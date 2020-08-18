@@ -1,0 +1,13 @@
+{
+  "appId": "com.strive.journal",
+  "appName": "strivejournal",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist/apps/journal",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

@@ -22,10 +22,21 @@
             "tsConfig": "apps/journal/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "apps/journal/src/favicon.ico",
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              },
               "apps/journal/src/assets"
             ],
-            "styles": ["apps/journal/src/styles.scss"],
+            "styles": [
+              {
+                "input": "apps/journal/src/theme/variables.scss"
+              },
+              {
+                "input": "apps/journal/src/global.scss"
+              }
+            ],
             "scripts": []
           },
           "configurations": {

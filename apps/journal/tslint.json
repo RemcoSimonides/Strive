@@ -1,6 +1,7 @@
 {
   "extends": "../../tslint.json",
   "rules": {
+    "component-class-suffix": [true, "Page", "Component"],
     "directive-selector": [true, "attribute", "strive", "camelCase"],
     "component-selector": [true, "element", "strive", "kebab-case"]
   },
