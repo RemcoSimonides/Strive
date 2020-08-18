@@ -1,11 +1,74 @@
-// http://ionicframework.com/docs/theming/
-@import '~@ionic/angular/css/core.css';
-@import '~@ionic/angular/css/normalize.css';
-@import '~@ionic/angular/css/structure.css';
-@import '~@ionic/angular/css/typography.css';
-@import '~@ionic/angular/css/display.css';
-@import '~@ionic/angular/css/padding.css';
-@import '~@ionic/angular/css/float-elements.css';
-@import '~@ionic/angular/css/text-alignment.css';
-@import '~@ionic/angular/css/text-transformation.css';
-@import '~@ionic/angular/css/flex-utils.css';
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+@import "~quill/dist/quill.core.css";
+@import "~quill/dist/quill.snow.css";
+
+/** Sharing buttons */
+// @import "~@ngx-share/button/themes/material/material-dark-theme";
+// @import "~@ngx-share/button/themes/modern/modern-light-theme";
+
+.not-logged-in {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  .fat-text-button {
+    margin-right: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--ion-color-primary);
+  }
+}
+
+.split-pane-visible > ion-menu {
+  max-width: 304px !important;
+}
+
+ion-list-header {
+  font-weight: bold;
+  font-size: 22px;
+  color: var(--ion-color-primary);
+}
+
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+// Used with popover pages/profile/modals/exercise-affirmation/popovers/exercise-affirmation-explanation
+.explanation_popover_class {
+  --width: 95%;
+}
