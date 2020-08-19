@@ -1,0 +1,32 @@
+ion-grid {
+    margin-top: 5%;
+}
+
+.submit_button {
+  margin-top: 20px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+hr {
+  margin-top: 20px;
+  border-top: 1px solid #a2a4ab;
+  margin-bottom: 20px;
+}
+
+.fat-text-button {
+  margin-left: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--ion-color-primary);
+}
+
+.passwordIcon{
+  font-size: 1.5rem !important;
+  position: relative !important;
+  top: 22px !important;
+  margin: 0 auto !important;
+}

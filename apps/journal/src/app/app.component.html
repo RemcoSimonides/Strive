@@ -1,3 +1,146 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+
+  <!-- Side menu -->
+  <div class="sidemenu" *ngIf="!_platform.is('android') && !_platform.is('ios')">
+    <ion-menu side="end" contentId="main-content">
+      <ion-content>
+        <div #header>
+          <ion-row class="ion-justify-content-center">
+            <img id="profile-image"
+              [src]="(auth.userProfile$ | async)?.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
+              routerDirection="root" [routerLink]="'/profile/' + _uid" />
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <h3>{{ (auth.userProfile$ | async)?.username }}</h3>
+          </ion-row>
+        </div>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerDirection="root" routerLink="/explore">
+              <ion-icon slot="start" name="globe"></ion-icon>
+              <ion-label>
+                Explore
+              </ion-label>
+            </ion-item>
+            <!-- Notifications -->
+            <ion-item routerDirection="root" routerLink="/notifications" *ngIf="_isLoggedIn">
+              <ion-icon slot="start" name="notifications"></ion-icon>
+              <ion-label>
+                Notifications
+                <span
+                  *ngIf="(auth.userProfile$ | async)?.numberOfUnreadNotifications > 0">({{ (auth.userProfile$ | async)?.numberOfUnreadNotifications }})</span>
+              </ion-label>
+            </ion-item>
+            <!-- Goals -->
+            <ion-item routerDirection="root" routerLink="/goals" *ngIf="_isLoggedIn">
+              <ion-icon slot="start" name="flag"></ion-icon>
+              <ion-label>
+                Goals
+              </ion-label>
+            </ion-item>
+            <!-- Supports -->
+            <ion-item routerDirection="root" routerLink="/supports" *ngIf="_isLoggedIn">
+              <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="start"></fa-icon>
+              <ion-label>
+                Supports
+              </ion-label>
+            </ion-item>
+            <!-- Profile -->
+            <ion-item routerDirection="root" [routerLink]="'/profile/' + (auth.userProfile$ | async)?.id"
+              *ngIf="_isLoggedIn">
+              <ion-icon slot="start" name="person"></ion-icon>
+              <ion-label>
+                Profile
+              </ion-label>
+            </ion-item>
+            <!-- Log in -->
+            <ion-item button (click)="openAuthModal(enumAuthSegment.login)" *ngIf="!_isLoggedIn">
+              <ion-icon slot="start" name="key"></ion-icon>
+              <ion-label>
+                Log in
+              </ion-label>
+            </ion-item>
+            <!-- Sign up -->
+            <ion-item button (click)="openAuthModal(enumAuthSegment.register)" *ngIf="!_isLoggedIn">
+              <ion-icon slot="start" name="key"></ion-icon>
+              <ion-label>
+                Sign up
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+  </div>
+
+  <!-- Main navbar -->
+  <ion-header *ngIf="!_platform.is('android') && !_platform.is('ios')">
+    <ion-toolbar>
+      <ion-row *ngIf="_isDesktop">
+        <ion-col size="1" class="ion-no-padding">
+          <a routerLink="/explore">
+            <img src="./assets/512x512.png" class="logo">
+          </a>
+        </ion-col>
+        <ion-col size="3" class="ion-no-padding searchbar-container">
+          <ion-searchbar (ionChange)="search($event)" placeholder='Try "Eat Healthy"'
+            (keydown.enter)="goToSearchResults($event)">
+          </ion-searchbar>
+        </ion-col>
+        <ion-col size="8" class="ion-no-padding">
+          <div class="navbar ion-align-self-end">
+            <div *ngIf="_isLoggedIn" class="buttons-container">
+              <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link"
+                class="link">
+                Goals
+              </ion-button>
+              <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link"
+                class="link">
+                Supports
+              </ion-button>
+              <ion-button fill="clear" routerLink="/notifications" routerDirection="root" routerLinkActive="active-link"
+                class="link">
+                Notifications
+                <ion-badge *ngIf="(auth.userProfile$ | async)?.numberOfUnreadNotifications > 0">
+                  {{ (auth.userProfile$ | async)?.numberOfUnreadNotifications }}</ion-badge>
+              </ion-button>
+              <ion-avatar (click)="openProfilePopover($event)">
+                <img id="profile-image"
+                  [src]="(auth.userProfile$ | async)?.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" />
+              </ion-avatar>
+            </div>
+            <div *ngIf="!_isLoggedIn" class="buttons-container">
+              <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)" class="link">
+                Log In
+              </ion-button>
+              <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.register)" class="link">
+                Sign Up
+              </ion-button>
+            </div>
+
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!_isDesktop">
+        <ion-col size="2" class="ion-no-padding">
+          <a routerLink="/explore">
+            <img src="./assets/512x512.png" class="logo ion-text-left">
+          </a>
+        </ion-col>
+        <ion-col size="9" class="ion-no-padding searchbar-container">
+          <ion-searchbar (ionChange)="search($event)" placeholder='Try "Eat Healthy"'
+            (keydown.enter)="goToSearchResults($event)">
+          </ion-searchbar>
+        </ion-col>
+        <ion-col size="1" class="ion-no-padding">
+          <ion-menu-button *ngIf="!_isDesktop"></ion-menu-button>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-router-outlet class="main-content-wrapper" id="main-content"></ion-router-outlet>
+
+  <ion-nav *ngIf="_platform.is('android') || _platform.is('ios')" [root]="rootPage"></ion-nav>
+
 </ion-app>
