@@ -1,0 +1,27 @@
+<ion-card (click)="navToGoal()">
+  <div class="image-container">
+    <img class="isFinished" [src]="_imageThumbURL"/>
+    <div class="after" *ngIf="isFinished">finished</div>
+  </div>
+  <ion-card-content class="ion-no-padding content-container">
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col size="12">
+          <h2 class="card-title">
+            <ion-icon *ngIf="!isPublic" name="lock-closed"></ion-icon> {{ title }}
+          </h2>
+        </ion-col>
+      </ion-row>
+      <ion-row class="stakeholder-numbers" *ngIf="isTemplate">
+        {{ numberOfTimesUsed || 0}} times used
+      </ion-row>
+      <ion-row class="stakeholder-numbers" *ngIf="numberOfSupporters">
+        {{ numberOfSupporters }} Supporters
+      </ion-row>
+      <ion-row class="stakeholder-numbers" *ngIf="numberOfAchievers">
+        {{ numberOfAchievers }} Achievers
+      </ion-row>
+    </ion-grid>
+    <div class="after" *ngIf="isFinished"></div>
+  </ion-card-content>
+</ion-card>

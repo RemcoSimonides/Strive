@@ -1,0 +1,25 @@
+<div class="clickable margin" (click)="navToGoal()">
+    <div class="image-container">
+        <img class="isFinished" [src]="_imageThumbURL"/>
+        <div class="after" *ngIf="isFinished">finished</div>
+    </div>
+    <div class="description-container">
+        <div class="wrap details">
+            <div *ngIf="isTemplate">
+                {{ numberOfTimesUsed || 0 }} times used
+            </div>
+            <div class="numberOfAchievers" *ngIf="!isTemplate">
+                <ion-icon name="flag"></ion-icon>{{ numberOfAchievers || 0}}
+            </div>
+            <div class="numberOfSupporters" *ngIf="numberOfSupporters">
+                <fa-icon [icon]="['fas', 'hand-holding-heart']"></fa-icon>{{ numberOfSupporters}}
+            </div>
+            <div class="deadline" *ngIf="deadline">
+                <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon>{{ deadline }}
+            </div>
+        </div>
+        <div class="title">
+            {{ title }}
+        </div> 
+    </div>
+</div>

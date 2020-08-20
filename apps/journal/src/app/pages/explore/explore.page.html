@@ -1,0 +1,107 @@
+<ion-header translucent *ngIf="_platform.is('android') || _platform.is('ios')">
+
+  <!-- <ion-toolbar [myScrollVanish]="scrollArea" color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button *ngIf="!_platform.is('android') && !_platform.is('ios')"></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Explore</ion-title>
+  </ion-toolbar> -->
+
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button *ngIf="!_platform.is('android') && !_platform.is('ios')"></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-searchbar (ionChange)="search($event)" placeholder='Try "Plastic free"'></ion-searchbar>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-no-padding" #scrollArea scrollEvents="true">
+
+  <h3>Collective Goals</h3>
+
+  <!-- Mobile -->
+  <div *ngIf="_platform.is('android') || _platform.is('ios')">
+    <ion-slides [options]="_goalSlideOptions">
+      <ion-slide *ngFor="let collectiveGoal of (_instantSearch.collectiveGoalResults | async)">
+        <app-goal-thumbnail [id]="collectiveGoal.id" [title]="collectiveGoal.title" [image]="collectiveGoal.image"
+          [numberOfSupporters]="collectiveGoal.numberOfSupporters"
+          [numberOfAchievers]="collectiveGoal.numberOfAchievers" [isCollectiveGoal]="true" [isPublic]="true">
+        </app-goal-thumbnail>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <!-- Browser -->
+  <div
+    *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
+    <div class="container">
+      <app-goal-thumbnail-browser *ngFor="let collectiveGoal of (_instantSearch.collectiveGoalResults | async)"
+        [id]="collectiveGoal.id" [title]="collectiveGoal.title" [image]="collectiveGoal.image"
+        [numberOfAchievers]="collectiveGoal.numberOfAchievers" [isCollectiveGoal]="true" [isPublic]="true">
+      </app-goal-thumbnail-browser>
+    </div>
+  </div>
+
+  <h3>Goals</h3>
+
+  <!-- Mobile -->
+  <div *ngIf="_platform.is('android') || _platform.is('ios')">
+    <ion-slides [options]="_goalSlideOptions">
+      <ion-slide *ngFor="let goal of (_instantSearch.goalResults | async)">
+        <app-goal-thumbnail [id]="goal.id" [title]="goal.title" [image]="goal.image"
+          [numberOfSupporters]="goal.numberOfSupporters" [numberOfAchievers]="goal.numberOfAchievers"
+          [isCollectiveGoal]="false" [isPublic]="true"></app-goal-thumbnail>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <!-- Browser -->
+  <div
+    *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
+    <div class="container">
+      <app-goal-thumbnail-browser *ngFor="let goal of (_instantSearch.goalResults | async)" [id]="goal.id"
+        [title]="goal.title" [image]="goal.image" [numberOfAchievers]="goal.numberOfAchievers"
+        [numberOfSupporters]="goal.numberOfSupporters" [isCollectiveGoal]="false" [isPublic]="true">
+      </app-goal-thumbnail-browser>
+    </div>
+  </div>
+
+  <h3>Users</h3>
+
+  <!-- Browser -->
+  <div
+    *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
+    <div class="container users">
+      <div class="user-profile" *ngFor="let user of (_instantSearch.profileResults | async)">
+        <div class="clickable margin" (click)="navToProfile(user.uid)">
+          <div class="profile-image-container">
+            <img class="profile-image" [src]="user.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'">
+          </div>
+          <div class="profile-username">
+            {{ user.username }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <div class="users-mobile" *ngIf="_platform.is('android') || _platform.is('ios')">
+    <ion-slides [options]="_goalSlideOptions">
+      <ion-slide *ngFor="let user of (_instantSearch.profileResults | async)">
+        <ion-card (click)="navToProfile(user.uid)">
+          <img class="profile-image" [src]="user.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'">
+          <ion-card-content class="ion-no-padding content-container">
+            <div class="profile-username">
+              {{ user.username }}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+</ion-content>
