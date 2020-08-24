@@ -1,0 +1,28 @@
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+ion-title {
+  --color: var(--ion-color-primary-contrast);
+}
+
+.arrow {
+  color: var(--ion-color-primary);
+  font-size: 20px;
+}
+
+fa-icon {
+  padding-left: 3px;
+}
+
+h4 {
+  color: var(--ion-color-primary);
+}
+
+.fat-text-button {
+  margin-left: 3px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--ion-color-primary);
+}

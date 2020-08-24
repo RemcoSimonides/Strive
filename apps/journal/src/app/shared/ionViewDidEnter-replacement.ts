@@ -1,11 +1,14 @@
 // Fount this class on https://github.com/ionic-team/ionic/issues/16152
 // ionViewDidEnter doesn't get called when switching back to an already-loaded page. This does the job
 
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Component } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 
+@Component({
+  template: ''
+})
 export abstract class RouterPage implements OnDestroy {
 
     private ngUnsubscribe: Subject<void> = new Subject();

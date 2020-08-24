@@ -1,0 +1,24 @@
+#goal-description-section {
+    position: relative;
+}
+
+#goal-description {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+#toggle-description-edit-button {
+    position: absolute;
+    bottom: -25px;
+    right: 30px;
+    z-index: 1;
+}
+
+#save-button {
+    float: right;
+    margin-right: 30px;
+}
+
+.text-editor {
+    padding-bottom: 90px;
+}

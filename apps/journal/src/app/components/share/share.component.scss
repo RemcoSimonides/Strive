@@ -1,0 +1,25 @@
+fa-icon {
+    color: white;
+}
+
+.share-popover {
+    padding: 15px;
+}
+
+.share_link {
+    position: relative;
+    background-color: var(--ion-color-dark-tint);
+    color: var(--ion-color-light);
+    padding: 3px 6px 3px 6px;
+    margin-top: 3px;
+    border-radius: 4px;
+    -webkit-user-select: all;  /* Chrome 49+ */
+    -moz-user-select: all;     /* Firefox 43+ */
+    -ms-user-select: all;      /* No support yet */
+    user-select: all;        /* Likely future */
+}
+
+.clipboard-button {
+    top: 0;
+    float: right;
+}

@@ -1,0 +1,14 @@
+ion-toolbar {
+    --background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 40%;
+    max-height: 25%;
+}

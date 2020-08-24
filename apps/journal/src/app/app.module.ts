@@ -27,11 +27,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-// import { CreateCollectiveGoalPage } from './pages/collective-goal/modals/create-collective-goal/create-collective-goal.page';
-// import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
-// import { CreatePostModalPage } from './pages/goal/posts/create-post-modal/create-post-modal.page';
+import { CreateCollectiveGoalPage } from './pages/collective-goal/modals/create-collective-goal/create-collective-goal.page';
+import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
+import { CreatePostModalPage } from './pages/goal/posts/create-post-modal/create-post-modal.page';
 // import { DiscussionPage } from './pages/discussion/discussion.page';
-// import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
+import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
 // import { TermsPage } from './pages/terms/terms.page';
 // import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
 // import { HomePage } from './pages/home/home.page';
@@ -49,24 +49,24 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
 // Text editor
-// import { QuillModule } from 'ngx-quill';
+import { QuillModule } from 'ngx-quill';
 // import { ShareButtonsModule } from '@ngx-share/buttons';
-// import { ShareButtonsConfig, ShareModule } from '@ngx-share/core';
+import { ShareButtonsConfig, ShareModule } from '@ngx-share/core';
 
-// const customConfig: ShareButtonsConfig = {
-//   autoSetMeta: true,
-//   twitterAccount: 'ankitsharma_007'
-// };
+const customConfig: ShareButtonsConfig = {
+  autoSetMeta: true,
+  twitterAccount: 'ankitsharma_007'
+};
 
 @NgModule({
   declarations: [
     AppComponent,
     // Autosize,
-    // CreateCollectiveGoalPage,
-    // CreateGoalPage,
-    // CreatePostModalPage,
+    CreateCollectiveGoalPage,
+    CreateGoalPage,
+    CreatePostModalPage,
     // DiscussionPage,
-    // CreateTemplateModalPage,
+    CreateTemplateModalPage,
     // PrivacyPolicyPage,
     // TermsPage,
     // HomePage,
@@ -75,11 +75,11 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
     AuthModalPage
   ],
   entryComponents: [
-    // CreateCollectiveGoalPage,
-    // CreateGoalPage,
-    // CreatePostModalPage,
+    CreateCollectiveGoalPage,
+    CreateGoalPage,
+    CreatePostModalPage,
     // DiscussionPage,
-    // CreateTemplateModalPage,
+    CreateTemplateModalPage,
     // PrivacyPolicyPage,
     // TermsPage,
     // HomePage,
@@ -107,8 +107,8 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
     FormsModule,
     // ComponentsModule,
     // ShareButtonsModule,
-    // ShareModule.withConfig(customConfig),
-    // QuillModule.forRoot(),
+    ShareModule.withConfig(customConfig),
+    QuillModule.forRoot(),
   ],
   providers: [
     StatusBar,

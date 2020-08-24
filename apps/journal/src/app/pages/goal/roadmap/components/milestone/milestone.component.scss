@@ -1,0 +1,68 @@
+ion-grid {
+  --ion-grid-columns: 24;
+  width: 100%;
+}
+
+.relative {
+  position: relative;
+}
+
+// Support btn
+.actions-area {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap-reverse;
+}
+
+.options-button {
+    --padding-start: 0px;
+    --padding-end: 0px;
+}
+
+.vertical-middle {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+}
+
+.milestone-extra-info {
+  color: var(--ion-color-medium);
+  font-size: 12px;
+}
+
+.milestone-extra {
+  margin-top: auto;
+}
+
+fa-icon {
+  margin-left: 3px;
+  margin-right: 3px;
+  font-size: initial;
+}
+
+.radio-button-off {
+  cursor: pointer;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+}
+
+.overdue {
+  color: var(--ion-color-danger-tint);
+}
+
+#profile-image {
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+ion-datetime.md.datetime-disabled.hydrated {
+  color: black;
+}

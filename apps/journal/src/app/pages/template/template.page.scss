@@ -1,0 +1,41 @@
+
+#template-title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--ion-color-dark-tint);
+}
+
+#template-description {
+    margin-top: 22px;
+    margin-bottom: 22px;
+}
+
+img {
+    object-fit: cover;
+    width: 100%;
+    max-width: 360px;
+    height: 200px;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.image-container {
+    // position: relative;
+    // display: inline-block;
+    height: 200px;
+    width: 100%;
+}
+
+ion-segment {
+    max-width: 800px;
+    margin: auto;
+}
+
+.vertical-align-content {
+    max-width: 800px;
+    margin: auto;
+}
+
+app-text-editor {
+    width: 100%;
+}

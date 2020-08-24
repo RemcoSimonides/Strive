@@ -1,0 +1,59 @@
+<ion-header translucent>
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  
+    <ion-title>{{title}}</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form [formGroup]="createGoalForm">
+
+    <ion-item>
+      <ion-label position="stacked">Title</ion-label>
+      <ion-input formControlName="title" 
+                  type="text"
+                  autofocus></ion-input>
+    </ion-item>
+  
+    <ion-item>
+        <ion-label position="stacked">Short description</ion-label>
+        <ion-textarea formControlName="shortDescription"
+                      type="text"
+                      maxlength="256"
+                      autosize></ion-textarea>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="stacked">Public</ion-label>
+      <ion-toggle formControlName="isPublic"></ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">End date &#40;optional&#41;</ion-label>
+      <ion-datetime
+        placeholder="-- -- --"
+        displayFormat="DDDD DD MMMM YYYY"
+        pickerFormat="DDDD MMMM YYYY" 
+        formControlName="deadline"
+        (click)="_openingDatetime($event)"
+      ></ion-datetime>
+    </ion-item>
+
+    <!-- <app-image-upload defaultImagePath="assets/Goal.jpg" [currentImage]="goal?.image"></app-image-upload> -->
+
+  </form>
+
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-button *ngIf="!this.goal.id" (click)="handleCreatingGoal()" clear>Create</ion-button>
+  <ion-button *ngIf="this.goal.id" (click)="handleUpdatingGoal()" clear>Update</ion-button>
+</ion-fab>

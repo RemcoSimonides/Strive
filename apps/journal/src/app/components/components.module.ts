@@ -8,21 +8,21 @@ import { IonicModule } from '@ionic/angular'
 // import { FileDropDirective } from '../directives/file-drop/file-drop.directive' // Should be imporated before ImageUploadComponent!
 // Share buttons
 // import { ShareButtonsModule } from '@ngx-share/buttons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // Pages
 // import { NotificationOptionsPage } from './notification/popovers/notification-options/notification-options.page'
 // Text editor
 import { QuillModule } from 'ngx-quill'
 // Custom Components
-import { GoalThumbnailComponent } from './goal-thumbnail/goal-thumbnail.component'
-import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thumbnail-browser.component'
-// import { CreateGoalThumbnailComponent } from './create-goal-thumbnail/create-goal-thumbnail.component'
-// import { HeaderComponent } from './header/header.component'
+import { GoalThumbnailComponent } from './goal-thumbnail/goal-thumbnail.component';
+import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thumbnail-browser.component';
+import { CreateGoalThumbnailComponent } from './create-goal-thumbnail/create-goal-thumbnail.component';
+import { HeaderComponent } from './header/header.component';
 // import { PostComponent } from './post/post.component'
 // import { CountdownComponent } from './countdown/countdown.component'
-// import { ImageUploadComponent } from './image-upload/image-upload.component'
-// import { ShareComponent } from './share/share.component'
-// import { TextEditorComponent } from './text-editor/text-editor.component'
+import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { ShareComponent } from './share/share.component';
+import { TextEditorComponent } from './text-editor/text-editor.component';
 // import { NotificationComponent } from './notification/notification.component'
 // import { CommentComponent } from './comment/comment.component'
 
@@ -39,14 +39,14 @@ import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thu
   declarations: [
     GoalThumbnailComponent,
     GoalThumbnailBrowserComponent,
-    // CreateGoalThumbnailComponent,
-    // HeaderComponent,
+    CreateGoalThumbnailComponent,
+    HeaderComponent,
     // PostComponent,
     // CountdownComponent,
     // FileDropDirective,
-    // ImageUploadComponent,
-    // ShareComponent,
-    // TextEditorComponent,
+    ImageUploadComponent,
+    ShareComponent,
+    TextEditorComponent,
     // NotificationComponent,
     // CommentComponent,
     // NotificationOptionsPage
@@ -58,13 +58,13 @@ import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thu
     // CountdownComponent,
     GoalThumbnailComponent,
     GoalThumbnailBrowserComponent,
-    // CreateGoalThumbnailComponent,
-    // HeaderComponent,
+    CreateGoalThumbnailComponent,
+    HeaderComponent,
     // PostComponent,
     // FileDropDirective,
     // ImageUploadComponent,
-    // ShareComponent,
-    // TextEditorComponent,
+    ShareComponent,
+    TextEditorComponent,
     // NotificationComponent,
     // CommentComponent,
   ]

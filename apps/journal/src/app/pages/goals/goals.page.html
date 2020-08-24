@@ -1,0 +1,82 @@
+<app-header title="Goals" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+
+<div class="not-logged-in" *ngIf="!_isLoggedIn">
+    <p>
+        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your goals
+    </p>
+</div>
+
+<ion-content *ngIf="_isLoggedIn" class="ion-no-padding">
+
+    <!-- Goals -->
+    <h3>Your Goals</h3>
+
+    <!-- Mobile -->
+    <div *ngIf="_platform.is('android') || _platform.is('ios')">
+        <ion-slides [options]="_goalSlideOptions">
+            <ion-slide>
+                <app-create-goal-thumbnail [limitReached]="false" [isCollectiveGoal]="false">
+                </app-create-goal-thumbnail>
+            </ion-slide>
+            <ion-slide *ngFor="let goal of _goals">
+                <app-goal-thumbnail [id]="goal.id" [title]="goal.title" [image]="goal.image"
+                    [numberOfSupporters]="goal.numberOfSupporters" [numberOfAchievers]="goal.numberOfAchievers"
+                    [isCollectiveGoal]="false" [isFinished]="goal.isFinished"
+                    [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"></app-goal-thumbnail>
+            </ion-slide>
+            <ion-slide *ngFor="let goal of _finishedGoals">
+                <app-goal-thumbnail [id]="goal.id" [title]="goal.title" [image]="goal.image"
+                    [numberOfSupporters]="goal.numberOfSupporters" [numberOfAchievers]="goal.numberOfAchievers"
+                    [isCollectiveGoal]="false" [isFinished]="goal.isFinished"
+                    [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"></app-goal-thumbnail>
+            </ion-slide>
+        </ion-slides>
+    </div>
+
+    <!-- Browser -->
+    <div
+        *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
+        <div class="container">
+            <app-create-goal-thumbnail [limitReached]="false" [isCollectiveGoal]="false"></app-create-goal-thumbnail>
+            <app-goal-thumbnail-browser *ngFor="let goal of _goals" [id]="goal.id" [title]="goal.title"
+                [image]="goal.image" [numberOfAchievers]="goal.numberOfAchievers"
+                [numberOfSupporters]="goal.numberOfSupporters" [isCollectiveGoal]="false" [isFinished]="goal.isFinished"
+                [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"></app-goal-thumbnail-browser>
+            <app-goal-thumbnail-browser *ngFor="let goal of _finishedGoals" [id]="goal.id" [title]="goal.title"
+                [image]="goal.image" [numberOfAchievers]="goal.numberOfAchievers"
+                [numberOfSupporters]="goal.numberOfSupporters" [isCollectiveGoal]="false" [isFinished]="goal.isFinished"
+                [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"></app-goal-thumbnail-browser>
+        </div>
+    </div>
+
+    <!-- Collective goals -->
+    <h3>Your Collective Goals</h3>
+
+    <!-- Mobile -->
+    <div *ngIf="_platform.is('android') || _platform.is('ios')">
+
+        <ion-slides [options]="_goalSlideOptions">
+            <ion-slide>
+                <app-create-goal-thumbnail [limitReached]="false" [isCollectiveGoal]="true"></app-create-goal-thumbnail>
+            </ion-slide>
+            <ion-slide *ngFor="let collectiveGoal of collectiveGoalsColObs | async">
+                <app-goal-thumbnail [id]="collectiveGoal.id" [image]="collectiveGoal.image"
+                    [title]="collectiveGoal.title" [numberOfAchievers]="collectiveGoal.numberOfAchievers"
+                    [isCollectiveGoal]="true" [isPublic]="collectiveGoal.isPublic"></app-goal-thumbnail>
+            </ion-slide>
+        </ion-slides>
+    </div>
+
+    <!-- Browser -->
+    <div
+        *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
+        <div class="container">
+            <app-create-goal-thumbnail [limitReached]="false" [isCollectiveGoal]="true"></app-create-goal-thumbnail>
+            <app-goal-thumbnail-browser *ngFor="let collectiveGoal of collectiveGoalsColObs | async"
+                [id]="collectiveGoal.id" [title]="collectiveGoal.title" [image]="collectiveGoal.image"
+                [numberOfAchievers]="collectiveGoal.numberOfAchievers" [isCollectiveGoal]="true"
+                [isPublic]="collectiveGoal.isPublic"></app-goal-thumbnail-browser>
+        </div>
+    </div>
+
+</ion-content>

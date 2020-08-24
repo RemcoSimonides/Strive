@@ -1,0 +1,30 @@
+<!-- Mobile -->
+<div *ngIf="_platform.is('android') || _platform.is('ios')">
+  <ion-card (click)="navToCreateGoal()" *ngIf="!limitReached" class="active">
+    <img id="img-mobile" src="assets/CreateNewGoal.png"/>
+    <ion-card-content>
+      <h2 class="card-title">{{ _title }}</h2>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="limitReached" class="inactive">
+    <img class="limitReached" src="assets/CreateNewGoal.png"/>
+    <ion-card-content>
+      <h2 class="card-title">{{ _title }}</h2>
+    </ion-card-content>
+  </ion-card>
+</div>
+
+<!-- Browser -->
+<div *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
+  <div class="clickable margin" (click)="navToCreateGoal()">
+      <div id="image-container-browser">
+          <img src="assets/CreateNewGoal.png"/>
+      </div>
+      <div class="description-container">
+        <div class="title">
+            {{ _title }}
+        </div> 
+      </div>
+  </div>
+</div>

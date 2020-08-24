@@ -1,0 +1,64 @@
+<app-header title=" {{ (_templateDocObs | async)?.title || 'Template' }}" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+
+<ion-content class="ion-padding">
+
+  <div class="vertical-align-content" *ngIf="_templateDocObs | async as template">
+
+    <!-- Template description -->
+    <ion-grid>
+      <ion-row>
+        <span id="template-title">{{ template.title }}</span>
+      </ion-row>
+      <ion-row>
+        <app-text-editor [_description]="template.description" 
+          [isAdmin]="_isAdmin" 
+          (update)="_saveDescription($event)"
+        ></app-text-editor>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-row>
+          <ion-col>
+            <b>{{ template.goalTitle }}</b>
+            <br/>
+            <div *ngIf="template.goalDeadline">
+              <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ template.goalDeadline | date:'fullDate' }}
+            </div>
+          </ion-col>
+          <ion-col size="1" class="ion-align-self-start" *ngIf="_isAdmin">
+            <ion-button (click)="presentTemplateOptionsPopover($event)" fill="clear">
+              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              {{ template.goalShortDescription }}
+            </ion-col>
+            <ion-col size-xs="12" size-sm="4" size-md="4" size-lg="4" size-xl="4">
+              <span class="image-container">
+                <img src="{{ template.goalImage }}"/>
+              </span>
+            </ion-col>
+          </ion-row>
+          <ion-row> 
+            <ion-col>
+              <ion-button (click)="useTemplate()" fill="outline">Use Template</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <h3>Roadmap</h3>
+
+    <app-default-roadmap [collectiveGoalId]="_collectiveGoalId" [templateId]="_templateId" [isAdmin]="_isAdmin"></app-default-roadmap>
+
+  </div>
+
+</ion-content>
