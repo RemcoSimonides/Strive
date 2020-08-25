@@ -1,0 +1,30 @@
+<ion-header translucent>
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Edit Bucket List</ion-title>
+  
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  What do you still want to do in your life?
+  <ion-item *ngFor="let item of bucketList?.items; let i = index">
+    <ion-input type="text" placeholder="Enter New Item" (ionInput)="onInput($event, i)" [(ngModel)]="bucketList.items[i].description"></ion-input>
+    <ion-select placeholder="Select One" value="public" interface="popover" [(ngModel)]="bucketList.items[i].privacy">
+      <ion-select-option value="public">Public</ion-select-option>
+      <ion-select-option value="spectatorsOnly">Followers Only</ion-select-option>
+      <ion-select-option value="private">Private</ion-select-option>
+    </ion-select>
+    <ion-icon class="remove-item-icon" (click)="removeControl(i)" name="close-circle"></ion-icon>
+  </ion-item>
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-button (click)="saveBucketList()" clear>Save</ion-button>
+</ion-fab>

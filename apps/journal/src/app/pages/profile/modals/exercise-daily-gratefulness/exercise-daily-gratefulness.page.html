@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Daily Gratefulness</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="_dailyGratefulness">
+
+  Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative. Receive a daily push notification to remind you to think of three things you are grateful for that day.
+
+  <!-- TURN ON OR OFF -->
+  <ion-item lines="none">
+    <ion-toggle [(ngModel)]="_dailyGratefulness.on" (ionChange)="switchOnOff()"></ion-toggle>
+    <ion-label>{{ _dailyGratefulness?.on ? 'ON' : 'OFF'}}</ion-label>
+  </ion-item>
+
+
+  <!-- DEFINE DAYS -->
+  <div *ngIf="_dailyGratefulness.on">
+
+    <!-- DEFINE TIME -->
+    <h4>SELECT TIME</h4>
+    <ion-item lines="none">
+      <ion-datetime displayFormat="HH:mm" [value]="_dailyGratefulness.time" (ionChange)="changedTime($event)"></ion-datetime>
+    </ion-item>
+  </div>
+
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-button (click)="saveDailyGratefulnessSettings()" clear>Save</ion-button>
+</ion-fab>

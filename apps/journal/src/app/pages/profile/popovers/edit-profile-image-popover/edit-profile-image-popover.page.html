@@ -1,0 +1,11 @@
+<div *ngIf="_profile as profile">
+    <app-image-upload defaultImagePath="assets/img/avatar/blank-profile-picture_256_thumb.png"
+        [currentImage]="profile.image"></app-image-upload>
+    <div class="save-button-container">
+
+        <ion-button (click)="updateProfileImage()">
+            {{ _saving ? 'Saving image' : 'Save image' }}</ion-button>
+        <ion-spinner *ngIf="_saving" name="lines" color="primary"></ion-spinner>
+
+    </div>
+</div>

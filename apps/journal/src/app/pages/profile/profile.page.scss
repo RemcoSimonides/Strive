@@ -1,0 +1,214 @@
+.vertical-align-content {
+    max-width: 800px;
+    margin: auto;
+}
+
+.not-logged-in {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  
+    .fat-text-button {
+      margin-right: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--ion-color-primary);
+    }
+  }
+
+#profile-bg {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    margin-top: -16px;
+    height: 160px;
+    background-image: linear-gradient(to bottom, var(--ion-color-primary-tint), white);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+}
+
+// Profile content
+#content {
+    position: relative;
+    margin-top: 180px;
+    padding-top: 50px;
+    text-align: center;
+}
+
+#profile-info {
+    position: absolute;
+    top: -95px;
+    width: 100%;
+    z-index: 2;
+    text-align: center;
+}
+
+#profile-image {
+    display: block;
+    border-radius: 50%;
+    // width: auto;
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 0;
+    box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
+}
+
+#profile-image-edit-icon {
+    margin-top: -14px;
+    margin-left: 40px;
+    position: absolute;
+    
+    &:hover  {
+        color: black;
+    }
+}
+
+#profile-username-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#profile-username {
+    color: #444;
+    font-size: 26px;
+    font-weight: 500;
+}
+
+#profile-username-edit-icon {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+
+    &:hover {
+        color: black;
+    }
+}
+
+// Affirmations
+
+
+// Bucketlist
+.exercise {
+
+    .exercise-header-container {
+        display: flex;
+    
+        .exercise-help-icon {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 5px;
+    
+            &:hover {
+                color: black;
+                cursor: pointer;
+            }
+        }
+    
+        .exercise-edit-icon {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 20px;
+    
+            &:hover {
+                color: black;
+                cursor: pointer;
+            }
+        }
+    
+    }
+
+    ion-checkbox {
+        margin-right: 5px;
+    }
+    
+    .bucketlist-item-public {
+        color: green;
+    }
+
+}
+
+.bucketlist {
+    .no-opacity {
+        opacity: 1;
+    }
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #444;
+    background: -webkit-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, rgb(188, 198, 214) 50%, hsla(0, 0%, 0%, 0) 100%);
+}
+
+.goal-thumbnail-wrapper {
+    display: flex;
+}
+
+app-goal-thumbnail {
+    margin: auto;
+}
+
+.profile-number:hover {
+    background: var(--ion-color-lightest);
+    cursor: pointer;
+}
+
+ion-slide {
+    float: left;
+    width: 165px !important;
+    margin-left: 5px!important;
+    margin-right: 5px!important;
+}
+
+h3 {
+    color: var(--ion-color-primary);
+}
+
+.padding {
+    padding-left: 16px;
+}
+
+ion-input {
+    max-width: 200px;
+    color: #444;
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.back-btn {
+    vertical-align: text-top;
+    cursor: pointer;
+    color: var(--ion-color-medium);
+}
+
+// Exercises
+.exercise-card {
+    position: relative;
+    text-align: center;
+    width: 260px;
+    
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.card-title {
+    position: absolute;
+    background: rgba(0, 0, 0, .4);
+    bottom: 10%;
+    font-size: 2.0em;
+    width: 100%;
+    font-weight: bold;
+    color: #fff;
+}
