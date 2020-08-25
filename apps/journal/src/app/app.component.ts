@@ -10,7 +10,7 @@ import { FcmService } from './services/fcm/fcm.service';
 import { ScreensizeService } from './services/screensize/screensize.service';
 // Pages
 import { TabsPage } from './pages/tabs/tabs'
-// import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
+import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
 import { InstantSearchService } from './services/instant-search/instant-search.service';
 import { Observable } from 'rxjs';
@@ -156,12 +156,12 @@ export class AppComponent {
   }
 
   async openProfilePopover(ev: UIEvent): Promise<void> {
-    // const popover = await this._popoverCtrl.create({
-    //   component: ProfileOptionsBrowserPage,
-    //   event: ev,
-    //   showBackdrop: false
-    // })
-    // await popover.present()
+    const popover = await this._popoverCtrl.create({
+      component: ProfileOptionsBrowserPage,
+      event: ev,
+      showBackdrop: false
+    })
+    await popover.present()
   }
 
   async openAuthModal(segment: enumAuthSegment): Promise<void> {
