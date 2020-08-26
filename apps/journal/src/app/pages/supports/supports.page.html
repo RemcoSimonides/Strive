@@ -1,0 +1,62 @@
+<app-header title="Supports" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+
+<div class="not-logged-in" *ngIf="_pageIsLoading">
+  <ion-spinner name="lines" color="primary"></ion-spinner>
+</div>
+
+<div class="not-logged-in" *ngIf="!_isLoggedIn && !_pageIsLoading">
+  <p>
+      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
+  </p>
+</div>
+
+<ion-content class="ion-padding" *ngIf="_isLoggedIn && !_pageIsLoading">
+  <div class="vertical-align-content">
+
+    <ion-list inset="false" lines="full">
+      <ion-list-header>Goals you support</ion-list-header>
+      <ion-item *ngFor="let support of _supportsOpen$ | async">
+        <ion-label class="ion-text-wrap">
+          <ion-text>{{ support?.description }}</ion-text>
+          <ion-text>
+            <p *ngIf="!support?.path?.level3description && !support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support?.path?.level1description | mSlice }} </b></p>
+            <p *ngIf="!support?.path?.level3description && support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support?.path?.level2description | mSlice }} </b> </p>
+            <p *ngIf="support?.path?.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support?.path?.level3description | mSlice }} </b></p>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+      
+      <ion-list-header>Support To Get</ion-list-header>
+      <ion-item *ngFor='let support of _supportsToGet$ | async'>
+        <ion-label>
+          <ion-text>
+            {{ support.description }} from {{ support.supporter.username }}
+          </ion-text>
+          <ion-text>
+            <p *ngIf="!support?.path?.level3description && !support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support?.path?.level1description | mSlice }} </b></p>
+            <p *ngIf="!support?.path?.level3description && support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support?.path?.level2description | mSlice }} </b> </p>
+            <p *ngIf="support?.path?.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support?.path?.level3description | mSlice }} </b></p>
+          </ion-text>
+        </ion-label>
+        <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Got it</ion-button>
+      </ion-item>
+
+      <ion-list-header>Supports To Give</ion-list-header>
+      <ion-item *ngFor="let support of _supportsToGive$ | async">
+        <ion-label>
+          <ion-text>
+            {{ support.description }} to achiever(s) from {{ support.goal.title }}
+          </ion-text>
+          <ion-text>
+              <p *ngIf="!support?.path?.level3description && !support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support?.path?.level1description | mSlice }} </b></p>
+              <p *ngIf="!support?.path?.level3description && support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support?.path?.level2description | mSlice }} </b> </p>
+              <p *ngIf="support?.path?.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support?.path?.level3description | mSlice }} </b></p>
+          </ion-text>
+        </ion-label>
+        <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Gave it</ion-button>
+        <!-- <ion-checkbox slot="start"></ion-checkbox> -->
+      </ion-item>
+    </ion-list>
+
+  </div>
+</ion-content>
