@@ -1,0 +1,126 @@
+<div class="notification" *ngIf="notification">
+  <ion-item class="ion-no-padding item-text-wrap">
+
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="1" size-lg="1" size-md="1" size-xs="2">
+          <!-- Goal or Collective goal image -->
+          <ion-thumbnail *ngIf="!isFromPerson" item-start class="item-thumbnail clickable" [routerLink]="sourcePageRef">
+            <img [src]="notification?.source?.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+          </ion-thumbnail>
+
+          <!-- Profile image -->
+          <img *ngIf="isFromPerson" id="profile-image" class="clickable" [routerLink]="sourcePageRef" [src]="notification?.source?.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+        
+        </ion-col>
+        <ion-col size="11" size-lg="11" size-md="11" size-xs="10">
+          <ion-grid>
+            <ion-row class="ion-no-padding">
+
+              <!-- Notification header -->
+              <div class="notification-header container">
+                <span id="name" class="clickable" [routerLink]="sourcePageRef">{{ notification?.source?.name }}</span>
+                <span id="date">{{ notification.createdAt.toDate() | date:'M/d' }}</span>
+
+                <ion-icon *ngIf="isAdmin" id="options" class="clickable" name="chevron-down-outline" (click)="openNotificationOptions($event)"></ion-icon>
+              </div>
+
+              <div class="container">
+                <!-- Message -->
+                <div class="item-message">
+
+                  <span *ngFor="let message of notification.message">
+                    <span *ngIf="message.link">
+                      <span class="link" [routerLink]="'../' + ( message.link )">{{ message.text }}</span>
+                    </span>
+                    <span *ngIf="!message.link">
+                      {{ message.text }}
+                    </span>
+                  </span>
+
+                </div>
+
+              </div>
+
+            </ion-row>
+
+            <ion-row class="ion-no-padding">
+
+
+              <!-- Request buttons -->
+              <div *ngIf="notification.notificationType === enumNotificationType.goal_request_to_join">
+                <ion-button (click)="handleRequestDecision(notification, true)"
+                  [disabled]="notification?.requestStatus !== enumRequestStatus.open"
+                  *ngIf="notification?.requestStatus !== enumRequestStatus.rejected">Accept</ion-button>
+                <ion-button (click)="handleRequestDecision(notification, false)"
+                  [disabled]="notification?.requestStatus !== enumRequestStatus.open"
+                  *ngIf="notification?.requestStatus !== enumRequestStatus.accepted">Reject</ion-button>
+              </div>
+
+              <!-- Post card -->
+              <div *ngIf="notification.path" class="post">
+                <app-post [postRef]="('Goals/' + notification.path.goalId + '/Posts/' + notification.path.postId)">
+                </app-post>
+              </div>
+
+            </ion-row>
+            <!-- Support -->
+            <ion-list *ngIf="(notification.notificationType == enumNotificationType.evidence_pending 
+    || notification.notificationType == enumNotificationType.evidence_finalized) 
+    && notification.supports.length >= 1" lines="none" class="ion-no-padding">
+              <ion-list-header class="supports-header">
+                Your supports:
+              </ion-list-header>
+              <ion-grid>
+                <ion-row *ngFor="let support of notification.supports">
+                  <ion-col size="6" class="ion-no-padding">
+                    {{support.description}}<span *ngIf="!support.milestoneIsFinished"
+                      style="margin-left: 5px;">&#40;unfinished
+                      milestone&#41;</span>
+                  </ion-col>
+                  <ion-col size="auto" class="ion-no-padding">
+                    <span class="choose-receiver" *ngIf="support.receiverId === null"
+                      (click)="chooseReceiver(notification, support)"><i>Choose receiver</i></span>
+                    <div class="box" *ngIf="support.receiverId !== null"
+                      (click)="removeReceiver(notification, support)">
+                      <ion-chip>
+                        <ion-avatar>
+                          <img [src]="support.receiverPhotoURL" />
+                        </ion-avatar>
+                        <ion-label>{{ support.receiverUsername }}</ion-label>
+                      </ion-chip>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+
+            </ion-list>
+
+            <!-- Buttons to accept or decline evidence -->
+            <div
+              *ngIf="notification.notificationType === enumNotificationType.evidence_pending || notification.notificationType == enumNotificationType.evidence_finalized">
+              <ion-button (click)="finalizeDecision(notification)" color="secondary"
+                [disabled]="notification.notificationType == enumNotificationType.evidence_finalized">Finalize
+              </ion-button>
+            </div>
+            <div *ngIf="notification.notificationType === enumNotificationType.evidence_pending">
+              <app-countdown [time]="notification.deadline"></app-countdown>
+            </div>
+
+            <ion-row>
+              <!-- Discussion -->
+              <ion-button (click)="openDiscussion()" fill="clear">{{ notification.discussion?.numberOfComments || 0 }}
+                <ion-icon id="discussion-icon" name="chatbox-outline">
+                </ion-icon>
+              </ion-button>
+            </ion-row>
+
+          </ion-grid>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+  </ion-item>
+
+</div>

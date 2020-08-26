@@ -1,0 +1,36 @@
+<app-header title="Notifications" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+
+<div class="not-logged-in" *ngIf="_pageIsLoading">
+  <ion-spinner name="lines" color="primary"></ion-spinner>
+</div>
+
+<div class="not-logged-in" *ngIf="!(isLoggedIn | async) && !_pageIsLoading">
+  <p>
+      <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
+  </p>
+</div>
+
+<ion-content class="ion-padding" *ngIf="!_pageIsLoading && (isLoggedIn | async)">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content
+        pullingIcon="arrow-down"
+        refreshingSpinner="circles">
+      </ion-refresher-content>
+    </ion-refresher>
+    <div class="vertical-align-content">
+
+    <div class="notification" *ngFor="let notification of paginationService.data | async">
+      <app-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + _uid + '/Notifications/' + notification.id"></app-notification>
+    </div>
+      
+
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  
+  </div>
+</ion-content>
+  

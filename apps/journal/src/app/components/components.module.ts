@@ -10,7 +10,7 @@ import { IonicModule } from '@ionic/angular'
 // import { ShareButtonsModule } from '@ngx-share/buttons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // Pages
-// import { NotificationOptionsPage } from './notification/popovers/notification-options/notification-options.page'
+import { NotificationOptionsPage } from './notification/popovers/notification-options/notification-options.page'
 // Text editor
 import { QuillModule } from 'ngx-quill'
 // Custom Components
@@ -23,7 +23,7 @@ import { HeaderComponent } from './header/header.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { ShareComponent } from './share/share.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
-// import { NotificationComponent } from './notification/notification.component'
+import { NotificationComponent } from './notification/notification.component'
 // import { CommentComponent } from './comment/comment.component'
 
 @NgModule({
@@ -47,12 +47,12 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     ImageUploadComponent,
     ShareComponent,
     TextEditorComponent,
-    // NotificationComponent,
+    NotificationComponent,
     // CommentComponent,
-    // NotificationOptionsPage
+    NotificationOptionsPage
   ],
   entryComponents: [
-    // NotificationOptionsPage
+    NotificationOptionsPage
   ],
   exports: [
     // CountdownComponent,
@@ -65,7 +65,7 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     // ImageUploadComponent,
     ShareComponent,
     TextEditorComponent,
-    // NotificationComponent,
+    NotificationComponent,
     // CommentComponent,
   ]
 })
