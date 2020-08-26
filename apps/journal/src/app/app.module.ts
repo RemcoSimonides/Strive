@@ -30,13 +30,13 @@ import { AppComponent } from './app.component';
 import { CreateCollectiveGoalPage } from './pages/collective-goal/modals/create-collective-goal/create-collective-goal.page';
 import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
 import { CreatePostModalPage } from './pages/goal/posts/create-post-modal/create-post-modal.page';
-// import { DiscussionPage } from './pages/discussion/discussion.page';
+import { DiscussionPage } from './pages/discussion/discussion.page';
 import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
 // import { TermsPage } from './pages/terms/terms.page';
 // import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
 // import { HomePage } from './pages/home/home.page';
 import { TabsPage } from './pages/tabs/tabs';
-// import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
+import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
 import { AuthModalPage } from './pages/auth/auth-modal.page';
 
 // Directives
@@ -65,26 +65,26 @@ const customConfig: ShareButtonsConfig = {
     CreateCollectiveGoalPage,
     CreateGoalPage,
     CreatePostModalPage,
-    // DiscussionPage,
+    DiscussionPage,
     CreateTemplateModalPage,
     // PrivacyPolicyPage,
     // TermsPage,
     // HomePage,
     TabsPage,
-    // ProfileOptionsBrowserPage,
+    ProfileOptionsBrowserPage,
     AuthModalPage
   ],
   entryComponents: [
     CreateCollectiveGoalPage,
     CreateGoalPage,
     CreatePostModalPage,
-    // DiscussionPage,
+    DiscussionPage,
     CreateTemplateModalPage,
     // PrivacyPolicyPage,
     // TermsPage,
     // HomePage,
     TabsPage,
-    // ProfileOptionsBrowserPage,
+    ProfileOptionsBrowserPage,
     AuthModalPage
   ],
   imports: [    

@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Discussion</ion-title>
+    <ion-title size="small" *ngIf="discussion?.audience === enumDiscussionAudience.public"></ion-title>
+    <ion-title size="small" *ngIf="discussion?.audience === enumDiscussionAudience.adminsAndRequestor">Requestor and Admins only</ion-title>
+    <ion-title size="small" *ngIf="discussion?.audience === enumDiscussionAudience.achievers">Achievers only</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
+  <ion-infinite-scroll position="top" threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <div *ngFor="let comment of paginationService.data | async">
+    <app-comment [comment]="comment"></app-comment>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-input type="text" placeholder="Reply..." [(ngModel)]="_comment" (keydown.enter)="addReply()"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

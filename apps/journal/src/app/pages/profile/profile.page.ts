@@ -97,10 +97,11 @@ export class ProfilePage implements OnInit {
   async ngOnInit() {
     this._pageIsLoading = true
     this._profileId = this.route.snapshot.paramMap.get('id')
+    const { uid } = await this.authService.afAuth.currentUser
     
     if (this._profileId === 'undefined') {
       if (await this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(`profile/${this.authService.afAuth.auth.currentUser.uid}`)
+        this.router.navigateByUrl(`profile/${uid}`)
       } else {
         this._shouldLogin = true
       }
