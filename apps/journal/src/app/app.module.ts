@@ -32,8 +32,8 @@ import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page
 import { CreatePostModalPage } from './pages/goal/posts/create-post-modal/create-post-modal.page';
 import { DiscussionPage } from './pages/discussion/discussion.page';
 import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
-// import { TermsPage } from './pages/terms/terms.page';
-// import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
+import { TermsPage } from './pages/terms/terms.page';
+import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
 // import { HomePage } from './pages/home/home.page';
 import { TabsPage } from './pages/tabs/tabs';
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
@@ -67,8 +67,8 @@ const customConfig: ShareButtonsConfig = {
     CreatePostModalPage,
     DiscussionPage,
     CreateTemplateModalPage,
-    // PrivacyPolicyPage,
-    // TermsPage,
+    PrivacyPolicyPage,
+    TermsPage,
     // HomePage,
     TabsPage,
     ProfileOptionsBrowserPage,
@@ -80,8 +80,8 @@ const customConfig: ShareButtonsConfig = {
     CreatePostModalPage,
     DiscussionPage,
     CreateTemplateModalPage,
-    // PrivacyPolicyPage,
-    // TermsPage,
+    PrivacyPolicyPage,
+    TermsPage,
     // HomePage,
     TabsPage,
     ProfileOptionsBrowserPage,
