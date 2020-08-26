@@ -40,7 +40,7 @@ import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-opti
 import { AuthModalPage } from './pages/auth/auth-modal.page';
 
 // Directives
-// import { Autosize } from './directives/auto-resize-textarea/auto-resize-textarea.directive';
+import { Autosize } from './directives/auto-resize-textarea/auto-resize-textarea.directive';
 
 // FontAwesome
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -61,7 +61,7 @@ const customConfig: ShareButtonsConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    // Autosize,
+    Autosize,
     CreateCollectiveGoalPage,
     CreateGoalPage,
     CreatePostModalPage,
