@@ -1,18 +1,18 @@
-import { NgModule } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
-import { RouterModule } from '@angular/router'
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 // Ionic
-import { IonicModule } from '@ionic/angular'
+import { IonicModule } from '@ionic/angular';
 // Custom Directives
-// import { FileDropDirective } from '../directives/file-drop/file-drop.directive' // Should be imporated before ImageUploadComponent!
+import { FileDropDirective } from '../directives/file-drop/file-drop.directive'; // Should be imporated before ImageUploadComponent!
 // Share buttons
 // import { ShareButtonsModule } from '@ngx-share/buttons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // Pages
 import { NotificationOptionsPage } from './notification/popovers/notification-options/notification-options.page'
 // Text editor
-import { QuillModule } from 'ngx-quill'
+import { QuillModule } from 'ngx-quill';
 // Custom Components
 import { GoalThumbnailComponent } from './goal-thumbnail/goal-thumbnail.component';
 import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thumbnail-browser.component';
@@ -43,7 +43,7 @@ import { NotificationComponent } from './notification/notification.component'
     HeaderComponent,
     // PostComponent,
     // CountdownComponent,
-    // FileDropDirective,
+    FileDropDirective,
     ImageUploadComponent,
     ShareComponent,
     TextEditorComponent,
@@ -61,8 +61,8 @@ import { NotificationComponent } from './notification/notification.component'
     CreateGoalThumbnailComponent,
     HeaderComponent,
     // PostComponent,
-    // FileDropDirective,
-    // ImageUploadComponent,
+    FileDropDirective,
+    ImageUploadComponent,
     ShareComponent,
     TextEditorComponent,
     NotificationComponent,
