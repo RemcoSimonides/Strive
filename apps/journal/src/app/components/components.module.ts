@@ -18,8 +18,8 @@ import { GoalThumbnailComponent } from './goal-thumbnail/goal-thumbnail.componen
 import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thumbnail-browser.component';
 import { CreateGoalThumbnailComponent } from './create-goal-thumbnail/create-goal-thumbnail.component';
 import { HeaderComponent } from './header/header.component';
-// import { PostComponent } from './post/post.component'
-// import { CountdownComponent } from './countdown/countdown.component'
+import { PostComponent } from './post/post.component'
+import { CountdownComponent } from './countdown/countdown.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { ShareComponent } from './share/share.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
@@ -41,8 +41,8 @@ import { NotificationComponent } from './notification/notification.component'
     GoalThumbnailBrowserComponent,
     CreateGoalThumbnailComponent,
     HeaderComponent,
-    // PostComponent,
-    // CountdownComponent,
+    PostComponent,
+    CountdownComponent,
     FileDropDirective,
     ImageUploadComponent,
     ShareComponent,
@@ -55,12 +55,12 @@ import { NotificationComponent } from './notification/notification.component'
     NotificationOptionsPage
   ],
   exports: [
-    // CountdownComponent,
+    CountdownComponent,
     GoalThumbnailComponent,
     GoalThumbnailBrowserComponent,
     CreateGoalThumbnailComponent,
     HeaderComponent,
-    // PostComponent,
+    PostComponent,
     FileDropDirective,
     ImageUploadComponent,
     ShareComponent,

@@ -1,0 +1,31 @@
+
+.username {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+}
+
+ion-grid {
+    padding-left: 10px;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+}
+
+.date {
+    color: var(--ion-color-medium);
+}
+
+h2 {
+    color: var(--ion-color-dark);
+}
+
+p {
+    color: var(--ion-color-dark);
+}
+
+.clickable {
+    cursor: pointer;
+}
