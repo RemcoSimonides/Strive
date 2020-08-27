@@ -6,12 +6,15 @@ import { IonicModule } from '@ionic/angular';
 
 import { DiscussionPageRoutingModule } from './discussion-routing.module';
 
+import { ComponentsModule } from '../../components/components.module';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DiscussionPageRoutingModule
+    DiscussionPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [],
 })

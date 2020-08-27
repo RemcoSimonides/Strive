@@ -1,0 +1,40 @@
+.comment-wrapper {
+    display: flex;
+    min-height: 80px;
+    padding: 5px 5px 5px 5px;
+}
+
+.text-wrapper {
+    margin-left: 10px;
+}
+
+.inner {
+    border-left: 3px solid;
+    padding: 10px;
+}
+
+.path {
+    word-wrap: wrap;
+}
+
+img {
+    border-radius: 10%;
+    width: 60px;
+    height: 60px;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.date {
+    font-size: .7rem;
+    margin-left: 22px;
+}
+
+// notification
+.notification {
+    display: flex;
+    margin-left: 55px;
+    padding: 5px 5px 5px 5px;
+}

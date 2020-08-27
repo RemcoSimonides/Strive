@@ -24,7 +24,7 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { ShareComponent } from './share/share.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { NotificationComponent } from './notification/notification.component'
-// import { CommentComponent } from './comment/comment.component'
+import { CommentComponent } from './comment/comment.component';
 
 @NgModule({
   imports: [
@@ -48,7 +48,7 @@ import { NotificationComponent } from './notification/notification.component'
     ShareComponent,
     TextEditorComponent,
     NotificationComponent,
-    // CommentComponent,
+    CommentComponent,
     NotificationOptionsPage
   ],
   entryComponents: [
@@ -66,7 +66,7 @@ import { NotificationComponent } from './notification/notification.component'
     ShareComponent,
     TextEditorComponent,
     NotificationComponent,
-    // CommentComponent,
+    CommentComponent,
   ]
 })
 export class ComponentsModule { }
