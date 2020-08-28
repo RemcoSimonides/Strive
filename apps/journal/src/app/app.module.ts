@@ -39,6 +39,9 @@ import { TabsPage } from './pages/tabs/tabs';
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
 import { AuthModalPage } from './pages/auth/auth-modal.page';
 
+// Components
+import { ComponentsModule } from './components/components.module';
+
 // Directives
 import { Autosize } from './directives/auto-resize-textarea/auto-resize-textarea.directive';
 
@@ -105,7 +108,7 @@ const customConfig: ShareButtonsConfig = {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    // ComponentsModule,
+    ComponentsModule,
     // ShareButtonsModule,
     ShareModule.withConfig(customConfig),
     QuillModule.forRoot(),
