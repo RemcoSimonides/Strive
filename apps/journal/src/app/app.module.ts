@@ -20,7 +20,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 // Environments
-import { environment } from '../environments/environment';
+import { environment } from 'environments/environment';
 
 // App
 import { AppRoutingModule } from './app-routing.module';
