@@ -27,9 +27,9 @@ export class InstantSearchService {
   
   constructor() {
     this.client = algoliasearch.default(environment.algolia.appId, environment.algolia.apiKey);
-    this.goalsIndex = this.client.initIndex('dev_Goals');
-    this.collectiveGoalsIndex = this.client.initIndex('dev_CollectiveGoals');
-    this.profilesIndex = this.client.initIndex('prod_Users');
+    this.goalsIndex = this.client.initIndex(environment.algolia.indexNameGoals);
+    this.collectiveGoalsIndex = this.client.initIndex(environment.algolia.indexNameCollectiveGoals);
+    this.profilesIndex = this.client.initIndex(environment.algolia.indexNameUsers);
   }
 
   search(query: string) {
