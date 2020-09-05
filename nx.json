@@ -38,6 +38,9 @@
       "implicitDependencies": [
         "journal"
       ]
+    },
+    "backend-functions": {
+      "tags": []
     }
   }
 }

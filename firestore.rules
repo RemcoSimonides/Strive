@@ -1,0 +1,172 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // collectionGroup query security rules
+    match /{path=**}/{collection}/{doc} {
+      allow read: if collection == "CGStakeholders"
+      allow read: if collection == "GStakeholders"
+      allow read: if collection == "Spectators"
+      allow read: if collection == "Supports"
+    }
+
+    match /{path=**}/Comments/{id} {
+      allow read;
+      allow write: if isSignedIn()
+    }
+
+    match /Users/{uid} {
+
+      allow get: if isOwner(uid)
+      allow create;
+
+      match /Profile/{userId} {
+        allow read;
+        allow write: if isOwner(userId)
+      }
+
+      match /Notifications/{notificationId} {
+        allow read: if isOwner(uid)
+        allow write: if isOwner(uid)
+      }
+
+      match /Spectators/{spectatorId} {
+        allow read;
+        allow create: if isSignedIn()
+        allow write: if isOwner(spectatorId)
+      }
+
+      match /Exercises/{exerciseId} {
+        allow read;
+        allow write: if isOwner(uid)
+      }
+
+    }
+
+    match /CollectiveGoals/{collectiveGoalId} {
+
+      allow read;
+      allow create: if isSignedIn()
+      allow update: if userIsCollectiveGoalAdmin(collectiveGoalId)
+      allow delete: if userIsCollectiveGoalAdmin(collectiveGoalId)
+
+      match /CGStakeholders/{uid} {
+        allow read;
+        allow write: if userIsCollectiveGoalAdmin(collectiveGoalId) || isOwner(uid)
+      }
+
+      match /Templates/{templateId} {
+        allow read;
+        allow write: if userIsCollectiveGoalAdmin(collectiveGoalId)
+      }
+
+      match /InviteTokens/{tokenId} {
+        allow read;
+        allow create: if userIsCollectiveGoalAdmin(collectiveGoalId)
+      }
+
+    }
+
+    match /Goals/{goalId} {
+
+      allow read;
+      allow create: if isSignedIn()
+      allow update: if userIsGoalAdmin(goalId)
+      allow delete: if userIsGoalAdmin(goalId)
+
+      match /GStakeholders/{uid} {
+        allow read;
+        allow write: if userIsGoalAdmin(goalId) || isOwner(uid)
+      }
+
+      match /Milestones/{milestoneId} {
+        allow read;
+        allow write: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
+      }
+
+      match /Notifications/{notificationId} {
+        allow read;
+      }
+
+      match /Posts/{postId} {
+        allow read;
+        allow create: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
+        // update and delete not possible yet
+      }
+
+      match /Supports/{supportId} {
+        allow read;
+        allow create: if isSignedIn()
+        // update and delete not possible yet
+        allow update: if isSupporterOrReceiver(goalId, supportId)
+      }
+
+      match /InviteTokens/{tokenId} {
+        allow read;
+        allow create: if userIsGoalAdmin(goalId)
+      }
+
+    }
+
+    match /Discussions/{discussionId} {
+      allow read;
+
+      match /Comments/{commentId} {
+        allow read;
+        allow create;
+      }
+    }
+
+
+    // FUNCTIONS
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId
+    }
+
+    function existingData() {
+      return resource.data
+    }
+
+    function incomingData() {
+      return request.resource.data
+    }
+
+    function userIsCollectiveGoalAdmin(collectiveGoalId) {
+      return getCollectiveGoalStakeholder(collectiveGoalId).isAdmin ==  true;
+    }
+
+    function getCollectiveGoalStakeholder(collectiveGoalId) {
+      return  get(/databases/$(database)/documents/CollectiveGoals/$(collectiveGoalId)/CGStakeholders/$(request.auth.uid)).data
+    }
+
+    function userIsGoalAdmin(goalId) {
+      return getGoalStakeholder(goalId).isAdmin == true;
+    }
+
+    function userIsGoalAchiever(goalId) {
+      return getGoalStakeholder(goalId).isAchiever == true;
+    }
+
+    function getGoalStakeholder(goalId) {
+      return get(/databases/$(database)/documents/Goals/$(goalId)/GStakeholders/$(request.auth.uid)).data
+    }
+
+    function isSupporterOrReceiver(goalId, supportId) {
+      return (getSupport(goalId, supportId).supporter.uid == request.auth.uid || getSupport(goalId, supportId).receiver.uid == request.auth.uid)
+    }
+
+    function getSupport(goalId, supportId) {
+      return get(/databases/$(database)/documents/Goals/$(goalId)/Supports/$(supportId)).data
+    }
+
+  }
+}

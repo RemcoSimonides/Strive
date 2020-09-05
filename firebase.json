@@ -1,0 +1,47 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "functions": {
+    "predeploy": [
+      "npm run lint backend-functions",
+      "ng build backend-functions"
+    ],
+    "source": "dist/apps/backend-functions"
+  },
+  "hosting": [
+    {
+      "target": "journal",
+      "public": "dist/apps/journal/",
+      "ingore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "pubsub": {
+      "port": 8085
+    }
+  }
+}
