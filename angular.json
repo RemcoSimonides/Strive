@@ -105,6 +105,30 @@
             "passWithNoTests": true,
             "setupFile": "apps/journal/src/test-setup.ts"
           }
+        },
+        "ionic-cordova-build": {
+          "builder": "@ionic/angular-toolkit:cordova-build",
+          "options": {
+            "browserTarget": "journal:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "journal:build:production"
+            }
+          }
+        },
+        "ionic-cordova-serve": {
+          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "options": {
+            "cordovaBuildTarget": "journal:ionic-cordova-build",
+            "devServerTarget": "journal:serve"
+          },
+          "configurations": {
+            "production": {
+              "cordovaBuildTarget": "journal:ionic-cordova-build:production",
+              "devServerTarget": "journal:serve:production"
+            }
+          }
         }
       }
     },

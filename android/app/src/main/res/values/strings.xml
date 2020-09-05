@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">journal</string>
+    <string name="title_activity_main">journal</string>
+    <string name="package_name">com.strive.journal</string>
+    <string name="custom_url_scheme">com.strive.journal</string>
+</resources>
