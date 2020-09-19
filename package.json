@@ -63,6 +63,7 @@
     "@ionic/pwa-elements": "3.0.1",
     "@ngx-share/core": "7.1.4",
     "@nrwl/angular": "10.0.12",
+    "@sendgrid/mail": "^7.2.5",
     "@types/algoliasearch": "3.24.10",
     "algoliasearch": "4.4.0",
     "cordova-plugin-ionic": "5.4.7",

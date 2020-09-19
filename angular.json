@@ -94,10 +94,7 @@
               "apps/journal/tsconfig.app.json",
               "apps/journal/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/journal/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/journal/**/*"]
           }
         },
         "test": {
@@ -156,13 +153,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/journal-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/journal-e2e/**/*"
-            ]
+            "tsConfig": ["apps/journal-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/journal-e2e/**/*"]
           }
         }
       }
@@ -180,9 +172,7 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": [	
-              "apps/backend-functions/src/package.json"
-            ],
+            "assets": ["apps/backend-functions/src/package.json"],
             "buildLibsFromSource": true
           },
           "configurations": {
@@ -212,10 +202,7 @@
               "apps/backend-functions/tsconfig.app.json",
               "apps/backend-functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/backend-functions/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/backend-functions/**/*"]
           }
         },
         "test": {
@@ -225,6 +212,38 @@
             "tsConfig": "apps/backend-functions/tsconfig.spec.json",
             "passWithNoTests": true
           }
+        }
+      }
+    },
+    "interfaces": {
+      "projectType": "library",
+      "root": "libs/interfaces",
+      "sourceRoot": "libs/interfaces/src",
+      "prefix": "strive",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/interfaces/tsconfig.lib.json",
+              "libs/interfaces/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/interfaces/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/interfaces/jest.config.js",
+            "tsConfig": "libs/interfaces/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/interfaces/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }
