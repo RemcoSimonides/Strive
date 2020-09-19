@@ -20,10 +20,13 @@ import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/i
 import { CollectiveGoalAuthGuardService } from 'apps/journal/src/app/services/collective-goal/collective-goal-auth-guard.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 // Interfaces
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { ICollectiveGoalStakeholder } from 'apps/journal/src/app/interfaces/collective-goal-stakeholder.interface';
-import { IGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
+import {
+  ICollectiveGoal,
+  ICollectiveGoalStakeholder,
+  IGoal,
+  enumGoalPublicity,
+  ITemplate
+} from '@strive/interfaces';
 // Others
 import { goalSlideOptions } from '../../../theme/goal-slide-options'
 

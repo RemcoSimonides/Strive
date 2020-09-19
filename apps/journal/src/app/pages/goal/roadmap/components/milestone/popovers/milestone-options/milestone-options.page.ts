@@ -4,7 +4,7 @@ import { PopoverController, NavParams } from '@ionic/angular';
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 // Interfaces
-import { IMilestone, enumMilestoneStatus } from 'apps/journal/src/app/interfaces/milestone.interface';
+import { IMilestone, enumMilestoneStatus } from '@strive/interfaces';
 
 @Component({
   selector: 'app-milestone-options',

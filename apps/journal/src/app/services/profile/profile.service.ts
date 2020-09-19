@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 // Rxjs
 import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 // Interfaces
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
-import { first } from 'rxjs/operators';
+import { IProfile } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

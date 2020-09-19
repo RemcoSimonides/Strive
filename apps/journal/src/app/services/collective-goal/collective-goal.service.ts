@@ -8,7 +8,7 @@ import { FirestoreService } from '../firestore/firestore.service';
 import { CollectiveGoalStakeholderService } from './collective-goal-stakeholder.service';
 import { ImageService } from '../image/image.service';
 // Interfaces
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
+import { ICollectiveGoal } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

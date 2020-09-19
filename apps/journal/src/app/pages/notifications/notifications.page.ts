@@ -4,14 +4,18 @@ import { IonInfiniteScroll, ModalController, NavController, Platform } from '@io
 // Services
 import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service'
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
 // Rxjs
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 // Interfaces
-import { enumNotificationType, enumRequestStatus } from 'apps/journal/src/app/interfaces/notification.interface';
-import { enumSupportDecision } from 'apps/journal/src/app/interfaces/support.interface';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
+import {
+  enumNotificationType,
+  enumRequestStatus,
+  enumSupportDecision,
+} from '@strive/interfaces';
+// Components
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 
 @Component({

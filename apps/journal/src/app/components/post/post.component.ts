@@ -4,7 +4,7 @@ import { FirestoreService } from 'apps/journal/src/app/services/firestore/firest
 // Rxjs
 import { take } from 'rxjs/operators';
 // Interface
-import { IPost } from '../../interfaces/post.interface'
+import { IPost } from '@strive/interfaces'
 
 @Component({
   selector: 'app-post',

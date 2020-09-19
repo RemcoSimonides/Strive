@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+// Services
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
-import { IBucketList, enumPrivacy } from 'apps/journal/src/app/interfaces/exercises.interface';
-import { ModalController } from '@ionic/angular';
+// Interfaces
+import { IBucketList, enumPrivacy } from '@strive/interfaces';
 
 @Component({
   selector: 'app-exercise-bucketlist',

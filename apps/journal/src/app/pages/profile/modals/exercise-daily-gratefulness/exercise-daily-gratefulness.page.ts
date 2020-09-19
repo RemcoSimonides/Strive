@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
 // Interfaces
-import { IDailyGratefulness } from 'apps/journal/src/app/interfaces/exercises.interface';
+import { IDailyGratefulness } from '@strive/interfaces';
 
 @Component({
   selector: 'app-exercise-daily-gratefulness',

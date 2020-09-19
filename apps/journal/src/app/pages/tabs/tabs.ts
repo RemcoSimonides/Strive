@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+// Rxjs
+import { Subscription } from 'rxjs';
 // Services
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ScreensizeService } from 'apps/journal/src/app/services/screensize/screensize.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'tabs.html',

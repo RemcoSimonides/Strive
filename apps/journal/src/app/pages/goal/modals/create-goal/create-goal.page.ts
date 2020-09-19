@@ -9,8 +9,11 @@ import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
 
 //Interfaces
-import { IGoal, enumGoalPublicity } from '../../../../interfaces/goal.interface'
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
+import { 
+  IGoal,
+  enumGoalPublicity,
+  ICollectiveGoal
+} from '@strive/interfaces'
 
 @Component({
   selector: 'app-create-goal',

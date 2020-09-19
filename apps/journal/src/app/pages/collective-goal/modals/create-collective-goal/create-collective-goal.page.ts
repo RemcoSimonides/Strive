@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // Ionic
 import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular';
 // Interface
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
+import { ICollectiveGoal } from '@strive/interfaces';
 // Service
 import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';

@@ -3,8 +3,12 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '../firestore/firestore.service';
 // Interfaces
-import { enumNotificationType, INotificationWithPostAndSupports, INotification } from 'apps/journal/src/app/interfaces/notification.interface';
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
+import {
+  enumNotificationType,
+  INotificationWithPostAndSupports,
+  INotification,
+  IProfile
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

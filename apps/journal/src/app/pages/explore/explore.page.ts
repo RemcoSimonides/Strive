@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 // Services
 import { InstantSearchService } from 'apps/journal/src/app/services/instant-search/instant-search.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-// Interfaces
+// Other
 import { goalSlideOptions } from '../../../theme/goal-slide-options'
 
 @Component({

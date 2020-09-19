@@ -8,8 +8,10 @@ import { FirestoreService } from '../firestore/firestore.service';
 import { ProfileService } from '../profile/profile.service';
 import { AuthService } from '../auth/auth.service';
 // Interfaces
-import { ISpectator } from 'apps/journal/src/app/interfaces/user-spectator.interface';
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
+import {
+  ISpectator,
+  IProfile
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

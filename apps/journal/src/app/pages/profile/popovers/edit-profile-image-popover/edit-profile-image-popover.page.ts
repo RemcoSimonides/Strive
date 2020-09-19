@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { PopoverController } from '@ionic/angular';
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
+// Services
+import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ProfileService } from 'apps/journal/src/app/services/profile/profile.service';
-
-import { Plugins } from '@capacitor/core';
-const { Camera } = Plugins;
+import { ImageService } from 'apps/journal/src/app/services/image/image.service';
+// Interfaces
+import { IProfile } from '@strive/interfaces';
 
 @Component({
   selector: 'app-edit-profile-image-popover',

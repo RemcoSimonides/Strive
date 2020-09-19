@@ -6,8 +6,13 @@ import { take, first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../firestore/firestore.service'
 // Interfaces
-import { IMilestone, IMilestoneTemplabeObject, enumMilestoneStatus, IMilestonesLeveled } from '../../interfaces/milestone.interface';
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
+import {
+  IMilestone,
+  IMilestoneTemplabeObject,
+  enumMilestoneStatus,
+  IMilestonesLeveled,
+  ITemplate
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

@@ -6,8 +6,11 @@ import { LoadingController } from '@ionic/angular';
 import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
 // Interfaces
-import { IMilestonesLeveled, enumMilestoneStatus } from '../../../../../interfaces/milestone.interface';
-import { IGoal } from 'apps/journal/src/app/interfaces/goal.interface';
+import { 
+  IGoal,
+  IMilestonesLeveled,
+  enumMilestoneStatus
+} from '@strive/interfaces';
 // Other
 import { RouterPage } from '../../../../../shared/ionViewDidEnter-replacement';
 

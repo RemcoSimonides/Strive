@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
+// Services
+import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+// Components
 import { enumAuthSegment, AuthModalPage } from 'apps/journal/src/app/pages/auth/auth-modal.page';
 
 @Component({

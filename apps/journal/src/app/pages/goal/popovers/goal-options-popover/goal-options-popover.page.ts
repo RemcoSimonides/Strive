@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular'
 // Services
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
-import { enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
+// Interfaces
+import { enumGoalPublicity } from '@strive/interfaces';
 
 @Component({
   selector: 'app-goal-options-popover',

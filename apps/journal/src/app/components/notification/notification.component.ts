@@ -7,14 +7,19 @@ import { take } from 'rxjs/operators';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service';
 // Pages
 import { ChooseAchieverModalPage } from 'apps/journal/src/app/pages/notifications/modals/choose-achiever-modal/choose-achiever-modal.page';
 import { NotificationOptionsPage } from './popovers/notification-options/notification-options.page';
 // Interfaces
-import { enumNotificationType, enumRequestStatus, INotificationGoalRequest, INotificationWithPostAndSupports } from 'apps/journal/src/app/interfaces/notification.interface';
-import { enumSupportDecision, INotificationSupport } from 'apps/journal/src/app/interfaces/support.interface';
-import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service';
-import { IGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
+import { 
+  enumNotificationType,
+  enumRequestStatus,
+  INotificationGoalRequest,
+  INotificationWithPostAndSupports,
+  enumSupportDecision,
+  INotificationSupport, 
+  IGoalStakeholder } from '@strive/interfaces';
 
 @Component({
   selector: 'app-notification',

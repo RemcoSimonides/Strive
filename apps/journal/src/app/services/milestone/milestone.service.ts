@@ -3,8 +3,11 @@ import { Injectable } from '@angular/core';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 // Interfaces
-import { IMilestone, enumMilestoneStatus } from 'apps/journal/src/app/interfaces/milestone.interface';
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
+import {
+  IMilestone,
+  enumMilestoneStatus,
+  IProfile
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

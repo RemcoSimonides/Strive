@@ -9,8 +9,12 @@ import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { DiscussionService } from 'apps/journal/src/app/services/discussion/discussion.service';
 import { DiscussionPaginationService } from 'apps/journal/src/app/services/pagination/discussion-pagination.service';
 // Interfaces
-import { IDiscussion, enumDiscussionAudience } from 'apps/journal/src/app/interfaces/discussion.interface';
-import { IComment, enumCommentType } from 'apps/journal/src/app/interfaces/comment.interface';
+import {
+  IDiscussion,
+  enumDiscussionAudience,
+  IComment,
+  enumCommentType
+} from '@strive/interfaces'
 
 @Component({
   selector: 'app-discussion',

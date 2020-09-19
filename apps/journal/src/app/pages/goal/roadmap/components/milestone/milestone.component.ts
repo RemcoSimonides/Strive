@@ -3,16 +3,20 @@ import { AlertController, ModalController, PopoverController } from '@ionic/angu
 // Pages
 import { CreatePostModalPage } from '../../../posts/create-post-modal/create-post-modal.page';
 import { AddSupportModalPage } from '../../../modals/add-support-modal/add-support-modal.page';
+import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-options.page';
 // Services
 import { PostService } from 'apps/journal/src/app/services/post/post.service';
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 // Interfaces
-import { IMilestone, enumMilestoneStatus } from 'apps/journal/src/app/interfaces/milestone.interface';
-import { IPost, enumPostSource } from 'apps/journal/src/app/interfaces/post.interface';
-import { IGoal } from 'apps/journal/src/app/interfaces/goal.interface';
-import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-options.page';
+import {
+  IMilestone,
+  enumMilestoneStatus,
+  IPost,
+  enumPostSource,
+  IGoal
+} from '@strive/interfaces'
 
 @Component({
   selector: 'app-milestone',

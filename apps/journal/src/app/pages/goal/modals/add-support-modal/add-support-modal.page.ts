@@ -10,9 +10,12 @@ import { GoalStakeholderService } from '../../../../services/goal/goal-stakehold
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { SupportService } from 'apps/journal/src/app/services/support/support.service'
 // Interfaces
-import { IMilestone } from 'apps/journal/src/app/interfaces/milestone.interface';
-import { ISupport } from 'apps/journal/src/app/interfaces/support.interface';
-import { IGoal } from 'apps/journal/src/app/interfaces/goal.interface';
+import {
+  IMilestone,
+  ISupport,
+  IGoal,
+} from '@strive/interfaces'
+// Components
 import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/auth-modal.page';
 
 @Component({

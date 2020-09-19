@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '../firestore/firestore.service';
-import { IComment } from 'apps/journal/src/app/interfaces/comment.interface';
+import { IComment } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

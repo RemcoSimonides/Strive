@@ -1,9 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-// Ionic
-import { ToastController } from '@ionic/angular';
-// Services
-import { GoalAuthGuardService } from '../../services/goal/goal-auth-guard.service';
 
 @Component({
   selector: 'app-goal-thumbnail',

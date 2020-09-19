@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '../firestore/firestore.service';
 // Interfaces
-import { IPost, enumPostSource } from 'apps/journal/src/app/interfaces/post.interface';
+import { IPost, enumPostSource } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

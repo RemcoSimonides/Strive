@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 // Ionic
 import { NavParams, ModalController } from '@ionic/angular';
 // Interfaces
-import { IGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
+import { IGoalStakeholder } from '@strive/interfaces';
 
 @Component({
   selector: 'app-choose-achiever-modal',

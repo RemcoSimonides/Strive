@@ -8,8 +8,10 @@ import { ImageService } from 'apps/journal/src/app/services/image/image.service'
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 
 // Interfaces
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
+import {
+  ICollectiveGoal,
+  ITemplate
+} from '@strive/interfaces';
 
 @Component({
   selector: 'app-create-template-modal',

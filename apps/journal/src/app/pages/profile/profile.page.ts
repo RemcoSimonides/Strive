@@ -5,6 +5,7 @@ import { PopoverController, Platform, NavController, ModalController } from '@io
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ProfileService } from 'apps/journal/src/app/services/profile/profile.service';
 import { UserSpectateService } from 'apps/journal/src/app/services/user/user-spectate.service';
+import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 // import { FcmService } from 'src/app/services/fcm/fcm.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
@@ -19,15 +20,20 @@ import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/e
 import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefulness/exercise-daily-gratefulness.page';
 import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page';
 // Interfaces
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
-import { IGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { enumGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
-import { ISpectator } from 'apps/journal/src/app/interfaces/user-spectator.interface';
+import {
+  IProfile,
+  IGoal,
+  enumGoalPublicity,
+  enumGoalStakeholder,
+  ISpectator,
+  IAffirmations,
+  IBucketList,
+  enumPrivacy,
+  IBucketListItem
+} from '@strive/interfaces';
 // Other
 import { goalSlideOptions } from '../../../theme/goal-slide-options'
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-import { IAffirmations, IBucketList, enumPrivacy, IBucketListItem } from 'apps/journal/src/app/interfaces/exercises.interface';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 
 

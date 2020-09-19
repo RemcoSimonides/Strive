@@ -10,9 +10,12 @@ import { GoalService } from '../goal/goal.service';
 import { GoalStakeholderService } from './goal-stakeholder.service';
 
 //Interfaces
-import { IGoal, enumGoalPublicity } from '../../interfaces/goal.interface'
-import { IGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
-import { ICollectiveGoalStakeholder } from 'apps/journal/src/app/interfaces/collective-goal-stakeholder.interface';
+import {
+  IGoal,
+  enumGoalPublicity,
+  IGoalStakeholder,
+  ICollectiveGoalStakeholder
+} from '@strive/interfaces'
 
 @Injectable({
   providedIn: 'root'

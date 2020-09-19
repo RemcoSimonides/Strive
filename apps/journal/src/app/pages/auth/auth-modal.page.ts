@@ -21,11 +21,13 @@ import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 
 // Interfaces
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface'
-import { IGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
+import { 
+  IProfile,
+  ITemplate,
+  ICollectiveGoal,
+  enumGoalPublicity,
+  IGoalStakeholder
+} from '@strive/interfaces';
 
 @Component({
   selector: 'app-auth-modal',

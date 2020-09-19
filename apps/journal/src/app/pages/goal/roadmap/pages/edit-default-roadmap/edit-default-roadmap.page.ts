@@ -11,9 +11,12 @@ import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 // Interfaces
-import { IGoal } from 'apps/journal/src/app/interfaces/goal.interface';
-import { IMilestoneTemplabeObject, IMilestone } from 'apps/journal/src/app/interfaces/milestone.interface';
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
+import { 
+  IGoal,
+  IMilestoneTemplabeObject,
+  IMilestone,
+  ITemplate
+} from '@strive/interfaces';
 
 @Component({
   selector: 'app-edit-default-roadmap',

@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../firestore/firestore.service';
 // Interfaces
-import { IAffirmations, IBucketList, IDailyGratefulness } from 'apps/journal/src/app/interfaces/exercises.interface';
+import { IAffirmations, IBucketList, IDailyGratefulness } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

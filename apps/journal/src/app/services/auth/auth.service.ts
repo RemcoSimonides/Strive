@@ -8,8 +8,10 @@ import { switchMap, first } from 'rxjs/operators';
 //Services
 import { FirestoreService } from '../../services/firestore/firestore.service';
 //Interfaces
-import { IProfile } from '../../interfaces/profile.interface';
-import { IUser } from '../../interfaces/user.interface';
+import { 
+  IProfile, 
+  IUser
+} from '@strive/interfaces';
 import { Router } from '@angular/router';
 
 @Injectable({

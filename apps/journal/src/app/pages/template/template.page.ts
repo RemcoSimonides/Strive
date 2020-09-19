@@ -6,6 +6,8 @@ import { Observable, empty, Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 // Pages / Popover / Modal
 import { TemplateOptionsPopoverPage, enumTemplateOptions } from './popovers/template-options-popover/template-options-popover.page';
+import { CreateTemplateModalPage } from './modals/create-template-modal/create-template-modal.page';
+import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 // Services
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
@@ -14,16 +16,16 @@ import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.se
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
 import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
-// Interfaces
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
-import { IMilestonesLeveled } from 'apps/journal/src/app/interfaces/milestone.interface';
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { CreateTemplateModalPage } from './modals/create-template-modal/create-template-modal.page';
-import { enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
-import { IGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+// Interfaces
+import {
+  ITemplate,
+  IMilestonesLeveled,
+  ICollectiveGoal,
+  enumGoalPublicity,
+  IGoalStakeholder
+} from '@strive/interfaces';
 
 @Component({
   selector: 'app-template',

@@ -6,7 +6,7 @@ import { first } from 'rxjs/operators';
 import { FirestoreService } from '../firestore/firestore.service';
 import { ImageService } from '../image/image.service';
 // Interfaces
-import { ITemplate } from 'apps/journal/src/app/interfaces/template.interface';
+import { ITemplate } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

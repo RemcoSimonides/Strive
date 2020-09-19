@@ -25,9 +25,13 @@ import { AddSupportModalPage } from './modals/add-support-modal/add-support-moda
 import { DiscussionPage } from '../discussion/discussion.page';
 import { CreatePostModalPage } from './posts/create-post-modal/create-post-modal.page';
 // Interfaces
-import { IGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { IGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
-import { IPost, enumPostSource } from 'apps/journal/src/app/interfaces/post.interface';
+import {
+  IGoal,
+  enumGoalPublicity,
+  IGoalStakeholder,
+  IPost,
+  enumPostSource
+} from '@strive/interfaces';
 
 import { Plugins } from '@capacitor/core';
 const { Share } = Plugins;

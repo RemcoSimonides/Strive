@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IComment, enumCommentType } from 'apps/journal/src/app/interfaces/comment.interface';
+import { IComment, enumCommentType } from '@strive/interfaces';
 
 @Component({
   selector: 'app-comment',

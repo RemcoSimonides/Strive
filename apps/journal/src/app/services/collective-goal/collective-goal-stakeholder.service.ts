@@ -5,9 +5,11 @@ import { take, switchMap, first } from 'rxjs/operators';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 // Interfaces
-import { ICollectiveGoalStakeholder } from 'apps/journal/src/app/interfaces/collective-goal-stakeholder.interface';
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
+import {
+  ICollectiveGoalStakeholder,
+  ICollectiveGoal,
+  IProfile
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

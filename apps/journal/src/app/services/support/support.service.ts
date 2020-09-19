@@ -5,9 +5,14 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '../firestore/firestore.service';
 import { RoadmapService } from '../roadmap/roadmap.service';
 // Interfaces
-import { IGoal } from 'apps/journal/src/app/interfaces/goal.interface';
-import { IMilestone } from 'apps/journal/src/app/interfaces/milestone.interface';
-import { ISupport, enumSupportStatus, enumSupportDecision, INotificationSupport } from 'apps/journal/src/app/interfaces/support.interface';
+import {
+  IGoal,
+  IMilestone,
+  ISupport,
+  enumSupportStatus,
+  enumSupportDecision,
+  INotificationSupport
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

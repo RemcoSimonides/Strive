@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FirestoreService } from '../firestore/firestore.service';
 import { AuthService } from '../auth/auth.service';
 // Interface
-import { IUser } from 'apps/journal/src/app/interfaces/user.interface';
+import { IUser } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

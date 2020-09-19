@@ -9,13 +9,16 @@ import { map, take } from 'rxjs/operators'
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 
 // Interfaces
-import { IUser } from '../../interfaces/user.interface';
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
-import { IGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { enumGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
+import { 
+  IUser,
+  IGoal,
+  enumGoalPublicity,
+  ICollectiveGoal,
+  enumGoalStakeholder
+} from '@strive/interfaces';
 
 // Pages
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';

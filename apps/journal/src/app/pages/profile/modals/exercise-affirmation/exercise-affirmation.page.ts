@@ -6,7 +6,7 @@ import { ExerciseAffirmationExplanationPage } from './popovers/exercise-affirmat
 // Services
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 // Interfaces
-import { IAffirmations } from 'apps/journal/src/app/interfaces/exercises.interface';
+import { IAffirmations } from '@strive/interfaces';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
 
 @Component({

@@ -7,9 +7,13 @@ import { FirestoreService } from '../firestore/firestore.service';
 import { Observable, combineLatest, of } from 'rxjs';
 import { take, switchMap, first } from 'rxjs/operators';
 // Interfaces
-import { IGoalStakeholder, enumGoalStakeholder } from 'apps/journal/src/app/interfaces/goal-stakeholder.interface';
-import { IGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { IProfile } from 'apps/journal/src/app/interfaces/profile.interface';
+import {
+  IGoalStakeholder,
+  enumGoalStakeholder,
+  IGoal,
+  enumGoalPublicity,
+  IProfile
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

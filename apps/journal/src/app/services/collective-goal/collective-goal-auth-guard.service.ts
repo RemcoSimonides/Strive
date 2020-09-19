@@ -5,8 +5,10 @@ import { AuthService } from '../auth/auth.service';
 import { CollectiveGoalService } from './collective-goal.service';
 import { CollectiveGoalStakeholderService } from './collective-goal-stakeholder.service';
 // Interfaces
-import { ICollectiveGoal } from 'apps/journal/src/app/interfaces/collective-goal.interface';
-import { ICollectiveGoalStakeholder } from 'apps/journal/src/app/interfaces/collective-goal-stakeholder.interface';
+import {
+  ICollectiveGoal,
+  ICollectiveGoalStakeholder
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
-import { IGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
+import { IGoal, enumGoalPublicity } from '@strive/interfaces';
 
 @Component({
   selector: 'app-goal-share-popover',

@@ -8,8 +8,12 @@ import { first } from 'rxjs/operators';
 import { GoalStakeholderService } from './goal-stakeholder.service';
 import { ImageService } from '../image/image.service';
 // Interfaces
-import { IGoal, EmptyGoal, enumGoalPublicity } from 'apps/journal/src/app/interfaces/goal.interface';
-import { IMilestoneTemplabeObject } from 'apps/journal/src/app/interfaces/milestone.interface';
+import {
+  IGoal,
+  EmptyGoal,
+  enumGoalPublicity,
+  IMilestoneTemplabeObject
+} from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'

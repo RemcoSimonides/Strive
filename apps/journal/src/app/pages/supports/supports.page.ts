@@ -3,13 +3,17 @@ import { NavController, Platform, ModalController } from '@ionic/angular';
 // angularfire
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 // services
+import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { SupportService } from 'apps/journal/src/app/services/support/support.service';
 // rxjs
 import { Observable } from 'rxjs';
 // interfaces
-import { ISupport, enumSupportStatus } from 'apps/journal/src/app/interfaces/support.interface';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import {
+  ISupport,
+  enumSupportStatus
+} from '@strive/interfaces';
+// components
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 
 @Component({
