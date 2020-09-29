@@ -178,6 +178,4 @@ export class SupportService {
     return newSupport
 
   }
-
-
 }

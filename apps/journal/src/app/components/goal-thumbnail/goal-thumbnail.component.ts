@@ -1,12 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-goal-thumbnail',
   templateUrl: './goal-thumbnail.component.html',
   styleUrls: ['./goal-thumbnail.component.scss'],
 })
-export class GoalThumbnailComponent implements OnInit {
+export class GoalThumbnailComponent {
 
   _imageThumbURL: string
 
@@ -15,6 +16,7 @@ export class GoalThumbnailComponent implements OnInit {
   @Input() numberOfSupporters: number
   @Input() numberOfAchievers: number
   @Input() numberOfTimesUsed: number
+  @Input() deadline
   @Input() isCollectiveGoal: boolean
   @Input() isTemplate: boolean
   @Input() isFinished: boolean
@@ -29,9 +31,8 @@ export class GoalThumbnailComponent implements OnInit {
 
   constructor(
     private router: Router,
+    public _platform: Platform
   ) { }
-
-  ngOnInit() {}
 
   async navToGoal(): Promise<void> {
 

@@ -67,9 +67,7 @@ export class ProfilePage implements OnInit {
   public profileDocObs: Observable<IProfile>
 
   public _achievingGoalsColObs: Observable<IGoal[]>
-  public _acheivingFinishedGoalsColObs: Observable<IGoal[]>
   public _supportingGoalsColObs: Observable<IGoal[]>
-  public _supportingFinishedGoalsColObs: Observable<IGoal[]>
 
   public _profile = <IProfile>{}
   private originalProfile = <IProfile>{}
@@ -104,7 +102,6 @@ export class ProfilePage implements OnInit {
     this._pageIsLoading = true
     this._profileId = this.route.snapshot.paramMap.get('id')
     const { uid } = await this.authService.afAuth.currentUser
-    
     if (this._profileId === 'undefined') {
       if (await this.authService.isLoggedIn()) {
         this.router.navigateByUrl(`profile/${uid}`)
@@ -146,10 +143,8 @@ export class ProfilePage implements OnInit {
       title: `${this._profile.username} - Strive Journal`
     })
 
-    this._achievingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.achiever, !this._isOwner, true)
-    this._acheivingFinishedGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.achiever, !this._isOwner, false)
-    this._supportingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.supporter, !this._isOwner, true)
-    this._supportingFinishedGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.supporter, !this._isOwner, false)
+    this._achievingGoalsColObs = this.goalStakeholderService.getGoals2(this._profileId, enumGoalStakeholder.achiever);
+    this._supportingGoalsColObs = this.goalStakeholderService.getGoals2(this._profileId, enumGoalStakeholder.supporter)
     this._pageIsLoading = false
 
   }

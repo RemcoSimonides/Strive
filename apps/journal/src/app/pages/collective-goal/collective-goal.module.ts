@@ -14,6 +14,10 @@ import { ComponentsModule } from '../../components/components.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CollectiveGoalAuthGuardService } from '../../services/collective-goal/collective-goal-auth-guard.service';
 
+// Strive
+import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
+import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
+
 const routes: Routes = [
   {
     path: '',
@@ -31,6 +35,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
+    // Strive
+    ThumbnailListModule,
+    ThumbnailListPipeModule
   ],
   declarations: [
     CollectiveGoalPage,

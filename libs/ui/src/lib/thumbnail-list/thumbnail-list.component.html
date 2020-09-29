@@ -1,0 +1,102 @@
+<!-- Mobile -->
+<ng-container *ngIf="_platform.is('android') || _platform.is('ios') else browser">
+
+  <ion-slides [options]="_goalSlideOptions">
+    <!-- CREATE -->
+    <ng-container *ngIf="canCreate">
+      <ion-slide>
+        <app-create-thumbnail [type]="type"></app-create-thumbnail>
+      </ion-slide>
+    </ng-container>
+
+    <ng-container *ngFor="let thumb of thumbnails">
+      <ion-slide>
+
+        <!-- THUMBNAIL -->
+        <ion-card (click)="navTo(thumb.id)">
+          <section class="image-container">
+            <img class="isFinished" [src]="thumb.image"/>
+
+            <ng-container *ngIf="thumb.isFinished">
+              <div class="after">finished</div>
+            </ng-container>
+
+          </section>
+          <ion-card-content class="ion-no-padding content-container">
+            <ion-grid class="ion-no-padding">
+              <ion-row class="ion-no-padding">
+                <ion-col size="12">
+                  <h2 class="card-title">
+
+                    <!-- <ng-container *ngIf="!thumb.isPublic">
+                      <ion-icon name="lock-closed"></ion-icon>
+                    </ng-container> -->
+
+                    {{ thumb.title }}
+                  </h2>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="description">
+                <!-- Details -->
+                <ng-container
+                  *ngIf="detailsTemplateRef"
+                  [ngTemplateOutlet]="detailsTemplateRef"
+                  [ngTemplateOutletContext]="{$implicit:thumb}"
+                ></ng-container>
+              </ion-row>
+
+            </ion-grid>
+            
+            <ng-container *ngIf="thumb.isFinished">
+              <div class="finished"></div>
+            </ng-container>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-slide>
+    </ng-container>
+  </ion-slides>
+
+</ng-container>
+
+<!-- Browser -->
+<ng-template #browser>
+  <section class="browser-container">
+
+    <!-- CREATE -->
+    <ng-container *ngIf="canCreate">
+      <app-create-thumbnail [type]="type" [collectiveGoalId]=""></app-create-thumbnail>
+    </ng-container>
+
+    <ng-container *ngFor="let thumb of thumbnails">
+
+      <!-- THUMBNAIL -->
+      <section class="clickable margin" (click)="navTo(thumb.id)">
+        <div class="image-container">
+          <img class="isFinished" [src]="thumb.image"/>
+
+          <ng-container *ngIf="thumb.isFinished">
+            <div class="finished">finished</div>
+          </ng-container>
+        </div>
+        <div class="description-container">
+          <div class="wrap details">
+
+            <!-- Details -->
+            <ng-container
+              *ngIf="detailsTemplateRef"
+              [ngTemplateOutlet]="detailsTemplateRef"
+              [ngTemplateOutletContext]="{$implicit:thumb}"
+            ></ng-container>
+
+          </div>
+          <div class="title">
+            {{ thumb.title }}
+          </div> 
+        </div>
+      </section>
+
+    </ng-container>
+  </section>
+</ng-template>

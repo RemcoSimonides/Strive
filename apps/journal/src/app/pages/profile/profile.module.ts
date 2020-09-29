@@ -17,6 +17,10 @@ import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefuln
 import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page'
 import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/exercise-dear-future-self.page'
 
+// Strive
+import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
+import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
+
 const routes: Routes = [
   { path: '', component: ProfilePage },
 ];
@@ -29,6 +33,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
+    ThumbnailListPipeModule,
+    ThumbnailListModule
   ],
   declarations: [
     ProfilePage,

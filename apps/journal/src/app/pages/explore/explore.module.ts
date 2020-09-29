@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 
 import { ExplorePage } from './explore.page';
 
+// Strive
+import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module'
+import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
 
 import { ComponentsModule } from '../../components/components.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -28,6 +31,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
+    ThumbnailListModule,
+    ThumbnailListPipeModule
   ],
   declarations: [
     ExplorePage,

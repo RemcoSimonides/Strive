@@ -15,6 +15,24 @@ import {
   IMilestoneTemplabeObject
 } from '@strive/interfaces';
 
+export interface goalArgs {
+  title: string;
+  description?: string;
+  shortDescription: string;
+  publicity: enumGoalPublicity;
+  deadline: string;
+  image?: string;
+  milestoneTemplateObject?: IMilestoneTemplabeObject[];
+}
+
+export interface collectiveGoalArgs {
+  id: string
+  title: string;
+  isPublic: boolean;
+  image: string;
+  deadline?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -151,22 +169,4 @@ export class GoalService {
 
   }
 
-}
-
-export interface goalArgs {
-  title: string;
-  description?: string;
-  shortDescription: string;
-  publicity: enumGoalPublicity;
-  deadline: string;
-  image?: string;
-  milestoneTemplateObject?: IMilestoneTemplabeObject[];
-}
-
-export interface collectiveGoalArgs {
-  id: string
-  title: string;
-  isPublic: boolean;
-  image: string;
-  deadline?: string;
 }

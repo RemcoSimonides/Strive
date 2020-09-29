@@ -51,5 +51,4 @@ export class NotificationService {
     await this.db.doc(reference).delete()
 
   }
-
 }

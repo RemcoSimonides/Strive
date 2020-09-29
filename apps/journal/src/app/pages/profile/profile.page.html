@@ -105,123 +105,40 @@
 
     </div>
 
+    <!-- Achieving Goals overview -->
     <h3 class="padding">Achieving Goals</h3>
-    <span class="padding" *ngIf="(_achievingGoalsColObs | async)?.length === 0">Not achieving any goals</span>
 
-    <!-- Mobile -->
-    <div *ngIf="_platform.is('android') || _platform.is('ios')">
-      <ion-slides [options]="_goalSlideOptions">
-        <ion-slide *ngFor="let goal of (_achievingGoalsColObs | async)">
-          <app-goal-thumbnail
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-          ></app-goal-thumbnail>
-        </ion-slide>
-        <ion-slide *ngFor="let goal of (_acheivingFinishedGoalsColObs | async)">
-          <app-goal-thumbnail
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-          ></app-goal-thumbnail>
-        </ion-slide>
-      </ion-slides>
-    </div>
+    <ng-container *ngIf="_achievingGoalsColObs | async as achievingGoals">
+      <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
 
-    <!-- Browser -->
-    <div *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
-      <div class="container">
-        <app-goal-thumbnail-browser *ngFor="let goal of (_achievingGoalsColObs | async)"
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-        ></app-goal-thumbnail-browser>
-        <app-goal-thumbnail-browser *ngFor="let goal of (_acheivingFinishedGoalsColObs | async)"
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-        ></app-goal-thumbnail-browser>
-      </div>
-    </div>
+        <thumbnail-list
+          [thumbnails]="achievingGoals | toThumbnailList:'goal'"
+          type="goal"
+        ></thumbnail-list>
+          
+      </ng-container>
+      <ng-template #noAchievingGoals>
+        <span class="padding">Not achieving any goals</span>
+      </ng-template>
+    </ng-container>
 
+    <!-- Supporting Goals overview -->
     <h3 class="padding">Supporting Goals</h3>
-    <span class="padding" *ngIf="(_supportingGoalsColObs | async)?.length === 0">Not supporting any goals</span>
 
-    <!-- Mobile -->
-    <div *ngIf="_platform.is('android') || _platform.is('ios')">
-      <ion-slides [options]="_goalSlideOptions">
-        <ion-slide *ngFor="let goal of (_supportingGoalsColObs | async)">
-          <app-goal-thumbnail
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-          ></app-goal-thumbnail>
-        </ion-slide>
-        <ion-slide *ngFor="let goal of (_supportingFinishedGoalsColObs | async)">
-          <app-goal-thumbnail
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-          ></app-goal-thumbnail>
-        </ion-slide>
-      </ion-slides>
-    </div>
+    <ng-container *ngIf="_supportingGoalsColObs | async as supportingGoals">
+      <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
 
-    <!-- Browser -->
-    <div *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
-      <div class="container">
-        <app-goal-thumbnail-browser *ngFor="let goal of (_supportingGoalsColObs | async)"
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-        ></app-goal-thumbnail-browser>
-        <app-goal-thumbnail-browser *ngFor="let goal of (_supportingFinishedGoalsColObs | async)"
-            [id]="goal.id"
-            [title]="goal.title"
-            [image]="goal.image"
-            [numberOfAchievers]="goal.numberOfAchievers"
-            [numberOfSupporters]="goal.numberOfSupporters"
-            [isCollectiveGoal]="false"
-            [isFinished]="goal.isFinished"
-            [isPublic]="(goal.publicity <= enumGoalPublicity.collectiveGoalOnly)"
-        ></app-goal-thumbnail-browser>
-      </div>
-    </div>
+        <thumbnail-list
+          [thumbnails]="supportingGoals | toThumbnailList:'goal'"
+          type="goal"
+        ></thumbnail-list>
+
+      </ng-container>
+      <ng-template #noSupportingGoals>
+        <span class="padding">Not supporting any goals</span>
+      </ng-template>
+    </ng-container>
+
 
     <div class="exercise-wrapper" *ngIf="_isOwner">
       <h3 class="padding">Exercises</h3>

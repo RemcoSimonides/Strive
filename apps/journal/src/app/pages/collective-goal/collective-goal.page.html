@@ -57,7 +57,7 @@
             </ion-col>
             <ion-col size-xs="12" size-sm="4" size-md="4" size-lg="4" size-xl="4">
                 <span class="image-container">
-                  <img class="collectiveGoal-image" src="{{ collectiveGoal.image }}"/>
+                  <img class="collectiveGoal-image" [src]="collectiveGoal.image"/>
                   <!-- <div class="after" *ngIf="collectiveGoal.isFinished">finished</div> TODO: can collective goal be finished? -->
                 </span>
               </ion-col>
@@ -73,126 +73,52 @@
     </div>
   </div>
 
+  <!-- Templates overview -->
+  <ng-container *ngIf="templateColObs | async as templates">
+    <h3 class="padding">Templates</h3>
 
-  <div *ngIf="templateColObs | async as templates">
-    <div *ngIf="templates.length > 0 || _isAdmin">
-      <h3 class="padding">Templates</h3>
-      <span class="padding" *ngIf="templates.length === 0">No templates available yet</span>
-
-      <!-- Mobile -->
-      <div *ngIf="_platform.is('android') || _platform.is('ios')">
-        <ion-slides [options]="_goalSlideOptions">
-          <ion-slide *ngIf="_isAdmin">
-            <app-create-goal-thumbnail
-              [limitReached]="false"
-              [isTemplate]="true"
-              [collectiveGoalId]="collectiveGoalId"
-            ></app-create-goal-thumbnail>
-          </ion-slide>
-          <ion-slide *ngFor="let template of templates">
-            <app-goal-thumbnail 
-              [id]="template.id"
-              [title]="template.title"
-              [image]="template.goalImage" 
-              [numberOfTimesUsed]="template.numberOfTimesUsed"
-              [isTemplate]="true"
-              [isPublic]="true"
-            ></app-goal-thumbnail>
-          </ion-slide>
-        </ion-slides>
-      </div>
-
-      <!-- Browser -->
-      <div *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
-        <div class="container">
-          <app-create-goal-thumbnail *ngIf="_isAdmin"
-            [limitReached]="false"
-            [isTemplate]="true"
-            [collectiveGoalId]="collectiveGoalId"
-          ></app-create-goal-thumbnail>
-          <app-goal-thumbnail-browser *ngFor="let template of templates"
-              [id]="template.id"
-              [title]="template.title"
-              [image]="template.goalImage"
-              [numberOfTimesUsed]="template.numberOfTimesUsed"
-              [isTemplate]="true"
-              [isPublic]="true"
-          ></app-goal-thumbnail-browser>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 class="padding">Goals</h3>
-  <span class="padding" *ngIf="(goalColObs | async)?.length === 0">No goals yet</span>
-
-  <!-- Mobile -->
-  <div *ngIf="_platform.is('android') || _platform.is('ios')">
-    <ion-slides [options]="_goalSlideOptions">
-      <ion-slide *ngIf="_isLoggedIn && (_isAdmin || (collectiveGoalDocObs | async)?.isPublic)">
-        <app-create-goal-thumbnail
-          [limitReached]="false"
-          [collectiveGoalId]="collectiveGoalId"
-        ></app-create-goal-thumbnail>
-      </ion-slide>
-      <ion-slide *ngFor="let goal of goalColObs | async">
-        <app-goal-thumbnail 
-          [id]="goal.id"
-          [title]="goal.title"
-          [image]="goal.image" 
-          [numberOfSupporters]="goal.numberOfSupporters" 
-          [numberOfAchievers]="goal.numberOfAchievers"
-          [isCollectiveGoal]="false" 
-          [isFinished]="goal.isFinished"
-          [isPublic]="goal.publicity === enumGoalPublicity.public"
-        ></app-goal-thumbnail>
-      </ion-slide>
-      <ion-slide *ngFor="let goal of _finishedColObs | async">
-        <app-goal-thumbnail 
-          [id]="goal.id"
-          [image]="goal.image" 
-          [title]="goal.title"
-          [numberOfSupporters]="goal.numberOfSupporters" 
-          [numberOfAchievers]="goal.numberOfAchievers"
-          [isCollectiveGoal]="false" 
-          [isFinished]="goal.isFinished"
-          [isPublic]="goal.publicity === enumGoalPublicity.public"
-        ></app-goal-thumbnail>
-      </ion-slide>
-    </ion-slides>
-  </div>
-
-  <!-- Browser -->
-  <div *ngIf="(_platform.is('desktop') || _platform.is('mobileweb')) && !(_platform.is('android') || _platform.is('ios'))">
-    <div class="container">
-      <app-create-goal-thumbnail *ngIf="_isLoggedIn && (_isAdmin || (collectiveGoalDocObs | async)?.isPublic)"
-        [limitReached]="false" 
+    <ng-container *ngIf="templates.length > 0 else noTemplate">
+      <thumbnail-list
+        [thumbnails]="templates | toThumbnailList:'template'"
+        type="template"
+        [canCreate]="_isAdmin"
         [collectiveGoalId]="collectiveGoalId"
-      ></app-create-goal-thumbnail>
-      <app-goal-thumbnail-browser *ngFor="let goal of (goalColObs | async)"
-          [id]="goal.id"
-          [title]="goal.title"
-          [image]="goal.image"
-          [numberOfAchievers]="goal.numberOfAchievers"
-          [numberOfSupporters]="goal.numberOfSupporters"
-          [isCollectiveGoal]="false"
-          [isFinished]="goal.isFinished"
-          [isPublic]="goal.publicity === enumGoalPublicity.public"
-      ></app-goal-thumbnail-browser>
-      <app-goal-thumbnail-browser *ngFor="let goal of (_finishedColObs | async)"
-          [id]="goal.id"
-          [title]="goal.title"
-          [image]="goal.image"
-          [numberOfAchievers]="goal.numberOfAchievers"
-          [numberOfSupporters]="goal.numberOfSupporters"
-          [isCollectiveGoal]="false"
-          [isFinished]="goal.isFinished"
-          [isPublic]="goal.publicity === enumGoalPublicity.public"
-      ></app-goal-thumbnail-browser>
-    </div>
-  </div>
+      >
+        <ng-template let-template #details>
+          {{ template.numberOfTimesUsed }} time{template.numberOfTimesUsed, plural, =1 {} other {s}} used
+        </ng-template>
+      </thumbnail-list>
+    </ng-container>
 
-  <div class="vertical-align-content">
+    <ng-template #noTemplate>
+      <span class="padding" *ngIf="templates.length === 0">No templates available yet</span>
+    </ng-template>
+  </ng-container>
+
+  <!-- Goals overview -->
+  <h3 class="padding">Goals</h3>
+  <ng-container *ngIf="goalColObs | async as goals">
+
+    <ng-container *ngIf="goals.length > 0 else noGoal">
+      <thumbnail-list
+        [thumbnails]="goals | toThumbnailList:'goal'"
+        type="goal"
+        [canCreate]="_isAdmin">
+        <ng-template let-goal #details>
+          {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}
+          <br/>
+          {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
+        </ng-template>
+      </thumbnail-list>
+    </ng-container>
+
+    <ng-template #noGoal>
+      <span class="padding">No goals yet</span>
+    </ng-template>
+
+  </ng-container>
+
+  <section class="vertical-align-content">
     <ion-list>
       <ion-list-header>Stakeholders</ion-list-header>
       <ion-item *ngFor="let stakeholder of (stakeholderColObs | async)" button [routerLink]="'../../profile/' + (stakeholder.id)">
@@ -203,6 +129,6 @@
         <fa-icon *ngIf="_isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder)"></fa-icon>
       </ion-item>
     </ion-list>
-  </div>
+  </section>
 
 </ion-content>

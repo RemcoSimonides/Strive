@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreDocument, AngularFirestore } from '@angular/fire/firestore';
+// Rxjs
 import { Observable, combineLatest, of } from 'rxjs';
 import { take, switchMap, first } from 'rxjs/operators';
+// Services
 import { FirestoreService } from '../firestore/firestore.service';
-import { AngularFireAuth } from '@angular/fire/auth';
 // Interfaces
 import {
   ICollectiveGoalStakeholder,
@@ -20,7 +21,6 @@ export class CollectiveGoalStakeholderService {
   collectiveGoalStakeholderDocObs: Observable<ICollectiveGoalStakeholder>
 
   constructor(
-    private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private db: FirestoreService
   ) { }

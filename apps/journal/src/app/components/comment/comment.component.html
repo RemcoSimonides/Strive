@@ -1,22 +1,27 @@
-<div *ngIf="comment">
-  <div class="comment-wrapper" *ngIf="comment.type === enumCommentType.sentByUser">
+<ng-container *ngIf="comment">
+  <ng-container *ngIf="comment.type === enumCommentType.sentByUser">
+    <section class="comment-wrapper">
 
-    <img [src]="comment.photoURL || 'assets/img/avatar/blank-profile-picture_64_thumb.png'"/>
-    <span class="text-wrapper">
-      <span class="username">{{ comment.username }}</span>
-      <span class="date">{{ comment.createdAt?.toDate() | date:'MMMM d, yyyy h:mm a' }}</span>
-      <div class="text">{{ comment.text }}</div>
-    </span>
+      <img [src]="comment.photoURL || 'assets/img/avatar/blank-profile-picture_64_thumb.png'"/>
+      <span class="text-wrapper">
+        <span class="username">{{ comment.username }}</span>
+        <span class="date">{{ comment.createdAt?.toDate() | date:'MMMM d, yyyy h:mm a' }}</span>
+        <div class="text">{{ comment.text }}</div>
+      </span>
+    
+    </section>
+  </ng-container>
   
-  </div>
-  
-  <div *ngIf="comment.type === enumCommentType.notification" class="notification">
-    <div class="notification-icon-item">
-      <ion-icon name="notifications"></ion-icon>
-    </div>
-    <div class="notification-text-item">
-      {{ comment.text }}
-    </div>
-  </div>
-  
-</div>
+  <ng-container *ngIf="comment.type === enumCommentType.notification">
+
+    <section class="notification">
+      <div class="notification-icon-item">
+        <ion-icon name="notifications"></ion-icon>
+      </div>
+      <div class="notification-text-item">
+        {{ comment.text }}
+      </div>
+    </section>
+
+  </ng-container>
+</ng-container>

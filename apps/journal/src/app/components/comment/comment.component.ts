@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IComment, enumCommentType } from '@strive/interfaces';
 
 @Component({
@@ -6,7 +6,7 @@ import { IComment, enumCommentType } from '@strive/interfaces';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent {
 
   @Input() goalId: string
   @Input() notificationId: string
@@ -14,10 +14,5 @@ export class CommentComponent implements OnInit {
 
   _reply: string
   enumCommentType = enumCommentType;
-
-  constructor(
-  ) { }
-
-  ngOnInit() {}
 
 }

@@ -1,0 +1,145 @@
+// BROWSER
+.browser-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+// MOBILE
+ion-slide {
+  float: left;
+  width: 165px !important;
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+}
+
+// App goal thumbnail
+ion-card {
+  width: 160px;
+  min-height: 150px;
+  transition: box-shadow 0.5s cubic-bezier(.25,.8,.25,1);
+
+  &:hover {
+      background-color: var(--ion-color-lightest);
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.16), 0 3px 10px rgba(0,0,0,0.23);
+  }
+}
+
+ion-card-content {
+  height: 80px;
+  padding-left: 2px;
+  padding-top: 2px;
+}
+
+.stakeholder-numbers  {
+  padding-left: 5px;
+}
+
+img {
+  object-fit: cover;
+  width: 100%;
+  height: 90px;   
+}
+
+.image-container {
+  position: relative;
+  height: 90px;
+  width: 100%;
+}
+
+.image-container .finished {
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  background: rgba(247, 148, 29, .6);
+}
+
+.content-container .finished {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: rgba(152, 154, 162, .1);
+}
+
+.card-title {
+  float: left;
+}
+
+// BROWSER THUMBNAIL
+.clickable {
+  cursor: pointer;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: row;
+}
+
+.margin {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 20px;
+}
+
+.description-container {
+  margin: 2px;
+}
+
+.details {
+  margin-top: 10px;
+  color: var(--ion-color-medium);
+  font-size: 14px;
+}
+
+.image-container {
+  position: relative;
+  height: 200px;
+  width: 100%;
+  width: 260px;
+  max-width: 260px;
+}
+
+.image-container .finished {
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  border-radius: 5px;
+  background: rgba(247, 148, 29, .6);
+}
+
+.deadline {
+  float: right;
+  margin-left: auto;
+}
+
+img {
+  border-radius: 5px;
+  object-fit: cover;
+  width: 100%;
+  height: 200px;
+}
+
+.numberOfSupporters {
+  margin-left: 6px;
+}
+
+.title {
+  margin-top: 4px;
+  font-weight: 400;
+}

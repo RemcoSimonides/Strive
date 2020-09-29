@@ -9,10 +9,9 @@ import { switchMap, first } from 'rxjs/operators';
 import { FirestoreService } from '../../services/firestore/firestore.service';
 //Interfaces
 import { 
-  IProfile, 
+  IProfile,
   IUser
 } from '@strive/interfaces';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +24,6 @@ export class AuthService {
   constructor(
     public afAuth: AngularFireAuth,
     db: FirestoreService,
-    private router: Router
   ) {
 
     this.user$ = this.afAuth.authState.pipe(

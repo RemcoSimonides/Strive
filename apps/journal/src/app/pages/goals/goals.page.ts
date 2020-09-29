@@ -42,7 +42,6 @@ export class GoalsPage implements OnInit {
   userDocObs: Observable<IUser>
 
   goalsColObs: Observable<IGoal[]>
-  _goals: IGoal[]
   _finishedGoals: IGoal[]
   collectiveGoalsColObs: Observable<ICollectiveGoal[]>
 
@@ -65,15 +64,14 @@ export class GoalsPage implements OnInit {
         const achieverGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.achiever, false, true)
         const spectatorGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.spectator, false, true)
 
-        combineLatest<any[]>(achieverGoals, spectatorGoals).pipe(
-          map(arr => arr.reduce((acc, cur) => acc.concat(cur)))
-        ).subscribe(goals => {
-          this._goals = goals.filter((thing, index, self) =>
+        this.goalsColObs = combineLatest<IGoal[][]>(achieverGoals, spectatorGoals).pipe(
+          map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
+          map(goals => goals.filter((thing, index, self) => 
             index === self.findIndex((t) => (
               t.id === thing.id
             ))
-          )
-        })
+          ))
+        )
 
         this._finishedGoals = await this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.achiever, false, false).pipe(take(1)).toPromise()
 

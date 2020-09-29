@@ -46,5 +46,4 @@ export class PostService {
     await this.db.set(`Goals/${goalId}/Posts/${newPostId}`, post)
     
   }
-
 }

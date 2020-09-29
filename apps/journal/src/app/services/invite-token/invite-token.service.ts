@@ -16,7 +16,6 @@ export class InviteTokenService {
 
   private _goalId: string
   private _collectiveGoalId: string
-  private _inviteToken: string
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -45,42 +44,41 @@ export class InviteTokenService {
   private async checkInviteToken(ref: string): Promise<boolean> {
 
     return this.afs.doc(ref)
-          .snapshotChanges()
-          .pipe(take(1))
-          .toPromise()
-          .then(async snap => {
-            if (snap.payload.exists) {
+      .snapshotChanges()
+      .pipe(take(1))
+      .toPromise()
+      .then(async snap => {
+        if (snap.payload.exists) {
 
-              const currentUser = await this.afAuth.currentUser;
+          const currentUser = await this.afAuth.currentUser;
 
-              // user not logged in so no need to create stakeholder
-              if (!currentUser) return true
+          // user not logged in so no need to create stakeholder
+          if (!currentUser) return true
 
-              // token valid! add currently logged in user as stakeholder
-              if (this._goalId) {
+          // token valid! add currently logged in user as stakeholder
+          if (this._goalId) {
 
-                await this.goalStakeholderService.upsert(currentUser.uid, this._goalId, {
-                  isSpectator: true
-                })
+            await this.goalStakeholderService.upsert(currentUser.uid, this._goalId, {
+              isSpectator: true
+            })
 
-              } else if(this._collectiveGoalId) {
+          } else if(this._collectiveGoalId) {
 
-                await this.collectiveGoalStakeholderService.upsert(currentUser.uid, this._collectiveGoalId, {
-                  isSpectator: true
-                })
+            await this.collectiveGoalStakeholderService.upsert(currentUser.uid, this._collectiveGoalId, {
+              isSpectator: true
+            })
 
-              }
+          }
 
-              return true
+          return true
 
-            } else {
+        } else {
 
-              // not a valid token
-              return false
-            
-            }
-          })
-
+          // not a valid token
+          return false
+        
+        }
+      })
   }
 
   /**
@@ -127,7 +125,5 @@ export class InviteTokenService {
     })
 
     return token
-
   }
-
 }

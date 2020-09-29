@@ -90,7 +90,6 @@ export class UserSpectateService {
 
     const currentUserProfile: IProfile = await this.authService.getCurrentUserProfile()
     const toBeSpectatedUserProfile: IProfile = await this.profileService.getProfile(uid)
-    console.log('current user', currentUserProfile)
 
     const newSpectator = <ISpectator>{}
     newSpectator.uid = currentUserProfile.id

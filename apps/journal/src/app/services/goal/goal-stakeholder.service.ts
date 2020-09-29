@@ -5,7 +5,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { FirestoreService } from '../firestore/firestore.service';
 // Rxjs
 import { Observable, combineLatest, of } from 'rxjs';
-import { take, switchMap, first } from 'rxjs/operators';
+import { take, switchMap, first, map } from 'rxjs/operators';
 // Interfaces
 import {
   IGoalStakeholder,
@@ -86,6 +86,22 @@ export class GoalStakeholderService {
       })
     )
 
+  }
+
+  public getGoals2(uid: string, role: enumGoalStakeholder) {
+    return this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, ref => ref
+      .where('uid', '==', uid)
+      .where(role, '==', true)
+      .orderBy('createdAt', 'desc')
+    ).pipe(
+      switchMap(stakeholders => {
+        const goalIDs = stakeholders.map(stakeholder => stakeholder.goalId)
+        const goalDocs = goalIDs.map(id => this.db.docWithId$<IGoal>(`Goals/${id}`))
+
+        return goalDocs.length ? combineLatest<IGoal[]>(goalDocs) : of([])  
+      }),
+      map((goals: IGoal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+    )
   }
 
   public async upsert(uid: string, goalId: string, roles: roleArgs){

@@ -68,9 +68,7 @@ export class ImageService {
         }).then((downloadURL) => { return downloadURL })
 
       })
-
     })
-
   }
 
   // https://zocada.com/compress-resize-images-javascript-browser/

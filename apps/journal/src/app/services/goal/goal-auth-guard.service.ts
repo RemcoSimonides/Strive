@@ -65,7 +65,6 @@ export class GoalAuthGuardService implements CanActivate {
       this.router.navigate(['/explore'])
       return false
     }
-
   }
 
   public async checkAccess(goal: IGoal, stakeholder: IGoalStakeholder): Promise<boolean> {
@@ -91,9 +90,7 @@ export class GoalAuthGuardService implements CanActivate {
 
         if (!await this.authService.isLoggedIn()) return false
         return await this.checkAccessToGoal(stakeholder)
-    
       }
-
   }
 
   private async checkAccessToCollectiveGoal(collectiveGoalId: string, uid: string): Promise<boolean> {
@@ -113,15 +110,10 @@ export class GoalAuthGuardService implements CanActivate {
           } else {
             return false
           }
-
         } else {
-
           return false
-
         }
-
       })
-
   }
 
   private async checkAccessToGoal(stakeholder: IGoalStakeholder): Promise<boolean> {
@@ -131,7 +123,5 @@ export class GoalAuthGuardService implements CanActivate {
     if (stakeholder.isAchiever || stakeholder.isAdmin || stakeholder.isSupporter || stakeholder.isSpectator) {
       return true
     } else return false
-
   }
-
 }

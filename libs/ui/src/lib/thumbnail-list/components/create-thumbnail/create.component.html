@@ -2,7 +2,7 @@
 <ng-container *ngIf="_platform.is('android') || _platform.is('ios') else browser">
   <ng-container *ngIf="!limitReached else limitReached">
 
-    <ion-card (click)="navToCreateGoal()" class="active">
+    <ion-card (click)="create()" class="active">
       <img id="img-mobile" src="assets/CreateNewGoal.png"/>
       <ion-card-content>
         <h2 class="card-title">{{ _title }}</h2>
@@ -22,10 +22,9 @@
     
 </ng-container>
 
-
 <!-- Browser -->
 <ng-template #browser>
-  <section class="clickable margin" (click)="navToCreateGoal()">
+  <section class="clickable margin" (click)="create()">
       <div id="image-container-browser">
           <img src="assets/CreateNewGoal.png"/>
       </div>

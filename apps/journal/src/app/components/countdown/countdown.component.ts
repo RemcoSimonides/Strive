@@ -1,11 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, Input } from '@angular/core';
 
 @Component({
   selector: 'app-countdown',
   templateUrl: './countdown.component.html',
   styleUrls: ['./countdown.component.scss'],
 })
-export class CountdownComponent implements OnInit {
+export class CountdownComponent {
 
   private _time: number;
   private _timing: number = 1000;
@@ -17,14 +17,6 @@ export class CountdownComponent implements OnInit {
     this._startTimer();
   }
 
-  // @Input()
-  // public set timing(value: string | number) {
-  //   this._timing = parseInt(value as string, 10);
-  //   this._startTimer();
-  // }
-
-  // @Input()
-  // public format: string = 'Auto finalize in {hh} hours and {mm} minutes.';
   format: string = 'Auto finalize in {hh} hours and {mm} minutes.';
 
   public get delta() {
@@ -49,12 +41,7 @@ export class CountdownComponent implements OnInit {
     return time;
   }
 
-  constructor(
-    private _changeDetector: ChangeDetectorRef
-
-  ) { }
-
-  ngOnInit() {}
+  constructor(private _changeDetector: ChangeDetectorRef) { }
 
   ngOnDestroy(){
     this._stopTimer();
