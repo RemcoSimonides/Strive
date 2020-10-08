@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { FirestoreService } from '../firestore/firestore.service';
 // Rxjs
 import { Observable, combineLatest, of } from 'rxjs';
@@ -20,86 +19,36 @@ import {
 })
 export class GoalStakeholderService {
 
-  stakeholder: IGoalStakeholder
-
-  isAdmin: boolean = false
-  isAchiever: boolean = false
-  isSupporter: boolean = false
-
-  private stakeholderDocRef: AngularFirestoreDocument<IGoalStakeholder>
-  private stakeholderDocObs: Observable<IGoalStakeholder>
-
   constructor(
-    private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private db: FirestoreService,
   ) { }
 
-  public async init(goalId: string) {
-
-    const uid = (await this.afAuth.currentUser).uid;
-    this.stakeholderDocObs = this.db.doc$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`)
-    this.stakeholderDocObs.subscribe(stakeholder => {
-
-      if (stakeholder) {
-
-        stakeholder.isAdmin ? this.isAdmin = stakeholder.isAdmin : this.isAdmin = false
-        stakeholder.isAchiever ? this.isAchiever = stakeholder.isAchiever : this.isAchiever = false
-        stakeholder.isSupporter ? this.isSupporter = stakeholder.isSupporter : this.isSupporter = false
-        
-      }
-      
-    })
-
-  }
-
   public getStakeholderDocObs(uid: string, goalId: string): Observable<IGoalStakeholder> {
-
     return this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`)
-
   }
 
   public async getStakeholder(uid: string, goalId: string): Promise<IGoalStakeholder | undefined> {
-    const stakeholder: IGoalStakeholder = await this.getStakeholderDocObs(uid, goalId).pipe(take(1)).toPromise()
-    if (stakeholder.username !== undefined) {
-      return stakeholder
-    } else return undefined
+    return this.getStakeholderDocObs(uid, goalId).pipe(take(1)).toPromise();
   }
 
-  public getGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean, activeOnly?: boolean): Observable<IGoal[]> {
+  public getGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<IGoal[]> {
 
-    let stakeholder$: Observable<IGoalStakeholder[]>
+    let query: QueryFn;
+    if (publicOnly) {
+      query = ref => ref.where('goalPublicity', '==', enumGoalPublicity.public).where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')
+    } else {
+      query = ref => ref.where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')
+    }
 
-      // TODO add goals where current user has access to the goal (private + collectiveGoalOnly) OR to the collective goal (public to collectiveGoalOnly) 
-    if (!publicOnly && !activeOnly) stakeholder$ = this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, ref => ref.where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc'))
-    if (!publicOnly && activeOnly !== undefined) stakeholder$ = this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, ref => ref.where('uid', '==', uid).where(role, '==', true).where('goalIsFinished', '==', !activeOnly).orderBy('createdAt', 'desc'))
-    if (publicOnly && !activeOnly) stakeholder$ = this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, ref => ref.where('uid', '==', uid).where('goalPublicity', '==', enumGoalPublicity.public).where(role, '==', true).orderBy('createdAt', 'desc'))
-    if (publicOnly && activeOnly !== undefined) stakeholder$ = this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, ref => ref.where('uid', '==', uid).where('goalPublicity', '==', enumGoalPublicity.public).where(role, '==', true).where('goalIsFinished', '==', !activeOnly).orderBy('createdAt', 'desc'))
-
-    return stakeholder$.pipe(
+    return this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, query).pipe(
       switchMap(stakeholders => {
         const goalIDs = stakeholders.map(stakeholder => stakeholder.goalId)
         const goalDocs = goalIDs.map(id => this.db.docWithId$<IGoal>(`Goals/${id}`))
 
         return goalDocs.length ? combineLatest<IGoal[]>(goalDocs) : of([])
-
-      })
-    )
-
-  }
-
-  public getGoals2(uid: string, role: enumGoalStakeholder) {
-    return this.db.collectionGroupWithIds$<IGoalStakeholder[]>(`GStakeholders`, ref => ref
-      .where('uid', '==', uid)
-      .where(role, '==', true)
-      .orderBy('createdAt', 'desc')
-    ).pipe(
-      switchMap(stakeholders => {
-        const goalIDs = stakeholders.map(stakeholder => stakeholder.goalId)
-        const goalDocs = goalIDs.map(id => this.db.docWithId$<IGoal>(`Goals/${id}`))
-
-        return goalDocs.length ? combineLatest<IGoal[]>(goalDocs) : of([])  
       }),
+      // Sort finished goals to the end
       map((goals: IGoal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
     )
   }
@@ -109,27 +58,22 @@ export class GoalStakeholderService {
     // note: syncing collectiveGoalStakeholder.isAchiever is done by firebase function (goal-stakeholder.ts)
     
     //Set stakeholder reference
-    this.stakeholderDocRef = this.afs.collection('Goals')
-                                         .doc(goalId)
-                                         .collection('GStakeholders')
-                                         .doc<IGoalStakeholder>(uid)
+    const ref = this.afs.doc<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`);
 
     //Check whether the stakeholder exists
-    this.stakeholderDocRef.snapshotChanges().pipe(take(1)).toPromise().then(snap => {
+    ref.snapshotChanges().pipe(take(1)).toPromise().then(snap => {
       if (snap.payload.exists === false) {
         //Stakeholder does not exist -> create new
         this.createNewStakeholder(uid, goalId, roles)
       } else {
         //Stakeholder already exists -> set role to roleStatus and update
-        this.db.update(this.stakeholderDocRef, roles)
+        this.db.update(ref, roles)
       }
     })
   }
 
   public async delete(goalId: string): Promise<void> {
-
     await this.db.doc(`Goals/${goalId}`).delete()
-
   }
 
   private async createNewStakeholder(uid: string, goalId: string, roles: roleArgs): Promise<void> {
@@ -154,7 +98,6 @@ export class GoalStakeholderService {
     newStakeholder.goalImage = goal.image
 
     await this.db.set(`Goals/${goalId}/GStakeholders/${uid}`, newStakeholder)
-
   }
 
 }

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Platform, NavController, ModalController } from '@ionic/angular';
 
 // Rxjs
-import { Observable, combineLatest } from 'rxjs'
-import { map, take } from 'rxjs/operators'
+import { Observable, combineLatest, Subscription } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 // Services
 import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
@@ -13,7 +13,6 @@ import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-
 
 // Interfaces
 import { 
-  IUser,
   IGoal,
   enumGoalPublicity,
   ICollectiveGoal,
@@ -23,27 +22,23 @@ import {
 // Pages
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 
-// Other
-import { goalSlideOptions } from '../../../theme/goal-slide-options';
 
 @Component({
   selector: 'app-goals',
   templateUrl: './goals.page.html',
   styleUrls: ['./goals.page.scss'],
 })
-export class GoalsPage implements OnInit {
+export class GoalsPage implements OnInit, OnDestroy {
 
-  _backBtnSubscription
   _isLoggedIn: boolean;
 
-  enumGoalPublicity = enumGoalPublicity
-  public _goalSlideOptions = goalSlideOptions
+  enumGoalPublicity = enumGoalPublicity;
 
-  userDocObs: Observable<IUser>
+  goalsColObs: Observable<IGoal[]>;
+  collectiveGoalsColObs: Observable<ICollectiveGoal[]>;
 
-  goalsColObs: Observable<IGoal[]>
-  _finishedGoals: IGoal[]
-  collectiveGoalsColObs: Observable<ICollectiveGoal[]>
+  sub: Subscription;
+  backBtnSubscription: Subscription;
 
   constructor(
     public authService: AuthService,
@@ -57,40 +52,29 @@ export class GoalsPage implements OnInit {
 
   async ngOnInit() { 
     
-    this.authService.userProfile$.subscribe(async userProfile => {
+    this.sub = this.authService.userProfile$.subscribe(async userProfile => {
+      this._isLoggedIn = userProfile ? true : false;
+
       if (userProfile) {
-        this._isLoggedIn = true
+        const achieverGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.achiever, false)
+        const spectatorGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.spectator, false)
 
-        const achieverGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.achiever, false, true)
-        const spectatorGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.spectator, false, true)
-
-        this.goalsColObs = combineLatest<IGoal[][]>(achieverGoals, spectatorGoals).pipe(
-          map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
-          map(goals => goals.filter((thing, index, self) => 
-            index === self.findIndex((t) => (
-              t.id === thing.id
-            ))
-          ))
-        )
-
-        this._finishedGoals = await this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.achiever, false, false).pipe(take(1)).toPromise()
+        this.goalsColObs = filterDuplicateGoals([achieverGoals, spectatorGoals])
 
         this.collectiveGoalsColObs = this.collectiveGoalStakeholderService.getCollectiveGoals(userProfile.id)
-
-      } else {
-        this._isLoggedIn = false
       }
     })
 
-    this._seo.generateTags({
-      title: `Goals - Strive Journal`
-    })
+    this._seo.generateTags({ title: `Goals - Strive Journal` })
+  }
 
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   ionViewDidEnter() { 
     if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => { 
+      this.backBtnSubscription = this._platform.backButton.subscribe(() => { 
         this.navCtrl.navigateRoot('explore')
       });
     }
@@ -98,7 +82,7 @@ export class GoalsPage implements OnInit {
     
   ionViewWillLeave() { 
     if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+      this.backBtnSubscription.unsubscribe();
     }
   }
 
@@ -111,11 +95,15 @@ export class GoalsPage implements OnInit {
     })
     await modal.present()
   }
+}
 
-  sortByCreatedAt(a, b) {
-    if (a.createdAt < b.createdAt) return 1
-    if (a.createdAt > b.createdAt) return -1
-    return 0
-  }
-
+function filterDuplicateGoals(observables: Observable<IGoal[]>[]) {
+  return combineLatest<IGoal[][]>(observables).pipe(
+    map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
+    map(goals => goals.filter((thing, index, self) => 
+      index === self.findIndex((t) => (
+        t.id === thing.id
+      ))
+    ))
+  )
 }

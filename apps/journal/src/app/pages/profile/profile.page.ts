@@ -143,8 +143,8 @@ export class ProfilePage implements OnInit {
       title: `${this._profile.username} - Strive Journal`
     })
 
-    this._achievingGoalsColObs = this.goalStakeholderService.getGoals2(this._profileId, enumGoalStakeholder.achiever);
-    this._supportingGoalsColObs = this.goalStakeholderService.getGoals2(this._profileId, enumGoalStakeholder.supporter)
+    this._achievingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.achiever, !this._isOwner);
+    this._supportingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.supporter, !this._isOwner)
     this._pageIsLoading = false
 
   }

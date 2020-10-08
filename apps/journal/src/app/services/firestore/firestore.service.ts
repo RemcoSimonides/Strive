@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestoreCollectionGroup } from '@angular/fire/firestore'
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestoreCollectionGroup, QueryFn } from '@angular/fire/firestore'
 import { Observable } from 'rxjs';
 import { take, tap, map } from 'rxjs/operators'
 import { FieldValue } from '@firebase/firestore-types';
@@ -86,7 +86,7 @@ export class FirestoreService {
    * @param queryFn query (filter/order)
    * @returns Observable of collection
    */
-  col$<T>(ref: CollectionPredicate<T>, queryFn?: any): Observable<T[]> {
+  col$<T>(ref: CollectionPredicate<T>, queryFn?: QueryFn): Observable<T[]> {
     return this.col(ref, queryFn).snapshotChanges()
       .pipe(
         map(docs => {
@@ -102,7 +102,7 @@ export class FirestoreService {
    * @param queryFn query (filter/order)
    * @returns Observable of collection including its ID
    */
-  colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
+  colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?: QueryFn): Observable<any[]> {
     return this.col(ref, queryFn).snapshotChanges()
       .pipe(
         map(actions => {
@@ -115,7 +115,7 @@ export class FirestoreService {
       )
   }
 
-  collectionGroupWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
+  collectionGroupWithIds$<T>(ref: CollectionPredicate<T>, queryFn?: QueryFn): Observable<any[]> {
 
     return this.collectionGroup(ref, queryFn).snapshotChanges()
       .pipe(
