@@ -4,13 +4,13 @@
   <ion-spinner name="lines" color="primary"></ion-spinner>
 </div>
 
-<div class="not-logged-in" *ngIf="!(isLoggedIn | async) && !_pageIsLoading">
+<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !_pageIsLoading">
   <p>
       <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
   </p>
 </div>
 
-<ion-content class="ion-padding" *ngIf="!_pageIsLoading && (isLoggedIn | async)">
+<ion-content class="ion-padding" *ngIf="!_pageIsLoading && (user.isLoggedIn$ | async)">
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
       <ion-refresher-content
         pullingIcon="arrow-down"
@@ -20,7 +20,7 @@
     <div class="vertical-align-content">
 
     <div class="notification" *ngFor="let notification of paginationService.data | async">
-      <app-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + _uid + '/Notifications/' + notification.id"></app-notification>
+      <app-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></app-notification>
     </div>
       
 

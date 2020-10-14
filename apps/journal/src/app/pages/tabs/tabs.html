@@ -11,7 +11,7 @@
         <ion-tab-button tab="notifications">
             <ion-icon name="notifications"></ion-icon>
             <ion-label>Notifications</ion-label>
-            <ion-badge *ngIf="(auth.userProfile$ | async)?.numberOfUnreadNotifications > 0">{{ (auth.userProfile$ | async)?.numberOfUnreadNotifications }}</ion-badge>
+            <ion-badge *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">{{ (user.profile$ | async)?.numberOfUnreadNotifications }}</ion-badge>
         </ion-tab-button>
 
         <ion-tab-button tab="goals">
@@ -24,7 +24,7 @@
             <ion-label>Supports</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button [tab]="'profile/' + _uid">
+        <ion-tab-button [tab]="'profile/' + user.uid">
             <ion-icon name="person"></ion-icon>
             <ion-label>Profile</ion-label>
         </ion-tab-button>

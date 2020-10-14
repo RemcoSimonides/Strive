@@ -1,6 +1,7 @@
 import { db, admin, functions, increment } from '../../../internals/firebase';
 // Interfaces
-import { enumNotificationType, INotification, INotificationSupport, enumSupportStatus, IProfile } from '@strive/interfaces';
+import { enumNotificationType, INotification, INotificationSupport, enumSupportStatus } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 
@@ -19,7 +20,7 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
         // get tokens
         const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${userId}/Profile/${userId}`)
         const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-        const profile: IProfile = Object.assign(<IProfile>{}, profileDocSnap.data())
+        const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
         console.log(`gonna send notification to ${profile.username}`)
         if (profile.fcmTokens) {

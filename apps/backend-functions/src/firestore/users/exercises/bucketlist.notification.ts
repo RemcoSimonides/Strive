@@ -7,16 +7,16 @@ import {
   enumPrivacy,
   INotificationBase,
   enumEvent,
-  IProfile,
   enumDiscussionAudience
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore'
 
 export async function handleNotificationsOfBucketListCreated(uid: string): Promise<void> {
 
     // get profile for profile image and name
     const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
     const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-    const profile: IProfile = Object.assign(<IProfile>{}, profileDocSnap.data())
+    const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
     await createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, enumDiscussionAudience.public, `${uid}bucketlist`)
 
@@ -47,7 +47,7 @@ export async function handleNotificationsOfBucketListChanged(uid: string, before
     // get profile for profile image and name
     const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
     const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-    const profile: IProfile = Object.assign(<IProfile>{}, profileDocSnap.data())
+    const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
     const changedPrivacyFromPrivateToSpectatorsOnlyOrPublic: IBucketListItem[] = getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before, after)
     const changedDescription: IBucketListItem[] = getChangedDescriptionItems(before, after)
@@ -68,7 +68,7 @@ export async function handleNotificationsOfBucketListChanged(uid: string, before
 
 }
 
-async function sendChangedBucketListNotification(uid: string, profile: IProfile, numberOfChangedItems: number): Promise<void> {
+async function sendChangedBucketListNotification(uid: string, profile: Profile, numberOfChangedItems: number): Promise<void> {
 
     const notification: Partial<INotificationBase> = {
         discussionId: `${uid}bucketlist`,
@@ -92,7 +92,7 @@ async function sendChangedBucketListNotification(uid: string, profile: IProfile,
 
 }
 
-async function sendBucketListItemComletedNotification(uid: string, profile: IProfile, bucketListItem: string): Promise<void> {
+async function sendBucketListItemComletedNotification(uid: string, profile: Profile, bucketListItem: string): Promise<void> {
 
     const notification: Partial<INotificationBase> = {
         discussionId: `${uid}bucketlist`,

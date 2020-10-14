@@ -9,7 +9,7 @@ import { TemplateOptionsPopoverPage, enumTemplateOptions } from './popovers/temp
 import { CreateTemplateModalPage } from './modals/create-template-modal/create-template-modal.page';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
@@ -33,7 +33,6 @@ import {
   styleUrls: ['./template.page.scss'],
 })
 export class TemplatePage implements OnInit {
-  public _isLoggedIn: boolean
   private _backBtnSubscription: Subscription
   
   public _collectiveGoalId: string
@@ -45,7 +44,7 @@ export class TemplatePage implements OnInit {
   public _isAdmin: boolean = false
 
   constructor(
-    private authService: AuthService,
+    public user: UserService,
     private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private db: FirestoreService,
@@ -81,21 +80,17 @@ export class TemplatePage implements OnInit {
 
         this._structuredMilestones = this.roadmapService.structureMilestones(template.milestoneTemplateObject)
 
-        this._seo.generateTags({
-          title: `${template.title} - Strive Journal`
-        })
+        this._seo.generateTags({ title: `${template.title} - Strive Journal` })
       }
     })
 
     //Get current users' rights
-    this.authService.userProfile$.pipe(
+    this.user.profile$.pipe(
       switchMap(userProfile => {
         if (userProfile) {
-          this._isLoggedIn = true
           return this.collectiveGoalStakeholderService.getStakeholderDocObs(userProfile.id, this._collectiveGoalId)
         } else {
           this._isAdmin = false
-          this._isLoggedIn = false
 
           // if collective goal is private, then no access anymore to template
           if (!this._collectiveGoal.isPublic) {
@@ -133,7 +128,7 @@ export class TemplatePage implements OnInit {
 
   public async useTemplate(): Promise<void> {
 
-    if (!this._isLoggedIn) {
+    if (!await this.user.isLoggedIn) {
       const modal = await this.modalCtrl.create({
         component: AuthModalPage,
         componentProps: {
@@ -150,7 +145,6 @@ export class TemplatePage implements OnInit {
     })
     await loading.present()
 
-    const uid: string = (await this.authService.afAuth.currentUser).uid
     const template: ITemplate = await this.templateService.getTemplate(this._collectiveGoalId, this._templateId)
     const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this._collectiveGoalId)
 
@@ -166,7 +160,7 @@ export class TemplatePage implements OnInit {
     }
 
     // Create goal
-    const goalId = await this.goalService.handleCreatingGoal(uid, {
+    const goalId = await this.goalService.handleCreatingGoal(this.user.uid, {
       title: template.goalTitle,
       description: template.description,
       publicity: publicity,
@@ -181,13 +175,13 @@ export class TemplatePage implements OnInit {
     })
 
     // Create stakeholder
-    this.goalStakeholderService.upsert(uid, goalId, {
+    this.goalStakeholderService.upsert(this.user.uid, goalId, {
       isAdmin: true,
       isAchiever: true
     })
 
     // Wait for stakeholder to be created before making milestones because you need admin rights for that
-    this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`)
+    this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
       .pipe(take(2))
       .subscribe(async stakeholder => {
         if (stakeholder) {

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Components
 import { enumAuthSegment, AuthModalPage } from 'apps/journal/src/app/pages/auth/auth-modal.page';
 
@@ -16,10 +17,11 @@ export class ProfileOptionsBrowserPage implements OnInit {
   enumProfileOptionsDesktop = enumProfileOptionsDesktop
 
   constructor(
-    public _authService: AuthService,
+    private afAuth: AngularFireAuth,
     private _modalCtrl: ModalController,
     private _popoverCtrl: PopoverController,
     private router: Router,
+    private user: UserService
   ) { }
 
   ngOnInit() {
@@ -30,13 +32,12 @@ export class ProfileOptionsBrowserPage implements OnInit {
   }
 
   async goToProfile() {
-    const { uid } = await this._authService.afAuth.currentUser
-    this.router.navigateByUrl(`/profile/${uid}`)
+    this.router.navigateByUrl(`/profile/${this.user.uid}`)
     this._popoverCtrl.dismiss()
   }
 
   async logOut() {
-    await this._authService.signOut()
+    await this.afAuth.signOut()
     this._popoverCtrl.dismiss()
 
     // open auth modal

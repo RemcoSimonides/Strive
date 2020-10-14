@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
 // Services
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { IMilestone, enumMilestoneStatus } from '@strive/interfaces';
 
@@ -22,7 +22,7 @@ export class MilestoneOptionsPage implements OnInit {
   public enumMilestoneStatus = enumMilestoneStatus
 
   constructor(
-    private _authService: AuthService,
+    private user: UserService,
     private _milestoneService: MilestoneService,
     private _navParams: NavParams,
     private _popoverCtrl: PopoverController
@@ -32,8 +32,7 @@ export class MilestoneOptionsPage implements OnInit {
     this._goalId = this._navParams.get('goalId')
     this._milestone = this._navParams.get('milestone')
 
-    const { uid } = await this._authService.afAuth.currentUser
-    if (this._milestone.achieverId ==  uid) {
+    if (this._milestone.achieverId ==  this.user.uid) {
       this._isAlreadyAssigned = true
     } else this._isAlreadyAssigned = false
 
@@ -67,7 +66,7 @@ export class MilestoneOptionsPage implements OnInit {
   }
 
   async assignMe(): Promise<void> {
-    const currentUser = await this._authService.afAuth.currentUser;
+    const currentUser = await this.user.getFirebaseUser();
     await this._milestoneService.assignCurrentUser(this._goalId, this._milestone)
     this._milestone.achieverId = currentUser.uid
     this._milestone.achieverUsername = currentUser.displayName

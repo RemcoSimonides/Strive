@@ -5,10 +5,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 //Rxjs
 import { take } from 'rxjs/operators';
 // Services
-import { AuthService } from '../auth/auth.service';
 import { GoalService } from '../goal/goal.service';
 import { GoalStakeholderService } from './goal-stakeholder.service';
-
+import { UserService } from '@strive/user/user/+state/user.service';
 //Interfaces
 import {
   IGoal,
@@ -27,17 +26,17 @@ export class GoalAuthGuardService implements CanActivate {
 
   constructor(
     private afs: AngularFirestore,
-    private authService: AuthService,
     private goalService: GoalService,
     private goalStakeholderService: GoalStakeholderService,
-    private router: Router
+    private router: Router,
+    private user: UserService
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
     this._goalId = next.params.id
     
-    if (!await this.authService.isLoggedIn()) {
+    if (!await this.user.isLoggedIn) {
       this.router.navigate(['/explore'])
       return false
     }
@@ -51,8 +50,7 @@ export class GoalAuthGuardService implements CanActivate {
     const goal: IGoal = await this.goalService.getGoal(this._goalId)
 
     // get stakeholder
-    const uid: string = (await this.authService.afAuth.currentUser).uid
-    const stakeholder: IGoalStakeholder = await this.goalStakeholderService.getStakeholder(uid, this._goalId)
+    const stakeholder: IGoalStakeholder = await this.goalStakeholderService.getStakeholder(this.user.uid, this._goalId)
     
     let access: boolean = false
     if (stakeholder) {
@@ -75,20 +73,19 @@ export class GoalAuthGuardService implements CanActivate {
         
       case enumGoalPublicity.collectiveGoalOnly:
         
-        if (!await this.authService.isLoggedIn()) return false
+        if (!await this.user.isLoggedIn) return false
 
         let accessToCollectiveGoal: boolean
         let accessToGoal: boolean
         if (goal.collectiveGoal.id) {
-          const uid = (await this.authService.afAuth.currentUser).uid
-          accessToCollectiveGoal = await this.checkAccessToCollectiveGoal(goal.collectiveGoal.id, uid)
+          accessToCollectiveGoal = await this.checkAccessToCollectiveGoal(goal.collectiveGoal.id, this.user.uid)
         }
         accessToGoal =  await this.checkAccessToGoal(stakeholder)
         return accessToCollectiveGoal || accessToGoal ? true : false
 
       case enumGoalPublicity.private:
 
-        if (!await this.authService.isLoggedIn()) return false
+        if (!await this.user.isLoggedIn) return false
         return await this.checkAccessToGoal(stakeholder)
       }
   }

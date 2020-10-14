@@ -3,11 +3,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
 // Services
 import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service'
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
 // Rxjs
-import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 // Interfaces
 import {
@@ -26,13 +25,8 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 export class NotificationsPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   _pageIsLoading: boolean
-
-  private _isLoggedIn = new BehaviorSubject(false)
-  public isLoggedIn: Observable<boolean> = this._isLoggedIn.asObservable()
   
   _backBtnSubscription
-  _nrOfUnreadNotifications: number = 0
-  _uid: string
 
   public _notifications: any[]
   enumNotificationType = enumNotificationType
@@ -40,7 +34,7 @@ export class NotificationsPage implements OnInit {
   enumRequestStatus = enumRequestStatus
 
   constructor(
-    public authService: AuthService,
+    public user: UserService,
     private _modalCtrl: ModalController,
     private navCtrl: NavController,
     private notificationService: NotificationService,
@@ -53,48 +47,30 @@ export class NotificationsPage implements OnInit {
 
     this._pageIsLoading = true
 
-    this._seo.generateTags({
-      title: `Notifications - Strive Journal`
-    })
+    this._seo.generateTags({ title: `Notifications - Strive Journal` })
 
-    this.authService.user$.subscribe(user => {
-      if (user) {
-        this._isLoggedIn.next(true)
-        this._uid = user.id;
+    this.user.profile$.subscribe(profile => {
+      if (profile) {
         this.paginationService.reset()
-        this.paginationService.init(`Users/${user.id}/Notifications`, 'createdAt', { reverse: true, prepend: false })
+        this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', { reverse: true, prepend: false })
         this.paginationService.data.subscribe(data => {
-        this._pageIsLoading = false
+          this._pageIsLoading = false
         })
       } else {
-        this._isLoggedIn.next(false)
         this._pageIsLoading = false
         this.paginationService.reset()
       }
-
     })
-
-    this.authService.userProfile$.pipe(take(1)).subscribe(profile => {
-      if (profile) {
-        if (profile.numberOfUnreadNotifications !== 0) {
-          this._nrOfUnreadNotifications = profile.numberOfUnreadNotifications
-        }
-      }
-    })
-
-
   }
 
   ionViewDidEnter() {
-    this.isLoggedIn.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        this.notificationService.resetNumberOfUnreadNotifications()
-      }
-    })
+    // TODO test if number of notifications is reset on login
+    if (this.user.uid) {
+      this.notificationService.resetNumberOfUnreadNotifications();
+    }
+
     if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => {
-        this.navCtrl.navigateRoot('explore')
-      });
+      this._backBtnSubscription = this._platform.backButton.subscribe(() => this.navCtrl.navigateRoot('explore'));
     }
   }
 
@@ -116,8 +92,7 @@ export class NotificationsPage implements OnInit {
 
   async doRefresh($event) {
 
-    const { uid } = await this.authService.afAuth.currentUser;
-    await this.paginationService.refresh(`Users/${uid}/Notifications`, 'createdAt', { reverse: true, prepend: false })
+    await this.paginationService.refresh(`Users/${this.user.uid}/Notifications`, 'createdAt', { reverse: true, prepend: false })
 
     this.paginationService.refreshing.subscribe(refreshing => {
       if (refreshing === false) {

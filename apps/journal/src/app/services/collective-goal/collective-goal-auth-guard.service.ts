@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 // Services
-import { AuthService } from '../auth/auth.service';
 import { CollectiveGoalService } from './collective-goal.service';
 import { CollectiveGoalStakeholderService } from './collective-goal-stakeholder.service';
 // Interfaces
@@ -9,6 +8,7 @@ import {
   ICollectiveGoal,
   ICollectiveGoalStakeholder
 } from '@strive/interfaces';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +18,10 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
   private _collectiveGoalId: string
 
   constructor(
-    private authService: AuthService,
     private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
-    private router: Router
+    private router: Router,
+    private user: UserService
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
@@ -33,14 +33,13 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
 
     if (collectiveGoal.isPublic) return true
 
-    if (!await this.authService.isLoggedIn()) {
+    if (!await this.user.isLoggedIn) {
       this.router.navigate(['/explore'])
       return false
     }
     
     // get stakeholder
-    const uid: string = (await this.authService.afAuth.currentUser).uid;
-    const stakeholder: ICollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(uid, this._collectiveGoalId)
+    const stakeholder: ICollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(this.user.uid, this._collectiveGoalId)
 
     let access: boolean = false
     if (stakeholder) {

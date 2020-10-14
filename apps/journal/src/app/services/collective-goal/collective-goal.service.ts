@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 // Services
-import { AuthService } from '../auth/auth.service';
 import { FirestoreService } from '../firestore/firestore.service';
 import { CollectiveGoalStakeholderService } from './collective-goal-stakeholder.service';
 import { ImageService } from '../image/image.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { ICollectiveGoal } from '@strive/interfaces';
 
@@ -17,7 +17,7 @@ export class CollectiveGoalService {
 
   constructor(
     // private chatService: ChatService,
-    private authService: AuthService,
+    private user: UserService,
     private db: FirestoreService,
     private imageService: ImageService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService
@@ -45,7 +45,6 @@ export class CollectiveGoalService {
     
     //Create new id for collective goal
     const id = await this.db.getNewId();
-    const uid = (await this.authService.afAuth.currentUser).uid;
     
     if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
 
@@ -56,7 +55,7 @@ export class CollectiveGoalService {
     await this.setCollectiveGoal(collectiveGoal, id)
 
     //Add User as Stakeholder
-    await this.collectiveGoalStakeholderService.upsert(uid, id, { isAdmin: true })
+    await this.collectiveGoalStakeholderService.upsert(this.user.uid, id, { isAdmin: true })
 
     //Create initial chat
     // this.chatService.addInitialChat(id, collectiveGoal.title, { collectiveGoal: true })

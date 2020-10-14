@@ -3,7 +3,8 @@ import { db, functions, admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
 
-import { IUser, IGoalStakeholder, INotification, ICollectiveGoalStakeholder, IProfile } from '@strive/interfaces';
+import { IGoalStakeholder, INotification, ICollectiveGoalStakeholder } from '@strive/interfaces';
+import { Profile, User as IUser } from '@strive/user/user/+state/user.firestore';
 import { sendNotificationMilestoneDeadlinePassed } from '../notifications/milestone.notification';
 import { sendgridAPIKey, sendgridTemplate } from '../../environments/environment';
 
@@ -180,7 +181,7 @@ async function getUserData(uid: string, fromDate: Date): Promise<User> {
     // get user
     const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
     const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-    const profile: IProfile = Object.assign(<IProfile>{}, profileDocSnap.data())
+    const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
     user.id = uid
     user.username = profile.username

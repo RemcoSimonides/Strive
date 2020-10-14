@@ -12,22 +12,21 @@ import { take } from 'rxjs/operators';
 // Services
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { FcmService } from 'apps/journal/src/app/services/fcm/fcm.service';
-import { UserService } from 'apps/journal/src/app/services/user/user.service';
-import { ProfileService } from 'apps/journal/src/app/services/profile/profile.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 // Interfaces
 import { 
-  IProfile,
   ITemplate,
   ICollectiveGoal,
   enumGoalPublicity,
   IGoalStakeholder
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'app-auth-modal',
@@ -89,11 +88,10 @@ export class AuthModalPage implements OnInit {
     private navParams: NavParams,
     private _navCtrl: NavController,
     public _platform: Platform,
-    private _profileService: ProfileService,
     private _roadmapService: RoadmapService,
     private _router: Router,
     private _templateService: TemplateService,
-    private _userService: UserService
+    private user: UserService
   ) { }
 
   ngOnInit() {
@@ -247,20 +245,19 @@ export class AuthModalPage implements OnInit {
 
       try {
 
-        await this.afAuth.createUserWithEmailAndPassword(this.signupForm.value.email, this.signupForm.value.password)
+        const { user } = await this.afAuth.createUserWithEmailAndPassword(this.signupForm.value.email, this.signupForm.value.password)
 
-        const newUserProfile = <IProfile>{
+        const newUserProfile = <Profile>{
           username: this.signupForm.value.username,
           image: `assets/img/avatar/blank-profile-picture_512_thumb.png`,
           numberOfSpectating: 0,
           numberOfSpectators: 0
         }
 
-        await this._userService.createUser(this.signupForm.value.email)
-        await this._profileService.upsert(newUserProfile)
+        await this.user.createUser(user.uid, this.signupForm.value.email)
+        await this.user.upsertProfile(newUserProfile)
 
         // create tutorial goal
-        const uid: string = (await this.afAuth.currentUser).uid
         const collectiveGoalId: string = `XGtfe77pCKh1QneOipI7`
         const templateId: string = `ScA150CYoGsk4xQDcVYM`
         const template: ITemplate = await this._templateService.getTemplate(collectiveGoalId, templateId)
@@ -275,7 +272,7 @@ export class AuthModalPage implements OnInit {
 
         }
 
-        const goalId = await this._goalService.handleCreatingGoal(uid, {
+        const goalId = await this._goalService.handleCreatingGoal(this.user.uid, {
           title: template.goalTitle,
           description: template.description,
           publicity: enumGoalPublicity.private,
@@ -289,12 +286,12 @@ export class AuthModalPage implements OnInit {
           image: collectiveGoal.image
         })
 
-        this._goalStakeholderService.upsert(uid, goalId, {
+        this._goalStakeholderService.upsert(user.uid, goalId, {
           isAdmin: true,
           isAchiever: true,
         })
 
-        this._db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`)
+        this._db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${user.uid}`)
           .pipe(take(2))
           .subscribe(async stakeholder => {
 

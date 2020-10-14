@@ -6,7 +6,6 @@ import { AddSupportModalPage } from '../../../modals/add-support-modal/add-suppo
 import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-options.page';
 // Services
 import { PostService } from 'apps/journal/src/app/services/post/post.service';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 // Interfaces
@@ -40,7 +39,6 @@ export class MilestoneComponent implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private authService: AuthService,
     private imageService: ImageService,
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,

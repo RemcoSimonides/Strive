@@ -3,13 +3,12 @@ import { ActivatedRoute } from '@angular/router'
 // Ionic
 import { IonInfiniteScroll, LoadingController, ModalController, NavController, PopoverController, AlertController, Platform } from '@ionic/angular'
 // Rxjs
-import { Observable, empty, Subscription } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Observable, empty, Subscription, of } from 'rxjs';
+import { first, switchMap, take } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../../services/firestore/firestore.service'
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
 import { GoalStakeholderService } from '../../services/goal/goal-stakeholder.service'
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { PostService } from 'apps/journal/src/app/services/post/post.service';
@@ -17,6 +16,7 @@ import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/i
 import { GoalAuthGuardService } from 'apps/journal/src/app/services/goal/goal-auth-guard.service';
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Pages / Popover / Modal
 import { CreateGoalPage } from './modals/create-goal/create-goal.page';
 import { GoalOptionsPopoverPage, enumGoalOptions } from './popovers/goal-options-popover/goal-options-popover.page'
@@ -34,6 +34,7 @@ import {
 } from '@strive/interfaces';
 
 import { Plugins } from '@capacitor/core';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 const { Share } = Plugins;
 
 // Animation for Roadmap
@@ -71,7 +72,7 @@ export class GoalPage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private authService: AuthService,
+    public user: UserService,
     private db: FirestoreService,
     private goalService: GoalService,
     private goalAuthGuardService: GoalAuthGuardService,
@@ -100,54 +101,46 @@ export class GoalPage implements OnInit {
       return
     }
 
-    this.authService.userProfile$.pipe(
-      switchMap(userProfile => {
-        if (userProfile) {
-
-          this._isLoggedIn = true
-          return this.goalStakeholderService.getStakeholderDocObs(userProfile.id, this._goalId)
-
-        } else {
-
-          this._isAchiever = false
-          this._isAdmin = false
-          this._isSupporter = false
-          this._isSpectator = false
-          this._hasOpenRequestToJoin = false
-          this._isLoggedIn = false
-
-          // empty observable does not trigger subscribe so init public goal (without being logged in) here
-          if (this._goal.publicity === enumGoalPublicity.public) {
-            this.initGoal()
-          } else {
-
-            // check invite token
-            this.route.queryParams.subscribe(data => {
-              if (data.invite_token) {
-
-                const access = this.inviteTokenService.checkInviteTokenOfGoal(this._goalId, data.invite_token)
-                access ? this.initGoal() : this.initNoAccess()
-
-              } else {
-                // no access
-                this.initNoAccess()
-              }
-            })
-
-          }
-
-          return empty()
-        }
-
-      })
-    ).subscribe(async stakeholder => {
+    // TODO test
+    this.user.profile$.pipe(
+      switchMap((profile: Profile) => !!profile ? this.goalStakeholderService.getStakeholderDocObs(profile.id, this._goalId) : of()),
+    ).subscribe(async (stakeholder: IGoalStakeholder) => {
 
       if (stakeholder) {
+
         this._isAchiever = stakeholder.isAchiever
         this._isAdmin = stakeholder.isAdmin
         this._isSupporter = stakeholder.isSupporter
         this._isSpectator = stakeholder.isSpectator
         this._hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
+
+      } else {
+
+        this._isAchiever = false
+        this._isAdmin = false
+        this._isSupporter = false
+        this._isSpectator = false
+        this._hasOpenRequestToJoin = false
+
+        // !empty observable does not trigger subscribe so init public goal (without being logged in) here
+        // I moved this to subscribe section. Trigger the subscription maybe
+        if (this._goal.publicity === enumGoalPublicity.public) {
+          this.initGoal()
+        } else {
+
+          // check invite token
+          this.route.queryParams.subscribe(data => {
+            if (data.invite_token) {
+
+              const access = this.inviteTokenService.checkInviteTokenOfGoal(this._goalId, data.invite_token)
+              access ? this.initGoal() : this.initNoAccess()
+
+            } else {
+              // no access
+              this.initNoAccess()
+            }
+          })
+        }
       }
 
       let access: boolean = await this.goalAuthGuardService.checkAccess(this._goal, stakeholder)
@@ -163,9 +156,7 @@ export class GoalPage implements OnInit {
       } else {
         this.initGoal()
       }
-
     })
-
   }
 
   public async initGoal(): Promise<void> {
@@ -396,20 +387,19 @@ export class GoalPage implements OnInit {
     })
     await loading.present()
 
-    const { uid } = await this.authService.afAuth.currentUser
     const goal = await this.goalService.getGoal(this._goalId)
 
     // Creating goal
     const goalId = await this.goalService.duplicateGoal(goal)
 
     // Creating stakeholder
-    await this.goalStakeholderService.upsert(uid, goalId, {
+    await this.goalStakeholderService.upsert(this.user.uid, goalId, {
       isAdmin: true,
       isAchiever: true
     })
 
     // Wait for stakeholder to be created before making milestones because you need admin rights for that
-    this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`)
+    this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
       .pipe(take(2))
       .subscribe(async stakeholder => {
         if (stakeholder) {
@@ -423,15 +413,11 @@ export class GoalPage implements OnInit {
 
   }
 
-  public async requestToJoinGoal(): Promise<void> {
-
-    const { uid } = await this.authService.afAuth.currentUser
-
-    await this.goalStakeholderService.upsert(uid, this._goalId, {
+  public requestToJoinGoal() {
+    return this.goalStakeholderService.upsert(this.user.uid, this._goalId, {
       isSpectator: true,
       hasOpenRequestToJoin: true
     })
-
   }
 
   public async _openSharePopover(ev: UIEvent): Promise<void> {

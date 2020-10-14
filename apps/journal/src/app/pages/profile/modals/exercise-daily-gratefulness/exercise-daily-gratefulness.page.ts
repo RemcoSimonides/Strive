@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { IDailyGratefulness } from '@strive/interfaces';
 
@@ -16,17 +16,14 @@ export class ExerciseDailyGratefulnessPage implements OnInit {
   public _dailyGratefulness: IDailyGratefulness
 
   constructor(
-    private authService: AuthService,
+    private user: UserService,
     private exercisesService: ExercisesService,
     private modalCtrl: ModalController,
     ) { }
 
   async ngOnInit() {
-
-    const { uid } = await this.authService.afAuth.currentUser;
-
     // load daily gratefulness settings
-    this._dailyGratefulness = await this.exercisesService.getDailyGratefulnessSettings(uid)
+    this._dailyGratefulness = await this.exercisesService.getDailyGratefulnessSettings(this.user.uid)
     if (!this._dailyGratefulness || !this._dailyGratefulness.time) {
       this._dailyGratefulness = {
         on: false,
@@ -47,8 +44,7 @@ export class ExerciseDailyGratefulnessPage implements OnInit {
   }
 
   async saveDailyGratefulnessSettings(dismiss: boolean = true): Promise<void> {
-    const { uid } = await this.authService.afAuth.currentUser;
-    await this.exercisesService.saveDailyGratefulnessSettings(uid, this._dailyGratefulness)
+    await this.exercisesService.saveDailyGratefulnessSettings(this.user.uid, this._dailyGratefulness)
     if (dismiss) this.dismiss()
   }
 

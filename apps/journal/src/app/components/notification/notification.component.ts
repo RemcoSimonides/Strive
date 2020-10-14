@@ -5,7 +5,6 @@ import { DiscussionPage } from '../../pages/discussion/discussion.page'
 import { take } from 'rxjs/operators';
 // Services
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service';
 // Pages
@@ -20,6 +19,7 @@ import {
   enumSupportDecision,
   INotificationSupport, 
   IGoalStakeholder } from '@strive/interfaces';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Component({
   selector: 'app-notification',
@@ -41,7 +41,7 @@ export class NotificationComponent implements OnInit {
   enumRequestStatus = enumRequestStatus
 
   constructor(
-    private authService: AuthService,
+    private user: UserService,
     private db: FirestoreService,
     private goalStakeholderService: GoalStakeholderService,
     private modalCtrl: ModalController,
@@ -97,8 +97,6 @@ export class NotificationComponent implements OnInit {
 
   public async handleRequestDecision(notification: INotificationGoalRequest, isAccepted: boolean): Promise<void> {
 
-    const { uid } = await this.authService.afAuth.currentUser;
-
     if (isAccepted) {
 
       await this.goalStakeholderService.upsert(notification.requestPath.uidRequestor, notification.requestPath.goalId, {
@@ -106,7 +104,7 @@ export class NotificationComponent implements OnInit {
         hasOpenRequestToJoin: false
       })
 
-      await this.notificationService.upsert(uid, notification.id, {
+      await this.notificationService.upsert(this.user.uid, notification.id, {
         requestStatus: enumRequestStatus.accepted
       })
 
@@ -118,7 +116,7 @@ export class NotificationComponent implements OnInit {
         hasOpenRequestToJoin: false
       })
 
-      await this.notificationService.upsert(uid, notification.id, {
+      await this.notificationService.upsert(this.user.uid, notification.id, {
         requestStatus: enumRequestStatus.rejected
       })
 

@@ -4,7 +4,7 @@ import { ModalController, PopoverController } from '@ionic/angular';
 // Pages
 import { ExerciseAffirmationExplanationPage } from './popovers/exercise-affirmation-explanation/exercise-affirmation-explanation.page'
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { IAffirmations } from '@strive/interfaces';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
@@ -90,18 +90,15 @@ export class ExerciseAffirmationPage implements OnInit {
   private _suggestionsCopy: IAffirmationSuggestion[]
 
   constructor(
-    private authService: AuthService,
+    private user: UserService,
     private exercisesService: ExercisesService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
     ) { }
 
   async ngOnInit() {
-    const { uid } = await this.authService.afAuth.currentUser;
-    this._profileId = uid
-
     // load affirmations
-    this._affirmations = await this.exercisesService.getAffirmations(this._profileId)
+    this._affirmations = await this.exercisesService.getAffirmations(this.user.uid)
     if (!this._affirmations.affirmations) {
       this._affirmations = <IAffirmations>{ affirmations: [], times: ['', '', ''] }    
     }
@@ -199,7 +196,7 @@ export class ExerciseAffirmationPage implements OnInit {
   async saveAffirmations(): Promise<void> {
     this._affirmations.affirmations = this._affirmations.affirmations.filter(affirmation => affirmation !== '')
 
-    await this.exercisesService.saveAffirmations(this._profileId, this._affirmations)
+    await this.exercisesService.saveAffirmations(this.user.uid, this._affirmations)
 
     await this.modalCtrl.dismiss()
 

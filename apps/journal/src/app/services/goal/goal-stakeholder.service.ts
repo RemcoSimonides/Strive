@@ -10,9 +10,9 @@ import {
   IGoalStakeholder,
   enumGoalStakeholder,
   IGoal,
-  enumGoalPublicity,
-  IProfile
+  enumGoalPublicity
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore'
 
 @Injectable({
   providedIn: 'root'
@@ -80,7 +80,7 @@ export class GoalStakeholderService {
 
     let newStakeholder = <IGoalStakeholder>{}
 
-    const userProfile = await this.db.docWithId$<IProfile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
+    const userProfile = await this.db.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
     newStakeholder.uid = uid
     newStakeholder.username = userProfile.username
     newStakeholder.photoURL = userProfile.image

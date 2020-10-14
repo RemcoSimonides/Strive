@@ -4,13 +4,13 @@
   <ion-spinner name="lines" color="primary"></ion-spinner>
 </div>
 
-<div class="not-logged-in" *ngIf="!_isLoggedIn && !_pageIsLoading">
+<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !_pageIsLoading">
   <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
   </p>
 </div>
 
-<ion-content class="ion-padding" *ngIf="_isLoggedIn && !_pageIsLoading">
+<ion-content class="ion-padding" *ngIf="(user.isLoggedIn$ | async) && !_pageIsLoading">
   <div class="vertical-align-content">
 
     <ion-list inset="false" lines="full">

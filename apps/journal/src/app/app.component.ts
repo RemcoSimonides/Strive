@@ -1,11 +1,11 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 // Ionic
 import { Platform, MenuController, PopoverController, ModalController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 // Services
-import { AuthService } from './services/auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 import { FcmService } from './services/fcm/fcm.service';
 import { ScreensizeService } from './services/screensize/screensize.service';
 // Pages
@@ -13,29 +13,32 @@ import { TabsPage } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
 import { InstantSearchService } from './services/instant-search/instant-search.service';
-import { Observable } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, first, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   rootPage:any = TabsPage;
   _isDesktop: boolean;
-  _isLoggedIn: boolean;
+  // _isLoggedIn: boolean;
 
   pages: Array<{ title: string, url: string, icon: string }> = []
 
-  _uid: string
+  // _uid: string
 
   private _inAppNotificationsObservable: Observable<any>
 
   enumAuthSegment = enumAuthSegment
 
+  private profileSubscription: Subscription
+  private screenSizeSubscription: Subscription
+
   constructor(
-    public auth: AuthService,
+    public user: UserService,
     private _fcm: FcmService,
     private _instantSearchService: InstantSearchService,
     private menuCtrl: MenuController,
@@ -49,6 +52,11 @@ export class AppComponent {
     private statusBar: StatusBar
   ) {
     this.initializeApp();
+  }
+
+  ngOnDestroy() {
+    this.profileSubscription.unsubscribe()
+    this.screenSizeSubscription.unsubscribe()
   }
 
   initializeApp() {
@@ -82,37 +90,14 @@ export class AppComponent {
       this._isDesktop = isDesktop
     })
 
-    this.auth.getCurrentuserProfileObs().subscribe((userProfile) => {
-      if (userProfile) {
-        this._isLoggedIn = true;
-      } else {
-        this._isLoggedIn = false;
-      }
-    })
-
-    this.pages = []
-    this.auth.getCurrentUserProfile().then(userProfile => {
-      if (userProfile) {
-        this._uid = userProfile.id
-
-        this.pages.push(
-          { title: 'Explore', url: '/explore', icon: 'globe' },
-          { title: 'Notifications', url: '/notifications', icon: 'notifications' },
-          { title: 'Goals', url: '/goals', icon: 'flag' },
-          { title: 'Supports', url: '/supports', icon: 'heart' },
-          { title: 'Profile', url: `/profile/${userProfile.id}`, icon: 'person' }
-        )
-
-      }
-    })
   }
 
   async openAuthModalOnStartup(): Promise<void> {
 
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), take(1)).subscribe(async (event: NavigationEnd) => {
 
-      const isLoggedIn: boolean = await this.auth.isLoggedIn()
-      if (isLoggedIn) return
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(async (event: NavigationEnd) => {
+
+      if (!this.user.uid) return
 
       const doNotShowAuthPages: string[] = ['/download', '/terms'];
       const doShowSignUpModalPages: string[] = ['/explore']

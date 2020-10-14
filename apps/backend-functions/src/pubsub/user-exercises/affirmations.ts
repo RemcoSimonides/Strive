@@ -1,6 +1,7 @@
 import { db, admin } from '../../internals/firebase';
 import * as moment from 'moment'
-import { IAffirmations, IProfile } from '@strive/interfaces';
+import { IAffirmations } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 import { IScheduledTaskUserExerciseAffirmations, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 
@@ -13,7 +14,7 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
         // get profile for FCM tokens
         const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
         const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-        const profile: IProfile = Object.assign(<IProfile>{}, profileDocSnap.data())
+        const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
         if (profile.fcmTokens) {
 

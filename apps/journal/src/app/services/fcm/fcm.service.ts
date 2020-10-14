@@ -5,7 +5,7 @@ import { ToastController, Platform } from '@ionic/angular';
 import { Plugins, PushNotification, PushNotificationToken, PushNotificationActionPerformed } from '@capacitor/core'
 import { tap, take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ProfileService } from '../profile/profile.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 const { PushNotifications } = Plugins;
 
@@ -20,7 +20,7 @@ export class FcmService {
     private fun: AngularFireFunctions,
     private toastController: ToastController,
     private _platform: Platform,
-    private profileService: ProfileService
+    private user: UserService
   ) {
 
   }
@@ -29,7 +29,7 @@ export class FcmService {
     return this.afMessaging.requestToken.pipe(
       tap(token => {
         this.token = token
-        this.profileService.addFCMToken(token)
+        this.user.addFCMToken(token)
       }),
     )
   }
@@ -55,7 +55,7 @@ export class FcmService {
     PushNotifications.addListener('registration',
       (token: PushNotificationToken) => {
         this.token = token.value
-        this.profileService.addFCMToken(token.value)
+        this.user.addFCMToken(token.value)
         console.log('Push registration success, token: ' + token.value);
       }
     );

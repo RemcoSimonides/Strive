@@ -6,9 +6,9 @@ import { FirestoreService } from '../firestore/firestore.service';
 import {
   enumNotificationType,
   INotificationWithPostAndSupports,
-  INotification,
-  IProfile
+  INotification
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore'
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,7 @@ export class NotificationService {
   async resetNumberOfUnreadNotifications(): Promise<void> {
     
     const { uid } = await this.afAuth.currentUser;
-    await this.db.upsert<IProfile>(`Users/${uid}/Profile/${uid}`, {
+    await this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, {
       numberOfUnreadNotifications: 0
     })
   }

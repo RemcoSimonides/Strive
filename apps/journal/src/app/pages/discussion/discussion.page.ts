@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavParams, IonContent, ModalController } from '@ionic/angular';
 // Rxjs
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 // Services
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { DiscussionService } from 'apps/journal/src/app/services/discussion/discussion.service';
 import { DiscussionPaginationService } from 'apps/journal/src/app/services/pagination/discussion-pagination.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import {
   IDiscussion,
@@ -21,7 +21,7 @@ import {
   templateUrl: './discussion.page.html',
   styleUrls: ['./discussion.page.scss'],
 })
-export class DiscussionPage implements OnInit {
+export class DiscussionPage implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea: IonContent
   scrolledToBottom: boolean = true
 
@@ -35,7 +35,7 @@ export class DiscussionPage implements OnInit {
   discussion: IDiscussion
 
   constructor(
-    private authService: AuthService,
+    public user: UserService,
     private db: FirestoreService,
     private discussionService: DiscussionService,
     private modalCtrl: ModalController,
@@ -64,8 +64,11 @@ export class DiscussionPage implements OnInit {
     this.modalCtrl.dismiss()
   }
 
-  ionViewWillLeave() {
+  ngOnDestroy() {
     this.subscription.unsubscribe()
+  }
+
+  ionViewWillLeave() {
     this.paginationService.reset()
   }
 
@@ -102,7 +105,7 @@ export class DiscussionPage implements OnInit {
     // do not allow empty enters
     if (this._comment == '') return
 
-    const { uid, displayName, photoURL } = await this.authService.afAuth.currentUser;
+    const { uid, displayName, photoURL } = await this.user.getFirebaseUser();
 
     this.discussionService.addReply(this.discussionId, {
       text: this._comment,

@@ -5,13 +5,10 @@ import { first, take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 // Services
 import { FirestoreService } from '../firestore/firestore.service';
-import { ProfileService } from '../profile/profile.service';
-import { AuthService } from '../auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import {
-  ISpectator,
-  IProfile
-} from '@strive/interfaces';
+import { ISpectator } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -20,34 +17,24 @@ export class UserSpectateService {
 
   constructor(
     private afs: AngularFirestore,
-    private authService: AuthService,
     private db: FirestoreService,
-    private profileService: ProfileService,
+    private user: UserService
   ) { }
 
-  async getCurrentSpectator(uidToBeSpectated: string): Promise<ISpectator> {
-
-    const { uid } = await this.authService.afAuth.currentUser
-    return await this.getSpectator(uid, uidToBeSpectated)
-
+  getCurrentSpectator(uidToBeSpectated: string) {
+    return this.getSpectator(this.user.uid, uidToBeSpectated)
   }
 
-  async getSpectator(uidSpectator: string, uidToBeSpectated): Promise<ISpectator> {
-
-    return await this.db.docWithId$<ISpectator>(`Users/${uidToBeSpectated}/Spectators/${uidSpectator}`).pipe(first()).toPromise()
-
+  getSpectator(uidSpectator: string, uidToBeSpectated) {
+    return this.db.docWithId$<ISpectator>(`Users/${uidToBeSpectated}/Spectators/${uidSpectator}`).pipe(first()).toPromise()
   }
 
   async getSpectators(uid: String): Promise<ISpectator[]> {
-
-    return this.db.colWithIds$(`Users/${uid}/Spectators`, ref => ref.where('isSpectator', '==', true)).pipe(take(1)).toPromise()
-
+    return this.db.colWithIds$<ISpectator[]>(`Users/${uid}/Spectators`, ref => ref.where('isSpectator', '==', true)).pipe(take(1)).toPromise()
   }
 
   async getSpectating(uid: string): Promise<ISpectator[]> {
-
-    return this.db.collectionGroupWithIds$(`Spectators`, ref => ref.where('uid', '==', uid)).pipe(take(1)).toPromise()
-
+    return this.db.collectionGroupWithIds$<ISpectator[]>(`Spectators`, ref => ref.where('uid', '==', uid)).pipe(take(1)).toPromise()
   }
 
   /**
@@ -56,9 +43,7 @@ export class UserSpectateService {
    */
   async toggleSpectate(targetUID: string): Promise<void> {
 
-    const { uid } = await this.authService.afAuth.currentUser
-
-    this.afs.doc<ISpectator>(`Users/${targetUID}/Spectators/${uid}`)
+    this.afs.doc<ISpectator>(`Users/${targetUID}/Spectators/${this.user.uid}`)
       .snapshotChanges()
       .pipe(take(1))
       .toPromise()
@@ -73,11 +58,8 @@ export class UserSpectateService {
           })
 
         } else {
-
           await this.createSpectator(targetUID)
-
         }
-
       })
 
   }
@@ -88,8 +70,8 @@ export class UserSpectateService {
    */
   private async createSpectator(uid: string): Promise<void> {
 
-    const currentUserProfile: IProfile = await this.authService.getCurrentUserProfile()
-    const toBeSpectatedUserProfile: IProfile = await this.profileService.getProfile(uid)
+    const currentUserProfile: Profile = await this.user.getProfile()
+    const toBeSpectatedUserProfile: Profile = await this.user.getProfile(uid)
 
     const newSpectator = <ISpectator>{}
     newSpectator.uid = currentUserProfile.id
@@ -104,11 +86,8 @@ export class UserSpectateService {
 
   }
 
-  private async upsert(targetUID: string, spectator: Partial<ISpectator>): Promise<void> {
-
-    const { uid } = await this.authService.afAuth.currentUser
-    await this.db.upsert(`Users/${targetUID}/Spectators/${uid}`, spectator)
-    
+  private upsert(targetUID: string, spectator: Partial<ISpectator>) {
+    return this.db.upsert(`Users/${targetUID}/Spectators/${this.user.uid}`, spectator)
   }
 
 }

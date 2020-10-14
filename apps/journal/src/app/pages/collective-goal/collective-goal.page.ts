@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 // Ionic
 import { ModalController, PopoverController, AlertController, NavController, Platform } from '@ionic/angular';
 // Rxjs
-import { Observable, empty, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, empty, Subscription, of } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 // Modals
 import { CreateCollectiveGoalPage } from './modals/create-collective-goal/create-collective-goal.page'
 import { CreateGoalPage } from '../goal/modals/create-goal/create-goal.page'
@@ -15,17 +15,18 @@ import { CollectiveGoalSharePopoverPage } from './popovers/collective-goal-share
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
 import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
 import { CollectiveGoalAuthGuardService } from 'apps/journal/src/app/services/collective-goal/collective-goal-auth-guard.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import {
   ICollectiveGoal,
   ICollectiveGoalStakeholder,
   IGoal,
   enumGoalPublicity,
-  ITemplate
+  ITemplate,
+  IGoalStakeholder
 } from '@strive/interfaces';
 // Others
 import { goalSlideOptions } from '../../../theme/goal-slide-options'
@@ -44,7 +45,6 @@ export class CollectiveGoalPage implements OnInit {
 
   public _goalSlideOptions = goalSlideOptions
   public enumGoalPublicity = enumGoalPublicity
-  public _isLoggedIn: boolean
   public _collectiveGoalExistsAndUserHasAccess: boolean
 
   collectiveGoalId: string
@@ -61,7 +61,7 @@ export class CollectiveGoalPage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private authService: AuthService,
+    public user: UserService,
     private collectiveGoalAuthGuardService: CollectiveGoalAuthGuardService,
     private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
@@ -90,64 +90,61 @@ export class CollectiveGoalPage implements OnInit {
     }
 
     //Get current users' rights
-    this.authService.userProfile$.pipe(
-      switchMap(userProfile => {
+    // TODO needs test and refactor
+    this.user.profile$.pipe(
+      switchMap(profile => {
+        if (!!profile) {
+          return this.collectiveGoalStakeholderService.getStakeholderDocObs(this.user.uid, this.collectiveGoalId)
+        } else {
+          return of()
+        }
+      }),
+    ).subscribe(async (stakeholder: ICollectiveGoalStakeholder | undefined) => {
+      if (!!stakeholder) {
 
-        if (userProfile) {
+        this._isAchiever = stakeholder.isAchiever
+        this._isAdmin = stakeholder.isAdmin
+        this._isSpectator = stakeholder.isSpectator
 
-          this._isLoggedIn = true
-          return this.collectiveGoalStakeholderService.getStakeholderDocObs(userProfile.id, this.collectiveGoalId)
+        const access = await this.collectiveGoalAuthGuardService.checkAccess(this._collectiveGoal, stakeholder)
+        if (!access) {
+          // check invite token
+          this.route.queryParams.subscribe(data => {
+            if (data.invite_token) {
 
+              const access = this.inviteTokenService.checkInviteTokenOfCollectiveGoal(this.collectiveGoalId, data.invite_token)
+              access ? this.initCollectiveGoal() : this.initNoAccess()
+
+            } else {
+              this.initNoAccess()
+            }
+          })
+        } else {
+          this.initCollectiveGoal()
+        }
+
+      } else {
+
+        this._isAdmin = false
+        this._isAchiever = false
+        this._isSpectator = false
+
+        if (this._collectiveGoal.isPublic) {
+          this.initCollectiveGoal()
         } else {
 
-          this._isAdmin = false
-          this._isAchiever = false
-          this._isSpectator = false
-          this._isLoggedIn = false
-
-          if (this._collectiveGoal.isPublic) {
-            this.initCollectiveGoal()
-          } else {
-
-            // check invite token
-            this.route.queryParams.subscribe(data => {
-              if (data.invite_token) {
-
-                const access = this.inviteTokenService.checkInviteTokenOfCollectiveGoal(this.collectiveGoalId, data.invite_token)
-                access ? this.initCollectiveGoal() : this.initNoAccess()
-
-              } else {
-                this.initNoAccess()
-              }
-            })
-          }
-
-          return empty()
+          // check invite token
+          this.route.queryParams.subscribe(data => {
+            if (data.invite_token) {
+              const access = this.inviteTokenService.checkInviteTokenOfCollectiveGoal(this.collectiveGoalId, data.invite_token)
+              access ? this.initCollectiveGoal() : this.initNoAccess()
+            } else {
+              this.initNoAccess()
+            }
+          })
         }
-      })
-    ).subscribe(async stakeholder => {
 
-      this._isAchiever = stakeholder.isAchiever
-      this._isAdmin = stakeholder.isAdmin
-      this._isSpectator = stakeholder.isSpectator
-
-      const access = await this.collectiveGoalAuthGuardService.checkAccess(this._collectiveGoal, stakeholder)
-      if (!access) {
-        // check invite token
-        this.route.queryParams.subscribe(data => {
-          if (data.invite_token) {
-
-            const access = this.inviteTokenService.checkInviteTokenOfCollectiveGoal(this.collectiveGoalId, data.invite_token)
-            access ? this.initCollectiveGoal() : this.initNoAccess()
-
-          } else {
-            this.initNoAccess()
-          }
-        })
-      } else {
-        this.initCollectiveGoal()
       }
-
     })
 
   }
@@ -313,8 +310,7 @@ export class CollectiveGoalPage implements OnInit {
   }
 
   async toggleSpectator(): Promise<void> {
-    const uid = (await this.authService.afAuth.currentUser).uid;
-    await this.collectiveGoalStakeholderService.upsert(uid, this.collectiveGoalId, { isSpectator: !this._isSpectator })
+    await this.collectiveGoalStakeholderService.upsert(this.user.uid, this.collectiveGoalId, { isSpectator: !this._isSpectator })
   }
 
   async createGoal(): Promise<void> {

@@ -1,12 +1,12 @@
 <app-header title="Goals" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
 
-<div class="not-logged-in" *ngIf="!_isLoggedIn">
+<div class="not-logged-in" *ngIf="!user.isLoggedIn$ | async">
     <p>
         <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your goals
     </p>
 </div>
 
-<ion-content *ngIf="_isLoggedIn" class="ion-no-padding">
+<ion-content *ngIf="user.isLoggedIn$ | async" class="ion-no-padding">
 
     <!-- Goals -->
     <h3>Your Goals</h3>

@@ -35,7 +35,7 @@
             <span id="goal-title">{{ _goal?.title }}</span>
             <span *ngIf="goal.isFinished"> (finished)</span>
           </ion-col>
-          <ion-col size-xs="3" size-sm="3" size-md="3" size-lg="3" size-xl="3" self-align-end *ngIf="_isLoggedIn">
+          <ion-col size-xs="3" size-sm="3" size-md="3" size-lg="3" size-xl="3" self-align-end *ngIf="user.isLoggedIn$ | async">
             <div class="action-buttons-wrapper">
               <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
                 <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
@@ -46,7 +46,7 @@
               <ion-button (click)="_openSharePopover($event)" fill="clear" size="small" class="ion-no-padding action-button">
                 <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
               </ion-button>
-              <ion-button (click)="presentGoalOptionsPopover($event)" fill="clear" class="ion-no-padding action-button" *ngIf="_isLoggedIn">
+              <ion-button (click)="presentGoalOptionsPopover($event)" fill="clear" class="ion-no-padding action-button" *ngIf="user.isLoggedIn$ | async">
                 <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
               </ion-button>
             </div>

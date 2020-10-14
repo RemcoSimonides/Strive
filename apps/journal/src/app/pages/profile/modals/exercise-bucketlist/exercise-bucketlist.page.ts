@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
 // Interfaces
 import { IBucketList, enumPrivacy } from '@strive/interfaces';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Component({
   selector: 'app-exercise-bucketlist',
@@ -16,15 +16,14 @@ export class ExerciseBucketlistPage implements OnInit {
   public bucketList: IBucketList
 
   constructor(
-    private authService: AuthService,
+    private user: UserService,
     private exercisesService: ExercisesService,
     private modalCtrl: ModalController,
     ) {
   }
 
   async ngOnInit() {
-    const { uid } = await this.authService.afAuth.currentUser;
-    this.bucketList = await this.exercisesService.getBucketList(uid)
+    this.bucketList = await this.exercisesService.getBucketList(this.user.uid)
     if (!this.bucketList.items) this.bucketList = <IBucketList>{ items: [] }
     this.addEmptyItem()
   }
@@ -44,8 +43,7 @@ export class ExerciseBucketlistPage implements OnInit {
 
     if (this.bucketList.items[this.bucketList.items.length - 1].description === '') this.bucketList.items.splice(this.bucketList.items.length - 1, 1)
 
-    const { uid } = await this.authService.afAuth.currentUser;
-    await this.exercisesService.saveBucketList(uid, this.bucketList)
+    await this.exercisesService.saveBucketList(this.user.uid, this.bucketList)
 
     await this.modalCtrl.dismiss()
   }

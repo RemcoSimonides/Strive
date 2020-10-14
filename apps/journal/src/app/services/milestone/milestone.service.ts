@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 // Services
 import { FirestoreService } from '../firestore/firestore.service';
-import { AuthService } from '../auth/auth.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import {
   IMilestone,
-  enumMilestoneStatus,
-  IProfile
+  enumMilestoneStatus
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ import {
 export class MilestoneService {
 
   constructor(
-    private authService: AuthService,
-    private db: FirestoreService
+    private db: FirestoreService,
+    private user: UserService
   ) { }
 
   async milestoneStatusChange(goalId: string, milestone: IMilestone, status: enumMilestoneStatus): Promise<void> {
@@ -40,12 +40,12 @@ export class MilestoneService {
   
   async assignCurrentUser(goalId: string, milestone: IMilestone): Promise<void> {
 
-    const userProfile: IProfile = await this.authService.getCurrentUserProfile()
+    const profile: Profile = await this.user.getProfile()
     
     await this.db.upsert(`Goals/${goalId}/Milestones/${milestone.id}`, {
-      achieverId: userProfile.id,
-      achieverUsername: userProfile.username,
-      achieverPhotoURL: userProfile.image
+      achieverId: profile.id,
+      achieverUsername: profile.username,
+      achieverPhotoURL: profile.image
     })
   
   }

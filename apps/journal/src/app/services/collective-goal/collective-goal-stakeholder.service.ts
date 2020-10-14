@@ -8,9 +8,9 @@ import { FirestoreService } from '../firestore/firestore.service';
 // Interfaces
 import {
   ICollectiveGoalStakeholder,
-  ICollectiveGoal,
-  IProfile
+  ICollectiveGoal
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -92,7 +92,7 @@ export class CollectiveGoalStakeholderService {
   private async createNewStakeholder(uid: string, collectiveGoalId: string, roles: roleArgs): Promise<void> {
     let newStakeholder = <ICollectiveGoalStakeholder>{}
 
-    const userProfile = await this.db.docWithId$<IProfile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
+    const userProfile = await this.db.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
     newStakeholder.uid = uid
     newStakeholder.username = userProfile.username
     newStakeholder.photoURL = userProfile.image

@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin'
 import * as moment from 'moment'
 import { IScheduledTaskUserExerciseDailyGratefulness, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
-import { IProfile } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore'
 
 const db = admin.firestore()
 
@@ -40,7 +40,7 @@ export async function sendDailyGratefulnessPushNotification(uid: string): Promis
     // get profile for FCM tokens
     const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
     const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-    const profile: IProfile = Object.assign(<IProfile>{}, profileDocSnap.data())
+    const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
     if (profile.fcmTokens) {
 

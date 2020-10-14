@@ -5,8 +5,8 @@ import { AlertController, LoadingController, ModalController, NavController, Nav
 
 //Services
 import { GoalService, goalArgs, collectiveGoalArgs } from '../../../../services/goal/goal.service'
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 //Interfaces
 import { 
@@ -31,7 +31,7 @@ export class CreateGoalPage implements OnInit {
   public goal = <IGoal>{}
 
   constructor(
-    private authService: AuthService,
+    private user: UserService,
     private alertCtrl: AlertController,
     private collectiveGoalService: CollectiveGoalService,
     private formBuilder: FormBuilder,
@@ -105,7 +105,7 @@ export class CreateGoalPage implements OnInit {
           image: this._collectiveGoal ? this._collectiveGoal.image : null
         }
 
-        const profile = await this.authService.getCurrentUserProfile()
+        const profile = await this.user.getProfile()
         const newGoalId = await this.goalService.handleCreatingGoal(profile.id, goal, collectiveGoal)
 
         await loading.dismiss()

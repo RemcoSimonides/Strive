@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
-import { ProfileService } from 'apps/journal/src/app/services/profile/profile.service';
 import { UserSpectateService } from 'apps/journal/src/app/services/user/user-spectate.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 // import { FcmService } from 'src/app/services/fcm/fcm.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { Observable } from 'rxjs';
 // Modals / Popover
@@ -21,7 +20,6 @@ import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefuln
 import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page';
 // Interfaces
 import {
-  IProfile,
   IGoal,
   enumGoalPublicity,
   enumGoalStakeholder,
@@ -31,10 +29,12 @@ import {
   enumPrivacy,
   IBucketListItem
 } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 // Other
 import { goalSlideOptions } from '../../../theme/goal-slide-options'
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 
 @Component({
@@ -64,13 +64,13 @@ export class ProfilePage implements OnInit {
   public _isSpectator: boolean = false
   public _editableProfileUsername: boolean = false
 
-  public profileDocObs: Observable<IProfile>
+  public profileDocObs: Observable<Profile>
 
   public _achievingGoalsColObs: Observable<IGoal[]>
   public _supportingGoalsColObs: Observable<IGoal[]>
 
-  public _profile = <IProfile>{}
-  private originalProfile = <IProfile>{}
+  public _profile = <Profile>{}
+  private originalProfile = <Profile>{}
 
   public _affirmationsDocObs: Observable<IAffirmations>
   public _affirmations = <IAffirmations>{}
@@ -83,7 +83,8 @@ export class ProfilePage implements OnInit {
   public segmentChoice: string = "info"
 
   constructor(
-    public authService: AuthService,
+    private afAuth: AngularFireAuth,
+    public user: UserService,
     private goalStakeholderService: GoalStakeholderService,
     private exerciseService: ExercisesService,
     private _imageService: ImageService,
@@ -91,7 +92,6 @@ export class ProfilePage implements OnInit {
     private navCtrl: NavController,
     public _platform: Platform,
     private popoverCtrl: PopoverController,
-    private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
@@ -101,24 +101,12 @@ export class ProfilePage implements OnInit {
   async ngOnInit() {
     this._pageIsLoading = true
     this._profileId = this.route.snapshot.paramMap.get('id')
-    const { uid } = await this.authService.afAuth.currentUser
-    if (this._profileId === 'undefined') {
-      if (await this.authService.isLoggedIn()) {
-        this.router.navigateByUrl(`profile/${uid}`)
-      } else {
-        this._shouldLogin = true
-      }
-    }
 
-    await  this.authService.getCurrentuserProfileObs().subscribe(async (userProfile) => {
-      if (userProfile) {
-        if (userProfile.id === this._profileId) {
-          this._isOwner = true
-        } else {
-          this._isOwner = false
-          await this.userSpectateService.getSpectator(userProfile.id, this._profileId).then(spectator => {
-            this._isSpectator = spectator.isSpectator
-          })
+    this.user.profile$.subscribe(async profile => {
+      if (profile) {
+        this._isOwner = profile.id === this._profileId
+        if (!this._isOwner) {
+          this._isSpectator = (await this.userSpectateService.getSpectator(profile.id, this._profileId)).isSpectator
         }
       } else {
         this._isOwner = false
@@ -126,22 +114,28 @@ export class ProfilePage implements OnInit {
       }
     })
 
-    this._profile = await this.profileService.getProfile(this._profileId)
+    if (this._profileId === 'undefined') {
+      if (this.user.uid) {
+        this.router.navigateByUrl(`profile/${this.user.uid}`)
+      } else {
+        this._shouldLogin = true
+      }
+    }
+
+    this._profile = await this.user.getProfile(this._profileId)
 
     // get affirmations
-    this._affirmationsDocObs = await this.exerciseService.getAffirmationsDocObs(this._profileId)
+    this._affirmationsDocObs = this.exerciseService.getAffirmationsDocObs(this._profileId)
     this._affirmationsDocObs.subscribe(affirmations => this._affirmations = affirmations)
 
     // get  bucketlist
-    this._bucketListDocObs = await this.exerciseService.getBucketListDocObs(this._profileId)
+    this._bucketListDocObs = this.exerciseService.getBucketListDocObs(this._profileId)
     this._bucketListDocObs.subscribe(bucketList  => this._bucketList = bucketList)
 
     // Save original values to later check for changes
     Object.assign(this.originalProfile, this._profile)
 
-    this.seo.generateTags({
-      title: `${this._profile.username} - Strive Journal`
-    })
+    this.seo.generateTags({ title: `${this._profile.username} - Strive Journal` })
 
     this._achievingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.achiever, !this._isOwner);
     this._supportingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.supporter, !this._isOwner)
@@ -203,22 +197,18 @@ export class ProfilePage implements OnInit {
           // }
           break
         case enumProfileOptions.logOut:
-          this.authService.signOut()
+          this.afAuth.signOut()
           break
       }
     })
 
   }
 
-  public async updateProfile(event: UIEvent, eventType: any): Promise<void> {
-
+  public async updateProfile() {
     // Check for changes
     if (this._profile !== this.originalProfile) {
-
-      await this.profileService.upsert(this._profile)
-    
+      return this.user.upsertProfile(this._profile)
     }
-
   }
 
   public async editProfileImage(ev: UIEvent): Promise<void> {
@@ -238,20 +228,17 @@ export class ProfilePage implements OnInit {
 
   }
 
-  public async _saveProfileUsername(){
-
+  public _saveProfileUsername(){
     if (!this._profile.username || !this._isOwner) return
 
-    await this.profileService.upsert({username:  this._profile.username})
+    this.user.upsertProfile({username:  this._profile.username})
 
     this._editableProfileUsername = false
-
   }
 
   async toggleSpectate(): Promise<void> {
 
-    const isLoggedIn = await this.authService.isLoggedIn()
-    if (isLoggedIn) {
+    if (await this.user.isLoggedIn) {
 
       this.userSpectateService.toggleSpectate(this._profileId)
       this._isSpectator = !this._isSpectator

@@ -6,10 +6,10 @@ import { Observable, combineLatest, Subscription } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 // Services
-import { AuthService } from 'apps/journal/src/app/services/auth/auth.service';
 import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 // Interfaces
 import { 
@@ -21,6 +21,7 @@ import {
 
 // Pages
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 
 
 @Component({
@@ -29,8 +30,6 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
   styleUrls: ['./goals.page.scss'],
 })
 export class GoalsPage implements OnInit, OnDestroy {
-
-  _isLoggedIn: boolean;
 
   enumGoalPublicity = enumGoalPublicity;
 
@@ -41,7 +40,7 @@ export class GoalsPage implements OnInit, OnDestroy {
   backBtnSubscription: Subscription;
 
   constructor(
-    public authService: AuthService,
+    public user: UserService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private goalStakeholderService: GoalStakeholderService,
     private _modalCtrl: ModalController,
@@ -52,16 +51,13 @@ export class GoalsPage implements OnInit, OnDestroy {
 
   async ngOnInit() { 
     
-    this.sub = this.authService.userProfile$.subscribe(async userProfile => {
-      this._isLoggedIn = userProfile ? true : false;
-
-      if (userProfile) {
-        const achieverGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.achiever, false)
-        const spectatorGoals = this.goalStakeholderService.getGoals(userProfile.id, enumGoalStakeholder.spectator, false)
-
+    this.sub = this.user.profile$.subscribe(async (profile: Profile) => {
+      if (!!profile) {
+        const achieverGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.achiever, false)
+        const spectatorGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.spectator, false)
         this.goalsColObs = filterDuplicateGoals([achieverGoals, spectatorGoals])
 
-        this.collectiveGoalsColObs = this.collectiveGoalStakeholderService.getCollectiveGoals(userProfile.id)
+        this.collectiveGoalsColObs = this.collectiveGoalStakeholderService.getCollectiveGoals(profile.id)
       }
     })
 

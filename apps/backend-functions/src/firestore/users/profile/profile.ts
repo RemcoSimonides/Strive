@@ -1,13 +1,13 @@
 import { db, functions, admin } from '../../../internals/firebase';
 
-import { IProfile } from '@strive/interfaces';
+import { Profile } from '@strive/user/user/+state/user.firestore';
 import { addToAlgolia, enumAlgoliaIndex, deleteFromAlgolia } from '../../../shared/algolia/algolia';
 
 export const profileCreatedHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
     .onCreate(async (snapshot, context) => {
 
         const uid = snapshot.id
-        const profile: IProfile = Object.assign(<IProfile>{}, snapshot.data())
+        const profile: Profile = Object.assign(<Profile>{}, snapshot.data())
 
         if (!profile) return
 
@@ -35,8 +35,8 @@ export const profileDeletedHandler = functions.firestore.document(`Users/{userId
 export const profileChangeHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
     .onUpdate(async (snapshot, context) => {
 
-        const before: IProfile = Object.assign(<IProfile>{}, snapshot.before.data())
-        const after: IProfile = Object.assign(<IProfile>{}, snapshot.after.data())
+        const before: Profile = Object.assign(<Profile>{}, snapshot.before.data())
+        const after: Profile = Object.assign(<Profile>{}, snapshot.after.data())
         if (!before) return
         if (!after) return
 
@@ -84,7 +84,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
 
     })
 
-async function updateCollectiveGoalStakeholders(uid: string, after: IProfile): Promise<void> {
+async function updateCollectiveGoalStakeholders(uid: string, after: Profile): Promise<void> {
 
     const stakeholdersColRef =  db.collectionGroup(`CGStakeholders`).where('uid', '==', uid)
     const stakeholdersSnap = await stakeholdersColRef.get()
@@ -105,7 +105,7 @@ async function updateCollectiveGoalStakeholders(uid: string, after: IProfile): P
 
 }
 
-async function updateGoalStakeholders(uid: string, after: IProfile): Promise<void> {
+async function updateGoalStakeholders(uid: string, after: Profile): Promise<void> {
 
     const stakeholdersColRef = db.collectionGroup(`GStakeholders`).where('uid', '==', uid)
     const stakeholdersSnap = await stakeholdersColRef.get()
@@ -128,7 +128,7 @@ async function updateGoalStakeholders(uid: string, after: IProfile): Promise<voi
 
 }
 
-async function updateSpectators(uid: string, after: IProfile): Promise<void> {
+async function updateSpectators(uid: string, after: Profile): Promise<void> {
 
     const spectatingsColRef = db.collectionGroup(`Spectators`).where('uid', '==', uid)
     const spectatingsSnap = await spectatingsColRef.get()
