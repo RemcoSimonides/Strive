@@ -22,22 +22,16 @@ import { filter, first, take } from 'rxjs/operators';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  rootPage:any = TabsPage;
-  _isDesktop: boolean;
-  // _isLoggedIn: boolean;
-
-  pages: Array<{ title: string, url: string, icon: string }> = []
-
-  // _uid: string
-
-  private _inAppNotificationsObservable: Observable<any>
+  rootPage: any = TabsPage;
 
   enumAuthSegment = enumAuthSegment
 
   private profileSubscription: Subscription
   private screenSizeSubscription: Subscription
+  private fcmSubscription: Subscription
 
   constructor(
+    public screensize: ScreensizeService,
     public user: UserService,
     private _fcm: FcmService,
     private _instantSearchService: InstantSearchService,
@@ -47,7 +41,6 @@ export class AppComponent implements OnDestroy {
     public _platform: Platform,
     private _popoverCtrl: PopoverController,
     private router: Router,
-    private _screensizeService: ScreensizeService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
@@ -57,6 +50,7 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy() {
     this.profileSubscription.unsubscribe()
     this.screenSizeSubscription.unsubscribe()
+    this.fcmSubscription.unsubscribe();
   }
 
   initializeApp() {
@@ -64,15 +58,14 @@ export class AppComponent implements OnDestroy {
       this.initializeMenu();
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this._screensizeService.onResize(this._platform.width());
+      this.screensize.onResize(this._platform.width());
 
       if ((this._platform.is('android') ||  this._platform.is('ios')) && !this._platform.is('mobileweb')) {
         this._fcm.addListenersCapacitor()
       }
 
       if (this._platform.is('mobileweb')) {
-        this._inAppNotificationsObservable = this._fcm.showMessages()
-        this._inAppNotificationsObservable.subscribe()
+        this.fcmSubscription = this._fcm.showMessages().subscribe()
       }
 
       this.openAuthModalOnStartup()
@@ -80,38 +73,24 @@ export class AppComponent implements OnDestroy {
   }
 
   initializeMenu() {
-
-    this._screensizeService.isDesktopView().subscribe(isDesktop => {
-      if (this._isDesktop) {
-        this.menuCtrl.enable(true)
-      } else {
-        this.menuCtrl.enable(false)
-      }
-      this._isDesktop = isDesktop
-    })
-
+    this.screenSizeSubscription = this.screensize.isDesktop$.subscribe(isDesktop => this.menuCtrl.enable(!isDesktop))
   }
 
   async openAuthModalOnStartup(): Promise<void> {
-
-
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(async (event: NavigationEnd) => {
+      const isLoggedIn = await this.user.isLoggedIn$.pipe(first()).toPromise();
+      if (isLoggedIn) return
 
-      if (!this.user.uid) return
+      const doNotShowAuthPages = ['/download', '/terms']
+      const doShowSignUpModalPages = ['/explore']
 
-      const doNotShowAuthPages: string[] = ['/download', '/terms'];
-      const doShowSignUpModalPages: string[] = ['/explore']
-
-      if (doNotShowAuthPages.indexOf(event.url) > -1) {
-        return
-      } else if (doShowSignUpModalPages.indexOf(event.url) > -1) {
+      if (doNotShowAuthPages.some(page => page === event.url)) return
+      if (doShowSignUpModalPages.some(page => page === event.url)) {
         this.openAuthModal(enumAuthSegment.register)
       } else {
         this.openAuthModal(enumAuthSegment.login)
       }
-
     })
-    
   }
 
   async search(event): Promise<void> {
@@ -161,6 +140,6 @@ export class AppComponent implements OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
-    this._screensizeService.onResize(event.target.innerWidth);
+    this.screensize.onResize(event.target.innerWidth);
   }
 }

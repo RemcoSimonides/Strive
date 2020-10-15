@@ -1,6 +1,6 @@
  
 <ion-tabs>
-  <ng-container *ngIf="!_isDesktop">
+  <ng-container *ngIf="!(screenSize.isDesktop$ | async)">
     <ion-tab-bar slot="bottom">
 
         <ion-tab-button tab="explore">

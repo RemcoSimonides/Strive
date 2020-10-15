@@ -9,19 +9,13 @@ import { distinctUntilChanged } from 'rxjs/operators';
 export class ScreensizeService {
 
   private isDesktop = new BehaviorSubject<boolean>(false);
+  public isDesktop$ = this.isDesktop.asObservable().pipe(distinctUntilChanged())
 
-  constructor() { }
-
-  onResize(size) {
+  onResize(size: number) {
     if (size < 568) {
       this.isDesktop.next(false);
     } else {
       this.isDesktop.next(true);
     }
   }
- 
-  isDesktopView(): Observable<boolean> {
-    return this.isDesktop.asObservable().pipe(distinctUntilChanged());
-  }
-  
 }
