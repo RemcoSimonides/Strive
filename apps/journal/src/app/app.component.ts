@@ -13,8 +13,8 @@ import { TabsPage } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
 import { InstantSearchService } from './services/instant-search/instant-search.service';
-import { Observable, Subscription } from 'rxjs';
-import { filter, first, take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -73,7 +73,9 @@ export class AppComponent implements OnDestroy {
   }
 
   initializeMenu() {
-    this.screenSizeSubscription = this.screensize.isDesktop$.subscribe(isDesktop => this.menuCtrl.enable(!isDesktop))
+    this.screenSizeSubscription = this.screensize.isDesktop$.subscribe(isDesktop => {
+      this.menuCtrl.enable(isDesktop && (this._platform.is('ios') || this._platform.is('android')))
+    })
   }
 
   async openAuthModalOnStartup(): Promise<void> {

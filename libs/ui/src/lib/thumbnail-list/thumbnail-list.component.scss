@@ -42,7 +42,7 @@ img {
   height: 90px;   
 }
 
-.image-container {
+.image-container-mobile {
   position: relative;
   height: 90px;
   width: 100%;
@@ -69,10 +69,6 @@ img {
   height: 100%;
   display: block;
   background: rgba(152, 154, 162, .1);
-}
-
-.card-title {
-  float: left;
 }
 
 // BROWSER THUMBNAIL

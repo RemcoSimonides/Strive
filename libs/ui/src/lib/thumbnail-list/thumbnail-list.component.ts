@@ -19,7 +19,7 @@ export interface IThumbnail {
 export class ThumbnailListComponent {
 
   @Input() thumbnails: IThumbnail[]
-  @Input() type:'collectiveGoal' | 'goal' | 'template';
+  @Input() type:'collectiveGoal' | 'goal' | 'template' | 'user';
   @Input() canCreate = false;
   @Input() collectiveGoalId: string;
 
@@ -44,6 +44,11 @@ export class ThumbnailListComponent {
       
       case 'template':
         this.router.navigateByUrl(`${this.router.url}/template/${id}`);
+        break
+
+      case 'user':
+        this.router.navigateByUrl(`profile/${id}`)
+        break
     
       default:
         throw new Error("Unknown type of thumbnail");        

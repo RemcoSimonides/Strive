@@ -1,8 +1,77 @@
 <ion-app>
 
+  <!-- Side menu -->
+  <section class="sidemenu">
+    <ion-menu side="end" contentId="main">
+      <ion-content>
+        <article #header>
+          <ion-row class="ion-justify-content-center">
+            <img id="profile-image"
+              [src]="(user.profile$ | async)?.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
+              routerDirection="root"
+              [routerLink]="'/profile/' + user.uid" />
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <h3>{{ (user.profile$ | async)?.username }}</h3>
+          </ion-row>
+        </article>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false">
+            <!-- Explore -->
+            <ion-item routerDirection="root" routerLink="/explore">
+              <ion-icon slot="start" name="globe"></ion-icon>
+              <ion-label>Explore</ion-label>
+            </ion-item>
+
+            <ng-container *ngIf="(user.isLoggedIn$ | async); else notLoggedInSide">
+              <!-- Notifications -->
+              <ion-item routerDirection="root" routerLink="/notifications">
+                <ion-icon slot="start" name="notifications"></ion-icon>
+                <ion-label>Notifications
+                  <ng-container *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">
+                    <span>({{ (user.profile$ | async)?.numberOfUnreadNotifications }})</span>                  
+                  </ng-container>
+                </ion-label>
+              </ion-item>
+              <!-- Goals -->
+              <ion-item routerDirection="root" routerLink="/goals">
+                <ion-icon slot="start" name="flag"></ion-icon>
+                <ion-label>Goals</ion-label>
+              </ion-item>
+              <!-- Supports -->
+              <ion-item routerDirection="root" routerLink="/supports">
+                <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="start"></fa-icon>
+                <ion-label>Supports</ion-label>
+              </ion-item>
+              <!-- Profile -->
+              <ion-item routerDirection="root" [routerLink]="'/profile/' + user.uid">
+                <ion-icon slot="start" name="person"></ion-icon>
+                <ion-label>Profile</ion-label>
+              </ion-item>
+            </ng-container>
+
+            <ng-template #notLoggedInSide>
+              <!-- Log in -->
+              <ion-item button (click)="openAuthModal(enumAuthSegment.login)">
+                <ion-icon slot="start" name="key"></ion-icon>
+                <ion-label>Log in</ion-label>
+              </ion-item>
+              <!-- Sign up -->
+              <ion-item button (click)="openAuthModal(enumAuthSegment.register)">
+                <ion-icon slot="start" name="key"></ion-icon>
+                <ion-label>Sign up</ion-label>
+              </ion-item>
+            </ng-template>
+
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+  </section>
+
   <!-- Mobile -->
   <ng-container *ngIf="_platform.is('android') && !_platform.is('ios'); else desktop">
-    <ion-nav [root]="rootPage"></ion-nav>
+    <ion-nav id="main" [root]="rootPage"></ion-nav>
   </ng-container>
 
   <ng-template #desktop>
@@ -86,76 +155,6 @@
       </ion-toolbar>
     </ion-header>
 
-    <!-- Side menu -->
-    <section class="sidemenu">
-      <ion-menu side="end" contentId="main">
-        <ion-content>
-          <article #header>
-            <ion-row class="ion-justify-content-center">
-              <img id="profile-image"
-                [src]="(user.profile$ | async)?.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
-                routerDirection="root"
-                [routerLink]="'/profile/' + user.uid" />
-            </ion-row>
-            <ion-row class="ion-justify-content-center">
-              <h3>{{ (user.profile$ | async)?.username }}</h3>
-            </ion-row>
-          </article>
-          <ion-list>
-            <ion-menu-toggle auto-hide="false">
-              <!-- Explore -->
-              <ion-item routerDirection="root" routerLink="/explore">
-                <ion-icon slot="start" name="globe"></ion-icon>
-                <ion-label>Explore</ion-label>
-              </ion-item>
-
-              <ng-container *ngIf="(user.isLoggedIn$ | async); else notLoggedInSide">
-                <!-- Notifications -->
-                <ion-item routerDirection="root" routerLink="/notifications">
-                  <ion-icon slot="start" name="notifications"></ion-icon>
-                  <ion-label>Notifications
-                    <ng-container *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">
-                      <span>({{ (user.profile$ | async)?.numberOfUnreadNotifications }})</span>                  
-                    </ng-container>
-                  </ion-label>
-                </ion-item>
-                <!-- Goals -->
-                <ion-item routerDirection="root" routerLink="/goals">
-                  <ion-icon slot="start" name="flag"></ion-icon>
-                  <ion-label>Goals</ion-label>
-                </ion-item>
-                <!-- Supports -->
-                <ion-item routerDirection="root" routerLink="/supports">
-                  <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="start"></fa-icon>
-                  <ion-label>Supports</ion-label>
-                </ion-item>
-                <!-- Profile -->
-                <ion-item routerDirection="root" [routerLink]="'/profile/' + user.uid">
-                  <ion-icon slot="start" name="person"></ion-icon>
-                  <ion-label>Profile</ion-label>
-                </ion-item>
-              </ng-container>
-
-              <ng-template #notLoggedInSide>
-                <!-- Log in -->
-                <ion-item button (click)="openAuthModal(enumAuthSegment.login)">
-                  <ion-icon slot="start" name="key"></ion-icon>
-                  <ion-label>Log in</ion-label>
-                </ion-item>
-                <!-- Sign up -->
-                <ion-item button (click)="openAuthModal(enumAuthSegment.register)">
-                  <ion-icon slot="start" name="key"></ion-icon>
-                  <ion-label>Sign up</ion-label>
-                </ion-item>
-              </ng-template>
-
-            </ion-menu-toggle>
-          </ion-list>
-        </ion-content>
-      </ion-menu>
-    </section>
+    <ion-router-outlet class="main-content-wrapper" id="main"></ion-router-outlet>
   </ng-template>
-    
-  <ion-router-outlet class="main-content-wrapper" id="main"></ion-router-outlet>
-
 </ion-app>

@@ -11,8 +11,6 @@ import { ExplorePage } from './explore.page';
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module'
 import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
 
-import { ComponentsModule } from '../../components/components.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { ScrollVanishDirective } from '../../directives/scroll-vanish/scroll-vanish.directive';
 
@@ -26,11 +24,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    FontAwesomeModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    ComponentsModule,
+    
+    // Strive
     ThumbnailListModule,
     ThumbnailListPipeModule
   ],
