@@ -13,19 +13,19 @@ import { take } from 'rxjs/operators';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { FcmService } from 'apps/journal/src/app/services/fcm/fcm.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
-import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 // Interfaces
 import { 
   ITemplate,
-  ICollectiveGoal,
   enumGoalPublicity,
   IGoalStakeholder
 } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Component({

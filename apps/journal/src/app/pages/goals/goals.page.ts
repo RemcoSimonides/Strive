@@ -6,7 +6,7 @@ import { Observable, combineLatest, Subscription } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 // Services
-import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
+import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -15,9 +15,9 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { 
   IGoal,
   enumGoalPublicity,
-  ICollectiveGoal,
   enumGoalStakeholder
 } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 // Pages
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';

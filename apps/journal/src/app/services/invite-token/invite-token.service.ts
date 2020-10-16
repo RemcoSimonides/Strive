@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 // Services
 import { GoalStakeholderService } from '../goal/goal-stakeholder.service';
-import { CollectiveGoalStakeholderService } from '../collective-goal/collective-goal-stakeholder.service';
+import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { FirestoreService } from '../firestore/firestore.service';
 // Rxjs
 import { take } from 'rxjs/operators';

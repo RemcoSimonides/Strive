@@ -4,17 +4,13 @@ import { AngularFirestoreDocument, AngularFirestore } from '@angular/fire/firest
 import { Observable, combineLatest, of } from 'rxjs';
 import { take, switchMap, first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from '../../../../../../apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
-import {
-  ICollectiveGoalStakeholder,
-  ICollectiveGoal
-} from '@strive/interfaces';
+import { ICollectiveGoalStakeholder } from './stakeholder.firestore';
+import { ICollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CollectiveGoalStakeholderService {
 
   collectiveGoalStakeholderDocRef: AngularFirestoreDocument<ICollectiveGoalStakeholder>

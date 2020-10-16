@@ -3,7 +3,7 @@ import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.inter
 import { deleteScheduledTask, upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { deleteFromAlgolia, addToAlgolia, enumAlgoliaIndex, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { deleteCollection } from '../../shared/delete-collections/delete-collections';
-import { ICollectiveGoal } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 export const collectiveGoalCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
     .onCreate(async (snapshot, context) => {

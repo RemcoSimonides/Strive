@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 // Services
-import { CollectiveGoalService } from './collective-goal.service';
-import { CollectiveGoalStakeholderService } from './collective-goal-stakeholder.service';
-// Interfaces
-import {
-  ICollectiveGoal,
-  ICollectiveGoalStakeholder
-} from '@strive/interfaces';
+import { CollectiveGoalService } from '../+state/collective-goal.service';
+import { CollectiveGoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+// Interfaces
+import { ICollectiveGoalStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
+import { ICollectiveGoal } from '../+state/collective-goal.firestore';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CollectiveGoalAuthGuardService implements CanActivate {
 
   private _collectiveGoalId: string

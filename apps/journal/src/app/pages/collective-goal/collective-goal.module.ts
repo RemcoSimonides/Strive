@@ -12,7 +12,7 @@ import { CollectiveGoalSharePopoverPage } from './popovers/collective-goal-share
 
 import { ComponentsModule } from '../../components/components.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CollectiveGoalAuthGuardService } from '../../services/collective-goal/collective-goal-auth-guard.service';
+import { CollectiveGoalAuthGuardService } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';

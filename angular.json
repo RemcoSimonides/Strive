@@ -310,6 +310,38 @@
           "style": "scss"
         }
       }
+    },
+    "collective-goal": {
+      "projectType": "library",
+      "root": "libs/collective-goal",
+      "sourceRoot": "libs/collective-goal/src",
+      "prefix": "strive",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/collective-goal/tsconfig.lib.json",
+              "libs/collective-goal/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/collective-goal/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/collective-goal/jest.config.js",
+            "tsConfig": "libs/collective-goal/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/collective-goal/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

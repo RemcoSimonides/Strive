@@ -5,15 +5,12 @@ import { AlertController, LoadingController, ModalController, NavController, Nav
 
 //Services
 import { GoalService, goalArgs, collectiveGoalArgs } from '../../../../services/goal/goal.service'
-import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 //Interfaces
-import { 
-  IGoal,
-  enumGoalPublicity,
-  ICollectiveGoal
-} from '@strive/interfaces'
+import { IGoal, enumGoalPublicity } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
   selector: 'app-create-goal',

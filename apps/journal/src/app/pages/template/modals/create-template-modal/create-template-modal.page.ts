@@ -3,15 +3,13 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, NavParams, NavController } from '@ionic/angular';
 
 // Services
-import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 
 // Interfaces
-import {
-  ICollectiveGoal,
-  ITemplate
-} from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
   selector: 'app-create-template-modal',

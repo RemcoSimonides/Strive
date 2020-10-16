@@ -1,5 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { ICollectiveGoal, IGoal, ITemplate } from '@strive/interfaces';
+import { IGoal, ITemplate } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { IThumbnail } from './thumbnail-list.component'
 

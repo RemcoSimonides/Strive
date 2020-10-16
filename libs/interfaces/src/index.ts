@@ -1,5 +1,3 @@
-export * from './lib/interfaces/collective-goal.interface';
-export * from './lib/interfaces/collective-goal-stakeholder.interface';
 export * from './lib/interfaces/comment.interface';
 export * from './lib/interfaces/discussion.interface';
 export * from './lib/interfaces/exercises.interface';

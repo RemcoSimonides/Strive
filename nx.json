@@ -43,6 +43,9 @@
     },
     "user": {
       "tags": []
+    },
+    "collective-goal": {
+      "tags": []
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ICollectiveGoal } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({

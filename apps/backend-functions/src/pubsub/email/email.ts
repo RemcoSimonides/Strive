@@ -3,9 +3,9 @@ import { db, functions, admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
 
-import { IGoalStakeholder, INotification, ICollectiveGoalStakeholder } from '@strive/interfaces';
+import { IGoalStakeholder, INotification } from '@strive/interfaces';
+import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { Profile, User as IUser } from '@strive/user/user/+state/user.firestore';
-import { sendNotificationMilestoneDeadlinePassed } from '../notifications/milestone.notification';
 import { sendgridAPIKey, sendgridTemplate } from '../../environments/environment';
 
 const API_KEY = sendgridAPIKey;

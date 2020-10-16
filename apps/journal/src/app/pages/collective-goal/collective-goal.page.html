@@ -1,14 +1,12 @@
-<app-header title=" {{ (collectiveGoalDocObs | async)?.title || 'Collective Goal' }}" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+<app-header [title]="(collectiveGoalDocObs | async)?.title || 'Collective Goal'"></app-header>
 
-<div class="not-logged-in" *ngIf="_pageIsLoading">
+<ng-container *ngIf="_pageIsLoading">
   <ion-spinner name="lines" color="primary"></ion-spinner>
-</div>
+</ng-container>
 
-<div class="not-logged-in" *ngIf="!_collectiveGoalExistsAndUserHasAccess && !_pageIsLoading">
-  <p>
-      Page not found
-  </p>
-</div>
+<ng-container *ngIf="!_collectiveGoalExistsAndUserHasAccess && !_pageIsLoading">
+  <p>Page not found</p>
+</ng-container>
 
 <ion-content class="ion-no-padding" *ngIf="_collectiveGoalExistsAndUserHasAccess && !_pageIsLoading">
 

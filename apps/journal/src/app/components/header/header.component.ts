@@ -1,26 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 // Ionic
-import { MenuController, Platform } from '@ionic/angular'
+import { Platform } from '@ionic/angular'
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
   @Input() title: string
 
   constructor(
-    private menuCtrl: MenuController,
-    public _platform: Platform
+    public platform: Platform
   ) { }
-
-  ngOnInit() {
-  }
-
-  toggleMenu(){
-    this.menuCtrl.toggle()
-  }
 
 }

@@ -10,11 +10,11 @@ import { CreateTemplateModalPage } from './modals/create-template-modal/create-t
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
-import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
+import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
-import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
@@ -22,10 +22,10 @@ import { FirestoreService } from 'apps/journal/src/app/services/firestore/firest
 import {
   ITemplate,
   IMilestonesLeveled,
-  ICollectiveGoal,
   enumGoalPublicity,
   IGoalStakeholder
 } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
   selector: 'app-template',

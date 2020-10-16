@@ -1,9 +1,11 @@
-<ion-header translucent>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button *ngIf="!_platform.is('android') && !_platform.is('ios')"></ion-menu-button>
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title> {{ title }} </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="platform.is('android') || platform.is('ios')">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title> {{ title }} </ion-title>
+    </ion-toolbar>
+  </ion-header>
+</ng-container>

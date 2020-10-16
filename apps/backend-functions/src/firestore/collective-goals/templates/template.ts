@@ -1,5 +1,6 @@
 import { db, functions, admin } from '../../../internals/firebase';
-import { ITemplate, ICollectiveGoal, INotificationBase, enumEvent } from '@strive/interfaces';
+import { ITemplate, INotificationBase, enumEvent } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
 
 export const templateCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)

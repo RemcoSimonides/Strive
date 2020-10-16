@@ -3,16 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '../firestore/firestore.service';
-import { CollectiveGoalStakeholderService } from './collective-goal-stakeholder.service';
-import { ImageService } from '../image/image.service';
+import { FirestoreService } from '../../../../../../apps/journal/src/app/services/firestore/firestore.service';
+import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
+import { ImageService } from '../../../../../../apps/journal/src/app/services/image/image.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { ICollectiveGoal } from '@strive/interfaces';
+import { ICollectiveGoal } from './collective-goal.firestore';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CollectiveGoalService {
 
   constructor(

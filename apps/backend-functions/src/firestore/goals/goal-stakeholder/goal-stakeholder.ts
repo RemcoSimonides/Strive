@@ -1,7 +1,8 @@
 import { db, admin, functions, increment } from '../../../internals/firebase';
 
 // interfaces
-import { ICollectiveGoalStakeholder, IGoal, IGoalStakeholder } from '@strive/interfaces';
+import { IGoal, IGoalStakeholder } from '@strive/interfaces';
+import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakeholderChanged } from './goal-stakeholder.notification'
 
 

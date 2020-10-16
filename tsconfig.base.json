@@ -18,7 +18,8 @@
     "paths": {
       "@strive/interfaces": ["libs/interfaces/src/index.ts"],
       "@strive/ui/*": ["libs/ui/src/lib/*"],
-      "@strive/user/*": ["libs/user/src/lib/*"]
+      "@strive/user/*": ["libs/user/src/lib/*"],
+      "@strive/collective-goal/*": ["libs/collective-goal/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

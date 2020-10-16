@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 // Ionic
 import { ModalController, PopoverController, AlertController, NavController, Platform } from '@ionic/angular';
 // Rxjs
-import { Observable, empty, Subscription, of } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Observable,  Subscription, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 // Modals
 import { CreateCollectiveGoalPage } from './modals/create-collective-goal/create-collective-goal.page'
 import { CreateGoalPage } from '../goal/modals/create-goal/create-goal.page'
@@ -13,21 +13,20 @@ import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers
 import { CollectiveGoalSharePopoverPage } from './popovers/collective-goal-share-popover/collective-goal-share-popover.page';
 // Services
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
-import { CollectiveGoalStakeholderService } from 'apps/journal/src/app/services/collective-goal/collective-goal-stakeholder.service';
-import { CollectiveGoalService } from 'apps/journal/src/app/services/collective-goal/collective-goal.service';
+import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
-import { CollectiveGoalAuthGuardService } from 'apps/journal/src/app/services/collective-goal/collective-goal-auth-guard.service';
+import { CollectiveGoalAuthGuardService } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 // Interfaces
 import {
-  ICollectiveGoal,
-  ICollectiveGoalStakeholder,
   IGoal,
   enumGoalPublicity,
-  ITemplate,
-  IGoalStakeholder
+  ITemplate
 } from '@strive/interfaces';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 // Others
 import { goalSlideOptions } from '../../../theme/goal-slide-options'
 
