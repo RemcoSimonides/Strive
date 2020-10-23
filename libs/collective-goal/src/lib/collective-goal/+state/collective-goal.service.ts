@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+// Angularfire
+import { QueryFn } from '@angular/fire/firestore';
 // Rxjs
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../../../../../../apps/journal/src/app/services/firestore/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
@@ -9,6 +11,7 @@ import { ImageService } from '../../../../../../apps/journal/src/app/services/im
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { ICollectiveGoal } from './collective-goal.firestore';
+import { IGoal, enumGoalPublicity } from '@strive/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalService {
@@ -81,9 +84,7 @@ export class CollectiveGoalService {
   }
 
   public async delete(collectiveGoalId: string): Promise<void> {
-
     await this.db.doc(`CollectiveGoals/${collectiveGoalId}`).delete()
-
   }
 
   private async setCollectiveGoal(collectiveGoal: ICollectiveGoal, id: string): Promise<void> {
@@ -95,6 +96,19 @@ export class CollectiveGoalService {
     const date = new Date(deadline)
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
 
+  }
+
+  public getGoals(id: string, publicOnly: boolean): Observable<IGoal[]> {
+    let query: QueryFn
+    if (publicOnly) {
+      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', '==', enumGoalPublicity.public).orderBy('createdAt', 'desc')
+    } else {
+      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', 'in', [enumGoalPublicity.collectiveGoalOnly, enumGoalPublicity.public]).orderBy('createdAt', 'desc')
+    }
+
+    return this.db.colWithIds$<IGoal[]>(`Goals`, query).pipe(
+      map((goals: IGoal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+    )
   }
 
 }

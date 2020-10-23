@@ -31,7 +31,6 @@ import {
 } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 // Other
-import { goalSlideOptions } from '../../../theme/goal-slide-options'
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -55,8 +54,6 @@ export class ProfilePage implements OnInit {
   public enumGoalPublicity = enumGoalPublicity
   public enumExercises = enumExercises
   public enumPrivacy = enumPrivacy
-
-  public _goalSlideOptions = goalSlideOptions
 
   public _chosenPicture: any
 

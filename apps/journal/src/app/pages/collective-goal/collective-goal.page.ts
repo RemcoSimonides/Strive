@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 // Ionic
 import { ModalController, PopoverController, AlertController, NavController, Platform } from '@ionic/angular';
@@ -15,20 +15,13 @@ import { CollectiveGoalSharePopoverPage } from './popovers/collective-goal-share
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
-import { CollectiveGoalAuthGuardService } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 // Interfaces
-import {
-  IGoal,
-  enumGoalPublicity,
-  ITemplate
-} from '@strive/interfaces';
+import { IGoal, enumGoalPublicity, ITemplate } from '@strive/interfaces';
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
-// Others
-import { goalSlideOptions } from '../../../theme/goal-slide-options'
 
 import { Plugins } from '@capacitor/core';
 const { Share } = Plugins;
@@ -38,180 +31,127 @@ const { Share } = Plugins;
   templateUrl: './collective-goal.page.html',
   styleUrls: ['./collective-goal.page.scss'],
 })
-export class CollectiveGoalPage implements OnInit {
-  public _pageIsLoading: boolean
-  private _backBtnSubscription: Subscription
+export class CollectiveGoalPage implements OnInit, OnDestroy {
+  pageIsLoading: boolean = true
+  canAccess: boolean = false
 
-  public _goalSlideOptions = goalSlideOptions
-  public enumGoalPublicity = enumGoalPublicity
-  public _collectiveGoalExistsAndUserHasAccess: boolean
+  enumGoalPublicity = enumGoalPublicity
 
   collectiveGoalId: string
-  collectiveGoalDocObs: Observable<ICollectiveGoal>
-  _collectiveGoal: ICollectiveGoal
-  templateColObs: Observable<ITemplate[]>
-  goalColObs: Observable<IGoal[]>
-  _finishedColObs: Observable<IGoal[]>
-  stakeholderColObs: Observable<ICollectiveGoalStakeholder[]>
+  collectiveGoal$: Observable<ICollectiveGoal>
+  collectiveGoal: ICollectiveGoal
 
-  _isAdmin: boolean = false
-  _isAchiever: boolean = false
-  _isSpectator: boolean = false
+  templates$: Observable<ITemplate[]>
+  goals$: Observable<IGoal[]>
+  stakeholders$: Observable<ICollectiveGoalStakeholder[]>
+
+  isAdmin: boolean = false
+  isAchiever: boolean = false
+  isSpectator: boolean = false
+
+  private backBtnSubscription: Subscription
+  private profileSubscription: Subscription
 
   constructor(
     private alertCtrl: AlertController,
     public user: UserService,
-    private collectiveGoalAuthGuardService: CollectiveGoalAuthGuardService,
     private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private db: FirestoreService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public _platform: Platform,
+    private platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
-    private _seo: SeoService,
+    private seo: SeoService,
   ) { }
 
   async ngOnInit() {
-    this._pageIsLoading = true
 
     //Get collective goal id from URL
     this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
 
     //Get collective goal data
-    this.collectiveGoalDocObs = this.collectiveGoalService.getCollectiveGoalDocObs(this.collectiveGoalId)
-    this._collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
-    if (!this._collectiveGoal.title) {
+    this.collectiveGoal$ = this.collectiveGoalService.getCollectiveGoalDocObs(this.collectiveGoalId)
+    this.collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
+    if (!this.collectiveGoal.title) {
       this.initNoAccess()
       return
     }
 
     //Get current users' rights
-    // TODO needs test and refactor
-    this.user.profile$.pipe(
-      switchMap(profile => {
-        if (!!profile) {
-          return this.collectiveGoalStakeholderService.getStakeholderDocObs(this.user.uid, this.collectiveGoalId)
-        } else {
-          return of()
-        }
-      }),
-    ).subscribe(async (stakeholder: ICollectiveGoalStakeholder | undefined) => {
+    this.profileSubscription = this.user.profile$.pipe(
+      switchMap(profile => !!profile ? this.collectiveGoalStakeholderService.getStakeholderDocObs(this.user.uid, this.collectiveGoalId) : of({})
+    )).subscribe(async (stakeholder: ICollectiveGoalStakeholder | undefined) => {
+      let access: boolean = this.collectiveGoal.isPublic
+
       if (!!stakeholder) {
+        this.isAchiever = stakeholder.isAchiever
+        this.isAdmin = stakeholder.isAdmin
+        this.isSpectator = stakeholder.isSpectator
 
-        this._isAchiever = stakeholder.isAchiever
-        this._isAdmin = stakeholder.isAdmin
-        this._isSpectator = stakeholder.isSpectator
-
-        const access = await this.collectiveGoalAuthGuardService.checkAccess(this._collectiveGoal, stakeholder)
-        if (!access) {
-          // check invite token
-          this.route.queryParams.subscribe(data => {
-            if (data.invite_token) {
-
-              const access = this.inviteTokenService.checkInviteTokenOfCollectiveGoal(this.collectiveGoalId, data.invite_token)
-              access ? this.initCollectiveGoal() : this.initNoAccess()
-
-            } else {
-              this.initNoAccess()
-            }
-          })
-        } else {
-          this.initCollectiveGoal()
-        }
-
+        if (!access) access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
+        if (!access) access = await this.inviteTokenService.checkInviteToken('collectiveGoal', this.collectiveGoalId)
       } else {
-
-        this._isAdmin = false
-        this._isAchiever = false
-        this._isSpectator = false
-
-        if (this._collectiveGoal.isPublic) {
-          this.initCollectiveGoal()
-        } else {
-
-          // check invite token
-          this.route.queryParams.subscribe(data => {
-            if (data.invite_token) {
-              const access = this.inviteTokenService.checkInviteTokenOfCollectiveGoal(this.collectiveGoalId, data.invite_token)
-              access ? this.initCollectiveGoal() : this.initNoAccess()
-            } else {
-              this.initNoAccess()
-            }
-          })
-        }
-
+        this.isAdmin = false
+        this.isAchiever = false
+        this.isSpectator = false
       }
-    })
 
+      access ? this.initCollectiveGoal() : this.initNoAccess()
+    })
   }
 
   async initCollectiveGoal(): Promise<void> {
-
-    this._collectiveGoalExistsAndUserHasAccess = true
-
-    //Getting all the goals that belong to this collective goal.
-    if (this._collectiveGoal.isPublic) {
-      this.goalColObs = this.db.colWithIds$(`Goals`, ref => ref.where('collectiveGoal.id', '==', this.collectiveGoalId).where('publicity', '==', enumGoalPublicity.public).where('isFinished', '==', false).orderBy('createdAt', 'desc'))
-      this._finishedColObs = this.db.colWithIds$(`Goals`, ref => ref.where('collectiveGoal.id', '==', this.collectiveGoalId).where('publicity', '==', enumGoalPublicity.public).where('isFinished', '==', true).orderBy('createdAt', 'desc'))
-    } else {
-      this.goalColObs = this.db.colWithIds$(`Goals`, ref => ref.where('collectiveGoal.id', '==', this.collectiveGoalId).where('publicity', 'in', [enumGoalPublicity.collectiveGoalOnly, enumGoalPublicity.public]).where('isFinished', '==', false).orderBy('createdAt', 'desc'))
-      this._finishedColObs = this.db.colWithIds$(`Goals`, ref => ref.where('collectiveGoal.id', '==', this.collectiveGoalId).where('publicity', 'in', [enumGoalPublicity.collectiveGoalOnly, enumGoalPublicity.public]).where('isFinished', '==', true).orderBy('createdAt', 'desc'))
-    }
-
-    //Getting all stakeholder data
-    this.stakeholderColObs = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
-
-    //Getting all templates
-    this.templateColObs = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, ref => ref.orderBy('numberOfTimesUsed', 'desc'))
+    this.canAccess = true
+    this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, this.collectiveGoal.isPublic)
+    this.stakeholders$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
+    this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, ref => ref.orderBy('numberOfTimesUsed', 'desc'))
 
     // SEO
-    this._seo.generateTags({
-      title: `${this._collectiveGoal.title} - Strive Journal`,
-      description: this._collectiveGoal.shortDescription,
-      image: this._collectiveGoal.image
+    this.seo.generateTags({
+      title: `${this.collectiveGoal.title} - Strive Journal`,
+      description: this.collectiveGoal.shortDescription,
+      image: this.collectiveGoal.image
     })
 
-    this._pageIsLoading = false
-
+    this.pageIsLoading = false
   }
 
-  async initNoAccess(): Promise<void> {
-
-    this._collectiveGoalExistsAndUserHasAccess = false
-
-    this._seo.generateTags({ title: `Page not found - Strive Journal` })
-
-    this._pageIsLoading = false
-
+  initNoAccess() {
+    this.pageIsLoading = false
+    this.canAccess = false
+    this.seo.generateTags({ title: `Page not found - Strive Journal` })
   }
 
   ionViewDidEnter() {
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => {
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => {
         this.navCtrl.back();
       });
     }
   }
 
   ionViewWillLeave() {
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription.unsubscribe();
     }
   }
 
-  //Collective Goal Section
-  async presentCollectiveGoalOptionsPopover(ev: UIEvent): Promise<void> {
+  ngOnDestroy() {
+    this.profileSubscription.unsubscribe();
+  }
 
+  //Collective Goal Section
+  async openOptionsPopover(ev: UIEvent): Promise<void> {
     const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
 
     const popover = await this.popoverCtrl.create({
       component: CollectiveGoalOptionsPage,
       event: ev,
       componentProps: {
-        isAdmin: this._isAdmin,
+        isAdmin: this.isAdmin,
         isPublic: collectiveGoal.isPublic
       }
     })
@@ -252,10 +192,8 @@ export class CollectiveGoalPage implements OnInit {
         {
           text: 'Yes',
           handler: async () => {
-
             await this.collectiveGoalService.delete(this.collectiveGoalId)
             await this.navCtrl.navigateRoot(`/explore`)
-
           }
         },
         {
@@ -269,53 +207,41 @@ export class CollectiveGoalPage implements OnInit {
 
   }
 
-  public async _saveDescription(description: string): Promise<void> {
-
-    this._collectiveGoal.description = description
-
-    await this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}`, {
-      description: description
-    })
-
+  public saveDescription(description: string) {
+    this.collectiveGoal.description = description
+    this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}`, { description })
   }
 
-  public async _openSharePopover(ev: UIEvent): Promise<void> {
+  public async openSharePopover(ev: UIEvent) {
+    if (this.platform.is('android') || this.platform.is('ios')) {
 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-
-      const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, this._collectiveGoal.isPublic, this._isAdmin)
-
-      let shareRet = await Share.share({
-        title: this._collectiveGoal.title,
+      const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, this.collectiveGoal.isPublic, this.isAdmin)
+      await Share.share({
+        title: this.collectiveGoal.title,
         text: 'Check out this collective goal',
         url: ref,
         dialogTitle: 'Together we achieve!'
       });
 
     } else {
-
       const popover = await this.popoverCtrl.create({
         component: CollectiveGoalSharePopoverPage,
         event: ev,
         componentProps: {
-          collectiveGoal: this._collectiveGoal,
-          isAdmin: this._isAdmin
+          collectiveGoal: this.collectiveGoal,
+          isAdmin: this.isAdmin
         }
       })
       await popover.present()
-
     }
-
   }
 
   async toggleSpectator(): Promise<void> {
-    await this.collectiveGoalStakeholderService.upsert(this.user.uid, this.collectiveGoalId, { isSpectator: !this._isSpectator })
+    await this.collectiveGoalStakeholderService.upsert(this.user.uid, this.collectiveGoalId, { isSpectator: !this.isSpectator })
   }
 
   async createGoal(): Promise<void> {
-
     const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
-
     const modal = await this.modalCtrl.create({
       component: CreateGoalPage,
       componentProps: {
@@ -326,18 +252,9 @@ export class CollectiveGoalPage implements OnInit {
       }
     })
     await modal.present()
-
-  }
-
-  async requestCreateGoal(): Promise<void> {
-
-    // TODO: Create request - now it just creates a goal without asking
-    this.createGoal()
-
   }
 
   public async toggleAdmin(stakeholder: ICollectiveGoalStakeholder): Promise<void> {
-
     event.preventDefault()
     event.stopPropagation()
 
@@ -347,11 +264,9 @@ export class CollectiveGoalPage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
-
-            this.collectiveGoalStakeholderService.upsert(stakeholder.id, this._collectiveGoal.id, {
+            this.collectiveGoalStakeholderService.upsert(stakeholder.id, this.collectiveGoalId, {
               isAdmin: !stakeholder.isAdmin
             })
-
           }
         },
         {
@@ -360,20 +275,16 @@ export class CollectiveGoalPage implements OnInit {
         }
       ]
     })
-
     await alert.present()
-
   }
 
   public async toggleAchiever(stakeholder: ICollectiveGoalStakeholder): Promise<void> {
-
     event.preventDefault()
     event.stopPropagation()
 
-    this.collectiveGoalStakeholderService.upsert(stakeholder.id, this._collectiveGoal.id, {
+    this.collectiveGoalStakeholderService.upsert(stakeholder.id, this.collectiveGoalId, {
       isAchiever: !stakeholder.isAchiever
     })
-
   }
 
 }

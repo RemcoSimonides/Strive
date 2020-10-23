@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router'
 // Ionic
 import { IonInfiniteScroll, LoadingController, ModalController, NavController, PopoverController, AlertController, Platform } from '@ionic/angular'
 // Rxjs
-import { Observable, empty, Subscription, of } from 'rxjs';
-import { first, switchMap, take } from 'rxjs/operators';
+import { Observable, Subscription, of } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../../services/firestore/firestore.service'
 import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
@@ -101,18 +101,22 @@ export class GoalPage implements OnInit {
       return
     }
 
-    // TODO test
     this.user.profile$.pipe(
-      switchMap((profile: Profile) => !!profile ? this.goalStakeholderService.getStakeholderDocObs(profile.id, this._goalId) : of()),
-    ).subscribe(async (stakeholder: IGoalStakeholder) => {
+      switchMap((profile: Profile) => !!profile ? this.goalStakeholderService.getStakeholderDocObs(profile.id, this._goalId) : of({})),
+    ).subscribe(async (stakeholder: IGoalStakeholder | undefined) => {
 
-      if (stakeholder) {
+      let access: boolean = this._goal.publicity === enumGoalPublicity.public
+
+      if (!!stakeholder) {
 
         this._isAchiever = stakeholder.isAchiever
         this._isAdmin = stakeholder.isAdmin
         this._isSupporter = stakeholder.isSupporter
         this._isSpectator = stakeholder.isSpectator
         this._hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
+
+        if (!access) access = await this.goalAuthGuardService.checkAccess(this._goal, stakeholder)
+        if (!access) access = await this.inviteTokenService.checkInviteToken('goal', this._goalId)
 
       } else {
 
@@ -121,41 +125,9 @@ export class GoalPage implements OnInit {
         this._isSupporter = false
         this._isSpectator = false
         this._hasOpenRequestToJoin = false
-
-        // !empty observable does not trigger subscribe so init public goal (without being logged in) here
-        // I moved this to subscribe section. Trigger the subscription maybe
-        if (this._goal.publicity === enumGoalPublicity.public) {
-          this.initGoal()
-        } else {
-
-          // check invite token
-          this.route.queryParams.subscribe(data => {
-            if (data.invite_token) {
-
-              const access = this.inviteTokenService.checkInviteTokenOfGoal(this._goalId, data.invite_token)
-              access ? this.initGoal() : this.initNoAccess()
-
-            } else {
-              // no access
-              this.initNoAccess()
-            }
-          })
-        }
       }
 
-      let access: boolean = await this.goalAuthGuardService.checkAccess(this._goal, stakeholder)
-      if (!access) {
-        this.route.queryParams.subscribe(data => {
-          if (data.invite_token) {
-            const access = this.inviteTokenService.checkInviteTokenOfGoal(this._goalId, data.invite_token)
-            access ? this.initGoal() : this.initNoAccess()
-          } else {
-            this.initNoAccess()
-          }
-        })
-      } else {
-        this.initGoal()
-      }
+      access ? this.initGoal() : this.initNoAccess();
     })
   }
 

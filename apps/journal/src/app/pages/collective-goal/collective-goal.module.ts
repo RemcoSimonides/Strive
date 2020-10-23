@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -17,6 +18,8 @@ import { CollectiveGoalAuthGuardService } from '@strive/collective-goal/collecti
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
 import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 
 const routes: Routes = [
   {
@@ -30,14 +33,19 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ComponentsModule,
+    FlexLayoutModule,
+
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
+
     // Strive
     ThumbnailListModule,
-    ThumbnailListPipeModule
+    ThumbnailListPipeModule,
+    PageLoadingModule,
+    PageNotFoundModule
   ],
   declarations: [
     CollectiveGoalPage,

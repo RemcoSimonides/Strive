@@ -33,7 +33,6 @@ export class GoalStakeholderService {
   }
 
   public getGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<IGoal[]> {
-
     let query: QueryFn;
     if (publicOnly) {
       query = ref => ref.where('goalPublicity', '==', enumGoalPublicity.public).where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')

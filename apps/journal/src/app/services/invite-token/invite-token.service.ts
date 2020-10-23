@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-// Angularfire
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { ActivatedRoute } from '@angular/router';
 // Services
 import { GoalStakeholderService } from '../goal/goal-stakeholder.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { FirestoreService } from '../firestore/firestore.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { take } from 'rxjs/operators';
 
@@ -14,71 +13,41 @@ import { take } from 'rxjs/operators';
 })
 export class InviteTokenService {
 
-  private _goalId: string
-  private _collectiveGoalId: string
-
   constructor(
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private db: FirestoreService,
-    private goalStakeholderService: GoalStakeholderService
-  ) { }
+    private goalStakeholderService: GoalStakeholderService,
+    private route: ActivatedRoute,
+    private user: UserService
+    ) { }
 
-  async checkInviteTokenOfGoal(goalId: string, inviteToken: string): Promise<boolean> {
+  public async checkInviteToken(collection: 'goal' | 'collectiveGoal', id: string): Promise<boolean> {
 
-    const ref: string = `Goals/${goalId}/InviteTokens/${inviteToken}`
-    this._goalId = goalId
-    return await this.checkInviteToken(ref)
+    const { invite_token } = this.route.snapshot.queryParams;
+    if (!invite_token) return false 
 
-  }
+    let ref: string;
+    if (collection === 'goal') {
+      ref = `Goals/${id}/InviteTokens/${invite_token}`
+    } else {
+      ref = `CollectiveGoals/${id}/InviteTokens/${invite_token}`
+    }
 
-  async checkInviteTokenOfCollectiveGoal(collectiveGoalId: string, inviteToken: string): Promise<boolean> {
+    const token = await this.db.docWithId$(ref).pipe(take(1)).toPromise()
+    if (token) {
+      const uid = this.user.uid
+      if (!!uid) {
 
-    const ref: string = `CollectiveGoals/${collectiveGoalId}/InviteTokens/${inviteToken}`
-    this._collectiveGoalId = collectiveGoalId
-    return await this.checkInviteToken(ref)
-
-  }
-
-  private async checkInviteToken(ref: string): Promise<boolean> {
-
-    return this.afs.doc(ref)
-      .snapshotChanges()
-      .pipe(take(1))
-      .toPromise()
-      .then(async snap => {
-        if (snap.payload.exists) {
-
-          const currentUser = await this.afAuth.currentUser;
-
-          // user not logged in so no need to create stakeholder
-          if (!currentUser) return true
-
-          // token valid! add currently logged in user as stakeholder
-          if (this._goalId) {
-
-            await this.goalStakeholderService.upsert(currentUser.uid, this._goalId, {
-              isSpectator: true
-            })
-
-          } else if(this._collectiveGoalId) {
-
-            await this.collectiveGoalStakeholderService.upsert(currentUser.uid, this._collectiveGoalId, {
-              isSpectator: true
-            })
-
-          }
-
-          return true
-
+        if (collection === 'goal') {
+          await this.goalStakeholderService.upsert(uid, id, { isSpectator: true })
         } else {
-
-          // not a valid token
-          return false
-        
+          await this.collectiveGoalStakeholderService.upsert(uid, id, { isSpectator: true })
         }
-      })
+
+      }
+    }
+
+    return !!token
   }
 
   /**
@@ -89,9 +58,7 @@ export class InviteTokenService {
     const parsedUrl = new URL(window.location.href)
 
     if (isPublic) {
-      
       return parsedUrl.href
-
     } else {
 
       if (isAdmin) {

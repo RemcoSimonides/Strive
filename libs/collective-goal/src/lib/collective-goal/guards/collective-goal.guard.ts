@@ -11,8 +11,6 @@ import { ICollectiveGoal } from '../+state/collective-goal.firestore';
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalAuthGuardService implements CanActivate {
 
-  private _collectiveGoalId: string
-
   constructor(
     private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
@@ -22,10 +20,10 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-    this._collectiveGoalId = next.params.id
+    const collectiveGoalId = next.params.id
 
     // get collective goal
-    const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this._collectiveGoalId)
+    const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
 
     if (collectiveGoal.isPublic) return true
 
@@ -35,11 +33,11 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
     }
     
     // get stakeholder
-    const stakeholder: ICollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(this.user.uid, this._collectiveGoalId)
+    const stakeholder: ICollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(this.user.uid, collectiveGoalId)
 
     let access: boolean = false
     if (stakeholder) {
-      access = await this.checkAccess(collectiveGoal, stakeholder)
+      access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
     }
 
     if (access) {
@@ -51,20 +49,4 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
 
   }
 
-  public async checkAccess(collectiveGoal: ICollectiveGoal, stakeholder: ICollectiveGoalStakeholder): Promise<boolean> {
-
-    if (collectiveGoal.isPublic) {
-      return true
-    } else {
-      return await this.checkStakeholderAccessRights(stakeholder)
-    }
-
-  }
-
-  async checkStakeholderAccessRights(stakeholder: ICollectiveGoalStakeholder): Promise<boolean> {
-
-    if (stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator) {
-      return true
-    } else return false 
-  }
 }

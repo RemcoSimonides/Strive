@@ -1,85 +1,87 @@
-<app-header [title]="(collectiveGoalDocObs | async)?.title || 'Collective Goal'"></app-header>
+<app-header [title]="(collectiveGoal$ | async)?.title || 'Collective Goal'"></app-header>
 
-<ng-container *ngIf="_pageIsLoading">
-  <ion-spinner name="lines" color="primary"></ion-spinner>
+<ng-container *ngIf="pageIsLoading">
+  <strive-page-loading></strive-page-loading>
 </ng-container>
 
-<ng-container *ngIf="!_collectiveGoalExistsAndUserHasAccess && !_pageIsLoading">
-  <p>Page not found</p>
+<ng-container *ngIf="!canAccess && !pageIsLoading">
+  <strive-page-not-found></strive-page-not-found>
 </ng-container>
 
-<ion-content class="ion-no-padding" *ngIf="_collectiveGoalExistsAndUserHasAccess && !_pageIsLoading">
+<ion-content *ngIf="canAccess && !pageIsLoading" class="ion-no-padding">
 
-  <div class="vertical-align-content">
-
-    <!-- Collective Goal Description -->
-    <div *ngIf="collectiveGoalDocObs | async as collectiveGoal">
+  <section>
+    <ng-container *ngIf="collectiveGoal$ | async as collectiveGoal">
       <ion-grid>
         <ion-row>
           <ion-col>
             <ion-icon *ngIf="collectiveGoal.isPublic === false" name="lock-closed"></ion-icon>
-            <span id="collectiveGoal-title">{{ collectiveGoal.title }}</span>
+            <span class="title">{{ collectiveGoal.title }}</span>
             <!-- <span *ngIf="collectiveGoal.isFinished"> (finished)</span> TODO: can collective goal be finished? -->
           </ion-col>
-          <ion-col size-xs="3" size-sm="2" size-md="2" size-lg="2" size-xl="2" self-align-start>
-            <ion-button (click)="_openSharePopover($event)" fill="clear" size="small" class="ion-no-padding">
-              <ion-icon  slot="icon-only" name="share-social-outline"></ion-icon>
+          <ion-col size-xs="3" size-sm="2" size-md="2" size-lg="2" size-xl="2" fxLayoutAlign="end center">
+            <ion-button (click)="openSharePopover($event)" fill="clear" size="small" class="ion-no-padding">
+              <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
             </ion-button>
-            <ion-button (click)="presentCollectiveGoalOptionsPopover($event)" fill="clear" class="ion-no-padding" *ngIf="user.isLoggedIn$ | async">
-              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-            </ion-button>
+            <ng-container *ngIf="user.isLoggedIn$ | async">
+              <ion-button (click)="openOptionsPopover($event)" fill="clear" class="ion-no-padding">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+            </ng-container>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="collectiveGoal.deadline">
-          <div id="collectiveGoal-deadline" [ngStyle]="{ 'color': collectiveGoal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
-            <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ collectiveGoal.deadline | date:'fullDate' }}
-          </div>
-        </ion-row>
+
+        <ng-container *ngIf="collectiveGoal.deadline">
+          <ion-row>
+            <div id="deadline" [ngStyle]="{ 'color': collectiveGoal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
+              <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ collectiveGoal.deadline | date:'fullDate' }}
+            </div>
+          </ion-row>
+        </ng-container>
       </ion-grid>
 
-      <div class="collectiveGoal-action-section">
+      <article class="summary">
         <ion-grid>
           <ion-row>
             <ion-col>
-              <div id="collectiveGoal-short-description">
+              <div class="short-description">
                 <i>{{ collectiveGoal.shortDescription }}</i>
               </div>
-              <div class="collectiveGoal-stats">
-                <div class="stats-holder">
-                  <div class="stats">
-                    <strong>Achievers</strong>
-                    <span>{{ collectiveGoal.numberOfAchievers || '0' }}</span>
-                  </div>
+              <div fxLayout fxLayoutAlign="center center">
+                <div fxLayout="column" fxLayoutAlign="center center">
+                  <strong>Achievers</strong>
+                  <span class="stats">{{ collectiveGoal.numberOfAchievers || '0' }}</span>
                 </div>
               </div>
             </ion-col>
             <ion-col size-xs="12" size-sm="4" size-md="4" size-lg="4" size-xl="4">
                 <span class="image-container">
-                  <img class="collectiveGoal-image" [src]="collectiveGoal.image"/>
-                  <!-- <div class="after" *ngIf="collectiveGoal.isFinished">finished</div> TODO: can collective goal be finished? -->
+                  <img [src]="collectiveGoal.image"/>
+                  <!-- <div class="after" *ngIf="collectiveGoal.isFinished">finished</div> TODO: can collective goal be finished? => maybe expired -->
                 </span>
               </ion-col>
           </ion-row>
         </ion-grid>
-      </div>
+      </article>
 
-      <app-text-editor [_description]="collectiveGoal.description" 
-        [isAdmin]="_isAdmin" 
-        (update)="_saveDescription($event)"
+      <app-text-editor
+        [_description]="collectiveGoal.description"
+        [isAdmin]="isAdmin"
+        (update)="saveDescription($event)"
       ></app-text-editor>
 
-    </div>
-  </div>
+    </ng-container>
+  </section>
 
   <!-- Templates overview -->
-  <ng-container *ngIf="templateColObs | async as templates">
+  <ng-container *ngIf="templates$ | async as templates">
     <h3 class="padding">Templates</h3>
 
     <ng-container *ngIf="templates.length > 0 else noTemplate">
       <thumbnail-list
         [thumbnails]="templates | toThumbnailList:'template'"
         type="template"
-        [canCreate]="_isAdmin"
+        [canCreate]="isAdmin"
         [collectiveGoalId]="collectiveGoalId"
       >
         <ng-template let-template #details>
@@ -95,13 +97,12 @@
 
   <!-- Goals overview -->
   <h3 class="padding">Goals</h3>
-  <ng-container *ngIf="goalColObs | async as goals">
-
+  <ng-container *ngIf="goals$ | async as goals">
     <ng-container *ngIf="goals.length > 0 else noGoal">
       <thumbnail-list
         [thumbnails]="goals | toThumbnailList:'goal'"
         type="goal"
-        [canCreate]="_isAdmin">
+        [canCreate]="isAdmin">
         <ng-template let-goal #details>
           {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}
           <br/>
@@ -113,18 +114,17 @@
     <ng-template #noGoal>
       <span class="padding">No goals yet</span>
     </ng-template>
-
   </ng-container>
 
-  <section class="vertical-align-content">
+  <section>
     <ion-list>
-      <ion-list-header>Stakeholders</ion-list-header>
-      <ion-item *ngFor="let stakeholder of (stakeholderColObs | async)" button [routerLink]="'../../profile/' + (stakeholder.id)">
+      <h3>Stakeholders</h3>
+      <ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="'../../profile/' + (stakeholder.id)">
         {{ stakeholder.username }}
         <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>
-        <fa-icon *ngIf="_isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder)"></fa-icon>
+        <fa-icon *ngIf="isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder)"></fa-icon>
         <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end"></fa-icon>
-        <fa-icon *ngIf="_isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder)"></fa-icon>
+        <fa-icon *ngIf="isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder)"></fa-icon>
       </ion-item>
     </ion-list>
   </section>

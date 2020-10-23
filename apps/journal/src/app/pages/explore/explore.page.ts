@@ -6,8 +6,6 @@ import { Subscription } from 'rxjs';
 import { InstantSearchService } from 'apps/journal/src/app/services/instant-search/instant-search.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { ScreensizeService } from '../../services/screensize/screensize.service';
-// Other
-import { goalSlideOptions } from '../../../theme/goal-slide-options'
 
 @Component({
   selector: 'app-explore',
@@ -16,7 +14,6 @@ import { goalSlideOptions } from '../../../theme/goal-slide-options'
 })
 export class ExplorePage implements OnInit {
 
-  public _goalSlideOptions = goalSlideOptions
   private _backBtnSubscription: Subscription
 
   constructor(

@@ -13,8 +13,8 @@ import {
   IGoal,
   enumGoalPublicity,
   IGoalStakeholder,
-  ICollectiveGoalStakeholder
 } from '@strive/interfaces'
+import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Injectable({
   providedIn: 'root'
