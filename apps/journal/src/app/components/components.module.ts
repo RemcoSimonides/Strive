@@ -21,7 +21,6 @@ import { HeaderComponent } from './header/header.component';
 import { PostComponent } from './post/post.component'
 import { CountdownComponent } from './countdown/countdown.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
-import { ShareComponent } from './share/share.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { NotificationComponent } from './notification/notification.component'
 import { CommentComponent } from './comment/comment.component';
@@ -45,7 +44,6 @@ import { CommentComponent } from './comment/comment.component';
     CountdownComponent,
     FileDropDirective,
     ImageUploadComponent,
-    ShareComponent,
     TextEditorComponent,
     NotificationComponent,
     CommentComponent,
@@ -63,7 +61,6 @@ import { CommentComponent } from './comment/comment.component';
     PostComponent,
     FileDropDirective,
     ImageUploadComponent,
-    ShareComponent,
     TextEditorComponent,
     NotificationComponent,
     CommentComponent,

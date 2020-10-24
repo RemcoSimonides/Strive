@@ -4,26 +4,25 @@ import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({
   selector: 'app-collective-goal-share-popover',
-  templateUrl: './collective-goal-share-popover.page.html',
-  styleUrls: ['./collective-goal-share-popover.page.scss'],
+  templateUrl: './share.component.html',
+  styleUrls: ['./share.component.scss'],
 })
 export class CollectiveGoalSharePopoverPage implements OnInit {
 
-  public _collectiveGoal: ICollectiveGoal
-  public _isAdmin: boolean = false
+  public collectiveGoal: ICollectiveGoal
+  public isAdmin: boolean = false
 
   constructor(
-    private _navParams: NavParams,
-    private _popoverCtrl: PopoverController
+    private navParams: NavParams,
+    private popoverCtrl: PopoverController
   ) { }
 
   ngOnInit() {
-    this._isAdmin = this._navParams.data.isAdmin
-    this._collectiveGoal = this._navParams.data.collectiveGoal
+    this.isAdmin = this.navParams.data.isAdmin
+    this.collectiveGoal = this.navParams.data.collectiveGoal
   }
 
   public async close() {
-    this._popoverCtrl.dismiss()
+    this.popoverCtrl.dismiss()
   }
-
 }

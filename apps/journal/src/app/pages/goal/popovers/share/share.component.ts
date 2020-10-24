@@ -4,8 +4,8 @@ import { IGoal, enumGoalPublicity } from '@strive/interfaces';
 
 @Component({
   selector: 'app-goal-share-popover',
-  templateUrl: './goal-share-popover.page.html',
-  styleUrls: ['./goal-share-popover.page.scss'],
+  templateUrl: './share.component.html',
+  styleUrls: ['./share.component.scss'],
 })
 export class GoalSharePopoverPage implements OnInit {
 

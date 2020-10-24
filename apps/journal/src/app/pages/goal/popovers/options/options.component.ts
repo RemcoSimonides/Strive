@@ -8,8 +8,8 @@ import { enumGoalPublicity } from '@strive/interfaces';
 
 @Component({
   selector: 'app-goal-options-popover',
-  templateUrl: './goal-options-popover.page.html',
-  styleUrls: ['./goal-options-popover.page.scss'],
+  templateUrl: './options.component.html',
+  styleUrls: ['./options.component.scss'],
 })
 export class GoalOptionsPopoverPage implements OnInit {
 

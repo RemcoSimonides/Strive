@@ -3,15 +3,14 @@ import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({
   selector: 'app-collective-goal-options',
-  templateUrl: './collective-goal-options.page.html',
-  styleUrls: ['./collective-goal-options.page.scss'],
+  templateUrl: './options.component.html',
+  styleUrls: ['./options.component.scss'],
 })
 export class CollectiveGoalOptionsPage implements OnInit {
 
   public enumCollectiveGoalOptions = enumCollectiveGoalOptions
 
-  public _isAdmin: boolean = false
-  public _isPublic: boolean = false
+  public isAdmin: boolean = false
 
   constructor(
     private navParams: NavParams,
@@ -19,8 +18,7 @@ export class CollectiveGoalOptionsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._isAdmin = this.navParams.data.isAdmin
-    this._isPublic = this.navParams.data.isPublic
+    this.isAdmin = this.navParams.data.isAdmin
   }
 
   async close(goalOption: enumCollectiveGoalOptions){

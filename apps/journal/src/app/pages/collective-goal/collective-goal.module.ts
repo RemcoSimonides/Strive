@@ -8,8 +8,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { CollectiveGoalPage } from './collective-goal.page';
 
-import { CollectiveGoalOptionsPage } from './popovers/collective-goal-options/collective-goal-options.page';
-import { CollectiveGoalSharePopoverPage } from './popovers/collective-goal-share-popover/collective-goal-share-popover.page';
+import { CollectiveGoalOptionsPopoverModule } from './popovers/options/options.module';
+import { CollectiveGoalSharePopoverModule } from './popovers/share/share.module';
 
 import { ComponentsModule } from '../../components/components.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -41,6 +41,9 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
 
+    CollectiveGoalOptionsPopoverModule,
+    CollectiveGoalSharePopoverModule,
+
     // Strive
     ThumbnailListModule,
     ThumbnailListPipeModule,
@@ -49,12 +52,6 @@ const routes: Routes = [
   ],
   declarations: [
     CollectiveGoalPage,
-    CollectiveGoalOptionsPage,
-    CollectiveGoalSharePopoverPage
-  ],
-  entryComponents: [
-    CollectiveGoalOptionsPage,
-    CollectiveGoalSharePopoverPage
   ],
   exports: []
 })

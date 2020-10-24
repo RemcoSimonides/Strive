@@ -6,7 +6,7 @@ import { Plugins }  from '@capacitor/core'
 const { Clipboard } = Plugins
 
 @Component({
-  selector: 'app-share',
+  selector: 'strive-share',
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })

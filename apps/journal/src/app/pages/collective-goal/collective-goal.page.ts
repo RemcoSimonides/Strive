@@ -9,8 +9,8 @@ import { switchMap } from 'rxjs/operators';
 import { CreateCollectiveGoalPage } from './modals/create-collective-goal/create-collective-goal.page'
 import { CreateGoalPage } from '../goal/modals/create-goal/create-goal.page'
 // Popovers
-import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/collective-goal-options/collective-goal-options.page'
-import { CollectiveGoalSharePopoverPage } from './popovers/collective-goal-share-popover/collective-goal-share-popover.page';
+import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'
+import { CollectiveGoalSharePopoverPage } from './popovers/share/share.component';
 // Services
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';

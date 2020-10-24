@@ -16,8 +16,8 @@ import { AddSupportModalPage } from './modals/add-support-modal/add-support-moda
 import { PipesModule } from '../../pipes/pipes.module'
 
 // Popover
-import { GoalOptionsPopoverPage } from './popovers/goal-options-popover/goal-options-popover.page'
-import { GoalSharePopoverPage } from './popovers/goal-share-popover/goal-share-popover.page'
+import { GoalSharePopoverModule } from './popovers/share/share.module';
+import { GoalOptionsModule } from './popovers/options/options.module';
 
 // Components
 import { ComponentsModule } from '../../components/components.module'
@@ -41,18 +41,16 @@ const routes: Routes = [
     ComponentsModule,
     PipesModule,
     RoadmapModule,
-    QuillModule
+    QuillModule,
+    GoalSharePopoverModule,
+    GoalOptionsModule
   ],
   declarations: [
     GoalPage,
-    GoalOptionsPopoverPage,
-    GoalSharePopoverPage,
     AddSupportModalPage,
   ],
   entryComponents: [
     AddSupportModalPage,
-    GoalOptionsPopoverPage,
-    GoalSharePopoverPage
   ]
 })
 export class GoalPageModule {}

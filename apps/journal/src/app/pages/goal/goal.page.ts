@@ -19,8 +19,8 @@ import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Pages / Popover / Modal
 import { CreateGoalPage } from './modals/create-goal/create-goal.page';
-import { GoalOptionsPopoverPage, enumGoalOptions } from './popovers/goal-options-popover/goal-options-popover.page'
-import { GoalSharePopoverPage } from './popovers/goal-share-popover/goal-share-popover.page';
+import { GoalOptionsPopoverPage, enumGoalOptions} from './popovers/options/options.component';
+import { GoalSharePopoverPage } from './popovers/share/share.component';
 import { AddSupportModalPage } from './modals/add-support-modal/add-support-modal.page'
 import { DiscussionPage } from '../discussion/discussion.page';
 import { CreatePostModalPage } from './posts/create-post-modal/create-post-modal.page';

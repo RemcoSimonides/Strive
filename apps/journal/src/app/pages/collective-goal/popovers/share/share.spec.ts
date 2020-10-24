@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoalSharePopoverPage } from './goal-share-popover.page';
+import { CollectiveGoalSharePopoverPage } from './share.component';
 
-describe('GoalSharePopoverPage', () => {
-  let component: GoalSharePopoverPage;
-  let fixture: ComponentFixture<GoalSharePopoverPage>;
+describe('CollectiveGoalSharePopoverPage', () => {
+  let component: CollectiveGoalSharePopoverPage;
+  let fixture: ComponentFixture<CollectiveGoalSharePopoverPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GoalSharePopoverPage ],
+      declarations: [ CollectiveGoalSharePopoverPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GoalSharePopoverPage);
+    fixture = TestBed.createComponent(CollectiveGoalSharePopoverPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
