@@ -13,3 +13,19 @@ export interface ICollectiveGoal {
     updatedAt?: FieldValue;
     createdAt?: FieldValue;
 }
+
+/** A factory function that creates an OrganizationDocument. */
+export function createCollectiveGoal(params: Partial<ICollectiveGoal> = {}): ICollectiveGoal {
+  return {
+    id: !!params.id ? params.id : '',
+    deadline: '',
+    description: '',
+    image: '',
+    isOverdue: false,
+    isPublic: false,
+    numberOfAchievers: 0,
+    shortDescription: '',
+    title: '',
+    ...params
+  }
+}

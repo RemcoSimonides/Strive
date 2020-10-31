@@ -42,7 +42,7 @@ export class CollectiveGoalService {
    * @param collectiveGoal Data of the Collective Goal
    * @param image Optional image blob
    */
-  public async handleCreatingCollectiveGoal(collectiveGoal: ICollectiveGoal): Promise<string> {
+  public async createCollectiveGoal(collectiveGoal: ICollectiveGoal): Promise<string> {
     
     //Create new id for collective goal
     const id = await this.db.getNewId();
@@ -53,7 +53,7 @@ export class CollectiveGoalService {
     collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, false)
 
     //Set Collective Goal
-    await this.setCollectiveGoal(collectiveGoal, id)
+    await this.upsertCollectiveGoal(collectiveGoal, id)
 
     //Add User as Stakeholder
     await this.collectiveGoalStakeholderService.upsert(this.user.uid, id, { isAdmin: true })
@@ -69,33 +69,18 @@ export class CollectiveGoalService {
    * @param collectiveGoal Data of the changed collective goal
    * @param image Optional image blob
    */
-  public async handleUpdatingCollectiveGoal(collectiveGoal: ICollectiveGoal): Promise<void> {
-
-    const id = collectiveGoal.id
+  public async updateCollectiveGoal(id: string, collectiveGoal: ICollectiveGoal): Promise<void> {
 
     if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
 
     //Handle image
-    collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, true)
-
-    delete collectiveGoal.id
+    // collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, true)
     
     await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
   }
 
   public async delete(collectiveGoalId: string): Promise<void> {
     await this.db.doc(`CollectiveGoals/${collectiveGoalId}`).delete()
-  }
-
-  private async setCollectiveGoal(collectiveGoal: ICollectiveGoal, id: string): Promise<void> {
-    await this.db.set(`CollectiveGoals/${id}`, collectiveGoal)
-  }
-
-  private setDeadlineToEndOfDay(deadline: string): string {
-
-    const date = new Date(deadline)
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
-
   }
 
   public getGoals(id: string, publicOnly: boolean): Observable<IGoal[]> {
@@ -111,4 +96,12 @@ export class CollectiveGoalService {
     )
   }
 
+  private async upsertCollectiveGoal(collectiveGoal: ICollectiveGoal, id: string): Promise<void> {
+    await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
+  }
+
+  private setDeadlineToEndOfDay(deadline: string): string {
+    const date = new Date(deadline)
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
+  }
 }

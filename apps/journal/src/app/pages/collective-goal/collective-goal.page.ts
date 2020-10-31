@@ -6,7 +6,7 @@ import { ModalController, PopoverController, AlertController, NavController, Pla
 import { Observable,  Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 // Modals
-import { CreateCollectiveGoalPage } from './modals/create-collective-goal/create-collective-goal.page'
+import { UpsertCollectiveGoalPage } from './modals/upsert/upsert.component'
 import { CreateGoalPage } from '../goal/modals/create-goal/create-goal.page'
 // Popovers
 import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'
@@ -177,7 +177,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
 
     const modal = await this.modalCtrl.create({
-      component: CreateCollectiveGoalPage,
+      component: UpsertCollectiveGoalPage,
       componentProps: { id: this.collectiveGoalId, data: collectiveGoal }
     })
     await modal.present()

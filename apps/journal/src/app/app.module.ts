@@ -27,7 +27,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-import { CreateCollectiveGoalPage } from './pages/collective-goal/modals/create-collective-goal/create-collective-goal.page';
 import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
 import { CreatePostModalPage } from './pages/goal/posts/create-post-modal/create-post-modal.page';
 import { DiscussionPage } from './pages/discussion/discussion.page';
@@ -65,7 +64,6 @@ const customConfig: ShareButtonsConfig = {
   declarations: [
     AppComponent,
     Autosize,
-    CreateCollectiveGoalPage,
     CreateGoalPage,
     CreatePostModalPage,
     DiscussionPage,
@@ -78,7 +76,6 @@ const customConfig: ShareButtonsConfig = {
     AuthModalPage
   ],
   entryComponents: [
-    CreateCollectiveGoalPage,
     CreateGoalPage,
     CreatePostModalPage,
     DiscussionPage,
