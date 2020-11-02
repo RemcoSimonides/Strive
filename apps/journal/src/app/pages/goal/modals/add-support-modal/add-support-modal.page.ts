@@ -5,16 +5,13 @@ import { AngularFireAuth } from '@angular/fire/auth';
 // Rxjs
 import { Observable } from 'rxjs';
 // Services
-import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
-import { GoalStakeholderService } from '../../../../services/goal/goal-stakeholder.service'
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { SupportService } from 'apps/journal/src/app/services/support/support.service'
 // Interfaces
-import {
-  IMilestone,
-  ISupport,
-  IGoal,
-} from '@strive/interfaces'
+import { IMilestone, ISupport } from '@strive/interfaces'
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/auth-modal.page';
 
@@ -29,7 +26,7 @@ export class AddSupportModalPage implements OnInit {
   public _originIsGoal: boolean
 
   private _goalId: string
-  public _goalDocObs: Observable<IGoal>
+  public _goalDocObs: Observable<Goal>
 
   public _milestone: IMilestone
   public _nrOfDotsInSeqno: number // used in html

@@ -3,9 +3,10 @@ import { db, functions, admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
 
-import { IGoalStakeholder, INotification } from '@strive/interfaces';
+import { INotification } from '@strive/interfaces';
 import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { Profile, User as IUser } from '@strive/user/user/+state/user.firestore';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { sendgridAPIKey, sendgridTemplate } from '../../environments/environment';
 
 const API_KEY = sendgridAPIKey;
@@ -97,7 +98,7 @@ async function getGoals(uid: string, fromDate: Date): Promise<Goal[]> {
 
     for (const doc of GStakeholderColSnap.docs) {
 
-        const GStakeholder: IGoalStakeholder = Object.assign(<IGoalStakeholder>{}, doc.data())
+        const GStakeholder: GoalStakeholder = Object.assign(<GoalStakeholder>{}, doc.data())
         const notifications: INotification[] = await getGoalNotifications(GStakeholder.goalId, fromDate)
 
         goals.push({

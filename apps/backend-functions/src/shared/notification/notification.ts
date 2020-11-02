@@ -1,7 +1,9 @@
 import * as admin from 'firebase-admin';
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { INotification, enumNotificationType, ISource, IGoalStakeholder, ICollectiveGoalStakeholder, IDiscussion, enumDiscussionAudience } from '@strive/interfaces';
+import { INotification, enumNotificationType, ISource, IDiscussion, enumDiscussionAudience } from '@strive/interfaces';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
@@ -156,7 +158,7 @@ async function getGoalStakeholders(goalId: string, isAdmin?: boolean,  isAchieve
     const receivers: string[] = []
     stakeholderColSnap.docs.forEach(stakeholderSnap => {
 
-        const stakeholder: IGoalStakeholder = Object.assign(<IGoalStakeholder>{}, stakeholderSnap.data())
+        const stakeholder: GoalStakeholder = Object.assign(<GoalStakeholder>{}, stakeholderSnap.data())
         let shouldPush = false
 
         if (isAdmin !== undefined && !shouldPush) {

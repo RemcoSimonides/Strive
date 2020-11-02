@@ -1,38 +1,39 @@
-<ion-toolbar>
-  <ion-segment (ionChange)="segmentChanged($event)" class="ion-align-self-center"  *ngIf="_goalExistsAndUserHasAccess">
-    <ion-segment-button value="Goal" href="#goal" checked>
-      Goal
-    </ion-segment-button>
-    <ion-segment-button value="Roadmap" href="#roadmap">
-      Roadmap
-    </ion-segment-button>
-    <ion-segment-button value="Posts" href="#posts">
-      Posts
-    </ion-segment-button>
-  </ion-segment>
-</ion-toolbar>
+<ng-container *ngIf="pageIsLoading">
+  <strive-page-loading></strive-page-loading>
+</ng-container>
 
-<div class="not-logged-in" *ngIf="_pageIsLoading">
-  <ion-spinner name="lines" color="primary"></ion-spinner>
-</div>
+<ng-container *ngIf="!canAccess && !pageIsLoading">
+  <strive-page-not-found></strive-page-not-found>
+</ng-container>
 
-<div class="not-logged-in" *ngIf="!_goalExistsAndUserHasAccess && !_pageIsLoading">
-  <p>
-      Page not found
-  </p>
-</div>
+<ng-container *ngIf="canAccess && !pageIsLoading">
+  <ion-toolbar>
+    <ion-segment (ionChange)="segmentChanged($event)" class="ion-align-self-center">
+      <ion-segment-button value="Goal" href="#goal" checked>
+        Goal
+      </ion-segment-button>
+      <ion-segment-button value="Roadmap" href="#roadmap">
+        Roadmap
+      </ion-segment-button>
+      <ion-segment-button value="Posts" href="#posts">
+        Posts
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ng-container>
 
-<ion-content class="ion-no-padding" [ngSwitch]="segmentChoice" *ngIf="_goalExistsAndUserHasAccess && !_pageIsLoading">
+
+<ion-content class="ion-no-padding" [ngSwitch]="segmentChoice" *ngIf="canAccess && !pageIsLoading">
 
   <!-- Goal description -->
   <div *ngSwitchCase="'Goal'" class="vertical-align-content">
 
-    <div *ngIf="_goal as goal">
+    <div *ngIf="!!goal">
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-icon *ngIf="goal.publicity === enumGoalPublicity.private" name="lock-closed"></ion-icon>
-            <span id="goal-title">{{ _goal?.title }}</span>
+            <ion-icon *ngIf="goal.publicity === 'private'" name="lock-closed"></ion-icon>
+            <span id="goal-title">{{ goal?.title }}</span>
             <span *ngIf="goal.isFinished"> (finished)</span>
           </ion-col>
           <ion-col size-xs="3" size-sm="3" size-md="3" size-lg="3" size-xl="3" self-align-end *ngIf="user.isLoggedIn$ | async">
@@ -43,7 +44,7 @@
               <ion-button (click)="supportGoal()" color="secondary" class="ion-no-padding action-button" fill="clear">
                 <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
               </ion-button>
-              <ion-button (click)="_openSharePopover($event)" fill="clear" size="small" class="ion-no-padding action-button">
+              <ion-button (click)="openSharePopover($event)" fill="clear" size="small" class="ion-no-padding action-button">
                 <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
               </ion-button>
               <ion-button (click)="presentGoalOptionsPopover($event)" fill="clear" class="ion-no-padding action-button" *ngIf="user.isLoggedIn$ | async">
@@ -102,9 +103,9 @@
               </span> -->
 
               <!-- Can only REQUEST to participate if not admin and not achiever  -->
-              <span *ngIf="!_isAdmin && !_isAchiever && !goal.isFinished && _isLoggedIn">
-                <ion-button (click)="requestToJoinGoal()" *ngIf="!_hasOpenRequestToJoin"><ion-icon name="flag"></ion-icon> Request to participate</ion-button>
-                <ion-button disabled *ngIf="_hasOpenRequestToJoin"><ion-icon name="flag"></ion-icon> Request pending</ion-button>
+              <span *ngIf="!isAdmin && !isAchiever && !goal.isFinished && user.isLoggedIn">
+                <ion-button (click)="requestToJoinGoal()" *ngIf="!hasOpenRequestToJoin"><ion-icon name="flag"></ion-icon> Request to participate</ion-button>
+                <ion-button disabled *ngIf="hasOpenRequestToJoin"><ion-icon name="flag"></ion-icon> Request pending</ion-button>
               </span>
 
             </ion-col>
@@ -125,22 +126,22 @@
       </div>
 
       <app-text-editor [_description]="goal.description"
-        [isAdmin]="_isAdmin" 
-        (update)="_saveDescription($event)"
+        [isAdmin]="isAdmin" 
+        (update)="saveDescription($event)"
       ></app-text-editor>
 
     </div>
 
     <ion-list>
       <ion-list-header>Stakeholders</ion-list-header>
-      <ion-item *ngFor="let stakeholder of _stakeholders" button [routerDirection]="'root'" [routerLink]="'../../profile/' + (stakeholder.id)">
+      <ion-item *ngFor="let stakeholder of stakeholders" button [routerDirection]="'root'" [routerLink]="'../../profile/' + (stakeholder.id)">
         {{ stakeholder.username }}
         <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>
-        <fa-icon *ngIf="_isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder)"></fa-icon>
+        <fa-icon *ngIf="isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder)"></fa-icon>
         <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end"></fa-icon>
-        <fa-icon *ngIf="_isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder)"></fa-icon>
+        <fa-icon *ngIf="isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder)"></fa-icon>
         <fa-icon *ngIf="stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-        <fa-icon *ngIf="_isAdmin && !stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end" style="opacity: 0.3;" (click)="toggleSupporter(stakeholder)"></fa-icon>
+        <fa-icon *ngIf="isAdmin && !stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end" style="opacity: 0.3;" (click)="toggleSupporter(stakeholder)"></fa-icon>
       </ion-item>
 
     </ion-list>
@@ -150,7 +151,7 @@
   <!-- Roadmap -->
   <div *ngSwitchCase="'Roadmap'" class="vertical-align-content">
   
-    <app-default-roadmap [goalId]="_goalId" [isAdmin]="_isAdmin" [isAchiever]="_isAchiever" [goal]="_goal"></app-default-roadmap>
+    <app-default-roadmap [goalId]="goalId" [isAdmin]="isAdmin" [isAchiever]="isAchiever" [goal]="goal"></app-default-roadmap>
 
   </div>
 
@@ -162,10 +163,10 @@
     </ion-refresher>
  
     <div *ngFor="let notification of paginationService.data | async">
-      <app-notification [goalId]="_goalId" [notification]="notification" [isAdmin]="_isAdmin" [reference]="'Goals/' + _goalId + '/Notifications/' + notification.id"></app-notification>
+      <app-notification [goalId]="goalId" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goalId + '/Notifications/' + notification.id"></app-notification>
     </div>
 
-    <ion-fab *ngIf="_isAdmin" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab *ngIf="isAdmin" vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
     </ion-fab>
 

@@ -5,15 +5,12 @@ import { AngularFirestore } from '@angular/fire/firestore';
 //Rxjs
 import { take } from 'rxjs/operators';
 // Services
-import { GoalService } from '../goal/goal.service';
-import { GoalStakeholderService } from './goal-stakeholder.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 //Interfaces
-import {
-  IGoal,
-  enumGoalPublicity,
-  IGoalStakeholder,
-} from '@strive/interfaces'
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Injectable({
@@ -47,10 +44,10 @@ export class GoalAuthGuardService implements CanActivate {
     }
 
     // get goal
-    const goal: IGoal = await this.goalService.getGoal(this._goalId)
+    const goal: Goal = await this.goalService.getGoal(this._goalId)
 
     // get stakeholder
-    const stakeholder: IGoalStakeholder = await this.goalStakeholderService.getStakeholder(this.user.uid, this._goalId)
+    const stakeholder: GoalStakeholder = await this.goalStakeholderService.getStakeholder(this.user.uid, this._goalId)
     
     let access: boolean = false
     if (stakeholder) {
@@ -65,13 +62,12 @@ export class GoalAuthGuardService implements CanActivate {
     }
   }
 
-  public async checkAccess(goal: IGoal, stakeholder: IGoalStakeholder): Promise<boolean> {
-
+  public async checkAccess(goal: Goal, stakeholder: GoalStakeholder): Promise<boolean> {
     switch (goal.publicity) {
-      case enumGoalPublicity.public:
+      case 'public':
         return true
         
-      case enumGoalPublicity.collectiveGoalOnly:
+      case 'collectiveGoalOnly':
         
         if (!await this.user.isLoggedIn) return false
 
@@ -83,9 +79,8 @@ export class GoalAuthGuardService implements CanActivate {
         accessToGoal =  await this.checkAccessToGoal(stakeholder)
         return accessToCollectiveGoal || accessToGoal ? true : false
 
-      case enumGoalPublicity.private:
-
-        if (!await this.user.isLoggedIn) return false
+      case 'private':
+        if (!this.user.uid) return false
         return await this.checkAccessToGoal(stakeholder)
       }
   }
@@ -113,7 +108,7 @@ export class GoalAuthGuardService implements CanActivate {
       })
   }
 
-  private async checkAccessToGoal(stakeholder: IGoalStakeholder): Promise<boolean> {
+  private async checkAccessToGoal(stakeholder: GoalStakeholder): Promise<boolean> {
 
     if (this._needsToBeAdmin) return stakeholder.isAdmin
 

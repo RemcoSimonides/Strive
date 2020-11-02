@@ -11,10 +11,10 @@ import {
   enumNotificationType,
   INotificationWithPostAndSupports,
   enumEvent,
-  IGoal,
   enumSupportDecision
 } from '@strive/interfaces';
 import { IReceiver, getReceiver } from '../../../shared/support/receiver'
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 const db = admin.firestore()
 
@@ -23,7 +23,7 @@ export async function handleStatusChangeNotification(before: IMilestone, after: 
     // Get goal data for the title
     const goalRef: admin.firestore.DocumentReference = db.doc(`Goals/${goalId}`)
     const goalSnap: admin.firestore.DocumentSnapshot = await goalRef.get()
-    const goal =  Object.assign(<IGoal>{}, goalSnap.data())
+    const goal =  Object.assign(<Goal>{}, goalSnap.data())
     if (!goal) return
 
     // send notification to every stakeholder
@@ -158,7 +158,7 @@ export async function handleStatusChangeNotification(before: IMilestone, after: 
 }
 
 // Milestone successful
-async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: IGoal, milestone: IMilestone): Promise<void> {
+async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: IMilestone): Promise<void> {
 
     const goalNotification: Partial<INotificationWithPost> = {
         discussionId: milestoneId,
@@ -207,7 +207,7 @@ async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: 
 }
 
 // Milestone failed
-async function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: IGoal, milestone: IMilestone): Promise<void> {
+async function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: IMilestone): Promise<void> {
 
     const goalNotification: Partial<INotificationWithPost> = {
         discussionId: milestoneId,

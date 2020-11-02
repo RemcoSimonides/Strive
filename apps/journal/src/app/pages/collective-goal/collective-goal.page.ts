@@ -19,7 +19,8 @@ import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 // Interfaces
-import { IGoal, enumGoalPublicity, ITemplate } from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
@@ -32,22 +33,20 @@ const { Share } = Plugins;
   styleUrls: ['./collective-goal.page.scss'],
 })
 export class CollectiveGoalPage implements OnInit, OnDestroy {
-  pageIsLoading: boolean = true
-  canAccess: boolean = false
-
-  enumGoalPublicity = enumGoalPublicity
+  pageIsLoading = true
+  canAccess = false
 
   collectiveGoalId: string
   collectiveGoal$: Observable<ICollectiveGoal>
   collectiveGoal: ICollectiveGoal
 
   templates$: Observable<ITemplate[]>
-  goals$: Observable<IGoal[]>
+  goals$: Observable<Goal[]>
   stakeholders$: Observable<ICollectiveGoalStakeholder[]>
 
-  isAdmin: boolean = false
-  isAchiever: boolean = false
-  isSpectator: boolean = false
+  isAdmin = false
+  isAchiever = false
+  isSpectator = false
 
   private backBtnSubscription: Subscription
   private profileSubscription: Subscription

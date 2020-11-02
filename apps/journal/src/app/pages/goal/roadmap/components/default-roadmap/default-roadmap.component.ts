@@ -4,13 +4,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 // Services
 import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
-import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
 // Interfaces
 import { 
-  IGoal,
   IMilestonesLeveled,
   enumMilestoneStatus
 } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Other
 import { RouterPage } from '../../../../../shared/ionViewDidEnter-replacement';
 
@@ -30,7 +30,7 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
   @Input() templateId: string
   // For goals:
   @Input() goalId: string
-  @Input() goal: IGoal
+  @Input() goal: Goal
   _isGoal: boolean
   @Input() isAchiever: boolean
   // For both:

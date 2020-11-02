@@ -13,19 +13,19 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
-import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
 import {
   ITemplate,
   IMilestonesLeveled,
-  enumGoalPublicity,
-  IGoalStakeholder
 } from '@strive/interfaces';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 
 @Component({
   selector: 'app-template',
@@ -148,15 +148,15 @@ export class TemplatePage implements OnInit {
     const template: ITemplate = await this.templateService.getTemplate(this._collectiveGoalId, this._templateId)
     const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this._collectiveGoalId)
 
-    let publicity: enumGoalPublicity
+    let publicity: GoalPublicityType
     if (collectiveGoal.isPublic && template.goalIsPublic) {
       // public
-      publicity = enumGoalPublicity.public
+      publicity = 'public'
     } else if (!collectiveGoal.isPublic && template.goalIsPublic) {
       // semi public
-      publicity = enumGoalPublicity.collectiveGoalOnly
+      publicity = 'collectiveGoalOnly'
     } else {
-      publicity = enumGoalPublicity.private
+      publicity = 'private'
     }
 
     // Create goal
@@ -181,7 +181,7 @@ export class TemplatePage implements OnInit {
     })
 
     // Wait for stakeholder to be created before making milestones because you need admin rights for that
-    this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
+    this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
       .pipe(take(2))
       .subscribe(async stakeholder => {
         if (stakeholder) {

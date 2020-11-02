@@ -1,9 +1,10 @@
 import * as admin from 'firebase-admin'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { INotificationBase, enumEvent, enumNotificationType, ISupport, enumSupportStatus, enumDiscussionAudience, IGoal } from '@strive/interfaces'
+import { INotificationBase, enumEvent, enumNotificationType, ISupport, enumSupportStatus, enumDiscussionAudience } from '@strive/interfaces'
 import { sendNotificationToGoalStakeholders, sendNotificationToUsers, createDiscussion } from "../../../shared/notification/notification"
 import { enumImage } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
@@ -203,7 +204,7 @@ export async function sendSupportDeletedNotification(goalId: string, supportId: 
     // get goal doc for image
     const goalDocRef: FirebaseFirestore.DocumentReference = db.doc(`Goals/${goalId}`)
     const goalDocSnap: FirebaseFirestore.DocumentSnapshot = await goalDocRef.get()
-    const goal: IGoal = Object.assign(<IGoal>{}, goalDocSnap.data())
+    const goal: Goal = Object.assign(<Goal>{}, goalDocSnap.data())
 
     // send notification
     if (support.milestone !== undefined) {

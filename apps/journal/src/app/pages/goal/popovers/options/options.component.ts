@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 // Ionic
 import { PopoverController, NavParams } from '@ionic/angular'
 // Services
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 // Interfaces
-import { enumGoalPublicity } from '@strive/interfaces';
 
 @Component({
   selector: 'app-goal-options-popover',
@@ -14,10 +13,8 @@ import { enumGoalPublicity } from '@strive/interfaces';
 export class GoalOptionsPopoverPage implements OnInit {
 
   public enumGoalOptions = enumGoalOptions
-  public enumGoalPublicity = enumGoalPublicity
 
   public _isAdmin: boolean = false
-  public _publicity: enumGoalPublicity
   public _isFinished: boolean = false
 
   constructor(
@@ -28,7 +25,6 @@ export class GoalOptionsPopoverPage implements OnInit {
 
   ngOnInit() {
     this._isAdmin = this.navParams.data.isAdmin
-    this._publicity = this.navParams.data.publicity
     this._isFinished = this.navParams.data.isFinished
   }
 

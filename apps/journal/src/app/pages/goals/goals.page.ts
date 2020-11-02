@@ -8,15 +8,12 @@ import { map } from 'rxjs/operators'
 // Services
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 
 // Interfaces
-import { 
-  IGoal,
-  enumGoalPublicity,
-  enumGoalStakeholder
-} from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 // Pages
@@ -31,9 +28,7 @@ import { Profile } from '@strive/user/user/+state/user.firestore';
 })
 export class GoalsPage implements OnInit, OnDestroy {
 
-  enumGoalPublicity = enumGoalPublicity;
-
-  goalsColObs: Observable<IGoal[]>;
+  goalsColObs: Observable<Goal[]>;
   collectiveGoalsColObs: Observable<ICollectiveGoal[]>;
 
   sub: Subscription;
@@ -93,8 +88,8 @@ export class GoalsPage implements OnInit, OnDestroy {
   }
 }
 
-function filterDuplicateGoals(observables: Observable<IGoal[]>[]) {
-  return combineLatest<IGoal[][]>(observables).pipe(
+function filterDuplicateGoals(observables: Observable<Goal[]>[]) {
+  return combineLatest<Goal[][]>(observables).pipe(
     map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
     map(goals => goals.filter((thing, index, self) => 
       index === self.findIndex((t) => (

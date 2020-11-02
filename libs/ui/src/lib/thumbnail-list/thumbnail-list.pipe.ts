@@ -1,12 +1,13 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { IGoal, ITemplate } from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { IThumbnail } from './thumbnail-list.component'
 
 @Pipe({ name: 'toThumbnailList' })
 export class ThumbnailListPipe implements PipeTransform {
-  transform(data: ICollectiveGoal[] | IGoal[] | ITemplate[] | Profile[], type: 'collectiveGoal' | 'goal' | 'template' | 'user') {
+  transform(data: ICollectiveGoal[] | Goal[] | ITemplate[] | Profile[], type: 'collectiveGoal' | 'goal' | 'template' | 'user') {
     if (!data) return [];
     switch (type) {
       case 'collectiveGoal':
@@ -23,7 +24,7 @@ export class ThumbnailListPipe implements PipeTransform {
         })
 
       case 'goal':
-        return (data as IGoal[]).map(g => {
+        return (data as Goal[]).map(g => {
           return {
             id: g.id,
             title: g.title,

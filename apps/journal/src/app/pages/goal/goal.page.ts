@@ -3,17 +3,17 @@ import { ActivatedRoute } from '@angular/router'
 // Ionic
 import { IonInfiniteScroll, LoadingController, ModalController, NavController, PopoverController, AlertController, Platform } from '@ionic/angular'
 // Rxjs
-import { Observable, Subscription, of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../../services/firestore/firestore.service'
-import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
-import { GoalStakeholderService } from '../../services/goal/goal-stakeholder.service'
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { PostService } from 'apps/journal/src/app/services/post/post.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
-import { GoalAuthGuardService } from 'apps/journal/src/app/services/goal/goal-auth-guard.service';
+import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -25,20 +25,16 @@ import { AddSupportModalPage } from './modals/add-support-modal/add-support-moda
 import { DiscussionPage } from '../discussion/discussion.page';
 import { CreatePostModalPage } from './posts/create-post-modal/create-post-modal.page';
 // Interfaces
-import {
-  IGoal,
-  enumGoalPublicity,
-  IGoalStakeholder,
-  IPost,
-  enumPostSource
-} from '@strive/interfaces';
+import { IPost, enumPostSource } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 import { Plugins } from '@capacitor/core';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 const { Share } = Plugins;
 
 // Animation for Roadmap
-declare var initMilestonesAnimation: any;
+declare const initMilestonesAnimation: Function;
 
 @Component({
   selector: 'app-goal',
@@ -47,28 +43,24 @@ declare var initMilestonesAnimation: any;
 })
 export class GoalPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-  _pageIsLoading: boolean
-  _isLoggedIn: boolean
-  _goalExistsAndUserHasAccess: boolean
-  private _backBtnSubscription: Subscription
+  pageIsLoading = true
+  canAccess = false
 
-  enumGoalPublicity = enumGoalPublicity
+  goalId: string
+  goal: Goal
 
-  public goalDocObs: Observable<IGoal>
-  public _goal: IGoal
-  public _goalId: string
-  public _isFinished: boolean = false
-
-  public _stakeholders: IGoalStakeholder[]
+  stakeholders: GoalStakeholder[]
 
   // user rights
-  public _isAdmin: boolean = false
-  public _isAchiever: boolean = false
-  public _isSupporter: boolean = false
-  public _isSpectator: boolean = false
-  public _hasOpenRequestToJoin: boolean = false
+  isAdmin = false
+  isAchiever = false
+  isSupporter = false
+  isSpectator = false
+  hasOpenRequestToJoin = false
 
-  public segmentChoice: string = "Goal"
+  segmentChoice: 'Goal' | 'Roadmap' | 'Posts' = "Goal"
+
+  backBtnSubscription: Subscription
 
   constructor(
     private alertCtrl: AlertController,
@@ -76,7 +68,7 @@ export class GoalPage implements OnInit {
     private db: FirestoreService,
     private goalService: GoalService,
     private goalAuthGuardService: GoalAuthGuardService,
-    public goalStakeholderService: GoalStakeholderService,
+    public stakeholder: GoalStakeholderService,
     private imageService: ImageService,
     private inviteTokenService: InviteTokenService,
     private loadingCtrl: LoadingController,
@@ -92,87 +84,80 @@ export class GoalPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this._pageIsLoading = true
-    this._goalId = this.route.snapshot.paramMap.get('id')
-    this._goal = await this.goalService.getGoal(this._goalId)
+    this.goalId = this.route.snapshot.paramMap.get('id')
+    this.goal = await this.goalService.getGoal(this.goalId)
 
-    if (!this._goal.title) {
+    if (!this.goal) {
       this.initNoAccess()
       return
     }
 
     this.user.profile$.pipe(
-      switchMap((profile: Profile) => !!profile ? this.goalStakeholderService.getStakeholderDocObs(profile.id, this._goalId) : of({})),
-    ).subscribe(async (stakeholder: IGoalStakeholder | undefined) => {
+      switchMap((profile: Profile) => !!profile ? this.stakeholder.getStakeholderDocObs(profile.id, this.goalId) : of({})),
+    ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
 
-      let access: boolean = this._goal.publicity === enumGoalPublicity.public
+      let access = this.goal.publicity === 'public'
 
       if (!!stakeholder) {
+        this.isAchiever = stakeholder.isAchiever
+        this.isAdmin = stakeholder.isAdmin
+        this.isSupporter = stakeholder.isSupporter
+        this.isSpectator = stakeholder.isSpectator
+        this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
 
-        this._isAchiever = stakeholder.isAchiever
-        this._isAdmin = stakeholder.isAdmin
-        this._isSupporter = stakeholder.isSupporter
-        this._isSpectator = stakeholder.isSpectator
-        this._hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
-
-        if (!access) access = await this.goalAuthGuardService.checkAccess(this._goal, stakeholder)
-        if (!access) access = await this.inviteTokenService.checkInviteToken('goal', this._goalId)
+        if (!access) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
+        if (!access) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
 
       } else {
 
-        this._isAchiever = false
-        this._isAdmin = false
-        this._isSupporter = false
-        this._isSpectator = false
-        this._hasOpenRequestToJoin = false
+        this.isAchiever = false
+        this.isAdmin = false
+        this.isSupporter = false
+        this.isSpectator = false
+        this.hasOpenRequestToJoin = false
       }
 
       access ? this.initGoal() : this.initNoAccess();
     })
   }
 
-  public async initGoal(): Promise<void> {
+  public async initGoal() {
 
-    this._goalExistsAndUserHasAccess = true
+    this.canAccess = true
 
     // get goal stakeholders
-    const colRef = this.db.col<IGoalStakeholder>(`Goals/${this._goalId}/GStakeholders`)
+    const colRef = this.db.col<GoalStakeholder>(`Goals/${this.goalId}/GStakeholders`)
     const colSnap = await colRef.get().toPromise()
-    this._stakeholders = colSnap.docs.map<IGoalStakeholder>(doc => {
+    this.stakeholders = colSnap.docs.map<GoalStakeholder>(doc => {
       const data = doc.data()
       const id = doc.id
-      return Object.assign(<IGoalStakeholder>{}, { id, ...data })
+      return Object.assign(<GoalStakeholder>{}, { id, ...data })
     })
 
     // SEO
     this.seo.generateTags({
-      title: `${this._goal.title} - Strive Journal`,
-      description: this._goal.shortDescription,
-      image: this._goal.image
+      title: `${this.goal.title} - Strive Journal`,
+      description: this.goal.shortDescription,
+      image: this.goal.image
     })
 
     // Posts
     this.paginationService.reset()
-    this.paginationService.init(`Goals/${this._goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
+    this.paginationService.init(`Goals/${this.goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
 
-    this._pageIsLoading = false
+    this.pageIsLoading = false
 
   }
 
-  public async initNoAccess(): Promise<void> {
-
-    this._goalExistsAndUserHasAccess = false
-
-    // SEO
+  public initNoAccess() {
+    this.pageIsLoading = false
+    this.canAccess = false
     this.seo.generateTags({ title: `Page not found - Strive Journal` })
-
-    this._pageIsLoading = false
-
   }
 
   ionViewDidEnter() {
     if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => {
+      this.backBtnSubscription = this._platform.backButton.subscribe(() => {
         this.navCtrl.back();
       });
     }
@@ -180,28 +165,26 @@ export class GoalPage implements OnInit {
 
   ionViewWillLeave() {
     if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+      this.backBtnSubscription.unsubscribe();
     }
   }
 
-  public async segmentChanged(ev: CustomEvent): Promise<void> {
+  public segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
-    if (ev.detail.value === "Roadmap") {
+    if (this.segmentChoice === 'Roadmap') {
       initMilestonesAnimation()
     }
   }
 
   // Goal section
   public async openDiscussion(): Promise<void> {
-
     const modal = await this.modalCtrl.create({
       component: DiscussionPage,
       componentProps: {
-        discussionId: this._goalId
+        discussionId: this.goalId
       }
     })
     await modal.present()
-
   }
 
   public async presentGoalOptionsPopover(ev: UIEvent): Promise<void> {
@@ -209,9 +192,8 @@ export class GoalPage implements OnInit {
       component: GoalOptionsPopoverPage,
       event: ev,
       componentProps: {
-        isAdmin: this._isAdmin,
-        publicity: this._goal.publicity,
-        isFinished: this._goal.isFinished
+        isAdmin: this.isAdmin,
+        isFinished: this.goal.isFinished
       }
     })
     await popover.present()
@@ -240,14 +222,14 @@ export class GoalPage implements OnInit {
 
     const alert = await this.alertCtrl.create({
       header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
-      subHeader: `To prevent mistakes, I have to ask whether you are sure the  goal is finished. Is it?`,
+      subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
       buttons: [
         {
           text: 'Yes',
           handler: async () => {
 
-            await this.goalService.finishGoal(this._goalId)
-            this._goal.isFinished = true
+            await this.goalService.finishGoal(this.goalId)
+            this.goal.isFinished = true
             this.startPostCreation()
 
           }
@@ -259,7 +241,6 @@ export class GoalPage implements OnInit {
       ]
     })
     await alert.present()
-
   }
 
   private async startPostCreation() {
@@ -267,8 +248,8 @@ export class GoalPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: CreatePostModalPage,
       componentProps: {
-        title: this._goal.title,
-        achievedComponent: "Goal"
+        title: this.goal.title,
+        achievedComponent: 'Goal'
       }
     })
     await modal.present()
@@ -280,17 +261,17 @@ export class GoalPage implements OnInit {
         post.content = {
           title: data.data.title,
           description: data.data.description,
-          mediaURL: await this.imageService.uploadImage(`Goals/${this._goalId}/Posts/${this._goalId}`, false)
+          mediaURL: await this.imageService.uploadImage(`Goals/${this.goalId}/Posts/${this.goalId}`, false)
         }
         post.goal = {
-          id: this._goalId,
-          title: this._goal.title,
-          image: this._goal.image
+          id: this.goalId,
+          title: this.goal.title,
+          image: this.goal.image
         }
         post.isEvidence = true
 
         // Create post
-        await this.postService.createPost(enumPostSource.goal, this._goalId, post, this._goalId)
+        await this.postService.createPost(enumPostSource.goal, this.goalId, post, this.goalId)
       }
       await this.imageService.reset()
     })
@@ -298,7 +279,7 @@ export class GoalPage implements OnInit {
   }
 
   public async editGoal(): Promise<void> {
-    const goal = await this.goalService.getGoal(this._goalId)
+    const goal = await this.goalService.getGoal(this.goalId)
 
     const modal = await this.modalCtrl.create({
       component: CreateGoalPage,
@@ -309,7 +290,7 @@ export class GoalPage implements OnInit {
     await modal.present()
 
     await modal.onDidDismiss().then(async () => {
-      this._goal = await this.goalService.getGoal(this._goalId)
+      this.goal = await this.goalService.getGoal(this.goalId)
     })
   }
 
@@ -323,7 +304,7 @@ export class GoalPage implements OnInit {
           text: 'Yes',
           handler: async () => {
 
-            await this.goalStakeholderService.delete(this._goalId)
+            await this.stakeholder.delete(this.goalId)
             await this.navCtrl.navigateRoot(`/explore`)
 
           }
@@ -344,7 +325,7 @@ export class GoalPage implements OnInit {
     const supportModal = await this.modalCtrl.create({
       component: AddSupportModalPage,
       componentProps: {
-        goalId: this._goalId
+        goalId: this.goalId
       }
     })
     await supportModal.present()
@@ -359,19 +340,19 @@ export class GoalPage implements OnInit {
     })
     await loading.present()
 
-    const goal = await this.goalService.getGoal(this._goalId)
+    const goal = await this.goalService.getGoal(this.goalId)
 
     // Creating goal
     const goalId = await this.goalService.duplicateGoal(goal)
 
     // Creating stakeholder
-    await this.goalStakeholderService.upsert(this.user.uid, goalId, {
+    await this.stakeholder.upsert(this.user.uid, goalId, {
       isAdmin: true,
       isAchiever: true
     })
 
     // Wait for stakeholder to be created before making milestones because you need admin rights for that
-    this.db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
+    this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
       .pipe(take(2))
       .subscribe(async stakeholder => {
         if (stakeholder) {
@@ -386,21 +367,21 @@ export class GoalPage implements OnInit {
   }
 
   public requestToJoinGoal() {
-    return this.goalStakeholderService.upsert(this.user.uid, this._goalId, {
+    return this.stakeholder.upsert(this.user.uid, this.goalId, {
       isSpectator: true,
       hasOpenRequestToJoin: true
     })
   }
 
-  public async _openSharePopover(ev: UIEvent): Promise<void> {
+  public async openSharePopover(ev: UIEvent): Promise<void> {
 
     if (this._platform.is('android') || this._platform.is('ios')) {
 
-      const isPublic: boolean = this._goal.publicity === enumGoalPublicity.public ? true : false
-      const ref = await this.inviteTokenService.getShareLink(this._goalId, false, isPublic, this._isAdmin)
+      const isPublic: boolean = this.goal.publicity === 'public' ? true : false
+      const ref = await this.inviteTokenService.getShareLink(this.goalId, false, isPublic, this.isAdmin)
 
       let shareRet = await Share.share({
-        title: this._goal.title,
+        title: this.goal.title,
         text: 'Check out this goal',
         url: ref,
         dialogTitle: 'Together we achieve!'
@@ -412,35 +393,25 @@ export class GoalPage implements OnInit {
         component: GoalSharePopoverPage,
         event: ev,
         componentProps: {
-          goal: this._goal,
-          isAdmin: this._isAdmin
+          goal: this.goal,
+          isAdmin: this.isAdmin
         }
       })
       await popover.present()
 
     }
-
-
-
-
-
   }
 
-  public async _saveDescription(description: string): Promise<void> {
-
-    this._goal.description = description
-
-    await this.db.upsert(`Goals/${this._goalId}`, {
+  public async saveDescription(description: string): Promise<void> {
+    this.goal.description = description
+    await this.db.upsert(`Goals/${this.goalId}`, {
       description: description
     })
-
   }
 
-  public async toggleAdmin(stakeholder: IGoalStakeholder): Promise<void> {
-
+  public async toggleAdmin(stakeholder: GoalStakeholder): Promise<void> {
     event.preventDefault()
     event.stopPropagation()
-
     const alert = await this.alertCtrl.create({
       subHeader: `Are you sure you want to make ${stakeholder.username} an admin?`,
       buttons: [
@@ -448,7 +419,7 @@ export class GoalPage implements OnInit {
           text: 'Yes',
           handler: () => {
 
-            this.goalStakeholderService.upsert(stakeholder.id, this._goalId, {
+            this.stakeholder.upsert(stakeholder.id, this.goalId, {
               isAdmin: !stakeholder.isAdmin
             })
 
@@ -462,46 +433,37 @@ export class GoalPage implements OnInit {
     })
 
     await alert.present()
-
   }
 
-  public async toggleAchiever(stakeholder: IGoalStakeholder): Promise<void> {
-
+  public async toggleAchiever(stakeholder: GoalStakeholder): Promise<void> {
     event.preventDefault()
     event.stopPropagation()
-
-    this.goalStakeholderService.upsert(stakeholder.id, this._goalId, {
+    this.stakeholder.upsert(stakeholder.id, this.goalId, {
       isAchiever: !stakeholder.isAchiever
     })
-
   }
 
-  public async toggleSupporter(stakeholder: IGoalStakeholder): Promise<void> {
-
+  public async toggleSupporter(stakeholder: GoalStakeholder): Promise<void> {
     event.preventDefault()
     event.stopPropagation()
-
-    this.goalStakeholderService.upsert(stakeholder.id, this._goalId, {
+    this.stakeholder.upsert(stakeholder.id, this.goalId, {
       isSupporter: !stakeholder.isSupporter
     })
-
   }
 
   //Posts section
   public loadData(event) {
-
     this.paginationService.more()
     event.target.complete();
 
     if (this.paginationService.done) {
       event.target.disabled = true
     }
-
   }
 
-  public async refreshPosts($event) {
+  public refreshPosts($event) {
 
-    await this.paginationService.refresh(`Goals/${this._goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
+    this.paginationService.refresh(`Goals/${this.goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
 
     this.paginationService.refreshing.subscribe(refreshing => {
       if (refreshing === false) {
@@ -528,22 +490,22 @@ export class GoalPage implements OnInit {
         post.content = {
           title: data.data.title,
           description: data.data.description,
-          mediaURL: await this.imageService.uploadImage(`Goals/${this._goalId}/Posts/${this._goalId}`, false)
+          mediaURL: await this.imageService.uploadImage(`Goals/${this.goalId}/Posts/${this.goalId}`, false)
         }
         post.goal = {
-          id: this._goalId,
-          title: this._goal.title,
-          image: this._goal.image,
+          id: this.goalId,
+          title: this.goal.title,
+          image: this.goal.image,
         }
         post.isEvidence = false
 
         // Create post
-        await this.postService.createPost(enumPostSource.custom, this._goalId, post)
+        await this.postService.createPost(enumPostSource.custom, this.goalId, post)
 
       }
       await this.imageService.reset()
 
-      await this.paginationService.refresh(`Goals/${this._goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
+      await this.paginationService.refresh(`Goals/${this.goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
 
     })
 

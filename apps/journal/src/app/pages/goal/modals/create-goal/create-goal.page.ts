@@ -4,12 +4,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
 //Services
-import { GoalService, goalArgs, collectiveGoalArgs } from '../../../../services/goal/goal.service'
+import { GoalService, collectiveGoalArgs } from '@strive/goal/goal/+state/goal.service'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 //Interfaces
-import { IGoal, enumGoalPublicity } from '@strive/interfaces';
+import { Goal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
@@ -25,7 +25,7 @@ export class CreateGoalPage implements OnInit {
   private _collectiveGoalId: string | undefined
   private _collectiveGoal: ICollectiveGoal
 
-  public goal = <IGoal>{}
+  public goal = <Goal>{}
 
   constructor(
     private user: UserService,
@@ -57,7 +57,7 @@ export class CreateGoalPage implements OnInit {
       this.createGoalForm.patchValue({
         title: this.goal.title,
         shortDescription: this.goal.shortDescription,
-        isPublic: this.goal.publicity === enumGoalPublicity.private ? false : true,
+        isPublic: this.goal.publicity === 'private' ? false : true,
         deadline: this.goal.deadline
       })
     }
@@ -87,7 +87,7 @@ export class CreateGoalPage implements OnInit {
 
       try {
 
-        const goal: goalArgs = {
+        const goal: Partial<Goal> = {
           title: this.createGoalForm.value.title,
           shortDescription: this.createGoalForm.value.shortDescription,
           publicity: this.determinePublicity(this.createGoalForm.value.isPublic, this.navParams.data.collectiveGoalIsPublic !== undefined ? this.navParams.data.collectiveGoalIsPublic : undefined),
@@ -162,33 +162,18 @@ export class CreateGoalPage implements OnInit {
 
   }
 
-  private determinePublicity(goalIsPublic: boolean, collectiveGoalIsPublic?: boolean): enumGoalPublicity {
-
-    let publicity: enumGoalPublicity
-
+  private determinePublicity(goalIsPublic: boolean, collectiveGoalIsPublic?: boolean): GoalPublicityType {
     if (!goalIsPublic) {
-
-      publicity = enumGoalPublicity.private
-
+      return 'private'
     } else if (collectiveGoalIsPublic !== undefined) {
-
       if (collectiveGoalIsPublic) {
-
-        publicity = enumGoalPublicity.public
-
+        return 'public'
       } else {
-        
-        publicity = enumGoalPublicity.collectiveGoalOnly
-
+        return 'collectiveGoalOnly'
       }
-
     } else {
-      
-      publicity = enumGoalPublicity.public
-    
+      return 'public'
     }
-    return publicity
-
   }
 
   public async _openingDatetime($event): Promise<void> {

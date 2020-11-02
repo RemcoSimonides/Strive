@@ -6,7 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 // Services
 import { AuthGuardService } from '../../services/auth-guard/auth-guard.service'
-import { GoalAuthGuardService } from 'apps/journal/src/app/services/goal/goal-auth-guard.service';
+import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service';
 
 // Pages
 import { GoalPage } from './goal.page';
@@ -20,6 +20,8 @@ import { GoalSharePopoverModule } from './popovers/share/share.module';
 import { GoalOptionsModule } from './popovers/options/options.module';
 
 // Components
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 import { ComponentsModule } from '../../components/components.module'
 import { RoadmapModule } from './roadmap/components/roadmap.module'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -43,7 +45,9 @@ const routes: Routes = [
     RoadmapModule,
     QuillModule,
     GoalSharePopoverModule,
-    GoalOptionsModule
+    GoalOptionsModule,
+    PageLoadingModule,
+    PageNotFoundModule
   ],
   declarations: [
     GoalPage,

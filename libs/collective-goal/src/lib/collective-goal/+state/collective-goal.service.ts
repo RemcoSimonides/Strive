@@ -11,7 +11,7 @@ import { ImageService } from '../../../../../../apps/journal/src/app/services/im
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { ICollectiveGoal } from './collective-goal.firestore';
-import { IGoal, enumGoalPublicity } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalService {
@@ -83,16 +83,16 @@ export class CollectiveGoalService {
     await this.db.doc(`CollectiveGoals/${collectiveGoalId}`).delete()
   }
 
-  public getGoals(id: string, publicOnly: boolean): Observable<IGoal[]> {
+  public getGoals(id: string, publicOnly: boolean): Observable<Goal[]> {
     let query: QueryFn
     if (publicOnly) {
-      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', '==', enumGoalPublicity.public).orderBy('createdAt', 'desc')
+      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', '==', 'public').orderBy('createdAt', 'desc')
     } else {
-      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', 'in', [enumGoalPublicity.collectiveGoalOnly, enumGoalPublicity.public]).orderBy('createdAt', 'desc')
+      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', 'in', ['collectiveGoalOnly', 'public']).orderBy('createdAt', 'desc')
     }
 
-    return this.db.colWithIds$<IGoal[]>(`Goals`, query).pipe(
-      map((goals: IGoal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+    return this.db.colWithIds$<Goal[]>(`Goals`, query).pipe(
+      map((goals:Goal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
     )
   }
 

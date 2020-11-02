@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin'
-import { INotificationBase, enumNotificationType, IMilestone, IGoal } from '@strive/interfaces';
+import { INotificationBase, enumNotificationType, IMilestone } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../shared/notification/notification';
 
 const db = admin.firestore()
@@ -8,7 +9,7 @@ export async function sendNotificationMilestoneDeadlinePassed(goalId: string, mi
 
     const goalDocRef: FirebaseFirestore.DocumentReference = db.doc(`Goals/${goalId}`)
     const goalDocSnap: FirebaseFirestore.DocumentSnapshot = await goalDocRef.get()
-    const goal: IGoal = Object.assign(<IGoal>{}, goalDocSnap.data())
+    const goal: Goal = Object.assign(<Goal>{}, goalDocSnap.data())
 
     const milestoneDocRef: FirebaseFirestore.DocumentReference = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
     const milestoneDocSnap: FirebaseFirestore.DocumentSnapshot = await milestoneDocRef.get()

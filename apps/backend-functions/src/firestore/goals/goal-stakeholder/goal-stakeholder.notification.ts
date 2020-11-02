@@ -8,9 +8,7 @@ import {
 } from '../../../shared/notification/notification'
 
 // Interfaces
-import { 
-  enumGoalPublicity,
-  IGoalStakeholder,
+import {
   enumDiscussionAudience,
   INotificationBase,
   INotificationGoalRequest,
@@ -18,10 +16,11 @@ import {
   enumRequestStatus,
   enumEvent
 } from '@strive/interfaces';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
-export async function handleNotificationsOfStakeholderCreated(goalId: string, stakeholder: IGoalStakeholder): Promise<void> {
+export async function handleNotificationsOfStakeholderCreated(goalId: string, stakeholder: GoalStakeholder): Promise<void> {
 
-    if (stakeholder.goalPublicity !== enumGoalPublicity.public) return
+    if (stakeholder.goalPublicity !== 'public') return
 
     if (stakeholder.isAdmin) {
         // const discussionId = await createDiscussion(enumDiscussionAudience.public)
@@ -32,7 +31,7 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
         // const discussionId = await createDiscussion()
         await sendNewAchieverNotificationInGoal(goalId, goalId, stakeholder)
 
-        if (stakeholder.goalPublicity === enumGoalPublicity.public) {
+        if (stakeholder.goalPublicity === 'public') {
             await sendNewAchieverNotificationToUserSpectators(goalId, goalId, stakeholder)
         }
     }
@@ -41,7 +40,7 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
         // const discussionId = await createDiscussion()
         await sendNewSupporterNotificationInGoal(goalId, goalId, stakeholder)
 
-        if (stakeholder.goalPublicity === enumGoalPublicity.public) {
+        if (stakeholder.goalPublicity === 'public') {
             await sendNewSupporterNotificationToUserSpectators(goalId, goalId, stakeholder)
         }
     }
@@ -53,7 +52,7 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
 
 }
 
-export async function handleNotificationsOfStakeholderChanged(goalId: string, before: IGoalStakeholder, after: IGoalStakeholder): Promise<void> {
+export async function handleNotificationsOfStakeholderChanged(goalId: string, before: GoalStakeholder, after: GoalStakeholder): Promise<void> {
 
     if (before.isAdmin !== after.isAdmin) {
         if (after.isAdmin) {
@@ -65,7 +64,7 @@ export async function handleNotificationsOfStakeholderChanged(goalId: string, be
         if (after.isAchiever) {
             await sendNewAchieverNotificationInGoal(goalId, goalId, after)
             
-            if (after.goalPublicity === enumGoalPublicity.public) {
+            if (after.goalPublicity === 'public') {
                 await sendNewAchieverNotificationToUserSpectators(goalId, goalId, after)
             }
         }
@@ -75,7 +74,7 @@ export async function handleNotificationsOfStakeholderChanged(goalId: string, be
         if (after.isSupporter) {
             await sendNewSupporterNotificationInGoal(goalId, goalId, after)
 
-            if (after.goalPublicity === enumGoalPublicity.public) {
+            if (after.goalPublicity === 'public') {
                 await sendNewSupporterNotificationToUserSpectators(goalId, goalId, after)
             }
         }
@@ -103,7 +102,7 @@ export async function handleNotificationsOfStakeholderChanged(goalId: string, be
 }
 
 // NEW ACHIEVER
-async function sendNewAchieverNotificationToUserSpectators(discussionId: string, goalId: string, stakeholder: IGoalStakeholder): Promise<void> {
+async function sendNewAchieverNotificationToUserSpectators(discussionId: string, goalId: string, stakeholder: GoalStakeholder): Promise<void> {
 
     const notification: Partial<INotificationBase> = {
         discussionId: discussionId,
@@ -131,7 +130,7 @@ async function sendNewAchieverNotificationToUserSpectators(discussionId: string,
 
 }
 
-async function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: IGoalStakeholder): Promise<void> {
+async function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder): Promise<void> {
 
     const goalNotification: Partial<INotificationBase> = {
         discussionId: discussionId,
@@ -175,7 +174,7 @@ async function sendNewAchieverNotificationInGoal(discussionId: string, goalId: s
 }
 
 // NEW SUPPORTER
-async function sendNewSupporterNotificationToUserSpectators(discussionId: string, goalId: string, stakeholder: IGoalStakeholder): Promise<void> {
+async function sendNewSupporterNotificationToUserSpectators(discussionId: string, goalId: string, stakeholder: GoalStakeholder): Promise<void> {
 
     const notification: Partial<INotificationBase> = {
         discussionId: discussionId,
@@ -203,7 +202,7 @@ async function sendNewSupporterNotificationToUserSpectators(discussionId: string
 
 }
 
-async function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: IGoalStakeholder): Promise<void> {
+async function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder): Promise<void> {
 
     const goalNotification: Partial<INotificationBase> = {
         discussionId: discussionId,
@@ -245,7 +244,7 @@ async function sendNewSupporterNotificationInGoal(discussionId: string, goalId: 
 }
 
 // NEW ADMIN
-async function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: IGoalStakeholder): Promise<void> {
+async function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder): Promise<void> {
 
     const goalNotification: Partial<INotificationBase> = {
         discussionId: discussionId,
@@ -287,7 +286,7 @@ async function sendNewAdminNotificationInGoal(discussionId: string, goalId: stri
 }
 
 // REQUEST TO JOIN
-async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string,  goalStakeholder: IGoalStakeholder): Promise<void> {
+async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string,  goalStakeholder: GoalStakeholder): Promise<void> {
     console.log('send New Request To Join Goal Notification In Goal')
 
     // Send request to admins only
@@ -319,7 +318,7 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
 
 }
 
-async function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goalId: string, goalStakeholder: IGoalStakeholder): Promise<void> {
+async function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder): Promise<void> {
 
     const notification: Partial<INotificationBase> = {
         discussionId: discussionId,
@@ -343,7 +342,7 @@ async function sendRequestToJoinGoalAcceptedNotification(discussionId: string, g
 
 }
 
-async function sendRequestToJoinGoalRejectedNotification(discussionId: string, goalId: string, goalStakeholder: IGoalStakeholder): Promise<void> {
+async function sendRequestToJoinGoalRejectedNotification(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder): Promise<void> {
 
     const notification: Partial<INotificationBase> = {
         discussionId: discussionId,

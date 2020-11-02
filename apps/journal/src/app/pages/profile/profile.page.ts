@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from 'apps/journal/src/app/services/user/user-spectate.service';
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 // import { FcmService } from 'src/app/services/fcm/fcm.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
@@ -20,9 +20,6 @@ import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefuln
 import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page';
 // Interfaces
 import {
-  IGoal,
-  enumGoalPublicity,
-  enumGoalStakeholder,
   ISpectator,
   IAffirmations,
   IBucketList,
@@ -30,6 +27,8 @@ import {
   IBucketListItem
 } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
@@ -51,7 +50,6 @@ export class ProfilePage implements OnInit {
 
   // enums
   public enumEdited = enumEdited
-  public enumGoalPublicity = enumGoalPublicity
   public enumExercises = enumExercises
   public enumPrivacy = enumPrivacy
 
@@ -63,8 +61,8 @@ export class ProfilePage implements OnInit {
 
   public profileDocObs: Observable<Profile>
 
-  public _achievingGoalsColObs: Observable<IGoal[]>
-  public _supportingGoalsColObs: Observable<IGoal[]>
+  public _achievingGoalsColObs: Observable<Goal[]>
+  public _supportingGoalsColObs: Observable<Goal[]>
 
   public _profile = <Profile>{}
   private originalProfile = <Profile>{}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 // Services
-import { GoalStakeholderService } from '../goal/goal-stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { FirestoreService } from '../firestore/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';

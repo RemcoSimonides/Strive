@@ -13,18 +13,15 @@ import { take } from 'rxjs/operators';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { FcmService } from 'apps/journal/src/app/services/fcm/fcm.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
-import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 // Interfaces
-import { 
-  ITemplate,
-  enumGoalPublicity,
-  IGoalStakeholder
-} from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 
@@ -275,7 +272,7 @@ export class AuthModalPage implements OnInit {
         const goalId = await this._goalService.handleCreatingGoal(this.user.uid, {
           title: template.goalTitle,
           description: template.description,
-          publicity: enumGoalPublicity.private,
+          publicity: 'private',
           deadline: template.goalDeadline,
           shortDescription: template.goalShortDescription || '',
           image: template.goalImage
@@ -291,7 +288,7 @@ export class AuthModalPage implements OnInit {
           isAchiever: true,
         })
 
-        this._db.docWithId$<IGoalStakeholder>(`Goals/${goalId}/GStakeholders/${user.uid}`)
+        this._db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${user.uid}`)
           .pipe(take(2))
           .subscribe(async stakeholder => {
 

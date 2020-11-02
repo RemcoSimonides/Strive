@@ -1,6 +1,7 @@
 import { db, functions } from '../../internals/firebase';
 
-import { enumMilestoneStatus, enumGoalPublicity, IGoal } from '@strive/interfaces';
+import { enumMilestoneStatus } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
@@ -11,12 +12,12 @@ import { handleNotificationsOfCreatedGoal, handleNotificationsOfChangedGoal } fr
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
     .onCreate(async (snapshot, context) => {
 
-        const goal: IGoal = Object.assign(<IGoal>{}, snapshot.data())
+        const goal: Goal = Object.assign(<Goal>{}, snapshot.data())
         const goalId = snapshot.id
         if (!goal) return
 
         // algolia
-        if (goal.publicity === enumGoalPublicity.public) {
+        if (goal.publicity === 'public') {
 
             await addToAlgolia(enumAlgoliaIndex.dev_Goals, goalId, {
                 goalId: goalId,
@@ -69,8 +70,8 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     .onUpdate(async (snapshot, context) => {
 
-        const before: IGoal = Object.assign(<IGoal>{}, snapshot.before.data())
-        const after: IGoal = Object.assign(<IGoal>{}, snapshot.after.data())
+        const before: Goal = Object.assign(<Goal>{}, snapshot.before.data())
+        const after: Goal = Object.assign(<Goal>{}, snapshot.after.data())
         if (!before) return
         if (!after) return
 
@@ -94,7 +95,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
         }
 
         if (before.publicity !== after.publicity) {
-            if (after.publicity === enumGoalPublicity.public) {
+            if (after.publicity === 'public') {
                 // add to algolia
                 await addToAlgolia(enumAlgoliaIndex.dev_Goals, goalId, {
                     goalId: goalId,

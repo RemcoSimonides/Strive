@@ -1,7 +1,8 @@
 import { db, admin, functions, increment } from '../../../internals/firebase';
 
 // interfaces
-import { IGoal, IGoalStakeholder } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakeholderChanged } from './goal-stakeholder.notification'
 
@@ -9,7 +10,7 @@ import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakehold
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
     .onCreate(async (snapshot, context) => {
 
-        const stakeholder: IGoalStakeholder = Object.assign(<IGoalStakeholder>{}, snapshot.data())
+        const stakeholder: GoalStakeholder = Object.assign(<GoalStakeholder>{}, snapshot.data())
         const goalId = context.params.goalId
         const stakeholderId = snapshot.id
         if (!stakeholder) return
@@ -31,8 +32,8 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
 export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
     .onUpdate(async (snapshot, context) => {
 
-        const before: IGoalStakeholder = Object.assign(<IGoalStakeholder>{}, snapshot.before.data())
-        const after: IGoalStakeholder = Object.assign(<IGoalStakeholder>{}, snapshot.after.data())
+        const before: GoalStakeholder = Object.assign(<GoalStakeholder>{}, snapshot.before.data())
+        const after: GoalStakeholder = Object.assign(<GoalStakeholder>{}, snapshot.after.data())
         const stakeholderId = context.params.stakeholderId
         if (!before) return
         if (!after) return
@@ -89,7 +90,7 @@ async function updateAchieverOnCollectiveGoal(goalId: string, stakeholderId: str
 
     const goalDocRef: admin.firestore.DocumentReference = db.doc(`Goals/${goalId}`)
     const goalDocSnap: admin.firestore.DocumentSnapshot = await goalDocRef.get()
-    const goal: IGoal = Object.assign(<IGoal>{}, goalDocSnap.data())
+    const goal: Goal = Object.assign(<Goal>{}, goalDocSnap.data())
 
     if (goal.collectiveGoal) {
         await upsertCollectiveGoalStakeholder(goalId, stakeholderId, isAchiever)

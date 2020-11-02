@@ -13,9 +13,9 @@ import {
   IMilestone,
   enumMilestoneStatus,
   IPost,
-  enumPostSource,
-  IGoal
+  enumPostSource
 } from '@strive/interfaces'
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 @Component({
   selector: 'app-milestone',
@@ -28,7 +28,7 @@ export class MilestoneComponent implements OnInit {
   // For goal
   @Input() goalId: string
   @Input() isAchiever: boolean
-  @Input() goal: IGoal
+  @Input() goal: Goal
   @Input() milestoneParent: IMilestone
   public _isGoal: boolean = false
   // For both

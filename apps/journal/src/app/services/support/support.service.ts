@@ -6,13 +6,13 @@ import { FirestoreService } from '../firestore/firestore.service';
 import { RoadmapService } from '../roadmap/roadmap.service';
 // Interfaces
 import {
-  IGoal,
   IMilestone,
   ISupport,
   enumSupportStatus,
   enumSupportDecision,
   INotificationSupport
 } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +55,7 @@ export class SupportService {
   /**
    * @param goal Goal has to include id
    */
-  async createCustomMilestoneSupport(goal: IGoal, milestone: IMilestone, newSupport: string): Promise<void> {
+  async createCustomMilestoneSupport(goal: Goal, milestone: IMilestone, newSupport: string): Promise<void> {
     
     const newCustomSupport = <ISupport>{}
     const currentUser = await this.afAuth.currentUser;
@@ -90,7 +90,7 @@ export class SupportService {
 
   }
 
-  async createCustomGoalSupport(goal: IGoal, newSupport: string): Promise<void> {
+  async createCustomGoalSupport(goal: Goal, newSupport: string): Promise<void> {
 
     const newCustomSupport = <ISupport>{}
     const currentUser = await this.afAuth.currentUser;

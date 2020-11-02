@@ -4,7 +4,7 @@ import { DiscussionPage } from '../../pages/discussion/discussion.page'
 // Rxjs
 import { take } from 'rxjs/operators';
 // Services
-import { GoalStakeholderService } from 'apps/journal/src/app/services/goal/goal-stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service';
 // Pages
@@ -17,9 +17,9 @@ import {
   INotificationGoalRequest,
   INotificationWithPostAndSupports,
   enumSupportDecision,
-  INotificationSupport, 
-  IGoalStakeholder } from '@strive/interfaces';
+  INotificationSupport } from '@strive/interfaces';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 @Component({
   selector: 'app-notification',
@@ -130,7 +130,7 @@ export class NotificationComponent implements OnInit {
 
     if (notification.notificationType === enumNotificationType.evidence_finalized) return
 
-    const stakeholders: IGoalStakeholder[] = await this.db.colWithIds$<IGoalStakeholder[]>(`Goals/${notification.path.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
+    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.path.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
 
     const chooseAchieverModal = await this.modalCtrl.create({
       component: ChooseAchieverModalPage,

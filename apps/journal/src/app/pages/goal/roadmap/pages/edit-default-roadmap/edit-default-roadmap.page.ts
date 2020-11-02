@@ -7,16 +7,16 @@ import { first } from 'rxjs/operators';
 // Services
 import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
-import { GoalService } from 'apps/journal/src/app/services/goal/goal.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 // Interfaces
 import { 
-  IGoal,
   IMilestoneTemplabeObject,
   IMilestone,
   ITemplate
 } from '@strive/interfaces';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 @Component({
   selector: 'app-edit-default-roadmap',
@@ -32,7 +32,7 @@ export class EditDefaultRoadmapPage implements OnInit {
   private _templateId: string
   // For goals
   private _goalId: string
-  private _goal: IGoal
+  private _goal: Goal
   // For both
   public _milestoneTemplateObject: IMilestoneTemplabeObject[]
 

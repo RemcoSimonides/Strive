@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 // Ionic
 import { NavParams, ModalController } from '@ionic/angular';
 // Interfaces
-import { IGoalStakeholder } from '@strive/interfaces';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 @Component({
   selector: 'app-choose-achiever-modal',
@@ -11,7 +11,7 @@ import { IGoalStakeholder } from '@strive/interfaces';
 })
 export class ChooseAchieverModalPage implements OnInit {
 
-  public _achievers: IGoalStakeholder[]
+  public _achievers: GoalStakeholder[]
 
   constructor(
     private modalCtrl: ModalController,
@@ -26,7 +26,7 @@ export class ChooseAchieverModalPage implements OnInit {
     await this.modalCtrl.dismiss()
   }
 
-  async achieverChosen(achiever: IGoalStakeholder): Promise<void> {
+  async achieverChosen(achiever: GoalStakeholder): Promise<void> {
 
     await this.modalCtrl.dismiss({
       receiverId: achiever.id,
