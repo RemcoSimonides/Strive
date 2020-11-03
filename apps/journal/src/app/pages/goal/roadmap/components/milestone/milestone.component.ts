@@ -1,21 +1,20 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 // Pages
-import { CreatePostModalPage } from '../../../posts/create-post-modal/create-post-modal.page';
+import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { AddSupportModalPage } from '../../../modals/add-support-modal/add-support-modal.page';
 import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-options.page';
 // Services
-import { PostService } from 'apps/journal/src/app/services/post/post.service';
+import { PostService } from '@strive/post/+state/post.service';
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 // Interfaces
 import {
   IMilestone,
-  enumMilestoneStatus,
-  IPost,
-  enumPostSource
+  enumMilestoneStatus
 } from '@strive/interfaces'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { Post, enumPostSource } from '@strive/post/+state/post.firestore'
 
 @Component({
   selector: 'app-milestone',
@@ -147,7 +146,7 @@ export class MilestoneComponent implements OnInit {
   private async startPostCreation() {
 
     const modal = await this.modalCtrl.create({
-      component: CreatePostModalPage,
+      component: UpsertPostModal,
       componentProps: {
         title: this.milestone.description,
         achievedComponent: "Milestone"
@@ -156,7 +155,7 @@ export class MilestoneComponent implements OnInit {
     await modal.present()
     await modal.onDidDismiss().then(async (data) => {
       if (data.data) {
-        const post = <IPost>{}
+        const post = <Post>{}
 
         //Prepare post object
         post.content = {

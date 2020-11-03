@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular'
 // Roadmap Components
 import { DefaultRoadmapComponent } from './default-roadmap/default-roadmap.component'
 import { MilestoneComponent } from './milestone/milestone.component'
+import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 // Popovers
 import { MilestoneOptionsPage } from './milestone/popovers/milestone-options/milestone-options.page';
 // Other
@@ -17,6 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
     FormsModule,
     IonicModule,
+    UpsertPostModalModule,
   ],
   declarations: [
     DefaultRoadmapComponent,

@@ -11,7 +11,7 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
-import { PostService } from 'apps/journal/src/app/services/post/post.service';
+import { PostService } from '@strive/post/+state/post.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
@@ -23,9 +23,9 @@ import { GoalOptionsPopoverPage, enumGoalOptions} from './popovers/options/optio
 import { GoalSharePopoverPage } from './popovers/share/share.component';
 import { AddSupportModalPage } from './modals/add-support-modal/add-support-modal.page'
 import { DiscussionPage } from '../discussion/discussion.page';
-import { CreatePostModalPage } from './posts/create-post-modal/create-post-modal.page';
+import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 // Interfaces
-import { IPost, enumPostSource } from '@strive/interfaces';
+import { Post, enumPostSource } from '@strive/post/+state/post.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
@@ -246,7 +246,7 @@ export class GoalPage implements OnInit {
   private async startPostCreation() {
 
     const modal = await this.modalCtrl.create({
-      component: CreatePostModalPage,
+      component: UpsertPostModal,
       componentProps: {
         title: this.goal.title,
         achievedComponent: 'Goal'
@@ -255,7 +255,7 @@ export class GoalPage implements OnInit {
     await modal.present()
     await modal.onDidDismiss().then(async (data) => {
       if (data.data) {
-        const post = <IPost>{}
+        const post = <Post>{}
 
         // Prepare post object
         post.content = {
@@ -279,6 +279,7 @@ export class GoalPage implements OnInit {
   }
 
   public async editGoal(): Promise<void> {
+    console.log('edit goal is called: ', this.editGoal);
     const goal = await this.goalService.getGoal(this.goalId)
 
     const modal = await this.modalCtrl.create({
@@ -478,13 +479,13 @@ export class GoalPage implements OnInit {
   public async createCustomPost() {
 
     const modal = await this.modalCtrl.create({
-      component: CreatePostModalPage,
+      component: UpsertPostModal,
     })
     await modal.present()
     await modal.onDidDismiss().then(async (data) => {
 
       if (data.data) {
-        const post = <IPost>{}
+        const post = <Post>{}
 
         // Prepare post object
         post.content = {

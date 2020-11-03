@@ -1,0 +1,27 @@
+<ng-container *ngIf="post">
+  <ion-card>
+    <ion-item>
+      <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="'/profile/' + post.author.id">
+        <img [src]="post.author.profileImage || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+      </ion-avatar>
+      <ion-grid>
+        <ion-row>
+          <span routerDirection="root" [routerLink]="'/profile/' + post.author.id"
+            class="username clickable">{{ post.author.username }}</span>
+        </ion-row>
+        <ion-row>
+          <span class="date">{{ post.createdAt.toDate() | date:'medium' }}</span>
+        </ion-row>
+      </ion-grid>
+
+    </ion-item>
+
+
+    <img class="post-image" *ngIf="post.content.mediaURL" [src]="post.content.mediaURL">
+
+    <ion-card-content>
+      <h2>{{ post.content.title }}</h2>
+      <p>{{ post.content.description }}</p>
+    </ion-card-content>
+  </ion-card>
+</ng-container>

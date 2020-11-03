@@ -15,7 +15,6 @@ import { NotificationOptionsPage } from './notification/popovers/notification-op
 import { QuillModule } from 'ngx-quill';
 // Custom Components
 import { HeaderComponent } from './header/header.component';
-import { PostComponent } from './post/post.component'
 import { CountdownComponent } from './countdown/countdown.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
@@ -34,7 +33,6 @@ import { CommentComponent } from './comment/comment.component';
   ],
   declarations: [
     HeaderComponent,
-    PostComponent,
     CountdownComponent,
     FileDropDirective,
     ImageUploadComponent,
@@ -49,7 +47,6 @@ import { CommentComponent } from './comment/comment.component';
   exports: [
     CountdownComponent,
     HeaderComponent,
-    PostComponent,
     FileDropDirective,
     ImageUploadComponent,
     TextEditorComponent,

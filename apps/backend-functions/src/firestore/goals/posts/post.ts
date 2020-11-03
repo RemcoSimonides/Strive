@@ -1,11 +1,12 @@
 import { functions } from '../../../internals/firebase';
-import { INotificationWithPost, enumNotificationType, enumEvent, IPost, enumDiscussionAudience } from '@strive/interfaces';
+import { INotificationWithPost, enumNotificationType, enumEvent, enumDiscussionAudience } from '@strive/interfaces';
+import { Post } from '@strive/post/+state/post.firestore';
 import { sendNotificationToGoalStakeholders, sendNotificationToGoal, createDiscussion } from '../../../shared/notification/notification'
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)
     .onCreate(async (snapshot, context) => {
 
-        const post: IPost = Object.assign(<IPost>{}, snapshot.data())
+        const post: Post = Object.assign(<Post>{}, snapshot.data())
         const goalId = context.params.goalId
         const postId = context.params.postId
         if (!post) return
@@ -18,7 +19,7 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
     })
 
 // NEW POST
-async function sendNotificationNewPost(goalId: string, postId: string, post: IPost): Promise<void> {
+async function sendNotificationNewPost(goalId: string, postId: string, post: Post): Promise<void> {
 
     const notification: Partial<INotificationWithPost> = {
         discussionId: postId,

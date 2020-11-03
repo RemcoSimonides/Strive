@@ -28,7 +28,6 @@ import { AppComponent } from './app.component';
 
 // Pages
 import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
-import { CreatePostModalPage } from './pages/goal/posts/create-post-modal/create-post-modal.page';
 import { DiscussionPage } from './pages/discussion/discussion.page';
 import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
 import { TermsPage } from './pages/terms/terms.page';
@@ -65,7 +64,6 @@ const customConfig: ShareButtonsConfig = {
     AppComponent,
     Autosize,
     CreateGoalPage,
-    CreatePostModalPage,
     DiscussionPage,
     CreateTemplateModalPage,
     PrivacyPolicyPage,
@@ -77,7 +75,6 @@ const customConfig: ShareButtonsConfig = {
   ],
   entryComponents: [
     CreateGoalPage,
-    CreatePostModalPage,
     DiscussionPage,
     CreateTemplateModalPage,
     PrivacyPolicyPage,

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 // Services
 import { AngularFireAuth } from '@angular/fire/auth';
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
-import { IPost, enumPostSource } from '@strive/interfaces';
+import { Post, enumPostSource } from './post.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,7 @@ export class PostService {
     private db: FirestoreService,
   ) { }
 
-  async createPost(postSource: enumPostSource, goalId: string, post: Partial<IPost>, newPostId?: string): Promise<void> {
-    
+  async createPost(postSource: enumPostSource, goalId: string, post: Partial<Post>, newPostId?: string): Promise<void> {
     switch (postSource) {
       case enumPostSource.goal:
         delete post.milestone
@@ -43,7 +42,6 @@ export class PostService {
     if (!post.content.mediaURL) delete post.content.mediaURL
     delete post.id
 
-    await this.db.set(`Goals/${goalId}/Posts/${newPostId}`, post)
-    
+    await this.db.set(`Goals/${goalId}/Posts/${newPostId}`, post) 
   }
 }

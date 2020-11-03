@@ -7,7 +7,7 @@ export enum enumPostSource {
     custom
 }
 
-export interface IPost {
+export interface Post {
     id?: string;
     isEvidence: boolean;
     author: {

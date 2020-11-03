@@ -21,7 +21,8 @@
       "@strive/user/*": ["libs/user/src/lib/*"],
       "@strive/collective-goal/*": ["libs/collective-goal/src/lib/*"],
       "@strive/utils/*": ["libs/utils/src/lib/*"],
-      "@strive/goal/*": ["libs/goal/src/lib/*"]
+      "@strive/goal/*": ["libs/goal/src/lib/*"],
+      "@strive/post/*": ["libs/post/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -162,9 +162,9 @@
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
  
-    <div *ngFor="let notification of paginationService.data | async">
+    <ng-container *ngFor="let notification of paginationService.data | async">
       <app-notification [goalId]="goalId" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goalId + '/Notifications/' + notification.id"></app-notification>
-    </div>
+    </ng-container>
 
     <ion-fab *ngIf="isAdmin" vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>

@@ -4,22 +4,18 @@ import { FirestoreService } from 'apps/journal/src/app/services/firestore/firest
 // Rxjs
 import { take } from 'rxjs/operators';
 // Interface
-import { IPost } from '@strive/interfaces'
+import { Post } from '../../+state/post.firestore'
 
 @Component({
-  selector: 'app-post',
+  selector: 'strive-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
 })
 export class PostComponent implements OnInit {
 
-  _post: IPost
+  @Input() post: Post
   @Input() postRef: string
-  @Input()
-  public set post(post: IPost) {
-    this._post = post
-  }
-
+  
   constructor(
     private db: FirestoreService
   ) { }
@@ -27,20 +23,15 @@ export class PostComponent implements OnInit {
   ngOnInit() {
 
     if (this.postRef) {
-      this.db.doc<IPost>(this.postRef).snapshotChanges().pipe(take(1)).toPromise().then(snap => {
+      this.db.doc<Post>(this.postRef).snapshotChanges().pipe(take(1)).toPromise().then(snap => {
         if (snap.payload.exists) {
           
           // Post does exist
-          this._post = snap.payload.data()
+          this.post = snap.payload.data()
   
         }
       })
-    }
-    
-  }
-
-  ionViewWillEnter() {
-
+    }    
   }
 
   // Depricated Chat
