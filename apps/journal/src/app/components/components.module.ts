@@ -14,9 +14,6 @@ import { NotificationOptionsPage } from './notification/popovers/notification-op
 // Text editor
 import { QuillModule } from 'ngx-quill';
 // Custom Components
-import { GoalThumbnailComponent } from './goal-thumbnail/goal-thumbnail.component';
-import { GoalThumbnailBrowserComponent } from './goal-thumbnail-browser/goal-thumbnail-browser.component';
-import { CreateGoalThumbnailComponent } from './create-goal-thumbnail/create-goal-thumbnail.component';
 import { HeaderComponent } from './header/header.component';
 import { PostComponent } from './post/post.component'
 import { CountdownComponent } from './countdown/countdown.component';
@@ -36,9 +33,6 @@ import { CommentComponent } from './comment/comment.component';
     FontAwesomeModule
   ],
   declarations: [
-    GoalThumbnailComponent,
-    GoalThumbnailBrowserComponent,
-    CreateGoalThumbnailComponent,
     HeaderComponent,
     PostComponent,
     CountdownComponent,
@@ -54,9 +48,6 @@ import { CommentComponent } from './comment/comment.component';
   ],
   exports: [
     CountdownComponent,
-    GoalThumbnailComponent,
-    GoalThumbnailBrowserComponent,
-    CreateGoalThumbnailComponent,
     HeaderComponent,
     PostComponent,
     FileDropDirective,
