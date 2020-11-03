@@ -128,7 +128,7 @@ export class TemplatePage implements OnInit {
 
   public async useTemplate(): Promise<void> {
 
-    if (!await this.user.isLoggedIn) {
+    if (!this.user.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalPage,
         componentProps: {

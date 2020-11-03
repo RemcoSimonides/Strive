@@ -233,7 +233,7 @@ export class ProfilePage implements OnInit {
 
   async toggleSpectate(): Promise<void> {
 
-    if (await this.user.isLoggedIn) {
+    if (this.user.uid) {
 
       this.userSpectateService.toggleSpectate(this._profileId)
       this._isSpectator = !this._isSpectator

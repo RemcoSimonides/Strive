@@ -16,7 +16,6 @@ export class UserService {
   user$: Observable<User>
   profile$: Observable<Profile>
   isLoggedIn$ = this.afAuth.authState.pipe(map(user => !!user))
-  isLoggedIn = this.isLoggedIn$.toPromise();
   uid: string = '';
 
   constructor(

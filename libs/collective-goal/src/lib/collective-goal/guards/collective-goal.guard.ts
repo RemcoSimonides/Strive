@@ -27,7 +27,7 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
 
     if (collectiveGoal.isPublic) return true
 
-    if (!await this.user.isLoggedIn) {
+    if (!this.user.uid) {
       this.router.navigate(['/explore'])
       return false
     }

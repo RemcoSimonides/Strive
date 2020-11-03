@@ -33,7 +33,7 @@ export class GoalAuthGuardService implements CanActivate {
 
     this._goalId = next.params.id
     
-    if (!await this.user.isLoggedIn) {
+    if (!this.user.uid) {
       this.router.navigate(['/explore'])
       return false
     }
@@ -69,7 +69,7 @@ export class GoalAuthGuardService implements CanActivate {
         
       case 'collectiveGoalOnly':
         
-        if (!await this.user.isLoggedIn) return false
+        if (!this.user.uid) return false
 
         let accessToCollectiveGoal: boolean
         let accessToGoal: boolean
