@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 //Ionic
 import { NavParams, ModalController } from '@ionic/angular'
+import { Post } from '@strive/post/+state/post.firestore';
+import { PostForm } from '@strive/post/forms/post.form';
 
 @Component({
   selector: 'post-upsert-modal',
@@ -9,30 +11,30 @@ import { NavParams, ModalController } from '@ionic/angular'
 })
 export class UpsertPostModal implements OnInit {
 
-  public post = {
-    title: '',
-    description: ''
-  }
+  public postForm = new PostForm();
 
   constructor(
     private modalCtrl: ModalController,
-    // private navParams: NavParams,
+    private navParams: NavParams, // { achievedComponent: 'Milestone' | 'Goal' | 'CollectiveGoal' }
   ) { }
 
   ngOnInit() {
+    let title: string;
+    switch (this.navParams.get('achievedComponent'))  {
+      case "Milestone": 
+        title = `Completed milestone '${this.navParams.get('title')}'`
+        break
+      case "Goal":
+        title = `Finished goal '${this.navParams.get('title')}'`
+        break
+      case "CollectiveGoal":
+        title = `Finished goal '${this.navParams.get('title')}'`
+        break
+    }
+    this.postForm.get('content').get('title').setValue(title);
+    this.postForm.get('isEvidence').setValue(true)
 
-    // switch (this.navParams.get('achievedComponent'))  {
-    //   case "Milestone":
-    //     this.post.title = `Completed milestone '${this.navParams.get('title')}'`
-    //     break
-    //   case "Goal":
-    //     this.post.title = `Finished goal '${this.navParams.get('title')}'`
-    //     break
-    //   case "CollectiveGoal":
-    //     this.post.title = `Finished goal '${this.navParams.get('title')}'`
-    //     break
-    // }
-
+    console.log('fomr value on init: ', this.postForm.value);
   }
 
   async cancel(): Promise<void> {
@@ -40,7 +42,34 @@ export class UpsertPostModal implements OnInit {
   }
 
   async submitPost(): Promise<void> {
-    await this.modalCtrl.dismiss(this.post)
+
+    console.log('formValue: ', this.postForm.value);
+
+    // const post = <Post>{
+    //  content: {
+    //    title: 
+    //  } 
+    // }
+
+    // // Prepare post object
+    // post.content = {
+    //   title: data.data.title,
+    //   description: data.data.description,
+    //   mediaURL: await this.imageService.uploadImage(`Goals/${this.goalId}/Posts/${this.goalId}`, false)
+    // }
+    // post.goal = {
+    //   id: this.goalId,
+    //   title: this.goal.title,
+    //   image: this.goal.image
+    // }
+    // post.isEvidence = true
+
+    // // Create post
+    // await this.postService.createPost(enumPostSource.goal, this.goalId, post, this.goalId)
+
+
+
+    await this.modalCtrl.dismiss()
   }
 
 }

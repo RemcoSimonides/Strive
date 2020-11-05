@@ -17,11 +17,11 @@ import {
 } from '@strive/interfaces'
 
 @Component({
-  selector: 'app-discussion',
-  templateUrl: './discussion.page.html',
-  styleUrls: ['./discussion.page.scss'],
+  selector: 'strive-chat',
+  templateUrl: './chat-modal.component.html',
+  styleUrls: ['./chat-modal.component.scss'],
 })
-export class DiscussionPage implements OnInit, OnDestroy {
+export class ChatModalPage implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea: IonContent
   scrolledToBottom: boolean = true
 

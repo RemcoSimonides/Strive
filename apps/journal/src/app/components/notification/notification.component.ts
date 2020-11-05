@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { DiscussionPage } from '../../pages/discussion/discussion.page'
+import { ChatModalPage } from '@strive/chat/components/chat-modal/chat-modal.component'
 // Rxjs
 import { take } from 'rxjs/operators';
 // Services
@@ -84,15 +84,13 @@ export class NotificationComponent implements OnInit {
   }
 
   async openDiscussion(): Promise<void> {
-
-    const modal = await this.modalCtrl.create({
-      component: DiscussionPage,
-      componentProps: {
-        discussionId: this.notification.discussionId,
-      }
-    })
-    await modal.present()
-
+    // const modal = await this.modalCtrl.create({
+    //   component: ChatModalPage,
+    //   componentProps: {
+    //     discussionId: this.notification.discussionId,
+    //   }
+    // })
+    // await modal.present()
   }
 
   public async handleRequestDecision(notification: INotificationGoalRequest, isAccepted: boolean): Promise<void> {

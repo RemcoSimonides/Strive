@@ -21,12 +21,15 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
 import { NotificationComponent } from './notification/notification.component'
 import { CommentComponent } from './comment/comment.component';
 
+// import { ChatModalModule } from '@strive/chat/components/chat-modal/chat-modal.module'
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule.forRoot(),
     RouterModule,
+    // ChatModalModule,
     // ShareButtonsModule,
     QuillModule,
     FontAwesomeModule

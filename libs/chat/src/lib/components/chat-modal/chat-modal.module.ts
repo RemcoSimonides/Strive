@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DiscussionPageRoutingModule } from './discussion-routing.module';
+import { ChatModalPage } from './chat-modal.component';
 
-import { ComponentsModule } from '../../components/components.module';
+import { ComponentsModule } from 'apps/journal/src/app/components/components.module'
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DiscussionPageRoutingModule,
+    RouterModule,
     ComponentsModule
   ],
-  declarations: [],
+  declarations: [
+    ChatModalPage
+  ],
 })
-export class DiscussionPageModule {}
+export class ChatModalModule {}

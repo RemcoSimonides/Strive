@@ -29,7 +29,34 @@ export interface Post {
         id: string;
         description: string;
     };
-    likes: { [uid: string]: true };
     updatedAt?: Timestamp;
     createdAt?: Timestamp;
 }
+
+/** A factory function that creates a PostDocument. */
+export function createPost(params: Partial<Post> ={}): Post {
+  return {
+    id: !!params.id ? params.id : '',
+    author: {
+      id: '',
+      profileImage: '',
+      username: ''
+    },
+    content: {
+      title: '',
+      description: '',
+      mediaURL: '',
+    },
+    goal: {
+      id: '',
+      title: '',
+      image: ''
+    },
+    milestone: {
+      id: '',
+      description: ''
+    },
+    isEvidence: false,
+    ...params
+  }
+} 

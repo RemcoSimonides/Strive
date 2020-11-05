@@ -20,12 +20,16 @@ export class GoalStakeholderService {
     private db: FirestoreService,
   ) { }
 
-  public getStakeholderDocObs(uid: string, goalId: string): Observable<GoalStakeholder> {
+  public getStakeholder$(uid: string, goalId: string): Observable<GoalStakeholder> {
     return this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${uid}`)
   }
 
   public async getStakeholder(uid: string, goalId: string): Promise<GoalStakeholder | undefined> {
-    return this.getStakeholderDocObs(uid, goalId).pipe(take(1)).toPromise();
+    return this.getStakeholder$(uid, goalId).pipe(take(1)).toPromise();
+  }
+
+  public getStakeholders$(goalId: string): Observable<GoalStakeholder[]> {
+    return this.db.colWithIds$<GoalStakeholder[]>(`Goals/${goalId}/GStakeholders`)
   }
 
   public getGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<Goal[]> {

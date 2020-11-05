@@ -3,7 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular'
 // Services
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-// Interfaces
+
+export enum enumGoalOptions {
+  EditNotificationSettings,
+  DuplicateGoal,
+  FinishGoal,
+  editGoal,
+  deleteGoal
+}
 
 @Component({
   selector: 'app-goal-options-popover',
@@ -32,12 +39,4 @@ export class GoalOptionsPopoverPage implements OnInit {
     this.popoverCtrl.dismiss(goalOption)
   }
 
-}
-
-export enum enumGoalOptions {
-  EditNotificationSettings,
-  DuplicateGoal,
-  FinishGoal,
-  editGoal,
-  deleteGoal
 }

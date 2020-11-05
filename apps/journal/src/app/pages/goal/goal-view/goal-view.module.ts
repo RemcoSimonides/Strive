@@ -5,33 +5,34 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 // Services
-import { AuthGuardService } from '../../services/auth-guard/auth-guard.service'
+import { AuthGuardService } from '../../../services/auth-guard/auth-guard.service'
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service';
 
 // Pages
-import { GoalPage } from './goal.page';
-import { AddSupportModalPage } from './modals/add-support-modal/add-support-modal.page'
+import { GoalViewPage } from './goal-view.page'
+import { GoalPageModule } from '../goal/goal.module';
+import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page'
 
 // Pipes
-import { PipesModule } from '../../pipes/pipes.module'
+import { PipesModule } from '../../../pipes/pipes.module'
 
 // Popover
-import { GoalSharePopoverModule } from './popovers/share/share.module';
-import { GoalOptionsModule } from './popovers/options/options.module';
+import { GoalSharePopoverModule } from '../popovers/share/share.module';
+import { GoalOptionsModule } from '../popovers/options/options.module';
 
 // Components
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
-import { ComponentsModule } from '../../components/components.module'
-import { RoadmapModule } from './roadmap/components/roadmap.module'
+import { ComponentsModule } from '../../../components/components.module'
+import { RoadmapModule } from '../roadmap/components/roadmap.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { QuillModule } from 'ngx-quill'
 
 const routes: Routes = [
-  { path: '', component: GoalPage },
-  { path: 'edit', loadChildren: () => import('./roadmap/pages/edit-default-roadmap/edit-default-roadmap.module').then(m => m.EditDefaultRoadmapPageModule), canActivate: [AuthGuardService, GoalAuthGuardService] },
+  { path: '', component: GoalViewPage },
+  { path: 'edit', loadChildren: () => import('../roadmap/pages/edit-default-roadmap/edit-default-roadmap.module').then(m => m.EditDefaultRoadmapPageModule), canActivate: [AuthGuardService, GoalAuthGuardService] },
 ];
 
 @NgModule({
@@ -49,14 +50,15 @@ const routes: Routes = [
     GoalOptionsModule,
     PageLoadingModule,
     PageNotFoundModule,
-    UpsertPostModalModule
+    UpsertPostModalModule,
+    GoalPageModule
   ],
   declarations: [
-    GoalPage,
+    GoalViewPage,
     AddSupportModalPage,
   ],
   entryComponents: [
     AddSupportModalPage,
   ]
 })
-export class GoalPageModule {}
+export class GoalViewPageModule {}

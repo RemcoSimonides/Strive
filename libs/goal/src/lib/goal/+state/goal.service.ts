@@ -92,12 +92,14 @@ export class GoalService {
 
   }
 
-  public async finishGoal(goalId: string): Promise<void> {
+  public async upsert(goalId: string, goal: Partial<Goal>) {
+    await this.db.upsert<Goal>(`Goals/${goalId}`, goal)
+  }
 
+  public async finishGoal(goalId: string): Promise<void> {
     await this.db.upsert<Goal>(`Goals/${goalId}`, {
       isFinished: true
     })
-
   }
 
   public async duplicateGoal(goal: Goal): Promise<string> {
