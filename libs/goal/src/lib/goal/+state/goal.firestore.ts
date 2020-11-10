@@ -46,11 +46,12 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     shortDescription: '',
     title: '',
     totalNumberOfCustomSupports: 0,
+    ...params,
     collectiveGoal: {
-      id: '',
-      image: '',
-      isPublic: false,
-      title: ''
+      id: params.collectiveGoal?.id ?? '',
+      image: params.collectiveGoal?.image ?? '',
+      isPublic: params.collectiveGoal.isPublic ?? false,
+      title: params.collectiveGoal?.title ?? ''
     },
   }
 }

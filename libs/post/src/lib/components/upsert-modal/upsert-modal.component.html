@@ -14,16 +14,19 @@
 
 <ion-content class="ion-padding">
 
-  <ion-item>
-    <ion-label color="primary" stacked>Title</ion-label>
-    <!-- <ion-input [(ngModel)]="post.title"></ion-input> -->
-  </ion-item>
-  <ion-item>
-    <ion-label color="primary" stacked>Description</ion-label>
-    <!-- <ion-textarea elastic [(ngModel)]="post.description"></ion-textarea> -->
-  </ion-item>
+  <form [formGroup]="postForm.get('content')">
 
-  <!-- <app-image-upload></app-image-upload> -->
+    <ion-item>
+      <ion-label color="primary" stacked>Title</ion-label>
+      <ion-input formControlName="title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary" stacked>Description</ion-label>
+      <ion-textarea elastic formControlName="description"></ion-textarea>
+    </ion-item>
+
+    <!-- <app-image-upload></app-image-upload> -->
+  </form>
 
 </ion-content>
 

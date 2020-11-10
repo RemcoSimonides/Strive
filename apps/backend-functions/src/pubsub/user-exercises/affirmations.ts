@@ -18,7 +18,7 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
 
         if (profile.fcmTokens) {
 
-            await admin.messaging().sendToDevice(profile.fcmTokens, {
+            await admin.messaging().sendToDevice(profile.fcmTokens as string[], {
                 notification: {
                     title: `Repeat out loud 5 times`,
                     body: `${randomAffirmation}`,

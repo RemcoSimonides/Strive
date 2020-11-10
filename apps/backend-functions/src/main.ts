@@ -25,3 +25,6 @@ export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } fr
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token';
 export { postCreatedHandler } from './firestore/goals/posts/post';
 export { commentCreatedHandler } from './firestore/discussions/comments/comment';
+
+// http
+export { duplicateGoal } from './firestore/goals/goal'

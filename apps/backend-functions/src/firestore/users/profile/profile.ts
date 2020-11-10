@@ -1,7 +1,7 @@
 import { db, functions, admin } from '../../../internals/firebase';
 
 import { Profile } from '@strive/user/user/+state/user.firestore';
-import { addToAlgolia, enumAlgoliaIndex, deleteFromAlgolia } from '../../../shared/algolia/algolia';
+import { addToAlgolia, deleteFromAlgolia } from '../../../shared/algolia/algolia';
 
 export const profileCreatedHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
     .onCreate(async (snapshot, context) => {
@@ -11,7 +11,7 @@ export const profileCreatedHandler = functions.firestore.document(`Users/{userId
 
         if (!profile) return
 
-        await addToAlgolia(enumAlgoliaIndex.prod_Users, uid, {
+        await addToAlgolia('user', uid, {
             uid: uid,
             username: profile.username,
             image: profile.image,
@@ -25,7 +25,7 @@ export const profileDeletedHandler = functions.firestore.document(`Users/{userId
 
         const uid = snapshot.id
         try {
-            await deleteFromAlgolia(enumAlgoliaIndex.prod_Users, uid)
+            await deleteFromAlgolia('user', uid)
         } catch (err) {
             console.log('deleting from Algolia error', err)
         }
@@ -43,7 +43,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
         const uid = context.params.userId
 
         console.log('fcm tokens', after.fcmTokens)
-        if (before.fcmTokens !== after.fcmTokens) {
+        if (before.fcmTokens !== after.fcmTokens && Array.isArray(after.fcmTokens)) {
             if (after.fcmTokens && after.fcmTokens.length > 0) {
                 await admin.messaging().subscribeToTopic(after.fcmTokens, 'notifications')
                 .then((res) => {
@@ -55,7 +55,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
             }
         }
 
-        await addToAlgolia(enumAlgoliaIndex.prod_Users, uid, {
+        await addToAlgolia('user', uid, {
             uid: uid,
             username: after.username,
             image: after.image,

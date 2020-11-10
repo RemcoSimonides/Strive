@@ -15,19 +15,10 @@ export class PostService {
     private db: FirestoreService,
   ) { }
 
-  async createPost(postSource: enumPostSource, goalId: string, post: Partial<Post>, newPostId?: string): Promise<void> {
-    switch (postSource) {
-      case enumPostSource.goal:
-        delete post.milestone
-
-        break
-      case enumPostSource.milestone:
-
-        break
-    }
-
-    if (!newPostId) {
-      newPostId = await this.db.getNewId()
+  async createPost(postSource: enumPostSource, post: Partial<Post>, newPostId?: string): Promise<void> {
+    
+    if (postSource === enumPostSource.milestone) {
+      delete post.milestone
     }
 
     //Prepare object
@@ -37,11 +28,12 @@ export class PostService {
       profileImage: currentUser.photoURL,
       username: currentUser.displayName
     }
-    post.goal.id = goalId
-    
-    if (!post.content.mediaURL) delete post.content.mediaURL
-    delete post.id
 
-    await this.db.set(`Goals/${goalId}/Posts/${newPostId}`, post) 
+    if (!!newPostId) {
+      await this.db.set(`Goals/${post.goal.id}/Posts/${newPostId}`, post)       
+    } else {
+      await this.db.add(`Goals/${post.goal.id}/Posts`, post)
+    }
+
   }
 }

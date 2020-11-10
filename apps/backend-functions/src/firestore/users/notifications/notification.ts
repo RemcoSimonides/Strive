@@ -32,7 +32,7 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
 
             console.log('sending notification to devices', profile.fcmTokens)
 
-            await admin.messaging().sendToDevice(profile.fcmTokens, {
+            await admin.messaging().sendToDevice(profile.fcmTokens as string[], {
                 notification: {
                     title: `Something happened!`,
                     body: message,

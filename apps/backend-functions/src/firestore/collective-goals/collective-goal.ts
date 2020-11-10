@@ -1,9 +1,9 @@
 import { db, functions } from '../../internals/firebase';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { deleteScheduledTask, upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
-import { deleteFromAlgolia, addToAlgolia, enumAlgoliaIndex, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { deleteCollection } from '../../shared/delete-collections/delete-collections';
+import { deleteFromAlgolia, addToAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { deleteCollection } from '../../shared/utils';
 
 export const collectiveGoalCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
     .onCreate(async (snapshot, context) => {
@@ -15,7 +15,7 @@ export const collectiveGoalCreatedHandler = functions.firestore.document(`Collec
 
         if (collectiveGoal.isPublic) {
 
-            await addToAlgolia(enumAlgoliaIndex.dev_CollectiveGoals, collectiveGoalId, {
+            await addToAlgolia('collectiveGoal', collectiveGoalId, {
                 collectiveGoalId: collectiveGoalId,
                 ...collectiveGoal
             })
@@ -41,7 +41,7 @@ export const collectiveGoalDeletedHandler = functions.firestore.document(`Collec
         const collectiveGoalId = snapshot.id
 
         try {
-            await deleteFromAlgolia(enumAlgoliaIndex.dev_CollectiveGoals, collectiveGoalId)
+            await deleteFromAlgolia('collectiveGoal', collectiveGoalId)
         } catch (err) {
             console.log('deleting from Algolia error', err)
         }
@@ -85,20 +85,20 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
             if (after.isPublic) {
 
                 // add to algolia
-                await addToAlgolia(enumAlgoliaIndex.dev_CollectiveGoals, collectiveGoalId, {
+                await addToAlgolia('collectiveGoal', collectiveGoalId, {
                     collectiveGoalId: collectiveGoalId,
                     ...after
                 })
 
             } else {
                 // delete goal from Algolia index
-                await deleteFromAlgolia(enumAlgoliaIndex.dev_CollectiveGoals, collectiveGoalId)
+                await deleteFromAlgolia('collectiveGoal', collectiveGoalId)
             }
         } else if (before.title !== after.title ||
             before.image !== after.image ||
             before.shortDescription !== after.shortDescription) {
 
-                await updateAlgoliaObject(enumAlgoliaIndex.dev_CollectiveGoals, collectiveGoalId, after)
+                await updateAlgoliaObject('collectiveGoal', collectiveGoalId, after)
         
         }
 

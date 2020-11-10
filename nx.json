@@ -58,6 +58,9 @@
     },
     "chat": {
       "tags": []
+    },
+    "milestone": {
+      "tags": []
     }
   }
 }

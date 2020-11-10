@@ -44,7 +44,7 @@ export async function sendDailyGratefulnessPushNotification(uid: string): Promis
 
     if (profile.fcmTokens) {
 
-        await admin.messaging().sendToDevice(profile.fcmTokens, {
+        await admin.messaging().sendToDevice(profile.fcmTokens as string[], {
             notification: {
                 title: `Daily Gratefulness Reminder`,
                 body: `Name three things you were grateful for today`,

@@ -44,5 +44,6 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     goalIsFinished: false,
     goalPublicity: 'private',
     goalTitle: '',
+    ...params
   }
 }

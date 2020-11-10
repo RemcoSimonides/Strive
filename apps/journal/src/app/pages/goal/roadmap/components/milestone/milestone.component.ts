@@ -148,37 +148,15 @@ export class MilestoneComponent implements OnInit {
     const modal = await this.modalCtrl.create({
       component: UpsertPostModal,
       componentProps: {
-        title: this.milestone.description,
-        achievedComponent: "Milestone"
+        milestone: this.milestone,
+        goal: this.goal,
+        isEvidence: true
       }
     })
     await modal.present()
-    await modal.onDidDismiss().then(async (data) => {
-      if (data.data) {
-        const post = <Post>{}
-
-        //Prepare post object
-        post.content = {
-          title: data.data.title,
-          description: data.data.description,
-          mediaURL: await this.imageService.uploadImage(`Goals/${this.goalId}/Posts/${this.milestone.id}`, false)
-        }
-        post.milestone = {
-          id: this.milestone.id,
-          description: this.milestone.description
-        }
-        post.goal = {
-          id: this.goalId,
-          title: this.goal.title,
-          image: this.goal.image
-        }
-        post.isEvidence = true
-
-        //Create post
-        this.postService.createPost(enumPostSource.milestone, this.goalId, post, this.milestone.id)
-
-      }
-      await this.imageService.reset()
+    await modal.onDidDismiss().then(data => {
+      // refresh page
+      // reset imageservice
     })
 
   }

@@ -23,7 +23,8 @@
       "@strive/utils/*": ["libs/utils/src/lib/*"],
       "@strive/goal/*": ["libs/goal/src/lib/*"],
       "@strive/post/*": ["libs/post/src/lib/*"],
-      "@strive/chat/*": ["libs/chat/src/lib/*"]
+      "@strive/chat/*": ["libs/chat/src/lib/*"],
+      "@strive/milestone/*": ["libs/milestone/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

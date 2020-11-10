@@ -17,6 +17,8 @@ import { CreateGoalPage } from '../modals/create-goal/create-goal.page';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { GoalSharePopoverPage } from '../popovers/share/share.component';
 import { InviteTokenService } from '../../../services/invite-token/invite-token.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { PostForm } from '@strive/post/forms/post.form';
 
 const { Share } = Plugins;
 
@@ -42,6 +44,7 @@ export class GoalPage implements OnInit, OnDestroy {
 
   constructor(
     private alertCtrl: AlertController,
+    private functions: AngularFireFunctions,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private loadingCtrl: LoadingController,
@@ -57,7 +60,7 @@ export class GoalPage implements OnInit, OnDestroy {
   ngOnInit() { 
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal$ = this.goalService.getGoalDocObs(this.goalId)
-    this.stakeholders$ = this.stakeholder.getStakeholders$(this.goalId);
+    this.stakeholders$ = this.stakeholder.getStakeholders$(this.goalId)
     
     this.sub = this.stakeholder.getStakeholder$(this.user.uid, this.goalId).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
@@ -99,7 +102,7 @@ export class GoalPage implements OnInit, OnDestroy {
           this.duplicateGoal()
           break
         case enumGoalOptions.FinishGoal:
-          this.finishGoal(goal.title)
+          this.finishGoal(goal)
           break
         case enumGoalOptions.editGoal:
           this.editGoal(goal)
@@ -111,42 +114,24 @@ export class GoalPage implements OnInit, OnDestroy {
   }
 
   public async duplicateGoal(): Promise<void> {
-
     const loading = await this.loadingCtrl.create({
       message: `Duplicating goal`,
       spinner: 'lines'
     })
     await loading.present()
 
-    // TODO rework this function. Is probably more efficient to have a back-end function and wait for it to complete 
+    const duplicateGoalFn = this.functions.httpsCallable('duplicateGoal');
+    const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).toPromise();
 
-    // const goal = await this.goalService.getGoal(this.goalId)
-
-    // // Creating goal
-    // const goalId = await this.goalService.duplicateGoal(goal)
-
-    // // Creating stakeholder
-    // await this.stakeholder.upsert(this.user.uid, goalId, {
-    //   isAdmin: true,
-    //   isAchiever: true
-    // })
-
-    // // Wait for stakeholder to be created before making milestones because you need admin rights for that
-    // this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
-    //   .pipe(take(2))
-    //   .subscribe(async stakeholder => {
-    //     if (stakeholder) {
-    //       if (stakeholder.isAdmin) {
-    //         this.roadmapService.duplicateMilestones(goalId, goal.milestoneTemplateObject)
-    //         await loading.dismiss()
-    //         this.navCtrl.navigateRoot(`goal/${goalId}`)
-    //       }
-    //     }
-    //   })
+    if (!!error) {
+      await loading.dismiss();
+      throw new Error(result)
+    };
+    this.navCtrl.navigateRoot(`goal/${result}`);
+    await loading.dismiss();
   }
 
-  private async finishGoal(title: string): Promise<void> {
-
+  private async finishGoal(goal: Goal): Promise<void> {
     const alert = await this.alertCtrl.create({
       header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
       subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
@@ -155,7 +140,7 @@ export class GoalPage implements OnInit, OnDestroy {
           text: 'Yes',
           handler: async () => {
             await this.goalService.finishGoal(this.goalId)
-            this.startPostCreation(title)
+            this.startPostCreation(goal)
           }
         },
         {
@@ -167,20 +152,17 @@ export class GoalPage implements OnInit, OnDestroy {
     await alert.present()
   }
 
-  private async startPostCreation(title: string) {
-
+  private async startPostCreation(goal: Goal) {
     const modal = await this.modalCtrl.create({
       component: UpsertPostModal,
       componentProps: {
-        title: title,
-        achievedComponent: 'Goal'
+        goal: goal,
+        isEvidence: true
       }
     })
     await modal.present()
-    await modal.onDidDismiss().then(async (data) => {
-      if (data.data) {
-        // refresh page here
-      }
+    await modal.onDidDismiss().then(data => {
+      // refresh page here
       // await this.imageService.reset()
     })
 
