@@ -1,24 +1,26 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
+import { AngularFireFunctions } from '@angular/fire/functions';
+// Rxjs
 import { Observable, Subscription } from 'rxjs';
 // Capacitor
 import { Plugins } from '@capacitor/core';
-// Strive
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+// Strive Components
 import { ChatModalPage } from '@strive/chat/components/chat-modal/chat-modal.component';
 import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/options.component';
+import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page';
+import { CreateGoalPage } from '../modals/create-goal/create-goal.page';
+import { GoalSharePopoverPage } from '../popovers/share/share.component';
+// Strive Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
-import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page';
-import { CreateGoalPage } from '../modals/create-goal/create-goal.page';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { GoalSharePopoverPage } from '../popovers/share/share.component';
 import { InviteTokenService } from '../../../services/invite-token/invite-token.service';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { PostForm } from '@strive/post/forms/post.form';
+// Strive Interfaces
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 const { Share } = Plugins;
 
@@ -186,7 +188,7 @@ export class GoalPage implements OnInit, OnDestroy {
         {
           text: 'Yes',
           handler: async () => {
-            await this.stakeholder.delete(this.goalId)
+            await this.goalService.delete(this.goalId)
             await this.navCtrl.navigateRoot(`/explore`)
           }
         },
@@ -200,7 +202,6 @@ export class GoalPage implements OnInit, OnDestroy {
   }
   
   public async supportGoal(): Promise<void> {
-
     const supportModal = await this.modalCtrl.create({
       component: AddSupportModalPage,
       componentProps: {
@@ -208,7 +209,6 @@ export class GoalPage implements OnInit, OnDestroy {
       }
     })
     await supportModal.present()
-
   }
 
   public requestToJoinGoal() {

@@ -5,10 +5,11 @@ import { IonicModule } from '@ionic/angular';
 
 import { GoalPage } from './goal.page';
 
-import { ChatModalModule } from '@strive/chat/components/chat-modal/chat-modal.module'
-import { GoalOptionsModule } from '../popovers/options/options.module'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { ComponentsModule } from 'apps/journal/src/app/components/components.module'
+import { ChatModalModule } from '@strive/chat/components/chat-modal/chat-modal.module'
+import { GoalOptionsModule } from '../popovers/options/options.module'
+import { GoalSharePopoverModule } from '../popovers/share/share.module';
 
 @NgModule({
   imports: [
@@ -18,9 +19,10 @@ import { ComponentsModule } from 'apps/journal/src/app/components/components.mod
     RouterModule,
     
     // Strive
+    ComponentsModule,
     ChatModalModule,
     GoalOptionsModule,
-    ComponentsModule
+    GoalSharePopoverModule
   ],
   exports: [GoalPage],
   declarations: [GoalPage],

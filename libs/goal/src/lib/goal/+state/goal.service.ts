@@ -96,6 +96,10 @@ export class GoalService {
     await this.db.upsert<Goal>(`Goals/${goalId}`, goal)
   }
 
+  public async delete(goalId: string): Promise<void> {
+    await this.db.doc(`Goals/${goalId}`).delete()
+  }
+
   public async finishGoal(goalId: string): Promise<void> {
     await this.db.upsert<Goal>(`Goals/${goalId}`, {
       isFinished: true

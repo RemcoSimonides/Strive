@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
@@ -10,15 +9,9 @@ import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.s
 
 // Pages
 import { GoalViewPage } from './goal-view.page'
+
 import { GoalPageModule } from '../goal/goal.module';
 import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page'
-
-// Pipes
-import { PipesModule } from '../../../pipes/pipes.module'
-
-// Popover
-import { GoalSharePopoverModule } from '../popovers/share/share.module';
-import { GoalOptionsModule } from '../popovers/options/options.module';
 
 // Components
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
@@ -26,28 +19,24 @@ import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.mod
 import { ComponentsModule } from '../../../components/components.module'
 import { RoadmapModule } from '../roadmap/components/roadmap.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { QuillModule } from 'ngx-quill'
 
 const routes: Routes = [
   { path: '', component: GoalViewPage },
-  { path: 'edit', loadChildren: () => import('../roadmap/pages/edit-default-roadmap/edit-default-roadmap.module').then(m => m.EditDefaultRoadmapPageModule), canActivate: [AuthGuardService, GoalAuthGuardService] },
+  { 
+    path: 'edit', 
+    loadChildren: () => import('../roadmap/pages/edit-default-roadmap/edit-default-roadmap.module').then(m => m.EditDefaultRoadmapPageModule), canActivate: [AuthGuardService, GoalAuthGuardService] },
 ];
 
 @NgModule({
   imports: [
     CommonModule,
-    FontAwesomeModule,
-    FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    PipesModule,
     RoadmapModule,
     QuillModule,
-    GoalSharePopoverModule,
-    GoalOptionsModule,
     PageLoadingModule,
     PageNotFoundModule,
     UpsertPostModalModule,

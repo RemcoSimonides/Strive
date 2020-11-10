@@ -71,10 +71,6 @@ export class GoalStakeholderService {
     })
   }
 
-  public async delete(goalId: string): Promise<void> {
-    await this.db.doc(`Goals/${goalId}`).delete()
-  }
-
   private async createNewStakeholder(uid: string, goalId: string, roles: roleArgs): Promise<void> {
 
     let newStakeholder = <GoalStakeholder>{}

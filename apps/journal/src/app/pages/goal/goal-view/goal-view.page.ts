@@ -200,7 +200,7 @@ export class GoalViewPage implements OnInit {
         post.isEvidence = false
 
         // Create post
-        await this.postService.createPost(enumPostSource.custom, this.goalId, post)
+        await this.postService.createPost(enumPostSource.custom, post)
 
       }
       await this.imageService.reset()
