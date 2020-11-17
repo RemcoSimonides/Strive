@@ -11,7 +11,6 @@ import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.s
 import { GoalViewPage } from './goal-view.page'
 
 import { GoalPageModule } from '../goal/goal.module';
-import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page'
 
 // Components
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
@@ -19,6 +18,7 @@ import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.mod
 import { ComponentsModule } from '../../../components/components.module'
 import { RoadmapModule } from '../roadmap/components/roadmap.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
+import { AddSupportModalPageModule } from '../modals/add-support-modal/add-support-modal.module'
 
 import { QuillModule } from 'ngx-quill'
 
@@ -40,14 +40,11 @@ const routes: Routes = [
     PageLoadingModule,
     PageNotFoundModule,
     UpsertPostModalModule,
+    AddSupportModalPageModule,
     GoalPageModule
   ],
   declarations: [
     GoalViewPage,
-    AddSupportModalPage,
   ],
-  entryComponents: [
-    AddSupportModalPage,
-  ]
 })
 export class GoalViewPageModule {}

@@ -9,11 +9,15 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 import { SupportService } from 'apps/journal/src/app/services/support/support.service'
+import { UserService } from '@strive/user/user/+state/user.service';
+import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
+import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
 import { IMilestone, ISupport } from '@strive/interfaces'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/auth-modal.page';
+import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
 
 @Component({
   selector: 'app-add-support-modal',
@@ -22,87 +26,60 @@ import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/
 })
 export class AddSupportModalPage implements OnInit {
 
-  public _isLoggedIn: boolean
-  public _originIsGoal: boolean
+  public origin: 'goal' | 'milestone'
 
-  private _goalId: string
-  public _goalDocObs: Observable<Goal>
+  private goalId: string
+  public goal$: Observable<Goal>
 
-  public _milestone: IMilestone
-  public _nrOfDotsInSeqno: number // used in html
+  public milestone: IMilestone
+  public nrOfDotsInSeqno = 0
 
-  public _supportColObs: Observable<ISupport[]>
-  public _mySupportColObs: Observable<ISupport[]>
+  public supports$: Observable<ISupport[]>
+  public mySupports$: Observable<ISupport[]>
   public _support: string = '' // Value in text field
+
+  public support = new SupportForm()
 
   constructor(
     private afAuth: AngularFireAuth,
     private db: FirestoreService,
+    private goalStakeholder: GoalStakeholderService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private goalStakeholder: GoalStakeholderService,
+    private roadmap: RoadmapService,
     private supportService: SupportService,
+    public user: UserService
   ) { }
 
   ngOnInit() {
-
-    this._goalId = this.navParams.get('goalId')
-    this._milestone = this.navParams.get('milestone')
+    this.goalId = this.navParams.get('goalId')
+    this.milestone = this.navParams.get('milestone')
+    this.origin = !!this.milestone ? 'milestone' : 'goal'
+    this.goal$ = this.goalService.getGoalDocObs(this.goalId)
 
     this.afAuth.authState.subscribe(authState => {
-      this._isLoggedIn = authState ? true : false
-      this.initPage()
+      const { uid, displayName, photoURL } = authState
+      const reference = `Goals/${this.goalId}/Supports`
+
+      this.support.supporter.uid.patchValue(uid)
+      this.support.supporter.username.patchValue(displayName)
+      this.support.supporter.image.patchValue(photoURL)
+      
+      if (this.origin === 'milestone') {
+        this.nrOfDotsInSeqno = getNrOfDotsInSeqno(this.milestone.sequenceNumber)
+        const milestoneLevel = `path.level${this.nrOfDotsInSeqno + 1}id`
+        this.supports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id))
+        if (!!uid) {
+          this.mySupports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id).where('supporter.uid', '==', uid))
+        }
+      } else {
+        this.supports$ = this.db.col$(reference, ref => ref.orderBy('createdAt', 'desc'))
+        if (!!uid) {
+          this.mySupports$ = this.db.col$(reference, ref => ref.where('supporter.uid', '==', uid).orderBy('createdAt', 'desc'))
+        }
+      }
     })
-
-  }
-
-  async initPage(): Promise<void> {
-
-    const { uid } = await this.afAuth.currentUser
-
-    if (this._milestone) {
-      this._originIsGoal = false
-      this._nrOfDotsInSeqno = (this._milestone.sequenceNumber.match(/\./g) || []).length
-    } else {
-      this._originIsGoal = true
-      this._nrOfDotsInSeqno = 0
-    }
-
-    this._goalDocObs = this.goalService.getGoalDocObs(this._goalId)
-    if (this._originIsGoal) { //Goal
-
-      this._supportColObs = this.db.col$(`Goals/${this._goalId}/Supports`, ref => ref.orderBy('createdAt', 'desc'))
-      if (this._isLoggedIn) {
-        this._mySupportColObs = this.db.col$(`Goals/${this._goalId}/Supports`, ref => ref.where('supporter.uid', '==', uid).orderBy('createdAt', 'desc'))
-      }
-
-    } else { //Milestone
-
-      let milestoneLevel: string
-
-      switch ((this._milestone.sequenceNumber.match(/\./g) || []).length) {
-        case 2: {
-          milestoneLevel = 'path.level3id'
-          break
-        }
-        case 1: {
-          milestoneLevel = 'path.level2id'
-          break
-        }
-        case 0: {
-          milestoneLevel = 'path.level1id'
-          break
-        }
-      }
-
-      this._supportColObs = this.db.col$(`Goals/${this._goalId}/Supports`, ref => ref.where(milestoneLevel, '==', this._milestone.id))
-      if (this._isLoggedIn) {
-        this._mySupportColObs = this.db.col$(`Goals/${this._goalId}/Supports`, ref => ref.where(milestoneLevel, '==', this._milestone.id).where('supporter.uid', '==', uid))
-      }
-
-    }
-
   }
 
   async openLoginModal(): Promise<void> {
@@ -119,56 +96,58 @@ export class AddSupportModalPage implements OnInit {
     await this.modalCtrl.dismiss()
   }
 
-  async addSupport(): Promise<void> {
+  async addSupport(goal: Goal): Promise<void> {
 
-    if (this._support === '') return
+    if (!this.support.description.value) return;
 
-    if (this._originIsGoal) {
-      await this.addCustomSupportToGoal()
-    } else {
-      await this.addCustomSupportToMilestone()
+    this.support.goal.id.patchValue(this.goalId)
+    this.support.goal.title.patchValue(goal.title)
+    this.support.goal.image.patchValue(goal.image)
+    if (!!this.milestone) {
+      this.support.milestone.id.patchValue(this.milestone.id)
+      this.support.milestone.description.patchValue(this.milestone.description)
+      await this.determinePath(this.goalId, this.milestone.sequenceNumber, this.support)
     }
 
-    this._support = ''
-
-  }
-
-  private async addCustomSupportToGoal(): Promise<void> {
-
-    const goal = await this.goalService.getGoal(this._goalId)
-
-    //Create support object
-    this.supportService.createCustomGoalSupport(goal, this._support)
+    this.supportService.addSupport(this.goalId, this.support.value)
+    this.support.reset();
 
     //Increase number of custom supports
     //IS FIREBASE FUNCTION
 
     //Set stakeholder as supporter
+    // TODO do in firebase functions
     const { uid } = await this.afAuth.currentUser;
-    this.goalStakeholder.upsert(uid, this._goalId, { isSupporter: true })
+    this.goalStakeholder.upsert(uid, this.goalId, { isSupporter: true })
 
     //Send notification to achievers of goal
     //IS FIREBASE FUNCTION
-
   }
 
-  private async addCustomSupportToMilestone(): Promise<void> {
+  public getMilestoneBreadcrumbs(support: ISupport) {
+    if (this.origin === 'goal') return
 
-    const goal = await this.goalService.getGoal(this._goalId)
+    const cutOff = (description: string) => description.length > 15 ? `${support.path.level2description.substr(0, 15).trim()}... > ` : `${description} > `
 
-    //Create support object
-    this.supportService.createCustomMilestoneSupport(goal, this._milestone, this._support)
+    const milestone3 = support.path?.level3description?.substr(0, 20) ?? ''
+    const milestone2 = !!milestone3 ? cutOff(support.path.level2description) : support.path?.level2description?.substr(0, 20) ?? ''
+    const milestone1 = !!milestone2 ? cutOff(support.path.level1description) : support.path?.level1description?.substr(0, 20) ?? ''
 
-    //Increase number of custom supports
-    //IS FIREBASE FUNCTION
-
-    //Set stakeholder as supporter
-    const { uid } = await this.afAuth.currentUser;
-    this.goalStakeholder.upsert(uid, this._goalId, { isSupporter: true })
-
-    //Send notification to achievers of goal
-    //IS FIREBASE NOT YET A FUNCTION
-
+    return `${milestone1}${milestone2}${milestone3}`
   }
 
+  private async determinePath(goalId: string, sequenceNumber: string, support: SupportForm) {
+    const nrOfDotsInSeqNo = getNrOfDotsInSeqno(sequenceNumber);
+
+    for (let i = 0; i <= nrOfDotsInSeqNo; i++) {
+      if (i === nrOfDotsInSeqNo) {
+        support.path.get(`level${i + 1}description`).patchValue(support.milestone.description.value)
+        support.path.get(`level${i + 1}id`).patchValue(support.milestone.id.value)
+      } else {
+        const milestone = await this.roadmap.getMilestoneWithSeqno(goalId, getPartOfSeqno(sequenceNumber, i))
+        support.path.get(`level${i + 1}description`).patchValue(milestone.description)
+        support.path.get(`level${i + 1}id`).patchValue(milestone.id)
+      }
+    }
+  }
 }

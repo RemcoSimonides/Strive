@@ -502,6 +502,38 @@
           "style": "scss"
         }
       }
+    },
+    "support": {
+      "projectType": "library",
+      "root": "libs/support",
+      "sourceRoot": "libs/support/src",
+      "prefix": "strive",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/support/tsconfig.lib.json",
+              "libs/support/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/support/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/support/jest.config.js",
+            "tsConfig": "libs/support/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/support/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

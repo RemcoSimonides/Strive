@@ -23,3 +23,18 @@ export interface Profile {
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
+
+export interface ProfileLink {
+  uid: string,
+  username: string,
+  image: string
+}
+
+export function createProfileLink(params: Partial<ProfileLink> = {}): ProfileLink {
+  return {
+    uid: '',
+    username: '',
+    image: '',
+    ...params
+  }
+}

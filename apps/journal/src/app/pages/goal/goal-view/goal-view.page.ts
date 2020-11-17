@@ -80,28 +80,9 @@ export class GoalViewPage implements OnInit {
     this.user.profile$.pipe(
       switchMap((profile: Profile) => !!profile ? this.stakeholder.getStakeholder$(profile.id, this.goalId) : of({})),
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
-
       let access = this.goal.publicity === 'public'
-
-      if (!!stakeholder) {
-        // this.isAchiever = stakeholder.isAchiever
-        // this.isAdmin = stakeholder.isAdmin
-        // this.isSupporter = stakeholder.isSupporter
-        // this.isSpectator = stakeholder.isSpectator
-        // this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
-
-        if (!access) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
-        if (!access) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
-
-      } else {
-
-        // this.isAchiever = false
-        // this.isAdmin = false
-        // this.isSupporter = false
-        // this.isSpectator = false
-        // this.hasOpenRequestToJoin = false
-      }
-
+      if (!access && !!stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
+      if (!access && !!stakeholder) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
       access ? this.initGoal() : this.initNoAccess();
     })
   }

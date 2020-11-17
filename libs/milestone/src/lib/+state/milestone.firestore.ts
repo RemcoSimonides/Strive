@@ -71,6 +71,11 @@ interface MilestonesLevelThree {
     createdAt?: FieldValue;
 }
 
+export interface MilestoneLink {
+  id: string;
+  description: string;
+}
+
 /**
  * Milestone
  */
@@ -95,4 +100,12 @@ export function createMilestone(params: Partial<Milestone> ={}): Milestone {
     status: enumMilestoneStatus.pending,
     ...params
   }
-} 
+}
+
+export function createMilestoneLink(params: Partial<MilestoneLink> = {}): MilestoneLink {
+  return {
+    id: '',
+    description: '',
+    ...params
+  }
+}

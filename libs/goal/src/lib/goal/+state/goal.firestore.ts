@@ -29,6 +29,12 @@ export interface Goal {
     createdAt?: Timestamp;
 }
 
+export interface GoalLink {
+  id: string;
+  title: string;
+  image: string;
+}
+
 /** A factory function that creates a GoalDocument. */
 export function createGoal(params: Partial<Goal> = {}): Goal {
   return {
@@ -53,5 +59,14 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
       isPublic: params.collectiveGoal.isPublic ?? false,
       title: params.collectiveGoal?.title ?? ''
     },
+  }
+}
+
+export function createGoalLink(params: Partial<GoalLink> = {}): GoalLink {
+  return {
+    id: '',
+    title: '',
+    image: '',
+    ...params
   }
 }

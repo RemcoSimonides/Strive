@@ -1,4 +1,4 @@
-<!-- <ion-header>
+<ion-header>
   <ion-toolbar>
 
     <ion-buttons slot="end">
@@ -7,8 +7,8 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title *ngIf="_originIsGoal === false"> Supports milestone '{{ _milestone?.description }}'</ion-title>
-    <ion-title *ngIf="_originIsGoal === true"> Supports goal '{{ (_goalDocObs | async)?.title }}'</ion-title>
+    <ion-title *ngIf="origin === 'milestone'">Supports milestone '{{ milestone?.description }}'</ion-title>
+    <ion-title *ngIf="origin === 'goal'">Supports goal '{{ (goal$ | async)?.title }}'</ion-title>
   
   </ion-toolbar>
 </ion-header>
@@ -17,59 +17,61 @@
 
   <h4>Your Supports</h4>
 
-  <div *ngIf="!_isLoggedIn">
-    Please <span class="fat-text-button" (click)="openLoginModal()">log in</span> to view your supports and support this goal
-  </div>
-  <ion-list *ngIf="_isLoggedIn">
-    <ion-item>
-      <ion-input type="text" placeholder="e.g. 'Bottle of wine' or '$20'" (keydown.enter)="addSupport()" [(ngModel)]="_support"></ion-input>
-      <ion-button slot="end" (click)="addSupport()" color="secondary" [class.button-disabled]="(_goalDocObs | async)?.isLocked" >
-        ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-      </ion-button>
-    </ion-item>
-    <ion-item *ngFor="let support of (_mySupportColObs | async)">
-        <ion-thumbnail slot="start">
-          <img [src]="support?.supporter.photoURL">
-        </ion-thumbnail>
-        <ion-label class="ion-text-wrap">
-          <ion-text>{{ support?.description }}</ion-text>
-          <ion-text *ngIf="_nrOfDotsInSeqno === 2">
-            <p>{{ support?.path?.level3description | mSlice }}</p> 
-          </ion-text>
-          <ion-text *ngIf="_nrOfDotsInSeqno === 1">
-            <p *ngIf="!support?.path.level3description">{{ support?.path?.level2description | mSlice }}</p>
-            <p *ngIf="support?.path.level3description as description">{{ support?.path?.level2description | mSlice }} <span class="arrow">&#8702;</span> {{ description | mSlice }}</p>
-          </ion-text>
-          <ion-text *ngIf="_nrOfDotsInSeqno === 0">
-            <p *ngIf="!support?.path?.level3description && !support?.path?.level2description">{{ support?.path?.level1description | mSlice }}</p>
-            <p *ngIf="!support?.path?.level3description && support?.path?.level2description">{{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice }}</p>
-            <p *ngIf="support?.path?.level3id">{{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span> {{ support?.path?.level3description | mSlice }}</p>
-          </ion-text>
-        </ion-label>
-    </ion-item>
-  </ion-list>
+  <ng-container *ngIf="user.isLoggedIn$ | async else notLoggedIn">
+    <ng-container *ngIf="goal$ | async as goal; else error">
+      <ion-list>
+        <form [formGroup]="support">
+          <ion-item>
+            <ion-input formControlName="description"
+              type="text"
+              placeholder="e.g. 'Bottle of wine' or '$20'"
+              (keydown.enter)="addSupport(goal)"></ion-input>
+            <ion-button slot="end" 
+              (click)="addSupport(goal)"
+              color="secondary"
+              [disabled]="goal.isLocked">
+              ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+            </ion-button>
+          </ion-item>
+        </form>
+        <ion-item *ngFor="let support of mySupports$ | async">
+          <ion-thumbnail slot="start">
+            <img [src]="support.supporter.photoURL">
+          </ion-thumbnail>
+          <ion-label class="ion-text-wrap">
+            <ion-text>{{ support.description }}</ion-text>
+            <ng-container *ngIf="origin === 'milestone'">
+              <br/>
+              <ion-text>{{ getMilestoneBreadcrumbs(support) }}</ion-text>
+            </ng-container>
+          </ion-label>
+        </ion-item>
+      </ion-list>
 
-  <h4>All Supports</h4>
-  <ion-list>
-    <ion-item *ngFor="let support of (_supportColObs | async)">
-      <ion-thumbnail slot="start">
-        <img [src]="support?.supporter.photoURL">
-      </ion-thumbnail>
-      <ion-label class="ion-text-wrap">
-        <ion-text>{{ support?.description }}</ion-text>
-        <ion-text *ngIf="_nrOfDotsInSeqno === 2">
-          <p>{{ support?.path?.level3description | mSlice }}</p> 
-        </ion-text>
-        <ion-text *ngIf="_nrOfDotsInSeqno === 1">
-          <p *ngIf="!support?.path.level3description">{{ support?.path?.level2description | mSlice }}</p>
-          <p *ngIf="support?.path.level3description as description">{{ support?.path?.level2description | mSlice }} <span class="arrow">&#8702;</span> {{ description | mSlice }}</p>
-        </ion-text>
-        <ion-text *ngIf="_nrOfDotsInSeqno === 0">
-          <p *ngIf="!support?.path?.level3description && !support?.path?.level2description">{{ support?.path?.level1description | mSlice }}</p>
-          <p *ngIf="!support?.path?.level3description && support?.path?.level2description">{{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice }}</p>
-          <p *ngIf="support?.path?.level3id">{{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span> {{ support?.path?.level3description | mSlice }}</p>
-        </ion-text>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-</ion-content> -->
+      <h4>All Supports</h4>
+      <ion-list>
+        <ion-item *ngFor="let support of supports$ | async">
+          <ion-thumbnail slot="start">
+            <img [src]="support?.supporter.photoURL">
+          </ion-thumbnail>
+          <ion-label class="ion-text-wrap">
+            <ion-text>{{ support.description }}</ion-text>
+            <ng-container *ngIf="origin === 'milestone'">
+              <br/>
+              <ion-text>{{ getMilestoneBreadcrumbs(support) }}</ion-text>
+            </ng-container>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #notLoggedIn>
+    Please <span class="fat-text-button" (click)="openLoginModal()">log in</span> to view your supports and support this goal
+  </ng-template>
+
+  <ng-template #error>
+    Something went wrong
+  </ng-template>
+
+</ion-content>
