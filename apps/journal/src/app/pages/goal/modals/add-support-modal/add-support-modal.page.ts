@@ -8,12 +8,13 @@ import { Observable } from 'rxjs';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
-import { SupportService } from 'apps/journal/src/app/services/support/support.service'
+import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
-import { IMilestone, ISupport } from '@strive/interfaces'
+import { IMilestone } from '@strive/interfaces'
+import { Support } from '@strive/support/+state/support.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/auth-modal.page';
@@ -34,8 +35,8 @@ export class AddSupportModalPage implements OnInit {
   public milestone: IMilestone
   public nrOfDotsInSeqno = 0
 
-  public supports$: Observable<ISupport[]>
-  public mySupports$: Observable<ISupport[]>
+  public supports$: Observable<Support[]>
+  public mySupports$: Observable<Support[]>
   public _support: string = '' // Value in text field
 
   public support = new SupportForm()
@@ -124,7 +125,7 @@ export class AddSupportModalPage implements OnInit {
     //IS FIREBASE FUNCTION
   }
 
-  public getMilestoneBreadcrumbs(support: ISupport) {
+  public getMilestoneBreadcrumbs(support: Support) {
     if (this.origin === 'goal') return
 
     const cutOff = (description: string) => description.length > 15 ? `${support.path.level2description.substr(0, 15).trim()}... > ` : `${description} > `

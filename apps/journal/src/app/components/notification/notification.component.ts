@@ -15,9 +15,9 @@ import {
   enumNotificationType,
   enumRequestStatus,
   INotificationGoalRequest,
-  INotificationWithPostAndSupports,
-  enumSupportDecision,
-  INotificationSupport } from '@strive/interfaces';
+  INotificationWithPostAndSupports
+} from '@strive/interfaces';
+import { NotificationSupport } from '@strive/support/+state/support.firestore'
 import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
@@ -37,7 +37,6 @@ export class NotificationComponent implements OnInit {
   isFromPerson: boolean
 
   enumNotificationType = enumNotificationType
-  enumSupportDecision = enumSupportDecision
   enumRequestStatus = enumRequestStatus
 
   constructor(
@@ -124,7 +123,7 @@ export class NotificationComponent implements OnInit {
 
   }
 
-  public async chooseReceiver(notification: INotificationWithPostAndSupports, support: INotificationSupport): Promise<void> {
+  public async chooseReceiver(notification: INotificationWithPostAndSupports, support: NotificationSupport): Promise<void> {
 
     if (notification.notificationType === enumNotificationType.evidence_finalized) return
 
@@ -157,7 +156,7 @@ export class NotificationComponent implements OnInit {
 
   }
 
-  public async removeReceiver(notification: INotificationWithPostAndSupports, support: INotificationSupport): Promise<void> {
+  public async removeReceiver(notification: INotificationWithPostAndSupports, support: NotificationSupport): Promise<void> {
 
     if (notification.notificationType === enumNotificationType.evidence_finalized) return
 

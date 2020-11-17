@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { INotificationSupport } from './support.interface';
+import { NotificationSupport } from '@strive/support/+state/support.firestore'
 import { IDiscussion } from './discussion.interface';
 
 export type INotification = INotificationBase | INotificationWithPost | INotificationWithPostAndSupports | INotificationGoalRequest;
@@ -109,7 +109,7 @@ export interface INotificationWithPost extends INotificationBase {
 
 export interface INotificationWithPostAndSupports extends INotificationWithPost {
     deadline: string; // deadline for when decision needs to be made
-    supports: INotificationSupport[]; // all supports that need to be decided within this notification
+    supports: NotificationSupport[]; // all supports that need to be decided within this notification
 }
 
 export interface INotificationGoalRequest extends INotificationBase {

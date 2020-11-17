@@ -1,12 +1,12 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
-import { ISupport } from '@strive/interfaces';
+import { Support } from '@strive/support/+state/support.firestore'
 import { handleNotificationsOfCreatedSupport, handleNotificationsOfChangedSupport, sendSupportDeletedNotification } from './support.notification'
 
 export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
     .onCreate(async (snapshot, context) => {
 
-        const support = Object.assign(<ISupport>{}, snapshot.data())
+        const support = Object.assign(<Support>{}, snapshot.data())
         const supportId = snapshot.id
         const goalId = context.params.goalId
         if (!support) return
@@ -31,8 +31,8 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
 export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
     .onUpdate(async (snapshot, context) =>  {
 
-        const before: ISupport = Object.assign(<ISupport>{}, snapshot.before.data())
-        const after: ISupport = Object.assign(<ISupport>{}, snapshot.after.data())
+        const before: Support = Object.assign(<Support>{}, snapshot.before.data())
+        const after: Support = Object.assign(<Support>{}, snapshot.after.data())
         if (!before) return
         if (!after) return
 
@@ -49,7 +49,7 @@ export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId
 
         const supportId = snapshot.id
         const goalId  = context.params.goalId
-        const support: ISupport = Object.assign(<ISupport>{}, snapshot.data())
+        const support: Support = Object.assign(<Support>{}, snapshot.data())
 
         await sendSupportDeletedNotification(goalId, supportId, support)
 

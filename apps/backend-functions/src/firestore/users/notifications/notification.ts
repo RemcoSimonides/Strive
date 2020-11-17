@@ -1,6 +1,7 @@
 import { db, admin, functions, increment } from '../../../internals/firebase';
 // Interfaces
-import { enumNotificationType, INotification, INotificationSupport, enumSupportStatus } from '@strive/interfaces';
+import { enumNotificationType, INotification } from '@strive/interfaces';
+import { NotificationSupport } from '@strive/support/+state/support.firestore'
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
@@ -89,7 +90,7 @@ export const notificationChangeHandler = functions.firestore.document(`Users/{us
 
     })
 
-async function finalizeSupports(goalId: string, supports: INotificationSupport[]): Promise<void> {
+async function finalizeSupports(goalId: string, supports: NotificationSupport[]): Promise<void> {
 
     supports.forEach(async support => {
 
@@ -99,7 +100,7 @@ async function finalizeSupports(goalId: string, supports: INotificationSupport[]
 
             // support rejected
             await supportDocRef.update({
-                status: enumSupportStatus.rejected
+                status: 'rejected'
             })
 
         } else {
@@ -111,7 +112,7 @@ async function finalizeSupports(goalId: string, supports: INotificationSupport[]
                     username: support.receiverUsername,
                     photoURL:  support.receiverPhotoURL
                 },
-                status: enumSupportStatus.waiting_to_be_paid
+                status: 'waiting_to_be_paid'
             })
 
         }

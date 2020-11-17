@@ -12,7 +12,6 @@ import { IReceiver, getReceiver } from '../../shared/support/receiver'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { 
-  enumSupportDecision,
   enumMilestoneStatus,
   INotificationBase,
   INotificationWithPostAndSupports,
@@ -298,7 +297,7 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
             newNotification.supports.push({
                 id: support,
                 description: supporters[supporter][support].description,
-                decision: supporters[supporter][support].milestoneIsFinished ? enumSupportDecision.give : enumSupportDecision.keep,
+                decision: supporters[supporter][support].milestoneIsFinished ? 'give' : 'keep',
                 milestoneIsFinished: supporters[supporter][support].milestoneIsFinished,
                 receiverId: supporters[supporter][support].receiverId,
                 receiverUsername: supporters[supporter][support].receiverUsername,

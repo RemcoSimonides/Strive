@@ -4,7 +4,6 @@ export * from './lib/interfaces/exercises.interface';
 export * from './lib/interfaces/invite-token.interface';
 export * from './lib/interfaces/milestone.interface';
 export * from './lib/interfaces/notification.interface';
-export * from './lib/interfaces/support.interface';
 export * from './lib/interfaces/template.interface';
 export * from './lib/interfaces/user-spectator.interface';
 export * from './lib/interfaces/constants';

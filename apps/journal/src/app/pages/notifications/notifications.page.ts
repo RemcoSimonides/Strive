@@ -12,7 +12,6 @@ import { take } from 'rxjs/operators';
 import {
   enumNotificationType,
   enumRequestStatus,
-  enumSupportDecision,
 } from '@strive/interfaces';
 // Components
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
@@ -30,7 +29,6 @@ export class NotificationsPage implements OnInit {
 
   public _notifications: any[]
   enumNotificationType = enumNotificationType
-  enumSupportDecision = enumSupportDecision
   enumRequestStatus = enumRequestStatus
 
   constructor(
@@ -120,10 +118,10 @@ export class NotificationsPage implements OnInit {
     const notificationIndex = this._notifications.findIndex(notification => notification.id == notificationId)
     const supportIndex = this._notifications[notificationIndex].supports.findIndex(support => support.id == supportId)
 
-    if (this._notifications[notificationIndex].supports[supportIndex].decision == enumSupportDecision.give) {
-      this._notifications[notificationIndex].supports[supportIndex].decision = enumSupportDecision.keep
+    if (this._notifications[notificationIndex].supports[supportIndex].decision == 'give') {
+      this._notifications[notificationIndex].supports[supportIndex].decision = 'keep'
     } else {
-      this._notifications[notificationIndex].supports[supportIndex].decision = enumSupportDecision.give
+      this._notifications[notificationIndex].supports[supportIndex].decision = 'give'
     }
 
   }
@@ -133,10 +131,10 @@ export class NotificationsPage implements OnInit {
     const notificationIndex = this._notifications.findIndex(notification => notification.id == notificationId)
     const supportIndex = this._notifications[notificationIndex].unfinishedMilestonesSupports.findIndex(support => support.id == supportId)
 
-    if (this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision == enumSupportDecision.give) {
-      this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision = enumSupportDecision.keep
+    if (this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision == 'give') {
+      this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision = 'keep'
     } else {
-      this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision = enumSupportDecision.give
+      this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision = 'give'
     }
 
   }

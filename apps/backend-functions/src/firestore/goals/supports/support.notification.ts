@@ -1,7 +1,8 @@
 import * as admin from 'firebase-admin'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { INotificationBase, enumEvent, enumNotificationType, ISupport, enumSupportStatus, enumDiscussionAudience } from '@strive/interfaces'
+import { INotificationBase, enumEvent, enumNotificationType, enumDiscussionAudience } from '@strive/interfaces'
+import { Support } from '@strive/support/+state/support.firestore'
 import { sendNotificationToGoalStakeholders, sendNotificationToUsers, createDiscussion } from "../../../shared/notification/notification"
 import { enumImage } from '@strive/interfaces';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -9,25 +10,25 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
 
-export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: ISupport): Promise<void> {
+export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: Support): Promise<void> {
 
     await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, enumDiscussionAudience.achievers, supportId)
     await sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
 
 }
 
-export async function handleNotificationsOfChangedSupport(supportId: string, goalId: string, before: ISupport, after: ISupport): Promise<void> {
+export async function handleNotificationsOfChangedSupport(supportId: string, goalId: string, before: Support, after: Support): Promise<void> {
 
     if (before.status !== after.status) {
-        if (after.status === enumSupportStatus.paid) {
+        if (after.status === 'paid') {
             await sendSupportPaidNotification(supportId, after)
         }
 
-        if (after.status === enumSupportStatus.rejected) {
+        if (after.status === 'rejected') {
             await sendSupportRejectedNotification(supportId, goalId, after)
         }
 
-        if (after.status === enumSupportStatus.waiting_to_be_paid) {
+        if (after.status === 'waiting_to_be_paid') {
             await sendSupportIsWaitingToBePaid(supportId, after)
         }
 
@@ -35,7 +36,7 @@ export async function handleNotificationsOfChangedSupport(supportId: string, goa
 
 }
 
-async function sendNewSupportNotificationToAchieversOfGoal(supportId: string, goalId: string, support: ISupport): Promise<void> {
+async function sendNewSupportNotificationToAchieversOfGoal(supportId: string, goalId: string, support: Support): Promise<void> {
 
     //Prepare notification object
     const newNotification: INotificationBase = {
@@ -69,7 +70,7 @@ async function sendNewSupportNotificationToAchieversOfGoal(supportId: string, go
 
 }
 
-async function sendSupportPaidNotification(supportId: string, support: ISupport): Promise<void> {
+async function sendSupportPaidNotification(supportId: string, support: Support): Promise<void> {
 
     if (!support.receiver || !support.receiver.uid) return
     if (support.receiver.uid === support.supporter.uid) return
@@ -101,7 +102,7 @@ async function sendSupportPaidNotification(supportId: string, support: ISupport)
 
 }
 
-async function sendSupportRejectedNotification(supportId: string, goalId: string, support: ISupport): Promise<void> {
+async function sendSupportRejectedNotification(supportId: string, goalId: string, support: Support): Promise<void> {
 
     let notification: Partial<INotificationBase>
 
@@ -167,7 +168,7 @@ async function sendSupportRejectedNotification(supportId: string, goalId: string
     
 }
 
-async function sendSupportIsWaitingToBePaid(supportId: string, support: ISupport): Promise<void> {
+async function sendSupportIsWaitingToBePaid(supportId: string, support: Support): Promise<void> {
 
     if (!support.receiver || !support.receiver.uid) return
     if (support.receiver.uid === support.supporter.uid) return
@@ -199,7 +200,7 @@ async function sendSupportIsWaitingToBePaid(supportId: string, support: ISupport
 
 }
 
-export async function sendSupportDeletedNotification(goalId: string, supportId: string,  support: ISupport): Promise<void> {
+export async function sendSupportDeletedNotification(goalId: string, supportId: string,  support: Support): Promise<void> {
 
     // get goal doc for image
     const goalDocRef: FirebaseFirestore.DocumentReference = db.doc(`Goals/${goalId}`)

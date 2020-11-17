@@ -11,7 +11,6 @@ import {
   enumNotificationType,
   INotificationWithPostAndSupports,
   enumEvent,
-  enumSupportDecision
 } from '@strive/interfaces';
 import { IReceiver, getReceiver } from '../../../shared/support/receiver'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -142,7 +141,7 @@ export async function handleStatusChangeNotification(before: IMilestone, after: 
             newNotification.supports.push({
                 id: support,
                 description: supporters[supporter][support].description,
-                decision: supporters[supporter][support].milestoneIsFinished ? enumSupportDecision.give : enumSupportDecision.keep,
+                decision: supporters[supporter][support].milestoneIsFinished ? 'give' : 'keep',
                 milestoneIsFinished: supporters[supporter][support].milestoneIsFinished,
                 receiverId: supporters[supporter][support].receiverId,
                 receiverUsername: supporters[supporter][support].receiverUsername,
