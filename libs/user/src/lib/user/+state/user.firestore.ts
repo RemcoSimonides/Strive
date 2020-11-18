@@ -27,14 +27,14 @@ export interface Profile {
 export interface ProfileLink {
   uid: string,
   username: string,
-  image: string
+  photoURL: string
 }
 
 export function createProfileLink(params: Partial<ProfileLink> = {}): ProfileLink {
   return {
     uid: '',
     username: '',
-    image: '',
+    photoURL: '',
     ...params
   }
 }

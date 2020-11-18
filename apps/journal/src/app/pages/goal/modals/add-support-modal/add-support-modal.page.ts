@@ -65,7 +65,7 @@ export class AddSupportModalPage implements OnInit {
 
       this.support.supporter.uid.patchValue(uid)
       this.support.supporter.username.patchValue(displayName)
-      this.support.supporter.image.patchValue(photoURL)
+      this.support.supporter.photoURL.patchValue(photoURL)
       
       if (this.origin === 'milestone') {
         this.nrOfDotsInSeqno = getNrOfDotsInSeqno(this.milestone.sequenceNumber)
@@ -117,9 +117,7 @@ export class AddSupportModalPage implements OnInit {
     //IS FIREBASE FUNCTION
 
     //Set stakeholder as supporter
-    // TODO do in firebase functions
-    const { uid } = await this.afAuth.currentUser;
-    this.goalStakeholder.upsert(uid, this.goalId, { isSupporter: true })
+    //IS FIREBASE FUNCTION
 
     //Send notification to achievers of goal
     //IS FIREBASE FUNCTION

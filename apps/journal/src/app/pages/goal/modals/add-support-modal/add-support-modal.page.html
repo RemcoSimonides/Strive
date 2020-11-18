@@ -18,7 +18,7 @@
   <h4>Your Supports</h4>
 
   <ng-container *ngIf="user.isLoggedIn$ | async else notLoggedIn">
-    <ng-container *ngIf="goal$ | async as goal; else error">
+    <ng-container *ngIf="goal$ | async as goal">
       <ion-list>
         <form [formGroup]="support">
           <ion-item>
@@ -68,10 +68,6 @@
 
   <ng-template #notLoggedIn>
     Please <span class="fat-text-button" (click)="openLoginModal()">log in</span> to view your supports and support this goal
-  </ng-template>
-
-  <ng-template #error>
-    Something went wrong
   </ng-template>
 
 </ion-content>

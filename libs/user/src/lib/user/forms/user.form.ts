@@ -8,7 +8,7 @@ function createProfileLinkFormControl(params: ProfileLink) {
   return {
     uid: new FormControl(profileLink.uid),
     username: new FormControl(profileLink.username),
-    image: new FormControl(profileLink.image)
+    photoURL: new FormControl(profileLink.photoURL)
   }
 }
 
@@ -21,5 +21,5 @@ export class ProfileLinkForm extends FormEntity<ProfileLinkFormControl> {
 
   get uid() { return this.get('uid') }
   get username() { return this.get('username') }
-  get image() { return this.get('image') }
+  get photoURL() { return this.get('photoURL') }
 }

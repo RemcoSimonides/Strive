@@ -2,6 +2,8 @@ import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
 import { Support } from '@strive/support/+state/support.firestore'
 import { handleNotificationsOfCreatedSupport, handleNotificationsOfChangedSupport, sendSupportDeletedNotification } from './support.notification'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
     .onCreate(async (snapshot, context) => {
@@ -10,6 +12,38 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
         const supportId = snapshot.id
         const goalId = context.params.goalId
         if (!support) return
+
+        //Set stakeholder as supporter
+        const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.supporter.uid}`)
+        const stakeholderSnap = await stakeholderRef.get()
+
+        if (stakeholderSnap.exists) {
+          // Update stakeholder
+          if (!(stakeholderSnap.data() as GoalStakeholder).isSupporter) {
+            stakeholderRef.update({ isSupporter: true })
+          }
+        } else {
+          const goalRef = db.doc(`Goals/${goalId}`)
+          const goalSnap = await goalRef.get()
+          const goal = goalSnap.data() as Goal
+
+          // create new stakeholder
+          const goalStakeholder = createGoalStakeholder({
+            uid: support.supporter.uid,
+            username: support.supporter.username,
+            photoURL: support.supporter.username,
+            goalId: goalId,
+            goalTitle: goal.title,
+            goalImage: goal.image,
+            goalIsFinished: goal.isFinished,
+            goalPublicity: goal.publicity,
+            isSupporter: true,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+          })
+
+          stakeholderRef.set(goalStakeholder)
+        }
 
         //Increase number of custom supports
         if (support.milestone && support.milestone.id !== null) { // Support for milestone added
