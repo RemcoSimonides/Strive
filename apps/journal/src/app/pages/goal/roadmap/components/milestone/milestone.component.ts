@@ -9,10 +9,7 @@ import { PostService } from '@strive/post/+state/post.service';
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 // Interfaces
-import {
-  IMilestone,
-  enumMilestoneStatus
-} from '@strive/interfaces'
+import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { Post, enumPostSource } from '@strive/post/+state/post.firestore'
 
@@ -28,10 +25,10 @@ export class MilestoneComponent implements OnInit {
   @Input() goalId: string
   @Input() isAchiever: boolean
   @Input() goal: Goal
-  @Input() milestoneParent: IMilestone
+  @Input() milestoneParent: Milestone
   public _isGoal: boolean = false
   // For both
-  @Input() milestone: IMilestone
+  @Input() milestone: Milestone
   @Input() isAdmin: boolean
 
   public enumMilestoneStatus = enumMilestoneStatus

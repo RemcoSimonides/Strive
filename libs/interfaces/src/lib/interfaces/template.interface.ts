@@ -1,4 +1,4 @@
-import { IMilestoneTemplabeObject } from './milestone.interface';
+import { MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { FieldValue } from '@firebase/firestore-types';
 
 export interface ITemplate {
@@ -13,7 +13,7 @@ export interface ITemplate {
     goalImage: string;
     goalIsPublic: boolean;
     goalDeadline: string;
-    milestoneTemplateObject: IMilestoneTemplabeObject[];
+    milestoneTemplateObject: MilestoneTemplabeObject[];
     updatedAt?: FieldValue;
     createdAt?: FieldValue;
 }

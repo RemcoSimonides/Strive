@@ -6,22 +6,18 @@ import { take, first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../firestore/firestore.service'
 // Interfaces
-import {
-  IMilestone,
-  IMilestoneTemplabeObject,
-  enumMilestoneStatus,
-  IMilestonesLeveled,
-  ITemplate
-} from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { Milestone, enumMilestoneStatus, MilestonesLeveled, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
+import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
+import { setDateToEndOfDay } from '@strive/utils/helpers'
+import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
 @Injectable({
   providedIn: 'root'
 })
 export class RoadmapService {
 
-  milestones: IMilestone[]
-  goalIdPassedFromGoal: string
-  milestoneDocRef: AngularFirestoreDocument<IMilestone>
+  milestones: Milestone[]
 
   enumMilestoneStatus = enumMilestoneStatus
 
@@ -30,60 +26,32 @@ export class RoadmapService {
     private db: FirestoreService,
   ) { }
 
-  async getStructuredMilestones(goalId: string): Promise<IMilestonesLeveled[]> {
-
-    const milestones = await this.db.colWithIds$<IMilestone[]>(`Goals/${goalId}/Milestones`, ref => ref.orderBy('sequenceNumber')).pipe(take(1)).toPromise()
+  async getStructuredMilestones(goalId: string): Promise<MilestonesLeveled[]> {
+    const milestones = await this.db.colWithIds$<Milestone[]>(`Goals/${goalId}/Milestones`, ref => ref.orderBy('sequenceNumber')).pipe(take(1)).toPromise()
     return this.structureMilestones(milestones)
-
   }
 
-  async getStructuredMilestonesForTemplates(collectiveGoalId: string, templateId: string): Promise<IMilestonesLeveled[]> {
-
+  async getStructuredMilestonesForTemplates(collectiveGoalId: string, templateId: string): Promise<MilestonesLeveled[]> {
     const template = await this.db.docWithId$<ITemplate>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`).pipe(first()).toPromise()
-    return  this.structureMilestones(template.milestoneTemplateObject)
-
+    return this.structureMilestones(template.milestoneTemplateObject)
   }
 
-  async getMilestoneWithSeqno(goalId: string, sequenceNumber: string): Promise<IMilestone> {
+  async getMilestoneWithSeqno(goalId: string, sequenceNumber: string): Promise<Milestone> {
+    const milestoneColObs = this.db.colWithIds$<Milestone[]>(`Goals/${goalId}/Milestones`, ref => ref.where('sequenceNumber', '==', sequenceNumber))
 
-    const milestoneColObs = await this.db.colWithIds$<IMilestone[]>(`Goals/${goalId}/Milestones`, ref => ref.where('sequenceNumber', '==', sequenceNumber))
-
-    return new Promise<IMilestone>((resolve, reject) => {
-
-      milestoneColObs.pipe(take(1)).subscribe(milestones => {
-        if (milestones) {
-          if (milestones.length == 1) {
-            resolve(milestones[0])
-          } else {
-            reject(null)
-          }
-        }
-      })
-
+    return new Promise<Milestone>((resolve, reject) => {
+      milestoneColObs.pipe(take(1)).subscribe(milestones => !!milestones && milestones.length === 1 ? resolve(milestones[0]) : reject())
     })
-
   }
 
   checkForIncompleteSubmilestones(milestoneId: string): boolean {
 
-    let blnHasUnfinishedSubmilestones: boolean = false
-    const index: number = this.milestones.findIndex(milestone => milestone.id == milestoneId)
-    const seqno: string = this.milestones[index].sequenceNumber
+    if (!this.milestones) throw new Error('No milestones in class!')
 
+    const seqno = this.milestones.find(milestone => milestone.id == milestoneId).sequenceNumber
     const prefix = `${seqno}.`
     const submilestones = this.milestones.filter(milestone => milestone.sequenceNumber.startsWith(prefix))
-
-    for (let milestone of submilestones) {
-
-      if (milestone.status === enumMilestoneStatus.pending) {
-        blnHasUnfinishedSubmilestones = true
-        break
-      }
-
-    }
-
-    return blnHasUnfinishedSubmilestones
-
+    return submilestones.some(milestone => milestone.status === enumMilestoneStatus.pending)
   }
 
   /**
@@ -91,119 +59,85 @@ export class RoadmapService {
    * @param goalId goal id of the goal which needs the milestones
    * @param milestoneTemplate 
    */
-  async startConversion(goalId: string, milestoneTemplate: IMilestoneTemplabeObject[]): Promise<void> {
+  async startConversion(goalId: string, milestoneTemplate: MilestoneTemplabeObject[]): Promise<void> {
 
     //Get all milestones if they have not been passed from the goal page.
-    if (!this.milestones || this.goalIdPassedFromGoal != goalId) {
-      
+    if (!this.milestones) {
       this.milestones = await this.db.colWithIds$(`Goals/${goalId}/Milestones`).pipe(take(1)).toPromise()
-
     }
 
-    //Loop through each document
-    milestoneTemplate.forEach((milestone, index) => {
+    milestoneTemplate.forEach(milestone => {
 
-      this.milestoneDocRef = this.afs.collection('Goals')
-                                      .doc(goalId)
-                                      .collection('Milestones')
-                                      .doc(milestone.id)
+      const milestoneDocRef = this.afs.doc(`Goals/${goalId}/Milestones/${milestone.id}`)
 
       //UPDATE
       if (this.milestones.some(x => x.id == milestone.id)){
         const index = this.milestones.findIndex(x => x.id == milestone.id)
 
         //Update only when anything has changed
-        if (this.milestones[index].description != milestone.description || this.milestones[index].sequenceNumber != milestone.sequenceNumber || this.milestones[index].deadline != milestone.deadline){
-          delete milestone.numberOfDotsInSequenceNumber
-          this.milestones[index].deadline = this.milestones[index].deadline ? this.setDeadlineToEndOfDay(this.milestones[index].deadline) : null
-          this.db.update(this.milestoneDocRef, milestone)
+        if (this.milestones[index].description !== milestone.description || this.milestones[index].sequenceNumber !== milestone.sequenceNumber || this.milestones[index].deadline !== milestone.deadline){
+          this.milestones[index].deadline = this.milestones[index].deadline ? setDateToEndOfDay(this.milestones[index].deadline) : null
+          this.db.update(milestoneDocRef, milestone)
         }
 
       } else {
 
         //ADD
-        const newMilestone: IMilestone = <IMilestone>{}
-        newMilestone.description = milestone.description
-        newMilestone.sequenceNumber = milestone.sequenceNumber
-        newMilestone.numberOfCustomSupports = 0
-        newMilestone.status = enumMilestoneStatus.pending
-        newMilestone.deadline = milestone.deadline ? this.setDeadlineToEndOfDay(milestone.deadline) : null
-        
-        this.db.set(this.milestoneDocRef, newMilestone)
-
+        const newMilestone = createMilestone(milestone)
+        this.db.set(milestoneDocRef, newMilestone)
       }
-
     })
     
     //DELETE
     this.milestones.forEach(milestone => {
-      
       if (!milestoneTemplate.some(x => x.id == milestone.id)){
-
-        this.afs.collection('Goals')
-                .doc(goalId)
-                .collection('Milestones')
-                .doc(milestone.id)
-                .delete()
-
+        this.afs.doc(`Goals/${goalId}/Milestones/${milestone.id}`).delete
       }
-
     })
 
   }
 
-  async duplicateMilestones(goalId: string, milestoneTemplate: IMilestoneTemplabeObject[]): Promise<void> {
-
+  async duplicateMilestones(goalId: string, milestoneTemplate: MilestoneTemplabeObject[]): Promise<void> {
     const promises: any[] = []
-
     milestoneTemplate.forEach(milestone => {
-
-      const newMilestone: IMilestone = <IMilestone>{}
-      newMilestone.description = milestone.description
-      newMilestone.sequenceNumber = milestone.sequenceNumber
-      newMilestone.numberOfCustomSupports = 0
-      newMilestone.status = enumMilestoneStatus.pending
-      newMilestone.deadline = milestone.deadline || null
-
+      const newMilestone = createMilestone(milestone)
       const promise = this.db.set(`Goals/${goalId}/Milestones/${milestone.id}`, newMilestone)
       promises.push(promise)
-
     })
-
     Promise.all(promises)
-
   }
 
-  structureMilestones(milestones): IMilestonesLeveled[] {
+  structureMilestones(milestones: Milestone[] | MilestoneTemplabeObject[]): MilestonesLeveled[] {
     
-    const structuredMilestones: IMilestonesLeveled[] = []
+    const structuredMilestones: MilestonesLeveled[] = []
+    console.log('structured milestones: ', structuredMilestones)
 
     let indexMilestoneLevelOne = -1
     let indexMilestoneLevelTwo = -1
     let indexMilestoneLevelThree = -1
 
-    milestones.forEach((milestone) => {
+    milestones.forEach((milestone: Milestone | MilestoneTemplabeObject) => {
 
-      if ((milestone.sequenceNumber.match(/\./g) || []).length === 2) {
+      if (getNrOfDotsInSeqno(milestone.sequenceNumber) === 2) {
 
         if (indexMilestoneLevelThree === -1 ){ //The milestones level three property does not exist, so create it
-          structuredMilestones[indexMilestoneLevelOne].milestonesLevelTwo[indexMilestoneLevelTwo]["milestonesLevelThree"] = []
+          structuredMilestones[indexMilestoneLevelOne].submilestones[indexMilestoneLevelTwo]["submilestones"] = []
         }
 
         indexMilestoneLevelThree++
 
-        structuredMilestones[indexMilestoneLevelOne].milestonesLevelTwo[indexMilestoneLevelTwo].milestonesLevelThree.push(milestone)
-      } else if ((milestone.sequenceNumber.match(/\./g) || []).length === 1){
+        structuredMilestones[indexMilestoneLevelOne].submilestones[indexMilestoneLevelTwo].submilestones.push(createMilestone(milestone))
+      } else if (getNrOfDotsInSeqno(milestone.sequenceNumber) === 1){
 
         if (indexMilestoneLevelTwo == -1 ){ //The milestones level two property does not exist, so create it
-          structuredMilestones[indexMilestoneLevelOne]["milestonesLevelTwo"] = []
+          structuredMilestones[indexMilestoneLevelOne]["submilestones"] = []
         }
 
         //Keep knowledge of index milestone level 1
         indexMilestoneLevelTwo++
         indexMilestoneLevelThree = -1
 
-        structuredMilestones[indexMilestoneLevelOne].milestonesLevelTwo.push(milestone)
+        structuredMilestones[indexMilestoneLevelOne].submilestones.push(createMilestone(milestone))
       } else {
 
         //Reset index milestone to this new one
@@ -211,116 +145,40 @@ export class RoadmapService {
         indexMilestoneLevelTwo = -1
         indexMilestoneLevelThree = -1
 
-        structuredMilestones.push(milestone)
+        structuredMilestones.push(createMilestone(milestone))
       }
-
     })
 
-    this.sortMilestonesLevelOne(structuredMilestones)
-    this.sortMilestonesLevelTwo(structuredMilestones)
-    this.sortMilestonesLevelThree(structuredMilestones)
+    //First sort level one milestones
+    structuredMilestones.sort((left, right) => this.sortMilestones(left, right, 0))
+    //Then loop through milestones level two for each milestone level one
+    structuredMilestones.forEach(milestone => {
+      if (!!milestone.submilestones && !!milestone.submilestones.length) {
+        milestone.submilestones.sort((left, right) => this.sortMilestones(left, right, 1))
+      }
+    })
+    // At last sort the third and last level of submilestones
+    structuredMilestones.forEach(milestoneLevelOne => {
+      if (!!milestoneLevelOne.submilestones && !!milestoneLevelOne.submilestones.length) {
+        milestoneLevelOne.submilestones.forEach(milestoneLevelTwo => {
+          if (!!milestoneLevelTwo.submilestones && !!milestoneLevelTwo.submilestones.length) {
+            milestoneLevelTwo.submilestones.sort((left, right) => this.sortMilestones(left, right, 2))
+          }
+        })
+      }
+    })
     
     return structuredMilestones
   }
 
-  private sortMilestonesLevelOne(structuredMilestones: IMilestonesLeveled[]){
-    //First sort level one milestones
-    structuredMilestones.sort((leftSide, rightSide): number => {
+  private sortMilestones(leftMilestone: Milestone, rightMilestone: Milestone, part: 0|1|2) {
+    const getPart = (seqNo: string) => +seqNo.split('.')[part];
 
-      if (leftSide.sequenceNumber.indexOf(".") > -1 && rightSide.sequenceNumber.indexOf(".") > -1) { //Both sides have dots
+    const left = getPart(leftMilestone.sequenceNumber)
+    const right = getPart(rightMilestone.sequenceNumber)
 
-        if ((+leftSide.sequenceNumber.substr(0, leftSide.sequenceNumber.indexOf("."))) < +rightSide.sequenceNumber.substr(0, rightSide.sequenceNumber.indexOf("."))) return -1
-        if (+leftSide.sequenceNumber.substr(0, leftSide.sequenceNumber.indexOf(".")) > +rightSide.sequenceNumber.substr(0, rightSide.sequenceNumber.indexOf("."))) return +1 
-        return 0
-
-      } else if (leftSide.sequenceNumber.indexOf(".") > -1) { //Only left side has dots
-
-        if ((+leftSide.sequenceNumber.substr(0, leftSide.sequenceNumber.indexOf("."))) < +rightSide.sequenceNumber) return -1
-        if (+leftSide.sequenceNumber.substr(0, leftSide.sequenceNumber.indexOf(".")) > +rightSide.sequenceNumber) return +1 
-        return 0
-
-      } else if (rightSide.sequenceNumber.indexOf(".") > -1) { //Only right side has dots
-
-        if (+leftSide.sequenceNumber < +rightSide.sequenceNumber.substr(0, rightSide.sequenceNumber.indexOf("."))) return -1
-        if (+leftSide.sequenceNumber > +rightSide.sequenceNumber.substr(0, rightSide.sequenceNumber.indexOf("."))) return +1 
-        return 0
-
-      } else { //No sides have dots
-        
-        if (+leftSide.sequenceNumber < +rightSide.sequenceNumber) return -1
-        if (+leftSide.sequenceNumber > +rightSide.sequenceNumber) return +1 
-        return 0
-
-      }
-    })
+    if (left < right) return -1
+    if (left > right) return 1
+    return 0
   }
-
-  private sortMilestonesLevelTwo(structuredMilestones: IMilestonesLeveled[]){
-    //Then loop through milestones level two for each milestone level one
-    structuredMilestones.forEach((milestone, index) => {
-
-      if (milestone.milestonesLevelTwo !== undefined) { 
-
-        milestone.milestonesLevelTwo.sort((leftSide, rightSide): number => {
-
-          //Check whether sequencenumber has a second dot
-          if ((leftSide.sequenceNumber.match(/\./g) || []).length === 2 && (rightSide.sequenceNumber.match(/\./g) || []).length === 2) { //Both sides have a second dot
-
-            if (+leftSide.sequenceNumber.substring(leftSide.sequenceNumber.indexOf(".") + 1, leftSide.sequenceNumber.lastIndexOf(".")) < +rightSide.sequenceNumber.substring(rightSide.sequenceNumber.indexOf(".") + 1, rightSide.sequenceNumber.lastIndexOf("."))) return -1
-            if (+leftSide.sequenceNumber.substring(leftSide.sequenceNumber.indexOf(".") + 1, leftSide.sequenceNumber.lastIndexOf(".")) > +rightSide.sequenceNumber.substring(rightSide.sequenceNumber.indexOf(".") + 1, rightSide.sequenceNumber.lastIndexOf("."))) return +1
-            return 0
-
-          } else if ((leftSide.sequenceNumber.match(/\./g) || []).length === 2) { //Only left side has a second dot
-
-            if (+leftSide.sequenceNumber.substring(leftSide.sequenceNumber.indexOf(".") + 1, leftSide.sequenceNumber.lastIndexOf(".")) < +rightSide.sequenceNumber.substr(rightSide.sequenceNumber.indexOf(".") + 1)) return -1
-            if (+leftSide.sequenceNumber.substring(leftSide.sequenceNumber.indexOf(".") + 1, leftSide.sequenceNumber.lastIndexOf(".")) > +rightSide.sequenceNumber.substr(rightSide.sequenceNumber.indexOf(".") + 1)) return +1
-            return 0
-
-          } else if ((rightSide.sequenceNumber.match(/\./g) || []).length === 2) { //Only right side has a second dot
-
-            if (+leftSide.sequenceNumber.substring(leftSide.sequenceNumber.indexOf(".") + 1) < +rightSide.sequenceNumber.substring(rightSide.sequenceNumber.indexOf(".") + 1, rightSide.sequenceNumber.lastIndexOf("."))) return -1
-            if (+leftSide.sequenceNumber.substring(leftSide.sequenceNumber.indexOf(".") + 1) > +rightSide.sequenceNumber.substring(rightSide.sequenceNumber.indexOf(".") + 1, rightSide.sequenceNumber.lastIndexOf("."))) return +1
-            return 0
-
-          } else { //No sides have a second dot
-
-            if (+leftSide.sequenceNumber.substr(leftSide.sequenceNumber.indexOf(".") + 1) < +rightSide.sequenceNumber.substr(rightSide.sequenceNumber.indexOf(".") + 1)) return -1
-            if (+leftSide.sequenceNumber.substr(leftSide.sequenceNumber.indexOf(".") + 1) > +rightSide.sequenceNumber.substr(rightSide.sequenceNumber.indexOf(".") + 1)) return +1
-            return 0
-
-          }
-        })
-      }
-    })
-  }
-
-  private sortMilestonesLevelThree(structuredMilestones: IMilestonesLeveled[]){
-    //Milestones level three
-    structuredMilestones.forEach((milestoneLevelOne) => {
-      if (milestoneLevelOne.milestonesLevelTwo !== undefined) {
-        milestoneLevelOne.milestonesLevelTwo.forEach((milestoneLevelTwo) => {
-          if (milestoneLevelTwo.milestonesLevelThree !== undefined) {
-            
-            //Sort milestones level three
-            milestoneLevelTwo.milestonesLevelThree.sort((leftSide, rightSide): number => {
-
-              if (+leftSide.sequenceNumber.substr(leftSide.sequenceNumber.lastIndexOf(".") + 1) < +rightSide.sequenceNumber.substr(rightSide.sequenceNumber.lastIndexOf(".") + 1)) return -1
-              if (+leftSide.sequenceNumber.substr(leftSide.sequenceNumber.lastIndexOf(".") + 1) > +rightSide.sequenceNumber.substr(rightSide.sequenceNumber.lastIndexOf(".") + 1)) return +1
-              return 0
-  
-            })
-
-          }
-        })
-      }
-    })
-  }
-
-  private setDeadlineToEndOfDay(deadline: string): string {
-
-    const date = new Date(deadline)
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
-
-  }
-
 }

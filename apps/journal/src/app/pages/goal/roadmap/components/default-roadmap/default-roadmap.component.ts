@@ -6,19 +6,16 @@ import { LoadingController } from '@ionic/angular';
 import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 // Interfaces
-import { 
-  IMilestonesLeveled,
-  enumMilestoneStatus
-} from '@strive/interfaces';
+import { MilestonesLeveled, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Other
-import { RouterPage } from '../../../../../shared/ionViewDidEnter-replacement';
+import { RouterPage } from '@strive/utils/ionViewDidEnter-replacement'
 import { Subscription } from 'rxjs';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 // Animation for Roadmap
-declare var initMilestonesAnimation: any;
+declare const initMilestonesAnimation: Function;
 
 @Component({
   selector: 'app-default-roadmap',
@@ -26,20 +23,22 @@ declare var initMilestonesAnimation: any;
   styleUrls: ['./default-roadmap.component.scss'],
 })
 export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDestroy {
-  _pageIsLoading: boolean
 
   // For templates:
   @Input() collectiveGoalId: string
   @Input() templateId: string
+
   // For goals:
   @Input() goalId: string
-  @Input() goal: Goal
-  _isGoal: boolean
+  goal: Goal
+
   // For both:
   isAdmin = false
   isAchiever = false
 
-  public structuredMilestones: IMilestonesLeveled[] = []
+  origin: 'goal' | 'template'
+
+  public structuredMilestones: MilestonesLeveled[] = []
   public enumMilestoneStatus = enumMilestoneStatus
 
   private sub: Subscription
@@ -48,71 +47,55 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
     private roadmapService: RoadmapService,
-    private route: ActivatedRoute,
     private router: Router,
     private stakeholder: GoalStakeholderService,
-    private user: UserService
+    private user: UserService,
+    route: ActivatedRoute,
   ) { 
     super(router, route)
   }
 
   async ngOnInit() {
-    this._pageIsLoading = true
-
     this.sub = this.stakeholder.getStakeholder$(this.user.uid, this.goalId).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
       this.isAchiever = stakeholder.isAchiever ?? false
     })
 
-    if (this.goalId) this._isGoal = true
-    await this.getData()
+    this.origin = !!this.goalId ? 'goal' : 'template'
 
-    this._pageIsLoading = false
-   
+    await this.getData()
   }
 
   async onEnter() {
-
     await this.getData()
-    
   }
 
   onDestroy() {
+    this.sub.unsubscribe()
     super.ngOnDestroy();
   }
 
   async getData(): Promise<void> {
-
-    if (this._isGoal) {
+    if (this.origin === 'goal') {
       this.structuredMilestones = await this.roadmapService.getStructuredMilestones(this.goalId)
     } else {
       this.structuredMilestones = await this.roadmapService.getStructuredMilestonesForTemplates(this.collectiveGoalId, this.templateId)
     }
 
     initMilestonesAnimation()
-
   }
 
   public async editMilestones(): Promise<void> {
     if (!this.isAdmin) return
 
-    const loading = await this.loadingCtrl.create({
-      spinner: 'lines'
-    })
+    const loading = await this.loadingCtrl.create({ spinner: 'lines' })
     await loading.present()
 
     if (this.goalId) {
-
       // lock goal
       await this.goalService.toggleLock(this.goalId, true)
-
-      await this.router.navigateByUrl(`${this.router.url}/edit`)
-
-    } else if (this.templateId) {
-
-      await this.router.navigateByUrl(`${this.router.url}/edit`)
-
     }
+    await this.router.navigateByUrl(`${this.router.url}/edit`)
   }
 
 }

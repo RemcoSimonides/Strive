@@ -5,8 +5,6 @@ import { _increaseSeqnoByOne } from './milestone'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import {
-  IMilestone,
-  enumMilestoneStatus,
   INotificationWithPost,
   enumNotificationType,
   INotificationWithPostAndSupports,
@@ -14,10 +12,11 @@ import {
 } from '@strive/interfaces';
 import { IReceiver, getReceiver } from '../../../shared/support/receiver'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 
 const db = admin.firestore()
 
-export async function handleStatusChangeNotification(before: IMilestone, after: IMilestone, goalId: string, milestoneId: string) {
+export async function handleStatusChangeNotification(before: Milestone, after: Milestone, goalId: string, milestoneId: string) {
 
     // Get goal data for the title
     const goalRef: admin.firestore.DocumentReference = db.doc(`Goals/${goalId}`)
@@ -46,11 +45,11 @@ export async function handleStatusChangeNotification(before: IMilestone, after: 
     let supporters: any = {}
     let receiver = <IReceiver>{}
 
-    if (after.achieverId) {
+    if (!!after.achiever?.uid) {
         // achiever is assigned to milestone
-        receiver.id = after.achieverId
-        receiver.username = after.achieverUsername || ''
-        receiver.photoURL = after.achieverPhotoURL || ''
+        receiver.id = after.achiever.uid
+        receiver.username = after.achiever.username || ''
+        receiver.photoURL = after.achiever.photoURL || ''
     } else {
         // receiver is only achiever OR receiver object with NULL
         receiver = await getReceiver(goalId, db)
@@ -157,7 +156,7 @@ export async function handleStatusChangeNotification(before: IMilestone, after: 
 }
 
 // Milestone successful
-async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: IMilestone): Promise<void> {
+async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone): Promise<void> {
 
     const goalNotification: Partial<INotificationWithPost> = {
         discussionId: milestoneId,
@@ -206,7 +205,7 @@ async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: 
 }
 
 // Milestone failed
-async function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: IMilestone): Promise<void> {
+async function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone): Promise<void> {
 
     const goalNotification: Partial<INotificationWithPost> = {
         discussionId: milestoneId,

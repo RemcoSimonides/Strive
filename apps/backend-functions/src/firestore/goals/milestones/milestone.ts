@@ -1,7 +1,7 @@
 import { db, functions } from '../../../internals/firebase';
 
 //Interfaces
-import { enumMilestoneStatus, IMilestone } from '@strive/interfaces';
+import { createMilestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore';
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
@@ -56,8 +56,8 @@ export const milestoneDeletedHandler = functions.firestore.document(`Goals/{goal
 export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
     .onUpdate(async (snapshot, context) => {
 
-        const before: IMilestone = Object.assign(<IMilestone>{}, snapshot.before.data())
-        const after: IMilestone = Object.assign(<IMilestone>{}, snapshot.after.data())
+        const before = createMilestone(snapshot.before.data())
+        const after = createMilestone(snapshot.after.data())
         const goalId = context.params.goalId
         const milestoneId = context.params.milestoneId
 

@@ -19,10 +19,8 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakehol
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
-import {
-  ITemplate,
-  IMilestonesLeveled,
-} from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
@@ -39,7 +37,7 @@ export class TemplatePage implements OnInit {
   private _collectiveGoal: ICollectiveGoal
   public _templateId: string
   public _templateDocObs: Observable<ITemplate>
-  public _structuredMilestones: IMilestonesLeveled[] = []
+  public _structuredMilestones: MilestonesLeveled[] = []
 
   public _isAdmin: boolean = false
 

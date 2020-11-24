@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { IMilestoneTemplabeObject } from '@strive/interfaces';
+import { MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 
 export type GoalPublicityType = 'public' | 'collectiveGoalOnly' | 'private'
 
@@ -15,7 +15,7 @@ export interface Goal {
         image: string;
         isPublic: boolean;
     };
-    milestoneTemplateObject: IMilestoneTemplabeObject[];
+    milestoneTemplateObject: MilestoneTemplabeObject[];
     isOverdue: boolean;
     isFinished: boolean;
     isLocked: boolean;

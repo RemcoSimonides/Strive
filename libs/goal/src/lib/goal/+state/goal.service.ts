@@ -8,18 +8,8 @@ import { first } from 'rxjs/operators';
 import { GoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 // Interfaces
-import { IMilestoneTemplabeObject } from '@strive/interfaces';
 import { Goal, createGoal } from './goal.firestore'
 
-// export interface goalArgs {
-//   title: string;
-//   description?: string;
-//   shortDescription: string;
-//   publicity: enumGoalPublicity;
-//   deadline: string;
-//   image?: string;
-//   milestoneTemplateObject?: IMilestoneTemplabeObject[];
-// }
 
 export interface collectiveGoalArgs {
   id: string

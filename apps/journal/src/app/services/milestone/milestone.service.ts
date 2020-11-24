@@ -3,10 +3,7 @@ import { Injectable } from '@angular/core';
 import { FirestoreService } from '../firestore/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import {
-  IMilestone,
-  enumMilestoneStatus
-} from '@strive/interfaces';
+import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({
@@ -19,7 +16,7 @@ export class MilestoneService {
     private user: UserService
   ) { }
 
-  async milestoneStatusChange(goalId: string, milestone: IMilestone, status: enumMilestoneStatus): Promise<void> {
+  async milestoneStatusChange(goalId: string, milestone: Milestone, status: enumMilestoneStatus): Promise<void> {
   
     //Update status
     await this.db.upsert(`Goals/${goalId}/Milestones/${milestone.id}`, {status: status})
@@ -30,7 +27,7 @@ export class MilestoneService {
 
   }
 
-  async upsert(goalId:  string, milestoneId: string, data: Partial<IMilestone>): Promise<void> {
+  async upsert(goalId:  string, milestoneId: string, data: Partial<Milestone>): Promise<void> {
 
     if (data.deadline) data.deadline = this.setDeadlineToEndOfDay(data.deadline)
 
@@ -38,7 +35,7 @@ export class MilestoneService {
 
   }
   
-  async assignCurrentUser(goalId: string, milestone: IMilestone): Promise<void> {
+  async assignCurrentUser(goalId: string, milestone: Milestone): Promise<void> {
 
     const profile: Profile = await this.user.getProfile()
     
@@ -50,7 +47,7 @@ export class MilestoneService {
   
   }
 
-  async unassignAchiever(goalId: string, milestone: IMilestone): Promise<void> {
+  async unassignAchiever(goalId: string, milestone: Milestone): Promise<void> {
 
     await this.db.upsert(`Goals/${goalId}/Milestones/${milestone.id}`, {
       achieverId: null,

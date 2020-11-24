@@ -1,74 +1,33 @@
-
 import { FieldValue } from '@firebase/firestore-types';
+import { createProfileLink, ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { setDateToEndOfDay } from '@strive/utils/helpers';
 
 export interface Milestone {
-    id?: string;
-    sequenceNumber: string;
-    description: string;
-    numberOfCustomSupports: number;
-    numberOfMoneySupports: number;
-    status: enumMilestoneStatus;
-    deadline: string;
-    achieverId?: string;
-    achieverUsername?: string;
-    achieverPhotoURL?: string;
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
+  id?: string;
+  sequenceNumber: string;
+  description: string;
+  numberOfCustomSupports: number;
+  numberOfMoneySupports: number;
+  status: enumMilestoneStatus;
+  deadline: string;
+  achiever: ProfileLink;
+  updatedAt?: FieldValue;
+  createdAt?: FieldValue;
 }
 
 export interface MilestoneTemplabeObject {
-    id: string;
-    description: string;
-    sequenceNumber: string;
-    deadline: string;
-    numberOfDotsInSequenceNumber?: number;
+  id: string;
+  description: string;
+  sequenceNumber: string;
+  deadline: string;
 }
 
-export interface MilestonesLeveled {
-    id?: string;
-    sequenceNumber: string;
-    description: string;
-    numberOfCustomSupports: number;
-    numberOfMoneySupports: number;
-    status: enumMilestoneStatus;
-    deadline: string;
-    achieverId?: string;
-    achieverUsername?: string;
-    achieverPhotoURL?: string;
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
-    milestonesLevelTwo?: MilestonesLevelTwo[];
+export interface MilestonesLeveled extends Milestone {
+  submilestones?: MilestoneLevelTwo[];
 }
 
-interface MilestonesLevelTwo {
-    id?: string;
-    sequenceNumber: string;
-    description: string;
-    numberOfCustomSupports: number;
-    numberOfMoneySupports: number;
-    status: enumMilestoneStatus;
-    deadline: string;
-    achieverId?: string;
-    achieverUsername?: string;
-    achieverPhotoURL?: string;
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
-    milestonesLevelThree?: MilestonesLevelThree[];
-}
-
-interface MilestonesLevelThree {
-    id?: string;
-    sequenceNumber: string;
-    description: string;
-    numberOfCustomSupports: number;
-    numberOfMoneySupports: number;
-    status: enumMilestoneStatus;
-    deadline: string;
-    achieverId?: string;
-    achieverUsername?: string;
-    achieverPhotoURL?: string;
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
+interface MilestoneLevelTwo extends Milestone {
+  submilestones?: Milestone[];
 }
 
 export interface MilestoneLink {
@@ -76,15 +35,12 @@ export interface MilestoneLink {
   description: string;
 }
 
-/**
- * Milestone
- */
 export enum enumMilestoneStatus {
-    pending, // 
-    succeeded, // milestone succesful
-    failed, // milestone failed
-    neutral, // didnt succeed and failed but no action was taken
-    overdue, //
+  pending, // 
+  succeeded, // milestone succesful
+  failed, // milestone failed
+  neutral, // didnt succeed and failed but no action was taken
+  overdue, //
 }
 
 
@@ -94,10 +50,11 @@ export function createMilestone(params: Partial<Milestone> ={}): Milestone {
     id: !!params.id ? params.id : '',
     sequenceNumber: '',
     deadline: '',
-    description: '',
+    description: params.deadline ? setDateToEndOfDay(params.deadline) : '',
     numberOfCustomSupports: 0,
     numberOfMoneySupports: 0,
     status: enumMilestoneStatus.pending,
+    achiever: createProfileLink(params.achiever),
     ...params
   }
 }
@@ -109,3 +66,4 @@ export function createMilestoneLink(params: Partial<MilestoneLink> = {}): Milest
     ...params
   }
 }
+

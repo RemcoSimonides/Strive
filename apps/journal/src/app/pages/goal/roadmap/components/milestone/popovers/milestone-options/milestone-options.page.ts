@@ -4,7 +4,7 @@ import { PopoverController, NavParams } from '@ionic/angular';
 import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { IMilestone, enumMilestoneStatus } from '@strive/interfaces';
+import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 
 @Component({
   selector: 'app-milestone-options',
@@ -14,7 +14,7 @@ import { IMilestone, enumMilestoneStatus } from '@strive/interfaces';
 export class MilestoneOptionsPage implements OnInit {
 
   _goalId: string
-  _milestone: IMilestone
+  _milestone: Milestone
 
   _isNotCompleted: boolean
   _isAlreadyAssigned: boolean
@@ -32,7 +32,7 @@ export class MilestoneOptionsPage implements OnInit {
     this._goalId = this._navParams.get('goalId')
     this._milestone = this._navParams.get('milestone')
 
-    if (this._milestone.achieverId ==  this.user.uid) {
+    if (this._milestone.achiever.uid ===  this.user.uid) {
       this._isAlreadyAssigned = true
     } else this._isAlreadyAssigned = false
 
@@ -68,9 +68,9 @@ export class MilestoneOptionsPage implements OnInit {
   async assignMe(): Promise<void> {
     const currentUser = await this.user.getFirebaseUser();
     await this._milestoneService.assignCurrentUser(this._goalId, this._milestone)
-    this._milestone.achieverId = currentUser.uid
-    this._milestone.achieverUsername = currentUser.displayName
-    this._milestone.achieverPhotoURL = currentUser.photoURL
+    this._milestone.achiever.uid = currentUser.uid
+    this._milestone.achiever.username = currentUser.displayName
+    this._milestone.achiever.photoURL = currentUser.photoURL
 
     this.dismiss(this._milestone)
 
@@ -79,9 +79,9 @@ export class MilestoneOptionsPage implements OnInit {
   async unassignMe(): Promise<void> {
 
     await  this._milestoneService.unassignAchiever(this._goalId, this._milestone)
-    this._milestone.achieverId = null
-    this._milestone.achieverUsername = null
-    this._milestone.achieverPhotoURL = null
+    this._milestone.achiever.uid = null
+    this._milestone.achiever.username = null
+    this._milestone.achiever.photoURL = null
 
     this.dismiss(this._milestone)
 

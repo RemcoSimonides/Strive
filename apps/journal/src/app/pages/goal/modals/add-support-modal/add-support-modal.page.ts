@@ -13,7 +13,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
-import { IMilestone } from '@strive/interfaces'
+import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
@@ -32,7 +32,7 @@ export class AddSupportModalPage implements OnInit {
   private goalId: string
   public goal$: Observable<Goal>
 
-  public milestone: IMilestone
+  public milestone: Milestone
   public nrOfDotsInSeqno = 0
 
   public supports$: Observable<Support[]>

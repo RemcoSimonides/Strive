@@ -17,7 +17,7 @@
     <ion-grid class="ion-no-padding">
       <ion-row class="ion-no-padding">
         <ion-col size="2" class="ion-no-padding">
-          <ion-input [(ngModel)]="_newSequenceNumber"></ion-input>
+          <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
         </ion-col>
         <ion-col class="ion-no-padding">
           <ion-searchbar placeholder="Add milestone" search-icon="add"
@@ -48,7 +48,7 @@
       <ion-row class="ion-no-padding">
         <ion-col size="1" class="ion-no-padding">
           <div class="seqno-input">
-            <ion-input [(ngModel)]="_newSequenceNumber"></ion-input>
+            <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
           </div>
         </ion-col>
         <ion-col class="ion-no-padding">
@@ -64,17 +64,17 @@
   <div class="center">
     <div class="limited-width">
 
-      <div class="explanation" *ngIf="_milestoneTemplateObject?.length === 0">
+      <div class="explanation" *ngIf="milestoneTemplate?.length === 0">
         <span class="center">This is how it works</span>
         <ion-img src="assets/pages/roadmap/How to edit roadmap.gif"></ion-img>
       </div>
 
       <ion-list>
-        <ion-item *ngFor="let milestone of _milestoneTemplateObject">
+        <ion-item *ngFor="let milestone of milestoneTemplate">
           <ion-grid class="ion-no-padding" fixed="true">
             <ion-row class="ion-no-padding ion-justify-content-start">
               <ion-col class="ion-no-padding" size="2">
-                <ion-input [ngStyle]="{'margin-left': getMargin(milestone?.numberOfDotsInSequenceNumber)}"
+                <ion-input [ngStyle]="{'margin-left': getMargin(milestone.sequenceNumber)}"
                   (ionInput)="onSequenceNumberInput($event, milestone.sequenceNumber)"
                   (ionFocus)="onSequenceNumberFocus(milestone.sequenceNumber)"
                   (ionBlur)="onSequenceNumberBlur($event, milestone.sequenceNumber)"
@@ -83,7 +83,7 @@
 
               </ion-col>
               <ion-col class="ion-no-padding">
-                <ion-input [ngStyle]="{'margin-left': getMargin(milestone?.numberOfDotsInSequenceNumber)}"
+                <ion-input [ngStyle]="{'margin-left': getMargin(milestone.sequenceNumber)}"
                   [(ngModel)]="milestone.description"></ion-input>
               </ion-col>
               <ion-col size-xl="2" size-lg="2" size-md="2" size-sm="1" size-xs="1">

@@ -11,12 +11,11 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 // Interfaces
-import { 
-  IMilestoneTemplabeObject,
-  IMilestone,
-  ITemplate
-} from '@strive/interfaces';
+import { ITemplate } from '@strive/interfaces';
+import { Milestone, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
+import { MilestoneForm } from '@strive/milestone/forms/milestone.form';
 
 @Component({
   selector: 'app-edit-default-roadmap',
@@ -28,18 +27,18 @@ export class EditDefaultRoadmapPage implements OnInit {
   @ViewChild('addMilestonebar') addMilestonebar: IonSearchbar;
 
   // For templates
-  private _collectiveGoalId: string
-  private _templateId: string
+  private collectiveGoalId: string
+  private templateId: string
   // For goals
-  private _goalId: string
-  private _goal: Goal
+  private goalId: string
+  private goal: Goal
   // For both
-  public _milestoneTemplateObject: IMilestoneTemplabeObject[]
+  public milestoneTemplate: MilestoneTemplabeObject[] = []
+  
+  public newSequenceNumber: string = '1'
 
-  public _newSequenceNumber: string
-
-  private _lastSequenceNumberValue: string
-  private _lastChangedMilestoneIndex: number
+  private prevSeqNo: string
+  private prevMilestoneIndex: number
 
   constructor(
     private alertCtrl: AlertController,
@@ -55,87 +54,72 @@ export class EditDefaultRoadmapPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-
     if (!this.router.url.includes('template')) {
-      this._goalId = this.route.snapshot.paramMap.get('id')
+      this.goalId = this.route.snapshot.paramMap.get('id')
 
-      this._goal = await this.goalService.getGoal(this._goalId)
-      this._milestoneTemplateObject = this._goal.milestoneTemplateObject
+      this.goal = await this.goalService.getGoal(this.goalId)
+      this.milestoneTemplate = this.goal.milestoneTemplateObject
 
       this._seo.generateTags({
-        title: `Edit ${this._goal.title} - Strive Journal`
+        title: `Edit ${this.goal.title} - Strive Journal`
       })
 
     } else if (this.router.url.includes('template')) {
-      this._collectiveGoalId = this.route.snapshot.paramMap.get('id')
-      this._templateId = this.route.snapshot.paramMap.get('templateId')
+      this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
+      this.templateId = this.route.snapshot.paramMap.get('templateId')
 
-      const template: ITemplate = await this.templateService.getTemplate(this._collectiveGoalId, this._templateId)
-      this._milestoneTemplateObject = template.milestoneTemplateObject
+      const template: ITemplate = await this.templateService.getTemplate(this.collectiveGoalId, this.templateId)
+      this.milestoneTemplate = template.milestoneTemplateObject
 
       this._seo.generateTags({
         title: `Edit ${template.title} - Strive Journal`
       })
     }
 
-    this._milestoneTemplateObject.forEach(milestone => {
-      milestone.numberOfDotsInSequenceNumber = this.getNumberOfDotsInSequenceNumber(milestone.sequenceNumber)
-    })
-
-    await this.setInitialSequenceNumber()
-
-    await this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)
-
+    this.setInitialSequenceNumber()
+    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)
   }
 
   async cancel(): Promise<void>{
-
-    if (this._goalId) {
-      await this.goalService.toggleLock(this._goalId, false)
-      this.router.navigateByUrl(`goal/${this._goalId}`)
+    if (this.goalId) {
+      await this.goalService.toggleLock(this.goalId, false)
+      this.router.navigateByUrl(`goal/${this.goalId}`)
     }
 
-    if (this._collectiveGoalId && this._templateId) {
-      this.router.navigateByUrl(`collective-goal/${this._collectiveGoalId}/template/${this._templateId}`)
+    if (this.collectiveGoalId && this.templateId) {
+      this.router.navigateByUrl(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
     }
   }
 
   async save(): Promise<void>{
-    const loading = await this.loadingCtrl.create({
-      spinner: 'lines',
-    })
+    const loading = await this.loadingCtrl.create({ spinner: 'lines' })
     await loading.present()
 
-    if (this._goalId) {
+    if (this.goalId) {
 
       // Save milestone object
-      await this.db.upsert(`Goals/${this._goalId}`, {
-        milestoneTemplateObject: this._milestoneTemplateObject
+      await this.db.upsert(`Goals/${this.goalId}`, {
+        milestoneTemplateObject: this.milestoneTemplate
       })
 
       // Start conversion to create milestones
-      await this.roadmapService.startConversion(this._goalId, this._milestoneTemplateObject)
+      await this.roadmapService.startConversion(this.goalId, this.milestoneTemplate)
 
-      await this.goalService.toggleLock(this._goalId, false)
+      await this.goalService.toggleLock(this.goalId, false)
 
       await loading.dismiss()
+      this.router.navigateByUrl(`goal/${this.goalId}`)
 
-      // Then navigate back to goal page
-      this.router.navigateByUrl(`goal/${this._goalId}`)
-
-    } else if (this._collectiveGoalId && this._templateId) {
+    } else if (this.collectiveGoalId && this.templateId) {
 
       // Save milestone object
-      await this.db.upsert(`CollectiveGoals/${this._collectiveGoalId}/Templates/${this._templateId}`, {
-        milestoneTemplateObject: this._milestoneTemplateObject
+      await this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, {
+        milestoneTemplateObject: this.milestoneTemplate
       })
 
       await loading.dismiss()
-
-      this.router.navigateByUrl(`collective-goal/${this._collectiveGoalId}/template/${this._templateId}`)
-
+      this.router.navigateByUrl(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
     }
-
   }
 
    /**
@@ -143,102 +127,88 @@ export class EditDefaultRoadmapPage implements OnInit {
    */
 
   async onSequenceNumberFocus(sequenceNumber: string){
-    this._lastSequenceNumberValue = sequenceNumber
-    this._lastChangedMilestoneIndex = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === sequenceNumber)
+    this.prevSeqNo = sequenceNumber
+    this.prevMilestoneIndex = this.milestoneTemplate.findIndex(m => m.sequenceNumber === sequenceNumber)
   }
 
   public async onSequenceNumberBlur(event: CustomEvent, newSequenceNumber: string){
 
     if (!this.checkSequenceNumberValidity(newSequenceNumber)){
-      this._milestoneTemplateObject[this._lastChangedMilestoneIndex].sequenceNumber = this._lastSequenceNumberValue
+      this.milestoneTemplate[this.prevMilestoneIndex].sequenceNumber = this.prevSeqNo
     } else {
-
-      this._milestoneTemplateObject[this._lastChangedMilestoneIndex].numberOfDotsInSequenceNumber = this.getNumberOfDotsInSequenceNumber(this._milestoneTemplateObject[this._lastChangedMilestoneIndex].sequenceNumber)
-
-      const indexes: {
-        from: number,
-        to: number
-      } = {
-        from: this._lastChangedMilestoneIndex,
+      const indexes: { from: number, to: number } = {
+        from: this.prevMilestoneIndex,
         to: this.findIndexForNewSequenceNumberPosition(newSequenceNumber)
       }
 
       // Following three lines reorder the array
-      let element = this._milestoneTemplateObject[indexes.from]
-      this._milestoneTemplateObject.splice(indexes.from, 1)
-      this._milestoneTemplateObject.splice(indexes.to, 0, element)
+      let element = this.milestoneTemplate[indexes.from]
+      this.milestoneTemplate.splice(indexes.from, 1)
+      this.milestoneTemplate.splice(indexes.to, 0, element)
 
       this.resetSequenceNumbers()
-      this.redetermineNextSequenceNumber()
-
+      this.determineNextSequenceNumber()
     }
-
   }
 
   public async onSequenceNumberInput(event: CustomEvent, oldValue: string){
+    if (event.detail.inputType === 'insertText') {
+      if (event.detail.data === '.') {
+        // Only dot is allowed other than number
+      } else if (!isNaN(event.detail.data)) { 
+        const valueToBeChecked: string = !oldValue ? event.detail.data : `${oldValue}${event.detail.data}`
 
-    if (event.detail.inputType === "insertText") {
-        if (event.detail.data === ".") {
-          // Only dot is allowed other than number
-        } else if (!isNaN(event.detail.data)) { 
-          let valueToBeChecked: string = oldValue === undefined ? event.detail.data : oldValue + event.detail.data
-
-          if (!this.checkSequenceNumberValidity(valueToBeChecked)){
-            // Attempt to cancel the change!
-            setTimeout(() => {
-              this._milestoneTemplateObject[this._lastChangedMilestoneIndex].sequenceNumber = oldValue
-            }, 0);
-            return
-          }
-        } else {
-
+        if (!this.checkSequenceNumberValidity(valueToBeChecked)){
           // Attempt to cancel the change!
           setTimeout(() => {
-            this._milestoneTemplateObject[this._lastChangedMilestoneIndex].sequenceNumber = oldValue
-          }, 0)
+            this.milestoneTemplate[this.prevMilestoneIndex].sequenceNumber = oldValue
+          }, 0);
           return
         }
+      } else {
 
+        // Attempt to cancel the change!
+        setTimeout(() => {
+          this.milestoneTemplate[this.prevMilestoneIndex].sequenceNumber = oldValue
+        }, 0)
+        return
+      }
     }
   }
 
   async addMilestone(description: string): Promise<void>{
 
     //Prevent adding empty descriptions
-    if (description === "") return
+    if (!description) return
 
     //Prevent adding invalid sequence number
-    if (!this.checkSequenceNumberValidity(this._newSequenceNumber)){
-      return
-    }
+    if (!this.checkSequenceNumberValidity(this.newSequenceNumber)) return
 
     const newMilestoneId = await this.db.getNewId()
 
-    const indexForNewMilestone: number = this.findIndexForNewSequenceNumberPosition(this._newSequenceNumber)
-
-    const newMilestone: IMilestoneTemplabeObject = {
+    const newMilestone: MilestoneTemplabeObject = {
       id: newMilestoneId,
-      sequenceNumber: this._newSequenceNumber,
+      sequenceNumber: this.newSequenceNumber,
       description: description,
       deadline: null,
-      numberOfDotsInSequenceNumber: (this._newSequenceNumber.match(/\./g) || []).length
     }
 
-    this._milestoneTemplateObject.splice(indexForNewMilestone, 0, newMilestone)
+    const indexForNewMilestone = this.findIndexForNewSequenceNumberPosition(this.newSequenceNumber)
+    this.milestoneTemplate.splice(indexForNewMilestone, 0, newMilestone)
 
     this.resetSequenceNumbers()
 
-    this._newSequenceNumber = this.changeSequenceNumberByOne(this._newSequenceNumber, 1)
+    this.newSequenceNumber = this.incrementSeqNo(this.newSequenceNumber, 1)
 
     this.addMilestonebar.value = ""
   }
 
   public async deleteMilestone(sequenceNumber: string): Promise<void> {
-    const index: number = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber == sequenceNumber)
+    const index: number = this.milestoneTemplate.findIndex(milestone => milestone.sequenceNumber == sequenceNumber)
 
     // check if milestone has supports -> then give a warning. Supports will be deleted if deleted
-    const milestoneId = this._milestoneTemplateObject[index].id
-    const milestone: IMilestone = await this.db.docWithId$<IMilestone>(`Goals/${this._goalId}/Milestones/${milestoneId}`).pipe(first()).toPromise()
+    const milestoneId = this.milestoneTemplate[index].id
+    const milestone = await this.db.docWithId$<Milestone>(`Goals/${this.goalId}/Milestones/${milestoneId}`).pipe(first()).toPromise()
     
     if (milestone.numberOfMoneySupports > 0 || milestone.numberOfCustomSupports > 0) {
 
@@ -246,7 +216,7 @@ export class EditDefaultRoadmapPage implements OnInit {
         header: `Milestone has active supports`,
         subHeader: `Are you sure you want to delete it?`,
         buttons: [
-          { 
+          {
             text: 'Cancel',
             role: 'cancel'
           },
@@ -260,259 +230,160 @@ export class EditDefaultRoadmapPage implements OnInit {
       await alert.onDidDismiss().then((res) => {
         if (res.role == 'delete') {
           // delete milestone
-          this._milestoneTemplateObject.splice(index, 1)
+          this.milestoneTemplate.splice(index, 1)
           this.resetSequenceNumbers()
-          this._newSequenceNumber = this.changeSequenceNumberByOne(this._newSequenceNumber, -1)
+          this.newSequenceNumber = this.incrementSeqNo(this.newSequenceNumber, -1)
         }
       })
 
     } else  {
 
       // delete milestone
-      this._milestoneTemplateObject.splice(index, 1)
+      this.milestoneTemplate.splice(index, 1)
       this.resetSequenceNumbers()
-      this._newSequenceNumber = this.changeSequenceNumberByOne(this._newSequenceNumber, -1)
+      this.newSequenceNumber = this.incrementSeqNo(this.newSequenceNumber, -1)
 
     }
 
    }
 
-  private async setInitialSequenceNumber(): Promise<void> {
-    let newSequenceNumber: string
-
-    if (this._milestoneTemplateObject.length > 0) {
-      //Set sequence number equal sequence number of last milestone
-      newSequenceNumber = this._milestoneTemplateObject[this._milestoneTemplateObject.length - 1].sequenceNumber
-
-      //Add one
-      newSequenceNumber = this.changeSequenceNumberByOne(newSequenceNumber, 1)
-
-    } else {
-      //No milestones yet -> set to first milestone
-      newSequenceNumber = '1'
+  private setInitialSequenceNumber() {
+    if (this.milestoneTemplate.length > 0) {
+      const lastSeqno = this.milestoneTemplate[this.milestoneTemplate.length - 1].sequenceNumber
+      this.newSequenceNumber = this.incrementSeqNo(lastSeqno, 1)
     }
-
-    this._newSequenceNumber = newSequenceNumber
   }
 
-  private changeSequenceNumberByOne(currentSequenceNumber: string, delta: number): string {
-    let lastNumberOfSequenceNumber: string = currentSequenceNumber.slice(currentSequenceNumber.lastIndexOf('.') + 1)
-    lastNumberOfSequenceNumber = (+lastNumberOfSequenceNumber + delta).toString()
-    currentSequenceNumber = currentSequenceNumber.slice(0, currentSequenceNumber.lastIndexOf('.') + 1) + lastNumberOfSequenceNumber
-    
-    return currentSequenceNumber
+  private incrementSeqNo(sequenceNumber: string, delta: number): string {
+    const elements = sequenceNumber.split('.')
+    const last = elements.pop()
+    elements.push((+last + delta).toString())
+    return elements.join('.')
   }
 
   private findIndexForNewSequenceNumberPosition(sequenceNumber: string): number {
-    if (sequenceNumber === "1" && this._milestoneTemplateObject.length === 0){
-      return 0
-    }
+    if (sequenceNumber === '1' && this.milestoneTemplate.length === 0) return 0
 
     //Check for equal to existing milestone
-    const index = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === sequenceNumber)
-    if (index > -1){
-      return index
-    }
+    const index = this.milestoneTemplate.findIndex(m => m.sequenceNumber === sequenceNumber)
+    if (index > -1) return index
 
     //Need to determine new sequence number
-    switch ((sequenceNumber.match(/\./g) || []).length){
-      
-      case 0:
-        return this._milestoneTemplateObject.length
+    const elements = sequenceNumber.split('.')
+    switch (elements.length) {
       case 1:
-        const firstPartOfSequenceNumberPlusOne: string = (+sequenceNumber.slice(0, sequenceNumber.indexOf('.')) + 1).toString()
-        const index = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === firstPartOfSequenceNumberPlusOne)
+        return this.milestoneTemplate.length
+      case 2: {
+        const parentSeqNo = elements.splice(-1).join('.')
+        const index = this.milestoneTemplate.findIndex(m => m.sequenceNumber === this.incrementSeqNo(parentSeqNo, 1))
+        return index === -1 ? this.milestoneTemplate.length : index
+      }
+      case 3: {
+        const parentSeqNo = elements.splice(-1).join('.')
+        const index = this.milestoneTemplate.findIndex(m => m.sequenceNumber === this.incrementSeqNo(parentSeqNo, 1))
         if (index === -1) {
-          return this._milestoneTemplateObject.length
-        } else {
-          return index
+          const parentOfParentSeqNo = elements.shift()
+          const i = this.milestoneTemplate.findIndex(m => m.sequenceNumber === this.incrementSeqNo(parentOfParentSeqNo, 1))
+          return i === -1 ? this.milestoneTemplate.length : i
         }
-      case 2:
-        const firstTwoPartOfSequenceNumberPlusOne: string = (+sequenceNumber.slice(0, sequenceNumber.lastIndexOf('.')) + 1).toString()
-        const indexx = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === firstTwoPartOfSequenceNumberPlusOne)
-        if (indexx !== -1) {
-          return indexx
-        } else {
-          const firstPartOfSequenceNumberPlusOne: string = (+sequenceNumber.slice(0, sequenceNumber.indexOf('.')) + 1).toString()
-          const index = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === firstPartOfSequenceNumberPlusOne)
-          if (index === -1) {
-            return this._milestoneTemplateObject.length
-          } else {
-            return index
-          }
-        }
+        return index
+      }
+      default: return 0
     }
-
-    return 0
   }
 
   private checkSequenceNumberValidity(sequenceNumber): boolean {
 
     //Check type
-    if (typeof sequenceNumber !== "string" ){
-      return false
-    }
+    if (typeof sequenceNumber !== 'string') return false
 
-    let leftOne: any
-    let leftTwo: any
-    let leftThree: any
+    const elements = sequenceNumber.split('.')
 
-    switch ((sequenceNumber.match(/\./g) || []).length){
-      case 0:
-        leftOne = sequenceNumber
-        break
-      case 1:
-        leftOne = sequenceNumber.substr(0, sequenceNumber.indexOf("."))
-        leftTwo = sequenceNumber.substr(sequenceNumber.indexOf(".") + 1)
-        break
-      case 2:
-        leftOne = sequenceNumber.substr(0, sequenceNumber.indexOf("."))
-        leftTwo = sequenceNumber.substring(sequenceNumber.indexOf(".") + 1, sequenceNumber.lastIndexOf("."))
-        leftThree = sequenceNumber.substr(sequenceNumber.lastIndexOf(".") + 1)
-       break
-    }
+    //Cannot contain more than three elements / two dots
+    if (elements.length > 3) return false
 
     //Check seqno syntax and length
-    if (leftOne !== undefined && ( isNaN(+leftOne) || +leftOne === 0) ) return false
-    if (leftTwo !== undefined && ( isNaN(+leftTwo) || +leftTwo === 0) ) return false
-    if (leftThree !== undefined && ( isNaN(+leftThree) || +leftThree === 0) ) return false
-
-    //Cannot contain more than two dots
-    if (this.getNumberOfDotsInSequenceNumber(sequenceNumber) > 2) return false
+    if (elements.some(seqNo => !seqNo || isNaN(+seqNo) || +seqNo <= 0)) return false
 
     //Has to be 1 if there are no milestones yet
-    if (this._milestoneTemplateObject.length === 0 && sequenceNumber !== "1"){
-      return false
-    } else if (this._milestoneTemplateObject.length === 0 && sequenceNumber === "1"){
-      return true
-    }
+    if (this.milestoneTemplate.length === 0 && sequenceNumber !== '1') return false
+    if (this.milestoneTemplate.length === 0 && sequenceNumber === "1") return true
 
     //Can only be equal or one bigger than the previous one
     //Check equal
-    let index = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === sequenceNumber)
-    if (index !== -1) {
-      return true
-    }
+    if (this.milestoneTemplate.some(m => m.sequenceNumber === sequenceNumber)) return true
 
     //Check if one bigger
-    let lastNumberOfSequenceNumber: string = sequenceNumber.slice(sequenceNumber.lastIndexOf('.') + 1)
-    let potentialPreviousSequenceNumber: string
-    if (lastNumberOfSequenceNumber === "1"){
-      potentialPreviousSequenceNumber = sequenceNumber.slice(0, sequenceNumber.lastIndexOf('.'))
+    const last = elements.pop()
+    if (last === '1') {
+      const parentSeqNo = elements.join('.')
+      return this.milestoneTemplate.some(m => m.sequenceNumber === parentSeqNo)
     } else {
-      lastNumberOfSequenceNumber = (+lastNumberOfSequenceNumber - 1).toString()
-      potentialPreviousSequenceNumber = sequenceNumber.slice(0, sequenceNumber.lastIndexOf('.') + 1) + lastNumberOfSequenceNumber
+      const previousSeqNo = this.incrementSeqNo(sequenceNumber, -1)
+      return this.milestoneTemplate.some(m => m.sequenceNumber === previousSeqNo)
     }
-    index = this._milestoneTemplateObject.findIndex(milestone => milestone.sequenceNumber === potentialPreviousSequenceNumber)
-    if (index === -1) {
-      return false
-    } else {
-      return true
-    }
-
   }
 
   private resetSequenceNumbers(){
 
     let counter1 = 1
-    let counter2 = 1 
-    let counter3 = 1 
+    let counter2 = 1
+    let counter3 = 1
 
-    this._milestoneTemplateObject.forEach((milestone, index) => {
-
-      switch ((milestone.sequenceNumber.match(/\./g) || []).length) {
+    for (const milestone of this.milestoneTemplate) {
+      switch (getNrOfDotsInSeqno(milestone.sequenceNumber)) {
         //Level one milestone
         case 0:
-
-          if (milestone.sequenceNumber != counter1.toString()){
-            milestone.sequenceNumber = counter1.toString()
-          }
-    
+          milestone.sequenceNumber = `${counter1}`
+              
           counter1++
-          //Reset other counters
           counter2 = 1
           counter3 = 1
           break
         //Level two milestone
         case 1:
-          if (milestone.sequenceNumber != counter2.toString()){
-            milestone.sequenceNumber = (counter1 - 1).toString() + '.' + counter2.toString()
-          }
+          milestone.sequenceNumber = `${counter1 - 1}.${counter2}`
     
           counter2++
-          //Reset other counters
           counter3 = 1
           break
         //Level three milestone
         case 2:
-
-          if (milestone.sequenceNumber != counter3.toString()){
-
-            // Normal seqno level 3 assignment
-            if (counter2 - 1 != 0){
-
-              milestone.sequenceNumber = (counter1 - 1).toString() + '.' + (counter2 - 1).toString() + '.' + counter3.toString()
-              counter3++
-            
+          if (counter2 === 1) {
             // This is triggered when the milestone above is two levels above the new one. Then the (current) seqno gets converted to a level 2 instead of level 3
-            } else {
-              milestone.sequenceNumber = (counter1 - 1).toString() + '.' + counter3.toString()
-              counter2++
-              counter3 = 1
-            }
-            
-          }
+            // Counter would otherwise already have been increased by 1 in the previous case
+            milestone.sequenceNumber = `${counter1 - 1}.${counter2}`
+            counter2++
+            counter3 = 1
 
+          } else {
+            milestone.sequenceNumber = `${counter1 - 1}.${counter2 - 1}.${counter3}`
+            counter3++
+          }
           break
       }
-    })
-
-
-  }
-
-  private redetermineNextSequenceNumber(){
-    
-    if (this.getNumberOfDotsInSequenceNumber(this._newSequenceNumber) === 0 ){
-      const lastSeqno: string = this._milestoneTemplateObject[this._milestoneTemplateObject.length - 1].sequenceNumber
-
-      if (this.getNumberOfDotsInSequenceNumber(lastSeqno) === 0){
-        this._newSequenceNumber = (+lastSeqno + 1).toString()
-      } else {
-        this._newSequenceNumber = (+lastSeqno.slice(0, lastSeqno.indexOf(".")) + 1).toString() 
-      }
-    } else {
-
-      const partBeforeLastNumber: string = this._newSequenceNumber.slice(0, this._newSequenceNumber.lastIndexOf(".") + 1)
-      let j = 1
-      for(let i = 0 ; i < this._milestoneTemplateObject.length ; i++){
-        if (this._milestoneTemplateObject[i].sequenceNumber.slice(0, partBeforeLastNumber.length) === partBeforeLastNumber){
-          j++
-        }
-      }
-      this._newSequenceNumber = partBeforeLastNumber + j.toString()
     }
   }
 
-  public getMargin(numberOfDots: number): string {
+  private determineNextSequenceNumber() {
+    const milestoneTemplate = [...this.milestoneTemplate]
+
+    const elements = this.newSequenceNumber.split('.')
+    if (elements.length > 1) {
+      const pre = elements.splice(-1).join('.') + '.'
+      milestoneTemplate.filter(m => m.sequenceNumber.includes(pre))
+    }
+
+    const siblings = milestoneTemplate.filter(m => getNrOfDotsInSeqno(m.sequenceNumber) === 0)
+    this.newSequenceNumber = this.incrementSeqNo(siblings.pop().sequenceNumber, 1)
+  }
+
+  public getMargin(sequenceNumber: string): string {
+    const numberOfDots = getNrOfDotsInSeqno(sequenceNumber)
     return (numberOfDots * 10).toString() + 'px'
   }
 
-  private getNumberOfDotsInSequenceNumber(sequenceNumber: string): number {
-    return (sequenceNumber.match(/\./g) || []).length
-  }
-
-  private getParentMilestone(sequenceNumber: string): IMilestoneTemplabeObject {
-
-    if (this.getNumberOfDotsInSequenceNumber(sequenceNumber) === 0) return undefined
-
-    const parentSequenceNumber = sequenceNumber.substr(0, sequenceNumber.lastIndexOf('.')) 
-
-    const milestone = this._milestoneTemplateObject.find(milestone => milestone.sequenceNumber === parentSequenceNumber)
-
-    return milestone
-  }
-
-  public async _openingDatetime($event, milestone: IMilestoneTemplabeObject): Promise<void> {
+  public async _openingDatetime($event, milestone: MilestoneTemplabeObject): Promise<void> {
     event.stopPropagation(); //prevents roadmap from collapsing in or out :)
     
     // empty value
@@ -522,24 +393,18 @@ export class EditDefaultRoadmapPage implements OnInit {
     $event.target.min = new Date().toISOString()
 
     // set max
-    if (this.getNumberOfDotsInSequenceNumber(milestone.sequenceNumber) === 0) {
-      $event.target.max = this._goal.deadline ? this._goal.deadline : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
+    if (!!this.goal.deadline) $event.target.max = this.goal.deadline
 
-    } else {
-
-      const parentDeadlineDate: string = this.getParentMilestone(milestone.sequenceNumber).deadline
-
-      if (parentDeadlineDate) {
-        $event.target.max = parentDeadlineDate
-      } else {
-        $event.target.max = this._goal.deadline ? this._goal.deadline : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
-      }
+    const elements = milestone.sequenceNumber.split('.')
+    if (elements.length !== 1) {
+      // if milestone is a submilestone, then max date cannot be later than parent milestone deadline
+      const parentSeqNo = elements.splice(-1).join('.')
+      const parent = this.milestoneTemplate.find(m => m.sequenceNumber === parentSeqNo)
+      if (!!parent.deadline) $event.target.max = parent.deadline
     }
-
   }
 
-  public onDeadlineDateChange($event, milestone: IMilestoneTemplabeObject) {
+  public onDeadlineDateChange($event, milestone: MilestoneTemplabeObject) {
     milestone.deadline = $event.detail.value
   }
-
 }

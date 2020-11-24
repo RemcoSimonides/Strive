@@ -5,7 +5,7 @@ import { enumPostSource } from '@strive/post/+state/post.firestore';
 import { PostForm } from '@strive/post/forms/post.form';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { PostService } from '@strive/post/+state/post.service';
-import { IMilestone } from '@strive/interfaces';
+import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 
 @Component({
   selector: 'post-upsert-modal',
@@ -18,13 +18,13 @@ export class UpsertPostModal implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private navParams: NavParams, // { goal: Goal, milestone: IMilestone, isEvidence: boolean }
+    private navParams: NavParams, // { goal: Goal, milestone: Milestone, isEvidence: boolean }
     private postService: PostService
   ) { }
 
   ngOnInit() {
     const goal = this.navParams.get('goal') as Goal
-    const milestone = this.navParams.get('milestone') as IMilestone
+    const milestone = this.navParams.get('milestone') as Milestone
 
     if (!goal) throw new Error('No goal to post the post at')
 
