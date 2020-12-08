@@ -19,7 +19,7 @@ import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/e
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
-import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
+import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -33,8 +33,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    ThumbnailListPipeModule,
-    ThumbnailListModule
+    ThumbnailListModule,
+    RectangleThumbnailModule
   ],
   declarations: [
     ProfilePage,

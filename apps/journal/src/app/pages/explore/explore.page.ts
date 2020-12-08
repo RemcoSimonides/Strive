@@ -18,7 +18,7 @@ export class ExplorePage implements OnInit {
 
   constructor(
     public _instantSearch: InstantSearchService,
-    public _platform: Platform,
+    public platform: Platform,
     public screensize: ScreensizeService,
     private _seo: SeoService,
   ) {}
@@ -40,13 +40,13 @@ export class ExplorePage implements OnInit {
   }
 
   ionViewDidEnter() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => { navigator['app'].exitApp(); });
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this._backBtnSubscription = this.platform.backButton.subscribe(() => { navigator['app'].exitApp(); });
     }
   }
     
   ionViewWillLeave() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
+    if (this.platform.is('android') || this.platform.is('ios')) {
       this._backBtnSubscription.unsubscribe();
     }
   }

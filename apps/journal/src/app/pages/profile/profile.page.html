@@ -111,10 +111,17 @@
     <ng-container *ngIf="_achievingGoalsColObs | async as achievingGoals">
       <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
 
-        <thumbnail-list
-          [thumbnails]="achievingGoals | toThumbnailList:'goal'"
-          type="goal"
-        ></thumbnail-list>
+        <thumbnail-list type="goal">
+          <ng-container *ngFor="let goal of _achievingGoalsColObs | async">
+            <ng-template #thumb>
+              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+                <ng-template #thumbTitle>
+                  {{ goal.title }}
+                </ng-template>
+              </rectangle-thumbnail>
+            </ng-template>
+          </ng-container>
+        </thumbnail-list>
           
       </ng-container>
       <ng-template #noAchievingGoals>
@@ -128,10 +135,17 @@
     <ng-container *ngIf="_supportingGoalsColObs | async as supportingGoals">
       <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
 
-        <thumbnail-list
-          [thumbnails]="supportingGoals | toThumbnailList:'goal'"
-          type="goal"
-        ></thumbnail-list>
+        <thumbnail-list type="goal">
+          <ng-container *ngFor="let goal of _supportingGoalsColObs | async">
+            <ng-template #thumb>
+              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+                <ng-template #thumbTitle>
+                  {{ goal.title }}
+                </ng-template>
+              </rectangle-thumbnail>
+            </ng-template>
+          </ng-container>
+        </thumbnail-list>
 
       </ng-container>
       <ng-template #noSupportingGoals>

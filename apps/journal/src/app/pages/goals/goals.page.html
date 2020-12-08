@@ -11,29 +11,34 @@
     <!-- Goals -->
     <h3>Your Goals</h3>
 
-    <thumbnail-list
-      [thumbnails]="goalsColObs | async | toThumbnailList:'goal'"
-      type="goal"
-      [canCreate]="true"
-    >
-      <!-- <ng-template let-goal #details>
-        {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}
-        <br/>
-        {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
-      </ng-template> -->
+    <thumbnail-list type="goal" [canCreate]="true">
+      <ng-container *ngFor="let goal of goalsColObs | async">
+        <ng-template #thumb>
+          <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="'/goal/' + goal.id">
+            <ng-template #thumbTitle>
+              <h5>{{ goal.title }}</h5>
+              <p>{{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}</p>
+              <p>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</p>
+            </ng-template>
+          </rectangle-thumbnail>
+        </ng-template>
+      </ng-container>
     </thumbnail-list>
 
     <!-- Collective goals -->
     <h3>Your Collective Goals</h3>
 
-    <thumbnail-list
-      [thumbnails]="collectiveGoalsColObs | async | toThumbnailList:'collectiveGoal'"
-      type="collectiveGoal"
-      [canCreate]="true"
-    >
-      <!-- <ng-template let-collectiveGoal #details>
-        {{ collectiveGoal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
-      </ng-template> -->
+    <thumbnail-list type="collectiveGoal" [canCreate]="true">
+      <ng-container *ngFor="let collectiveGoal of collectiveGoalsColObs | async">
+        <ng-template #thumb>
+          <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="['/collective-goal', collectiveGoal.id]">
+            <ng-template #thumbTitle>
+              <h5>{{ collectiveGoal.title }}</h5>
+              <p>{{ collectiveGoal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</p>
+            </ng-template>
+          </rectangle-thumbnail>
+        </ng-template>
+      </ng-container>
     </thumbnail-list>
 
 </ion-content>

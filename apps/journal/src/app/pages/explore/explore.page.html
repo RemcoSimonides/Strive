@@ -1,4 +1,4 @@
-<ng-container *ngIf="_platform.is('android') || _platform.is('ios')">
+<ng-container *ngIf="platform.is('android') || platform.is('ios')">
   <ion-header translucent>
 
     <ng-container *ngIf="screensize.isDesktop$ | async">
@@ -26,24 +26,42 @@
 <ion-content class="ion-no-padding" #scrollArea scrollEvents="true">
 
   <h3>Collective Goals</h3>
-  <thumbnail-list 
-    [thumbnails]="_instantSearch.collectiveGoalResults | async | toThumbnailList:'collectiveGoal'"
-    type="collectiveGoal">
-    <!-- <ng-template let-detail #details>
-      <div>{{ detail.shortDescription }}</div>
-    </ng-template> -->
+  <thumbnail-list type="collectiveGoal">
+    <ng-container *ngFor="let collectiveGoal of _instantSearch.collectiveGoalResults | async">
+      <ng-template #thumb>
+        <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+          <ng-template #thumbTitle>
+            {{ collectiveGoal.title }}
+          </ng-template>
+        </rectangle-thumbnail>
+      </ng-template>
+    </ng-container>
   </thumbnail-list>
 
   <h3>Goals</h3>
-  <thumbnail-list
-    [thumbnails]="_instantSearch.goalResults | async | toThumbnailList:'goal'"
-    type="goal">
+  <thumbnail-list type="goal">
+    <ng-container *ngFor="let goal of _instantSearch.goalResults | async">
+      <ng-template #thumb>
+        <rectangle-thumbnail type="goal" [image]="goal.image">
+          <ng-template #thumbTitle>
+            {{ goal.title }}
+          </ng-template>
+        </rectangle-thumbnail>
+      </ng-template>
+    </ng-container>
   </thumbnail-list>
 
   <h3>Users</h3>
-  <thumbnail-list
-    [thumbnails]="_instantSearch.profileResults | async | toThumbnailList:'user'"
-    type="user">
+  <thumbnail-list type="user">
+    <ng-container *ngFor="let user of _instantSearch.profileResults | async">
+      <ng-template #thumb>
+        <rectangle-thumbnail type="user" [image]="user.image">
+          <ng-template #thumbTitle>
+            {{ user.username }}
+          </ng-template>
+        </rectangle-thumbnail>
+      </ng-template>
+    </ng-container>
   </thumbnail-list>
 
 </ion-content>

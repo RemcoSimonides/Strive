@@ -6,50 +6,31 @@ import { UpsertCollectiveGoalPage } from 'apps/journal/src/app/pages/collective-
 import { CreateGoalPage } from 'apps/journal/src/app/pages/goal/modals/create-goal/create-goal.page';
 import { CreateTemplateModalPage } from 'apps/journal/src/app/pages/template/modals/create-template-modal/create-template-modal.page';
 
+type Type = 'collectiveGoal' | 'goal' | 'template'
+
 @Component({
-  selector: '[type]app-create-thumbnail',
+  selector: '[type] strive-create-thumbnail',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
 })
 export class CreateThumbnailComponent {
 
-  @Input() set type(t: 'collectiveGoal' | 'goal' | 'template') {
-    this._type = t;
-    switch (t) {
-      case 'collectiveGoal':
-        this._title = "NEW COLLECTIVE GOAL"
-        break;
-    
-      case 'goal':
-        this._title = "NEW GOAL"
-        break;
+  title = { collectiveGoal: 'NEW COLLECTIVE GOAL', goal: 'NEW GOAL', template: 'NEW TEMPLATE' }
 
-      case 'template':
-        this._title = "NEW TEMPLATE"
-        break;
-
-      default:
-        break;
-    }
-  };
-  @Input() collectiveGoalId: string;
-  @Input() limitReached: boolean = false;
-
-  public _title: string;
-  public _type: string;
+  @Input() type: Type
+  @Input() collectiveGoalId: string
+  @Input() limitReached: boolean = false
 
   constructor(
     private modalCtrl: ModalController,
-    public _platform: Platform
+    public platform: Platform
   ) { }
 
   async create() {
-    let modal;
-    switch (this._type) {
+    let modal: HTMLIonModalElement
+    switch (this.type) {
       case 'collectiveGoal':
-        modal = await this.modalCtrl.create({
-          component: UpsertCollectiveGoalPage
-        })
+        modal = await this.modalCtrl.create({ component: UpsertCollectiveGoalPage })
         break;
       
       case 'goal':

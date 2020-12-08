@@ -1,11 +1,11 @@
 <!-- Mobile -->
-<ng-container *ngIf="_platform.is('android') || _platform.is('ios') else browser">
+<ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
   <ng-container *ngIf="!limitReached else limitReached">
 
     <ion-card (click)="create()" class="active">
       <img id="img-mobile" src="assets/CreateNewGoal.png"/>
       <ion-card-content>
-        <h2 class="card-title">{{ _title }}</h2>
+        <h2 class="card-title">{{ title[type] }}</h2>
       </ion-card-content>
     </ion-card>
 
@@ -15,7 +15,7 @@
     <ion-card class="inactive">
       <img class="limitReached" src="assets/CreateNewGoal.png"/>
       <ion-card-content>
-        <h2 class="card-title">{{ _title }}</h2>
+        <h2 class="card-title">{{ title[type] }}</h2>
       </ion-card-content>
     </ion-card>
   </ng-template>
@@ -30,7 +30,7 @@
       </div>
       <div class="description-container">
         <div class="title">
-            {{ _title }}
+            {{ title[type] }}
         </div> 
       </div>
   </section>

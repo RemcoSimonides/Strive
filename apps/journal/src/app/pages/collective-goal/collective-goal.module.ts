@@ -17,7 +17,7 @@ import { UpsertCollectiveGoalModule } from './modals/upsert/upsert.module';
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
-import { ThumbnailListPipeModule } from '@strive/ui/thumbnail-list/thumbnail-list.pipe';
+import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 
@@ -45,7 +45,7 @@ const routes: Routes = [
 
     // Strive
     ThumbnailListModule,
-    ThumbnailListPipeModule,
+    RectangleThumbnailModule,
     PageLoadingModule,
     PageNotFoundModule
   ],

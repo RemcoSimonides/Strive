@@ -1,0 +1,58 @@
+<!-- Mobile -->
+<ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
+  <ion-card>
+    <div class="image-container">
+      <img [src]="image"/>
+      <ng-container *ngIf="isFinished">
+        <div class="finished">finished</div>
+      </ng-container>
+    </div>
+
+    <ion-card-content class="ion-no-padding content-container">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
+          <ion-col size="12">
+            <h2 class="card-title">
+
+              <!-- <ng-container *ngIf="!thumb.isPublic">
+                <ion-icon name="lock-closed"></ion-icon>
+              </ng-container> -->
+
+              <ng-container *ngTemplateOutlet="title"></ng-container>
+            </h2>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="description">
+          <!-- Details -->
+          <!-- <ng-container
+            *ngIf="detailsTemplateRef"
+            [ngTemplateOutlet]="detailsTemplateRef"
+            [ngTemplateOutletContext]="{$implicit:thumb}"
+          ></ng-container> -->
+        </ion-row>
+
+      </ion-grid>
+      
+      <!-- <ng-container *ngIf="thumb.isFinished">
+        <div class="finished"></div>
+      </ng-container> -->
+    </ion-card-content>
+
+  </ion-card>
+</ng-container>
+
+<!-- Browser -->
+<ng-template #browser>
+  <section class="clickable margin">
+    <div class="image-container">
+      <img class="isFinished" [src]="image"/>
+      
+      <ng-container *ngIf="isFinished">
+        <span class="finished">finished</span>
+      </ng-container>
+    </div>
+
+    <ng-container *ngTemplateOutlet="title"></ng-container>
+  </section>
+</ng-template>

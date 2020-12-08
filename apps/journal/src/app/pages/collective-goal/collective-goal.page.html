@@ -78,15 +78,17 @@
     <h3 class="padding">Templates</h3>
 
     <ng-container *ngIf="templates.length > 0 else noTemplate">
-      <thumbnail-list
-        [thumbnails]="templates | toThumbnailList:'template'"
-        type="template"
-        [canCreate]="isAdmin"
-        [collectiveGoalId]="collectiveGoalId"
-      >
-        <ng-template let-template #details>
-          {{ template.numberOfTimesUsed }} time{template.numberOfTimesUsed, plural, =1 {} other {s}} used
-        </ng-template>
+      <thumbnail-list type="template">
+        <ng-container *ngFor="let template of templates$ | async">
+          <ng-template #thumb>
+            <rectangle-thumbnail type="template" [image]="template.goalImage">
+              <ng-template #thumbTitle>
+                <h5>{{ template.title }}</h5>
+                <p>{{ template.numberOfTimesUsed }} time{template.numberOfTimesUsed, plural, =1 {} other {s}} used</p>
+              </ng-template>
+            </rectangle-thumbnail>
+          </ng-template>
+        </ng-container>
       </thumbnail-list>
     </ng-container>
 
@@ -99,15 +101,18 @@
   <h3 class="padding">Goals</h3>
   <ng-container *ngIf="goals$ | async as goals">
     <ng-container *ngIf="goals.length > 0 else noGoal">
-      <thumbnail-list
-        [thumbnails]="goals | toThumbnailList:'goal'"
-        type="goal"
-        [canCreate]="isAdmin">
-        <ng-template let-goal #details>
-          {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}
-          <br/>
-          {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
-        </ng-template>
+      <thumbnail-list type="goal" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
+        <ng-container *ngFor="let goal of goals$ | async">
+          <ng-template #thumb>
+            <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['goal', goal.id]">
+              <ng-template #thumbTitle>
+                <h5>{{ goal.title }}</h5>
+                <p>{{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}</p>
+                <p>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</p>
+              </ng-template>
+            </rectangle-thumbnail>
+          </ng-template>
+        </ng-container>
       </thumbnail-list>
     </ng-container>
 
