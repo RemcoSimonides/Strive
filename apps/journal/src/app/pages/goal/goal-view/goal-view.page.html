@@ -36,24 +36,7 @@
   <!-- Posts -->
   <section *ngSwitchCase="'Posts'" class="vertical-align-content">
 
-    <ion-refresher slot="fixed" (ionRefresh)="refreshPosts($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
- 
-    <ng-container *ngFor="let notification of paginationService.data | async">
-      <app-notification [goalId]="goalId" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goalId + '/Notifications/' + notification.id"></app-notification>
-    </ng-container>
-
-    <ion-fab *ngIf="isAdmin" vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
-    </ion-fab>
-
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Loading more data...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    <journal-goal-posts [goalId]="goalId"></journal-goal-posts>
 
   </section>
 

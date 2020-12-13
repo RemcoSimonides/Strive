@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 // Services
 import { AngularFireAuth } from '@angular/fire/auth';
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
 import {
   enumNotificationType,
-  INotificationWithPostAndSupports,
-  INotification
-} from '@strive/interfaces';
+  Notification,
+  PostMeta
+} from './notification.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore'
 
 @Injectable({
@@ -20,17 +20,19 @@ export class NotificationService {
     private db: FirestoreService,
   ) { }
 
-  async finalizeDecision(notification: INotificationWithPostAndSupports): Promise<void> {
+  async finalizeDecision(notification: Notification<PostMeta>): Promise<void> {
+
+    // TODO CHECK THIS AGAIN - it's probably incorrect!
 
     const data = {
       notificationType: enumNotificationType.evidence_finalized,
-      supports: notification.supports
+      supports: notification.meta.supports
     }
 
     const { uid } = await this.afAuth.currentUser;
 
     // Update Notification to replace timer and buttons by status
-    await this.db.upsert<INotificationWithPostAndSupports>(`Users/${uid}/Notifications/${notification.id}`, data)
+    await this.db.upsert<Notification<PostMeta>>(`Users/${uid}/Notifications/${notification.id}`, data)
 
   }
 
@@ -42,7 +44,7 @@ export class NotificationService {
     })
   }
 
-  async upsert(uid: string, notificationId: string, notification: Partial<INotification>): Promise<void> {
+  async upsert(uid: string, notificationId: string, notification: Partial<Notification>) {
     await this.db.upsert(`Users/${uid}/Notifications/${notificationId}`, notification)
   }
 

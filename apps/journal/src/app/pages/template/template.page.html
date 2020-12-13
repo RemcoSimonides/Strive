@@ -1,4 +1,4 @@
-<app-header title=" {{ (_templateDocObs | async)?.title || 'Template' }}" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+<strive-header [title]="(_templateDocObs | async)?.title || 'Template'" *ngIf="_platform.is('android') || _platform.is('ios')"></strive-header>
 
 <ion-content class="ion-padding">
 
@@ -57,7 +57,7 @@
 
     <h3>Roadmap</h3>
 
-    <app-default-roadmap [collectiveGoalId]="_collectiveGoalId" [templateId]="_templateId" [isAdmin]="_isAdmin"></app-default-roadmap>
+    <app-default-roadmap [collectiveGoalId]="_collectiveGoalId" [templateId]="_templateId"></app-default-roadmap>
 
   </div>
 

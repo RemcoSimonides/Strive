@@ -1,23 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 // Ionic
-import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular'
+import { IonInfiniteScroll, NavController, Platform } from '@ionic/angular'
 // Rxjs
 import { Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
-import { PostService } from '@strive/post/+state/post.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
-import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 // Interfaces
-import { Post, enumPostSource } from '@strive/post/+state/post.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
@@ -57,13 +52,9 @@ export class GoalViewPage implements OnInit {
     private goalService: GoalService,
     private goalAuthGuardService: GoalAuthGuardService,
     public stakeholder: GoalStakeholderService,
-    private imageService: ImageService,
     private inviteTokenService: InviteTokenService,
-    private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public paginationService: NotificationPaginationService,
     private platform: Platform,
-    private postService: PostService,
     private route: ActivatedRoute,
     private seo: SeoService
   ) { }
@@ -97,12 +88,7 @@ export class GoalViewPage implements OnInit {
       image: this.goal.image
     })
 
-    // Posts
-    this.paginationService.reset()
-    this.paginationService.init(`Goals/${this.goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
-
     this.pageIsLoading = false
-
   }
 
   public initNoAccess() {
@@ -131,65 +117,4 @@ export class GoalViewPage implements OnInit {
       initMilestonesAnimation()
     }
   }
-
-  //Posts section
-  public loadData(event) {
-    this.paginationService.more()
-    event.target.complete();
-
-    if (this.paginationService.done) {
-      event.target.disabled = true
-    }
-  }
-
-  public refreshPosts($event) {
-
-    this.paginationService.refresh(`Goals/${this.goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
-
-    this.paginationService.refreshing.subscribe(refreshing => {
-      if (refreshing === false) {
-        setTimeout(() => {
-          $event.target.complete();
-        }, 500);
-      }
-    })
-
-  }
-
-  public async createCustomPost() {
-
-    const modal = await this.modalCtrl.create({
-      component: UpsertPostModal,
-    })
-    await modal.present()
-    await modal.onDidDismiss().then(async (data) => {
-
-      if (data.data) {
-        const post = <Post>{}
-
-        // Prepare post object
-        post.content = {
-          title: data.data.title,
-          description: data.data.description,
-          mediaURL: await this.imageService.uploadImage(`Goals/${this.goalId}/Posts/${this.goalId}`, false)
-        }
-        post.goal = {
-          id: this.goalId,
-          title: this.goal.title,
-          image: this.goal.image,
-        }
-        post.isEvidence = false
-
-        // Create post
-        await this.postService.createPost(enumPostSource.custom, post)
-
-      }
-      await this.imageService.reset()
-
-      await this.paginationService.refresh(`Goals/${this.goalId}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
-
-    })
-
-  }
-
 }

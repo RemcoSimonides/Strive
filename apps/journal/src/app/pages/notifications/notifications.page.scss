@@ -1,17 +1,12 @@
-ion-segment {
-    max-width: 800px;
-    margin: auto;
-}
-
 ion-content {
-    background: #efefef;
+  background: #efefef;
 }
 
 ion-refresher {
-    z-index: 1;
+  z-index: 1;
 }
 
-.vertical-align-content {
-    max-width: 800px;
-    margin: auto;
+section {
+  width: 800px;
+  margin: auto;
 }

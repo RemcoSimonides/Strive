@@ -25,7 +25,8 @@
       "@strive/post/*": ["libs/post/src/lib/*"],
       "@strive/chat/*": ["libs/chat/src/lib/*"],
       "@strive/milestone/*": ["libs/milestone/src/lib/*"],
-      "@strive/support/*": ["libs/support/src/lib/*"]
+      "@strive/support/*": ["libs/support/src/lib/*"],
+      "@strive/notification/*": ["libs/notification/src/lib/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]

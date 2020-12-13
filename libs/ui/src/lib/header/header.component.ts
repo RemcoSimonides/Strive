@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Platform } from '@ionic/angular'
 
 @Component({
-  selector: 'app-header',
+  selector: 'strive-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

@@ -9,16 +9,12 @@ import { FileDropDirective } from '../directives/file-drop/file-drop.directive';
 // Share buttons
 // import { ShareButtonsModule } from '@ngx-share/buttons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-// Pages
-import { NotificationOptionsPage } from './notification/popovers/notification-options/notification-options.page'
 // Text editor
 import { QuillModule } from 'ngx-quill';
 // Custom Components
-import { HeaderComponent } from './header/header.component';
 import { CountdownComponent } from './countdown/countdown.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
-import { NotificationComponent } from './notification/notification.component'
 import { CommentComponent } from './comment/comment.component';
 
 // import { ChatModalModule } from '@strive/chat/components/chat-modal/chat-modal.module'
@@ -35,25 +31,17 @@ import { CommentComponent } from './comment/comment.component';
     FontAwesomeModule
   ],
   declarations: [
-    HeaderComponent,
     CountdownComponent,
     FileDropDirective,
     ImageUploadComponent,
     TextEditorComponent,
-    NotificationComponent,
     CommentComponent,
-    NotificationOptionsPage
-  ],
-  entryComponents: [
-    NotificationOptionsPage
   ],
   exports: [
     CountdownComponent,
-    HeaderComponent,
     FileDropDirective,
     ImageUploadComponent,
     TextEditorComponent,
-    NotificationComponent,
     CommentComponent,
   ]
 })

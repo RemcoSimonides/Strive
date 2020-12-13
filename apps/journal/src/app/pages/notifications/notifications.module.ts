@@ -2,15 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
 // Pages
 import { NotificationsPage } from './notifications.page';
-import { ChooseAchieverModalPage } from './modals/choose-achiever-modal/choose-achiever-modal.page'
 
-import { ComponentsModule } from '../../components/components.module'
-// pipes
+// Components
+import { NotificationModule } from '@strive/notification/components/notification/notification.module';
+import { HeaderModule } from '@strive/ui/header/header.module';
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+
+// Pipes
 import { PipesModule } from '../../pipes/pipes.module'
 
 const routes: Routes = [
@@ -22,19 +26,18 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    ComponentsModule,
     CommonModule,
     FormsModule,
     IonicModule,
+    FlexLayoutModule,
     RouterModule.forChild(routes),
-    PipesModule
+    PipesModule,
+    NotificationModule,
+    HeaderModule,
+    PageLoadingModule
   ],
   declarations: [
     NotificationsPage,
-    ChooseAchieverModalPage
-  ],
-  entryComponents: [
-    ChooseAchieverModalPage
   ]
 })
 export class NotificationsPageModule {}

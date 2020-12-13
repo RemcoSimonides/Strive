@@ -19,6 +19,7 @@ import { ComponentsModule } from '../../../components/components.module'
 import { RoadmapModule } from '../roadmap/components/roadmap.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 import { AddSupportModalPageModule } from '../modals/add-support-modal/add-support-modal.module'
+import { PostsModule } from '../posts/posts.module';
 
 import { QuillModule } from 'ngx-quill'
 
@@ -41,7 +42,8 @@ const routes: Routes = [
     PageNotFoundModule,
     UpsertPostModalModule,
     AddSupportModalPageModule,
-    GoalPageModule
+    GoalPageModule,
+    PostsModule
   ],
   declarations: [
     GoalViewPage,

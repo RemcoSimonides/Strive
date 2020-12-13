@@ -10,6 +10,7 @@ import { GoalsPage } from './goals.page';
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
+import { HeaderModule } from '@strive/ui/header/header.module';
 
 // Components
 import { ComponentsModule } from '../../components/components.module'
@@ -29,7 +30,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ComponentsModule,
     ThumbnailListModule,
-    RectangleThumbnailModule
+    RectangleThumbnailModule,
+    HeaderModule
   ],
   declarations: [
     GoalsPage,

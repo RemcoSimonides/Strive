@@ -9,17 +9,17 @@ import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.fir
   templateUrl: './choose-achiever-modal.page.html',
   styleUrls: ['./choose-achiever-modal.page.scss'],
 })
-export class ChooseAchieverModalPage implements OnInit {
+export class ChooseAchieverModal implements OnInit {
 
   public _achievers: GoalStakeholder[]
 
   constructor(
     private modalCtrl: ModalController,
-    private navParams: NavParams,
+    // private navParams: NavParams,
   ) { }
 
   ngOnInit() {
-    this._achievers = this.navParams.get('stakeholders')
+    // this._achievers = this.navParams.get('stakeholders')
   }
 
   async dismiss(): Promise<void> {

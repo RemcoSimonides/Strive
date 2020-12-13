@@ -1,0 +1,18 @@
+<ion-refresher slot="fixed" (ionRefresh)="refreshPosts($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
+
+<ng-container *ngFor="let notification of paginationService.data | async">
+  <notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></notification>
+</ng-container>
+
+<ion-fab *ngIf="isAdmin" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
+</ion-fab>
+
+<ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Loading more data...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>

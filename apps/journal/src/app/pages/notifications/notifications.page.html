@@ -1,29 +1,30 @@
-<app-header title="Notifications" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+<strive-header title="Notifications" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
-<div class="not-logged-in" *ngIf="_pageIsLoading">
-  <ion-spinner name="lines" color="primary"></ion-spinner>
-</div>
+<ng-container *ngIf="pageIsLoading">
+  <strive-page-loading></strive-page-loading>
+</ng-container>
 
-<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !_pageIsLoading">
+<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !pageIsLoading">
   <p>
       <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
   </p>
 </div>
 
-<ion-content class="ion-padding" *ngIf="!_pageIsLoading && (user.isLoggedIn$ | async)">
-    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-      <ion-refresher-content
-        pullingIcon="arrow-down"
-        refreshingSpinner="circles">
-      </ion-refresher-content>
-    </ion-refresher>
-    <div class="vertical-align-content">
+<ion-content class="ion-padding" *ngIf="!pageIsLoading && (user.isLoggedIn$ | async)">
 
-    <div class="notification" *ngFor="let notification of paginationService.data | async">
-      <app-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></app-notification>
-    </div>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-down"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <section fxLayout="column" fxLayoutAlign="center start">
+
+    <ng-container *ngFor="let notification of paginationService.data | async">
+      <notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification>
+    </ng-container>
       
-
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles"
@@ -31,6 +32,6 @@
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
   
-  </div>
+  </section>
 </ion-content>
   

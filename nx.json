@@ -64,6 +64,9 @@
     },
     "support": {
       "tags": []
+    },
+    "notification": {
+      "tags": []
     }
   }
 }

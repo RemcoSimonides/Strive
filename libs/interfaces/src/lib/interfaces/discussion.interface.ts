@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { ISource } from './notification.interface';
+import { ISource } from '@strive/notification/+state/notification.firestore'
 
 export interface IDiscussion {
     id?: string;

@@ -1,19 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-// Ionic
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
-// Services
-import { NotificationService } from 'apps/journal/src/app/services/notification/notification.service'
+import { Subscription } from 'rxjs';
+// Strive
+import { NotificationService } from '@strive/notification/+state/notification.service';
+import { isPostMeta } from '@strive/notification/+state/notification.model';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
-// Rxjs
-import { take } from 'rxjs/operators';
-// Interfaces
-import {
-  enumNotificationType,
-  enumRequestStatus,
-} from '@strive/interfaces';
-// Components
+import { enumNotificationType, Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 
 @Component({
@@ -23,39 +17,36 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 })
 export class NotificationsPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-  _pageIsLoading: boolean
   
-  _backBtnSubscription
-
-  public _notifications: any[]
+  pageIsLoading = true
+  notifications: Notification[]
   enumNotificationType = enumNotificationType
-  enumRequestStatus = enumRequestStatus
+
+  private backBtnSubscription: Subscription
 
   constructor(
     public user: UserService,
-    private _modalCtrl: ModalController,
+    private modalCtrl: ModalController,
     private navCtrl: NavController,
     private notificationService: NotificationService,
     public paginationService: NotificationPaginationService,
-    public _platform: Platform,
-    private _seo: SeoService
+    public platform: Platform,
+    private seo: SeoService
   ) { }
 
   ngOnInit() {
-
-    this._pageIsLoading = true
-
-    this._seo.generateTags({ title: `Notifications - Strive Journal` })
+    this.seo.generateTags({ title: `Notifications - Strive Journal` })
 
     this.user.profile$.subscribe(profile => {
       if (profile) {
         this.paginationService.reset()
         this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', { reverse: true, prepend: false })
         this.paginationService.data.subscribe(data => {
-          this._pageIsLoading = false
+          console.log('data received: ', data)
+          this.pageIsLoading = false
         })
       } else {
-        this._pageIsLoading = false
+        this.pageIsLoading = false
         this.paginationService.reset()
       }
     })
@@ -67,19 +58,19 @@ export class NotificationsPage implements OnInit {
       this.notificationService.resetNumberOfUnreadNotifications();
     }
 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => this.navCtrl.navigateRoot('explore'));
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => this.navCtrl.navigateRoot('explore'));
     }
   }
 
   ionViewWillLeave() {
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription.unsubscribe();
     }
   }
 
   async openLoginModal(): Promise<void> {
-    const modal = await this._modalCtrl.create({
+    const modal = await this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
@@ -90,8 +81,7 @@ export class NotificationsPage implements OnInit {
 
   async doRefresh($event) {
 
-    await this.paginationService.refresh(`Users/${this.user.uid}/Notifications`, 'createdAt', { reverse: true, prepend: false })
-
+    this.paginationService.refresh(`Users/${this.user.uid}/Notifications`, 'createdAt', { reverse: true, prepend: false })
     this.paginationService.refreshing.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
@@ -103,40 +93,20 @@ export class NotificationsPage implements OnInit {
   }
 
   public loadData(event) {
-
     this.paginationService.more()
     event.target.complete();
 
     if (this.paginationService.done) {
       event.target.disabled = true
     }
-
   }
 
-  public async _toggleSupportDecision(notificationId: string, supportId: string): Promise<void> {
-
-    const notificationIndex = this._notifications.findIndex(notification => notification.id == notificationId)
-    const supportIndex = this._notifications[notificationIndex].supports.findIndex(support => support.id == supportId)
-
-    if (this._notifications[notificationIndex].supports[supportIndex].decision == 'give') {
-      this._notifications[notificationIndex].supports[supportIndex].decision = 'keep'
-    } else {
-      this._notifications[notificationIndex].supports[supportIndex].decision = 'give'
+  public async toggleSupportDecision(notificationId: string, supportId: string): Promise<void> {
+    const notification = this.notifications.find(notification => notification.id == notificationId)
+    if (isPostMeta(notification)) {
+      const support = notification.meta.supports.find(support => support.id === supportId)
+      support.decision = support.decision === 'give' ? 'keep' : 'give'
     }
-
-  }
-
-  public async _toggleUnfinishedMilestoneSupportDecision(notificationId: string, supportId: string): Promise<void> {
-
-    const notificationIndex = this._notifications.findIndex(notification => notification.id == notificationId)
-    const supportIndex = this._notifications[notificationIndex].unfinishedMilestonesSupports.findIndex(support => support.id == supportId)
-
-    if (this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision == 'give') {
-      this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision = 'keep'
-    } else {
-      this._notifications[notificationIndex].unfinishedMilestonesSupports[supportIndex].decision = 'give'
-    }
-
   }
 
 }

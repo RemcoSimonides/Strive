@@ -1,4 +1,4 @@
-<app-header title="Goals" *ngIf="_platform.is('android') || _platform.is('ios')"></app-header>
+<strive-header title="Goals" *ngIf="_platform.is('android') || _platform.is('ios')"></strive-header>
 
 <div class="not-logged-in" *ngIf="!user.isLoggedIn$ | async">
     <p>

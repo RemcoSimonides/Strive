@@ -20,6 +20,7 @@ import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.mo
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
+import { HeaderModule } from '@strive/ui/header/header.module';
 
 const routes: Routes = [
   {
@@ -47,7 +48,8 @@ const routes: Routes = [
     ThumbnailListModule,
     RectangleThumbnailModule,
     PageLoadingModule,
-    PageNotFoundModule
+    PageNotFoundModule,
+    HeaderModule
   ],
   declarations: [
     CollectiveGoalPage,

@@ -1,4 +1,4 @@
-<div class="notification" *ngIf="notification">
+<div class="notification" *ngIf="!!notification">
   <ion-item class="ion-no-padding item-text-wrap">
 
     <ion-grid class="ion-no-padding">
@@ -50,11 +50,11 @@
               <!-- Request buttons -->
               <div *ngIf="notification.notificationType === enumNotificationType.goal_request_to_join">
                 <ion-button (click)="handleRequestDecision(notification, true)"
-                  [disabled]="notification?.requestStatus !== enumRequestStatus.open"
-                  *ngIf="notification?.requestStatus !== enumRequestStatus.rejected">Accept</ion-button>
+                  [disabled]="notification?.requestStatus !== 'open'"
+                  *ngIf="notification?.requestStatus !== 'rejected'">Accept</ion-button>
                 <ion-button (click)="handleRequestDecision(notification, false)"
-                  [disabled]="notification?.requestStatus !== enumRequestStatus.open"
-                  *ngIf="notification?.requestStatus !== enumRequestStatus.accepted">Reject</ion-button>
+                  [disabled]="notification?.requestStatus !== 'open'"
+                  *ngIf="notification?.requestStatus !== 'accepted'">Reject</ion-button>
               </div>
 
               <!-- Post card -->

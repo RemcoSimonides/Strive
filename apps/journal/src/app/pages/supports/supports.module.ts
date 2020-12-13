@@ -10,6 +10,7 @@ import { SupportsPage } from './supports.page';
 import { PipesModule } from '../../pipes/pipes.module'
 // Components
 import { ComponentsModule } from '../../components/components.module'
+import { HeaderModule } from '@strive/ui/header/header.module';
 
 const routes: Routes = [
   {
@@ -25,7 +26,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     PipesModule,
-    ComponentsModule
+    ComponentsModule,
+    HeaderModule
   ],
   declarations: [
     SupportsPage,

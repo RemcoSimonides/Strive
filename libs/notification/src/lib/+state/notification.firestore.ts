@@ -1,8 +1,6 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { NotificationSupport } from '@strive/support/+state/support.firestore'
-import { IDiscussion } from './discussion.interface';
-
-export type INotification = INotificationBase | INotificationWithPost | INotificationWithPostAndSupports | INotificationGoalRequest;
+import { IDiscussion } from '@strive/interfaces';
 
 export enum enumNotificationType {
     general,
@@ -74,19 +72,23 @@ export enum enumEvent {
 
 }
 
-export interface INotificationBase {
+export type NotificationMeta = PostMeta | GoalRequest | {};
+
+export interface Notification<Meta extends NotificationMeta = any> {
     id?: string; // only pass id if it needs a specific id
     discussionId: string; // mandatory
     discussion?: IDiscussion; // only used to join discussion data with this data
     message: INotificationMessageText[]; // mandatory
-    notificationType: enumNotificationType; // if notification type is not 'general', then define what it is
+    type: enumNotificationType; // if notification type is not 'general', then define what it is
     event: enumEvent; // mandatory
     source: ISource; // add all information you have :)
     isRead: boolean; // added automatically
+    meta: Meta;
     updatedAt?: Timestamp; // added automatically
     createdAt?: Timestamp; // added automatically
 }
 
+// add all information you have :)
 export interface ISource {
     image: string;
     name: string;
@@ -94,40 +96,28 @@ export interface ISource {
     milestoneId?: string;
     postId?: string;
     supportId?: string;
-    collecetiveGoalId?: string;
+    collectiveGoalId?: string;
     templateId?: string;
     userId?: string;
-}// add all information you have :)
-
-export interface INotificationWithPost extends INotificationBase {
-    path: {
-        collectiveGoalId?: string;
-        goalId?: string;
-        postId?: string;
-    }; // defines the path to the post
 }
 
-export interface INotificationWithPostAndSupports extends INotificationWithPost {
-    deadline: string; // deadline for when decision needs to be made
-    supports: NotificationSupport[]; // all supports that need to be decided within this notification
+// defines the path to the post
+export interface PostMeta {
+  collectiveGoalId?: string;
+  goalId?: string;
+  postId?: string;
+  deadline: string; // deadline for when decision needs to be made
+  supports: NotificationSupport[]; // all supports that need to be decided within this notification
 }
 
-export interface INotificationGoalRequest extends INotificationBase {
-    requestPath: {
-        collectiveGoalId?: string;
-        goalId?: string;
-        uidRequestor?: string;
-    };
-    requestStatus: enumRequestStatus;
+export interface GoalRequest {
+  collectiveGoalId?: string;
+  goalId?: string;
+  uidRequestor: string;
+  requestStatus: 'open' | 'accepted' | 'rejected';
 }
 
 export interface INotificationMessageText {
     text: string;
     link?: string;
-}
-
-export enum enumRequestStatus {
-    open,
-    accepted,
-    rejected
 }
