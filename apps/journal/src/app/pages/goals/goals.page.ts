@@ -38,10 +38,10 @@ export class GoalsPage implements OnInit, OnDestroy {
     public user: UserService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private goalStakeholderService: GoalStakeholderService,
-    private _modalCtrl: ModalController,
+    private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public _platform: Platform,
-    private _seo: SeoService
+    public platform: Platform,
+    private seo: SeoService
   ) { }
 
   async ngOnInit() { 
@@ -56,7 +56,7 @@ export class GoalsPage implements OnInit, OnDestroy {
       }
     })
 
-    this._seo.generateTags({ title: `Goals - Strive Journal` })
+    this.seo.generateTags({ title: `Goals - Strive Journal` })
   }
 
   ngOnDestroy() {
@@ -64,21 +64,21 @@ export class GoalsPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this.backBtnSubscription = this._platform.backButton.subscribe(() => { 
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
         this.navCtrl.navigateRoot('explore')
       });
     }
   }
     
   ionViewWillLeave() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
+    if (this.platform.is('android') || this.platform.is('ios')) {
       this.backBtnSubscription.unsubscribe();
     }
   }
 
   async openAuthModal(): Promise<void> {
-    const modal = await this._modalCtrl.create({
+    const modal = await this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login

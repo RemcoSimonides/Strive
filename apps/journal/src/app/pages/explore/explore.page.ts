@@ -14,40 +14,40 @@ import { ScreensizeService } from '../../services/screensize/screensize.service'
 })
 export class ExplorePage implements OnInit {
 
-  private _backBtnSubscription: Subscription
+  private backBtnSubscription: Subscription
 
   constructor(
-    public _instantSearch: InstantSearchService,
+    public instantSearch: InstantSearchService,
     public platform: Platform,
     public screensize: ScreensizeService,
-    private _seo: SeoService,
+    private seo: SeoService,
   ) {}
 
   async ngOnInit() {
-    if (this._instantSearch.lastQuery === '') {
-      this._instantSearch.search('')
+    if (this.instantSearch.lastQuery === '') {
+      this.instantSearch.search('')
     }
 
-    this._seo.generateTags({ title: `Explore - Strive Journal` })
+    this.seo.generateTags({ title: `Explore - Strive Journal` })
   }
 
   async search(event): Promise<void> {
     const query = event.target.value
 
     if (query !== undefined) {
-      this._instantSearch.search(query)
+      this.instantSearch.search(query)
     }
   }
 
   ionViewDidEnter() { 
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this._backBtnSubscription = this.platform.backButton.subscribe(() => { navigator['app'].exitApp(); });
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => { navigator['app'].exitApp(); });
     }
   }
     
   ionViewWillLeave() { 
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+      this.backBtnSubscription.unsubscribe();
     }
   }
 

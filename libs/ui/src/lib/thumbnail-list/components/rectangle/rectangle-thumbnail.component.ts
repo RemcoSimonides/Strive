@@ -7,12 +7,11 @@ import { Platform } from '@ionic/angular';
   styleUrls: ['./rectangle-thumbnail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class RectangleThumbnailComponent {
 
   @Input() type: 'collectiveGoal' | 'goal' | 'template'
   @Input() image: string
-  @Input() isFinished: boolean = true
+  @Input() isFinished: boolean
 
   @ContentChild('thumbTitle') title: TemplateRef<any>
 
