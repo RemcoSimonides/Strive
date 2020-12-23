@@ -5,9 +5,7 @@ export interface IReceiver {
 }
 
 export async function getReceiver( goalId: string, db: FirebaseFirestore.Firestore): Promise<IReceiver> {
-  const stakeholdersColRef: FirebaseFirestore.Query = db
-    .collection(`Goals/${goalId}/GStakeholders`)
-    .where('isAchiever', '==', true);
+  const stakeholdersColRef: FirebaseFirestore.Query = db.collection(`Goals/${goalId}/GStakeholders`).where('isAchiever', '==', true);
   const stakeholdersSnap: FirebaseFirestore.QuerySnapshot = await stakeholdersColRef.get();
 
   if (stakeholdersSnap.docs.length === 1) {

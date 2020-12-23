@@ -3,11 +3,12 @@ import { db, functions, admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
 
-import { INotification } from '@strive/interfaces';
-import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { Notification } from '@strive/notification/+state/notification.firestore';
 import { Profile, User as IUser } from '@strive/user/user/+state/user.firestore';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { sendgridAPIKey, sendgridTemplate } from '../../environments/environment';
+import { createNotification } from '@strive/notification/+state/notification.model';
 
 const API_KEY = sendgridAPIKey;
 const TEMPLATE_ID = sendgridTemplate;
@@ -17,416 +18,270 @@ sgMail.setApiKey(API_KEY)
 // export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
 export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun(async (context) => {
     
-    const dateWeekAgo = moment(context.timestamp).subtract(7, 'days').toDate()
+  const dateWeekAgo = moment(context.timestamp).subtract(7, 'days').toDate()
 
-    // get users
-    const userColRef: admin.firestore.CollectionReference = db.collection(`Users`)
-    const userColSnap: admin.firestore.QuerySnapshot = await userColRef.get()
+  // get users
+  const userColRef = db.collection(`Users`)
+  const userColSnap = await userColRef.get()
     
-    userColSnap.forEach(async userSnap => {
+  userColSnap.forEach(async userSnap => {
 
-        const user: IUser = Object.assign(<IUser>{}, userSnap.data())
+    const user: IUser = Object.assign(<IUser>{}, userSnap.data())
 
-        let mail =  `
-            <h1>Strive Journal update</h1>
-            <h3>Missed notifications</h3>`
+    let mail =  `
+        <h1>Strive Journal update</h1>
+        <h3>Missed notifications</h3>`
 
-        const data: Data = await getData(userSnap.id, dateWeekAgo)
-        if (!hasNewNotifications(data)) return
-        mail += getGoalUpdatesHTML(data)
-        mail += getCollectiveGoalUpdatesHTML(data)
-        mail += getUserUpdates(data.user)
+    const data: Data = await getData(userSnap.id, dateWeekAgo)
+    if (!hasNewNotifications(data)) return
+    mail += getGoalUpdatesHTML(data)
+    mail += getCollectiveGoalUpdatesHTML(data)
+    mail += getUserUpdates(data.user)
 
-        console.log('email', user.email)
-        console.log('mail', mail)
-        await submitEmail(mail, user.email)
+    console.log('email', user.email)
+    console.log('mail', mail)
+    await submitEmail(mail, user.email)
 
-    })
-
-
+  })
 })
 
 function hasNewNotifications(data: Data): boolean {
-    let hasUpdates = false
-
-    data.collectiveGoals.forEach(collectiveGoal => {
-        if (collectiveGoal.notifications.length > 0) {
-            hasUpdates = true
-        }
-    })
-
-    if (!hasUpdates) {
-        data.goals.forEach(goal => {
-            if (goal.notifications.length > 0) {
-                hasUpdates = true
-            }
-        })
-    }
-
-    if (!hasUpdates) {
-        if (data.user.notifications.length > 0) {
-            hasUpdates = true
-        }
-    }
-
-    return hasUpdates
-
+  let hasUpdates = false
+  hasUpdates = data.collectiveGoals.some(collectiveGoal => !!collectiveGoal.notifications.length)
+  if (!hasUpdates) hasUpdates = data.goals.some(goal => !!goal.notifications.length)
+  if (!hasUpdates) hasUpdates = !!data.user.notifications.length
+  return hasUpdates
 }
 
 async function getData(uid: string, fromDate: Date): Promise<Data> {
 
-    const data: Data = {
-        goals: [],
-        collectiveGoals: [],
-        user: { id: '', username: '', notifications: [] }
-    }
+  const data: Data = {
+    goals: [],
+    collectiveGoals: [],
+    user: { id: '', username: '', notifications: [] }
+  }
 
-    data.goals = await getGoals(uid, fromDate)
-    data.collectiveGoals = await getCollectiveGoals(uid, fromDate)
-    data.user = await getUserData(uid, fromDate)
+  data.goals = await getGoals(uid, fromDate)
+  data.collectiveGoals = await getCollectiveGoals(uid, fromDate)
+  data.user = await getUserData(uid, fromDate)
 
-    return  data
+  return data
 }
 
 async function getGoals(uid: string, fromDate: Date): Promise<Goal[]> {
+  const goals: Goal[] = []
 
-    const goals: Goal[] = []
+  // get goals
+  const GStakeholderColRef = db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('goalIsFinished', '==', false)
+  const GStakeholderColSnap = await GStakeholderColRef.get()
 
-    // get goals
-    const GStakeholderColRef: admin.firestore.Query = db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('goalIsFinished', '==', false)
-    const GStakeholderColSnap: admin.firestore.QuerySnapshot = await GStakeholderColRef.get()
+  for (const doc of GStakeholderColSnap.docs) {
+    const GStakeholder = createGoalStakeholder(doc.data())
+    const notifications: Notification[] = await getGoalNotifications(GStakeholder.goalId, fromDate)
 
-    for (const doc of GStakeholderColSnap.docs) {
+    goals.push({
+      id: GStakeholder.goalId,
+      title: GStakeholder.goalTitle,
+      notifications: notifications
+    })
+  }
 
-        const GStakeholder: GoalStakeholder = Object.assign(<GoalStakeholder>{}, doc.data())
-        const notifications: INotification[] = await getGoalNotifications(GStakeholder.goalId, fromDate)
-
-        goals.push({
-            id: GStakeholder.goalId,
-            title: GStakeholder.goalTitle,
-            notifications: notifications
-        })
-
-    }
-
-    return goals
-
+  return goals
 }
 
-async function getGoalNotifications(goalId: string, fromDate: Date): Promise<INotification[]> {
+async function getGoalNotifications(goalId: string, fromDate: Date): Promise<Notification[]> {
 
-    const notifications: INotification[] = []
-    
-    const notificationColRef: admin.firestore.Query = db.collection(`Goals/${goalId}/Notifications`).where('createdAt', '>=', fromDate).orderBy('createdAt')
-    const notificationColSnap: admin.firestore.QuerySnapshot = await notificationColRef.get()
-    notificationColSnap.docs.forEach(notificationSnap => {
+  const notifications: Notification[] = []
+  const notificationColRef = db.collection(`Goals/${goalId}/Notifications`).where('createdAt', '>=', fromDate).orderBy('createdAt')
+  const notificationColSnap = await notificationColRef.get()
+  notificationColSnap.docs.forEach(notificationSnap => {
 
-        const notification: INotification = Object.assign(<INotification>{}, notificationSnap.data())
-        notification.id = notificationSnap.id
-        notifications.push(notification)
+    const notification = createNotification(notificationSnap.data())
+    notification.id = notificationSnap.id
+    notifications.push(notification)
+  })
 
-    })
-
-    return notifications
-
+  return notifications
 }
 
 async function getCollectiveGoals(uid: string, fromDate: Date): Promise<Goal[]> {
 
-    const collectiveGoals: Goal[] = []
+  const collectiveGoals: Goal[] = []
 
-    // get goals
-    const CGStakeholderColRef: admin.firestore.Query = db.collectionGroup(`CGStakeholders`).where(`uid`, `==`, uid)
-    const CGStakeholderColSnap: admin.firestore.QuerySnapshot = await CGStakeholderColRef.get()
+  // get goals
+  const CGStakeholderColRef = db.collectionGroup(`CGStakeholders`).where(`uid`, `==`, uid)
+  const CGStakeholderColSnap = await CGStakeholderColRef.get()
 
-    for (const doc of CGStakeholderColSnap.docs) {
+  for (const doc of CGStakeholderColSnap.docs) {
 
-        const CGStakeholder: ICollectiveGoalStakeholder = Object.assign(<ICollectiveGoalStakeholder>{}, doc.data())
-        const notifications: INotification[] = await getCollectiveGoalNotifications(CGStakeholder.collectiveGoalId, fromDate)
+    const CGStakeholder = createCollectiveGoalStakeholder(doc.data())
+    const notifications: Notification[] = await getCollectiveGoalNotifications(CGStakeholder.collectiveGoalId, fromDate)
 
-        collectiveGoals.push({
-            id: CGStakeholder.collectiveGoalId,
-            title: CGStakeholder.collectiveGoalTitle,
-            notifications: notifications
-        })
-
-    }
-
-    return collectiveGoals
-
+    collectiveGoals.push({
+      id: CGStakeholder.collectiveGoalId,
+      title: CGStakeholder.collectiveGoalTitle,
+      notifications: notifications
+    })
+  }
+  return collectiveGoals
 }
 
-async function getCollectiveGoalNotifications(collectiveGoalId: string, fromDate: Date): Promise<INotification[]> {
+async function getCollectiveGoalNotifications(collectiveGoalId: string, fromDate: Date): Promise<Notification[]> {
 
-    const notifications: INotification[] = []
-    
-    const notificationColRef: admin.firestore.Query = db.collection(`ColleciveGoals/${collectiveGoalId}/Notifications`).where('createdAt', '>=', fromDate).orderBy('createdAt')
-    const notificationColSnap: admin.firestore.QuerySnapshot = await notificationColRef.get()
-    notificationColSnap.docs.forEach(notificationSnap => {
+  const notifications: Notification[] = []
+  const notificationColRef = db.collection(`ColleciveGoals/${collectiveGoalId}/Notifications`).where('createdAt', '>=', fromDate).orderBy('createdAt')
+  const notificationColSnap = await notificationColRef.get()
+  notificationColSnap.docs.forEach(notificationSnap => {
 
-        const notification: INotification = Object.assign(<INotification>{}, notificationSnap.data())
-        notification.id = notificationSnap.id
-        notifications.push(notification)
+    const notification = createNotification(notificationSnap.data())
+    notification.id = notificationSnap.id
+    notifications.push(notification)
+  })
 
-    })
-
-    return notifications
-
+  return notifications
 }
 
 async function getUserData(uid: string, fromDate: Date): Promise<User> {
 
-    const user = <User>{}
-    user.notifications = []
+  const user = <User>{}
+  user.notifications = []
 
-    // get user
-    const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
-    const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-    const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
+  // get user
+  const profileDocRef = db.doc(`Users/${uid}/Profile/${uid}`)
+  const profileDocSnap = await profileDocRef.get()
+  const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
-    user.id = uid
-    user.username = profile.username
+  user.id = uid
+  user.username = profile.username
 
-    const notificationsColRef: admin.firestore.Query = db.collection(`Users/${uid}/Notifications`).where('event', '>=', 400000).where('event', '<', 500000)
-    const notificationsColSnap: admin.firestore.QuerySnapshot = await notificationsColRef.get()
+  const notificationsColRef = db.collection(`Users/${uid}/Notifications`).where('event', '>=', 400000).where('event', '<', 500000)
+  const notificationsColSnap = await notificationsColRef.get()
     
-    notificationsColSnap.docs.forEach(notificationSnap => {
+  notificationsColSnap.docs.forEach(notificationSnap => {
+    const notification = createNotification(notificationSnap.data())
+    notification.id = notificationSnap.id
+    user.notifications.push(notification)
+  })
 
-        const notification: INotification = Object.assign(<INotification>{}, notificationSnap.data())
-        notification.id = notificationSnap.id
+  user.notifications.filter((notification) => {
+    if (!!notification.createdAt) {
+      return notification.createdAt.toDate() >= fromDate ? true : false;
+    } else {
+      return false;
+    }
+  })
 
-        user.notifications.push(notification)
-
-    })
-
-    user.notifications.filter((notification) => {
-        if (!!notification.createdAt) {
-          return notification.createdAt.toDate() >= fromDate ? true : false;
-        } else {
-          return false;
-        }
-    })
-
-    return user
-
+  return user
 }
 
 function getGoalUpdatesHTML(data: Data): string {
+  let html = '' 
 
-    let html = '' 
-
-    data.goals.forEach(goal => {
-        html += getGoalUpdateHTML(goal)
-    })
+  data.goals.forEach(goal => {
+    html += getGoalUpdateHTML(goal)
+  })
     
-
-    return html
+  return html
 }
 
 function getGoalUpdateHTML(goal: Goal): string {
+  let html = `<h2>${goal.title}</h2>`
 
-    let html = `<h2>${goal.title}</h2>`
+  if (!!goal.notifications.length) {
+    html += getNotificationListHTML(goal.notifications)
+  } else {
+    html += 'no updates'
+  }
 
-    if (goal.notifications.length === 0) {
-
-        html += 'no updates'
-
-    } else {
-
-        html += getNotificationListHTML(goal.notifications)
-
-    }
-
-    return html
-
+  return html
 }
 
-function getNotificationListHTML(notifications: INotification[]): string {
+function getNotificationListHTML(notifications: Notification[]): string {
+  let html = '<ul>'
 
-    let html = '<ul>'
+  notifications.forEach(notification => {
+    const date = moment.unix(notification.createdAt?.seconds ?? 0).format('MMM Do, h:mm a')
+    const messageText: string = notification.message.map(messageObj => messageObj.text).join(' ')
 
-    notifications.forEach(notification => {
+    html += `<li>${date}: ${messageText}</li>`
+  })
 
-        const date = moment.unix(notification.createdAt?.seconds || 0).format('MMM Do, h:mm a')
-        const messageText: string = notification.message.map(messageObj => messageObj.text).join(' ')
+  html += '</ul>'
 
-        html += `<li>${date}: ${messageText}</li>`
-    })
-
-    html += '</ul>'
-
-    return html
-
+  return html
 }
 
 function getCollectiveGoalUpdatesHTML(data: Data): string {
+  let html = '' 
 
-    let html = '' 
+  data.collectiveGoals.forEach(collectiveGoal => {
+    html += getCollectiveGoalUpdateHTML(collectiveGoal)
+  })
 
-    data.collectiveGoals.forEach(collectiveGoal => {
-        html += getCollectiveGoalUpdateHTML(collectiveGoal)
-    })
-    
-    return html
-
+  return html
 }
 
 function getCollectiveGoalUpdateHTML(collectiveGoal: CollectiveGoal): string {
+  let html = `<h2>${collectiveGoal.title}</h2>`
 
-    let html = `<h2>${collectiveGoal.title}</h2>`
+  if (!!collectiveGoal.notifications.length) {
+    html += getNotificationListHTML(collectiveGoal.notifications)
+  } else {
+    html += 'no updates'
+  }
 
-    if (collectiveGoal.notifications.length === 0) {
-
-        html += 'no updates'
-
-    } else {
-
-        html += getNotificationListHTML(collectiveGoal.notifications)
-
-    }
-
-    return html
-
+  return html
 }
 
 function getUserUpdates(user: User): string {
+  let html = '<h2>Your personal notifications</h2>'
 
-    let html = '<h2>Your personal notifications</h2>'
+  if (!!user.notifications.length) {
+    html += getNotificationListHTML(user.notifications)
+  } else {
+    html += 'no updates'
+  }
 
-    if (user.notifications.length === 0) {
-        html += 'no updates'
-    } else {
-        html += getNotificationListHTML(user.notifications)
-    }
-
-    return html
+  return html
 }
 
 async function submitEmail(mail: string, receiverEmailAddress: string): Promise<void> {
 
-    console.log('trying to submit email', receiverEmailAddress)
+  console.log('trying to submit email', receiverEmailAddress)
 
-    const msg = {
-        to: 'remcosimonides@gmail.com',
-        from: 'remco@lets.support',
-        templateId: TEMPLATE_ID,
-        dynamic_template_data: {
-            subject: 'Weekly Update',
-            body: mail
-        }
+  const msg = {
+    to: 'remcosimonides@gmail.com',
+    from: 'remco@lets.support',
+    templateId: TEMPLATE_ID,
+    dynamic_template_data: {
+      subject: 'Weekly Update',
+      body: mail
     }
+  }
 
-    await sgMail.send(msg)
-
+  await sgMail.send(msg)
 }
 
 interface Data {
-    collectiveGoals: CollectiveGoal[];
-    goals: Goal[];
-    user: User;
+  collectiveGoals: CollectiveGoal[];
+  goals: Goal[];
+  user: User;
 }
 
 interface Goal {
-    id: string;
-    title: string;
-    notifications: INotification[];
+  id: string;
+  title: string;
+  notifications: Notification[];
 }
 
 interface CollectiveGoal {
-    id: string;
-    title: string;
-    notifications: INotification[];
+  id: string;
+  title: string;
+  notifications: Notification[];
 }
 
 interface User {
-    id: string;
-    username: string;
-    notifications: INotification[];
+  id: string;
+  username: string;
+  notifications: Notification[];
 }
-
-// class EventAggregation {
-
-//     // goal events
-//     goalsFinished: number = 0
-
-//     // roadmap/milestone events
-//     milestonesCompleted: number = 0
-//     milestonesCompletedSuccessfully: number = 0
-//     milestonesCompletedUnsuccessfully: number = 0
-
-//     // stakeholder events
-//     gStakeholderAchieverAdded: number = 0
-//     gStakeholderAchieverRemoved: number = 0
-//     gStakeholderAdminAdded: number = 0
-//     gStakeholderAdminRemoved: number = 0
-//     gStakeholderSupporterAdded: number = 0
-//     gStakeholderSupporterRemoved: number = 0
-//     gStakeholderRequestToJoinPending: number = 0
-//     gStakeholderRequestToJoinAccepted: number = 0
-//     gStakeholderRequestToJoinRejected: number = 0
-
-//     // support events
-//     addedSupports: number = 0
-
-
-//     // constructor() {}
-
-//     public aggregate(event: enumEvent) {
-
-//         switch(event) {
-//             // goal events
-//             case enumEvent.gFinished: {
-//                 ++this.goalsFinished
-//                 break
-//             }
-            
-//             // roadmap/milestone events
-//             case enumEvent.gMilestoneCompletedSuccessfully: {
-//                 ++this.milestonesCompleted
-//                 ++this.milestonesCompletedSuccessfully
-//                 break
-//             }
-//             case enumEvent.gMilestoneCompletedUnsuccessfully: {
-//                 ++this.milestonesCompleted
-//                 ++this.milestonesCompletedUnsuccessfully
-//                 break
-//             }
-
-//             // support events
-//             case enumEvent.gSupportAdded: {
-//                 ++this.addedSupports
-//                 break
-//             }
-
-//             // stakeholder events
-//             case enumEvent.gStakeholderAchieverAdded: {
-//                 ++this.gStakeholderAchieverAdded
-//                 break
-//             }
-//             case enumEvent.gStakeholderAchieverRemoved: {
-//                 ++this.gStakeholderAchieverRemoved
-//                 break
-//             }
-//             case enumEvent.gStakeholderAdminAdded: {
-//                 ++this.gStakeholderAdminAdded
-//                 break
-//             }
-//             case enumEvent.gStakeholderAdminRemoved: {
-//                 ++this.gStakeholderAdminRemoved
-//                 break
-//             }
-//             case enumEvent.gStakeholderSupporterAdded: {
-//                 ++this.gStakeholderSupporterAdded
-//                 break
-//             }
-//             case enumEvent.gStakeholderSupporterRemoved: {
-//                 ++this.gStakeholderSupporterRemoved
-//                 break
-//             }
-
-
-//         }
-
-//     }
-
-// }

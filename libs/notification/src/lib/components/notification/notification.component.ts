@@ -3,7 +3,7 @@ import { ModalController, PopoverController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
 
 // Strive
-import { Notification, PostMeta, enumNotificationType, GoalRequest } from '@strive/notification/+state/notification.firestore';
+import { Notification, SupportDecisionMeta, GoalRequest } from '@strive/notification/+state/notification.firestore';
 import { NotificationOptionsPopover } from '@strive/notification/components/notification-options/notification-options.component';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { NotificationSupport } from '@strive/support/+state/support.firestore';
@@ -12,6 +12,7 @@ import { FirestoreService } from 'apps/journal/src/app/services/firestore/firest
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
+import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 
 @Component({
   selector: 'notification',
@@ -27,9 +28,7 @@ export class NotificationComponent implements OnInit {
   @Input() reference: string
 
   sourcePageRef: string
-  isFromPerson: boolean
-
-  enumNotificationType = enumNotificationType
+  isFromPerson: boolean = false;
 
   constructor(
     private user: UserService,
@@ -44,7 +43,6 @@ export class NotificationComponent implements OnInit {
 
     // determine source page reference
     const source = this.notification.source
-    console.log('source; ', source);
     if (!!source.userId) {
       this.sourcePageRef = `/profile/${source.userId}`
       this.isFromPerson = true
@@ -87,18 +85,18 @@ export class NotificationComponent implements OnInit {
   public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean): Promise<void> {
     notification.meta.requestStatus = isAccepted ? 'accepted' : 'rejected'
 
-    await this.goalStakeholderService.upsert(notification.meta.uidRequestor, notification.meta.goalId, {
+    await this.goalStakeholderService.upsert(notification.meta.uidRequestor, notification.source.goalId, {
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false
     })
     await this.notificationService.upsert(this.user.uid, notification.id, { meta: notification.meta })
   }
 
-  public async chooseReceiver(notification: Notification<PostMeta>, support: NotificationSupport): Promise<void> {
+  public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport): Promise<void> {
 
-    if (notification.type === enumNotificationType.evidence_finalized) return
+    if (!isSupportDecisionNotification(notification)) return
 
-    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.meta.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
+    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.source.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
 
     const chooseAchieverModal = await this.modalCtrl.create({
       component: ChooseAchieverModal,
@@ -106,34 +104,30 @@ export class NotificationComponent implements OnInit {
         stakeholders: stakeholders
       }
     })
-    chooseAchieverModal.onDidDismiss().then((data) => {
-
+    chooseAchieverModal.onDidDismiss().then(data => {
       if (data) {
         support.receiverId = data.data.receiverId
         support.receiverUsername = data.data.receiverUsername
         support.receiverPhotoURL = data.data.receiverPhotoURL
       }
-
     })
 
     await chooseAchieverModal.present()
-
   }
 
-  public async finalizeDecision(notification: Notification<PostMeta>): Promise<void> {
+  public async finalizeDecision(notification: Notification<SupportDecisionMeta>): Promise<void> {
 
     await this.notificationService.finalizeDecision(notification)
-    notification.type = enumNotificationType.evidence_finalized
+    notification.type = 'supportDecision'
+    notification.meta.decisionStatus = 'finalized'
 
   }
 
-  public async removeReceiver(notification: Notification<PostMeta>, support: NotificationSupport): Promise<void> {
-
-    if (notification.type === enumNotificationType.evidence_finalized) return
+  public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport): Promise<void> {
+    if (!isSupportDecisionNotification(notification)) return
 
     support.receiverId = null
     support.receiverUsername = null
     support.receiverPhotoURL = null
-
   }
 }

@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { enumNotificationType, GoalRequest, Notification, PostMeta } from '../+state/notification.firestore';
-import { createNotification, createPostMeta, createGoalRequest, isPost, isGoalRequest } from '../+state/notification.model';
+import { GoalRequest, Notification, SupportDecisionMeta } from '../+state/notification.firestore';
+import { createNotification, createSupportDecisionMeta, createGoalRequest, isSupportDecisionNotification, isGoalRequestNotification } from '../+state/notification.model';
 
 function createNotificationFormControl(params?: Notification) {
   const notification = createNotification(params)
@@ -29,30 +29,28 @@ function createNotificationFormControl(params?: Notification) {
 
 type NotificationControl = ReturnType<typeof createNotificationFormControl>
 
-function createMetaControl(notification: Notification): PostMetaForm | GoalRequestForm | FormGroup {
-  if (isPost(notification)) {
-    return new PostMetaForm(notification.meta)
-  } else if (isGoalRequest(notification)) {
+function createMetaControl(notification: Notification): SupportDecisionForm | GoalRequestForm | FormGroup {
+  if (isSupportDecisionNotification(notification)) {
+    return new SupportDecisionForm(notification.meta)
+  } else if (isGoalRequestNotification(notification)) {
     return new GoalRequestForm(notification.meta)
   }
 }
 
 // PostMeta
-function createPostMetaFormControl(params?: Partial<PostMeta>) {
-  const postMeta = createPostMeta(params)
+function createSupportDecisionMetaFormControl(params?: Partial<SupportDecisionMeta>) {
+  const meta = createSupportDecisionMeta(params)
   return {
-    deadline: new FormControl(postMeta.deadline),
-    supports: new FormControl(postMeta.supports),
-    collectiveGoalId: new FormControl(postMeta.collectiveGoalId),
-    goalId: new FormControl(postMeta.goalId),
-    postId: new FormControl(postMeta.postId)
+    deadline: new FormControl(meta.deadline),
+    supports: new FormControl(meta.supports),
+    decisionStatus: new FormControl(meta.decisionStatus)
   }
 }
 
-type PostMetaControl = ReturnType<typeof createPostMetaFormControl>
-export class PostMetaForm extends FormEntity<PostMetaControl, PostMeta> {
-  constructor(postMeta?: Partial<PostMeta>) {
-    super(createPostMetaFormControl(postMeta))
+type SupportDecisionMetaControl = ReturnType<typeof createSupportDecisionMetaFormControl>
+export class SupportDecisionForm extends FormEntity<SupportDecisionMetaControl, SupportDecisionMeta> {
+  constructor(meta?: Partial<SupportDecisionMeta>) {
+    super(createSupportDecisionMetaFormControl(meta))
   }
 }
 

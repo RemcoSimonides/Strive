@@ -1,6 +1,5 @@
 import { db, functions } from '../../internals/firebase';
 
-import { enumMilestoneStatus } from '@strive/interfaces';
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore';
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
@@ -11,126 +10,117 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared/utils';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
-import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-        const goal: Goal = Object.assign(<Goal>{}, snapshot.data())
-        const goalId = snapshot.id
-        if (!goal) return
+    const goal = createGoal(snapshot.data())
+    const goalId = snapshot.id
 
-        // algolia
-        if (goal.publicity === 'public') {
+    // algolia
+    if (goal.publicity === 'public') {
+      await addToAlgolia('goal', goalId, {
+        goalId: goalId,
+        ...goal
+      })
+    }
 
-            await addToAlgolia('goal', goalId, {
-                goalId: goalId,
-                ...goal
-            })
+    // notifications
+    await handleNotificationsOfCreatedGoal(goalId, goal)
 
+    // deadline
+    if (!!goal.deadline) {
+      await upsertScheduledTask(goalId, {
+        worker: enumWorkerType.goalDeadline,
+        performAt: goal.deadline,
+        options: {
+            goalId: goalId
         }
-
-        // notifications
-        await handleNotificationsOfCreatedGoal(goalId, goal)
-
-        // deadline
-        if (goal.deadline) {
-            await upsertScheduledTask(goalId, {
-                worker: enumWorkerType.goalDeadline,
-                performAt: goal.deadline,
-                options: {
-                    goalId: goalId
-                }
-            })
-        }
-
-    })
+      })
+    }
+  })
 
 export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
-    .onDelete(async (snapshot, context) => {
+  .onDelete(async (snapshot, context) => {
 
-        const goalId = snapshot.id
+    const goalId = snapshot.id
 
-        try {
-            await deleteFromAlgolia('goal', goalId)
-        } catch (err) {
-            console.log('deleting from Algolia error', err)
-        }
-        await deleteScheduledTask(goalId)
+    try {
+      await deleteFromAlgolia('goal', goalId)
+    } catch (err) {
+      console.log('deleting from Algolia error', err)
+    }
+    await deleteScheduledTask(goalId)
 
-        const promises: any[] = []
-        
-        //delete subcollections too
-        promises.push(deleteCollection(db, `Goals/${goalId}/Milestones`, 500))
-        promises.push(deleteCollection(db, `Goals/${goalId}/Supports`, 500))
-        promises.push(deleteCollection(db, `Goals/${goalId}/Posts`, 500))
-        promises.push(deleteCollection(db, `Goals/${goalId}/InviteTokens`, 500))
-        promises.push(deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500))
+    const promises: any[] = []
+    
+    //delete subcollections too
+    promises.push(deleteCollection(db, `Goals/${goalId}/Milestones`, 500))
+    promises.push(deleteCollection(db, `Goals/${goalId}/Supports`, 500))
+    promises.push(deleteCollection(db, `Goals/${goalId}/Posts`, 500))
+    promises.push(deleteCollection(db, `Goals/${goalId}/InviteTokens`, 500))
+    promises.push(deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500))
 
-        await Promise.all(promises)
-
-    })
+    await Promise.all(promises)
+  })
 
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
-    .onUpdate(async (snapshot, context) => {
+  .onUpdate(async (snapshot, context) => {
 
-        const before: Goal = Object.assign(<Goal>{}, snapshot.before.data())
-        const after: Goal = Object.assign(<Goal>{}, snapshot.after.data())
-        if (!before) return
-        if (!after) return
+    const before = createGoal(snapshot.before.data())
+    const after = createGoal(snapshot.after.data())
+    const goalId = context.params.goalId
 
-        const goalId = context.params.goalId
+    // notifications
+    await handleNotificationsOfChangedGoal(goalId, before, after)
 
-        // notifications
-        await handleNotificationsOfChangedGoal(goalId, before, after)
+    if (before.isFinished !== after.isFinished ||
+      before.publicity !== after.publicity ||
+      before.title !== after.title) {
 
-        if (before.isFinished !== after.isFinished ||
-            before.publicity !== after.publicity ||
-            before.title !== after.title) {
+      // change value on stakeholder docs
+      await updateGoalStakeholders(goalId, after)
+    }
 
-            // change value on stakeholder docs
-            await updateGoalStakeholders(goalId, after)
-        }
+    if (before.isFinished !== after.isFinished) {
+      if (after.isFinished) {
+        await handleUnfinishedMilestones(goalId)
+      }
+    }
 
-        if (before.isFinished !== after.isFinished) {
-            if (after.isFinished) {
-                await handleUnfinishedMilestones(goalId)
-            }
-        }
+    if (before.publicity !== after.publicity) {
+      if (after.publicity === 'public') {
+        // add to algolia
+        await addToAlgolia('goal', goalId, {
+          goalId: goalId,
+          ...after
+        })
+      } else {
+        // delete goal from Algolia index
+        await deleteFromAlgolia('goal', goalId)
+      }
 
-        if (before.publicity !== after.publicity) {
-            if (after.publicity === 'public') {
-                // add to algolia
-                await addToAlgolia('goal', goalId, {
-                    goalId: goalId,
-                    ...after
-                })
-            } else {
-                // delete goal from Algolia index
-                await deleteFromAlgolia('goal', goalId)
-            }
+    } else if (before.title !== after.title ||
+      before.image !== after.image ||
+      before.shortDescription !== after.shortDescription) {
 
-        } else if (before.title !== after.title ||
-            before.image !== after.image ||
-            before.shortDescription !== after.shortDescription) {
+      await updateAlgoliaObject('goal', goalId, after)
+    }
 
-                await updateAlgoliaObject('goal', goalId, after)
-        }
-
-        // deadline
-        if (before.deadline !== after.deadline) {
-            if (!after.isOverdue) {
-                await upsertScheduledTask(goalId, {
-                    worker: enumWorkerType.goalDeadline,
-                    performAt: after.deadline ? after.deadline : '',
-                    options: {
-                        goalId: goalId
-                    }
-                })
-            }
-        }
-
-    })
+    // deadline
+    if (before.deadline !== after.deadline) {
+      if (!after.isOverdue) {
+        await upsertScheduledTask(goalId, {
+          worker: enumWorkerType.goalDeadline,
+          performAt: after.deadline ? after.deadline : '',
+          options: {
+              goalId: goalId
+          }
+        })
+      }
+    }
+  })
 
 export const duplicateGoal = functions.https.onCall(async (data: { goalId: string }, context: CallableContext): Promise<ErrorResultResponse> => {
 
@@ -202,44 +192,38 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
   }
 })
 
-async function updateGoalStakeholders(goalId: string, after): Promise<void> {
+async function updateGoalStakeholders(goalId: string, after: Goal) {
 
-    const stakeholdersColRef: FirebaseFirestore.CollectionReference = db.collection(`Goals/${goalId}/GStakeholders`)
-    const stakeholdersSnap: FirebaseFirestore.QuerySnapshot = await stakeholdersColRef.get()
+  const stakeholdersColRef = db.collection(`Goals/${goalId}/GStakeholders`)
+  const stakeholdersSnap = await stakeholdersColRef.get()
     
-    const promises: any[] = []
-    stakeholdersSnap.forEach(stakeholderSnap => {
+  const promises: any[] = []
+  stakeholdersSnap.forEach(stakeholderSnap => {
 
-        const promise = stakeholderSnap.ref.update({
-            goalId: goalId,
-            goalTitle: after.title,
-            goalPublicity: after.publicity,
-            goalIsFinished: after.isFinished
-        })
-
-        promises.push(promise)
-
+    const promise = stakeholderSnap.ref.update({
+      goalId: goalId,
+      goalTitle: after.title,
+      goalPublicity: after.publicity,
+      goalIsFinished: after.isFinished
     })
 
-    await Promise.all(promises)
+    promises.push(promise)
+  })
 
+  await Promise.all(promises)
 }
 
-async function handleUnfinishedMilestones(goalId: string): Promise<void> {
+async function handleUnfinishedMilestones(goalId: string) {
 
-    const milestonesRef = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', enumMilestoneStatus.pending)
-    const milestonesSnap = await milestonesRef.get()
+  const milestonesRef = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', enumMilestoneStatus.pending)
+  const milestonesSnap = await milestonesRef.get()
     
-    const promises: any[] = []
-    milestonesSnap.forEach(milestoneSnap => {
-
-        const promise = milestoneSnap.ref.update({
-            status: enumMilestoneStatus.neutral
-        })
-        promises.push(promise)
-
+  const promises: any[] = []
+  milestonesSnap.forEach(milestoneSnap => {
+    const promise = milestoneSnap.ref.update({
+      status: enumMilestoneStatus.neutral
     })
-
-    await Promise.all(promises)
-
+    promises.push(promise)
+  })
+  await Promise.all(promises)
 }

@@ -1,52 +1,47 @@
 import { functions } from '../../../internals/firebase';
-import { INotificationWithPost, enumNotificationType, enumEvent, enumDiscussionAudience } from '@strive/interfaces';
+import { enumEvent } from '@strive/notification/+state/notification.firestore'
 import { Post } from '@strive/post/+state/post.firestore';
 import { sendNotificationToGoalStakeholders, sendNotificationToGoal, createDiscussion } from '../../../shared/notification/notification'
+import { createNotification } from '@strive/notification/+state/notification.model';
+import { enumDiscussionAudience } from '@strive/interfaces';
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-        const post: Post = Object.assign(<Post>{}, snapshot.data())
-        const goalId = context.params.goalId
-        const postId = context.params.postId
-        if (!post) return
+    const post: Post = Object.assign(<Post>{}, snapshot.data())
+    const goalId = context.params.goalId
+    const postId = context.params.postId
+    if (!post) return
 
-        if (!post.isEvidence) {
-            await createDiscussion(post.content.title, { image: post.goal.image, name: `Discussion - ${post.content.title}`, goalId: post.goal.id }, enumDiscussionAudience.public, postId)
-            await sendNotificationNewPost(goalId, postId, post)
-        }
-
-    })
+    if (!post.isEvidence) {
+      await createDiscussion(post.content.title, { image: post.goal.image, name: `Discussion - ${post.content.title}`, goalId: post.goal.id }, enumDiscussionAudience.public, postId)
+      sendNotificationNewPost(goalId, postId, post)
+    }
+  })
 
 // NEW POST
-async function sendNotificationNewPost(goalId: string, postId: string, post: Post): Promise<void> {
+function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
 
-    const notification: Partial<INotificationWithPost> = {
-        discussionId: postId,
-        event: enumEvent.gNewPost,
-        source: {
-            image: post.goal.image,
-            name: post.goal.title,
-            goalId: goalId,
-            postId: postId
-        },
-        notificationType: enumNotificationType.post,
-        path: {
-            goalId: goalId,
-            postId: postId
-        }
+  const notification = createNotification({
+    discussionId: postId,
+    event: enumEvent.gNewPost,
+    source: {
+        image: post.goal.image,
+        name: post.goal.title,
+        goalId: goalId,
+        postId: postId
     }
-    await sendNotificationToGoal(goalId, notification)
+  })
+  sendNotificationToGoal(goalId, notification)
 
-    notification.message = [
-        {
-            text: post.author.username,
-            link: `profile/${post.author.id}`
-        },
-        {
-            text: ` just created a new post`
-        },
-    ]
-    await sendNotificationToGoalStakeholders(goalId, notification, true, true, true)
-
+  notification.message = [
+    {
+      text: post.author.username,
+      link: `profile/${post.author.id}`
+    },
+    {
+      text: ` just created a new post`
+    },
+  ]
+  sendNotificationToGoalStakeholders(goalId, notification, true, true, true)
 }

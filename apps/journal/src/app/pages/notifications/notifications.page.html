@@ -1,37 +1,47 @@
 <strive-header title="Notifications" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
-<ng-container *ngIf="pageIsLoading">
-  <strive-page-loading></strive-page-loading>
+<ng-container *ngIf="user.isLoggedIn$ | async; else notLoggedIn">
+  <ng-container *ngIf="paginationService.data | async as notifications; else loading">
+
+    <ion-content>
+      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="arrow-down"
+          refreshingSpinner="circles">
+        </ion-refresher-content>
+      </ion-refresher>
+    
+      <section fxLayout="column" fxLayoutAlign="center start">
+    
+        <ng-container *ngFor="let notification of notifications">
+          <notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification>
+        </ng-container>
+          
+        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      
+      </section>
+    </ion-content>
+
+  </ng-container>
 </ng-container>
 
-<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !pageIsLoading">
-  <p>
-      <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
-  </p>
-</div>
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
+</ng-template>
 
-<ion-content class="ion-padding" *ngIf="!pageIsLoading && (user.isLoggedIn$ | async)">
+<ng-template #notLoggedIn>
+  <div class="not-logged-in">
+    <p>
+        <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
+    </p>
+  </div>
+</ng-template>
 
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="arrow-down"
-      refreshingSpinner="circles">
-    </ion-refresher-content>
-  </ion-refresher>
 
-  <section fxLayout="column" fxLayoutAlign="center start">
-
-    <ng-container *ngFor="let notification of paginationService.data | async">
-      <notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification>
-    </ng-container>
-      
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Loading more data...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
   
-  </section>
-</ion-content>
   

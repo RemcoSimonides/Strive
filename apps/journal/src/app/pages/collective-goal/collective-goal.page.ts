@@ -22,7 +22,7 @@ import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+
 import { ITemplate } from '@strive/interfaces';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { ICollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
+import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
 import { Plugins } from '@capacitor/core';
 const { Share } = Plugins;
@@ -42,7 +42,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
   templates$: Observable<ITemplate[]>
   goals$: Observable<Goal[]>
-  stakeholders$: Observable<ICollectiveGoalStakeholder[]>
+  stakeholders$: Observable<CollectiveGoalStakeholder[]>
 
   isAdmin = false
   isAchiever = false
@@ -82,7 +82,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     //Get current users' rights
     this.profileSubscription = this.user.profile$.pipe(
       switchMap(profile => !!profile ? this.collectiveGoalStakeholderService.getStakeholderDocObs(this.user.uid, this.collectiveGoalId) : of({})
-    )).subscribe(async (stakeholder: ICollectiveGoalStakeholder | undefined) => {
+    )).subscribe(async (stakeholder: CollectiveGoalStakeholder | undefined) => {
       let access: boolean = this.collectiveGoal.isPublic
 
       if (!!stakeholder) {
@@ -253,7 +253,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     await modal.present()
   }
 
-  public async toggleAdmin(stakeholder: ICollectiveGoalStakeholder): Promise<void> {
+  public async toggleAdmin(stakeholder: CollectiveGoalStakeholder): Promise<void> {
     event.preventDefault()
     event.stopPropagation()
 
@@ -277,7 +277,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     await alert.present()
   }
 
-  public async toggleAchiever(stakeholder: ICollectiveGoalStakeholder): Promise<void> {
+  public async toggleAchiever(stakeholder: CollectiveGoalStakeholder): Promise<void> {
     event.preventDefault()
     event.stopPropagation()
 

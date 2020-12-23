@@ -4,9 +4,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
 import {
-  enumNotificationType,
   Notification,
-  PostMeta
+  SupportDecisionMeta
 } from './notification.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore'
 
@@ -20,24 +19,23 @@ export class NotificationService {
     private db: FirestoreService,
   ) { }
 
-  async finalizeDecision(notification: Notification<PostMeta>): Promise<void> {
+  async finalizeDecision(notification: Notification<SupportDecisionMeta>): Promise<void> {
 
     // TODO CHECK THIS AGAIN - it's probably incorrect!
 
-    const data = {
-      notificationType: enumNotificationType.evidence_finalized,
+    const meta: Partial<SupportDecisionMeta> = {
+      decisionStatus: 'finalized',
       supports: notification.meta.supports
     }
 
     const { uid } = await this.afAuth.currentUser;
 
     // Update Notification to replace timer and buttons by status
-    await this.db.upsert<Notification<PostMeta>>(`Users/${uid}/Notifications/${notification.id}`, data)
+    await this.db.upsert<Notification<SupportDecisionMeta>>(`Users/${uid}/Notifications/${notification.id}`, { meta })
 
   }
 
   async resetNumberOfUnreadNotifications(): Promise<void> {
-    
     const { uid } = await this.afAuth.currentUser;
     await this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, {
       numberOfUnreadNotifications: 0
@@ -49,8 +47,6 @@ export class NotificationService {
   }
 
   async delete(reference: string): Promise<void> {
-
     await this.db.doc(reference).delete()
-
   }
 }

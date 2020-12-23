@@ -1,18 +1,19 @@
 import { db, functions, admin } from '../../../internals/firebase';
-import { ITemplate, INotificationBase, enumEvent } from '@strive/interfaces';
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
+import { ITemplate } from '@strive/interfaces';
+import { createCollectiveGoal, ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
+import { createNotification } from '@strive/notification/+state/notification.model';
+import { enumEvent } from '@strive/notification/+state/notification.firestore';
 
 export const templateCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate((snapshot, context) => {
 
-        const template: ITemplate = Object.assign(<ITemplate>{}, snapshot.data())
-        const collectiveGoalId = context.params.collectiveGoalId
-        const templateId = context.params.templateId
+    const template: ITemplate = Object.assign(<ITemplate>{}, snapshot.data())
+    const collectiveGoalId = context.params.collectiveGoalId
+    const templateId = context.params.templateId
 
-        await sendNewTemplateNotification(collectiveGoalId, templateId, template)
-
-    })
+    sendNewTemplateNotification(collectiveGoalId, templateId, template)
+  })
 
 // export const templateDeletedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)
 //     .onDelete(async (snapshot, context) => {
@@ -35,34 +36,33 @@ export const templateCreatedHandler = functions.firestore.document(`CollectiveGo
 
 //     })
 
-async function sendNewTemplateNotification(collectiveGoalId: string, templateId: string, template: ITemplate): Promise<void> {
+async function sendNewTemplateNotification(collectiveGoalId: string, templateId: string, template: ITemplate) {
 
-    const collectiveGoalRef: admin.firestore.DocumentReference = db.doc(`CollectiveGoals/${collectiveGoalId}`)
-    const collectiveGoalSnap: admin.firestore.DocumentSnapshot = await collectiveGoalRef.get()
-    const collectiveGoal: ICollectiveGoal = Object.assign(<ICollectiveGoal>{}, collectiveGoalSnap.data()) 
+  const collectiveGoalRef = db.doc(`CollectiveGoals/${collectiveGoalId}`)
+  const collectiveGoalSnap = await collectiveGoalRef.get()
+  const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data()) 
 
-    const notification: Partial<INotificationBase> = {
-        discussionId: templateId,
-        event: enumEvent.cgTemplateAdded,
-        source: {
-            image: collectiveGoal.image,
-            name: collectiveGoal.title,
-            collecetiveGoalId: collectiveGoalId,
-            templateId: templateId
-        },
-        message: [
-            {
-                text: `New template '`
-            },
-            {
-                text: template.title,
-                link: `collective-goal/${collectiveGoalId}/template/${templateId}`
-            },
-            {
-                text: `' has been created! Check it out`
-            }
-        ]
-    }
-
-    await sendNotificationToCollectiveGoalStakeholders(collectiveGoalId, notification, true, true)
+  const notification = createNotification({
+    discussionId: templateId,
+    event: enumEvent.cgTemplateAdded,
+    source: {
+      image: collectiveGoal.image,
+      name: collectiveGoal.title,
+      collectiveGoalId: collectiveGoalId,
+      templateId: templateId
+    },
+    message: [
+      {
+        text: `New template '`
+      },
+      {
+        text: template.title,
+        link: `collective-goal/${collectiveGoalId}/template/${templateId}`
+      },
+      {
+        text: `' has been created! Check it out`
+      }
+    ]
+  })
+  sendNotificationToCollectiveGoalStakeholders(collectiveGoalId, notification, true, true)
 }

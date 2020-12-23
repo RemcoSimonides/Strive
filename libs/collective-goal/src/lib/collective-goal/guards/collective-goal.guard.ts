@@ -5,7 +5,7 @@ import { CollectiveGoalService } from '../+state/collective-goal.service';
 import { CollectiveGoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { ICollectiveGoalStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
+import { CollectiveGoalStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
 import { ICollectiveGoal } from '../+state/collective-goal.firestore';
 
 @Injectable({ providedIn: 'root' })
@@ -33,7 +33,7 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
     }
     
     // get stakeholder
-    const stakeholder: ICollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(this.user.uid, collectiveGoalId)
+    const stakeholder: CollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(this.user.uid, collectiveGoalId)
 
     let access: boolean = false
     if (stakeholder) {

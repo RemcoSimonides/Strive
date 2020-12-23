@@ -1,35 +1,27 @@
 :host {
   width: 100%;
+  margin: 4px 0;
 }
 
-.notification {
-  margin-top: 4px;
-  margin-bottom: 4px;
+ion-grid {
+  width: 100%;
+}
 
-  ion-grid {
-    width: 100%;
+.notification-header {
+  align-items: flex-end;
+
+  #name {
+    font-size: 1.1rem;
+    font-weight: bold;
   }
-
-  .notification-header {
-    align-items: flex-end;
-
-    #name {
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-    #date {
-      font-size: 0.8rem;
-      padding-left: 5px;
-      opacity: 0.8;
-    }
-    #options {
-      margin-right: 0px;
-      margin-left: auto;
-    }
+  #date {
+    font-size: 0.8rem;
+    padding-left: 5px;
+    opacity: 0.8;
   }
-
-  .item-message {
-    flex-grow: 1;
+  #options {
+    margin-right: 0px;
+    margin-left: auto;
   }
 }
 
@@ -91,7 +83,7 @@ ion-checkbox {
   margin-bottom: 7px;
 }
 
-.post {
+strive-post {
   margin: auto;
   width: 100%;
 }

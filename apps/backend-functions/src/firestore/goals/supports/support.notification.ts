@@ -1,254 +1,231 @@
 import * as admin from 'firebase-admin'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { INotificationBase, enumEvent, enumNotificationType, enumDiscussionAudience } from '@strive/interfaces'
+import { enumDiscussionAudience } from '@strive/interfaces'
+import { enumEvent } from '@strive/notification/+state/notification.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
 import { sendNotificationToGoalStakeholders, sendNotificationToUsers, createDiscussion } from "../../../shared/notification/notification"
 import { enumImage } from '@strive/interfaces';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createNotification } from '@strive/notification/+state/notification.model';
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
 
 export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: Support): Promise<void> {
 
-    await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, enumDiscussionAudience.achievers, supportId)
-    await sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
-
+  await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, enumDiscussionAudience.achievers, supportId)
+  await sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
 }
 
 export async function handleNotificationsOfChangedSupport(supportId: string, goalId: string, before: Support, after: Support): Promise<void> {
 
-    if (before.status !== after.status) {
-        if (after.status === 'paid') {
-            await sendSupportPaidNotification(supportId, after)
-        }
-
-        if (after.status === 'rejected') {
-            await sendSupportRejectedNotification(supportId, goalId, after)
-        }
-
-        if (after.status === 'waiting_to_be_paid') {
-            await sendSupportIsWaitingToBePaid(supportId, after)
-        }
-
+  if (before.status !== after.status) {
+    if (after.status === 'paid') {
+      await sendSupportPaidNotification(supportId, after)
     }
 
+    if (after.status === 'rejected') {
+      await sendSupportRejectedNotification(supportId, goalId, after)
+    }
+
+    if (after.status === 'waiting_to_be_paid') {
+      await sendSupportIsWaitingToBePaid(supportId, after)
+    }
+  }
 }
 
-async function sendNewSupportNotificationToAchieversOfGoal(supportId: string, goalId: string, support: Support): Promise<void> {
+function sendNewSupportNotificationToAchieversOfGoal(supportId: string, goalId: string, support: Support) {
 
-    //Prepare notification object
-    const newNotification: INotificationBase = {
-        id: goalId,
-        discussionId: supportId,
-        event: enumEvent.gSupportAdded,
-        source: {
-            image: enumImage.supportLogo,
-            name: support.goal.title,
-            goalId: goalId,
-            supportId: supportId
-        },
-        notificationType: enumNotificationType.general,
-        message: [
-            {
-                text: support.supporter.username,
-                link: `profile/${support.supporter.uid}`
-            },
-            {
-                text: support.milestone && support.milestone.description ? ` is now supporting milestone ${support.milestone.description}` : ` is now supporting`
-            },
-            {
-                text: ` with ${support.description}`
-            }
-        ],
-        isRead: false,
-        createdAt: serverTimestamp() as Timestamp,
-        updatedAt: serverTimestamp() as Timestamp
-    }
-    await sendNotificationToGoalStakeholders(goalId, newNotification, undefined, true)
-
+  //Prepare notification object
+  const newNotification = createNotification({
+    id: goalId,
+    discussionId: supportId,
+    event: enumEvent.gSupportAdded,
+    source: {
+      image: enumImage.supportLogo,
+      name: support.goal.title,
+      goalId: goalId,
+      supportId: supportId
+    },
+    message: [
+      {
+        text: support.supporter.username,
+        link: `profile/${support.supporter.uid}`
+      },
+      {
+        text: support.milestone && support.milestone.description ? ` is now supporting milestone ${support.milestone.description}` : ` is now supporting`
+      },
+      {
+        text: ` with ${support.description}`
+      }
+    ],
+    isRead: false,
+    createdAt: serverTimestamp() as Timestamp,
+    updatedAt: serverTimestamp() as Timestamp
+  })
+  sendNotificationToGoalStakeholders(goalId, newNotification, undefined, true)
 }
 
-async function sendSupportPaidNotification(supportId: string, support: Support): Promise<void> {
+function sendSupportPaidNotification(supportId: string, support: Support) {
 
-    if (!support.receiver || !support.receiver.uid) return
-    if (support.receiver.uid === support.supporter.uid) return
+  if (!support.receiver || !support.receiver.uid) return
+  if (support.receiver.uid === support.supporter.uid) return
 
-    const notification: Partial<INotificationBase> = {
-        discussionId: supportId,
-        event: enumEvent.gSupportPaid,
-        source: {
-            image: enumImage.supportLogo,
-            name: support.goal.title,
-            goalId: support.goal.id,
-            supportId: supportId
-        },
-        message: [
-            {
-                text: support.supporter.username,
-                link: `profile/${support.supporter.uid}`
-            },
-            {
-                text: ` paid support '${support.description}'`
-            }
-        ]
-    }
+  const notification = createNotification({
+    discussionId: supportId,
+    event: enumEvent.gSupportPaid,
+    source: {
+      image: enumImage.supportLogo,
+      name: support.goal.title,
+      goalId: support.goal.id,
+      supportId: supportId
+    },
+    message: [
+      {
+        text: support.supporter.username,
+        link: `profile/${support.supporter.uid}`
+      },
+      {
+        text: ` paid support '${support.description}'`
+      }
+    ]
+  })
 
-    const receivers: string[] = []
-    receivers.push(support.receiver.uid ? support.receiver.uid : '')
+  const receivers: string[] = []
+  receivers.push(support.receiver.uid ? support.receiver.uid : '')
 
-    await sendNotificationToUsers(notification, receivers)
-
+  sendNotificationToUsers(notification, receivers)
 }
 
-async function sendSupportRejectedNotification(supportId: string, goalId: string, support: Support): Promise<void> {
+function sendSupportRejectedNotification(supportId: string, goalId: string, support: Support) {
 
-    let notification: Partial<INotificationBase>
+  const notification = createNotification({
+    discussionId: supportId,
+    event: enumEvent.gSupportRejected,
+    source: {
+      image: enumImage.supportLogo,
+      name: support.goal.title,
+      goalId: goalId,
+      supportId: supportId
+    },
+  })
 
-    if (support.milestone) {
-        // milestone support
-        notification = {
-            discussionId: supportId,
-            event: enumEvent.gSupportRejected,
-            source: {
-                image: enumImage.supportLogo,
-                name: support.goal.title,
-                goalId: goalId,
-                supportId: supportId
-            },
-            message: [
-                {
-                    text: support.supporter.username,
-                    link: `profile/${support.supporter.uid}`
-                },
-                {
-                    text: ` rejected paying support '${support.description}' for milestone '${support.milestone.description}' in goal '`
-                },
-                {
-                    text: support.goal.title,
-                    link: `goal/${support.goal.id}`
-                },
-                {
-                    text: `'`
-                }
-            ]
-        }
-    } else {
-        // goal support
-        notification = {
-            discussionId: supportId,
-            event: enumEvent.gSupportRejected,
-            source: {
-                image: enumImage.supportLogo,
-                name: support.goal.title,
-                goalId: goalId,
-                supportId: supportId
-            },
-            message: [
-                {
-                    text: support.supporter.username,
-                    link: `profile/${support.supporter.uid}`
-                },
-                {
-                    text: ` rejected paying support '${support.description}' for goal '`
-                },
-                {
-                    text: support.goal.title,
-                    link: `goal/${support.goal.id}`
-                },
-                {
-                    text: `'`
-                }
-            ]
-        }
-    }
-    
-    await sendNotificationToGoalStakeholders(goalId, notification, true, true, false)
-    
+  if (support.milestone) {
+    notification.message = [
+      {
+        text: support.supporter.username,
+        link: `profile/${support.supporter.uid}`
+      },
+      {
+        text: ` rejected paying support '${support.description}' for milestone '${support.milestone.description}' in goal '`
+      },
+      {
+        text: support.goal.title,
+        link: `goal/${support.goal.id}`
+      },
+      {
+        text: `'`
+      } 
+    ]
+  } else {
+    notification.message = [
+      {
+        text: support.supporter.username,
+        link: `profile/${support.supporter.uid}`
+      },
+      {
+          text: ` rejected paying support '${support.description}' for goal '`
+      },
+      {
+          text: support.goal.title,
+          link: `goal/${support.goal.id}`
+      },
+      {
+          text: `'`
+      }
+    ]
+  }    
+  sendNotificationToGoalStakeholders(goalId, notification, true, true, false)  
 }
 
-async function sendSupportIsWaitingToBePaid(supportId: string, support: Support): Promise<void> {
+function sendSupportIsWaitingToBePaid(supportId: string, support: Support) {
 
-    if (!support.receiver || !support.receiver.uid) return
-    if (support.receiver.uid === support.supporter.uid) return
+  if (!support.receiver || !support.receiver.uid) return
+  if (support.receiver.uid === support.supporter.uid) return
 
-    const notification: Partial<INotificationBase> = {
-        discussionId: supportId,
-        event: enumEvent.gSupportWaitingToBePaid,
-        source: {
-            image: enumImage.supportLogo,
-            name: support.goal.title,
-            goalId: support.goal.id,
-            supportId: supportId
-        },
-        message: [
-            {
-                text: support.supporter.username,
-                link: `profile/${support.supporter.uid}`
-            },
-            {
-                text: ` is going to give you the support '${support.description}' :)`
-            }
-        ]
-    }
+  const notification = createNotification({
+    discussionId: supportId,
+    event: enumEvent.gSupportWaitingToBePaid,
+    source: {
+      image: enumImage.supportLogo,
+      name: support.goal.title,
+      goalId: support.goal.id,
+      supportId: supportId
+    },
+    message: [
+      {
+        text: support.supporter.username,
+        link: `profile/${support.supporter.uid}`
+      },
+      {
+        text: ` is going to give you the support '${support.description}' :)`
+      }
+    ]
+  })
 
-    const receivers: string[] = []
-    receivers.push(support.receiver.uid ? support.receiver.uid : '')
+  const receivers: string[] = []
+  receivers.push(support.receiver.uid ? support.receiver.uid : '')
 
-    await sendNotificationToUsers(notification, receivers)
-
+  sendNotificationToUsers(notification, receivers)
 }
 
-export async function sendSupportDeletedNotification(goalId: string, supportId: string,  support: Support): Promise<void> {
+export async function sendSupportDeletedNotification(goalId: string, supportId: string,  support: Support) {
 
-    // get goal doc for image
-    const goalDocRef: FirebaseFirestore.DocumentReference = db.doc(`Goals/${goalId}`)
-    const goalDocSnap: FirebaseFirestore.DocumentSnapshot = await goalDocRef.get()
-    const goal: Goal = Object.assign(<Goal>{}, goalDocSnap.data())
+  // get goal doc for image
+  const goalDocRef = db.doc(`Goals/${goalId}`)
+  const goalDocSnap = await goalDocRef.get()
+  const goal = createGoal(goalDocSnap.data())
 
-    // send notification
-    if (support.milestone !== undefined) {
+  // send notification
+  if (!!support.milestone) {
 
-        // because milestone has been deleted
-        const notification: Partial<INotificationBase> = {
-            discussionId: support.milestone.id,
-            event: enumEvent.gSupportDeleted,
-            source: {
-                image: goal.image,
-                name: goal.title,
-                goalId: goalId,
-                milestoneId: support.milestone.id,
-                supportId: supportId
-            },
-            message: [
-                {
-                    text: `Support '${support.description}' has been deleted because milestone '${support.milestone.description}' has been deleted`
-                }
-            ]
+    // because milestone has been deleted
+    const notification = createNotification({
+      discussionId: support.milestone.id,
+      event: enumEvent.gSupportDeleted,
+      source: {
+        image: goal.image,
+        name: goal.title,
+        goalId: goalId,
+        milestoneId: support.milestone.id,
+        supportId: supportId
+      },
+      message: [
+        {
+          text: `Support '${support.description}' has been deleted because milestone '${support.milestone.description}' has been deleted`
         }
-        await sendNotificationToUsers(notification, [support.supporter.uid])
-
-    } else {
-        
-        // because goal has been deleted
-        const notification: Partial<INotificationBase> = {
-            discussionId:  support.goal.id,
-            event: enumEvent.gSupportDeleted,
-            source: {
-                image: goal.image,
-                name:  goal.title,
-                goalId: goalId,
-                supportId: supportId
-            },
-            message: [
-                {
-                    text: `Support '${support.description}' has been deleted because goal '${support.goal.title}' has been deleted`
-                }
-            ]
+      ]
+    })
+    sendNotificationToUsers(notification, [support.supporter.uid])
+  } else {
+      
+    // because goal has been deleted
+    const notification = createNotification({
+      discussionId:  support.goal.id,
+      event: enumEvent.gSupportDeleted,
+      source: {
+        image: goal.image,
+        name:  goal.title,
+        goalId: goalId,
+        supportId: supportId
+      },
+      message: [
+        {
+          text: `Support '${support.description}' has been deleted because goal '${support.goal.title}' has been deleted`
         }
-        await sendNotificationToUsers(notification, [support.supporter.uid])
-
-    }
-
+      ]
+    })
+    sendNotificationToUsers(notification, [support.supporter.uid])
+  }
 }

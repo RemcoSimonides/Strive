@@ -12,7 +12,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // Text editor
 import { QuillModule } from 'ngx-quill';
 // Custom Components
-import { CountdownComponent } from './countdown/countdown.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { CommentComponent } from './comment/comment.component';
@@ -31,14 +30,12 @@ import { CommentComponent } from './comment/comment.component';
     FontAwesomeModule
   ],
   declarations: [
-    CountdownComponent,
     FileDropDirective,
     ImageUploadComponent,
     TextEditorComponent,
     CommentComponent,
   ],
   exports: [
-    CountdownComponent,
     FileDropDirective,
     ImageUploadComponent,
     TextEditorComponent,

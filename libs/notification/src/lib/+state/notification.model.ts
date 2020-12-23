@@ -1,17 +1,17 @@
-import { enumNotificationType, GoalRequest, Notification, PostMeta } from './notification.firestore';
+import { GoalRequest, Notification, SupportDecisionMeta } from './notification.firestore';
 
 /** A factory function that creates a NotificationDocument. */
 export function createNotification(params: Partial<Notification> = {}): Notification {
   const meta = 
-  isPostMeta(params) ? createPostMeta(params.meta)
-    : isGoalRequest(params) ? createGoalRequest(params.meta)
+  isSupportDecisionNotification(params) ? createSupportDecisionMeta(params.meta)
+    : isGoalRequestNotification(params) ? createGoalRequest(params.meta)
     : {}
     
   return {
     id: !!params.id ? params.id : '',
     discussionId: '',
     message: [],
-    type: 0,
+    type: 'general',
     event: 0,
     source: {
       image: '',
@@ -29,33 +29,29 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
   }
 }
 
-export interface PostNotification extends Notification<PostMeta> {
-  type: enumNotificationType.post
+export interface SupportDecisionNotification extends Notification<SupportDecisionMeta> {
+  type: 'supportDecision'
 }
-export const isPostMeta = (notification: Partial<Notification>): notification is PostNotification => notification.type === enumNotificationType.post
-export function createPostMeta(postMeta: Partial<PostMeta>): PostMeta {
+export const isSupportDecisionNotification = (notification: Partial<Notification>): notification is SupportDecisionNotification => notification.type === 'supportDecision'
+export function createSupportDecisionMeta(meta: Partial<SupportDecisionMeta>): SupportDecisionMeta {
   return {
     deadline: '',
     supports: [],
-    collectiveGoalId: '',
-    goalId: '',
-    postId: '',
-    ...postMeta
+    decisionStatus: 'pending',
+    ...meta
   }
 }
 
 
 export interface GoalRequestNotification extends Notification<GoalRequest> {
-  type: enumNotificationType.goal_request_to_join
+  type: 'goalRequest'
 }
-export const isGoalRequest = (notification: Partial<Notification>): notification is GoalRequestNotification => notification.type === enumNotificationType.goal_request_to_join
-export function createGoalRequest(goalRequest: Partial<GoalRequest>): GoalRequest {
+export const isGoalRequestNotification = (notification: Partial<Notification>): notification is GoalRequestNotification => notification.type === 'goalRequest'
+export function createGoalRequest(meta: Partial<GoalRequest>): GoalRequest {
   return {
     requestStatus: 'open',
     uidRequestor: '',
-    collectiveGoalId: '',
-    goalId: '',
-    ...goalRequest
+    ...meta
   }
 }
 

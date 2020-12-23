@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // Strive
 import { NotificationService } from '@strive/notification/+state/notification.service';
-import { isPostMeta } from '@strive/notification/+state/notification.model';
+import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
-import { enumNotificationType, Notification } from '@strive/notification/+state/notification.firestore';
+import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 
 @Component({
@@ -15,14 +15,13 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
   templateUrl: './notifications.page.html',
   styleUrls: ['./notifications.page.scss'],
 })
-export class NotificationsPage implements OnInit {
+export class NotificationsPage implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   
-  pageIsLoading = true
   notifications: Notification[]
-  enumNotificationType = enumNotificationType
 
   private backBtnSubscription: Subscription
+  private userSubscription: Subscription
 
   constructor(
     public user: UserService,
@@ -37,16 +36,11 @@ export class NotificationsPage implements OnInit {
   ngOnInit() {
     this.seo.generateTags({ title: `Notifications - Strive Journal` })
 
-    this.user.profile$.subscribe(profile => {
+    this.userSubscription = this.user.profile$.subscribe(profile => {
       if (profile) {
         this.paginationService.reset()
         this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', { reverse: true, prepend: false })
-        this.paginationService.data.subscribe(data => {
-          console.log('data received: ', data)
-          this.pageIsLoading = false
-        })
       } else {
-        this.pageIsLoading = false
         this.paginationService.reset()
       }
     })
@@ -59,14 +53,18 @@ export class NotificationsPage implements OnInit {
     }
 
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => this.navCtrl.navigateRoot('explore'));
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => this.navCtrl.navigateRoot('explore'))
     }
   }
 
   ionViewWillLeave() {
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe();
+      this.backBtnSubscription.unsubscribe()
     }
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe()
   }
 
   async openLoginModal(): Promise<void> {
@@ -103,7 +101,7 @@ export class NotificationsPage implements OnInit {
 
   public async toggleSupportDecision(notificationId: string, supportId: string): Promise<void> {
     const notification = this.notifications.find(notification => notification.id == notificationId)
-    if (isPostMeta(notification)) {
+    if (isSupportDecisionNotification(notification)) {
       const support = notification.meta.supports.find(support => support.id === supportId)
       support.decision = support.decision === 'give' ? 'keep' : 'give'
     }

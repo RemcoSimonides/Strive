@@ -6,29 +6,29 @@ import { take, switchMap, first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '../../../../../../apps/journal/src/app/services/firestore/firestore.service';
 // Interfaces
-import { ICollectiveGoalStakeholder } from './stakeholder.firestore';
+import { CollectiveGoalStakeholder } from './stakeholder.firestore';
 import { ICollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalStakeholderService {
 
-  collectiveGoalStakeholderDocRef: AngularFirestoreDocument<ICollectiveGoalStakeholder>
-  collectiveGoalStakeholderDocObs: Observable<ICollectiveGoalStakeholder>
+  collectiveGoalStakeholderDocRef: AngularFirestoreDocument<CollectiveGoalStakeholder>
+  collectiveGoalStakeholderDocObs: Observable<CollectiveGoalStakeholder>
 
   constructor(
     private afs: AngularFirestore,
     private db: FirestoreService
   ) { }
 
-  public getStakeholderDocObs(uid: string, collectiveGoalId: string): Observable<ICollectiveGoalStakeholder> {
+  public getStakeholderDocObs(uid: string, collectiveGoalId: string): Observable<CollectiveGoalStakeholder> {
 
-    return this.db.docWithId$<ICollectiveGoalStakeholder>(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${uid}`)
+    return this.db.docWithId$<CollectiveGoalStakeholder>(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${uid}`)
 
   }
 
-  public async getStakeholder(uid: string, collectiveGoalId: string): Promise<ICollectiveGoalStakeholder | undefined> {
-    const stakeholder: ICollectiveGoalStakeholder = await this.getStakeholderDocObs(uid, collectiveGoalId).pipe(take(1)).toPromise()
+  public async getStakeholder(uid: string, collectiveGoalId: string): Promise<CollectiveGoalStakeholder | undefined> {
+    const stakeholder: CollectiveGoalStakeholder = await this.getStakeholderDocObs(uid, collectiveGoalId).pipe(take(1)).toPromise()
     if  (stakeholder.username) {
       return stakeholder
     } else return undefined
@@ -47,7 +47,7 @@ export class CollectiveGoalStakeholderService {
     this.collectiveGoalStakeholderDocRef = this.afs.collection('CollectiveGoals')
                                                   .doc(collectiveGoalId)
                                                   .collection('CGStakeholders')
-                                                  .doc<ICollectiveGoalStakeholder>(uid)
+                                                  .doc<CollectiveGoalStakeholder>(uid)
 
     //Check whether stakeholder exists
     this.collectiveGoalStakeholderDocRef.snapshotChanges().pipe(take(1)).toPromise().then(snap => {
@@ -64,12 +64,12 @@ export class CollectiveGoalStakeholderService {
 
   public getCollectiveGoals(uid: string, isPublic?: boolean): Observable<ICollectiveGoal[]> {
 
-    let stakeholdersColObs: Observable<ICollectiveGoalStakeholder[]>
+    let stakeholdersColObs: Observable<CollectiveGoalStakeholder[]>
 
     if (isPublic !== undefined) {
-      stakeholdersColObs = this.db.collectionGroupWithIds$<ICollectiveGoalStakeholder[]>(`CGStakeholders`, ref => ref.where('uid', '==', uid).where('collectiveGoalIsPublic', '==', isPublic).orderBy('createdAt', 'desc'))
+      stakeholdersColObs = this.db.collectionGroupWithIds$<CollectiveGoalStakeholder[]>(`CGStakeholders`, ref => ref.where('uid', '==', uid).where('collectiveGoalIsPublic', '==', isPublic).orderBy('createdAt', 'desc'))
     } else {
-      stakeholdersColObs = this.db.collectionGroupWithIds$<ICollectiveGoalStakeholder[]>(`CGStakeholders`, ref => ref.where('uid', '==', uid).orderBy('createdAt', 'desc'))
+      stakeholdersColObs = this.db.collectionGroupWithIds$<CollectiveGoalStakeholder[]>(`CGStakeholders`, ref => ref.where('uid', '==', uid).orderBy('createdAt', 'desc'))
     }
 
     return stakeholdersColObs.pipe(
@@ -86,7 +86,7 @@ export class CollectiveGoalStakeholderService {
   }
 
   private async createNewStakeholder(uid: string, collectiveGoalId: string, roles: roleArgs): Promise<void> {
-    let newStakeholder = <ICollectiveGoalStakeholder>{}
+    let newStakeholder = <CollectiveGoalStakeholder>{}
 
     const userProfile = await this.db.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
     newStakeholder.uid = uid
