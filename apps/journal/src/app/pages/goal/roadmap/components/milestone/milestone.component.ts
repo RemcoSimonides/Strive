@@ -11,7 +11,6 @@ import { ImageService } from 'apps/journal/src/app/services/image/image.service'
 // Interfaces
 import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { Post, enumPostSource } from '@strive/post/+state/post.firestore'
 
 @Component({
   selector: 'app-milestone',
@@ -78,14 +77,11 @@ export class MilestoneComponent implements OnInit {
 
   }
 
-  public async goToSupportModal(): Promise<void> {
+  public async goToSupportModal($event: Event): Promise<void> {
 
-    if (!this.isAdmin || !this.isAchiever) return
-    if (this.milestone.status === enumMilestoneStatus.succeeded
-    || this.milestone.status === enumMilestoneStatus.failed 
-    || this.milestone.status === enumMilestoneStatus.neutral) return
+    if (this.milestone.status !== enumMilestoneStatus.pending) return
 
-    event.stopPropagation(); //prevents roadmap from collapsing in or out :)
+    $event.stopPropagation(); //prevents roadmap from collapsing in or out :)
 
     const supportModal = await this.modalCtrl.create({
       component: AddSupportModalPage,

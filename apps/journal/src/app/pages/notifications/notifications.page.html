@@ -13,8 +13,11 @@
     
       <section fxLayout="column" fxLayoutAlign="center start">
     
-        <ng-container *ngFor="let notification of notifications">
+        <ng-container *ngFor="let notification of notifications; let isLast = last">
           <notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification>
+          <ng-container *ngIf="!isLast">
+            <span class="divider"></span>
+          </ng-container>
         </ng-container>
           
         <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">

@@ -82,7 +82,7 @@ export class NotificationComponent implements OnInit {
     // await modal.present()
   }
 
-  public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean): Promise<void> {
+  public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {
     notification.meta.requestStatus = isAccepted ? 'accepted' : 'rejected'
 
     await this.goalStakeholderService.upsert(notification.meta.uidRequestor, notification.source.goalId, {
@@ -92,7 +92,7 @@ export class NotificationComponent implements OnInit {
     await this.notificationService.upsert(this.user.uid, notification.id, { meta: notification.meta })
   }
 
-  public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport): Promise<void> {
+  public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
 
     if (!isSupportDecisionNotification(notification)) return
 
@@ -115,7 +115,7 @@ export class NotificationComponent implements OnInit {
     await chooseAchieverModal.present()
   }
 
-  public async finalizeDecision(notification: Notification<SupportDecisionMeta>): Promise<void> {
+  public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
 
     await this.notificationService.finalizeDecision(notification)
     notification.type = 'supportDecision'
@@ -123,7 +123,7 @@ export class NotificationComponent implements OnInit {
 
   }
 
-  public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport): Promise<void> {
+  public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
     if (!isSupportDecisionNotification(notification)) return
 
     support.receiverId = null

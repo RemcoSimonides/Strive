@@ -9,6 +9,7 @@ import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { NotificationPaginationService } from 'apps/journal/src/app/services/pagination/notification-pagination.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notifications',
@@ -48,8 +49,13 @@ export class NotificationsPage implements OnInit, OnDestroy {
 
   ionViewDidEnter() {
     // TODO test if number of notifications is reset on login
-    if (this.user.uid) {
+    if (!!this.user.uid) {
       this.notificationService.resetNumberOfUnreadNotifications();
+    } else {
+      // If this is the first page after reloading, this.user.uid is not filled yet, therefore we check value on first auth trigger
+      this.user.isLoggedIn$.pipe(take(1)).subscribe(isLoggedIn => {
+        if (isLoggedIn) this.notificationService.resetNumberOfUnreadNotifications();
+      })
     }
 
     if (this.platform.is('android') || this.platform.is('ios')) {

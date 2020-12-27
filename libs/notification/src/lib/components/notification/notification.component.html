@@ -1,62 +1,61 @@
 <ng-container *ngIf="!!notification">
-  <ion-item class="ion-no-padding item-text-wrap">
+  <ion-item lines="none">
 
     <ion-grid class="ion-no-padding">
       <ion-row>
-        <ion-col size="1" size-lg="1" size-md="1" size-xs="2">
+        <ion-col size="1" size-lg="1" size-md="1" size-xs="2" fxLayoutAlign="center center">
 
           <ng-container *ngIf="isFromPerson else notFromPerson">
-            <!-- Goal or Collective goal image -->
-            <ion-thumbnail item-start class="item-thumbnail clickable" [routerLink]="sourcePageRef">
-              <img [src]="notification.source.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
-            </ion-thumbnail>
-          </ng-container>
-          <ng-template #notFromPerson>
             <!-- Profile image -->
             <img id="profile-image" class="clickable" [routerLink]="sourcePageRef" [src]="notification.source.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+          </ng-container>
+          <ng-template #notFromPerson>
+            <!-- Goal or Collective goal image -->
+            <ion-thumbnail item-start class="clickable" [routerLink]="sourcePageRef">
+              <img [src]="notification.source.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+            </ion-thumbnail>
           </ng-template>
 
         </ion-col>
         <ion-col size="11" size-lg="11" size-md="11" size-xs="10">
-          <section fxLayout>
+          <section fxLayout="column">
 
             <!-- Notification header -->
-            <article class="notification-header container">
+            <article class="notification-header" fxLayout fxLayoutAlign="space-between">
               <span id="name" class="clickable" [routerLink]="sourcePageRef">{{ notification.source.name }}</span>
               <span id="date">{{ notification.createdAt.toDate() | date:'M/d' }}</span>
-
-              <ion-icon *ngIf="isAdmin" id="options" class="clickable" name="chevron-down-outline" (click)="openNotificationOptions($event)"></ion-icon>
+              <!-- <ion-icon *ngIf="isAdmin" id="options" class="clickable" name="chevron-down-outline" (click)="openNotificationOptions($event)"></ion-icon> -->
             </article>
 
             <article fxLayout>
               <!-- Message -->
               <ng-container *ngFor="let message of notification.message">
-                <span *ngIf="message.link">
-                  <span class="link" [routerLink]="'../' + ( message.link )">{{ message.text }}</span>
-                </span>
-                <span *ngIf="!message.link">
+                <ng-container *ngIf="!!message.link; else noLink">
+                  <span class="link" [routerLink]="'/' + ( message.link )">{{ message.text }}</span>
+                </ng-container>
+                <ng-template #noLink>
                   {{ message.text }}
-                </span>
+                </ng-template>
               </ng-container>
             </article>
           </section>
 
           <section fxLayout>
 
-              <!-- Goal Request buttons -->
-              <div *ngIf="notification.type === 'goalRequest'">
-                <ion-button (click)="handleRequestDecision(notification, true)"
-                  [disabled]="notification.meta.requestStatus !== 'open'"
-                  *ngIf="notification.meta.requestStatus !== 'rejected'">Accept</ion-button>
-                <ion-button (click)="handleRequestDecision(notification, false)"
-                  [disabled]="notification.meta.requestStatus !== 'open'"
-                  *ngIf="notification.meta.requestStatus !== 'accepted'">Reject</ion-button>
-              </div>
+            <!-- Goal Request buttons -->
+            <div *ngIf="notification.type === 'goalRequest'">
+              <ion-button (click)="handleRequestDecision(notification, true)"
+                [disabled]="notification.meta.requestStatus !== 'open'"
+                *ngIf="notification.meta.requestStatus !== 'rejected'">Accept</ion-button>
+              <ion-button (click)="handleRequestDecision(notification, false)"
+                [disabled]="notification.meta.requestStatus !== 'open'"
+                *ngIf="notification.meta.requestStatus !== 'accepted'">Reject</ion-button>
+            </div>
 
-              <!-- Post card -->
-              <ng-container *ngIf="notification.meta.path">
-                <strive-post [postRef]="('Goals/' + notification.meta.path.goalId + '/Posts/' + notification.meta.path.postId)"></strive-post>
-              </ng-container>
+            <!-- Post card -->
+            <ng-container *ngIf="!!notification.source.postId">
+              <strive-post [postRef]="'Goals/' + notification.source.goalId + '/Posts/' + notification.source.postId"></strive-post>
+            </ng-container>
 
           </section>
 
@@ -74,9 +73,9 @@
                     milestone&#41;</span>
                 </ion-col>
                 <ion-col size="auto" class="ion-no-padding">
-                  <span class="choose-receiver" *ngIf="support.receiverId === null"
+                  <span class="clickable" *ngIf="support.receiverId === null"
                     (click)="chooseReceiver(notification, support)"><i>Choose receiver</i></span>
-                  <div class="box" *ngIf="support.receiverId !== null"
+                  <section fxLayout fxLayoutAlign="center"*ngIf="support.receiverId !== null"
                     (click)="removeReceiver(notification, support)">
                     <ion-chip>
                       <ion-avatar>
@@ -84,7 +83,7 @@
                       </ion-avatar>
                       <ion-label>{{ support.receiverUsername }}</ion-label>
                     </ion-chip>
-                  </div>
+                  </section>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -95,19 +94,19 @@
             <ion-button (click)="finalizeDecision(notification)" color="secondary"
               [disabled]="notification.meta.decisionStatus !== 'pending'">Finalize
             </ion-button>
+
+            <ng-container *ngIf="notification.meta.decisionStatus === 'pending'">
+              <notification-countdown [time]="notification.meta.deadline"></notification-countdown>
+            </ng-container>
           </ng-container>
 
-          <ng-container *ngIf="notification.meta.decisionStatus === 'pending'">
-            <notification-countdown [time]="notification.meta.deadline"></notification-countdown>
-          </ng-container>
-
-          <section fxLayout>
+          <!-- <section fxLayout> -->
             <!-- Discussion -->
-            <ion-button (click)="openDiscussion()" fill="clear">
+            <!-- <ion-button (click)="openDiscussion()" fill="clear">
               {{ notification.discussion?.numberOfComments || 0 }}
               <ion-icon id="discussion-icon" name="chatbox-outline"></ion-icon>
-            </ion-button>
-          </section>
+            </ion-button> -->
+          <!-- </section> -->
         </ion-col>
       </ion-row>
     </ion-grid>

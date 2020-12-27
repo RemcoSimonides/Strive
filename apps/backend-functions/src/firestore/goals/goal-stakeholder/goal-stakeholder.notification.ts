@@ -277,8 +277,8 @@ function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, go
 }
 
 // REQUEST TO JOIN
-async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string,  goalStakeholder: GoalStakeholder): Promise<void> {
-  console.log('send New Request To Join Goal Notification In Goal')
+async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string,  goalStakeholder: GoalStakeholder) {
+  console.log(`send 'New Request To Join Goal' Notification In Goal`)
 
   // Send request to admins only
   const meta = createGoalRequest({ uidRequestor: goalStakeholder.uid })
@@ -304,7 +304,6 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
       meta
   })
   sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true)
-
 }
 
 function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {

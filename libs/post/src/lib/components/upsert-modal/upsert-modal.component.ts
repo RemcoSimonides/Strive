@@ -43,11 +43,11 @@ export class UpsertPostModal implements OnInit {
     this.postForm.get('isEvidence').setValue(this.navParams.get('isEvidence'))
   }
 
-  async cancel(): Promise<void> {
-    await this.modalCtrl.dismiss()
+  cancel() {
+    this.modalCtrl.dismiss()
   }
 
-  async submitPost(): Promise<void> {
+  async submitPost() {
 
     const goalId = this.postForm.get('goal').get('id').value
 

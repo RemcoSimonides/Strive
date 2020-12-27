@@ -47,13 +47,7 @@ export class NotificationPaginationService {
       ...opts
     }
 
-    const firstNotifications = this.afs.collection(this.query.path, ref => {
-      return ref
-              .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-              .limit(this.query.limit)
-    })
-
-    // const firstDiscussion = this.afs.collection()
+    const firstNotifications = this.afs.collection(this.query.path, ref => ref.orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc').limit(this.query.limit))
 
     this.mapAndUpdate(firstNotifications)
 

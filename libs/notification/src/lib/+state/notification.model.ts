@@ -8,7 +8,6 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
     : {}
     
   return {
-    id: !!params.id ? params.id : '',
     discussionId: '',
     message: [],
     type: 'general',
@@ -25,6 +24,7 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
       userId: ''
     },
     isRead: false,
+    ...params,
     meta
   }
 }

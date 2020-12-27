@@ -5,15 +5,17 @@
     <ion-menu side="end" contentId="main">
       <ion-content>
         <article #header>
-          <ion-row class="ion-justify-content-center">
-            <img id="profile-image"
-              [src]="(user.profile$ | async)?.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
-              routerDirection="root"
-              [routerLink]="'/profile/' + user.uid" />
-          </ion-row>
-          <ion-row class="ion-justify-content-center">
-            <h3>{{ (user.profile$ | async)?.username }}</h3>
-          </ion-row>
+          <ng-container *ngIf="user.profile$ | async as profile">
+            <ion-row class="ion-justify-content-center">
+              <img id="profile-image"
+                [src]="profile.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
+                routerDirection="root"
+                [routerLink]="'/profile/' + user.uid" />  
+            </ion-row>
+            <ion-row class="ion-justify-content-center">
+              <h3>{{ profile.username }}</h3>
+            </ion-row>
+          </ng-container>
         </article>
         <ion-list>
           <ion-menu-toggle auto-hide="false">
@@ -23,13 +25,14 @@
               <ion-label>Explore</ion-label>
             </ion-item>
 
-            <ng-container *ngIf="(user.isLoggedIn$ | async); else notLoggedInSide">
+            <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInSide">
+
               <!-- Notifications -->
               <ion-item routerDirection="root" routerLink="/notifications">
                 <ion-icon slot="start" name="notifications"></ion-icon>
                 <ion-label>Notifications
-                  <ng-container *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">
-                    <span>({{ (user.profile$ | async)?.numberOfUnreadNotifications }})</span>                  
+                  <ng-container *ngIf="!!profile.numberOfUnreadNotifications">
+                    <span>({{ profile.numberOfUnreadNotifications }})</span>                  
                   </ng-container>
                 </ion-label>
               </ion-item>
@@ -87,7 +90,7 @@
               </a>
             </ion-col>
             <ion-col size="3" class="ion-no-padding searchbar-container">
-              <ion-searchbar 
+              <ion-searchbar
                 (ionChange)="search($event)"
                 placeholder='Try "Eat Healthy"'
                 (keydown.enter)="goToSearchResults($event)">
@@ -96,7 +99,7 @@
             <ion-col size="8" class="ion-no-padding">
               <section class="navbar ion-align-self-end buttons-container">
 
-                <ng-container *ngIf="(user.isLoggedIn$ | async); else notLoggedInMain">
+                <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInMain">
                   <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link"
                     class="link">
                     Goals
@@ -109,14 +112,14 @@
                     class="link">
                     Notifications
 
-                    <ng-container *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">
-                      <ion-badge>{{ (user.profile$ | async).numberOfUnreadNotifications }}</ion-badge>
+                    <ng-container *ngIf="!!profile.numberOfUnreadNotifications">
+                      <ion-badge>{{ profile.numberOfUnreadNotifications }}</ion-badge>
                     </ng-container> 
 
                   </ion-button>
                   <ion-avatar (click)="openProfilePopover($event)">
                     <img id="profile-image"
-                      [src]="(user.profile$ | async)?.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" />
+                      [src]="profile.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" />
                   </ion-avatar>
                 </ng-container>
 

@@ -75,7 +75,8 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
     super.ngOnDestroy();
   }
 
-  async getData(): Promise<void> {
+  async getData() {
+    this.goal = await this.goalService.getGoal(this.goalId);
     if (this.origin === 'goal') {
       this.structuredMilestones = await this.roadmapService.getStructuredMilestones(this.goalId)
     } else {
@@ -85,7 +86,7 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
     initMilestonesAnimation()
   }
 
-  public async editMilestones(): Promise<void> {
+  public async editMilestones() {
     if (!this.isAdmin) return
 
     const loading = await this.loadingCtrl.create({ spinner: 'lines' })
