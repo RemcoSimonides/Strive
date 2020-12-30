@@ -43,7 +43,7 @@ function sendNewSupportNotificationToAchieversOfGoal(supportId: string, goalId: 
     discussionId: supportId,
     event: enumEvent.gSupportAdded,
     source: {
-      image: enumImage.supportLogo,
+      image: support.goal.image,
       name: support.goal.title,
       goalId: goalId,
       supportId: supportId
@@ -76,7 +76,7 @@ function sendSupportPaidNotification(supportId: string, support: Support) {
     discussionId: supportId,
     event: enumEvent.gSupportPaid,
     source: {
-      image: enumImage.supportLogo,
+      image: support.goal.image,
       name: support.goal.title,
       goalId: support.goal.id,
       supportId: supportId
@@ -104,7 +104,7 @@ function sendSupportRejectedNotification(supportId: string, goalId: string, supp
     discussionId: supportId,
     event: enumEvent.gSupportRejected,
     source: {
-      image: enumImage.supportLogo,
+      image: support.goal.image,
       name: support.goal.title,
       goalId: goalId,
       supportId: supportId
@@ -158,7 +158,7 @@ function sendSupportIsWaitingToBePaid(supportId: string, support: Support) {
     discussionId: supportId,
     event: enumEvent.gSupportWaitingToBePaid,
     source: {
-      image: enumImage.supportLogo,
+      image: support.goal.image,
       name: support.goal.title,
       goalId: support.goal.id,
       supportId: supportId
