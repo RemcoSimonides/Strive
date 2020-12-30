@@ -102,8 +102,8 @@ service cloud.firestore {
       match /Supports/{supportId} {
         allow read;
         allow create: if isSignedIn()
-        // update and delete not possible yet
         allow update: if isSupporterOrReceiver(goalId, supportId)
+        // delete not possible yet
       }
 
       match /InviteTokens/{tokenId} {

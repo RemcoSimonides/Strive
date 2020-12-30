@@ -90,7 +90,7 @@ async function finalizeSupports(goalId: string, supports: NotificationSupport[])
   supports.forEach(support => {
     const supportDocRef = db.doc(`Goals/${goalId}/Supports/${support.id}`)
 
-    if (!support.receiverId) {
+    if (!support.receiver.uid) {
 
       // support rejected
       supportDocRef.update({
@@ -101,11 +101,7 @@ async function finalizeSupports(goalId: string, supports: NotificationSupport[])
 
       // set receiver
       supportDocRef.update({
-        receiver: {
-          uid: support.receiverId,
-          username: support.receiverUsername,
-          photoURL:  support.receiverPhotoURL
-        },
+        receiver: support.receiver,
         status: 'waiting_to_be_paid'
       })
     }

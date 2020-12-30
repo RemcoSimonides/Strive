@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
 
@@ -13,6 +13,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakehol
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
+import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'notification',
@@ -32,6 +33,7 @@ export class NotificationComponent implements OnInit {
 
   constructor(
     private user: UserService,
+    private cdr: ChangeDetectorRef,
     private db: FirestoreService,
     private goalStakeholderService: GoalStakeholderService,
     private modalCtrl: ModalController,
@@ -93,8 +95,8 @@ export class NotificationComponent implements OnInit {
   }
 
   public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
-
     if (!isSupportDecisionNotification(notification)) return
+    if (notification.meta.decisionStatus === 'finalized') return
 
     const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.source.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
 
@@ -105,29 +107,24 @@ export class NotificationComponent implements OnInit {
       }
     })
     chooseAchieverModal.onDidDismiss().then(data => {
-      if (data) {
-        support.receiverId = data.data.receiverId
-        support.receiverUsername = data.data.receiverUsername
-        support.receiverPhotoURL = data.data.receiverPhotoURL
+      if (!!data.data) {
+        support.receiver = data.data
+        this.cdr.markForCheck();
       }
     })
 
     await chooseAchieverModal.present()
   }
 
-  public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
-
-    await this.notificationService.finalizeDecision(notification)
-    notification.type = 'supportDecision'
-    notification.meta.decisionStatus = 'finalized'
-
-  }
-
   public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
     if (!isSupportDecisionNotification(notification)) return
-
-    support.receiverId = null
-    support.receiverUsername = null
-    support.receiverPhotoURL = null
+    if (notification.meta.decisionStatus === 'finalized') return
+    support.receiver = createProfileLink();
   }
+
+  public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
+    await this.notificationService.finalizeDecision(notification)
+    notification.meta.decisionStatus = 'finalized'
+  }
+
 }

@@ -30,7 +30,7 @@ export class UpsertPostModal implements OnInit {
 
     if (!!milestone) {
       this.postForm.get('milestone').get('id').setValue(milestone.id)
-      this.postForm.get('milestone').get('description').setValue(milestone.id)
+      this.postForm.get('milestone').get('description').setValue(milestone.description)
       this.postForm.get('content').get('title').setValue(`Completed milestone '${goal.title}'`)
     } else {
       this.postForm.get('content').get('title').setValue(`Finished goal '${goal.title}'`)
@@ -48,12 +48,12 @@ export class UpsertPostModal implements OnInit {
   }
 
   async submitPost() {
-
     const goalId = this.postForm.get('goal').get('id').value
 
     // Create post
-    if (this.postForm.get('milestone').get('id').value) {
-      await this.postService.createPost(enumPostSource.milestone, this.postForm.value, goalId)
+    const milestoneId = this.postForm.get('milestone').get('id').value
+    if (!!milestoneId) {
+      await this.postService.createPost(enumPostSource.milestone, this.postForm.value, milestoneId)
     } else {
       await this.postService.createPost(enumPostSource.goal, this.postForm.value, goalId)
     }

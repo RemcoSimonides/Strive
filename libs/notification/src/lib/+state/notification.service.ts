@@ -19,7 +19,7 @@ export class NotificationService {
     private db: FirestoreService,
   ) { }
 
-  async finalizeDecision(notification: Notification<SupportDecisionMeta>): Promise<void> {
+  async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
 
     // TODO CHECK THIS AGAIN - it's probably incorrect!
 
@@ -35,7 +35,7 @@ export class NotificationService {
 
   }
 
-  async resetNumberOfUnreadNotifications(): Promise<void> {
+  async resetNumberOfUnreadNotifications() {
     const { uid } = await this.afAuth.currentUser;
     await this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, {
       numberOfUnreadNotifications: 0
@@ -46,7 +46,7 @@ export class NotificationService {
     await this.db.upsert(`Users/${uid}/Notifications/${notificationId}`, notification)
   }
 
-  async delete(reference: string): Promise<void> {
+  async delete(reference: string) {
     await this.db.doc(reference).delete()
   }
 }

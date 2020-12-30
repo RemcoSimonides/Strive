@@ -3,7 +3,7 @@
 
     <ion-grid class="ion-no-padding">
       <ion-row>
-        <ion-col size="1" size-lg="1" size-md="1" size-xs="2" fxLayoutAlign="center center">
+        <ion-col size="1" size-lg="1" size-md="1" size-xs="2" fxLayoutAlign="center start">
 
           <ng-container *ngIf="isFromPerson else notFromPerson">
             <!-- Profile image -->
@@ -73,17 +73,21 @@
                     milestone&#41;</span>
                 </ion-col>
                 <ion-col size="auto" class="ion-no-padding">
-                  <span class="clickable" *ngIf="support.receiverId === null"
-                    (click)="chooseReceiver(notification, support)"><i>Choose receiver</i></span>
-                  <section fxLayout fxLayoutAlign="center"*ngIf="support.receiverId !== null"
-                    (click)="removeReceiver(notification, support)">
-                    <ion-chip>
-                      <ion-avatar>
-                        <img [src]="support.receiverPhotoURL" />
-                      </ion-avatar>
-                      <ion-label>{{ support.receiverUsername }}</ion-label>
-                    </ion-chip>
-                  </section>
+                  <ng-container *ngIf="!support.receiver.uid; else hasReceiver">
+                    <span class="clickable" (click)="chooseReceiver(notification, support)">
+                      <i>Choose receiver</i>
+                    </span>
+                  </ng-container>
+                  <ng-template #hasReceiver>
+                    <section fxLayout fxLayoutAlign="center" (click)="removeReceiver(notification, support)">
+                      <ion-chip>
+                        <ion-avatar>
+                          <img [src]="support.receiver.photoURL" />
+                        </ion-avatar>
+                        <ion-label>{{ support.receiver.username }}</ion-label>
+                      </ion-chip>
+                    </section>
+                  </ng-template>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -91,7 +95,7 @@
 
           <!-- Buttons to accept or decline evidence -->
           <ng-container *ngIf="notification.type === 'supportDecision'">
-            <ion-button (click)="finalizeDecision(notification)" color="secondary"
+            <ion-button (click)="finalizeDecision(notification)" color="primary"
               [disabled]="notification.meta.decisionStatus !== 'pending'">Finalize
             </ion-button>
 

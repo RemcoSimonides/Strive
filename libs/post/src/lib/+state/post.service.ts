@@ -15,11 +15,7 @@ export class PostService {
     private db: FirestoreService,
   ) { }
 
-  async createPost(postSource: enumPostSource, post: Partial<Post>, newPostId?: string): Promise<void> {
-    
-    if (postSource === enumPostSource.milestone) {
-      delete post.milestone
-    }
+  async createPost(postSource: enumPostSource, post: Partial<Post>, newPostId?: string) {
 
     //Prepare object
     const currentUser = await this.afAuth.currentUser;

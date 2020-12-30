@@ -16,7 +16,7 @@ import { Notification, enumEvent, SupportDecisionMeta } from '@strive/notificati
 import { enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { createSupport } from '@strive/support/+state/support.firestore';
+import { createNotificationSupport, createSupport } from '@strive/support/+state/support.firestore';
 import { createNotification, createSupportDecisionMeta, SupportDecisionNotification } from '@strive/notification/+state/notification.model';
 
 const db = admin.firestore()
@@ -276,15 +276,17 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
 
     // add supports to notification
     Object.keys(supporters[supporter]).forEach(support => {
-      notification.meta.supports.push({
+      const notificationSupport = createNotificationSupport({
         id: support,
         description: supporters[supporter][support].description,
-        decision: supporters[supporter][support].milestoneIsFinished ? 'give' : 'keep',
         milestoneIsFinished: supporters[supporter][support].milestoneIsFinished,
-        receiverId: supporters[supporter][support].receiverId,
-        receiverUsername: supporters[supporter][support].receiverUsername,
-        receiverPhotoURL: supporters[supporter][support].receiverPhotoURL
+        receiver: {
+          uid: supporters[supporter][support].receiverId,
+          username: supporters[supporter][support].receiverUsername,
+          photoURL: supporters[supporter][support].receiverPhotoURL
+        }
       })
+      notification.meta.supports.push(notificationSupport)
     })
         
     const promise = db.doc(`Users/${supporter}/Notifications/${goalId}`).set(notification)

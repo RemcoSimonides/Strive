@@ -14,14 +14,14 @@
 <ion-content class="ion-padding">
 
   <ion-list>
-    <ion-item *ngFor="let achiever of _achievers">
+    <ion-item *ngFor="let achiever of achievers">
       <ion-thumbnail slot="start">
         <img [src]="achiever.photoURL">
       </ion-thumbnail>
       <ion-label class="ion-text-wrap">
         <ion-text>{{ achiever.username }}</ion-text>
       </ion-label>
-      <ion-button slot="end" color="secondary" fill="outline" size="default" (click)="achieverChosen(achiever)">
+      <ion-button slot="end" color="primary" fill="outline" size="default" (click)="achieverChosen(achiever)">
         Choose
       </ion-button>
     </ion-item>

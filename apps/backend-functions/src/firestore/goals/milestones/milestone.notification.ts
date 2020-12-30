@@ -9,6 +9,7 @@ import { IReceiver, getReceiver } from '../../../shared/support/receiver'
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta, SupportDecisionNotification } from '@strive/notification/+state/notification.model';
+import { createNotificationSupport } from '@strive/support/+state/support.firestore';
 
 const db = admin.firestore()
 
@@ -123,15 +124,17 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
     })
 
     Object.keys(supporters[supporter]).forEach(support => {
-      newNotification.meta.supports.push({
+      const notificationSupport = createNotificationSupport({
         id: support,
         description: supporters[supporter][support].description,
-        decision: supporters[supporter][support].milestoneIsFinished ? 'give' : 'keep',
         milestoneIsFinished: supporters[supporter][support].milestoneIsFinished,
-        receiverId: supporters[supporter][support].receiverId,
-        receiverUsername: supporters[supporter][support].receiverUsername,
-        receiverPhotoURL: supporters[supporter][support].receiverPhotoURL
+        receiver: {
+          uid: supporters[supporter][support].receiverId,
+          username: supporters[supporter][support].receiverUsername,
+          photoURL: supporters[supporter][support].receiverPhotoURL
+        }
       })
+      newNotification.meta.supports.push(notificationSupport)
     })
 
     db.doc(`Users/${supporter}/Notifications/${milestoneId}`).set(newNotification)

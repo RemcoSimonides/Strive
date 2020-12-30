@@ -32,9 +32,7 @@ export interface NotificationSupport {
     description: string;
     decision: SupportDecision;
     milestoneIsFinished: boolean;
-    receiverId?: string;
-    receiverUsername?: string;
-    receiverPhotoURL?: string;
+    receiver: ProfileLink;
 }
 
 /** A factory function that creates a SupportDocument. */
@@ -54,6 +52,18 @@ export function createSupport(params: Partial<Support> = {}): Support {
       level3description: ''
     },
     supporter: createProfileLink(params.supporter),
+    receiver: createProfileLink(params.receiver),
+    ...params
+  }
+}
+
+/** A factory function that creates a NotificationSupportDocumnet */
+export function createNotificationSupport(params: Partial<NotificationSupport> = {}): NotificationSupport {
+  return {
+    id: !!params.id ? params.id : '',
+    description: '',
+    decision: params.milestoneIsFinished ? 'give' : 'keep',
+    milestoneIsFinished: false,
     receiver: createProfileLink(params.receiver),
     ...params
   }
