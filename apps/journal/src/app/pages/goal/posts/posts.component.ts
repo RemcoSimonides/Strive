@@ -18,7 +18,7 @@ import { NotificationPaginationService } from '../../../services/pagination/noti
 })
 
 export class PostsComponent implements OnInit, OnDestroy {
-  @Input() goal: Goal;
+  @Input() goal: Goal
 
   isAdmin = false
   private sub: Subscription
@@ -57,9 +57,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   public refreshPosts($event) {
-
     this.paginationService.refresh(`Goals/${this.goal.id}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
-
     this.paginationService.refreshing.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
@@ -67,11 +65,9 @@ export class PostsComponent implements OnInit, OnDestroy {
         }, 500);
       }
     })
-
   }
 
   public async createCustomPost() {
-
     const modal = await this.modalCtrl.create({
       component: UpsertPostModal,
     })
@@ -101,8 +97,6 @@ export class PostsComponent implements OnInit, OnDestroy {
       await this.imageService.reset()
 
       this.paginationService.refresh(`Goals/${this.goal.id}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
-
     })
-
   }
 }

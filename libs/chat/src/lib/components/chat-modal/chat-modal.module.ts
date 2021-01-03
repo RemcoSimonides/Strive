@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ChatModalPage } from './chat-modal.component';
 
-import { ComponentsModule } from 'apps/journal/src/app/components/components.module'
+import { CommentModule } from '../comment/comment.module';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { ComponentsModule } from 'apps/journal/src/app/components/components.mod
     FormsModule,
     IonicModule,
     RouterModule,
-    ComponentsModule
+    CommentModule
   ],
   declarations: [
     ChatModalPage

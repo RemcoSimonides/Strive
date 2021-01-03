@@ -18,7 +18,6 @@ export class AuthGuardService implements CanActivate {
   ) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-
     return this.user.user$.pipe(
       take(1),
       map(user => !!user),
@@ -34,5 +33,4 @@ export class AuthGuardService implements CanActivate {
       })
     )
   }
-  
 }

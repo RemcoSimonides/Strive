@@ -9,12 +9,8 @@ import { FileDropDirective } from '../directives/file-drop/file-drop.directive';
 // Share buttons
 // import { ShareButtonsModule } from '@ngx-share/buttons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-// Text editor
-import { QuillModule } from 'ngx-quill';
 // Custom Components
 import { ImageUploadComponent } from './image-upload/image-upload.component';
-import { TextEditorComponent } from './text-editor/text-editor.component';
-import { CommentComponent } from './comment/comment.component';
 
 // import { ChatModalModule } from '@strive/chat/components/chat-modal/chat-modal.module'
 
@@ -26,20 +22,15 @@ import { CommentComponent } from './comment/comment.component';
     RouterModule,
     // ChatModalModule,
     // ShareButtonsModule,
-    QuillModule,
     FontAwesomeModule
   ],
   declarations: [
     FileDropDirective,
-    ImageUploadComponent,
-    TextEditorComponent,
-    CommentComponent,
+    ImageUploadComponent
   ],
   exports: [
     FileDropDirective,
-    ImageUploadComponent,
-    TextEditorComponent,
-    CommentComponent,
+    ImageUploadComponent
   ]
 })
 export class ComponentsModule { }

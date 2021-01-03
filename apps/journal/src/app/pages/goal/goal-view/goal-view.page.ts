@@ -43,7 +43,7 @@ export class GoalViewPage implements OnInit {
   isSpectator = false
   hasOpenRequestToJoin = false
 
-  segmentChoice: 'Goal' | 'Roadmap' | 'Posts' = "Goal"
+  segmentChoice: 'Goal' | 'Roadmap' | 'Posts' = 'Goal'
 
   backBtnSubscription: Subscription
 

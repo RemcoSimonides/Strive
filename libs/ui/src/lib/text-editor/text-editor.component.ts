@@ -1,25 +1,23 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 
 import * as QuillNamespace from 'quill';
 import { ImageDrop } from 'quill-image-drop-module'
-// import ImageResize from 'quill-image-resize-module';
+
 let Quill: any = QuillNamespace;
-// Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/imageDrop', ImageDrop)
 
 @Component({
-  selector: 'app-text-editor',
+  selector: 'strive-text-editor',
   templateUrl: './text-editor.component.html',
   styleUrls: ['./text-editor.component.scss'],
 })
-export class TextEditorComponent implements OnInit {
+export class TextEditorComponent {
 
-  @Input() _description: string
+  @Input() description: string
   @Input() isAdmin: boolean = true
   @Input() editMode: boolean = false
 
-  @Output('update')
-  public description: EventEmitter<string> = new EventEmitter<string>() 
+  @Output() update = new EventEmitter<string>() 
 
   public _editorStyle = {
     height: '300px',
@@ -48,13 +46,8 @@ export class TextEditorComponent implements OnInit {
     }
   }
 
-  constructor() { }
-
-  ngOnInit() {}
-
-  public async _saveDescription() {
+  public async saveDescription() {
     this.editMode = false
-    this.description.emit(this._description)
+    this.update.emit(this.description)
   }
-
 }

@@ -21,16 +21,14 @@ export class FcmService {
     private toastController: ToastController,
     private _platform: Platform,
     private user: UserService
-  ) {
-
-  }
+  ) { }
 
   private getPermission(): Observable<any> {
     return this.afMessaging.requestToken.pipe(
       tap(token => {
         this.token = token
         this.user.addFCMToken(token)
-      }),
+      })
     )
   }
 
@@ -122,5 +120,4 @@ export class FcmService {
     });
     toast.present();
   }
-
 }
