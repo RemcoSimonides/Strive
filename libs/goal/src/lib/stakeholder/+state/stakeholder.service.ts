@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // Angularfire
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable, combineLatest, of } from 'rxjs';
 import { take, switchMap, first, map } from 'rxjs/operators';

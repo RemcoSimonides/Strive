@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 // Services
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { take } from 'rxjs/operators';

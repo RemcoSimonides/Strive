@@ -8,7 +8,7 @@ import { NotificationOptionsPopover } from '@strive/notification/components/noti
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { NotificationSupport } from '@strive/support/+state/support.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';

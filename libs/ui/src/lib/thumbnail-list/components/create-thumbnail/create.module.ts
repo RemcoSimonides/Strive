@@ -3,14 +3,15 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 import { CreateThumbnailComponent } from './create.component';
+import { CreateTemplateModalPageModule } from 'apps/journal/src/app/pages/template/modals/create-template-modal/create-template-modal.module'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    CreateTemplateModalPageModule
   ],
   exports: [CreateThumbnailComponent],
   declarations: [CreateThumbnailComponent],
-  providers: [],
 })
 export class CreateThumbnailModule { }

@@ -1,4 +1,4 @@
-import { ElementRef, HostListener, Directive, OnInit } from '@angular/core';
+import { ElementRef, HostListener, Directive, OnInit, NgModule } from '@angular/core';
 
 @Directive({
   selector: 'ion-textarea [autosize]'
@@ -31,3 +31,9 @@ export class Autosize implements OnInit {
   }
 
 }
+
+@NgModule({
+  exports: [Autosize],
+  declarations: [Autosize]
+})
+export class AutosizeModule { } 

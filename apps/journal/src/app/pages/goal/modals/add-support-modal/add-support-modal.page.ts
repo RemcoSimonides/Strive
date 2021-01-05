@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';

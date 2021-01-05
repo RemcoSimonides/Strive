@@ -12,9 +12,6 @@ import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.mo
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
 
-// Components
-import { ComponentsModule } from '../../components/components.module'
-
 const routes: Routes = [
   {
     path: '',
@@ -28,7 +25,6 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    ComponentsModule,
     ThumbnailListModule,
     RectangleThumbnailModule,
     HeaderModule

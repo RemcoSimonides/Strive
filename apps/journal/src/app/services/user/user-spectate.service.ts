@@ -4,7 +4,7 @@ import { first, take } from 'rxjs/operators';
 // Angularfire
 import { AngularFirestore } from '@angular/fire/firestore';
 // Services
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { ISpectator } from '@strive/interfaces';

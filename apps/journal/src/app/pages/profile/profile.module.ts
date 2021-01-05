@@ -9,7 +9,6 @@ import { ProfilePage } from './profile.page';
 import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page'
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 
-import { ComponentsModule } from '../../components/components.module'
 import { ExerciseAffirmationPage } from './modals/exercise-affirmation/exercise-affirmation.page';
 import { ExerciseBucketlistPage }  from './modals/exercise-bucketlist/exercise-bucketlist.page'
 import { ExerciseAffirmationExplanationPage } from './modals/exercise-affirmation/popovers/exercise-affirmation-explanation/exercise-affirmation-explanation.page'
@@ -32,7 +31,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    ComponentsModule,
     ThumbnailListModule,
     RectangleThumbnailModule
   ],

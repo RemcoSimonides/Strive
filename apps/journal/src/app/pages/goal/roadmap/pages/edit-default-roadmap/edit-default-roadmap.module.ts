@@ -8,9 +8,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { EditDefaultRoadmapPage } from './edit-default-roadmap.page';
 
-// Components
-import { ComponentsModule } from '../../../../../components/components.module'
-
 const routes: Routes = [
   {
     path: '',
@@ -21,7 +18,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    ComponentsModule,
     FontAwesomeModule,
     FormsModule,
     IonicModule,

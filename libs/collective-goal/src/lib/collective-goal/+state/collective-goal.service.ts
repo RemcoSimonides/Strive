@@ -5,7 +5,7 @@ import { QueryFn } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '../../../../../../apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { ImageService } from '../../../../../../apps/journal/src/app/services/image/image.service';
 import { UserService } from '@strive/user/user/+state/user.service';

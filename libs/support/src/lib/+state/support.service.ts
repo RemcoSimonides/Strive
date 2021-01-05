@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Services
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { SupportStatus, NotificationSupport, createSupport } from '@strive/support/+state/support.firestore';
 import { Support } from '@strive/support/+state/support.firestore';

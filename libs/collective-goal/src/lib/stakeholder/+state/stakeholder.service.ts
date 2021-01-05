@@ -4,7 +4,7 @@ import { AngularFirestoreDocument, AngularFirestore } from '@angular/fire/firest
 import { Observable, combineLatest, of } from 'rxjs';
 import { take, switchMap, first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '../../../../../../apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { CollectiveGoalStakeholder } from './stakeholder.firestore';
 import { ICollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';

@@ -7,11 +7,10 @@ import { IonicModule } from '@ionic/angular';
 // Pages
 import { TemplatePage } from './template.page';
 // Modals
-// import { CreateTemplateModalPage } from './modals/create-template-modal/create-template-modal.page'
+import { CreateTemplateModalPageModule } from './modals/create-template-modal/create-template-modal.module'
 // Popover
 import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page'
 // Components
-import { ComponentsModule } from '../../components/components.module';
 import { RoadmapModule } from '../goal/roadmap/components/roadmap.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from '@strive/ui/header/header.module';
@@ -27,13 +26,13 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    ComponentsModule,
     FontAwesomeModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
     RoadmapModule,
-    HeaderModule
+    HeaderModule,
+    CreateTemplateModalPageModule
   ],
   declarations: [
     TemplatePage,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, Platform, ModalController } from '@ionic/angular';
 // angularfire
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // services
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
 import { SupportService } from '@strive/support/+state/support.service';

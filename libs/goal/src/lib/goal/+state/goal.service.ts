@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';

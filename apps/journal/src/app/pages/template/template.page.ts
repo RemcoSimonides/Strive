@@ -17,7 +17,7 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { ITemplate } from '@strive/interfaces';
 import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'

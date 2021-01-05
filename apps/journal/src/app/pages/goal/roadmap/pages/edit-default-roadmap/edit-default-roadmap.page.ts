@@ -6,7 +6,7 @@ import { LoadingController, IonSearchbar, AlertController, Platform } from '@ion
 import { first } from 'rxjs/operators';
 // Services
 import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';

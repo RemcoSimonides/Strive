@@ -4,7 +4,7 @@ import { NavParams, IonContent, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 // Services
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { DiscussionService } from 'apps/journal/src/app/services/discussion/discussion.service';
 import { DiscussionPaginationService } from 'apps/journal/src/app/services/pagination/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';

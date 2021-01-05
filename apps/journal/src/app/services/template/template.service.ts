@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { ImageService } from '../image/image.service';
 // Interfaces
 import { ITemplate } from '@strive/interfaces';

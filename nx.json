@@ -67,6 +67,9 @@
     },
     "notification": {
       "tags": []
+    },
+    "media": {
+      "tags": []
     }
   }
 }

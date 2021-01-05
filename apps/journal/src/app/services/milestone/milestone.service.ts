@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Services
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'

@@ -27,20 +27,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
-import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
+// import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
+// import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
 import { TermsPage } from './pages/terms/terms.page';
 import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
 // import { HomePage } from './pages/home/home.page';
 import { TabsPage } from './pages/tabs/tabs';
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
 import { AuthModalPage } from './pages/auth/auth-modal.page';
-
-// Components
-import { ComponentsModule } from './components/components.module';
-
-// Directives
-import { Autosize } from './directives/auto-resize-textarea/auto-resize-textarea.directive';
 
 // FontAwesome
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -61,9 +55,8 @@ const customConfig: ShareButtonsConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    Autosize,
-    CreateGoalPage,
-    CreateTemplateModalPage,
+    // CreateGoalPage,
+    // CreateTemplateModalPage,
     PrivacyPolicyPage,
     TermsPage,
     // HomePage,
@@ -72,8 +65,8 @@ const customConfig: ShareButtonsConfig = {
     AuthModalPage
   ],
   entryComponents: [
-    CreateGoalPage,
-    CreateTemplateModalPage,
+    // CreateGoalPage,
+    // CreateTemplateModalPage,
     PrivacyPolicyPage,
     TermsPage,
     // HomePage,
@@ -99,7 +92,6 @@ const customConfig: ShareButtonsConfig = {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    ComponentsModule,
     // ShareButtonsModule,
     ShareModule.withConfig(customConfig),
     QuillModule.forRoot(),

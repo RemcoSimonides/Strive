@@ -4,7 +4,7 @@ import { AngularFirestoreDocument, AngularFirestore } from '@angular/fire/firest
 // Rxjs
 import { take, first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '../firestore/firestore.service'
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { ITemplate } from '@strive/interfaces';
 import { Milestone, enumMilestoneStatus, MilestonesLeveled, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'

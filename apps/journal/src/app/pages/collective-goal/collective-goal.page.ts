@@ -12,7 +12,7 @@ import { CreateGoalPage } from '../goal/modals/create-goal/create-goal.page'
 import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'
 import { CollectiveGoalSharePopoverPage } from './popovers/share/share.component';
 // Services
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
 import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';

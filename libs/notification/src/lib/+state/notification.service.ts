@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // Services
 import { AngularFireAuth } from '@angular/fire/auth';
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import {
   Notification,

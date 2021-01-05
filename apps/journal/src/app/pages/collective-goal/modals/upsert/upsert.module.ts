@@ -4,14 +4,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { UpsertCollectiveGoalPage } from './upsert.component';
+import { AutosizeModule } from '@strive/ui/directives/auto-resize-textarea.directive';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AutosizeModule
   ],
   exports: [],
-  declarations: [UpsertCollectiveGoalPage],
+  declarations: [
+    UpsertCollectiveGoalPage
+  ],
 })
 export class UpsertCollectiveGoalModule { }

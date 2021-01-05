@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, Renderer2, OnInit } from "@angular/core";
+import { Directive, Input, ElementRef, Renderer2, OnInit, NgModule } from "@angular/core";
 import { DomController } from "@ionic/angular";
 
 @Directive({
@@ -65,3 +65,9 @@ export class ScrollVanishDirective implements OnInit {
     this.hidden = false;
   }
 }
+
+@NgModule({
+  exports: [ScrollVanishDirective],
+  declarations: [ScrollVanishDirective]
+})
+export class ScrollVanishDirectiveModule { } 

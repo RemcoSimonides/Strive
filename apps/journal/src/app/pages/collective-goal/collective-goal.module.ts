@@ -10,7 +10,6 @@ import { CollectiveGoalPage } from './collective-goal.page';
 import { CollectiveGoalOptionsPopoverModule } from './popovers/options/options.module';
 import { CollectiveGoalSharePopoverModule } from './popovers/share/share.module';
 
-import { ComponentsModule } from '../../components/components.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CollectiveGoalAuthGuardService } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 import { UpsertCollectiveGoalModule } from './modals/upsert/upsert.module';
@@ -21,6 +20,7 @@ import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/r
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
+import { CreateGoalPageModule } from 'apps/journal/src/app/pages/goal/modals/create-goal/create-goal.module'
 
 const routes: Routes = [
   {
@@ -33,7 +33,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    ComponentsModule,
     FlexLayoutModule,
 
     FontAwesomeModule,
@@ -49,7 +48,8 @@ const routes: Routes = [
     RectangleThumbnailModule,
     PageLoadingModule,
     PageNotFoundModule,
-    HeaderModule
+    HeaderModule,
+    CreateGoalPageModule
   ],
   declarations: [
     CollectiveGoalPage,

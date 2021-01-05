@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirestoreService } from '../firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { IComment } from '@strive/interfaces';
 
 @Injectable({

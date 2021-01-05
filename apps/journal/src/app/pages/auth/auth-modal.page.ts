@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 // Services
-import { FirestoreService } from 'apps/journal/src/app/services/firestore/firestore.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { FcmService } from 'apps/journal/src/app/services/fcm/fcm.service';
 import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'

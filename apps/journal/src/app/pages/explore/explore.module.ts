@@ -11,7 +11,7 @@ import { ExplorePage } from './explore.page';
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module'
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module'
 
-import { ScrollVanishDirective } from '../../directives/scroll-vanish/scroll-vanish.directive';
+import { ScrollVanishDirectiveModule } from '@strive/ui/directives/scroll-vanish.directive';
 
 const routes: Routes = [
   {
@@ -29,12 +29,11 @@ const routes: Routes = [
     
     // Strive
     ThumbnailListModule,
-    // ThumbnailListPipeModule,
-    RectangleThumbnailModule
+    RectangleThumbnailModule,
+    ScrollVanishDirectiveModule
   ],
   declarations: [
-    ExplorePage,
-    ScrollVanishDirective
+    ExplorePage
   ]
 })
 export class ExplorePageModule {}

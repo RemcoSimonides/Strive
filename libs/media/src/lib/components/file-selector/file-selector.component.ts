@@ -6,11 +6,11 @@ import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 const { Camera } = Plugins;
 
 @Component({
-  selector: 'app-image-upload',
-  templateUrl: './image-upload.component.html',
-  styleUrls: ['./image-upload.component.scss'],
+  selector: 'media-file-selector',
+  templateUrl: './file-selector.component.html',
+  styleUrls: ['./file-selector.component.scss'],
 })
-export class ImageUploadComponent implements OnInit {
+export class FileSelectorComponent implements OnInit {
   enumCameraSource = CameraSource
 
   _androidORios: boolean = false
