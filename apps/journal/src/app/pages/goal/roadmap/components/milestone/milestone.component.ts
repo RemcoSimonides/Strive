@@ -111,9 +111,6 @@ export class MilestoneComponent implements OnInit {
           handler: async () => {
 
             this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.succeeded })
-            // Firebase backend function handles completing submilestones (WITHOUT NOTIFICATION)
-            // Firebase backend function milestoneChangeHandler handles sending notification to supporters of milestone
-
             this.milestone.status = enumMilestoneStatus.succeeded
             this.startPostCreation()
           }
@@ -123,7 +120,7 @@ export class MilestoneComponent implements OnInit {
           role: 'succeeded',
           handler: async () => {
 
-            this.milestoneService.milestoneStatusChange(this.goalId, this.milestone, enumMilestoneStatus.failed)
+            this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.failed })
             this.milestone.status = enumMilestoneStatus.failed
             this.startPostCreation()
 

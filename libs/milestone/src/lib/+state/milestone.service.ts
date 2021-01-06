@@ -12,6 +12,9 @@ export class MilestoneService {
   async upsert(goalId:  string, milestoneId: string, data: Partial<Milestone>) {
     if (!!data.deadline) data.deadline = this.setDeadlineToEndOfDay(data.deadline)
     await this.db.upsert(`Goals/${goalId}/Milestones/${milestoneId}`, data)
+
+    // Firebase backend function handles completing submilestones (WITHOUT NOTIFICATION)
+    // Firebase backend function milestoneChangeHandler handles sending notification to supporters of milestone
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {
