@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'mSlice',
@@ -23,7 +23,11 @@ export class MilestonePathPipe implements PipeTransform {
     } else {
       return value.slice(0, this.end) + '...'
     }
-
   }
-
 }
+
+@NgModule({
+  exports: [MilestonePathPipe],
+  declarations: [MilestonePathPipe]
+})
+export class MilestonePathPipeModule { } 

@@ -4,14 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MilestoneOptionsPageRoutingModule } from './milestone-options-routing.module';
-
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
-    MilestoneOptionsPageRoutingModule
+    IonicModule
   ],
   declarations: []
 })

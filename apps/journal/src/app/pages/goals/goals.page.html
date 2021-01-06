@@ -34,7 +34,7 @@
         <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="['/collective-goal', collectiveGoal.id]">
           <ng-template #thumbTitle>
             <h5>{{ collectiveGoal.title }}</h5>
-            <p>{{ collectiveGoal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</p>
+            <p>{{ collectiveGoal.numberOfAchievers }} Achiever{collectiveGoal.numberOfAchievers, plural, =1 {} other {s}}</p>
           </ng-template>
         </rectangle-thumbnail>
       </ng-template>

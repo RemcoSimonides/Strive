@@ -6,7 +6,7 @@ import { AddSupportModalPage } from '../../../modals/add-support-modal/add-suppo
 import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-options.page';
 // Services
 import { PostService } from '@strive/post/+state/post.service';
-import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
+import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { ImageService } from 'apps/journal/src/app/services/image/image.service';
 // Interfaces
 import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
@@ -58,17 +58,18 @@ export class MilestoneComponent implements OnInit {
       }
     })
     await popover.present()
-    await popover.onDidDismiss().then(async (data) => {
-      if (data) {
-        if (data.data.setDeadline) {
+    await popover.onDidDismiss().then(data => {
+      if (!!data.data) {
+
+        if (!!data.data.setDeadline) {
           this.datePicker.open()
         }
 
-        if (data.data.removeDeadline) {
+        if (!!data.data.removeDeadline) {
           this.onDeadlineDateChange(null) 
         }
   
-        if (data.data.statusChange) {
+        if (!!data.data.statusChange) {
           this.milestoneStatusChange()
         }
 
@@ -109,10 +110,12 @@ export class MilestoneComponent implements OnInit {
           role: 'succeeded',
           handler: async () => {
 
-            this.milestoneService.milestoneStatusChange(this.goalId, this.milestone, enumMilestoneStatus.succeeded)
+            this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.succeeded })
+            // Firebase backend function handles completing submilestones (WITHOUT NOTIFICATION)
+            // Firebase backend function milestoneChangeHandler handles sending notification to supporters of milestone
+
             this.milestone.status = enumMilestoneStatus.succeeded
             this.startPostCreation()
-
           }
         },
         {

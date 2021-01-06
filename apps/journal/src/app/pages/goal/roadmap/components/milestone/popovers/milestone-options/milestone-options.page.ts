@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
 // Services
-import { MilestoneService } from 'apps/journal/src/app/services/milestone/milestone.service';
+import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
+import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'app-milestone-options',
@@ -13,38 +14,31 @@ import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milesto
 })
 export class MilestoneOptionsPage implements OnInit {
 
-  _goalId: string
-  _milestone: Milestone
+  goalId: string
+  milestone: Milestone
 
-  _isNotCompleted: boolean
-  _isAlreadyAssigned: boolean
+  isNotCompleted: boolean
+  isAlreadyAssigned: boolean
 
   public enumMilestoneStatus = enumMilestoneStatus
 
   constructor(
     private user: UserService,
-    private _milestoneService: MilestoneService,
-    private _navParams: NavParams,
-    private _popoverCtrl: PopoverController
+    private milestoneService: MilestoneService,
+    private navParams: NavParams,
+    private popoverCtrl: PopoverController
   ) { }
 
   async ngOnInit() {
-    this._goalId = this._navParams.get('goalId')
-    this._milestone = this._navParams.get('milestone')
+    this.goalId = this.navParams.get('goalId')
+    this.milestone = this.navParams.get('milestone')
 
-    if (this._milestone.achiever.uid ===  this.user.uid) {
-      this._isAlreadyAssigned = true
-    } else this._isAlreadyAssigned = false
-
-    if (this._milestone.status === enumMilestoneStatus.pending || this._milestone.status === enumMilestoneStatus.overdue) {
-      this._isNotCompleted = true
-    } else this._isNotCompleted = false
-
+    this.isAlreadyAssigned = this.milestone.achiever.uid === this.user.uid
+    this.isNotCompleted = this.milestone.status === enumMilestoneStatus.pending || this.milestone.status === enumMilestoneStatus.overdue
   }
 
   dismiss(data) {
-    console.log('dimissed data', data)
-    this._popoverCtrl.dismiss(data)
+    this.popoverCtrl.dismiss(data)
   }
 
   complete() {
@@ -65,26 +59,21 @@ export class MilestoneOptionsPage implements OnInit {
     })
   }
 
-  async assignMe(): Promise<void> {
+  async assignMe() {
     const currentUser = await this.user.getFirebaseUser();
-    await this._milestoneService.assignCurrentUser(this._goalId, this._milestone)
-    this._milestone.achiever.uid = currentUser.uid
-    this._milestone.achiever.username = currentUser.displayName
-    this._milestone.achiever.photoURL = currentUser.photoURL
-
-    this.dismiss(this._milestone)
-
+    this.milestone.achiever = createProfileLink({
+      username: currentUser.displayName,
+      photoURL: currentUser.photoURL,
+      uid: currentUser.uid
+    })
+    await this.milestoneService.upsert(this.goalId, this.milestone.id, { achiever: this.milestone.achiever })
+    this.dismiss(this.milestone)
   }
 
-  async unassignMe(): Promise<void> {
-
-    await  this._milestoneService.unassignAchiever(this._goalId, this._milestone)
-    this._milestone.achiever.uid = null
-    this._milestone.achiever.username = null
-    this._milestone.achiever.photoURL = null
-
-    this.dismiss(this._milestone)
-
+  async unassignMe() {
+    this.milestone.achiever = createProfileLink()
+    await this.milestoneService.upsert(this.goalId, this.milestone.id, { achiever: this.milestone.achiever})
+    this.dismiss(this.milestone)
   }
 
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
-import { leftJoin } from 'apps/journal/src/app/shared/leftJoin';
+import { leftJoin } from '@strive/utils/leftJoin';
 
 // Options to reproduce firestore queries consistently
 interface QueryConfig {

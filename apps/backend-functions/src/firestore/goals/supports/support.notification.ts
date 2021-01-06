@@ -5,7 +5,6 @@ import { enumDiscussionAudience } from '@strive/interfaces'
 import { enumEvent } from '@strive/notification/+state/notification.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
 import { sendNotificationToGoalStakeholders, sendNotificationToUsers, createDiscussion } from "../../../shared/notification/notification"
-import { enumImage } from '@strive/interfaces';
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createNotification } from '@strive/notification/+state/notification.model';
 

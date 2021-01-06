@@ -15,7 +15,7 @@ import { HeaderModule } from '@strive/ui/header/header.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 // Pipes
-import { PipesModule } from '../../pipes/pipes.module'
+import { MilestonePathPipeModule } from '@strive/milestone/pipes/path.pipe'
 
 const routes: Routes = [
   {
@@ -31,7 +31,7 @@ const routes: Routes = [
     IonicModule,
     FlexLayoutModule,
     RouterModule.forChild(routes),
-    PipesModule,
+    MilestonePathPipeModule,
     NotificationModule,
     HeaderModule,
     PageLoadingModule
