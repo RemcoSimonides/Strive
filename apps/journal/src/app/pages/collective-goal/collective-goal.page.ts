@@ -14,8 +14,8 @@ import { CollectiveGoalSharePopoverPage } from './popovers/share/share.component
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
-import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { InviteTokenService } from '@strive/utils/services/invite-token.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 // Interfaces

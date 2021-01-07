@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { AngularFirestoreDocument, AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 // Rxjs
 import { take, first } from 'rxjs/operators';
 // Services
@@ -11,7 +11,7 @@ import { Milestone, enumMilestoneStatus, MilestonesLeveled, MilestoneTemplabeObj
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
 import { setDateToEndOfDay } from '@strive/utils/helpers'
-import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
+import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
 @Injectable({
   providedIn: 'root'
 })

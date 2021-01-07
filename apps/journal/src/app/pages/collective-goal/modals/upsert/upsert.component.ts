@@ -6,7 +6,7 @@ import { AlertController, LoadingController, ModalController, NavParams } from '
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 // Service
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 // Forms
 import { CollectiveGoalForm } from '@strive/collective-goal/collective-goal/forms/collective-goal.form';
 

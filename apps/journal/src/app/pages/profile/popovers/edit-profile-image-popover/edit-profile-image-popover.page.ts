@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 // Services
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { UserService } from '@strive/user/user/+state/user.service';
 

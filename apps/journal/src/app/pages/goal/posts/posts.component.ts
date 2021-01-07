@@ -7,8 +7,8 @@ import { PostService } from '@strive/post/+state/post.service';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { Subscription } from 'rxjs';
-import { ImageService } from '../../../services/image/image.service';
-import { NotificationPaginationService } from '../../../services/pagination/notification-pagination.service';
+import { ImageService } from '@strive/media/+state/image.service';
+import { NotificationPaginationService } from '@strive/notification/+state/notification-pagination.service';
 
 @Component({
   selector: '[goal] journal-goal-posts',

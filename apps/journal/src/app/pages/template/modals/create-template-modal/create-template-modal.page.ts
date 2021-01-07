@@ -4,8 +4,8 @@ import { AlertController, LoadingController, ModalController, NavParams, NavCont
 
 // Services
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
-import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
+import { ImageService } from '@strive/media/+state/image.service';
+import { TemplateService } from '@strive/template/+state/template.service';
 
 // Interfaces
 import { ITemplate } from '@strive/interfaces';

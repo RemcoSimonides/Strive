@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 // Services
-import { AuthGuardService } from '../../../services/auth-guard/auth-guard.service'
+import { AuthGuardService } from '@strive/user/auth/guard/auth-guard.service'
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service';
 
 // Pages

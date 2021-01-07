@@ -11,11 +11,11 @@ import { take } from 'rxjs/operators';
 
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
-import { FcmService } from 'apps/journal/src/app/services/fcm/fcm.service';
-import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
+import { FcmService } from '@strive/utils/services/fcm.service';
+import { TemplateService } from '@strive/template/+state/template.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
-import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
+import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 

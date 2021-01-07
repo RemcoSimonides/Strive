@@ -7,7 +7,7 @@ import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-opt
 // Services
 import { PostService } from '@strive/post/+state/post.service';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'

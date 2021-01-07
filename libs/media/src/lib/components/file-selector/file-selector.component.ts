@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 import { Platform } from '@ionic/angular';
 
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';

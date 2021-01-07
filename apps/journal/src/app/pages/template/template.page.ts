@@ -11,12 +11,12 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
-import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
-import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
+import { TemplateService } from '@strive/template/+state/template.service';
+import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { ITemplate } from '@strive/interfaces';

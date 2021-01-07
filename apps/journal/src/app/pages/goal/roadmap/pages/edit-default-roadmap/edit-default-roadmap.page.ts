@@ -5,17 +5,16 @@ import { LoadingController, IonSearchbar, AlertController, Platform } from '@ion
 // Rxjs
 import { first } from 'rxjs/operators';
 // Services
-import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
+import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
-import { TemplateService } from 'apps/journal/src/app/services/template/template.service';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { TemplateService } from '@strive/template/+state/template.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 // Interfaces
 import { ITemplate } from '@strive/interfaces';
 import { Milestone, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
-import { MilestoneForm } from '@strive/milestone/forms/milestone.form';
+import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
 
 @Component({
   selector: 'app-edit-default-roadmap',

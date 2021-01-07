@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class InstantSearchService {
+export class AlgoliaService {
 
   client: algoliasearch.SearchClient
   goalsIndex: algoliasearch.SearchIndex

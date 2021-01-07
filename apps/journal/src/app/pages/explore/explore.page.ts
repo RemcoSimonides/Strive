@@ -3,9 +3,9 @@ import { Platform } from '@ionic/angular';
 // Rxjs
 import { Subscription } from 'rxjs';
 // Services
-import { InstantSearchService } from 'apps/journal/src/app/services/instant-search/instant-search.service';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
-import { ScreensizeService } from '../../services/screensize/screensize.service';
+import { AlgoliaService  } from '@strive/utils/services/algolia.service';
+import { SeoService } from '@strive/utils/services/seo.service';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
   selector: 'app-explore',
@@ -17,15 +17,15 @@ export class ExplorePage implements OnInit {
   private backBtnSubscription: Subscription
 
   constructor(
-    public instantSearch: InstantSearchService,
+    public algolia: AlgoliaService,
     public platform: Platform,
     public screensize: ScreensizeService,
     private seo: SeoService,
   ) {}
 
   async ngOnInit() {
-    if (this.instantSearch.lastQuery === '') {
-      this.instantSearch.search('')
+    if (this.algolia.lastQuery === '') {
+      this.algolia.search('')
     }
 
     this.seo.generateTags({ title: `Explore - Strive Journal` })
@@ -35,7 +35,7 @@ export class ExplorePage implements OnInit {
     const query = event.target.value
 
     if (query !== undefined) {
-      this.instantSearch.search(query)
+      this.algolia.search(query)
     }
   }
 

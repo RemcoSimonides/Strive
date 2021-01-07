@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
-import { ImageService } from '../image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { ITemplate } from '@strive/interfaces';
 

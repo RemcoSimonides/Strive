@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 // Ionic
 import { LoadingController } from '@ionic/angular';
 // Services
-import { RoadmapService } from '../../../../../services/roadmap/roadmap.service'
+import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 // Interfaces
 import { MilestonesLeveled, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'

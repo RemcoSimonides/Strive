@@ -27,7 +27,7 @@
 
   <h3>Collective Goals</h3>
   <thumbnail-list type="collectiveGoal">
-    <ng-container *ngFor="let collectiveGoal of instantSearch.collectiveGoalResults | async">
+    <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
       <ng-template #thumb>
         <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="'/collective-goal/' + collectiveGoal.id">
           <ng-template #thumbTitle>
@@ -40,7 +40,7 @@
 
   <h3>Goals</h3>
   <thumbnail-list type="goal">
-    <ng-container *ngFor="let goal of instantSearch.goalResults | async">
+    <ng-container *ngFor="let goal of algolia.goalResults | async">
       <ng-template #thumb>
         <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="'/goal/' + goal.id">
           <ng-template #thumbTitle>
@@ -53,7 +53,7 @@
 
   <h3>Users</h3>
   <thumbnail-list type="user">
-    <ng-container *ngFor="let user of instantSearch.profileResults | async">
+    <ng-container *ngFor="let user of algolia.profileResults | async">
       <ng-template #thumb>
         <rectangle-thumbnail type="user" [image]="user.image" [routerLink]="'/profile/' + user.id">
           <ng-template #thumbTitle>

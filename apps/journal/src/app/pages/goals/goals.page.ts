@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators'
 
 // Services
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 

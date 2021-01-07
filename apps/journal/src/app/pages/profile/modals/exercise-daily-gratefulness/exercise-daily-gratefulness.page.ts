@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 // Services
-import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
+import { ExercisesService } from '@strive/exercises/+state/exercises.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { IDailyGratefulness } from '@strive/interfaces';

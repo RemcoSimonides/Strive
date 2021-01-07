@@ -7,15 +7,13 @@ import { IComment } from '@strive/interfaces';
 })
 export class DiscussionService {
 
-  constructor(
-    private db: FirestoreService
-  ) { }
+  constructor(private db: FirestoreService) { }
 
   get(path: string) {
     return this.db.colWithIds$(path)
   }
 
-  async addReply(discussionId: string, comment: IComment): Promise<void> {
+  async addReply(discussionId: string, comment: IComment) {
     await this.db.add<IComment>(`Discussions/${discussionId}/Comments`, comment)
   }
 

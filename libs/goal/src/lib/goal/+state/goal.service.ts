@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 // Services
 import { GoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Goal, createGoal } from './goal.firestore'
 

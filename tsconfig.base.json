@@ -27,7 +27,9 @@
       "@strive/milestone/*": ["libs/milestone/src/lib/*"],
       "@strive/support/*": ["libs/support/src/lib/*"],
       "@strive/notification/*": ["libs/notification/src/lib/*"],
-      "@strive/media/*": ["libs/media/src/lib/*"]
+      "@strive/media/*": ["libs/media/src/lib/*"],
+      "@strive/exercises/*": ["libs/exercises/src/lib/*"],
+      "@strive/template/*": ["libs/template/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

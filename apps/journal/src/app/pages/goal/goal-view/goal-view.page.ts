@@ -8,9 +8,9 @@ import { switchMap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
+import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';

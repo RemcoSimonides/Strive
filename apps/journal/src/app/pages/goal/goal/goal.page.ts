@@ -17,7 +17,7 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
-import { InviteTokenService } from '../../../services/invite-token/invite-token.service';
+import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 // Strive Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';

@@ -6,13 +6,13 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
-import { FcmService } from './services/fcm/fcm.service';
-import { ScreensizeService } from './services/screensize/screensize.service';
+import { FcmService } from '@strive/utils/services/fcm.service';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 // Pages
 import { TabsPage } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
-import { InstantSearchService } from './services/instant-search/instant-search.service';
+import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { Subscription } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
@@ -34,7 +34,7 @@ export class AppComponent implements OnDestroy {
     public screensize: ScreensizeService,
     public user: UserService,
     private _fcm: FcmService,
-    private _instantSearchService: InstantSearchService,
+    private algolia: AlgoliaService,
     private menuCtrl: MenuController,
     private _modalCtrl: ModalController,
     private _navCtrl: NavController,
@@ -101,7 +101,7 @@ export class AppComponent implements OnDestroy {
     // only search when page is explore page
     if (this.router.url === '/explore') {
       if (query !== undefined) {
-        this._instantSearchService.search(query)
+        this.algolia.search(query)
       }
     }
 
@@ -115,7 +115,7 @@ export class AppComponent implements OnDestroy {
 
       this._navCtrl.navigateRoot('/explore')
       if (query !== undefined) {
-        this._instantSearchService.search(query)
+        this.algolia.search(query)
       }
     }
 

@@ -18,7 +18,7 @@ import { Support } from '@strive/support/+state/support.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/auth-modal.page';
-import { RoadmapService } from 'apps/journal/src/app/services/roadmap/roadmap.service';
+import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 
 @Component({
   selector: 'app-add-support-modal',

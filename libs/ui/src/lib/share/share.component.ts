@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { InviteTokenService } from 'apps/journal/src/app/services/invite-token/invite-token.service';
+import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { ShareService } from '@ngx-share/core';
 
 import { Plugins }  from '@capacitor/core'

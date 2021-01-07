@@ -20,7 +20,7 @@ export class SeoService {
       // Open Graph
       { name: 'og:url', content: `https://strivejournal.com/${this.router.url}` },
       { name: 'og:title', content: title },
-      { name: 'og:description', content: 'description' },
+      { name: 'og:description', content: description },
       { name: 'og:image', content: image }
 
     ])

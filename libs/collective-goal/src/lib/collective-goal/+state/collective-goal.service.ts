@@ -7,7 +7,7 @@ import { first, map } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
-import { ImageService } from '../../../../../../apps/journal/src/app/services/image/image.service';
+import { ImageService } from '@strive/media/+state/image.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { ICollectiveGoal } from './collective-goal.firestore';

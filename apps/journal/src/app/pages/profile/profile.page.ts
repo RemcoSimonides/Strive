@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
-import { UserSpectateService } from 'apps/journal/src/app/services/user/user-spectate.service';
+import { UserSpectateService } from '@strive/user/user/+state/user-spectate.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
-// import { FcmService } from 'src/app/services/fcm/fcm.service';
-import { ImageService } from 'apps/journal/src/app/services/image/image.service';
-import { ExercisesService } from 'apps/journal/src/app/services/exercises/exercises.service';
+// import { FcmService } from '@strive/utils/services/fcm.service';
+import { ImageService } from '@strive/media/+state/image.service';
+import { ExercisesService } from '@strive/exercises/+state/exercises.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { Observable } from 'rxjs';
@@ -30,7 +30,7 @@ import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
 

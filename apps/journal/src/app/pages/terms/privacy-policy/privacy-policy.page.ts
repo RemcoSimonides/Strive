@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SeoService } from 'apps/journal/src/app/services/seo/seo.service';
+import { SeoService } from '@strive/utils/services/seo.service';
 
 @Component({
   selector: 'app-privacy-policy',
