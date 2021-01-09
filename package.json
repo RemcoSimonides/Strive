@@ -94,7 +94,7 @@
     "@angular/language-service": "^11.0.7",
     "@capacitor/cli": "2.4.0",
     "@ionic/angular-toolkit": "2.2.0",
-    "@nrwl/cypress": "10.0.12",
+    "@nrwl/cypress": "11.1.1",
     "@nrwl/jest": "10.0.12",
     "@nrwl/node": "10.1.0",
     "@nrwl/workspace": "10.0.12",
