@@ -1,10 +1,10 @@
 module.exports = {
-  name: 'backend-functions',
-  preset: '../../jest.config.js',
+  preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsConfig: '<rootDir>/tsconfig.spec.json',
-    }
+    },
   },
-  coverageDirectory: '../../coverage/apps/backend-functions'
+  coverageDirectory: '../../coverage/apps/backend-functions',
+  displayName: 'backend-functions',
 };

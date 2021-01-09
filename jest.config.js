@@ -1,9 +1,20 @@
 module.exports = {
-  testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
-  transform: {
-    '^.+\\.(ts|js|html)$': 'ts-jest',
-  },
-  resolver: '@nrwl/jest/plugins/resolver',
-  moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageReporters: ['html'],
+  projects: [
+    '<rootDir>/apps/journal',
+    '<rootDir>/apps/backend-functions',
+    '<rootDir>/libs/interfaces',
+    '<rootDir>/libs/ui',
+    '<rootDir>/libs/user',
+    '<rootDir>/libs/collective-goal',
+    '<rootDir>/libs/utils',
+    '<rootDir>/libs/goal',
+    '<rootDir>/libs/post',
+    '<rootDir>/libs/chat',
+    '<rootDir>/libs/milestone',
+    '<rootDir>/libs/support',
+    '<rootDir>/libs/notification',
+    '<rootDir>/libs/media',
+    '<rootDir>/libs/exercises',
+    '<rootDir>/libs/template',
+  ],
 };
