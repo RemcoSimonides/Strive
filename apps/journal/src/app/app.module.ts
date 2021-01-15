@@ -44,8 +44,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 
 // Text editor
 import { QuillModule } from 'ngx-quill';
-// import { ShareButtonsModule } from '@ngx-share/buttons';
-import { ShareButtonsConfig, ShareModule } from '@ngx-share/core';
+import { ShareButtonsConfig, ShareModule } from 'ngx-sharebuttons';
 
 const customConfig: ShareButtonsConfig = {
   autoSetMeta: true,

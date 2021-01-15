@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase/app';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestoreCollectionGroup, QueryFn } from '@angular/fire/firestore'
+import firebase from 'firebase/app';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestoreCollectionGroup, QueryFn, DocumentSnapshot, Action, DocumentSnapshotExists, QueryDocumentSnapshot } from '@angular/fire/firestore'
 import { Observable } from 'rxjs';
 import { take, tap, map } from 'rxjs/operators'
 import { FieldValue } from '@firebase/firestore-types';
@@ -21,7 +21,7 @@ export class FirestoreService {
   constructor(private afs: AngularFirestore) { }
 
   get timestamp(): FieldValue {
-    return firebase.firestore.FieldValue.serverTimestamp()
+    return firebase.firestore.FieldValue.serverTimestamp();
   }
 
   getArrayUnion(value): FieldValue {
@@ -93,7 +93,7 @@ export class FirestoreService {
           return docs.map(a => a.payload.doc.data() as T)
         })
       )
-    
+
   }
 
   /**

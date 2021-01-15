@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
-import { ShareService } from '@ngx-share/core';
+import { ShareService } from 'ngx-sharebuttons';
 
 import { Plugins }  from '@capacitor/core'
 const { Clipboard } = Plugins
