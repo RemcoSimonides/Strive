@@ -2,5 +2,21 @@
   "projects": {
     "prod": "strive-journal",
     "remco": "lets-support-23a6c"
+  },
+  "targets": {
+    "strive-journal": {
+      "hosting": {
+        "journal": [
+          "strive-journal"
+        ]
+      }
+    },
+    "lets-support-23a6c": {
+      "hosting": {
+        "journal": [
+          "lets-support-23a6c"
+        ]
+      }
+    }
   }
 }
