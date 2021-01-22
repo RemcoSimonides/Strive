@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CreateTemplateModalPage } from './create-template-modal.page';
+// import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    ReactiveFormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    QuillModule
   ],
   exports: [],
   declarations: [CreateTemplateModalPage]

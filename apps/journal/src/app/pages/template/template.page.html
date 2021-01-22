@@ -10,10 +10,10 @@
         <span id="template-title">{{ template.title }}</span>
       </ion-row>
       <ion-row>
-        <app-text-editor [_description]="template.description" 
+        <strive-text-editor [description]="template.description" 
           [isAdmin]="_isAdmin" 
           (update)="_saveDescription($event)"
-        ></app-text-editor>
+        ></strive-text-editor>
       </ion-row>
     </ion-grid>
 

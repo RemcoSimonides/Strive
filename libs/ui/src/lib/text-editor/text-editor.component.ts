@@ -1,11 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 
-import * as QuillNamespace from 'quill';
-import { ImageDrop } from 'quill-image-drop-module'
-
-let Quill: any = QuillNamespace;
-Quill.register('modules/imageDrop', ImageDrop)
-
 @Component({
   selector: 'strive-text-editor',
   templateUrl: './text-editor.component.html',
@@ -17,14 +11,14 @@ export class TextEditorComponent {
   @Input() isAdmin: boolean = true
   @Input() editMode: boolean = false
 
-  @Output() update = new EventEmitter<string>() 
+  @Output() update = new EventEmitter<string>()
 
-  public _editorStyle = {
+  public editorStyle = {
     height: '300px',
     width: '100%'
   }
 
-  public _editorConfig = {
+  public editorConfig = {
     toolbar: {
       container: [
         ['bold', 'italic', 'underline'],
@@ -32,17 +26,7 @@ export class TextEditorComponent {
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'indent': '-1'}, { 'indent': '+1' }],
         ['link', 'image', 'video'],
-        // ['clean']
       ]
-    },
-    imageDrop: true,
-    imageResize: {
-      displayStyles: {
-        backgroundColor: 'black',
-        border: 'none',
-        color: 'white'
-      },
-      modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
     }
   }
 

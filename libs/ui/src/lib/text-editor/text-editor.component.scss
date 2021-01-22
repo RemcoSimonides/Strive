@@ -1,24 +1,24 @@
-#goal-description-section {
-    position: relative;
+quill-editor {
+  padding-bottom: 90px;
 }
 
-#goal-description {
-    padding-left: 16px;
-    padding-right: 16px;
-}
+section {
+  position: relative;
 
-#toggle-description-edit-button {
+  .edit-button {
     position: absolute;
     bottom: -25px;
     right: 30px;
     z-index: 1;
-}
-
-#save-button {
+  }
+  
+  .save-button {
     float: right;
     margin-right: 30px;
-}
+  }
 
-.text-editor {
-    padding-bottom: 90px;
+  article {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }

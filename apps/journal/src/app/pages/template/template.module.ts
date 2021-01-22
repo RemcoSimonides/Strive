@@ -14,6 +14,7 @@ import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/
 import { RoadmapModule } from '../goal/roadmap/components/roadmap.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from '@strive/ui/header/header.module';
+import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     RoadmapModule,
     HeaderModule,
-    CreateTemplateModalPageModule
+    CreateTemplateModalPageModule,
+    TextEditorModule
   ],
   declarations: [
     TemplatePage,

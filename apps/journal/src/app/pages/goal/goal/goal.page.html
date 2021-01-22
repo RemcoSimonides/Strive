@@ -95,10 +95,10 @@
     </ion-grid>
   </div>
 
-  <app-text-editor [_description]="goal.description"
+  <strive-text-editor [description]="goal.description"
     [isAdmin]="isAdmin" 
     (update)="saveDescription($event)"
-  ></app-text-editor>
+  ></strive-text-editor>
 
 </ng-container>
 

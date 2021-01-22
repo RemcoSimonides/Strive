@@ -11,7 +11,7 @@ import { TextEditorComponent } from './text-editor.component';
     CommonModule,
     IonicModule,
     FormsModule,
-    QuillModule
+    QuillModule.forRoot(),
   ],
   exports: [TextEditorComponent],
   declarations: [TextEditorComponent]

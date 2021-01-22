@@ -64,11 +64,11 @@
         </ion-grid>
       </article>
 
-      <app-text-editor
-        [_description]="collectiveGoal.description"
+      <strive-text-editor
+        [description]="collectiveGoal.description"
         [isAdmin]="isAdmin"
         (update)="saveDescription($event)"
-      ></app-text-editor>
+      ></strive-text-editor>
 
     </ng-container>
   </section>
