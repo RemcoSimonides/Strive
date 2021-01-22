@@ -27,11 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-// import { CreateGoalPage } from './pages/goal/modals/create-goal/create-goal.page';
-// import { CreateTemplateModalPage } from './pages/template/modals/create-template-modal/create-template-modal.page';
 import { TermsPage } from './pages/terms/terms.page';
 import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
-// import { HomePage } from './pages/home/home.page';
 import { TabsPage } from './pages/tabs/tabs';
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
 import { AuthModalPage } from './pages/auth/auth-modal.page';
@@ -43,32 +40,25 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
 // Text editor
-import { QuillModule } from 'ngx-quill';
 import { ShareButtonsConfig, ShareModule } from 'ngx-sharebuttons';
 
 const customConfig: ShareButtonsConfig = {
   autoSetMeta: true,
-  twitterAccount: 'ankitsharma_007'
+  twitterAccount: 'strivejournal'
 };
 
 @NgModule({
   declarations: [
     AppComponent,
-    // CreateGoalPage,
-    // CreateTemplateModalPage,
     PrivacyPolicyPage,
     TermsPage,
-    // HomePage,
     TabsPage,
     ProfileOptionsBrowserPage,
     AuthModalPage
   ],
   entryComponents: [
-    // CreateGoalPage,
-    // CreateTemplateModalPage,
     PrivacyPolicyPage,
     TermsPage,
-    // HomePage,
     TabsPage,
     ProfileOptionsBrowserPage,
     AuthModalPage
@@ -93,7 +83,6 @@ const customConfig: ShareButtonsConfig = {
     FormsModule,
     // ShareButtonsModule,
     ShareModule.withConfig(customConfig),
-    QuillModule.forRoot(),
   ],
   providers: [
     StatusBar,

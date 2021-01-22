@@ -20,8 +20,6 @@ import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upse
 import { AddSupportModalPageModule } from '../modals/add-support-modal/add-support-modal.module'
 import { PostsModule } from '../posts/posts.module';
 
-import { QuillModule } from 'ngx-quill'
-
 const routes: Routes = [
   { path: '', component: GoalViewPage },
   { 
@@ -35,7 +33,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     RoadmapModule,
-    QuillModule,
     PageLoadingModule,
     PageNotFoundModule,
     UpsertPostModalModule,
