@@ -76,11 +76,11 @@ export class UserSpectateService {
     const newSpectator = <ISpectator>{}
     newSpectator.uid = currentUserProfile.id
     newSpectator.username = currentUserProfile.username
-    newSpectator.photoURL = currentUserProfile.image
+    newSpectator.photoURL = currentUserProfile.photoURL
     newSpectator.isSpectator = true
     newSpectator.profileId = toBeSpectatedUserProfile.id
     newSpectator.profileUsername = toBeSpectatedUserProfile.username
-    newSpectator.profilePhotoURL = toBeSpectatedUserProfile.image
+    newSpectator.profilePhotoURL = toBeSpectatedUserProfile.photoURL
     
     await this.upsert(uid, newSpectator)
 

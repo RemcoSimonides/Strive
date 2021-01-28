@@ -53,7 +53,7 @@ export class UserService {
     const currentUser = await this.afAuth.currentUser
     currentUser.updateProfile({
       displayName: profile.username ?? currentUser.displayName,
-      photoURL: profile.image ?? currentUser.photoURL
+      photoURL: profile.photoURL ?? currentUser.photoURL
     })
   }
 

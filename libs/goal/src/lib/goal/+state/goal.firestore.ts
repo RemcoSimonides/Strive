@@ -9,12 +9,7 @@ export interface Goal {
     shortDescription: string;
     description: string;
     image: string;
-    collectiveGoal?: {
-        id: string;
-        title: string;
-        image: string;
-        isPublic: boolean;
-    };
+    collectiveGoalId: string;
     milestoneTemplateObject: MilestoneTemplabeObject[];
     isOverdue: boolean;
     isFinished: boolean;
@@ -52,13 +47,8 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     shortDescription: '',
     title: '',
     totalNumberOfCustomSupports: 0,
+    collectiveGoalId: '',
     ...params,
-    collectiveGoal: {
-      id: params.collectiveGoal?.id ?? '',
-      image: params.collectiveGoal?.image ?? '',
-      isPublic: params.collectiveGoal.isPublic ?? false,
-      title: params.collectiveGoal?.title ?? ''
-    },
   }
 }
 

@@ -216,7 +216,7 @@ export class ProfilePage implements OnInit {
       })
       popover.onDidDismiss().then((imageURL => {
         if (imageURL && imageURL.data) {
-          this._profile.image = imageURL.data.toString()
+          this._profile.photoURL = imageURL.data.toString()
         }
       }))
       await popover.present()

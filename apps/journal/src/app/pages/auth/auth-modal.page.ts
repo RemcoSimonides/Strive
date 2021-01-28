@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 // Ionic
@@ -24,6 +23,7 @@ import { ITemplate } from '@strive/interfaces';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
+import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
 
 @Component({
   selector: 'app-auth-modal',
@@ -38,8 +38,8 @@ export class AuthModalPage implements OnInit {
   passwordIcon: string = 'eye-off-outline';
 
   hideShowPassword() {
-      this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
-      this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
+    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
   }
 
   public loginForm: FormGroup
@@ -74,20 +74,19 @@ export class AuthModalPage implements OnInit {
   constructor(
     private afAuth: AngularFireAuth,
     private alertCtrl: AlertController,
-    private _collectiveGoalService: CollectiveGoalService,
-    private _db: FirestoreService,
+    private collectiveGoalService: CollectiveGoalService,
+    private db: FirestoreService,
     private fcmService: FcmService,
     private formBuilder: FormBuilder,
-    private _goalService: GoalService,
-    private _goalStakeholderService: GoalStakeholderService,
+    private goalService: GoalService,
+    private goalStakeholderService: GoalStakeholderService,
     private loadingCtrl: LoadingController,
-    private _modalCtrl: ModalController,
+    private modalCtrl: ModalController,
     private navParams: NavParams,
-    private _navCtrl: NavController,
-    public _platform: Platform,
-    private _roadmapService: RoadmapService,
-    private _router: Router,
-    private _templateService: TemplateService,
+    private navCtrl: NavController,
+    public platform: Platform,
+    private roadmapService: RoadmapService,
+    private templateService: TemplateService,
     private user: UserService
   ) { }
 
@@ -146,8 +145,8 @@ export class AuthModalPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => { 
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this._backBtnSubscription = this.platform.backButton.subscribe(() => { 
         
         if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
           this.segmentChanged(enumAuthSegment.login)
@@ -162,7 +161,7 @@ export class AuthModalPage implements OnInit {
   }
 
   ionViewWillLeave() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
+    if (this.platform.is('android') || this.platform.is('ios')) {
       this._backBtnSubscription.unsubscribe();
     }
   }
@@ -195,7 +194,7 @@ export class AuthModalPage implements OnInit {
   }
 
   async closeAuthModal(): Promise<void> {
-    await this._modalCtrl.dismiss()
+    await this.modalCtrl.dismiss()
   }
 
   async loginUser(): Promise<void> {
@@ -217,7 +216,7 @@ export class AuthModalPage implements OnInit {
         await this.afAuth.signInWithEmailAndPassword(email, password)
         await loading.dismiss()
         await this.fcmService.registerFCM()
-        await this._modalCtrl.dismiss()
+        await this.modalCtrl.dismiss()
 
       } catch (error) {
 
@@ -246,7 +245,7 @@ export class AuthModalPage implements OnInit {
 
         const newUserProfile = <Profile>{
           username: this.signupForm.value.username,
-          image: `assets/img/avatar/blank-profile-picture_512_thumb.png`,
+          photoURL: `assets/img/avatar/blank-profile-picture_512_thumb.png`,
           numberOfSpectating: 0,
           numberOfSpectators: 0
         }
@@ -257,38 +256,34 @@ export class AuthModalPage implements OnInit {
         // create tutorial goal
         const collectiveGoalId: string = `XGtfe77pCKh1QneOipI7`
         const templateId: string = `ScA150CYoGsk4xQDcVYM`
-        const template: ITemplate = await this._templateService.getTemplate(collectiveGoalId, templateId)
-        const collectiveGoal: ICollectiveGoal = await this._collectiveGoalService.getCollectiveGoal(collectiveGoalId)
+        const template: ITemplate = await this.templateService.getTemplate(collectiveGoalId, templateId)
+        const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
 
         if (!template || !template.createdAt || !collectiveGoal || collectiveGoal.createdAt) {
 
           await loading.dismiss()
           this.fcmService.registerFCM()
-          this._modalCtrl.dismiss()
+          this.modalCtrl.dismiss()
           return
 
         }
 
-        const goalId = await this._goalService.handleCreatingGoal(this.user.uid, {
+        const goalId = await this.goalService.create(this.user.uid, createGoal({
           title: template.goalTitle,
-          description: template.description,
+          description: template.goalDeadline,
           publicity: 'private',
           deadline: template.goalDeadline,
           shortDescription: template.goalShortDescription || '',
-          image: template.goalImage
-        }, {
-          id: collectiveGoalId,
-          title: collectiveGoal.title,
-          isPublic: collectiveGoal.isPublic,
-          image: collectiveGoal.image
-        })
+          image: template.goalImage,
+          collectiveGoalId
+        }))
 
-        this._goalStakeholderService.upsert(user.uid, goalId, {
+        this.goalStakeholderService.upsert(user.uid, goalId, {
           isAdmin: true,
           isAchiever: true,
         })
 
-        this._db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${user.uid}`)
+        this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${user.uid}`)
           .pipe(take(2))
           .subscribe(async stakeholder => {
 
@@ -296,14 +291,14 @@ export class AuthModalPage implements OnInit {
               if (stakeholder.isAdmin) {
 
                 // generate milestones
-                this._roadmapService.duplicateMilestones(goalId, template.milestoneTemplateObject)
+                this.roadmapService.duplicateMilestones(goalId, template.milestoneTemplateObject)
 
                 await loading.dismiss()
 
-                this._templateService.increaseTimesUsed(collectiveGoalId, templateId, template.numberOfTimesUsed)
+                this.templateService.increaseTimesUsed(collectiveGoalId, templateId, template.numberOfTimesUsed)
                 await this.fcmService.registerFCM()
 
-                this._navCtrl.navigateRoot(`/goal/${goalId}`)
+                this.navCtrl.navigateRoot(`/goal/${goalId}`)
               }
             }
 

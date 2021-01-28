@@ -31,7 +31,7 @@ export class EditProfileImagePopoverPage {
 
     if (this.imageService.image) {
       const image = await this.imageService.uploadImage(`Profiles/${this.user.uid}/${this.user.uid}`, false)
-      await this.user.upsertProfile({ image: image })
+      await this.user.upsertProfile({ photoURL: image })
 
       this.dismiss(image)
       this._saving = false

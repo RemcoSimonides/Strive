@@ -158,18 +158,14 @@ export class TemplatePage implements OnInit {
     }
 
     // Create goal
-    const goalId = await this.goalService.handleCreatingGoal(this.user.uid, {
+    const goalId = await this.goalService.create(this.user.uid, {
       title: template.goalTitle,
       description: template.description,
       publicity: publicity,
       deadline: template.goalDeadline,
       shortDescription: template.goalShortDescription || '',
-      image: template.goalImage
-    }, {
-      id: this._collectiveGoalId,
-      title: collectiveGoal.title,
-      isPublic: collectiveGoal.isPublic,
-      image: collectiveGoal.image
+      image: template.goalImage,
+      collectiveGoalId: this._collectiveGoalId
     })
 
     // Create stakeholder

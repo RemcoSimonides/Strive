@@ -91,7 +91,7 @@ export class CollectiveGoalStakeholderService {
     const userProfile = await this.db.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
     newStakeholder.uid = uid
     newStakeholder.username = userProfile.username
-    newStakeholder.photoURL = userProfile.image
+    newStakeholder.photoURL = userProfile.photoURL
     newStakeholder.isAdmin = roles.isAdmin ? roles.isAdmin : false
     newStakeholder.isAchiever = roles.isAchiever ? roles.isAchiever : false
     newStakeholder.isSpectator = roles.isSpectator ? roles.isSpectator : false

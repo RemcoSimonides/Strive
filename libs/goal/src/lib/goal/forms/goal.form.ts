@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createGoalLink, GoalLink } from "../+state/goal.firestore";
+import { createGoalLink, GoalLink, Goal, createGoal } from "../+state/goal.firestore";
 
 function createGoalLinkFormControl(params?: GoalLink) {
   const goalLink = createGoalLink(params)
@@ -21,4 +21,40 @@ export class GoalLinkForm extends FormEntity<GoalLinkFormControl> {
   get id() { return this.get('id') }
   get title() { return this.get('title') }
   get image() { return this.get('image') }
+}
+
+function createGoalFormControl(params?: Goal) {
+  const goal = createGoal(params);
+  return {
+    description: new FormControl(goal.description),
+    image: new FormControl(goal.image),
+    isFinished: new FormControl(goal.isFinished),
+    isLocked: new FormControl(goal.isLocked),
+    isOverdue: new FormControl(goal.isOverdue),
+    deadline: new FormControl(goal.deadline),
+    milestoneTemplateObject: new FormControl(goal.milestoneTemplateObject),
+    numberOfAchievers: new FormControl(goal.numberOfAchievers),
+    numberOfCustomSupports: new FormControl(goal.numberOfCustomSupports),
+    numberOfSupporters: new FormControl(goal.numberOfSupporters),
+    publicity: new FormControl(goal.publicity),
+    isPublic: new FormControl(goal.publicity === 'private' ? false : true),
+    shortDescription: new FormControl(goal.shortDescription),
+    title: new FormControl(goal.title),
+    totalNumberOfCustomSupports: new FormControl(goal.totalNumberOfCustomSupports),
+    collectiveGoalId: new FormControl(goal.collectiveGoalId)
+  }
+}
+
+export type GoalFormControl = ReturnType<typeof createGoalFormControl>
+
+export class GoalForm extends FormEntity<GoalFormControl> {
+  constructor(goal?: Goal) {
+    super(createGoalFormControl(goal))
+  }
+
+  get title() { return this.get('title') }
+  get description() { return this.get('description') }
+  get shortDescription() { return this.get('shortDescription') }
+  get publicity() { return this.get('publicity') }
+  get collectiveGoalId() { return this.get('collectiveGoalId') }
 }

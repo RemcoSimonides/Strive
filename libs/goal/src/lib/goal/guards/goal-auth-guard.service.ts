@@ -73,8 +73,8 @@ export class GoalAuthGuardService implements CanActivate {
 
         let accessToCollectiveGoal: boolean
         let accessToGoal: boolean
-        if (goal.collectiveGoal.id) {
-          accessToCollectiveGoal = await this.checkAccessToCollectiveGoal(goal.collectiveGoal.id, this.user.uid)
+        if (!!goal.collectiveGoalId) {
+          accessToCollectiveGoal = await this.checkAccessToCollectiveGoal(goal.collectiveGoalId, this.user.uid)
         }
         accessToGoal =  await this.checkAccessToGoal(stakeholder)
         return accessToCollectiveGoal || accessToGoal ? true : false

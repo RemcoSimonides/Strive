@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 //ionic
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
 //Services
-import { GoalService, collectiveGoalArgs } from '@strive/goal/goal/+state/goal.service'
+import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 //Interfaces
-import { Goal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoal, Goal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({
   selector: 'app-create-goal',
@@ -19,164 +19,96 @@ import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/
 })
 export class CreateGoalPage implements OnInit {
 
-  public createGoalForm: FormGroup
-  public title: string = 'Create Goal'
+  // update only
+  private goal: Goal
 
-  private _collectiveGoalId: string | undefined
-  private _collectiveGoal: ICollectiveGoal
+  // both update and create
+  private collectiveGoal: ICollectiveGoal
 
-  public goal = <Goal>{}
+  public goalForm = new GoalForm()
+  public title = 'Create Goal'
+  public mode: 'update' | 'create'
 
   constructor(
     private user: UserService,
     private alertCtrl: AlertController,
     private collectiveGoalService: CollectiveGoalService,
-    private formBuilder: FormBuilder,
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private navParams: NavParams,
-  ) { }
+  ) { 
+  }
 
   async ngOnInit() {
-
-    //Initialising create goal form
-    this.createGoalForm = this.formBuilder.group({
-      title: ['', Validators.compose([Validators.required])],
-      shortDescription: [''],
-      isPublic: [false, Validators.compose([Validators.required])],
-      deadline: ['']
-    })
-
-    if (this.navParams.data.currentGoal) {
-      this.goal = this.navParams.data.currentGoal
-      this.title = 'Edit Goal'
-      this._collectiveGoalId = this.goal.collectiveGoal ? this.goal.collectiveGoal.id : undefined
-
-      this.createGoalForm.patchValue({
-        title: this.goal.title,
-        shortDescription: this.goal.shortDescription,
-        isPublic: this.goal.publicity === 'private' ? false : true,
-        deadline: this.goal.deadline
-      })
+    this.goal = this.navParams.data.currentGoal as Goal
+    if (!!this.goal) {
+      this.goalForm = new GoalForm(this.goal)
+      this.mode = 'update'
+    } else {
+      this.mode = 'create'
     }
 
-    this._collectiveGoalId = this.navParams.data.collectiveGoalId
-    if (this._collectiveGoalId) this._collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this._collectiveGoalId)
+    const collectiveGoalId = this.navParams.data.collectiveGoalId as string
+    if (!!collectiveGoalId) {
+      this.goalForm.collectiveGoalId.setValue(collectiveGoalId)
+      this.collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId);
+    }
 
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)
-
   }
 
-  public async dismiss(){
-    await this.modalCtrl.dismiss()
+  public dismiss(){
+    this.modalCtrl.dismiss()
   }
 
-  public async handleCreatingGoal(){
-
-    if (!this.createGoalForm.valid){
+  public async upsert() {
+    if (!this.goalForm.valid){
       console.log('invalid value(s)')
     } else {
-
+    
       const loading = await this.loadingCtrl.create({
         spinner: 'lines',
         message: 'Please wait...'
       })
       await loading.present()
-
+      
       try {
 
-        const goal: Partial<Goal> = {
-          title: this.createGoalForm.value.title,
-          shortDescription: this.createGoalForm.value.shortDescription,
-          publicity: this.determinePublicity(this.createGoalForm.value.isPublic, this.navParams.data.collectiveGoalIsPublic !== undefined ? this.navParams.data.collectiveGoalIsPublic : undefined),
-          deadline: this.createGoalForm.value.deadline ? this.createGoalForm.value.deadline : null
+        // determine publicity
+        const publicity = this.determinePublicity(this.goalForm.value.isPublic)
+        this.goalForm.publicity.setValue(publicity)
+
+        const goal = createGoal(this.goalForm.value)
+        if (this.mode === 'create') {
+          const id = await this.goalService.create(this.user.uid, goal)
+          await this.navCtrl.navigateForward(`/goal/${id}`)
+        } else if (this.mode === 'update') {
+          await this.goalService.update(this.goal.id, this.goalForm.value)
         }
-
-        const collectiveGoal: collectiveGoalArgs = {
-          id: this._collectiveGoal ? this._collectiveGoal.id : null,
-          title: this._collectiveGoal ? this._collectiveGoal.title : null,
-          isPublic: this._collectiveGoal ? this._collectiveGoal.isPublic : null,
-          deadline: this._collectiveGoal ? this._collectiveGoal.deadline : null,
-          image: this._collectiveGoal ? this._collectiveGoal.image : null
-        }
-
-        const profile = await this.user.getProfile()
-        const newGoalId = await this.goalService.handleCreatingGoal(profile.id, goal, collectiveGoal)
-
-        await loading.dismiss()
-        await this.modalCtrl.dismiss()
-        await this.navCtrl.navigateForward(`/goal/${newGoalId}`)
-
-      } catch(error) {
-        await loading.dismiss()
-
-        const alert = await this.alertCtrl.create({
-          message: error.message,
-          buttons: ['Ok']
-        })
-        await alert.present()
-
-      }
-
-    }
-  }
-
-  public async handleUpdatingGoal(): Promise<void> {
-
-    if (!this.createGoalForm.valid) {
-      console.log('invalid value(s)')
-    } else {
-
-      const loading = await this.loadingCtrl.create({
-        spinner: 'lines',
-        message: 'Updating goal...'
-      })
-      await loading.present()
-
-      try {
-
-        this.goal.title = this.createGoalForm.value.title
-        this.goal.shortDescription = this.createGoalForm.value.shortDescription
-        this.goal.publicity = this.determinePublicity(this.createGoalForm.value.isPublic, this.goal.collectiveGoal ? this.goal.collectiveGoal.isPublic : undefined)
-        this.goal.deadline = this.createGoalForm.value.deadline ? this.createGoalForm.value.deadline : null
-        
-        // image
-        await this.goalService.handleUpdatingGoal(this.goal)
 
         await loading.dismiss()
         await this.modalCtrl.dismiss()
 
       } catch(error) {
         await loading.dismiss()
-
         const alert = await this.alertCtrl.create({
           message: error.message,
           buttons: ['Ok']
         })
         await alert.present()
-
       }
-    }
-
-  }
-
-  private determinePublicity(goalIsPublic: boolean, collectiveGoalIsPublic?: boolean): GoalPublicityType {
-    if (!goalIsPublic) {
-      return 'private'
-    } else if (collectiveGoalIsPublic !== undefined) {
-      if (collectiveGoalIsPublic) {
-        return 'public'
-      } else {
-        return 'collectiveGoalOnly'
-      }
-    } else {
-      return 'public'
     }
   }
 
-  public async _openingDatetime($event): Promise<void> {
+  private determinePublicity(goalIsPublic: boolean): GoalPublicityType {
+    if (!goalIsPublic) return 'private'
+    if (!!this.collectiveGoal && !this.collectiveGoal.isPublic) return 'collectiveGoalOnly'
+    return 'public'
+  }
+
+  public openingDatetime($event) {
 
     // empty value
     $event.target.value = ""
@@ -185,8 +117,8 @@ export class CreateGoalPage implements OnInit {
     $event.target.min = new Date().toISOString() 
 
     // set max value
-    if (this._collectiveGoal) {
-      $event.target.max = this._collectiveGoal.deadline ? this._collectiveGoal.deadline : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
+    if (!!this.collectiveGoal) {
+      $event.target.max = this.collectiveGoal.deadline ? this.collectiveGoal.deadline : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
     } else {
       $event.target.max = new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
     }

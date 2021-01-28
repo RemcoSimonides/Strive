@@ -7,7 +7,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { take, switchMap, first, map } from 'rxjs/operators';
 // Interfaces
 import { Profile } from '@strive/user/user/+state/user.firestore'
-import { GoalStakeholder, enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { GoalStakeholder, enumGoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 @Injectable({
@@ -71,30 +71,26 @@ export class GoalStakeholderService {
     })
   }
 
-  private async createNewStakeholder(uid: string, goalId: string, roles: roleArgs): Promise<void> {
+  private async createNewStakeholder(uid: string, goalId: string, roles: roleArgs) {
 
-    let newStakeholder = <GoalStakeholder>{}
+    const [profile, goal] = await Promise.all([
+      this.db.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise(),
+      this.db.docWithId$<Goal>(`Goals/${goalId}`).pipe(first()).toPromise()
+    ])
 
-    const userProfile = await this.db.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(first()).toPromise()
-    newStakeholder.uid = uid
-    newStakeholder.username = userProfile.username
-    newStakeholder.photoURL = userProfile.image
-    newStakeholder.isAchiever = roles.isAchiever ? true : false
-    newStakeholder.isAdmin = roles.isAdmin ? true : false
-    newStakeholder.isSupporter = roles.isSupporter ? true : false
-    newStakeholder.isSpectator = roles.isSpectator ? true : false
-    newStakeholder.hasOpenRequestToJoin = roles.hasOpenRequestToJoin ? true : false
+    const stakeholder = createGoalStakeholder({
+      uid,
+      goalId,
+      goalTitle: goal.title,
+      goalPublicity: goal.publicity,
+      goalIsFinished: goal.isFinished,
+      goalImage: goal.image,
+      ...profile,
+      ...roles
+    })
 
-    const goal = await this.db.docWithId$<Goal>(`Goals/${goalId}`).pipe(first()).toPromise()
-    newStakeholder.goalId = goalId,
-    newStakeholder.goalTitle = goal.title,
-    newStakeholder.goalPublicity = goal.publicity,
-    newStakeholder.goalIsFinished = goal.isFinished,
-    newStakeholder.goalImage = goal.image
-
-    await this.db.set(`Goals/${goalId}/GStakeholders/${uid}`, newStakeholder)
+    return await this.db.set(`Goals/${goalId}/GStakeholders/${uid}`, stakeholder)
   }
-
 }
 
 export interface roleArgs {

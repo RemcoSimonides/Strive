@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // Ionic
 import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular';
-// Interface
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 // Service
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { ImageService } from '@strive/media/+state/image.service';

@@ -15,7 +15,7 @@ export interface User {
 export interface Profile {
   id?: string;
   username: string;
-  image: string;
+  photoURL: string;
   numberOfSpectating: number;
   numberOfSpectators: number;
   numberOfUnreadNotifications: number;

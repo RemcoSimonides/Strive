@@ -7,28 +7,28 @@
       </ion-button>
     </ion-buttons>
   
-    <ion-title>{{title}}</ion-title>
+    <ion-title>{{ mode === 'create' ? 'Create' : 'Edit'}} Goal</ion-title>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <form [formGroup]="createGoalForm">
+  <form [formGroup]="goalForm">
 
     <ion-item>
       <ion-label position="stacked">Title</ion-label>
       <ion-input formControlName="title" 
-                  type="text"
-                  autofocus></ion-input>
+                 type="text"
+                 autofocus></ion-input>
     </ion-item>
   
     <ion-item>
-        <ion-label position="stacked">Short description</ion-label>
-        <ion-textarea formControlName="shortDescription"
-                      type="text"
-                      maxlength="256"
-                      autosize></ion-textarea>
+      <ion-label position="stacked">Short description</ion-label>
+      <ion-textarea formControlName="shortDescription"
+                    type="text"
+                    maxlength="256"
+                    autosize></ion-textarea>
     </ion-item>
   
     <ion-item>
@@ -43,7 +43,7 @@
         displayFormat="DDDD DD MMMM YYYY"
         pickerFormat="DDDD MMMM YYYY" 
         formControlName="deadline"
-        (click)="_openingDatetime($event)"
+        (click)="openingDatetime($event)"
       ></ion-datetime>
     </ion-item>
 
@@ -54,6 +54,5 @@
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-button *ngIf="!this.goal.id" (click)="handleCreatingGoal()" clear>Create</ion-button>
-  <ion-button *ngIf="this.goal.id" (click)="handleUpdatingGoal()" clear>Update</ion-button>
+  <ion-button (click)="upsert()" clear>{{ mode === 'create' ? 'Create' : 'Update'}}</ion-button>
 </ion-fab>

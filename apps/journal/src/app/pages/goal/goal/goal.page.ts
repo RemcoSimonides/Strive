@@ -248,7 +248,7 @@ export class GoalPage implements OnInit, OnDestroy {
   }
 
   public async saveDescription(description: string): Promise<void> {
-    await this.goalService.upsert(this.goalId, { description })
+    await this.goalService.updateDescription(this.goalId, description)
   }
 
   public async toggleAdmin(stakeholder: GoalStakeholder): Promise<void> {

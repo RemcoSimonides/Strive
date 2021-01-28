@@ -10,15 +10,6 @@ import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Goal, createGoal } from './goal.firestore'
 
-
-export interface collectiveGoalArgs {
-  id: string
-  title: string;
-  isPublic: boolean;
-  image: string;
-  deadline?: string;
-}
-
 @Injectable({ providedIn: 'root' })
 export class GoalService {
 
@@ -40,17 +31,16 @@ export class GoalService {
     await this.db.update<Goal>(`Goals/${goalId}`, { isLocked: lock })
   }
 
-  public async handleCreatingGoal(uid: string, goal: Partial<Goal>, collectiveGoal?: collectiveGoalArgs): Promise<string>{
-    
+  public async create(uid: string, goal: Partial<Goal>): Promise<string> {
     const id = await this.db.getNewId()
 
-    if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
+    if (!!goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
 
     //Goal image
-    if (!goal.image) goal.image = await this.imageService.uploadImage(`Goals/${id}/${id}`, false)
+    // if (!goal.image) goal.image = await this.imageService.uploadImage(`Goals/${id}/${id}`, false)
 
     //Set goal
-    await this.setGoal(id, goal)
+    await this.db.doc(`Goals/${id}`).set(createGoal({ ...goal, id }))
 
     //Add user as stakeholder
     await this.stakeholder.upsert(uid, id, {
@@ -58,101 +48,47 @@ export class GoalService {
       isAchiever: true
     })
 
-    //Add user as achiever of collective goal
+    // Add user as achiever of collective goal
     // Firebase function handles this
     
-    //Create initial chat
+    // Create initial chat
     // this.chatService.addInitialChat(id, goal.title, { goal: true })
 
     return id
-
   }
 
-  public async handleUpdatingGoal(goal: Goal): Promise<void> {
-
-    const id = goal.id
-    delete goal.id
-
-    if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
+  public async update(goalId: string, goal: Goal) {
+    if (!!goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
 
     //Goal image
-    goal.image = await this.imageService.uploadImage(`Goals/${id}/${id}`, true)
+    // goal.image = await this.imageService.uploadImage(`Goals/${id}/${id}`, true)
 
-    await this.db.upsert(`Goals/${id}`, goal)
-
+    await this.upsert(goalId, createGoal(goal))
   }
 
-  public async upsert(goalId: string, goal: Partial<Goal>) {
+  private async upsert(goalId: string, goal: Partial<Goal>) {
     await this.db.upsert<Goal>(`Goals/${goalId}`, goal)
   }
 
-  public async delete(goalId: string): Promise<void> {
+  public async delete(goalId: string) {
     await this.db.doc(`Goals/${goalId}`).delete()
   }
 
-  public async finishGoal(goalId: string): Promise<void> {
-    await this.db.upsert<Goal>(`Goals/${goalId}`, {
-      isFinished: true
-    })
+  public async finishGoal(goalId: string) {
+    await this.upsert(goalId, { isFinished: true })
+  }
+
+  public async updateDescription(goalId: string, description: string) {
+    await this.upsert(goalId, { description })
   }
 
   public async duplicateGoal(goal: Goal): Promise<string> {
-
-    const id = await this.db.getNewId()
-
-    // const goalArgs: goalArgs = {
-    //   title: goal.title,
-    //   description: goal.description,
-    //   shortDescription: goal.shortDescription,
-    //   image: goal.image,
-    //   publicity: goal.publicity,
-    //   deadline: goal.deadline,
-    //   milestoneTemplateObject: goal.milestoneTemplateObject
-    // }
-
-    // let collectiveGoalArgs: collectiveGoalArgs
-    // if (goal.collectiveGoal) {
-    //   collectiveGoalArgs = {
-    //     id: goal.collectiveGoal.id,
-    //     title: goal.collectiveGoal.title,
-    //     isPublic: goal.collectiveGoal.isPublic,
-    //     image: goal.collectiveGoal.image
-    //   }
-    // }
-
-    await this.setGoal(id, goal)
-    
-    return id
-  }
-
-  private async setGoal(id: string, goal: Partial<Goal>): Promise<void> {
-
-    const newGoal = createGoal(goal);
-
-    // Object.assign(newGoal, goal)
-
-    // if (collectiveGoal !== null && collectiveGoal.id !== null && collectiveGoal.title !== null){
-    //   newGoal.collectiveGoal.id = collectiveGoal.id
-    //   newGoal.collectiveGoal.title = collectiveGoal.title
-    //   newGoal.collectiveGoal.image = collectiveGoal.image
-    //   newGoal.collectiveGoal.isPublic == collectiveGoal.isPublic
-    // } else {
-    //   delete newGoal.collectiveGoal
-    // }
-
-    // delete newGoal.id
-
-    console.log('new Goal: ', newGoal);
-
-    // this.db.set(`Goals/${id}`, newGoal)
-    
+    const ref = await this.db.col(`Goals`).add(createGoal(goal))
+    return ref.id
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {
-
     const date = new Date(deadline)
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
-
   }
-
 }
