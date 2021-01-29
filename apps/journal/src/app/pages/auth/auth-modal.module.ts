@@ -1,20 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AuthModalPageRoutingModule } from './auth-modal-routing.module';
-
 import { AuthModalPage } from './auth-modal.page';
+
+import { TermsModule } from '@strive/ui/static-information/terms/terms.module';
+import { PrivacyPolicyModule } from '@strive/ui/static-information/privacy/privacy-policy.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AuthModalPageRoutingModule
+    TermsModule,
+    ReactiveFormsModule,
+    PrivacyPolicyModule
   ],
   declarations: [AuthModalPage]
 })
-export class LoginModalPageModule {}
+export class AuthModalModule {}

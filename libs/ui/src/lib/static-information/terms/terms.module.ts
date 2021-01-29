@@ -5,11 +5,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TermsPage } from './terms.page';
+import { TermsComponent } from './terms.page';
 
 const routes: Routes = [
-  { path: '', component: TermsPage },
-  { path: 'privacy-policy', loadChildren: () => import('./privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyPageModule) }
+  { path: '', component: TermsComponent },
 ];
 
 @NgModule({
@@ -19,6 +18,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: []
+  declarations: [TermsComponent],
+  exports: [TermsComponent]
 })
-export class TermsPageModule {}
+export class TermsModule {}

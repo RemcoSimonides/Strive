@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouteReuseStrategy } from '@angular/router';
@@ -27,11 +26,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-import { TermsPage } from './pages/terms/terms.page';
-import { PrivacyPolicyPage } from './pages/terms/privacy-policy/privacy-policy.page';
 import { TabsPage } from './pages/tabs/tabs';
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
-import { AuthModalPage } from './pages/auth/auth-modal.page';
+import { AuthModalModule } from './pages/auth/auth-modal.module';
 
 // FontAwesome
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -50,20 +47,15 @@ const customConfig: ShareButtonsConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    PrivacyPolicyPage,
-    TermsPage,
     TabsPage,
     ProfileOptionsBrowserPage,
-    AuthModalPage
   ],
   entryComponents: [
-    PrivacyPolicyPage,
-    TermsPage,
     TabsPage,
     ProfileOptionsBrowserPage,
-    AuthModalPage
   ],
-  imports: [    
+  imports: [
+    // Angular
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
@@ -73,16 +65,19 @@ const customConfig: ShareButtonsConfig = {
     //enable offline persistance
     // AngularFirestoreModule.enablePersistence(),
     AngularFirePerformanceModule,
+    AppRoutingModule,
     BrowserModule,
     CommonModule,
-    FontAwesomeModule,
-    HttpClientModule,
-    IonicModule.forRoot(), 
-    AppRoutingModule,
-    ReactiveFormsModule,
     FormsModule,
-    // ShareButtonsModule,
+    IonicModule.forRoot(),
+    ReactiveFormsModule,
+
+    // Libraries
+    FontAwesomeModule,
     ShareModule.withConfig(customConfig),
+
+    // Strive
+    AuthModalModule
   ],
   providers: [
     StatusBar,

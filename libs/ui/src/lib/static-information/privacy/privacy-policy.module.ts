@@ -5,12 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { PrivacyPolicyPage } from './privacy-policy.page';
+import { PrivacyPolicy } from './privacy-policy.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: PrivacyPolicyPage
+    component: PrivacyPolicy
   }
 ];
 
@@ -21,6 +21,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: []
+  declarations: [PrivacyPolicy],
+  exports: [PrivacyPolicy]
 })
-export class PrivacyPolicyPageModule {}
+export class PrivacyPolicyModule {}

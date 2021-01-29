@@ -8,7 +8,7 @@
           <ng-container *ngIf="user.profile$ | async as profile">
             <ion-row class="ion-justify-content-center">
               <img id="profile-image"
-                [src]="profile.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
+                [src]="profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
                 routerDirection="root"
                 [routerLink]="'/profile/' + user.uid" />  
             </ion-row>
@@ -119,7 +119,7 @@
                   </ion-button>
                   <ion-avatar (click)="openProfilePopover($event)">
                     <img id="profile-image"
-                      [src]="profile.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" />
+                      [src]="profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" />
                   </ion-avatar>
                 </ng-container>
 

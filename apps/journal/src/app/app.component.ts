@@ -83,7 +83,7 @@ export class AppComponent implements OnDestroy {
       const isLoggedIn = await this.user.isLoggedIn$.pipe(first()).toPromise();
       if (isLoggedIn) return
 
-      const doNotShowAuthPages = ['/download', '/terms']
+      const doNotShowAuthPages = ['/terms', '/privacy-policy']
       const doShowSignUpModalPages = ['/explore']
 
       if (doNotShowAuthPages.some(page => page === event.url)) return
