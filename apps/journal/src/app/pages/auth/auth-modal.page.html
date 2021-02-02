@@ -7,7 +7,7 @@
       <ion-icon name="close" slot="icon-only"></ion-icon>
     </ion-button>
 
-    <ion-button fill="clear" (click)="segmentChanged(enumAuthSegment.register)"
+    <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.register"
       *ngIf="authSegmentChoice === enumAuthSegment.terms || authSegmentChoice === enumAuthSegment.privacy_policy">
       <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
     </ion-button>
@@ -40,7 +40,7 @@
       </ion-grid>
 
       <div class="center">
-        <span class="fat-text-button" (click)="segmentChanged(enumAuthSegment.forgot_password)">I forgot my
+        <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.forgot_password">I forgot my
           password</span>
       </div>
 
@@ -48,7 +48,7 @@
 
       <div class="center">
         <span>Don't have an account?</span>
-        <span class="fat-text-button" (click)="segmentChanged(enumAuthSegment.register)">Sign Up</span>
+        <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.register">Sign Up</span>
       </div>
 
     </div>
@@ -113,9 +113,9 @@
             </form>
 
             <p>By signing up, you agree with the <span class="fat-text-button"
-                (click)="segmentChanged(enumAuthSegment.terms)">Terms of
+                (click)="this.authSegmentChoice = enumAuthSegment.terms">Terms of
                 Service</span>, <span class="fat-text-button"
-                (click)="segmentChanged(enumAuthSegment.privacy_policy)">Privacy Policy</span>, as well
+                (click)="this.authSegmentChoice = enumAuthSegment.privacy_policy">Privacy Policy</span>, as well
               as to
               receive occasional emails from us.</p>
 
@@ -123,7 +123,7 @@
 
             <div class="center">
               <span>Already a member?</span>
-              <span class="fat-text-button" (click)="segmentChanged(enumAuthSegment.login)">Log in</span>
+              <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.login">Log in</span>
             </div>
           </ion-col>
         </ion-row>
@@ -156,7 +156,7 @@
 
       <hr />
       <div clas="center">
-        <span class="fat-text-button" (click)="segmentChanged(enumAuthSegment.login)">Back to login</span>
+        <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.login">Back to login</span>
       </div>
     </div>
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 // Ionic
 import { NavParams, LoadingController, Platform, AlertController, ModalController, NavController } from '@ionic/angular';
@@ -25,6 +24,19 @@ import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
 
+// Strive
+import { SignupForm } from '@strive/user/auth/forms/signup.form'
+import { SigninForm } from '@strive/user/auth/forms/signin.form';
+import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
+
+export enum enumAuthSegment {
+  login,
+  register,
+  forgot_password,
+  terms,
+  privacy_policy
+}
+
 @Component({
   selector: 'app-auth-modal',
   templateUrl: './auth-modal.page.html',
@@ -32,23 +44,19 @@ import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
 })
 export class AuthModalPage implements OnInit {
 
-  private _backBtnSubscription: Subscription
+  private backBtnSubscription: Subscription
 
-  passwordType: string = 'password';
-  passwordIcon: string = 'eye-off-outline';
+  public passwordType = 'password';
+  public passwordIcon = 'eye-off-outline';
 
-  hideShowPassword() {
-    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
-    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
-  }
+  public loginForm = new SigninForm()
+  public signupForm = new SignupForm()
+  public resetPasswordForm = new ResetPasswordForm()
 
-  public loginForm: FormGroup
-  public signupForm: FormGroup
-  public resetPasswordForm: FormGroup
   public enumAuthSegment = enumAuthSegment
-  public authSegmentChoice: enumAuthSegment = enumAuthSegment.login
+  public authSegmentChoice = enumAuthSegment.login
 
-  validation_messages = {
+  public validation_messages = {
     'username': [
       { type: 'required', message: 'Name is required.' },
       { type: 'minlength', message: 'Name must be at least 3 characters long.' },
@@ -77,7 +85,6 @@ export class AuthModalPage implements OnInit {
     private collectiveGoalService: CollectiveGoalService,
     private db: FirestoreService,
     private fcmService: FcmService,
-    private formBuilder: FormBuilder,
     private goalService: GoalService,
     private goalStakeholderService: GoalStakeholderService,
     private loadingCtrl: LoadingController,
@@ -91,69 +98,20 @@ export class AuthModalPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    // Initialising login form
-    this.loginForm = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required])],
-      password: ['', Validators.compose([Validators.required])]
-    })
-
-    // Initialising signup form
-    this.signupForm = this.formBuilder.group({
-      email: ['', Validators.compose([
-        Validators.email,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
-        Validators.required
-      ])],
-      username: ['', Validators.compose([
-        Validators.maxLength(50),
-        Validators.minLength(2),
-        Validators.pattern('^[0-9a-zA-Z ]+$'),
-        Validators.required
-      ])],
-      password: ['', Validators.compose([
-        Validators.minLength(8),
-        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9 !@#\$%\^&\*]+$'),
-        Validators.required
-      ])],
-      // dateofbirth: ['', Validators.compose([
-      //   Validators.required
-      // ])]
-    })
-
-    this.resetPasswordForm = this.formBuilder.group({
-      email: ['',
-      Validators.compose([Validators.required])]
-    })
-
     const segmentChoice = this.navParams.data.authSegment
-    if (segmentChoice) {
-      switch (segmentChoice) {
-        case enumAuthSegment.login:
-          this.authSegmentChoice = enumAuthSegment.login
-          break
-        case enumAuthSegment.register:
-          this.authSegmentChoice = enumAuthSegment.register
-          break
-        case enumAuthSegment.forgot_password:
-          this.authSegmentChoice = enumAuthSegment.forgot_password
-          break
-      }
-    } else {
-      this.authSegmentChoice = enumAuthSegment.login
-    }
+    this.authSegmentChoice = !!segmentChoice ? segmentChoice : enumAuthSegment.login
   }
 
   ionViewDidEnter() {
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this._backBtnSubscription = this.platform.backButton.subscribe(() => { 
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
         
         if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
-          this.segmentChanged(enumAuthSegment.login)
+          this.authSegmentChoice = enumAuthSegment.login
         }
 
         if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
-          this.segmentChanged(enumAuthSegment.register)
+          this.authSegmentChoice = enumAuthSegment.register
         }
 
       });
@@ -162,20 +120,7 @@ export class AuthModalPage implements OnInit {
 
   ionViewWillLeave() { 
     if (this.platform.is('android') || this.platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
-    }
-  }
-
-  public async segmentChanged(segment: enumAuthSegment): Promise<void> {
-
-    this.authSegmentChoice = segment
-    switch (this.authSegmentChoice) {
-      case enumAuthSegment.login:
-        break
-      case enumAuthSegment.register:
-        break
-      case enumAuthSegment.forgot_password:
-        break
+      this.backBtnSubscription.unsubscribe();
     }
   }
 
@@ -193,7 +138,7 @@ export class AuthModalPage implements OnInit {
     }
   }
 
-  async closeAuthModal(): Promise<void> {
+  async closeAuthModal() {
     await this.modalCtrl.dismiss()
   }
 
@@ -335,7 +280,7 @@ export class AuthModalPage implements OnInit {
           buttons: [
             { text: 'Cancel', role: 'cancel'},
             { text: 'Ok', handler: data => {
-              this.segmentChanged(enumAuthSegment.login)
+              this.authSegmentChoice = enumAuthSegment.login
             }}
           ]
         })
@@ -352,12 +297,8 @@ export class AuthModalPage implements OnInit {
 
   }
 
-}
-
-export enum enumAuthSegment {
-  login,
-  register,
-  forgot_password,
-  terms,
-  privacy_policy
+  hideShowPassword() {
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
+    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
+  }
 }

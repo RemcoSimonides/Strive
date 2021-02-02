@@ -11,9 +11,8 @@ export class TermsComponent implements OnInit {
   constructor(private seo: SeoService) { }
 
   ngOnInit() {
-    this.seo.generateTags({
-      title: `Terms - Strive Journal`
-    })
+    // TODO create wrapper for this page and set seo tags in that wrapper.
+    // this.seo.generateTags({ title: `Terms - Strive Journal` })
   }
 
 }
