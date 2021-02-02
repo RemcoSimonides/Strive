@@ -1,20 +1,23 @@
-ion-grid {
-    margin-top: 5%;
+form {
+  width: 100%;
 }
 
 .submit_button {
-  margin-top: 20px;
-}
-
-.center {
-  display: flex;
-  justify-content: center;
+  margin: 20px 0;
 }
 
 hr {
   margin-top: 20px;
   border-top: 1px solid #a2a4ab;
   margin-bottom: 20px;
+  width: 100%;
+}
+
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: small;
+  font-style: italic;
+  margin: 6px 12px;
 }
 
 .fat-text-button {
@@ -24,9 +27,7 @@ hr {
   color: var(--ion-color-primary);
 }
 
-.passwordIcon{
-  font-size: 1.5rem !important;
-  position: relative !important;
-  top: 22px !important;
-  margin: 0 auto !important;
+.passwordIcon {
+  cursor: pointer;
+  margin: auto;
 }

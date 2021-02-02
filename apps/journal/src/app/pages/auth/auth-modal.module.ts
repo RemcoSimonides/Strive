@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -13,6 +14,7 @@ import { PrivacyPolicyModule } from '@strive/ui/static-information/privacy/priva
   imports: [
     CommonModule,
     FormsModule,
+    FlexLayoutModule,
     IonicModule,
     TermsModule,
     ReactiveFormsModule,
