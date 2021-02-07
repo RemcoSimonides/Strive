@@ -22,7 +22,7 @@
   </ion-toolbar>
 </ng-container>
 
-<ion-content class="ion-no-padding" [ngSwitch]="segmentChoice" *ngIf="canAccess && !pageIsLoading">
+<ion-content class="ion-padding" [ngSwitch]="segmentChoice" *ngIf="canAccess && !pageIsLoading">
 
   <section *ngSwitchCase="'Goal'" class="vertical-align-content">
     <journal-goal></journal-goal>

@@ -143,7 +143,7 @@ export class MilestoneComponent implements OnInit {
       componentProps: {
         milestone: this.milestone,
         goal: this.goal,
-        isEvidence: true
+        postId: this.milestone.id
       }
     })
     await modal.present()

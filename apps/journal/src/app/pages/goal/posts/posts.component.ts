@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { ModalController } from '@ionic/angular';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { enumPostSource, Post } from '@strive/post/+state/post.firestore';
+import { Post } from '@strive/post/+state/post.firestore';
 import { PostService } from '@strive/post/+state/post.service';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -70,6 +70,10 @@ export class PostsComponent implements OnInit, OnDestroy {
   public async createCustomPost() {
     const modal = await this.modalCtrl.create({
       component: UpsertPostModal,
+      componentProps: {
+        goal: this.goal,
+        postId: undefined
+      }
     })
     await modal.present()
     await modal.onDidDismiss().then(async (data) => {
@@ -91,7 +95,7 @@ export class PostsComponent implements OnInit, OnDestroy {
         post.isEvidence = false
 
         // Create post
-        await this.postService.createPost(enumPostSource.custom, post)
+        await this.postService.createPost(post)
 
       }
       await this.imageService.reset()

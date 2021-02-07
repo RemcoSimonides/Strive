@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { AngularFireFunctions } from '@angular/fire/functions';
 // Rxjs
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
 import { Plugins } from '@capacitor/core';
 // Strive Components
@@ -21,6 +21,9 @@ import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
+import { switchMap } from 'rxjs/operators';
 
 const { Share } = Plugins;
 
@@ -33,14 +36,16 @@ const { Share } = Plugins;
 export class GoalPage implements OnInit, OnDestroy {
 
   private goalId: string
-  goal$: Observable<Goal>
+  
+  public goal$: Observable<Goal>
+  public collectiveGoal$: Observable<ICollectiveGoal | undefined>
 
-  stakeholders$: Observable<GoalStakeholder[]>
-  stakeholder$: Observable<GoalStakeholder>
+  public stakeholders$: Observable<GoalStakeholder[]>
+  public stakeholder$: Observable<GoalStakeholder>
 
-  isAdmin = false
-  isAchiever = false
-  hasOpenRequestToJoin = false
+  public isAdmin = false
+  public isAchiever = false
+  public hasOpenRequestToJoin = false
 
   private sub: Subscription
 
@@ -48,6 +53,7 @@ export class GoalPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private functions: AngularFireFunctions,
     private goalService: GoalService,
+    private collectiveGoalService: CollectiveGoalService,
     private inviteTokenService: InviteTokenService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
@@ -63,6 +69,10 @@ export class GoalPage implements OnInit, OnDestroy {
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal$ = this.goalService.getGoalDocObs(this.goalId)
     this.stakeholders$ = this.stakeholder.getStakeholders$(this.goalId)
+
+    this.collectiveGoal$ = this.goal$.pipe(
+      switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.getCollectiveGoalDocObs(goal.collectiveGoalId) : of(undefined))
+    )
     
     this.sub = this.stakeholder.getStakeholder$(this.user.uid, this.goalId).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
@@ -75,7 +85,7 @@ export class GoalPage implements OnInit, OnDestroy {
     this.sub.unsubscribe()
   }
 
-  public async openDiscussion(): Promise<void> {
+  public async openDiscussion() {
     const modal = await this.modalCtrl.create({
       component: ChatModalPage,
       componentProps: {
@@ -85,7 +95,7 @@ export class GoalPage implements OnInit, OnDestroy {
     await modal.present()
   }
 
-  public async presentGoalOptionsPopover(ev: UIEvent, goal: Goal): Promise<void> {
+  public async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
     const popover = await this.popoverCtrl.create({
       component: GoalOptionsPopoverPage,
       event: ev,
@@ -115,7 +125,7 @@ export class GoalPage implements OnInit, OnDestroy {
     })
   }
 
-  public async duplicateGoal(): Promise<void> {
+  public async duplicateGoal() {
     const loading = await this.loadingCtrl.create({
       message: `Duplicating goal`,
       spinner: 'lines'
@@ -133,7 +143,7 @@ export class GoalPage implements OnInit, OnDestroy {
     await loading.dismiss();
   }
 
-  private async finishGoal(goal: Goal): Promise<void> {
+  private async finishGoal(goal: Goal) {
     const alert = await this.alertCtrl.create({
       header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
       subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
@@ -159,7 +169,7 @@ export class GoalPage implements OnInit, OnDestroy {
       component: UpsertPostModal,
       componentProps: {
         goal: goal,
-        isEvidence: true
+        postId: goal.id
       }
     })
     await modal.present()
@@ -170,7 +180,7 @@ export class GoalPage implements OnInit, OnDestroy {
 
   }
 
-  private async editGoal(goal: Goal): Promise<void> {
+  private async editGoal(goal: Goal) {
     const modal = await this.modalCtrl.create({
       component: CreateGoalPage,
       componentProps: {
@@ -180,7 +190,7 @@ export class GoalPage implements OnInit, OnDestroy {
     await modal.present()
   }
 
-  private async deleteGoal(): Promise<void> {
+  private async deleteGoal() {
     const alert = await this.alertCtrl.create({
       subHeader: `Are you sure you want to delete this goal?`,
       message: `This action is irreversible`,
@@ -201,7 +211,7 @@ export class GoalPage implements OnInit, OnDestroy {
     await alert.present()
   }
   
-  public async supportGoal(): Promise<void> {
+  public async supportGoal() {
     const supportModal = await this.modalCtrl.create({
       component: AddSupportModalPage,
       componentProps: {
@@ -218,7 +228,7 @@ export class GoalPage implements OnInit, OnDestroy {
     })
   }
 
-  public async openSharePopover(ev: UIEvent, goal: Goal): Promise<void> {
+  public async openSharePopover(ev: UIEvent, goal: Goal) {
 
     if (this.platform.is('android') || this.platform.is('ios')) {
 
@@ -247,11 +257,11 @@ export class GoalPage implements OnInit, OnDestroy {
     }
   }
 
-  public async saveDescription(description: string): Promise<void> {
+  public async saveDescription(description: string) {
     await this.goalService.updateDescription(this.goalId, description)
   }
 
-  public async toggleAdmin(stakeholder: GoalStakeholder): Promise<void> {
+  public async toggleAdmin(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
     const alert = await this.alertCtrl.create({
@@ -275,7 +285,7 @@ export class GoalPage implements OnInit, OnDestroy {
     await alert.present()
   }
 
-  public async toggleAchiever(stakeholder: GoalStakeholder): Promise<void> {
+  public async toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
     this.stakeholder.upsert(stakeholder.id, this.goalId, {
@@ -283,7 +293,7 @@ export class GoalPage implements OnInit, OnDestroy {
     })
   }
 
-  public async toggleSupporter(stakeholder: GoalStakeholder): Promise<void> {
+  public async toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
     this.stakeholder.upsert(stakeholder.id, this.goalId, {

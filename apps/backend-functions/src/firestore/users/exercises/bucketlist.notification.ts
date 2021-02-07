@@ -24,7 +24,7 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListCreated,
     source: {
-      image: profile.image,
+      image: profile.photoURL,
       name: profile.username,
       userId: uid
     },
@@ -72,7 +72,7 @@ function sendChangedBucketListNotification(uid: string, profile: Profile, number
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListItemAdded,
     source: {
-      image: profile.image,
+      image: profile.photoURL,
       name: profile.username,
       userId: uid,
     },
@@ -95,7 +95,7 @@ function sendBucketListItemComletedNotification(uid: string, profile: Profile, b
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListItemCompleted,
     source: {
-      image: profile.image,
+      image: profile.photoURL,
       name: profile.username,
       userId: uid,
     },

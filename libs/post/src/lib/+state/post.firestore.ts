@@ -1,12 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
 
-export enum enumPostSource {
-    milestone,
-    goal,
-    collectiveGoal,
-    custom
-}
-
 export interface Post {
   id?: string;
   isEvidence: boolean;

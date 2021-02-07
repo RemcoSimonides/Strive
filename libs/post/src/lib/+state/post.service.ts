@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
-import { Post, enumPostSource } from './post.firestore';
+import { Post } from './post.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class PostService {
     private db: FirestoreService,
   ) { }
 
-  async createPost(postSource: enumPostSource, post: Partial<Post>, newPostId?: string) {
+  async createPost(post: Partial<Post>, newPostId?: string) {
 
     //Prepare object
     const currentUser = await this.afAuth.currentUser;
@@ -30,6 +30,5 @@ export class PostService {
     } else {
       await this.db.add(`Goals/${post.goal.id}/Posts`, post)
     }
-
   }
 }

@@ -135,7 +135,6 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
 
   // Duplicate goal
   const goal = await getDocument<Goal>(`Goals/${data.goalId}`)
-  console.log('pre goal: ', JSON.stringify(goal))
   const newGoal = createGoal({
     title: goal.title,
     description: goal.description,
@@ -144,26 +143,17 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     publicity: goal.publicity,
     deadline: goal.deadline,
     milestoneTemplateObject: goal.milestoneTemplateObject,
-    collectiveGoal: {
-      id: goal.collectiveGoal?.id,
-      title: goal.collectiveGoal?.title,
-      isPublic: goal.collectiveGoal?.isPublic,
-      image: goal.collectiveGoal?.image
-    }
+    collectiveGoalId: goal.collectiveGoalId,
   })
-  console.log('new Goal: ', JSON.stringify(newGoal))
   const { id } = await db.collection(`Goals`).add(newGoal)
-  console.log('Goal created: ', id);
-
-  console.log('uid:', uid)
+  db.doc(`Goals/${id}`).update({ id });
 
   // Create stakeholder
   const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
-  console.log('profile: ', JSON.stringify(profile))
   const stakeholder = createGoalStakeholder({
     uid: uid,
     username: profile.username,
-    photoURL: profile.image,
+    photoURL: profile.photoURL,
     isAchiever: true,
     isAdmin: true,
     goalId: id,
@@ -172,9 +162,8 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     goalImage: goal.image
   })
   await db.doc(`Goals/${id}/GStakeholders/${uid}`).set(stakeholder)
-  console.log('stakeholder created! ', JSON.stringify(stakeholder))
 
-  // Creating milestone
+  // Creating milestones
   const promises: any[] = []
   for (const milestone of goal.milestoneTemplateObject) {
     const newMilestone = createMilestone({
@@ -195,10 +184,10 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
 async function updateGoalStakeholders(goalId: string, after: Goal) {
 
   const stakeholdersColRef = db.collection(`Goals/${goalId}/GStakeholders`)
-  const stakeholdersSnap = await stakeholdersColRef.get()
+  const stakeholderSnaps = await stakeholdersColRef.get()
     
   const promises: any[] = []
-  stakeholdersSnap.forEach(stakeholderSnap => {
+  stakeholderSnaps.forEach(stakeholderSnap => {
 
     const promise = stakeholderSnap.ref.update({
       goalId: goalId,

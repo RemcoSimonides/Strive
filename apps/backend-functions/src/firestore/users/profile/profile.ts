@@ -14,7 +14,7 @@ export const profileCreatedHandler = functions.firestore.document(`Users/{userId
         await addToAlgolia('user', uid, {
             uid: uid,
             username: profile.username,
-            image: profile.image,
+            photoURL: profile.photoURL,
             numberOfSpectators: profile.numberOfSpectators
         })
 
@@ -58,19 +58,19 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
         await addToAlgolia('user', uid, {
             uid: uid,
             username: after.username,
-            image: after.image,
+            photoURL: after.photoURL,
             numberOfSpectators: after.numberOfSpectators
         })
 
         if (before.username !== after.username ||
-            before.image !== after.image) {
+            before.photoURL !== after.photoURL) {
 
                 console.log(`username before: ${before.username}`)
                 console.log(`username after: ${after.username}`)
-                console.log(`image before: ${before.image}`)
-                console.log(`image after: ${after.image}`)
+                console.log(`image before: ${before.photoURL}`)
+                console.log(`image after: ${after.photoURL}`)
                 
-                if (!after.username || !after.image) {
+                if (!after.username || !after.photoURL) {
                     console.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
                     return
                 }
@@ -94,7 +94,7 @@ async function updateCollectiveGoalStakeholders(uid: string, after: Profile): Pr
 
         const promise = stakeholderSnap.ref.update({
             username: after.username,
-            photoURL: after.image
+            photoURL: after.photoURL
         })
 
         promises.push(promise)
@@ -117,7 +117,7 @@ async function updateGoalStakeholders(uid: string, after: Profile): Promise<void
 
         const promise = stakeholderSnap.ref.update({
             username: after.username,
-            photoURL: after.image
+            photoURL: after.photoURL
         })
 
         promises.push(promise)
@@ -138,7 +138,7 @@ async function updateSpectators(uid: string, after: Profile): Promise<void> {
 
         const promise = spectatingSnap.ref.update({
             username: after.username,
-            photoURL: after.image
+            photoURL: after.photoURL
         })
         promises.push(promise)
 
@@ -151,7 +151,7 @@ async function updateSpectators(uid: string, after: Profile): Promise<void> {
 
         const promise = spectatorSnap.ref.update({
             profileUsername: after.username,
-            profilePhotoURL: after.image
+            profilePhotoURL: after.photoURL
         })
         promises.push(promise)
 

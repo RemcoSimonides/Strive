@@ -81,9 +81,9 @@ async function updateAchieverOnCollectiveGoal(goalId: string, stakeholderId: str
   const goalDocSnap = await goalDocRef.get()
   const goal = createGoal(goalDocSnap.data())
 
-  if (goal.collectiveGoal) {
+  if (goal.collectiveGoalId) {
     await upsertCollectiveGoalStakeholder(goalId, stakeholderId, isAchiever)
-    await changeNumberOfAchieversOfCollectiveGoal(goal.collectiveGoal.id, isAchiever)
+    await changeNumberOfAchieversOfCollectiveGoal(goal.collectiveGoalId, isAchiever)
   }
 }
 
@@ -94,8 +94,8 @@ async function upsertCollectiveGoalStakeholder(goalId: string, stakeholderId: st
   const goalSnap = await goalRef.get()
   const goal = createGoal(goalSnap.data())
 
-  if (!goal.collectiveGoal.id) return; // No collective goal to update
-  const collectiveGoalId = goal.collectiveGoal.id
+  if (!goal.collectiveGoalId) return; // No collective goal to update
+  const collectiveGoalId = goal.collectiveGoalId
 
   // add user as collective goal stakeholder
   const collectiveGoalStakeholderRef = db.doc(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${stakeholderId}`)

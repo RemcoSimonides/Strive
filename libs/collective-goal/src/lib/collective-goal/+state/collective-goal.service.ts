@@ -25,9 +25,7 @@ export class CollectiveGoalService {
   ) { }
 
   public getCollectiveGoalDocObs(collectiveGoalId: string): Observable<ICollectiveGoal> {
-
     return this.db.docWithId$<ICollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`)
-
   }
 
   public async getCollectiveGoal(collectiveGoalId: string): Promise<ICollectiveGoal> {

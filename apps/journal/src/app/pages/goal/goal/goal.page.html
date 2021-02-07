@@ -1,99 +1,89 @@
 <ng-container *ngIf="goal$ | async as goal">
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-icon *ngIf="goal.publicity === 'private'" name="lock-closed"></ion-icon>
-        <span id="goal-title">{{ goal?.title }}</span>
-        <span *ngIf="goal.isFinished"> (finished)</span>
-      </ion-col>
-      <ion-col size-xs="3" size-sm="3" size-md="3" size-lg="3" size-xl="3" self-align-end *ngIf="user.isLoggedIn$ | async">
-        <div class="action-buttons-wrapper">
-          <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
-            <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
-          </ion-button>
-          <ion-button (click)="supportGoal()" color="secondary" class="ion-no-padding action-button" fill="clear">
-            <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-          </ion-button>
-          <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
-            <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
-          </ion-button>
-          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="user.isLoggedIn$ | async">
-            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-          </ion-button>
+  <section fxLayout fxLayoutAlign="space-between center">
+    <article fxLayout="column">
+      <h1>{{ goal.title }}</h1>
+      <ng-container *ngIf="goal.publicity === 'private'">
+        <div fxLayout fxLayoutAlign="start center">
+          <!-- <ion-icon name="lock-closed"></ion-icon> -->
+          <span>Access: Private</span>
         </div>
-      </ion-col>
-    </ion-row>
-    <ion-row *ngIf="goal.deadline">
-      <ion-col>
-        <div id="goal-deadline" [ngStyle]="{ 'color': goal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
-          <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ goal.deadline | date:'fullDate' }}
+      </ng-container>
+      <ng-container *ngIf="!!goal.isFinished">
+        <span>Status: Finished</span>
+      </ng-container>
+      <ng-container *ngIf="!!goal.deadline">
+        <div [ngStyle]="{ 'color': goal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
+          <!-- <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> -->
+          <span>Deadline: {{ goal.deadline | date:'fullDate' }}</span>
         </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      </ng-container>
+    </article>
 
-  <div class="goal-action-section">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
+    <ng-container *ngIf="user.isLoggedIn$ | async">
+      <article fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
+        <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
+          <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="supportGoal()" color="secondary" class="ion-no-padding action-button" fill="clear">
+          <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+        </ion-button>
+        <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
+          <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="user.isLoggedIn$ | async">
+          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+        </ion-button>
+      </article>
+    </ng-container>
+  </section>
 
-          <!-- Short Description -->
-          <div id="goal-short-description">
-            <i>{{ goal.shortDescription }}</i>
-          </div>
+  <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="24px">
+    <article fxLayout="column" fxLayoutGap="24px">
+      <i>{{ goal.shortDescription }}</i>
 
-          <!-- Only show collective goal data if the goal is connected to a collective goal -->
-          <div class="collective-goal-details-section">
-            <ion-card *ngIf="goal.collectiveGoal as collectiveGoal">
-              <div id="collective-goal-text">
-                this goal is part of<br/>
-                <a id="collective-goal-title" [routerLink]="'../../collective-goal/' + ( collectiveGoal.id )">{{ collectiveGoal.title }}</a>
-              </div>
-              <img class="collective-goal-image" [src]="goal.collectiveGoal.image">
-            </ion-card>
-          </div>
+      <ng-container *ngIf="collectiveGoal$ | async as collectiveGoal">
+        <ion-card fxLayout>
+          <article fxLayout="column" fxFlex fxLayoutAlign="center center">
+            this goal is part of
+            <a [routerLink]="'../../collective-goal/' + ( collectiveGoal.id )"><b>{{ collectiveGoal.title }}</b></a>
+          </article>
+          <img class="collective-goal-image" [src]="collectiveGoal.image">
+        </ion-card>
+      </ng-container>
 
-          <div class="goal-stats">
-            <div class="stats-holder">
-              <div class="stats">
-                <strong>Achievers</strong>
-                <span>{{ goal.numberOfAchievers || '0' }}</span>
-              </div>
-              <div class="stats">
-                <strong>Supporters</strong>
-                <span>{{ goal.numberOfSupporters || '0' }}</span>
-              </div>
-            </div>
-          </div>
 
-          <!-- <span *ngIf="!goal.isFinished && _isLoggedIn">
-            <ion-button (click)="supportGoal()" color="secondary" fill="clear">
-              Support goal <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-            </ion-button>
-          </span> -->
+      <div fxLayout fxLayoutAlign="space-evenly">
+        <div fxLayout="column" fxLayoutAlign="center center" class="stats">
+          <strong>Achievers</strong>
+          <span>{{ goal.numberOfAchievers || '0' }}</span>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" class="stats">
+          <strong>Supporters</strong>
+          <span>{{ goal.numberOfSupporters || '0' }}</span>
+        </div>
+      </div>
 
-          <!-- Can only REQUEST to participate if not admin and not achiever  -->
-          <span *ngIf="!isAdmin && !isAchiever && !goal.isFinished && user.isLoggedIn$ | async">
-            <ion-button (click)="requestToJoinGoal()" *ngIf="!hasOpenRequestToJoin"><ion-icon name="flag"></ion-icon> Request to participate</ion-button>
-            <ion-button disabled *ngIf="hasOpenRequestToJoin"><ion-icon name="flag"></ion-icon> Request pending</ion-button>
-          </span>
-
-        </ion-col>
-        <ion-col size-xs="12" size-sm="4" size-md="4" size-lg="4" size-xl="4">
-          <span class="image-container">
-            <img class="goal-image" src="{{goal.image}}"/>
-            <div class="after" *ngIf="goal.isFinished">finished</div>
-          </span>
-        </ion-col>
-      </ion-row>
+      <!-- Can only REQUEST to participate if not admin and not achiever  -->
+      <ng-container *ngIf="!isAdmin && !isAchiever && !goal.isFinished && user.isLoggedIn$ | async">
+        <ng-container *ngIf="hasOpenRequestToJoin else pending">
+          <ion-button disabled><ion-icon name="flag"></ion-icon> Request pending</ion-button>
+        </ng-container>
+        <ng-template #pending>
+          <ion-button (click)="requestToJoinGoal()"><ion-icon name="flag"></ion-icon> Request to participate</ion-button>
+        </ng-template>
+      </ng-container>
+    </article>
+    <article fxLayout="column" fxLayoutAlign="center" class="image-container">
+      <img [src]="goal.image"/>
+      <div class="after" *ngIf="goal.isFinished">finished</div>
+    </article>
 
       <!-- Only a stakeholder can join the chat -->
       <!-- <span *ngIf="isSupporter || isAdmin || isAchiever">
         <ion-button color="primary" fill="solid" routerLink="/chat"><ion-icon name="chatboxes"></ion-icon> Chat</ion-button>
       </span> -->
 
-    </ion-grid>
-  </div>
+  </section>
 
   <strive-text-editor [description]="goal.description"
     [isAdmin]="isAdmin" 
@@ -107,10 +97,10 @@
   <ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerDirection]="'root'" [routerLink]="'../../profile/' + (stakeholder.id)">
     {{ stakeholder.username }}
     <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>
-    <fa-icon *ngIf="isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder)"></fa-icon>
+    <fa-icon *ngIf="isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder, $event)"></fa-icon>
     <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end"></fa-icon>
-    <fa-icon *ngIf="isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder)"></fa-icon>
+    <fa-icon *ngIf="isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder, $event)"></fa-icon>
     <fa-icon *ngIf="stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-    <fa-icon *ngIf="isAdmin && !stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end" style="opacity: 0.3;" (click)="toggleSupporter(stakeholder)"></fa-icon>
+    <fa-icon *ngIf="isAdmin && !stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end" style="opacity: 0.3;" (click)="toggleSupporter(stakeholder, $event)"></fa-icon>
   </ion-item>
 </ion-list>

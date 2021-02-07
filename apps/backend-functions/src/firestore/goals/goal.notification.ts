@@ -18,6 +18,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createNotificationSupport, createSupport } from '@strive/support/+state/support.firestore';
 import { createNotification, createSupportDecisionMeta, SupportDecisionNotification } from '@strive/notification/+state/notification.model';
+import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
@@ -28,7 +29,7 @@ export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goa
   await createDiscussion(goal.title, { image: goal.image, name: `General discussion - ${goal.title}`, goalId: goalId }, enumDiscussionAudience.public, goalId)
 
   // New Goal
-  if (goal.collectiveGoal && goal.collectiveGoal.id) {
+  if (!!goal.collectiveGoalId) {
     if (goal.publicity === 'public' || goal.publicity === 'collectiveGoalOnly') {
       await sendNewGoalNotificationInCollectiveGoal(goalId, goal)
     }
@@ -53,7 +54,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
     await sendFinishedGoalNotificationToSupporter(goalId, after)
     await sendGoalFinishedNotificationToUserSpectators(goalId, after.title, after.image)
 
-    if (after.collectiveGoal && after.collectiveGoal.id) {
+    if (!!after.collectiveGoalId) {
       if (after.publicity === 'public' || after.publicity === 'collectiveGoalOnly') {
         await sendNotificationFinishedGoalInCollectiveGoal(goalId, after)
       }
@@ -62,7 +63,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
 
     // new (public) goal in collective goal
     if (before.publicity === 'private' && (after.publicity === 'public' || after.publicity === 'collectiveGoalOnly')) {
-        if (after.collectiveGoal && after.collectiveGoal.id) {
+        if (!!after.collectiveGoalId) {
 
             await sendNewGoalNotificationInCollectiveGoal(goalId, after)
 
@@ -143,27 +144,30 @@ async function sendNewGoalNotificationToUserSpectators(discussionId: string, goa
 
 }
 
-async function sendNewGoalNotificationInCollectiveGoal(discussionId: string, goal: Goal): Promise<void> {
+async function sendNewGoalNotificationInCollectiveGoal(discussionId: string, goal: Goal) {
 
-    if (!goal.collectiveGoal || !goal.collectiveGoal.id) return
-    console.log(`executing send new goal notification in collective goal (${goal.collectiveGoal.id}) stakeholders`)
+    if (!goal.collectiveGoalId) return
+    console.log(`executing send new goal notification in collective goal (${goal.collectiveGoalId}) stakeholders`)
+
+    const collectiveGoalSnap = await db.doc(`CollectiveGoals/${goal.collectiveGoalId}`).get()
+    const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data());
 
     const notification: Partial<Notification> = {
         discussionId: discussionId,
         event: enumEvent.gNew,
         source: {
             image: goal.image,
-            name: goal.collectiveGoal.title,
+            name: collectiveGoal.title,
             goalId: goal.id,
-            collectiveGoalId: goal.collectiveGoal.id,
+            collectiveGoalId: goal.collectiveGoalId,
         },
         message: [
             {
                 text: `A new goal has been created in collective goal '`
             },
             {
-                text: goal.collectiveGoal.title,
-                link: `collective-goal/${goal.collectiveGoal.id}`
+                text: collectiveGoal.title,
+                link: `collective-goal/${goal.collectiveGoalId}`
             },
             {
                 text: `', can you help out?`
@@ -171,7 +175,7 @@ async function sendNewGoalNotificationInCollectiveGoal(discussionId: string, goa
         ]
     }
 
-    await sendNotificationToCollectiveGoalStakeholders(goal.collectiveGoal.id, notification, true, true)
+    await sendNotificationToCollectiveGoalStakeholders(goal.collectiveGoalId, notification, true, true)
     
 }
 
@@ -338,15 +342,18 @@ async function sendGoalFinishedNotificationToUserSpectators(goalId: string, goal
 
 async function sendNotificationFinishedGoalInCollectiveGoal(goalId: string, after: Goal): Promise<void> {
 
-    if (!after.collectiveGoal || !after.collectiveGoal.id) return
+    if (!after.collectiveGoalId) return
+
+    const collectiveGoalSnap = await db.doc(`CollectiveGoals/${after.collectiveGoalId}`).get()
+    const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data());
 
     const notification: Partial<Notification> = {
       discussionId: goalId,
       event: enumEvent.gFinished,
       source: {
-        image: after.collectiveGoal.image,
-        name: after.collectiveGoal.title,
-        collectiveGoalId: after.collectiveGoal.id,
+        image: collectiveGoal.image,
+        name: collectiveGoal.title,
+        collectiveGoalId: after.collectiveGoalId,
         goalId: goalId,
         postId: goalId
       },
@@ -364,7 +371,7 @@ async function sendNotificationFinishedGoalInCollectiveGoal(goalId: string, afte
       ],
     }
 
-    await sendNotificationToCollectiveGoalStakeholders(after.collectiveGoal.id, notification, true, true)
+    await sendNotificationToCollectiveGoalStakeholders(after.collectiveGoalId, notification, true, true)
 }
 
 // ROADMAP CHANGED

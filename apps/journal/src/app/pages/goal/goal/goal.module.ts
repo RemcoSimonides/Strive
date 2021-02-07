@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { GoalPage } from './goal.page';
 
@@ -18,6 +19,7 @@ import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
     IonicModule,
     FontAwesomeModule,
     RouterModule,
+    FlexLayoutModule,
     
     // Strive
     ChatModalModule,

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 //Ionic
 import { NavParams, ModalController } from '@ionic/angular'
-import { enumPostSource } from '@strive/post/+state/post.firestore';
 import { PostForm } from '@strive/post/forms/post.form';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { PostService } from '@strive/post/+state/post.service';
@@ -15,6 +14,7 @@ import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 export class UpsertPostModal implements OnInit {
 
   public postForm = new PostForm();
+  private postId: string;
 
   constructor(
     private modalCtrl: ModalController,
@@ -25,6 +25,7 @@ export class UpsertPostModal implements OnInit {
   ngOnInit() {
     const goal = this.navParams.get('goal') as Goal
     const milestone = this.navParams.get('milestone') as Milestone
+    this.postId = this.navParams.get('postId') as string
 
     if (!goal) throw new Error('No goal to post the post at')
 
@@ -33,14 +34,15 @@ export class UpsertPostModal implements OnInit {
       this.postForm.get('milestone').get('description').setValue(milestone.description)
       this.postForm.get('content').get('title').setValue(`Completed milestone '${goal.title}'`)
     } else {
-      this.postForm.get('content').get('title').setValue(`Finished goal '${goal.title}'`)
+      const title = !!this.postId ? `Finished goal '${goal.title}'` : ''
+      this.postForm.get('content').get('title').setValue(title)
     }
 
     this.postForm.get('goal').get('id').setValue(goal.id)
     this.postForm.get('goal').get('title').setValue(goal.title)
     this.postForm.get('goal').get('image').setValue(goal.image)
 
-    this.postForm.get('isEvidence').setValue(this.navParams.get('isEvidence'))
+    this.postForm.get('isEvidence').setValue(!!this.postId)
   }
 
   cancel() {
@@ -48,16 +50,7 @@ export class UpsertPostModal implements OnInit {
   }
 
   async submitPost() {
-    const goalId = this.postForm.get('goal').get('id').value
-
-    // Create post
-    const milestoneId = this.postForm.get('milestone').get('id').value
-    if (!!milestoneId) {
-      await this.postService.createPost(enumPostSource.milestone, this.postForm.value, milestoneId)
-    } else {
-      await this.postService.createPost(enumPostSource.goal, this.postForm.value, goalId)
-    }
-
+    await this.postService.createPost(this.postForm.value, this.postId)
     await this.modalCtrl.dismiss()
   }
 
