@@ -9,25 +9,24 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 })
 export class GoalSharePopoverPage implements OnInit {
 
-  public _goal: Goal
-  public _isAdmin: boolean = false
-  public _isPublic: boolean = false
+  public goal: Goal
+  public isAdmin = false
+  public isPublic = false
 
   constructor(
-    private _navParams: NavParams,
-    private _popoverCtrl: PopoverController
+    private navParams: NavParams,
+    private popoverCtrl: PopoverController
   ) { }
 
-  async ngOnInit() {
-    this._isAdmin = this._navParams.data.isAdmin
-    this._goal = this._navParams.data.goal
+  ngOnInit() {
+    this.isAdmin = this.navParams.data.isAdmin
+    this.goal = this.navParams.data.goal
 
-    this._goal.publicity === 'public' ? this._isPublic = true : this._isPublic = false
-
+    this.isPublic = this.goal.publicity === 'public'
   }
 
-  public async close() {
-    this._popoverCtrl.dismiss()
+  public close() {
+    this.popoverCtrl.dismiss()
   }
 
 }

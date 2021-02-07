@@ -1,53 +1,14 @@
-<div class="share-popover">
-    <!-- <share-buttons 
-        *ngIf="isPublic"
-        [theme]="'material-dark'"
-        [include]="['facebook','twitter','linkedin','google','pinterest','reddit','tumblr','mix','vk','telegram','messenger','whatsapp','xing','line','sms','email']"
-        [exclude]="['print']"
-        [show]="5"
-        [size]="-4"
-        [url]="_ref"
-        [title]="title"
-        [description]="description"
-        [image]="image"
-        [autoSetMeta]="false"
-    ></share-buttons>
+<share-button button="telegram" theme="outline"></share-button>
+<share-button button="messenger" theme="outline"></share-button>
+<share-button button="whatsapp" theme="outline"></share-button>
+<share-button button="email" theme="outline"></share-button>
 
-    <share-buttons
-        *ngIf="!isPublic && isAdmin"
-        [theme]="'material-dark'"
-        [include]="['telegram','messenger','whatsapp', 'sms','email']"
-        [show]="5"
-        [size]="-4"
-        [url]="_ref"
-        [title]="title"
-        [description]="description"
-        [image]="image"
-        [autoSetMeta]="false"
-    ></share-buttons> -->
-
-    <button mat-fab shareButton="telegram" [style.backgroundColor]="share.prop.telegram.color">
-        <fa-icon [icon]="share.prop.telegram.icon" size="lg"></fa-icon>
-    </button>
-    <button mat-fab shareButton="messenger" [style.backgroundColor]="share.prop.messenger.color">
-        <fa-icon [icon]="share.prop.messenger.icon" size="lg"></fa-icon>
-    </button>
-    <button mat-fab shareButton="whatsapp" [style.backgroundColor]="share.prop.whatsapp.color">
-        <fa-icon [icon]="share.prop.whatsapp.icon" size="lg"></fa-icon>
-    </button>
-    <button mat-fab shareButton="sms" [style.backgroundColor]="share.prop.sms.color">
-        <fa-icon [icon]="share.prop.sms.icon" size="lg"></fa-icon>
-    </button>
-    <button mat-fab shareButton="email" [style.backgroundColor]="share.prop.email.color">
-        <fa-icon [icon]="share.prop.email.icon" size="lg"></fa-icon>
-    </button>
-
-    <div class="share_link" *ngIf="isPublic || (!isPublic && isAdmin)">
-        <code>{{ _ref }}</code>
-        <ion-button class="clipboard-button" (click)="_copyUrl()" fill="clear" size="small" >
-            <span *ngIf="!_isCopied">copy</span>
-            <span *ngIf="_isCopied">copied!</span>
-            <ion-icon name="clipboard"></ion-icon>
-        </ion-button>
-    </div>
-</div>
+<ng-container *ngIf="isPublic || (!isPublic && isAdmin)">
+  <section class="share_link" fxLayout="column" fxLayoutAlign="start center">
+    <code>{{ ref }}</code>
+    <ion-button (click)="copyUrl()" fill="clear" size="small" >
+      <span>{{ isCopied ? 'copied!' : 'copy' }}</span>
+      <ion-icon name="clipboard"></ion-icon>
+    </ion-button>
+  </section>
+</ng-container>

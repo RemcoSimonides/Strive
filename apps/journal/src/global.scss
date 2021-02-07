@@ -29,8 +29,7 @@
 @import "~quill/dist/quill.snow.css";
 
 /** Sharing buttons */
-// @import "~@ngx-share/button/themes/material/material-dark-theme";
-// @import "~@ngx-share/button/themes/modern/modern-light-theme";
+@import '~ngx-sharebuttons/themes/outline/outline-theme';
 
 .not-logged-in {
   display: flex;

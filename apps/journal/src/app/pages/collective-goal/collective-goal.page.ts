@@ -212,7 +212,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   public async openSharePopover(ev: UIEvent) {
-    if (this.platform.is('android') || this.platform.is('ios')) {
+    if (this.platform.is('android') || this.platform.is('ios') || navigator.share) {
 
       const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, this.collectiveGoal.isPublic, this.isAdmin)
       await Share.share({
@@ -235,11 +235,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     }
   }
 
-  async toggleSpectator(): Promise<void> {
-    await this.collectiveGoalStakeholderService.upsert(this.user.uid, this.collectiveGoalId, { isSpectator: !this.isSpectator })
-  }
-
-  async createGoal(): Promise<void> {
+  async createGoal() {
     const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
     const modal = await this.modalCtrl.create({
       component: CreateGoalPage,
@@ -253,7 +249,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     await modal.present()
   }
 
-  public async toggleAdmin(stakeholder: CollectiveGoalStakeholder): Promise<void> {
+  public async toggleAdmin(stakeholder: CollectiveGoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
 
@@ -277,7 +273,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     await alert.present()
   }
 
-  public async toggleAchiever(stakeholder: CollectiveGoalStakeholder): Promise<void> {
+  public async toggleAchiever(stakeholder: CollectiveGoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
 
@@ -285,5 +281,4 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
       isAchiever: !stakeholder.isAchiever
     })
   }
-
 }

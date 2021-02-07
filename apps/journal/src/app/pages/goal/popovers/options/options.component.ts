@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 // Ionic
 import { PopoverController, NavParams } from '@ionic/angular'
-// Services
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 
 export enum enumGoalOptions {
-  EditNotificationSettings,
-  DuplicateGoal,
-  FinishGoal,
+  editNotificationSettings,
+  duplicateGoal,
+  finishGoal,
   editGoal,
   deleteGoal
 }
@@ -21,22 +19,20 @@ export class GoalOptionsPopoverPage implements OnInit {
 
   public enumGoalOptions = enumGoalOptions
 
-  public _isAdmin: boolean = false
-  public _isFinished: boolean = false
+  public isAdmin = false
+  public isFinished = false
 
   constructor(
     private navParams: NavParams,
-    private popoverCtrl: PopoverController,
-    public stakeholderService: GoalStakeholderService
+    private popoverCtrl: PopoverController
   ) { }
 
   ngOnInit() {
-    this._isAdmin = this.navParams.data.isAdmin
-    this._isFinished = this.navParams.data.isFinished
+    this.isAdmin = this.navParams.data.isAdmin
+    this.isFinished = this.navParams.data.isFinished
   }
 
   async close(goalOption: enumGoalOptions){
     this.popoverCtrl.dismiss(goalOption)
   }
-
 }

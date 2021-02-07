@@ -10,7 +10,7 @@ import { PopoverController, NavParams } from '@ionic/angular';
 export class CollectiveGoalSharePopoverPage implements OnInit {
 
   public collectiveGoal: ICollectiveGoal
-  public isAdmin: boolean = false
+  public isAdmin = false
 
   constructor(
     private navParams: NavParams,
@@ -22,7 +22,7 @@ export class CollectiveGoalSharePopoverPage implements OnInit {
     this.collectiveGoal = this.navParams.data.collectiveGoal
   }
 
-  public async close() {
+  public close() {
     this.popoverCtrl.dismiss()
   }
 }

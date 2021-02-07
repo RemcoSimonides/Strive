@@ -36,14 +36,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
-// Text editor
-import { ShareButtonsConfig, ShareModule } from 'ngx-sharebuttons';
-
-const customConfig: ShareButtonsConfig = {
-  autoSetMeta: true,
-  twitterAccount: 'strivejournal'
-};
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,7 +66,6 @@ const customConfig: ShareButtonsConfig = {
 
     // Libraries
     FontAwesomeModule,
-    ShareModule.withConfig(customConfig),
 
     // Strive
     AuthModalModule

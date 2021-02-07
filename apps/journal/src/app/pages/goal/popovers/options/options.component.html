@@ -1,8 +1,10 @@
 <ion-list>
   <!-- <ion-item (click)="close(enumGoalOptions.EditNotificationSettings)" button>Edit Notification Settings</ion-item> -->
-  <ion-item (click)="close(enumGoalOptions.DuplicateGoal)" button>Duplicate Goal</ion-item>
+  <ion-item [lines]="isAdmin ? 'inset' : 'none'" (click)="close(enumGoalOptions.duplicateGoal)" button>Duplicate Goal</ion-item>
   <!-- <ion-item (click)="close(enumGoalOptions.leaveGoal)" *ngIf="!_isFinished" button>Leave Goal</ion-item> -->
-  <ion-item (click)="close(enumGoalOptions.FinishGoal)"  *ngIf="_isAdmin && !_isFinished" button><ion-icon name="trophy"></ion-icon>Finish Goal</ion-item>
-  <ion-item (click)="close(enumGoalOptions.editGoal)" *ngIf="_isAdmin" button>Edit Goal</ion-item>
-  <ion-item (click)="close(enumGoalOptions.deleteGoal)" *ngIf="_isAdmin" button>Delete Goal</ion-item>
+  <ng-container *ngIf="isAdmin">
+    <ion-item (click)="close(enumGoalOptions.finishGoal)" *ngIf="!isFinished" button>Finish Goal</ion-item>
+    <ion-item (click)="close(enumGoalOptions.editGoal)" button>Edit Goal</ion-item>
+    <ion-item lines="none" (click)="close(enumGoalOptions.deleteGoal)" button>Delete Goal</ion-item>
+  </ng-container>
 </ion-list>
