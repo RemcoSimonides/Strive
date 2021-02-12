@@ -12,7 +12,7 @@
   <h3>Your Goals</h3>
 
   <thumbnail-list type="goal" [canCreate]="true">
-    <ng-container *ngFor="let goal of goalsColObs | async">
+    <ng-container *ngFor="let goal of goals$ | async">
       <ng-template #thumb>
         <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="'/goal/' + goal.id">
           <ng-template #thumbTitle>
@@ -29,7 +29,7 @@
   <h3>Your Collective Goals</h3>
 
   <thumbnail-list type="collectiveGoal" [canCreate]="true">
-    <ng-container *ngFor="let collectiveGoal of collectiveGoalsColObs | async">
+    <ng-container *ngFor="let collectiveGoal of collectiveGoals$ | async">
       <ng-template #thumb>
         <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="['/collective-goal', collectiveGoal.id]">
           <ng-template #thumbTitle>

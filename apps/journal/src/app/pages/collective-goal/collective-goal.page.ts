@@ -143,7 +143,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   //Collective Goal Section
-  async openOptionsPopover(ev: UIEvent): Promise<void> {
+  async openOptionsPopover(ev: UIEvent) {
     const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
 
     const popover = await this.popoverCtrl.create({
@@ -171,7 +171,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     })
   }
 
-  private async editCollectiveGoal(): Promise<void> {
+  private async editCollectiveGoal() {
 
     const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
 

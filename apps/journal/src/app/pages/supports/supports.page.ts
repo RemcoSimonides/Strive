@@ -7,7 +7,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/+state/support.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // rxjs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 // interfaces
 import { Support } from '@strive/support/+state/support.firestore'
 // components
@@ -20,64 +20,56 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 })
 export class SupportsPage implements OnInit {
 
-  _backBtnSubscription
-  _pageIsLoading: boolean
+  private backBtnSubscription: Subscription
 
-  public _supportsOpen$: Observable<Support[]>
-  public _supportsToGet$: Observable<Support[]>
-  public _supportsToGive$: Observable<Support[]>
-  public _supportsGotten$: Observable<Support[]>
+  public pageIsLoading = true
+
+  public supportsOpen$: Observable<Support[]>
+  public supportsToGet$: Observable<Support[]>
+  public supportsToGive$: Observable<Support[]>
+  public supportsGotten$: Observable<Support[]>
 
   constructor(
     public user: UserService,
     private db: FirestoreService,
-    private _modalCtrl: ModalController,
+    private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public _platform: Platform,
-    private _seo: SeoService,
+    public platform: Platform,
+    private seo: SeoService,
     private supportService: SupportService
   ) { }
 
   ngOnInit() {
-
-    this._pageIsLoading = true
-
-    this._seo.generateTags({
-      title: `Supports - Strive Journal`
-    })
+    this.seo.generateTags({ title: `Supports - Strive Journal` })
 
     this.user.user$.subscribe(user => {
       if (user) {
-        this._supportsOpen$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('supporter.uid', '==', user.id).where('status', '==', 'open'))
-        this._supportsToGet$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'waiting_to_be_paid'))
-        this._supportsToGive$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('supporter.uid', '==', user.id).where('status', '==', 'waiting_for_receiver'))
-
+        this.supportsOpen$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('supporter.uid', '==', user.id).where('status', '==', 'open'))
+        this.supportsToGet$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'waiting_to_be_paid'))
+        this.supportsToGive$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('supporter.uid', '==', user.id).where('status', '==', 'waiting_for_receiver'))
         // this._supportsGotten$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'paid'))
-        this._pageIsLoading = false
-
-      } else {
-        this._pageIsLoading = false
       }
-    }) 
 
+      this.pageIsLoading = false
+    }) 
   }
 
   ionViewDidEnter() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => { 
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
         this.navCtrl.navigateRoot('explore')
       });
     }
   }
     
   ionViewWillLeave() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription.unsubscribe();
     }
   }
 
-  async openAuthModal(): Promise<void> {
-    const modal = await this._modalCtrl.create({
+  async openAuthModal() {
+    const modal = await this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
@@ -86,7 +78,7 @@ export class SupportsPage implements OnInit {
     await modal.present()
   }
 
-  async supportPaid(support: Support): Promise<void> {
+  async supportPaid(support: Support) {
     await this.supportService.changeSupportStatus(support.goal.id, support.id, 'paid')
   }
   

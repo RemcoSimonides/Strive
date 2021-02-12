@@ -9,7 +9,7 @@ import { ImageService } from '@strive/media/+state/image.service';
 import { ExercisesService } from '@strive/exercises/+state/exercises.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 // Modals / Popover
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 import { ProfileOptionsPage, enumProfileOptions } from './popovers/profile-options/profile-options.page';
@@ -34,6 +34,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+// CONTINUE WITH REWORKING THIS PAGE 🤣 AND ADDING INDEXESd
 
 @Component({
   selector: 'app-profile',
@@ -42,40 +43,40 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class ProfilePage implements OnInit {
 
-  _backBtnSubscription
-  public _pageIsLoading: boolean;
-  public _shouldLogin: boolean;
+  private backBtnSubscription: Subscription
+  public pageIsLoading: boolean = true
 
-  private _profileId: string
+  public shouldLogin: boolean = false
+
+  private profileId: string
 
   // enums
-  public enumEdited = enumEdited
   public enumExercises = enumExercises
   public enumPrivacy = enumPrivacy
 
   public _chosenPicture: any
 
-  public _isOwner: boolean = false
-  public _isSpectator: boolean = false
-  public _editableProfileUsername: boolean = false
+  public isOwner = false
+  public isSpectator = false
+  public editableProfileUsername = false
 
   public profileDocObs: Observable<Profile>
 
-  public _achievingGoalsColObs: Observable<Goal[]>
-  public _supportingGoalsColObs: Observable<Goal[]>
+  public achievingGoals$: Observable<Goal[]>
+  public supportingGoals$: Observable<Goal[]>
 
-  public _profile = <Profile>{}
+  public profile = <Profile>{}
   private originalProfile = <Profile>{}
 
-  public _affirmationsDocObs: Observable<IAffirmations>
+  public affirmations$: Observable<IAffirmations>
   public _affirmations = <IAffirmations>{}
-  public _bucketListDocObs: Observable<IBucketList>
+  public bucketList$: Observable<IBucketList>
   public _bucketList: IBucketList = <IBucketList>{}
 
   public _spectators: ISpectator[]
   public _spectating: ISpectator[]
 
-  public segmentChoice: string = "info"
+  public segmentChoice = 'info'
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -85,7 +86,7 @@ export class ProfilePage implements OnInit {
     private _imageService: ImageService,
     private _modalCtrl: ModalController,
     private navCtrl: NavController,
-    public _platform: Platform,
+    public platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
     private router: Router,
@@ -94,61 +95,59 @@ export class ProfilePage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this._pageIsLoading = true
-    this._profileId = this.route.snapshot.paramMap.get('id')
+    this.profileId = this.route.snapshot.paramMap.get('id')
 
     this.user.profile$.subscribe(async profile => {
       if (profile) {
-        this._isOwner = profile.id === this._profileId
-        if (!this._isOwner) {
-          this._isSpectator = (await this.userSpectateService.getSpectator(profile.id, this._profileId)).isSpectator
+        this.isOwner = profile.id === this.profileId
+        if (!this.isOwner) {
+          this.isSpectator = (await this.userSpectateService.getSpectator(profile.id, this.profileId)).isSpectator
         }
       } else {
-        this._isOwner = false
-        this._isSpectator = false
+        this.isOwner = false
+        this.isSpectator = false
       }
     })
 
-    if (this._profileId === 'undefined') {
+    if (this.profileId === 'undefined') {
       if (this.user.uid) {
         this.router.navigateByUrl(`profile/${this.user.uid}`)
       } else {
-        this._shouldLogin = true
+        this.shouldLogin = true
       }
     }
 
-    this._profile = await this.user.getProfile(this._profileId)
+    this.profile = await this.user.getProfile(this.profileId)
 
     // get affirmations
-    this._affirmationsDocObs = this.exerciseService.getAffirmationsDocObs(this._profileId)
-    this._affirmationsDocObs.subscribe(affirmations => this._affirmations = affirmations)
+    this.affirmations$ = this.exerciseService.getAffirmationsDocObs(this.profileId)
+    this.affirmations$.subscribe(affirmations => this._affirmations = affirmations)
 
     // get  bucketlist
-    this._bucketListDocObs = this.exerciseService.getBucketListDocObs(this._profileId)
-    this._bucketListDocObs.subscribe(bucketList  => this._bucketList = bucketList)
+    this.bucketList$ = this.exerciseService.getBucketListDocObs(this.profileId)
+    this.bucketList$.subscribe(bucketList  => this._bucketList = bucketList)
 
     // Save original values to later check for changes
-    Object.assign(this.originalProfile, this._profile)
+    Object.assign(this.originalProfile, this.profile)
 
-    this.seo.generateTags({ title: `${this._profile.username} - Strive Journal` })
+    this.seo.generateTags({ title: `${this.profile.username} - Strive Journal` })
 
-    this._achievingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.achiever, !this._isOwner);
-    this._supportingGoalsColObs = this.goalStakeholderService.getGoals(this._profileId, enumGoalStakeholder.supporter, !this._isOwner)
-    this._pageIsLoading = false
-
+    this.achievingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
+    this.supportingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
+    this.pageIsLoading = false
   }
 
   ionViewDidEnter() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription = this._platform.backButton.subscribe(() => { 
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
         this.navCtrl.back()
       });
     }
   }
     
   ionViewWillLeave() { 
-    if (this._platform.is('android') || this._platform.is('ios')) {
-      this._backBtnSubscription.unsubscribe();
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.backBtnSubscription.unsubscribe();
     }
   } 
 
@@ -166,9 +165,9 @@ export class ProfilePage implements OnInit {
 
     this.segmentChoice = segment
     if (segment === "spectators") {
-      this._spectators = await this.userSpectateService.getSpectators(this._profileId)
+      this._spectators = await this.userSpectateService.getSpectators(this.profileId)
     } else if (segment === "spectating") {
-      this._spectating = await this.userSpectateService.getSpectating(this._profileId)
+      this._spectating = await this.userSpectateService.getSpectating(this.profileId)
     } else if (segment === "info") {
 
     }
@@ -201,14 +200,14 @@ export class ProfilePage implements OnInit {
 
   public async updateProfile() {
     // Check for changes
-    if (this._profile !== this.originalProfile) {
-      return this.user.upsertProfile(this._profile)
+    if (this.profile !== this.originalProfile) {
+      return this.user.upsertProfile(this.profile)
     }
   }
 
   public async editProfileImage(ev: UIEvent): Promise<void> {
 
-    if (!this._isOwner) return
+    if (!this.isOwner) return
 
       const popover = await this.popoverCtrl.create({
         component: EditProfileImagePopoverPage,
@@ -216,28 +215,28 @@ export class ProfilePage implements OnInit {
       })
       popover.onDidDismiss().then((imageURL => {
         if (imageURL && imageURL.data) {
-          this._profile.photoURL = imageURL.data.toString()
+          this.profile.photoURL = imageURL.data.toString()
         }
       }))
       await popover.present()
 
   }
 
-  public _saveProfileUsername(){
-    if (!this._profile.username || !this._isOwner) return
+  public saveProfileUsername(){
+    if (!this.profile.username || !this.isOwner) return
 
-    this.user.upsertProfile({username:  this._profile.username})
+    this.user.upsertProfile({username:  this.profile.username})
 
-    this._editableProfileUsername = false
+    this.editableProfileUsername = false
   }
 
-  async toggleSpectate(): Promise<void> {
+  async toggleSpectate() {
 
     if (this.user.uid) {
 
-      this.userSpectateService.toggleSpectate(this._profileId)
-      this._isSpectator = !this._isSpectator
-      this._isSpectator ? this._profile.numberOfSpectators += 1 : this._profile.numberOfSpectators -= 1 
+      this.userSpectateService.toggleSpectate(this.profileId)
+      this.isSpectator = !this.isSpectator
+      this.isSpectator ? this.profile.numberOfSpectators += 1 : this.profile.numberOfSpectators -= 1 
 
     } else {
       const modal = await this._modalCtrl.create({
@@ -253,7 +252,7 @@ export class ProfilePage implements OnInit {
 
   async openExercise(enumExercise: enumExercises) {
 
-    if (!this._isOwner) return
+    if (!this.isOwner) return
     let modal
 
     switch (enumExercise) {
@@ -292,22 +291,16 @@ export class ProfilePage implements OnInit {
 
   }
 
-  async completeBucketListItem(item: IBucketListItem): Promise<void> {
-
-    if (!this._isOwner) return
+  async completeBucketListItem(item: IBucketListItem) {
+    if (!this.isOwner) return
 
     this._bucketList.items.forEach((x) => {
       if (x.description === item.description) {
         x.completed = !x.completed
       }
     })
-    await this.exerciseService.saveBucketList(this._profileId, this._bucketList)
+    await this.exerciseService.saveBucketList(this.profileId, this._bucketList)
   }
-}
-
-enum enumEdited {
-  username,
-  image
 }
 
 enum enumExercises {

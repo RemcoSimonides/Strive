@@ -1,12 +1,12 @@
-<ion-header *ngIf="_platform.is('android') || _platform.is('ios')">
+<ion-header *ngIf="platform.is('android') || platform.is('ios')">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <!-- <ion-menu-button *ngIf="!_platform.is('android') && !_platform.is('ios')"></ion-menu-button> -->
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="!_shouldLogin">{{ _profile.username }}</ion-title>
-    <ion-title *ngIf="_shouldLogin">Profile</ion-title>
-    <ion-buttons slot="end" *ngIf="_isOwner">
+    <ion-title *ngIf="!shouldLogin">{{ profile.username }}</ion-title>
+    <ion-title *ngIf="shouldLogin">Profile</ion-title>
+    <ion-buttons slot="end" *ngIf="isOwner">
       <ion-button (click)="presentProfileOptionsPopover($event)">
         <ion-icon slot="icon-only" name="settings"></ion-icon>
       </ion-button>
@@ -14,17 +14,17 @@
   </ion-toolbar>
 </ion-header>
 
-<div class="not-logged-in" *ngIf="_pageIsLoading">
+<div class="not-logged-in" *ngIf="pageIsLoading">
   <ion-spinner name="lines" color="primary"></ion-spinner>
 </div>
 
-<div class="not-logged-in" *ngIf="_shouldLogin && !_pageIsLoading">
+<div class="not-logged-in" *ngIf="shouldLogin && !pageIsLoading">
   <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your profile
   </p>
 </div>
 
-<ion-content class="ion-no-padding" [ngSwitch]="segmentChoice" *ngIf="!_pageIsLoading">
+<ion-content class="ion-no-padding" [ngSwitch]="segmentChoice" *ngIf="!pageIsLoading">
 
   <div class="vertical-align-content">
     <ion-card>
@@ -32,31 +32,31 @@
       <div id="content">
         <div id="profile-info">
           <div id="profile-image-container">
-            <img id="profile-image" [src]="_chosenPicture || _profile.image || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" (click)="editProfileImage($event)">
-            <ion-icon id="profile-image-edit-icon" *ngIf="_isOwner" name="create" (click)="editProfileImage($event)"></ion-icon>
+            <img id="profile-image" [src]="_chosenPicture || profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" (click)="editProfileImage($event)">
+            <ion-icon id="profile-image-edit-icon" *ngIf="isOwner" name="create" (click)="editProfileImage($event)"></ion-icon>
           </div>
           <div id="profile-username-container">              
-            <ion-input [ngStyle]="{'max-width': _profile.username ? _profile.username.length + 1 + 'ch' : '1ch'}" *ngIf="_isOwner" type="text" [(ngModel)]="_profile.username" (keydown.enter)="_saveProfileUsername()" [disabled]="!_editableProfileUsername"></ion-input>
-            <ion-icon id="profile-username-edit-icon" *ngIf="_isOwner && !_editableProfileUsername" name="create" (click)="_editableProfileUsername = true"></ion-icon>
-            <ion-icon id="profile-username-edit-icon" *ngIf="_isOwner && _editableProfileUsername" name="save" (click)="_saveProfileUsername()"></ion-icon>
+            <ion-input [ngStyle]="{'max-width': profile.username ? profile.username.length + 1 + 'ch' : '1ch'}" *ngIf="isOwner" type="text" [(ngModel)]="profile.username" (keydown.enter)="saveProfileUsername()" [disabled]="!editableProfileUsername"></ion-input>
+            <ion-icon id="profile-username-edit-icon" *ngIf="isOwner && !editableProfileUsername" name="create" (click)="_editableProfileUsername = true"></ion-icon>
+            <ion-icon id="profile-username-edit-icon" *ngIf="isOwner && editableProfileUsername" name="save" (click)="saveProfileUsername()"></ion-icon>
           </div>
         </div>
         <ion-row>
           <ion-col col-4 class="profile-number" (click)="segmentChanged('spectators')">
             <p>Followers</p>
-            <span>{{ _profile.numberOfSpectators }}</span>
+            <span>{{ profile.numberOfSpectators }}</span>
           </ion-col>
           <ion-col col-4 class="profile-number" (click)="segmentChanged('spectating')">
             <p>Following</p>
-            <span>{{ _profile.numberOfSpectating }}</span>
+            <span>{{ profile.numberOfSpectating }}</span>
           </ion-col>
         </ion-row>
       </div>
 
       <!-- Edit profile image -->
 
-      <ion-button *ngIf="!_isOwner && !_isSpectator" (click)="toggleSpectate()" fill="outline">Follow</ion-button>
-      <ion-button *ngIf="!_isOwner && _isSpectator" (click)="toggleSpectate()" fill="outline">Stop Following</ion-button>
+      <ion-button *ngIf="!isOwner && !isSpectator" (click)="toggleSpectate()" fill="outline">Follow</ion-button>
+      <ion-button *ngIf="!isOwner && isSpectator" (click)="toggleSpectate()" fill="outline">Stop Following</ion-button>
 
     </ion-card>
 
@@ -70,7 +70,7 @@
         <div *ngIf="affirmations?.affirmations?.length > 0">
           <div class="exercise-header-container">
             <h3 class="padding">Affirmations</h3>
-            <ion-icon class="exercise-edit-icon" *ngIf="_isOwner" name="create" (click)="openExercise(enumExercises.affirmations)"></ion-icon>
+            <ion-icon class="exercise-edit-icon" *ngIf="isOwner" name="create" (click)="openExercise(enumExercises.affirmations)"></ion-icon>
           </div>
           <ion-list>
             <div *ngFor="let affirmation of affirmations.affirmations">
@@ -83,16 +83,16 @@
       </div>
 
       <!-- Bucket List -->
-      <div class="exercise" *ngIf="_bucketListDocObs | async as bucketList">
+      <div class="exercise" *ngIf="bucketList$ | async as bucketList">
         <div *ngIf="bucketList.items?.length > 0" class="bucketlist">
           <div class="exercise-header-container">
             <h3 class="padding">Bucket List</h3>
-            <ion-icon class="exercise-edit-icon" *ngIf="_isOwner" name="create" (click)="openExercise(enumExercises.bucketlist)"></ion-icon>
+            <ion-icon class="exercise-edit-icon" *ngIf="isOwner" name="create" (click)="openExercise(enumExercises.bucketlist)"></ion-icon>
           </div>
           <ion-list>
             <div *ngFor="let item of bucketList.items">
-              <ion-item *ngIf="(item.privacy === enumPrivacy.private && _isOwner) || (item.privacy === enumPrivacy.spectatorsOnly && (_isSpectator || _isOwner)) || item.privacy === enumPrivacy.public">
-                <ion-checkbox class="no-opacity" [checked]="item.completed" [disabled]="item.completed  || !_isOwner" (ionChange)="completeBucketListItem(item)"></ion-checkbox>
+              <ion-item *ngIf="(item.privacy === enumPrivacy.private && isOwner) || (item.privacy === enumPrivacy.spectatorsOnly && (isSpectator || isOwner)) || item.privacy === enumPrivacy.public">
+                <ion-checkbox class="no-opacity" [checked]="item.completed" [disabled]="item.completed  || !isOwner" (ionChange)="completeBucketListItem(item)"></ion-checkbox>
                 <ion-label class="no-opacity">{{ item.description }}</ion-label>
                 <ion-icon *ngIf="item.privacy === enumPrivacy.public" name="eye" class="bucketlist-item-public"></ion-icon>
                 <ion-icon *ngIf="item.privacy === enumPrivacy.spectatorsOnly" name="eye" class="bucketlist-item-spectatorsOnly"></ion-icon>
@@ -108,11 +108,11 @@
     <!-- Achieving Goals overview -->
     <h3 class="padding">Achieving Goals</h3>
 
-    <ng-container *ngIf="_achievingGoalsColObs | async as achievingGoals">
+    <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
       <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
 
         <thumbnail-list type="goal">
-          <ng-container *ngFor="let goal of _achievingGoalsColObs | async">
+          <ng-container *ngFor="let goal of achievingGoals$ | async">
             <ng-template #thumb>
               <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
                 <ng-template #thumbTitle>
@@ -132,11 +132,11 @@
     <!-- Supporting Goals overview -->
     <h3 class="padding">Supporting Goals</h3>
 
-    <ng-container *ngIf="_supportingGoalsColObs | async as supportingGoals">
+    <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
       <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
 
         <thumbnail-list type="goal">
-          <ng-container *ngFor="let goal of _supportingGoalsColObs | async">
+          <ng-container *ngFor="let goal of supportingGoals$ | async">
             <ng-template #thumb>
               <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
                 <ng-template #thumbTitle>
@@ -154,7 +154,7 @@
     </ng-container>
 
 
-    <div class="exercise-wrapper" *ngIf="_isOwner">
+    <div class="exercise-wrapper" *ngIf="isOwner">
       <h3 class="padding">Exercises</h3>
       <ion-grid>
         <ion-row>
@@ -165,7 +165,7 @@
       
             </ion-card>
       
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)" *ngIf="!(_bucketListDocObs | async)?.items">
+            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)" *ngIf="!(bucketList$ | async)?.items">
             
               <img src="assets\exercises\bucketlist\bucketlist2.jpg"/>
               <div class="card-title">Bucket List</div>

@@ -1,21 +1,21 @@
-<strive-header title="Supports" *ngIf="_platform.is('android') || _platform.is('ios')"></strive-header>
+<strive-header title="Supports" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
-<div class="not-logged-in" *ngIf="_pageIsLoading">
+<div class="not-logged-in" *ngIf="pageIsLoading">
   <ion-spinner name="lines" color="primary"></ion-spinner>
 </div>
 
-<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !_pageIsLoading">
+<div class="not-logged-in" *ngIf="!(user.isLoggedIn$ | async) && !pageIsLoading">
   <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
   </p>
 </div>
 
-<ion-content class="ion-padding" *ngIf="(user.isLoggedIn$ | async) && !_pageIsLoading">
+<ion-content class="ion-padding" *ngIf="(user.isLoggedIn$ | async) && !pageIsLoading">
   <div class="vertical-align-content">
 
     <ion-list inset="false" lines="full">
       <ion-list-header>Goals you support</ion-list-header>
-      <ion-item *ngFor="let support of _supportsOpen$ | async">
+      <ion-item *ngFor="let support of supportsOpen$ | async">
         <ion-label class="ion-text-wrap">
           <ion-text>{{ support?.description }}</ion-text>
           <ion-text>
@@ -27,7 +27,7 @@
       </ion-item>
       
       <ion-list-header>Support To Get</ion-list-header>
-      <ion-item *ngFor='let support of _supportsToGet$ | async'>
+      <ion-item *ngFor='let support of supportsToGet$ | async'>
         <ion-label>
           <ion-text>
             {{ support.description }} from {{ support.supporter.username }}
@@ -42,7 +42,7 @@
       </ion-item>
 
       <ion-list-header>Supports To Give</ion-list-header>
-      <ion-item *ngFor="let support of _supportsToGive$ | async">
+      <ion-item *ngFor="let support of supportsToGive$ | async">
         <ion-label>
           <ion-text>
             {{ support.description }} to achiever(s) from {{ support.goal.title }}

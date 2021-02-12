@@ -29,9 +29,7 @@ export class CollectiveGoalService {
   }
 
   public async getCollectiveGoal(collectiveGoalId: string): Promise<ICollectiveGoal> {
-
     return await this.getCollectiveGoalDocObs(collectiveGoalId).pipe(first()).toPromise()
-
   }
 
 
@@ -67,7 +65,7 @@ export class CollectiveGoalService {
    * @param collectiveGoal Data of the changed collective goal
    * @param image Optional image blob
    */
-  public async updateCollectiveGoal(id: string, collectiveGoal: ICollectiveGoal): Promise<void> {
+  public async updateCollectiveGoal(id: string, collectiveGoal: ICollectiveGoal) {
 
     if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
 
@@ -77,16 +75,16 @@ export class CollectiveGoalService {
     await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
   }
 
-  public async delete(collectiveGoalId: string): Promise<void> {
+  public async delete(collectiveGoalId: string) {
     await this.db.doc(`CollectiveGoals/${collectiveGoalId}`).delete()
   }
 
   public getGoals(id: string, publicOnly: boolean): Observable<Goal[]> {
     let query: QueryFn
     if (publicOnly) {
-      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', '==', 'public').orderBy('createdAt', 'desc')
+      query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '==', 'public').orderBy('createdAt', 'desc')
     } else {
-      query = ref => ref.where('collectiveGoal.id', '==', id).where('publicity', 'in', ['collectiveGoalOnly', 'public']).orderBy('createdAt', 'desc')
+      query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '!=', 'private').orderBy('publicity').orderBy('createdAt', 'desc')
     }
 
     return this.db.colWithIds$<Goal[]>(`Goals`, query).pipe(
@@ -94,7 +92,7 @@ export class CollectiveGoalService {
     )
   }
 
-  private async upsertCollectiveGoal(collectiveGoal: ICollectiveGoal, id: string): Promise<void> {
+  private async upsertCollectiveGoal(collectiveGoal: ICollectiveGoal, id: string) {
     await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
   }
 

@@ -28,8 +28,8 @@ import { Profile } from '@strive/user/user/+state/user.firestore';
 })
 export class GoalsPage implements OnInit, OnDestroy {
 
-  goalsColObs: Observable<Goal[]>;
-  collectiveGoalsColObs: Observable<ICollectiveGoal[]>;
+  goals$: Observable<Goal[]>;
+  collectiveGoals$: Observable<ICollectiveGoal[]>;
 
   sub: Subscription;
   backBtnSubscription: Subscription;
@@ -44,15 +44,15 @@ export class GoalsPage implements OnInit, OnDestroy {
     private seo: SeoService
   ) { }
 
-  async ngOnInit() { 
-    
-    this.sub = this.user.profile$.subscribe(async (profile: Profile) => {
+  ngOnInit() { 
+    this.sub = this.user.profile$.subscribe((profile: Profile) => {
       if (!!profile) {
-        const achieverGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.achiever, false)
-        const spectatorGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.spectator, false)
-        this.goalsColObs = filterDuplicateGoals([achieverGoals, spectatorGoals])
+        this.goals$ = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.achiever, false)
+        // TODO Create separate section for goals you spectate (they are not YOUR goals)
+        // const spectatorGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.spectator, false)
+        // this.goals$ = filterDuplicateGoals([achieverGoals, spectatorGoals])
 
-        this.collectiveGoalsColObs = this.collectiveGoalStakeholderService.getCollectiveGoals(profile.id)
+        this.collectiveGoals$ = this.collectiveGoalStakeholderService.getCollectiveGoals(profile.id)
       }
     })
 
@@ -88,13 +88,13 @@ export class GoalsPage implements OnInit, OnDestroy {
   }
 }
 
-function filterDuplicateGoals(observables: Observable<Goal[]>[]) {
-  return combineLatest<Goal[][]>(observables).pipe(
-    map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
-    map(goals => goals.filter((thing, index, self) => 
-      index === self.findIndex((t) => (
-        t.id === thing.id
-      ))
-    ))
-  )
-}
+// function filterDuplicateGoals(observables: Observable<Goal[]>[]) {
+//   return combineLatest<Goal[][]>(observables).pipe(
+//     map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
+//     map(goals => goals.filter((thing, index, self) => 
+//       index === self.findIndex((t) => (
+//         t.id === thing.id
+//       ))
+//     ))
+//   )
+// }
