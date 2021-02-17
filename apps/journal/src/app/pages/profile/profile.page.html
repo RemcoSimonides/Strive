@@ -4,227 +4,215 @@
       <!-- <ion-menu-button *ngIf="!_platform.is('android') && !_platform.is('ios')"></ion-menu-button> -->
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="!shouldLogin">{{ profile.username }}</ion-title>
-    <ion-title *ngIf="shouldLogin">Profile</ion-title>
-    <ion-buttons slot="end" *ngIf="isOwner">
-      <ion-button (click)="presentProfileOptionsPopover($event)">
-        <ion-icon slot="icon-only" name="settings"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>{{ shouldLogin ? 'Profile' : (profile$ | async).username }}</ion-title>
+    <ng-container *ngIf="isOwner">
+      <ion-buttons slot="end">
+        <ion-button (click)="presentProfileOptionsPopover($event)">
+          <ion-icon slot="icon-only" name="settings"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ng-container>
   </ion-toolbar>
 </ion-header>
 
-<div class="not-logged-in" *ngIf="pageIsLoading">
-  <ion-spinner name="lines" color="primary"></ion-spinner>
-</div>
+<ion-content class="ion-padding">
+  <ng-template #loading>
+    <ng-container *ngIf="!shouldLogin else login">
+      <strive-page-loading></strive-page-loading>
+    </ng-container>
 
-<div class="not-logged-in" *ngIf="shouldLogin && !pageIsLoading">
-  <p>
-      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your profile
-  </p>
-</div>
+    <ng-template #login>
+      <section fxLayout fxLayoutAlign="center center">
+        <span><b (click)="openAuthModal()">Log in</b> to view your profile</span>
+      </section>
+   </ng-template>
+  </ng-template>
 
-<ion-content class="ion-no-padding" [ngSwitch]="segmentChoice" *ngIf="!pageIsLoading">
+  <ng-container *ngIf="!!profile; else loading">
+    <section fxLayout="column" class="header">
 
-  <div class="vertical-align-content">
-    <ion-card>
-      <div id="profile-bg"></div>
-      <div id="content">
-        <div id="profile-info">
-          <div id="profile-image-container">
-            <img id="profile-image" [src]="_chosenPicture || profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" (click)="editProfileImage($event)">
-            <ion-icon id="profile-image-edit-icon" *ngIf="isOwner" name="create" (click)="editProfileImage($event)"></ion-icon>
-          </div>
-          <div id="profile-username-container">              
-            <ion-input [ngStyle]="{'max-width': profile.username ? profile.username.length + 1 + 'ch' : '1ch'}" *ngIf="isOwner" type="text" [(ngModel)]="profile.username" (keydown.enter)="saveProfileUsername()" [disabled]="!editableProfileUsername"></ion-input>
-            <ion-icon id="profile-username-edit-icon" *ngIf="isOwner && !editableProfileUsername" name="create" (click)="_editableProfileUsername = true"></ion-icon>
-            <ion-icon id="profile-username-edit-icon" *ngIf="isOwner && editableProfileUsername" name="save" (click)="saveProfileUsername()"></ion-icon>
-          </div>
-        </div>
-        <ion-row>
-          <ion-col col-4 class="profile-number" (click)="segmentChanged('spectators')">
+      <!-- HEADER -->
+      <ion-card>
+        <article fxLayout fxLayoutAlign="center end">
+          <img [src]="_chosenPicture || profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" (click)="editProfileImage($event)">
+          <ion-icon *ngIf="isOwner" name="create" (click)="editProfileImage($event)"></ion-icon>
+        </article>
+        <article fxLayout fxLayoutAlign="center center">
+          <ng-container *ngIf="isOwner else username">
+            <ion-input type="text" 
+              [ngStyle]="{'max-width': profileForm.username.value ? profileForm.username.value.length + 1.5 + 'ch' : '1.5ch'}" 
+              [formControl]="profileForm.username" 
+              (keydown.enter)="updateUsername()">
+            </ion-input>
+            <ion-icon [name]="profileForm.enabled ? 'save' : 'create'" (click)="updateUsername()"></ion-icon>
+          </ng-container>
+          <ng-template #username>
+            <h4>{{ profile.username }}</h4>
+          </ng-template>
+        </article>
+        <article fxLayout fxLayoutAlign="space-evenly">
+          <div fxLayout="column" fxLayoutAlign="center center">
             <p>Followers</p>
             <span>{{ profile.numberOfSpectators }}</span>
-          </ion-col>
-          <ion-col col-4 class="profile-number" (click)="segmentChanged('spectating')">
+          </div>
+          <div fxLayout="column" fxLayoutAlign="center center">
             <p>Following</p>
             <span>{{ profile.numberOfSpectating }}</span>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <!-- Edit profile image -->
-
-      <ion-button *ngIf="!isOwner && !isSpectator" (click)="toggleSpectate()" fill="outline">Follow</ion-button>
-      <ion-button *ngIf="!isOwner && isSpectator" (click)="toggleSpectate()" fill="outline">Stop Following</ion-button>
-
-    </ion-card>
-
-  </div>
-
-  <div *ngSwitchCase="'info'">
-    <div class="vertical-align-content">
-
-      <!-- Affirmations -->
-      <div class="exercise" *ngIf="_affirmations as affirmations">  
-        <div *ngIf="affirmations?.affirmations?.length > 0">
-          <div class="exercise-header-container">
-            <h3 class="padding">Affirmations</h3>
-            <ion-icon class="exercise-edit-icon" *ngIf="isOwner" name="create" (click)="openExercise(enumExercises.affirmations)"></ion-icon>
           </div>
-          <ion-list>
-            <div *ngFor="let affirmation of affirmations.affirmations">
-              <ion-item>
-                <ion-label>{{ affirmation }}</ion-label>
-              </ion-item>
-            </div>
-          </ion-list>
-        </div>
-      </div>
+        </article>
 
-      <!-- Bucket List -->
-      <div class="exercise" *ngIf="bucketList$ | async as bucketList">
-        <div *ngIf="bucketList.items?.length > 0" class="bucketlist">
-          <div class="exercise-header-container">
-            <h3 class="padding">Bucket List</h3>
-            <ion-icon class="exercise-edit-icon" *ngIf="isOwner" name="create" (click)="openExercise(enumExercises.bucketlist)"></ion-icon>
+        <ng-container *ngIf="!isOwner">
+          <ion-button (click)="toggleSpectate()" fill="outline">{{ isSpectator ? 'Stop Following' : 'Follow' }}</ion-button>
+        </ng-container>
+      </ion-card>
+
+    </section>
+  </ng-container>
+
+    <!-- <div *ngSwitchCase="'info'"> -->
+      <div class="vertical-align-content">
+
+        <!-- Affirmations -->
+        <div class="exercise" *ngIf="_affirmations as affirmations">  
+          <div *ngIf="affirmations?.affirmations?.length > 0">
+            <div class="exercise-header-container">
+              <h3 class="padding">Affirmations</h3>
+              <ion-icon class="exercise-edit-icon" *ngIf="isOwner" name="create" (click)="openExercise(enumExercises.affirmations)"></ion-icon>
+            </div>
+            <ion-list>
+              <div *ngFor="let affirmation of affirmations.affirmations">
+                <ion-item>
+                  <ion-label>{{ affirmation }}</ion-label>
+                </ion-item>
+              </div>
+            </ion-list>
           </div>
-          <ion-list>
-            <div *ngFor="let item of bucketList.items">
-              <ion-item *ngIf="(item.privacy === enumPrivacy.private && isOwner) || (item.privacy === enumPrivacy.spectatorsOnly && (isSpectator || isOwner)) || item.privacy === enumPrivacy.public">
-                <ion-checkbox class="no-opacity" [checked]="item.completed" [disabled]="item.completed  || !isOwner" (ionChange)="completeBucketListItem(item)"></ion-checkbox>
-                <ion-label class="no-opacity">{{ item.description }}</ion-label>
-                <ion-icon *ngIf="item.privacy === enumPrivacy.public" name="eye" class="bucketlist-item-public"></ion-icon>
-                <ion-icon *ngIf="item.privacy === enumPrivacy.spectatorsOnly" name="eye" class="bucketlist-item-spectatorsOnly"></ion-icon>
-                <ion-icon *ngIf="item.privacy === enumPrivacy.private" name="eye-off" class="bucketlist-item-private"></ion-icon>
-              </ion-item>
-            </div>
-          </ion-list>
         </div>
+
+        <!-- Bucket List -->
+        <exercise-bucket-list-view [uid]="profileId" [isOwner]="isOwner" [isSpectator]="isSpectator"></exercise-bucket-list-view>
+
       </div>
 
-    </div>
+      <!-- Achieving Goals overview -->
+      <h3 class="padding">Achieving Goals</h3>
 
-    <!-- Achieving Goals overview -->
-    <h3 class="padding">Achieving Goals</h3>
+      <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
+        <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
 
-    <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
-      <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
-
-        <thumbnail-list type="goal">
-          <ng-container *ngFor="let goal of achievingGoals$ | async">
-            <ng-template #thumb>
-              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
-                <ng-template #thumbTitle>
-                  {{ goal.title }}
-                </ng-template>
-              </rectangle-thumbnail>
-            </ng-template>
-          </ng-container>
-        </thumbnail-list>
-          
+          <thumbnail-list type="goal">
+            <ng-container *ngFor="let goal of achievingGoals$ | async">
+              <ng-template #thumb>
+                <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+                  <ng-template #thumbTitle>
+                    {{ goal.title }}
+                  </ng-template>
+                </rectangle-thumbnail>
+              </ng-template>
+            </ng-container>
+          </thumbnail-list>
+            
+        </ng-container>
+        <ng-template #noAchievingGoals>
+          <span class="padding">Not achieving any goals</span>
+        </ng-template>
       </ng-container>
-      <ng-template #noAchievingGoals>
-        <span class="padding">Not achieving any goals</span>
-      </ng-template>
-    </ng-container>
 
-    <!-- Supporting Goals overview -->
-    <h3 class="padding">Supporting Goals</h3>
+      <!-- Supporting Goals overview -->
+      <h3 class="padding">Supporting Goals</h3>
 
-    <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
-      <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
+      <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
+        <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
 
-        <thumbnail-list type="goal">
-          <ng-container *ngFor="let goal of supportingGoals$ | async">
-            <ng-template #thumb>
-              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
-                <ng-template #thumbTitle>
-                  {{ goal.title }}
-                </ng-template>
-              </rectangle-thumbnail>
-            </ng-template>
-          </ng-container>
-        </thumbnail-list>
+          <thumbnail-list type="goal">
+            <ng-container *ngFor="let goal of supportingGoals$ | async">
+              <ng-template #thumb>
+                <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+                  <ng-template #thumbTitle>
+                    {{ goal.title }}
+                  </ng-template>
+                </rectangle-thumbnail>
+              </ng-template>
+            </ng-container>
+          </thumbnail-list>
 
+        </ng-container>
+        <ng-template #noSupportingGoals>
+          <span class="padding">Not supporting any goals</span>
+        </ng-template>
       </ng-container>
-      <ng-template #noSupportingGoals>
-        <span class="padding">Not supporting any goals</span>
-      </ng-template>
-    </ng-container>
 
 
-    <div class="exercise-wrapper" *ngIf="isOwner">
-      <h3 class="padding">Exercises</h3>
-      <ion-grid>
-        <ion-row>
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.affirmations)" >
-    
-              <img src="assets\exercises\affirmations\affirmations2.jpg"/>
-              <div class="card-title">Affirmations</div>
+      <div class="exercise-wrapper" *ngIf="isOwner">
+        <h3 class="padding">Exercises</h3>
+        <ion-grid>
+          <ion-row>
+              <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.affirmations)" >
       
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)" *ngIf="!(bucketList$ | async)?.items">
-            
-              <img src="assets\exercises\bucketlist\bucketlist2.jpg"/>
-              <div class="card-title">Bucket List</div>
-      
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">
-            
-              <img src="assets\exercises\dear_future_self\dear_future_self2.jpg"/>
-              <div class="card-title">Dear Future Self</div>
-      
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.daily_gratefulness)">
-            
-              <img src="assets\exercises\daily_gratefulness\daily_gratefulness2.jpg"/>
-              <div class="card-title">Daily Gratefulness</div>
-      
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.assess_life)">
-            
-              <img src="assets\exercises\assess_life\assess_life_man2.jpg"/>
-              <div class="card-title">Assess Life</div>
-      
-            </ion-card>
-        </ion-row>        
-      </ion-grid>
-    </div>
+                <img src="assets\exercises\affirmations\affirmations2.jpg"/>
+                <div class="card-title">Affirmations</div>
+        
+              </ion-card>
+        
+              <!-- <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)" *ngIf="!(bucketList$ | async)?.items">
+              
+                <img src="assets\exercises\bucketlist\bucketlist2.jpg"/>
+                <div class="card-title">Bucket List</div>
+        
+              </ion-card> -->
+        
+              <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">
+              
+                <img src="assets\exercises\dear_future_self\dear_future_self2.jpg"/>
+                <div class="card-title">Dear Future Self</div>
+        
+              </ion-card>
+        
+              <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.daily_gratefulness)">
+              
+                <img src="assets\exercises\daily_gratefulness\daily_gratefulness2.jpg"/>
+                <div class="card-title">Daily Gratefulness</div>
+        
+              </ion-card>
+        
+              <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.assess_life)">
+              
+                <img src="assets\exercises\assess_life\assess_life_man2.jpg"/>
+                <div class="card-title">Assess Life</div>
+        
+              </ion-card>
+          </ion-row>        
+        </ion-grid>
+      </div>
 
-    <!-- Only owner can go into edit mode -->
-    <!-- <ion-fab *ngIf="_isOwner && _inEditMode" vertical="bottom" horizontal="end" slot="fixed"> -->
-      <!-- <ion-fab-button *ngIf="!_inEditMode" (click)="toggleEdit()"><ion-icon name="build"></ion-icon></ion-fab-button> -->
-      <!-- <ion-fab-button *ngIf="_inEditMode" (click)="toggleEdit()"><ion-icon name="send"></ion-icon></ion-fab-button> -->
-    <!-- </ion-fab> -->
+      <!-- Only owner can go into edit mode -->
+      <!-- <ion-fab *ngIf="_isOwner && _inEditMode" vertical="bottom" horizontal="end" slot="fixed"> -->
+        <!-- <ion-fab-button *ngIf="!_inEditMode" (click)="toggleEdit()"><ion-icon name="build"></ion-icon></ion-fab-button> -->
+        <!-- <ion-fab-button *ngIf="_inEditMode" (click)="toggleEdit()"><ion-icon name="send"></ion-icon></ion-fab-button> -->
+      <!-- </ion-fab> -->
 
-  </div>
-  <div *ngSwitchCase="'spectators'" class="vertical-align-content">
-    <span class="back-btn" (click)="segmentChanged('info')"><ion-icon name="arrow-back"></ion-icon>back</span>
+    <!-- </div>
+    <div *ngSwitchCase="'spectators'" class="vertical-align-content"> -->
+      <!-- <span class="back-btn" (click)="segmentChanged('info')"><ion-icon name="arrow-back"></ion-icon>back</span>
 
-    <h3 class="padding">Followers</h3>
-    <ion-list>
-      <ion-item *ngFor="let spectator of _spectators" button [routerLink]="'../' + (spectator.id)">
-        {{ spectator.username }}
-      </ion-item>
-    </ion-list>
+      <h3 class="padding">Followers</h3>
+      <ion-list>
+        <ion-item *ngFor="let spectator of spectators" button [routerLink]="'../' + (spectator.id)">
+          {{ spectator.username }}
+        </ion-item>
+      </ion-list> -->
 
-  </div>
+    <!-- </div>
 
-  <div *ngSwitchCase="'spectating'" class="vertical-align-content">
-    <span class="back-btn" (click)="segmentChanged('info')"><ion-icon name="arrow-back"></ion-icon>back</span>
+    <div *ngSwitchCase="'spectating'" class="vertical-align-content"> -->
+      <!-- <span class="back-btn" (click)="segmentChanged('info')"><ion-icon name="arrow-back"></ion-icon>back</span>
 
-    <h3 class="padding">Following</h3>
-    <ion-list>
-      <ion-item *ngFor="let spectating of _spectating"  button [routerLink]="'../' + (spectating.id)">
-        {{ spectating.profileUsername }}
-      </ion-item>
-    </ion-list>
+      <h3 class="padding">Following</h3>
+      <ion-list>
+        <ion-item *ngFor="let spectating of spectating"  button [routerLink]="'../' + (spectating.id)">
+          {{ spectating.profileUsername }}
+        </ion-item>
+      </ion-list> -->
 
-  </div>
-  
-</ion-content>
+    <!-- </div> -->
+  </ion-content>  

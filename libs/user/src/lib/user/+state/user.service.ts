@@ -5,7 +5,7 @@ import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { Observable, of } from 'rxjs';
 import { first, map, switchMap, tap } from 'rxjs/operators';
 // Interfaces
-import { Profile, User } from './user.firestore';
+import { createUser, Profile, User } from './user.firestore';
 
 const userPath = (uid: string) => `Users/${uid}`
 const profilePath = (uid: string) => `Users/${uid}/Profile/${uid}`
@@ -42,8 +42,12 @@ export class UserService {
     return this.afAuth.currentUser
   }
 
-  async getProfile(uid: string = this.uid) {
-    return this.db.docWithId$<Profile>(profilePath(uid)).pipe(first()).toPromise()
+  getProfile$(uid = this.uid) {
+    return this.db.docWithId$<Profile>(profilePath(uid))
+  }
+
+  async getProfile(uid = this.uid) {
+    return this.getProfile$(uid).pipe(first()).toPromise()
   }
 
   async upsertProfile(profile: Partial<Profile>, uid = this.uid) {
@@ -58,15 +62,7 @@ export class UserService {
   }
 
   createUser(uid: string, email: string) {
-
-    const newUser = <User>{
-      email: email,
-      walletBalance: 0
-    }
-
-    //Create user
-    return this.db.upsert(`Users/${uid}`, newUser)
-
+    return this.db.upsert(`Users/${uid}`, createUser({ id: uid, email }))
   }
 
   addFCMToken(token: string) {

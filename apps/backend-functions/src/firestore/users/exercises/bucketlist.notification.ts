@@ -1,15 +1,11 @@
 import { db } from '../../../internals/firebase';
 // Functions
 import { sendNotificationToUserSpectators, createDiscussion } from '../../../shared/notification/notification'
-import { 
-  IBucketList,
-  IBucketListItem,
-  enumPrivacy,
-  enumDiscussionAudience
-} from '@strive/interfaces';
+import { enumDiscussionAudience } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore'
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
+import { BucketList, BucketListItem } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
 
 export async function handleNotificationsOfBucketListCreated(uid: string) {
 
@@ -41,17 +37,17 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   await sendNotificationToUserSpectators(uid, notification)
 }
 
-export async function handleNotificationsOfBucketListChanged(uid: string, before: IBucketList, after: IBucketList) {
+export async function handleNotificationsOfBucketListChanged(uid: string, before: BucketList, after: BucketList) {
 
   // get profile for profile image and name
   const profileDocRef = db.doc(`Users/${uid}/Profile/${uid}`)
   const profileDocSnap = await profileDocRef.get()
   const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
-  const changedPrivacyFromPrivateToSpectatorsOnlyOrPublic: IBucketListItem[] = getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before, after)
-  const changedDescription: IBucketListItem[] = getChangedDescriptionItems(before, after)
-  const completedItems: IBucketListItem[] = getCompletedItems(before, after)
-  const addedItems: IBucketListItem[] = getNonPrivateAddedItems(before, after)
+  const changedPrivacyFromPrivateToSpectatorsOnlyOrPublic: BucketListItem[] = getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before, after)
+  const changedDescription = getChangedDescriptionItems(before, after)
+  const completedItems = getCompletedItems(before, after)
+  const addedItems = getNonPrivateAddedItems(before, after)
 
   const totalNumberOfChangedItems: number = changedPrivacyFromPrivateToSpectatorsOnlyOrPublic.length + addedItems.length + changedDescription.length
 
@@ -112,17 +108,17 @@ function sendBucketListItemComletedNotification(uid: string, profile: Profile, b
   sendNotificationToUserSpectators(uid, notification)
 }
 
-function getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before: IBucketList, after: IBucketList): IBucketListItem[] {
+function getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before: BucketList, after: BucketList): BucketListItem[] {
 
   return before.items.filter(itemBefore => {
-    if (itemBefore.privacy === enumPrivacy.private) {
+    if (itemBefore.privacy === 'private') {
       const itemAfter = after.items.find(x => x.description === itemBefore.description)
-      return itemAfter && (itemAfter.privacy  === enumPrivacy.spectatorsOnly || itemAfter?.privacy === enumPrivacy.public) ? true : false
+      return !!itemAfter && (itemAfter.privacy === 'spectatorsOnly' || itemAfter?.privacy === 'public')
     } else return false
   })
 }
 
-function getChangedDescriptionItems(before: IBucketList, after: IBucketList): IBucketListItem[] {
+function getChangedDescriptionItems(before: BucketList, after: BucketList): BucketListItem[] {
 
   return before.items.filter(itemBefore => {  
     const itemAfter = after.items.find(x => x.description === itemBefore.description)
@@ -132,7 +128,7 @@ function getChangedDescriptionItems(before: IBucketList, after: IBucketList): IB
   })
 }
 
-function getCompletedItems(before: IBucketList, after: IBucketList): IBucketListItem[] {
+function getCompletedItems(before: BucketList, after: BucketList): BucketListItem[] {
 
   return before.items.filter(itemBefore => {
     // get the same after
@@ -143,11 +139,11 @@ function getCompletedItems(before: IBucketList, after: IBucketList): IBucketList
   })
 }
 
-function getNonPrivateAddedItems(before: IBucketList, after: IBucketList): IBucketListItem[] {
+function getNonPrivateAddedItems(before: BucketList, after: BucketList): BucketListItem[] {
 
   if (before.items.length < after.items.length) {
     return after.items.filter(itemAfter => {
-      if (itemAfter.privacy === enumPrivacy.private) return false
+      if (itemAfter.privacy === 'private') return false
       return !before.items.some(itemBefore => itemBefore.description === itemAfter.description)
     })
   } else return []

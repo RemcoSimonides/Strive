@@ -5,11 +5,24 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
-    dateOfBirth?: string;
-    walletBalance: number;
-    posts?: { [goalPostId: string ]: true };
+    // dateOfBirth?: string;
+    // walletBalance: number;
+    // posts?: { [goalPostId: string ]: true };
     updatedAt?: FieldValue;
     createdAt?: FieldValue;
+}
+
+export function createUser(params: Partial<User> = {}): User {
+  return {
+    id: !!params.id ? params.id : '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    // dateOfBirth: '',
+    // walletBalance: 0
+    // posts: [],
+    ...params
+  }
 }
 
 export interface Profile {
@@ -22,6 +35,19 @@ export interface Profile {
   fcmTokens?: FieldValue | string[]; // one token per used device
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
+}
+
+export function createProfile(params: Partial<Profile> = {}): Profile {
+  return {
+    id: !!params.id ? params.id : '',
+    username: '',
+    photoURL: '',
+    numberOfSpectating: 0,
+    numberOfSpectators: 0,
+    numberOfUnreadNotifications: 0,
+    fcmTokens: [],
+    ...params
+  }
 }
 
 export interface ProfileLink {

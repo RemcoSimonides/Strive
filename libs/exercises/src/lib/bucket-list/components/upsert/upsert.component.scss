@@ -1,0 +1,11 @@
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+ion-item {
+  ion-icon:hover {
+    color: var(--ion-color-warning);
+    cursor: pointer;
+  }
+}

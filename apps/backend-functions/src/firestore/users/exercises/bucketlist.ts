@@ -1,6 +1,6 @@
 import { functions } from '../../../internals/firebase';
 import * as moment from 'moment'
-import { IBucketList } from '@strive/interfaces';
+import { BucketList } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
 import { enumWorkerType, IScheduledTaskUserExerciseBucketList } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { handleNotificationsOfBucketListChanged, handleNotificationsOfBucketListCreated } from './bucketlist.notification'
@@ -9,7 +9,7 @@ export const bucketListCreatedHandler = functions.firestore.document(`Users/{use
     .onCreate(async (snapshot, context) => {
 
         const uid = context.params.userId
-        const affirmations: IBucketList = Object.assign(<IBucketList>{}, snapshot.data())
+        const affirmations: BucketList = Object.assign(<BucketList>{}, snapshot.data())
         if (!affirmations) return
 
         const nextYear: string = moment(snapshot.createTime).add(1, 'year').toISOString()
@@ -33,8 +33,8 @@ export const bucketListCreatedHandler = functions.firestore.document(`Users/{use
 export const bucketListChangeHandler = functions.firestore.document(`Users/{userId}/Exercises/BucketList`)
     .onUpdate(async (snapshot, context) => {
 
-        const before: IBucketList = Object.assign(<IBucketList>{}, snapshot.before.data())
-        const after: IBucketList = Object.assign(<IBucketList>{}, snapshot.after.data())
+        const before: BucketList = Object.assign(<BucketList>{}, snapshot.before.data())
+        const after: BucketList = Object.assign(<BucketList>{}, snapshot.after.data())
         const uid = context.params.userId
 
         if (before !== after) {

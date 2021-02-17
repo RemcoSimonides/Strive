@@ -1,34 +1,29 @@
-.vertical-align-content {
-    max-width: 800px;
-    margin: auto;
-}
-
-.not-logged-in {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  
-    .fat-text-button {
-      margin-right: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      color: var(--ion-color-primary);
-    }
-  }
-
-#profile-bg {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    margin-top: -16px;
-    height: 160px;
+.header {
+  ion-card {
     background-image: linear-gradient(to bottom, var(--ion-color-primary-tint), white);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    text-align: center;
+    padding: 16px;
+
+    img {
+      border-radius: 50%;
+      object-fit: cover;
+      width: 100px;
+      height: 100px;
+      margin: 0 0 12px 12px;
+      box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
+    }
+
+    ion-icon {
+      &:hover  {
+        color: black;
+        cursor: pointer;
+      }
+    }
+  }
 }
+
 
 // Profile content
 #content {
@@ -44,33 +39,6 @@
     width: 100%;
     z-index: 2;
     text-align: center;
-}
-
-#profile-image {
-    display: block;
-    border-radius: 50%;
-    // width: auto;
-    object-fit: cover;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 0;
-    box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
-}
-
-#profile-image-edit-icon {
-    margin-top: -14px;
-    margin-left: 40px;
-    position: absolute;
-    
-    &:hover  {
-        color: black;
-    }
-}
-
-#profile-username-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
 }
 
 #profile-username {
@@ -125,17 +93,6 @@
     ion-checkbox {
         margin-right: 5px;
     }
-    
-    .bucketlist-item-public {
-        color: green;
-    }
-
-}
-
-.bucketlist {
-    .no-opacity {
-        opacity: 1;
-    }
 }
 
 hr {
@@ -147,11 +104,6 @@ hr {
 
 .goal-thumbnail-wrapper {
     display: flex;
-}
-
-.profile-number:hover {
-    background: var(--ion-color-lightest);
-    cursor: pointer;
 }
 
 ion-slide {
