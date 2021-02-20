@@ -18,7 +18,7 @@ import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratef
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 // Interfaces
-import { ISpectator } from '@strive/interfaces';
+import { Spectator } from '@strive/user/spectator/+state/stakeholder.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
@@ -62,8 +62,8 @@ export class ProfilePage implements OnInit {
   public affirmations$: Observable<Affirmations>
   public _affirmations = <Affirmations>{}
 
-  public spectators: ISpectator[]
-  public spectating: ISpectator[]
+  public spectators: Spectator[]
+  public spectating: Spectator[]
 
   public segmentChoice = 'info'
 
@@ -110,12 +110,6 @@ export class ProfilePage implements OnInit {
     this.profileForm.disable()
 
     this.seo.generateTags({ title: `${this.profile.username} - Strive Journal` })
-
-    // get affirmations
-    // this.affirmations$ = this.exerciseService.getAffirmationsDocObs(this.profileId)
-    // this.affirmations$.subscribe(affirmations => this._affirmations = affirmations)
-
-    // Get bucketlist observable
 
     this.achievingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
     this.supportingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
@@ -171,20 +165,18 @@ export class ProfilePage implements OnInit {
   }
 
   public async editProfileImage(ev: UIEvent): Promise<void> {
-
     if (!this.isOwner) return
 
-      const popover = await this.popoverCtrl.create({
-        component: EditProfileImagePopoverPage,
-        event: ev
-      })
-      popover.onDidDismiss().then((imageURL => {
-        if (imageURL && imageURL.data) {
-          this.profileForm.photoURL.setValue(imageURL.data.toString())
-        }
-      }))
-      await popover.present()
-
+    const popover = await this.popoverCtrl.create({
+      component: EditProfileImagePopoverPage,
+      event: ev
+    })
+    popover.onDidDismiss().then((imageURL => {
+      if (imageURL && imageURL.data) {
+        this.profileForm.photoURL.setValue(imageURL.data.toString())
+      }
+    }))
+    await popover.present()
   }
 
   public updateUsername(){

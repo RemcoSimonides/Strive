@@ -1,7 +1,7 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 
-import { handleNotificationsOfCreatedUserSpectator } from './user-spectator.notification'
-import { ISpectator } from '@strive/interfaces';
+import { handleNotificationsOfCreatedUserSpectator } from './user-spectator.notification';
+import { Spectator } from '@strive/user/spectator/+state/stakeholder.firestore';
 
 export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
     .onCreate(async (snapshot, context) => {
@@ -9,7 +9,7 @@ export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{
         const uidToBeSpectated = context.params.uidToBeSpectated
         const uidSpectator = context.params.uidSpectator
 
-        const spectator: ISpectator = Object.assign(<ISpectator>{}, snapshot.data())
+        const spectator: Spectator = Object.assign(<Spectator>{}, snapshot.data())
 
         if (!spectator) return
 

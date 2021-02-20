@@ -2,18 +2,18 @@ import { MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.fire
 import { FieldValue } from '@firebase/firestore-types';
 
 export interface ITemplate {
-    id?: string;
-    title: string;
-    description: string;
-    deadline: string;
-    numberOfTimesUsed: number;
-    goalTitle: string;
-    goalShortDescription: string;
-    goalDescription: string;
-    goalImage: string;
-    goalIsPublic: boolean;
-    goalDeadline: string;
-    milestoneTemplateObject: MilestoneTemplabeObject[];
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
+  id?: string;
+  title: string;
+  description: string;
+  deadline: string;
+  numberOfTimesUsed: number;
+  goalTitle: string;
+  goalShortDescription: string;
+  goalDescription: string;
+  goalImage: string;
+  goalIsPublic: boolean;
+  goalDeadline: string;
+  milestoneTemplateObject: MilestoneTemplabeObject[];
+  updatedAt?: FieldValue;
+  createdAt?: FieldValue;
 }

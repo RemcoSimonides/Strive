@@ -1,14 +1,14 @@
 // Interfaces
-import { ISpectator } from '@strive/interfaces';
+import { Spectator } from '@strive/user/spectator/+state/stakeholder.firestore';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
 
-export function handleNotificationsOfCreatedUserSpectator(userSpectator: ISpectator) {
+export function handleNotificationsOfCreatedUserSpectator(userSpectator: Spectator) {
   sendNotificationToUserBeingSpectated(userSpectator)
 }
 
-async function sendNotificationToUserBeingSpectated(userSpectator: ISpectator): Promise<void> {
+async function sendNotificationToUserBeingSpectated(userSpectator: Spectator) {
 
   // creating discussion id by combining both user id's with lowest in alphabet first
   const discussionId: string = userSpectator.profileId > userSpectator.uid ? `${userSpectator.uid}${userSpectator.profileId}` : `${userSpectator.profileId}${userSpectator.uid}` 
