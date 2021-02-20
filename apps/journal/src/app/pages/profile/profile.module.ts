@@ -17,6 +17,7 @@ import { BucketListViewModule } from '@strive/exercises/bucket-list/components/v
 import { BucketListUpsertModule } from '@strive/exercises/bucket-list/components/upsert/upsert.module';
 import { AffirmationsViewModule } from '@strive/exercises/affirmation/components/view/view.module';
 import { AffirmationUpsertModule } from '@strive/exercises/affirmation/components/upsert/upsert.module';
+import { DailyGratefulnessUpsertModule } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.module';
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
@@ -43,7 +44,8 @@ const routes: Routes = [
     BucketListViewModule,
     BucketListUpsertModule,
     AffirmationsViewModule,
-    AffirmationUpsertModule
+    AffirmationUpsertModule,
+    DailyGratefulnessUpsertModule
   ],
   declarations: [
     ProfilePage,

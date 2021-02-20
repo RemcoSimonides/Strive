@@ -6,7 +6,6 @@ import { UserSpectateService } from '@strive/user/user/+state/user-spectate.serv
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 // import { FcmService } from '@strive/utils/services/fcm.service';
 import { ImageService } from '@strive/media/+state/image.service';
-import { ExercisesService } from '@strive/exercises/+state/exercises.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { Observable, Subscription } from 'rxjs';
@@ -15,13 +14,12 @@ import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popov
 import { ProfileOptionsPage, enumProfileOptions } from './popovers/profile-options/profile-options.page';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
+import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 // import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/exercise-dear-future-self.page';
 // import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefulness/exercise-daily-gratefulness.page';
 // import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page';
 // Interfaces
-import {
-  ISpectator,
-} from '@strive/interfaces';
+import { ISpectator } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
@@ -74,7 +72,6 @@ export class ProfilePage implements OnInit {
     private afAuth: AngularFireAuth,
     public user: UserService,
     private goalStakeholderService: GoalStakeholderService,
-    private exerciseService: ExercisesService,
     private _imageService: ImageService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -234,11 +231,11 @@ export class ProfilePage implements OnInit {
     //     })
     //     break
 
-    //   case enumExercises.daily_gratefulness:
-    //     modal = await this.modalCtrl.create({
-    //       component: ExerciseDailyGratefulnessPage
-    //     })
-    //     break
+      case enumExercises.daily_gratefulness:
+        modal = await this.modalCtrl.create({
+          component: DailyGratefulnessUpsertComponent
+        })
+        break
 
     //   case enumExercises.assess_life:
     //     modal = await this.modalCtrl.create({

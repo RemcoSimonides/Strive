@@ -1,6 +1,6 @@
 import { functions } from '../../../internals/firebase';
 import * as moment from 'moment'
-import { IDailyGratefulness } from '@strive/interfaces';
+import { DailyGratefulness } from '@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore'
 import { IScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 
@@ -8,7 +8,7 @@ export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Use
     .onCreate(async (snapshot, context) => {
 
         const uid = context.params.uid
-        const dailyGratefulnessSettings: IDailyGratefulness = Object.assign(<IDailyGratefulness>{}, snapshot.data())
+        const dailyGratefulnessSettings: DailyGratefulness = Object.assign(<DailyGratefulness>{}, snapshot.data())
         if (!dailyGratefulnessSettings) return
         if (!dailyGratefulnessSettings.on) return
 
@@ -20,8 +20,8 @@ export const dailyGratefulnessChangedHandler = functions.firestore.document(`Use
     .onUpdate(async (snapshot, context) => {
 
         const uid = context.params.uid
-        const before: IDailyGratefulness = Object.assign(<IDailyGratefulness>{}, snapshot.before.data())
-        const after: IDailyGratefulness = Object.assign(<IDailyGratefulness>{}, snapshot.after.data())
+        const before: DailyGratefulness = Object.assign(<DailyGratefulness>{}, snapshot.before.data())
+        const after: DailyGratefulness = Object.assign(<DailyGratefulness>{}, snapshot.after.data())
 
         if (before.time !== after.time || before.on !== after.on) {
 
@@ -45,7 +45,7 @@ export const dailyGratefulnessChangedHandler = functions.firestore.document(`Use
         }
     })
 
-async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: IDailyGratefulness): Promise<void> {
+async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: DailyGratefulness): Promise<void> {
 
     const hours: number = new Date().getHours()
 
