@@ -15,9 +15,8 @@ import { ProfileOptionsPage, enumProfileOptions } from './popovers/profile-optio
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
-// import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/exercise-dear-future-self.page';
-// import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefulness/exercise-daily-gratefulness.page';
-// import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page';
+import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
+import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 // Interfaces
 import { ISpectator } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore';
@@ -210,41 +209,30 @@ export class ProfilePage implements OnInit {
   async openExercise(enumExercise: enumExercises) {
     if (!this.isOwner) return
 
-    let modal: HTMLIonModalElement
-
+    let component
     switch (enumExercise) {
       case enumExercises.affirmations:
-        modal = await this.modalCtrl.create({
-          component: AffirmationUpsertComponent
-        })  
+        component = AffirmationUpsertComponent
         break
       
       case enumExercises.bucketlist:
-        modal = await this.modalCtrl.create({
-          component: BucketListUpsertComponent
-        })
+        component = BucketListUpsertComponent
         break
       
-    //   case enumExercises.dear_future_self:
-    //     modal = await this.modalCtrl.create({
-    //       component: ExerciseDearFutureSelfPage
-    //     })
-    //     break
-
-      case enumExercises.daily_gratefulness:
-        modal = await this.modalCtrl.create({
-          component: DailyGratefulnessUpsertComponent
-        })
+      case enumExercises.dear_future_self:
+        component = DearFutureSelfUpsertComponent
         break
 
-    //   case enumExercises.assess_life:
-    //     modal = await this.modalCtrl.create({
-    //       component: ExerciseAssessLifePage
-    //     })
-    //     break
+      case enumExercises.daily_gratefulness:
+        component = DailyGratefulnessUpsertComponent
+        break
+
+      case enumExercises.assess_life:
+        component = AssessLifeUpsertComponent
+        break
     }
 
-    await modal.present()
+    this.modalCtrl.create({ component }).then(modal => modal.present())
   }
 }
 
