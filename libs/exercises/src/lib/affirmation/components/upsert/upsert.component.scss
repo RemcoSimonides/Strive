@@ -1,0 +1,52 @@
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+h4 {
+  color: var(--ion-color-primary);
+}
+
+ion-fab {
+  margin-right: 15px;
+}
+
+.remove-item-icon:hover {
+  color: red;
+  cursor: pointer;
+}
+
+
+.setTimeContainer {
+
+  .remove-set-time-icon {
+      padding-left: 5px;
+      position: relative;
+      z-index: 2;
+  }
+
+  .remove-set-time-icon {
+      --padding-end: 10px;
+  }
+  
+}
+
+
+section {
+  margin-top: 25px;
+
+  article {
+    display: flex;
+    margin-top: auto;
+    margin-bottom: auto;
+    justify-content: space-between;
+  
+    ion-select {
+        margin-top: 8px;
+    }
+
+    ion-icon:hover {
+      color: var(--ion-color-primary)
+    }
+  }
+}

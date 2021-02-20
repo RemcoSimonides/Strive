@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BucketList, BucketListItem } from '../../+state/bucket-list.firestore';
+import { BucketList } from '../../+state/bucket-list.firestore';
 import { BucketListService } from '../../+state/bucket-list.service';
-import { UpsertComponent } from '../upsert/upsert.component';
+import { BucketListUpsertComponent } from '../upsert/upsert.component';
 
 @Component({
   selector: '[uid][isOwner][isSpectator] exercise-bucket-list-view',
@@ -44,6 +44,6 @@ export class ViewComponent implements OnInit {
 
   edit() {
     if (!this.isOwner) return
-    this.modalCtrl.create({ component: UpsertComponent }).then(modal => modal.present())
+    this.modalCtrl.create({ component: BucketListUpsertComponent }).then(modal => modal.present())
   }
 }

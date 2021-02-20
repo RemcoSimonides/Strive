@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['upsert.component.scss']
 })
 
-export class UpsertComponent implements OnInit, OnDestroy {
+export class BucketListUpsertComponent implements OnInit, OnDestroy {
 
   itemsForm = new FormArray([])
 

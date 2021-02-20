@@ -1,7 +1,7 @@
 import { db, functions, admin } from '../internals/firebase';
 
 import { enumTaskStatus } from '../shared/scheduled-task/scheduled-task.interface';
-import { IAffirmations } from '@strive/interfaces';
+import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { sendNotificationMilestoneDeadlinePassed } from './notifications/milestone.notification';
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
 import { sendBucketListYearlyReminder, rescheduleYearlyReminder } from './user-exercises/bucketlist';
@@ -112,7 +112,7 @@ async function userExerciseAffirmationsHandler(options) {
   // get affirmation
   const affirmationsDocRef = db.doc(`Users/${options.userId}/Exercises/Affirmations`)
   const affirmationsDocSnap = await affirmationsDocRef.get()
-  const affirmations: IAffirmations = Object.assign(<IAffirmations>{}, affirmationsDocSnap.data())
+  const affirmations: Affirmations = Object.assign(<Affirmations>{}, affirmationsDocSnap.data())
 
   if (!affirmations) return
 

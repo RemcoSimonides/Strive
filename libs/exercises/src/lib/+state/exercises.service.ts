@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
-import { IAffirmations, IDailyGratefulness } from '@strive/interfaces';
+import { IDailyGratefulness } from '@strive/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,24 +15,6 @@ export class ExercisesService {
   constructor(
     private db: FirestoreService
   ) { }
-
-  public getAffirmationsDocObs(uid: string): Observable<IAffirmations> {
-
-    return this.db.docWithId$<IAffirmations>(`Users/${uid}/Exercises/Affirmations`)
-
-  }
-
-  async getAffirmations(uid: string): Promise<IAffirmations> {
-
-    return await this.getAffirmationsDocObs(uid).pipe(first()).toPromise()
-
-  }
-
-  async saveAffirmations(uid: string, affirmations: IAffirmations): Promise<void> {
-
-    await this.db.upsert(`Users/${uid}/Exercises/Affirmations`, affirmations)
-
-  }
 
   public getDailyGratefulnessSettingsDocObs(uid: string): Observable<IDailyGratefulness> {
 

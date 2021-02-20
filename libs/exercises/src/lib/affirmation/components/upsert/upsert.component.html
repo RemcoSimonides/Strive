@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="openExplanation()">
+        <ion-icon slot="icon-only" name="help"></ion-icon>
+      </ion-button>
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Edit Affirmations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <h4>Choose time(s) to receive an affirmation</h4>
+
+  <ion-item *ngIf="affirmations.times" class="setTimeContainer">
+    <ion-label>Set time 1</ion-label>
+    <ion-datetime class="setTimeDatetime" [(ngModel)]="affirmations.times[0]" placeholder="- - : - -" displayFormat="HH:mm"></ion-datetime>
+    <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(0)" name="close-circle"></ion-icon>
+  </ion-item>
+  <ion-item *ngIf="affirmations.times[0] !== ''" class="setTimeContainer">
+    <ion-label>Set time 2</ion-label>
+    <ion-datetime class="setTimeDatetime" [(ngModel)]="affirmations.times[1]" placeholder="- - : - -" displayFormat="HH:mm"></ion-datetime>
+    <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(1)" name="close-circle"></ion-icon>
+  </ion-item>
+  <ion-item *ngIf="affirmations.times[1] !== ''" class="setTimeContainer">
+    <ion-label>Set time 3</ion-label>
+    <ion-datetime class="setTimeDatetime" [(ngModel)]="affirmations.times[2]" placeholder="- - : - -" displayFormat="HH:mm"></ion-datetime>
+    <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(2)" name="close-circle"></ion-icon>
+  </ion-item>
+
+  <h4>Your Affirmations</h4>
+  <ion-item *ngFor="let affirmation of affirmations?.affirmations; let i = index; trackBy:trackByFn">
+    <ion-input class="ion-text-wrap" type="text" placeholder="Enter New Affirmations" (ionInput)="onInput($event, affirmation)" [(ngModel)]="affirmations.affirmations[i]"></ion-input>
+    <ion-icon class="remove-item-icon" (click)="removeControl(i)" name="close-circle"></ion-icon>
+  </ion-item>
+
+  <section>
+    <article>
+      <h4>Suggestions</h4>
+      <ion-select [value]="enumAffirmationCategory.all" interface="popover" (ionChange)="filterSuggestions($event.detail.value)">
+        <ion-select-option [value]="enumAffirmationCategory.all">All</ion-select-option>
+        <ion-select-option [value]="enumAffirmationCategory.health">Health</ion-select-option>
+        <ion-select-option [value]="enumAffirmationCategory.personal_development">Personal Development</ion-select-option>
+        <ion-select-option [value]="enumAffirmationCategory.motivation">Motivation</ion-select-option>
+        <ion-select-option [value]="enumAffirmationCategory.positive_mindset">Positive Mindset</ion-select-option>
+        <ion-select-option [value]="enumAffirmationCategory.money">Money</ion-select-option>
+        <ion-select-option [value]="enumAffirmationCategory.love">Love</ion-select-option>
+      </ion-select>  
+    </article>
+
+    <ion-item *ngFor="let suggestion of suggestions">
+      <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
+      <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"></ion-icon>
+    </ion-item>
+  </section>
+
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-button (click)="save()" clear>Save</ion-button>
+</ion-fab>

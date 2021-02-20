@@ -1,8 +1,10 @@
 <ng-container *ngIf="bucketList$ | async as bucketList">
   <ng-container *ngIf="bucketList.items.length">
 
-    <h3>Bucket List</h3>
-    <ion-icon *ngIf="isOwner" name="create" (click)="edit()"></ion-icon>
+    <section fxLayout fxLayoutAlign="start center">
+      <h3>Bucket List</h3>
+      <ion-icon *ngIf="isOwner" name="create" (click)="edit()"></ion-icon>
+    </section>
 
     <ion-list>
       <ng-container *ngFor="let item of bucketList.items; let last = last; let i = index">

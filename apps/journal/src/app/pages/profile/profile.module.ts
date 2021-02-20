@@ -10,17 +10,18 @@ import { ProfilePage } from './profile.page';
 import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page'
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 
-// import { ExerciseAffirmationPage } from './modals/exercise-affirmation/exercise-affirmation.page';
-// import { ExerciseAffirmationExplanationPage } from './modals/exercise-affirmation/popovers/exercise-affirmation-explanation/exercise-affirmation-explanation.page'
 // import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefulness/exercise-daily-gratefulness.page'
 // import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page'
 // import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/exercise-dear-future-self.page'
+import { BucketListViewModule } from '@strive/exercises/bucket-list/components/view/view.module';
+import { BucketListUpsertModule } from '@strive/exercises/bucket-list/components/upsert/upsert.module';
+import { AffirmationsViewModule } from '@strive/exercises/affirmation/components/view/view.module';
+import { AffirmationUpsertModule } from '@strive/exercises/affirmation/components/upsert/upsert.module';
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
-import { BucketListViewModule } from '@strive/exercises/bucket-list/components/view/view.module';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -37,26 +38,21 @@ const routes: Routes = [
     ThumbnailListModule,
     RectangleThumbnailModule,
     PageLoadingModule,
-    BucketListViewModule
+
+    // Exercises
+    BucketListViewModule,
+    BucketListUpsertModule,
+    AffirmationsViewModule,
+    AffirmationUpsertModule
   ],
   declarations: [
     ProfilePage,
     ProfileOptionsPage,
-    EditProfileImagePopoverPage,
-    // ExerciseAffirmationPage,
-    // ExerciseAffirmationExplanationPage,
-    // ExerciseDailyGratefulnessPage,
-    // ExerciseAssessLifePage,
-    // ExerciseDearFutureSelfPage
+    EditProfileImagePopoverPage
   ],
   entryComponents: [
     ProfileOptionsPage,
-    EditProfileImagePopoverPage,
-    // ExerciseAffirmationPage,
-    // ExerciseAffirmationExplanationPage,
-    // ExerciseDailyGratefulnessPage,
-    // ExerciseAssessLifePage,
-    // ExerciseDearFutureSelfPage
+    EditProfileImagePopoverPage
   ]
 })
 export class ProfilePageModule {}

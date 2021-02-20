@@ -23,5 +23,5 @@ export class BucketListService {
 
   async saveBucketList(uid: string, bucketList: BucketList): Promise<void> {
     await this.db.upsert(`Users/${uid}/Exercises/BucketList`, bucketList)
-  } 
+  }
 }

@@ -1,11 +1,11 @@
 import { db, admin } from '../../internals/firebase';
 import * as moment from 'moment'
-import { IAffirmations } from '@strive/interfaces';
+import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { IScheduledTaskUserExerciseAffirmations, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 
-export async function sendAffirmationPushNotification(uid: string, affirmations: IAffirmations): Promise<void> {
+export async function sendAffirmationPushNotification(uid: string, affirmations: Affirmations): Promise<void> {
 
     if  (affirmations.affirmations.length >= 1) {
 
@@ -32,7 +32,7 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
 
 }
 
-export async function scheduleNextAffirmation(uid: string, affirmations: IAffirmations): Promise<void> {
+export async function scheduleNextAffirmation(uid: string, affirmations: Affirmations): Promise<void> {
 
     const nextAffirmationDateTime: string = getNextAffirmationDate(affirmations)
 
@@ -49,7 +49,7 @@ export async function scheduleNextAffirmation(uid: string, affirmations: IAffirm
 
 }
 
-export function getNextAffirmationDate(affirmations: IAffirmations): string {
+export function getNextAffirmationDate(affirmations: Affirmations): string {
 
     const currentDate = new Date()
     const dates: Date[] = []

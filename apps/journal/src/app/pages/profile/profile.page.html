@@ -69,30 +69,12 @@
     </section>
   </ng-container>
 
-    <!-- <div *ngSwitchCase="'info'"> -->
-      <div class="vertical-align-content">
-
-        <!-- Affirmations -->
-        <div class="exercise" *ngIf="_affirmations as affirmations">  
-          <div *ngIf="affirmations?.affirmations?.length > 0">
-            <div class="exercise-header-container">
-              <h3 class="padding">Affirmations</h3>
-              <ion-icon class="exercise-edit-icon" *ngIf="isOwner" name="create" (click)="openExercise(enumExercises.affirmations)"></ion-icon>
-            </div>
-            <ion-list>
-              <div *ngFor="let affirmation of affirmations.affirmations">
-                <ion-item>
-                  <ion-label>{{ affirmation }}</ion-label>
-                </ion-item>
-              </div>
-            </ion-list>
-          </div>
-        </div>
-
-        <!-- Bucket List -->
-        <exercise-bucket-list-view [uid]="profileId" [isOwner]="isOwner" [isSpectator]="isSpectator"></exercise-bucket-list-view>
-
-      </div>
+    <section fxLayout="column">
+      <!-- Affirmations -->
+      <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
+      <!-- Bucket List -->
+      <exercise-bucket-list-view [uid]="profileId" [isOwner]="isOwner" [isSpectator]="isSpectator"></exercise-bucket-list-view>
+    </section>
 
       <!-- Achieving Goals overview -->
       <h3 class="padding">Achieving Goals</h3>
@@ -154,12 +136,12 @@
         
               </ion-card>
         
-              <!-- <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)" *ngIf="!(bucketList$ | async)?.items">
-              
-                <img src="assets\exercises\bucketlist\bucketlist2.jpg"/>
-                <div class="card-title">Bucket List</div>
-        
-              </ion-card> -->
+              <ng-container *ngIf="!(bucketList$ | async)?.items.length">
+                <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)">
+                  <img src="assets\exercises\bucketlist\bucketlist2.jpg"/>
+                  <div class="card-title">Bucket List</div>
+                </ion-card>
+              </ng-container>
         
               <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">
               

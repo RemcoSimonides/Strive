@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { UpsertComponent } from './upsert.component';
+import { BucketListUpsertComponent } from './upsert.component';
 
 @NgModule({
   imports: [
@@ -11,6 +11,6 @@ import { UpsertComponent } from './upsert.component';
     ReactiveFormsModule,
     IonicModule
   ],
-  declarations: [UpsertComponent]
+  declarations: [BucketListUpsertComponent]
 })
-export class UpsertModule { }
+export class BucketListUpsertModule { }

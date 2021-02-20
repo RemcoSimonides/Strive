@@ -1,0 +1,18 @@
+<ng-container *ngIf="affirmations$ | async as affirmations">
+  <ng-container *ngIf="affirmations.affirmations.length">
+
+    <section fxLayout fxLayoutAlign="start center">
+      <h3>Affirmations</h3>
+      <ion-icon *ngIf="isOwner" name="create" (click)="edit()"></ion-icon>  
+    </section>
+
+    <ion-list>
+      <ng-container *ngFor="let affirmation of affirmations.affirmations">
+        <ion-item>
+          <ion-label>{{ affirmation }}</ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+  </ng-container>
+</ng-container>

@@ -13,15 +13,14 @@ import { Observable, Subscription } from 'rxjs';
 // Modals / Popover
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 import { ProfileOptionsPage, enumProfileOptions } from './popovers/profile-options/profile-options.page';
-// import { ExerciseAffirmationPage } from './modals/exercise-affirmation/exercise-affirmation.page';
-// import { ExerciseBucketlistPage } from './modals/exercise-bucketlist/exercise-bucketlist.page';
+import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
+import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
 // import { ExerciseDearFutureSelfPage } from './modals/exercise-dear-future-self/exercise-dear-future-self.page';
 // import { ExerciseDailyGratefulnessPage } from './modals/exercise-daily-gratefulness/exercise-daily-gratefulness.page';
 // import { ExerciseAssessLifePage } from './modals/exercise-assess-life/exercise-assess-life.page';
 // Interfaces
 import {
   ISpectator,
-  IAffirmations,
 } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -31,6 +30,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
+import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 
 
 @Component({
@@ -62,8 +62,8 @@ export class ProfilePage implements OnInit {
   public achievingGoals$: Observable<Goal[]>
   public supportingGoals$: Observable<Goal[]>
 
-  public affirmations$: Observable<IAffirmations>
-  public _affirmations = <IAffirmations>{}
+  public affirmations$: Observable<Affirmations>
+  public _affirmations = <Affirmations>{}
 
   public spectators: ISpectator[]
   public spectating: ISpectator[]
@@ -118,6 +118,8 @@ export class ProfilePage implements OnInit {
     // get affirmations
     // this.affirmations$ = this.exerciseService.getAffirmationsDocObs(this.profileId)
     // this.affirmations$.subscribe(affirmations => this._affirmations = affirmations)
+
+    // Get bucketlist observable
 
     this.achievingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
     this.supportingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
@@ -209,22 +211,22 @@ export class ProfilePage implements OnInit {
   }
 
   async openExercise(enumExercise: enumExercises) {
+    if (!this.isOwner) return
 
-    // if (!this.isOwner) return
-    // let modal: HTMLIonModalElement
+    let modal: HTMLIonModalElement
 
-    // switch (enumExercise) {
-    //   case enumExercises.affirmations:
-    //     modal = await this.modalCtrl.create({
-    //       component: ExerciseAffirmationPage
-    //     })  
-    //     break
+    switch (enumExercise) {
+      case enumExercises.affirmations:
+        modal = await this.modalCtrl.create({
+          component: AffirmationUpsertComponent
+        })  
+        break
       
-    //   case enumExercises.bucketlist:
-    //     modal = await this.modalCtrl.create({
-    //       component: ExerciseBucketlistPage
-    //     })
-    //     break
+      case enumExercises.bucketlist:
+        modal = await this.modalCtrl.create({
+          component: BucketListUpsertComponent
+        })
+        break
       
     //   case enumExercises.dear_future_self:
     //     modal = await this.modalCtrl.create({
@@ -243,12 +245,10 @@ export class ProfilePage implements OnInit {
     //       component: ExerciseAssessLifePage
     //     })
     //     break
-    // }
+    }
 
-    // await modal.present()
-
+    await modal.present()
   }
-
 }
 
 enum enumExercises {

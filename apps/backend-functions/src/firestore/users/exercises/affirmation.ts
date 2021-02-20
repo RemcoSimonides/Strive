@@ -1,14 +1,14 @@
 import { functions } from '../../../internals/firebase';
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType, IScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
-import { IAffirmations } from '@strive/interfaces';
+import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
 
 export const affirmationsCreatedHandler = functions.firestore.document(`Users/{userId}/Exercises/Affirmations`)
     .onCreate(async (snapshot, context) => {
 
         const uid = context.params.userId
-        const affirmations: IAffirmations = Object.assign(<IAffirmations>{}, snapshot.data())
+        const affirmations: Affirmations = Object.assign(<Affirmations>{}, snapshot.data())
         if (!affirmations) return
 
         const nextDate = getNextAffirmationDate(affirmations)
@@ -30,8 +30,8 @@ export const affirmationsChangeHandler = functions.firestore.document(`Users/{us
     .onUpdate(async (snapshot, context) => {
 
 
-        const before: IAffirmations = Object.assign(<IAffirmations>{}, snapshot.before.data())
-        const after: IAffirmations = Object.assign(<IAffirmations>{}, snapshot.after.data())
+        const before: Affirmations = Object.assign(<Affirmations>{}, snapshot.before.data())
+        const after: Affirmations = Object.assign(<Affirmations>{}, snapshot.after.data())
         const uid = context.params.userId
 
         if (before.times !== after.times) {
