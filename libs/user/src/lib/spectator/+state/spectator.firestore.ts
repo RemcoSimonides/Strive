@@ -1,5 +1,6 @@
 import { FieldValue } from '@firebase/firestore-types';
 
+// TODO rework to record on Profile
 export interface Spectator {
   id?: string;
   uid: string;

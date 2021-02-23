@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
-import { UserSpectateService } from '@strive/user/user/+state/user-spectate.service';
+import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 // import { FcmService } from '@strive/utils/services/fcm.service';
 import { ImageService } from '@strive/media/+state/image.service';
@@ -18,7 +18,7 @@ import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratef
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 // Interfaces
-import { Spectator } from '@strive/user/spectator/+state/stakeholder.firestore';
+import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
@@ -27,7 +27,6 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
-import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 
 
 @Component({
@@ -42,8 +41,6 @@ export class ProfilePage implements OnInit {
 
   public shouldLogin = false
 
-  public profileId: string
-
   // enums
   public enumExercises = enumExercises
 
@@ -51,16 +48,13 @@ export class ProfilePage implements OnInit {
 
   public isOwner = false
   public isSpectator = false
-  public editableProfileUsername = false
 
+  public profileId: string
   public profile: Profile
   public profileForm: ProfileForm
 
   public achievingGoals$: Observable<Goal[]>
   public supportingGoals$: Observable<Goal[]>
-
-  public affirmations$: Observable<Affirmations>
-  public _affirmations = <Affirmations>{}
 
   public spectators: Spectator[]
   public spectating: Spectator[]
