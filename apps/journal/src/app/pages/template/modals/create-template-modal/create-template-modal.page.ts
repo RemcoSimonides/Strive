@@ -8,7 +8,7 @@ import { ImageService } from '@strive/media/+state/image.service';
 import { TemplateService } from '@strive/template/+state/template.service';
 
 // Interfaces
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
@@ -22,7 +22,7 @@ export class CreateTemplateModalPage implements OnInit {
 
   public createTemplateForm: FormGroup
 
-  public template = <ITemplate>{}
+  public template = <Template>{}
 
   public _modalTitle: string = `Create template`
   public _templateIsNew: boolean = true
@@ -83,10 +83,10 @@ export class CreateTemplateModalPage implements OnInit {
       goalDeadline: ['']
     })
 
-    if (this.navParams.data.currentTemplate) {
+    if (this.navParams.data.template) {
       this._templateIsNew = false
       this._modalTitle = `Edit template`
-      this.template = this.navParams.data.currentTemplate
+      this.template = this.navParams.data.template
 
       this.createTemplateForm.patchValue({
         title: this.template.title,

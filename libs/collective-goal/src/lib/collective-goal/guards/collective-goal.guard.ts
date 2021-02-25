@@ -4,12 +4,8 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { CollectiveGoalService } from '../+state/collective-goal.service';
 import { CollectiveGoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-// Interfaces
-import { CollectiveGoalStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
-import { ICollectiveGoal } from '../+state/collective-goal.firestore';
-
 @Injectable({ providedIn: 'root' })
-export class CollectiveGoalAuthGuardService implements CanActivate {
+export class CollectiveGoalGuard implements CanActivate {
 
   constructor(
     private collectiveGoalService: CollectiveGoalService,
@@ -19,34 +15,23 @@ export class CollectiveGoalAuthGuardService implements CanActivate {
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-
     const collectiveGoalId = next.params.id
-
-    // get collective goal
-    const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
-
-    if (collectiveGoal.isPublic) return true
-
-    if (!this.user.uid) {
-      this.router.navigate(['/explore'])
-      return false
-    }
-    
-    // get stakeholder
-    const stakeholder: CollectiveGoalStakeholder = await this.collectiveGoalStakeholderService.getStakeholder(this.user.uid, collectiveGoalId)
-
-    let access: boolean = false
-    if (stakeholder) {
-      access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
-    }
-
-    if (access) {
+    const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
+    if (collectiveGoal.isPublic) {
       return true
     } else {
-      this.router.navigate(['/explore'])
-      return false
+      const uid = await this.user.getUID()
+      if (!uid) {
+        this.router.navigate(['/explore'])
+        return false
+      }
+      const stakeholder = await this.collectiveGoalStakeholderService.getStakeholder(uid, collectiveGoalId)
+      if (!!stakeholder && (stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator)) {
+        return true
+      } else {
+        this.router.navigate(['/explore'])
+        return false
+      }
     }
-
   }
-
 }

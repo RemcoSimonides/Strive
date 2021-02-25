@@ -1,5 +1,5 @@
 import { db, functions, admin } from '../../../internals/firebase';
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 import { createCollectiveGoal, ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';
@@ -8,7 +8,7 @@ import { enumEvent } from '@strive/notification/+state/notification.firestore';
 export const templateCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)
   .onCreate((snapshot, context) => {
 
-    const template: ITemplate = Object.assign(<ITemplate>{}, snapshot.data())
+    const template: Template = Object.assign(<Template>{}, snapshot.data())
     const collectiveGoalId = context.params.collectiveGoalId
     const templateId = context.params.templateId
 
@@ -36,7 +36,7 @@ export const templateCreatedHandler = functions.firestore.document(`CollectiveGo
 
 //     })
 
-async function sendNewTemplateNotification(collectiveGoalId: string, templateId: string, template: ITemplate) {
+async function sendNewTemplateNotification(collectiveGoalId: string, templateId: string, template: Template) {
 
   const collectiveGoalRef = db.doc(`CollectiveGoals/${collectiveGoalId}`)
   const collectiveGoalSnap = await collectiveGoalRef.get()

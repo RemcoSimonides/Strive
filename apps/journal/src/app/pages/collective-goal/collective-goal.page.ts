@@ -19,7 +19,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 // Interfaces
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
@@ -40,7 +40,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   collectiveGoal$: Observable<ICollectiveGoal>
   collectiveGoal: ICollectiveGoal
 
-  templates$: Observable<ITemplate[]>
+  templates$: Observable<Template[]>
   goals$: Observable<Goal[]>
   stakeholders$: Observable<CollectiveGoalStakeholder[]>
 
@@ -72,7 +72,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
 
     //Get collective goal data
-    this.collectiveGoal$ = this.collectiveGoalService.getCollectiveGoalDocObs(this.collectiveGoalId)
+    this.collectiveGoal$ = this.collectiveGoalService.getCollectiveGoal$(this.collectiveGoalId)
     this.collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
     if (!this.collectiveGoal.title) {
       this.initNoAccess()
@@ -81,7 +81,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
     //Get current users' rights
     this.profileSubscription = this.user.profile$.pipe(
-      switchMap(profile => !!profile ? this.collectiveGoalStakeholderService.getStakeholderDocObs(this.user.uid, this.collectiveGoalId) : of({})
+      switchMap(profile => !!profile ? this.collectiveGoalStakeholderService.getStakeholder$(this.user.uid, this.collectiveGoalId) : of({})
     )).subscribe(async (stakeholder: CollectiveGoalStakeholder | undefined) => {
       let access: boolean = this.collectiveGoal.isPublic
 

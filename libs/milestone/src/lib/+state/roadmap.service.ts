@@ -6,7 +6,7 @@ import { take, first } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 import { Milestone, enumMilestoneStatus, MilestonesLeveled, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
@@ -32,7 +32,7 @@ export class RoadmapService {
   }
 
   async getStructuredMilestonesForTemplates(collectiveGoalId: string, templateId: string): Promise<MilestonesLeveled[]> {
-    const template = await this.db.docWithId$<ITemplate>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`).pipe(first()).toPromise()
+    const template = await this.db.docWithId$<Template>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`).pipe(first()).toPromise()
     return this.structureMilestones(template.milestoneTemplateObject)
   }
 
@@ -108,9 +108,7 @@ export class RoadmapService {
   }
 
   structureMilestones(milestones: Milestone[] | MilestoneTemplabeObject[]): MilestonesLeveled[] {
-    
     const structuredMilestones: MilestonesLeveled[] = []
-    console.log('structured milestones: ', structuredMilestones)
 
     let indexMilestoneLevelOne = -1
     let indexMilestoneLevelTwo = -1

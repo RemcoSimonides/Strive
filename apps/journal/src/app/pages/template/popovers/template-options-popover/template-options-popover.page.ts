@@ -1,33 +1,41 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 // Ionic
-import { PopoverController, NavParams } from '@ionic/angular'
+import { PopoverController, NavParams, ModalController } from '@ionic/angular'
+import { TemplateService } from '@strive/template/+state/template.service';
+import { CreateTemplateModalPage } from '../../modals/create-template-modal/create-template-modal.page';
 
 @Component({
   selector: 'app-template-options-popover',
-  templateUrl: './template-options-popover.page.html',
-  styleUrls: ['./template-options-popover.page.scss'],
+  templateUrl: './template-options-popover.page.html'
 })
 export class TemplateOptionsPopoverPage implements OnInit {
 
-  public enumTemplateOptions = enumTemplateOptions
-  public _isAdmin: boolean = false
+  public isAdmin = false
 
   constructor(
+    private modalCtrl: ModalController,
     private navParams: NavParams,
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private router: Router,
+    private service: TemplateService
   ) { }
 
   ngOnInit() {
-    this._isAdmin = this.navParams.data.isAdmin
+    this.isAdmin = this.navParams.data.isAdmin
   }
 
-  async close(enumTemplateOptions: enumTemplateOptions) {
-    this.popoverCtrl.dismiss(enumTemplateOptions)
+  async editTemplate() {
+    const { collectiveGoalId, templateId } = this.navParams.data
+    const template = await this.service.getTemplate(collectiveGoalId, templateId)
+    this.modalCtrl.create({
+      component: CreateTemplateModalPage,
+      componentProps: { collectiveGoalId, template }
+    }).then(modal => modal.present())
   }
 
-}
-
-export enum enumTemplateOptions {
-  editTemplate,
-  editRoadmap
+  editRoadmap() {
+    this.router.navigateByUrl(`${this.router.url}/edit`)
+    this.popoverCtrl.dismiss()
+  }
 }

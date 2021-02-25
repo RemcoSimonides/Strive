@@ -1,64 +1,44 @@
-<strive-header [title]="(_templateDocObs | async)?.title || 'Template'" *ngIf="_platform.is('android') || _platform.is('ios')"></strive-header>
-
+<strive-header [title]="(template$ | async)?.title || 'Template'" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 <ion-content class="ion-padding">
+  <ng-container *ngIf="template$ | async as template">
+    <section fxLayout="column">
 
-  <div class="vertical-align-content" *ngIf="_templateDocObs | async as template">
+      <h1>{{ template.title }}</h1>
+      <strive-text-editor [description]="template.description" 
+        [isAdmin]="isAdmin | async"
+        (update)="saveDescription($event)"
+      ></strive-text-editor>
 
-    <!-- Template description -->
-    <ion-grid>
-      <ion-row>
-        <span id="template-title">{{ template.title }}</span>
-      </ion-row>
-      <ion-row>
-        <strive-text-editor [description]="template.description" 
-          [isAdmin]="_isAdmin" 
-          (update)="_saveDescription($event)"
-        ></strive-text-editor>
-      </ion-row>
-    </ion-grid>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-row>
-          <ion-col>
-            <b>{{ template.goalTitle }}</b>
-            <br/>
-            <div *ngIf="template.goalDeadline">
-              <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ template.goalDeadline | date:'fullDate' }}
+      <ion-card>
+        <ion-card-header>
+          <article fxLayout fxLayoutAlign="space-between">
+            <div>
+              <b>{{ template.goalTitle }}</b>
+              <ng-container *ngIf="!!template.goalDeadline">
+                <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ template.goalDeadline | date:'fullDate' }}
+              </ng-container>
             </div>
-          </ion-col>
-          <ion-col size="1" class="ion-align-self-start" *ngIf="_isAdmin">
-            <ion-button (click)="presentTemplateOptionsPopover($event)" fill="clear">
-              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
+            <ng-container *ngIf="isAdmin | async">
+              <ion-button (click)="presentTemplateOptionsPopover($event)" fill="clear">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+            </ng-container>
+          </article>
+        </ion-card-header>
+        <ion-card-content>
+          <article fxLayout fxLayout.lt-sm="column">
+            <div>
               {{ template.goalShortDescription }}
-            </ion-col>
-            <ion-col size-xs="12" size-sm="4" size-md="4" size-lg="4" size-xl="4">
-              <span class="image-container">
-                <img src="{{ template.goalImage }}"/>
-              </span>
-            </ion-col>
-          </ion-row>
-          <ion-row> 
-            <ion-col>
-              <ion-button (click)="useTemplate()" fill="outline">Use Template</ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
+            </div>
+            <img src="{{ template.goalImage }}"/>
+          </article>
 
-    <h3>Roadmap</h3>
+          <ion-button (click)="useTemplate()" fill="outline">Use Template</ion-button>
+        </ion-card-content>
+      </ion-card>
 
-    <app-default-roadmap [collectiveGoalId]="_collectiveGoalId" [templateId]="_templateId"></app-default-roadmap>
-
-  </div>
-
+      <h3>Roadmap</h3>
+      <app-default-roadmap [collectiveGoalId]="collectiveGoalId" [templateId]="templateId"></app-default-roadmap>
+    </section>
+  </ng-container>
 </ion-content>

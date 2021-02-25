@@ -81,7 +81,7 @@
       <thumbnail-list type="template">
         <ng-container *ngFor="let template of templates$ | async">
           <ng-template #thumb>
-            <rectangle-thumbnail type="template" [image]="template.goalImage">
+            <rectangle-thumbnail type="template" [image]="template.goalImage" [routerLink]="['template/', template.id]">
               <ng-template #thumbTitle>
                 <h5>{{ template.title }}</h5>
                 <p>{{ template.numberOfTimesUsed }} time{template.numberOfTimesUsed, plural, =1 {} other {s}} used</p>

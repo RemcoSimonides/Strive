@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable, of } from 'rxjs';
-import { first, map, switchMap, tap } from 'rxjs/operators';
+import { first, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 // Interfaces
 import { createUser, Profile, User } from './user.firestore';
 
@@ -15,8 +15,7 @@ export class UserService {
 
   user$: Observable<User>
   profile$: Observable<Profile>
-  isLoggedIn$ = this.afAuth.authState.pipe(map(user => !!user))
-  uid: string = '';
+  uid: string = undefined
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -31,7 +30,22 @@ export class UserService {
       switchMap(user => user ? db.docWithId$(profilePath(user.uid)) : of(null))
     )
 
-    this.afAuth.authState.pipe(tap(user => this.uid = user ? user.uid : undefined )).subscribe()
+    this.afAuth.authState.pipe(tap(user => this.uid = !!user ? user.uid : '' )).subscribe()
+  }
+
+  get isLoggedIn$() {
+    // return this.uid === undefined ? this.afAuth.authState.pipe(map(user => !!user)) : of(!!this.uid)
+    return this.afAuth.authState.pipe(startWith(this.uid), map(user => !!user))
+  }
+
+  async getUID(): Promise<string> {
+    if (this.uid === undefined) {
+      return await new Promise((resolve) => {
+        this.afAuth.authState.pipe(take(1)).subscribe(user => resolve(user.uid))
+      })
+    } else {
+      return this.uid
+    }
   }
 
   async getUser(uid: string = this.uid) {

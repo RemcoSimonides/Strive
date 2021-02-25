@@ -21,14 +21,12 @@ export class CollectiveGoalStakeholderService {
     private db: FirestoreService
   ) { }
 
-  public getStakeholderDocObs(uid: string, collectiveGoalId: string): Observable<CollectiveGoalStakeholder> {
-
+  public getStakeholder$(uid: string, collectiveGoalId: string): Observable<CollectiveGoalStakeholder> {
     return this.db.docWithId$<CollectiveGoalStakeholder>(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${uid}`)
-
   }
 
   public async getStakeholder(uid: string, collectiveGoalId: string): Promise<CollectiveGoalStakeholder | undefined> {
-    const stakeholder: CollectiveGoalStakeholder = await this.getStakeholderDocObs(uid, collectiveGoalId).pipe(take(1)).toPromise()
+    const stakeholder: CollectiveGoalStakeholder = await this.getStakeholder$(uid, collectiveGoalId).pipe(take(1)).toPromise()
     if  (stakeholder.username) {
       return stakeholder
     } else return undefined

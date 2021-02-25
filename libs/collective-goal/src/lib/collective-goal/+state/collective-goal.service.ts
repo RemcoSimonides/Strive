@@ -24,12 +24,12 @@ export class CollectiveGoalService {
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService
   ) { }
 
-  public getCollectiveGoalDocObs(collectiveGoalId: string): Observable<ICollectiveGoal> {
+  public getCollectiveGoal$(collectiveGoalId: string): Observable<ICollectiveGoal> {
     return this.db.docWithId$<ICollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`)
   }
 
   public async getCollectiveGoal(collectiveGoalId: string): Promise<ICollectiveGoal> {
-    return await this.getCollectiveGoalDocObs(collectiveGoalId).pipe(first()).toPromise()
+    return await this.getCollectiveGoal$(collectiveGoalId).pipe(first()).toPromise()
   }
 
 

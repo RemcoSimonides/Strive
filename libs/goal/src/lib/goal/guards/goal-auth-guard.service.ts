@@ -32,8 +32,9 @@ export class GoalAuthGuardService implements CanActivate {
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
     this._goalId = next.params.id
-    
-    if (!this.user.uid) {
+
+    const uid = await this.user.getUID()
+    if (!uid) {
       this.router.navigate(['/explore'])
       return false
     }
@@ -47,7 +48,7 @@ export class GoalAuthGuardService implements CanActivate {
     const goal: Goal = await this.goalService.getGoal(this._goalId)
 
     // get stakeholder
-    const stakeholder: GoalStakeholder = await this.goalStakeholderService.getStakeholder(this.user.uid, this._goalId)
+    const stakeholder: GoalStakeholder = await this.goalStakeholderService.getStakeholder(uid, this._goalId)
     
     let access: boolean = false
     if (stakeholder) {

@@ -1,7 +1,7 @@
 import { MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { FieldValue } from '@firebase/firestore-types';
 
-export interface ITemplate {
+export interface Template {
   id?: string;
   title: string;
   description: string;

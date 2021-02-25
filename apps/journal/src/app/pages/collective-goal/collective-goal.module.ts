@@ -11,7 +11,7 @@ import { CollectiveGoalOptionsPopoverModule } from './popovers/options/options.m
 import { CollectiveGoalSharePopoverModule } from './popovers/share/share.module';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CollectiveGoalAuthGuardService } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
+import { CollectiveGoalGuard } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 import { UpsertCollectiveGoalModule } from './modals/upsert/upsert.module';
 
 // Strive
@@ -28,7 +28,10 @@ const routes: Routes = [
     path: '',
     component: CollectiveGoalPage
   },
-  { path: 'template/:templateId', loadChildren: () => import('../template/template.module').then(m => m.TemplatePageModule), canActivate: [CollectiveGoalAuthGuardService] },
+  { path: 'template/:templateId',
+    loadChildren: () => import('../template/template.module').then(m => m.TemplatePageModule),
+    canActivate: [CollectiveGoalGuard]
+  },
 ];
 
 @NgModule({

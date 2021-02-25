@@ -6,7 +6,7 @@ import { first } from 'rxjs/operators';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +18,12 @@ export class TemplateService {
     private imageService: ImageService,
   ) { }
 
-  public getTemplateDocObs(collectiveGoalId: string, templateId: string): Observable<ITemplate> {
-
-    return this.db.docWithId$<ITemplate>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`)
-
+  public getTemplate$(collectiveGoalId: string, templateId: string): Observable<Template> {
+    return this.db.docWithId$<Template>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`)
   }
 
-  public async getTemplate(collectiveGoalId: string, templateId: string): Promise<ITemplate> {
-
-    return await this.getTemplateDocObs(collectiveGoalId, templateId).pipe(first()).toPromise()
-
+  public async getTemplate(collectiveGoalId: string, templateId: string): Promise<Template> {
+    return await this.getTemplate$(collectiveGoalId, templateId).pipe(first()).toPromise()
   }
 
   async increaseTimesUsed(collectiveGoalId: string, templateId: string, currentNumberOfTimesUsed?: number): Promise<void> {
@@ -46,7 +42,7 @@ export class TemplateService {
 
   }
 
-  async createTemplate(collectiveGoalId: string, template: ITemplate): Promise<string> {
+  async createTemplate(collectiveGoalId: string, template: Template): Promise<string> {
 
     const id = await this.db.getNewId()
 
@@ -63,7 +59,7 @@ export class TemplateService {
     return id
   }
 
-  async updateTemplate(collectiveGoalId: string, template: ITemplate): Promise<void> {
+  async updateTemplate(collectiveGoalId: string, template: Template): Promise<void> {
 
     if (!template.goalDeadline) template.goalDeadline = null
     if (template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)

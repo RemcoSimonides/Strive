@@ -18,7 +18,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 // Interfaces
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
@@ -199,10 +199,10 @@ export class AuthModalPage implements OnInit {
         await this.user.upsertProfile(newUserProfile)
 
         // create tutorial goal
-        const collectiveGoalId: string = `XGtfe77pCKh1QneOipI7`
-        const templateId: string = `ScA150CYoGsk4xQDcVYM`
-        const template: ITemplate = await this.templateService.getTemplate(collectiveGoalId, templateId)
-        const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
+        const collectiveGoalId = `XGtfe77pCKh1QneOipI7`
+        const templateId = `ScA150CYoGsk4xQDcVYM`
+        const template = await this.templateService.getTemplate(collectiveGoalId, templateId)
+        const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
 
         if (!template || !template.createdAt || !collectiveGoal || collectiveGoal.createdAt) {
 

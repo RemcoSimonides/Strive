@@ -11,7 +11,7 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from '@strive/template/+state/template.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Interfaces
-import { ITemplate } from '@strive/interfaces';
+import { Template } from '@strive/template/+state/template.firestore'
 import { Milestone, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
@@ -67,7 +67,7 @@ export class EditDefaultRoadmapPage implements OnInit {
       this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
       this.templateId = this.route.snapshot.paramMap.get('templateId')
 
-      const template: ITemplate = await this.templateService.getTemplate(this.collectiveGoalId, this.templateId)
+      const template = await this.templateService.getTemplate(this.collectiveGoalId, this.templateId)
       this.milestoneTemplate = template.milestoneTemplateObject
 
       this._seo.generateTags({
