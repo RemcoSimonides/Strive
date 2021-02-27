@@ -48,6 +48,7 @@ service cloud.firestore {
 
     }
 
+    // ===== COLLECTIVE GOALS ====
     match /CollectiveGoals/{collectiveGoalId} {
 
       allow read;
@@ -69,9 +70,18 @@ service cloud.firestore {
         allow read;
         allow create: if userIsCollectiveGoalAdmin(collectiveGoalId)
       }
-
     }
 
+    // ===== Collective Goal Functions ======
+    function userIsCollectiveGoalAdmin(collectiveGoalId) {
+      return getCollectiveGoalStakeholder(collectiveGoalId).isAdmin == true
+    }
+
+    function getCollectiveGoalStakeholder(collectiveGoalId) {
+      return get(/databases/$(database)/documents/CollectiveGoals/PuutcXPwyoBazVuvf7Ov/CGStakeholders/$(request.auth.uid)).data
+    }
+
+    // ===== GOALS ====
     match /Goals/{goalId} {
 
       allow read;
@@ -138,14 +148,6 @@ service cloud.firestore {
 
     function incomingData() {
       return request.resource.data
-    }
-
-    function userIsCollectiveGoalAdmin(collectiveGoalId) {
-      return getCollectiveGoalStakeholder(collectiveGoalId).isAdmin ==  true;
-    }
-
-    function getCollectiveGoalStakeholder(collectiveGoalId) {
-      return  get(/databases/$(database)/documents/CollectiveGoals/$(collectiveGoalId)/CGStakeholders/$(request.auth.uid)).data
     }
 
     function userIsGoalAdmin(goalId) {

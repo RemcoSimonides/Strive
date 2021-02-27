@@ -78,7 +78,7 @@
     <h3 class="padding">Templates</h3>
 
     <ng-container *ngIf="templates.length > 0 else noTemplate">
-      <thumbnail-list type="template">
+      <thumbnail-list type="template" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
         <ng-container *ngFor="let template of templates$ | async">
           <ng-template #thumb>
             <rectangle-thumbnail type="template" [image]="template.goalImage" [routerLink]="['template/', template.id]">

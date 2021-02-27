@@ -32,6 +32,7 @@ export class TemplateOptionsPopoverPage implements OnInit {
       component: CreateTemplateModalPage,
       componentProps: { collectiveGoalId, template }
     }).then(modal => modal.present())
+    this.popoverCtrl.dismiss()
   }
 
   editRoadmap() {

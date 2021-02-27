@@ -28,6 +28,7 @@ export class TemplateService {
 
   async increaseTimesUsed(collectiveGoalId: string, templateId: string, currentNumberOfTimesUsed?: number): Promise<void> {
 
+    // TODO move counter to back-end
     let plusOne: number
     if (currentNumberOfTimesUsed) {
       plusOne = currentNumberOfTimesUsed + 1
@@ -42,39 +43,28 @@ export class TemplateService {
 
   }
 
-  async createTemplate(collectiveGoalId: string, template: Template): Promise<string> {
-
+  async create(collectiveGoalId: string, template: Template): Promise<string> {
     const id = await this.db.getNewId()
+    template.id = id;
+    if (!!template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
 
-    if (!template.milestoneTemplateObject) template.milestoneTemplateObject = []
-    if (!template.numberOfTimesUsed) template.numberOfTimesUsed = 0
-    if (!template.goalDeadline) template.goalDeadline = null
-    
-    if (template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
+    // template.goalImage = await this.imageService.uploadImage(`CollectiveGoals/${collectiveGoalId}/Templates/${id}`, false)
 
-    template.goalImage = await this.imageService.uploadImage(`CollectiveGoals/${collectiveGoalId}/Templates/${id}`, false)
-
-    this.db.upsert(`CollectiveGoals/${collectiveGoalId}/Templates/${id}`, template)
+    await this.db.upsert(`CollectiveGoals/${collectiveGoalId}/Templates/${id}`, template)
 
     return id
   }
 
-  async updateTemplate(collectiveGoalId: string, template: Template): Promise<void> {
-
-    if (!template.goalDeadline) template.goalDeadline = null
+  async update(collectiveGoalId: string, templateId: string, template: Template) {
     if (template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
 
-    template.goalImage = await this.imageService.uploadImage(`CollectiveGoals/${collectiveGoalId}/Templates/${template.id}`, true)
+    // template.goalImage = await this.imageService.uploadImage(`CollectiveGoals/${collectiveGoalId}/Templates/${template.id}`, true)
 
-    await this.db.upsert(`CollectiveGoals/${collectiveGoalId}/Templates/${template.id}`, template)
-
+    await this.db.upsert(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`, template)
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {
-
     const date = new Date(deadline)
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
-
   }
-
 }

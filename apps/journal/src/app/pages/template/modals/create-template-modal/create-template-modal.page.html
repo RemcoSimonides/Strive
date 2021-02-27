@@ -1,21 +1,18 @@
 <ion-header tranlucent>
   <ion-toolbar>
-
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-  
-    <ion-title>{{_modalTitle}}</ion-title>
-
+    <ion-title>{{ newTemplate ? 'Create Template' : 'Edit Template' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="createTemplateForm">
+  <form [formGroup]="templateForm">
 
-    <div *ngIf="!_nextPage">
+    <ng-container *ngIf="!nextPage">
       <ion-item>
         <ion-label position="stacked">Template Title</ion-label>
         <ion-input formControlName="title"
@@ -28,20 +25,19 @@
       </ion-item>
 
       <quill-editor 
-        class="text-editor" 
-        [(ngModel)]="_description"
+        class="text-editor"
+        [formControlName]="'description'"
         [ngModelOptions]="{standalone: true}"
-        [style]="_editorStyle" 
-        [modules]="_editorConfig"
+        [style]="editorStyle" 
+        [modules]="editorConfig"
       ></quill-editor>
+    </ng-container>
 
-    </div>
-    <div *ngIf="_nextPage">
-
+    <ng-container *ngIf="nextPage">
       <ion-item>
         <ion-label position="stacked">Title of goal</ion-label>
         <ion-input formControlName="goalTitle"
-                    type="text"></ion-input>
+                   type="text"></ion-input>
       </ion-item>
 
       <ion-item>
@@ -67,22 +63,25 @@
           displayFormat="DDDD MMMM YYYY"
           pickerFormat="DDDD MMMM YYYY" 
           formControlName="goalDeadline"
-          (click)="_openingDatetime($event)"
+          (click)="openingDatetime($event)"
         ></ion-datetime>
       </ion-item>
       
       <!-- <app-image-upload defaultImagePath="assets/Goal.jpg" [currentImage]="template?.goalImage"></app-image-upload> -->
 
-    </div>
+    </ng-container>
   </form>
 </ion-content>
 
-<ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="_nextPage">
-  <ion-button (click)="nextPage()" class="white" fill="outline">Back</ion-button>
+<ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="nextPage">
+  <ion-button (click)="nextPage = false" class="white" fill="outline">Back</ion-button>
 </ion-fab>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-button *ngIf="!_nextPage" class="white" (click)="nextPage()" fill="outline">Next</ion-button>
-  <ion-button *ngIf="_nextPage && _templateIsNew" (click)="handleCreatingTemplate()" clear>Create</ion-button>
-  <ion-button *ngIf="_nextPage && !_templateIsNew" (click)="handleUpdatingTemplate()" clear>Update</ion-button>
+  <ng-container *ngIf="!nextPage; else last">
+    <ion-button class="white" (click)="nextPage = true" fill="outline">Next</ion-button>
+  </ng-container>
+  <ng-template #last>
+    <ion-button (click)="save()" clear [disabled]="!templateForm.dirty">{{ newTemplate ? 'Create' : 'Update'}}</ion-button>
+  </ng-template>
 </ion-fab>

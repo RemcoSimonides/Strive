@@ -25,7 +25,7 @@
 
     <!-- CREATE -->
     <ng-container *ngIf="canCreate">
-      <strive-create-thumbnail [type]="type" [collectiveGoalId]=""></strive-create-thumbnail>
+      <strive-create-thumbnail [type]="type" [collectiveGoalId]="collectiveGoalId"></strive-create-thumbnail>
     </ng-container>
 
     <ng-container *ngFor="let thumb of thumbs.changes | async">

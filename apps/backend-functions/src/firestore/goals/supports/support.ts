@@ -6,116 +6,99 @@ import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-        const support = Object.assign(<Support>{}, snapshot.data())
-        const supportId = snapshot.id
-        const goalId = context.params.goalId
-        if (!support) return
+    const support = Object.assign(<Support>{}, snapshot.data())
+    const supportId = snapshot.id
+    const goalId = context.params.goalId
+    if (!support) return
 
-        //Set stakeholder as supporter
-        const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.supporter.uid}`)
-        const stakeholderSnap = await stakeholderRef.get()
+    //Set stakeholder as supporter
+    const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.supporter.uid}`)
+    const stakeholderSnap = await stakeholderRef.get()
 
-        if (stakeholderSnap.exists) {
-          // Update stakeholder
-          if (!(stakeholderSnap.data() as GoalStakeholder).isSupporter) {
-            stakeholderRef.update({ isSupporter: true })
-          }
-        } else {
-          const goalRef = db.doc(`Goals/${goalId}`)
-          const goalSnap = await goalRef.get()
-          const goal = goalSnap.data() as Goal
+    if (stakeholderSnap.exists) {
+      // Update stakeholder
+      if (!(stakeholderSnap.data() as GoalStakeholder).isSupporter) {
+        stakeholderRef.update({ isSupporter: true })
+      }
+    } else {
+      const goalRef = db.doc(`Goals/${goalId}`)
+      const goalSnap = await goalRef.get()
+      const goal = goalSnap.data() as Goal
 
-          // create new stakeholder
-          const goalStakeholder = createGoalStakeholder({
-            uid: support.supporter.uid,
-            username: support.supporter.username,
-            photoURL: support.supporter.username,
-            goalId: goalId,
-            goalTitle: goal.title,
-            goalImage: goal.image,
-            goalIsFinished: goal.isFinished,
-            goalPublicity: goal.publicity,
-            isSupporter: true,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            createdAt: admin.firestore.FieldValue.serverTimestamp()
-          })
+      // create new stakeholder
+      const goalStakeholder = createGoalStakeholder({
+        uid: support.supporter.uid,
+        username: support.supporter.username,
+        photoURL: support.supporter.username,
+        goalId: goalId,
+        goalTitle: goal.title,
+        goalImage: goal.image,
+        goalIsFinished: goal.isFinished,
+        goalPublicity: goal.publicity,
+        isSupporter: true,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+      })
 
-          stakeholderRef.set(goalStakeholder)
-        }
-
-        //Increase number of custom supports
-        if (support.milestone && support.milestone.id !== null) { // Support for milestone added
-            
-            await increaseCustomSupportOfMilestone(goalId, support.milestone.id)
-            await increaseCustomSupportOfGoal(goalId, false, true)
-
-        } else { // Support for goal added
-
-            await increaseCustomSupportOfGoal(goalId, true, true)
-
-        }
-
-        //Send notification to achievers of goal
-        await handleNotificationsOfCreatedSupport(supportId, goalId, support)
-
-    })
-
-export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-    .onUpdate(async (snapshot, context) =>  {
-
-        const before: Support = Object.assign(<Support>{}, snapshot.before.data())
-        const after: Support = Object.assign(<Support>{}, snapshot.after.data())
-        if (!before) return
-        if (!after) return
-
-        const goalId = context.params.goalId
-        const supportId = context.params.supportId
-
-        // Send notification
-        await handleNotificationsOfChangedSupport(supportId, goalId, before, after)
-
-    })
-
-export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-    .onDelete(async (snapshot, context) => {
-
-        const supportId = snapshot.id
-        const goalId  = context.params.goalId
-        const support: Support = Object.assign(<Support>{}, snapshot.data())
-
-        await sendSupportDeletedNotification(goalId, supportId, support)
-
-    })
-
-async function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean): Promise<void> {
-
-    const goalRef: admin.firestore.DocumentReference = db.doc(`Goals/${goalId}`)
-
-    if (increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-
-        await goalRef.update({
-            numberOfCustomSupports: increment(1),
-            totalNumberOfCustomSupports: increment(1)
-        })
-
-    } else if (!increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-
-        await goalRef.update({
-            totalNumberOfCustomSupports: increment(1),
-        })
-
+      stakeholderRef.set(goalStakeholder)
     }
 
+    //Increase number of custom supports
+    if (support.milestone && support.milestone.id !== null) { // Support for milestone added
+      await increaseCustomSupportOfMilestone(goalId, support.milestone.id)
+      await increaseCustomSupportOfGoal(goalId, false, true)
+    } else { // Support for goal added
+      await increaseCustomSupportOfGoal(goalId, true, true)
+    }
+
+    //Send notification to achievers of goal
+    await handleNotificationsOfCreatedSupport(supportId, goalId, support)
+  })
+
+export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
+  .onUpdate(async (snapshot, context) =>  {
+
+    const before: Support = Object.assign(<Support>{}, snapshot.before.data())
+    const after: Support = Object.assign(<Support>{}, snapshot.after.data())
+    if (!before) return
+    if (!after) return
+
+    const goalId = context.params.goalId
+    const supportId = context.params.supportId
+
+    // Send notification
+    await handleNotificationsOfChangedSupport(supportId, goalId, before, after)
+
+  })
+
+export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
+  .onDelete(async (snapshot, context) => {
+
+    const supportId = snapshot.id
+    const goalId  = context.params.goalId
+    const support: Support = Object.assign(<Support>{}, snapshot.data())
+
+    await sendSupportDeletedNotification(goalId, supportId, support)
+  })
+
+async function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean): Promise<void> {
+  const goalRef = db.doc(`Goals/${goalId}`)
+
+  if (increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
+    await goalRef.update({
+      numberOfCustomSupports: increment(1),
+      totalNumberOfCustomSupports: increment(1)
+    })
+
+  } else if (!increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
+    await goalRef.update({ totalNumberOfCustomSupports: increment(1) })
+  }
 }
 
 async function increaseCustomSupportOfMilestone(goalId: string, milestoneId: string): Promise<void> {
+  const milestoneRef = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
 
-    const milestoneRef: admin.firestore.DocumentReference = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
-
-    await milestoneRef.update({
-        numberOfCustomSupports: increment(1)
-    })
-
+  await milestoneRef.update({ numberOfCustomSupports: increment(1) })
 }
