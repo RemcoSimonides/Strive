@@ -21,7 +21,7 @@ import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { switchMap } from 'rxjs/operators';
 
@@ -38,7 +38,7 @@ export class GoalPage implements OnInit, OnDestroy {
   private goalId: string
   
   public goal$: Observable<Goal>
-  public collectiveGoal$: Observable<ICollectiveGoal | undefined>
+  public collectiveGoal$: Observable<CollectiveGoal | undefined>
 
   public stakeholders$: Observable<GoalStakeholder[]>
   public stakeholder$: Observable<GoalStakeholder>

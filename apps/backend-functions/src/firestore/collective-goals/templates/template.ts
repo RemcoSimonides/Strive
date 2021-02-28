@@ -1,6 +1,6 @@
 import { db, functions, increment } from '../../../internals/firebase';
 import { createTemplate, Template } from '@strive/template/+state/template.firestore'
-import { createCollectiveGoal, ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
+import { createCollectiveGoal, CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
@@ -38,7 +38,7 @@ export const useTemplate = functions.https.onCall(async (
 
   const [ template, collectiveGoal, profile ] = await Promise.all([
     getDocument<Template>(`CollectiveGoals/${data.collectiveGoalId}/Templates/${data.templateId}`),
-    getDocument<ICollectiveGoal>(`CollectiveGoals/${data.collectiveGoalId}`),
+    getDocument<CollectiveGoal>(`CollectiveGoals/${data.collectiveGoalId}`),
     getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
   ])
 

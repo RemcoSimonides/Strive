@@ -21,7 +21,7 @@ import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
 import { Plugins } from '@capacitor/core';
@@ -37,8 +37,8 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   canAccess = false
 
   collectiveGoalId: string
-  collectiveGoal$: Observable<ICollectiveGoal>
-  collectiveGoal: ICollectiveGoal
+  collectiveGoal$: Observable<CollectiveGoal>
+  collectiveGoal: CollectiveGoal
 
   templates$: Observable<Template[]>
   goals$: Observable<Goal[]>
@@ -144,7 +144,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
   //Collective Goal Section
   async openOptionsPopover(ev: UIEvent) {
-    const collectiveGoal: ICollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
+    const collectiveGoal: CollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
 
     const popover = await this.popoverCtrl.create({
       component: CollectiveGoalOptionsPage,

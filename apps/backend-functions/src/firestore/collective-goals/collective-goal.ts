@@ -2,13 +2,13 @@ import { db, functions } from '../../internals/firebase';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { deleteScheduledTask, upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { deleteFromAlgolia, addToAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { deleteCollection } from '../../shared/utils';
 
 export const collectiveGoalCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
     .onCreate(async (snapshot, context) => {
 
-        const collectiveGoal: ICollectiveGoal = Object.assign(<ICollectiveGoal>{}, snapshot.data())
+        const collectiveGoal: CollectiveGoal = Object.assign(<CollectiveGoal>{}, snapshot.data())
         const collectiveGoalId: string = snapshot.id
 
         if (!collectiveGoal) return
@@ -63,8 +63,8 @@ export const collectiveGoalDeletedHandler = functions.firestore.document(`Collec
 export const collectiveGoalChangeHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
     .onUpdate(async (snapshot, context) => {
 
-        const before: ICollectiveGoal = Object.assign(<ICollectiveGoal>{}, snapshot.before.data())
-        const after: ICollectiveGoal = Object.assign(<ICollectiveGoal>{}, snapshot.after.data())
+        const before: CollectiveGoal = Object.assign(<CollectiveGoal>{}, snapshot.before.data())
+        const after: CollectiveGoal = Object.assign(<CollectiveGoal>{}, snapshot.after.data())
         if (!before) return
         if (!after) return
 

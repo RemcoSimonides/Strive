@@ -14,7 +14,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 // Pages
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
@@ -29,7 +29,7 @@ import { Profile } from '@strive/user/user/+state/user.firestore';
 export class GoalsPage implements OnInit, OnDestroy {
 
   goals$: Observable<Goal[]>;
-  collectiveGoals$: Observable<ICollectiveGoal[]>;
+  collectiveGoals$: Observable<CollectiveGoal[]>;
 
   sub: Subscription;
   backBtnSubscription: Subscription;

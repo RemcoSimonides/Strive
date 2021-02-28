@@ -1,8 +1,8 @@
 import { FormControl, Validators } from '@angular/forms';
-import { createCollectiveGoal, ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
+import { createCollectiveGoal, CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { FormEntity } from '@strive/utils/form/entity.form';
 
-function createCollectiveGoalFormControl(params?: ICollectiveGoal) {
+function createCollectiveGoalFormControl(params?: CollectiveGoal) {
   const collectiveGoal = createCollectiveGoal(params);
   return {
     deadline: new FormControl(collectiveGoal.deadline),
@@ -19,7 +19,7 @@ function createCollectiveGoalFormControl(params?: ICollectiveGoal) {
 export type CollectiveGoalFormControl = ReturnType<typeof createCollectiveGoalFormControl>;
 
 export class CollectiveGoalForm extends FormEntity<CollectiveGoalFormControl> {
-  constructor(collectiveGoal?: ICollectiveGoal) {
+  constructor(collectiveGoal?: CollectiveGoal) {
     super(createCollectiveGoalFormControl(collectiveGoal))
   }
 }

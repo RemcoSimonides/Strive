@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({
@@ -9,7 +9,7 @@ import { PopoverController, NavParams } from '@ionic/angular';
 })
 export class CollectiveGoalSharePopoverPage implements OnInit {
 
-  public collectiveGoal: ICollectiveGoal
+  public collectiveGoal: CollectiveGoal
   public isAdmin = false
 
   constructor(

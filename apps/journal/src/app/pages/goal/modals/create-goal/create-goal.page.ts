@@ -9,7 +9,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 
 //Interfaces
 import { createGoal, Goal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore'
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({
@@ -23,7 +23,7 @@ export class CreateGoalPage implements OnInit {
   private goal: Goal
 
   // both update and create
-  private collectiveGoal: ICollectiveGoal
+  private collectiveGoal: CollectiveGoal
 
   public goalForm = new GoalForm()
   public title = 'Create Goal'

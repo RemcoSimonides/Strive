@@ -10,7 +10,7 @@ import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeh
 import { ImageService } from '@strive/media/+state/image.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { ICollectiveGoal } from './collective-goal.firestore';
+import { CollectiveGoal } from './collective-goal.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 @Injectable({ providedIn: 'root' })
@@ -24,11 +24,11 @@ export class CollectiveGoalService {
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService
   ) { }
 
-  public getCollectiveGoal$(collectiveGoalId: string): Observable<ICollectiveGoal> {
-    return this.db.docWithId$<ICollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`)
+  public getCollectiveGoal$(collectiveGoalId: string): Observable<CollectiveGoal> {
+    return this.db.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`)
   }
 
-  public async getCollectiveGoal(collectiveGoalId: string): Promise<ICollectiveGoal> {
+  public async getCollectiveGoal(collectiveGoalId: string): Promise<CollectiveGoal> {
     return await this.getCollectiveGoal$(collectiveGoalId).pipe(first()).toPromise()
   }
 
@@ -38,7 +38,7 @@ export class CollectiveGoalService {
    * @param collectiveGoal Data of the Collective Goal
    * @param image Optional image blob
    */
-  public async createCollectiveGoal(collectiveGoal: ICollectiveGoal): Promise<string> {
+  public async createCollectiveGoal(collectiveGoal: CollectiveGoal): Promise<string> {
     
     //Create new id for collective goal
     const id = await this.db.getNewId();
@@ -65,7 +65,7 @@ export class CollectiveGoalService {
    * @param collectiveGoal Data of the changed collective goal
    * @param image Optional image blob
    */
-  public async updateCollectiveGoal(id: string, collectiveGoal: ICollectiveGoal) {
+  public async updateCollectiveGoal(id: string, collectiveGoal: CollectiveGoal) {
 
     if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
 
@@ -92,7 +92,7 @@ export class CollectiveGoalService {
     )
   }
 
-  private async upsertCollectiveGoal(collectiveGoal: ICollectiveGoal, id: string) {
+  private async upsertCollectiveGoal(collectiveGoal: CollectiveGoal, id: string) {
     await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
   }
 

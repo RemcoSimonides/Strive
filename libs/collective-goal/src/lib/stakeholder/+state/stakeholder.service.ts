@@ -7,7 +7,7 @@ import { take, switchMap, first } from 'rxjs/operators';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { CollectiveGoalStakeholder } from './stakeholder.firestore';
-import { ICollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({ providedIn: 'root' })
@@ -60,7 +60,7 @@ export class CollectiveGoalStakeholderService {
 
   }
 
-  public getCollectiveGoals(uid: string, isPublic?: boolean): Observable<ICollectiveGoal[]> {
+  public getCollectiveGoals(uid: string, isPublic?: boolean): Observable<CollectiveGoal[]> {
 
     let stakeholdersColObs: Observable<CollectiveGoalStakeholder[]>
 
@@ -74,9 +74,9 @@ export class CollectiveGoalStakeholderService {
       switchMap(stakeholders => {
 
         const collectiveGoalIDs = stakeholders.map(stakeholder => stakeholder.collectiveGoalId)
-        const collectiveGoalDocs = collectiveGoalIDs.map(id => this.db.docWithId$<ICollectiveGoal>(`CollectiveGoals/${id}`))
+        const collectiveGoalDocs = collectiveGoalIDs.map(id => this.db.docWithId$<CollectiveGoal>(`CollectiveGoals/${id}`))
 
-        return collectiveGoalDocs.length ? combineLatest<ICollectiveGoal[]>(collectiveGoalDocs) : of([])
+        return collectiveGoalDocs.length ? combineLatest<CollectiveGoal[]>(collectiveGoalDocs) : of([])
 
       })
     )
@@ -94,7 +94,7 @@ export class CollectiveGoalStakeholderService {
     newStakeholder.isAchiever = roles.isAchiever ? roles.isAchiever : false
     newStakeholder.isSpectator = roles.isSpectator ? roles.isSpectator : false
 
-    const collectiveGoal = await this.db.docWithId$<ICollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).pipe(first()).toPromise()
+    const collectiveGoal = await this.db.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).pipe(first()).toPromise()
     newStakeholder.collectiveGoalId = collectiveGoalId
     newStakeholder.collectiveGoalTitle = collectiveGoal.title
     newStakeholder.collectiveGoalIsPublic = collectiveGoal.isPublic

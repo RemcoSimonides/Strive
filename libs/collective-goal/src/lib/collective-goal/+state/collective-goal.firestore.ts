@@ -1,6 +1,6 @@
 import { FieldValue } from '@firebase/firestore-types';
 
-export interface ICollectiveGoal {
+export interface CollectiveGoal {
     id?: string;
     title: string;
     shortDescription: string;
@@ -15,7 +15,7 @@ export interface ICollectiveGoal {
 }
 
 /** A factory function that creates a CollectiveGoalDocument. */
-export function createCollectiveGoal(params: Partial<ICollectiveGoal> = {}): ICollectiveGoal {
+export function createCollectiveGoal(params: Partial<CollectiveGoal> = {}): CollectiveGoal {
   return {
     id: !!params.id ? params.id : '',
     deadline: '',
