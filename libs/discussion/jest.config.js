@@ -13,11 +13,11 @@ module.exports = {
       },
     },
   },
-  coverageDirectory: '../../coverage/libs/chat',
+  coverageDirectory: '../../coverage/libs/discussion',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
     'jest-preset-angular/build/HTMLCommentSerializer.js',
   ],
-  displayName: 'chat',
+  displayName: 'discussion',
 };

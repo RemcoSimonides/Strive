@@ -23,7 +23,7 @@
       "@strive/utils/*": ["libs/utils/src/lib/*"],
       "@strive/goal/*": ["libs/goal/src/lib/*"],
       "@strive/post/*": ["libs/post/src/lib/*"],
-      "@strive/chat/*": ["libs/chat/src/lib/*"],
+      "@strive/discussion/*": ["libs/discussion/src/lib/*"],
       "@strive/milestone/*": ["libs/milestone/src/lib/*"],
       "@strive/support/*": ["libs/support/src/lib/*"],
       "@strive/notification/*": ["libs/notification/src/lib/*"],

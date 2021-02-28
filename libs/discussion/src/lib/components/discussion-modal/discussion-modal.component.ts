@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
-import { DiscussionService } from '@strive/chat/+state/discussion.service';
+import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
@@ -17,11 +17,11 @@ import {
 } from '@strive/interfaces'
 
 @Component({
-  selector: 'strive-chat',
-  templateUrl: './chat-modal.component.html',
-  styleUrls: ['./chat-modal.component.scss'],
+  selector: 'strive-discussion',
+  templateUrl: './discussion-modal.component.html',
+  styleUrls: ['./discussion-modal.component.scss'],
 })
-export class ChatModalPage implements OnInit, OnDestroy {
+export class DiscussionModalPage implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea: IonContent
   scrolledToBottom: boolean = true
 

@@ -51,8 +51,8 @@ export class GoalService {
     // Add user as achiever of collective goal
     // Firebase function handles this
     
-    // Create initial chat
-    // this.chatService.addInitialChat(id, goal.title, { goal: true })
+    // Create initial discussion
+    // this.discussionService.addInitialDiscussion(id, goal.title, { goal: true })
 
     return id
   }

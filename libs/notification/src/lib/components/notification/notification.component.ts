@@ -76,7 +76,7 @@ export class NotificationComponent implements OnInit {
 
   async openDiscussion(): Promise<void> {
     // const modal = await this.modalCtrl.create({
-    //   component: ChatModalPage,
+    //   component: DiscussionModalPage,
     //   componentProps: {
     //     discussionId: this.notification.discussionId,
     //   }

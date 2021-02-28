@@ -36,18 +36,18 @@ export class PostComponent implements OnInit {
     }    
   }
 
-  // Depricated Chat
-  // async goToPostChat(): Promise<void> {
-    // const postChatParams: PostChatParams = {
+  // Depricated Discussion
+  // async goToPostDiscussion(): Promise<void> {
+    // const postDiscussionParams: PostDiscussionParams = {
     //   goalID: '',
     //   postID: ''
     // }
   
     // var splitted = this._postRef.split("/")
-    // postChatParams.goalID = splitted[1]
-    // postChatParams.postID = splitted[3]
+    // postDiscussionParams.goalID = splitted[1]
+    // postDiscussionParams.postID = splitted[3]
 
-    // this.navCtrl.push('PostChatPage', { postChatParams })
+    // this.navCtrl.push('PostDiscussionPage', { postDiscussionParams })
   // }
 
 }

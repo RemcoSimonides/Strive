@@ -17,7 +17,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 export class CollectiveGoalService {
 
   constructor(
-    // private chatService: ChatService,
+    // private discussionService: DiscussionService,
     private user: UserService,
     private db: FirestoreService,
     private imageService: ImageService,
@@ -54,8 +54,8 @@ export class CollectiveGoalService {
     //Add User as Stakeholder
     await this.collectiveGoalStakeholderService.upsert(this.user.uid, id, { isAdmin: true })
 
-    //Create initial chat
-    // this.chatService.addInitialChat(id, collectiveGoal.title, { collectiveGoal: true })
+    //Create initial discussion
+    // this.discussionService.addInitialDiscussion(id, collectiveGoal.title, { collectiveGoal: true })
 
     return id
   }

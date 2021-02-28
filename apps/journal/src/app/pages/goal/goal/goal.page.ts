@@ -7,7 +7,7 @@ import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
 import { Plugins } from '@capacitor/core';
 // Strive Components
-import { ChatModalPage } from '@strive/chat/components/chat-modal/chat-modal.component';
+import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/options.component';
 import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page';
 import { CreateGoalPage } from '../modals/create-goal/create-goal.page';
@@ -87,7 +87,7 @@ export class GoalPage implements OnInit, OnDestroy {
 
   public async openDiscussion() {
     const modal = await this.modalCtrl.create({
-      component: ChatModalPage,
+      component: DiscussionModalPage,
       componentProps: {
         discussionId: this.goalId
       }

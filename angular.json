@@ -424,26 +424,26 @@
         }
       }
     },
-    "chat": {
+    "discussion": {
       "projectType": "library",
-      "root": "libs/chat",
-      "sourceRoot": "libs/chat/src",
+      "root": "libs/discussion",
+      "sourceRoot": "libs/discussion/src",
       "prefix": "strive",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/chat/tsconfig.lib.json",
-              "libs/chat/tsconfig.spec.json"
+              "libs/discussion/tsconfig.lib.json",
+              "libs/discussion/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/chat/**/*"]
+            "exclude": ["**/node_modules/**", "!libs/discussion/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/chat/jest.config.js",
+            "jestConfig": "libs/discussion/jest.config.js",
             "passWithNoTests": true
           }
         }

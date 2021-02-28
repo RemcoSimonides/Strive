@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ChatModalPage } from './chat-modal.component';
+import { DiscussionModalPage } from './discussion-modal.component';
 
 import { CommentModule } from '../comment/comment.module';
 
@@ -18,7 +18,7 @@ import { CommentModule } from '../comment/comment.module';
     CommentModule
   ],
   declarations: [
-    ChatModalPage
+    DiscussionModalPage
   ],
 })
-export class ChatModalModule {}
+export class DiscussionModalModule {}

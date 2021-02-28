@@ -9,7 +9,7 @@ module.exports = {
     '<rootDir>/libs/utils',
     '<rootDir>/libs/goal',
     '<rootDir>/libs/post',
-    '<rootDir>/libs/chat',
+    '<rootDir>/libs/discussion',
     '<rootDir>/libs/milestone',
     '<rootDir>/libs/support',
     '<rootDir>/libs/notification',
