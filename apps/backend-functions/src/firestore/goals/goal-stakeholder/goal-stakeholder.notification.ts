@@ -8,7 +8,6 @@ import {
 } from '../../../shared/notification/notification'
 
 // Interfaces
-import { enumDiscussionAudience } from '@strive/interfaces'
 import { Notification, enumEvent } from '@strive/notification/+state/notification.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createGoalRequest, createNotification } from '@strive/notification/+state/notification.model'
@@ -18,7 +17,7 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
   if (stakeholder.goalPublicity !== 'public') return
 
   if (stakeholder.isAdmin) {
-    // const discussionId = await createDiscussion(enumDiscussionAudience.public)
+    // const discussionId = await createDiscussion('public')
     sendNewAdminNotificationInGoal(goalId, goalId, stakeholder)
   }
 
@@ -41,7 +40,7 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
   }
 
   if (stakeholder.hasOpenRequestToJoin) {
-    const discussionId = await createDiscussion(`Request to become Achiever`, { image: stakeholder.goalImage, name: `Request to join ${stakeholder.goalTitle}`, goalId: stakeholder.goalId }, enumDiscussionAudience.adminsAndRequestor, undefined, stakeholder.uid)
+    const discussionId = await createDiscussion(`Request to become Achiever`, { image: stakeholder.goalImage, name: `Request to join ${stakeholder.goalTitle}`, goalId: stakeholder.goalId }, 'adminsAndRequestor', undefined, stakeholder.uid)
     await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goalId, stakeholder)
   }
 
@@ -79,7 +78,7 @@ export async function handleNotificationsOfStakeholderChanged(goalId: string, be
   const discussionId = `RtjG${after.uid}${goalId}`
 
   if (!before.hasOpenRequestToJoin && after.hasOpenRequestToJoin) {
-    await createDiscussion(`Request to become Achiever`, { image: after.goalImage, name: `Request to join ${after.goalTitle}`, goalId: after.goalId }, enumDiscussionAudience.adminsAndRequestor, discussionId, after.uid)
+    await createDiscussion(`Request to become Achiever`, { image: after.goalImage, name: `Request to join ${after.goalTitle}`, goalId: after.goalId }, 'adminsAndRequestor', discussionId, after.uid)
     await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goalId, after)
   }
 

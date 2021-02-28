@@ -1,17 +1,12 @@
 import { Timestamp } from '@firebase/firestore-types';
 
-export interface IComment {
+export interface Comment {
     id?: string;
     text: string;
-    type: enumCommentType;
+    type: 'sentByUser' | 'notification';
     uid: string;
     username: string;
     photoURL: string;
     createdAt?: Timestamp;
     updatedAt?: Timestamp;
-}
-
-export enum enumCommentType {
-    sentByUser,
-    notification
 }

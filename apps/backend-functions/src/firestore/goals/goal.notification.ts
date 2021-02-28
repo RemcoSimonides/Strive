@@ -11,7 +11,6 @@ import {
 import { IReceiver, getReceiver } from '../../shared/support/receiver'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { enumDiscussionAudience } from '@strive/interfaces';
 import { Notification, enumEvent, SupportDecisionMeta } from '@strive/notification/+state/notification.firestore'
 import { enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -26,7 +25,7 @@ const { serverTimestamp } = admin.firestore.FieldValue
 export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goal): Promise<void> {
   console.log('executting handle notification of created goal')
 
-  await createDiscussion(goal.title, { image: goal.image, name: `General discussion - ${goal.title}`, goalId: goalId }, enumDiscussionAudience.public, goalId)
+  await createDiscussion(goal.title, { image: goal.image, name: `General discussion - ${goal.title}`, goalId: goalId }, 'public', goalId)
 
   // New Goal
   if (!!goal.collectiveGoalId) {

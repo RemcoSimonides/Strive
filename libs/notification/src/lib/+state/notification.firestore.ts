@@ -1,6 +1,6 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { NotificationSupport } from '@strive/support/+state/support.firestore'
-import { IDiscussion } from '@strive/interfaces';
+import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 
 export enum enumEvent {
   // 100000 -> 199999 = collective goal events
@@ -73,7 +73,7 @@ export type NotificationMeta = SupportDecisionMeta | GoalRequest | {};
 export interface Notification<Meta extends NotificationMeta = any> {
   id?: string; // only pass id if it needs a specific id
   discussionId: string;
-  discussion?: IDiscussion; // only used to join discussion data with this data
+  discussion?: Discussion; // only used to join discussion data with this data
   message: INotificationMessageText[];
   type: NotificationTypes;
   event: enumEvent;

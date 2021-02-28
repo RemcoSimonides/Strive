@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
-import { IComment } from '@strive/interfaces';
+import { Comment } from '@strive/discussion/+state/comment.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,7 @@ export class DiscussionService {
     return this.db.colWithIds$(path)
   }
 
-  async addReply(discussionId: string, comment: IComment) {
-    await this.db.add<IComment>(`Discussions/${discussionId}/Comments`, comment)
+  async addReply(discussionId: string, comment: Comment) {
+    await this.db.add<Comment>(`Discussions/${discussionId}/Comments`, comment)
   }
-
 }

@@ -1,5 +1,5 @@
 <ng-container *ngIf="!!comment">
-  <ng-container *ngIf="comment.type === enumCommentType.sentByUser">
+  <ng-container *ngIf="comment.type === 'sentByUser'">
     <section class="comment-wrapper">
 
       <img [src]="comment.photoURL || 'assets/img/avatar/blank-profile-picture_64_thumb.png'"/>
@@ -12,7 +12,7 @@
     </section>
   </ng-container>
   
-  <ng-container *ngIf="comment.type === enumCommentType.notification">
+  <ng-container *ngIf="comment.type === 'notification'">
 
     <section class="notification">
       <div class="notification-icon-item">

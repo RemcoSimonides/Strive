@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { IDiscussion, enumDiscussionAudience } from '@strive/interfaces';
+import { AudienceType, Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 import { ISource, Notification } from '@strive/notification/+state/notification.firestore';
@@ -11,7 +11,7 @@ const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
 
 // create discussion
-export async function createDiscussion(title: string, source: ISource, audience: enumDiscussionAudience, id?: string, stakeholderUID?: string): Promise<string> {
+export async function createDiscussion(title: string, source: ISource, audience: AudienceType, id?: string, stakeholderUID?: string): Promise<string> {
 
   const commentators: string[] = []
   // already add requestor as commentator --> if admin says something in discussion, requestor will receive notification of it
@@ -19,7 +19,7 @@ export async function createDiscussion(title: string, source: ISource, audience:
     commentators.push(stakeholderUID)
   }
 
-  const discussion: IDiscussion = {
+  const discussion: Discussion = {
     title: title,
     audience: audience,
     source: source,

@@ -9,12 +9,8 @@ import { DiscussionService } from '@strive/discussion/+state/discussion.service'
 import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import {
-  IDiscussion,
-  enumDiscussionAudience,
-  IComment,
-  enumCommentType
-} from '@strive/interfaces'
+import { Comment } from '@strive/discussion/+state/comment.firestore';
+import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 
 @Component({
   selector: 'strive-discussion',
@@ -27,12 +23,10 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
   subscription: Subscription
 
-  enumDiscussionAudience = enumDiscussionAudience
-
   discussionId: string
-  comments: IComment[] = []
+  comments: Comment[] = []
   _comment: string
-  discussion: IDiscussion
+  discussion: Discussion
 
   constructor(
     public user: UserService,
@@ -45,7 +39,7 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.discussionId = this.navParams.get('discussionId')
-    this.discussion = await this.db.docWithId$<IDiscussion>(`Discussions/${this.discussionId}`).pipe(take(1)).toPromise()
+    this.discussion = await this.db.docWithId$<Discussion>(`Discussions/${this.discussionId}`).pipe(take(1)).toPromise()
 
     this.paginationService.init(`Discussions/${this.discussionId}/Comments`, 'createdAt', { reverse: true, prepend: true, limit: 10 })
     this.paginationService.listenToUpdates()
@@ -109,7 +103,7 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
     this.discussionService.addReply(this.discussionId, {
       text: this._comment,
-      type: enumCommentType.sentByUser,
+      type: 'sentByUser',
       uid: uid,
       username: displayName,
       photoURL: photoURL,

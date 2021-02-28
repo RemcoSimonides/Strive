@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IComment, enumCommentType } from '@strive/interfaces';
+import { Comment } from '@strive/discussion/+state/comment.firestore';
 
 @Component({
   selector: 'app-comment',
@@ -10,9 +10,8 @@ export class CommentComponent {
 
   @Input() goalId: string
   @Input() notificationId: string
-  @Input() comment: IComment
+  @Input() comment: Comment
 
   _reply: string
-  enumCommentType = enumCommentType;
 
 }

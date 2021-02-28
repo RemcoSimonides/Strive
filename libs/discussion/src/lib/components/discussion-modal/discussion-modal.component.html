@@ -7,9 +7,9 @@
       </ion-button>
     </ion-buttons>
     <ion-title>Discussion</ion-title>
-    <ion-title size="small" *ngIf="discussion?.audience === enumDiscussionAudience.public"></ion-title>
-    <ion-title size="small" *ngIf="discussion?.audience === enumDiscussionAudience.adminsAndRequestor">Requestor and Admins only</ion-title>
-    <ion-title size="small" *ngIf="discussion?.audience === enumDiscussionAudience.achievers">Achievers only</ion-title>
+    <ion-title size="small" *ngIf="discussion?.audience === 'public'"></ion-title>
+    <ion-title size="small" *ngIf="discussion?.audience === 'adminsAndRequestor'">Requestor and Admins only</ion-title>
+    <ion-title size="small" *ngIf="discussion?.audience === 'achievers'">Achievers only</ion-title>
   </ion-toolbar>
 </ion-header>
 

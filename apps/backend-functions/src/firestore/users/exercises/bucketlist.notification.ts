@@ -1,7 +1,6 @@
 import { db } from '../../../internals/firebase';
 // Functions
 import { sendNotificationToUserSpectators, createDiscussion } from '../../../shared/notification/notification'
-import { enumDiscussionAudience } from '@strive/interfaces';
 import { Profile } from '@strive/user/user/+state/user.firestore'
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
@@ -14,7 +13,7 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   const profileDocSnap = await profileDocRef.get()
   const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
 
-  await createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, enumDiscussionAudience.public, `${uid}bucketlist`)
+  await createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, 'public', `${uid}bucketlist`)
 
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,

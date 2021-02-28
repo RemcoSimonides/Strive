@@ -1,26 +1,15 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { ISource } from '@strive/notification/+state/notification.firestore'
 
-export interface IDiscussion {
+export type AudienceType = 'public' | 'stakeholders' | 'adminsAndRequestor' | 'achievers'
+
+export interface Discussion {
   id?: string;
   title: string;
-  audience: enumDiscussionAudience;
+  audience: AudienceType;
   numberOfComments: number;
   commentators: string[];
   source: ISource;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
-
-// export interface IMessage {
-//   uid: string;
-//   content: string;
-//   createdAt: Timestamp;
-// }
-
-export enum enumDiscussionAudience {
-  public,
-  stakeholders,
-  adminsAndRequestor,
-  achievers
 }

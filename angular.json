@@ -37,9 +37,7 @@
                 "input": "apps/journal/src/global.scss"
               }
             ],
-            "scripts": [
-              "node_modules/quill/dist/quill.min.js"
-            ]
+            "scripts": ["node_modules/quill/dist/quill.min.js"]
           },
           "configurations": {
             "production": {
@@ -211,36 +209,6 @@
             "jestConfig": "apps/backend-functions/jest.config.js",
             "passWithNoTests": true
           }
-        }
-      }
-    },
-    "interfaces": {
-      "projectType": "library",
-      "root": "libs/interfaces",
-      "sourceRoot": "libs/interfaces/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/interfaces/tsconfig.lib.json",
-              "libs/interfaces/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/interfaces/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/interfaces/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     },

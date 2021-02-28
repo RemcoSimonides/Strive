@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { enumDiscussionAudience } from '@strive/interfaces'
 import { enumEvent } from '@strive/notification/+state/notification.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
 import { sendNotificationToGoalStakeholders, sendNotificationToUsers, createDiscussion } from "../../../shared/notification/notification"
@@ -13,7 +12,7 @@ const { serverTimestamp } = admin.firestore.FieldValue
 
 export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: Support): Promise<void> {
 
-  await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, enumDiscussionAudience.achievers, supportId)
+  await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, 'achievers', supportId)
   await sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
 }
 
