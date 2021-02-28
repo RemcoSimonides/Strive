@@ -34,8 +34,7 @@ export class UserService {
   }
 
   get isLoggedIn$() {
-    // return this.uid === undefined ? this.afAuth.authState.pipe(map(user => !!user)) : of(!!this.uid)
-    return this.afAuth.authState.pipe(startWith(this.uid), map(user => !!user))
+    return this.afAuth.authState.pipe(map(user => !!user))
   }
 
   async getUID(): Promise<string> {
