@@ -10,11 +10,11 @@ import { TemplateService } from '@strive/template/+state/template.service';
 import { TemplateForm } from '@strive/template/forms/template.form';
 
 @Component({
-  selector: 'app-create-template-modal',
-  templateUrl: './create-template-modal.page.html',
-  styleUrls: ['./create-template-modal.page.scss'],
+  selector: 'app-upsert-template-modal',
+  templateUrl: './upsert-template-modal.page.html',
+  styleUrls: ['./upsert-template-modal.page.scss'],
 })
-export class CreateTemplateModalPage implements OnInit {
+export class UpsertTemplateModalPage implements OnInit {
 
   private collectiveGoalId: string
   private templateId: string

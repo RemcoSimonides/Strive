@@ -8,7 +8,7 @@ import { IonicModule } from '@ionic/angular';
 // Pages
 import { TemplatePage } from './template.page';
 // Modals
-import { CreateTemplateModalPageModule } from './modals/create-template-modal/create-template-modal.module'
+import { UpsertTemplateModalPageModule } from './modals/upsert-template-modal/upsert-template-modal.module'
 // Popover
 import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page'
 // Components
@@ -39,7 +39,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     RoadmapModule,
     HeaderModule,
-    CreateTemplateModalPageModule,
+    UpsertTemplateModalPageModule,
     TextEditorModule
   ],
   declarations: [

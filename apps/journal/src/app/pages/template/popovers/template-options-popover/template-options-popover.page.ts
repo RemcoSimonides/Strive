@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 // Ionic
 import { PopoverController, NavParams, ModalController } from '@ionic/angular'
 import { TemplateService } from '@strive/template/+state/template.service';
-import { CreateTemplateModalPage } from '../../modals/create-template-modal/create-template-modal.page';
+import { UpsertTemplateModalPage } from '../../modals/upsert-template-modal/upsert-template-modal.page';
 
 @Component({
   selector: 'app-template-options-popover',
@@ -29,7 +29,7 @@ export class TemplateOptionsPopoverPage implements OnInit {
     const { collectiveGoalId, templateId } = this.navParams.data
     const template = await this.service.getTemplate(collectiveGoalId, templateId)
     this.modalCtrl.create({
-      component: CreateTemplateModalPage,
+      component: UpsertTemplateModalPage,
       componentProps: { collectiveGoalId, template }
     }).then(modal => modal.present())
     this.popoverCtrl.dismiss()

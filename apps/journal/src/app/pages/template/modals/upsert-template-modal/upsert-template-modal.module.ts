@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CreateTemplateModalPage } from './create-template-modal.page';
+import { UpsertTemplateModalPage } from './upsert-template-modal.page';
 // import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 import { QuillModule } from 'ngx-quill';
 
@@ -15,7 +15,6 @@ import { QuillModule } from 'ngx-quill';
     ReactiveFormsModule,
     QuillModule
   ],
-  exports: [],
-  declarations: [CreateTemplateModalPage]
+  declarations: [UpsertTemplateModalPage]
 })
-export class CreateTemplateModalPageModule { }
+export class UpsertTemplateModalPageModule { }
