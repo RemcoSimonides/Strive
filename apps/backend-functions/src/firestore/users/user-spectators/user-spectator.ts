@@ -1,7 +1,7 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 
 import { handleNotificationsOfCreatedUserSpectator } from './user-spectator.notification';
-import { Spectator } from '@strive/user/spectator/+state/stakeholder.firestore';
+import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 
 export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
     .onCreate(async (snapshot, context) => {

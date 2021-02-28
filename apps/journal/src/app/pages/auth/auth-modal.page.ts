@@ -1,29 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireFunctions } from '@angular/fire/functions';
 // Ionic
 import { NavParams, LoadingController, Platform, AlertController, ModalController, NavController } from '@ionic/angular';
-
 // Rxjs
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
-
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { FcmService } from '@strive/utils/services/fcm.service';
-import { TemplateService } from '@strive/template/+state/template.service';
-import { GoalService } from '@strive/goal/goal/+state/goal.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
-import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-
 // Interfaces
-import { Template } from '@strive/template/+state/template.firestore'
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { ICollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore';
-import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
-
+import { createProfile, Profile } from '@strive/user/user/+state/user.firestore';
 // Strive
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
@@ -82,18 +68,13 @@ export class AuthModalPage implements OnInit {
   constructor(
     private afAuth: AngularFireAuth,
     private alertCtrl: AlertController,
-    private collectiveGoalService: CollectiveGoalService,
-    private db: FirestoreService,
     private fcmService: FcmService,
-    private goalService: GoalService,
-    private goalStakeholderService: GoalStakeholderService,
+    private functions: AngularFireFunctions,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private navCtrl: NavController,
     public platform: Platform,
-    private roadmapService: RoadmapService,
-    private templateService: TemplateService,
     private user: UserService
   ) { }
 
@@ -138,11 +119,11 @@ export class AuthModalPage implements OnInit {
     }
   }
 
-  async closeAuthModal() {
-    await this.modalCtrl.dismiss()
+  closeAuthModal() {
+    this.modalCtrl.dismiss()
   }
 
-  async loginUser(): Promise<void> {
+  async loginUser() {
 
     if (!this.loginForm.valid) {
       console.log(`Form is not valid yet, current value: ${this.loginForm.value}`)
@@ -153,101 +134,53 @@ export class AuthModalPage implements OnInit {
       })
       await loading.present()
 
-      const email: string = this.loginForm.value.email
-      const password: string = this.loginForm.value.password
+      const { email, password } = this.loginForm.value
 
       try {
 
         await this.afAuth.signInWithEmailAndPassword(email, password)
-        await loading.dismiss()
+        loading.dismiss()
         await this.fcmService.registerFCM()
-        await this.modalCtrl.dismiss()
+        this.modalCtrl.dismiss()
 
       } catch (error) {
 
-        await loading.dismiss()
-
-        const alert = await this.alertCtrl.create({
+        loading.dismiss()
+        this.alertCtrl.create({
           message: error.message,
           buttons: [{ text: 'Ok', role: 'cancel' }]
-        })
-
-        await alert.present()
-
+        }).then(alert => alert.present())
       }
     }
   }
 
-  async signUpUser(): Promise<void> {
+  async signUpUser() {
     if (!this.signupForm.valid) {
     } else {
       const loading = await this.loadingCtrl.create()
-      await loading.present()
+      loading.present()
 
       try {
-
         const { user } = await this.afAuth.createUserWithEmailAndPassword(this.signupForm.value.email, this.signupForm.value.password)
+        const profile = createProfile({ username: this.signupForm.value.username })
 
-        const newUserProfile = <Profile>{
-          username: this.signupForm.value.username,
-          photoURL: `assets/img/avatar/blank-profile-picture_512_thumb.png`,
-          numberOfSpectating: 0,
-          numberOfSpectators: 0
-        }
+        await Promise.all([
+          this.user.createUser(user.uid, this.signupForm.value.email),
+          this.user.upsertProfile(profile)
+        ])
 
-        await this.user.createUser(user.uid, this.signupForm.value.email)
-        await this.user.upsertProfile(newUserProfile)
+        const useTemplateFn = this.functions.httpsCallable('useTemplate')
+        const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }).toPromise();
 
-        // create tutorial goal
-        const collectiveGoalId = `XGtfe77pCKh1QneOipI7`
-        const templateId = `ScA150CYoGsk4xQDcVYM`
-        const template = await this.templateService.getTemplate(collectiveGoalId, templateId)
-        const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
+        await this.fcmService.registerFCM()
+        this.modalCtrl.dismiss()
 
-        if (!template || !template.createdAt || !collectiveGoal || collectiveGoal.createdAt) {
-
+        if (!!error) {
           await loading.dismiss()
-          this.fcmService.registerFCM()
-          this.modalCtrl.dismiss()
-          return
-
+          throw new Error(result)
+        } else {
+          this.navCtrl.navigateRoot(`/goal/${result}`)
         }
-
-        const goalId = await this.goalService.create(this.user.uid, createGoal({
-          title: template.goalTitle,
-          description: template.goalDeadline,
-          publicity: 'private',
-          deadline: template.goalDeadline,
-          shortDescription: template.goalShortDescription || '',
-          image: template.goalImage,
-          collectiveGoalId
-        }))
-
-        this.goalStakeholderService.upsert(user.uid, goalId, {
-          isAdmin: true,
-          isAchiever: true,
-        })
-
-        this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${user.uid}`)
-          .pipe(take(2))
-          .subscribe(async stakeholder => {
-
-            if (stakeholder) {
-              if (stakeholder.isAdmin) {
-
-                // generate milestones
-                this.roadmapService.duplicateMilestones(goalId, template.milestoneTemplateObject)
-
-                await loading.dismiss()
-
-                this.templateService.increaseTimesUsed(collectiveGoalId, templateId, template.numberOfTimesUsed)
-                await this.fcmService.registerFCM()
-
-                this.navCtrl.navigateRoot(`/goal/${goalId}`)
-              }
-            }
-
-          })
 
       } catch (error) {
 
@@ -270,31 +203,28 @@ export class AuthModalPage implements OnInit {
       const loading = await this.loadingCtrl.create()
       await loading.present()
 
-      const email = this.resetPasswordForm.value.email
+      const { email } = this.resetPasswordForm.value
 
       try {
+
         await this.afAuth.sendPasswordResetEmail(email)
-        await loading.dismiss()
-        const alert =  await this.alertCtrl.create({
+        loading.dismiss()
+        this.alertCtrl.create({
           message: 'Check your inbox for a password reset link',
           buttons: [
             { text: 'Cancel', role: 'cancel'},
-            { text: 'Ok', handler: data => {
-              this.authSegmentChoice = enumAuthSegment.login
-            }}
+            { text: 'Ok', handler: () => { this.authSegmentChoice = enumAuthSegment.login }}
           ]
-        })
-        await alert.present()
+        }).then(alert => alert.present())
+
       } catch (error) {
         await loading.dismiss()
-        const alert = await this.alertCtrl.create({
+        this.alertCtrl.create({
           message: error.message,
           buttons: [{ text: 'Ok', role: 'cancel' }]
-        })
-        await alert.present()
+        }).then(alert => alert.present())
       }
     }
-
   }
 
   hideShowPassword() {

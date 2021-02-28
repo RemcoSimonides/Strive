@@ -26,23 +26,6 @@ export class TemplateService {
     return await this.getTemplate$(collectiveGoalId, templateId).pipe(first()).toPromise()
   }
 
-  async increaseTimesUsed(collectiveGoalId: string, templateId: string, currentNumberOfTimesUsed?: number): Promise<void> {
-
-    // TODO move counter to back-end
-    let plusOne: number
-    if (currentNumberOfTimesUsed) {
-      plusOne = currentNumberOfTimesUsed + 1
-    } else {
-      const template = await this.getTemplate(collectiveGoalId, templateId)
-      plusOne = template.numberOfTimesUsed + 1
-    }
-
-    this.db.update(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`, {
-      numberOfTimesUsed: plusOne
-    })
-
-  }
-
   async create(collectiveGoalId: string, template: Template): Promise<string> {
     const id = await this.db.getNewId()
     template.id = id;

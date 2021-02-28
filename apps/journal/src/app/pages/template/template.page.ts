@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, PopoverController, ModalController, Platform, NavController } from '@ionic/angular';
+import { AngularFireFunctions } from '@angular/fire/functions';
 // Rxjs
 import { Observable, Subscription, of } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
@@ -12,16 +13,11 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { TemplateService } from '@strive/template/+state/template.service';
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
-import { GoalService } from '@strive/goal/goal/+state/goal.service'
-import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 
 @Component({
   selector: 'app-template',
@@ -41,11 +37,9 @@ export class TemplatePage implements OnInit {
 
   constructor(
     public user: UserService,
-    private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private db: FirestoreService,
-    private goalService: GoalService,
-    private goalStakeholderService: GoalStakeholderService,
+    private functions: AngularFireFunctions,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -112,54 +106,15 @@ export class TemplatePage implements OnInit {
     })
     loading.present();
 
+    const useTemplateFn = this.functions.httpsCallable('useTemplate')
+    const { error, result } = await useTemplateFn({ collectiveGoalId: this.collectiveGoalId, templateId: this.templateId }).toPromise()
 
-    // TODO extract to http callable function
-    const template = await this.templateService.getTemplate(this.collectiveGoalId, this.templateId)
-    const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
-
-    let publicity: GoalPublicityType
-    if (collectiveGoal.isPublic && template.goalIsPublic) {
-      // public
-      publicity = 'public'
-    } else if (!collectiveGoal.isPublic && template.goalIsPublic) {
-      // semi public
-      publicity = 'collectiveGoalOnly'
-    } else {
-      publicity = 'private'
+    if (!!error) {
+      await loading.dismiss()
+      throw new Error(result)
     }
-
-    // Create goal
-    const goalId = await this.goalService.create(this.user.uid, {
-      title: template.goalTitle,
-      description: template.description,
-      publicity: publicity,
-      deadline: template.goalDeadline,
-      shortDescription: template.goalShortDescription || '',
-      image: template.goalImage,
-      collectiveGoalId: this.collectiveGoalId
-    })
-
-    // Create stakeholder
-    this.goalStakeholderService.upsert(this.user.uid, goalId, {
-      isAdmin: true,
-      isAchiever: true
-    })
-
-    // Wait for stakeholder to be created before making milestones because you need admin rights for that
-    this.db.docWithId$<GoalStakeholder>(`Goals/${goalId}/GStakeholders/${this.user.uid}`)
-      .pipe(take(2))
-      .subscribe(async stakeholder => {
-        if (!!stakeholder && stakeholder.isAdmin) {
-          // Generate milestones
-          this.roadmapService.duplicateMilestones(goalId, template.milestoneTemplateObject)
-          await loading.dismiss()
-
-          // Increase numberOfTimesUsed
-          this.templateService.increaseTimesUsed(this.collectiveGoalId, this.templateId, template.numberOfTimesUsed)
-
-          this.router.navigateByUrl(`goal/${goalId}`)
-        }
-      })
+    this.router.navigateByUrl(`goal/${result}`)
+    loading.dismiss()
   }
 
   public presentTemplateOptionsPopover(ev: UIEvent) {

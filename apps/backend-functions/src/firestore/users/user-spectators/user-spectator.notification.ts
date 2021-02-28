@@ -1,5 +1,5 @@
 // Interfaces
-import { Spectator } from '@strive/user/spectator/+state/stakeholder.firestore';
+import { Spectator } from '@strive/user/spectator/+state/spectator.firestore'
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { sendNotificationToUsers } from '../../../shared/notification/notification'

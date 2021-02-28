@@ -11,6 +11,7 @@ import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { createMilestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore';
+import { logger } from 'firebase-functions';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onCreate(async (snapshot, context) => {
@@ -125,6 +126,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
 export const duplicateGoal = functions.https.onCall(async (data: { goalId: string }, context: CallableContext): Promise<ErrorResultResponse> => {
 
   if (!context.auth) {
+    logger.error(`UNAUTHORIZED - User needs to be authorized`)
     return {
       error: `UNAUTHORIZED`,
       result: `User needs to be authorized`

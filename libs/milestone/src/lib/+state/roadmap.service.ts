@@ -97,16 +97,6 @@ export class RoadmapService {
 
   }
 
-  async duplicateMilestones(goalId: string, milestoneTemplate: MilestoneTemplabeObject[]): Promise<void> {
-    const promises: any[] = []
-    milestoneTemplate.forEach(milestone => {
-      const newMilestone = createMilestone(milestone)
-      const promise = this.db.set(`Goals/${goalId}/Milestones/${milestone.id}`, newMilestone)
-      promises.push(promise)
-    })
-    Promise.all(promises)
-  }
-
   structureMilestones(milestones: Milestone[] | MilestoneTemplabeObject[]): MilestonesLeveled[] {
     const structuredMilestones: MilestonesLeveled[] = []
 
