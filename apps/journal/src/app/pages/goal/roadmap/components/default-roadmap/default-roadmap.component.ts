@@ -10,9 +10,11 @@ import { MilestonesLeveled, enumMilestoneStatus } from '@strive/milestone/+state
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Other
 import { RouterPage } from '@strive/utils/ionViewDidEnter-replacement'
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
+import { switchMap, tap } from 'rxjs/operators';
 
 // Animation for Roadmap
 declare const initMilestonesAnimation: Function;
@@ -44,6 +46,7 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
   private sub: Subscription
 
   constructor(
+    private collectiveGoalStakeholder: CollectiveGoalStakeholderService,
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
     private roadmapService: RoadmapService,
@@ -55,33 +58,46 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
     super(router, route)
   }
 
-  async ngOnInit() {
-    this.sub = this.stakeholder.getStakeholder$(this.user.uid, this.goalId).subscribe(stakeholder => {
-      this.isAdmin = stakeholder.isAdmin ?? false
-      this.isAchiever = stakeholder.isAchiever ?? false
-    })
-
+  ngOnInit() {
     this.origin = !!this.goalId ? 'goal' : 'template'
+    
+    this.sub = this.user.profile$.pipe(
+      switchMap(profile => {
+        if (!!profile) {
+          if (this.origin === 'goal') {
+            return this.stakeholder.getStakeholder$(this.user.uid, this.goalId)
+          } else if (this.origin === 'template') {
+            return this.collectiveGoalStakeholder.getStakeholder$(this.user.uid, this.collectiveGoalId)
+          }
+        } else {
+          return of({ isAdmin: false, isAchiever: false })
+        }
+      }),
+      tap(stakeholder => {
+        this.isAdmin = stakeholder.isAdmin ?? false
+        this.isAchiever = stakeholder.isAchiever ?? false
+      })
+    ).subscribe()
 
-    await this.getData()
+    this.getData()
   }
 
-  async onEnter() {
-    await this.getData()
+  onEnter() {
+    this.getData()
   }
 
   onDestroy() {
-    this.sub.unsubscribe()
+    if (!!this.sub) this.sub.unsubscribe()
     super.ngOnDestroy();
   }
 
   async getData() {
-    this.goal = await this.goalService.getGoal(this.goalId);
     if (this.origin === 'goal') {
+      this.goal = await this.goalService.getGoal(this.goalId);
       this.structuredMilestones = await this.roadmapService.getStructuredMilestones(this.goalId)
-    } else {
+    } else if (this.origin === 'template') {
       this.structuredMilestones = await this.roadmapService.getStructuredMilestonesForTemplates(this.collectiveGoalId, this.templateId)
-    }
+    } else throw Error('Unknown origin')
 
     initMilestonesAnimation()
   }

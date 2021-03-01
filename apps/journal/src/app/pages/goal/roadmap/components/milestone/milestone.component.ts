@@ -5,7 +5,6 @@ import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-mod
 import { AddSupportModalPage } from '../../../modals/add-support-modal/add-support-modal.page';
 import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-options.page';
 // Services
-import { PostService } from '@strive/post/+state/post.service';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
@@ -25,7 +24,7 @@ export class MilestoneComponent implements OnInit {
   @Input() isAchiever: boolean
   @Input() goal: Goal
   @Input() milestoneParent: Milestone
-  public _isGoal: boolean = false
+  public isGoal = false
   // For both
   @Input() milestone: Milestone
   @Input() isAdmin: boolean
@@ -34,18 +33,16 @@ export class MilestoneComponent implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private imageService: ImageService,
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
-    private _popoverCtrl: PopoverController,
-    private postService: PostService,
+    private _popoverCtrl: PopoverController
   ) { }
 
-  async ngOnInit() {
-    if (this.goalId) this._isGoal = true
+  ngOnInit() {
+    if (!!this.goalId) this.isGoal = true
   }
 
-  public async openMilestoneOptions(event): Promise<void> {
+  public async openMilestoneOptions(event: Event): Promise<void> {
 
     event.stopPropagation(); //prevents roadmap from collapsing in or out :)
 
@@ -72,10 +69,8 @@ export class MilestoneComponent implements OnInit {
         if (!!data.data.statusChange) {
           this.milestoneStatusChange()
         }
-
       }
     })
-
   }
 
   public async goToSupportModal($event: Event): Promise<void> {
@@ -84,32 +79,29 @@ export class MilestoneComponent implements OnInit {
 
     $event.stopPropagation(); //prevents roadmap from collapsing in or out :)
 
-    const supportModal = await this.modalCtrl.create({
+    this.modalCtrl.create({
       component: AddSupportModalPage,
       componentProps: {
         goalId: this.goalId,
         milestone: this.milestone
       }
-    })
-    await supportModal.present()
-
+    }).then(modal => modal.present())
   }
 
-  public async milestoneStatusChange(): Promise<void> {
+  public milestoneStatusChange(event?: Event) {
 
     if (!this.isAdmin && !this.isAchiever) return
 
-    event.stopPropagation(); //prevents roadmap from collapsing in or out :)
+    if (event) event.stopPropagation(); //prevents roadmap from collapsing in or out :)
 
-    let alert = await this.alertCtrl.create({
+    this.alertCtrl.create({
       header: 'Good job!',
       subHeader: 'Or didn\'t you?',
       buttons: [
         {
           text: 'Succeeded',
           role: 'succeeded',
-          handler: async () => {
-
+          handler: () => {
             this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.succeeded })
             this.milestone.status = enumMilestoneStatus.succeeded
             this.startPostCreation()
@@ -118,12 +110,10 @@ export class MilestoneComponent implements OnInit {
         {
           text: 'Failed',
           role: 'succeeded',
-          handler: async () => {
-
+          handler: () => {
             this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.failed })
             this.milestone.status = enumMilestoneStatus.failed
             this.startPostCreation()
-
           }
         },
         {
@@ -131,9 +121,7 @@ export class MilestoneComponent implements OnInit {
           role: 'cancel',
         },
       ]
-    })
-    await alert.present()
-
+    }).then(alert => alert.present())
   }
 
   private async startPostCreation() {
@@ -154,7 +142,7 @@ export class MilestoneComponent implements OnInit {
 
   }
 
-  public async _openingDatetime($event): Promise<void> {
+  public async openDatetime($event): Promise<void> {
 
     event.stopPropagation(); //prevents roadmap from collapsing in or out :)
 
@@ -175,13 +163,10 @@ export class MilestoneComponent implements OnInit {
 
   }
 
-  public async onDeadlineDateChange(value): Promise<void> {
-
+  public onDeadlineDateChange(value) {
     this.milestone.deadline = value
     this.milestoneService.upsert(this.goalId, this.milestone.id, {
       deadline: value ? value : null
     })
-
   }
-
 }

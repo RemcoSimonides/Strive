@@ -72,7 +72,6 @@ export class TemplatePage implements OnInit {
         }
       })
     )
-
   }
 
   ionViewDidEnter() {
@@ -94,7 +93,7 @@ export class TemplatePage implements OnInit {
       this.modalCtrl.create({
         component: AuthModalPage,
         componentProps: {
-          authSegment: enumAuthSegment.register
+          authSegment: enumAuthSegment.login
         }
       }).then(modal => modal.present())
       return

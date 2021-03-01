@@ -1,24 +1,15 @@
 .collapsible-header {
-    align-items: center;
-    min-height: 4em;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    line-height: 1.5;
-    padding: .6rem;
-    background-color: var(--collapsible-header-color);
-  
-    i {
-        width: 2rem;
-        font-size: 1.6rem;
-        display: inline-block;
-        text-align: center;
-        margin-right: 1rem;
-    }
+  align-items: center;
+  min-height: 4em;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.5;
+  padding: .6rem;
+  background-color: var(--collapsible-header-color);
 
-    &:hover {
-        background-color: var(--ion-color-lightest);
-        cursor: pointer;
-    }
+  &:hover {
+    background-color: var(--ion-color-lightest);
+    cursor: pointer;
+  }
 }
 
 .collapsible-body {
@@ -70,10 +61,8 @@
         cursor: pointer;
         box-shadow: 0 3px 10px rgba(0,0,0,0.16), 0 3px 10px rgba(0,0,0,0.23);
       }
-
     }
   }
-
 }
 
 .collapsible-header.active {
