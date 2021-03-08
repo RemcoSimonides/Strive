@@ -1,49 +1,33 @@
 import { Injectable } from '@angular/core';
-// Rxjs
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
-import { ImageService } from '@strive/media/+state/image.service';
+import { FireCollection } from '@strive/utils/services/collection.service';
+// import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 
 @Injectable({
   providedIn: 'root'
 })
-export class TemplateService {
+export class TemplateService extends FireCollection<Template> {
+  readonly path = 'CollectiveGoals/:collectiveGoalId/Templates';
 
   constructor(
-    private db: FirestoreService,
-    private imageService: ImageService,
-  ) { }
-
-  public getTemplate$(collectiveGoalId: string, templateId: string): Observable<Template> {
-    return this.db.docWithId$<Template>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`)
+    db: AngularFirestore,
+    // private imageService: ImageService,
+  ) {
+    super(db)
   }
 
-  public async getTemplate(collectiveGoalId: string, templateId: string): Promise<Template> {
-    return await this.getTemplate$(collectiveGoalId, templateId).pipe(first()).toPromise()
+  protected fromFirestore(snapshot: DocumentSnapshot<Template>) {
+    return (snapshot.exists)
+      ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
+      : undefined
   }
 
-  async create(collectiveGoalId: string, template: Template): Promise<string> {
-    const id = await this.db.getNewId()
-    template.id = id;
+  protected toFirestore(template: Template): Template {
     if (!!template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
-
-    // template.goalImage = await this.imageService.uploadImage(`CollectiveGoals/${collectiveGoalId}/Templates/${id}`, false)
-
-    await this.db.upsert(`CollectiveGoals/${collectiveGoalId}/Templates/${id}`, template)
-
-    return id
-  }
-
-  async update(collectiveGoalId: string, templateId: string, template: Template) {
-    if (template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
-
-    // template.goalImage = await this.imageService.uploadImage(`CollectiveGoals/${collectiveGoalId}/Templates/${template.id}`, true)
-
-    await this.db.upsert(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`, template)
+    return template
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {

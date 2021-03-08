@@ -1,7 +1,7 @@
 import { db, functions } from '../../../internals/firebase';
 
 //Interfaces
-import { createMilestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
@@ -65,13 +65,13 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
         if (!after) return
 
         // Do not do anything with milestones which just have been set to neutral
-        if (before.status !== enumMilestoneStatus.pending && after.status === enumMilestoneStatus.neutral) return
+        if (before.status !== 'pending' && after.status === 'neutral') return
 
         //Milestone succeeded
         if (before.status !== after.status) { // Something has changed
 
-            if (after.status !== enumMilestoneStatus.neutral && after.status !== enumMilestoneStatus.overdue) await handleStatusChangeNotification(before, after, goalId, milestoneId)
-            if (after.status !== enumMilestoneStatus.pending && after.status !== enumMilestoneStatus.overdue) await handlePotentialSubmilestones(after, goalId)
+            if (after.status !== 'neutral' && after.status !== 'overdue') await handleStatusChangeNotification(before, after, goalId, milestoneId)
+            if (after.status !== 'pending' && after.status !== 'overdue') await handlePotentialSubmilestones(after, goalId)
 
         }
 
@@ -99,7 +99,7 @@ async function handlePotentialSubmilestones(milestone: any, goalId: string): Pro
 
     // get all submilestones
     const subMilestonesColRef = db.collection(`Goals/${goalId}/Milestones`)
-        .where('status', '==', enumMilestoneStatus.pending)
+        .where('status', '==', 'pending')
         .where('sequenceNumber', '>', milestone.sequenceNumber)
         .where('sequenceNumber', '<', oneSeqnoHigher)
     const subMilestonesColSnap = await subMilestonesColRef.get()
@@ -108,7 +108,7 @@ async function handlePotentialSubmilestones(milestone: any, goalId: string): Pro
     subMilestonesColSnap.forEach(subMilestoneSnap => {
 
         const promise = subMilestoneSnap.ref.update({
-            status: enumMilestoneStatus.neutral
+            status: 'neutral'
         })
         promises.push(promise)
 

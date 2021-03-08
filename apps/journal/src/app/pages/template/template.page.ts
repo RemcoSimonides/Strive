@@ -4,7 +4,7 @@ import { LoadingController, PopoverController, ModalController, Platform, NavCon
 import { AngularFireFunctions } from '@angular/fire/functions';
 // Rxjs
 import { Observable, Subscription, of } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 // Pages / Popover / Modal
 import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
@@ -18,6 +18,7 @@ import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 @Component({
   selector: 'app-template',
@@ -33,10 +34,13 @@ export class TemplatePage implements OnInit {
   public template$: Observable<Template>
   public structuredMilestones: MilestonesLeveled[] = []
 
+  public maxDeadline$: Observable<string>
+
   public isAdmin: Observable<boolean>
 
   constructor(
     public user: UserService,
+    private collectiveGoalService: CollectiveGoalService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
     private db: FirestoreService,
     private functions: AngularFireFunctions,
@@ -49,18 +53,24 @@ export class TemplatePage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
-    private templateService: TemplateService
+    private template: TemplateService
   ) { }
 
   ngOnInit() {
     this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
     this.templateId = this.route.snapshot.paramMap.get('templateId')
 
-    this.template$ = this.templateService.getTemplate$(this.collectiveGoalId, this.templateId).pipe(
+    this.template$ = this.template.valueChanges(this.templateId, { collectiveGoalId: this.collectiveGoalId }).pipe(
       tap(template => {
-        this.structuredMilestones = this.roadmapService.structureMilestones(template.milestoneTemplateObject)
+        if (!this.structuredMilestones.length) {
+          this.structuredMilestones = this.roadmapService.structureMilestones(template.milestoneTemplateObject)
+        }
         this.seo.generateTags({ title: `${template.title} - Strive Journal` })
       })
+    )
+
+    this.maxDeadline$ = this.collectiveGoalService.getCollectiveGoal$(this.collectiveGoalId).pipe(
+      map(collectiveGoal => collectiveGoal.deadline)
     )
 
     this.isAdmin = this.user.profile$.pipe(
@@ -128,8 +138,22 @@ export class TemplatePage implements OnInit {
     }).then(popover => popover.present())
   }
 
-
   public saveDescription(description: string) {
     this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, { description })
+  }
+
+  updateRoadmap(value, context, template: Template) {
+    // const getDeepValue = (object: any, index: number[]) => index.reduce((result, key, i) => i === 0 ? result?.[key] : result?.submilestones?.[key], object);
+    // const milestone = getDeepValue(this.structuredMilestones, context.index)
+    // milestone.deadline = value
+
+    const milestone = template.milestoneTemplateObject.find(milestone => milestone.sequenceNumber === context.sequenceNumber)
+    milestone.deadline = value
+
+    // const milestone = this.structuredMilestones.find(milestone => milestone.sequenceNumber === context.sequenceNumber)
+
+    this.template.update(this.templateId, {
+      milestoneTemplateObject: template.milestoneTemplateObject
+    }, { params: { collectiveGoalId: this.collectiveGoalId }})
   }
 }

@@ -10,7 +10,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared/utils';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
-import { createMilestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
@@ -206,13 +206,13 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
 
 async function handleUnfinishedMilestones(goalId: string) {
 
-  const milestonesRef = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', enumMilestoneStatus.pending)
+  const milestonesRef = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', 'pending')
   const milestonesSnap = await milestonesRef.get()
     
   const promises: any[] = []
   milestonesSnap.forEach(milestoneSnap => {
     const promise = milestoneSnap.ref.update({
-      status: enumMilestoneStatus.neutral
+      status: 'neutral'
     })
     promises.push(promise)
   })

@@ -8,7 +8,7 @@ import { MilestoneOptionsPage } from './popovers/milestone-options/milestone-opt
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
-import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
 @Component({
@@ -28,8 +28,6 @@ export class MilestoneComponent implements OnInit {
   // For both
   @Input() milestone: Milestone
   @Input() isAdmin: boolean
-
-  public enumMilestoneStatus = enumMilestoneStatus
 
   constructor(
     private alertCtrl: AlertController,
@@ -75,7 +73,7 @@ export class MilestoneComponent implements OnInit {
 
   public async goToSupportModal($event: Event): Promise<void> {
 
-    if (this.milestone.status !== enumMilestoneStatus.pending) return
+    if (this.milestone.status !== 'pending') return
 
     $event.stopPropagation(); //prevents roadmap from collapsing in or out :)
 
@@ -102,8 +100,8 @@ export class MilestoneComponent implements OnInit {
           text: 'Succeeded',
           role: 'succeeded',
           handler: () => {
-            this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.succeeded })
-            this.milestone.status = enumMilestoneStatus.succeeded
+            this.milestoneService.upsert(this.goalId, this.milestone.id, { status: 'succeeded' })
+            this.milestone.status = 'succeeded'
             this.startPostCreation()
           }
         },
@@ -111,8 +109,8 @@ export class MilestoneComponent implements OnInit {
           text: 'Failed',
           role: 'succeeded',
           handler: () => {
-            this.milestoneService.upsert(this.goalId, this.milestone.id, { status: enumMilestoneStatus.failed })
-            this.milestone.status = enumMilestoneStatus.failed
+            this.milestoneService.upsert(this.goalId, this.milestone.id, { status: 'failed' })
+            this.milestone.status = 'failed'
             this.startPostCreation()
           }
         },

@@ -7,7 +7,7 @@ import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent} from '@strive/notification/+state/notification.firestore'
 import { IReceiver, getReceiver } from '../../../shared/support/receiver'
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone, MilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta, SupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport } from '@strive/support/+state/support.firestore';
 
@@ -21,9 +21,9 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   const goal =  createGoal(goalSnap.data())
 
   // send notification to every stakeholder
-  if (before.status === enumMilestoneStatus.pending  && after.status === enumMilestoneStatus.succeeded) {
+  if (before.status === 'pending'  && after.status === 'succeeded') {
     sendNotificationMilestoneSuccessful(goalId, milestoneId, goal, after)
-  } else if (before.status === enumMilestoneStatus.pending && after.status === enumMilestoneStatus.failed) {
+  } else if (before.status === 'pending' && after.status === 'failed') {
     sendNotificationMilestoneFailed(goalId, milestoneId, goal, after)
   }
 
@@ -31,9 +31,9 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   // overwrite notification to supporters // send notification if person does not want level 1/2/3 milestone notifications but does support them
   const startText = `Milestone '${after.description}'`
   let endText = ''
-  if (before.status === enumMilestoneStatus.pending && after.status === enumMilestoneStatus.succeeded) { 
+  if (before.status === 'pending' && after.status === 'succeeded') { 
     endText = ` is successfully completed &#127881;`
-  } else if (before.status === enumMilestoneStatus.pending && after.status === enumMilestoneStatus.failed) {
+  } else if (before.status === 'pending' && after.status === 'failed') {
     endText = ` has failed to complete`
   }
 
@@ -73,7 +73,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 
   const oneSeqnoHigher = _increaseSeqnoByOne(after.sequenceNumber)
   const subMilestonesRef = db.collection(`Goals/${goalId}/Milestones`)
-      .where('status', '==', enumMilestoneStatus.pending)
+      .where('status', '==', 'pending')
       .where('sequenceNumber', '>', after.sequenceNumber)
       .where('sequenceNumber', '<', oneSeqnoHigher)
   const subMilestonesSnap = await subMilestonesRef.get()

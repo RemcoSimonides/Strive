@@ -6,7 +6,6 @@ import { sendNotificationMilestoneDeadlinePassed } from './notifications/milesto
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
 import { sendBucketListYearlyReminder, rescheduleYearlyReminder } from './user-exercises/bucketlist';
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
-import { enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -90,7 +89,7 @@ async function milestoneDeadlineHandler(options) {
 
   // set status to overdue
   await db.doc(`Goals/${options.goalId}/Milestones/${options.milestoneId}`).update({
-    status: enumMilestoneStatus.overdue
+    status: 'overdue'
   })
 }
 

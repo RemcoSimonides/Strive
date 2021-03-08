@@ -27,7 +27,7 @@ export class TemplateOptionsPopoverPage implements OnInit {
 
   async editTemplate() {
     const { collectiveGoalId, templateId } = this.navParams.data
-    const template = await this.service.getTemplate(collectiveGoalId, templateId)
+    const template = await this.service.getValue(templateId, { collectiveGoalId })
     this.modalCtrl.create({
       component: UpsertTemplateModalPage,
       componentProps: { collectiveGoalId, template }

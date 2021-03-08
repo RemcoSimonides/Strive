@@ -7,7 +7,7 @@ import { take, first } from 'rxjs/operators';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
-import { Milestone, enumMilestoneStatus, MilestonesLeveled, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone, MilestonesLeveled, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
 import { setDateToEndOfDay } from '@strive/utils/helpers'
@@ -18,8 +18,6 @@ import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
 export class RoadmapService {
 
   milestones: Milestone[]
-
-  enumMilestoneStatus = enumMilestoneStatus
 
   constructor(
     private afs: AngularFirestore,
@@ -51,7 +49,7 @@ export class RoadmapService {
     const seqno = this.milestones.find(milestone => milestone.id == milestoneId).sequenceNumber
     const prefix = `${seqno}.`
     const submilestones = this.milestones.filter(milestone => milestone.sequenceNumber.startsWith(prefix))
-    return submilestones.some(milestone => milestone.status === enumMilestoneStatus.pending)
+    return submilestones.some(milestone => milestone.status === 'pending')
   }
 
   /**

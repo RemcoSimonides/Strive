@@ -30,7 +30,7 @@
             <div>
               {{ template.goalShortDescription }}
             </div>
-            <img src="{{ template.goalImage }}"/>
+            <img [src]="template.goalImage"/>
           </article>
 
           <ion-button (click)="useTemplate()" fill="outline">Use Template</ion-button>
@@ -38,7 +38,25 @@
       </ion-card>
 
       <h3>Roadmap</h3>
-      <app-default-roadmap [collectiveGoalId]="collectiveGoalId" [templateId]="templateId"></app-default-roadmap>
+      <strive-roadmap 
+        [structuredMilestones]="structuredMilestones"
+        [isAdmin]="isAdmin | async"
+        [maxDeadline]="maxDeadline$ | async" 
+      >
+        <ng-template milestone let-milestone>
+          <strive-milestone-status [status]="milestone.status"></strive-milestone-status>
+          <article fxLayout="column">
+            {{ milestone.description }}
+            <ng-container *ngIf="milestone.deadline || (isAdmin | async)">
+              <strive-milestone-deadline 
+                [milestone]="milestone"
+                [isAdmin]="isAdmin | async"
+                (change)="updateRoadmap($event, milestone, template)"
+              ></strive-milestone-deadline>
+            </ng-container>
+          </article>
+        </ng-template>
+      </strive-roadmap>
     </section>
   </ng-container>
 </ion-content>

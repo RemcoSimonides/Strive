@@ -8,7 +8,7 @@ export interface Milestone {
   description: string;
   numberOfCustomSupports: number;
   numberOfMoneySupports: number;
-  status: enumMilestoneStatus;
+  status: MilestoneStatus
   deadline: string;
   achiever: ProfileLink;
   updatedAt?: FieldValue;
@@ -35,14 +35,12 @@ export interface MilestoneLink {
   description: string;
 }
 
-export enum enumMilestoneStatus {
-  pending, // 
-  succeeded, // milestone succesful
-  failed, // milestone failed
-  neutral, // didnt succeed and failed but no action was taken
-  overdue, //
-}
-
+export type MilestoneStatus = 
+  'pending'
+  | 'succeeded' // milestone succesful
+  | 'failed' // milestone failed
+  | 'neutral' // didnt succeed and failed but no action was taken
+  | 'overdue'
 
 /** A factory function that creates a MilestoneDocument. */
 export function createMilestone(params: Partial<Milestone> ={}): Milestone {
@@ -53,7 +51,7 @@ export function createMilestone(params: Partial<Milestone> ={}): Milestone {
     description: params.deadline ? setDateToEndOfDay(params.deadline) : '',
     numberOfCustomSupports: 0,
     numberOfMoneySupports: 0,
-    status: enumMilestoneStatus.pending,
+    status: 'pending',
     achiever: createProfileLink(params.achiever),
     ...params
   }

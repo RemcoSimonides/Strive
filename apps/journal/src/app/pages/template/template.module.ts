@@ -12,10 +12,10 @@ import { UpsertTemplateModalPageModule } from './modals/upsert-template-modal/up
 // Popover
 import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page'
 // Components
-import { RoadmapModule } from '../goal/roadmap/components/roadmap.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
+import { RoadmapModule } from '@strive/ui/roadmap/roadmap.module';
 // Guards
 import { CollectiveGoalGuard } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 

@@ -4,7 +4,7 @@ import { PopoverController, NavParams } from '@ionic/angular';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { Milestone, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
@@ -20,8 +20,6 @@ export class MilestoneOptionsPage implements OnInit {
   isNotCompleted: boolean
   isAlreadyAssigned: boolean
 
-  public enumMilestoneStatus = enumMilestoneStatus
-
   constructor(
     private user: UserService,
     private milestoneService: MilestoneService,
@@ -34,7 +32,7 @@ export class MilestoneOptionsPage implements OnInit {
     this.milestone = this.navParams.get('milestone')
 
     this.isAlreadyAssigned = this.milestone.achiever.uid === this.user.uid
-    this.isNotCompleted = this.milestone.status === enumMilestoneStatus.pending || this.milestone.status === enumMilestoneStatus.overdue
+    this.isNotCompleted = this.milestone.status === 'pending' || this.milestone.status === 'overdue'
   }
 
   dismiss(data) {

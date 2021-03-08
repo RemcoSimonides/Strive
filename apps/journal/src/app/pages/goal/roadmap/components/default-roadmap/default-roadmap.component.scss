@@ -27,43 +27,6 @@
 .collapsible-body .collapsible .active {
   padding-bottom: 15px;
 }
-  
-.side-nav,
-.side-nav.fixed {
-
-  .collapsible {
-    border: none;
-    box-shadow: none;
-
-    li { 
-      padding: 0;
-    }
-  }
-
-  .collapsible-header {
-    background-color: transparent;
-    border: none;
-    line-height: inherit;
-    height: inherit;
-    padding: 0 var(--sidenav-padding);
-
-    i { line-height: inherit; }
-  }
-
-  .collapsible-body {
-    border: 0;
-    background-color: var(--collapsible-header-color);
-
-    li a {
-
-      &:hover {
-        background-color: var(--ion-color-lightest);
-        cursor: pointer;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.16), 0 3px 10px rgba(0,0,0,0.23);
-      }
-    }
-  }
-}
 
 .collapsible-header.active {
   .second-description {

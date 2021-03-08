@@ -1,0 +1,66 @@
+<ng-container *ngIf="structuredMilestones; else loading">
+  <ng-container *ngIf="structuredMilestones.length; else empty">
+
+    <!-- First level -->
+    <ul class="collapsible popout" data-collapsible="accordion">
+      <ng-container *ngFor="let milestoneLevelOne of structuredMilestones; let i = index">
+        <li>
+          <section class="collapsible-header" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+            <ng-template 
+              [ngTemplateOutlet]="milestoneTemplate"
+              [ngTemplateOutletContext]="getContext(milestoneLevelOne, maxDeadline, [i])">
+            </ng-template>
+          </section>
+
+          <!-- Second level -->
+          <ul class="collapsible collapsible-body" data-collapsible="accordion">
+            <ng-container *ngFor="let milestoneLevelTwo of milestoneLevelOne.submilestones; let j = index">
+              <li>
+                <section class="collapsible-header"  fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+                  <ng-template 
+                    [ngTemplateOutlet]="milestoneTemplate"
+                    [ngTemplateOutletContext]="getContext(milestoneLevelTwo, milestoneLevelOne.deadline, [i, j])">
+                  </ng-template>
+                </section>
+
+                <!-- Third level -->
+                <ng-container *ngFor="let milestoneLevelThree of milestoneLevelTwo.submilestones; let k = index">
+                  <section class="collapsible-body third" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+                    <ng-template 
+                      [ngTemplateOutlet]="milestoneTemplate"
+                      [ngTemplateOutletContext]="getContext(milestoneLevelThree, milestoneLevelTwo.deadline, [i, j, k])">
+                    </ng-template>
+                  </section>
+                </ng-container>
+              </li><!-- End level 3-->
+
+            </ng-container>
+          </ul><!-- End level 2-->
+
+        </li>
+      </ng-container>
+    </ul><!-- End level 1-->
+
+  </ng-container>
+</ng-container>
+
+<ng-template #empty>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <img src='assets/pages/roadmap/Define Roadmap.png' (click)="editRoadmap()" [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}"/>
+    <ng-container *ngIf="isAdmin; else noAdmin">
+      <h3 (click)="editRoadmap()" 
+        [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}">
+        Define your roadmap
+      </h3>
+    </ng-container>
+    <ng-template #noAdmin>
+      <h3>Roadmap is not defined</h3>
+    </ng-template>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <section fxLayout fxLayoutAlign="center center">
+    <ion-spinner name="lines" color="primary"></ion-spinner>
+  </section>
+</ng-template>

@@ -6,7 +6,7 @@ import { LoadingController } from '@ionic/angular';
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 // Interfaces
-import { MilestonesLeveled, enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
+import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Other
 import { RouterPage } from '@strive/utils/ionViewDidEnter-replacement'
@@ -41,7 +41,6 @@ export class DefaultRoadmapComponent extends RouterPage implements OnInit, OnDes
   origin: 'goal' | 'template'
 
   public structuredMilestones: MilestonesLeveled[] = []
-  public enumMilestoneStatus = enumMilestoneStatus
 
   private sub: Subscription
 

@@ -1,7 +1,7 @@
 <ion-grid class="ion-no-padding" fixed="true">
   <ion-row class="ion-no-padding ion-justify-content-start">
     <ion-col size-xl="1" size-lg="1" size-md="1" size-sm="1" size-xs="2" class="ion-no-padding relative">
-      <ion-icon class="radio-button-off vertical-middle" name="radio-button-off" color="primary"
+      <!-- <ion-icon class="radio-button-off vertical-middle" name="radio-button-off" color="primary"
         *ngIf="milestone.status === enumMilestoneStatus.pending || milestone.status === enumMilestoneStatus.overdue"
         (click)="milestoneStatusChange($event)"></ion-icon>
       <ion-icon class="vertical-middle" name="checkmark-circle"
@@ -9,7 +9,7 @@
       <ion-icon class="vertical-middle" name="close-circle"
         *ngIf="milestone.status && milestone.status === enumMilestoneStatus.failed" color="danger"></ion-icon>
       <ion-icon class="vertical-middle" name="remove-circle"
-        *ngIf="milestone.status && milestone.status === enumMilestoneStatus.neutral" color="warning"></ion-icon>
+        *ngIf="milestone.status && milestone.status === enumMilestoneStatus.neutral" color="warning"></ion-icon> -->
     </ion-col>
     <ion-col class="ion-no-padding" size-xl="20" size-lg="20" size-md="20" size-sm="19" size-xs="16">
       <ion-grid class="ion-no-padding" fixed="true">
@@ -22,14 +22,11 @@
         <!-- Deadline + Assing -->
         <ion-row class="milestone-extra-info">
           <ion-col class="ion-no-padding milestone-extra" size-xl="4" size-lg="4" size-md="4" size-sm="8" size-xs="10">
-            <div class="box" [ngClass]="{'overdue': milestone.status === enumMilestoneStatus.overdue }"
+            <div class="box" [ngClass]="{'overdue': milestone.status === 'overdue' }"
               *ngIf="milestone.deadline || isAchiever || isAdmin" (click)="openDatetime($event)">
               <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon>
               <!-- Hidden datetime controller -->
-              <ion-datetime hidden="true" #datePicker class="ion-no-padding" displayFormat="DD-MM-YYYY"
-                pickerFormat="DDDD MMMM YYYY" placeholder="-- -- --" [value]="milestone.deadline"
-                [disabled]="(!isAchiever && !isAdmin) || !_isGoal" (click)="openDatetime($event)"
-                (ionChange)="onDeadlineDateChange($event.detail.value)"></ion-datetime>
+              
               {{ milestone.deadline ? (milestone.deadline | date:'MMM d, y') : ('-- -- --') }}
             </div>
           </ion-col>
@@ -47,7 +44,7 @@
       <!-- Support button -->
       <ion-col size-xl="3" size-lg="3" size-md="3" size-sm="4" size-xs="6" class="ion-no-padding actions-area">
         <ion-button class="support-btn" size="small"
-          [disabled]="milestone.status !== enumMilestoneStatus.pending" (click)="goToSupportModal($event)">
+          [disabled]="milestone.status !== 'pending'" (click)="goToSupportModal($event)">
           {{ milestone?.numberOfCustomSupports }}
           <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
         </ion-button>

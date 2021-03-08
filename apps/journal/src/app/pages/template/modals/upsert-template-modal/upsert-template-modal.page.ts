@@ -4,6 +4,7 @@ import { AlertController, LoadingController, ModalController, NavParams, NavCont
 // Services
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { ImageService } from '@strive/media/+state/image.service';
+import { createTemplate } from '@strive/template/+state/template.firestore';
 import { TemplateService } from '@strive/template/+state/template.service';
 
 // Strive
@@ -86,13 +87,9 @@ export class UpsertTemplateModalPage implements OnInit {
       await loading.present()
 
       try {
-
-        if (this.newTemplate) {
-          const id = await this.templateService.create(this.collectiveGoalId, this.templateForm.value)
-          this.navCtrl.navigateForward(`collective-goal/${this.collectiveGoalId}/template/${id}`)
-        } else {
-          await this.templateService.update(this.collectiveGoalId, this.templateId, this.templateForm.value)
-        }
+        const template = createTemplate({ ...this.templateForm.value, id: this.templateId })
+        const id = await this.templateService.upsert(template, { params: {collectiveGoalId: this.collectiveGoalId}})
+        if (this.newTemplate) this.navCtrl.navigateForward(`collective-goal/${this.collectiveGoalId}/template/${id}`)
 
         loading.dismiss()
         this.modalCtrl.dismiss()

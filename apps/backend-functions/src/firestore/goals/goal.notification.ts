@@ -12,7 +12,7 @@ import { IReceiver, getReceiver } from '../../shared/support/receiver'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { Notification, enumEvent, SupportDecisionMeta } from '@strive/notification/+state/notification.firestore'
-import { enumMilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
+import { MilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createNotificationSupport, createSupport } from '@strive/support/+state/support.firestore';
@@ -233,7 +233,7 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
   supporters = await getGoalSupports(goalId, supporters, receiver)
 
   // get unfinished milestones and then its supports
-  const milestonesRef: admin.firestore.Query = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', enumMilestoneStatus.pending)
+  const milestonesRef: admin.firestore.Query = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', 'pending')
   const milestonesSnap: admin.firestore.QuerySnapshot = await milestonesRef.get()
   for (const milestoneSnap of milestonesSnap.docs) {
 
@@ -446,7 +446,7 @@ async function getUnfinishedMilestoneSupports(goalId: string, milestoneId: strin
 
     const supportsRef = db.collection(`Goals/${goalId}/Supports`)
         .where('milestone.id', '==', milestoneId)
-        .where('status', '==', enumMilestoneStatus.pending)
+        .where('status', '==', 'pending')
     const supportsSnap = await supportsRef.get()
 
     supportsSnap.forEach(supportSnap => {

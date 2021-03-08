@@ -67,7 +67,7 @@ export class EditDefaultRoadmapPage implements OnInit {
       this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
       this.templateId = this.route.snapshot.paramMap.get('templateId')
 
-      const template = await this.templateService.getTemplate(this.collectiveGoalId, this.templateId)
+      const template = await this.templateService.getValue(this.templateId, { collectiveGoalId: this.collectiveGoalId})
       this.milestoneTemplate = template.milestoneTemplateObject
 
       this._seo.generateTags({
