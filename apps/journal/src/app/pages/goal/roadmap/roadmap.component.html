@@ -1,42 +1,46 @@
-<strive-roadmap
-  [structuredMilestones]="structuredMilestones"
-  [isAdmin]="isAdmin$ | async"
-  [maxdeadline]="goal.deadline"
->
-  <ng-template milestone let-milestone let-index="index" let-maxDeadline="maxDeadline">
-    <strive-milestone-status [status]="milestone.status" (click)="updateStatus(milestone, index, $event)"></strive-milestone-status>
-    <article fxLayout="column" fxFlex>
-      {{ milestone.description }}
-      <div fxLayout fxLayoutAlign="start center">
-        <strive-milestone-deadline
-          [milestone]="milestone"
-          [isAdmin]="isAdmin$ | async"
-          (change)="updateDeadline($event, index)"
-          fxFlex>
-        </strive-milestone-deadline>
-        <ng-container *ngIf="!!milestone.achiever.uid">
-          <div fxLayout fxLayoutAlign="start center" fxFlex>
-            <img [src]="milestone.achiever.photoURL"/>
-            {{ milestone.achiever.username }}
-          </div>
+<ng-container *ngIf="stakeholder$ | async as stakeholder">
+  <strive-roadmap
+    [structuredMilestones]="structuredMilestones"
+    [isAdmin]="stakeholder.isAdmin"
+    [maxdeadline]="goal.deadline"
+  >
+    <ng-template milestone let-milestone let-index="index" let-maxDeadline="maxDeadline">
+      <strive-milestone-status [status]="milestone.status" (click)="updateStatus(milestone, index, stakeholder, $event)"></strive-milestone-status>
+      <article fxLayout="column" fxFlex>
+        {{ milestone.description }}
+        <div fxLayout fxLayoutAlign="start center">
+          <strive-milestone-deadline
+            [milestone]="milestone"
+            [isAdmin]="stakeholder.isAdmin"
+            (change)="updateDeadline($event, index)"
+            fxFlex>
+          </strive-milestone-deadline>
+          <ng-container *ngIf="!!milestone.achiever.uid">
+            <div fxLayout fxLayoutAlign="start center" fxFlex>
+              <img [src]="milestone.achiever.photoURL"/>
+              {{ milestone.achiever.username }}
+            </div>
+          </ng-container>
+        </div>
+      </article>
+      <article fxLayout="row" fxLayout.lt-sm="column">
+        <ion-button size="small"
+          [disabled]="milestone.status !== 'pending'"
+          (click)="openSupportModal($event, milestone)"
+        >{{ milestone.numberOfCustomSupports }}
+          <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+        </ion-button>
+        <ng-container *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
+          <ion-button size="small" fill="clear" (click)="openOptions($event, milestone, index)">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+          </ion-button>
         </ng-container>
-      </div>
-    </article>
-    <article fxLayout="row" fxLayout.lt-sm="column">
-      <ion-button size="small"
-        [disabled]="milestone.status !== 'pending'"
-        (click)="openSupportModal($event, milestone)"
-      >{{ milestone.numberOfCustomSupports }}
-        <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-      </ion-button>
-      <ion-button size="small" fill="clear" (click)="openOptions($event, milestone, index)">
-        <ion-icon name="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </article>
-  </ng-template>
-</strive-roadmap>
+      </article>
+    </ng-template>
+  </strive-roadmap>
 
-<!-- Only admins can edit the roadmap -->
-<ion-fab *ngIf="isAdmin$ | async" vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="editRoadmap()"><ion-icon name="build"></ion-icon></ion-fab-button>
-</ion-fab>
+  <!-- Only admins can edit the roadmap -->
+  <ion-fab *ngIf="stakeholder.isAdmin" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="editRoadmap()"><ion-icon name="build"></ion-icon></ion-fab-button>
+  </ion-fab>
+</ng-container>

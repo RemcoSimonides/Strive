@@ -6,12 +6,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { IonicModule } from '@ionic/angular';
 
-import { EditDefaultRoadmapPage } from './edit-default-roadmap.page';
+import { EditRoadmapPage } from './edit-roadmap.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: EditDefaultRoadmapPage
+    component: EditRoadmapPage
   }
 ];
 
@@ -24,7 +24,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
-    EditDefaultRoadmapPage
+    EditRoadmapPage
   ]
 })
-export class EditDefaultRoadmapPageModule {}
+export class EditRoadmapPageModule {}

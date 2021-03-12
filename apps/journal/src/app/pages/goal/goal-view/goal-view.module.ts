@@ -21,8 +21,10 @@ import { PostsModule } from '../posts/posts.module';
 const routes: Routes = [
   { path: '', component: GoalViewPage },
   { 
-    path: 'edit', 
-    loadChildren: () => import('../roadmap/pages/edit-default-roadmap/edit-default-roadmap.module').then(m => m.EditDefaultRoadmapPageModule), canActivate: [AuthGuardService, GoalAuthGuardService] },
+    path: 'edit',
+    loadChildren: () => import('../roadmap/edit/edit-roadmap.module').then(m => m.EditRoadmapPageModule),
+    canActivate: [AuthGuardService, GoalAuthGuardService]
+  },
 ];
 
 @NgModule({

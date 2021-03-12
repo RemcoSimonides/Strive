@@ -26,7 +26,7 @@ const routes: Routes = [
     canActivate: [CollectiveGoalGuard]
   },
   { path: 'edit',
-    loadChildren: () => import('../goal/roadmap/pages/edit-default-roadmap/edit-default-roadmap.module').then(m => m.EditDefaultRoadmapPageModule) },
+    loadChildren: () => import('../goal/roadmap/edit/edit-roadmap.module').then(m => m.EditRoadmapPageModule) },
 ];
 
 @NgModule({

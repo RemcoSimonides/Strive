@@ -4,7 +4,7 @@ import { AlertController, LoadingController, ModalController, PopoverController 
 
 // Rxjs
 import { Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 // Strive Service
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -32,8 +32,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 export class RoadmapComponent implements OnInit {
 
   structuredMilestones: MilestonesLeveled[] = []
-  isAdmin$: Observable<boolean>
-  stakeholder: GoalStakeholder
+  stakeholder$: Observable<GoalStakeholder>
 
   @Input() goal: Goal
 
@@ -53,16 +52,14 @@ export class RoadmapComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.isAdmin$ = this.user.profile$.pipe(
+    this.stakeholder$ = this.user.profile$.pipe(
       switchMap(profile => {
         if (!!profile) {
           return this.stakeholderService.getStakeholder$(this.user.uid, this.goal.id).pipe(
-            tap(stakeholder => this.stakeholder = stakeholder),
-            map(stakeholder => stakeholder.isAdmin ?? false),
+            map(stakeholder => createGoalStakeholder(stakeholder)),
           )
         } else {
-          this.stakeholder = createGoalStakeholder()
-          return of(false)
+          return of(createGoalStakeholder())
         }
       })
     )
@@ -71,9 +68,9 @@ export class RoadmapComponent implements OnInit {
     this.cdr.markForCheck()
   }
 
-  updateStatus(context: Milestone, index: number[], event: Event) {
+  updateStatus(context: Milestone, index: number[], stakeholder: GoalStakeholder, event: Event) {
     if (context.status !== 'pending' && context.status !== 'overdue') return
-    if (!this.stakeholder.isAdmin && this.stakeholder.isAchiever) return
+    if (!stakeholder.isAdmin && !stakeholder.isAchiever) return
 
     event.stopPropagation() //prevents roadmap from collapsing in or out :)
 
@@ -158,7 +155,7 @@ export class RoadmapComponent implements OnInit {
     await loading.present()
 
     await this.goalService.toggleLock(this.goal.id, true)
-    await this.router.navigate(['/edit'], { relativeTo: this.route })
+    await this.router.navigate(['edit'], { relativeTo: this.route })
   }
 
   private getMilestone(index: number[]): Milestone {

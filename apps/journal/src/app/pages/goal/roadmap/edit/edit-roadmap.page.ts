@@ -11,17 +11,16 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from '@strive/template/+state/template.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Interfaces
-import { Template } from '@strive/template/+state/template.firestore'
 import { Milestone, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
 
 @Component({
-  selector: 'app-edit-default-roadmap',
-  templateUrl: './edit-default-roadmap.page.html',
-  styleUrls: ['./edit-default-roadmap.page.scss'],
+  selector: 'app-edit-roadmap',
+  templateUrl: './edit-roadmap.page.html',
+  styleUrls: ['./edit-roadmap.page.scss'],
 })
-export class EditDefaultRoadmapPage implements OnInit {
+export class EditRoadmapPage implements OnInit {
 
   @ViewChild('addMilestonebar') addMilestonebar: IonSearchbar;
 
