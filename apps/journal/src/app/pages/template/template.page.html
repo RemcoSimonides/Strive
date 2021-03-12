@@ -43,13 +43,14 @@
         [isAdmin]="isAdmin | async"
         [maxDeadline]="maxDeadline$ | async" 
       >
-        <ng-template milestone let-milestone>
+        <ng-template milestone let-milestone let-index="index" let-maxDeadline="maxDeadline">
           <strive-milestone-status [status]="milestone.status"></strive-milestone-status>
           <article fxLayout="column">
             {{ milestone.description }}
             <ng-container *ngIf="milestone.deadline || (isAdmin | async)">
               <strive-milestone-deadline 
                 [milestone]="milestone"
+                [maxDeadline]="maxDeadline"
                 [isAdmin]="isAdmin | async"
                 (change)="updateRoadmap($event, milestone, template)"
               ></strive-milestone-deadline>

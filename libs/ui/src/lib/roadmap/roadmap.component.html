@@ -8,7 +8,7 @@
           <section class="collapsible-header" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
             <ng-template 
               [ngTemplateOutlet]="milestoneTemplate"
-              [ngTemplateOutletContext]="getContext(milestoneLevelOne, maxDeadline, [i])">
+              [ngTemplateOutletContext]="{ $implicit: milestoneLevelOne, index: [i], maxDeadline: maxDeadline }">
             </ng-template>
           </section>
 
@@ -19,7 +19,7 @@
                 <section class="collapsible-header"  fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
                   <ng-template 
                     [ngTemplateOutlet]="milestoneTemplate"
-                    [ngTemplateOutletContext]="getContext(milestoneLevelTwo, milestoneLevelOne.deadline, [i, j])">
+                  [ngTemplateOutletContext]="{ $implicit: milestoneLevelTwo, index: [i, j], maxDeadline: milestoneLevelOne.deadline }">
                   </ng-template>
                 </section>
 
@@ -28,7 +28,7 @@
                   <section class="collapsible-body third" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
                     <ng-template 
                       [ngTemplateOutlet]="milestoneTemplate"
-                      [ngTemplateOutletContext]="getContext(milestoneLevelThree, milestoneLevelTwo.deadline, [i, j, k])">
+                      [ngTemplateOutletContext]="{ $implicit: milestoneLevelThree, index: [i, j, k], maxDeadline: milestoneLevelTwo.deadline }">
                     </ng-template>
                   </section>
                 </ng-container>

@@ -8,11 +8,11 @@ import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
-  selector: 'app-milestone-options',
-  templateUrl: './milestone-options.page.html',
-  styleUrls: ['./milestone-options.page.scss'],
+  selector: 'milestone-options',
+  templateUrl: './options.component.html',
+  styleUrls: ['./options.component.scss'],
 })
-export class MilestoneOptionsPage implements OnInit {
+export class MilestoneOptionsPopover implements OnInit {
 
   goalId: string
   milestone: Milestone
@@ -37,24 +37,6 @@ export class MilestoneOptionsPage implements OnInit {
 
   dismiss(data) {
     this.popoverCtrl.dismiss(data)
-  }
-
-  complete() {
-    this.dismiss({
-      statusChange: true
-    })
-  }
-
-  setDeadline() {
-    this.dismiss({
-      setDeadline: true
-    })
-  }
-
-  removeDeadline() {
-    this.dismiss({
-      removeDeadline: true
-    })
   }
 
   async assignMe() {

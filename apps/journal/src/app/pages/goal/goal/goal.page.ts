@@ -20,7 +20,7 @@ import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-mod
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 // Strive Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { switchMap } from 'rxjs/operators';
@@ -74,7 +74,15 @@ export class GoalPage implements OnInit, OnDestroy {
       switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.getCollectiveGoal$(goal.collectiveGoalId) : of(undefined))
     )
     
-    this.sub = this.stakeholder.getStakeholder$(this.user.uid, this.goalId).subscribe(stakeholder => {
+    this.sub = this.user.profile$.pipe(
+      switchMap(profile => {
+        if (!!profile) {
+          return this.stakeholder.getStakeholder$(this.user.uid, this.goalId)
+        } else {
+          return of(createGoalStakeholder())
+        }
+      })
+    ).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
       this.isAchiever = stakeholder.isAchiever ?? false
       this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin ?? false

@@ -19,6 +19,7 @@ export class MilestoneDeadlineComponent {
 
   openDatePicker(event: Event) {
     if (!this.isAdmin) return
+    if (this.milestone.status !== 'pending' && this.milestone.status !== 'overdue') return
     event.stopPropagation(); //prevents roadmap from collapsing in or out :)
     this.datePicker.el.click()
   }

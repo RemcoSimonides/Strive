@@ -1,8 +1,0 @@
-<ion-list lines="none" *ngIf="!!milestone">
-  <ion-item (click)="complete()" *ngIf="isNotCompleted" button>Complete</ion-item>
-  <ion-item (click)="setDeadline()" *ngIf="isNotCompleted" button>{{ milestone.deadline ? 'Change Deadline' : 'Set Deadline'}}</ion-item>
-  <ion-item (click)="removeDeadline()" *ngIf="isNotCompleted && milestone.deadline" button>Remove Deadline</ion-item>
-  <ion-item (click)="assignMe()" *ngIf="!isAlreadyAssigned && isNotCompleted" button>Assign Me</ion-item>
-  <ion-item (click)="unassignMe()" *ngIf="isAlreadyAssigned && isNotCompleted" button>Unassign Me</ion-item>
-  <ion-item *ngIf="!isNotCompleted">No Actions Available</ion-item>
-</ion-list>

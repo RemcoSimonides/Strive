@@ -15,9 +15,7 @@ import { GoalPageModule } from '../goal/goal.module';
 // Components
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
-import { RoadmapModule } from '../roadmap/components/roadmap.module'
-import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
-import { AddSupportModalPageModule } from '../modals/add-support-modal/add-support-modal.module'
+import { RoadmapModule } from '../roadmap/roadmap.module';
 import { PostsModule } from '../posts/posts.module';
 
 const routes: Routes = [
@@ -32,12 +30,10 @@ const routes: Routes = [
     CommonModule,
     IonicModule,
     RouterModule.forChild(routes),
-    RoadmapModule,
     PageLoadingModule,
     PageNotFoundModule,
-    UpsertPostModalModule,
-    AddSupportModalPageModule,
     GoalPageModule,
+    RoadmapModule,
     PostsModule
   ],
   declarations: [

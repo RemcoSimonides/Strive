@@ -36,13 +36,6 @@ export class GoalViewPage implements OnInit {
 
   stakeholders: GoalStakeholder[]
 
-  // user rights
-  isAdmin = false
-  isAchiever = false
-  isSupporter = false
-  isSpectator = false
-  hasOpenRequestToJoin = false
-
   segmentChoice: 'Goal' | 'Roadmap' | 'Posts' = 'Goal'
 
   backBtnSubscription: Subscription
@@ -78,20 +71,17 @@ export class GoalViewPage implements OnInit {
     })
   }
 
-  public async initGoal() {
+  private initGoal() {
     this.canAccess = true
-
-    // SEO
+    this.pageIsLoading = false
     this.seo.generateTags({
       title: `${this.goal.title} - Strive Journal`,
       description: this.goal.shortDescription,
       image: this.goal.image
     })
-
-    this.pageIsLoading = false
   }
 
-  public initNoAccess() {
+  private initNoAccess() {
     this.pageIsLoading = false
     this.canAccess = false
     this.seo.generateTags({ title: `Page not found - Strive Journal` })

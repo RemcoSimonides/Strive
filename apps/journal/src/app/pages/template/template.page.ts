@@ -17,7 +17,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
-import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone, MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 @Component({
@@ -142,15 +142,9 @@ export class TemplatePage implements OnInit {
     this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, { description })
   }
 
-  updateRoadmap(value, context, template: Template) {
-    // const getDeepValue = (object: any, index: number[]) => index.reduce((result, key, i) => i === 0 ? result?.[key] : result?.submilestones?.[key], object);
-    // const milestone = getDeepValue(this.structuredMilestones, context.index)
-    // milestone.deadline = value
-
-    const milestone = template.milestoneTemplateObject.find(milestone => milestone.sequenceNumber === context.sequenceNumber)
-    milestone.deadline = value
-
-    // const milestone = this.structuredMilestones.find(milestone => milestone.sequenceNumber === context.sequenceNumber)
+  updateRoadmap(deadline: string, context: Milestone, template: Template) {
+    const milestone = template.milestoneTemplateObject.find(m => m.sequenceNumber === context.sequenceNumber)
+    milestone.deadline = deadline
 
     this.template.update(this.templateId, {
       milestoneTemplateObject: template.milestoneTemplateObject

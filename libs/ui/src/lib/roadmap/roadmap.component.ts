@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore';
@@ -14,11 +14,17 @@ export class MilestoneDirective { }
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RoadmapComponent implements OnInit {
+export class RoadmapComponent {
 
   @ContentChild(MilestoneDirective, { read: TemplateRef }) milestoneTemplate: MilestoneDirective;
 
-  @Input() structuredMilestones: MilestonesLeveled[]
+
+  private _structuredMilestones: MilestonesLeveled[]
+  get structuredMilestones() { return this._structuredMilestones }
+  @Input() set structuredMilestones(value: MilestonesLeveled[]) {
+    this._structuredMilestones = value;
+    initMilestonesAnimation();
+  }
   @Input() isAdmin: boolean
   @Input() maxdeadline: string
 
@@ -27,17 +33,10 @@ export class RoadmapComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit() {
-    initMilestonesAnimation()
-  }
-
   editRoadmap() {
     if (!this.isAdmin) return
     this.loadingCtrl.create({ spinner: 'lines' }).then(loading => loading.present())
     this.router.navigateByUrl(`${this.router.url}/edit`)
   }
 
-  getContext(milestone: any, maxDeadline: string, index: string[]) {
-    return { $implicit: { ...milestone, maxDeadline, index }}
-  }
 }
