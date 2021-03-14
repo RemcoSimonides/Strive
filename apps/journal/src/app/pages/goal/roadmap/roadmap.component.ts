@@ -14,7 +14,7 @@ import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 
 // Strive Components
-import { AddSupportModalPage } from '../modals/add-support-modal/add-support-modal.page';
+import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { MilestoneOptionsPopover } from '@strive/milestone/components/options/options.component';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
@@ -119,7 +119,7 @@ export class RoadmapComponent implements OnInit {
     event.stopPropagation() //prevents roadmap from collapsing in or out :)
   
     this.modalCtrl.create({
-      component: AddSupportModalPage,
+      component: AddSupportModalComponent,
       componentProps: {
         goalId: this.goal.id,
         milestone

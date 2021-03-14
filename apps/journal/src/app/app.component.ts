@@ -33,13 +33,13 @@ export class AppComponent implements OnDestroy {
   constructor(
     public screensize: ScreensizeService,
     public user: UserService,
-    private _fcm: FcmService,
+    private fcm: FcmService,
     private algolia: AlgoliaService,
     private menuCtrl: MenuController,
-    private _modalCtrl: ModalController,
-    private _navCtrl: NavController,
-    public _platform: Platform,
-    private _popoverCtrl: PopoverController,
+    private modalCtrl: ModalController,
+    private navCtrl: NavController,
+    public platform: Platform,
+    private popoverCtrl: PopoverController,
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
@@ -54,18 +54,18 @@ export class AppComponent implements OnDestroy {
   }
 
   initializeApp() {
-    this._platform.ready().then(() => {
+    this.platform.ready().then(() => {
       this.initializeMenu();
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.screensize.onResize(this._platform.width());
+      this.screensize.onResize(this.platform.width());
 
-      if ((this._platform.is('android') ||  this._platform.is('ios')) && !this._platform.is('mobileweb')) {
-        this._fcm.addListenersCapacitor()
+      if ((this.platform.is('android') ||  this.platform.is('ios')) && !this.platform.is('mobileweb')) {
+        this.fcm.addListenersCapacitor()
       }
 
-      if (this._platform.is('mobileweb')) {
-        this.fcmSubscription = this._fcm.showMessages().subscribe()
+      if (this.platform.is('mobileweb')) {
+        this.fcmSubscription = this.fcm.showMessages().subscribe()
       }
 
       this.openAuthModalOnStartup()
@@ -74,13 +74,13 @@ export class AppComponent implements OnDestroy {
 
   initializeMenu() {
     this.screenSizeSubscription = this.screensize.isDesktop$.subscribe(isDesktop => {
-      this.menuCtrl.enable(isDesktop && (this._platform.is('ios') || this._platform.is('android')))
+      this.menuCtrl.enable(isDesktop && (this.platform.is('ios') || this.platform.is('android')))
     })
   }
 
-  async openAuthModalOnStartup(): Promise<void> {
+  async openAuthModalOnStartup() {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(async (event: NavigationEnd) => {
-      const isLoggedIn = await this.user.isLoggedIn$.pipe(first()).toPromise();
+      const isLoggedIn = await this.user.isLoggedIn$.pipe(first()).toPromise()
       if (isLoggedIn) return
 
       const doNotShowAuthPages = ['/terms', '/privacy-policy']
@@ -113,7 +113,7 @@ export class AppComponent implements OnDestroy {
     // check if current website is explore page already
     if (this.router.url !== '/explore') {
 
-      this._navCtrl.navigateRoot('/explore')
+      this.navCtrl.navigateRoot('/explore')
       if (query !== undefined) {
         this.algolia.search(query)
       }
@@ -122,16 +122,15 @@ export class AppComponent implements OnDestroy {
   }
 
   async openProfilePopover(ev: UIEvent): Promise<void> {
-    const popover = await this._popoverCtrl.create({
+    this.popoverCtrl.create({
       component: ProfileOptionsBrowserPage,
       event: ev,
       showBackdrop: false
-    })
-    await popover.present()
+    }).then(popover => popover.present())
   }
 
   async openAuthModal(segment: enumAuthSegment): Promise<void> {
-    const modal = await this._modalCtrl.create({
+    const modal = await this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: segment

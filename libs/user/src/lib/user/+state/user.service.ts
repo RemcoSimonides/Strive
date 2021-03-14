@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable, of } from 'rxjs';
-import { first, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { first, map, switchMap, take, tap } from 'rxjs/operators';
 // Interfaces
 import { createUser, Profile, User } from './user.firestore';
 
@@ -64,7 +64,6 @@ export class UserService {
   }
 
   async upsertProfile(profile: Partial<Profile>, uid = this.uid) {
-
     this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, profile);
 
     const currentUser = await this.afAuth.currentUser

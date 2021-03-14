@@ -6,7 +6,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -21,11 +20,11 @@ import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 
 @Component({
-  selector: 'app-add-support-modal',
-  templateUrl: './add-support-modal.page.html',
-  styleUrls: ['./add-support-modal.page.scss'],
+  selector: 'support-add',
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.scss'],
 })
-export class AddSupportModalPage implements OnInit {
+export class AddSupportModalComponent implements OnInit {
 
   public origin: 'goal' | 'milestone'
 
@@ -44,7 +43,6 @@ export class AddSupportModalPage implements OnInit {
   constructor(
     private afAuth: AngularFireAuth,
     private db: FirestoreService,
-    private goalStakeholder: GoalStakeholderService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private navParams: NavParams,
@@ -60,44 +58,47 @@ export class AddSupportModalPage implements OnInit {
     this.goal$ = this.goalService.getGoalDocObs(this.goalId)
 
     this.afAuth.authState.subscribe(authState => {
-      const { uid, displayName, photoURL } = authState
       const reference = `Goals/${this.goalId}/Supports`
+      let milestoneLevel: string
 
-      this.support.supporter.uid.patchValue(uid)
-      this.support.supporter.username.patchValue(displayName)
-      this.support.supporter.photoURL.patchValue(photoURL)
-      
       if (this.origin === 'milestone') {
         this.nrOfDotsInSeqno = getNrOfDotsInSeqno(this.milestone.sequenceNumber)
-        const milestoneLevel = `path.level${this.nrOfDotsInSeqno + 1}id`
+        milestoneLevel = `path.level${this.nrOfDotsInSeqno + 1}id`
         this.supports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id))
-        if (!!uid) {
-          this.mySupports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id).where('supporter.uid', '==', uid))
-        }
       } else {
         this.supports$ = this.db.col$(reference, ref => ref.orderBy('createdAt', 'desc'))
-        if (!!uid) {
+      }
+    
+      if (!!authState) {
+        const { uid, displayName, photoURL } = authState
+  
+        this.support.supporter.uid.patchValue(uid)
+        this.support.supporter.username.patchValue(displayName)
+        this.support.supporter.photoURL.patchValue(photoURL)
+        
+        if (this.origin === 'milestone') {
+          this.mySupports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id).where('supporter.uid', '==', uid))
+        } else {
           this.mySupports$ = this.db.col$(reference, ref => ref.where('supporter.uid', '==', uid).orderBy('createdAt', 'desc'))
         }
       }
     })
   }
 
-  async openLoginModal(): Promise<void> {
-    const modal = await this.modalCtrl.create({
+  openLoginModal() {
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
-  async dismiss(): Promise<void> {
-    await this.modalCtrl.dismiss()
+  dismiss() {
+    this.modalCtrl.dismiss()
   }
 
-  async addSupport(goal: Goal): Promise<void> {
+  async addSupport(goal: Goal) {
 
     if (!this.support.description.value) return;
 

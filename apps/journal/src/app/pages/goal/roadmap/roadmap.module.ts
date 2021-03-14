@@ -7,7 +7,7 @@ import { RoadmapComponent } from './roadmap.component';
 
 import { RoadmapModule as RoadmapUIModule } from '@strive/ui/roadmap/roadmap.module';
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
-import { AddSupportModalPageModule } from '../modals/add-support-modal/add-support-modal.module';
+import { AddSupportModalModule } from '@strive/support/components/add/add.module';
 import { MilestoneOptionsPopoverModule } from '@strive/milestone/components/options/options.module';
 
 
@@ -18,7 +18,7 @@ import { MilestoneOptionsPopoverModule } from '@strive/milestone/components/opti
     FontAwesomeModule,
     RoadmapUIModule,
     UpsertPostModalModule,
-    AddSupportModalPageModule,
+    AddSupportModalModule,
     MilestoneOptionsPopoverModule
   ],
   exports: [RoadmapComponent],

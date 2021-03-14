@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { AddSupportModalPage } from './add-support-modal.page';
+import { AddSupportModalComponent } from './add.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -15,7 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule
   ],
   declarations: [
-    AddSupportModalPage
+    AddSupportModalComponent
   ]
 })
-export class AddSupportModalPageModule {}
+export class AddSupportModalModule {}

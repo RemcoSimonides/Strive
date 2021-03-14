@@ -140,7 +140,7 @@ export class AuthModalPage implements OnInit {
 
         await this.afAuth.signInWithEmailAndPassword(email, password)
         loading.dismiss()
-        await this.fcmService.registerFCM()
+        // await this.fcmService.registerFCM()
         this.modalCtrl.dismiss()
 
       } catch (error) {

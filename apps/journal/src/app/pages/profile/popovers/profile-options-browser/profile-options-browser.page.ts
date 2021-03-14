@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 // Services
@@ -12,45 +12,39 @@ import { enumAuthSegment, AuthModalPage } from 'apps/journal/src/app/pages/auth/
   templateUrl: './profile-options-browser.page.html',
   styleUrls: ['./profile-options-browser.page.scss'],
 })
-export class ProfileOptionsBrowserPage implements OnInit {
+export class ProfileOptionsBrowserPage {
 
   enumProfileOptionsDesktop = enumProfileOptionsDesktop
 
   constructor(
     private afAuth: AngularFireAuth,
-    private _modalCtrl: ModalController,
-    private _popoverCtrl: PopoverController,
+    private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
     private router: Router,
     private user: UserService
   ) { }
 
-  ngOnInit() {
+  close(profileOption: enumProfileOptionsDesktop) {
+    this.popoverCtrl.dismiss(profileOption)
   }
 
-  async close(profileOption: enumProfileOptionsDesktop) {
-    this._popoverCtrl.dismiss(profileOption)
-  }
-
-  async goToProfile() {
+  goToProfile() {
     this.router.navigateByUrl(`/profile/${this.user.uid}`)
-    this._popoverCtrl.dismiss()
+    this.popoverCtrl.dismiss()
   }
 
   async logOut() {
     await this.afAuth.signOut()
-    this._popoverCtrl.dismiss()
+    this.popoverCtrl.dismiss()
 
     // open auth modal
-    const modal = await this._modalCtrl.create({
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
       }
-    })
-    await modal.present()
-
+    }).then(modal => modal.present())
   }
-
 }
 
 export enum enumProfileOptionsDesktop {

@@ -17,7 +17,7 @@
 
   <h4>Your Supports</h4>
 
-  <ng-container *ngIf="user.isLoggedIn$ | async else notLoggedIn">
+  <ng-container *ngIf="!!user.uid else notLoggedIn">
     <ng-container *ngIf="goal$ | async as goal">
       <ion-list>
         <form [formGroup]="support">
@@ -48,9 +48,14 @@
         </ion-item>
       </ion-list>
 
-      <h4>All Supports</h4>
+    </ng-container>
+  </ng-container>
+
+  <h4>All Supports</h4>
+  <ng-container *ngIf="supports$ | async as supports">
+    <ng-container *ngIf="supports.length else empty">
       <ion-list>
-        <ion-item *ngFor="let support of supports$ | async">
+        <ion-item *ngFor="let support of supports">
           <ion-thumbnail slot="start">
             <img [src]="support?.supporter.photoURL">
           </ion-thumbnail>
@@ -64,10 +69,13 @@
         </ion-item>
       </ion-list>
     </ng-container>
+    <ng-template #empty>
+      No supports yet
+    </ng-template>
   </ng-container>
 
   <ng-template #notLoggedIn>
-    Please <span class="fat-text-button" (click)="openLoginModal()">log in</span> to view your supports and support this goal
+    Please <span class="fat-text-button" (click)="openLoginModal()">log in</span> to view your supports and to support this goal
   </ng-template>
 
 </ion-content>

@@ -73,7 +73,7 @@
   </section>
 
   <!-- Mobile -->
-  <ng-container *ngIf="_platform.is('android') && !_platform.is('ios'); else desktop">
+  <ng-container *ngIf="platform.is('android') && !platform.is('ios'); else desktop">
     <ion-nav id="main" [root]="rootPage"></ion-nav>
   </ng-container>
 
