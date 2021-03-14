@@ -32,20 +32,20 @@ export class UpsertCollectiveGoalPage implements OnInit {
   ngOnInit() {
     this.collectiveGoalId = this.navParam.data.id
     this.collectiveGoalForm = new CollectiveGoalForm(this.navParam.data.data)
-    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
+    this.loadingCtrl.getTop().then(v => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
-  async dismiss(){
-    await this.modalCtrl.dismiss()
+  dismiss(){
+    this.modalCtrl.dismiss()
   }
 
   public async upsertCollectiveGoal() {
     
     if (!this.collectiveGoalForm.valid) {
-      const alert = await this.alertCtrl.create({
+      this.alertCtrl.create({
         message: 'Please check the entered values',
         buttons: ['Ok']
-      })
+      }).then(alert => alert.present())
     }
 
     if (!this.collectiveGoalForm.dirty) return;
@@ -57,11 +57,10 @@ export class UpsertCollectiveGoalPage implements OnInit {
     await loading.present()
 
     try {
-      console.log('cg: ', this.collectiveGoalForm.value);
       if (this.collectiveGoalId) {
         this.service.updateCollectiveGoal(this.collectiveGoalId, this.collectiveGoalForm.value);
       } else {
-        const id = this.service.createCollectiveGoal(this.collectiveGoalForm.value);
+        const id = await this.service.createCollectiveGoal(this.collectiveGoalForm.value);
         await this.router.navigateByUrl(`/collective-goal/${id}`)
       }
 
@@ -70,11 +69,10 @@ export class UpsertCollectiveGoalPage implements OnInit {
 
     } catch(error) {
       await loading.dismiss();
-      const alert = await this.alertCtrl.create({
+      this.alertCtrl.create({
         message: error.message,
         buttons: ['Ok']
-      })
-      await alert.present()
+      }).then(alert => alert.present())
     }
   }
 

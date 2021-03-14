@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Platform, NavController, ModalController } from '@ionic/angular';
 
 // Rxjs
-import { Observable, combineLatest, Subscription } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { Observable, Subscription } from 'rxjs'
 
 // Services
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
@@ -28,11 +27,11 @@ import { Profile } from '@strive/user/user/+state/user.firestore';
 })
 export class GoalsPage implements OnInit, OnDestroy {
 
-  goals$: Observable<Goal[]>;
-  collectiveGoals$: Observable<CollectiveGoal[]>;
+  goals$: Observable<Goal[]>
+  collectiveGoals$: Observable<CollectiveGoal[]>
 
-  sub: Subscription;
-  backBtnSubscription: Subscription;
+  sub: Subscription
+  backBtnSubscription: Subscription
 
   constructor(
     public user: UserService,
@@ -44,7 +43,7 @@ export class GoalsPage implements OnInit, OnDestroy {
     private seo: SeoService
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.sub = this.user.profile$.subscribe((profile: Profile) => {
       if (!!profile) {
         this.goals$ = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.achiever, false)
@@ -77,14 +76,13 @@ export class GoalsPage implements OnInit, OnDestroy {
     }
   }
 
-  async openAuthModal(): Promise<void> {
-    const modal = await this.modalCtrl.create({
+  openAuthModal() {
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 }
 

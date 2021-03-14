@@ -46,7 +46,7 @@ export class CollectiveGoalService {
     if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
 
     //Handle image
-    collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, false)
+    // collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, false)
 
     //Set Collective Goal
     await this.upsertCollectiveGoal(collectiveGoal, id)
