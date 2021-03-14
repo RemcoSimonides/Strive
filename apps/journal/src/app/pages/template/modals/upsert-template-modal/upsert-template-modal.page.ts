@@ -69,7 +69,6 @@ export class UpsertTemplateModalPage implements OnInit {
     this.newTemplate = !template
     if (!!template) this.templateId = template.id
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)
-    this.templateForm.valueChanges.subscribe(console.log)
   }
 
   dismiss() {

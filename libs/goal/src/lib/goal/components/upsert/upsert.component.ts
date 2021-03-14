@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 //ionic
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
@@ -13,11 +13,11 @@ import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/c
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({
-  selector: 'app-create-goal',
-  templateUrl: './create-goal.page.html',
-  styleUrls: ['./create-goal.page.scss'],
+  selector: 'goal-upsert',
+  templateUrl: './upsert.component.html',
+  styleUrls: ['./upsert.component.scss']
 })
-export class CreateGoalPage implements OnInit {
+export class UpsertGoalModalComponent implements OnInit {
 
   // update only
   private goal: Goal
@@ -38,8 +38,7 @@ export class CreateGoalPage implements OnInit {
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private navParams: NavParams,
-  ) { 
-  }
+  ) { }
 
   async ngOnInit() {
     this.goal = this.navParams.data.currentGoal as Goal

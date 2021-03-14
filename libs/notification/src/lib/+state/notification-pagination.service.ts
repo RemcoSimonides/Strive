@@ -47,23 +47,21 @@ export class NotificationPaginationService {
       ...opts
     }
 
-    const firstNotifications = this.afs.collection(this.query.path, ref => ref.orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc').limit(this.query.limit))
+    const query = this.afs.collection(this.query.path, ref => ref.orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc').limit(this.query.limit))
 
-    this.mapAndUpdate(firstNotifications)
+    this.mapAndUpdate(query)
 
     // Create the observable array for consumption in components
     this.data = this._data.asObservable().pipe(
-      scan( (acc, val) => { 
+      scan((acc, val) => { 
         const array = this.query.prepend ? val.concat(acc) : acc.concat(val)
         const uniqueArrray = this.getUnique(array, 'id')
         // order by created At
         const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? this.query.reverse ? -1 : 1 : this.query.reverse ? 1 : -1)
 
         return orderedArray
-
       })
     )
-
   }
 
   // Retrieves additional data from firestore

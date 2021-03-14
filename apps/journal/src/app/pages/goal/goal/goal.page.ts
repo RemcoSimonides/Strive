@@ -10,7 +10,7 @@ import { Plugins } from '@capacitor/core';
 import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/options.component';
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
-import { CreateGoalPage } from '../modals/create-goal/create-goal.page';
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalSharePopoverPage } from '../popovers/share/share.component';
 // Strive Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
@@ -190,7 +190,7 @@ export class GoalPage implements OnInit, OnDestroy {
 
   private async editGoal(goal: Goal) {
     const modal = await this.modalCtrl.create({
-      component: CreateGoalPage,
+      component: UpsertGoalModalComponent,
       componentProps: {
         currentGoal: goal
       }

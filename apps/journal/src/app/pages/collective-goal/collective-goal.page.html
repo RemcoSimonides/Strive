@@ -23,7 +23,7 @@
             <ion-button (click)="openSharePopover($event)" fill="clear" size="small" class="ion-no-padding">
               <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
             </ion-button>
-            <ng-container *ngIf="user.isLoggedIn$ | async">
+            <ng-container *ngIf="!!user.uid">
               <ion-button (click)="openOptionsPopover($event)" fill="clear" class="ion-no-padding">
                 <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
               </ion-button>
@@ -77,7 +77,7 @@
   <ng-container *ngIf="templates$ | async as templates">
     <h3 class="padding">Templates</h3>
 
-    <ng-container *ngIf="templates.length > 0 else noTemplate">
+    <ng-container *ngIf="templates.length > 0 || isAdmin else noTemplate">
       <thumbnail-list type="template" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
         <ng-container *ngFor="let template of templates$ | async">
           <ng-template #thumb>
@@ -100,7 +100,7 @@
   <!-- Goals overview -->
   <h3 class="padding">Goals</h3>
   <ng-container *ngIf="goals$ | async as goals">
-    <ng-container *ngIf="goals.length > 0 else noGoal">
+    <ng-container *ngIf="goals.length > 0 || isAdmin else noGoal">
       <thumbnail-list type="goal" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
         <ng-container *ngFor="let goal of goals$ | async">
           <ng-template #thumb>

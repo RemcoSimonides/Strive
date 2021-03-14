@@ -7,7 +7,7 @@ import { Observable,  Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 // Modals
 import { UpsertCollectiveGoalPage } from './modals/upsert/upsert.component'
-import { CreateGoalPage } from '../goal/modals/create-goal/create-goal.page'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 // Popovers
 import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'
 import { CollectiveGoalSharePopoverPage } from './popovers/share/share.component';
@@ -172,19 +172,17 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   private async editCollectiveGoal() {
-
     const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
 
-    const modal = await this.modalCtrl.create({
+    this.modalCtrl.create({
       component: UpsertCollectiveGoalPage,
       componentProps: { id: this.collectiveGoalId, data: collectiveGoal }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
   public async deleteCollectiveGoal(): Promise<void> {
 
-    const alert = await this.alertCtrl.create({
+    this.alertCtrl.create({
       subHeader: `Are you sure you want to delete this collective goal?`,
       message: `This action is irreversible. Goals will not be deleted`,
       buttons: [
@@ -200,9 +198,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
           role: 'cancel'
         }
       ]
-    })
-
-    await alert.present()
+    }).then(alert => alert.present())
 
   }
 
@@ -223,30 +219,28 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
       });
 
     } else {
-      const popover = await this.popoverCtrl.create({
+      this.popoverCtrl.create({
         component: CollectiveGoalSharePopoverPage,
         event: ev,
         componentProps: {
           collectiveGoal: this.collectiveGoal,
           isAdmin: this.isAdmin
         }
-      })
-      await popover.present()
+      }).then(popover => popover.present())
     }
   }
 
   async createGoal() {
     const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
-    const modal = await this.modalCtrl.create({
-      component: CreateGoalPage,
+    this.modalCtrl.create({
+      component: UpsertGoalModalComponent,
       componentProps: {
         collectiveGoalId: this.collectiveGoalId,
         collectiveGoalTitle: collectiveGoal.title,
         collectiveGoalIsPublic: collectiveGoal.isPublic,
         collectiveGoalImage: collectiveGoal.image
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
   public async toggleAdmin(stakeholder: CollectiveGoalStakeholder, event: Event) {

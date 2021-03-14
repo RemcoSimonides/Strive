@@ -1,6 +1,6 @@
 <strive-header title="Notifications" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
-<ng-container *ngIf="user.isLoggedIn$ | async; else notLoggedIn">
+<ng-container *ngIf="!!user.uid; else notLoggedIn">
   <ng-container *ngIf="paginationService.data | async as notifications; else loading">
 
     <ion-content>

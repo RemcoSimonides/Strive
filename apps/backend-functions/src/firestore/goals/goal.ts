@@ -48,22 +48,19 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     const goalId = snapshot.id
 
     try {
-      await deleteFromAlgolia('goal', goalId)
+      deleteFromAlgolia('goal', goalId)
     } catch (err) {
       console.log('deleting from Algolia error', err)
     }
-    await deleteScheduledTask(goalId)
+    deleteScheduledTask(goalId)
 
-    const promises: any[] = []
-    
     //delete subcollections too
-    promises.push(deleteCollection(db, `Goals/${goalId}/Milestones`, 500))
-    promises.push(deleteCollection(db, `Goals/${goalId}/Supports`, 500))
-    promises.push(deleteCollection(db, `Goals/${goalId}/Posts`, 500))
-    promises.push(deleteCollection(db, `Goals/${goalId}/InviteTokens`, 500))
-    promises.push(deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500))
-
-    await Promise.all(promises)
+    deleteCollection(db, `Goals/${goalId}/Milestones`, 500)
+    deleteCollection(db, `Goals/${goalId}/Supports`, 500)
+    deleteCollection(db, `Goals/${goalId}/Posts`, 500)
+    deleteCollection(db, `Goals/${goalId}/InviteTokens`, 500)
+    deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500)
+    deleteCollection(db, `Goals/${goalId}/Notificaitons`, 500)
   })
 
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)

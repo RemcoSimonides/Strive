@@ -10,7 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module'
 import { GoalOptionsModule } from '../popovers/options/options.module'
 import { GoalSharePopoverModule } from '../popovers/share/share.module'
-import { CreateGoalPageModule } from 'apps/journal/src/app/pages/goal/modals/create-goal/create-goal.module'
+import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 
 @NgModule({
@@ -25,7 +25,7 @@ import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
     DiscussionModalModule,
     GoalOptionsModule,
     GoalSharePopoverModule,
-    CreateGoalPageModule,
+    UpsertGoalModalModule,
     TextEditorModule
   ],
   exports: [GoalPage],

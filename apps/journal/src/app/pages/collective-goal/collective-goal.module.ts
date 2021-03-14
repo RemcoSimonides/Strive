@@ -20,7 +20,7 @@ import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/r
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
-import { CreateGoalPageModule } from 'apps/journal/src/app/pages/goal/modals/create-goal/create-goal.module';
+import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 
 const routes: Routes = [
@@ -53,7 +53,7 @@ const routes: Routes = [
     PageLoadingModule,
     PageNotFoundModule,
     HeaderModule,
-    CreateGoalPageModule,
+    UpsertGoalModalModule,
     TextEditorModule
   ],
   declarations: [

@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 // Pages
 import { UpsertCollectiveGoalPage } from 'apps/journal/src/app/pages/collective-goal/modals/upsert/upsert.component';
-import { CreateGoalPage } from 'apps/journal/src/app/pages/goal/modals/create-goal/create-goal.page';
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { UpsertTemplateModalPage } from 'apps/journal/src/app/pages/template/modals/upsert-template-modal/upsert-template-modal.page';
 
 type Type = 'collectiveGoal' | 'goal' | 'template'
@@ -35,7 +35,7 @@ export class CreateThumbnailComponent {
       
       case 'goal':
         modal = await this.modalCtrl.create({
-          component: CreateGoalPage,
+          component: UpsertGoalModalComponent,
           componentProps: {
             collectiveGoalId: this.collectiveGoalId
           }

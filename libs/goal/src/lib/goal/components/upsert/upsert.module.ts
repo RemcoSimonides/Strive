@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateGoalPage } from './create-goal.page';
+import { UpsertGoalModalComponent } from './upsert.component';
 
 // import { ImageUploadComponent } from '../../../../components/image-upload/image-upload.component'
 import { AutosizeModule } from '@strive/ui/directives/auto-resize-textarea.directive';
@@ -17,7 +17,7 @@ import { AutosizeModule } from '@strive/ui/directives/auto-resize-textarea.direc
     AutosizeModule
   ],
   declarations: [
-    CreateGoalPage
+    UpsertGoalModalComponent
   ]
 })
-export class CreateGoalPageModule {}
+export class UpsertGoalModalModule {}

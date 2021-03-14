@@ -19,26 +19,24 @@
       </ng-container>
     </article>
 
-    <ng-container *ngIf="user.isLoggedIn$ | async">
-      <article fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
-        <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
-          <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
-        </ion-button>
-        <ion-button (click)="supportGoal()" color="secondary" class="ion-no-padding action-button" fill="clear">
-          <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-        </ion-button>
-        <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
-          <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
-        </ion-button>
-        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="user.isLoggedIn$ | async">
-          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-        </ion-button>
-      </article>
-    </ng-container>
+    <article fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
+      <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
+        <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="supportGoal()" color="secondary" class="ion-no-padding action-button" fill="clear">
+        <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+      </ion-button>
+      <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
+        <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="!!user.uid">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </article>
   </section>
 
   <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="24px">
-    <article fxLayout="column" fxLayoutGap="24px">
+    <article fxLayout="column" fxLayoutGap="24px" fxFlex>
       <i>{{ goal.shortDescription }}</i>
 
       <ng-container *ngIf="collectiveGoal$ | async as collectiveGoal">
