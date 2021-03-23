@@ -1,90 +1,86 @@
 import { Injectable } from '@angular/core';
-// Angularfire
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 // Services
+import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 import { GoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Goal, createGoal } from './goal.firestore'
+import { AngularFirestore, DocumentSnapshot, QueryGroupFn } from '@angular/fire/firestore';
+import { createGoalStakeholder, enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({ providedIn: 'root' })
-export class GoalService {
+export class GoalService extends FireCollection<Goal> {
+  readonly path = `Goals`;
 
   constructor(
-    private db: FirestoreService,
+    db: AngularFirestore,
     private stakeholder: GoalStakeholderService,
-    private imageService: ImageService,
-  ) { }
-
-  public getGoalDocObs(goalId: string): Observable<Goal> {
-    return this.db.docWithId$<Goal>(`Goals/${goalId}`)
+    private user: UserService,
+    private imageService: ImageService
+  ) { 
+    super(db)
   }
 
-  public async getGoal(goalId: string): Promise<Goal> {
-    return await this.getGoalDocObs(goalId).pipe(first()).toPromise()
+  protected fromFirestore(snapshot: DocumentSnapshot<Goal>) {
+    return snapshot.exists
+      ? createGoal({ ...snapshot.data(), id: snapshot.id })
+      : undefined
   }
 
-  public async toggleLock(goalId: string, lock: boolean) {
-    await this.db.update<Goal>(`Goals/${goalId}`, { isLocked: lock })
-  }
-
-  public async create(uid: string, goal: Partial<Goal>): Promise<string> {
-    const id = await this.db.getNewId()
-
+  protected toFirstore(goal: Goal): Goal {
     if (!!goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
+    return goal
+  }
 
-    //Goal image
-    // if (!goal.image) goal.image = await this.imageService.uploadImage(`Goals/${id}/${id}`, false)
-
-    //Set goal
-    await this.db.doc(`Goals/${id}`).set(createGoal({ ...goal, id }))
-
-    //Add user as stakeholder
-    await this.stakeholder.upsert(uid, id, {
+  onCreate(goal: Goal, { write }: WriteOptions) {
+    const stakeholder = createGoalStakeholder({
+      uid: this.user.uid,
+      goalId: goal.id,
+      goalTitle: goal.title,
+      goalImage: goal.image,
+      goalPublicity: goal.publicity,
       isAdmin: true,
       isAchiever: true
-    })
-
-    // Add user as achiever of collective goal
-    // Firebase function handles this
-    
-    // Create initial discussion
-    // this.discussionService.addInitialDiscussion(id, goal.title, { goal: true })
-
-    return id
+    });
+    return this.stakeholder.add(stakeholder, { write, params: { goalId: goal.id }})
   }
 
-  public async update(goalId: string, goal: Goal) {
-    if (!!goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
-
-    //Goal image
-    // goal.image = await this.imageService.uploadImage(`Goals/${id}/${id}`, true)
-
-    await this.upsert(goalId, createGoal(goal))
+  public toggleLock(goalId: string, isLocked: boolean) {
+    return this.update(goalId, { isLocked });
   }
 
-  private async upsert(goalId: string, goal: Partial<Goal>) {
-    await this.db.upsert<Goal>(`Goals/${goalId}`, goal)
+  getStakeholderGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<Goal[]> {
+    let query: QueryGroupFn<GoalStakeholder>;
+    if (publicOnly) {
+      query = ref => ref.where('goalPublicity', '==', 'public').where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')
+    } else {
+      query = ref => ref.where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')
+    }
+
+    return this.stakeholder.groupChanges(query).pipe(
+      switchMap(stakeholders => {
+        const goalIds = stakeholders.map(stakeholder => stakeholder.goalId)
+        return this.valueChanges(goalIds)
+      }),
+      // Sort finished goals to the end
+      map((goals: Goal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+    )
   }
 
-  public async delete(goalId: string) {
-    await this.db.doc(`Goals/${goalId}`).delete()
+  public finishGoal(goalId: string) {
+    return this.update(goalId, { isFinished: true })
   }
 
-  public async finishGoal(goalId: string) {
-    await this.upsert(goalId, { isFinished: true })
+  public updateDescription(goalId: string, description: string) {
+    return this.update(goalId, { description })
   }
 
-  public async updateDescription(goalId: string, description: string) {
-    await this.upsert(goalId, { description })
-  }
-
-  public async duplicateGoal(goal: Goal): Promise<string> {
-    const ref = await this.db.col(`Goals`).add(createGoal(goal))
-    return ref.id
+  public duplicateGoal(goal: Goal): Promise<string> {
+    return this.add(createGoal(goal))
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {

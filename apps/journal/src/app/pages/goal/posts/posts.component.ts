@@ -37,7 +37,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.paginationService.reset()
     this.paginationService.init(`Goals/${this.goal.id}/Notifications`, 'createdAt', { reverse: true, prepend: false, limit: 10 })
 
-    this.sub = this.stakeholder.getStakeholder$(this.user.uid, this.goal.id).subscribe(stakeholder => {
+    this.sub = this.stakeholder.valueChanges(this.user.uid, { goalId: this.goal.id }).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
     })
   }

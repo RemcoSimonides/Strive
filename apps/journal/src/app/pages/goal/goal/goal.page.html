@@ -62,7 +62,7 @@
       </div>
 
       <!-- Can only REQUEST to participate if not admin and not achiever  -->
-      <ng-container *ngIf="!isAdmin && !isAchiever && !goal.isFinished && user.isLoggedIn$ | async">
+      <ng-container *ngIf="!isAdmin && !isAchiever && !goal.isFinished && !!user.uid">
         <ng-container *ngIf="hasOpenRequestToJoin else pending">
           <ion-button disabled><ion-icon name="flag"></ion-icon> Request pending</ion-button>
         </ng-container>

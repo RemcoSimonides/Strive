@@ -371,7 +371,7 @@ export abstract class FireCollection<E extends DocumentData> {
     options: WriteOptions = {}
   ): Promise<string | string[]> {
     const docs = Array.isArray(documents) ? documents : [documents];
-    const { write = this.batch(), ctx } = options;
+    const { write = this.batch(), ctx, params } = options;
     const path = this.getPath(options.params);
     const operations = docs.map(async doc => {
       const id = doc[this.idKey] || this.db.createId();
@@ -379,7 +379,7 @@ export abstract class FireCollection<E extends DocumentData> {
       const { ref } = this.db.doc(getDocPath(path, id));
       (write as WriteBatch).set(ref, (data));
       if (this.onCreate) {
-        await this.onCreate(data, { write, ctx });
+        await this.onCreate(data, { write, ctx, params });
       }
       return id;
     });

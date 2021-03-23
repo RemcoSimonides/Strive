@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 //ionic
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
 //Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { UserService } from '@strive/user/user/+state/user.service';
 
 //Interfaces
 import { createGoal, Goal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore'
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 
 @Component({
   selector: 'goal-upsert',
@@ -30,7 +30,6 @@ export class UpsertGoalModalComponent implements OnInit {
   public mode: 'update' | 'create'
 
   constructor(
-    private user: UserService,
     private alertCtrl: AlertController,
     private collectiveGoalService: CollectiveGoalService,
     private goalService: GoalService,
@@ -81,7 +80,7 @@ export class UpsertGoalModalComponent implements OnInit {
 
         const goal = createGoal(this.goalForm.value)
         if (this.mode === 'create') {
-          const id = await this.goalService.create(this.user.uid, goal)
+          const id = await this.goalService.upsert(goal)
           await this.navCtrl.navigateForward(`/goal/${id}`)
         } else if (this.mode === 'update') {
           await this.goalService.update(this.goal.id, this.goalForm.value)

@@ -55,9 +55,7 @@ export class RoadmapComponent implements OnInit {
     this.stakeholder$ = this.user.profile$.pipe(
       switchMap(profile => {
         if (!!profile) {
-          return this.stakeholderService.getStakeholder$(this.user.uid, this.goal.id).pipe(
-            map(stakeholder => createGoalStakeholder(stakeholder)),
-          )
+          return this.stakeholderService.valueChanges(this.user.uid, { goalId: this.goal.id })
         } else {
           return of(createGoalStakeholder())
         }

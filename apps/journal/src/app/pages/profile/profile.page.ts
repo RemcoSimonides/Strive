@@ -27,6 +27,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
 
 
 @Component({
@@ -64,7 +65,7 @@ export class ProfilePage implements OnInit {
   constructor(
     private afAuth: AngularFireAuth,
     public user: UserService,
-    private goalStakeholderService: GoalStakeholderService,
+    private goalService: GoalService,
     private _imageService: ImageService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -105,8 +106,8 @@ export class ProfilePage implements OnInit {
 
     this.seo.generateTags({ title: `${this.profile.username} - Strive Journal` })
 
-    this.achievingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
-    this.supportingGoals$ = this.goalStakeholderService.getGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
+    this.achievingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
+    this.supportingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
   }
 
   ionViewDidEnter() { 

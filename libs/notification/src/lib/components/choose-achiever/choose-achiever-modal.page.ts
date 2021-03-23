@@ -29,8 +29,8 @@ export class ChooseAchieverModal implements OnInit {
 
   achieverChosen(achiever: GoalStakeholder) {
     const receiver = createProfileLink({
-      uid: achiever.id,
-      username: achiever.photoURL,
+      uid: achiever.uid,
+      username: achiever.username,
       photoURL: achiever.photoURL
     })
     this.modalCtrl.dismiss(receiver)

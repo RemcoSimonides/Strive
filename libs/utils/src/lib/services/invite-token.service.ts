@@ -39,7 +39,10 @@ export class InviteTokenService {
       if (!!uid) {
 
         if (collection === 'goal') {
-          await this.goalStakeholderService.upsert(uid, id, { isSpectator: true })
+          await this.goalStakeholderService.upsert({
+            uid,
+            isSpectator: true
+          }, { params: { goalId: id }})
         } else {
           await this.collectiveGoalStakeholderService.upsert(uid, id, { isSpectator: true })
         }

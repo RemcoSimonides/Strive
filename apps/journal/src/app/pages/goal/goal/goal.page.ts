@@ -67,8 +67,8 @@ export class GoalPage implements OnInit, OnDestroy {
 
   ngOnInit() { 
     this.goalId = this.route.snapshot.paramMap.get('id')
-    this.goal$ = this.goalService.getGoalDocObs(this.goalId)
-    this.stakeholders$ = this.stakeholder.getStakeholders$(this.goalId)
+    this.goal$ = this.goalService.valueChanges(this.goalId)
+    this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.goalId })
 
     this.collectiveGoal$ = this.goal$.pipe(
       switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.getCollectiveGoal$(goal.collectiveGoalId) : of(undefined))
@@ -77,15 +77,15 @@ export class GoalPage implements OnInit, OnDestroy {
     this.sub = this.user.profile$.pipe(
       switchMap(profile => {
         if (!!profile) {
-          return this.stakeholder.getStakeholder$(this.user.uid, this.goalId)
+          return this.stakeholder.valueChanges(this.user.uid, { goalId: this.goalId })
         } else {
           return of(createGoalStakeholder())
         }
       })
     ).subscribe(stakeholder => {
-      this.isAdmin = stakeholder.isAdmin ?? false
-      this.isAchiever = stakeholder.isAchiever ?? false
-      this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin ?? false
+      this.isAdmin = stakeholder?.isAdmin ?? false
+      this.isAchiever = stakeholder?.isAchiever ?? false
+      this.hasOpenRequestToJoin = stakeholder?.hasOpenRequestToJoin ?? false
     })
   }
 
@@ -206,7 +206,7 @@ export class GoalPage implements OnInit, OnDestroy {
         {
           text: 'Yes',
           handler: async () => {
-            await this.goalService.delete(this.goalId)
+            await this.goalService.remove(this.goalId)
             await this.navCtrl.navigateRoot(`/explore`)
           }
         },
@@ -230,10 +230,11 @@ export class GoalPage implements OnInit, OnDestroy {
   }
 
   public requestToJoinGoal() {
-    return this.stakeholder.upsert(this.user.uid, this.goalId, {
+    return this.stakeholder.upsert({
+      uid: this.user.uid,
       isSpectator: true,
       hasOpenRequestToJoin: true
-    })
+    }, { params: { goalId: this.goalId }})
   }
 
   public async openSharePopover(ev: UIEvent, goal: Goal) {
@@ -278,9 +279,10 @@ export class GoalPage implements OnInit, OnDestroy {
         {
           text: 'Yes',
           handler: () => {
-            this.stakeholder.upsert(stakeholder.id, this.goalId, {
+            this.stakeholder.upsert({
+              uid: stakeholder.uid,
               isAdmin: !stakeholder.isAdmin
-            })
+            }, { params: { goalId: this.goalId }})
           }
         },
         {
@@ -296,16 +298,18 @@ export class GoalPage implements OnInit, OnDestroy {
   public async toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
-    this.stakeholder.upsert(stakeholder.id, this.goalId, {
+    this.stakeholder.upsert({
+      uid: stakeholder.uid,
       isAchiever: !stakeholder.isAchiever
-    })
+    }, { params: { goalId: this.goalId }})
   }
 
   public async toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
-    this.stakeholder.upsert(stakeholder.id, this.goalId, {
+    this.stakeholder.upsert({
+      uid: stakeholder.uid,
       isSupporter: !stakeholder.isSupporter
-    })
+    }, { params: { goalId: this.goalId }})
   }
 }

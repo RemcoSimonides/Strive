@@ -55,7 +55,7 @@ export class AddSupportModalComponent implements OnInit {
     this.goalId = this.navParams.get('goalId')
     this.milestone = this.navParams.get('milestone')
     this.origin = !!this.milestone ? 'milestone' : 'goal'
-    this.goal$ = this.goalService.getGoalDocObs(this.goalId)
+    this.goal$ = this.goalService.valueChanges(this.goalId)
 
     this.afAuth.authState.subscribe(authState => {
       const reference = `Goals/${this.goalId}/Supports`

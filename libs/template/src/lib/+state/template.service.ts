@@ -10,7 +10,7 @@ import { Template } from '@strive/template/+state/template.firestore'
   providedIn: 'root'
 })
 export class TemplateService extends FireCollection<Template> {
-  readonly path = 'CollectiveGoals/:collectiveGoalId/Templates';
+  readonly path = 'CollectiveGoals/:collectiveGoalId/Templates'
 
   constructor(
     db: AngularFirestore,

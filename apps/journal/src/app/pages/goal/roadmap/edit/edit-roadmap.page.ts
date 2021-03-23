@@ -55,7 +55,7 @@ export class EditRoadmapPage implements OnInit {
     if (!this.router.url.includes('template')) {
       this.goalId = this.route.snapshot.paramMap.get('id')
 
-      this.goal = await this.goalService.getGoal(this.goalId)
+      this.goal = await this.goalService.getValue(this.goalId)
       this.milestoneTemplate = this.goal.milestoneTemplateObject
 
       this._seo.generateTags({

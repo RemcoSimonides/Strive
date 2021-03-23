@@ -2,7 +2,6 @@ import { FieldValue } from '@firebase/firestore-types';
 import { GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 
 export interface GoalStakeholder {
-  id?: string;
   uid: string;
   username: string;
   photoURL: string;
@@ -30,8 +29,7 @@ export enum enumGoalStakeholder {
 /** A factory function that creates a GoalStakeholderDocument */
 export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): GoalStakeholder {
   return {
-    id: !!params.id ? params.id : '',
-    uid: '',
+    uid: !!params.uid ? params.uid : '',
     username: '',
     photoURL: '',
     isAdmin: false,

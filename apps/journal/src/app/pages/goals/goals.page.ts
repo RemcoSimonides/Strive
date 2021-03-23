@@ -18,6 +18,7 @@ import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/c
 // Pages
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { Profile } from '@strive/user/user/+state/user.firestore';
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class GoalsPage implements OnInit, OnDestroy {
   constructor(
     public user: UserService,
     private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
-    private goalStakeholderService: GoalStakeholderService,
+    private goalService: GoalService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
@@ -46,7 +47,7 @@ export class GoalsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.user.profile$.subscribe((profile: Profile) => {
       if (!!profile) {
-        this.goals$ = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.achiever, false)
+        this.goals$ = this.goalService.getStakeholderGoals(profile.id, enumGoalStakeholder.achiever, false);
         // TODO Create separate section for goals you spectate (they are not YOUR goals)
         // const spectatorGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.spectator, false)
         // this.goals$ = filterDuplicateGoals([achieverGoals, spectatorGoals])

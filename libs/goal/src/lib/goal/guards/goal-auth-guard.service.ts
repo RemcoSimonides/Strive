@@ -45,10 +45,10 @@ export class GoalAuthGuardService implements CanActivate {
     }
 
     // get goal
-    const goal: Goal = await this.goalService.getGoal(this._goalId)
+    const goal = await this.goalService.getValue(this._goalId);
 
     // get stakeholder
-    const stakeholder: GoalStakeholder = await this.goalStakeholderService.getStakeholder(uid, this._goalId)
+    const stakeholder = await this.goalStakeholderService.getValue(uid, { goalId: this._goalId });
     
     let access: boolean = false
     if (stakeholder) {

@@ -87,10 +87,12 @@ export class NotificationComponent implements OnInit {
   public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {
     notification.meta.requestStatus = isAccepted ? 'accepted' : 'rejected'
 
-    await this.goalStakeholderService.upsert(notification.meta.uidRequestor, notification.source.goalId, {
+    await this.goalStakeholderService.upsert({
+      uid: notification.meta.uidRequestor,
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false
-    })
+    }, { params: { goalId: notification.source.goalId }})
+
     await this.notificationService.upsert(this.user.uid, notification.id, { meta: notification.meta })
   }
 

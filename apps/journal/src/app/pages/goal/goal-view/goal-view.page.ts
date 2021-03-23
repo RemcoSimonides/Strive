@@ -54,7 +54,7 @@ export class GoalViewPage implements OnInit {
 
   async ngOnInit() {
     this.goalId = this.route.snapshot.paramMap.get('id')
-    this.goal = await this.goalService.getGoal(this.goalId)
+    this.goal = await this.goalService.getValue(this.goalId)
 
     if (!this.goal) {
       this.initNoAccess()
@@ -62,7 +62,7 @@ export class GoalViewPage implements OnInit {
     }
 
     this.user.profile$.pipe(
-      switchMap((profile: Profile) => !!profile ? this.stakeholder.getStakeholder$(profile.id, this.goalId) : of({})),
+      switchMap((profile: Profile) => !!profile ? this.stakeholder.valueChanges(profile.id, { goalId: this.goalId }) : of({})),
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
       let access = this.goal.publicity === 'public'
       if (!access && !!stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
