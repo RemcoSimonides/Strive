@@ -30,7 +30,7 @@
             <div>
               {{ template.goalShortDescription }}
             </div>
-            <img [src]="template.goalImage"/>
+            <img [ref]="template.goalImage" asset="goal.jpg"/>
           </article>
 
           <ion-button (click)="useTemplate()" fill="outline">Use Template</ion-button>

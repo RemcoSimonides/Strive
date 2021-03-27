@@ -10,6 +10,7 @@ import { ChooseAchieverModalModule } from '../choose-achiever/choose-achiever-mo
 import { NotificationOptionsPopoverModule } from '../notification-options/notification-options.module';
 import { PostComponentModule } from '@strive/post/components/post/post.module';
 import { CountdownComponent } from '../countdown/countdown.component';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import { CountdownComponent } from '../countdown/countdown.component';
 
     ChooseAchieverModalModule,
     NotificationOptionsPopoverModule,
-    PostComponentModule
+    PostComponentModule,
+    ImageModule
   ],
   exports: [NotificationComponent],
   declarations: [NotificationComponent, CountdownComponent],

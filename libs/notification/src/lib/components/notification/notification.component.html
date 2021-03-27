@@ -7,12 +7,16 @@
 
           <ng-container *ngIf="isFromPerson else notFromPerson">
             <!-- Profile image -->
-            <img id="profile-image" class="clickable" [routerLink]="sourcePageRef" [src]="notification.source.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+            <img id="profile-image"
+              class="clickable"
+              [routerLink]="sourcePageRef"
+              [ref]="notification.source.image"
+              asset="profile.png"/>
           </ng-container>
           <ng-template #notFromPerson>
             <!-- Goal or Collective goal image -->
             <ion-thumbnail item-start class="clickable" [routerLink]="sourcePageRef">
-              <img [src]="notification.source.image || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+              <img [ref]="notification.source.image" asset="profile.png">
             </ion-thumbnail>
           </ng-template>
 
@@ -82,7 +86,7 @@
                     <section fxLayout fxLayoutAlign="center" (click)="removeReceiver(notification, support)">
                       <ion-chip>
                         <ion-avatar>
-                          <img [src]="support.receiver.photoURL" />
+                          <img [ref]="support.receiver.photoURL" asset="profile.png" />
                         </ion-avatar>
                         <ion-label>{{ support.receiver.username }}</ion-label>
                       </ion-chip>

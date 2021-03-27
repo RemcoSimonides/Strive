@@ -4,12 +4,14 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { PostComponent } from './post.component';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    IonicModule
+    IonicModule,
+    ImageModule
   ],
   exports: [PostComponent],
   declarations: [PostComponent],

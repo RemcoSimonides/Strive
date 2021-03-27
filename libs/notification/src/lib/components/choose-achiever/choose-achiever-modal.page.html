@@ -16,7 +16,7 @@
   <ion-list>
     <ion-item *ngFor="let achiever of achievers">
       <ion-thumbnail slot="start">
-        <img [src]="achiever.photoURL">
+        <img [ref]="achiever.photoURL" asset="profile.png">
       </ion-thumbnail>
       <ion-label class="ion-text-wrap">
         <ion-text>{{ achiever.username }}</ion-text>

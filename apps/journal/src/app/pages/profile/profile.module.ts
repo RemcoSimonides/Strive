@@ -22,6 +22,7 @@ import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/c
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -38,6 +39,7 @@ const routes: Routes = [
     ThumbnailListModule,
     RectangleThumbnailModule,
     PageLoadingModule,
+    ImageModule,
 
     // Exercises
     BucketListViewModule,

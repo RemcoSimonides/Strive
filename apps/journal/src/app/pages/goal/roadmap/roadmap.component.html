@@ -17,7 +17,7 @@
           </strive-milestone-deadline>
           <ng-container *ngIf="!!milestone.achiever.uid">
             <div fxLayout fxLayoutAlign="start center" fxFlex>
-              <img [src]="milestone.achiever.photoURL"/>
+              <img [ref]="milestone.achiever.photoURL" asset="profile.png"/>
               {{ milestone.achiever.username }}
             </div>
           </ng-container>

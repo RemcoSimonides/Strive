@@ -36,7 +36,7 @@
         </form>
         <ion-item *ngFor="let support of mySupports$ | async">
           <ion-thumbnail slot="start">
-            <img [src]="support.supporter.photoURL">
+            <img [ref]="support.supporter.photoURL" asset="profile.png">
           </ion-thumbnail>
           <ion-label class="ion-text-wrap">
             <ion-text>{{ support.description }}</ion-text>
@@ -57,7 +57,7 @@
       <ion-list>
         <ion-item *ngFor="let support of supports">
           <ion-thumbnail slot="start">
-            <img [src]="support?.supporter.photoURL">
+            <img [ref]="support?.supporter.photoURL" asset="profile.png">
           </ion-thumbnail>
           <ion-label class="ion-text-wrap">
             <ion-text>{{ support.description }}</ion-text>

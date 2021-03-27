@@ -18,6 +18,9 @@ import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 import { RoadmapModule } from '@strive/ui/roadmap/roadmap.module';
 // Guards
 import { CollectiveGoalGuard } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
+// Strive
+import { ImageModule } from '@strive/media/directives/image.module';
+
 
 const routes: Routes = [
   {
@@ -40,7 +43,8 @@ const routes: Routes = [
     RoadmapModule,
     HeaderModule,
     UpsertTemplateModalPageModule,
-    TextEditorModule
+    TextEditorModule,
+    ImageModule
   ],
   declarations: [
     TemplatePage,

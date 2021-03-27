@@ -34,7 +34,7 @@
       <!-- HEADER -->
       <ion-card>
         <article fxLayout fxLayoutAlign="center end">
-          <img [src]="_chosenPicture || profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" (click)="editProfileImage($event)">
+          <img [ref]="_chosenPicture || profile.photoURL" (click)="editProfileImage($event)" asset="profile.png" alt="profile picture"/>
           <ion-icon *ngIf="isOwner" name="create" (click)="editProfileImage($event)"></ion-icon>
         </article>
         <article fxLayout fxLayoutAlign="center center">
@@ -130,28 +130,28 @@
       <ion-grid>
         <ion-row>
           <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.affirmations)" >
-            <img src="assets\exercises\affirmations\affirmations2.jpg"/>
+            <img asset="affirmations.jpg"/>
             <div class="card-title">Affirmations</div>
           </ion-card>
     
           <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)">
-            <img src="assets\exercises\bucketlist\bucketlist2.jpg"/>
+            <img asset="bucketlist.jpg"/>
             <div class="card-title">Bucket List</div>
           </ion-card>
     
           <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">            
-            <img src="assets\exercises\dear_future_self\dear_future_self2.jpg"/>
+            <img asset="dear_future_self.jpg"/>
             <div class="card-title">Dear Future Self</div>
 
           </ion-card>
     
           <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.daily_gratefulness)">            
-            <img src="assets\exercises\daily_gratefulness\daily_gratefulness2.jpg"/>
+            <img asset="daily_gratefulness.jpg"/>
             <div class="card-title">Daily Gratefulness</div>
           </ion-card>
     
           <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.assess_life)">
-            <img src="assets\exercises\assess_life\assess_life_man2.jpg"/>
+            <img asset="assess_life_man.jpg"/>
             <div class="card-title">Assess Life</div>
           </ion-card>
         </ion-row>        

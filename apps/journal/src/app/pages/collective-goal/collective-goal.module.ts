@@ -22,6 +22,7 @@ import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.mod
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 const routes: Routes = [
   {
@@ -54,7 +55,8 @@ const routes: Routes = [
     PageNotFoundModule,
     HeaderModule,
     UpsertGoalModalModule,
-    TextEditorModule
+    TextEditorModule,
+    ImageModule
   ],
   declarations: [
     CollectiveGoalPage,

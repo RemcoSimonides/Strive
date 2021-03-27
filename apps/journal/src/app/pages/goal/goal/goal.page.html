@@ -45,7 +45,7 @@
             this goal is part of
             <a [routerLink]="'../../collective-goal/' + ( collectiveGoal.id )"><b>{{ collectiveGoal.title }}</b></a>
           </article>
-          <img class="collective-goal-image" [src]="collectiveGoal.image">
+          <img class="collective-goal-image" [ref]="collectiveGoal.image" asset="collective-goal.jpg">
         </ion-card>
       </ng-container>
 
@@ -72,7 +72,7 @@
       </ng-container>
     </article>
     <article fxLayout="column" fxLayoutAlign="center" class="image-container">
-      <img [src]="goal.image"/>
+      <img [ref]="goal.image" asset="goal.jpg"/>
       <div class="after" *ngIf="goal.isFinished">finished</div>
     </article>
 

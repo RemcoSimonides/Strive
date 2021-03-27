@@ -12,6 +12,7 @@ import { GoalOptionsModule } from '../popovers/options/options.module'
 import { GoalSharePopoverModule } from '../popovers/share/share.module'
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
     GoalOptionsModule,
     GoalSharePopoverModule,
     UpsertGoalModalModule,
-    TextEditorModule
+    TextEditorModule,
+    ImageModule
   ],
   exports: [GoalPage],
   declarations: [GoalPage],

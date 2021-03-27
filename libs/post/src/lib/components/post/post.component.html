@@ -2,7 +2,7 @@
   <ion-card>
     <ion-item>
       <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="'/profile/' + post.author.id">
-        <img [src]="post.author.profileImage || 'assets/img/avatar/blank-profile-picture_64_thumb.png'">
+        <img [ref]="post.author.profileImage" asset="profile.png">
       </ion-avatar>
       <ion-grid>
         <ion-row>
@@ -17,7 +17,7 @@
     </ion-item>
 
 
-    <img class="post-image" *ngIf="post.content.mediaURL" [src]="post.content.mediaURL">
+    <img class="post-image" *ngIf="post.content.mediaURL" [ref]="post.content.mediaURL">
 
     <ion-card-content>
       <h2>{{ post.content.title }}</h2>

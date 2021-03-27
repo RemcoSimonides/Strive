@@ -9,7 +9,14 @@ import { Platform } from '@ionic/angular';
 })
 export class RectangleThumbnailComponent {
 
-  @Input() type: 'collectiveGoal' | 'goal' | 'template'
+  public assets = {  
+    collectiveGoal: 'collective-goal.jpg',
+    goal: 'goal.jpg',
+    template: 'goal.jpg',
+    user: 'profile.png'
+  }
+
+  @Input() type: 'collectiveGoal' | 'goal' | 'template' | 'user'
   @Input() image: string
   @Input() isFinished: boolean
 

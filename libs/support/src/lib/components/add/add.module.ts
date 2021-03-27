@@ -6,13 +6,15 @@ import { IonicModule } from '@ionic/angular';
 import { AddSupportModalComponent } from './add.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ImageModule
   ],
   declarations: [
     AddSupportModalComponent

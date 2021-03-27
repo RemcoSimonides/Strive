@@ -9,6 +9,7 @@ import { RoadmapModule as RoadmapUIModule } from '@strive/ui/roadmap/roadmap.mod
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 import { AddSupportModalModule } from '@strive/support/components/add/add.module';
 import { MilestoneOptionsPopoverModule } from '@strive/milestone/components/options/options.module';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { MilestoneOptionsPopoverModule } from '@strive/milestone/components/opti
     RoadmapUIModule,
     UpsertPostModalModule,
     AddSupportModalModule,
-    MilestoneOptionsPopoverModule
+    MilestoneOptionsPopoverModule,
+    ImageModule
   ],
   exports: [RoadmapComponent],
   declarations: [RoadmapComponent],

@@ -41,7 +41,7 @@ export function createProfile(params: Partial<Profile> = {}): Profile {
   return {
     id: !!params.id ? params.id : '',
     username: '',
-    photoURL: 'assets/img/avatar/blank-profile-picture_512_thumb.png',
+    photoURL: '',
     numberOfSpectating: 0,
     numberOfSpectators: 0,
     numberOfUnreadNotifications: 0,

@@ -7,8 +7,8 @@
         <article #header>
           <ng-container *ngIf="user.profile$ | async as profile">
             <ion-row class="ion-justify-content-center">
-              <img id="profile-image"
-                [src]="profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'"
+              <img [ref]="profile.photoURL"
+                asset="profile.png"
                 routerDirection="root"
                 [routerLink]="'/profile/' + user.uid" />  
             </ion-row>
@@ -86,7 +86,7 @@
           <ng-container *ngIf="(screensize.isDesktop$ | async); else noDesktopMain">
             <ion-col size="1" class="ion-no-padding">
               <a routerLink="/explore">
-                <img src="./assets/512x512.png" class="logo">
+                <img asset="logo.png" class="logo">
               </a>
             </ion-col>
             <ion-col size="3" class="ion-no-padding searchbar-container">
@@ -118,8 +118,7 @@
 
                   </ion-button>
                   <ion-avatar (click)="openProfilePopover($event)">
-                    <img id="profile-image"
-                      [src]="profile.photoURL || 'assets/img/avatar/blank-profile-picture_256_thumb.png'" />
+                    <img [ref]="profile.photoURL" asset="profile.png"/>
                   </ion-avatar>
                 </ng-container>
 
@@ -140,7 +139,7 @@
         <ng-template #noDesktopMain>
           <ion-col size="2" class="ion-no-padding">
             <a routerLink="/explore">
-              <img src="./assets/512x512.png" class="logo ion-text-left">
+              <img asset="logo.png" class="logo ion-text-left">
             </a>
           </ion-col>
           <ion-col size="9" class="ion-no-padding searchbar-container">

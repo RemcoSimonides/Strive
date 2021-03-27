@@ -2,7 +2,7 @@
 <ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
   <ion-card>
     <div class="image-container">
-      <img [src]="image"/>
+      <img [ref]="image" [asset]="assets[type]"/>
       <ng-container *ngIf="isFinished">
         <div class="finished">finished</div>
       </ng-container>
@@ -46,7 +46,7 @@
 <ng-template #browser>
   <section class="clickable margin">
     <div class="image-container">
-      <img class="isFinished" [src]="image"/>
+      <img class="isFinished" [ref]="image" [asset]="assets[type]" />
       
       <ng-container *ngIf="isFinished">
         <span class="finished">finished</span>

@@ -5,13 +5,15 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { RectangleThumbnailComponent } from './rectangle-thumbnail.component';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     RouterModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ImageModule
   ],
   exports: [RectangleThumbnailComponent],
   declarations: [RectangleThumbnailComponent],

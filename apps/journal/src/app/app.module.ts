@@ -36,6 +36,9 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
+// Directive
+import { ImageModule } from '@strive/media/directives/image.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +71,8 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
     FontAwesomeModule,
 
     // Strive
-    AuthModalModule
+    AuthModalModule,
+    ImageModule
   ],
   providers: [
     StatusBar,

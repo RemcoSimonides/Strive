@@ -16,6 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@env": ["environments/environment.ts"],
       "@strive/ui/*": ["libs/ui/src/lib/*"],
       "@strive/user/*": ["libs/user/src/lib/*"],
       "@strive/collective-goal/*": ["libs/collective-goal/src/lib/*"],

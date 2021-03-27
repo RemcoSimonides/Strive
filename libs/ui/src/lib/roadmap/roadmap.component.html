@@ -46,7 +46,7 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <img src='assets/pages/roadmap/Define Roadmap.png' (click)="editRoadmap()" [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}"/>
+    <img asset='define_roadmap.png' (click)="editRoadmap()" [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}"/>
     <ng-container *ngIf="isAdmin; else noAdmin">
       <h3 (click)="editRoadmap()" 
         [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}">
