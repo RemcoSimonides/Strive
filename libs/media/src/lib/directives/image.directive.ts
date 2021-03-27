@@ -1,7 +1,7 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { getAssetPath } from '../+state/media.model';
-import { ImageParameters } from './imgix-helpers';
+import { getImgIxResourceUrl, getImgSize, ImageParameters } from './imgix-helpers';
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
@@ -71,9 +71,8 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, ref]) => {
       if (!!ref) {
         // ref
-        // this.srcset = await this.mediaService.generateImageSrcset(ref, params);
-        this.src = ref;
-        // this.src = this.srcset.split(' ')[0];
+        this.srcset = await this.generateImageSrcset(ref, params);
+        this.src = this.srcset.split(' ')[0];
       } else {
         // asset
         this.srcset = getAssetPath(asset);
@@ -85,5 +84,17 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  async generateImageSrcset(storagePath: string, _parameters: ImageParameters): Promise<string> {
+    const params: ImageParameters[] = getImgSize(storagePath).map(size => ({ ..._parameters, w: size }));
+    let tokens: string[] = [];
+
+    const urls = params.map((param, index) => {
+      if (tokens[index]) { param.s = tokens[index] };
+      return `${getImgIxResourceUrl(storagePath, param)} ${param.w}w`;
+    })
+
+    return urls.join(', ');
   }
 }
