@@ -23,6 +23,7 @@ import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.mo
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -40,6 +41,7 @@ const routes: Routes = [
     RectangleThumbnailModule,
     PageLoadingModule,
     ImageModule,
+    ImageSelectorModule,
 
     // Exercises
     BucketListViewModule,

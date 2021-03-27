@@ -1,0 +1,18 @@
+section {
+  width: 100%;
+  padding: 24px;
+  article {
+    text-align: center;
+    border: solid 1px var(--foreground-divider);
+    border-radius: 10px;
+    background: rgba(var(--primary), 0.3);
+    image-cropper {
+      width: inherit;
+      padding: 0;
+      margin: 5px;
+    }
+  }
+  article.drop-zone {
+    border: 2px dashed var(--ion-color-primary);
+  }
+}

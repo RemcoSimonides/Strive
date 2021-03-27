@@ -1,11 +1,6 @@
-<div *ngIf="user.profile$ | async as profile">
-    <app-image-upload defaultImagePath="assets/images/profile.png"
-        [currentImage]="profile.image"></app-image-upload>
-    <div class="save-button-container">
-
-        <ion-button (click)="updateProfileImage()">
-            {{ _saving ? 'Saving image' : 'Save image' }}</ion-button>
-        <ion-spinner *ngIf="_saving" name="lines" color="primary"></ion-spinner>
-
-    </div>
-</div>
+<ng-container *ngIf="user.profile$ | async as profile">
+  <media-image-selector [form]="form" [storagePath]="'profiles/' + user.uid"></media-image-selector>
+  <section fxLayout fxLayoutAlign="center">
+    <ion-button (click)="update()">Save</ion-button>
+  </section>
+</ng-container>

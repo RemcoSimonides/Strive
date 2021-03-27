@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { PopoverController } from '@ionic/angular';
-// Services
-import { ImageService } from '@strive/media/+state/image.service';
-// Interfaces
+// Strive
 import { UserService } from '@strive/user/user/+state/user.service';
 
 @Component({
@@ -12,33 +11,21 @@ import { UserService } from '@strive/user/user/+state/user.service';
 })
 export class EditProfileImagePopoverPage {
 
-  _saving: boolean = false
+  form = new FormControl();
 
   constructor(
-    private imageService: ImageService,
     private popoverCtrl: PopoverController,
     public user: UserService
   ) { }
 
-  dismiss(image: string) {
-    this.popoverCtrl.dismiss(image)
-  }
-
-  public async updateProfileImage(): Promise<void> {
-
-    if (this._saving) return
-    this._saving = true
-
-    if (this.imageService.image) {
-      const image = await this.imageService.uploadImage(`Profiles/${this.user.uid}/${this.user.uid}`, false)
-      await this.user.upsertProfile({ photoURL: image })
-
-      this.dismiss(image)
-      this._saving = false
-
+  public update() {
+    if (!this.form.value) {
+      throw new Error('Nothing to update')
     }
-    this.imageService.reset()
 
+    // update profile
+    this.user.upsertProfile({ photoURL: this.form.value })
+    this.popoverCtrl.dismiss(this.form.value)
   }
 
 }
