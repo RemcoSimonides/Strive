@@ -1,7 +1,7 @@
 import { AngularFirestore, AngularFirestoreCollection, CollectionReference, DocumentChangeAction, DocumentData, DocumentReference, DocumentSnapshot, QueryDocumentSnapshot, QueryFn, QueryGroupFn } from '@angular/fire/firestore';
 import { Observable, of, combineLatest } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import type firebase from 'firebase/app';
+import firebase from 'firebase/app'
 
 ////////////
 // TYEPES //
@@ -14,6 +14,7 @@ export type Transaction = firebase.firestore.Transaction;
 export type AtomicWrite  = WriteBatch | Transaction;
 export type Params = Record<string, string>;
 export type Timestamp = firebase.firestore.Timestamp;
+export type FieldValue = firebase.firestore.FieldValue;
 export interface WriteOptions {
   params?: Params;
   write?: AtomicWrite;
@@ -102,6 +103,10 @@ export abstract class FireCollection<E extends DocumentData> {
   protected onDelete?(id: string, options: WriteOptions): any;
 
   constructor(protected db: AngularFirestore ) {}
+
+  get timestamp(): FieldValue {
+    return firebase.firestore.FieldValue.serverTimestamp();
+  }
 
   private fromMemo(path: string, id: string): Observable<E | undefined> {
     if (!this.memo[id]) {
@@ -375,8 +380,9 @@ export abstract class FireCollection<E extends DocumentData> {
     const path = this.getPath(options.params);
     const operations = docs.map(async doc => {
       const id = doc[this.idKey] || this.db.createId();
-      const data = this.toFirestore({ ...doc, [this.idKey]: id });
+      const data = this.toFirestore({ ...doc, [this.idKey]: id, createdAt: this.timestamp, updatedAt: this.timestamp });
       const { ref } = this.db.doc(getDocPath(path, id));
+      
       (write as WriteBatch).set(ref, (data));
       if (this.onCreate) {
         await this.onCreate(data, { write, ctx, params });
@@ -482,7 +488,7 @@ export abstract class FireCollection<E extends DocumentData> {
           const doc = this.fromFirestore(snapshot);
           if (doc && stateFunction) {
             const data = await stateFunction(Object.freeze(doc), tx);
-            tx.update(ref, this.toFirestore(data));
+            tx.update(ref, this.toFirestore({ ...data, updatedAt: this.timestamp }));
             if (this.onUpdate) {
               await this.onUpdate(data, { write: tx, ctx });
             }
@@ -499,7 +505,7 @@ export abstract class FireCollection<E extends DocumentData> {
           throw new Error(`Document should have an unique id to be updated, but none was found in ${doc}`);
         }
         const { ref } = this.db.doc(getDocPath(path, docId));
-        write.update(ref, this.toFirestore(doc));
+        write.update(ref, this.toFirestore({ ...doc, updatedAt: this.timestamp }));
         if (this.onUpdate) {
           await this.onUpdate(doc, { write, ctx });
         }

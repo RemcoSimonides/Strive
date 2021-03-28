@@ -14,13 +14,12 @@ import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {
-  readonly path = `Goals`;
+  readonly path = `Goals`
 
   constructor(
     db: AngularFirestore,
     private stakeholder: GoalStakeholderService,
-    private user: UserService,
-    private imageService: ImageService
+    private user: UserService
   ) { 
     super(db)
   }

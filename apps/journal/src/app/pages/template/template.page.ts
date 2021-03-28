@@ -41,7 +41,7 @@ export class TemplatePage implements OnInit {
   constructor(
     public user: UserService,
     private collectiveGoalService: CollectiveGoalService,
-    private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
+    private stakeholder: CollectiveGoalStakeholderService,
     private db: FirestoreService,
     private functions: AngularFireFunctions,
     private loadingCtrl: LoadingController,
@@ -69,14 +69,14 @@ export class TemplatePage implements OnInit {
       })
     )
 
-    this.maxDeadline$ = this.collectiveGoalService.getCollectiveGoal$(this.collectiveGoalId).pipe(
+    this.maxDeadline$ = this.collectiveGoalService.valueChanges(this.collectiveGoalId).pipe(
       map(collectiveGoal => collectiveGoal.deadline)
     )
 
     this.isAdmin = this.user.profile$.pipe(
       switchMap(userProfile => {
         if (!!userProfile) {
-          return this.collectiveGoalStakeholderService.getStakeholder$(userProfile.id, this.collectiveGoalId).pipe(map(stakeholder => !!stakeholder && stakeholder.isAdmin))
+          return this.stakeholder.valueChanges(userProfile.id, { collectiveGoalId: this.collectiveGoalId }).pipe(map(stakeholder => !!stakeholder?.isAdmin))
         } else {
           return of(false)
         }

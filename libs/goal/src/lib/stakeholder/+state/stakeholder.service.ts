@@ -5,7 +5,7 @@ import { FireCollection, WriteOptions } from '@strive/utils/services/collection.
 // Rxjs
 import { take } from 'rxjs/operators';
 // Interfaces
-import { createProfileLink } from '@strive/user/user/+state/user.firestore'
+import { Profile } from '@strive/user/user/+state/user.firestore'
 import { GoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
@@ -30,7 +30,7 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
 
   fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {
     return snapshot.exists
-      ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
+      ? { ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }
       : undefined
   }
 
@@ -39,7 +39,7 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     const uid = stakeholder.uid
 
     const [profile, goal] = await Promise.all([
-      this.db.doc(`Users/${uid}/Profile/${uid}`).valueChanges().pipe(take(1)).toPromise(),
+      this.db.doc<Profile>(`Users/${uid}/Profile/${uid}`).valueChanges().pipe(take(1)).toPromise(),
       this.db.doc<Goal>(`Goals/${goalId}`).valueChanges().pipe(take(1)).toPromise()
     ])
 
@@ -53,7 +53,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     const ref = this.getRef(uid, { goalId })
     write.update(ref, createGoalStakeholder({
         ...stakeholder,  
-        ...createProfileLink(profile),
+        username: profile.username,
+        photoURL: profile.photoURL,
         uid,
         goalId,
       })

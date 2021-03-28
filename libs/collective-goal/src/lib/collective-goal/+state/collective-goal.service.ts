@@ -1,63 +1,51 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { QueryFn } from '@angular/fire/firestore';
-// Rxjs
-import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { AngularFirestore, DocumentSnapshot, QueryFn } from '@angular/fire/firestore';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
-import { ImageService } from '@strive/media/+state/image.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
 // Interfaces
-import { CollectiveGoal } from './collective-goal.firestore';
+import { CollectiveGoal, createCollectiveGoal } from './collective-goal.firestore';
+import { map } from 'rxjs/operators';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { Observable } from 'rxjs';
+import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Injectable({ providedIn: 'root' })
-export class CollectiveGoalService {
+export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
+  readonly path = 'CollectiveGoals'
 
   constructor(
-    // private discussionService: DiscussionService,
+    public db: AngularFirestore,
+    private goalService: GoalService,
     private user: UserService,
-    private db: FirestoreService,
-    private imageService: ImageService,
-    private collectiveGoalStakeholderService: CollectiveGoalStakeholderService
-  ) { }
-
-  public getCollectiveGoal$(collectiveGoalId: string): Observable<CollectiveGoal> {
-    return this.db.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`)
+    private stakeholder: CollectiveGoalStakeholderService
+  ) {
+    super(db)
   }
 
-  public async getCollectiveGoal(collectiveGoalId: string): Promise<CollectiveGoal> {
-    return await this.getCollectiveGoal$(collectiveGoalId).pipe(first()).toPromise()
+  protected fromFirestore(snapshot: DocumentSnapshot<CollectiveGoal>) {
+    return snapshot.exists
+      ? createCollectiveGoal({ ...snapshot.data(), id: snapshot.id })
+      : undefined
   }
 
+  protected toFirestore(collectiveGoal: CollectiveGoal): CollectiveGoal {
+    if (!!collectiveGoal) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
+    return collectiveGoal
+  }
 
-  /**
-   * @returns returns the id of the newly created collectiveGoal document
-   * @param collectiveGoal Data of the Collective Goal
-   * @param image Optional image blob
-   */
-  public async createCollectiveGoal(collectiveGoal: CollectiveGoal): Promise<string> {
-    
-    //Create new id for collective goal
-    const id = await this.db.getNewId();
-    
-    if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
-
-    //Handle image
-    // collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, false)
-
-    //Set Collective Goal
-    await this.upsertCollectiveGoal(collectiveGoal, id)
-
-    //Add User as Stakeholder
-    await this.collectiveGoalStakeholderService.upsert(this.user.uid, id, { isAdmin: true })
-
-    //Create initial discussion
-    // this.discussionService.addInitialDiscussion(id, collectiveGoal.title, { collectiveGoal: true })
-
-    return id
+  onCreate(collectiveGoal: CollectiveGoal, { write }: WriteOptions) {
+    const stakeholder = createCollectiveGoalStakeholder({
+      uid: this.user.uid,
+      collectiveGoalId: collectiveGoal.id,
+      collectiveGoalIsPublic: collectiveGoal.isPublic,
+      collectiveGoalTitle: collectiveGoal.title,
+      isAdmin: true
+    })
+    return this.stakeholder.add(stakeholder, { write, params: { collectiveGoalId: collectiveGoal.id }})
   }
 
   /**
@@ -72,7 +60,7 @@ export class CollectiveGoalService {
     //Handle image
     // collectiveGoal.image = await this.imageService.uploadImage(`CollectiveGoals/${id}/${id}`, true)
     
-    await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
+    await this.upsert(collectiveGoal)
   }
 
   public async delete(collectiveGoalId: string) {
@@ -87,13 +75,9 @@ export class CollectiveGoalService {
       query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '!=', 'private').orderBy('publicity').orderBy('createdAt', 'desc')
     }
 
-    return this.db.colWithIds$<Goal[]>(`Goals`, query).pipe(
-      map((goals:Goal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+    return this.goalService.valueChanges(query).pipe(
+      map(goals => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
     )
-  }
-
-  private async upsertCollectiveGoal(collectiveGoal: CollectiveGoal, id: string) {
-    await this.db.upsert(`CollectiveGoals/${id}`, collectiveGoal)
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {

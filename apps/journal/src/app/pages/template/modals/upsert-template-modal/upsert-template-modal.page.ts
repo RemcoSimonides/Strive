@@ -109,7 +109,7 @@ export class UpsertTemplateModalPage implements OnInit {
     // empty value
     $event.target.value = ""
 
-    const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
+    const collectiveGoal = await this.collectiveGoalService.getValue(this.collectiveGoalId)
 
     // set min
     $event.target.min = new Date().toISOString()

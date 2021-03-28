@@ -22,4 +22,6 @@ export class CollectiveGoalForm extends FormEntity<CollectiveGoalFormControl> {
   constructor(collectiveGoal?: CollectiveGoal) {
     super(createCollectiveGoalFormControl(collectiveGoal))
   }
+
+  get image() { return this.get('image') }
 }

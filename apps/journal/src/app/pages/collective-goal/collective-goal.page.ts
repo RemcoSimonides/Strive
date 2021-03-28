@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 // Ionic
 import { ModalController, PopoverController, AlertController, NavController, Platform } from '@ionic/angular';
 // Rxjs
-import { Observable,  Subscription, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable,  Subscription, of, combineLatest } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 // Modals
 import { UpsertCollectiveGoalPage } from './modals/upsert/upsert.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
@@ -22,7 +22,7 @@ import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+
 import { Template } from '@strive/template/+state/template.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
+import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
 import { Plugins } from '@capacitor/core';
 const { Share } = Plugins;
@@ -38,7 +38,6 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
   collectiveGoalId: string
   collectiveGoal$: Observable<CollectiveGoal>
-  collectiveGoal: CollectiveGoal
 
   templates$: Observable<Template[]>
   goals$: Observable<Goal[]>
@@ -55,7 +54,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     public user: UserService,
     private collectiveGoalService: CollectiveGoalService,
-    private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
+    private stakeholder: CollectiveGoalStakeholderService,
     private db: FirestoreService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
@@ -66,56 +65,51 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     private seo: SeoService,
   ) { }
 
-  async ngOnInit() {
-
-    //Get collective goal id from URL
+  ngOnInit() {
     this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
 
     //Get collective goal data
-    this.collectiveGoal$ = this.collectiveGoalService.getCollectiveGoal$(this.collectiveGoalId)
-    this.collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
-    if (!this.collectiveGoal.title) {
-      this.initNoAccess()
-      return
-    }
+    this.collectiveGoal$ = this.collectiveGoalService.valueChanges(this.collectiveGoalId)
 
     //Get current users' rights
     this.profileSubscription = this.user.profile$.pipe(
-      switchMap(profile => !!profile ? this.collectiveGoalStakeholderService.getStakeholder$(this.user.uid, this.collectiveGoalId) : of({})
-    )).subscribe(async (stakeholder: CollectiveGoalStakeholder | undefined) => {
-      let access: boolean = this.collectiveGoal.isPublic
+      map(profile => !!profile ? this.stakeholder.valueChanges(this.user.uid, { collectiveGoalId: this.collectiveGoalId }) : of(createCollectiveGoalStakeholder())),
+      switchMap(stakeholder$ => combineLatest([
+        stakeholder$,
+        this.collectiveGoal$
+      ])
+    )).subscribe(async ([stakeholder, collectiveGoal]) => {
+      this.isAchiever = stakeholder?.isAchiever ?? false
+      this.isAdmin = stakeholder?.isAdmin ?? false
+      this.isSpectator = stakeholder?.isSpectator ?? false
 
-      if (!!stakeholder) {
-        this.isAchiever = stakeholder.isAchiever
-        this.isAdmin = stakeholder.isAdmin
-        this.isSpectator = stakeholder.isSpectator
-
+      if (!!collectiveGoal) {
+        let access = collectiveGoal.isPublic
         if (!access) access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
-        if (!access) access = await this.inviteTokenService.checkInviteToken('collectiveGoal', this.collectiveGoalId)
+        if (!access) access = await this.inviteTokenService.checkInviteToken('collectiveGoal', this.collectiveGoalId)  
+        access ? this.initCollectiveGoal(collectiveGoal) : this.initNoAccess()
       } else {
-        this.isAdmin = false
-        this.isAchiever = false
-        this.isSpectator = false
+        this.initNoAccess()
       }
-
-      access ? this.initCollectiveGoal() : this.initNoAccess()
     })
   }
 
-  async initCollectiveGoal(): Promise<void> {
-    this.canAccess = true
-    this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, this.collectiveGoal.isPublic)
-    this.stakeholders$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
-    this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, ref => ref.orderBy('numberOfTimesUsed', 'desc'))
-
-    // SEO
-    this.seo.generateTags({
-      title: `${this.collectiveGoal.title} - Strive Journal`,
-      description: this.collectiveGoal.shortDescription,
-      image: this.collectiveGoal.image
-    })
-
-    this.pageIsLoading = false
+  async initCollectiveGoal(collectiveGoal: CollectiveGoal) {
+    if (!this.canAccess) {
+      this.canAccess = true
+      this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, collectiveGoal.isPublic)
+      this.stakeholders$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
+      this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, ref => ref.orderBy('numberOfTimesUsed', 'desc'))
+  
+      // SEO
+      this.seo.generateTags({
+        title: `${collectiveGoal.title} - Strive Journal`,
+        description: collectiveGoal.shortDescription,
+        // image: collectiveGoal.image
+      })
+  
+      this.pageIsLoading = false  
+    }
   }
 
   initNoAccess() {
@@ -143,9 +137,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   //Collective Goal Section
-  async openOptionsPopover(ev: UIEvent) {
-    const collectiveGoal: CollectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
-
+  async openOptionsPopover(collectiveGoal: CollectiveGoal, ev: UIEvent) {
     const popover = await this.popoverCtrl.create({
       component: CollectiveGoalOptionsPage,
       event: ev,
@@ -172,7 +164,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   private async editCollectiveGoal() {
-    const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
+    const collectiveGoal = await this.collectiveGoalService.getValue(this.collectiveGoalId)
 
     this.modalCtrl.create({
       component: UpsertCollectiveGoalPage,
@@ -180,9 +172,8 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     }).then(modal => modal.present())
   }
 
-  public async deleteCollectiveGoal(): Promise<void> {
-
-    this.alertCtrl.create({
+  public async deleteCollectiveGoal() {
+    return this.alertCtrl.create({
       subHeader: `Are you sure you want to delete this collective goal?`,
       message: `This action is irreversible. Goals will not be deleted`,
       buttons: [
@@ -203,16 +194,15 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   public saveDescription(description: string) {
-    this.collectiveGoal.description = description
     this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}`, { description })
   }
 
-  public async openSharePopover(ev: UIEvent) {
+  public async openSharePopover(collectiveGoal: CollectiveGoal, ev: UIEvent) {
     if (this.platform.is('android') || this.platform.is('ios') || navigator.share) {
 
-      const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, this.collectiveGoal.isPublic, this.isAdmin)
+      const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, collectiveGoal.isPublic, this.isAdmin)
       await Share.share({
-        title: this.collectiveGoal.title,
+        title: collectiveGoal.title,
         text: 'Check out this collective goal',
         url: ref,
         dialogTitle: 'Together we achieve!'
@@ -223,7 +213,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
         component: CollectiveGoalSharePopoverPage,
         event: ev,
         componentProps: {
-          collectiveGoal: this.collectiveGoal,
+          collectiveGoal: collectiveGoal,
           isAdmin: this.isAdmin
         }
       }).then(popover => popover.present())
@@ -231,7 +221,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   async createGoal() {
-    const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(this.collectiveGoalId)
+    const collectiveGoal = await this.collectiveGoalService.getValue(this.collectiveGoalId)
     this.modalCtrl.create({
       component: UpsertGoalModalComponent,
       componentProps: {
@@ -243,19 +233,20 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     }).then(modal => modal.present())
   }
 
-  public async toggleAdmin(stakeholder: CollectiveGoalStakeholder, event: Event) {
+  public toggleAdmin(stakeholder: CollectiveGoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
 
-    const alert = await this.alertCtrl.create({
+    this.alertCtrl.create({
       subHeader: `Are you sure you want to make ${stakeholder.username} an admin?`,
       buttons: [
         {
           text: 'Yes',
           handler: () => {
-            this.collectiveGoalStakeholderService.upsert(stakeholder.id, this.collectiveGoalId, {
+            this.stakeholder.upsert({
+              uid: stakeholder.id,
               isAdmin: !stakeholder.isAdmin
-            })
+            }, { params: { collectiveGoalId: this.collectiveGoalId }})
           }
         },
         {
@@ -263,16 +254,16 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
           role: 'cancel'
         }
       ]
-    })
-    await alert.present()
+    }).then(alert => alert.present())
   }
 
-  public async toggleAchiever(stakeholder: CollectiveGoalStakeholder, event: Event) {
+  public toggleAchiever(stakeholder: CollectiveGoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
 
-    this.collectiveGoalStakeholderService.upsert(stakeholder.id, this.collectiveGoalId, {
-      isAchiever: !stakeholder.isAchiever
-    })
+    return this.stakeholder.upsert({
+      uid: stakeholder.uid,
+      isAchiever: !stakeholder.isAchiever,
+    }, { params: { collectiveGoalId: this.collectiveGoalId }})
   }
 }

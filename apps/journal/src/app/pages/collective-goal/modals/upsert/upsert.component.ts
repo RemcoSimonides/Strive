@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular';
 // Service
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { ImageService } from '@strive/media/+state/image.service';
 // Forms
 import { CollectiveGoalForm } from '@strive/collective-goal/collective-goal/forms/collective-goal.form';
+import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
   selector: 'app-upsert-collective-goal',
@@ -17,12 +17,12 @@ export class UpsertCollectiveGoalPage implements OnInit {
 
   public collectiveGoalId: string
   public collectiveGoalForm: CollectiveGoalForm
-  // public chosenPicture: any
+  
+  private state: 'create' | 'update'
 
   constructor(
     private alertCtrl: AlertController,
     private service: CollectiveGoalService,
-    private imageService: ImageService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private router: Router,
@@ -31,6 +31,8 @@ export class UpsertCollectiveGoalPage implements OnInit {
 
   ngOnInit() {
     this.collectiveGoalId = this.navParam.data.id
+    this.state = !!this.collectiveGoalId ? 'update' : 'create'
+    if (!this.collectiveGoalId) this.collectiveGoalId = this.service.db.createId();
     this.collectiveGoalForm = new CollectiveGoalForm(this.navParam.data.data)
     this.loadingCtrl.getTop().then(v => v ? this.loadingCtrl.dismiss() : undefined)
   }
@@ -57,11 +59,13 @@ export class UpsertCollectiveGoalPage implements OnInit {
     await loading.present()
 
     try {
-      if (this.collectiveGoalId) {
-        this.service.updateCollectiveGoal(this.collectiveGoalId, this.collectiveGoalForm.value);
-      } else {
-        const id = await this.service.createCollectiveGoal(this.collectiveGoalForm.value);
-        await this.router.navigateByUrl(`/collective-goal/${id}`)
+      const collectiveGoal = createCollectiveGoal({
+        ...this.collectiveGoalForm.value,
+        id: this.collectiveGoalId
+      })
+      this.service.upsert(collectiveGoal);
+      if (this.state === 'create') {
+        await this.router.navigateByUrl(`/collective-goal/${this.collectiveGoalId}`)
       }
 
       await loading.dismiss();

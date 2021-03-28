@@ -51,7 +51,7 @@ export class UpsertGoalModalComponent implements OnInit {
     const collectiveGoalId = this.navParams.data.collectiveGoalId as string
     if (!!collectiveGoalId) {
       this.goalForm.collectiveGoalId.setValue(collectiveGoalId)
-      this.collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId);
+      this.collectiveGoal = await this.collectiveGoalService.getValue(collectiveGoalId);
     }
 
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)

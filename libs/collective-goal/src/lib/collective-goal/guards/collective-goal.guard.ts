@@ -9,14 +9,14 @@ export class CollectiveGoalGuard implements CanActivate {
 
   constructor(
     private collectiveGoalService: CollectiveGoalService,
-    private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
+    private stakeholder: CollectiveGoalStakeholderService,
     private router: Router,
     private user: UserService
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    const collectiveGoalId = next.params.id
-    const collectiveGoal = await this.collectiveGoalService.getCollectiveGoal(collectiveGoalId)
+    const collectiveGoalId = next.params.id as string
+    const collectiveGoal = await this.collectiveGoalService.getValue(collectiveGoalId)
     if (collectiveGoal.isPublic) {
       return true
     } else {
@@ -25,7 +25,7 @@ export class CollectiveGoalGuard implements CanActivate {
         this.router.navigate(['/explore'])
         return false
       }
-      const stakeholder = await this.collectiveGoalStakeholderService.getStakeholder(uid, collectiveGoalId)
+      const stakeholder = await this.stakeholder.getValue(uid, { collectiveGoalId })
       if (!!stakeholder && (stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator)) {
         return true
       } else {

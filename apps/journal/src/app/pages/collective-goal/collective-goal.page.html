@@ -20,11 +20,11 @@
             <!-- <span *ngIf="collectiveGoal.isFinished"> (finished)</span> TODO: can collective goal be finished? -->
           </ion-col>
           <ion-col size-xs="3" size-sm="2" size-md="2" size-lg="2" size-xl="2" fxLayoutAlign="end center">
-            <ion-button (click)="openSharePopover($event)" fill="clear" size="small" class="ion-no-padding">
+            <ion-button (click)="openSharePopover(collectiveGoal, $event)" fill="clear" size="small" class="ion-no-padding">
               <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
             </ion-button>
             <ng-container *ngIf="!!user.uid">
-              <ion-button (click)="openOptionsPopover($event)" fill="clear" class="ion-no-padding">
+              <ion-button (click)="openOptionsPopover(collectiveGoal, $event)" fill="clear" class="ion-no-padding">
                 <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
               </ion-button>
             </ng-container>

@@ -14,7 +14,7 @@ import { take } from 'rxjs/operators';
 export class InviteTokenService {
 
   constructor(
-    private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
+    private stakeholder: CollectiveGoalStakeholderService,
     private db: FirestoreService,
     private goalStakeholderService: GoalStakeholderService,
     private route: ActivatedRoute,
@@ -44,7 +44,7 @@ export class InviteTokenService {
             isSpectator: true
           }, { params: { goalId: id }})
         } else {
-          await this.collectiveGoalStakeholderService.upsert(uid, id, { isSpectator: true })
+          await this.stakeholder.upsert({ uid, isSpectator: true }, { params: { collectiveGoalId: id }})
         }
 
       }
