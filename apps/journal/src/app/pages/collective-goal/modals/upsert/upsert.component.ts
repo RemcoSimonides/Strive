@@ -56,7 +56,7 @@ export class UpsertCollectiveGoalPage implements OnInit {
       spinner: 'lines',
       message: 'Please wait...'
     })
-    await loading.present()
+    loading.present()
 
     try {
       const collectiveGoal = createCollectiveGoal({
@@ -65,14 +65,14 @@ export class UpsertCollectiveGoalPage implements OnInit {
       })
       this.service.upsert(collectiveGoal);
       if (this.state === 'create') {
-        await this.router.navigateByUrl(`/collective-goal/${this.collectiveGoalId}`)
+        this.router.navigateByUrl(`/collective-goal/${this.collectiveGoalId}`)
       }
 
-      await loading.dismiss();
-      await this.modalCtrl.dismiss();
+      loading.dismiss();
+      this.modalCtrl.dismiss();
 
     } catch(error) {
-      await loading.dismiss();
+      loading.dismiss();
       this.alertCtrl.create({
         message: error.message,
         buttons: ['Ok']

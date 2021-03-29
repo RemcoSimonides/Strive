@@ -58,9 +58,9 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
 
     return this.groupChanges(query).pipe(
       switchMap(stakeholders => {
-        const collectiveGoalIDs = stakeholders.map(stakeholder => stakeholder.collectiveGoalId)
-        const collectiveGoalDocs = collectiveGoalIDs.map(id => this.db.doc<CollectiveGoal>(`CollectiveGoals/${id}`))
-        return collectiveGoalDocs.length ? combineLatest<CollectiveGoal[]>(collectiveGoalDocs) : of([])
+        const ids = stakeholders.map(stakeholder => stakeholder.collectiveGoalId)
+        const observables = ids.map(id => this.db.doc<CollectiveGoal>(`CollectiveGoals/${id}`).valueChanges())
+        return observables.length ? combineLatest<CollectiveGoal[]>(observables) : of([])
       })
     )
   }

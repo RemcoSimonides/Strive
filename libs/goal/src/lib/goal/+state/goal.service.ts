@@ -17,7 +17,7 @@ export class GoalService extends FireCollection<Goal> {
   readonly path = `Goals`
 
   constructor(
-    db: AngularFirestore,
+    public db: AngularFirestore,
     private stakeholder: GoalStakeholderService,
     private user: UserService
   ) { 

@@ -13,7 +13,6 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
   <form [formGroup]="goalForm">
 
     <ion-item>
@@ -47,10 +46,9 @@
       ></ion-datetime>
     </ion-item>
 
-    <!-- <app-image-upload defaultImagePath="assets/goal.jpg" [currentImage]="goal?.image"></app-image-upload> -->
+    <media-image-selector [form]="goalForm.image" [storagePath]="'goals/' + goalId"></media-image-selector>
 
   </form>
-
 </ion-content>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">

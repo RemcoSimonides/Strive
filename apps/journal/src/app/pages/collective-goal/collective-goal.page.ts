@@ -73,7 +73,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
     //Get current users' rights
     this.profileSubscription = this.user.profile$.pipe(
-      map(profile => !!profile ? this.stakeholder.valueChanges(this.user.uid, { collectiveGoalId: this.collectiveGoalId }) : of(createCollectiveGoalStakeholder())),
+      map(profile => !!profile ? this.stakeholder.valueChanges(this.user.uid, { collectiveGoalId: this.collectiveGoalId }) : of(undefined)),
       switchMap(stakeholder$ => combineLatest([
         stakeholder$,
         this.collectiveGoal$
@@ -85,7 +85,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
       if (!!collectiveGoal) {
         let access = collectiveGoal.isPublic
-        if (!access) access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
+        if (!access && !!stakeholder) access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
         if (!access) access = await this.inviteTokenService.checkInviteToken('collectiveGoal', this.collectiveGoalId)  
         access ? this.initCollectiveGoal(collectiveGoal) : this.initNoAccess()
       } else {

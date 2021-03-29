@@ -19,14 +19,10 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakehol
 })
 export class UpsertGoalModalComponent implements OnInit {
 
-  // update only
-  private goal: Goal
-
-  // both update and create
   private collectiveGoal: CollectiveGoal
 
+  public goalId: string
   public goalForm = new GoalForm()
-  public title = 'Create Goal'
   public mode: 'update' | 'create'
 
   constructor(
@@ -40,12 +36,14 @@ export class UpsertGoalModalComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.goal = this.navParams.data.currentGoal as Goal
-    if (!!this.goal) {
-      this.goalForm = new GoalForm(this.goal)
+    const goal = this.navParams.data.currentGoal as Goal
+    if (!!goal) {
+      this.goalForm.reset(goal)
+      this.goalId = goal.id
       this.mode = 'update'
     } else {
       this.mode = 'create'
+      this.goalId = this.goalService.db.createId()
     }
 
     const collectiveGoalId = this.navParams.data.collectiveGoalId as string
@@ -54,7 +52,7 @@ export class UpsertGoalModalComponent implements OnInit {
       this.collectiveGoal = await this.collectiveGoalService.getValue(collectiveGoalId);
     }
 
-    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)
+    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
   public dismiss(){
@@ -70,20 +68,16 @@ export class UpsertGoalModalComponent implements OnInit {
         spinner: 'lines',
         message: 'Please wait...'
       })
-      await loading.present()
+      loading.present()
       
       try {
-
-        // determine publicity
         const publicity = this.determinePublicity(this.goalForm.value.isPublic)
         this.goalForm.publicity.setValue(publicity)
 
-        const goal = createGoal(this.goalForm.value)
+        const goal = createGoal({ ...this.goalForm.value, id: this.goalId })
+        await this.goalService.upsert(goal);
         if (this.mode === 'create') {
-          const id = await this.goalService.upsert(goal)
-          await this.navCtrl.navigateForward(`/goal/${id}`)
-        } else if (this.mode === 'update') {
-          await this.goalService.update(this.goal.id, this.goalForm.value)
+          await this.navCtrl.navigateForward(`/goal/${this.goalId}`);
         }
 
         await loading.dismiss()
@@ -107,7 +101,6 @@ export class UpsertGoalModalComponent implements OnInit {
   }
 
   public openingDatetime($event) {
-
     // empty value
     $event.target.value = ""
     

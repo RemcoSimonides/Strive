@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms'
+import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
 import { createGoalLink, GoalLink, Goal, createGoal } from "../+state/goal.firestore";
 
@@ -39,7 +39,7 @@ function createGoalFormControl(params?: Goal) {
     publicity: new FormControl(goal.publicity),
     isPublic: new FormControl(goal.publicity === 'private' ? false : true),
     shortDescription: new FormControl(goal.shortDescription),
-    title: new FormControl(goal.title),
+    title: new FormControl(goal.title, Validators.required),
     totalNumberOfCustomSupports: new FormControl(goal.totalNumberOfCustomSupports),
     collectiveGoalId: new FormControl(goal.collectiveGoalId)
   }
@@ -57,4 +57,5 @@ export class GoalForm extends FormEntity<GoalFormControl> {
   get shortDescription() { return this.get('shortDescription') }
   get publicity() { return this.get('publicity') }
   get collectiveGoalId() { return this.get('collectiveGoalId') }
+  get image() { return this.get('image') }
 }
