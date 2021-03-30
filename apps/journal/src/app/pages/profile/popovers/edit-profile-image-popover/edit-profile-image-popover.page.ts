@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { PopoverController } from '@ionic/angular';
+import { NavParams, PopoverController } from '@ionic/angular';
 // Strive
 import { UserService } from '@strive/user/user/+state/user.service';
 
@@ -9,14 +9,19 @@ import { UserService } from '@strive/user/user/+state/user.service';
   templateUrl: './edit-profile-image-popover.page.html',
   styleUrls: ['./edit-profile-image-popover.page.scss'],
 })
-export class EditProfileImagePopoverPage {
+export class EditProfileImagePopoverPage implements OnInit {
 
-  form = new FormControl();
+  form: FormControl;
 
   constructor(
+    private navParams: NavParams,
     private popoverCtrl: PopoverController,
     public user: UserService
   ) { }
+
+  ngOnInit() {
+    this.form = new FormControl(this.navParams.data.storagePath)
+  }
 
   public update() {
     if (!this.form.value) {

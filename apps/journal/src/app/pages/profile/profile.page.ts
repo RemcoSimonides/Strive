@@ -141,8 +141,8 @@ export class ProfilePage implements OnInit {
       component: ProfileOptionsPage,
       event: ev
     })
-    await popover.present()
-    await popover.onDidDismiss().then((data) => {
+    popover.present()
+    popover.onDidDismiss().then((data) => {
       switch (data.data) {
         case enumProfileOptions.pushNotificationPermission:
           // if (this._platform.is('cordova')) {
@@ -156,7 +156,6 @@ export class ProfilePage implements OnInit {
           break
       }
     })
-
   }
 
   public async editProfileImage(ev: UIEvent): Promise<void> {
@@ -164,6 +163,9 @@ export class ProfilePage implements OnInit {
 
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverPage,
+      componentProps: {
+        storagePath: this.profile.photoURL
+      },
       event: ev
     })
     popover.onDidDismiss().then((imageURL => {

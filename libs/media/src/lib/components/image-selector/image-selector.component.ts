@@ -3,6 +3,12 @@ import { BehaviorSubject } from 'rxjs';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { FormControl } from '@angular/forms';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
+import { SafeUrl } from '@angular/platform-browser';
+import { Platform } from '@ionic/angular';
+
+import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
+const { Camera } = Plugins;
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -35,15 +41,21 @@ export class ImageSelectorComponent implements OnInit {
   accept = ['.jpg', '.jpeg', '.png', '.webp'];
   file: File;
   croppedImage: string;
+  previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
 
   @Input() form: FormControl;
   @Input() storagePath: string;
 
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
-  constructor(private afStorage: AngularFireStorage) { }
+  constructor(
+    private afStorage: AngularFireStorage,
+    public platform: Platform
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.resetState();
+  }
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
@@ -69,31 +81,38 @@ export class ImageSelectorComponent implements OnInit {
 
   private resetState() {
     if (!!this.form.value) {
-    //   this.mediaService.generateImgIxUrl({
-    //     ...this.metadata,
-    //     storagePath: this.form.storagePath.value,
-    //   }).then(previewUrl => {
-    //     this.previewUrl$.next(previewUrl);
-    //     this.nextStep('show');
-    //   });
+      const params: ImageParameters = { w: 1024 }
+      const previewUrl = getImgIxResourceUrl(this.form.value, params)
+      this.previewUrl$.next(previewUrl)
+      this.step.next('show')
     } else {
-      // const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-      // if (!!retrieved) {
-      //   this.step.next('show')
-      // } else {
-        this.step.next('drop')
-      // };
+      this.step.next('drop')
     }
   }
 
-  // crop
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
   }
 
-  // drop
-  filesSelected(fileList: FileList) {
-    this.file = fileList[0];
+  async selectImage() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl
+      })
+
+      if (!!image.dataUrl) {
+        const file = dataUrlToFile(image.dataUrl, Date.now().toString())
+        this.filesSelected(file)
+      }
+    } catch (err) {
+      this.fileUploader.nativeElement.click()
+    }
+  }
+
+  filesSelected(file: FileList | File) {
+    this.file = Array.isArray(file) ? file[0] : file;
 
     if (this.file.type.split('/')[0] !== 'image') {
       console.error('unsupported file type')
@@ -102,6 +121,12 @@ export class ImageSelectorComponent implements OnInit {
 
     this.step.next('crop');
     this.fileUploader.nativeElement.value = null;
+  }
+
+  remove() {
+    this.afStorage.ref(this.form.value).delete()
+    this.form.setValue('');
+    this.step.next('drop')
   }
 
   cropIt() {
@@ -123,4 +148,18 @@ export class ImageSelectorComponent implements OnInit {
       console.error(err);
     }
   }
+}
+
+function dataUrlToFile(dataUrl: string, fileName: string) {
+  var arr = dataUrl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], fileName, { type: mime });
 }

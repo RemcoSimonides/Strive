@@ -6,7 +6,7 @@
     <ng-content select="[title]"></ng-content>
     <p>{{ cropDimensions }}</p>
     <p>Drag 'n drop an Image</p>
-    <p>or <a (click)="fileUploader.click()">choose a file</a></p>
+    <p>or <a (click)="selectImage()">choose a file</a></p>
   </article>
 
   <!-- Hovering -->
@@ -33,8 +33,8 @@
   <article class="show" *ngSwitchCase="'show'">
     <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
-      <ion-fab-button color="primary" (click)="fileUploader.click()">
-        <ion-icon name="image-outline"></ion-icon>
+      <ion-fab-button color="primary" (click)="remove()">
+        <ion-icon name="close-outline"></ion-icon>
       </ion-fab-button>
     </div>
   </article>
