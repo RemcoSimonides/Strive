@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
-// import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 
@@ -12,10 +11,7 @@ import { Template } from '@strive/template/+state/template.firestore'
 export class TemplateService extends FireCollection<Template> {
   readonly path = 'CollectiveGoals/:collectiveGoalId/Templates'
 
-  constructor(
-    db: AngularFirestore,
-    // private imageService: ImageService,
-  ) {
+  constructor(public db: AngularFirestore) {
     super(db)
   }
 

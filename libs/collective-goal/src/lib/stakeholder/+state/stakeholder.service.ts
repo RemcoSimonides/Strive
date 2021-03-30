@@ -8,13 +8,14 @@ import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from './st
 import { CollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
+import { FirestoreService } from '@strive/utils/services/firestore.service';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalStakeholderService extends FireCollection<CollectiveGoalStakeholder> {
   readonly path = 'CollectiveGoals/:collectiveGoalId/CGStakeholders'
   readonly idKey = 'uid'
 
-  constructor(db: AngularFirestore) {
+  constructor(db: AngularFirestore, private fire: FirestoreService) {
     super(db)
   }
 
@@ -29,8 +30,8 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     const uid = stakeholder.uid
 
     const [profile, collectiveGoal] = await Promise.all([
-      this.db.doc<Profile>(`Users/${uid}/Profile/${uid}`).valueChanges().pipe(take(1)).toPromise(),
-      this.db.doc<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).valueChanges().pipe(take(1)).toPromise()
+      this.fire.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(take(1)).toPromise(),
+      this.fire.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).pipe(take(1)).toPromise()
     ])
 
     if (!!collectiveGoal) {
@@ -59,7 +60,7 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     return this.groupChanges(query).pipe(
       switchMap(stakeholders => {
         const ids = stakeholders.map(stakeholder => stakeholder.collectiveGoalId)
-        const observables = ids.map(id => this.db.doc<CollectiveGoal>(`CollectiveGoals/${id}`).valueChanges())
+        const observables = ids.map(id => this.fire.docWithId$<CollectiveGoal>(`CollectiveGoals/${id}`))
         return observables.length ? combineLatest<CollectiveGoal[]>(observables) : of([])
       })
     )

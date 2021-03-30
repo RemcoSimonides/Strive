@@ -53,11 +53,7 @@
   
         <media-image-selector [form]="collectiveGoalForm.image" [storagePath]="'collectiveGoals/' + collectiveGoalId"></media-image-selector>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-button *ngIf="!collectiveGoalId" (click)="upsertCollectiveGoal()" clear>Create</ion-button>
-        <ion-button *ngIf="collectiveGoalId" (click)="upsertCollectiveGoal()" clear>Update</ion-button>
-      </ion-fab>
-  
+        <ion-button (click)="upsertCollectiveGoal()" clear>{{ !!collectiveGoalId ? 'Update' : 'Create' }}</ion-button>
     </form>
   
   </ion-content>

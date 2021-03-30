@@ -93,14 +93,13 @@ export class GoalPage implements OnInit, OnDestroy {
     this.sub.unsubscribe()
   }
 
-  public async openDiscussion() {
-    const modal = await this.modalCtrl.create({
+  public openDiscussion() {
+    this.modalCtrl.create({
       component: DiscussionModalPage,
       componentProps: {
         discussionId: this.goalId
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
   public async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
@@ -138,21 +137,21 @@ export class GoalPage implements OnInit, OnDestroy {
       message: `Duplicating goal`,
       spinner: 'lines'
     })
-    await loading.present()
+    loading.present()
 
     const duplicateGoalFn = this.functions.httpsCallable('duplicateGoal');
     const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).toPromise();
 
     if (!!error) {
-      await loading.dismiss();
+      loading.dismiss();
       throw new Error(result)
     };
     this.navCtrl.navigateRoot(`goal/${result}`);
-    await loading.dismiss();
+    loading.dismiss();
   }
 
-  private async finishGoal(goal: Goal) {
-    const alert = await this.alertCtrl.create({
+  private finishGoal(goal: Goal) {
+    this.alertCtrl.create({
       header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
       subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
       buttons: [
@@ -168,38 +167,30 @@ export class GoalPage implements OnInit, OnDestroy {
           role: 'cancel'
         }
       ]
-    })
-    await alert.present()
+    }).then(alert => alert.present())
   }
 
-  private async startPostCreation(goal: Goal) {
-    const modal = await this.modalCtrl.create({
+  private startPostCreation(goal: Goal) {
+    this.modalCtrl.create({
       component: UpsertPostModal,
       componentProps: {
         goal: goal,
         postId: goal.id
       }
-    })
-    await modal.present()
-    await modal.onDidDismiss().then(data => {
-      // refresh page here
-      // await this.imageService.reset()
-    })
-
+    }).then(modal => modal.present())
   }
 
-  private async editGoal(goal: Goal) {
-    const modal = await this.modalCtrl.create({
+  private editGoal(goal: Goal) {
+    this.modalCtrl.create({
       component: UpsertGoalModalComponent,
       componentProps: {
         currentGoal: goal
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
-  private async deleteGoal() {
-    const alert = await this.alertCtrl.create({
+  private deleteGoal() {
+    this.alertCtrl.create({
       subHeader: `Are you sure you want to delete this goal?`,
       message: `This action is irreversible`,
       buttons: [
@@ -215,18 +206,16 @@ export class GoalPage implements OnInit, OnDestroy {
           role: 'cancel'
         }
       ]
-    })
-    await alert.present()
+    }).then(alert => alert.present())
   }
   
-  public async supportGoal() {
-    const supportModal = await this.modalCtrl.create({
+  public supportGoal() {
+    this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
         goalId: this.goalId
       }
-    })
-    await supportModal.present()
+    }).then(modal => modal.present())
   }
 
   public requestToJoinGoal() {
@@ -252,28 +241,25 @@ export class GoalPage implements OnInit, OnDestroy {
       });
 
     } else {
-
-      const popover = await this.popoverCtrl.create({
+      this.popoverCtrl.create({
         component: GoalSharePopoverPage,
         event: ev,
         componentProps: {
           goal: goal,
           isAdmin: this.isAdmin
         }
-      })
-      await popover.present()
-
+      }).then(popover => popover.present())
     }
   }
 
-  public async saveDescription(description: string) {
-    await this.goalService.updateDescription(this.goalId, description)
+  public saveDescription(description: string) {
+    return this.goalService.updateDescription(this.goalId, description)
   }
 
   public async toggleAdmin(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
-    const alert = await this.alertCtrl.create({
+    this.alertCtrl.create({
       subHeader: `Are you sure you want to make ${stakeholder.username} an admin?`,
       buttons: [
         {
@@ -290,24 +276,22 @@ export class GoalPage implements OnInit, OnDestroy {
           role: 'cancel'
         }
       ]
-    })
-
-    await alert.present()
+    }).then(alert => alert.present())
   }
 
-  public async toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
+  public toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
-    this.stakeholder.upsert({
+    return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isAchiever: !stakeholder.isAchiever
     }, { params: { goalId: this.goalId }})
   }
 
-  public async toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
+  public toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
-    this.stakeholder.upsert({
+    return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isSupporter: !stakeholder.isSupporter
     }, { params: { goalId: this.goalId }})

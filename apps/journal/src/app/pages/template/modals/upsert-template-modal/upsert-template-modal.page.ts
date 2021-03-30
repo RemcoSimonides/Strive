@@ -3,7 +3,6 @@ import { AlertController, LoadingController, ModalController, NavParams, NavCont
 
 // Services
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { ImageService } from '@strive/media/+state/image.service';
 import { createTemplate } from '@strive/template/+state/template.firestore';
 import { TemplateService } from '@strive/template/+state/template.service';
 
@@ -17,9 +16,9 @@ import { TemplateForm } from '@strive/template/forms/template.form';
 })
 export class UpsertTemplateModalPage implements OnInit {
 
-  private collectiveGoalId: string
-  private templateId: string
+  public templateId: string
   public templateForm: TemplateForm
+  public collectiveGoalId: string
 
   public newTemplate = true
   public nextPage = false
@@ -54,7 +53,6 @@ export class UpsertTemplateModalPage implements OnInit {
   constructor(
     private alertCtrl: AlertController,
     private collectiveGoalService: CollectiveGoalService,
-    private imageService: ImageService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -67,8 +65,8 @@ export class UpsertTemplateModalPage implements OnInit {
     this.collectiveGoalId = collectiveGoalId
     this.templateForm = new TemplateForm(template)
     this.newTemplate = !template
-    if (!!template) this.templateId = template.id
-    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : null)
+    this.templateId = !!template ? template.id : this.templateService.db.createId()
+    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
   dismiss() {
@@ -87,8 +85,8 @@ export class UpsertTemplateModalPage implements OnInit {
 
       try {
         const template = createTemplate({ ...this.templateForm.value, id: this.templateId })
-        const id = await this.templateService.upsert(template, { params: {collectiveGoalId: this.collectiveGoalId}})
-        if (this.newTemplate) this.navCtrl.navigateForward(`collective-goal/${this.collectiveGoalId}/template/${id}`)
+        await this.templateService.upsert(template, { params: {collectiveGoalId: this.collectiveGoalId}})
+        if (this.newTemplate) this.navCtrl.navigateForward(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
 
         loading.dismiss()
         this.modalCtrl.dismiss()

@@ -20,3 +20,8 @@ section {
 image-cropper {
   height: 200px;
 }
+
+.croppedImage {
+  max-height: 200px;
+  max-width: 200px;
+}
