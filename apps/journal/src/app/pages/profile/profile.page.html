@@ -4,7 +4,7 @@
       <!-- <ion-menu-button *ngIf="!_platform.is('android') && !_platform.is('ios')"></ion-menu-button> -->
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ shouldLogin ? 'Profile' : (profile$ | async).username }}</ion-title>
+    <ion-title>{{ shouldLogin ? 'Profile' : profile?.username }}</ion-title>
     <ng-container *ngIf="isOwner">
       <ion-buttons slot="end">
         <ion-button (click)="presentProfileOptionsPopover($event)">
