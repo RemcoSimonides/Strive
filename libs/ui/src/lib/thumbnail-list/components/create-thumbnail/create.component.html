@@ -1,6 +1,6 @@
 <!-- Mobile -->
 <ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
-  <ng-container *ngIf="!limitReached else limitReached">
+  <ng-container *ngIf="!limitReached else limit_reached">
 
     <ion-card (click)="create()" class="active">
       <img id="img-mobile" asset="create_goal.png"/>
@@ -10,7 +10,7 @@
     </ion-card>
 
   </ng-container>
-  <ng-template #limitReached>
+  <ng-template #limit_reached>
 
     <ion-card class="inactive">
       <img class="limitReached" asset="create_goal.png"/>

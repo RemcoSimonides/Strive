@@ -19,7 +19,7 @@ export class CreateThumbnailComponent {
 
   @Input() type: Type
   @Input() collectiveGoalId: string
-  @Input() limitReached: boolean = false
+  @Input() limitReached = false
 
   constructor(
     private modalCtrl: ModalController,

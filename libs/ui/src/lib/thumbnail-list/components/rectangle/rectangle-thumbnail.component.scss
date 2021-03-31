@@ -45,6 +45,10 @@ ion-card {
       height: $image-height-mobile;
     }
   }
+
+  ion-card-content {
+    height: 80px;
+  }
 }
 
 // BROWSER
