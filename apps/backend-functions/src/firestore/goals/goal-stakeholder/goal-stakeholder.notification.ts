@@ -12,7 +12,7 @@ import { Notification, enumEvent } from '@strive/notification/+state/notificatio
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createGoalRequest, createNotification } from '@strive/notification/+state/notification.model'
 
-export async function handleNotificationsOfStakeholderCreated(goalId: string, stakeholder: GoalStakeholder): Promise<void> {
+export async function handleNotificationsOfStakeholderCreated(goalId: string, stakeholder: GoalStakeholder) {
 
   if (stakeholder.goalPublicity !== 'public') return
 

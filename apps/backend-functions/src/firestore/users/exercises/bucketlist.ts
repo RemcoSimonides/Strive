@@ -6,42 +6,30 @@ import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-ta
 import { handleNotificationsOfBucketListChanged, handleNotificationsOfBucketListCreated } from './bucketlist.notification'
 
 export const bucketListCreatedHandler = functions.firestore.document(`Users/{userId}/Exercises/BucketList`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-        const uid = context.params.userId
-        const affirmations: BucketList = Object.assign(<BucketList>{}, snapshot.data())
-        if (!affirmations) return
+    const uid = context.params.userId
+    const nextYear = moment(snapshot.createTime).add(1, 'year').toISOString()
 
-        const nextYear: string = moment(snapshot.createTime).add(1, 'year').toISOString()
+    handleNotificationsOfBucketListCreated(uid)
 
-        await handleNotificationsOfBucketListCreated(uid)
-
-        // create scheduled task in a year to reassess bucket list
-        const task: IScheduledTaskUserExerciseBucketList = {
-            worker: enumWorkerType.userExerciseBucketListYearlyReminder,
-            performAt: nextYear,
-            options: {
-                userId: uid
-            }
-        }
-
-        await upsertScheduledTask(`${uid}bucketlist`, task)
-
-
-    })
+    // create scheduled task in a year to reassess bucket list
+    const task: IScheduledTaskUserExerciseBucketList = {
+      worker: enumWorkerType.userExerciseBucketListYearlyReminder,
+      performAt: nextYear,
+      options: { userId: uid }
+    }
+    upsertScheduledTask(`${uid}bucketlist`, task)
+  })
 
 export const bucketListChangeHandler = functions.firestore.document(`Users/{userId}/Exercises/BucketList`)
-    .onUpdate(async (snapshot, context) => {
+  .onUpdate(async (snapshot, context) => {
 
-        const before: BucketList = Object.assign(<BucketList>{}, snapshot.before.data())
-        const after: BucketList = Object.assign(<BucketList>{}, snapshot.after.data())
-        const uid = context.params.userId
+    const before = snapshot.before.data() as BucketList
+    const after = snapshot.after.data() as BucketList
+    const uid = context.params.userId
 
-        if (before !== after) {
-
-            await handleNotificationsOfBucketListChanged(uid, before, after)
-
-        }
-
-    })
-
+    if (before !== after) {
+      handleNotificationsOfBucketListChanged(uid, before, after)
+    }
+  })

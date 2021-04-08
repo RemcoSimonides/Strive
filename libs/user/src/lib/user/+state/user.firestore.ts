@@ -32,7 +32,7 @@ export interface Profile {
   numberOfSpectating: number;
   numberOfSpectators: number;
   numberOfUnreadNotifications: number;
-  fcmTokens?: FieldValue | string[]; // one token per used device
+  fcmTokens: string[]; // one token per used device
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }

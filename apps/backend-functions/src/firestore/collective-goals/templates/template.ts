@@ -68,7 +68,6 @@ export const useTemplate = functions.https.onCall(async (
 
   // Create stakeholder
   const stakeholder = createGoalStakeholder({
-    id: uid,
     goalId: id,
     goalImage: template.goalImage,
     goalPublicity: publicity,
@@ -101,32 +100,10 @@ export const useTemplate = functions.https.onCall(async (
   }
 })
 
-// export const templateDeletedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)
-//     .onDelete(async (snapshot, context) => {
-
-//         const templateId = snapshot.id
-
-//     })
-
-// export const templateChangeHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)
-//     .onUpdate(async (snapshot, context) => {
-
-//         const before: ITemplate = Object.assign(<ITemplate>{}, snapshot.before.data())
-//         const after: ITemplate = Object.assign(<ITemplate>{}, snapshot.after.data())
-//         if (!before) return
-//         if (!after) return
-
-//         const collectiveGoalId = context.params.collectiveGoalId
-//         const templateId = context.params.templateId
-
-
-//     })
-
 async function sendNewTemplateNotification(collectiveGoalId: string, templateId: string, template: Template) {
 
-  const collectiveGoalRef = db.doc(`CollectiveGoals/${collectiveGoalId}`)
-  const collectiveGoalSnap = await collectiveGoalRef.get()
-  const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data()) 
+  const snap = await db.doc(`CollectiveGoals/${collectiveGoalId}`).get()
+  const collectiveGoal = createCollectiveGoal(snap.data()) 
 
   const notification = createNotification({
     discussionId: templateId,

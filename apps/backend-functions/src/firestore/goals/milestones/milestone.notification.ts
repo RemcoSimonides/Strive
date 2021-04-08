@@ -1,120 +1,114 @@
 import * as admin from 'firebase-admin'
 // Functions
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../../shared/notification/notification'
-import { _increaseSeqnoByOne } from './milestone'
+import { increaseSeqnoByOne } from './milestone'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent} from '@strive/notification/+state/notification.firestore'
-import { IReceiver, getReceiver } from '../../../shared/support/receiver'
+import { getReceiver } from '../../../shared/support/receiver'
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { Milestone, MilestoneStatus } from '@strive/milestone/+state/milestone.firestore'
-import { createNotification, createSupportDecisionMeta, SupportDecisionNotification } from '@strive/notification/+state/notification.model';
-import { createNotificationSupport } from '@strive/support/+state/support.firestore';
+import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
+import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
+import { ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { converter } from 'apps/backend-functions/src/shared/utils';
 
 const db = admin.firestore()
 
 export async function handleStatusChangeNotification(before: Milestone, after: Milestone, goalId: string, milestoneId: string) {
 
   // Get goal data for the title
-  const goalRef = db.doc(`Goals/${goalId}`)
-  const goalSnap = await goalRef.get()
-  const goal =  createGoal(goalSnap.data())
+  const goalSnap = await db.doc(`Goals/${goalId}`).get()
+  const goal = createGoal(goalSnap.data())
+
+  if (before.status !== 'pending') return;
+  if (after.status === 'neutral') return;
+  if (after.status === 'overdue') {
+    // send overdue notification
+  }
+
+  if (after.status !== 'succeeded' && after.status !== 'failed') return;
 
   // send notification to every stakeholder
-  if (before.status === 'pending'  && after.status === 'succeeded') {
+  if (after.status === 'succeeded') {
     sendNotificationMilestoneSuccessful(goalId, milestoneId, goal, after)
-  } else if (before.status === 'pending' && after.status === 'failed') {
+  } else if (after.status === 'failed') {
     sendNotificationMilestoneFailed(goalId, milestoneId, goal, after)
   }
 
-  // send message to supporters (including the supports)
+  // send notification to supporters of this milestone and submilestones 
   // overwrite notification to supporters // send notification if person does not want level 1/2/3 milestone notifications but does support them
-  const startText = `Milestone '${after.description}'`
-  let endText = ''
-  if (before.status === 'pending' && after.status === 'succeeded') { 
-    endText = ` is successfully completed &#127881;`
-  } else if (before.status === 'pending' && after.status === 'failed') {
-    endText = ` has failed to complete`
+  const supporters: Record<string, NotificationSupport[]> = {}
+  const receiver: ProfileLink | undefined = !!after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
+
+  // get milestones (including unfinished submilestones)
+  const milestones: Milestone[] = [after]
+
+  const oneSeqnoHigher = increaseSeqnoByOne(after.sequenceNumber)
+  const subMilestonesSnap = await db.collection(`Goals/${goalId}/Milestones`)
+    .where('status', '==', 'pending')
+    .where('sequenceNumber', '>', after.sequenceNumber)
+    .where('sequenceNumber', '<', oneSeqnoHigher)
+    .withConverter<Milestone>(converter(createMilestone))
+    .get()
+
+  for (const snap of subMilestonesSnap.docs) {
+    milestones.push(snap.data())
   }
+  
+  // get supports
+  const supportsQuery = milestones.map(milestone => db.collection(`Goals/${goalId}/Supports`)
+    .where('milestone.id', '==', milestone.id)
+    .withConverter<Support>(converter(createSupport))
+    .get()
+  )
+  const supportsPerMilestoneSnap = await Promise.all(supportsQuery)
 
-  //Send notification to supporters of this milestone
-  let supporters: any = {}
-  let receiver = <IReceiver>{}
+  for (const supportsSnap of supportsPerMilestoneSnap) {
+    for (const snap of supportsSnap.docs) {
+      const support = snap.data()
+      const uid = support.supporter.uid
+      const milestone = milestones.find(m => m.id === support.milestone.id)
 
-  if (!!after.achiever.uid) {
-    // achiever is assigned to milestone
-    receiver.id = after.achiever.uid
-    receiver.username = after.achiever.username || ''
-    receiver.photoURL = after.achiever.photoURL || ''
-  } else {
-    // receiver is only achiever OR receiver object with NULL
-    receiver = await getReceiver(goalId, db)
-  }
+      const supportNotification = createNotificationSupport({
+        description: support.description,
+        finished: support.milestone.id === after.id,
+        receiver: !!milestone.achiever.uid ? milestone.achiever : receiver 
+      })
 
-  const supportsColRef = db.collection(`Goals/${goalId}/Supports`).where('milestone.id', '==', milestoneId)
-  const supportsColSnap = await supportsColRef.get()
-  supportsColSnap.forEach(supportSnap => {
-
-    const support = supportSnap.data();
-    const supporterUID = support.supporter.uid
-    const supportId = supportSnap.id
-
-    if (!(supporterUID in supporters)) supporters[supporterUID] = {}
-    if (!(supportId in supporters[supporterUID])) supporters[supporterUID][supportId] = {}
-
-    supporters[supporterUID][supportId] = {
-      description: support.description,
-      milestoneIsFinished: true,
-      receiverId: receiver ? receiver.id : null,
-      receiverUsername: receiver ? receiver.username : null,
-      receiverPhotoURL: receiver ? receiver.photoURL : null
+      if (!!supporters[uid]) {
+        supporters[uid].push(supportNotification)
+      } else {
+        supporters[uid] = [supportNotification]
+      }
     }
-  })
-
-  const oneSeqnoHigher = _increaseSeqnoByOne(after.sequenceNumber)
-  const subMilestonesRef = db.collection(`Goals/${goalId}/Milestones`)
-      .where('status', '==', 'pending')
-      .where('sequenceNumber', '>', after.sequenceNumber)
-      .where('sequenceNumber', '<', oneSeqnoHigher)
-  const subMilestonesSnap = await subMilestonesRef.get()
-  for (const subMilestoneSnap of subMilestonesSnap.docs) {
-
-    const subReceiver = <IReceiver>{}
-    const subMilestone = subMilestoneSnap.data()
-
-    subReceiver.id = subMilestone.achieverId || null
-    subReceiver.username = subMilestone.achieverUsername || null
-    subReceiver.photoURL = subMilestone.achieverPhotoURL || null
-
-    supporters = await getUnfinishedSupports(goalId, subMilestoneSnap.id, supporters, subReceiver)
   }
 
   const timestamp = admin.firestore.FieldValue.serverTimestamp()
+  const date = new Date()
+  const text = `Milestone '${after.description}' ${after.status === 'succeeded' ? 'is successfully completed &#127881;' : 'has failed to complete'}`
 
-  Object.keys(supporters).forEach(supporter => {
-    const date = new Date()
+  for (const [uid, supportNotifications] of Object.entries(supporters)) {
     const meta = createSupportDecisionMeta({
       deadline: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).toISOString(),
+      supports: supportNotifications
     })
 
-    const newNotification = createNotification({
+    const notification = createNotification({
       id: milestoneId,
       discussionId: milestoneId,
       event: enumEvent.gSupportStatusChangedToPending,
       source: {
         image: goal.image,
         name: goal.title,
-        goalId: goalId,
-        milestoneId: milestoneId,
+        goalId,
+        milestoneId,
         postId: milestoneId
       },
       type: 'supportDecision',
       message: [
         {
-          text: startText
-        },
-        {
-          text: endText
+          text
         }
       ],
       isRead: false,
@@ -122,24 +116,8 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
       createdAt: timestamp as Timestamp,
       updatedAt: timestamp as Timestamp
     })
-
-    Object.keys(supporters[supporter]).forEach(support => {
-      const notificationSupport = createNotificationSupport({
-        id: support,
-        description: supporters[supporter][support].description,
-        milestoneIsFinished: supporters[supporter][support].milestoneIsFinished,
-        receiver: {
-          uid: supporters[supporter][support].receiverId,
-          username: supporters[supporter][support].receiverUsername,
-          photoURL: supporters[supporter][support].receiverPhotoURL
-        }
-      })
-      newNotification.meta.supports.push(notificationSupport)
-    })
-
-    db.doc(`Users/${supporter}/Notifications/${milestoneId}`).set(newNotification)
-  });
-
+    db.doc(`Users/${uid}/Notifications/${milestoneId}`).set(notification)
+  }
 }
 
 // Milestone successful
@@ -221,29 +199,4 @@ function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, go
     ]
   })
   sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true, true, true)
-}
-
-// Other functions
-async function getUnfinishedSupports(goalId: string, milestoneId: string, supporters: any, receiver: IReceiver):Promise<any> {
-
-  const supportsRef = db.collection(`Goals/${goalId}/Supports`).where('milestone.id', '==', milestoneId)
-  const supportsSnap = await supportsRef.get()
-  supportsSnap.forEach((supportSnap) => {
-    const support = supportSnap.data()
-    const supporterUID = support.supporter.uid
-    const supportId = supportSnap.id
-
-    if (!(supporterUID in supporters)) supporters[supporterUID] = {}
-    if (!(supportId in supporters[supporterUID])) supporters[supporterUID][supportId] = {}
-
-    supporters[supporterUID][supportId] = {
-      description: support.description,
-      milestoneIsFinished: false,
-      receiverId: receiver ? receiver.id : null,
-      receiverUsername: receiver ? receiver.username : null,
-      receiverPhotoURL: receiver ? receiver.photoURL : null
-    }
-  })
-
-  return supporters
 }

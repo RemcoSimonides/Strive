@@ -3,21 +3,16 @@ import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-ta
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface';
 
 export const collectiveGoalInviteTokenCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/InviteTokens/{inviteTokenId}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate((snapshot, context) => {
+    const inviteToken = snapshot.data()
+    const collectiveGoalId = context.params.collectiveGoalId
+    const inviteTokenId = context.params.inviteTokenId
 
-        const inviteToken = snapshot.data()
-        const collectiveGoalId = context.params.collectiveGoalId
-        const inviteTokenId = context.params.inviteTokenId
+    if (!inviteToken) return
 
-        if (!inviteToken) return
-
-        await upsertScheduledTask(inviteTokenId, {
-            worker: enumWorkerType.deleteInviteTokenCollectiveGoal,
-            performAt: inviteToken.deadline,
-            options: {
-                collectiveGoalId: collectiveGoalId,
-                inviteTokenId: inviteTokenId
-            }
-        })
-
+    upsertScheduledTask(inviteTokenId, {
+        worker: enumWorkerType.deleteInviteTokenCollectiveGoal,
+        performAt: inviteToken.deadline,
+        options: { collectiveGoalId, inviteTokenId }
     })
+  })

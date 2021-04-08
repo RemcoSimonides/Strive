@@ -5,7 +5,6 @@ import { AudienceType, Discussion } from '@strive/discussion/+state/discussion.f
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 import { ISource, Notification } from '@strive/notification/+state/notification.firestore';
-// import { } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
@@ -36,45 +35,40 @@ export async function createDiscussion(title: string, source: ISource, audience:
   }    
 }
 
-export async function sendNotificationToUsers(notification: Partial<Notification>, receivers: string[]) {
+export function sendNotificationToUsers(notification: Partial<Notification>, receivers: string[]) {
 
   notification.updatedAt = serverTimestamp() as Timestamp
   notification.createdAt = serverTimestamp() as Timestamp
 
-  const promises: any[] = []
-  receivers.forEach(receiver => {
-
+  const promises: Promise<any>[] = receivers.map(receiver => {
     if (!!notification.id) {
-      promises.push(db.doc(`Users/${receiver}/Notifications/${notification.id}`).set(notification))
+      return db.doc(`Users/${receiver}/Notifications/${notification.id}`).set(notification)
     } else {
-      promises.push(db.collection(`Users/${receiver}/Notifications`).add(notification))
+      return db.collection(`Users/${receiver}/Notifications`).add(notification)
     }
-
   })
-  await Promise.all(promises)
+  return Promise.all(promises)
 }
 
 export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, isAdmin: boolean, isAchiever: boolean) {
 
   console.log('executing Send Notification to Collective Goal Stakeholder(s)')
-  const receivers: string[] = await getCollectiveGoalStakeholders(collectiveGoalId, isAdmin, isAchiever)
-  await sendNotificationToUsers(notification, receivers)
+  const receivers = await getCollectiveGoalStakeholders(collectiveGoalId, isAdmin, isAchiever)
+  return sendNotificationToUsers(notification, receivers)
 
 }
 
 async function getCollectiveGoalStakeholders(collectiveGoalId: string, isAdmin: boolean, isAchiever: boolean): Promise<string[]> {
 
-  const stakeholderColRef = db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`)
-  const stakeholderColSnap = await stakeholderColRef.get()
+  const stakeholderColSnap = await db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`).get()
   const receivers: string[] = []
-  stakeholderColSnap.docs.forEach(stakeholderSnap => {
 
-    const stakeholder = createCollectiveGoalStakeholder(stakeholderSnap.data())
+  for (const snap of stakeholderColSnap.docs) {
+    const stakeholder = createCollectiveGoalStakeholder(snap.data())
     if (stakeholder.isAdmin === isAdmin || stakeholder.isAchiever === isAchiever) {
-      receivers.push(stakeholderSnap.id)
+      receivers.push(snap.id)
     }
-
-  })
+  }
 
   return receivers
 }
@@ -90,11 +84,9 @@ export function sendNotificationToGoal(goalId: string, notification: Partial<Not
   notification.updatedAt = serverTimestamp() as Timestamp
   notification.createdAt = serverTimestamp() as Timestamp
 
-  if (notification.id) {
-    const id = notification.id
-    delete notification.id
-    console.log(`adding notification to goal ${goalId} with notificationId ${id}`, notification)
-    db.doc(`Goals/${goalId}/Notifications/${id}`).set(notification)
+  if (!!notification.id) {
+    console.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, notification)
+    db.doc(`Goals/${goalId}/Notifications/${notification.id}`).set(notification)
   } else {
     console.log(`adding notification to goal ${goalId}`, notification)
     db.collection(`Goals/${goalId}/Notifications`).add(notification)
@@ -138,33 +130,34 @@ export function sendNotificationToGoal(goalId: string, notification: Partial<Not
  * @param isSupporter True if you want a goal stakeholder with this right to receive the notification, False if you don't want them  to receive it, and undefined if you don't care if they receive it or not
  */
 export async function sendNotificationToGoalStakeholders(goalId: string, notification: Partial<Notification>, isAdmin?: boolean, isAchiever?: boolean, isSupporter?: boolean) {
-  const receivers: string[] =  await getGoalStakeholders(goalId, isAdmin, isAchiever, isSupporter)
+  const receivers = await getGoalStakeholders(goalId, isAdmin, isAchiever, isSupporter)
   console.log('receivers: ', receivers)
-  await sendNotificationToUsers(notification, receivers)
+  return sendNotificationToUsers(notification, receivers)
 }
 
 async function getGoalStakeholders(goalId: string, isAdmin?: boolean,  isAchiever?: boolean, isSupporter?: boolean): Promise<string[]> {
 
-  const stakeholderColRef = db.collection(`Goals/${goalId}/GStakeholders`)
-  const stakeholderColSnap = await stakeholderColRef.get() 
+  const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get() 
   const receivers: string[] = []
-  stakeholderColSnap.docs.forEach(stakeholderSnap => {
 
-    const stakeholder = createGoalStakeholder(stakeholderSnap.data())
+  for (const snap of stakeholderColSnap.docs) {
+    const stakeholder = createGoalStakeholder(snap.data())
     if (isAdmin === stakeholder.isAdmin || isAchiever === stakeholder.isAchiever || isSupporter === stakeholder.isSupporter) {
-      receivers.push(stakeholderSnap.id)
+      receivers.push(snap.id)
     }
-  })
+  }
+
   return receivers
 }
 
-export async function sendNotificationToUserSpectators(uid: string, notification: Partial<Notification>): Promise<void> {
+export async function sendNotificationToUserSpectators(uid: string, notification: Partial<Notification>) {
 
   // get all spectators
-  const userSpectatorColRef = db.collection(`Users/${uid}/Spectators`).where('isSpectator', '==', true)
-  const userSpectatorColSnap = await userSpectatorColRef.get()
-  const receivers: string[] = userSpectatorColSnap.docs.map(doc => doc.id)
-  await sendNotificationToUsers(notification, receivers)
+  const userSpectatorColSnap = await db.collection(`Users/${uid}/Spectators`)
+    .where('isSpectator', '==', true)
+    .get()
+  const receivers = userSpectatorColSnap.docs.map(doc => doc.id)
+  return sendNotificationToUsers(notification, receivers)
 
 }
 

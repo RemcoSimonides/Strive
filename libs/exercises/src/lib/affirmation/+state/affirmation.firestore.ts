@@ -6,3 +6,4 @@ export interface Affirmations {
   createdAt?: FieldValue;
   updatedAt?: FieldValue;
 }
+

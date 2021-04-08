@@ -10,7 +10,7 @@ const { increment, arrayUnion } = admin.firestore.FieldValue
 export const commentCreatedHandler = functions.firestore.document(`Discussions/{discussionId}/Comments/{commentId}`)
   .onCreate(async (snapshot, context) =>{
 
-    const comment: Comment = Object.assign(<Comment>{}, snapshot.data())
+    const comment = Object.assign(<Comment>{}, snapshot.data())
     const discussionId: string = context.params.discussionId
     if (!comment) return
 
@@ -20,23 +20,20 @@ export const commentCreatedHandler = functions.firestore.document(`Discussions/{
     const discussionSnap = await discussionRef.get()
     if (discussionSnap.exists) {
       await discussionRef.update({
-          numberOfComments: increment(1),
-          commentators: arrayUnion(comment.uid)
+        numberOfComments: increment(1),
+        commentators: arrayUnion(comment.uid)
       })
 
       // send notification to participants
       const discussion: Discussion = Object.assign(<Discussion>{}, discussionSnap.data())
-      await sendNewMessageNotificationToParticipants(discussionId, discussion, comment)  
+      sendNewMessageNotificationToParticipants(discussionId, discussion, comment)  
     } else {
-      await discussionRef.set({
-        numberOfComments: 1,
-        participants: []
-      })
+      discussionRef.set({ numberOfComments: 1, participants: [] })
     }
   })
 
 function sendNewMessageNotificationToParticipants(discussionId: string, discussion: Discussion, comment: Comment) {
-  console.log(`executing Send New Message Notification to Participants`)
+  console.log(`Sending New Message Notification to Participants`)
 
   if (!discussion.commentators) return
 
@@ -58,5 +55,5 @@ function sendNewMessageNotificationToParticipants(discussionId: string, discussi
       }
     ]
   })
-  sendNotificationToUsers(notification, discussion.commentators)
+  return sendNotificationToUsers(notification, discussion.commentators)
 }

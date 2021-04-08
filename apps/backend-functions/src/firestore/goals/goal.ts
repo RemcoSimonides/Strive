@@ -14,36 +14,34 @@ import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
-  .onCreate(async (snapshot, context) => {
+  .onCreate(async snapshot => {
 
     const goal = createGoal(snapshot.data())
     const goalId = snapshot.id
 
     // algolia
     if (goal.publicity === 'public') {
-      await addToAlgolia('goal', goalId, {
-        goalId: goalId,
+      addToAlgolia('goal', goalId, {
+        goalId,
         ...goal
       })
     }
 
     // notifications
-    await handleNotificationsOfCreatedGoal(goalId, goal)
+    handleNotificationsOfCreatedGoal(goalId, goal)
 
     // deadline
     if (!!goal.deadline) {
-      await upsertScheduledTask(goalId, {
+      upsertScheduledTask(goalId, {
         worker: enumWorkerType.goalDeadline,
         performAt: goal.deadline,
-        options: {
-            goalId: goalId
-        }
+        options: { goalId }
       })
     }
   })
 
 export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
-  .onDelete(async (snapshot, context) => {
+  .onDelete(async snapshot => {
 
     const goalId = snapshot.id
 
@@ -71,50 +69,42 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     const goalId = context.params.goalId
 
     // notifications
-    await handleNotificationsOfChangedGoal(goalId, before, after)
+    handleNotificationsOfChangedGoal(goalId, before, after)
 
-    if (before.isFinished !== after.isFinished ||
-      before.publicity !== after.publicity ||
-      before.title !== after.title) {
-
-      // change value on stakeholder docs
-      await updateGoalStakeholders(goalId, after)
+    if (before.isFinished !== after.isFinished || before.publicity !== after.publicity || before.title !== after.title) {
+      // update value on stakeholder docs
+      updateGoalStakeholders(goalId, after)
     }
 
     if (before.isFinished !== after.isFinished) {
       if (after.isFinished) {
-        await handleUnfinishedMilestones(goalId)
+        handleUnfinishedMilestones(goalId)
       }
     }
 
     if (before.publicity !== after.publicity) {
       if (after.publicity === 'public') {
         // add to algolia
-        await addToAlgolia('goal', goalId, {
-          goalId: goalId,
+        addToAlgolia('goal', goalId, {
+          goalId,
           ...after
         })
       } else {
         // delete goal from Algolia index
-        await deleteFromAlgolia('goal', goalId)
+        deleteFromAlgolia('goal', goalId)
       }
 
-    } else if (before.title !== after.title ||
-      before.image !== after.image ||
-      before.shortDescription !== after.shortDescription) {
-
-      await updateAlgoliaObject('goal', goalId, after)
+    } else if (before.title !== after.title || before.image !== after.image || before.shortDescription !== after.shortDescription) {
+      updateAlgoliaObject('goal', goalId, after)
     }
 
     // deadline
     if (before.deadline !== after.deadline) {
       if (!after.isOverdue) {
-        await upsertScheduledTask(goalId, {
+        upsertScheduledTask(goalId, {
           worker: enumWorkerType.goalDeadline,
           performAt: after.deadline ? after.deadline : '',
-          options: {
-              goalId: goalId
-          }
+          options: { goalId}
         })
       }
     }
@@ -181,37 +171,24 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
 })
 
 async function updateGoalStakeholders(goalId: string, after: Goal) {
-
-  const stakeholdersColRef = db.collection(`Goals/${goalId}/GStakeholders`)
-  const stakeholderSnaps = await stakeholdersColRef.get()
-    
-  const promises: any[] = []
-  stakeholderSnaps.forEach(stakeholderSnap => {
-
-    const promise = stakeholderSnap.ref.update({
-      goalId: goalId,
-      goalTitle: after.title,
-      goalPublicity: after.publicity,
-      goalIsFinished: after.isFinished
-    })
-
-    promises.push(promise)
-  })
-
-  await Promise.all(promises)
+  const stakeholderSnaps = await db.collection(`Goals/${goalId}/GStakeholders`).get()
+  const promises = stakeholderSnaps.docs.map(doc => doc.ref.update({
+    goalId,
+    goalTitle: after.title,
+    goalPublicity: after.publicity,
+    goalIsFinished: after.isFinished
+  }))
+  return Promise.all(promises)
 }
 
 async function handleUnfinishedMilestones(goalId: string) {
-
-  const milestonesRef = db.collection(`Goals/${goalId}/Milestones`).where('status', '==', 'pending')
-  const milestonesSnap = await milestonesRef.get()
+  const milestonesSnap = await db
+    .collection(`Goals/${goalId}/Milestones`)
+    .where('status', '==', 'pending')
+    .get()
     
-  const promises: any[] = []
-  milestonesSnap.forEach(milestoneSnap => {
-    const promise = milestoneSnap.ref.update({
-      status: 'neutral'
-    })
-    promises.push(promise)
-  })
-  await Promise.all(promises)
+  const promises = milestonesSnap.docs.map(doc => doc.ref.update({
+    status: 'neutral'
+  }))
+  return Promise.all(promises)
 }

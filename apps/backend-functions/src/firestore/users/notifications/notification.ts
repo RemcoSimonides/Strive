@@ -1,11 +1,12 @@
 import { db, admin, functions, increment } from '../../../internals/firebase';
 // Interfaces
 import { createNotification, isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
-import { NotificationSupport } from '@strive/support/+state/support.firestore'
+import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { Notification } from '@strive/notification/+state/notification.firestore';
+import { getDocument } from 'apps/backend-functions/src/shared/utils';
 
 export const notificationCreatedHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)
   .onCreate(async (snapshot, context) => {
@@ -18,29 +19,23 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
     incrementUnreadNotifications(userId)
 
     // send push notification
-    // get tokens
-    const profileDocRef = db.doc(`Users/${userId}/Profile/${userId}`)
-    const profileDocSnap = await profileDocRef.get()
-    const profile = profileDocSnap.data() as Profile
+    const profile = await getDocument<Profile>(`Users/${userId}/Profile/${userId}`)
 
     console.log(`gonna send notification to ${profile.username}`)
-    if (profile.fcmTokens) {
+    if (!!profile.fcmTokens.length) {
 
-      let message = ''
-      notification.message.forEach(msg => {
-        message = message + msg.text
-      })
+      const message = notification.message.map(msg => msg.text).join(' ')
 
       console.log('sending notification to devices', profile.fcmTokens)
 
-      await admin.messaging().sendToDevice(profile.fcmTokens as string[], {
+      admin.messaging().sendToDevice(profile.fcmTokens, {
         notification: {
-            title: `Something happened!`,
-            body: message,
-            clickAction: 'hello'
+          title: `Something happened!`,
+          body: message,
+          clickAction: 'hello'
         }
       }).catch((err => {
-        console.log('error sending push notification', err)
+        console.error('error sending push notification', err)
       }))
 
     }
@@ -49,13 +44,10 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
     if (isSupportDecisionNotification(notification)) {
       console.log('notificaiton is support decision');
       // deadline
-      await upsertScheduledTask(notificationId, {
+      upsertScheduledTask(notificationId, {
         worker: enumWorkerType.notificationEvidenceDeadline,
         performAt: notification.meta.deadline,
-        options: {
-            userId: userId,
-            notificationId: notificationId
-        }
+        options: { userId, notificationId }
       })
     }
   })
@@ -63,7 +55,7 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
 export const notificationDeletedHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)
   .onDelete(async (snapshot, context) => {
     const notificationId = snapshot.id
-    await deleteScheduledTask(notificationId)
+    deleteScheduledTask(notificationId)
   })
 
 export const notificationChangeHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)
@@ -72,45 +64,36 @@ export const notificationChangeHandler = functions.firestore.document(`Users/{us
     const before = snapshot.before.data() as Notification
     const after = snapshot.after.data() as Notification
     const notificationId = context.params.notificationId
-    if (!before) return
-    if (!after) return
-
 
     if (isSupportDecisionNotification(before) && isSupportDecisionNotification(after)) {
       // Support Decision
       if (before.meta.decisionStatus === 'pending' && after.meta.decisionStatus === 'finalized') {
-        await finalizeSupports(after.source.goalId, after.meta.supports)
-        await deleteScheduledTask(notificationId)
+        finalizeSupports(after.source.goalId, after.meta.supports)
+        deleteScheduledTask(notificationId)
       }
     }
   })
 
 async function finalizeSupports(goalId: string, supports: NotificationSupport[]): Promise<void> {
 
-  supports.forEach(support => {
-    const supportDocRef = db.doc(`Goals/${goalId}/Supports/${support.id}`)
+  for (const support of supports) {
+    const ref = db.doc(`Goals/${goalId}/Supports/${support.id}`)
 
-    if (!support.receiver.uid) {
-
-      // support rejected
-      supportDocRef.update({
-          status: 'rejected'
-      })
-
-    } else {
-
-      // set receiver
-      supportDocRef.update({
+    if (!!support.receiver.uid) {
+      const data: Partial<Support> = {
         receiver: support.receiver,
         status: 'waiting_to_be_paid'
-      })
+      }
+      ref.update(data)
+    } else {
+      // support rejected
+      const data: Partial<Support> = { status: 'rejected' }
+      ref.update(data)
     }
-  })
+  }
 }
 
 function incrementUnreadNotifications(uid: string) {
-  const profileRef = db.doc(`Users/${uid}/Profile/${uid}`)
-  profileRef.update({
-    numberOfUnreadNotifications: increment(1)
-  })
+  const ref = db.doc(`Users/${uid}/Profile/${uid}`)
+  ref.update({ numberOfUnreadNotifications: increment(1) })
 }

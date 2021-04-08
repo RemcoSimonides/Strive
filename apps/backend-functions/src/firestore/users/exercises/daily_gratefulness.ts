@@ -5,71 +5,52 @@ import { IScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 
 export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-        const uid = context.params.uid
-        const dailyGratefulnessSettings: DailyGratefulness = Object.assign(<DailyGratefulness>{}, snapshot.data())
-        if (!dailyGratefulnessSettings) return
-        if (!dailyGratefulnessSettings.on) return
+    const uid = context.params.uid
+    const dailyGratefulnessSettings = snapshot.data() as DailyGratefulness
+    if (!dailyGratefulnessSettings) return
+    if (!dailyGratefulnessSettings.on) return
 
-        await scheduleScheduledTask(uid, dailyGratefulnessSettings)
-
-    })
+    scheduleScheduledTask(uid, dailyGratefulnessSettings)
+  })
 
 export const dailyGratefulnessChangedHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
-    .onUpdate(async (snapshot, context) => {
+  .onUpdate(async (snapshot, context) => {
 
-        const uid = context.params.uid
-        const before: DailyGratefulness = Object.assign(<DailyGratefulness>{}, snapshot.before.data())
-        const after: DailyGratefulness = Object.assign(<DailyGratefulness>{}, snapshot.after.data())
+    const uid = context.params.uid
+    const before = snapshot.before.data() as DailyGratefulness
+    const after = snapshot.after.data() as DailyGratefulness
 
-        if (before.time !== after.time || before.on !== after.on) {
+    if (before.on !== after.on) {
+      if (after.on) {
+        //  create task
+        scheduleScheduledTask(uid, after)
+      } else {
+        // delete task
+        deleteScheduledTask(`${uid}dailygratefulness`)
+      }
+    } else if (before.time !== after.time) {
+      scheduleScheduledTask(uid, after)
+    }
+  })
 
-            if (before.on !== after.on) {
-                if (after.on === false) {
+async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: DailyGratefulness) {
 
-                    // delete task
-                    await deleteScheduledTask(`${uid}dailygratefulness`)
+    const hours = new Date().getHours()
+    const [ setHours, setMinutes ] = dailyGratefulnessSettings.time.split(':').map(time => +time)
+    let scheduledDate = moment(new Date().setHours(setHours, setMinutes))
 
-                } else {
-
-                    //  create task
-                    await scheduleScheduledTask(uid, after)
-                
-                }
-            } else if (before.time !== after.time) {
-                
-                await scheduleScheduledTask(uid, after)
-            
-            }
-        }
-    })
-
-async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: DailyGratefulness): Promise<void> {
-
-    const hours: number = new Date().getHours()
-
-    const setHours: number = +dailyGratefulnessSettings.time.substring(0, dailyGratefulnessSettings.time.indexOf(':'))
-    const setMinutes: number = +dailyGratefulnessSettings.time.substring(dailyGratefulnessSettings.time.indexOf(':') + 1)
-
-    let scheduledDate = moment(new Date().setHours(+setHours, +setMinutes)).toISOString()
-
-    // check if set time is today or tomorrow
     if (hours > setHours) {
-        // time passed so set date to tomorrow
-        scheduledDate = moment(scheduledDate).add(1, 'day').toISOString()
+      // time passed so set date to tomorrow
+      scheduledDate.add(1, 'day')
     }
 
-    // create scheduled task
     const task: IScheduledTaskUserExerciseDailyGratefulness = {
-        worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
-        performAt: scheduledDate,
-        options: {
-            userId: uid
-        }
+      worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
+      performAt: scheduledDate.toISOString(),
+      options: { userId: uid }
     }
 
-    await upsertScheduledTask(`${uid}dailygratefulness`, task)
-
-
+    return upsertScheduledTask(`${uid}dailygratefulness`, task)
 }

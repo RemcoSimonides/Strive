@@ -5,6 +5,16 @@ export interface ErrorResultResponse {
   result: any;
 }
 
+export const converter = <T>(factory?: Function) => {
+  return {
+    toFirestore(model: T): T { return model },
+    fromFirestore(snap: admin.firestore.QueryDocumentSnapshot<T>) {
+      const data = { ...snap.data(), id: snap.id }
+      return !!factory ? factory(data) : data;
+    }
+  }
+}
+
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
   return db

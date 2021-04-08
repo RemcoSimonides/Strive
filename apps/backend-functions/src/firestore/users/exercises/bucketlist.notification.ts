@@ -1,19 +1,17 @@
 import { db } from '../../../internals/firebase';
 // Functions
 import { sendNotificationToUserSpectators, createDiscussion } from '../../../shared/notification/notification'
-import { Profile } from '@strive/user/user/+state/user.firestore'
+import { createProfile, Profile } from '@strive/user/user/+state/user.firestore'
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { BucketList, BucketListItem } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
 
 export async function handleNotificationsOfBucketListCreated(uid: string) {
 
-  // get profile for profile image and name
-  const profileDocRef = db.doc(`Users/${uid}/Profile/${uid}`)
-  const profileDocSnap = await profileDocRef.get()
-  const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
+  const profileSnap = await db.doc(`Users/${uid}/Profile/${uid}`).get()
+  const profile = createProfile(profileSnap.data())
 
-  await createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, 'public', `${uid}bucketlist`)
+  createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, 'public', `${uid}bucketlist`)
 
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
@@ -33,30 +31,29 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
       }
     ]
   })
-  await sendNotificationToUserSpectators(uid, notification)
+  sendNotificationToUserSpectators(uid, notification)
 }
 
 export async function handleNotificationsOfBucketListChanged(uid: string, before: BucketList, after: BucketList) {
 
   // get profile for profile image and name
-  const profileDocRef = db.doc(`Users/${uid}/Profile/${uid}`)
-  const profileDocSnap = await profileDocRef.get()
-  const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
+  const profileSnap = await db.doc(`Users/${uid}/Profile/${uid}`).get()
+  const profile = createProfile(profileSnap.data())
 
-  const changedPrivacyFromPrivateToSpectatorsOnlyOrPublic: BucketListItem[] = getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before, after)
+  const changedPrivacyFromPrivate: BucketListItem[] = getChangedPrivacyFromPrivate(before, after)
   const changedDescription = getChangedDescriptionItems(before, after)
   const completedItems = getCompletedItems(before, after)
   const addedItems = getNonPrivateAddedItems(before, after)
 
-  const totalNumberOfChangedItems: number = changedPrivacyFromPrivateToSpectatorsOnlyOrPublic.length + addedItems.length + changedDescription.length
+  const numberOfChangedItems = changedPrivacyFromPrivate.length + addedItems.length + changedDescription.length
 
-  if (totalNumberOfChangedItems > 0) {
-    sendChangedBucketListNotification(uid, profile, totalNumberOfChangedItems)
+  if (numberOfChangedItems > 0) {
+    sendChangedBucketListNotification(uid, profile, numberOfChangedItems)
   }
 
   if (completedItems.length > 0) {
     completedItems.forEach(async item => {
-      await sendBucketListItemComletedNotification(uid, profile, item.description)
+      sendBucketListItemComletedNotification(uid, profile, item.description)
     })
   }
 }
@@ -107,31 +104,30 @@ function sendBucketListItemComletedNotification(uid: string, profile: Profile, b
   sendNotificationToUserSpectators(uid, notification)
 }
 
-function getChangedPrivacyFromPrivateToSpectatorsOnlyOrPublic(before: BucketList, after: BucketList): BucketListItem[] {
-
+/**
+ * Gets bucket list items which changed from Private to SpectatorOnly or Public
+ */
+function getChangedPrivacyFromPrivate(before: BucketList, after: BucketList): BucketListItem[] {
   return before.items.filter(itemBefore => {
     if (itemBefore.privacy === 'private') {
-      const itemAfter = after.items.find(x => x.description === itemBefore.description)
+      const itemAfter = after.items.find(item => item.description === itemBefore.description)
       return !!itemAfter && (itemAfter.privacy === 'spectatorsOnly' || itemAfter?.privacy === 'public')
     } else return false
   })
 }
 
 function getChangedDescriptionItems(before: BucketList, after: BucketList): BucketListItem[] {
-
   return before.items.filter(itemBefore => {  
-    const itemAfter = after.items.find(x => x.description === itemBefore.description)
+    const itemAfter = after.items.find(item => item.description === itemBefore.description)
     if (itemAfter) {
-        return itemAfter.description !== itemBefore.description ? true : false
+      return itemAfter.description !== itemBefore.description ? true : false
     } else return false
   })
 }
 
 function getCompletedItems(before: BucketList, after: BucketList): BucketListItem[] {
-
   return before.items.filter(itemBefore => {
-    // get the same after
-    const itemAfter = after.items.find(x => x.description === itemBefore.description)
+    const itemAfter = after.items.find(item => item.description === itemBefore.description)
     if (itemAfter) {
       return itemAfter.completed !== itemBefore.completed ? true : false
     } else return false 
@@ -139,11 +135,8 @@ function getCompletedItems(before: BucketList, after: BucketList): BucketListIte
 }
 
 function getNonPrivateAddedItems(before: BucketList, after: BucketList): BucketListItem[] {
-
-  if (before.items.length < after.items.length) {
-    return after.items.filter(itemAfter => {
-      if (itemAfter.privacy === 'private') return false
-      return !before.items.some(itemBefore => itemBefore.description === itemAfter.description)
-    })
-  } else return []
+  return after.items.filter(itemAfter => {
+    if (itemAfter.privacy === 'private') return false
+    return !before.items.some(itemBefore => itemBefore.description === itemAfter.description)
+  })
 }

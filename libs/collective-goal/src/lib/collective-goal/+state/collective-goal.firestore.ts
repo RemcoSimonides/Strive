@@ -6,6 +6,7 @@ export interface CollectiveGoal {
     shortDescription: string;
     description: string;
     isPublic: boolean;
+    // TODO remove isOverdue field
     isOverdue: boolean;
     deadline: string;
     image: string;

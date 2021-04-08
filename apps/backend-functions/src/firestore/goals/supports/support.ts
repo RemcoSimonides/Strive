@@ -1,17 +1,16 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
-import { Support } from '@strive/support/+state/support.firestore'
+import { createSupport, Support } from '@strive/support/+state/support.firestore'
 import { handleNotificationsOfCreatedSupport, handleNotificationsOfChangedSupport, sendSupportDeletedNotification } from './support.notification'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
 
 export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onCreate(async (snapshot, context) => {
 
-    const support = Object.assign(<Support>{}, snapshot.data())
+    const support = createSupport(snapshot.data())
     const supportId = snapshot.id
     const goalId = context.params.goalId
-    if (!support) return
 
     //Set stakeholder as supporter
     const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.supporter.uid}`)
@@ -19,13 +18,13 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
 
     if (stakeholderSnap.exists) {
       // Update stakeholder
-      if (!(stakeholderSnap.data() as GoalStakeholder).isSupporter) {
+      const stakeholder = createGoalStakeholder(stakeholderSnap.data())
+      if (!stakeholder.isSupporter) {
         stakeholderRef.update({ isSupporter: true })
       }
     } else {
-      const goalRef = db.doc(`Goals/${goalId}`)
-      const goalSnap = await goalRef.get()
-      const goal = goalSnap.data() as Goal
+      const goalSnap = await db.doc(`Goals/${goalId}`).get()
+      const goal = createGoal(goalSnap.data())
 
       // create new stakeholder
       const goalStakeholder = createGoalStakeholder({
@@ -46,11 +45,11 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
     }
 
     //Increase number of custom supports
-    if (support.milestone && support.milestone.id !== null) { // Support for milestone added
-      await increaseCustomSupportOfMilestone(goalId, support.milestone.id)
-      await increaseCustomSupportOfGoal(goalId, false, true)
+    if (!!support.milestone?.id) { // Support for milestone added
+      increaseCustomSupportOfMilestone(goalId, support.milestone.id)
+      increaseCustomSupportOfGoal(goalId, false, true)
     } else { // Support for goal added
-      await increaseCustomSupportOfGoal(goalId, true, true)
+      increaseCustomSupportOfGoal(goalId, true, true)
     }
 
     //Send notification to achievers of goal
@@ -60,17 +59,14 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
 export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onUpdate(async (snapshot, context) =>  {
 
-    const before: Support = Object.assign(<Support>{}, snapshot.before.data())
-    const after: Support = Object.assign(<Support>{}, snapshot.after.data())
-    if (!before) return
-    if (!after) return
+    const before = createSupport(snapshot.before.data())
+    const after = createSupport(snapshot.after.data())
 
     const goalId = context.params.goalId
     const supportId = context.params.supportId
 
     // Send notification
-    await handleNotificationsOfChangedSupport(supportId, goalId, before, after)
-
+    handleNotificationsOfChangedSupport(supportId, goalId, before, after)
   })
 
 export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
@@ -83,22 +79,21 @@ export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId
     await sendSupportDeletedNotification(goalId, supportId, support)
   })
 
-async function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean): Promise<void> {
-  const goalRef = db.doc(`Goals/${goalId}`)
+function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean) {
+  const ref = db.doc(`Goals/${goalId}`)
 
   if (increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-    await goalRef.update({
+    return ref.update({
       numberOfCustomSupports: increment(1),
       totalNumberOfCustomSupports: increment(1)
     })
 
   } else if (!increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-    await goalRef.update({ totalNumberOfCustomSupports: increment(1) })
+    return ref.update({ totalNumberOfCustomSupports: increment(1) })
   }
 }
 
-async function increaseCustomSupportOfMilestone(goalId: string, milestoneId: string): Promise<void> {
-  const milestoneRef = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
-
-  await milestoneRef.update({ numberOfCustomSupports: increment(1) })
+function increaseCustomSupportOfMilestone(goalId: string, milestoneId: string) {
+  const ref = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
+  return ref.update({ numberOfCustomSupports: increment(1) })
 }

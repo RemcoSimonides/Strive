@@ -13,22 +13,22 @@ const { serverTimestamp } = admin.firestore.FieldValue
 export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: Support): Promise<void> {
 
   await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, 'achievers', supportId)
-  await sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
+  sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
 }
 
-export async function handleNotificationsOfChangedSupport(supportId: string, goalId: string, before: Support, after: Support): Promise<void> {
+export function handleNotificationsOfChangedSupport(supportId: string, goalId: string, before: Support, after: Support) {
 
   if (before.status !== after.status) {
     if (after.status === 'paid') {
-      await sendSupportPaidNotification(supportId, after)
+      sendSupportPaidNotification(supportId, after)
     }
 
     if (after.status === 'rejected') {
-      await sendSupportRejectedNotification(supportId, goalId, after)
+      sendSupportRejectedNotification(supportId, goalId, after)
     }
 
     if (after.status === 'waiting_to_be_paid') {
-      await sendSupportIsWaitingToBePaid(supportId, after)
+      sendSupportIsWaitingToBePaid(supportId, after)
     }
   }
 }
@@ -181,8 +181,7 @@ function sendSupportIsWaitingToBePaid(supportId: string, support: Support) {
 export async function sendSupportDeletedNotification(goalId: string, supportId: string,  support: Support) {
 
   // get goal doc for image
-  const goalDocRef = db.doc(`Goals/${goalId}`)
-  const goalDocSnap = await goalDocRef.get()
+  const goalDocSnap = await db.doc(`Goals/${goalId}`).get()
   const goal = createGoal(goalDocSnap.data())
 
   // send notification

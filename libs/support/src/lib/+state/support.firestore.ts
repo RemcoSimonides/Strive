@@ -7,32 +7,32 @@ export type SupportDecision = 'give' | 'keep'
 export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid' | 'waiting_for_receiver'
 
 export interface Support {
-    id?: string;
-    amount?: number;
-    description: string;
-    status: SupportStatus;
-    goal: GoalLink;
-    milestone?: MilestoneLink;
-    path?: {
-        level1id: string;
-        level1description: string;
-        level2id: string;
-        level2description: string;
-        level3id: string;
-        level3description: string;
-    };
-    supporter: ProfileLink;
-    receiver?: ProfileLink;
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
+  id?: string;
+  amount?: number;
+  description: string;
+  status: SupportStatus;
+  goal: GoalLink;
+  milestone?: MilestoneLink;
+  path?: {
+    level1id: string;
+    level1description: string;
+    level2id: string;
+    level2description: string;
+    level3id: string;
+    level3description: string;
+  };
+  supporter: ProfileLink;
+  receiver?: ProfileLink;
+  updatedAt?: FieldValue;
+  createdAt?: FieldValue;
 }
 
 export interface NotificationSupport {
-    id: string;
-    description: string;
-    decision: SupportDecision;
-    milestoneIsFinished: boolean;
-    receiver: ProfileLink;
+  id: string;
+  description: string;
+  decision: SupportDecision;
+  finished: boolean;
+  receiver: ProfileLink;
 }
 
 /** A factory function that creates a SupportDocument. */
@@ -62,8 +62,8 @@ export function createNotificationSupport(params: Partial<NotificationSupport> =
   return {
     id: !!params.id ? params.id : '',
     description: '',
-    decision: params.milestoneIsFinished ? 'give' : 'keep',
-    milestoneIsFinished: false,
+    decision: params.finished ? 'give' : 'keep',
+    finished: false,
     receiver: createProfileLink(params.receiver),
     ...params
   }

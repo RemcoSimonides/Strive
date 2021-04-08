@@ -11,7 +11,7 @@ export function handleNotificationsOfCreatedUserSpectator(userSpectator: Spectat
 async function sendNotificationToUserBeingSpectated(userSpectator: Spectator) {
 
   // creating discussion id by combining both user id's with lowest in alphabet first
-  const discussionId: string = userSpectator.profileId > userSpectator.uid ? `${userSpectator.uid}${userSpectator.profileId}` : `${userSpectator.profileId}${userSpectator.uid}` 
+  const discussionId = userSpectator.profileId > userSpectator.uid ? `${userSpectator.uid}${userSpectator.profileId}` : `${userSpectator.profileId}${userSpectator.uid}` 
 
   const notification = createNotification({
     discussionId: discussionId,

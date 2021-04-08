@@ -1,19 +1,22 @@
 import { functions } from '../../../internals/firebase';
 import { enumEvent } from '@strive/notification/+state/notification.firestore'
-import { Post } from '@strive/post/+state/post.firestore';
+import { createPost, Post } from '@strive/post/+state/post.firestore';
 import { sendNotificationToGoalStakeholders, sendNotificationToGoal, createDiscussion } from '../../../shared/notification/notification'
 import { createNotification } from '@strive/notification/+state/notification.model';
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)
   .onCreate(async (snapshot, context) => {
 
-    const post: Post = Object.assign(<Post>{}, snapshot.data())
+    const post = createPost(snapshot.data())
     const goalId = context.params.goalId
     const postId = context.params.postId
-    if (!post) return
 
     if (!post.isEvidence) {
-      await createDiscussion(post.content.title, { image: post.goal.image, name: `Discussion - ${post.content.title}`, goalId: post.goal.id }, 'public', postId)
+      await createDiscussion(post.content.title, { 
+        image: post.goal.image,
+        name: `Discussion - ${post.content.title}`,
+        goalId: post.goal.id
+      }, 'public', postId)
       sendNotificationNewPost(goalId, postId, post)
     }
   })
@@ -25,10 +28,10 @@ function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
     discussionId: postId,
     event: enumEvent.gNewPost,
     source: {
-        image: post.goal.image,
-        name: post.goal.title,
-        goalId: goalId,
-        postId: postId
+      image: post.goal.image,
+      name: post.goal.title,
+      goalId,
+      postId
     }
   })
   sendNotificationToGoal(goalId, notification)

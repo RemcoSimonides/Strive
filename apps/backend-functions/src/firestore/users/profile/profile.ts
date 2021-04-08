@@ -2,161 +2,104 @@ import { db, functions, admin } from '../../../internals/firebase';
 
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { addToAlgolia, deleteFromAlgolia } from '../../../shared/algolia/algolia';
+import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 export const profileCreatedHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
-        const uid = snapshot.id
-        const profile: Profile = Object.assign(<Profile>{}, snapshot.data())
+    const uid = snapshot.id
+    const profile = snapshot.data() as Profile
 
-        if (!profile) return
-
-        await addToAlgolia('user', uid, {
-            uid: uid,
-            username: profile.username,
-            photoURL: profile.photoURL,
-            numberOfSpectators: profile.numberOfSpectators
-        })
-
+    addToAlgolia('user', uid, {
+      uid,
+      username: profile.username,
+      photoURL: profile.photoURL,
+      numberOfSpectators: profile.numberOfSpectators
     })
+  })
 
 export const profileDeletedHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
-    .onDelete(async (snapshot, context) => {
+  .onDelete(async (snapshot, context) => {
 
-        const uid = snapshot.id
-        try {
-            await deleteFromAlgolia('user', uid)
-        } catch (err) {
-            console.log('deleting from Algolia error', err)
-        }
+    const uid = snapshot.id
+    deleteFromAlgolia('user', uid)
 
-    })
+  })
 
 export const profileChangeHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
-    .onUpdate(async (snapshot, context) => {
+  .onUpdate(async (snapshot, context) => {
 
-        const before: Profile = Object.assign(<Profile>{}, snapshot.before.data())
-        const after: Profile = Object.assign(<Profile>{}, snapshot.after.data())
-        if (!before) return
-        if (!after) return
+    const before = snapshot.before.data() as Profile
+    const after = snapshot.after.data() as Profile
+    const uid = context.params.userId
 
-        const uid = context.params.userId
+    if (before.fcmTokens.length < after.fcmTokens.length) {
+      admin.messaging().subscribeToTopic(after.fcmTokens, 'notifications')
+        .then(res => { console.log('Successfully subscribed to topic:', res) })
+        .catch(err => { console.log('Error subscribing tot topic', err) })
+    }
 
-        console.log('fcm tokens', after.fcmTokens)
-        if (before.fcmTokens !== after.fcmTokens && Array.isArray(after.fcmTokens)) {
-            if (after.fcmTokens && after.fcmTokens.length > 0) {
-                await admin.messaging().subscribeToTopic(after.fcmTokens, 'notifications')
-                .then((res) => {
-                    console.log('Successfully subscribed to topic:', res)
-                })
-                .catch((err) => {
-                    console.log('Error subscribing tot topic', err)
-                })
-            }
-        }
-
-        await addToAlgolia('user', uid, {
-            uid: uid,
-            username: after.username,
-            photoURL: after.photoURL,
-            numberOfSpectators: after.numberOfSpectators
-        })
-
-        if (before.username !== after.username ||
-            before.photoURL !== after.photoURL) {
-
-                console.log(`username before: ${before.username}`)
-                console.log(`username after: ${after.username}`)
-                console.log(`image before: ${before.photoURL}`)
-                console.log(`image after: ${after.photoURL}`)
-                
-                if (!after.username || !after.photoURL) {
-                    console.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
-                    return
-                }
-
-                const p1 = updateGoalStakeholders(uid, after)
-                const p2 = updateSpectators(uid, after)
-                const p3 = updateCollectiveGoalStakeholders(uid, after)
-                await Promise.all([p1, p2, p3])
-
-            }
-
+    addToAlgolia('user', uid, {
+      uid,
+      username: after.username,
+      photoURL: after.photoURL,
+      numberOfSpectators: after.numberOfSpectators
     })
 
-async function updateCollectiveGoalStakeholders(uid: string, after: Profile): Promise<void> {
+    if (before.username !== after.username || before.photoURL !== after.photoURL) {
+              
+      if (!after.username || !after.photoURL) {
+        // TODO prevent this with firestore rules
+        console.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
+        return
+      }
 
-    const stakeholdersColRef =  db.collectionGroup(`CGStakeholders`).where('uid', '==', uid)
-    const stakeholdersSnap = await stakeholdersColRef.get()
+      await Promise.all([
+        updateGoalStakeholders(uid, after), 
+        updateSpectators(uid, after),
+        updateCollectiveGoalStakeholders(uid, after)
+      ])
+    }
+  })
 
-    const promises: any[] = []
-    stakeholdersSnap.forEach(stakeholderSnap => {
+async function updateCollectiveGoalStakeholders(uid: string, after: Profile) {
+  const data: Partial<CollectiveGoalStakeholder> = {
+    username: after.username,
+    photoURL: after.photoURL
+  }
 
-        const promise = stakeholderSnap.ref.update({
-            username: after.username,
-            photoURL: after.photoURL
-        })
-
-        promises.push(promise)
-
-    })
-
-    await Promise.all(promises)
-
+  const stakeholdersSnap = await db.collectionGroup(`CGStakeholders`).where('uid', '==', uid).get()
+  const promises = stakeholdersSnap.docs.map(doc => doc.ref.update(data))
+  return Promise.all(promises)
 }
 
-async function updateGoalStakeholders(uid: string, after: Profile): Promise<void> {
+async function updateGoalStakeholders(uid: string, after: Profile) {
+  const data: Partial<GoalStakeholder> = {
+    username: after.username,
+    photoURL: after.photoURL
+  }
 
-    const stakeholdersColRef = db.collectionGroup(`GStakeholders`).where('uid', '==', uid)
-    const stakeholdersSnap = await stakeholdersColRef.get()
-
-    const promises: any[] = []
-    stakeholdersSnap.forEach(stakeholderSnap => {
-
-        console.log('updating stakeholder', stakeholderSnap)
-
-        const promise = stakeholderSnap.ref.update({
-            username: after.username,
-            photoURL: after.photoURL
-        })
-
-        promises.push(promise)
-
-    })
-
-    await Promise.all(promises)
-
+  const stakeholdersSnap = await db.collectionGroup(`GStakeholders`).where('uid', '==', uid).get()
+  const promises = stakeholdersSnap.docs.map(doc => doc.ref.update(data))
+  return Promise.all(promises)
 }
 
-async function updateSpectators(uid: string, after: Profile): Promise<void> {
+async function updateSpectators(uid: string, after: Profile) {
+  const data: Partial<Spectator> = {
+    username: after.username,
+    photoURL: after.photoURL
+  }
 
-    const spectatingsColRef = db.collectionGroup(`Spectators`).where('uid', '==', uid)
-    const spectatingsSnap = await spectatingsColRef.get()
-    
-    const promises: any[] = []
-    spectatingsSnap.forEach(spectatingSnap => {
+  const spectatingsSnap = await db.collectionGroup(`Spectators`).where('uid', '==', uid).get()
+  const promises = spectatingsSnap.docs.map(doc => doc.ref.update(data))
+  
+  const spectatorsSnap = await db.collection(`Users/${uid}/Spectators`).get()
+  for (const doc of spectatorsSnap.docs) {
+    const promise = doc.ref.update(data)
+    promises.push(promise)
+  }
 
-        const promise = spectatingSnap.ref.update({
-            username: after.username,
-            photoURL: after.photoURL
-        })
-        promises.push(promise)
-
-    })
-
-    const spectatorsColRef = db.collection(`Users/${uid}/Spectators`)
-    const spectatorsSnap = await spectatorsColRef.get()
-
-    spectatorsSnap.forEach(spectatorSnap => {
-
-        const promise = spectatorSnap.ref.update({
-            profileUsername: after.username,
-            profilePhotoURL: after.photoURL
-        })
-        promises.push(promise)
-
-    })
-
-    await Promise.all(promises)
-
+  return Promise.all(promises)
 }

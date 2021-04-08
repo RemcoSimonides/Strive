@@ -51,31 +51,28 @@ export async function scheduleNextAffirmation(uid: string, affirmations: Affirma
 
 export function getNextAffirmationDate(affirmations: Affirmations): string {
 
-    const currentDate = new Date()
-    const dates: Date[] = []
+  const currentDate = new Date()
+  const dates: Date[] = []
 
-    for (let i = 0; i < affirmations.times.length; i++ ) {
+  for (const time of  affirmations.times) {
 
-        const d = new Date(affirmations.times[i])
-        const x = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), d.getHours(), d.getMinutes())
-    
-        if (x.getTime() < currentDate.getTime()) {
+    const d = new Date(time)
+    const x = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), d.getHours(), d.getMinutes())
 
-            dates.push(moment(x).add(1, 'day').toDate())
-
-        } else {
-            dates.push(x)
-        }
+    if (x.getTime() < currentDate.getTime()) {
+      dates.push(moment(x).add(1, 'day').toDate())
+    } else {
+      dates.push(x)
     }
+  }
 
-    let nextDate: Date = new Date(dates[0])
-    for (let i = 1; i < dates.length; i++ ) {
-        
-        const d = new Date(dates[i])
-        if (d.getTime() < nextDate.getTime()) nextDate = new Date(dates[i])
+  let nextDate: Date = new Date(dates[0])
+  for (let i = 1; i < dates.length; i++ ) {
+      
+    const d = new Date(dates[i])
+    if (d.getTime() < nextDate.getTime()) nextDate = new Date(dates[i])
 
-    }
+  }
 
-    return nextDate.toISOString()
-
+  return nextDate.toISOString()
 }

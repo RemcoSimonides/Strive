@@ -2,188 +2,129 @@ import { db, functions } from '../../internals/firebase';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { deleteScheduledTask, upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { deleteFromAlgolia, addToAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { CollectiveGoal, createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { deleteCollection } from '../../shared/utils';
 
 export const collectiveGoalCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
-    .onCreate(async (snapshot, context) => {
+  .onCreate(snapshot => {
 
-        const collectiveGoal: CollectiveGoal = Object.assign(<CollectiveGoal>{}, snapshot.data())
-        const collectiveGoalId: string = snapshot.id
+    const collectiveGoal = createCollectiveGoal(snapshot.data())
+    const collectiveGoalId = snapshot.id
 
-        if (!collectiveGoal) return
+    if (collectiveGoal.isPublic) {
+      addToAlgolia('collectiveGoal', collectiveGoalId, {
+        collectiveGoalId,
+        ...collectiveGoal
+      })
+    }
 
-        if (collectiveGoal.isPublic) {
-
-            await addToAlgolia('collectiveGoal', collectiveGoalId, {
-                collectiveGoalId: collectiveGoalId,
-                ...collectiveGoal
-            })
-
-        }
-
-        if (collectiveGoal.deadline) {
-
-            await upsertScheduledTask(collectiveGoalId, {
-                worker: enumWorkerType.collectiveGoalDeadline,
-                performAt: collectiveGoal.deadline,
-                options: {
-                    collectiveGoalId: collectiveGoalId
-                }
-            })
-        }
-
-    })
+    if (!!collectiveGoal.deadline) {
+      upsertScheduledTask(collectiveGoalId, {
+        worker: enumWorkerType.collectiveGoalDeadline,
+        performAt: collectiveGoal.deadline,
+        options: { collectiveGoalId }
+      })
+    }
+  })
 
 export const collectiveGoalDeletedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
-    .onDelete(async (snapshot, context) => {
+  .onDelete(snapshot => {
 
-        const collectiveGoalId = snapshot.id
+    const collectiveGoalId = snapshot.id
 
-        try {
-            await deleteFromAlgolia('collectiveGoal', collectiveGoalId)
-        } catch (err) {
-            console.log('deleting from Algolia error', err)
-        }
-        await deleteScheduledTask(collectiveGoalId)
+    try {
+      deleteFromAlgolia('collectiveGoal', collectiveGoalId)
+    } catch (err) {
+      console.log('deleting from Algolia error', err)
+    }
+    deleteScheduledTask(collectiveGoalId)
 
-        const promises: any[] = []
+    const promises: any[] = []
         
-        //delete subcollections too
-        promises.push(deleteCollection(db, `CollectiveGoals/${collectiveGoalId}/Templates`, 500))
-        promises.push(deleteCollection(db, `CollectiveGoals/${collectiveGoalId}/InviteTokens`, 500))
-        promises.push(deleteCollection(db, `CollectiveGoals/${collectiveGoalId}/CGStakeholders`, 500))
-        promises.push(emptyCollectiveGoalDataOnGoals(collectiveGoalId))
+    //delete subcollections too
+    promises.push(deleteCollection(db, `CollectiveGoals/${collectiveGoalId}/Templates`, 500))
+    promises.push(deleteCollection(db, `CollectiveGoals/${collectiveGoalId}/InviteTokens`, 500))
+    promises.push(deleteCollection(db, `CollectiveGoals/${collectiveGoalId}/CGStakeholders`, 500))
+    promises.push(emptyCollectiveGoalIdOnGoals(collectiveGoalId))
 
-        await Promise.all(promises)
-
-
-    })
+    return Promise.all(promises)
+  })
 
 export const collectiveGoalChangeHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
-    .onUpdate(async (snapshot, context) => {
+  .onUpdate(async (snapshot, context) => {
 
-        const before: CollectiveGoal = Object.assign(<CollectiveGoal>{}, snapshot.before.data())
-        const after: CollectiveGoal = Object.assign(<CollectiveGoal>{}, snapshot.after.data())
-        if (!before) return
-        if (!after) return
+    const before = createCollectiveGoal(snapshot.before.data())
+    const after = createCollectiveGoal(snapshot.after.data())
+    const collectiveGoalId = context.params.collectiveGoalId
 
-        const collectiveGoalId = context.params.collectiveGoalId
+    // update collective goal data in other collections
+    if (before.title !== after.title
+     || before.isPublic !== after.isPublic
+     || before.image !== after.image) {
+      updateCollectiveGoalStakeholders(collectiveGoalId, after)
+    }
 
-        // info updated
-        if (before.title !== after.title ||
-            before.isPublic !== after.isPublic ||
-            before.image !== after.image) {
+    // public
+    if (before.isPublic !== after.isPublic) {
+      if (after.isPublic) { // made public
 
-            await updateCollectiveGoalStakeholders(collectiveGoalId, after)
-            await updateCollectiveGoalDataOnGoal(collectiveGoalId, after)
-
-        }
-
-        // public
-        if (before.isPublic !== after.isPublic) {
-            if (after.isPublic) {
-
-                // add to algolia
-                await addToAlgolia('collectiveGoal', collectiveGoalId, {
-                    collectiveGoalId: collectiveGoalId,
-                    ...after
-                })
-
-            } else {
-                // delete goal from Algolia index
-                await deleteFromAlgolia('collectiveGoal', collectiveGoalId)
-            }
-        } else if (before.title !== after.title ||
-            before.image !== after.image ||
-            before.shortDescription !== after.shortDescription) {
-
-                await updateAlgoliaObject('collectiveGoal', collectiveGoalId, after)
-        
-        }
-
-        // deadline
-        if (before.deadline !== after.deadline) {
-            if (!after.isOverdue) {
-                await upsertScheduledTask(collectiveGoalId, {
-                    worker: enumWorkerType.collectiveGoalDeadline,
-                    performAt: after.deadline,
-                    options: {
-                        collectiveGoalId: collectiveGoalId
-                    }
-                })
-            }
-        }
-
-    })
-
-async function updateCollectiveGoalStakeholders(collectiveGoalId: string, after: FirebaseFirestore.DocumentData): Promise<void> {
-
-    const stakeholdersColRef: FirebaseFirestore.CollectionReference = db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`)
-    const stakeholdersSnap: FirebaseFirestore.QuerySnapshot = await stakeholdersColRef.get()
-
-    const promises: any[] = []
-    stakeholdersSnap.forEach(stakeholderSnap => {
-
-        const promise = stakeholderSnap.ref.update({
-            collectiveGoalId: collectiveGoalId,
-            collectiveGoalTitle: after.title,
-            collectiveGoalIsPublic: after.isPublic,
-            collectiveGoalImage: after.image
+        // add to algolia
+        addToAlgolia('collectiveGoal', collectiveGoalId, {
+          collectiveGoalId,
+          ...after
         })
 
-        promises.push(promise)
+      } else { // made private
 
+        // delete goal from Algolia index
+        deleteFromAlgolia('collectiveGoal', collectiveGoalId)
+      }
+    } else if (before.title !== after.title 
+      || before.image !== after.image 
+      || before.shortDescription !== after.shortDescription) {
+        updateAlgoliaObject('collectiveGoal', collectiveGoalId, after)
+    }
+
+    // deadline
+    if (before.deadline !== after.deadline && !after.isOverdue) {
+      upsertScheduledTask(collectiveGoalId, {
+        worker: enumWorkerType.collectiveGoalDeadline,
+        performAt: after.deadline,
+        options: {
+          collectiveGoalId: collectiveGoalId
+        }
+      })
+    }
+  })
+
+async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { title, isPublic, image }: CollectiveGoal) {
+
+  const stakeholdersSnap = await db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`).get()
+
+  const promises: any[] = []
+  stakeholdersSnap.forEach(stakeholderSnap => {
+    const promise = stakeholderSnap.ref.update({
+      collectiveGoalId,
+      collectiveGoalTitle: title,
+      collectiveGoalIsPublic: isPublic,
+      collectiveGoalImage: image
     })
+    promises.push(promise)
+  })
 
-    await Promise.all(promises)
-
+  return Promise.all(promises)
 }
 
-async function updateCollectiveGoalDataOnGoal(collectiveGoalId: string, after: FirebaseFirestore.DocumentData): Promise<void> {
+async function emptyCollectiveGoalIdOnGoals(collectiveGoalId: string) {
 
-    const goalsColRef: FirebaseFirestore.Query = db.collection(`Goals`).where('collectiveGoal.id', '==', collectiveGoalId)
-    const goalsSnap: FirebaseFirestore.QuerySnapshot = await goalsColRef.get()
-    
-    const promises: any[] = []
-    goalsSnap.forEach(goalSnap => {
+  const goalsColSnap = await db.collection(`Goals`).where('collectiveGoal.id', '==', collectiveGoalId).get()
+  if (!goalsColSnap) return
+  
+  const promises: any[] = []
+  goalsColSnap.forEach(goalSnap => {
+    const promise = goalSnap.ref.update({ collectiveGoalId: '' })
+    promises.push(promise)
+  });
 
-        const promise = goalSnap.ref.update({
-            collectiveGoal: {
-                id: collectiveGoalId,
-                image: after.image,
-                isPublic: after.isPublic,
-                title: after.title
-            }
-        })
-        promises.push(promise)
-
-    })
-
-    await Promise.all(promises)
-
-}
-
-async function emptyCollectiveGoalDataOnGoals(collectiveGoalId: string): Promise<void> {
-
-    const goalsColRef: FirebaseFirestore.Query = db.collection(`Goals`).where('collectiveGoal.id', '==', collectiveGoalId)
-    const goalsColSnap: FirebaseFirestore.QuerySnapshot = await goalsColRef.get()
-    if (!goalsColSnap) return
-    
-    const promises: any[] = []
-    goalsColSnap.forEach(goalSnap => {
-        
-        const promise = goalSnap.ref.update({
-            collectiveGoal: {
-                id: null,
-                title: null,
-                isPublic: null
-            }
-        })
-        promises.push(promise)
-
-    });
-
-    await Promise.all(promises)
-
+  return Promise.all(promises)
 }
