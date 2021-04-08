@@ -12,19 +12,9 @@ const { serverTimestamp } = admin.firestore.FieldValue
 // create discussion
 export async function createDiscussion(title: string, source: ISource, audience: AudienceType, id?: string, stakeholderUID?: string): Promise<string> {
 
-  const commentators: string[] = []
   // already add requestor as commentator --> if admin says something in discussion, requestor will receive notification of it
-  if (!!stakeholderUID) {
-    commentators.push(stakeholderUID)
-  }
-
-  const discussion: Discussion = {
-    title: title,
-    audience: audience,
-    source: source,
-    commentators: commentators,
-    numberOfComments: 0
-  }
+  const commentators = !!stakeholderUID ? [stakeholderUID] : []
+  const discussion: Discussion = { title, audience, source, commentators, numberOfComments: 0 }
 
   if (!!id) {
     await db.doc(`Discussions/${id}`).set(discussion)
@@ -32,7 +22,7 @@ export async function createDiscussion(title: string, source: ISource, audience:
   } else {
     const res = await db.collection(`Discussions`).add(discussion)
     return res.id
-  }    
+  }
 }
 
 export function sendNotificationToUsers(notification: Partial<Notification>, receivers: string[]) {

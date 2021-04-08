@@ -6,6 +6,7 @@ import { sendNotificationMilestoneDeadlinePassed } from './notifications/milesto
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
 import { sendBucketListYearlyReminder, rescheduleYearlyReminder } from './user-exercises/bucketlist';
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
+import { getDocument } from '../shared/utils';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -22,7 +23,7 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
   // Jobs to execute concurrently. 
   const jobs: Promise<any>[] = [];
 
-  const reschedulingTasks: string[] = [
+  const reschedulingTasks = [
     'userExerciseAffirmation',
     'userExerciseBucketListYearlyReminder',
     'userExerciseDailyGratefulness'
@@ -67,17 +68,17 @@ const workers: IWorkers = {
   userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options)
 }
 
-async function deleteInviteLinkGoal(options) {
-  await db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
+function deleteInviteLinkGoal(options) {
+  return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
-async function deleteInviteLinkCollectiveGoal(options) {
-  await db.doc(`CollectiveGoals/${options.collectiveGoalId}/InviteTokens/${options.inviteTokenId}`).delete()
+function deleteInviteLinkCollectiveGoal(options) {
+  return db.doc(`CollectiveGoals/${options.collectiveGoalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
-async function notificationEvidenceDeadline(options) {
+function notificationEvidenceDeadline(options) {
   // auto accept evidence
-  await db.doc(`Users/${options.userId}/Notifications/${options.notificationId}`).update({
+  return db.doc(`Users/${options.userId}/Notifications/${options.notificationId}`).update({
     'meta.decisionStatus': 'finalized'
   })
 }
@@ -88,52 +89,48 @@ async function milestoneDeadlineHandler(options) {
   await sendNotificationMilestoneDeadlinePassed(options.goalId, options.milestoneId)
 
   // set status to overdue
-  await db.doc(`Goals/${options.goalId}/Milestones/${options.milestoneId}`).update({
+  return db.doc(`Goals/${options.goalId}/Milestones/${options.milestoneId}`).update({
     status: 'overdue'
   })
 }
 
-async function goalDeadlineHandler(options) {
+function goalDeadlineHandler(options) {
   // set overdue
-  await db.doc(`Goals/${options.goalId}`).update({
+  return db.doc(`Goals/${options.goalId}`).update({
     isOverdue: true
   })
 }
 
-async function collectiveGoalDeadlineHandler(options) {
+function collectiveGoalDeadlineHandler(options) {
   // set overdue
-  await db.doc(`CollectiveGoals/${options.collectiveGoalId}`).update({
+  return db.doc(`CollectiveGoals/${options.collectiveGoalId}`).update({
     isOverdue: true
   })
 }
 
 async function userExerciseAffirmationsHandler(options) {
   // get affirmation
-  const affirmationsDocRef = db.doc(`Users/${options.userId}/Exercises/Affirmations`)
-  const affirmationsDocSnap = await affirmationsDocRef.get()
-  const affirmations: Affirmations = Object.assign(<Affirmations>{}, affirmationsDocSnap.data())
-
-  if (!affirmations) return
+  const affirmations = await getDocument<Affirmations>(`Users/${options.userId}/Exercises/Affirmations`)
 
   // send push notification
-  await sendAffirmationPushNotification(options.userId, affirmations)
+  sendAffirmationPushNotification(options.userId, affirmations)
 
   // reschedule task for tomorrow
-  await scheduleNextAffirmation(options.userId, affirmations)
+  scheduleNextAffirmation(options.userId, affirmations)
 }
 
 async function userExerciseBucketListYearlyReminderHandler(options) {
   // send notification to self (and a push notification)
-  await sendBucketListYearlyReminder(options.userId)
+  sendBucketListYearlyReminder(options.userId)
 
   // reschedule for next year
-  await rescheduleYearlyReminder(options.userId)
+  rescheduleYearlyReminder(options.userId)
 }
 
 async function userExerciseDailyGratefulnessReminderHandler(options) {
   // send push notification
-  await sendDailyGratefulnessPushNotification(options.userId)
+  sendDailyGratefulnessPushNotification(options.userId)
 
   // reschedule task for tomorrow
-  await scheduleNextDailyGratefulnessReminder(options.userId)
+  scheduleNextDailyGratefulnessReminder(options.userId)
 }

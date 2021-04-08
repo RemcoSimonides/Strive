@@ -5,8 +5,10 @@ import { createProfileLink, ProfileLink } from "@strive/user/user/+state/user.fi
  * Return receiver if the goal has only 1 achiever
  */
 export async function getReceiver( goalId: string, db: FirebaseFirestore.Firestore): Promise<ProfileLink | undefined> {
-  const stakeholdersColRef = db.collection(`Goals/${goalId}/GStakeholders`).where('isAchiever', '==', true);
-  const stakeholdersSnap = await stakeholdersColRef.get();
+  const stakeholdersSnap = await db
+    .collection(`Goals/${goalId}/GStakeholders`)
+    .where('isAchiever', '==', true)
+    .get();
 
   if (stakeholdersSnap.docs.length === 1) {
     const stakeholder = createGoalStakeholder(stakeholdersSnap.docs[0].data()) 

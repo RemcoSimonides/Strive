@@ -1,52 +1,40 @@
-import { db, admin } from '../../internals/firebase';
+import { admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { IScheduledTaskUserExerciseAffirmations, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
+import { getDocument } from '../../shared/utils';
 
-export async function sendAffirmationPushNotification(uid: string, affirmations: Affirmations): Promise<void> {
+export async function sendAffirmationPushNotification(uid: string, affirmations: Affirmations) {
 
-    if  (affirmations.affirmations.length >= 1) {
+  if  (affirmations.affirmations.length >= 1) {
 
-        const randomAffirmation = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)];
+    const randomAffirmation = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)];
+    const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
 
-        // get profile for FCM tokens
-        const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
-        const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-        const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
-
-        if (profile.fcmTokens) {
-
-            await admin.messaging().sendToDevice(profile.fcmTokens as string[], {
-                notification: {
-                    title: `Repeat out loud 5 times`,
-                    body: `${randomAffirmation}`,
-                    clickAction: 'affirmation'
-                }
-            })
-            
+    if (!!profile.fcmTokens.length) {
+      return admin.messaging().sendToDevice(profile.fcmTokens as string[], {
+        notification: {
+          title: `Repeat out loud 5 times`,
+          body: `${randomAffirmation}`,
+          clickAction: 'affirmation'
         }
-
+      })
     }
-
+  }
 }
 
-export async function scheduleNextAffirmation(uid: string, affirmations: Affirmations): Promise<void> {
+export async function scheduleNextAffirmation(uid: string, affirmations: Affirmations) {
 
-    const nextAffirmationDateTime: string = getNextAffirmationDate(affirmations)
-
-    const task: IScheduledTaskUserExerciseAffirmations = {
-        worker: enumWorkerType.userExerciseAffirmation,
-        performAt: nextAffirmationDateTime,
-        options: {
-            userId: uid
-        },
-        status: enumTaskStatus.scheduled
-    }
-
-    await upsertScheduledTask(`${uid}affirmations`, task) 
-
+  const nextAffirmationDateTime = getNextAffirmationDate(affirmations)
+  const task: IScheduledTaskUserExerciseAffirmations = {
+    worker: enumWorkerType.userExerciseAffirmation,
+    performAt: nextAffirmationDateTime,
+    options: { userId: uid },
+    status: enumTaskStatus.scheduled
+  }
+  return upsertScheduledTask(`${uid}affirmations`, task) 
 }
 
 export function getNextAffirmationDate(affirmations: Affirmations): string {

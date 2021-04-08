@@ -1,6 +1,4 @@
 // src/index.ts
-// storage
-export { imagesUploadedHandler } from './firestorage/firestorage';
 
 // pubsub
 export { scheduledTasksRunner } from './pubsub/scheduled-task-runner';

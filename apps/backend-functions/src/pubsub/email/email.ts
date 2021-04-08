@@ -1,14 +1,15 @@
-import { db, functions, admin } from '../../internals/firebase';
+import { db, functions } from '../../internals/firebase';
 
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
 
-import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { Profile, User as IUser } from '@strive/user/user/+state/user.firestore';
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { sendgridAPIKey, sendgridTemplate } from '../../environments/environment';
 import { createNotification } from '@strive/notification/+state/notification.model';
+import { converter, getCollection, getDocument } from '../../shared/utils';
 
 const API_KEY = sendgridAPIKey;
 const TEMPLATE_ID = sendgridTemplate;
@@ -21,18 +22,14 @@ export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun
   const dateWeekAgo = moment(context.timestamp).subtract(7, 'days').toDate()
 
   // get users
-  const userColRef = db.collection(`Users`)
-  const userColSnap = await userColRef.get()
-    
-  userColSnap.forEach(async userSnap => {
+  const users = await getCollection<IUser>(`Users`)
 
-    const user: IUser = Object.assign(<IUser>{}, userSnap.data())
-
+  for (const user of users) {
     let mail =  `
-        <h1>Strive Journal update</h1>
-        <h3>Missed notifications</h3>`
+    <h1>Strive Journal update</h1>
+    <h3>Missed notifications</h3>`
 
-    const data: Data = await getData(userSnap.id, dateWeekAgo)
+    const data = await getData(user.id, dateWeekAgo)
     if (!hasNewNotifications(data)) return
     mail += getGoalUpdatesHTML(data)
     mail += getCollectiveGoalUpdatesHTML(data)
@@ -41,8 +38,7 @@ export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun
     console.log('email', user.email)
     console.log('mail', mail)
     await submitEmail(mail, user.email)
-
-  })
+  }
 })
 
 function hasNewNotifications(data: Data): boolean {
@@ -72,17 +68,16 @@ async function getGoals(uid: string, fromDate: Date): Promise<Goal[]> {
   const goals: Goal[] = []
 
   // get goals
-  const GStakeholderColRef = db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('goalIsFinished', '==', false)
-  const GStakeholderColSnap = await GStakeholderColRef.get()
+  const gStakeholdersSnap = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('goalIsFinished', '==', false).get()
 
-  for (const doc of GStakeholderColSnap.docs) {
+  for (const doc of gStakeholdersSnap.docs) {
     const GStakeholder = createGoalStakeholder(doc.data())
-    const notifications: Notification[] = await getGoalNotifications(GStakeholder.goalId, fromDate)
+    const notifications = await getGoalNotifications(GStakeholder.goalId, fromDate)
 
     goals.push({
       id: GStakeholder.goalId,
       title: GStakeholder.goalTitle,
-      notifications: notifications
+      notifications
     })
   }
 
@@ -90,88 +85,66 @@ async function getGoals(uid: string, fromDate: Date): Promise<Goal[]> {
 }
 
 async function getGoalNotifications(goalId: string, fromDate: Date): Promise<Notification[]> {
+  const notificationsSnap = await db
+    .collection(`Goals/${goalId}/Notifications`)
+    .where('createdAt', '>=', fromDate)
+    .orderBy('createdAt')
+    .withConverter<Notification>(converter(createNotification))
+    .get()
 
-  const notifications: Notification[] = []
-  const notificationColRef = db.collection(`Goals/${goalId}/Notifications`).where('createdAt', '>=', fromDate).orderBy('createdAt')
-  const notificationColSnap = await notificationColRef.get()
-  notificationColSnap.docs.forEach(notificationSnap => {
-
-    const notification = createNotification(notificationSnap.data())
-    notification.id = notificationSnap.id
-    notifications.push(notification)
-  })
-
-  return notifications
+  return notificationsSnap.docs.map(doc => doc.data())
 }
 
 async function getCollectiveGoals(uid: string, fromDate: Date): Promise<Goal[]> {
 
   const collectiveGoals: Goal[] = []
 
-  // get goals
-  const CGStakeholderColRef = db.collectionGroup(`CGStakeholders`).where(`uid`, `==`, uid)
-  const CGStakeholderColSnap = await CGStakeholderColRef.get()
+  const cGStakeholdersSnap = await db
+    .collectionGroup(`CGStakeholders`)
+    .where(`uid`, `==`, uid)
+    .withConverter<CollectiveGoalStakeholder>(converter(createCollectiveGoalStakeholder))
+    .get()
 
-  for (const doc of CGStakeholderColSnap.docs) {
-
-    const CGStakeholder = createCollectiveGoalStakeholder(doc.data())
-    const notifications: Notification[] = await getCollectiveGoalNotifications(CGStakeholder.collectiveGoalId, fromDate)
+  for (const doc of cGStakeholdersSnap.docs) {
+    const CGStakeholder = doc.data()
+    const notifications = await getCollectiveGoalNotifications(CGStakeholder.collectiveGoalId, fromDate)
 
     collectiveGoals.push({
       id: CGStakeholder.collectiveGoalId,
       title: CGStakeholder.collectiveGoalTitle,
-      notifications: notifications
+      notifications
     })
   }
   return collectiveGoals
 }
 
 async function getCollectiveGoalNotifications(collectiveGoalId: string, fromDate: Date): Promise<Notification[]> {
+  const notificationsSnap = await db
+    .collection(`ColleciveGoals/${collectiveGoalId}/Notifications`)
+    .where('createdAt', '>=', fromDate)
+    .orderBy('createdAt')
+    .withConverter<Notification>(converter(createNotification))
+    .get()
 
-  const notifications: Notification[] = []
-  const notificationColRef = db.collection(`ColleciveGoals/${collectiveGoalId}/Notifications`).where('createdAt', '>=', fromDate).orderBy('createdAt')
-  const notificationColSnap = await notificationColRef.get()
-  notificationColSnap.docs.forEach(notificationSnap => {
-
-    const notification = createNotification(notificationSnap.data())
-    notification.id = notificationSnap.id
-    notifications.push(notification)
-  })
-
-  return notifications
+  return notificationsSnap.docs.map(doc => doc.data())
 }
 
 async function getUserData(uid: string, fromDate: Date): Promise<User> {
+  const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
+  const notificationsSnap = await db
+    .collection(`Users/${uid}/Notifications`)
+    .where('event', '>=', 400000)
+    .where('event', '<', 500000)
+    .where('createdAt', '>=', fromDate)
+    .withConverter<Notification>(converter(createNotification))
+    .get()
+  const notifications = notificationsSnap.docs.map(doc => doc.data())
 
-  const user = <User>{}
-  user.notifications = []
-
-  // get user
-  const profileDocRef = db.doc(`Users/${uid}/Profile/${uid}`)
-  const profileDocSnap = await profileDocRef.get()
-  const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
-
-  user.id = uid
-  user.username = profile.username
-
-  const notificationsColRef = db.collection(`Users/${uid}/Notifications`).where('event', '>=', 400000).where('event', '<', 500000)
-  const notificationsColSnap = await notificationsColRef.get()
-    
-  notificationsColSnap.docs.forEach(notificationSnap => {
-    const notification = createNotification(notificationSnap.data())
-    notification.id = notificationSnap.id
-    user.notifications.push(notification)
-  })
-
-  user.notifications.filter((notification) => {
-    if (!!notification.createdAt) {
-      return notification.createdAt.toDate() >= fromDate ? true : false;
-    } else {
-      return false;
-    }
-  })
-
-  return user
+  return {
+    id: uid,
+    username: profile.username,
+    notifications
+  }
 }
 
 function getGoalUpdatesHTML(data: Data): string {
@@ -245,7 +218,7 @@ function getUserUpdates(user: User): string {
   return html
 }
 
-async function submitEmail(mail: string, receiverEmailAddress: string): Promise<void> {
+async function submitEmail(mail: string, receiverEmailAddress: string) {
 
   console.log('trying to submit email', receiverEmailAddress)
 
@@ -259,7 +232,7 @@ async function submitEmail(mail: string, receiverEmailAddress: string): Promise<
     }
   }
 
-  await sgMail.send(msg)
+  return sgMail.send(msg)
 }
 
 interface Data {

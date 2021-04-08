@@ -20,7 +20,7 @@ export function getDocument<T>(path: string): Promise<T> {
   return db
     .doc(path)
     .get()
-    .then(doc => doc.data() as T);
+    .then(doc => ({ id: doc.id, ...doc.data() as T}));
 }
 
 export function getCollectionRef<T>(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
@@ -31,7 +31,7 @@ export function getCollectionRef<T>(path: string): Promise<FirebaseFirestore.Que
 }
 
 export function getCollection<T>(path: string): Promise<T[]> {
-  return getCollectionRef(path).then(collection => collection.docs.map(doc => doc.data() as T));
+  return getCollectionRef(path).then(collection => collection.docs.map(doc => ({ id: doc.id, ...doc.data() as T })));
 }
 
 export function deleteCollection(db, collectionPath, batchSize) {

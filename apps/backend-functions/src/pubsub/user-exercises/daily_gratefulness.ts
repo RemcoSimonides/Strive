@@ -3,6 +3,7 @@ import * as moment from 'moment'
 import { IScheduledTaskUserExerciseDailyGratefulness, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { Profile } from '@strive/user/user/+state/user.firestore'
+import { getDocument } from '../../shared/utils'
 
 const db = admin.firestore()
 
@@ -35,40 +36,31 @@ const db = admin.firestore()
 // Write and share a Letter of Gratitude to someone who's brought a positive difference in your life
 // Write three things down what you did well that day
 
-export async function sendDailyGratefulnessPushNotification(uid: string): Promise<void> {
+export async function sendDailyGratefulnessPushNotification(uid: string) {
 
-    // get profile for FCM tokens
-    const profileDocRef: admin.firestore.DocumentReference = db.doc(`Users/${uid}/Profile/${uid}`)
-    const profileDocSnap: admin.firestore.DocumentSnapshot = await profileDocRef.get()
-    const profile: Profile = Object.assign(<Profile>{}, profileDocSnap.data())
+  const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
+  if (!!profile.fcmTokens.length) {
 
-    if (profile.fcmTokens) {
-
-        await admin.messaging().sendToDevice(profile.fcmTokens as string[], {
-            notification: {
-                title: `Daily Gratefulness Reminder`,
-                body: `Name three things you were grateful for today`,
-                clickAction: 'dailyGratefulness'
-            }
-        })
-        
-    }
-
+    return admin.messaging().sendToDevice(profile.fcmTokens as string[], {
+      notification: {
+        title: `Daily Gratefulness Reminder`,
+        body: `Name three things you were grateful for today`,
+        clickAction: 'dailyGratefulness'
+      }
+    })
+  }
 }
 
-export async function scheduleNextDailyGratefulnessReminder(uid: string): Promise<void> {
+export function scheduleNextDailyGratefulnessReminder(uid: string) {
 
-    const nextReminder = moment(new Date()).add(1, 'day').toISOString()
+  const nextReminder = moment(new Date()).add(1, 'day').toISOString()
 
-    const task: IScheduledTaskUserExerciseDailyGratefulness = {
-        worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
-        performAt: nextReminder,
-        options: {
-            userId: uid
-        },
-        status: enumTaskStatus.scheduled
-    }
+  const task: IScheduledTaskUserExerciseDailyGratefulness = {
+    worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
+    performAt: nextReminder,
+    options: { userId: uid },
+    status: enumTaskStatus.scheduled
+  }
 
-    await upsertScheduledTask(`${uid}dailygratefulness`, task) 
-
+  return upsertScheduledTask(`${uid}dailygratefulness`, task) 
 }
