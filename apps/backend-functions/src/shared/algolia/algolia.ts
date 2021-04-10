@@ -1,8 +1,8 @@
 import * as algoliasearch from 'algoliasearch';
-import { algoliaAppId, sendgridAPIKey } from '../../environments/environment';
+import { algoliaApiKey, algoliaAppId } from '../../environments/environment';
 import { environment } from '../../../../../environments/environment'
 
-const client: algoliasearch.SearchClient = algoliasearch.default(algoliaAppId, sendgridAPIKey);
+const client: algoliasearch.SearchClient = algoliasearch.default(algoliaAppId, algoliaApiKey);
 let idx: algoliasearch.SearchIndex
 
 const initAlgoliaIndex = (index: AlgoliaIndex) => {

@@ -79,7 +79,7 @@ export class UserService {
 
   addFCMToken(token: string) {
     return this.upsertProfile({
-      fcmTokens: this.db.getArrayUnion(token)
+      fcmTokens: this.db.getArrayUnion(token) as any
     })
   }
 

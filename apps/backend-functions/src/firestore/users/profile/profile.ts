@@ -1,7 +1,7 @@
 import { db, functions, admin } from '../../../internals/firebase';
 
 import { Profile } from '@strive/user/user/+state/user.firestore';
-import { addToAlgolia, deleteFromAlgolia } from '../../../shared/algolia/algolia';
+import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../../shared/algolia/algolia';
 import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
@@ -41,7 +41,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
         .catch(err => { console.log('Error subscribing tot topic', err) })
     }
 
-    addToAlgolia('user', uid, {
+    updateAlgoliaObject('user', uid, {
       uid,
       username: after.username,
       photoURL: after.photoURL,

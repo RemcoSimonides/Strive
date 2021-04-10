@@ -4,7 +4,7 @@ export const environment = {
   production: false
 };
 
-export const googleaerviceaccount = functions.config().googleServiceAccount;
+export const googleserviceaccount = functions.config().googleServiceAccount;
 
 export const sendgridAPIKey = functions.config().sendgrid?.key ?? '';
 export const sendgridTemplate = functions.config().sendgrid?.template ?? '';
