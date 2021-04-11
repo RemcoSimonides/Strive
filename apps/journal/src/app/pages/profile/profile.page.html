@@ -28,14 +28,14 @@
    </ng-template>
   </ng-template>
 
-  <ng-container *ngIf="!!profile; else loading">
+  <ng-container *ngIf="profile$ | async as profile; else loading">
     <section fxLayout="column" class="header">
 
       <!-- HEADER -->
       <ion-card>
         <article fxLayout fxLayoutAlign="center end">
-          <img [ref]="_chosenPicture || profile.photoURL" (click)="editProfileImage($event)" asset="profile.png" alt="profile picture"/>
-          <ion-icon *ngIf="isOwner" name="create" (click)="editProfileImage($event)"></ion-icon>
+          <img [ref]="profile.photoURL" (click)="editProfileImage(profile, $event)" asset="profile.png" alt="profile picture"/>
+          <ion-icon *ngIf="isOwner" name="create" (click)="editProfileImage(profile, $event)"></ion-icon>
         </article>
         <article fxLayout fxLayoutAlign="center center">
           <ng-container *ngIf="isOwner else username">

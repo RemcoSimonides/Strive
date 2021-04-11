@@ -37,7 +37,7 @@ function createProfileFormControl(params: Profile) {
 export type ProfileFormControl = ReturnType<typeof createProfileFormControl>
 
 export class ProfileForm extends FormEntity<ProfileFormControl> {
-  constructor(profile: Profile) {
+  constructor(profile?: Profile) {
     super(createProfileFormControl(profile))
   }
 

@@ -28,7 +28,8 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
-
+import { ProfileService } from '@strive/user/user/+state/profile.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -42,17 +43,14 @@ export class ProfilePage implements OnInit {
 
   public shouldLogin = false
 
-  // enums
   public enumExercises = enumExercises
-
-  public _chosenPicture: any
 
   public isOwner = false
   public isSpectator = false
 
   public profileId: string
-  public profile: Profile
-  public profileForm: ProfileForm
+  public profile$: Observable<Profile>
+  public profileForm = new ProfileForm()
 
   public achievingGoals$: Observable<Goal[]>
   public supportingGoals$: Observable<Goal[]>
@@ -65,8 +63,8 @@ export class ProfilePage implements OnInit {
   constructor(
     private afAuth: AngularFireAuth,
     public user: UserService,
+    private profileService: ProfileService,
     private goalService: GoalService,
-    private _imageService: ImageService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
@@ -100,11 +98,15 @@ export class ProfilePage implements OnInit {
       }
     }
 
-    this.profile = await this.user.getProfile(this.profileId)
-    this.profileForm = new ProfileForm(this.profile)
+    this.profile$ = this.profileService.valueChanges(this.profileId, { uid: this.profileId }).pipe(
+      tap(profile => {
+        if (!!profile) {
+          this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
+          this.profileForm.patchValue(profile)
+        }
+      })
+    )
     this.profileForm.disable()
-
-    this.seo.generateTags({ title: `${this.profile.username} - Strive Journal` })
 
     this.achievingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
     this.supportingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
@@ -158,13 +160,13 @@ export class ProfilePage implements OnInit {
     })
   }
 
-  public async editProfileImage(ev: UIEvent): Promise<void> {
+  public async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
     if (!this.isOwner) return
 
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverPage,
       componentProps: {
-        storagePath: this.profile.photoURL
+        storagePath: profile.photoURL
       },
       event: ev
     })
