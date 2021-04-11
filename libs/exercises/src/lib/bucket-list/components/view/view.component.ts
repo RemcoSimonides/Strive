@@ -26,20 +26,19 @@ export class ViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.bucketList$ = this.service.getBucketList$(this.uid).pipe(
+    this.bucketList$ = this.service.valueChanges('BucketList', { uid: this.uid }).pipe(
       map(bucketlist => {
         if (!this.isOwner && this.isSpectator) bucketlist.items = bucketlist.items.filter(item => item.privacy !== 'private')
         if (!this.isOwner && !this.isSpectator) bucketlist.items = bucketlist.items.filter(item => item.privacy === 'public')
         return bucketlist
-      }),
+      })
     )
   }
 
   toggle(list: BucketList, index: number) {
     if (!this.isOwner) return
-
     list.items[index].completed = !list.items[index].completed
-    this.service.saveBucketList(this.uid, list)
+    this.service.upsert(list, { params: { uid: this.uid }});
   }
 
   edit() {

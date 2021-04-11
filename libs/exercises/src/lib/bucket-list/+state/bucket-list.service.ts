@@ -1,27 +1,15 @@
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-
-// Rxjs
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
-
 // Strive
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { BucketList } from './bucket-list.firestore';
+import { FireCollection } from '@strive/utils/services/collection.service';
 
 @Injectable({providedIn: 'root'})
-export class BucketListService {
+export class BucketListService extends FireCollection<BucketList> {
+  readonly path = 'Users/:uid/Exercises'
 
-  constructor(private db: FirestoreService) { }
-
-  public getBucketList$(uid: string): Observable<BucketList> {
-    return this.db.docWithId$<BucketList>(`Users/${uid}/Exercises/BucketList`)
+  constructor(db: AngularFirestore) {
+    super(db)
   }
 
-  async getBucketList(uid: string): Promise<BucketList> {
-    return await this.getBucketList$(uid).pipe(first()).toPromise()
-  }
-
-  async saveBucketList(uid: string, bucketList: BucketList): Promise<void> {
-    await this.db.upsert(`Users/${uid}/Exercises/BucketList`, bucketList)
-  }
 }

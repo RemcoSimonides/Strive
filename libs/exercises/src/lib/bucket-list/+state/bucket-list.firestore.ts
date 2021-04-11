@@ -1,6 +1,7 @@
 import { FieldValue } from '@firebase/firestore-types';
 
 export interface BucketList {
+  id?: string;
   items: BucketListItem[];
   createdAt?: FieldValue;
   updatedAt?: FieldValue;

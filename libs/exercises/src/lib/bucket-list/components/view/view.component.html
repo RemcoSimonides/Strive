@@ -1,7 +1,7 @@
 <ng-container *ngIf="bucketList$ | async as bucketList">
   <ng-container *ngIf="bucketList.items.length">
 
-    <section fxLayout fxLayoutAlign="start center">
+    <section fxLayout fxLayoutAlign="start baseline" fxLayoutGap="8px">
       <h3>Bucket List</h3>
       <ion-icon *ngIf="isOwner" name="create" (click)="edit()"></ion-icon>
     </section>
@@ -9,8 +9,8 @@
     <ion-list>
       <ng-container *ngFor="let item of bucketList.items; let last = last; let i = index">
         <ion-item [lines]="last ? 'none' : 'inset'">
-          <ion-checkbox class="no-opacity" [checked]="item.completed" [disabled]="item.completed  || !isOwner" (ionChange)="toggle(bucketList, i)"></ion-checkbox>
-          <ion-label class="no-opacity">{{ item.description }}</ion-label>
+          <ion-checkbox [checked]="item.completed" [disabled]="item.completed  || !isOwner" (ionChange)="toggle(bucketList, i)"></ion-checkbox>
+          <ion-label >{{ item.description }}</ion-label>
           <ion-icon *ngIf="item.privacy === 'public'" name="eye" class="public"></ion-icon>
           <ion-icon *ngIf="item.privacy === 'spectatorsOnly'" name="eye"></ion-icon>
           <ion-icon *ngIf="item.privacy === 'private'" name="eye-off"></ion-icon>

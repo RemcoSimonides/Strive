@@ -1,9 +1,14 @@
-.no-opacity {
+.public {
+  color: green;
+}
+
+ion-checkbox {
+  margin-right: 8px;
   opacity: 1;
 }
 
-.public {
-  color: green;
+ion-label {
+  opacity: 1 !important;
 }
 
 ion-icon:hover {

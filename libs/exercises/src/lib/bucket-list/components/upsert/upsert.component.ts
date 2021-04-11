@@ -6,6 +6,7 @@ import { BucketListItemForm } from '../../form/bucket-list.form';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { startWith } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { BucketListItem } from '../../+state/bucket-list.firestore';
 
 @Component({
   selector: 'exercise-upsert-bucket-list',
@@ -26,7 +27,7 @@ export class BucketListUpsertComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() { 
-    const bucketList = await this.service.getBucketList(this.user.uid)
+    const bucketList = await this.service.getValue('BucketList', { uid: this.user.uid })
     bucketList.items.forEach(item => this.itemsForm.push(new BucketListItemForm(item)))
 
     this.sub = this.itemsForm.valueChanges.pipe(startWith(this.itemsForm.value)).subscribe(items => {
@@ -47,10 +48,8 @@ export class BucketListUpsertComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    const last = this.itemsForm.at(this.itemsForm.length - 1)
-    if (last.value === '') this.itemsForm.removeAt(this.itemsForm.length - 1)
-
-    this.service.saveBucketList(this.user.uid, { items: this.itemsForm.value })
+    const items = (this.itemsForm.value as BucketListItem[]).filter(item => !!item.description)
+    this.service.update('BucketList', { id: 'BucketList', items }, { params: { uid: this.user.uid }})
     this.dismiss();
   }
 }

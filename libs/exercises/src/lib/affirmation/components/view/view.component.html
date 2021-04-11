@@ -1,7 +1,7 @@
 <ng-container *ngIf="affirmations$ | async as affirmations">
   <ng-container *ngIf="affirmations.affirmations.length">
 
-    <section fxLayout fxLayoutAlign="start center">
+    <section fxLayout fxLayoutAlign="start baseline" fxLayoutGap="8px">
       <h3>Affirmations</h3>
       <ion-icon *ngIf="isOwner" name="create" (click)="edit()"></ion-icon>  
     </section>
