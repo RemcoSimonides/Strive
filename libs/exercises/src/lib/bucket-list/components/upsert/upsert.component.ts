@@ -28,7 +28,9 @@ export class BucketListUpsertComponent implements OnInit, OnDestroy {
 
   async ngOnInit() { 
     const bucketList = await this.service.getValue('BucketList', { uid: this.user.uid })
-    bucketList.items.forEach(item => this.itemsForm.push(new BucketListItemForm(item)))
+    if (!!bucketList && !!bucketList.items) {
+      bucketList.items.forEach(item => this.itemsForm.push(new BucketListItemForm(item)))
+    }
 
     this.sub = this.itemsForm.valueChanges.pipe(startWith(this.itemsForm.value)).subscribe(items => {
       if (!items.some(item => !item.description)) this.add()
@@ -49,7 +51,7 @@ export class BucketListUpsertComponent implements OnInit, OnDestroy {
 
   save() {
     const items = (this.itemsForm.value as BucketListItem[]).filter(item => !!item.description)
-    this.service.update('BucketList', { id: 'BucketList', items }, { params: { uid: this.user.uid }})
+    this.service.upsert({ id: 'BucketList', items }, { params: { uid: this.user.uid }})
     this.dismiss();
   }
 }

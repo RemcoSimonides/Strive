@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, Tem
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore';
+import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 
 declare const initMilestonesAnimation: Function;
 
@@ -16,9 +17,6 @@ export class MilestoneDirective { }
 })
 export class RoadmapComponent {
 
-  @ContentChild(MilestoneDirective, { read: TemplateRef }) milestoneTemplate: MilestoneDirective;
-
-
   private _structuredMilestones: MilestonesLeveled[]
   get structuredMilestones() { return this._structuredMilestones }
   @Input() set structuredMilestones(value: MilestonesLeveled[]) {
@@ -28,9 +26,12 @@ export class RoadmapComponent {
   @Input() isAdmin: boolean
   @Input() maxdeadline: string
 
+  @ContentChild(MilestoneDirective, { read: TemplateRef }) milestoneTemplate: MilestoneDirective;
+
   constructor(
     private loadingCtrl: LoadingController,
-    private router: Router
+    private router: Router,
+    public roadmapService: RoadmapService
   ) { }
 
   editRoadmap() {

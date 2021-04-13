@@ -1,16 +1,16 @@
 import { FormControl } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createMilestone, createMilestoneLink, Milestone, MilestoneLink } from "../+state/milestone.firestore";
+import { createMilestone, createMilestoneLink, createMilestoneTemplate, Milestone, MilestoneLink, MilestoneTemplateObject } from "../+state/milestone.firestore";
 import { ProfileLinkForm } from '@strive/user/user/forms/user.form'
 
 function createMilestoneFormControl(params: Milestone) {
   const milestone = createMilestone(params)
   return {
-    sequenceNumber: new FormControl(params.sequenceNumber),
-    description: new FormControl(params.sequenceNumber),
-    status: new FormControl(params.status),
-    deadline: new FormControl(params.deadline),
-    achiever: new ProfileLinkForm(params.achiever)
+    sequenceNumber: new FormControl(milestone.sequenceNumber),
+    description: new FormControl(milestone.sequenceNumber),
+    status: new FormControl(milestone.status),
+    deadline: new FormControl(milestone.deadline),
+    achiever: new ProfileLinkForm(milestone.achiever)
   }
 }
 
@@ -44,4 +44,27 @@ export class MilestoneLinkForm extends FormEntity<MilestoneLinkFormControl> {
 
   get id() { return this.get('id') }
   get description() { return this.get('description') }
+}
+
+function createMilestoneTemplateFormControl(params?: Partial<MilestoneTemplateObject>) {
+  const milestone = createMilestoneTemplate(params)
+  return {
+    id: new FormControl(milestone.id),
+    deadline: new FormControl(milestone.deadline),
+    description: new FormControl(milestone.description),
+    sequenceNumber: new FormControl(milestone.sequenceNumber)
+  }
+}
+
+export type MilestoneTemplateFormControl = ReturnType<typeof createMilestoneTemplateFormControl>
+
+export class MilestoneTemplateForm extends FormEntity<MilestoneTemplateFormControl> {
+  constructor(milestoneTemplate?: Partial<MilestoneTemplateObject>) {
+    super(createMilestoneTemplateFormControl(milestoneTemplate))
+  }
+
+  get id() { return this.get('id') }
+  get deadline() { return this.get('deadline') }
+  get description() { return this.get('description') }
+  get sequenceNumber() { return this.get('sequenceNumber') }
 }

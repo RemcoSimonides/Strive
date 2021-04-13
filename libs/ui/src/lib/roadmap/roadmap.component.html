@@ -1,48 +1,57 @@
-<ng-container *ngIf="structuredMilestones; else loading">
-  <ng-container *ngIf="structuredMilestones.length; else empty">
+<ng-container *ngIf="!(roadmapService.converting | async); else updating">
+ <ng-container *ngIf="structuredMilestones && !(roadmapService.converting | async); else loading">
+    <ng-container *ngIf="structuredMilestones.length; else empty">
 
-    <!-- First level -->
-    <ul class="collapsible popout" data-collapsible="accordion">
-      <ng-container *ngFor="let milestoneLevelOne of structuredMilestones; let i = index">
-        <li>
-          <section class="collapsible-header" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
-            <ng-template 
-              [ngTemplateOutlet]="milestoneTemplate"
-              [ngTemplateOutletContext]="{ $implicit: milestoneLevelOne, index: [i], maxDeadline: maxDeadline }">
-            </ng-template>
-          </section>
+      <!-- First level -->
+      <ul class="collapsible popout" data-collapsible="accordion">
+        <ng-container *ngFor="let milestoneLevelOne of structuredMilestones; let i = index">
+          <li>
+            <section class="collapsible-header" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+              <ng-template 
+                [ngTemplateOutlet]="milestoneTemplate"
+                [ngTemplateOutletContext]="{ $implicit: milestoneLevelOne, index: [i], maxDeadline: maxDeadline }">
+              </ng-template>
+            </section>
 
-          <!-- Second level -->
-          <ul class="collapsible collapsible-body" data-collapsible="accordion">
-            <ng-container *ngFor="let milestoneLevelTwo of milestoneLevelOne.submilestones; let j = index">
-              <li>
-                <section class="collapsible-header"  fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
-                  <ng-template 
-                    [ngTemplateOutlet]="milestoneTemplate"
-                  [ngTemplateOutletContext]="{ $implicit: milestoneLevelTwo, index: [i, j], maxDeadline: milestoneLevelOne.deadline }">
-                  </ng-template>
-                </section>
-
-                <!-- Third level -->
-                <ng-container *ngFor="let milestoneLevelThree of milestoneLevelTwo.submilestones; let k = index">
-                  <section class="collapsible-body third" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+            <!-- Second level -->
+            <ul class="collapsible collapsible-body" data-collapsible="accordion">
+              <ng-container *ngFor="let milestoneLevelTwo of milestoneLevelOne.submilestones; let j = index">
+                <li>
+                  <section class="collapsible-header"  fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
                     <ng-template 
                       [ngTemplateOutlet]="milestoneTemplate"
-                      [ngTemplateOutletContext]="{ $implicit: milestoneLevelThree, index: [i, j, k], maxDeadline: milestoneLevelTwo.deadline }">
+                    [ngTemplateOutletContext]="{ $implicit: milestoneLevelTwo, index: [i, j], maxDeadline: milestoneLevelOne.deadline }">
                     </ng-template>
                   </section>
-                </ng-container>
-              </li><!-- End level 3-->
 
-            </ng-container>
-          </ul><!-- End level 2-->
+                  <!-- Third level -->
+                  <ng-container *ngFor="let milestoneLevelThree of milestoneLevelTwo.submilestones; let k = index">
+                    <section class="collapsible-body third" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+                      <ng-template 
+                        [ngTemplateOutlet]="milestoneTemplate"
+                        [ngTemplateOutletContext]="{ $implicit: milestoneLevelThree, index: [i, j, k], maxDeadline: milestoneLevelTwo.deadline }">
+                      </ng-template>
+                    </section>
+                  </ng-container>
+                </li><!-- End level 3-->
 
-        </li>
-      </ng-container>
-    </ul><!-- End level 1-->
+              </ng-container>
+            </ul><!-- End level 2-->
 
+          </li>
+        </ng-container>
+      </ul><!-- End level 1-->
+
+    </ng-container>
   </ng-container>
 </ng-container>
+
+<ng-template #updating>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <ion-spinner name="lines" color="primary"></ion-spinner>
+    Updating roadmap...
+  </section>
+</ng-template>
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">

@@ -46,13 +46,13 @@ export class MilestoneOptionsPopover implements OnInit {
       photoURL: currentUser.photoURL,
       uid: currentUser.uid
     })
-    await this.milestoneService.upsert(this.goalId, this.milestone.id, { achiever: this.milestone.achiever })
+    await this.milestoneService.upsert({ achiever: this.milestone.achiever, id: this.milestone.id }, { params: { goalId: this.goalId }})
     this.dismiss(this.milestone)
   }
 
   async unassignMe() {
     this.milestone.achiever = createProfileLink()
-    await this.milestoneService.upsert(this.goalId, this.milestone.id, { achiever: this.milestone.achiever})
+    await this.milestoneService.upsert({ achiever: this.milestone.achiever, id: this.milestone.id }, { params: { goalId: this.goalId }})
     this.dismiss(this.milestone)
   }
 

@@ -1,55 +1,41 @@
 import { Injectable } from '@angular/core';
-// Angularfire
-import { AngularFirestore } from '@angular/fire/firestore';
-// Rxjs
-import { take, first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { MilestoneService } from './milestone.service';
+import { TemplateService } from '@strive/template/+state/template.service';
 // Interfaces
-import { Template } from '@strive/template/+state/template.firestore'
-import { Milestone, MilestonesLeveled, MilestoneTemplabeObject } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone, MilestonesLeveled, MilestoneTemplateObject } from '@strive/milestone/+state/milestone.firestore'
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
-import { setDateToEndOfDay } from '@strive/utils/helpers'
 import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class RoadmapService {
 
-  milestones: Milestone[]
+  private _converting = new BehaviorSubject<boolean>(false)
+  converting = this._converting.asObservable()
 
   constructor(
-    private afs: AngularFirestore,
-    private db: FirestoreService,
-  ) { }
+    private milestoneService: MilestoneService,
+    private templateService: TemplateService
+  ) {
+    this.converting.subscribe(console.log)
+  }
 
   async getStructuredMilestones(goalId: string): Promise<MilestonesLeveled[]> {
-    const milestones = await this.db.colWithIds$<Milestone[]>(`Goals/${goalId}/Milestones`, ref => ref.orderBy('sequenceNumber')).pipe(take(1)).toPromise()
+    const milestones = await this.milestoneService.getValue(ref => ref.orderBy('sequenceNumber'), { goalId })
     return this.structureMilestones(milestones)
   }
 
   async getStructuredMilestonesForTemplates(collectiveGoalId: string, templateId: string): Promise<MilestonesLeveled[]> {
-    const template = await this.db.docWithId$<Template>(`CollectiveGoals/${collectiveGoalId}/Templates/${templateId}`).pipe(first()).toPromise()
+    const template = await this.templateService.getValue(templateId, { collectiveGoalId })
     return this.structureMilestones(template.milestoneTemplateObject)
   }
 
   async getMilestoneWithSeqno(goalId: string, sequenceNumber: string): Promise<Milestone> {
-    const milestoneColObs = this.db.colWithIds$<Milestone[]>(`Goals/${goalId}/Milestones`, ref => ref.where('sequenceNumber', '==', sequenceNumber))
-
-    return new Promise<Milestone>((resolve, reject) => {
-      milestoneColObs.pipe(take(1)).subscribe(milestones => !!milestones && milestones.length === 1 ? resolve(milestones[0]) : reject())
-    })
-  }
-
-  checkForIncompleteSubmilestones(milestoneId: string): boolean {
-
-    if (!this.milestones) throw new Error('No milestones in class!')
-
-    const seqno = this.milestones.find(milestone => milestone.id == milestoneId).sequenceNumber
-    const prefix = `${seqno}.`
-    const submilestones = this.milestones.filter(milestone => milestone.sequenceNumber.startsWith(prefix))
-    return submilestones.some(milestone => milestone.status === 'pending')
+    const milestones = await this.milestoneService.getValue(ref => ref.where('sequenceNumber', '==', sequenceNumber), { goalId })
+    if (!!milestones) return milestones[0]
   }
 
   /**
@@ -57,52 +43,46 @@ export class RoadmapService {
    * @param goalId goal id of the goal which needs the milestones
    * @param milestoneTemplate 
    */
-  async startConversion(goalId: string, milestoneTemplate: MilestoneTemplabeObject[]): Promise<void> {
+  async startConversion(goalId: string, milestoneTemplates: MilestoneTemplateObject[]): Promise<void> {
+    this._converting.next(true);
 
-    //Get all milestones if they have not been passed from the goal page.
-    if (!this.milestones) {
-      this.milestones = await this.db.colWithIds$(`Goals/${goalId}/Milestones`).pipe(take(1)).toPromise()
+    const milestones = await this.milestoneService.getValue({ goalId })
+    const promises: Promise<any>[] = []
+
+    for (const milestoneTemplate of milestoneTemplates) {
+      // UPDATE
+      const milestone = milestones.find(m => m.id === milestoneTemplate.id)
+      if (!!milestone) {
+        // Update only when anything has changed
+        if (milestone.description !== milestoneTemplate.description
+         || milestone.sequenceNumber !== milestoneTemplate.sequenceNumber
+         || milestone.deadline !== milestoneTemplate.deadline) {
+          const promise = this.milestoneService.update(milestoneTemplate, { params: { goalId }})
+          promises.push(promise)
+        }
+      } else {
+        // ADD
+        const promise = this.milestoneService.add(createMilestone(milestoneTemplate), { params: { goalId }})
+        promises.push(promise)
+      }
     }
 
-    milestoneTemplate.forEach(milestone => {
+    // DELETE
+    const ids = milestones.filter(milestone => !milestoneTemplates.some(m => m.id === milestone.id)).map(milestone => milestone.id)
+    const promise = this.milestoneService.remove(ids, { params: { goalId }})
+    promises.push(promise)
 
-      const milestoneDocRef = this.afs.doc(`Goals/${goalId}/Milestones/${milestone.id}`)
-
-      //UPDATE
-      if (this.milestones.some(x => x.id == milestone.id)){
-        const index = this.milestones.findIndex(x => x.id == milestone.id)
-
-        //Update only when anything has changed
-        if (this.milestones[index].description !== milestone.description || this.milestones[index].sequenceNumber !== milestone.sequenceNumber || this.milestones[index].deadline !== milestone.deadline){
-          this.milestones[index].deadline = this.milestones[index].deadline ? setDateToEndOfDay(this.milestones[index].deadline) : null
-          this.db.update(milestoneDocRef, milestone)
-        }
-
-      } else {
-
-        //ADD
-        const newMilestone = createMilestone(milestone)
-        this.db.set(milestoneDocRef, newMilestone)
-      }
-    })
-    
-    //DELETE
-    this.milestones.forEach(milestone => {
-      if (!milestoneTemplate.some(x => x.id == milestone.id)){
-        this.afs.doc(`Goals/${goalId}/Milestones/${milestone.id}`).delete
-      }
-    })
-
+    Promise.all(promises).then(_ => this._converting.next(false))
   }
 
-  structureMilestones(milestones: Milestone[] | MilestoneTemplabeObject[]): MilestonesLeveled[] {
+  structureMilestones(milestones: Milestone[] | MilestoneTemplateObject[]): MilestonesLeveled[] {
     const structuredMilestones: MilestonesLeveled[] = []
 
     let indexMilestoneLevelOne = -1
     let indexMilestoneLevelTwo = -1
     let indexMilestoneLevelThree = -1
 
-    milestones.forEach((milestone: Milestone | MilestoneTemplabeObject) => {
+    milestones.forEach((milestone: Milestone | MilestoneTemplateObject) => {
 
       if (getNrOfDotsInSeqno(milestone.sequenceNumber) === 2) {
 

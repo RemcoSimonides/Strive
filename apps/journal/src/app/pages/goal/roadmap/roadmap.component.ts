@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
 
 // Rxjs
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { pairwise, switchMap } from 'rxjs/operators';
 
 // Strive Service
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -29,7 +29,9 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RoadmapComponent implements OnInit {
+export class RoadmapComponent implements OnInit, OnDestroy {
+
+  private sub: Subscription;
 
   structuredMilestones: MilestonesLeveled[] = []
   stakeholder$: Observable<GoalStakeholder>
@@ -62,8 +64,20 @@ export class RoadmapComponent implements OnInit {
       })
     )
 
+    this.sub = this.service.converting.pipe(pairwise()).subscribe(async ([prev, next]) => {
+      if (prev && !next) {
+        // reload milestones
+        this.structuredMilestones = await this.service.getStructuredMilestones(this.goal.id)
+        this.cdr.markForCheck()
+      }
+    })
+
     this.structuredMilestones = await this.service.getStructuredMilestones(this.goal.id)
     this.cdr.markForCheck()
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 
   updateStatus(context: Milestone, index: number[], stakeholder: GoalStakeholder, event: Event) {
@@ -82,7 +96,7 @@ export class RoadmapComponent implements OnInit {
           text: 'Succeeded',
           role: 'succeeded',
           handler: () => {
-            this.milestone.upsert(this.goal.id, milestone.id, { status: 'succeeded' })
+            this.milestone.upsert({ status: 'succeeded', id: milestone.id }, { params: { goalId: this.goal.id }})
             milestone.status = 'succeeded'
             this.cdr.markForCheck()
             this.startPostCreation(milestone)
@@ -92,7 +106,7 @@ export class RoadmapComponent implements OnInit {
           text: 'Failed',
           role: 'succeeded',
           handler: () => {
-            this.milestone.upsert(this.goal.id, milestone.id, { status: 'failed' })
+            this.milestone.upsert({ status: 'failed', id: milestone.id }, { params: { goalId: this.goal.id }})
             milestone.status = 'failed'
             this.cdr.markForCheck()
             this.startPostCreation(milestone)
@@ -109,7 +123,7 @@ export class RoadmapComponent implements OnInit {
   updateDeadline(deadline: string, index: number[]) {
     const milestone = this.getMilestone(index)
     milestone.deadline = deadline
-    this.milestone.upsert(this.goal.id, milestone.id, { deadline });
+    this.milestone.upsert({ deadline, id: milestone.id }, { params: { goalId: this.goal.id }})
   }
 
   openSupportModal(event: Event, milestone: Milestone) {
@@ -142,7 +156,7 @@ export class RoadmapComponent implements OnInit {
       const milestone = this.getMilestone(index)
       milestone.achiever = data.data.achiever
 
-      this.milestone.upsert(this.goal.id, context.id, { achiever: data.data.achiever })
+      this.milestone.upsert({ achiever: data.data.achiever, id: context.id }, { params: { goalId: this.goal.id }})
       this.cdr.markForCheck();
     })
     popover.present()

@@ -1,5 +1,5 @@
 <!-- Android or iOS header -->
-<ion-header *ngIf="_platform.is('android') || _platform.is('ios')">
+<ion-header *ngIf="platform.is('android') || platform.is('ios')">
   <ion-toolbar>
     <ion-buttons slot="secondary">
       <ion-button (click)="cancel()">
@@ -14,94 +14,78 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-grid class="ion-no-padding">
-      <ion-row class="ion-no-padding">
-        <ion-col size="2" class="ion-no-padding">
-          <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
-        </ion-col>
-        <ion-col class="ion-no-padding">
-          <ion-searchbar placeholder="Add milestone" search-icon="add"
-            (keydown.enter)="addMilestone(addMilestonebar.value)" #addMilestonebar></ion-searchbar>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <section fxLayout fxLayoutAlign="center" class="limited-width">
+      <article class="new_sequenceNumber">
+        <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
+      </article>
+      <ion-searchbar placeholder="Add milestone" 
+        search-icon="add"
+        (keydown.enter)="addMilestone(addMilestonebar.value)"
+        #addMilestonebar>
+      </ion-searchbar>
+    </section>
   </ion-toolbar>
 </ion-header>
 
 <!-- Browser header -->
-<div *ngIf="!_platform.is('android') && !_platform.is('ios')">
-  <div class="header">
-    <h1>Edit Roadmap</h1>
-  </div>
+<ng-container *ngIf="!platform.is('android') && !platform.is('ios')">
+  <h1>Edit Roadmap</h1>
 
-  <div class="sub-header">
+  <section fxLayout fxLayoutAlign="center">
     <ion-button (click)="cancel()" color="primary" fill="clear">
       <ion-icon name="close" color="primary"></ion-icon>Cancel
     </ion-button>
     <ion-button (click)="save()" color="primary" fill="clear">
       <ion-icon name="checkmark" color="primary"></ion-icon>Save changes
     </ion-button>
-  </div>
+  </section>
 
-  <div class="center">
-    <div class="not-too-wide">
-      <ion-row class="ion-no-padding">
-        <ion-col size="1" class="ion-no-padding">
-          <div class="seqno-input">
-            <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
-          </div>
-        </ion-col>
-        <ion-col class="ion-no-padding">
-          <ion-searchbar placeholder="Add milestone" search-icon="add"
-            (keydown.enter)="addMilestone(addMilestonebar.value)" #addMilestonebar></ion-searchbar>
-        </ion-col>
-      </ion-row>
-    </div>
-  </div>
-</div>
+  <section fxLayout fxLayoutAlign="center" class="limited-width">
+    <article class="new_sequenceNumber">
+      <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
+    </article>
+    <ion-searchbar placeholder="Add milestone" 
+      search-icon="add"
+      (keydown.enter)="addMilestone(addMilestonebar.value)"
+      #addMilestonebar>
+    </ion-searchbar>
+  </section>
+</ng-container>
 
 <ion-content class="ion-padding">
-  <div class="center">
-    <div class="limited-width">
+  <section fxLayout fxLayoutAlign="center" class="limited-width">
 
-      <div class="explanation" *ngIf="milestoneTemplate?.length === 0">
+    <ng-container *ngIf="formArray.controls.length === 0">
+      <article class="explanation">
         <span class="center">This is how it works</span>
         <ion-img src="assets/pages/roadmap/How to edit roadmap.gif"></ion-img>
-      </div>
+      </article>
+    </ng-container>
 
-      <ion-list>
-        <ion-item *ngFor="let milestone of milestoneTemplate">
-          <ion-grid class="ion-no-padding" fixed="true">
-            <ion-row class="ion-no-padding ion-justify-content-start">
-              <ion-col class="ion-no-padding" size="2">
-                <ion-input [ngStyle]="{'margin-left': getMargin(milestone.sequenceNumber)}"
-                  (ionInput)="onSequenceNumberInput($event, milestone.sequenceNumber)"
-                  (ionFocus)="onSequenceNumberFocus(milestone.sequenceNumber)"
-                  (ionBlur)="onSequenceNumberBlur($event, milestone.sequenceNumber)"
-                  [(ngModel)]="milestone.sequenceNumber">
-                </ion-input>
+    <ion-list>
+      <ion-item *ngFor="let control of formArray.controls">
+        <ion-input [ngStyle]="{'margin-left': getMargin(control.value.sequenceNumber)}"
+          class="sequenceNumber"
+          (ionInput)="onSequenceNumberInput($event, control.value.sequenceNumber)"
+          (ionFocus)="onSequenceNumberFocus(control.value.sequenceNumber)"
+          (ionBlur)="onSequenceNumberBlur($event, control.value.sequenceNumber)"
+          [formControl]="control.sequenceNumber">
+        </ion-input>
+        <ion-input [ngStyle]="{'margin-left': getMargin(control.value.sequenceNumber)}"
+          [formControl]="control.description">
+        </ion-input>
+        <ion-datetime class="ion-no-padding" 
+          placeholder="-- -- --"
+          displayFormat="DD-MM-YY"
+          pickerFormat="DDDD MMMM YYYY"
+          [formControl]="control.deadline"
+          (click)="_openingDatetime($event, control.value)"
+          (ionChange)="onDeadlineDateChange($event, control.value)">
+        </ion-datetime>
+        <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon>
+        <ion-icon name="trash" (click)="deleteMilestone(control.value.sequenceNumber)"></ion-icon>
+      </ion-item>
+    </ion-list>
 
-              </ion-col>
-              <ion-col class="ion-no-padding">
-                <ion-input [ngStyle]="{'margin-left': getMargin(milestone.sequenceNumber)}"
-                  [(ngModel)]="milestone.description"></ion-input>
-              </ion-col>
-              <ion-col size-xl="2" size-lg="2" size-md="2" size-sm="1" size-xs="1">
-                <div class="box">
-                  <ion-datetime class="ion-no-padding" placeholder="-- -- --" displayFormat="DD-MM-YY"
-                    pickerFormat="DDDD MMMM YYYY" [value]="milestone.deadline"
-                    (click)="_openingDatetime($event, milestone)" (ionChange)="onDeadlineDateChange($event, milestone)">
-                  </ion-datetime>
-                  <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon>
-                </div>
-              </ion-col>
-              <ion-col size="1">
-                <ion-icon name="trash" (click)="deleteMilestone(milestone.sequenceNumber)"></ion-icon>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
-      </ion-list>
-    </div>
-  </div>
+  </section>
 </ion-content>

@@ -2,6 +2,13 @@ import { FieldValue } from '@firebase/firestore-types';
 import { createProfileLink, ProfileLink } from '@strive/user/user/+state/user.firestore';
 import { setDateToEndOfDay } from '@strive/utils/helpers';
 
+export type MilestoneStatus = 
+  'pending'
+  | 'succeeded' // milestone succesful
+  | 'failed' // milestone failed
+  | 'neutral' // didnt succeed and failed but no action was taken
+  | 'overdue'
+
 export interface Milestone {
   id?: string;
   sequenceNumber: string;
@@ -14,14 +21,6 @@ export interface Milestone {
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
-
-export interface MilestoneTemplabeObject {
-  id: string;
-  description: string;
-  sequenceNumber: string;
-  deadline: string;
-}
-
 export interface MilestonesLeveled extends Milestone {
   submilestones?: MilestoneLevelTwo[];
 }
@@ -34,16 +33,16 @@ export interface MilestoneLink {
   id: string;
   description: string;
 }
-
-export type MilestoneStatus = 
-  'pending'
-  | 'succeeded' // milestone succesful
-  | 'failed' // milestone failed
-  | 'neutral' // didnt succeed and failed but no action was taken
-  | 'overdue'
+export interface MilestoneTemplateObject {
+  id: string;
+  description: string;
+  sequenceNumber: string;
+  deadline: string;
+}
+  
 
 /** A factory function that creates a MilestoneDocument. */
-export function createMilestone(params: Partial<Milestone> ={}): Milestone {
+export function createMilestone(params: Partial<Milestone> = {}): Milestone {
   return {
     id: !!params.id ? params.id : '',
     sequenceNumber: '',
@@ -65,3 +64,13 @@ export function createMilestoneLink(params: Partial<MilestoneLink> = {}): Milest
   }
 }
 
+/** A factory function that creates a MilestoneTemplate Object. */
+export function createMilestoneTemplate(params: Partial<MilestoneTemplateObject> = {}): MilestoneTemplateObject {
+  return {
+    id: !!params.id ? params.id : '',
+    deadline: '',
+    description: '',
+    sequenceNumber: '',
+    ...params
+  }
+}
