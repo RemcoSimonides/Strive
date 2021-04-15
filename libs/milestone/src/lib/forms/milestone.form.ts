@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createMilestone, createMilestoneLink, createMilestoneTemplate, Milestone, MilestoneLink, MilestoneTemplateObject } from "../+state/milestone.firestore";
+import { createMilestone, createMilestoneLink, createMilestoneTemplate, Milestone, MilestoneLink, MilestoneTemplate } from "../+state/milestone.firestore";
 import { ProfileLinkForm } from '@strive/user/user/forms/user.form'
 
 function createMilestoneFormControl(params: Milestone) {
@@ -46,7 +46,7 @@ export class MilestoneLinkForm extends FormEntity<MilestoneLinkFormControl> {
   get description() { return this.get('description') }
 }
 
-function createMilestoneTemplateFormControl(params?: Partial<MilestoneTemplateObject>) {
+function createMilestoneTemplateFormControl(params?: Partial<MilestoneTemplate>) {
   const milestone = createMilestoneTemplate(params)
   return {
     id: new FormControl(milestone.id),
@@ -59,7 +59,7 @@ function createMilestoneTemplateFormControl(params?: Partial<MilestoneTemplateOb
 export type MilestoneTemplateFormControl = ReturnType<typeof createMilestoneTemplateFormControl>
 
 export class MilestoneTemplateForm extends FormEntity<MilestoneTemplateFormControl> {
-  constructor(milestoneTemplate?: Partial<MilestoneTemplateObject>) {
+  constructor(milestoneTemplate?: Partial<MilestoneTemplate>) {
     super(createMilestoneTemplateFormControl(milestoneTemplate))
   }
 

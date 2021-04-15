@@ -59,7 +59,7 @@ export const useTemplate = functions.https.onCall(async (
     deadline: template.goalDeadline,
     shortDescription: template.goalShortDescription,
     image: template.goalImage,
-    milestoneTemplateObject: template.milestoneTemplateObject,
+    roadmapTemplate: template.roadmapTemplate,
     collectiveGoalId: data.collectiveGoalId
   })
   const { id } = await db.collection(`Goals`).add(goal)
@@ -82,7 +82,7 @@ export const useTemplate = functions.https.onCall(async (
   promises.push(p)
 
   // Create milestones
-  template.milestoneTemplateObject.forEach(m => {
+  template.roadmapTemplate.forEach(m => {
     const milestone = createMilestone(m)
     const promise = db.doc(`Goals/${id}/Milestones/${m.id}`).set(milestone)
     promises.push(promise)

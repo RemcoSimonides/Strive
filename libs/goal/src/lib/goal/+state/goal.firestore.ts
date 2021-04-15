@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { MilestoneTemplateObject } from '@strive/milestone/+state/milestone.firestore'
+import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
 
 export type GoalPublicityType = 'public' | 'collectiveGoalOnly' | 'private'
 
@@ -10,7 +10,7 @@ export interface Goal {
     description: string;
     image: string;
     collectiveGoalId: string;
-    milestoneTemplateObject: MilestoneTemplateObject[];
+    roadmapTemplate: MilestoneTemplate[];
     isOverdue: boolean;
     isFinished: boolean;
     isLocked: boolean;
@@ -39,7 +39,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     isFinished: false,
     isLocked: false,
     isOverdue: false,
-    milestoneTemplateObject: [],
+    roadmapTemplate: [],
     numberOfAchievers: 0,
     numberOfCustomSupports: 0,
     numberOfSupporters: 0,

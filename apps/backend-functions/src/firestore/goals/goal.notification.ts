@@ -70,7 +70,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
   }
 
   // Roadmap changed
-  if (JSON.stringify(before.milestoneTemplateObject) !== JSON.stringify(after.milestoneTemplateObject)) {
+  if (JSON.stringify(before.roadmapTemplate) !== JSON.stringify(after.roadmapTemplate)) {
 
     const momentBefore = moment(before.updatedAt)
     const momentAfter = moment(after.updatedAt)

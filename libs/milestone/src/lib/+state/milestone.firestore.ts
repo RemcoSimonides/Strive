@@ -33,7 +33,7 @@ export interface MilestoneLink {
   id: string;
   description: string;
 }
-export interface MilestoneTemplateObject {
+export interface MilestoneTemplate {
   id: string;
   description: string;
   sequenceNumber: string;
@@ -65,7 +65,7 @@ export function createMilestoneLink(params: Partial<MilestoneLink> = {}): Milest
 }
 
 /** A factory function that creates a MilestoneTemplate Object. */
-export function createMilestoneTemplate(params: Partial<MilestoneTemplateObject> = {}): MilestoneTemplateObject {
+export function createMilestoneTemplate(params: Partial<MilestoneTemplate> = {}): MilestoneTemplate {
   return {
     id: !!params.id ? params.id : '',
     deadline: '',

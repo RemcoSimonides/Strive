@@ -32,7 +32,7 @@ function createGoalFormControl(params?: Goal) {
     isLocked: new FormControl(goal.isLocked),
     isOverdue: new FormControl(goal.isOverdue),
     deadline: new FormControl(goal.deadline),
-    milestoneTemplateObject: new FormControl(goal.milestoneTemplateObject),
+    roadmapTemplate: new FormControl(goal.roadmapTemplate),
     numberOfAchievers: new FormControl(goal.numberOfAchievers),
     numberOfCustomSupports: new FormControl(goal.numberOfCustomSupports),
     numberOfSupporters: new FormControl(goal.numberOfSupporters),

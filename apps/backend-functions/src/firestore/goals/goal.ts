@@ -131,7 +131,7 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     image: goal.image,
     publicity: goal.publicity,
     deadline: goal.deadline,
-    milestoneTemplateObject: goal.milestoneTemplateObject,
+    roadmapTemplate: goal.roadmapTemplate,
     collectiveGoalId: goal.collectiveGoalId,
   })
   const { id } = await db.collection(`Goals`).add(newGoal)
@@ -154,7 +154,7 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
 
   // Creating milestones
   const promises: any[] = []
-  for (const milestone of goal.milestoneTemplateObject) {
+  for (const milestone of goal.roadmapTemplate) {
     const newMilestone = createMilestone({
       description: milestone.description,
       sequenceNumber: milestone.sequenceNumber,

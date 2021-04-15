@@ -63,7 +63,7 @@ export class TemplatePage implements OnInit {
     this.template$ = this.template.valueChanges(this.templateId, { collectiveGoalId: this.collectiveGoalId }).pipe(
       tap(template => {
         if (!this.structuredMilestones.length) {
-          this.structuredMilestones = this.roadmapService.structureMilestones(template.milestoneTemplateObject)
+          this.structuredMilestones = this.roadmapService.structureMilestones(template.roadmapTemplate)
         }
         this.seo.generateTags({ title: `${template.title} - Strive Journal` })
       })
@@ -143,11 +143,11 @@ export class TemplatePage implements OnInit {
   }
 
   updateRoadmap(deadline: string, context: Milestone, template: Template) {
-    const milestone = template.milestoneTemplateObject.find(m => m.sequenceNumber === context.sequenceNumber)
+    const milestone = template.roadmapTemplate.find(m => m.sequenceNumber === context.sequenceNumber)
     milestone.deadline = deadline
 
     this.template.update(this.templateId, {
-      milestoneTemplateObject: template.milestoneTemplateObject
+      roadmapTemplate: template.roadmapTemplate
     }, { params: { collectiveGoalId: this.collectiveGoalId }})
   }
 }

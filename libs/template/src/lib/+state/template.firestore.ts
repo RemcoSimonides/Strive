@@ -1,4 +1,4 @@
-import { MilestoneTemplateObject } from '@strive/milestone/+state/milestone.firestore'
+import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
 import { FieldValue } from '@firebase/firestore-types';
 
 export interface Template {
@@ -13,7 +13,7 @@ export interface Template {
   goalImage: string;
   goalIsPublic: boolean;
   goalDeadline: string;
-  milestoneTemplateObject: MilestoneTemplateObject[];
+  roadmapTemplate: MilestoneTemplate[];
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
@@ -26,7 +26,7 @@ export function createTemplate(params: Partial<Template> = {}): Template {
     title: '',
     numberOfTimesUsed: 0,
     deadline: '',
-    milestoneTemplateObject: [],
+    roadmapTemplate: [],
     goalTitle: '',
     goalDescription: '',
     goalDeadline: '',

@@ -24,7 +24,7 @@ export const addToAlgolia = async (index: AlgoliaIndex, objectID: string, data):
 
   initAlgoliaIndex(index)
 
-  if (data.milestoneTemplateObject) delete data.milestoneTemplateObject
+  if (data.roadmapTemplate) delete data.roadmapTemplate
   if (data.description) delete data.description
 
   await idx.saveObject({
@@ -40,7 +40,7 @@ export const updateAlgoliaObject = async (index: AlgoliaIndex, objectID: string,
 
   initAlgoliaIndex(index)
 
-  if (data.milestoneTemplateObject) delete data.milestoneTemplateObject
+  if (data.roadmapTemplate) delete data.roadmapTemplate
   if (data.description) delete data.description
 
   idx.partialUpdateObject({

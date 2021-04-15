@@ -14,7 +14,7 @@ function createTemplateFormControl(params?: Template) {
     goalImage: new FormControl(template.goalImage),
     goalIsPublic: new FormControl(template.goalIsPublic),
     goalDeadline: new FormControl(template.goalDeadline),
-    milestoneTemplateObject: new FormControl(template.milestoneTemplateObject)
+    roadmapTemplate: new FormControl(template.roadmapTemplate)
   }
 }
 

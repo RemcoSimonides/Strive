@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MilestoneService } from './milestone.service';
 import { TemplateService } from '@strive/template/+state/template.service';
 // Interfaces
-import { Milestone, MilestonesLeveled, MilestoneTemplateObject } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone, MilestonesLeveled, MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
 import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
@@ -30,7 +30,7 @@ export class RoadmapService {
 
   async getStructuredMilestonesForTemplates(collectiveGoalId: string, templateId: string): Promise<MilestonesLeveled[]> {
     const template = await this.templateService.getValue(templateId, { collectiveGoalId })
-    return this.structureMilestones(template.milestoneTemplateObject)
+    return this.structureMilestones(template.roadmapTemplate)
   }
 
   async getMilestoneWithSeqno(goalId: string, sequenceNumber: string): Promise<Milestone> {
@@ -43,13 +43,13 @@ export class RoadmapService {
    * @param goalId goal id of the goal which needs the milestones
    * @param milestoneTemplate 
    */
-  async startConversion(goalId: string, milestoneTemplates: MilestoneTemplateObject[]): Promise<void> {
+  async startConversion(goalId: string, roadmapTemplate: MilestoneTemplate[]): Promise<void> {
     this._converting.next(true);
 
     const milestones = await this.milestoneService.getValue({ goalId })
     const promises: Promise<any>[] = []
 
-    for (const milestoneTemplate of milestoneTemplates) {
+    for (const milestoneTemplate of roadmapTemplate) {
       // UPDATE
       const milestone = milestones.find(m => m.id === milestoneTemplate.id)
       if (!!milestone) {
@@ -68,21 +68,21 @@ export class RoadmapService {
     }
 
     // DELETE
-    const ids = milestones.filter(milestone => !milestoneTemplates.some(m => m.id === milestone.id)).map(milestone => milestone.id)
+    const ids = milestones.filter(milestone => !roadmapTemplate.some(m => m.id === milestone.id)).map(milestone => milestone.id)
     const promise = this.milestoneService.remove(ids, { params: { goalId }})
     promises.push(promise)
 
     Promise.all(promises).then(_ => this._converting.next(false))
   }
 
-  structureMilestones(milestones: Milestone[] | MilestoneTemplateObject[]): MilestonesLeveled[] {
+  structureMilestones(milestones: Milestone[] | MilestoneTemplate[]): MilestonesLeveled[] {
     const structuredMilestones: MilestonesLeveled[] = []
 
     let indexMilestoneLevelOne = -1
     let indexMilestoneLevelTwo = -1
     let indexMilestoneLevelThree = -1
 
-    milestones.forEach((milestone: Milestone | MilestoneTemplateObject) => {
+    milestones.forEach((milestone: Milestone | MilestoneTemplate) => {
 
       if (getNrOfDotsInSeqno(milestone.sequenceNumber) === 2) {
 

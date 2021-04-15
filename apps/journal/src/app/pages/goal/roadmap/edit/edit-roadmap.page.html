@@ -55,7 +55,7 @@
 <ion-content class="ion-padding">
   <section fxLayout fxLayoutAlign="center" class="limited-width">
 
-    <ng-container *ngIf="formArray.controls.length === 0">
+    <ng-container *ngIf="roadmapForm.controls.length === 0">
       <article class="explanation">
         <span class="center">This is how it works</span>
         <ion-img src="assets/pages/roadmap/How to edit roadmap.gif"></ion-img>
@@ -63,7 +63,7 @@
     </ng-container>
 
     <ion-list>
-      <ion-item *ngFor="let control of formArray.controls">
+      <ion-item *ngFor="let control of roadmapForm.controls">
         <ion-input [ngStyle]="{'margin-left': getMargin(control.value.sequenceNumber)}"
           class="sequenceNumber"
           (ionInput)="onSequenceNumberInput($event, control.value.sequenceNumber)"

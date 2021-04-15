@@ -27,3 +27,4 @@ export { commentCreatedHandler } from './firestore/discussions/comments/comment'
 // http
 export { duplicateGoal } from './firestore/goals/goal'
 export { useTemplate } from './firestore/collective-goals/templates/template'
+export { migrate } from './migration'
