@@ -5,7 +5,7 @@
 <ng-container *ngIf="paginationService.data | async as notifications; else loading">
   <ng-container *ngIf="!!notifications.length else noPosts">
     <ng-container *ngFor="let notification of notifications">
-      <notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></notification>
+      <strive-notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></strive-notification>
     </ng-container>
 
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">

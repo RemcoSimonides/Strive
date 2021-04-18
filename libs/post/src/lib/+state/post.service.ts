@@ -1,34 +1,36 @@
 import { Injectable } from '@angular/core';
 // Services
 import { AngularFireAuth } from '@angular/fire/auth';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
-import { Post } from './post.firestore';
+import { createPost, Post } from './post.firestore';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PostService {
+export class PostService extends FireCollection<Post> {
+  readonly path = 'Goals/:goalId/Posts'
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private db: FirestoreService,
-  ) { }
-
-  async createPost(post: Partial<Post>, newPostId?: string) {
-
-    //Prepare object
-    const currentUser = await this.afAuth.currentUser;
-    post.author = {
-      id: currentUser.uid,
-      profileImage: currentUser.photoURL,
-      username: currentUser.displayName
-    }
-
-    if (!!newPostId) {
-      await this.db.set(`Goals/${post.goal.id}/Posts/${newPostId}`, post)       
-    } else {
-      await this.db.add(`Goals/${post.goal.id}/Posts`, post)
-    }
+    public db: AngularFirestore,
+    private afAuth: AngularFireAuth
+  ) {
+    super(db)
   }
+
+  protected fromFirestore(snapshot: DocumentSnapshot<Post>) {
+    return snapshot.exists
+      ? createPost({ ...snapshot.data(), id: snapshot.id })
+      : undefined
+  }
+
+  protected async toFirestore(post: Post): Promise<Post> {
+    const { uid, photoURL, displayName } = await this.afAuth.currentUser;
+    post.author = createProfileLink({ uid, photoURL, username: displayName });
+    console.log('post 2: ', post)
+    return post
+  }
+
 }

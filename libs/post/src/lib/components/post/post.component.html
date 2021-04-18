@@ -16,8 +16,9 @@
 
     </ion-item>
 
-
-    <img class="post-image" *ngIf="post.content.mediaURL" [ref]="post.content.mediaURL">
+    <ng-container *ngIf="post.content.mediaURL">
+      <img class="post-image" [ref]="post.content.mediaURL" [asset]="">
+    </ng-container>
 
     <ion-card-content>
       <h2>{{ post.content.title }}</h2>

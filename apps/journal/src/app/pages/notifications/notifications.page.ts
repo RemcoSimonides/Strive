@@ -40,7 +40,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
     this.userSubscription = this.user.profile$.subscribe(profile => {
       if (profile) {
         this.paginationService.reset()
-        this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', { reverse: true, prepend: false })
+        this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', 20)
       } else {
         this.paginationService.reset()
       }
@@ -73,19 +73,17 @@ export class NotificationsPage implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe()
   }
 
-  async openLoginModal(): Promise<void> {
-    const modal = await this.modalCtrl.create({
+  openLoginModal() {
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
-  async doRefresh($event) {
-
-    this.paginationService.refresh(`Users/${this.user.uid}/Notifications`, 'createdAt', { reverse: true, prepend: false })
+  doRefresh($event) {
+    this.paginationService.refresh(`Users/${this.user.uid}/Notifications`, 'createdAt', 20)
     this.paginationService.refreshing.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
@@ -93,10 +91,9 @@ export class NotificationsPage implements OnInit, OnDestroy {
         }, 500);
       }
     })
-
   }
 
-  public loadData(event) {
+  loadData(event) {
     this.paginationService.more()
     event.target.complete();
 

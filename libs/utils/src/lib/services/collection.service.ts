@@ -380,7 +380,7 @@ export abstract class FireCollection<E extends DocumentData> {
     const path = this.getPath(options.params);
     const operations = docs.map(async doc => {
       const id = doc[this.idKey] || this.db.createId();
-      const data = this.toFirestore({ ...doc, [this.idKey]: id, createdAt: this.timestamp, updatedAt: this.timestamp });
+      const data = await this.toFirestore({ ...doc, [this.idKey]: id, createdAt: this.timestamp, updatedAt: this.timestamp });
       const { ref } = this.db.doc(getDocPath(path, id));
       
       (write as WriteBatch).set(ref, (data));
@@ -488,7 +488,7 @@ export abstract class FireCollection<E extends DocumentData> {
           const doc = this.fromFirestore(snapshot);
           if (doc && stateFunction) {
             const data = await stateFunction(Object.freeze(doc), tx);
-            tx.update(ref, this.toFirestore({ ...data, updatedAt: this.timestamp }));
+            tx.update(ref, await this.toFirestore({ ...data, updatedAt: this.timestamp }));
             if (this.onUpdate) {
               await this.onUpdate(data, { write: tx, ctx });
             }
@@ -505,7 +505,7 @@ export abstract class FireCollection<E extends DocumentData> {
           throw new Error(`Document should have an unique id to be updated, but none was found in ${doc}`);
         }
         const { ref } = this.db.doc(getDocPath(path, docId));
-        write.update(ref, this.toFirestore({ ...doc, updatedAt: this.timestamp }));
+        write.update(ref, await this.toFirestore({ ...doc, updatedAt: this.timestamp }));
         if (this.onUpdate) {
           await this.onUpdate(doc, { write, ctx });
         }

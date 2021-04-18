@@ -6,11 +6,14 @@ import { IonicModule } from '@ionic/angular';
 
 import { UpsertPostModal } from './upsert-modal.component';
 
+import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
+
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
+    ImageSelectorModule
   ],
   declarations: [UpsertPostModal]
 })

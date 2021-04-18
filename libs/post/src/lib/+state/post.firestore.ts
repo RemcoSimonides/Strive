@@ -1,54 +1,35 @@
 import { Timestamp } from '@firebase/firestore-types';
+import { createGoalLink, GoalLink } from '@strive/goal/goal/+state/goal.firestore';
+import { createMilestoneLink, MilestoneLink } from '@strive/milestone/+state/milestone.firestore';
+import { createProfileLink, ProfileLink } from '@strive/user/user/+state/user.firestore';
 
 export interface Post {
   id?: string;
   isEvidence: boolean;
-  author: {
-    id: string;
-    username: string;
-    profileImage: string;
-  };
   content: {
     title: string;
     description: string;
     mediaURL?: string;
   };
-  goal: {
-    id: string;
-    title: string;
-    image: string;
-  };
-  milestone: {
-    id: string;
-    description: string;
-  };
+  author: ProfileLink;
+  goal: GoalLink;
+  milestone: MilestoneLink;
   updatedAt?: Timestamp;
   createdAt?: Timestamp;
 }
 
 /** A factory function that creates a PostDocument. */
-export function createPost(params: Partial<Post> ={}): Post {
+export function createPost(params: Partial<Post> = {}): Post {
   return {
     id: !!params.id ? params.id : '',
-    author: {
-      id: '',
-      profileImage: '',
-      username: ''
-    },
+    author: createProfileLink(),
     content: {
       title: '',
       description: '',
       mediaURL: '',
     },
-    goal: {
-      id: '',
-      title: '',
-      image: ''
-    },
-    milestone: {
-      id: '',
-      description: ''
-    },
+    goal: createGoalLink(),
+    milestone: createMilestoneLink(),
     isEvidence: false,
     ...params
   }

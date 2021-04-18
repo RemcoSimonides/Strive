@@ -2,72 +2,27 @@
   width: 100%;
 }
 
-.notification-header {
-  margin-bottom: 6px;
-
-  #name {
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  #date {
-    font-size: 0.8rem;
-    padding-left: 5px;
-    opacity: 0.8;
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-  #options {
-    margin-right: 0px;
-    margin-left: auto;
-  }
-}
-
-.link {
-  color: var(--ion-color-primary);
-  cursor: pointer;
-}
-
-.link::after {
-  content: "\00a0";
-}
-
-ion-thumbnail {
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 5px;
-  width: 50px;
-  max-width: 50px;
-  min-width: 50px;
-}
-
-#profile-image {
-  display: block;
-  border-radius: 50%;
-  object-fit: cover;
+img {
   width: 50px;
   height: 50px;
-  margin: 0 auto 0;
 }
 
-// Supports section
-.supports-header {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--ion-color-primary);
-  min-height: 0px;
-  padding-left: 0px;
-  padding-top: 10px;
+h5 {
+  margin: 0;
+  font-weight: bold;
+  overflow-wrap: anywhere;
 }
 
-strive-post {
-  margin: auto;
-  width: 100%;
+p {
+  margin: 0;
+}
+
+.date {
+  font-size: .8rem;
+  opacity: .8;
+  margin-left: 6px;
 }
 
 .clickable {
   cursor: pointer;
-}
-
-#discussion-icon {
-  padding-left: 3px;
 }

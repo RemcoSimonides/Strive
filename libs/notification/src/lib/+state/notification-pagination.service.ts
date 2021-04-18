@@ -3,14 +3,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
 import { leftJoin } from '@strive/utils/leftJoin';
+import { Notification } from './notification.firestore';
 
 // Options to reproduce firestore queries consistently
 interface QueryConfig {
   path: string, // path to collection
   field: string, // field to orderBy
-  limit?: number, // limit per query
-  reverse?: boolean, // reverse order?
-  prepend?: boolean // prepend to source?
+  limit: number, // limit per query
+  reverse: boolean, // reverse order?
+  prepend: boolean // prepend to source?
 }
 
 @Injectable({
@@ -36,16 +37,14 @@ export class NotificationPaginationService {
 
   constructor(private afs: AngularFirestore) {}
 
-  // Initial query sets options and defines the Observable
-  init(path, field, opts?) {
-    this.query = { 
-      path,
-      field,
-      limit: 20,
-      reverse: false,
-      prepend: false,
-      ...opts
-    }
+  /**
+   * Initial query sets options and defines the Observable
+   * @param path path to collection
+   * @param field field to orderBy
+   * @param limit limit per query
+   */
+  init(path: string, field: string, limit: number) {
+    this.query = { path, field, limit, reverse: true, prepend: false }
 
     const query = this.afs.collection(this.query.path, ref => ref.orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc').limit(this.query.limit))
 
@@ -56,9 +55,7 @@ export class NotificationPaginationService {
       scan((acc, val) => { 
         const array = this.query.prepend ? val.concat(acc) : acc.concat(val)
         const uniqueArrray = this.getUnique(array, 'id')
-        // order by created At
         const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? this.query.reverse ? -1 : 1 : this.query.reverse ? 1 : -1)
-
         return orderedArray
       })
     )
@@ -67,12 +64,11 @@ export class NotificationPaginationService {
   // Retrieves additional data from firestore
   more() {
     const cursor = this.getCursor()
-    const more = this.afs.collection(this.query.path, ref => {
-      return ref
-              .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-              .limit(this.query.limit)
-              .startAfter(cursor.createdAt)
-    })
+    const more = this.afs.collection(this.query.path, ref => ref
+      .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
+      .limit(this.query.limit)
+      .startAfter(cursor.createdAt)
+    )
     this.mapAndUpdate(more)
   }
 
@@ -88,20 +84,15 @@ export class NotificationPaginationService {
 
   // Maps the snapshot to usable format the updates source
   private mapAndUpdate(col: AngularFirestoreCollection<any>) {
-
-    if (this._done.value || this._loading.value) { return };
-
-    // loading
+    if (this._done.value || this._loading.value) return
     this._loading.next(true)
 
     // Map snapshot with doc ref (needed for cursor)
     return col.snapshotChanges().pipe(
       leftJoin(this.afs, 'discussionId', 'Discussions'),
       tap(arr => {
-        // If prepending, reverse array
         arr = this.query.prepend ? arr.reverse() : arr
 
-        // update source with new values, done loading
         this._data.next(arr)
         this._loading.next(false)
         this._refreshing.next(false)
@@ -113,7 +104,6 @@ export class NotificationPaginationService {
       }),
       take(1)
     ).subscribe()
-
   }
 
   // Reset the page
@@ -124,26 +114,20 @@ export class NotificationPaginationService {
   }
 
   // Refresh the page
-  refresh(path, field, opts?) {
+  refresh(path: string, field: string, limit: number) {
     this._refreshing.next(true)
 
     // this.reset()
     this._done.next(false)
-    this.init(path, field, opts)
+    this.init(path, field, limit)
   }
 
-  private getUnique(arr, comp: string) {
-
-    const unique = arr
-         .map(e => e[comp])
-  
+  private getUnique(arr: Notification[], comp: string) {
+    return arr.map(e => e[comp])
        // store the keys of the unique objects
       .map((e, i, final) => final.indexOf(e) === i && i)
-  
       // eliminate the dead keys & store unique objects
       .filter(e => arr[e]).map(e => arr[e]);
-  
-     return unique;
   }
   
 }

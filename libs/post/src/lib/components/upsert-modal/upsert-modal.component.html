@@ -25,7 +25,10 @@
       <ion-textarea elastic formControlName="description"></ion-textarea>
     </ion-item>
 
-    <!-- <app-image-upload></app-image-upload> -->
+    <media-image-selector 
+      [form]="postForm.get('content').get('mediaURL')"
+      [storagePath]="'goals/' + postForm.get('goal').get('id').value + '/posts/' + postId">
+    </media-image-selector>
   </form>
 
 </ion-content>

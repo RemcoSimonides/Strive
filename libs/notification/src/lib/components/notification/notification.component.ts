@@ -16,7 +16,7 @@ import { isSupportDecisionNotification } from '@strive/notification/+state/notif
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
-  selector: 'notification',
+  selector: '[notification][reference][isAdmin] strive-notification',
   templateUrl: 'notification.component.html',
   styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
