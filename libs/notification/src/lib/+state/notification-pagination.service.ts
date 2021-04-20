@@ -116,8 +116,7 @@ export class NotificationPaginationService {
   // Refresh the page
   refresh(path: string, field: string, limit: number) {
     this._refreshing.next(true)
-
-    // this.reset()
+    this.reset()
     this._done.next(false)
     this.init(path, field, limit)
   }

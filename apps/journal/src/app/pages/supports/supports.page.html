@@ -17,12 +17,9 @@
       <ion-list-header>Goals you support</ion-list-header>
       <ion-item *ngFor="let support of supportsOpen$ | async">
         <ion-label class="ion-text-wrap">
-          <ion-text>{{ support?.description }}</ion-text>
-          <ion-text>
-            <p *ngIf="!support?.path?.level3description && !support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support?.path?.level1description | mSlice }} </b></p>
-            <p *ngIf="!support?.path?.level3description && support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support?.path?.level2description | mSlice }} </b> </p>
-            <p *ngIf="support?.path?.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support?.path?.level3description | mSlice }} </b></p>
-          </ion-text>
+          <ion-text>{{ support.description }}</ion-text>
+          <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+          </ng-template>
         </ion-label>
       </ion-item>
       
@@ -32,11 +29,8 @@
           <ion-text>
             {{ support.description }} from {{ support.supporter.username }}
           </ion-text>
-          <ion-text>
-            <p *ngIf="!support?.path?.level3description && !support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support?.path?.level1description | mSlice }} </b></p>
-            <p *ngIf="!support?.path?.level3description && support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support?.path?.level2description | mSlice }} </b> </p>
-            <p *ngIf="support?.path?.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support?.path?.level3description | mSlice }} </b></p>
-          </ion-text>
+          <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+          </ng-template>
         </ion-label>
         <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Got it</ion-button>
       </ion-item>
@@ -47,11 +41,8 @@
           <ion-text>
             {{ support.description }} to achiever(s) from {{ support.goal.title }}
           </ion-text>
-          <ion-text>
-              <p *ngIf="!support?.path?.level3description && !support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support?.path?.level1description | mSlice }} </b></p>
-              <p *ngIf="!support?.path?.level3description && support?.path?.level2description"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support?.path?.level2description | mSlice }} </b> </p>
-              <p *ngIf="support?.path?.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support?.goal?.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support?.path?.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support?.path?.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support?.path?.level3description | mSlice }} </b></p>
-          </ion-text>
+          <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+          </ng-template>
         </ion-label>
         <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Gave it</ion-button>
         <!-- <ion-checkbox slot="start"></ion-checkbox> -->
@@ -60,3 +51,12 @@
 
   </div>
 </ion-content>
+
+<ng-template #path let-support>
+  <ion-text>
+    <p *ngIf="!support.path.level1id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title }}</a></p>
+    <p *ngIf="!support.path.level3id && !support.path.level2id && support.path.level1id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support.path.level1description | mSlice }} </b></p>
+    <p *ngIf="!support.path.level3id && support.path.level2id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support.path.level1description | mSlice }} <span class="arrow">&#8702;</span><b> {{ support.path.level2description | mSlice }} </b> </p>
+    <p *ngIf="support.path.level3id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title | mSlice }}</a> <span class="arrow">&#8702;</span> {{ support.path.level1description | mSlice }} <span class="arrow">&#8702;</span> {{ support.path.level2description | mSlice}} <span class="arrow">&#8702;</span><b> {{ support.path.level3description | mSlice }} </b></p>
+  </ion-text>
+</ng-template>
