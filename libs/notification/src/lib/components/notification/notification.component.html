@@ -2,13 +2,14 @@
   <section fxLayout fxLayoutGap="8px">
     <article>
       <img
+        class="source_image"
         [ref]="notification.source.image"
-        [asset]="'profile.png'"
+        [asset]="isFromPerson ? 'profile.png' : 'goal.jpg'"
         [ngStyle]="{'border-radius': isFromPerson ? '50%' : 'none'}"
         [routerLink]="sourcePageRef"
       />
     </article>
-    <article fxLayout="column" fxFlex>
+    <article fxLayout="column" fxFlex fxLayoutGap="4px">
       <div fxLayout fxLayoutAlign="space-between start">
         <h5 [routerLink]="sourcePageRef">{{ notification.source.name }}</h5>
         <p class="date">{{ notification.createdAt.toDate() | date:'M/d' }}</p>
@@ -46,14 +47,10 @@
         <b>Your supports:</b>
         <ng-container *ngFor="let support of notification.meta.supports">
           <div fxLayout>
-            <div fxLayout="column" fxFlex>
-              {{ support.description }}
-              <span *ngIf="!support.milestoneIsFinished"
-                style="margin-left: 5px;">
-                &#40;unfinished milestone&#41;
-              </span>
+            <div fxFlex fxLayoutAlign="start center">
+              {{ !support.finished ? support.description : support.description + ' (unfinished milestone)' }}
             </div>
-            <div fxLayout="column" fxFlex>
+            <div fxFlex fxLayoutAlign="start center">
               <ng-container *ngIf="!support.receiver.uid; else hasReceiver">
                 <span class="clickable" (click)="chooseReceiver(notification, support)">
                   <i>Choose receiver</i>
@@ -72,18 +69,21 @@
             </div>
           </div>
         </ng-container>
-      </ng-container>
 
-      <!-- Buttons to accept or decline evidence -->
-      <ng-container *ngIf="notification.type === 'supportDecision'">
-        <ion-button (click)="finalizeDecision(notification)" color="primary"
-          [disabled]="notification.meta.decisionStatus !== 'pending'">Finalize
+        <!-- Buttons to accept or decline evidence -->
+        <ion-button color="primary"
+          (click)="finalizeDecision(notification)"
+          [disabled]="notification.meta.decisionStatus !== 'pending'"
+          class="support_decision_btn"
+        >Finalize
         </ion-button>
 
         <ng-container *ngIf="notification.meta.decisionStatus === 'pending'">
           <notification-countdown [time]="notification.meta.deadline"></notification-countdown>
         </ng-container>
       </ng-container>
+
+
 
       <!-- <section fxLayout> -->
       <!-- Discussion -->

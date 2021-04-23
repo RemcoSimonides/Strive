@@ -25,6 +25,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   if (after.status === 'neutral') return;
   if (after.status === 'overdue') {
     // send overdue notification
+    // TODO this never happens because this is checked before this function is called
   }
 
   if (after.status !== 'succeeded' && after.status !== 'failed') return;
@@ -39,7 +40,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   // send notification to supporters of this milestone and submilestones 
   // overwrite notification to supporters // send notification if person does not want level 1/2/3 milestone notifications but does support them
   const supporters: Record<string, NotificationSupport[]> = {}
-  const receiver: ProfileLink | undefined = !!after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
+  const receiver: ProfileLink = !!after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
 
   // get milestones (including unfinished submilestones)
   const milestones: Milestone[] = [after]
@@ -59,7 +60,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   // get supports
   const supportsQuery = milestones.map(milestone => db.collection(`Goals/${goalId}/Supports`)
     .where('milestone.id', '==', milestone.id)
-    .withConverter<Support>(converter(createSupport))
+    // .withConverter<Support>(converter(createSupport))
     .get()
   )
   const supportsPerMilestoneSnap = await Promise.all(supportsQuery)

@@ -13,11 +13,11 @@ export class CountdownComponent {
 
   @Input()
   public set time(value: string | number) {
-    this._time = parseInt(value as string, 10); parseInt('', )
-    this._startTimer();
+    this._time = new Date(value).getTime()
+    this._startTimer()
   }
 
-  format: string = 'Auto finalize in {hh} hours and {mm} minutes.';
+  format: string = 'Automatically finalized in {hh} hours and {mm} minutes.';
 
   public get delta() {
     let date = new Date();
@@ -25,18 +25,17 @@ export class CountdownComponent {
   }
 
   public get displayTime() {
-    let days, hours, minutes, seconds, delta = this.delta, time = this.format;
+    let delta = this.delta
+    let time = this.format;
 
-    days = Math.floor(delta / 86400);
-    delta -= days * 86400;
-    hours = Math.floor(delta  / 3600) % 24;
-    delta -= hours * 3600;
-    minutes = Math.floor(delta  / 60) % 60;
-    delta -= minutes * 60;
-    seconds = delta % 60;
+    const days = Math.floor(delta / 86400)
+    delta -= days * 86400
+    const hours = Math.floor(delta  / 3600) % 24
+    delta -= hours * 3600
+    const minutes = Math.floor(delta  / 60) % 60
 
-    time = time.replace('{hh}', hours);
-    time = time.replace('{mm}', minutes);
+    time = time.replace('{hh}', `${hours}`);
+    time = time.replace('{mm}', `${minutes}`);
 
     return time;
   }

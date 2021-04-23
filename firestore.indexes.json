@@ -10,6 +10,14 @@
       ]
     },
     {
+      "collectionGroup": "Milestones",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "sequenceNumber", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "GStakeholders",
       "queryScope": "COLLECTION_GROUP",
       "fields": [

@@ -39,7 +39,7 @@ function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
   notification.message = [
     {
       text: post.author.username,
-      link: `profile/${post.author.id}`
+      link: `profile/${post.author.uid}`
     },
     {
       text: ` just created a new post`

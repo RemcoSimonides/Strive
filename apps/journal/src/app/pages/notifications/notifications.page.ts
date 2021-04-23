@@ -9,7 +9,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { NotificationPaginationService } from '@strive/notification/+state/notification-pagination.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
-import { take } from 'rxjs/operators';
+import { distinctUntilChanged, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notifications',
@@ -37,7 +37,9 @@ export class NotificationsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.seo.generateTags({ title: `Notifications - Strive Journal` })
 
-    this.userSubscription = this.user.profile$.subscribe(profile => {
+    this.userSubscription = this.user.profile$.pipe(
+      distinctUntilChanged((a, b) => JSON.stringify(a) !== JSON.stringify(b))
+    ).subscribe(profile => {
       if (profile) {
         this.paginationService.reset()
         this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', 20)
@@ -53,8 +55,8 @@ export class NotificationsPage implements OnInit, OnDestroy {
       this.notificationService.resetNumberOfUnreadNotifications();
     } else {
       // If this is the first page after reloading, this.user.uid is not filled yet, therefore we check value on first auth trigger
-      this.user.isLoggedIn$.pipe(take(1)).subscribe(isLoggedIn => {
-        if (isLoggedIn) this.notificationService.resetNumberOfUnreadNotifications();
+      this.user.profile$.pipe(take(1)).subscribe(profile => {
+        if (!!profile) this.notificationService.resetNumberOfUnreadNotifications();
       })
     }
 

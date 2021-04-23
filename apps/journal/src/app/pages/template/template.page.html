@@ -1,4 +1,3 @@
-<strive-header [title]="(template$ | async)?.title || 'Template'" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 <ion-content class="ion-padding">
   <ng-container *ngIf="template$ | async as template">
     <section fxLayout="column">
