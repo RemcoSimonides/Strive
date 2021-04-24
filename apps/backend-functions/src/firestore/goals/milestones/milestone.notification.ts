@@ -67,11 +67,12 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 
   for (const supportsSnap of supportsPerMilestoneSnap) {
     for (const snap of supportsSnap.docs) {
-      const support = snap.data()
+      const support = { ...snap.data() as Support, id: snap.id };
       const uid = support.supporter.uid
       const milestone = milestones.find(m => m.id === support.milestone.id)
 
       const supportNotification = createNotificationSupport({
+        id: support.id,
         description: support.description,
         finished: support.milestone.id === after.id,
         receiver: !!milestone.achiever.uid ? milestone.achiever : receiver 

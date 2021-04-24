@@ -114,8 +114,7 @@ export class NotificationComponent implements OnInit {
         this.cdr.markForCheck();
       }
     })
-
-    await chooseAchieverModal.present()
+    chooseAchieverModal.present()
   }
 
   public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
@@ -127,6 +126,7 @@ export class NotificationComponent implements OnInit {
   public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
     await this.notificationService.finalizeDecision(notification)
     notification.meta.decisionStatus = 'finalized'
+    this.cdr.markForCheck()
   }
 
 }

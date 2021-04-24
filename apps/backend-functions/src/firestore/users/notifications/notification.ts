@@ -40,9 +40,8 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
 
     }
 
-    // SupportDecision 
+    // SupportDecision
     if (isSupportDecisionNotification(notification)) {
-      console.log('notificaiton is support decision');
       // deadline
       upsertScheduledTask(notificationId, {
         worker: enumWorkerType.notificationEvidenceDeadline,

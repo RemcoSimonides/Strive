@@ -247,11 +247,12 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
 
   for (const supportsSnap of supportsSnaps) {
     for (const snap of supportsSnap.docs) {
-      const support = snap.data()
+      const support = { ...snap.data() as Support, id: snap.id }
       const uid = support.supporter.uid
       const milestone = milestones.find(m => m.id === support.milestone.id)
 
       const supportNotification = createNotificationSupport({
+        id: support.id,
         description: support.description,
         finished: !milestone.id,
         receiver: !!milestone.achiever.uid ? milestone.achiever : receiver

@@ -48,7 +48,7 @@
         <ng-container *ngFor="let support of notification.meta.supports">
           <div fxLayout>
             <div fxFlex fxLayoutAlign="start center">
-              {{ !support.finished ? support.description : support.description + ' (unfinished milestone)' }}
+              {{ support.finished ? support.description : support.description + ' (unfinished milestone)' }}
             </div>
             <div fxFlex fxLayoutAlign="start center">
               <ng-container *ngIf="!support.receiver.uid; else hasReceiver">

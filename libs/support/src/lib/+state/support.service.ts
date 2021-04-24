@@ -23,7 +23,7 @@ export class SupportService {
   async changeSupportStatusDependantOnDecision(goalId: string, supports: NotificationSupport[]): Promise<void> {
     supports.forEach(support => {
       if (support.decision === 'give') {
-        this.changeSupportStatus(goalId, support.id, 'waiting_for_receiver')
+        this.changeSupportStatus(goalId, support.id, 'waiting_to_be_paid')
       } else if (support.decision === 'keep') {
         this.changeSupportStatus(goalId, support.id, 'rejected')
       }  
