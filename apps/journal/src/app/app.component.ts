@@ -50,7 +50,7 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy() {
     this.profileSubscription.unsubscribe()
     this.screenSizeSubscription.unsubscribe()
-    this.fcmSubscription.unsubscribe();
+    this.fcmSubscription.unsubscribe()
   }
 
   initializeApp() {
@@ -60,7 +60,7 @@ export class AppComponent implements OnDestroy {
       this.splashScreen.hide();
       this.screensize.onResize(this.platform.width());
 
-      if ((this.platform.is('android') ||  this.platform.is('ios')) && !this.platform.is('mobileweb')) {
+      if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
         this.fcm.addListenersCapacitor()
       }
 
@@ -129,14 +129,13 @@ export class AppComponent implements OnDestroy {
     }).then(popover => popover.present())
   }
 
-  async openAuthModal(segment: enumAuthSegment): Promise<void> {
-    const modal = await this.modalCtrl.create({
+  openAuthModal(segment: enumAuthSegment) {
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: segment
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
   @HostListener('window:resize', ['$event'])
