@@ -5,7 +5,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
-import { Plugins } from '@capacitor/core';
+import { Share } from '@capacitor/share';
 // Strive Components
 import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/options.component';
@@ -24,8 +24,6 @@ import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { switchMap } from 'rxjs/operators';
-
-const { Share } = Plugins;
 
 @Component({
   selector: 'journal-goal',

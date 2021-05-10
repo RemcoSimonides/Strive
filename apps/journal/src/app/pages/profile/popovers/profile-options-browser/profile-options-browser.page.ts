@@ -6,6 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Components
 import { enumAuthSegment, AuthModalPage } from 'apps/journal/src/app/pages/auth/auth-modal.page';
+import { FcmService } from '@strive/utils/services/fcm.service';
 
 @Component({
   selector: 'app-profile-options-browser',
@@ -21,7 +22,8 @@ export class ProfileOptionsBrowserPage {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private router: Router,
-    private user: UserService
+    private user: UserService,
+    private fcm: FcmService
   ) { }
 
   close(profileOption: enumProfileOptionsDesktop) {
@@ -30,6 +32,11 @@ export class ProfileOptionsBrowserPage {
 
   goToProfile() {
     this.router.navigateByUrl(`/profile/${this.user.uid}`)
+    this.popoverCtrl.dismiss()
+  }
+
+  pushNotifications() {
+    this.fcm.registerFCM();
     this.popoverCtrl.dismiss()
   }
 

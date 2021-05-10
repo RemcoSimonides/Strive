@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "156079640882",
+    "firebase_url": "https://lets-support-23a6c.firebaseio.com",
+    "project_id": "lets-support-23a6c",
+    "storage_bucket": "lets-support-23a6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156079640882:android:4a372c9c19c77ceb81872b",
+        "android_client_info": {
+          "package_name": "com.strive.journal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156079640882-liserg09rsituo8oq7vo2fo8avtmqms2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0K5cm7wC4wGycHfWwUnFzG1mmSBWsGZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156079640882-liserg09rsituo8oq7vo2fo8avtmqms2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "156079640882-31l0iai7ma2cpe08briohru1v0gaji3a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lets.support"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,18 +2,15 @@ import { Injectable } from '@angular/core';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { ToastController, Platform } from '@ionic/angular';
-import { Plugins, PushNotification, PushNotificationToken, PushNotificationActionPerformed } from '@capacitor/core'
+import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
 import { tap, take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { UserService } from '@strive/user/user/+state/user.service';
-
-const { PushNotifications } = Plugins;
 
 @Injectable({
   providedIn: 'root'
 })
 export class FcmService {
-  token
 
   constructor(
     private afMessaging: AngularFireMessaging,
@@ -23,20 +20,18 @@ export class FcmService {
     private user: UserService
   ) { }
 
-  private getPermission(): Observable<any> {
+  private getPermission() {
     return this.afMessaging.requestToken.pipe(
-      tap(token => {
-        this.token = token
-        this.user.addFCMToken(token)
-      })
-    )
+      take(1),
+      tap(token => this.user.addFCMToken(token)) 
+    ).toPromise()
   }
 
   async registerFCM(): Promise<void> {
     if ((this._platform.is('android') || this._platform.is('ios')) && !this._platform.is('mobileweb')) {
       await this.registerCapacitor()
     } else {
-      this.getPermission().pipe(take(1)).subscribe()
+      await this.getPermission()
     }
   }
 
@@ -51,8 +46,7 @@ export class FcmService {
 
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
-      (token: PushNotificationToken) => {
-        this.token = token.value
+      (token: Token) => {
         this.user.addFCMToken(token.value)
         console.log('Push registration success, token: ' + token.value);
       }
@@ -67,7 +61,7 @@ export class FcmService {
 
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
-      (notification: PushNotification) => {
+      (notification: PushNotificationSchema) => {
         this.makeToast(notification)
         console.log('Push received: ' + JSON.stringify(notification));
       }
@@ -75,7 +69,7 @@ export class FcmService {
 
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
-      (notification: PushNotificationActionPerformed) => {
+      (notification: ActionPerformed) => {
         console.log('Push action performed: ' + JSON.stringify(notification));
       }
     );

@@ -24,8 +24,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
-import { Plugins } from '@capacitor/core';
-const { Share } = Plugins;
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-collective-goal',

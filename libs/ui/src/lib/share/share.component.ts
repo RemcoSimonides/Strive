@@ -3,8 +3,7 @@ import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { ShareService } from 'ngx-sharebuttons';
 import { boolean } from '@strive/utils/decorators/decorators';
 
-import { Plugins }  from '@capacitor/core'
-const { Clipboard } = Plugins
+import { Clipboard }  from '@capacitor/clipboard';
 
 
 @Component({

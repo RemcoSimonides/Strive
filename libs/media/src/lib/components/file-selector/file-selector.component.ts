@@ -2,8 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ImageService } from '@strive/media/+state/image.service';
 import { Platform } from '@ionic/angular';
 
-import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
-const { Camera } = Plugins;
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'media-file-selector',

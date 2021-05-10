@@ -7,8 +7,7 @@ import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-hel
 import { SafeUrl } from '@angular/platform-browser';
 import { Platform } from '@ionic/angular';
 
-import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
-const { Camera } = Plugins;
+import { Camera, CameraResultType } from '@capacitor/camera';
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
