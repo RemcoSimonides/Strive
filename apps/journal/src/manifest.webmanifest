@@ -1,7 +1,7 @@
 {
   "name": "Strive Journal",
-  "short_name": "strive",
-  "theme_color": "#1976d2",
+  "short_name": "Strive",
+  "theme_color": "#F7941D",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
