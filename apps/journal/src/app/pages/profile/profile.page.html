@@ -1,9 +1,9 @@
 <ion-header *ngIf="platform.is('android') || platform.is('ios')">
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ shouldLogin ? 'Profile' : (profile$ | async)?.username }}</ion-title>
+    <ion-title>{{ !!profileId ? (profile$ | async)?.username : 'Profile'  }}</ion-title>
     <ng-container *ngIf="isOwner">
       <ion-buttons slot="end">
         <ion-button (click)="presentProfileOptionsPopover($event)">
@@ -16,13 +16,15 @@
 
 <ion-content class="ion-padding">
   <ng-template #loading>
-    <ng-container *ngIf="!shouldLogin else login">
+    <ng-container *ngIf="!profileId else login">
       <strive-page-loading></strive-page-loading>
     </ng-container>
 
     <ng-template #login>
-      <section fxLayout fxLayoutAlign="center center">
-        <span><b (click)="openAuthModal()">Log in</b> to view your profile</span>
+      <section class="not-logged-in">
+        <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your profile
+        </p>
       </section>
    </ng-template>
   </ng-template>
@@ -66,95 +68,96 @@
       </ion-card>
 
     </section>
-  </ng-container>
 
-  <section fxLayout="column">
-    <!-- Affirmations -->
-    <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
-    <!-- Bucket List -->
-    <exercise-bucket-list-view [uid]="profileId" [isOwner]="isOwner" [isSpectator]="isSpectator"></exercise-bucket-list-view>
-  </section>
-
-  <!-- Achieving Goals overview -->
-  <h3 class="padding">Achieving Goals</h3>
-
-  <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
-    <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
-
-      <thumbnail-list type="goal">
-        <ng-container *ngFor="let goal of achievingGoals$ | async">
-          <ng-template #thumb>
-            <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
-              <ng-template #thumbTitle>
-                {{ goal.title }}
-              </ng-template>
-            </rectangle-thumbnail>
-          </ng-template>
-        </ng-container>
-      </thumbnail-list>
-        
-    </ng-container>
-    <ng-template #noAchievingGoals>
-      <span class="padding">Not achieving any goals</span>
-    </ng-template>
-  </ng-container>
-
-  <!-- Supporting Goals overview -->
-  <h3 class="padding">Supporting Goals</h3>
-
-  <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
-    <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
-
-      <thumbnail-list type="goal">
-        <ng-container *ngFor="let goal of supportingGoals$ | async">
-          <ng-template #thumb>
-            <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
-              <ng-template #thumbTitle>
-                {{ goal.title }}
-              </ng-template>
-            </rectangle-thumbnail>
-          </ng-template>
-        </ng-container>
-      </thumbnail-list>
-
-    </ng-container>
-    <ng-template #noSupportingGoals>
-      <span class="padding">Not supporting any goals</span>
-    </ng-template>
-  </ng-container>
-
-  <ng-container *ngIf="isOwner">
-    <section>
-      <h3 class="padding">Exercises</h3>
-      <ion-grid>
-        <ion-row>
-          <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.affirmations)" >
-            <img asset="affirmations.jpg"/>
-            <div class="card-title">Affirmations</div>
-          </ion-card>
-    
-          <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)">
-            <img asset="bucketlist.jpg"/>
-            <div class="card-title">Bucket List</div>
-          </ion-card>
-    
-          <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">            
-            <img asset="dear_future_self.jpg"/>
-            <div class="card-title">Dear Future Self</div>
-
-          </ion-card>
-    
-          <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.daily_gratefulness)">            
-            <img asset="daily_gratefulness.jpg"/>
-            <div class="card-title">Daily Gratefulness</div>
-          </ion-card>
-    
-          <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.assess_life)">
-            <img asset="assess_life_man.jpg"/>
-            <div class="card-title">Assess Life</div>
-          </ion-card>
-        </ion-row>        
-      </ion-grid>
+    <section fxLayout="column">
+      <!-- Affirmations -->
+      <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
+      <!-- Bucket List -->
+      <exercise-bucket-list-view [uid]="profileId" [isOwner]="isOwner" [isSpectator]="isSpectator"></exercise-bucket-list-view>
     </section>
-  </ng-container>      
-</ion-content>  
+  
+    <!-- Achieving Goals overview -->
+    <h3 class="padding">Achieving Goals</h3>
+  
+    <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
+      <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
+  
+        <thumbnail-list type="goal">
+          <ng-container *ngFor="let goal of achievingGoals$ | async">
+            <ng-template #thumb>
+              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+                <ng-template #thumbTitle>
+                  {{ goal.title }}
+                </ng-template>
+              </rectangle-thumbnail>
+            </ng-template>
+          </ng-container>
+        </thumbnail-list>
+          
+      </ng-container>
+      <ng-template #noAchievingGoals>
+        <span class="padding">Not achieving any goals</span>
+      </ng-template>
+    </ng-container>
+
+
+    <!-- Supporting Goals overview -->
+    <h3 class="padding">Supporting Goals</h3>
+
+    <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
+      <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
+
+        <thumbnail-list type="goal">
+          <ng-container *ngFor="let goal of supportingGoals$ | async">
+            <ng-template #thumb>
+              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+                <ng-template #thumbTitle>
+                  {{ goal.title }}
+                </ng-template>
+              </rectangle-thumbnail>
+            </ng-template>
+          </ng-container>
+        </thumbnail-list>
+
+      </ng-container>
+      <ng-template #noSupportingGoals>
+        <span class="padding">Not supporting any goals</span>
+      </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="isOwner">
+      <section>
+        <h3 class="padding">Exercises</h3>
+        <ion-grid>
+          <ion-row>
+            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.affirmations)" >
+              <img asset="affirmations.jpg"/>
+              <div class="card-title">Affirmations</div>
+            </ion-card>
+      
+            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)">
+              <img asset="bucketlist.jpg"/>
+              <div class="card-title">Bucket List</div>
+            </ion-card>
+      
+            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">            
+              <img asset="dear_future_self.jpg"/>
+              <div class="card-title">Dear Future Self</div>
+
+            </ion-card>
+      
+            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.daily_gratefulness)">            
+              <img asset="daily_gratefulness.jpg"/>
+              <div class="card-title">Daily Gratefulness</div>
+            </ion-card>
+      
+            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.assess_life)">
+              <img asset="assess_life_man.jpg"/>
+              <div class="card-title">Assess Life</div>
+            </ion-card>
+          </ion-row>        
+        </ion-grid>
+      </section>
+    </ng-container>
+  </ng-container>
+</ion-content>

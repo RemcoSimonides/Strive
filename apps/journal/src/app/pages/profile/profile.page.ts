@@ -41,8 +41,6 @@ export class ProfilePage implements OnInit {
   private backBtnSubscription: Subscription
   private rightsSubscription: Subscription
 
-  public shouldLogin = false
-
   public enumExercises = enumExercises
 
   public isOwner = false
@@ -77,9 +75,12 @@ export class ProfilePage implements OnInit {
 
   async ngOnInit() {
     this.profileId = this.route.snapshot.paramMap.get('id')
+    this.profileForm.disable();
 
     this.rightsSubscription = this.user.profile$.subscribe(async profile => {
       if (!!profile) {
+        if (!this.profileId) return this.router.navigateByUrl(`profile/${this.user.uid}`);
+
         this.isOwner = profile.id === this.profileId
         if (!this.isOwner) {
           this.isSpectator = (await this.userSpectateService.getSpectator(profile.id, this.profileId)).isSpectator
@@ -90,26 +91,19 @@ export class ProfilePage implements OnInit {
       }
     })
 
-    if (this.profileId === 'undefined') {
-      if (this.user.uid) {
-        this.router.navigateByUrl(`profile/${this.user.uid}`)
-      } else {
-        this.shouldLogin = true
-      }
+    if (!!this.profileId) {
+      this.profile$ = this.profileService.valueChanges(this.profileId, { uid: this.profileId }).pipe(
+        tap(profile => {
+          if (!!profile) {
+            this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
+            this.profileForm.patchValue(profile)
+          }
+        })
+      )
+
+      this.achievingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
+      this.supportingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
     }
-
-    this.profile$ = this.profileService.valueChanges(this.profileId, { uid: this.profileId }).pipe(
-      tap(profile => {
-        if (!!profile) {
-          this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
-          this.profileForm.patchValue(profile)
-        }
-      })
-    )
-    this.profileForm.disable()
-
-    this.achievingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
-    this.supportingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
   }
 
   ionViewDidEnter() { 
