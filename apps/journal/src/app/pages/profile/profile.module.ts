@@ -17,7 +17,8 @@ import { AffirmationUpsertModule } from '@strive/exercises/affirmation/component
 import { DailyGratefulnessUpsertModule } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.module';
 import { AssessLifeUpsertModule } from '@strive/exercises/assess-life/components/upsert/upsert.module';
 import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/components/upsert/upsert.module';
-
+import { FollowingModule } from '@strive/user/spectator/components/following/following.module';
+import { FollowersModule } from '@strive/user/spectator/components/followers/followers.module';
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
@@ -42,6 +43,7 @@ const routes: Routes = [
     PageLoadingModule,
     ImageModule,
     ImageSelectorModule,
+    FollowingModule,
 
     // Exercises
     BucketListViewModule,

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="modalCtrl.dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  
+    <ion-title>Followers</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-no-padding">
+
+  <ion-list>
+    <ng-container *ngFor="let spectator of spectators; let last = last">
+      <ion-item button [lines]="last ? 'none' : 'inset'" (click)="navigateTo(spectator.uid)">
+        <ion-avatar slot="start">
+          <img asset="profile.png" [ref]="spectator.photoURL">
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ spectator.username }}</h2>
+        </ion-label>
+      </ion-item>
+    </ng-container> 
+  </ion-list>
+  
+</ion-content>

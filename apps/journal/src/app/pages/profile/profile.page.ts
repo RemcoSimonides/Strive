@@ -3,20 +3,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
-// import { FcmService } from '@strive/utils/services/fcm.service';
-import { ImageService } from '@strive/media/+state/image.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { Observable, Subscription } from 'rxjs';
 // Modals / Popover
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
-import { ProfileOptionsPage, enumProfileOptions } from './popovers/profile-options/profile-options.page';
+import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
+import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
+import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
 // Interfaces
 import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
@@ -25,7 +24,6 @@ import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder
 // Other
 import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { ProfileService } from '@strive/user/user/+state/profile.service';
@@ -59,7 +57,6 @@ export class ProfilePage implements OnInit {
   public segmentChoice = 'info'
 
   constructor(
-    private afAuth: AngularFireAuth,
     public user: UserService,
     private profileService: ProfileService,
     private goalService: GoalService,
@@ -122,36 +119,19 @@ export class ProfilePage implements OnInit {
   } 
 
   async openAuthModal() {
-    const modal = await this.modalCtrl.create({
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
-  public async presentProfileOptionsPopover(ev: UIEvent): Promise<void> {
-
-    const popover = await this.popoverCtrl.create({
+  public presentProfileOptionsPopover(ev: UIEvent) {
+    this.popoverCtrl.create({
       component: ProfileOptionsPage,
       event: ev
-    })
-    popover.present()
-    popover.onDidDismiss().then((data) => {
-      switch (data.data) {
-        case enumProfileOptions.pushNotificationPermission:
-          // if (this._platform.is('cordova')) {
-          //   this.fcmService.getPermissionCordova()
-          // } else {
-          //   this.fcmService.getPermission().subscribe()
-          // }
-          break
-        case enumProfileOptions.logOut:
-          this.afAuth.signOut()
-          break
-      }
-    })
+    }).then(popover => popover.present())
   }
 
   public async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
@@ -159,9 +139,7 @@ export class ProfilePage implements OnInit {
 
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverPage,
-      componentProps: {
-        storagePath: profile.photoURL
-      },
+      componentProps: { storagePath: profile.photoURL },
       event: ev
     })
     popover.onDidDismiss().then((imageURL => {
@@ -169,7 +147,7 @@ export class ProfilePage implements OnInit {
         this.profileForm.photoURL.setValue(imageURL.data.toString())
       }
     }))
-    await popover.present()
+    popover.present()
   }
 
   public updateUsername(){
@@ -218,6 +196,14 @@ export class ProfilePage implements OnInit {
     }
 
     this.modalCtrl.create({ component }).then(modal => modal.present())
+  }
+
+  openFollowers() {
+    this.modalCtrl.create({ component: FollowersComponent }).then(modal => modal.present())
+  }
+
+  openFollowing() {
+    this.modalCtrl.create({ component: FollowingComponent }).then(modal => modal.present())
   }
 }
 

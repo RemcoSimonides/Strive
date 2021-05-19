@@ -29,6 +29,7 @@ export class ExplorePage implements OnInit {
     }
 
     this.seo.generateTags({ title: `Explore - Strive Journal` })
+    this.algolia.profileResults.subscribe(console.log)
   }
 
   async search(event): Promise<void> {

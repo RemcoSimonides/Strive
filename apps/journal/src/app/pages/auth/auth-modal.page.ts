@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { createProfile, Profile } from '@strive/user/user/+state/user.firestore';
+import { createProfile } from '@strive/user/user/+state/user.firestore';
 // Strive
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';

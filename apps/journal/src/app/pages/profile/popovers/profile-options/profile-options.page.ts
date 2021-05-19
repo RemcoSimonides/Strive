@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { PopoverController } from '@ionic/angular';
 import { FcmService } from '@strive/utils/services/fcm.service';
 
@@ -7,29 +8,21 @@ import { FcmService } from '@strive/utils/services/fcm.service';
   templateUrl: './profile-options.page.html',
   styleUrls: ['./profile-options.page.scss'],
 })
-export class ProfileOptionsPage implements OnInit {
-
-  public enumProfileOptions = enumProfileOptions
+export class ProfileOptionsPage {
 
   constructor(
+    private afAuth: AngularFireAuth,
     private popoverCtrl: PopoverController,
     private fcm: FcmService
   ) { }
-
-  ngOnInit() {}
-
-  async close(profileOption: enumProfileOptions) {
-    this.popoverCtrl.dismiss(profileOption)
-  }
 
   pushNotifications() {
     this.fcm.registerFCM();
     this.popoverCtrl.dismiss()
   }
-}
 
-export enum enumProfileOptions {
-  editProfile,
-  pushNotificationPermission,
-  logOut
+  signOut() {
+    this.afAuth.signOut()
+    this.popoverCtrl.dismiss()
+  }
 }

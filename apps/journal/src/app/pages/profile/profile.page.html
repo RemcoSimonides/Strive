@@ -52,11 +52,11 @@
           </ng-template>
         </article>
         <article fxLayout fxLayoutAlign="space-evenly">
-          <div fxLayout="column" fxLayoutAlign="center center">
+          <div fxLayout="column" fxLayoutAlign="center center" (click)="openFollowers()">
             <p>Followers</p>
             <span>{{ profile.numberOfSpectators }}</span>
           </div>
-          <div fxLayout="column" fxLayoutAlign="center center">
+          <div fxLayout="column" fxLayoutAlign="center center" (click)="openFollowing()">
             <p>Following</p>
             <span>{{ profile.numberOfSpectating }}</span>
           </div>

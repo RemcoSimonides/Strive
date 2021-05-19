@@ -41,6 +41,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
         .catch(err => { console.log('Error subscribing tot topic', err) })
     }
 
+    console.log('updating Algolia: ', )
     updateAlgoliaObject('user', uid, {
       uid,
       username: after.username,
@@ -87,17 +88,23 @@ async function updateGoalStakeholders(uid: string, after: Profile) {
 }
 
 async function updateSpectators(uid: string, after: Profile) {
-  const data: Partial<Spectator> = {
+  console.log('uid: ', uid);
+  const spectating: Partial<Spectator> = {
     username: after.username,
     photoURL: after.photoURL
   }
 
+  const spectator: Partial<Spectator> = {
+    profileUsername: after.username,
+    profilePhotoURL: after.photoURL
+  }
+
   const spectatingsSnap = await db.collectionGroup(`Spectators`).where('uid', '==', uid).get()
-  const promises = spectatingsSnap.docs.map(doc => doc.ref.update(data))
+  const promises = spectatingsSnap.docs.map(doc => doc.ref.update(spectating))
   
   const spectatorsSnap = await db.collection(`Users/${uid}/Spectators`).get()
   for (const doc of spectatorsSnap.docs) {
-    const promise = doc.ref.update(data)
+    const promise = doc.ref.update(spectator)
     promises.push(promise)
   }
 

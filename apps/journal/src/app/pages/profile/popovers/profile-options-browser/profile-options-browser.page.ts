@@ -15,8 +15,6 @@ import { FcmService } from '@strive/utils/services/fcm.service';
 })
 export class ProfileOptionsBrowserPage {
 
-  enumProfileOptionsDesktop = enumProfileOptionsDesktop
-
   constructor(
     private afAuth: AngularFireAuth,
     private modalCtrl: ModalController,
@@ -26,21 +24,17 @@ export class ProfileOptionsBrowserPage {
     private fcm: FcmService
   ) { }
 
-  close(profileOption: enumProfileOptionsDesktop) {
-    this.popoverCtrl.dismiss(profileOption)
-  }
-
   goToProfile() {
     this.router.navigateByUrl(`/profile/${this.user.uid}`)
     this.popoverCtrl.dismiss()
   }
 
   pushNotifications() {
-    this.fcm.registerFCM();
+    this.fcm.registerFCM()
     this.popoverCtrl.dismiss()
   }
 
-  async logOut() {
+  async signOut() {
     await this.afAuth.signOut()
     this.popoverCtrl.dismiss()
 
@@ -52,10 +46,4 @@ export class ProfileOptionsBrowserPage {
       }
     }).then(modal => modal.present())
   }
-}
-
-export enum enumProfileOptionsDesktop {
-  editProfile,
-  pushNotificationPermission,
-  logOut
 }

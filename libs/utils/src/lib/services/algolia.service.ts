@@ -81,7 +81,7 @@ export class AlgoliaService {
 
     this.profilesIndex.search(query, {
       hitsPerPage: hitsPerPage,
-      attributesToRetrieve: ['uid', 'username', 'image', 'numberOfSpectating', 'numberOfSpectators']
+      attributesToRetrieve: ['uid', 'username', 'photoURL', 'numberOfSpectating', 'numberOfSpectators']
     }).then((data) => {
       hits = data.hits.map(hit => {
         return {
