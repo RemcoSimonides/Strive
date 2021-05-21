@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular'
-import { UserService } from '@strive/user/user/+state/user.service';
+import { ModalController } from '@ionic/angular';
 
 import { Spectator } from '../../+state/spectator.firestore';
 import { UserSpectateService } from '../../+state/spectator.service';
@@ -19,12 +18,12 @@ export class FollowingComponent {
   constructor(
     public modalCtrl: ModalController,
     private service: UserSpectateService,
-    private user: UserService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {
-    if (!!this.user.uid) {
-      this.service.getSpectating(this.user.uid).then(spectating => {
+    const uid = this.router.url.split('/').pop();
+    if (uid) {
+      this.service.getSpectating(uid).then(spectating => {
         this.spectating = spectating
         this.cdr.markForCheck()
       })
