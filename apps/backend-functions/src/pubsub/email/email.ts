@@ -3,22 +3,20 @@ import { db, functions } from '../../internals/firebase';
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
 
-import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
-import { Notification } from '@strive/notification/+state/notification.firestore';
+import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { Notification, NotificationMeta } from '@strive/notification/+state/notification.firestore';
 import { Profile, User as IUser } from '@strive/user/user/+state/user.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { sendgridAPIKey, sendgridTemplate } from '../../environments/environment';
 import { createNotification } from '@strive/notification/+state/notification.model';
-import { converter, getCollection, getDocument } from '../../shared/utils';
+import { getCollection, getDocument } from '../../shared/utils';
+import { MailDataRequired } from '@sendgrid/mail';
 
-const API_KEY = sendgridAPIKey;
-const TEMPLATE_ID = sendgridTemplate;
-sgMail.setApiKey(API_KEY)
+const TEMPLATE_ID = 'd-b7a805f974814ca084c8d0a47d110322';
 
 // crontab.guru to determine schedule value
 // export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
 export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun(async (context) => {
-    
+
   const dateWeekAgo = moment(context.timestamp).subtract(7, 'days').toDate()
 
   // get users
@@ -27,95 +25,79 @@ export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun
   for (const user of users) {
     let mail =  `
     <h1>Strive Journal update</h1>
-    <h3>Missed notifications</h3>`
+    <h2>Missed notifications</h2>`
 
     const data = await getData(user.id, dateWeekAgo)
-    if (!hasNewNotifications(data)) return
+    if (!hasNewNotifications(data)) continue
     mail += getGoalUpdatesHTML(data)
     mail += getCollectiveGoalUpdatesHTML(data)
     mail += getUserUpdates(data.user)
 
-    console.log('email', user.email)
-    console.log('mail', mail)
-    await submitEmail(mail, user.email)
+    await sendTemplateEmail('', TEMPLATE_ID, { text: mail })
   }
 })
 
-function hasNewNotifications(data: Data): boolean {
-  let hasUpdates = false
-  hasUpdates = data.collectiveGoals.some(collectiveGoal => !!collectiveGoal.notifications.length)
-  if (!hasUpdates) hasUpdates = data.goals.some(goal => !!goal.notifications.length)
-  if (!hasUpdates) hasUpdates = !!data.user.notifications.length
-  return hasUpdates
+function hasNewNotifications({ collectiveGoals, goals, user }: Data): boolean {
+  return collectiveGoals.some(collectiveGoal => !!collectiveGoal.notifications.length)
+    || goals.some(goal => !!goal.notifications.length)
+    || !!user.notifications.length
 }
 
 async function getData(uid: string, fromDate: Date): Promise<Data> {
-
-  const data: Data = {
-    goals: [],
-    collectiveGoals: [],
-    user: { id: '', username: '', notifications: [] }
-  }
-
-  data.goals = await getGoals(uid, fromDate)
-  data.collectiveGoals = await getCollectiveGoals(uid, fromDate)
-  data.user = await getUserData(uid, fromDate)
-
-  return data
+  const [ goals, collectiveGoals, user ] = await Promise.all([
+    getGoals(uid, fromDate),
+    getCollectiveGoals(uid, fromDate),
+    getUserData(uid, fromDate)
+  ])
+  return { goals, collectiveGoals, user }
 }
 
 async function getGoals(uid: string, fromDate: Date): Promise<Goal[]> {
-  const goals: Goal[] = []
+  const gStakeholdersSnap = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).get()
 
-  // get goals
-  const gStakeholdersSnap = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('goalIsFinished', '==', false).get()
-
-  for (const doc of gStakeholdersSnap.docs) {
-    const GStakeholder = createGoalStakeholder(doc.data())
-    const notifications = await getGoalNotifications(GStakeholder.goalId, fromDate)
-
-    goals.push({
-      id: GStakeholder.goalId,
-      title: GStakeholder.goalTitle,
-      notifications
+  const promises = gStakeholdersSnap.docs.map(doc => {
+    const gStakeholder = createGoalStakeholder(doc.data())
+    return getGoalNotifications(gStakeholder.goalId, fromDate).then(notifications => {
+      const goal: Goal = {
+        id: gStakeholder.goalId,
+        title: gStakeholder.goalTitle,
+        notifications
+      }
+      return goal
     })
-  }
-
-  return goals
+  })
+  return Promise.all(promises);
 }
 
-async function getGoalNotifications(goalId: string, fromDate: Date): Promise<Notification[]> {
+async function getGoalNotifications(goalId: string, fromDate: Date): Promise<Notification<NotificationMeta>[]> {
   const notificationsSnap = await db
     .collection(`Goals/${goalId}/Notifications`)
     .where('createdAt', '>=', fromDate)
     .orderBy('createdAt')
-    .withConverter<Notification>(converter(createNotification))
     .get()
 
-  return notificationsSnap.docs.map(doc => doc.data())
+  return notificationsSnap.docs.map(doc => createNotification(doc.data()))
 }
 
 async function getCollectiveGoals(uid: string, fromDate: Date): Promise<Goal[]> {
-
-  const collectiveGoals: Goal[] = []
-
   const cGStakeholdersSnap = await db
     .collectionGroup(`CGStakeholders`)
     .where(`uid`, `==`, uid)
-    .withConverter<CollectiveGoalStakeholder>(converter(createCollectiveGoalStakeholder))
     .get()
 
-  for (const doc of cGStakeholdersSnap.docs) {
-    const CGStakeholder = doc.data()
-    const notifications = await getCollectiveGoalNotifications(CGStakeholder.collectiveGoalId, fromDate)
 
-    collectiveGoals.push({
-      id: CGStakeholder.collectiveGoalId,
-      title: CGStakeholder.collectiveGoalTitle,
-      notifications
+  const promises = cGStakeholdersSnap.docs.map(doc => {
+    const cGStakeholder = createCollectiveGoalStakeholder(doc.data())
+    return getCollectiveGoalNotifications(cGStakeholder.collectiveGoalId, fromDate).then(notifications => {
+      const collectiveGoal: CollectiveGoal = {
+        id: cGStakeholder.collectiveGoalId,
+        title: cGStakeholder.collectiveGoalTitle,
+        notifications
+      }
+      return collectiveGoal
     })
-  }
-  return collectiveGoals
+  })
+  return Promise.all(promises)
 }
 
 async function getCollectiveGoalNotifications(collectiveGoalId: string, fromDate: Date): Promise<Notification[]> {
@@ -123,25 +105,22 @@ async function getCollectiveGoalNotifications(collectiveGoalId: string, fromDate
     .collection(`ColleciveGoals/${collectiveGoalId}/Notifications`)
     .where('createdAt', '>=', fromDate)
     .orderBy('createdAt')
-    .withConverter<Notification>(converter(createNotification))
     .get()
 
-  return notificationsSnap.docs.map(doc => doc.data())
+  return notificationsSnap.docs.map(doc => createNotification(doc.data()))
 }
 
 async function getUserData(uid: string, fromDate: Date): Promise<User> {
-  const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
-  const notificationsSnap = await db
-    .collection(`Users/${uid}/Notifications`)
-    .where('event', '>=', 400000)
-    .where('event', '<', 500000)
-    .where('createdAt', '>=', fromDate)
-    .withConverter<Notification>(converter(createNotification))
-    .get()
-  const notifications = notificationsSnap.docs.map(doc => doc.data())
+  const [ profile, notifications ] = await Promise.all([
+    getDocument<Profile>(`Users/${uid}/Profile/${uid}`),
+    db.collection(`Users/${uid}/Notifications`)
+      .where('createdAt', '>=', fromDate)
+      .get()
+      .then(notifications => notifications.docs.map(doc => createNotification(doc.data())).filter(notifications => notifications.event >= 40000 && notifications.event < 50000))
+  ])
 
   return {
-    id: uid,
+    uid,
     username: profile.username,
     notifications
   }
@@ -220,19 +199,44 @@ function getUserUpdates(user: User): string {
 
 async function submitEmail(mail: string, receiverEmailAddress: string) {
 
-  console.log('trying to submit email', receiverEmailAddress)
-
-  const msg = {
+  const msg: MailDataRequired = {
     to: 'remcosimonides@gmail.com',
-    from: 'remco@lets.support',
-    templateId: TEMPLATE_ID,
-    dynamic_template_data: {
-      subject: 'Weekly Update',
-      body: mail
-    }
+    from: 'remco@strivejournal.com',
+    subject: 'Weekly Update',
+    text: mail
   }
 
-  return sgMail.send(msg)
+  const config = functions.config()
+  sgMail.setApiKey(config.sendgrid.apikey)
+
+  try {
+    console.log('going to send email template: ', JSON.stringify(msg));
+    await sgMail.send(msg)
+    console.log('sent 🙂')
+  } catch (err) {
+    console.log('err: ', err)
+  }
+}
+
+async function sendTemplateEmail(to: string, templateId: string, data: Record<string, any>) {
+
+  const config = functions.config()
+  sgMail.setApiKey(config.sendgrid.apikey)
+
+  const msg: MailDataRequired = {
+    from: 'remco@strivejournal.com',
+    to: 'remcosimonides@gmail.com',
+    templateId: TEMPLATE_ID,
+    dynamicTemplateData: { ...data }
+  }
+
+  try {
+    console.log('going to send email template: ', JSON.stringify(msg));
+    await sgMail.send(msg)
+    console.log('sent 🙂')
+  } catch (err) {
+    console.log('err: ', err)
+  }
 }
 
 interface Data {
@@ -254,7 +258,7 @@ interface CollectiveGoal {
 }
 
 interface User {
-  id: string;
+  uid: string;
   username: string;
   notifications: Notification[];
 }
