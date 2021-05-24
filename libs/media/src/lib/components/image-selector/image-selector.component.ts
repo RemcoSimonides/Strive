@@ -137,11 +137,12 @@ export class ImageSelectorComponent implements OnInit {
         throw new Error('No path defined to upload to')
       }
 
-      const blob = b64toBlob(this.croppedImage);
-      const path = `${this.storagePath}/${this.file.name}`;
-      this.afStorage.upload(path, blob);
+      const blob = b64toBlob(this.croppedImage)
+      const path = `${this.storagePath}/${this.file.name}`
+      this.afStorage.upload(path, blob)
       this.form.setValue(path)
-      this.step.next('show');
+      this.form.markAsDirty()
+      this.step.next('show')
 
     } catch (err) {
       console.error(err);
