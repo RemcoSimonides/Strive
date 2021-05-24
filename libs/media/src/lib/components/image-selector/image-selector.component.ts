@@ -123,7 +123,9 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   remove() {
-    this.afStorage.ref(this.form.value).delete()
+    try {
+      this.afStorage.ref(this.form.value).delete()
+    } catch (err) { console.error(err) }
     this.form.setValue('');
     this.step.next('drop')
   }
