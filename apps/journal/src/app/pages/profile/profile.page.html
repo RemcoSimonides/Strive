@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-no-padding">
   <ng-template #loading>
     <ng-container *ngIf="!profileId else login">
       <strive-page-loading></strive-page-loading>
@@ -30,48 +30,48 @@
   </ng-template>
 
   <ng-container *ngIf="profile$ | async as profile; else loading">
-    <section fxLayout="column" class="header">
+    <section fxLayout fxLayoutAlign="center" class="header">
 
       <!-- HEADER -->
       <ion-card>
-        <article fxLayout fxLayoutAlign="center end">
-          <img [ref]="profile.photoURL" (click)="editProfileImage(profile, $event)" asset="profile.png" alt="profile picture"/>
-          <ion-icon *ngIf="isOwner" name="create" (click)="editProfileImage(profile, $event)"></ion-icon>
-        </article>
-        <article fxLayout fxLayoutAlign="center center">
-          <ng-container *ngIf="isOwner else username">
-            <ion-input type="text" 
-              [ngStyle]="{'max-width': profileForm.username.value ? profileForm.username.value.length + 1.5 + 'ch' : '1.5ch'}" 
-              [formControl]="profileForm.username" 
-              (keydown.enter)="updateUsername()">
-            </ion-input>
-            <ion-icon [name]="profileForm.enabled ? 'save' : 'create'" (click)="updateUsername()"></ion-icon>
+        <article fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="12px">
+          <div fxLayout fxLayoutAlign="center center" fxLayoutGap="12px">
+            <ng-container *ngIf="isOwner else username">
+              <ion-input type="text" 
+                [ngStyle]="{'max-width': profileForm.username.value ? profileForm.username.value.length + 1.5 + 'ch' : '1.5ch'}" 
+                [formControl]="profileForm.username" 
+                (keydown.enter)="updateUsername()">
+              </ion-input>
+              <ion-icon [name]="profileForm.enabled ? 'save' : 'create'" (click)="updateUsername()"></ion-icon>
+            </ng-container>
+            <ng-template #username>
+              <h4>{{ profile.username }}</h4>
+            </ng-template>
+          </div>
+
+          <article fxLayout fxLayoutAlign="space-evenly">
+            <div fxLayout="column" fxLayoutAlign="center center" (click)="openFollowers()">
+              <p>Followers</p>
+              <span>{{ profile.numberOfSpectators }}</span>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center" (click)="openFollowing()">
+              <p>Following</p>
+              <span>{{ profile.numberOfSpectating }}</span>
+            </div>
+          </article>
+  
+          <ng-container *ngIf="!isOwner">
+            <ion-button (click)="toggleSpectate()" fill="outline">{{ isSpectator ? 'Stop Following' : 'Follow' }}</ion-button>
           </ng-container>
-          <ng-template #username>
-            <h4>{{ profile.username }}</h4>
-          </ng-template>
-        </article>
-        <article fxLayout fxLayoutAlign="space-evenly">
-          <div fxLayout="column" fxLayoutAlign="center center" (click)="openFollowers()">
-            <p>Followers</p>
-            <span>{{ profile.numberOfSpectators }}</span>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="center center" (click)="openFollowing()">
-            <p>Following</p>
-            <span>{{ profile.numberOfSpectating }}</span>
-          </div>
         </article>
 
-        <ng-container *ngIf="!isOwner">
-          <ion-button (click)="toggleSpectate()" fill="outline">{{ isSpectator ? 'Stop Following' : 'Follow' }}</ion-button>
-        </ng-container>
       </ion-card>
-
+      <article fxLayout fxLayoutAlign="center end" class="img-container">
+        <img [ref]="profile.photoURL" (click)="editProfileImage(profile, $event)" asset="profile.png" alt="profile picture"/>
+      </article>
     </section>
 
     <section fxLayout="column">
-      <!-- Affirmations -->
-      <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
       <!-- Bucket List -->
       <exercise-bucket-list-view [uid]="profileId" [isOwner]="isOwner" [isSpectator]="isSpectator"></exercise-bucket-list-view>
     </section>
@@ -126,7 +126,13 @@
     </ng-container>
 
     <ng-container *ngIf="isOwner">
-      <section>
+      <section fxLayout="column">
+        <h5>Only you see the content below</h5>
+
+        <!-- Affirmations -->
+        <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
+
+        <!-- Exercises -->
         <h3 class="padding">Exercises</h3>
         <ion-grid>
           <ion-row>

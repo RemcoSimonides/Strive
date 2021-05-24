@@ -1,10 +1,32 @@
+section {
+  max-width: 700px;
+  margin: auto;
+  padding: 0px 16px;
+}
+
 .header {
+  position: relative;
+  margin-top: 64px;
+
+  article div {
+    cursor: pointer;
+  }
+
   ion-card {
-    background-image: linear-gradient(to bottom, var(--ion-color-primary-tint), white);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    padding: 16px;
+    width: 100%;
+    padding: 48px 12px 12px 12px;
+  }
+
+  ion-icon {
+    &:hover  {
+      color: black;
+      cursor: pointer;
+    }
+  }
+
+  .img-container {
+    position: absolute;
+    top: -40px;
 
     img {
       border-radius: 50%;
@@ -13,18 +35,12 @@
       height: 100px;
       margin: 0 0 12px 12px;
       box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
-    }
-
-    ion-icon {
-      &:hover  {
-        color: black;
-        cursor: pointer;
-      }
+      cursor: pointer;
     }
   }
 
-  article div {
-    cursor: pointer;
+  ion-button {
+    width: fit-content;
   }
 }
 
@@ -35,120 +51,19 @@
   color: var(--ion-color-primary);
 }
 
-
-// Profile content
-#content {
-    position: relative;
-    margin-top: 180px;
-    padding-top: 50px;
-    text-align: center;
-}
-
-#profile-info {
-    position: absolute;
-    top: -95px;
-    width: 100%;
-    z-index: 2;
-    text-align: center;
-}
-
-#profile-username {
-    color: #444;
-    font-size: 26px;
-    font-weight: 500;
-}
-
-#profile-username-edit-icon {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 5px;
-
-    &:hover {
-        color: black;
-    }
-}
-
-// Affirmations
-
-
-// Bucketlist
-.exercise {
-
-    .exercise-header-container {
-        display: flex;
-    
-        .exercise-help-icon {
-            margin-top: auto;
-            margin-bottom: auto;
-            margin-left: 5px;
-    
-            &:hover {
-                color: black;
-                cursor: pointer;
-            }
-        }
-    
-        .exercise-edit-icon {
-            margin-top: auto;
-            margin-bottom: auto;
-            margin-left: 20px;
-    
-            &:hover {
-                color: black;
-                cursor: pointer;
-            }
-        }
-    
-    }
-
-    ion-checkbox {
-        margin-right: 5px;
-    }
-}
-
-hr {
-    border: 0;
-    height: 1px;
-    background: #444;
-    background: -webkit-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, rgb(188, 198, 214) 50%, hsla(0, 0%, 0%, 0) 100%);
-}
-
-.goal-thumbnail-wrapper {
-    display: flex;
-}
-
-ion-slide {
-    float: left;
-    width: 165px !important;
-    margin-left: 5px!important;
-    margin-right: 5px!important;
-}
-
 h3 {
-    color: var(--ion-color-primary);
+  color: var(--ion-color-primary);
 }
 
 .padding {
-    padding-left: 16px;
+  padding-left: 16px;
 }
 
 ion-input {
-    max-width: 200px;
-    color: #444;
-    font-size: 26px;
-    font-weight: 500;
-}
-
-.container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.back-btn {
-    vertical-align: text-top;
-    cursor: pointer;
-    color: var(--ion-color-medium);
+  max-width: 200px;
+  color: #444;
+  font-size: 26px;
+  font-weight: 500;
 }
 
 // Exercises
@@ -170,4 +85,27 @@ ion-input {
     width: 100%;
     font-weight: bold;
     color: #fff;
+}
+
+h5 {
+  overflow: hidden;
+  text-align: center;
+}
+h5:before,
+h5:after {
+  background-color: #333;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+h5:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+h5:after {
+  left: 0.5em;
+  margin-right: -50%;
 }

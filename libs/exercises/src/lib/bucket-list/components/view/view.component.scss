@@ -2,6 +2,10 @@
   color: green;
 }
 
+h3 {
+  color: var(--ion-color-primary);
+}
+
 ion-checkbox {
   margin-right: 8px;
   opacity: 1;
