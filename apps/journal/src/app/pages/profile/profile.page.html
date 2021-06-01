@@ -16,7 +16,7 @@
 
 <ion-content class="ion-no-padding">
   <ng-template #loading>
-    <ng-container *ngIf="!profileId else login">
+    <ng-container *ngIf="!!profileId else login">
       <strive-page-loading></strive-page-loading>
     </ng-container>
 
