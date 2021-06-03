@@ -31,6 +31,10 @@
 /** Sharing buttons */
 @import '~ngx-sharebuttons/themes/outline/outline-theme';
 
+* {
+  font-family: 'Inter', sans-serif;
+}
+
 .not-logged-in {
   display: flex;
   justify-content: center;
