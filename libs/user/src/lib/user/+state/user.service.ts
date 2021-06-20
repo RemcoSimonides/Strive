@@ -66,11 +66,13 @@ export class UserService {
   async upsertProfile(profile: Partial<Profile>, uid = this.uid) {
     this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, profile);
 
-    const currentUser = await this.afAuth.currentUser
-    currentUser.updateProfile({
-      displayName: profile.username ?? currentUser.displayName,
-      photoURL: profile.photoURL ?? currentUser.photoURL
-    })
+    if (profile.username || profile.photoURL) {
+      const currentUser = await this.afAuth.currentUser
+      currentUser.updateProfile({
+        displayName: profile.username ?? currentUser.displayName,
+        photoURL: profile.photoURL ?? currentUser.photoURL
+      })
+    }
   }
 
   createUser(uid: string, email: string) {

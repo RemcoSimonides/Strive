@@ -20,19 +20,19 @@ export class FcmService {
     private user: UserService
   ) { }
 
-  private getPermission() {
-    return this.afMessaging.requestToken.pipe(
-      take(1),
-      tap(token => this.user.addFCMToken(token)) 
-    ).toPromise()
+  private async getPermission() {
+    const token = await this.afMessaging.requestToken.pipe(take(1)).toPromise()
+    console.log('Permission granted! Save to the server!', token);
+    this.user.addFCMToken(token);
   }
 
   async registerFCM(): Promise<void> {
-    if ((this._platform.is('android') || this._platform.is('ios')) && !this._platform.is('mobileweb')) {
-      await this.registerCapacitor()
-    } else {
-      await this.getPermission()
-    }
+    // if ((this._platform.is('android') || this._platform.is('ios')) && !this._platform.is('mobileweb')) {
+    //   await this.registerCapacitor()
+    // } else {
+    //   await this.getPermission()
+    // }
+    this.getPermission();
   }
 
   private async registerCapacitor(): Promise<void> {

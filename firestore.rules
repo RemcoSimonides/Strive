@@ -27,7 +27,8 @@ service cloud.firestore {
 
       match /Profile/{userId} {
         allow read;
-        allow write: if isOwner(userId)
+        // PUT BACK STRICT RULES: allow write: if isOwner(userId); https://github.com/firebase/firebase-js-sdk/issues/4932
+        allow write;
       }
 
       match /Notifications/{notificationId} {

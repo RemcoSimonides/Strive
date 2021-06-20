@@ -15,6 +15,7 @@ import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { Subscription } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +43,8 @@ export class AppComponent implements OnDestroy {
     private popoverCtrl: PopoverController,
     private router: Router,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private messaging: AngularFireMessaging
   ) {
     this.initializeApp();
   }

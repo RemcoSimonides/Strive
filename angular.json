@@ -29,7 +29,8 @@
               },
               "apps/journal/src/assets",
               "apps/journal/src/manifest.webmanifest",
-              "apps/journal/src/firebase-messaging-sw.js"
+              "apps/journal/src/firebase-messaging-sw.js",
+              "apps/journal/src/sw-master.js"
             ],
             "styles": [
               {

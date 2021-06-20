@@ -74,7 +74,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     // Strive
     AuthModalModule,
     ImageModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
+    ServiceWorkerModule.register('sw-master.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
