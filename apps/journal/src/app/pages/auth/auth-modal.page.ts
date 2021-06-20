@@ -162,35 +162,38 @@ export class AuthModalPage implements OnInit {
 
       try {
         const { user } = await this.afAuth.createUserWithEmailAndPassword(this.signupForm.value.email, this.signupForm.value.password)
-        const profile = createProfile({ username: this.signupForm.value.username })
+        const profile = createProfile({ id: user.uid, username: this.signupForm.value.username })
 
         await Promise.all([
           this.user.createUser(user.uid, this.signupForm.value.email),
-          this.user.upsertProfile(profile)
+          this.user.upsertProfile(profile, user.uid)
         ])
 
+      } catch(error) {
+        loading.dismiss()
+        this.alertCtrl.create({
+          message: error.message,
+          buttons: [{ text: 'Ok', role: 'cancel' }]
+        }).then(alert => alert.present())
+      }
+      
+      try {
         const useTemplateFn = this.functions.httpsCallable('useTemplate')
         const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }).toPromise();
 
         await this.fcmService.registerFCM()
         this.modalCtrl.dismiss()
 
+        loading.dismiss()
         if (!!error) {
-          await loading.dismiss()
           throw new Error(result)
         } else {
           this.navCtrl.navigateRoot(`/goal/${result}`)
         }
 
       } catch (error) {
-
-        await loading.dismiss()
-        let alert = await this.alertCtrl.create({
-          message: error.message,
-          buttons: [{ text: 'Ok', role: 'cancel' }]
-        })
-        await alert.present()
-
+        loading.dismiss()
+        this.modalCtrl.dismiss()
       }
     }
   }

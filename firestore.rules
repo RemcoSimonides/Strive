@@ -27,8 +27,7 @@ service cloud.firestore {
 
       match /Profile/{userId} {
         allow read;
-        // PUT BACK STRICT RULES: allow write: if isOwner(userId); https://github.com/firebase/firebase-js-sdk/issues/4932
-        allow write;
+        allow write: if isOwner(userId);
       }
 
       match /Notifications/{notificationId} {
@@ -79,7 +78,7 @@ service cloud.firestore {
     }
 
     function getCollectiveGoalStakeholder(collectiveGoalId) {
-      return get(/databases/$(database)/documents/CollectiveGoals/PuutcXPwyoBazVuvf7Ov/CGStakeholders/$(request.auth.uid)).data
+      return get(/databases/$(database)/documents/CollectiveGoals/$(collectiveGoalId)/CGStakeholders/$(request.auth.uid)).data
     }
 
     // ===== GOALS ====

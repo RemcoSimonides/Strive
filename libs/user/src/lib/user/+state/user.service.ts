@@ -76,7 +76,8 @@ export class UserService {
   }
 
   createUser(uid: string, email: string) {
-    return this.db.upsert(`Users/${uid}`, createUser({ id: uid, email }))
+    const user = createUser({ id: uid, email });
+    return this.db.set(`Users/${uid}`, user);
   }
 
   addFCMToken(token: string) {
