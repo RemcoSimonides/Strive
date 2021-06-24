@@ -14,6 +14,7 @@ import { createProfile } from '@strive/user/user/+state/user.firestore';
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
+import firebase from 'firebase';
 
 export enum enumAuthSegment {
   login,
@@ -81,6 +82,14 @@ export class AuthModalPage implements OnInit {
   ngOnInit() {
     const segmentChoice = this.navParams.data.authSegment
     this.authSegmentChoice = !!segmentChoice ? segmentChoice : enumAuthSegment.login
+  }
+
+  fixesAnIssue() {
+    // TODO remove when fixed
+    // https://github.com/angular/angularfire/issues/2864
+    // https://github.com/firebase/firebase-js-sdk/issues/4932
+    // next line doesnt get called but it does fix an issue 
+    this.afAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
   }
 
   ionViewDidEnter() {
