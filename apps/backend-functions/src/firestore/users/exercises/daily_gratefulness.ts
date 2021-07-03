@@ -1,7 +1,7 @@
 import { functions } from '../../../internals/firebase';
 import * as moment from 'moment'
 import { DailyGratefulness } from '@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore'
-import { IScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
+import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 
 export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
@@ -46,7 +46,7 @@ async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: Dai
       scheduledDate.add(1, 'day')
     }
 
-    const task: IScheduledTaskUserExerciseDailyGratefulness = {
+    const task: Partial<ScheduledTaskUserExerciseDailyGratefulness> = {
       worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
       performAt: scheduledDate.toISOString(),
       options: { userId: uid }

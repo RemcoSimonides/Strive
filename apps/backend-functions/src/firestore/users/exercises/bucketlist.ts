@@ -1,7 +1,7 @@
 import { functions } from '../../../internals/firebase';
 import * as moment from 'moment'
 import { BucketList } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
-import { enumWorkerType, IScheduledTaskUserExerciseBucketList } from '../../../shared/scheduled-task/scheduled-task.interface'
+import { enumWorkerType, ScheduledTaskUserExerciseBucketList } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { handleNotificationsOfBucketListChanged, handleNotificationsOfBucketListCreated } from './bucketlist.notification'
 
@@ -14,10 +14,11 @@ export const bucketListCreatedHandler = functions.firestore.document(`Users/{use
     handleNotificationsOfBucketListCreated(uid)
 
     // create scheduled task in a year to reassess bucket list
-    const task: IScheduledTaskUserExerciseBucketList = {
+    const task: ScheduledTaskUserExerciseBucketList = {
       worker: enumWorkerType.userExerciseBucketListYearlyReminder,
       performAt: nextYear,
-      options: { userId: uid }
+      options: { userId: uid },
+      status: 'scheduled'
     }
     upsertScheduledTask(`${uid}bucketlist`, task)
   })

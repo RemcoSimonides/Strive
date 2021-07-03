@@ -1,6 +1,6 @@
 import { functions } from '../../../internals/firebase';
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
-import { enumWorkerType, IScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
+import { enumWorkerType, ScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
 
@@ -14,10 +14,11 @@ export const affirmationsCreatedHandler = functions.firestore.document(`Users/{u
     const nextDate = getNextAffirmationDate(affirmations)
     
     // create scheduled task on set time
-    const task: IScheduledTaskUserExerciseAffirmations = {
+    const task: ScheduledTaskUserExerciseAffirmations = {
       worker: enumWorkerType.userExerciseAffirmation,
       performAt: nextDate,
-      options: { userId: uid }
+      options: { userId: uid },
+      status: 'scheduled'
     }
     upsertScheduledTask(`${uid}affirmations`, task)
   })

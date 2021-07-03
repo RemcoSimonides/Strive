@@ -1,6 +1,6 @@
 import * as moment from 'moment'
 import { sendNotificationToUsers } from '../../shared/notification/notification';
-import { IScheduledTaskUserExerciseBucketList, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
+import { ScheduledTaskUserExerciseBucketList, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
@@ -28,7 +28,7 @@ export async function rescheduleYearlyReminder(uid: string) {
 
   const nextYear: string = moment(new Date()).add(1, 'year').toISOString()
 
-  const task: IScheduledTaskUserExerciseBucketList = {
+  const task: Partial<ScheduledTaskUserExerciseBucketList> = {
     worker: enumWorkerType.userExerciseBucketListYearlyReminder,
     performAt: nextYear,
     options: {
