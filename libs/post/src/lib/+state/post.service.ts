@@ -29,7 +29,6 @@ export class PostService extends FireCollection<Post> {
   protected async toFirestore(post: Post): Promise<Post> {
     const { uid, photoURL, displayName } = await this.afAuth.currentUser;
     post.author = createProfileLink({ uid, photoURL, username: displayName });
-    console.log('post 2: ', post)
     return post
   }
 

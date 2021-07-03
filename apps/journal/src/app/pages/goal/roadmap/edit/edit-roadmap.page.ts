@@ -99,7 +99,7 @@ export class EditRoadmapPage implements OnInit {
 
       // Save milestone object
       await this.db.upsert(`Goals/${this.goalId}`, {
-        milestoneTemplateObject: this.roadmapForm.value
+        roadmapTemplate: this.roadmapForm.value
       })
 
       console.log('starting conversion')
@@ -116,7 +116,7 @@ export class EditRoadmapPage implements OnInit {
 
       // Save milestone object
       await this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, {
-        milestoneTemplateObject: this.roadmapForm.value
+        roadmapTemplate: this.roadmapForm.value
       })
 
       await loading.dismiss()
