@@ -19,9 +19,7 @@ export class RoadmapService {
   constructor(
     private milestoneService: MilestoneService,
     private templateService: TemplateService
-  ) {
-    this.converting.subscribe(console.log)
-  }
+  ) {}
 
   async getStructuredMilestones(goalId: string): Promise<MilestonesLeveled[]> {
     const milestones = await this.milestoneService.getValue(ref => ref.orderBy('sequenceNumber'), { goalId })

@@ -93,33 +93,27 @@ export class EditRoadmapPage implements OnInit {
 
   async save() {
     const loading = await this.loadingCtrl.create({ spinner: 'lines' })
-    await loading.present()
+    loading.present()
 
     if (this.goalId) {
 
       // Save milestone object
-      await this.db.upsert(`Goals/${this.goalId}`, {
-        roadmapTemplate: this.roadmapForm.value
-      })
+      await this.db.upsert(`Goals/${this.goalId}`, { roadmapTemplate: this.roadmapForm.value })
 
-      console.log('starting conversion')
       // Start conversion to create milestones
       await this.roadmapService.startConversion(this.goalId, this.roadmapForm.value)
 
-      console.log('releasing lock')
       await this.goalService.toggleLock(this.goalId, false)
 
-      await loading.dismiss()
+      loading.dismiss()
       this.router.navigateByUrl(`goal/${this.goalId}`)
 
     } else if (this.collectiveGoalId && this.templateId) {
 
       // Save milestone object
-      await this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, {
-        roadmapTemplate: this.roadmapForm.value
-      })
+      await this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, { roadmapTemplate: this.roadmapForm.value })
 
-      await loading.dismiss()
+      loading.dismiss()
       this.router.navigateByUrl(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
     }
   }
@@ -268,12 +262,12 @@ export class EditRoadmapPage implements OnInit {
       case 1:
         return this.roadmapForm.controls.length
       case 2: {
-        const parentSeqNo = elements.splice(-1).join('.')
+        const parentSeqNo = elements[0]
         const i = this.roadmapForm.controls.findIndex(ctrl => ctrl.value.sequenceNumber === this.incrementSeqNo(parentSeqNo, 1))
         return i === -1 ? this.roadmapForm.controls.length : i
       }
       case 3: {
-        const parentSeqNo = elements.splice(-1).join('.')
+        const parentSeqNo = `${elements[0]}.${elements[2]}`
         const index = this.roadmapForm.controls.findIndex(ctrl => ctrl.value.sequenceNumber === this.incrementSeqNo(parentSeqNo, 1))
         if (index === -1) {
           const parentOfParentSeqNo = elements.shift()
@@ -363,7 +357,8 @@ export class EditRoadmapPage implements OnInit {
 
     let siblings
     if (elements.length > 1) {
-      const pre = elements.splice(-1).join('.') + '.'
+      elements.pop();
+      const pre = elements.join('.') + '.'
       siblings = roadmapTemplate.filter(m => m.sequenceNumber.includes(pre))
     } else {
       siblings = roadmapTemplate.filter(m => getNrOfDotsInSeqno(m.sequenceNumber) === 0)
@@ -392,7 +387,8 @@ export class EditRoadmapPage implements OnInit {
     const elements = milestone.sequenceNumber.split('.')
     if (elements.length !== 1) {
       // if milestone is a submilestone, then max date cannot be later than parent milestone deadline
-      const parentSeqNo = elements.splice(-1).join('.')
+      elements.pop()
+      const parentSeqNo = elements.join('.')
       const rodmapTemplate: MilestoneTemplate[] = this.roadmapForm.value;
       const parent = rodmapTemplate.find(milestone => milestone.sequenceNumber === parentSeqNo)
       if (!!parent.deadline) $event.target.max = parent.deadline
