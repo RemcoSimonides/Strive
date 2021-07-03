@@ -8,8 +8,8 @@
 
 <ng-container *ngIf="canAccess && !pageIsLoading">
   <ion-toolbar>
-    <ion-segment (ionChange)="segmentChanged($event)" class="ion-align-self-center">
-      <ion-segment-button value="Goal" checked>
+    <ion-segment value="Goal" (ionChange)="segmentChanged($event)" class="ion-align-self-center">
+      <ion-segment-button value="Goal">
         Goal
       </ion-segment-button>
       <ion-segment-button value="Roadmap">
