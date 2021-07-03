@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin'
 import * as moment from 'moment'
-import { IScheduledTaskUserExerciseDailyGratefulness, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
+import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { Profile } from '@strive/user/user/+state/user.firestore'
 import { getDocument } from '../../shared/utils'
@@ -55,11 +55,11 @@ export function scheduleNextDailyGratefulnessReminder(uid: string) {
 
   const nextReminder = moment(new Date()).add(1, 'day').toISOString()
 
-  const task: IScheduledTaskUserExerciseDailyGratefulness = {
+  const task: ScheduledTaskUserExerciseDailyGratefulness = {
     worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
     performAt: nextReminder,
     options: { userId: uid },
-    status: enumTaskStatus.scheduled
+    status: 'scheduled'
   }
 
   return upsertScheduledTask(`${uid}dailygratefulness`, task) 

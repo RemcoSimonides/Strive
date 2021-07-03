@@ -22,7 +22,8 @@ export const collectiveGoalCreatedHandler = functions.firestore.document(`Collec
       upsertScheduledTask(collectiveGoalId, {
         worker: enumWorkerType.collectiveGoalDeadline,
         performAt: collectiveGoal.deadline,
-        options: { collectiveGoalId }
+        options: { collectiveGoalId },
+        status: 'scheduled'
       })
     }
   })

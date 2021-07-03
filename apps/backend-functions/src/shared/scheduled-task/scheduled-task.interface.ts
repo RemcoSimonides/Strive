@@ -1,18 +1,18 @@
-interface IScheduledTaskBase {
+interface ScheduledTaskBase {
   worker: enumWorkerType;
   performAt: FirebaseFirestore.FieldValue | string;
-  status?: enumTaskStatus;
+  status: 'scheduled' | 'complete' | 'error';
 }
 
-export type IScheduledTask =
-  | IScheduledTaskGoalInviteLinkDeadline
-  | IScheduledTaskCollectiveGoalInviteLinkDeadline
-  | IScheduledTaskNotificationDeadline
-  | IScheduledTaskMilestoneDeadline
-  | IScheduledTaskGoalDeadline
-  | IScheduledTaskCollectiveGoalDeadline
-  | IScheduledTaskUserExerciseAffirmations
-  | IScheduledTaskUserExerciseBucketList;
+export type ScheduledTask =
+  | ScheduledTaskGoalInviteLinkDeadline
+  | ScheduledTaskCollectiveGoalInviteLinkDeadline
+  | ScheduledTaskNotificationDeadline
+  | ScheduledTaskMilestoneDeadline
+  | ScheduledTaskGoalDeadline
+  | ScheduledTaskCollectiveGoalDeadline
+  | ScheduledTaskUserExerciseAffirmations
+  | ScheduledTaskUserExerciseBucketList;
 
 export enum enumWorkerType {
   deleteInviteTokenGoal = 'deleteInviteLinkGoal',
@@ -26,71 +26,59 @@ export enum enumWorkerType {
   userExerciseDailyGratefulnessReminder = 'userExerciseDailyGratefulnessReminder',
 }
 
-export enum enumTaskStatus {
-  scheduled,
-  complete,
-  error,
-}
-
-export interface IScheduledTaskGoalInviteLinkDeadline
-  extends IScheduledTaskBase {
+export interface ScheduledTaskGoalInviteLinkDeadline extends ScheduledTaskBase {
   options: {
     goalId: string;
     inviteTokenId: string;
   };
 }
 
-export interface IScheduledTaskCollectiveGoalInviteLinkDeadline
-  extends IScheduledTaskBase {
+export interface ScheduledTaskCollectiveGoalInviteLinkDeadline extends ScheduledTaskBase {
   options: {
     collectiveGoalId: string;
     inviteTokenId: string;
   };
 }
 
-export interface IScheduledTaskNotificationDeadline extends IScheduledTaskBase {
+export interface ScheduledTaskNotificationDeadline extends ScheduledTaskBase {
   options: {
     userId: string;
     notificationId: string;
   };
 }
 
-export interface IScheduledTaskMilestoneDeadline extends IScheduledTaskBase {
+export interface ScheduledTaskMilestoneDeadline extends ScheduledTaskBase {
   options: {
     goalId: string;
     milestoneId: string;
   };
 }
 
-export interface IScheduledTaskGoalDeadline extends IScheduledTaskBase {
+export interface ScheduledTaskGoalDeadline extends ScheduledTaskBase {
   options: {
     goalId: string;
   };
 }
 
-export interface IScheduledTaskCollectiveGoalDeadline
-  extends IScheduledTaskBase {
+export interface ScheduledTaskCollectiveGoalDeadline extends ScheduledTaskBase {
   options: {
     collectiveGoalId: string;
   };
 }
 
-export interface IScheduledTaskUserExerciseAffirmations
-  extends IScheduledTaskBase {
+export interface ScheduledTaskUserExerciseAffirmations extends ScheduledTaskBase {
   options: {
     userId: string;
   };
 }
 
-export interface IScheduledTaskUserExerciseBucketList
-  extends IScheduledTaskBase {
+export interface ScheduledTaskUserExerciseBucketList extends ScheduledTaskBase {
   options: {
     userId: string;
   };
 }
 
-export interface IScheduledTaskUserExerciseDailyGratefulness
-  extends IScheduledTaskBase {
+export interface ScheduledTaskUserExerciseDailyGratefulness extends ScheduledTaskBase {
   options: {
     userId: string;
   };

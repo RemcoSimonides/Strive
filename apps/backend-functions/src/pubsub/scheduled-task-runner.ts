@@ -1,6 +1,5 @@
 import { db, functions, admin } from '../internals/firebase';
 
-import { enumTaskStatus } from '../shared/scheduled-task/scheduled-task.interface';
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { sendNotificationMilestoneDeadlinePassed } from './notifications/milestone.notification';
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
@@ -16,7 +15,7 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
   const now = admin.firestore.Timestamp.now();
 
   // Query all documents ready to perform
-  const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', enumTaskStatus.scheduled);
+  const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', 'scheduled');
 
   const tasks = await query.get();
 
@@ -37,11 +36,11 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
       // Update doc with status on success or error
       .then(async () => {
         if (reschedulingTasks.some(task => task === worker)) return
-        await snapshot.ref.update({ status: enumTaskStatus.complete })
+        await snapshot.ref.update({ status: 'complete' })
       })
       .catch(async (err) => {
         if (reschedulingTasks.some(task => task === worker)) return
-        await snapshot.ref.update({ status: enumTaskStatus.error })
+        await snapshot.ref.update({ status: 'error' })
       });
       jobs.push(job);
   });

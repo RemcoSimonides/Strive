@@ -2,7 +2,7 @@ import { admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
-import { IScheduledTaskUserExerciseAffirmations, enumWorkerType, enumTaskStatus } from '../../shared/scheduled-task/scheduled-task.interface'
+import { ScheduledTaskUserExerciseAffirmations, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { getDocument } from '../../shared/utils';
 
@@ -28,13 +28,13 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
 export async function scheduleNextAffirmation(uid: string, affirmations: Affirmations) {
 
   const nextAffirmationDateTime = getNextAffirmationDate(affirmations)
-  const task: IScheduledTaskUserExerciseAffirmations = {
+  const task: ScheduledTaskUserExerciseAffirmations = {
     worker: enumWorkerType.userExerciseAffirmation,
     performAt: nextAffirmationDateTime,
     options: { userId: uid },
-    status: enumTaskStatus.scheduled
+    status: 'scheduled'
   }
-  return upsertScheduledTask(`${uid}affirmations`, task) 
+  return upsertScheduledTask(`${uid}affirmations`, task)
 }
 
 export function getNextAffirmationDate(affirmations: Affirmations): string {

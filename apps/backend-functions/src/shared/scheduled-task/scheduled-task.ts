@@ -1,7 +1,7 @@
 import { db, admin } from '../../internals/firebase';
-import { IScheduledTask, enumTaskStatus } from './scheduled-task.interface';
+import { ScheduledTask } from './scheduled-task.interface';
 
-export async function upsertScheduledTask(id: string, scheduledTask: IScheduledTask) {
+export async function upsertScheduledTask(id: string, scheduledTask: Partial<ScheduledTask>) {
   const scheduledTaskSnap = await db.doc(`ScheduledTasks/${id}`).get();
 
   return scheduledTaskSnap.exists
@@ -9,7 +9,7 @@ export async function upsertScheduledTask(id: string, scheduledTask: IScheduledT
     : createScheduledTask(id, scheduledTask);
 }
 
-function createScheduledTask(id: string, scheduledTask: IScheduledTask) {
+function createScheduledTask(id: string, scheduledTask: Partial<ScheduledTask>) {
   if (typeof scheduledTask.performAt === 'string') {
     scheduledTask.performAt = admin.firestore.Timestamp.fromDate(
       new Date(scheduledTask.performAt)
@@ -17,19 +17,14 @@ function createScheduledTask(id: string, scheduledTask: IScheduledTask) {
   }
 
   return db.doc(`ScheduledTasks/${id}`).create({
-    status: enumTaskStatus.scheduled,
+    status: 'scheduled',
     ...scheduledTask,
   });
 }
 
-function updateScheduledTask(id: string, performAt: string | FirebaseFirestore.FieldValue) {
-  let performAtTime = performAt;
-
-  if (typeof performAt === 'string') {
-    performAtTime = admin.firestore.Timestamp.fromDate(new Date(performAt));
-  }
-
-  return db.doc(`ScheduledTasks/${id}`).update({ performAt: performAtTime, });
+function updateScheduledTask(id: string, _performAt: string | FirebaseFirestore.FieldValue) {
+  const performAt = typeof _performAt === 'string' ? admin.firestore.Timestamp.fromDate(new Date(_performAt)) : _performAt
+  return db.doc(`ScheduledTasks/${id}`).update({ performAt });
 }
 
 export function deleteScheduledTask(id: string) {
