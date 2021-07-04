@@ -85,7 +85,7 @@
         <thumbnail-list type="goal">
           <ng-container *ngFor="let goal of achievingGoals$ | async">
             <ng-template #thumb>
-              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+              <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">
                 <ng-template #thumbTitle>
                   {{ goal.title }}
                 </ng-template>
@@ -110,7 +110,7 @@
         <thumbnail-list type="goal">
           <ng-container *ngFor="let goal of supportingGoals$ | async">
             <ng-template #thumb>
-              <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+              <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">
                 <ng-template #thumbTitle>
                   {{ goal.title }}
                 </ng-template>

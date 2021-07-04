@@ -102,7 +102,7 @@
       <thumbnail-list type="goal" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
         <ng-container *ngFor="let goal of goals$ | async">
           <ng-template #thumb>
-            <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="['/goal', goal.id]">
+            <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">
               <ng-template #thumbTitle>
                 <h5>{{ goal.title }}</h5>
                 <p>{{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}</p>
