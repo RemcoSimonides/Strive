@@ -23,7 +23,7 @@ import { AngularFireMessaging } from '@angular/fire/messaging';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  rootPage: any = TabsPage;
+  rootPage: typeof TabsPage = TabsPage;
 
   enumAuthSegment = enumAuthSegment
 

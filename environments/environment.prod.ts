@@ -18,3 +18,5 @@ export const environment = {
     indexNameUsers: 'prod_Users'
   },
 };
+
+export const vapidKey = 'BKj9FmfZe_rm1L-PRhytI_4AgCcmwJdHjKaegw5buVk5Eo7Pu3T3vf__EjlUgUfV2TAbBdzLQkDfwrwPJxjBYDI';
