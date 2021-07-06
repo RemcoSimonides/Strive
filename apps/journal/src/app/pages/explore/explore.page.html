@@ -1,21 +1,21 @@
 <ng-container *ngIf="platform.is('android') || platform.is('ios')">
   <ion-header translucent>
 
-    <ng-container *ngIf="screensize.isDesktop$ | async">
-      <ion-toolbar [myScrollVanish]="scrollArea">
+    <!-- <ng-container *ngIf="(screensize.isDesktop$ | async) === false">
+      <ion-toolbar [myScrollVanish]="scrollArea" color="primary">
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
           <ion-back-button></ion-back-button>
         </ion-buttons>
         <ion-title>Explore</ion-title>
       </ion-toolbar>
-    </ng-container>
+    </ng-container> -->
   
-    <ion-toolbar>
-      <!-- <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <!-- <ion-menu-button></ion-menu-button> -->
         <ion-back-button></ion-back-button>
-      </ion-buttons> -->
+      </ion-buttons>
       <ion-searchbar (ionChange)="search($event)" placeholder='Try "Plastic free"'></ion-searchbar>
     </ion-toolbar>
   

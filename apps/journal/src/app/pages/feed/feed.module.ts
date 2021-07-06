@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { IonicModule } from '@ionic/angular';
 
 // Pages
-import { NotificationsPage } from './notifications.page';
+import { FeedPage } from './feed.page';
 
 // Components
 import { NotificationModule } from '@strive/notification/components/notification/notification.module';
@@ -20,7 +20,7 @@ import { MilestonePathPipeModule } from '@strive/milestone/pipes/path.pipe'
 const routes: Routes = [
   {
     path: '',
-    component: NotificationsPage
+    component: FeedPage
   }
 ];
 
@@ -37,7 +37,7 @@ const routes: Routes = [
     PageLoadingModule
   ],
   declarations: [
-    NotificationsPage,
+    FeedPage,
   ]
 })
-export class NotificationsPageModule {}
+export class FeedPageModule {}

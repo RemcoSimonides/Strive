@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // Strive
@@ -12,11 +12,12 @@ import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { distinctUntilChanged, take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-notifications',
-  templateUrl: './notifications.page.html',
-  styleUrls: ['./notifications.page.scss'],
+  selector: 'strive-feed',
+  templateUrl: './feed.page.html',
+  styleUrls: ['./feed.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationsPage implements OnInit, OnDestroy {
+export class FeedPage implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   
   notifications: Notification[]
@@ -35,7 +36,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.seo.generateTags({ title: `Notifications - Strive Journal` })
+    this.seo.generateTags({ title: `Home - Strive Journal` });
 
     this.userSubscription = this.user.profile$.pipe(
       distinctUntilChanged((a, b) => JSON.stringify(a) !== JSON.stringify(b))

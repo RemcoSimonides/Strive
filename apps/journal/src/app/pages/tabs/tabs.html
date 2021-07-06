@@ -3,7 +3,7 @@
   <ng-container *ngIf="!(screenSize.isDesktop$ | async)">
     <ion-tab-bar slot="bottom">
 
-      <ion-tab-button tab="notifications">
+      <ion-tab-button tab="feed">
         <ion-icon name="home-sharp"></ion-icon>
         <ion-badge *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">{{ (user.profile$ | async)?.numberOfUnreadNotifications }}</ion-badge>
       </ion-tab-button>

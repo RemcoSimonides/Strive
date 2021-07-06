@@ -1,4 +1,18 @@
-<strive-header title="Notifications" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
+<ng-container *ngIf="platform.is('android') || platform.is('ios')">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Home</ion-title>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="notifications-sharp"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+</ng-container>
 
 <ng-container *ngIf="!!user.uid; else notLoggedIn">
   <ng-container *ngIf="paginationService.data | async as notifications; else loading">
