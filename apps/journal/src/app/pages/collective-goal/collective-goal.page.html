@@ -121,7 +121,7 @@
 
   <section>
     <ion-list>
-      <h3>Stakeholders</h3>
+      <h3>Team</h3>
       <ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="'/profile/' + (stakeholder.uid)">
         {{ stakeholder.username }}
         <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>
