@@ -27,6 +27,7 @@ function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
   const notification = createNotification({
     discussionId: postId,
     event: enumEvent.gNewPost,
+    type: 'feed',
     source: {
       image: post.goal.image,
       name: post.goal.title,

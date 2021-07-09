@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // Strive
-import { NotificationService } from '@strive/notification/+state/notification.service';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from '@strive/utils/services/seo.service';
-import { NotificationPaginationService } from '@strive/notification/+state/notification-pagination.service';
+import { FeedPaginationService } from '@strive/notification/+state/feed-pagination.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
-import { distinctUntilChanged, take } from 'rxjs/operators';
+import { distinctUntilChanged, take, tap } from 'rxjs/operators';
+import { ProfileService } from '@strive/user/user/+state/profile.service';
 
 @Component({
   selector: 'strive-feed',
@@ -27,37 +27,37 @@ export class FeedPage implements OnInit, OnDestroy {
 
   constructor(
     public user: UserService,
+    private profile: ProfileService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    private notificationService: NotificationService,
-    public paginationService: NotificationPaginationService,
+    public feed: FeedPaginationService,
     public platform: Platform,
-    private seo: SeoService
+    private seo: SeoService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.seo.generateTags({ title: `Home - Strive Journal` });
 
     this.userSubscription = this.user.profile$.pipe(
-      distinctUntilChanged((a, b) => JSON.stringify(a) !== JSON.stringify(b))
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ).subscribe(profile => {
+      this.feed.reset()
       if (profile) {
-        this.paginationService.reset()
-        this.paginationService.init(`Users/${profile.id}/Notifications`, 'createdAt', 20)
-      } else {
-        this.paginationService.reset()
+        this.feed.init(`Users/${profile.id}/Notifications`)
       }
+      this.cdr.markForCheck()
     })
   }
 
   ionViewDidEnter() {
     // TODO test if number of notifications is reset on login
     if (!!this.user.uid) {
-      this.notificationService.resetNumberOfUnreadNotifications();
+      this.profile.resetNumberOfUnreadNotifications(this.user.uid);
     } else {
       // If this is the first page after reloading, this.user.uid is not filled yet, therefore we check value on first auth trigger
       this.user.profile$.pipe(take(1)).subscribe(profile => {
-        if (!!profile) this.notificationService.resetNumberOfUnreadNotifications();
+        if (!!profile) this.profile.resetNumberOfUnreadNotifications(profile.id);
       })
     }
 
@@ -86,8 +86,8 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   doRefresh($event) {
-    this.paginationService.refresh(`Users/${this.user.uid}/Notifications`, 'createdAt', 20)
-    this.paginationService.refreshing.subscribe(refreshing => {
+    this.feed.refresh(`Users/${this.user.uid}/Notifications`)
+    this.feed.refreshing.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
           $event.target.complete();
@@ -97,10 +97,10 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   loadData(event) {
-    this.paginationService.more()
+    this.feed.more()
     event.target.complete();
 
-    if (this.paginationService.done) {
+    if (this.feed.done) {
       event.target.disabled = true
     }
   }

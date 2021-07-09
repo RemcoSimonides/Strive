@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { NavParams, PopoverController } from '@ionic/angular';
-
-// Strive
-import { NotificationService } from '@strive/notification/+state/notification.service';
 
 
 @Component({
   selector: 'notification-options',
   templateUrl: 'notification-options.component.html'
 })
-
 export class NotificationOptionsPopover implements OnInit {
 
   isAdmin = false
   reference: string
 
   constructor(
+    private db: AngularFirestore,
     private navParams: NavParams,
-    private notificationService: NotificationService,
     private popoverCtrl: PopoverController
   ) { }
 
@@ -27,15 +24,12 @@ export class NotificationOptionsPopover implements OnInit {
   }
 
   dismiss(remove: boolean = false) {
-    this.popoverCtrl.dismiss({
-      remove: remove
-    })
+    this.popoverCtrl.dismiss({ remove })
   }
 
   async delete() {
     if (!this.isAdmin) return
-    
-    await this.notificationService.delete(this.reference)
+    await this.db.doc(this.reference).delete()
     this.dismiss(true)
   }
 

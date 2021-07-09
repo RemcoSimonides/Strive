@@ -63,7 +63,11 @@ export enum enumEvent {
   userExerciseBucketListYearlyReminder = 420003
 }
 
-export type NotificationTypes = 'general' | 'supportDecision' | 'goalRequest';
+/**
+ * type feed - Shows up on the feed
+ * type notification - Shows up on the notifications page
+ */
+export type NotificationTypes = 'feed' | 'notification' | 'supportDecision' | 'goalRequest';
 export type NotificationMeta = SupportDecisionMeta | GoalRequest | {};
 
 // Firestore docs

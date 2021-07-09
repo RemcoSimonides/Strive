@@ -1,0 +1,18 @@
+ion-content {
+  background: #efefef;
+}
+
+.divider {
+  width: 100%;
+  border-bottom: 1px solid var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.13))));
+}
+
+section {
+  padding: 16px 8px 0 8px;
+  max-width: 700px;
+  margin: auto;
+}
+
+h3 {
+  color: var(--ion-color-primary);
+}

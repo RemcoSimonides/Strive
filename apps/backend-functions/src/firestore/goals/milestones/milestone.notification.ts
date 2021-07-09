@@ -9,7 +9,7 @@ import { getReceiver } from '../../../shared/support/receiver'
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
-import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
+import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { ProfileLink } from '@strive/user/user/+state/user.firestore';
 import { converter } from 'apps/backend-functions/src/shared/utils';
 
@@ -128,6 +128,7 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
   const goalNotification = createNotification({
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedSuccessfully,
+    type: 'feed',
     source: {
       image: goal.image,
       name: goal.title,
@@ -147,6 +148,7 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
     id: milestoneId,
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedSuccessfully,
+    type: 'feed',
     source: {
       image: goal.image,
       name: goal.title,
@@ -169,6 +171,7 @@ function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, go
   const goalNotification = createNotification({
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedUnsuccessfully,
+    type: 'feed',
     source: {
       image: goal.image,
       name: goal.title,
@@ -187,6 +190,7 @@ function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, go
   const goalStakeholdersNotification = createNotification({
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedUnsuccessfully,
+    type: 'feed',
     source:  {
       image: goal.image,
       name: goal.title,

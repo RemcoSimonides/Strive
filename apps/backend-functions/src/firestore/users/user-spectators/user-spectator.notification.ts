@@ -16,6 +16,7 @@ async function sendNotificationToUserBeingSpectated(userSpectator: Spectator) {
   const notification = createNotification({
     discussionId: discussionId,
     event: enumEvent.userSpectatorAdded,
+    type: 'notification',
     source: {
       image: userSpectator.photoURL,
       name: userSpectator.username,

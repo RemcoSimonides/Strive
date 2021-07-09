@@ -1,23 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
 import { leftJoin } from '@strive/utils/leftJoin';
-import { Notification } from './notification.firestore';
+import { Notification, NotificationTypes } from './notification.firestore';
 
 // Options to reproduce firestore queries consistently
 interface QueryConfig {
   path: string, // path to collection
-  field: string, // field to orderBy
-  limit: number, // limit per query
-  reverse: boolean, // reverse order?
-  prepend: boolean // prepend to source?
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationPaginationService {
+export class GoalFeedPaginationService {
 
   // Source data
   private _done = new BehaviorSubject(false);
@@ -25,7 +21,7 @@ export class NotificationPaginationService {
   private _data = new BehaviorSubject([]);
   private _refreshing = new BehaviorSubject(false);
 
-  private query: QueryConfig;
+  private path: string;
 
   // Observable data
   data: Observable<any>;
@@ -43,19 +39,23 @@ export class NotificationPaginationService {
    * @param field field to orderBy
    * @param limit limit per query
    */
-  init(path: string, field: string, limit: number) {
-    this.query = { path, field, limit, reverse: true, prepend: false }
+  init(path: string) {
+    this.path = path
 
-    const query = this.afs.collection(this.query.path, ref => ref.orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc').limit(this.query.limit))
+    const query = this.afs.collection(this.path, ref => ref
+      .where('type', '==', 'feed')
+      .orderBy('createdAt', 'desc')
+      .limit(20)
+    )
 
     this.mapAndUpdate(query)
 
     // Create the observable array for consumption in components
     this.data = this._data.asObservable().pipe(
       scan((acc, val) => { 
-        const array = this.query.prepend ? val.concat(acc) : acc.concat(val)
+        const array = acc.concat(val)
         const uniqueArrray = this.getUnique(array, 'id')
-        const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? this.query.reverse ? -1 : 1 : this.query.reverse ? 1 : -1)
+        const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? -1 : 1)
         return orderedArray
       })
     )
@@ -64,9 +64,10 @@ export class NotificationPaginationService {
   // Retrieves additional data from firestore
   more() {
     const cursor = this.getCursor()
-    const more = this.afs.collection(this.query.path, ref => ref
-      .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-      .limit(this.query.limit)
+    const more = this.afs.collection(this.path, ref => ref
+      .where('type', '==', 'feed')
+      .orderBy('createdAt', 'desc')
+      .limit(20)
       .startAfter(cursor.createdAt)
     )
     this.mapAndUpdate(more)
@@ -75,12 +76,8 @@ export class NotificationPaginationService {
   // Determines the doc snapshot to paginate query 
   private getCursor() {
     const current = this._data.value
-    if (current.length) {
-      return this.query.prepend ? current[0] : current[current.length - 1]
-    }
-    return null
+    return current.length ? current[current.length - 1] : null
   }
-
 
   // Maps the snapshot to usable format the updates source
   private mapAndUpdate(col: AngularFirestoreCollection<any>) {
@@ -91,8 +88,6 @@ export class NotificationPaginationService {
     return col.snapshotChanges().pipe(
       leftJoin(this.afs, 'discussionId', 'Discussions'),
       tap(arr => {
-        arr = this.query.prepend ? arr.reverse() : arr
-
         this._data.next(arr)
         this._loading.next(false)
         this._refreshing.next(false)
@@ -114,11 +109,11 @@ export class NotificationPaginationService {
   }
 
   // Refresh the page
-  refresh(path: string, field: string, limit: number) {
+  refresh(path: string) {
     this._refreshing.next(true)
     this.reset()
     this._done.next(false)
-    this.init(path, field, limit)
+    this.init(path)
   }
 
   private getUnique(arr: Notification[], comp: string) {

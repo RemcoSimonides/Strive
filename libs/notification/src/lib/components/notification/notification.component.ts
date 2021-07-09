@@ -93,7 +93,7 @@ export class NotificationComponent implements OnInit {
       hasOpenRequestToJoin: false
     }, { params: { goalId: notification.source.goalId }})
 
-    await this.notificationService.upsert(this.user.uid, notification.id, { meta: notification.meta })
+    await this.notificationService.update(notification.id, { meta: notification.meta }, { params: { uid: this.user.uid }})
   }
 
   public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {

@@ -16,6 +16,7 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListCreated,
+    type: 'feed',
     source: {
       image: profile.photoURL,
       name: profile.username,
@@ -63,6 +64,7 @@ function sendChangedBucketListNotification(uid: string, profile: Profile, number
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListItemAdded,
+    type: 'notification',
     source: {
       image: profile.photoURL,
       name: profile.username,
@@ -86,6 +88,7 @@ function sendBucketListItemComletedNotification(uid: string, profile: Profile, b
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListItemCompleted,
+    type: 'feed',
     source: {
       image: profile.photoURL,
       name: profile.username,

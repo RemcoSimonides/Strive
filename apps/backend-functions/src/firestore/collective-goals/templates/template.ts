@@ -108,6 +108,7 @@ async function sendNewTemplateNotification(collectiveGoalId: string, templateId:
   const notification = createNotification({
     discussionId: templateId,
     event: enumEvent.cgTemplateAdded,
+    type: 'notification',
     source: {
       image: collectiveGoal.image,
       name: collectiveGoal.title,
@@ -123,7 +124,7 @@ async function sendNewTemplateNotification(collectiveGoalId: string, templateId:
         link: `collective-goal/${collectiveGoalId}/template/${templateId}`
       },
       {
-        text: `' has been created! Check it out`
+        text: `' has been created.`
       }
     ]
   })

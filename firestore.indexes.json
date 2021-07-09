@@ -77,6 +77,14 @@
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "performAt", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "Notifications",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [

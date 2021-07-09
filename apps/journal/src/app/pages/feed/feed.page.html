@@ -6,7 +6,7 @@
       </ion-buttons>
       <ion-title>Home</ion-title>
       <ion-buttons slot="end">
-        <ion-button>
+        <ion-button routerLink="../notifications">
           <ion-icon slot="icon-only" name="notifications-sharp"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -15,7 +15,7 @@
 </ng-container>
 
 <ng-container *ngIf="!!user.uid; else notLoggedIn">
-  <ng-container *ngIf="paginationService.data | async as notifications; else loading">
+  <ng-container *ngIf="feed.data | async as notifications; else loading">
 
     <ion-content>
       <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
@@ -29,9 +29,7 @@
     
         <ng-container *ngFor="let notification of notifications; let isLast = last">
           <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
-          <ng-container *ngIf="!isLast">
-            <span class="divider"></span>
-          </ng-container>
+          <span *ngIf="!isLast" class="divider"></span>
         </ng-container>
           
         <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">

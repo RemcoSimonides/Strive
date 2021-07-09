@@ -113,6 +113,7 @@ async function sendNewGoalNotificationToUserSpectators(discussionId: string, goa
     const notification = createNotification({
       discussionId,
       event: enumEvent.gNew,
+      type: 'feed',
       source: {
         image: stakeholder.photoURL,
         name: stakeholder.username,
@@ -128,7 +129,7 @@ async function sendNewGoalNotificationToUserSpectators(discussionId: string, goa
           link: `goal/${goalId}`
         },
         {
-          text: `'`
+          text: `'. Can you help out?`
         }
       ]
     })
@@ -147,6 +148,7 @@ async function sendNewGoalNotificationInCollectiveGoal(discussionId: string, goa
   const notification = createNotification({
     discussionId,
     event: enumEvent.gNew,
+    type: 'notification',
     source: {
       image: collectiveGoal.image,
       name: collectiveGoal.title,
@@ -177,6 +179,7 @@ function sendFinishedGoalNotification(discussionId: string, goalId:  string, goa
   const goalNotification = createNotification({
     discussionId,
     event: enumEvent.gFinished,
+    type: 'feed',
     source: {
       image: goal.image,
       name: goal.title,
@@ -195,6 +198,7 @@ function sendFinishedGoalNotification(discussionId: string, goalId:  string, goa
   const goalStakeholderNotification = createNotification({
     discussionId,
     event: enumEvent.gFinished,
+    type: 'feed',
     source: {
       image: goal.image,
       name: goal.title,
@@ -309,6 +313,7 @@ async function sendGoalFinishedNotificationToUserSpectators(goalId: string, goal
     const notification = createNotification({
       discussionId: goalId,
       event: enumEvent.gFinished,
+      type: 'feed',
       source: {
         image: stakeholder.photoURL,
         name: stakeholder.username,
@@ -346,6 +351,7 @@ async function sendNotificationFinishedGoalInCollectiveGoal(goalId: string, afte
   const notification: Partial<Notification> = {
     discussionId: goalId,
     event: enumEvent.gFinished,
+    type: 'notification',
     source: {
       image: collectiveGoal.image,
       name: collectiveGoal.title,
@@ -376,6 +382,7 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
   const goalNotification: Partial<Notification> = {
     discussionId: discussionId,
     event: enumEvent.gRoadmapUpdated,
+    type: 'feed',
     source: {
       image: after.image,
       name: after.title,
@@ -392,6 +399,7 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
   const goalStakeholderNotification: Partial<Notification> = {
     discussionId: discussionId,
     event: enumEvent.gRoadmapUpdated,
+    type: 'notification',
     source: {
       image: after.image,
       name: after.title,
@@ -406,7 +414,7 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
         link: `goal/${goalId}`
       },
       {
-        text: `' has been changed. Go and checkout what the new plan is!`
+        text: `' has been changed. Go and checkout what the new plan is.`
       }
     ]
   }

@@ -9,10 +9,11 @@ export class ProfileService extends FireCollection<Profile> {
   readonly path = 'Users/:uid/Profile'
   readonly idKey = 'uid'
 
-  constructor(
-    db: AngularFirestore
-  ) {
+  constructor(db: AngularFirestore) {
     super(db)
   }
 
+  resetNumberOfUnreadNotifications(uid: string) {
+    this.update(uid, { numberOfUnreadNotifications: 0 }, { params: { uid }});
+  }
 }

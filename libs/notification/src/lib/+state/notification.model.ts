@@ -10,7 +10,7 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
   return {
     discussionId: '',
     message: [],
-    type: 'general',
+    type: 'feed',
     event: 0,
     source: {
       image: '',

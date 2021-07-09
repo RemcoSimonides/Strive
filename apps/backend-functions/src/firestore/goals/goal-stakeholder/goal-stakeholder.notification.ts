@@ -35,7 +35,8 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
     sendNewSupporterNotificationInGoal(goalId, goalId, stakeholder)
 
     if (stakeholder.goalPublicity === 'public') {
-      sendNewSupporterNotificationToUserSpectators(goalId, goalId, stakeholder)
+      // No need for notification about this
+      // sendNewSupporterNotificationToUserSpectators(goalId, goalId, stakeholder)
     }
   }
 
@@ -69,7 +70,8 @@ export async function handleNotificationsOfStakeholderChanged(goalId: string, be
       sendNewSupporterNotificationInGoal(goalId, goalId, after)
 
       if (after.goalPublicity === 'public') {
-        sendNewSupporterNotificationToUserSpectators(goalId, goalId, after)
+        // No need for notification about this
+        // sendNewSupporterNotificationToUserSpectators(goalId, goalId, after)
       }
     }
   }
@@ -125,6 +127,7 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
   const goalNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderAchieverAdded,
+    type: 'feed',
     source: {
       image: goalStakeholder.photoURL,
       name: goalStakeholder.username,
@@ -133,7 +136,7 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
     },
     message: [
       {
-        text: `Is now helping out as an Achiever!`
+        text: `Joined as an Achiever!`
       },
     ]
   })
@@ -142,6 +145,7 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
   const goalStakeholdersNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderAchieverAdded,
+    type: 'notification',
     source: {
       image: goalStakeholder.goalImage,
       name: goalStakeholder.goalTitle,
@@ -153,7 +157,7 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
         link: `profile/${goalStakeholder.uid}`
       },
       {
-        text: ` is now helping out!`
+        text: ` joined as an Achiever`
       }
     ]    
   })
@@ -163,40 +167,12 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
 
 }
 
-// NEW SUPPORTER
-function sendNewSupporterNotificationToUserSpectators(discussionId: string, goalId: string, stakeholder: GoalStakeholder) {
-
-  const notification = createNotification({
-    discussionId: discussionId,
-    event: enumEvent.gSupportAdded,
-    source: {
-      image: stakeholder.photoURL,
-      name: stakeholder.username,
-      userId: stakeholder.uid,
-      goalId: goalId
-    },
-    message: [
-      {
-        text: `Started supporting goal '`
-      },
-      {
-        text: stakeholder.goalTitle,
-        link: `goal/${goalId}`
-      },
-      {
-        text: `'`
-      }
-    ]
-  })
-  sendNotificationToUserSpectators(stakeholder.uid, notification)
-
-}
-
 function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
 
   const goalNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderSupporterAdded,
+    type: 'feed',
     source:  {
       image: goalStakeholder.photoURL,
       name: goalStakeholder.username,
@@ -205,7 +181,7 @@ function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string
     },
     message: [
       {
-        text: `Is now supporting :)`
+        text: `Joined as a Supporter 🥳`
       },
     ]
   })
@@ -214,6 +190,7 @@ function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string
   const goalStakeholdersNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderSupporterAdded,
+    type: 'notification',
     source: {
       image: goalStakeholder.goalImage,
       name: goalStakeholder.goalTitle,
@@ -225,7 +202,7 @@ function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string
         link: `profile/${goalStakeholder.uid}`
       },
       {
-        text: ` is now supporting :)`
+        text: ` is now supporting 🥳`
       }
     ]
   })

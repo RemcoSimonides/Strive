@@ -1,25 +1,33 @@
 import { Injectable } from '@angular/core';
-// Services
-import { AngularFireAuth } from '@angular/fire/auth';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import {
   Notification,
   SupportDecisionMeta
 } from './notification.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore'
+import { FireCollection } from '@strive/utils/services/collection.service';
+import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService {
-
+export class NotificationService extends FireCollection<Notification> {
+  readonly path = `Users/:uid/Notifications`
+  
   constructor(
-    private afAuth: AngularFireAuth,
-    private db: FirestoreService,
-  ) { }
+    private user: UserService,
+    db: AngularFirestore
+  ) { 
+    super(db)
+  }
 
-  async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
+  protected fromFirestore(snapshot: DocumentSnapshot<Notification>) {
+    return snapshot.exists
+      ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
+      : undefined
+  }
+
+  finalizeDecision(notification: Notification<SupportDecisionMeta>) {
 
     // TODO CHECK THIS AGAIN - it's probably incorrect!
 
@@ -28,25 +36,8 @@ export class NotificationService {
       supports: notification.meta.supports
     }
 
-    const { uid } = await this.afAuth.currentUser;
-
     // Update Notification to replace timer and buttons by status
-    await this.db.upsert<Notification<SupportDecisionMeta>>(`Users/${uid}/Notifications/${notification.id}`, { meta })
-
+    return this.upsert({ id: notification.id, meta }, { params: { uid: this.user.uid }});
   }
 
-  async resetNumberOfUnreadNotifications() {
-    const { uid } = await this.afAuth.currentUser;
-    await this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, {
-      numberOfUnreadNotifications: 0
-    })
-  }
-
-  async upsert(uid: string, notificationId: string, notification: Partial<Notification>) {
-    await this.db.upsert(`Users/${uid}/Notifications/${notificationId}`, notification)
-  }
-
-  async delete(reference: string) {
-    await this.db.doc(reference).delete()
-  }
 }

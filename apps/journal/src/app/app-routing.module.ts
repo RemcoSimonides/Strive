@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'goal/:id', loadChildren: () => import('./pages/goal/goal-view/goal-view.module').then(m => m.GoalViewPageModule) },
   { path: 'collective-goal/:id', loadChildren: () => import('./pages/collective-goal/collective-goal.module').then(m => m.CollectiveGoalPageModule), },
   { path: 'feed', loadChildren: () => import('./pages/feed/feed.module').then(m => m.FeedPageModule) },
+  { path: 'notifications', loadChildren: () => import('./pages/feed/notifications/notifications.module').then(m => m.NotificationsModule) },
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.module').then(m => m.TermsModule) },

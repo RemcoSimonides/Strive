@@ -5,7 +5,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakehol
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { Subscription } from 'rxjs';
-import { NotificationPaginationService } from '@strive/notification/+state/notification-pagination.service';
+import { GoalFeedPaginationService } from '@strive/notification/+state/goal-feed-pagination.service';
 
 @Component({
   selector: '[goal] journal-goal-posts',
@@ -23,13 +23,13 @@ export class PostsComponent implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private user: UserService,
     private stakeholder: GoalStakeholderService,
-    public paginationService: NotificationPaginationService,
+    public feed: GoalFeedPaginationService,
   ) { }
 
   ngOnInit() {
     // Posts
-    this.paginationService.reset()
-    this.paginationService.init(`Goals/${this.goal.id}/Notifications`, 'createdAt', 10 )
+    this.feed.reset()
+    this.feed.init(`Goals/${this.goal.id}/Notifications`)
 
     this.sub = this.stakeholder.valueChanges(this.user.uid, { goalId: this.goal.id }).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
@@ -42,17 +42,17 @@ export class PostsComponent implements OnInit, OnDestroy {
 
   //Posts section
   public loadData(event) {
-    this.paginationService.more()
+    this.feed.more()
     event.target.complete();
 
-    if (this.paginationService.done) {
+    if (this.feed.done) {
       event.target.disabled = true
     }
   }
 
   public refreshPosts($event) {
-    this.paginationService.refresh(`Goals/${this.goal.id}/Notifications`, 'createdAt', 10 )
-    this.paginationService.refreshing.subscribe(refreshing => {
+    this.feed.refresh(`Goals/${this.goal.id}/Notifications`)
+    this.feed.refreshing.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
           $event.target.complete();
@@ -71,8 +71,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     })
     await modal.present()
     await modal.onDidDismiss().then(async (data) => {
-      console.log('dismissed: ', data)
-      this.paginationService.refresh(`Goals/${this.goal.id}/Notifications`, 'createdAt', 10 )
+      this.feed.refresh(`Goals/${this.goal.id}/Notifications`)
     })
   }
 }

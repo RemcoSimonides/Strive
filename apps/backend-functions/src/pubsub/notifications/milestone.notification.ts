@@ -13,6 +13,7 @@ export async function sendNotificationMilestoneDeadlinePassed(goalId: string, mi
 
   const goalNotification = createNotification({
     discussionId: milestoneId,
+    type: 'feed',
     message: [
       {
         text: `Milestone '${milestone.description}' of goal '`
@@ -30,6 +31,7 @@ export async function sendNotificationMilestoneDeadlinePassed(goalId: string, mi
 
   const goalStakeholdersNotification = createNotification({
     discussionId: milestoneId,
+    type: 'notification',
     message: [
       {
         text: `Milestone '${milestone.description}' has passed the due date`

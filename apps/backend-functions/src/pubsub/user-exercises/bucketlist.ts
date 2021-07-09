@@ -10,6 +10,7 @@ export async function sendBucketListYearlyReminder(uid: string) {
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListYearlyReminder,
+    type: 'notification',
     source: {
       image: 'assets/exercises/bucketlist/bucketlist.jpg',
       name: 'Your Bucketlist',

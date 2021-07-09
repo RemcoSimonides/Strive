@@ -1,0 +1,14 @@
+<strive-header title="Notifications"></strive-header>
+
+<ion-content>
+  <section fxLayout="column" fxLayoutGap="24px">
+    <ng-container *ngFor="let notification of decisions$ | async">
+      <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+    </ng-container>
+    <h3>Notifications</h3>
+    <ng-container *ngFor="let notification of notifications$ | async; let isLast = last">
+      <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+      <span *ngIf="!isLast" class="divider"></span>
+    </ng-container>
+  </section>
+</ion-content>

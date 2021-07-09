@@ -28,9 +28,9 @@
             <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInSide">
 
               <!-- Notifications -->
-              <ion-item routerDirection="root" routerLink="/notifications">
+              <ion-item routerDirection="root" routerLink="/feed">
                 <ion-icon slot="start" name="notifications"></ion-icon>
-                <ion-label>Notifications
+                <ion-label>Activity Feed
                   <ng-container *ngIf="!!profile.numberOfUnreadNotifications">
                     <span>({{ profile.numberOfUnreadNotifications }})</span>                  
                   </ng-container>
@@ -85,7 +85,7 @@
 
           <ng-container *ngIf="(screensize.isDesktop$ | async); else noDesktopMain">
             <ion-col size="1" class="ion-no-padding">
-              <a routerLink="/explore">
+              <a [routerLink]="user.uid ? '/feed' : '/explore'">
                 <img asset="logo.png" class="logo">
               </a>
             </ion-col>
@@ -98,6 +98,10 @@
             </ion-col>
             <ion-col size="8" class="ion-no-padding">
               <section class="navbar ion-align-self-end buttons-container">
+                <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link"
+                  class="link">
+                  Explore
+                </ion-button>
 
                 <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInMain">
                   <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link"
@@ -138,7 +142,7 @@
   
         <ng-template #noDesktopMain>
           <ion-col size="2" class="ion-no-padding">
-            <a routerLink="/explore">
+            <a [routerLink]="user.uid ? '/feed' : '/explore'">
               <img asset="logo.png" class="logo ion-text-left">
             </a>
           </ion-col>

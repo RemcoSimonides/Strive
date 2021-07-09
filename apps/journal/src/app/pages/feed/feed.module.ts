@@ -11,7 +11,6 @@ import { FeedPage } from './feed.page';
 
 // Components
 import { NotificationModule } from '@strive/notification/components/notification/notification.module';
-import { HeaderModule } from '@strive/ui/header/header.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 // Pipes
@@ -33,7 +32,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MilestonePathPipeModule,
     NotificationModule,
-    HeaderModule,
     PageLoadingModule
   ],
   declarations: [

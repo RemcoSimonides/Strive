@@ -44,6 +44,7 @@ function sendNewMessageNotificationToParticipants(discussionId: string, discussi
   const notification = createNotification({
     discussionId: discussionId,
     event: enumEvent.discussionNewMessage,
+    type: 'notification',
     source: discussion.source,
     message: [
       {

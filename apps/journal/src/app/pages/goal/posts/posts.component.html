@@ -2,18 +2,20 @@
   <ion-refresher-content></ion-refresher-content>
 </ion-refresher>
 
-<ng-container *ngIf="paginationService.data | async as notifications; else loading">
+<ng-container *ngIf="feed.data | async as notifications; else loading">
   <ng-container *ngIf="!!notifications.length else noPosts">
-    <ng-container *ngFor="let notification of notifications">
-      <strive-notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></strive-notification>
-    </ng-container>
+    <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
+      <ng-container *ngFor="let notification of notifications">
+        <strive-notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></strive-notification>
+      </ng-container>
 
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Loading more data...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </section>
   </ng-container>
 
   <ng-template #noPosts>
