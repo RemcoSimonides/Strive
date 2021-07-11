@@ -11,28 +11,30 @@ import {
 import { Notification, enumEvent } from '@strive/notification/+state/notification.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createGoalRequest, createNotification } from '@strive/notification/+state/notification.model'
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 
-export async function handleNotificationsOfStakeholderCreated(goalId: string, stakeholder: GoalStakeholder) {
+export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeholder: GoalStakeholder) {
 
-  if (stakeholder.goalPublicity !== 'public') return
+  // check if goal has collective goal
+  if (!goal.numberOfAchievers && !goal.numberOfSupporters) return
 
   if (stakeholder.isAdmin) {
     // const discussionId = await createDiscussion('public')
-    sendNewAdminNotificationInGoal(goalId, goalId, stakeholder)
+    sendNewAdminNotificationInGoal(goal.id, goal.id, stakeholder)
   }
 
   if (stakeholder.isAchiever) {
     // const discussionId = await createDiscussion()
-    sendNewAchieverNotificationInGoal(goalId, goalId, stakeholder)
+    sendNewAchieverNotificationInGoal(goal.id, goal.id, stakeholder)
 
     if (stakeholder.goalPublicity === 'public') {
-      sendNewAchieverNotificationToUserSpectators(goalId, goalId, stakeholder)
+      sendNewAchieverNotificationToUserSpectators(goal.id, goal.id, stakeholder)
     }
   }
 
   if (stakeholder.isSupporter) {
     // const discussionId = await createDiscussion()
-    sendNewSupporterNotificationInGoal(goalId, goalId, stakeholder)
+    sendNewSupporterNotificationInGoal(goal.id, goal.id, stakeholder)
 
     if (stakeholder.goalPublicity === 'public') {
       // No need for notification about this
@@ -42,37 +44,31 @@ export async function handleNotificationsOfStakeholderCreated(goalId: string, st
 
   if (stakeholder.hasOpenRequestToJoin) {
     const discussionId = await createDiscussion(`Request to become Achiever`, { image: stakeholder.goalImage, name: `Request to join ${stakeholder.goalTitle}`, goalId: stakeholder.goalId }, 'adminsAndRequestor', undefined, stakeholder.uid)
-    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goalId, stakeholder)
+    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goal.id, stakeholder)
   }
 
 }
 
 export async function handleNotificationsOfStakeholderChanged(goalId: string, before: GoalStakeholder, after: GoalStakeholder) {
 
-  if (before.isAdmin !== after.isAdmin) {
-    if (after.isAdmin) {
-      sendNewAdminNotificationInGoal(goalId, goalId, after)
+  if (!before.isAdmin && after.isAdmin) {
+    sendNewAdminNotificationInGoal(goalId, goalId, after)
+  }
+
+  if (!before.isAchiever && after.isAchiever) {
+    sendNewAchieverNotificationInGoal(goalId, goalId, after)
+      
+    if (after.goalPublicity === 'public') {
+      sendNewAchieverNotificationToUserSpectators(goalId, goalId, after)
     }
   }
 
-  if (before.isAchiever !== after.isAchiever) {
-    if (after.isAchiever) {
-      sendNewAchieverNotificationInGoal(goalId, goalId, after)
-        
-      if (after.goalPublicity === 'public') {
-        sendNewAchieverNotificationToUserSpectators(goalId, goalId, after)
-      }
-    }
-  }
+  if (!before.isSupporter && after.isSupporter) {
+    sendNewSupporterNotificationInGoal(goalId, goalId, after)
 
-  if (before.isSupporter !== after.isSupporter) {
-    if (after.isSupporter) {
-      sendNewSupporterNotificationInGoal(goalId, goalId, after)
-
-      if (after.goalPublicity === 'public') {
-        // No need for notification about this
-        // sendNewSupporterNotificationToUserSpectators(goalId, goalId, after)
-      }
+    if (after.goalPublicity === 'public') {
+      // No need for notification about this
+      // sendNewSupporterNotificationToUserSpectators(goalId, goalId, after)
     }
   }
 

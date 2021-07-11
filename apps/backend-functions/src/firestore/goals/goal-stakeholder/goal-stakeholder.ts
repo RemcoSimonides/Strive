@@ -1,23 +1,27 @@
 import { db, admin, functions, increment } from '../../../internals/firebase';
 
 // interfaces
-import { createGoal } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakeholderChanged } from './goal-stakeholder.notification'
 import { createProfile } from '@strive/user/user/+state/user.firestore';
 import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
-  .onCreate((snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
 
     const stakeholder = createGoalStakeholder(snapshot.data())
     const goalId = context.params.goalId
     const stakeholderId = snapshot.id
 
+    // check if goal has collective goal
+    const goalSnap = await db.doc(`Goals/${goalId}`).get()
+    const goal = createGoal({ ...goalSnap.data(), id: goalId })
+
     if (stakeholder.isAchiever) {
-      upsertCollectiveGoalStakeholder(goalId, stakeholderId, true)
+      upsertCollectiveGoalStakeholder(goal, stakeholderId, true)
       changeNumberOfAchievers(goalId, stakeholder.isAchiever)
     }
 
@@ -26,7 +30,7 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
     }
 
     // notifications
-    handleNotificationsOfStakeholderCreated(goalId, stakeholder)
+    handleNotificationsOfStakeholderCreated(goal, stakeholder)
   })
 
 export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
@@ -75,20 +79,17 @@ function changeNumberOfSupporters(goalId: string, isSupporter: boolean) {
 
 async function updateAchieverOnCollectiveGoal(goalId: string, stakeholderId: string, isAchiever: boolean) {
   const goalDocSnap = await db.doc(`Goals/${goalId}`).get()
-  const goal = createGoal(goalDocSnap.data())
+  const goal = createGoal({ ...goalDocSnap.data(), id: goalId })
 
   if (goal.collectiveGoalId) {
-    upsertCollectiveGoalStakeholder(goalId, stakeholderId, isAchiever)
+    upsertCollectiveGoalStakeholder(goal, stakeholderId, isAchiever)
     changeNumberOfAchieversOfCollectiveGoal(goal.collectiveGoalId, isAchiever)
   }
 }
 
-async function upsertCollectiveGoalStakeholder(goalId: string, stakeholderId: string, isAchiever: boolean) {
+async function upsertCollectiveGoalStakeholder(goal: Goal, stakeholderId: string, isAchiever: boolean) {
 
   // check if goal has collective goal
-  const goalSnap = await db.doc(`Goals/${goalId}`).get()
-  const goal = createGoal(goalSnap.data())
-
   if (!goal.collectiveGoalId) return; // No collective goal to update
   const collectiveGoalId = goal.collectiveGoalId
 

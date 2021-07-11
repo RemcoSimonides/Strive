@@ -31,7 +31,7 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
 }
 
 
-export const isSupportDecisionNotification = (notification: Partial<Notification>): notification is Notification<SupportDecisionMeta> => notification?.meta.type === 'supportDecision'
+export const isSupportDecisionNotification = (notification: Partial<Notification>): notification is Notification<SupportDecisionMeta> => notification.meta?.type === 'supportDecision'
 export function createSupportDecisionMeta(meta: Partial<SupportDecisionMeta>): SupportDecisionMeta {
   return {
     type: 'supportDecision',
@@ -43,7 +43,7 @@ export function createSupportDecisionMeta(meta: Partial<SupportDecisionMeta>): S
 }
 
 
-export const isGoalRequestNotification = (notification: Partial<Notification>): notification is Notification<GoalRequest> => notification?.meta.type === 'goalRequest'
+export const isGoalRequestNotification = (notification: Partial<Notification>): notification is Notification<GoalRequest> => notification.meta?.type === 'goalRequest'
 export function createGoalRequest(meta: Partial<GoalRequest>): GoalRequest {
   return {
     type: 'goalRequest',

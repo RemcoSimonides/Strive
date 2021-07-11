@@ -31,7 +31,7 @@ export const addToAlgolia = async (index: AlgoliaIndex, objectID: string, data):
     objectID,
     ...data
   }).catch((err) => {
-    if (err) console.log('error adding algolia object', err)
+    if (err) console.error('error adding algolia object: ', JSON.stringify(err))
   })
 
 }
@@ -47,14 +47,16 @@ export const updateAlgoliaObject = async (index: AlgoliaIndex, objectID: string,
     objectID,
     ...data
   }).catch((err) => {
-    if (err) console.log('error updating algolia object', err)
+    if (err) console.error('error updating algolia object', JSON.stringify(err))
   })
 
 }
 
 export const deleteFromAlgolia = async (index: AlgoliaIndex, objectID: string): Promise<void> => {
   initAlgoliaIndex(index)
-  await idx.deleteObject(objectID)
+  await idx.deleteObject(objectID).catch((err) => {
+    if (err) console.error('error deleting algolia object', JSON.stringify(err))
+  })
 }
 
 export type AlgoliaIndex = keyof typeof algoliaIndex;
