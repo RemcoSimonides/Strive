@@ -38,12 +38,12 @@ export class NotificationsPage implements OnInit, OnDestroy {
         : of([])),
     )
 
-    const date = new Date();
-    date.setDate(date.getDate() - 14);
+    // const date = new Date();
+    // date.setDate(date.getDate() - 14);
 
     this.notifications$ = profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('createdAt', '>=', date).orderBy('createdAt', 'desc'), { uid: profile.id })
+        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').orderBy('createdAt', 'desc'), { uid: profile.id })
         : of([]))
     )
 
