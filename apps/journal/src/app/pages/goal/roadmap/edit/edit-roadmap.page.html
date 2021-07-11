@@ -1,5 +1,5 @@
 <!-- Android or iOS header -->
-<ion-header *ngIf="platform.is('android') || platform.is('ios')">
+<ion-header *ngIf="screensize.isMobile$">
   <ion-toolbar>
     <ion-buttons slot="secondary">
       <ion-button (click)="cancel()">

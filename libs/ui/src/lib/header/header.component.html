@@ -1,4 +1,4 @@
-<ng-container *ngIf="platform.is('android') || platform.is('ios')">
+<ng-container *ngIf="screensize.isMobile$ | async">
   <ion-header translucent>
     <ion-toolbar>
       <ion-buttons slot="start">

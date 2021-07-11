@@ -13,9 +13,10 @@ import { TabsPage } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
-import { Subscription } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, first, map, switchMap } from 'rxjs/operators';
 import { AngularFireMessaging } from '@angular/fire/messaging';
+import { NotificationService } from '@strive/notification/+state/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,8 @@ export class AppComponent implements OnDestroy {
   rootPage: typeof TabsPage = TabsPage;
 
   enumAuthSegment = enumAuthSegment
+
+  unreadNotifications$: Observable<boolean>
 
   private profileSubscription: Subscription
   private screenSizeSubscription: Subscription
@@ -44,7 +47,8 @@ export class AppComponent implements OnDestroy {
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private messaging: AngularFireMessaging
+    private messaging: AngularFireMessaging,
+    private notification: NotificationService
   ) {
     this.initializeApp();
   }
@@ -71,12 +75,22 @@ export class AppComponent implements OnDestroy {
       }
 
       this.openAuthModalOnStartup()
+
+      this.unreadNotifications$ = this.user.profile$.pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        switchMap(profile => {
+          return profile
+          ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('isRead', '==', false).limit(1), { uid: profile.id}).pipe(map(notifications => !!notifications.length))
+          : of(false)
+        })
+      )
+      
     });
   }
 
   initializeMenu() {
-    this.screenSizeSubscription = this.screensize.isDesktop$.subscribe(isDesktop => {
-      this.menuCtrl.enable(isDesktop && (this.platform.is('ios') || this.platform.is('android')))
+    this.screenSizeSubscription = this.screensize.isTablet$.subscribe(isTablet => {
+      this.menuCtrl.enable(isTablet)
     })
   }
 

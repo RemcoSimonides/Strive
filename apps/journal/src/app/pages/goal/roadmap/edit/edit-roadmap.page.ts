@@ -8,6 +8,7 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from '@strive/template/+state/template.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 // Interfaces
 import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -50,7 +51,8 @@ export class EditRoadmapPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
-    private templateService: TemplateService
+    private templateService: TemplateService,
+    public screensize: ScreensizeService
   ) { }
 
   async ngOnInit() {

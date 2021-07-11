@@ -1,11 +1,9 @@
- 
-<ion-tabs>
-  <ng-container *ngIf="!(screenSize.isDesktop$ | async)">
+<ng-container *ngIf="screenSize.isMobile$ | async">
+  <ion-tabs>
     <ion-tab-bar slot="bottom">
 
       <ion-tab-button tab="feed">
         <ion-icon name="home-sharp"></ion-icon>
-        <ion-badge *ngIf="(user.profile$ | async)?.numberOfUnreadNotifications > 0">{{ (user.profile$ | async)?.numberOfUnreadNotifications }}</ion-badge>
       </ion-tab-button>
 
       <ion-tab-button tab="explore">
@@ -25,5 +23,5 @@
       </ion-tab-button>
   
     </ion-tab-bar>
-  </ng-container>
-</ion-tabs>
+  </ion-tabs>
+</ng-container>

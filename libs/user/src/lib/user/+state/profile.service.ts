@@ -13,7 +13,4 @@ export class ProfileService extends FireCollection<Profile> {
     super(db)
   }
 
-  resetNumberOfUnreadNotifications(uid: string) {
-    this.update(uid, { numberOfUnreadNotifications: 0 }, { params: { uid }});
-  }
 }

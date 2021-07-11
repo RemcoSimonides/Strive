@@ -19,21 +19,27 @@
         </article>
         <ion-list>
           <ion-menu-toggle auto-hide="false">
+            <ng-container *ngIf="user.profile$ | async">
+              <!-- Feed -->
+              <ion-item routerDirection="root" routerLink="/feed">
+                <ion-icon slot="start" name="home-sharp"></ion-icon>
+                <ion-label>Home</ion-label>
+              </ion-item>              
+            </ng-container>
+
             <!-- Explore -->
             <ion-item routerDirection="root" routerLink="/explore">
-              <ion-icon slot="start" name="globe"></ion-icon>
+              <ion-icon slot="start" name="earth-sharp"></ion-icon>
               <ion-label>Explore</ion-label>
             </ion-item>
 
             <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInSide">
 
               <!-- Notifications -->
-              <ion-item routerDirection="root" routerLink="/feed">
-                <ion-icon slot="start" name="notifications"></ion-icon>
-                <ion-label>Activity Feed
-                  <ng-container *ngIf="!!profile.numberOfUnreadNotifications">
-                    <span>({{ profile.numberOfUnreadNotifications }})</span>                  
-                  </ng-container>
+              <ion-item routerDirection="root" routerLink="/notifications">
+                <ion-icon slot="start" name="notifications" [ngClass]="{'badge': unreadNotifications$ | async}" class="badge"></ion-icon>
+                <ion-label>
+                  <span>Notifications</span>
                 </ion-label>
               </ion-item>
               <!-- Goals -->
@@ -73,7 +79,7 @@
   </section>
 
   <!-- Mobile -->
-  <ng-container *ngIf="platform.is('android') && !platform.is('ios'); else desktop">
+  <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
     <ion-nav id="main" [root]="rootPage"></ion-nav>
   </ng-container>
 
@@ -83,7 +89,7 @@
       <ion-toolbar>
         <ion-row>
 
-          <ng-container *ngIf="(screensize.isDesktop$ | async); else noDesktopMain">
+          <ng-container *ngIf="(screensize.size$ | async) === 'desktop'; else tablet">
             <ion-col size="1" class="ion-no-padding">
               <a [routerLink]="user.uid ? '/feed' : '/explore'">
                 <img asset="logo.png" class="logo">
@@ -104,22 +110,14 @@
                 </ion-button>
 
                 <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInMain">
-                  <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link"
-                    class="link">
+                  <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link" class="link">
                     Goals
                   </ion-button>
-                  <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link"
-                    class="link">
+                  <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link" class="link">
                     Supports
                   </ion-button>
-                  <ion-button fill="clear" routerLink="/notifications" routerDirection="root" routerLinkActive="active-link"
-                    class="link">
-                    Notifications
-
-                    <ng-container *ngIf="!!profile.numberOfUnreadNotifications">
-                      <ion-badge>{{ profile.numberOfUnreadNotifications }}</ion-badge>
-                    </ng-container> 
-
+                  <ion-button fill="clear" routerLink="/notifications" routerDirection="root" routerLinkActive="active-link" class="link">
+                    <span [ngClass]="{'badge': unreadNotifications$ | async}">Notifications</span>
                   </ion-button>
                   <ion-avatar (click)="openProfilePopover($event)">
                     <img [ref]="profile.photoURL" asset="profile.png"/>
@@ -140,7 +138,7 @@
           </ng-container>
         </ion-row>
   
-        <ng-template #noDesktopMain>
+        <ng-template #tablet>
           <ion-col size="2" class="ion-no-padding">
             <a [routerLink]="user.uid ? '/feed' : '/explore'">
               <img asset="logo.png" class="logo ion-text-left">

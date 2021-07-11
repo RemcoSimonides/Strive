@@ -4,6 +4,10 @@ import { PopoverController, Platform, NavController, ModalController } from '@io
 // Services
 import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { SeoService } from '@strive/utils/services/seo.service';
+import { ProfileService } from '@strive/user/user/+state/profile.service';
 // Rxjs
 import { Observable, Subscription } from 'rxjs';
 // Modals / Popover
@@ -22,11 +26,8 @@ import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
-import { SeoService } from '@strive/utils/services/seo.service';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
-import { ProfileService } from '@strive/user/user/+state/profile.service';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -67,7 +68,8 @@ export class ProfilePage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
-    private userSpectateService: UserSpectateService
+    private userSpectateService: UserSpectateService,
+    public screensize: ScreensizeService
   ) { }
 
   async ngOnInit() {

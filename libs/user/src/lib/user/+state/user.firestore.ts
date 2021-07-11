@@ -31,7 +31,6 @@ export interface Profile {
   photoURL: string;
   numberOfSpectating: number;
   numberOfSpectators: number;
-  numberOfUnreadNotifications: number;
   fcmTokens: string[]; // one token per used device
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
@@ -44,7 +43,6 @@ export function createProfile(params: Partial<Profile> = {}): Profile {
     photoURL: '',
     numberOfSpectating: 0,
     numberOfSpectators: 0,
-    numberOfUnreadNotifications: 0,
     fcmTokens: [],
     ...params
   }

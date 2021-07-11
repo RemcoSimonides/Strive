@@ -15,9 +15,6 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
     const userId = context.params.userId
     const notificationId = snapshot.id
 
-    // increment number of unread message
-    incrementUnreadNotifications(userId)
-
     // send push notification
     const profile = await getDocument<Profile>(`Users/${userId}/Profile/${userId}`)
 
@@ -90,9 +87,4 @@ async function finalizeSupports(goalId: string, supports: NotificationSupport[])
       ref.update(data)
     }
   }
-}
-
-function incrementUnreadNotifications(uid: string) {
-  const ref = db.doc(`Users/${uid}/Profile/${uid}`)
-  ref.update({ numberOfUnreadNotifications: increment(1) })
 }

@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'strive-notifications',
@@ -12,10 +12,12 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationsPage implements OnInit {
+export class NotificationsPage implements OnInit, OnDestroy {
 
   decisions$: Observable<Notification[]>
   notifications$: Observable<Notification[]>
+
+  sub: Subscription
 
   constructor(
     private notification: NotificationService,
@@ -44,5 +46,20 @@ export class NotificationsPage implements OnInit {
         ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('createdAt', '>=', date).orderBy('createdAt', 'desc'), { uid: profile.id })
         : of([]))
     )
+
+    this.sub = combineLatest([
+      profile$.pipe(map(profile => profile.id)),
+      this.notifications$.pipe(
+        map(notifications => notifications.filter(notification => !notification.isRead)),
+        filter(unreadNotifications => !!unreadNotifications.length),
+        map(unreadNotifications => unreadNotifications.map(notification => notification.id))
+      )
+    ]).subscribe(([uid, ids]) => {
+      this.notification.update(ids, { isRead: true }, { params: { uid}})
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 }

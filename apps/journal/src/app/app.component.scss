@@ -2,15 +2,26 @@
   img {
     border-radius: 50%;
     object-fit: cover;
-    height: 160px;
-    width: 160px;
-    margin-top: 15px;
+    height: 140px;
+    width: 140px;
+    margin-top: 16px;
+  }
+
+  ion-icon {
+    color: black;
+    font-size: 1.4rem;
+    padding: 4px;
+    margin: 4px;
+  }
+  
+  fa-icon {
+    color: black;
+    font-size: 1.2rem;
+    padding: 4px;
+    margin: 4px;
   }
 }
 
-ion-icon {
-  color: black;
-}
 
 ion-router-outlet {
   margin-top: 65px;
@@ -46,6 +57,12 @@ ion-router-outlet {
 
 .searchbar-container {
   display: flex;
+  align-items: center;
+  padding-left: 8px;
+
+  ion-searchbar {
+    padding: 0;
+  }
 }
 
 ion-avatar {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="platform.is('android') || platform.is('ios')">
+<ng-container *ngIf="screensize.isMobile$ | async">
   <ion-header translucent>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -7,7 +7,7 @@
       <ion-title>Home</ion-title>
       <ion-buttons slot="end">
         <ion-button routerLink="../notifications">
-          <ion-icon slot="icon-only" name="notifications-sharp"></ion-icon>
+          <ion-icon slot="icon-only" name="notifications-sharp" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
