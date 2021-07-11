@@ -72,7 +72,7 @@ export class ProfilePage implements OnInit {
     public screensize: ScreensizeService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.profileId = this.route.snapshot.paramMap.get('id')
     this.profileForm.disable();
 
@@ -117,7 +117,6 @@ export class ProfilePage implements OnInit {
     if (this.platform.is('android') || this.platform.is('ios')) {
       this.backBtnSubscription.unsubscribe();
     }
-    this.rightsSubscription.unsubscribe();
   } 
 
   async openAuthModal() {

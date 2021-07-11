@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable, of } from 'rxjs';
-import { first, map, switchMap, take, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, map, switchMap, take, tap } from 'rxjs/operators';
 // Interfaces
 import { createUser, Profile, User } from './user.firestore';
 
@@ -27,7 +27,8 @@ export class UserService {
     )
 
     this.profile$ = this.afAuth.authState.pipe(
-      switchMap(user => user ? db.docWithId$(profilePath(user.uid)) : of(null))
+      switchMap(user => user ? db.docWithId$(profilePath(user.uid)) : of(null)),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     )
 
     this.afAuth.authState.pipe(tap(user => this.uid = !!user ? user.uid : '' )).subscribe()

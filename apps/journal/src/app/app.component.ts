@@ -14,7 +14,7 @@ import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-opti
 import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { Observable, of, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, first, map, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 
@@ -77,7 +77,6 @@ export class AppComponent implements OnDestroy {
       this.openAuthModalOnStartup()
 
       this.unreadNotifications$ = this.user.profile$.pipe(
-        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
         switchMap(profile => {
           return profile
           ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('isRead', '==', false).limit(1), { uid: profile.id}).pipe(map(notifications => !!notifications.length))

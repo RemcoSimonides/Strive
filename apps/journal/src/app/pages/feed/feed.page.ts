@@ -8,7 +8,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { FeedPaginationService } from '@strive/notification/+state/feed-pagination.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
@@ -43,21 +43,21 @@ export class FeedPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.seo.generateTags({ title: `Home - Strive Journal` });
 
-    this.userSubscription = this.user.profile$.pipe(
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
-    ).subscribe(profile => {
+    this.userSubscription = this.user.profile$.subscribe(profile => {
       this.feed.reset()
 
       if (profile) {
         this.feed.init(`Users/${profile.id}/Notifications`)
-        this.unreadNotifications$ = this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('isRead', '==', false).limit(1), { uid: profile.id }).pipe(
-          map(notifications => !!notifications.length)
-        )
-      } else { 
-        this.unreadNotifications$ = of(false)
       }
       this.cdr.markForCheck()
     })
+
+    this.unreadNotifications$ = this.user.profile$.pipe(
+      switchMap(profile => profile
+        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('isRead', '==', false).limit(1), { uid: profile.id }).pipe(map(notifications => !!notifications.length))
+        : of(false)
+      )
+    )
   }
 
   ionViewDidEnter() {
