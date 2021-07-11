@@ -26,14 +26,14 @@
       </p>
 
       <!-- Goal Request to join action buttons -->
-      <ng-container *ngIf="notification.type === 'goalRequest'">
+      <ng-container *ngIf="notification.meta?.type === 'goalRequest'">
         <div fxLayout>
           <ion-button (click)="handleRequestDecision(notification, true)"
               [disabled]="notification.meta.requestStatus !== 'open'"
-              *ngIf="notification.meta.requestStatus !== 'rejected'">Accept</ion-button>
+              *ngIf="notification.meta.status !== 'rejected'">Accept</ion-button>
             <ion-button (click)="handleRequestDecision(notification, false)"
               [disabled]="notification.meta.requestStatus !== 'open'"
-              *ngIf="notification.meta.requestStatus !== 'accepted'">Reject</ion-button>
+              *ngIf="notification.meta.status !== 'accepted'">Reject</ion-button>
         </div>
       </ng-container>
 
@@ -43,7 +43,7 @@
       </ng-container>
 
       <!-- Supports -->
-      <ng-container *ngIf="notification.type === 'supportDecision' && notification.meta.supports.length > 0">
+      <ng-container *ngIf="notification.meta?.type === 'supportDecision' && notification.meta.supports.length > 0">
         <b>Your supports:</b>
         <ng-container *ngFor="let support of notification.meta.supports">
           <div fxLayout>
@@ -73,12 +73,12 @@
         <!-- Buttons to accept or decline evidence -->
         <ion-button color="primary"
           (click)="finalizeDecision(notification)"
-          [disabled]="notification.meta.decisionStatus !== 'pending'"
+          [disabled]="notification.meta.status !== 'pending'"
           class="support_decision_btn"
         >Finalize
         </ion-button>
 
-        <ng-container *ngIf="notification.meta.decisionStatus === 'pending'">
+        <ng-container *ngIf="notification.meta.status === 'pending'">
           <notification-countdown [time]="notification.meta.deadline"></notification-countdown>
         </ng-container>
       </ng-container>

@@ -1,14 +1,13 @@
 import * as admin from 'firebase-admin'
 // Functions
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../../shared/notification/notification'
-import { increaseSeqnoByOne } from './milestone'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent} from '@strive/notification/+state/notification.firestore'
 import { getReceiver } from '../../../shared/support/receiver'
 import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore'
-import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
+import { createNotification, createSupportDecisionMeta, increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { ProfileLink } from '@strive/user/user/+state/user.firestore';
 import { converter } from 'apps/backend-functions/src/shared/utils';
@@ -107,7 +106,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
         milestoneId,
         postId: milestoneId
       },
-      type: 'supportDecision',
+      type: 'feed',
       message: [
         {
           text

@@ -288,7 +288,7 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
         goalId: goalId,
         postId: goalId
       },
-      type: 'supportDecision',
+      type: 'feed',
       message: [
         {
           text: 'Goal has been completed!'

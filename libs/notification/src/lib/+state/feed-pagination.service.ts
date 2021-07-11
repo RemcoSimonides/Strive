@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
 import { leftJoin } from '@strive/utils/leftJoin';
-import { Notification, NotificationTypes } from './notification.firestore';
+import { Notification } from './notification.firestore';
 
-// Options to reproduce firestore queries consistently
-interface QueryConfig {
-  path: string, // path to collection
-}
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +38,7 @@ export class FeedPaginationService {
   init(path: string) {
     this.path = path
 
-    const query = this.afs.collection(this.path, ref => ref
+    const query = this.afs.collection<Notification>(this.path, ref => ref
       .where('type', '==', 'feed')
       .orderBy('createdAt', 'desc')
       .limit(20)
@@ -64,7 +60,7 @@ export class FeedPaginationService {
   // Retrieves additional data from firestore
   more() {
     const cursor = this.getCursor()
-    const more = this.afs.collection(this.path, ref => ref
+    const more = this.afs.collection<Notification>(this.path, ref => ref
       .where('type', '==', 'feed')
       .orderBy('createdAt', 'desc')
       .limit(20)
@@ -80,14 +76,14 @@ export class FeedPaginationService {
   }
 
   // Maps the snapshot to usable format the updates source
-  private mapAndUpdate(col: AngularFirestoreCollection<any>) {
+  private mapAndUpdate(col: AngularFirestoreCollection<Notification>) {
     if (this._done.value || this._loading.value) return
     this._loading.next(true)
 
     // Map snapshot with doc ref (needed for cursor)
     return col.snapshotChanges().pipe(
       leftJoin(this.afs, 'discussionId', 'Discussions'),
-      tap(arr => {
+      tap((arr: Notification[]) => {
         this._data.next(arr)
         this._loading.next(false)
         this._refreshing.next(false)

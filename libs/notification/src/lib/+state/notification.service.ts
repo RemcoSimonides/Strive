@@ -32,12 +32,12 @@ export class NotificationService extends FireCollection<Notification> {
     // TODO CHECK THIS AGAIN - it's probably incorrect!
 
     const meta: Partial<SupportDecisionMeta> = {
-      decisionStatus: 'finalized',
+      status: 'finalized',
       supports: notification.meta.supports
     }
 
     // Update Notification to replace timer and buttons by status
-    return this.upsert({ id: notification.id, meta }, { params: { uid: this.user.uid }});
+    return this.upsert({ id: notification.id, needsDecision: false, meta }, { params: { uid: this.user.uid }});
   }
 
 }

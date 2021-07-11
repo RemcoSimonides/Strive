@@ -21,7 +21,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 export class FeedPage implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   
-  notifications: Notification[]
+  decisions$: Observable<Notification[]>
 
   unreadNotifications$: Observable<boolean>
 
@@ -51,6 +51,12 @@ export class FeedPage implements OnInit, OnDestroy {
       }
       this.cdr.markForCheck()
     })
+
+    this.decisions$ = this.user.profile$.pipe(
+      switchMap(profile => profile
+        ? this.notification.valueChanges(ref => ref.where('needsDecision', '==', true), { uid: profile.id })
+        : of([])),
+    )
 
     this.unreadNotifications$ = this.user.profile$.pipe(
       switchMap(profile => profile
@@ -104,13 +110,4 @@ export class FeedPage implements OnInit, OnDestroy {
       event.target.disabled = true
     }
   }
-
-  public async toggleSupportDecision(notificationId: string, supportId: string): Promise<void> {
-    const notification = this.notifications.find(notification => notification.id == notificationId)
-    if (isSupportDecisionNotification(notification)) {
-      const support = notification.meta.supports.find(support => support.id === supportId)
-      support.decision = support.decision === 'give' ? 'keep' : 'give'
-    }
-  }
-
 }

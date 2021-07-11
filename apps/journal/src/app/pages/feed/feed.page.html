@@ -28,9 +28,16 @@
       <ng-container *ngIf="notifications.length else empty">
         <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
 
-          <ng-container *ngFor="let notification of notifications; let isLast = last">
+          <ng-container *ngFor="let notification of decisions$ | async; let isLast = last">
             <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
-            <span *ngIf="!isLast" class="divider"></span>
+            <span *ngIf="isLast" class="divider"></span>
+          </ng-container>
+
+          <ng-container *ngFor="let notification of notifications; let isLast = last">
+            <ng-container *ngIf="!notification.needsDecision">
+              <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+              <span *ngIf="!isLast" class="divider"></span>
+            </ng-container>
           </ng-container>
 
           <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">

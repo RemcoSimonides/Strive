@@ -67,7 +67,7 @@ export enum enumEvent {
  * type feed - Shows up on the feed
  * type notification - Shows up on the notifications page
  */
-export type NotificationTypes = 'feed' | 'notification' | 'supportDecision' | 'goalRequest';
+export type NotificationTypes = 'feed' | 'notification';
 export type NotificationMeta = SupportDecisionMeta | GoalRequest | {};
 
 // Firestore docs
@@ -83,6 +83,7 @@ export interface Notification<Meta extends NotificationMeta = any> {
   event: enumEvent;
   source: ISource; // add all information you have :)
   isRead: boolean;
+  needsDecision: boolean;
   meta: Meta;
   updatedAt?: Timestamp;
   createdAt?: Timestamp;
@@ -101,16 +102,22 @@ export interface ISource {
   userId?: string;
 }
 
+interface MetaBase {
+  type: 'supportDecision' | 'goalRequest';
+}
+
 // defines the path to the post
-export interface SupportDecisionMeta {
-  decisionStatus: 'pending' | 'finalized';
+export interface SupportDecisionMeta extends MetaBase {
+  type: 'supportDecision';
+  status: 'pending' | 'finalized';
   deadline: string; // deadline for when decision needs to be made
   supports: NotificationSupport[]; // all supports that need to be decided within this notification
 }
 
-export interface GoalRequest {
+export interface GoalRequest extends MetaBase {
+  type: 'goalRequest';
   uidRequestor: string;
-  requestStatus: 'open' | 'accepted' | 'rejected';
+  status: 'open' | 'accepted' | 'rejected';
 }
 
 export interface INotificationMessageText {

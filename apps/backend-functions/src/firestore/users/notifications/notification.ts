@@ -63,7 +63,7 @@ export const notificationChangeHandler = functions.firestore.document(`Users/{us
 
     if (isSupportDecisionNotification(before) && isSupportDecisionNotification(after)) {
       // Support Decision
-      if (before.meta.decisionStatus === 'pending' && after.meta.decisionStatus === 'finalized') {
+      if (before.meta.status === 'pending' && after.meta.status === 'finalized') {
         finalizeSupports(after.source.goalId, after.meta.supports)
         deleteScheduledTask(notificationId)
       }

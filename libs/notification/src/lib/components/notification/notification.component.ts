@@ -85,7 +85,7 @@ export class NotificationComponent implements OnInit {
   }
 
   public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {
-    notification.meta.requestStatus = isAccepted ? 'accepted' : 'rejected'
+    notification.meta.status = isAccepted ? 'accepted' : 'rejected'
 
     await this.goalStakeholderService.upsert({
       uid: notification.meta.uidRequestor,
@@ -93,20 +93,18 @@ export class NotificationComponent implements OnInit {
       hasOpenRequestToJoin: false
     }, { params: { goalId: notification.source.goalId }})
 
-    await this.notificationService.update(notification.id, { meta: notification.meta }, { params: { uid: this.user.uid }})
+    await this.notificationService.update(notification.id, { needsDecision: false, meta: notification.meta }, { params: { uid: this.user.uid }})
   }
 
   public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
     if (!isSupportDecisionNotification(notification)) return
-    if (notification.meta.decisionStatus === 'finalized') return
+    if (notification.meta.status === 'finalized') return
 
     const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.source.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
 
     const chooseAchieverModal = await this.modalCtrl.create({
       component: ChooseAchieverModal,
-      componentProps: {
-        stakeholders: stakeholders
-      }
+      componentProps: { stakeholders }
     })
     chooseAchieverModal.onDidDismiss().then(data => {
       if (!!data.data) {
@@ -119,13 +117,13 @@ export class NotificationComponent implements OnInit {
 
   public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
     if (!isSupportDecisionNotification(notification)) return
-    if (notification.meta.decisionStatus === 'finalized') return
+    if (notification.meta.status === 'finalized') return
     support.receiver = createProfileLink();
   }
 
   public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
     await this.notificationService.finalizeDecision(notification)
-    notification.meta.decisionStatus = 'finalized'
+    notification.meta.status = 'finalized'
     this.cdr.markForCheck()
   }
 

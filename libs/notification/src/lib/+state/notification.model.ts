@@ -24,34 +24,39 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
       userId: ''
     },
     isRead: false,
+    needsDecision: false,
     ...params,
     meta
   }
 }
 
-export interface SupportDecisionNotification extends Notification<SupportDecisionMeta> {
-  type: 'supportDecision'
-}
-export const isSupportDecisionNotification = (notification: Partial<Notification>): notification is SupportDecisionNotification => notification.type === 'supportDecision'
+
+export const isSupportDecisionNotification = (notification: Partial<Notification>): notification is Notification<SupportDecisionMeta> => notification?.meta.type === 'supportDecision'
 export function createSupportDecisionMeta(meta: Partial<SupportDecisionMeta>): SupportDecisionMeta {
   return {
+    type: 'supportDecision',
     deadline: '',
     supports: [],
-    decisionStatus: 'pending',
+    status: 'pending',
     ...meta
   }
 }
 
 
-export interface GoalRequestNotification extends Notification<GoalRequest> {
-  type: 'goalRequest'
-}
-export const isGoalRequestNotification = (notification: Partial<Notification>): notification is GoalRequestNotification => notification.type === 'goalRequest'
+export const isGoalRequestNotification = (notification: Partial<Notification>): notification is Notification<GoalRequest> => notification?.meta.type === 'goalRequest'
 export function createGoalRequest(meta: Partial<GoalRequest>): GoalRequest {
   return {
-    requestStatus: 'open',
+    type: 'goalRequest',
+    status: 'open',
     uidRequestor: '',
     ...meta
   }
 }
 
+export function increaseSeqnoByOne(seqno: string): string {
+  const segments = seqno.split('.');
+  const last = segments.pop()
+  const lastPlusOne = +last + 1
+  segments.push(`${lastPlusOne}`)
+  return segments.join('.')
+}

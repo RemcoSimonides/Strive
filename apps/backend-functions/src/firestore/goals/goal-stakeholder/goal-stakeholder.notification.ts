@@ -276,7 +276,7 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
         text: ` requests to join, do you accept?`
       }
       ],
-      type: 'goalRequest',
+      type: 'feed',
       meta
   })
   sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true)

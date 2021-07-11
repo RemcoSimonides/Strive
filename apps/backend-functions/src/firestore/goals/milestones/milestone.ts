@@ -7,6 +7,7 @@ import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.f
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface';
 import { handleStatusChangeNotification } from './milestone.notification';
+import { increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 
 export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
   .onCreate(async (snapshot, context) => {
@@ -91,12 +92,4 @@ async function handlePotentialSubmilestones(milestone: Milestone, goalId: string
 
   const promises = subMilestonesSnap.docs.map(subMilestoneSnap => subMilestoneSnap.ref.update({ status: 'neutral' }))
   return Promise.all(promises)
-}
-
-export function increaseSeqnoByOne(seqno: string): string {
-  const segments = seqno.split('.');
-  const last = segments.pop()
-  const lastPlusOne = +last + 1
-  segments.push(`${lastPlusOne}`)
-  return segments.join('.')
 }

@@ -14,7 +14,6 @@ import { combineLatest, Observable, of, Subscription } from 'rxjs';
 })
 export class NotificationsPage implements OnInit, OnDestroy {
 
-  decisions$: Observable<Notification[]>
   notifications$: Observable<Notification[]>
 
   sub: Subscription
@@ -27,12 +26,6 @@ export class NotificationsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.seo.generateTags({ title: `Notifications - Strive Journal` })
-
-    this.decisions$ = this.user.profile$.pipe(
-      switchMap(profile => profile
-        ? this.notification.valueChanges(ref => ref.where('type', 'not-in', ['notification', 'feed']), { uid: profile.id })
-        : of([])),
-    )
 
     // const date = new Date();
     // date.setDate(date.getDate() - 14);
