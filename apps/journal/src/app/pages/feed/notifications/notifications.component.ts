@@ -22,7 +22,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
   constructor(
     private notification: NotificationService,
     private seo: SeoService,
-    private user: UserService
+    public user: UserService
   ) { }
 
   ngOnInit() {

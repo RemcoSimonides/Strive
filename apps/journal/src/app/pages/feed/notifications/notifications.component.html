@@ -1,14 +1,32 @@
 <strive-header title="Notifications"></strive-header>
 
-<ion-content>
-  <section fxLayout="column" fxLayoutGap="24px">
-    <ng-container *ngFor="let notification of decisions$ | async">
-      <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
-    </ng-container>
-    <h3>Notifications</h3>
-    <ng-container *ngFor="let notification of notifications$ | async; let isLast = last">
-      <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
-      <span *ngIf="!isLast" class="divider"></span>
-    </ng-container>
-  </section>
-</ion-content>
+<ng-container *ngIf="!!user.uid; else notLoggedIn">
+  <ion-content>
+    <section fxLayout="column" fxLayoutGap="24px">
+      <ng-container *ngFor="let notification of decisions$ | async">
+        <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+      </ng-container>
+      <h3>Notifications</h3>
+      <ng-container *ngIf="notifications$ | async as notifications; else empty">
+        <ng-container *ngIf="notifications.length; else empty">
+          <ng-container *ngFor="let notification of notifications; let isLast = last">
+            <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+            <span *ngIf="!isLast" class="divider"></span>
+          </ng-container>
+        </ng-container>  
+      </ng-container>
+
+      <ng-template #empty>
+        No notifications
+      </ng-template>
+    </section>
+  </ion-content>
+</ng-container>
+
+<ng-template #notLoggedIn>
+  <div class="not-logged-in">
+    <p>
+      <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
+    </p>
+  </div>
+</ng-template>

@@ -40,13 +40,13 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+}
 
-  .fat-text-button {
-    margin-right: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    color: var(--ion-color-primary);
-  }
+.fat-text-button {
+  margin-right: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--ion-color-primary);
 }
 
 .split-pane-visible > ion-menu {

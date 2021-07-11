@@ -25,21 +25,32 @@
         </ion-refresher-content>
       </ion-refresher>
     
-      <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
-    
-        <ng-container *ngFor="let notification of notifications; let isLast = last">
-          <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
-          <span *ngIf="!isLast" class="divider"></span>
-        </ng-container>
-          
-        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-          <ion-infinite-scroll-content
-            loadingSpinner="bubbles"
-            loadingText="Loading more data...">
-          </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-      
-      </section>
+      <ng-container *ngIf="notifications.length else empty">
+        <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
+
+          <ng-container *ngFor="let notification of notifications; let isLast = last">
+            <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+            <span *ngIf="!isLast" class="divider"></span>
+          </ng-container>
+
+          <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+            <ion-infinite-scroll-content
+              loadingSpinner="bubbles"
+              loadingText="Loading more data...">
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+        </section>
+      </ng-container>
+
+      <ng-template #empty>
+        <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px" class="empty">
+          <article>Nothing to show yet</article>
+          <article><span class="fat-text-button" routerLink="/explore">Explore</span>goals</article>
+          <article><span class="fat-text-button" routerLink="/explore">Find</span>friend</article>
+          <article><span class="fat-text-button" routerLink="/goals">Create</span> a goal</article>
+        </section>
+      </ng-template>
     </ion-content>
 
   </ng-container>

@@ -2,7 +2,7 @@
 <ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
   <ng-container *ngIf="!limitReached else limit_reached">
 
-    <ion-card (click)="create()" class="active">
+    <ion-card (click)="create()" class="active" fxLayout="column" fxLayoutAlign="start center">
       <img id="img-mobile" asset="create_goal.png"/>
       <ion-card-content>
         <h2 class="card-title">{{ title[type] }}</h2>
@@ -25,13 +25,13 @@
 <!-- Browser -->
 <ng-template #browser>
   <section class="clickable margin" (click)="create()">
-      <div id="image-container-browser">
-          <img asset="create_goal.png"/>
+    <div id="image-container-browser">
+      <img asset="create_goal.png"/>
+    </div>
+    <div class="description-container">
+      <div class="title">
+        {{ title[type] }}
       </div>
-      <div class="description-container">
-        <div class="title">
-            {{ title[type] }}
-        </div> 
-      </div>
+    </div>
   </section>
 </ng-template>
