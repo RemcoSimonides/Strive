@@ -8,7 +8,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 })
 export class ScreensizeService {
 
-  private size = new ReplaySubject<'desktop' | 'tablet' | 'mobile'>()
+  private size = new BehaviorSubject<'desktop' | 'tablet' | 'mobile'>('mobile')
   public size$ = this.size.asObservable().pipe(distinctUntilChanged())
 
   private isDesktop = new BehaviorSubject<boolean>(false)
