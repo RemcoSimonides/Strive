@@ -10,7 +10,6 @@ import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+
 import { createGoal, Goal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore'
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 
 @Component({
   selector: 'goal-upsert',

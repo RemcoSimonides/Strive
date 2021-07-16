@@ -40,7 +40,16 @@ export function sendNotificationToUsers(notification: Partial<Notification>, rec
   return Promise.all(promises)
 }
 
-export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, isAdmin: boolean, isAchiever: boolean) {
+/**
+ * 
+ * @param collectiveGoalId 
+ * @param notification 
+ * @param except UID of user who doesnt receive the notification (e.g. the user who triggered the notification)
+ * @param isAdmin 
+ * @param isAchiever 
+ * @returns 
+ */
+  export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, isAdmin: boolean, isAchiever: boolean) {
 
   console.log('executing Send Notification to Collective Goal Stakeholder(s)')
   const receivers = await getCollectiveGoalStakeholders(collectiveGoalId, isAdmin, isAchiever)
@@ -115,22 +124,23 @@ export function sendNotificationToGoal(goalId: string, notification: Partial<Not
  * 
  * @param goalId 
  * @param notification Check notification interface to see when to pass which data
+ * @param except UID of user who doesnt receive the notification (e.g. the user who triggered the notification)
  * @param isAdmin True if you want a goal stakeholder with this right to receive the notification, False if you don't want them  to receive it, and undefined if you don't care if they receive it or not
  * @param isAchiever True if you want a goal stakeholder with this right to receive the notification, False if you don't want them  to receive it, and undefined if you don't care if they receive it or not
  * @param isSupporter True if you want a goal stakeholder with this right to receive the notification, False if you don't want them  to receive it, and undefined if you don't care if they receive it or not
  */
-export async function sendNotificationToGoalStakeholders(goalId: string, notification: Partial<Notification>, isAdmin?: boolean, isAchiever?: boolean, isSupporter?: boolean) {
-  const receivers = await getGoalStakeholders(goalId, isAdmin, isAchiever, isSupporter)
-  console.log('receivers: ', receivers)
+export async function sendNotificationToGoalStakeholders(goalId: string, notification: Partial<Notification>, except: string, isAdmin?: boolean, isAchiever?: boolean, isSupporter?: boolean) {
+  const receivers = await getGoalStakeholders(goalId, except, isAdmin, isAchiever, isSupporter)
   return sendNotificationToUsers(notification, receivers)
 }
 
-async function getGoalStakeholders(goalId: string, isAdmin?: boolean,  isAchiever?: boolean, isSupporter?: boolean): Promise<string[]> {
+async function getGoalStakeholders(goalId: string, except: string, isAdmin?: boolean,  isAchiever?: boolean, isSupporter?: boolean): Promise<string[]> {
 
   const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get() 
   const receivers: string[] = []
 
   for (const snap of stakeholderColSnap.docs) {
+    if (snap.id === except) continue
     const stakeholder = createGoalStakeholder(snap.data())
     if (isAdmin === stakeholder.isAdmin || isAchiever === stakeholder.isAchiever || isSupporter === stakeholder.isSupporter) {
       receivers.push(snap.id)

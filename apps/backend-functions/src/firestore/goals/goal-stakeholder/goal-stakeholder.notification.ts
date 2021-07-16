@@ -96,6 +96,7 @@ function sendNewAchieverNotificationToUserSpectators(discussionId: string, goalI
   const notification: Partial<Notification> = {
     discussionId: discussionId,
     event: enumEvent.gStakeholderAchieverAdded,
+    type: 'notification',
     source: {
       image: stakeholder.photoURL,
       name: stakeholder.username,
@@ -159,7 +160,7 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
   })
 
   // send to all achievers and admins
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true, true, true)
 
 }
 
@@ -202,7 +203,7 @@ function sendNewSupporterNotificationInGoal(discussionId: string, goalId: string
       }
     ]
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true, true, true)
 
 }
 
@@ -212,6 +213,7 @@ function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, go
   const goalNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderAdminAdded,
+    type: 'feed',
     source: {
       image: goalStakeholder.photoURL,
       name: goalStakeholder.username,
@@ -220,7 +222,7 @@ function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, go
     },
     message: [
       {
-        text: `Became admin`
+        text: `Became an Admin`
       },
     ]
   })
@@ -229,6 +231,7 @@ function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, go
   const goalStakeholdersNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderAdminAdded,
+    type: 'notification',
     source: {
       image: goalStakeholder.goalImage,
       name: goalStakeholder.goalTitle,
@@ -244,7 +247,7 @@ function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, go
       }
     ]
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true)
 
 }
 
@@ -258,6 +261,7 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
   const goalStakeholdersNotification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderRequestToJoinPending,
+    type: 'feed',
     source: {
       image: goalStakeholder.goalImage,
       name: goalStakeholder.goalTitle,
@@ -271,11 +275,10 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
       {
         text: ` requests to join, do you accept?`
       }
-      ],
-      type: 'feed',
-      meta
+    ],
+    meta
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true)
 }
 
 function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
@@ -283,6 +286,7 @@ function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goalId:
   const notification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderRequestToJoinAccepted,
+    type: 'notification',
     source: {
       image: goalStakeholder.goalImage,
       name: goalStakeholder.goalTitle,
@@ -302,6 +306,7 @@ function sendRequestToJoinGoalRejectedNotification(discussionId: string, goalId:
   const notification = createNotification({
     discussionId: discussionId,
     event: enumEvent.gStakeholderRequestToJoinRejected,
+    type: 'notification',
     source: {
       image: goalStakeholder.goalImage,
       name: goalStakeholder.goalTitle,

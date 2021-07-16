@@ -46,5 +46,5 @@ function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
       text: ` just created a new post`
     },
   ]
-  sendNotificationToGoalStakeholders(goalId, notification, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, notification, post.author.uid, true, true, true)
 }

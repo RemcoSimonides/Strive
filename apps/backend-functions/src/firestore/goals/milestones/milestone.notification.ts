@@ -161,7 +161,7 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
       }
     ]
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, '', true, true, true)
 }
 
 // Milestone failed
@@ -203,5 +203,5 @@ function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, go
       }
     ]
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, '', true, true, true)
 }

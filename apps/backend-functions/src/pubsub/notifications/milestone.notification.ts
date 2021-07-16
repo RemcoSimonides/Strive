@@ -38,5 +38,5 @@ export async function sendNotificationMilestoneDeadlinePassed(goalId: string, mi
       }
     ]
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, '', undefined, true, undefined)
 }

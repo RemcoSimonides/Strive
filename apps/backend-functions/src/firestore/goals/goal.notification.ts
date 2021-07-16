@@ -218,7 +218,8 @@ function sendFinishedGoalNotification(discussionId: string, goalId:  string, goa
     ]
   })
 
-  sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, true, true, false)
+  // TODO shouldn't be received by the person who finished the goal
+  sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, '', true, true, false)
 }
 
 async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goal) {
@@ -418,6 +419,7 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
       }
     ]
   }
-  sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, true, true, true)
+  // TODO shouldn't be received by the user who updated the roadmap
+  sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, '', true, true, true)
 }
 

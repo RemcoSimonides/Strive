@@ -29,10 +29,10 @@
       <ng-container *ngIf="notification.meta?.type === 'goalRequest'">
         <div fxLayout>
           <ion-button (click)="handleRequestDecision(notification, true)"
-              [disabled]="notification.meta.requestStatus !== 'open'"
+              [disabled]="notification.meta.status !== 'open'"
               *ngIf="notification.meta.status !== 'rejected'">Accept</ion-button>
             <ion-button (click)="handleRequestDecision(notification, false)"
-              [disabled]="notification.meta.requestStatus !== 'open'"
+              [disabled]="notification.meta.status !== 'open'"
               *ngIf="notification.meta.status !== 'accepted'">Reject</ion-button>
         </div>
       </ng-container>

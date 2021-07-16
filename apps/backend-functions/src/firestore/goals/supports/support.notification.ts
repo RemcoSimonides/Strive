@@ -147,7 +147,7 @@ function sendSupportRejectedNotification(supportId: string, goalId: string, supp
       }
     ]
   }    
-  sendNotificationToGoalStakeholders(goalId, notification, true, true, false)  
+  sendNotificationToGoalStakeholders(goalId, notification, support.supporter.uid, true, true, false)  
 }
 
 function sendSupportIsWaitingToBePaid(supportId: string, support: Support) {
@@ -195,6 +195,7 @@ export async function sendSupportDeletedNotification(goalId: string, supportId: 
     const notification = createNotification({
       discussionId: support.milestone.id,
       event: enumEvent.gSupportDeleted,
+      type: 'notification',
       source: {
         image: goal.image,
         name: goal.title,
@@ -204,7 +205,7 @@ export async function sendSupportDeletedNotification(goalId: string, supportId: 
       },
       message: [
         {
-          text: `Support '${support.description}' has been deleted because milestone '${support.milestone.description}' has been deleted`
+          text: `Support '${support.description}' has been removed because milestone '${support.milestone.description}' has been deleted`
         }
       ]
     })
@@ -215,6 +216,7 @@ export async function sendSupportDeletedNotification(goalId: string, supportId: 
     const notification = createNotification({
       discussionId:  support.goal.id,
       event: enumEvent.gSupportDeleted,
+      type: 'notification',
       source: {
         image: goal.image,
         name:  goal.title,
@@ -223,7 +225,7 @@ export async function sendSupportDeletedNotification(goalId: string, supportId: 
       },
       message: [
         {
-          text: `Support '${support.description}' has been deleted because goal '${support.goal.title}' has been deleted`
+          text: `Support '${support.description}' has been removed because goal '${support.goal.title}' has been deleted`
         }
       ]
     })
