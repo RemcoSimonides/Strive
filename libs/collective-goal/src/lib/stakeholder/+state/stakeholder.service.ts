@@ -9,13 +9,17 @@ import { CollectiveGoal } from '../../collective-goal/+state/collective-goal.fir
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalStakeholderService extends FireCollection<CollectiveGoalStakeholder> {
   readonly path = 'CollectiveGoals/:collectiveGoalId/CGStakeholders'
   readonly idKey = 'uid'
 
-  constructor(db: AngularFirestore, private fire: FirestoreService) {
+  constructor(
+    db: AngularFirestore,
+    private fire: FirestoreService,
+    private user: UserService) {
     super(db)
   }
 
@@ -23,6 +27,11 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     return snapshot.exists
       ? { ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }
       : undefined
+  }
+
+  toFirestore(stakeholder: CollectiveGoalStakeholder): CollectiveGoalStakeholder {
+    stakeholder.updatedBy = this.user.uid
+    return stakeholder
   }
 
   async onCreate(stakeholder: CollectiveGoalStakeholder, { write, params }: WriteOptions) {

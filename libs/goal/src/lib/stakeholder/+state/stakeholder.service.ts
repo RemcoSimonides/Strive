@@ -8,6 +8,7 @@ import { take } from 'rxjs/operators';
 import { Profile } from '@strive/user/user/+state/user.firestore'
 import { GoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { UserService } from '@strive/user/user/+state/user.service';
 
 export interface roleArgs {
   isAdmin?: boolean;
@@ -24,7 +25,7 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
   readonly path = 'Goals/:goalId/GStakeholders'
   readonly idKey = 'uid'
 
-  constructor(db: AngularFirestore) {
+  constructor(db: AngularFirestore, private user: UserService) {
     super(db)
   }
 
@@ -32,6 +33,11 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     return snapshot.exists
       ? { ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }
       : undefined
+  }
+
+  toFirestore(stakeholder: GoalStakeholder): GoalStakeholder {
+    stakeholder.updatedBy = this.user.uid
+    return stakeholder
   }
 
   async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {

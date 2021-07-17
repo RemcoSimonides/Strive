@@ -1,5 +1,5 @@
 <!-- Android or iOS header -->
-<ion-header *ngIf="screensize.isMobile$">
+<ion-header *ngIf="screensize.isMobile$ | async else desktop">
   <ion-toolbar>
     <ion-buttons slot="secondary">
       <ion-button (click)="cancel()">
@@ -28,7 +28,7 @@
 </ion-header>
 
 <!-- Browser header -->
-<ng-container *ngIf="!platform.is('android') && !platform.is('ios')">
+<ng-template #desktop>
   <h1>Edit Roadmap</h1>
 
   <section fxLayout fxLayoutAlign="center">
@@ -50,7 +50,7 @@
       #addMilestonebar>
     </ion-searchbar>
   </section>
-</ng-container>
+</ng-template>
 
 <ion-content class="ion-padding">
   <section fxLayout fxLayoutAlign="center" class="limited-width">

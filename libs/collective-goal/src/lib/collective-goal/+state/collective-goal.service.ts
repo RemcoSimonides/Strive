@@ -34,6 +34,7 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
 
   protected toFirestore(collectiveGoal: CollectiveGoal): CollectiveGoal {
     if (!!collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
+    collectiveGoal.updatedBy = this.user.uid
     return collectiveGoal
   }
 

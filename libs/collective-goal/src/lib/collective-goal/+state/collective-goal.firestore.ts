@@ -11,6 +11,7 @@ export interface CollectiveGoal {
     deadline: string;
     image: string;
     numberOfAchievers: number;
+    updatedBy?: string;
     updatedAt?: FieldValue;
     createdAt?: FieldValue;
 }

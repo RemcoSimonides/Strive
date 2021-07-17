@@ -20,6 +20,7 @@ export interface Goal {
     numberOfCustomSupports: number;
     totalNumberOfCustomSupports: number;
     deadline?: string;
+    updatedBy?: string;
     updatedAt?: Timestamp;
     createdAt?: Timestamp;
 }

@@ -5,7 +5,6 @@ import { map, switchMap } from 'rxjs/operators';
 // Services
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 import { GoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
-import { ImageService } from '@strive/media/+state/image.service';
 // Interfaces
 import { Goal, createGoal } from './goal.firestore'
 import { AngularFirestore, DocumentSnapshot, QueryGroupFn } from '@angular/fire/firestore';
@@ -30,8 +29,9 @@ export class GoalService extends FireCollection<Goal> {
       : undefined
   }
 
-  protected toFirstore(goal: Goal): Goal {
+  protected toFirestore(goal: Goal): Goal {
     if (!!goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
+    goal.updatedBy = this.user.uid
     return goal
   }
 

@@ -97,10 +97,14 @@ export class EditRoadmapPage implements OnInit {
     const loading = await this.loadingCtrl.create({ spinner: 'lines' })
     loading.present()
 
+    console.log('saving')
+
+    const roadmapTemplate = this.roadmapForm.value
+
     if (this.goalId) {
 
-      // Save milestone object
-      await this.db.upsert(`Goals/${this.goalId}`, { roadmapTemplate: this.roadmapForm.value })
+      // Save roadmap template object
+      await this.goalService.update(this.goalId, { roadmapTemplate })
 
       // Start conversion to create milestones
       await this.roadmapService.startConversion(this.goalId, this.roadmapForm.value)
@@ -113,7 +117,7 @@ export class EditRoadmapPage implements OnInit {
     } else if (this.collectiveGoalId && this.templateId) {
 
       // Save milestone object
-      await this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, { roadmapTemplate: this.roadmapForm.value })
+      await this.templateService.update(this.templateId, { roadmapTemplate }, { params: { collectiveGoalId: this.collectiveGoalId }})
 
       loading.dismiss()
       this.router.navigateByUrl(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)

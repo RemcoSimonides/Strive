@@ -218,7 +218,6 @@ function sendFinishedGoalNotification(discussionId: string, goalId:  string, goa
     ]
   })
 
-  // TODO shouldn't be received by the person who finished the goal
   sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, '', true, true, false)
 }
 
@@ -378,20 +377,20 @@ async function sendNotificationFinishedGoalInCollectiveGoal(goalId: string, afte
 }
 
 // ROADMAP CHANGED
-function sendRoadmapChangedNotifications(discussionId: string, goalId: string, after: Goal) {
+function sendRoadmapChangedNotifications(discussionId: string, goalId: string, goal: Goal) {
 
   const goalNotification: Partial<Notification> = {
     discussionId: discussionId,
     event: enumEvent.gRoadmapUpdated,
     type: 'feed',
     source: {
-      image: after.image,
-      name: after.title,
+      image: goal.image,
+      name: goal.title,
       goalId: goalId
     },
     message: [
       {
-        text: `Roadmap has been changed`
+        text: `Roadmap has been updated`
       }
     ]
   }
@@ -402,8 +401,8 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
     event: enumEvent.gRoadmapUpdated,
     type: 'notification',
     source: {
-      image: after.image,
-      name: after.title,
+      image: goal.image,
+      name: goal.title,
       goalId: goalId
     },
     message: [
@@ -411,7 +410,7 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
         text: `Roadmap of goal '`
       },
       {
-        text: after.title,
+        text: goal.title,
         link: `goal/${goalId}`
       },
       {
@@ -419,7 +418,7 @@ function sendRoadmapChangedNotifications(discussionId: string, goalId: string, a
       }
     ]
   }
-  // TODO shouldn't be received by the user who updated the roadmap
-  sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, '', true, true, true)
+
+  sendNotificationToGoalStakeholders(goalId, goalStakeholderNotification, goal.updatedBy, true, true, true)
 }
 

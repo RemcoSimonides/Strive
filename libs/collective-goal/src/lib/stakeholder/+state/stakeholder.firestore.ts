@@ -11,6 +11,7 @@ export interface CollectiveGoalStakeholder {
   collectiveGoalId: string;
   collectiveGoalTitle: string;
   collectiveGoalIsPublic: boolean;
+  updatedBy?: string;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }

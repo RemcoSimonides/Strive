@@ -41,7 +41,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
         .catch(err => { console.log('Error subscribing tot topic', err) })
     }
 
-    console.log('updating Algolia: ', )
+    console.log('updating Algolia')
     updateAlgoliaObject('user', uid, {
       uid,
       username: after.username,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -60,7 +60,8 @@ export class GoalPage implements OnInit, OnDestroy {
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
     private stakeholder: GoalStakeholderService,
-    public user: UserService
+    public user: UserService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() { 
@@ -84,6 +85,7 @@ export class GoalPage implements OnInit, OnDestroy {
       this.isAdmin = stakeholder?.isAdmin ?? false
       this.isAchiever = stakeholder?.isAchiever ?? false
       this.hasOpenRequestToJoin = stakeholder?.hasOpenRequestToJoin ?? false
+      this.cdr.markForCheck()
     })
   }
 

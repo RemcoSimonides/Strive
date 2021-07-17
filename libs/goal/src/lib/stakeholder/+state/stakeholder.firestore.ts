@@ -15,6 +15,7 @@ export interface GoalStakeholder {
   goalImage: string;
   goalPublicity: GoalPublicityType;
   goalIsFinished: boolean;
+  updatedBy?: string;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
