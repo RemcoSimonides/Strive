@@ -7,12 +7,12 @@ firebase.initializeApp({
   appId: "1:423468347975:web:6e2be7bea1c4475ad2f762",
 });
 const messaging = firebase.messaging();
-messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  const notificationOptions = {
-    body: payload.body,
-    icon: payload.icon || 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
-  };
+// messaging.onBackgroundMessage((payload) => {
+//   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+//   const notificationOptions = {
+//     body: payload.notification.body,
+//     icon: payload.notification.icon || 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
+//   };
 
-  self.registration.showNotification(payload.title, notificationOptions);
-});
+//   self.registration.showNotification(payload.notification.title, notificationOptions);
+// });

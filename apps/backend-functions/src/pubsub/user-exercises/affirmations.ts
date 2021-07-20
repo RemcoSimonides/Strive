@@ -18,6 +18,7 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
         notification: {
           title: `Repeat out loud 5 times`,
           body: `${randomAffirmation}`,
+          icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
           clickAction: 'affirmation'
         }
       })

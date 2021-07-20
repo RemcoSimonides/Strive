@@ -160,7 +160,7 @@ function sendNewAchieverNotificationInGoal(discussionId: string, goalId: string,
   })
 
   // send to all achievers and admins
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.updatedBy, true, true, true)
 
 }
 
@@ -247,7 +247,7 @@ function sendNewAdminNotificationInGoal(discussionId: string, goalId: string, go
       }
     ]
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true)
+  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.updatedBy, true)
 
 }
 
