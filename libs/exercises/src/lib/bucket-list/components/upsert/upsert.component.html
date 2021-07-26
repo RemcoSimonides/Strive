@@ -13,9 +13,9 @@
 <ion-content class="ion-padding">
   <p>What do you still want to do in your life?</p>
 
-  <ng-container *ngFor="let ctrl of itemsForm.controls; let i = index">
+  <ng-container *ngFor="let ctrl of itemsForm.controls; let i = index; let last = last">
     <ion-item>
-      <ion-input [formControl]="ctrl.get('description')" type="text"></ion-input>
+      <ion-input [formControl]="ctrl.get('description')" type="text" placeholder="Add item"></ion-input>
       <ion-select [formControl]="ctrl.get('privacy')" interface="popover">
         <ion-select-option value="public">Public</ion-select-option>
         <ion-select-option value="spectatorsOnly">Followers Only</ion-select-option>
