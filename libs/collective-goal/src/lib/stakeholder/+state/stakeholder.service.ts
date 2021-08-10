@@ -43,10 +43,8 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
       this.fire.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).pipe(take(1)).toPromise()
     ])
 
-    if (!!collectiveGoal) {
-      stakeholder.collectiveGoalTitle = collectiveGoal.title
-      stakeholder.collectiveGoalIsPublic = collectiveGoal.isPublic
-    }
+    if (collectiveGoal.title) stakeholder.collectiveGoalTitle = collectiveGoal.title
+    if (collectiveGoal.isPublic !== undefined) stakeholder.collectiveGoalIsPublic = collectiveGoal.isPublic
 
     const ref = this.getRef(uid, { collectiveGoalId })
     write.update(ref, createCollectiveGoalStakeholder({

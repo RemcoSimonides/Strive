@@ -4,13 +4,13 @@ import { Timestamp } from '@firebase/firestore-types';
 import { AudienceType, Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
-import { ISource, Notification } from '@strive/notification/+state/notification.firestore';
+import { Source, Notification } from '@strive/notification/+state/notification.firestore';
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
 
 // create discussion
-export async function createDiscussion(title: string, source: ISource, audience: AudienceType, id?: string, stakeholderUID?: string): Promise<string> {
+export async function createDiscussion(title: string, source: Source, audience: AudienceType, id?: string, stakeholderUID?: string): Promise<string> {
 
   // already add requestor as commentator --> if admin says something in discussion, requestor will receive notification of it
   const commentators = !!stakeholderUID ? [stakeholderUID] : []
@@ -26,7 +26,6 @@ export async function createDiscussion(title: string, source: ISource, audience:
 }
 
 export function sendNotificationToUsers(notification: Partial<Notification>, receivers: string[]) {
-
   notification.updatedAt = serverTimestamp() as Timestamp
   notification.createdAt = serverTimestamp() as Timestamp
 
@@ -49,20 +48,22 @@ export function sendNotificationToUsers(notification: Partial<Notification>, rec
  * @param isAchiever 
  * @returns 
  */
-  export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, isAdmin: boolean, isAchiever: boolean) {
+export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, except: string, isAdmin: boolean, isAchiever: boolean) {
 
   console.log('executing Send Notification to Collective Goal Stakeholder(s)')
-  const receivers = await getCollectiveGoalStakeholders(collectiveGoalId, isAdmin, isAchiever)
+  notification.target = 'stakeholder'
+  const receivers = await getCollectiveGoalStakeholders(collectiveGoalId, except, isAdmin, isAchiever)
   return sendNotificationToUsers(notification, receivers)
 
 }
 
-async function getCollectiveGoalStakeholders(collectiveGoalId: string, isAdmin: boolean, isAchiever: boolean): Promise<string[]> {
+async function getCollectiveGoalStakeholders(collectiveGoalId: string, except: string, isAdmin: boolean, isAchiever: boolean): Promise<string[]> {
 
   const stakeholderColSnap = await db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`).get()
   const receivers: string[] = []
 
   for (const snap of stakeholderColSnap.docs) {
+    if (snap.id === except) continue
     const stakeholder = createCollectiveGoalStakeholder(snap.data())
     if (stakeholder.isAdmin === isAdmin || stakeholder.isAchiever === isAchiever) {
       receivers.push(snap.id)
@@ -82,42 +83,43 @@ export function sendNotificationToGoal(goalId: string, notification: Partial<Not
 
   notification.updatedAt = serverTimestamp() as Timestamp
   notification.createdAt = serverTimestamp() as Timestamp
+  notification.target = 'goal'
 
   if (!!notification.id) {
-    console.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, notification)
+    console.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, JSON.stringify(notification))
     db.doc(`Goals/${goalId}/Notifications/${notification.id}`).set(notification)
   } else {
-    console.log(`adding notification to goal ${goalId}`, notification)
+    console.log(`adding notification to goal ${goalId}`, JSON.stringify(notification))
     db.collection(`Goals/${goalId}/Notifications`).add(notification)
   }
 
-  console.log('also sending notification to discussion')
+  // console.log('also sending notification to discussion')
   // Add notification to discussion too
-  if (!notification.source.milestoneId && !notification.source.supportId) {
-    console.log('sending to goal')
+  // if (!notification.source.milestone.id && !notification.source.support.id ) {
+    // console.log('sending to goal')
 
     // send notification in goal discussion
     // TODO use createComment({}) here
-    db.collection(`Discussions/${goalId}/Comments`).add({
-      text: `${notification.message.map(messageObj => messageObj.text).join(' ')}`,
-      type: 1,
-      createdAt: serverTimestamp() as Timestamp,
-      updatedAt: serverTimestamp() as Timestamp
-    })
-  } else if (notification.source.milestoneId) {
+    // db.collection(`Discussions/${goalId}/Comments`).add({
+    //   text: `${notification.message.map(messageObj => messageObj.text).join(' ')}`,
+    //   type: 1,
+    //   createdAt: serverTimestamp() as Timestamp,
+    //   updatedAt: serverTimestamp() as Timestamp
+    // })
+  // } else if (notification.source.milestone.id) {
 
-    console.log('sending to milestone')
+    // console.log('sending to milestone')
     // send notification in milestone discussion
-    db.collection(`Discussions/${notification.source.milestoneId}/Comments`).add({
-      text: `${notification.message?.map(messageObj => messageObj.text).join(' ')}`,
-      type: 1,
-      createdAt: serverTimestamp() as Timestamp,
-      updatedAt: serverTimestamp() as Timestamp
-    })
+    // db.collection(`Discussions/${notification.source.milestoneId}/Comments`).add({
+    //   text: `${notification.message?.map(messageObj => messageObj.text).join(' ')}`,
+    //   type: 1,
+    //   createdAt: serverTimestamp() as Timestamp,
+    //   updatedAt: serverTimestamp() as Timestamp
+    // })
 
-  } else {
-    console.log('no discussino for notification', notification)
-  }
+  // } else {
+  //   console.log('no discussino for notification', notification)
+  // }
 }
 
 /**
@@ -130,6 +132,7 @@ export function sendNotificationToGoal(goalId: string, notification: Partial<Not
  * @param isSupporter True if you want a goal stakeholder with this right to receive the notification, False if you don't want them  to receive it, and undefined if you don't care if they receive it or not
  */
 export async function sendNotificationToGoalStakeholders(goalId: string, notification: Partial<Notification>, except: string, isAdmin?: boolean, isAchiever?: boolean, isSupporter?: boolean) {
+  notification.target = 'stakeholder'
   const receivers = await getGoalStakeholders(goalId, except, isAdmin, isAchiever, isSupporter)
   return sendNotificationToUsers(notification, receivers)
 }
@@ -151,6 +154,8 @@ async function getGoalStakeholders(goalId: string, except: string, isAdmin?: boo
 }
 
 export async function sendNotificationToUserSpectators(uid: string, notification: Partial<Notification>) {
+
+  notification.target = 'spectator'
 
   // get all spectators
   const userSpectatorColSnap = await db.collection(`Users/${uid}/Spectators`)

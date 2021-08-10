@@ -3,6 +3,7 @@ import { Spectator } from '@strive/user/spectator/+state/spectator.firestore'
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
+import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 export function handleNotificationsOfCreatedUserSpectator(userSpectator: Spectator) {
   sendNotificationToUserBeingSpectated(userSpectator)
@@ -14,23 +15,12 @@ async function sendNotificationToUserBeingSpectated(userSpectator: Spectator) {
   const discussionId = userSpectator.profileId > userSpectator.uid ? `${userSpectator.uid}${userSpectator.profileId}` : `${userSpectator.profileId}${userSpectator.uid}` 
 
   const notification = createNotification({
-    discussionId: discussionId,
+    discussionId,
     event: enumEvent.userSpectatorAdded,
     type: 'notification',
     source: {
-      image: userSpectator.photoURL,
-      name: userSpectator.username,
-      userId: userSpectator.uid
+      user: createProfileLink(userSpectator)
     },
-    message: [
-      {
-        text: `${userSpectator.username}`,
-        link: `profile/${userSpectator.uid}`
-      }, 
-      {
-        text: `is now following you`
-      }
-    ]
   })
   sendNotificationToUsers(notification, [userSpectator.profileId])
 }

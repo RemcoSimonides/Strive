@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
 
@@ -15,21 +15,28 @@ import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.pa
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
+
+@Pipe({ name: 'source' })
+export class SourcePipe implements PipeTransform {
+  transform(link: string): 'user' | 'goal' | 'collectiveGoal' {
+    if (link.includes('profile')) return 'user'
+    if (link.includes('collective-goal')) return 'collectiveGoal'
+    return 'goal'
+  }
+}
+
 @Component({
   selector: '[notification][reference][isAdmin] strive-notification',
   templateUrl: 'notification.component.html',
   styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent {
 
   @Input() goalId: string
   @Input() notification: Notification
   @Input() isAdmin: boolean
   @Input() reference: string
-
-  sourcePageRef: string
-  isFromPerson: boolean = false;
 
   constructor(
     private user: UserService,
@@ -40,22 +47,6 @@ export class NotificationComponent implements OnInit {
     private notificationService: NotificationService,
     private popoverCtrl: PopoverController
   ) { }
-
-  ngOnInit() {
-
-    // determine source page reference
-    const source = this.notification.source
-    if (!!source.userId) {
-      this.sourcePageRef = `/profile/${source.userId}`
-      this.isFromPerson = true
-    } else if (!!source.collectiveGoalId) {
-      this.sourcePageRef = `/collective-goal/${source.collectiveGoalId}`
-    } else if (!!source.goalId) {
-      this.sourcePageRef = `/goal/${source.goalId}`
-    } else {
-      this.sourcePageRef = ''
-    }
-  }
 
   async openNotificationOptions(event): Promise<void> {
     const popover = await this.popoverCtrl.create({
@@ -91,7 +82,7 @@ export class NotificationComponent implements OnInit {
       uid: notification.meta.uidRequestor,
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false
-    }, { params: { goalId: notification.source.goalId }})
+    }, { params: { goalId: notification.source.goal.id }})
 
     await this.notificationService.update(notification.id, { needsDecision: false, meta: notification.meta }, { params: { uid: this.user.uid }})
   }
@@ -100,7 +91,7 @@ export class NotificationComponent implements OnInit {
     if (!isSupportDecisionNotification(notification)) return
     if (notification.meta.status === 'finalized') return
 
-    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.source.goalId}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
+    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.source.goal.id}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
 
     const chooseAchieverModal = await this.modalCtrl.create({
       component: ChooseAchieverModal,

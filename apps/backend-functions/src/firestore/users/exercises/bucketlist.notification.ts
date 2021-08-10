@@ -1,7 +1,7 @@
 import { db } from '../../../internals/firebase';
 // Functions
-import { sendNotificationToUserSpectators, createDiscussion } from '../../../shared/notification/notification'
-import { createProfile, Profile } from '@strive/user/user/+state/user.firestore'
+import { sendNotificationToUserSpectators } from '../../../shared/notification/notification'
+import { createProfile, createProfileLink, Profile } from '@strive/user/user/+state/user.firestore'
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { BucketList, BucketListItem } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
@@ -11,26 +11,15 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   const profileSnap = await db.doc(`Users/${uid}/Profile/${uid}`).get()
   const profile = createProfile(profileSnap.data())
 
-  createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, 'public', `${uid}bucketlist`)
+  // createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, 'public', `${uid}bucketlist`)
 
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListCreated,
     type: 'feed',
     source: {
-      image: profile.photoURL,
-      name: profile.username,
-      userId: uid
-    },
-    message: [
-      {
-        text: profile.username,
-        link: `profile/${uid}`
-      },
-      {
-        text: ` has created a Bucket List! Can you help with some of the items on it?`
-      }
-    ]
+      user: createProfileLink({ ...profile, uid })
+    }
   })
   sendNotificationToUserSpectators(uid, notification)
 }
@@ -41,68 +30,45 @@ export async function handleNotificationsOfBucketListChanged(uid: string, before
   const profileSnap = await db.doc(`Users/${uid}/Profile/${uid}`).get()
   const profile = createProfile(profileSnap.data())
 
-  const changedPrivacyFromPrivate: BucketListItem[] = getChangedPrivacyFromPrivate(before, after)
-  const changedDescription = getChangedDescriptionItems(before, after)
+  const changedPrivacyFromPrivate = getChangedPrivacyFromPrivate(before, after)
+  const addedItems = getNonPrivateAddedItems(before, after).concat(changedPrivacyFromPrivate)
   const completedItems = getCompletedItems(before, after)
-  const addedItems = getNonPrivateAddedItems(before, after)
 
-  const numberOfChangedItems = changedPrivacyFromPrivate.length + addedItems.length + changedDescription.length
 
-  if (numberOfChangedItems > 0) {
-    sendChangedBucketListNotification(uid, profile, numberOfChangedItems)
+  if (addedItems.length) {
+    sendItemsAddedNotification(uid, profile, addedItems)
   }
 
   if (completedItems.length > 0) {
-    completedItems.forEach(async item => {
-      sendBucketListItemComletedNotification(uid, profile, item.description)
+    completedItems.forEach(item => {
+      sendBucketListItemComletedNotification(uid, profile, item)
     })
   }
 }
 
-function sendChangedBucketListNotification(uid: string, profile: Profile, numberOfChangedItems: number) {
-
+function sendItemsAddedNotification(uid: string, profile: Profile, items: BucketListItem[]) {
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
-    event: enumEvent.userExerciseBucketListItemAdded,
+    event: enumEvent.userExerciseBucketListItemsAdded,
     type: 'notification',
     source: {
-      image: profile.photoURL,
-      name: profile.username,
-      userId: uid,
-    },
-    message: [
-      {
-        text: profile.username,
-        link: `profile/${uid}`
-      },
-      {
-        text: ` has changed ${numberOfChangedItems} items on his/her Bucket List. Maybe you can help?`
-      }
-    ]
+      user: createProfileLink({ ...profile, uid }),
+      bucketList: items
+    }
   })
   sendNotificationToUserSpectators(uid, notification)
 }
 
-function sendBucketListItemComletedNotification(uid: string, profile: Profile, bucketListItem: string) {
-
+function sendBucketListItemComletedNotification(uid: string, profile: Profile, bucketListItem: BucketListItem) {
   const notification = createNotification({
     discussionId: `${uid}bucketlist`,
     event: enumEvent.userExerciseBucketListItemCompleted,
     type: 'feed',
+    target: 'spectator',
     source: {
-      image: profile.photoURL,
-      name: profile.username,
-      userId: uid,
-    },
-    message: [
-      {
-        text: profile.username,
-        link: `profile/${uid}`
-      },
-      {
-        text: ` ticked off '${bucketListItem}' from his/her Bucket List!`
-      }
-    ]
+      user: createProfileLink({ ...profile, uid }),
+      bucketList: [bucketListItem]
+    }
   })
   sendNotificationToUserSpectators(uid, notification)
 }
@@ -115,15 +81,6 @@ function getChangedPrivacyFromPrivate(before: BucketList, after: BucketList): Bu
     if (itemBefore.privacy === 'private') {
       const itemAfter = after.items.find(item => item.description === itemBefore.description)
       return !!itemAfter && (itemAfter.privacy === 'spectatorsOnly' || itemAfter?.privacy === 'public')
-    } else return false
-  })
-}
-
-function getChangedDescriptionItems(before: BucketList, after: BucketList): BucketListItem[] {
-  return before.items.filter(itemBefore => {  
-    const itemAfter = after.items.find(item => item.description === itemBefore.description)
-    if (itemAfter) {
-      return itemAfter.description !== itemBefore.description ? true : false
     } else return false
   })
 }

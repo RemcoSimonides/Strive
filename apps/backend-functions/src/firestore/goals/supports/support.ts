@@ -70,13 +70,9 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
   })
 
 export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-  .onDelete(async (snapshot, context) => {
-
-    const supportId = snapshot.id
-    const goalId  = context.params.goalId
-    const support: Support = Object.assign(<Support>{}, snapshot.data())
-
-    await sendSupportDeletedNotification(goalId, supportId, support)
+  .onDelete(async snapshot => {
+    const support = createSupport(snapshot.data())
+    sendSupportDeletedNotification(support)
   })
 
 function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean) {

@@ -1,6 +1,6 @@
 import { db, functions, increment } from '../../../internals/firebase';
-import { createTemplate, Template } from '@strive/template/+state/template.firestore'
-import { createCollectiveGoal, CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
+import { createTemplate, createTemplateLink, Template } from '@strive/template/+state/template.firestore'
+import { createCollectiveGoal, CollectiveGoal, createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
@@ -109,24 +109,14 @@ async function sendNewTemplateNotification(collectiveGoalId: string, templateId:
     discussionId: templateId,
     event: enumEvent.cgTemplateAdded,
     type: 'notification',
+    target: 'stakeholder',
     source: {
-      image: collectiveGoal.image,
-      name: collectiveGoal.title,
-      collectiveGoalId: collectiveGoalId,
-      templateId: templateId
-    },
-    message: [
-      {
-        text: `New template '`
-      },
-      {
-        text: template.title,
-        link: `collective-goal/${collectiveGoalId}/template/${templateId}`
-      },
-      {
-        text: `' has been created.`
-      }
-    ]
+      collectiveGoal: createCollectiveGoalLink(collectiveGoal),
+      template: createTemplateLink({
+        ...template,
+        id: templateId
+      })
+    }
   })
-  sendNotificationToCollectiveGoalStakeholders(collectiveGoalId, notification, true, true)
+  sendNotificationToCollectiveGoalStakeholders(collectiveGoalId, notification, template.updatedBy, true, true)
 }

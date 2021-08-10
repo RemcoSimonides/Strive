@@ -14,6 +14,7 @@ export interface Template {
   goalIsPublic: boolean;
   goalDeadline: string;
   roadmapTemplate: MilestoneTemplate[];
+  updatedBy?: string;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
@@ -34,5 +35,19 @@ export function createTemplate(params: Partial<Template> = {}): Template {
     goalIsPublic: false,
     goalShortDescription: '',
     ...params
+  }
+}
+
+export interface TemplateLink {
+  id: string;
+  title: string;
+  image: string;
+}
+
+export function createTemplateLink(params: Partial<Template> = {}): TemplateLink {
+  return {
+    id: params.id ?? '',
+    title: params.title ?? '',
+    image: params.goalImage ?? ''
   }
 }

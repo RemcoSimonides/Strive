@@ -55,9 +55,8 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
 
 export function createGoalLink(params: Partial<GoalLink> = {}): GoalLink {
   return {
-    id: '',
-    title: '',
-    image: '',
-    ...params
+    id: params.id ?? '',
+    title: params.title ?? '',
+    image: params.image ?? ''
   }
 }

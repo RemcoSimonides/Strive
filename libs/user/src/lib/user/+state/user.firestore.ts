@@ -56,9 +56,8 @@ export interface ProfileLink {
 
 export function createProfileLink(params: Partial<ProfileLink> = {}): ProfileLink {
   return {
-    uid: '',
-    username: '',
-    photoURL: '',
-    ...params
+    uid: params.uid ?? '',
+    username: params.username ?? '',
+    photoURL: params.photoURL ?? ''
   }
 }

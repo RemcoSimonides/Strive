@@ -1,10 +1,17 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { NotificationSupport } from '@strive/support/+state/support.firestore'
+import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
+import { GoalLink } from '@strive/goal/goal/+state/goal.firestore';
+import { MilestoneLink } from '@strive/milestone/+state/milestone.firestore';
+import { ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { CollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { TemplateLink } from '@strive/template/+state/template.firestore';
+import { BucketListItem } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
+import { Comment } from '@strive/discussion/+state/comment.firestore';
 
 export enum enumEvent {
   // 100000 -> 199999 = collective goal events
-  cgAdded = 100001,
+  cgCreated = 100001,
   cgUpdated = 100002,
   cgDeleted = 100003,
   cgFinished = 100004,
@@ -35,6 +42,7 @@ export enum enumEvent {
   gRoadmapUpdated = 204001,
   gMilestoneCompletedSuccessfully = 201001,
   gMilestoneCompletedUnsuccessfully = 201002,
+  gMilestoneDeadlinePassed = 201010,
   gStakeholderAchieverAdded = 202001,
   gStakeholderAchieverRemoved = 202002,
   gStakeholderAdminAdded = 202003,
@@ -44,13 +52,14 @@ export enum enumEvent {
   gStakeholderRequestToJoinPending = 202101,
   gStakeholderRequestToJoinAccepted = 202102,
   gStakeholderRequestToJoinRejected = 202103,
-  gSupportAdded = 203001,
-  gSupportWaitingToBePaid = 203002,
-  gSupportPaid = 203003,
-  gSupportRejected = 203004,
-  gSupportStatusChangedToPending = 203005,
-  gSupportDeleted = 203006,
-  gNewPost = 2050001,
+  gSupportAdded = 203010,
+  gSupportWaitingToBePaid = 203020,
+  gSupportPaid = 203030,
+  gSupportRejected = 203040,
+  gSupportPendingSuccesful = 203050, // succeeded achieving objective
+  gSupportPendingFailed = 203051, // failed achieving objective
+  gSupportDeleted = 203060,
+  gNewPost = 205001,
   // 300000 -> 399999 = discussion events
   discussionNewMessage = 300000,
   // 400000 -> 499999 = user events
@@ -58,7 +67,7 @@ export enum enumEvent {
   userSpectatorRemoved = 400002,
       // 420000 -> 429999 = exercise events
   userExerciseBucketListCreated = 420000,
-  userExerciseBucketListItemAdded = 420001,
+  userExerciseBucketListItemsAdded = 420001,
   userExerciseBucketListItemCompleted = 420002,
   userExerciseBucketListYearlyReminder = 420003
 }
@@ -78,10 +87,10 @@ export interface Notification<Meta extends NotificationMeta = any> {
   id?: string; // only pass id if it needs a specific id
   discussionId: string;
   discussion?: Discussion; // only used to join discussion data with this data
-  message: INotificationMessageText[];
   type: NotificationTypes;
+  target: 'spectator' | 'stakeholder' | 'user' | 'goal'
   event: enumEvent;
-  source: ISource; // add all information you have :)
+  source: Source; // add all information you have :)
   isRead: boolean;
   needsDecision: boolean;
   meta: Meta;
@@ -90,16 +99,16 @@ export interface Notification<Meta extends NotificationMeta = any> {
 }
 
 // add all information you have :)
-export interface ISource {
-  image: string;
-  name: string;
-  goalId?: string;
-  milestoneId?: string;
+export interface Source {
+  user?: ProfileLink,
+  goal?: GoalLink;
+  milestone?: MilestoneLink,
+  collectiveGoal?: CollectiveGoalLink,
+  template?: TemplateLink;
   postId?: string;
-  supportId?: string;
-  collectiveGoalId?: string;
-  templateId?: string;
-  userId?: string;
+  support?: Support;
+  bucketList?: BucketListItem[];
+  comment?: Comment;
 }
 
 interface MetaBase {
@@ -120,7 +129,7 @@ export interface GoalRequest extends MetaBase {
   status: 'open' | 'accepted' | 'rejected';
 }
 
-export interface INotificationMessageText {
+export interface NotificationMessageText {
   text: string;
   link?: string;
 }

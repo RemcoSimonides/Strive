@@ -21,14 +21,21 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
     console.log(`gonna send notification to ${profile.username}`)
     if (!!profile.fcmTokens.length) {
 
-      const message = notification.message.map(msg => msg.text).join(' ')
+      // TODO find way to get message (probably determine again - make them shorter though)
+      // Try to define a tag for each too so they get aggregated
+      // Do so by getting the unread notifications.
+      // Add clickaction to set notification to being read
+      // GOOD LUCK!
+
+      // const message = notification.message.map(msg => msg.text).join(' ')
 
       console.log('sending notification to devices', profile.fcmTokens)
 
       admin.messaging().sendToDevice(profile.fcmTokens, {
         notification: {
+          tag: undefined, // key of notification
           title: `Something happened!`,
-          body: message,
+          body: 'go and check it out',
           icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
         }
       }).catch((err => {
@@ -49,7 +56,7 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
   })
 
 export const notificationDeletedHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)
-  .onDelete(async (snapshot, context) => {
+  .onDelete(async snapshot => {
     const notificationId = snapshot.id
     deleteScheduledTask(notificationId)
   })
@@ -64,7 +71,7 @@ export const notificationChangeHandler = functions.firestore.document(`Users/{us
     if (isSupportDecisionNotification(before) && isSupportDecisionNotification(after)) {
       // Support Decision
       if (before.meta.status === 'pending' && after.meta.status === 'finalized') {
-        finalizeSupports(after.source.goalId, after.meta.supports)
+        finalizeSupports(after.source.goal.id, after.meta.supports)
         deleteScheduledTask(notificationId)
       }
     }

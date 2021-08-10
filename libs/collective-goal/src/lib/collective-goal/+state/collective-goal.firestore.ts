@@ -31,3 +31,17 @@ export function createCollectiveGoal(params: Partial<CollectiveGoal> = {}): Coll
     ...params
   }
 }
+
+export interface CollectiveGoalLink {
+  id: string;
+  title: string;
+  image: string;
+}
+
+export function createCollectiveGoalLink(params: Partial<CollectiveGoalLink> = {}): CollectiveGoalLink {
+  return {
+    id: params.id ?? '',
+    title: params.title ?? '',
+    image: params.image ?? ''
+  }
+}

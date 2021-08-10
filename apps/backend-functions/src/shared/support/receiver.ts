@@ -12,10 +12,6 @@ export async function getReceiver( goalId: string, db: FirebaseFirestore.Firesto
 
   if (stakeholdersSnap.docs.length === 1) {
     const stakeholder = createGoalStakeholder(stakeholdersSnap.docs[0].data()) 
-    return createProfileLink({
-      uid: stakeholder.uid,
-      username: stakeholder.username,
-      photoURL: stakeholder.photoURL
-    })
+    return createProfileLink(stakeholder)
   } else return createProfileLink();
 }

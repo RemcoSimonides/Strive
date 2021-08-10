@@ -15,10 +15,10 @@ import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+s
 })
 export class UpsertCollectiveGoalPage implements OnInit {
 
-  public collectiveGoalId: string
-  public collectiveGoalForm: CollectiveGoalForm
+  collectiveGoalId: string
+  collectiveGoalForm: CollectiveGoalForm
   
-  private state: 'create' | 'update'
+  state: 'create' | 'update'
 
   constructor(
     private alertCtrl: AlertController,

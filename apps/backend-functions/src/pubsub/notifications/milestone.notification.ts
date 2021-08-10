@@ -1,8 +1,9 @@
-import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore'
-import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createMilestone, createMilestoneLink, Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { getDocument } from '../../shared/utils';
+import { enumEvent } from '@strive/notification/+state/notification.firestore';
 
 export async function sendNotificationMilestoneDeadlinePassed(goalId: string, milestoneId: string): Promise<void> {
  
@@ -11,32 +12,16 @@ export async function sendNotificationMilestoneDeadlinePassed(goalId: string, mi
     getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`).then(data => createMilestone(data))
   ])
 
-  const goalNotification = createNotification({
+  const notification = createNotification({
     discussionId: milestoneId,
-    type: 'feed',
-    message: [
-      {
-        text: `Milestone '${milestone.description}' of goal '`
-      },
-      {
-        text: goal.title,
-        link: `goal/${goalId}`
-      },
-      {
-        text: `' has passed the due date`
-      }
-    ]
+    event: enumEvent.gMilestoneDeadlinePassed,
+    source: {
+      goal: createGoalLink({ id: goalId, ...goal }),
+      milestone: createMilestoneLink({ id: milestoneId, ...milestone })
+    }
   })
-  sendNotificationToGoal(goalId, goalNotification)
+  sendNotificationToGoal(goalId, notification)
 
-  const goalStakeholdersNotification = createNotification({
-    discussionId: milestoneId,
-    type: 'notification',
-    message: [
-      {
-        text: `Milestone '${milestone.description}' has passed the due date`
-      }
-    ]
-  })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, '', undefined, true, undefined)
+  notification.type = 'notification'
+  sendNotificationToGoalStakeholders(goalId, notification, '', undefined, true, undefined)
 }

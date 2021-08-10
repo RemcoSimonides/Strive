@@ -9,8 +9,9 @@ import { DiscussionService } from '@strive/discussion/+state/discussion.service'
 import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { Comment } from '@strive/discussion/+state/comment.firestore';
+import { Comment, createComment } from '@strive/discussion/+state/comment.firestore';
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
+import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'strive-discussion',
@@ -101,16 +102,14 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
     const { uid, displayName, photoURL } = await this.user.getFirebaseUser();
 
-    this.discussionService.addReply(this.discussionId, {
+    const comment = createComment({
       text: this._comment,
       type: 'sentByUser',
-      uid: uid,
-      username: displayName,
-      photoURL: photoURL,
+      user: createProfileLink({ uid, username: displayName, photoURL })
     })
+    this.discussionService.addReply(this.discussionId, comment)
 
     this._comment = ''
-
   }
 
   public loadData(event) {
@@ -129,7 +128,5 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
       }
     })
-
   }
-
 }

@@ -97,8 +97,6 @@ export class EditRoadmapPage implements OnInit {
     const loading = await this.loadingCtrl.create({ spinner: 'lines' })
     loading.present()
 
-    console.log('saving')
-
     const roadmapTemplate = this.roadmapForm.value
 
     if (this.goalId) {

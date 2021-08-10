@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { ISource } from '@strive/notification/+state/notification.firestore'
+import { Source } from '@strive/notification/+state/notification.firestore'
 
 export type AudienceType = 'public' | 'stakeholders' | 'adminsAndRequestor' | 'achievers'
 
@@ -9,7 +9,7 @@ export interface Discussion {
   audience: AudienceType;
   numberOfComments: number;
   commentators: string[];
-  source: ISource;
+  source: Source;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

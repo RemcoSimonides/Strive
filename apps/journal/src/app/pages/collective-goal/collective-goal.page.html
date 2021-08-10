@@ -98,8 +98,8 @@
   <!-- Goals overview -->
   <h3 class="padding">Goals</h3>
   <ng-container *ngIf="goals$ | async as goals">
-    <ng-container *ngIf="goals.length > 0 || isAdmin else noGoal">
-      <thumbnail-list type="goal" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
+    <ng-container *ngIf="goals.length > 0 || !!user.uid else noGoal">
+      <thumbnail-list type="goal" [canCreate]="!!user.uid" [collectiveGoalId]="collectiveGoalId">
         <ng-container *ngFor="let goal of goals$ | async">
           <ng-template #thumb>
             <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">

@@ -5,8 +5,8 @@ import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../.
 import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent} from '@strive/notification/+state/notification.firestore'
 import { getReceiver } from '../../../shared/support/receiver'
-import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createMilestone, createMilestoneLink, Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta, increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { ProfileLink } from '@strive/user/user/+state/user.firestore';
@@ -87,7 +87,6 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 
   const timestamp = admin.firestore.FieldValue.serverTimestamp()
   const date = new Date()
-  const text = `Milestone '${after.description}' ${after.status === 'succeeded' ? 'is successfully completed &#127881;' : 'has failed to complete'}`
 
   for (const [uid, supportNotifications] of Object.entries(supporters)) {
     const meta = createSupportDecisionMeta({
@@ -98,20 +97,20 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
     const notification = createNotification({
       id: milestoneId,
       discussionId: milestoneId,
-      event: enumEvent.gSupportStatusChangedToPending,
+      event: after.status === 'succeeded' ? enumEvent.gSupportPendingSuccesful : enumEvent.gSupportPendingSuccesful,
+      type: 'feed',
+      target: 'stakeholder',
       source: {
-        image: goal.image,
-        name: goal.title,
-        goalId,
-        milestoneId,
+        goal: createGoalLink({
+          id: goalId,
+          ...goal
+        }),
+        milestone: createMilestoneLink({
+          id: milestoneId,
+          ...after
+        }),
         postId: milestoneId
       },
-      type: 'feed',
-      message: [
-        {
-          text
-        }
-      ],
       isRead: false,
       meta,
       createdAt: timestamp as Timestamp,
@@ -124,84 +123,47 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 // Milestone successful
 function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
 
-  const goalNotification = createNotification({
+  const notification = createNotification({
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedSuccessfully,
     type: 'feed',
     source: {
-      image: goal.image,
-      name: goal.title,
-      goalId: goalId,
-      milestoneId: milestoneId,
+      goal: createGoalLink({
+        id: goalId,
+        ...goal
+      }),
+      milestone: createMilestoneLink({
+        id: milestoneId,
+        ...milestone
+      }),
       postId: milestoneId
-    },
-    message: [
-      {
-        text: `Milestone '${milestone.description}' is successfully completed`
-      }
-    ],
+    }
   })
-  sendNotificationToGoal(goalId, goalNotification)
+  sendNotificationToGoal(goalId, notification)
 
-  const goalStakeholdersNotification = createNotification({
-    id: milestoneId,
-    discussionId: milestoneId,
-    event: enumEvent.gMilestoneCompletedSuccessfully,
-    type: 'feed',
-    source: {
-      image: goal.image,
-      name: goal.title,
-      goalId: goalId,
-      milestoneId: milestoneId,
-      postId: milestoneId
-    },
-    message: [
-      {
-        text: `Milestone '${milestone.description}' is successfully completed`
-      }
-    ]
-  })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, '', true, true, true)
+  sendNotificationToGoalStakeholders(goalId, notification, '', true, true, true)
 }
 
 // Milestone failed
 function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
 
-  const goalNotification = createNotification({
+  const notification = createNotification({
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedUnsuccessfully,
     type: 'feed',
     source: {
-      image: goal.image,
-      name: goal.title,
-      goalId: goalId,
-      milestoneId: milestoneId,
+      goal: createGoalLink({
+        id: goalId,
+        ...goal
+      }),
+      milestone: createMilestoneLink({
+        id: milestoneId,
+        ...milestone
+      }),
       postId: milestoneId
-    },
-    message: [
-      {
-        text: `Milestone '${milestone.description}' failed to completed'`
-      }
-    ]
+    }
   })
-  sendNotificationToGoal(goalId, goalNotification)
+  sendNotificationToGoal(goalId, notification)
 
-  const goalStakeholdersNotification = createNotification({
-    discussionId: milestoneId,
-    event: enumEvent.gMilestoneCompletedUnsuccessfully,
-    type: 'feed',
-    source:  {
-      image: goal.image,
-      name: goal.title,
-      goalId: goalId,
-      milestoneId: milestoneId,
-      postId: milestoneId
-    },
-    message: [
-      {
-        text: `Milestone '${milestone.description}' failed to complete`
-      }
-    ]
-  })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, '', true, true, true)
+  sendNotificationToGoalStakeholders(goalId, notification, '', true, true, true)
 }

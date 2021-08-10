@@ -4,6 +4,7 @@ import { ScheduledTaskUserExerciseBucketList, enumWorkerType } from '../../share
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
+import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
 export async function sendBucketListYearlyReminder(uid: string) {
 
@@ -12,15 +13,8 @@ export async function sendBucketListYearlyReminder(uid: string) {
     event: enumEvent.userExerciseBucketListYearlyReminder,
     type: 'notification',
     source: {
-      image: 'assets/exercises/bucketlist/bucketlist.jpg',
-      name: 'Your Bucketlist',
-      userId: uid
-    },
-    message: [
-      {
-        text: `It's been a year since you last updated your Bucket List. How is it going? Are you still focussed in life in completing this list? Or does it need an update? Schedule a moment for yourself to review`
-      }
-    ]
+      user: createProfileLink({ uid })
+    }
   })
   sendNotificationToUsers(notification, [uid])
 }

@@ -12,11 +12,11 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
     const postId = context.params.postId
 
     if (!post.isEvidence) {
-      await createDiscussion(post.content.title, { 
-        image: post.goal.image,
-        name: `Discussion - ${post.content.title}`,
-        goalId: post.goal.id
-      }, 'public', postId)
+      // await createDiscussion(post.content.title, { 
+      //   image: post.goal.image,
+      //   name: `Discussion - ${post.content.title}`,
+      //   goalId: post.goal.id
+      // }, 'public', postId)
       sendNotificationNewPost(goalId, postId, post)
     }
   })
@@ -29,22 +29,11 @@ function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
     event: enumEvent.gNewPost,
     type: 'feed',
     source: {
-      image: post.goal.image,
-      name: post.goal.title,
-      goalId,
+      goal: post.goal,
       postId
     }
   })
   sendNotificationToGoal(goalId, notification)
 
-  notification.message = [
-    {
-      text: post.author.username,
-      link: `profile/${post.author.uid}`
-    },
-    {
-      text: ` just created a new post`
-    },
-  ]
   sendNotificationToGoalStakeholders(goalId, notification, post.author.uid, true, true, true)
 }

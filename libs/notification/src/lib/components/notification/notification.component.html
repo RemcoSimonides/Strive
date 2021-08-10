@@ -1,29 +1,29 @@
-<ng-container *ngIf="!!notification">
+<ng-container *ngIf="notification | message:'user' as _message">
   <section fxLayout fxLayoutGap="8px">
     <article>
       <img
         class="source_image"
-        [ref]="notification.source.image"
-        [asset]="isFromPerson ? 'profile.png' : 'goal.jpg'"
-        [ngStyle]="{'border-radius': isFromPerson ? '50%' : 'none'}"
-        [routerLink]="sourcePageRef"
+        [ref]="_message.image"
+        [asset]="(_message.link | source) === 'user' ? 'profile.png' : 'goal.jpg'"
+        [ngStyle]="{'border-radius': (_message.link | source) === 'user' ? '50%' : 'none'}"
+        [routerLink]="_message.link"
       />
     </article>
     <article fxLayout="column" fxFlex fxLayoutGap="4px">
       <div fxLayout fxLayoutAlign="space-between start">
-        <h5 [routerLink]="sourcePageRef">{{ notification.source.name }}</h5>
+        <h5 [routerLink]="_message.link">{{ _message.title }}</h5>
         <p class="date">{{ notification.createdAt.toDate() | date:'M/d' }}</p>
       </div>
-      <p>
-        <ng-container *ngFor="let message of notification.message">
-          <ng-container *ngIf="!!message.link; else noLink">
+      <span>
+        <ng-container *ngFor="let message of _message.message">
+          <ng-container *ngIf="message.link; else noLink">
             <a [routerLink]="'/' + message.link">{{ message.text }}</a>
           </ng-container>
           <ng-template #noLink>
             {{ message.text }}
           </ng-template>
         </ng-container>
-      </p>
+      </span>
 
       <!-- Goal Request to join action buttons -->
       <ng-container *ngIf="notification.meta?.type === 'goalRequest'">
@@ -39,7 +39,7 @@
 
       <!-- Post -->
       <ng-container *ngIf="!!notification.source.postId">
-        <strive-post [postRef]="'Goals/' + notification.source.goalId + '/Posts/' + notification.source.postId"></strive-post>
+        <strive-post [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></strive-post>
       </ng-container>
 
       <!-- Supports -->

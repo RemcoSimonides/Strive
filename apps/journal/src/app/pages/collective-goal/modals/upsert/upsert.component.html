@@ -53,7 +53,7 @@
 
       <media-image-selector [form]="collectiveGoalForm.image" [storagePath]="'collectiveGoals/' + collectiveGoalId"></media-image-selector>
 
-      <ion-button (click)="upsertCollectiveGoal()" clear>{{ !!collectiveGoalId ? 'Update' : 'Create' }}</ion-button>
+      <ion-button (click)="upsertCollectiveGoal()" clear>{{ state | titlecase }}</ion-button>
   </form>
 
 </ion-content>

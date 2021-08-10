@@ -6,7 +6,7 @@ export type MilestoneStatus =
   'pending'
   | 'succeeded' // milestone succesful
   | 'failed' // milestone failed
-  | 'neutral' // didnt succeed and failed but no action was taken
+  | 'neutral' // didnt succeed or failed but no action was taken
   | 'overdue'
 
 export interface Milestone {

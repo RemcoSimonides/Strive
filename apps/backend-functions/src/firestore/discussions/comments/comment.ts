@@ -38,23 +38,17 @@ function sendNewMessageNotificationToParticipants(discussionId: string, discussi
   if (!discussion.commentators) return
 
   // removing the user who sent the comment from participants
-  const index = discussion.commentators.indexOf(comment.uid)
-  if (index !== -1) discussion.commentators.splice(index, 1)
+  discussion.commentators = discussion.commentators.filter(commentator => commentator !== comment.user.uid)
 
   const notification = createNotification({
-    discussionId: discussionId,
+    discussionId,
     event: enumEvent.discussionNewMessage,
     type: 'notification',
-    source: discussion.source,
-    message: [
-      {
-        text: `New comment '${comment.text}' from `
-      },
-      {
-        text: comment.username,
-        link: `profile/${comment.uid}`
-      }
-    ]
+    target: 'user',
+    source: {
+      ...discussion.source,
+      comment
+    },
   })
   return sendNotificationToUsers(notification, discussion.commentators)
 }
