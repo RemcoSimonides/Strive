@@ -1,4 +1,4 @@
-import { db, admin, functions, increment } from '../../../internals/firebase';
+import { db, admin, functions } from '../../../internals/firebase';
 // Interfaces
 import { createNotification, isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
@@ -7,6 +7,7 @@ import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/schedu
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { getDocument } from 'apps/backend-functions/src/shared/utils';
+import { getPushMessage } from '@strive/notification/message/push-notification';
 
 export const notificationCreatedHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)
   .onCreate(async (snapshot, context) => {
@@ -21,25 +22,20 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
     console.log(`gonna send notification to ${profile.username}`)
     if (!!profile.fcmTokens.length) {
 
-      // TODO find way to get message (probably determine again - make them shorter though)
+      // TODO
       // Try to define a tag for each too so they get aggregated
       // Do so by getting the unread notifications.
       // Add clickaction to set notification to being read
       // GOOD LUCK!
-
-      // const message = notification.message.map(msg => msg.text).join(' ')
-
+      const message = getPushMessage(notification)
+      
       console.log('sending notification to devices', profile.fcmTokens)
 
       admin.messaging().sendToDevice(profile.fcmTokens, {
-        notification: {
-          tag: undefined, // key of notification
-          title: `Something happened!`,
-          body: 'go and check it out',
-          icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-        }
+        notification: { ...message },
+        data: { url: message.url }
       }).catch((err => {
-        console.error('error sending push notification', err)
+        console.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
       }))
 
     }

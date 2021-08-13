@@ -1,9 +1,9 @@
 import { db } from '../../../internals/firebase';
 // Functions
-import { sendNotificationToUserSpectators } from '../../../shared/notification/notification'
+import { addDiscussion, sendNotificationToUserSpectators } from '../../../shared/notification/notification'
 import { createProfile, createProfileLink, Profile } from '@strive/user/user/+state/user.firestore'
 import { createNotification } from '@strive/notification/+state/notification.model';
-import { enumEvent } from '@strive/notification/+state/notification.firestore';
+import { enumEvent, Source } from '@strive/notification/+state/notification.firestore';
 import { BucketList, BucketListItem } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
 
 export async function handleNotificationsOfBucketListCreated(uid: string) {
@@ -11,15 +11,16 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   const profileSnap = await db.doc(`Users/${uid}/Profile/${uid}`).get()
   const profile = createProfile(profileSnap.data())
 
-  // createDiscussion(`Bucket List`, { image: 'assets/exercises/bucketlist/bucketlist.jpg', name: `BucketList - ${profile.username}`, userId: uid }, 'public', `${uid}bucketlist`)
+  const discussionId = `${uid}bucketlist`
+  const source: Source = { user: createProfileLink(profile) }
+
+  addDiscussion(`Bucket List`, source, 'public', discussionId)
 
   const notification = createNotification({
-    discussionId: `${uid}bucketlist`,
+    discussionId,
     event: enumEvent.userExerciseBucketListCreated,
     type: 'feed',
-    source: {
-      user: createProfileLink({ ...profile, uid })
-    }
+    source
   })
   sendNotificationToUserSpectators(uid, notification)
 }

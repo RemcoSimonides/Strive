@@ -1,12 +1,26 @@
-import { enumEvent } from '@strive/notification/+state/notification.firestore'
+import { enumEvent, Source } from '@strive/notification/+state/notification.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
-import { sendNotificationToGoalStakeholders, sendNotificationToUsers, createDiscussion } from "../../../shared/notification/notification"
+import { sendNotificationToGoalStakeholders, sendNotificationToUsers, addDiscussion } from "../../../shared/notification/notification"
 import { createNotification } from '@strive/notification/+state/notification.model';
 
-export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: Support): Promise<void> {
+export async function handleNotificationsOfCreatedSupport(supportId: string, goalId: string, support: Support) {
 
-  // await createDiscussion(`Support '${support.description}'`, { image: support.goal.image, name: support.goal.title, goalId: support.goal.id }, 'achievers', supportId)
-  sendNewSupportNotificationToAchieversOfGoal(supportId, goalId, support)
+  const source: Source = {
+    goal: support.goal,
+    milestone: support.milestone,
+    support
+  }
+  await addDiscussion(`Support '${support.description}'`, source, 'achievers', supportId)
+
+  const notification = createNotification({
+    id: goalId,
+    discussionId: supportId,
+    event: enumEvent.gSupportAdded,
+    type: 'notification',
+    source
+  })
+  sendNotificationToGoalStakeholders(goalId, notification, undefined, true)
+
 }
 
 export function handleNotificationsOfChangedSupport(supportId: string, goalId: string, before: Support, after: Support) {
@@ -24,23 +38,6 @@ export function handleNotificationsOfChangedSupport(supportId: string, goalId: s
       sendSupportIsWaitingToBePaid(supportId, after)
     }
   }
-}
-
-function sendNewSupportNotificationToAchieversOfGoal(supportId: string, goalId: string, support: Support) {
-
-  //Prepare notification object
-  const newNotification = createNotification({
-    id: goalId,
-    discussionId: supportId,
-    event: enumEvent.gSupportAdded,
-    type: 'notification',
-    source: {
-      goal: support.goal,
-      milestone: support.milestone,
-      support
-    }
-  })
-  sendNotificationToGoalStakeholders(goalId, newNotification, undefined, true)
 }
 
 function sendSupportPaidNotification(supportId: string, support: Support) {

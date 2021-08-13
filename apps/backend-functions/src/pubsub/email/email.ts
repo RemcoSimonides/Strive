@@ -10,7 +10,7 @@ import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakehold
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { getCollection, getDocument } from '../../shared/utils';
 import { MailDataRequired } from '@sendgrid/mail';
-// import { getNotificationMessage } from '@strive/notification/pipes/message.pipe';
+import { getNotificationMessage } from '@strive/notification/message/notification';
 
 const TEMPLATE_ID = 'd-b7a805f974814ca084c8d0a47d110322';
 
@@ -154,8 +154,7 @@ function getNotificationListHTML(notifications: Notification[]): string {
 
   notifications.forEach(notification => {
     const date = moment.unix(notification.createdAt?.seconds ?? 0).format('MMM Do, h:mm a')
-    // const message = getNotificationMessage(notification).message.map(message => message.text).join(' ')
-    const message = ''
+    const message = getNotificationMessage(notification).message.map(message => message.text).join(' ')
 
     html += `<li>${date}: ${message}</li>`
   })

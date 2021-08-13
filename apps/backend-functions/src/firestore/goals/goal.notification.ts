@@ -5,12 +5,13 @@ import {
   sendNotificationToGoal,
   sendNotificationToGoalStakeholders,
   sendNotificationToCollectiveGoalStakeholders,
-  sendNotificationToUserSpectators
+  sendNotificationToUserSpectators,
+  addDiscussion
 } from '../../shared/notification/notification'
 import { getReceiver } from '../../shared/support/receiver'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
-import { enumEvent } from '@strive/notification/+state/notification.firestore'
+import { enumEvent, Source } from '@strive/notification/+state/notification.firestore'
 import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
@@ -26,7 +27,10 @@ const { serverTimestamp } = admin.firestore.FieldValue
 export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goal): Promise<void> {
   console.log('executting handle notification of created goal')
 
-  // await createDiscussion(goal.title, { image: goal.image, name: `General discussion - ${goal.title}`, goalId: goalId }, 'public', goalId)
+  const source: Source = {
+    goal: createGoalLink({ ...goal, id: goalId })
+  }
+  await addDiscussion(`General discussion`, source, 'public', goalId)
 
   // New Goal
   if (goal.collectiveGoalId && (goal.publicity === 'public' || goal.publicity === 'collectiveGoalOnly')) {

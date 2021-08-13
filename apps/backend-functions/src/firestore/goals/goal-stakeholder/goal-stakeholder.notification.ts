@@ -1,5 +1,6 @@
 // Functions
 import { 
+  addDiscussion,
   sendNotificationToGoal,
   sendNotificationToGoalStakeholders,
   sendNotificationToUsers,
@@ -7,7 +8,7 @@ import {
 } from '../../../shared/notification/notification'
 
 // Interfaces
-import { enumEvent } from '@strive/notification/+state/notification.firestore'
+import { enumEvent, Source } from '@strive/notification/+state/notification.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createGoalRequest, createNotification } from '@strive/notification/+state/notification.model'
 import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -15,16 +16,14 @@ import { createProfileLink } from '@strive/user/user/+state/user.firestore'
 
 export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeholder: GoalStakeholder) {
 
-  // check if goal has collective goal
+  // check if goal has other stakeholders
   if (!goal.numberOfAchievers && !goal.numberOfSupporters) return
 
   if (stakeholder.isAdmin) {
-    // const discussionId = await createDiscussion('public')
-    sendNewAdminNotificationInGoal(goal.id, stakeholder)
+    sendNewAdminNotification(goal.id, stakeholder)
   }
 
   if (stakeholder.isAchiever) {
-    // const discussionId = await createDiscussion()
     sendNewAchieverNotificationInGoal(goal.id, stakeholder)
 
     if (stakeholder.goalPublicity === 'public') {
@@ -32,19 +31,9 @@ export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeh
     }
   }
 
-  if (stakeholder.isSupporter) {
-    // const discussionId = await createDiscussion()
-    sendNewSupporterNotificationInGoal(goal.id, stakeholder)
-
-    if (stakeholder.goalPublicity === 'public') {
-      // No need for notification about this
-      // sendNewSupporterNotificationToUserSpectators(goalId, goalId, stakeholder)
-    }
-  }
-
   if (stakeholder.hasOpenRequestToJoin) {
-    // const discussionId = await createDiscussion(`Request to become Achiever`, { image: stakeholder.goalImage, name: `Request to join ${stakeholder.goalTitle}`, goalId: stakeholder.goalId }, 'adminsAndRequestor', undefined, stakeholder.uid)
-    await sendNewRequestToJoinGoalNotificationInGoal('invalid', goal.id, stakeholder)
+    const discussionId = `RtjG${stakeholder.uid}${goal.id}`
+    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goal.id, stakeholder)
   }
 
 }
@@ -52,7 +41,7 @@ export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeh
 export async function handleNotificationsOfStakeholderChanged(goalId: string, before: GoalStakeholder, after: GoalStakeholder) {
 
   if (!before.isAdmin && after.isAdmin) {
-    sendNewAdminNotificationInGoal(goalId, after)
+    sendNewAdminNotification(goalId, after)
   }
 
   if (!before.isAchiever && after.isAchiever) {
@@ -63,20 +52,10 @@ export async function handleNotificationsOfStakeholderChanged(goalId: string, be
     }
   }
 
-  if (!before.isSupporter && after.isSupporter) {
-    sendNewSupporterNotificationInGoal(goalId, after)
-
-    if (after.goalPublicity === 'public') {
-      // No need for notification about this
-      // sendNewSupporterNotificationToUserSpectators(goalId, goalId, after)
-    }
-  }
-
   // requests
   const discussionId = `RtjG${after.uid}${goalId}`
 
   if (!before.hasOpenRequestToJoin && after.hasOpenRequestToJoin) {
-    // await createDiscussion(`Request to become Achiever`, { image: after.goalImage, name: `Request to join ${after.goalTitle}`, goalId: after.goalId }, 'adminsAndRequestor', discussionId, after.uid)
     await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goalId, after)
   }
 
@@ -131,29 +110,7 @@ function sendNewAchieverNotificationInGoal(goalId: string, goalStakeholder: Goal
 
 }
 
-function sendNewSupporterNotificationInGoal(goalId: string, goalStakeholder: GoalStakeholder) {
-
-  const notification = createNotification({
-    discussionId: goalId,
-    event: enumEvent.gStakeholderSupporterAdded,
-    type: 'feed',
-    source:  {
-      user: createProfileLink(goalStakeholder),
-      goal: createGoalLink({
-        id: goalId,
-        title: goalStakeholder.goalTitle,
-        image: goalStakeholder.goalImage
-      })
-    }
-  })
-  sendNotificationToGoal(goalId, notification)
-
-  sendNotificationToGoalStakeholders(goalId, notification, goalStakeholder.uid, true, true, true)
-
-}
-
-// NEW ADMIN
-function sendNewAdminNotificationInGoal(goalId: string, goalStakeholder: GoalStakeholder) {
+function sendNewAdminNotification(goalId: string, goalStakeholder: GoalStakeholder) {
 
   const notification = createNotification({
     discussionId: goalId,
@@ -175,8 +132,19 @@ function sendNewAdminNotificationInGoal(goalId: string, goalStakeholder: GoalSta
 }
 
 // REQUEST TO JOIN
-async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string,  goalStakeholder: GoalStakeholder) {
+async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
   console.log(`send 'New Request To Join Goal' Notification In Goal`)
+
+  const source: Source = {
+    goal: createGoalLink({
+      id: goalId,
+      title: goalStakeholder.goalTitle,
+      image: goalStakeholder.goalImage
+    }),
+    user: createProfileLink(goalStakeholder)
+  }
+
+  await addDiscussion(`Request to become Achiever`, source, 'adminsAndRequestor', discussionId, goalStakeholder.uid)
 
   // Send request to admins only
   const meta = createGoalRequest({ uidRequestor: goalStakeholder.uid })
@@ -185,14 +153,7 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
     discussionId,
     event: enumEvent.gStakeholderRequestToJoinPending,
     type: 'feed',
-    source: {
-      goal: createGoalLink({
-        id: goalId,
-        title: goalStakeholder.goalTitle,
-        image: goalStakeholder.goalImage
-      }),
-      user: createProfileLink(goalStakeholder)
-    },
+    source,
     meta
   })
   sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true)
