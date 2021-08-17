@@ -78,9 +78,6 @@
         >Finalize
         </ion-button>
 
-        <ng-container *ngIf="notification.meta.status === 'pending'">
-          <notification-countdown [time]="notification.meta.deadline"></notification-countdown>
-        </ng-container>
       </ng-container>
 
 

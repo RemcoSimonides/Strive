@@ -41,9 +41,8 @@
 // function createSupportDecisionMetaFormControl(params?: Partial<SupportDecisionMeta>) {
 //   const meta = createSupportDecisionMeta(params)
 //   return {
-//     deadline: new FormControl(meta.deadline),
 //     supports: new FormControl(meta.supports),
-//     decisionStatus: new FormControl(meta.decisionStatus)
+//     status: new FormControl(meta.status)
 //   }
 // }
 

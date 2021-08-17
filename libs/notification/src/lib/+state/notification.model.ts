@@ -42,7 +42,6 @@ export const isSupportDecisionNotification = (notification: Partial<Notification
 export function createSupportDecisionMeta(meta: Partial<SupportDecisionMeta>): SupportDecisionMeta {
   return {
     type: 'supportDecision',
-    deadline: '',
     supports: [],
     status: 'pending',
     ...meta

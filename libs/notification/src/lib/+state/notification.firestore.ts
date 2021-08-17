@@ -119,7 +119,6 @@ interface MetaBase {
 export interface SupportDecisionMeta extends MetaBase {
   type: 'supportDecision';
   status: 'pending' | 'finalized';
-  deadline: string; // deadline for when decision needs to be made
   supports: NotificationSupport[]; // all supports that need to be decided within this notification
 }
 

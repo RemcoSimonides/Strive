@@ -39,16 +39,6 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
       }))
 
     }
-
-    // SupportDecision
-    if (isSupportDecisionNotification(notification)) {
-      // deadline
-      upsertScheduledTask(notificationId, {
-        worker: enumWorkerType.notificationEvidenceDeadline,
-        performAt: notification.meta.deadline,
-        options: { userId, notificationId }
-      })
-    }
   })
 
 export const notificationDeletedHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)

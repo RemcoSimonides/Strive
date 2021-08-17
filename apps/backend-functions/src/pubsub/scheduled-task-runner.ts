@@ -58,7 +58,6 @@ interface IWorkers {
 const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
   deleteInviteLinkCollectiveGoal: (options) => deleteInviteLinkCollectiveGoal(options),
-  notificationEvidenceDeadline: (options) => notificationEvidenceDeadline(options),
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
   goalDeadline: (options) => goalDeadlineHandler(options),
   collectiveGoalDeadline: (options) => collectiveGoalDeadlineHandler(options),
@@ -73,13 +72,6 @@ function deleteInviteLinkGoal(options) {
 
 function deleteInviteLinkCollectiveGoal(options) {
   return db.doc(`CollectiveGoals/${options.collectiveGoalId}/InviteTokens/${options.inviteTokenId}`).delete()
-}
-
-function notificationEvidenceDeadline(options) {
-  // auto accept evidence
-  return db.doc(`Users/${options.userId}/Notifications/${options.notificationId}`).update({
-    'meta.decisionStatus': 'finalized'
-  })
 }
 
 async function milestoneDeadlineHandler(options) {

@@ -7,6 +7,7 @@ import {
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { createSupportDecisionMeta } from './notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,10 +32,10 @@ export class NotificationService extends FireCollection<Notification> {
 
     // TODO CHECK THIS AGAIN - it's probably incorrect!
 
-    const meta: Partial<SupportDecisionMeta> = {
+    const meta = createSupportDecisionMeta({
       status: 'finalized',
       supports: notification.meta.supports
-    }
+    })
 
     // Update Notification to replace timer and buttons by status
     return this.upsert({ id: notification.id, needsDecision: false, meta }, { params: { uid: this.user.uid }});

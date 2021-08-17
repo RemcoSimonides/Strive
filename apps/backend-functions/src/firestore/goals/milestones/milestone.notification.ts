@@ -86,18 +86,16 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   }
 
   const timestamp = admin.firestore.FieldValue.serverTimestamp()
-  const date = new Date()
 
   for (const [uid, supportNotifications] of Object.entries(supporters)) {
     const meta = createSupportDecisionMeta({
-      deadline: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).toISOString(),
       supports: supportNotifications
     })
 
     const notification = createNotification({
       id: milestoneId,
       discussionId: milestoneId,
-      event: after.status === 'succeeded' ? enumEvent.gSupportPendingSuccesful : enumEvent.gSupportPendingSuccesful,
+      event: after.status === 'succeeded' ? enumEvent.gSupportPendingSuccesful : enumEvent.gSupportPendingFailed,
       type: 'feed',
       target: 'stakeholder',
       source: {
@@ -124,6 +122,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
 
   const notification = createNotification({
+    id: milestoneId,
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedSuccessfully,
     type: 'feed',
@@ -148,6 +147,7 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
 function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
 
   const notification = createNotification({
+    id: milestoneId,
     discussionId: milestoneId,
     event: enumEvent.gMilestoneCompletedUnsuccessfully,
     type: 'feed',

@@ -65,7 +65,7 @@ export class NotificationComponent {
     })
   }
 
-  async openDiscussion(): Promise<void> {
+  async openDiscussion() {
     // const modal = await this.modalCtrl.create({
     //   component: DiscussionModalPage,
     //   componentProps: {

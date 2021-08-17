@@ -4,7 +4,7 @@ import { AlertController, LoadingController, ModalController, PopoverController 
 
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
-import { pairwise, switchMap } from 'rxjs/operators';
+import { map, pairwise, switchMap } from 'rxjs/operators';
 
 // Strive Service
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -57,7 +57,9 @@ export class RoadmapComponent implements OnInit, OnDestroy {
     this.stakeholder$ = this.user.profile$.pipe(
       switchMap(profile => {
         if (!!profile) {
-          return this.stakeholderService.valueChanges(this.user.uid, { goalId: this.goal.id })
+          return this.stakeholderService.valueChanges(this.user.uid, { goalId: this.goal.id }).pipe(
+            map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
+          )
         } else {
           return of(createGoalStakeholder())
         }

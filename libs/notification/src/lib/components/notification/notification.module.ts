@@ -9,7 +9,6 @@ import { NotificationComponent, SourcePipe } from './notification.component';
 import { ChooseAchieverModalModule } from '../choose-achiever/choose-achiever-modal.module';
 import { NotificationOptionsPopoverModule } from '../notification-options/notification-options.module';
 import { PostComponentModule } from '@strive/post/components/post/post.module';
-import { CountdownComponent } from '../countdown/countdown.component';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { MessagePipeModule } from '../../pipes/message.pipe';
 
@@ -27,6 +26,6 @@ import { MessagePipeModule } from '../../pipes/message.pipe';
     MessagePipeModule
   ],
   exports: [NotificationComponent],
-  declarations: [NotificationComponent, CountdownComponent, SourcePipe],
+  declarations: [NotificationComponent, SourcePipe],
 })
 export class NotificationModule { }

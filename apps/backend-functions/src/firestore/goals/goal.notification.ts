@@ -206,7 +206,6 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
 
   for (const [uid, supportNotifications] of Object.entries(supporters)) {
     const meta = createSupportDecisionMeta({
-      deadline: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).toISOString(),
       supports: supportNotifications
     })
 

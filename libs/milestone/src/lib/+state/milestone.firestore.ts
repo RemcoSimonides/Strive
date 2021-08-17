@@ -58,9 +58,8 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
 
 export function createMilestoneLink(params: Partial<MilestoneLink> = {}): MilestoneLink {
   return {
-    id: '',
-    description: '',
-    ...params
+    id: params.id ?? '',
+    description: params.description ?? '',
   }
 }
 
