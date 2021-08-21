@@ -89,6 +89,7 @@ export class GoalFeedPaginationService {
         const data = doc.payload.doc.data();
         return {
           ...data,
+          id: doc.payload.doc.id,
           'discussion$': this.discussion.valueChanges(data.discussionId)
         }
       })),
