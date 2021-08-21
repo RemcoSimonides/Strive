@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
-import { Comment } from '@strive/discussion/+state/comment.firestore';
+import { Discussion} from './discussion.firestore'
+import { FireCollection } from '@strive/utils/services/collection.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { CommentService } from './comment.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DiscussionService {
+export class DiscussionService extends FireCollection<Discussion> {
+  readonly path = `Discussions`
 
-  constructor(private db: FirestoreService) { }
-
-  get(path: string) {
-    return this.db.colWithIds$(path)
-  }
-
-  async addReply(discussionId: string, comment: Comment) {
-    await this.db.add<Comment>(`Discussions/${discussionId}/Comments`, comment)
+  constructor(
+    db: AngularFirestore,
+    public comment: CommentService
+  ) {
+    super(db)
   }
 }

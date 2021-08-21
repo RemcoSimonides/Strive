@@ -107,7 +107,7 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
       type: 'sentByUser',
       user: createProfileLink({ uid, username: displayName, photoURL })
     })
-    this.discussionService.addReply(this.discussionId, comment)
+    this.discussionService.comment.add(comment, { params: { discussionId: this.discussionId }})
 
     this._comment = ''
   }

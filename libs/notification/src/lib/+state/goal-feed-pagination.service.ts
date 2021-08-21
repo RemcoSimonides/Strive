@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
-import { scan, tap, take } from 'rxjs/operators';
-import { leftJoin } from '@strive/utils/leftJoin';
-import { Notification, NotificationTypes } from './notification.firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { scan, tap, take, map } from 'rxjs/operators';
+import { Notification } from './notification.firestore';
+import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 
-// Options to reproduce firestore queries consistently
-interface QueryConfig {
-  path: string, // path to collection
-}
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +27,10 @@ export class GoalFeedPaginationService {
 
   discussionIds: string[] = []
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(
+    private afs: AngularFirestore,
+    private discussion: DiscussionService
+  ) {}
 
   /**
    * Initial query sets options and defines the Observable
@@ -86,7 +85,13 @@ export class GoalFeedPaginationService {
 
     // Map snapshot with doc ref (needed for cursor)
     return col.snapshotChanges().pipe(
-      leftJoin(this.afs, 'discussionId', 'Discussions'),
+      map(docs => docs.map(doc => {
+        const data = doc.payload.doc.data();
+        return {
+          ...data,
+          'discussion$': this.discussion.valueChanges(data.discussionId)
+        }
+      })),
       tap(arr => {
         this._data.next(arr)
         this._loading.next(false)

@@ -80,15 +80,13 @@
 
       </ng-container>
 
-
-
-      <!-- <section fxLayout> -->
       <!-- Discussion -->
-        <!-- <ion-button (click)="openDiscussion()" fill="clear">
-          {{ notification.discussion?.numberOfComments || 0 }}
+      <section fxLayout>
+        <ion-button (click)="openDiscussion()" fill="clear">
+          {{ (notification.discussion$ | async)?.numberOfComments || 0 }}
           <ion-icon id="discussion-icon" name="chatbox-outline"></ion-icon>
-        </ion-button> -->
-      <!-- </section> -->
+        </ion-button>
+      </section>
     </article>
   </section>
 

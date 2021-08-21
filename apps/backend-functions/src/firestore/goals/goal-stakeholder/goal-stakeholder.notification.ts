@@ -1,3 +1,4 @@
+import * as admin from 'firebase-admin';
 // Functions
 import { 
   addDiscussion,
@@ -14,7 +15,17 @@ import { createGoalRequest, createNotification } from '@strive/notification/+sta
 import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createProfileLink } from '@strive/user/user/+state/user.firestore'
 
+const db = admin.firestore()
+const { arrayUnion } = admin.firestore.FieldValue
+
 export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeholder: GoalStakeholder) {
+
+  // Adding admins and achievers to goal chat so they receive notifications
+  if (stakeholder.isAdmin || stakeholder.isAchiever) {
+    db.doc(`Discussions/${goal.id}`).update({
+      commentators: arrayUnion(stakeholder.uid)
+    })
+  }
 
   // check if goal has other stakeholders
   if (!goal.numberOfAchievers && !goal.numberOfSupporters) return
@@ -40,11 +51,21 @@ export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeh
 
 export async function handleNotificationsOfStakeholderChanged(goalId: string, before: GoalStakeholder, after: GoalStakeholder) {
 
-  if (!before.isAdmin && after.isAdmin) {
+  const becameAdmin = !before.isAdmin && after.isAdmin
+  const becameAchiever = !before.isAchiever && after.isAchiever
+
+  // Adding admins and achievers to goal chat so they receive notifications
+  if (becameAdmin || becameAchiever) {
+    db.doc(`Discussions/${goalId}`).update({
+      commentators: arrayUnion(after.uid)
+    })
+  }
+
+  if (becameAdmin) {
     sendNewAdminNotification(goalId, after)
   }
 
-  if (!before.isAchiever && after.isAchiever) {
+  if (becameAchiever) {
     sendNewAchieverNotificationInGoal(goalId, after)
       
     if (after.goalPublicity === 'public') {

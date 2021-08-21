@@ -12,9 +12,9 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   const profile = createProfile(profileSnap.data())
 
   const discussionId = `${uid}bucketlist`
-  const source: Source = { user: createProfileLink(profile) }
+  const source: Source = { user: createProfileLink({...profile, uid }) }
 
-  addDiscussion(`Bucket List`, source, 'public', discussionId)
+  addDiscussion(`Bucket List`, source, 'public', discussionId, uid)
 
   const notification = createNotification({
     discussionId,

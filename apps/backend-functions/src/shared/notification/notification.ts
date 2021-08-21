@@ -20,7 +20,9 @@ export async function addDiscussion(title: string, source: Source, audience: Aud
     title,
     source,
     audience,
-    commentators
+    commentators,
+    createdAt: serverTimestamp() as Timestamp,
+    updatedAt: serverTimestamp() as Timestamp
   })
 
   if (id) {

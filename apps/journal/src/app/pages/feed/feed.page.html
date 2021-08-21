@@ -26,7 +26,7 @@
       </ion-refresher>
     
       <ng-container *ngIf="notifications.length else empty">
-        <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
+        <section fxLayout="column" fxLayoutAlign="center start">
 
           <ng-container *ngFor="let notification of decisions$ | async; let isLast = last">
             <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>

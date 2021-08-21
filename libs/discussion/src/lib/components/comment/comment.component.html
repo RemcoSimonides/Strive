@@ -1,27 +1,25 @@
-<ng-container *ngIf="!!comment">
-  <ng-container *ngIf="comment.type === 'sentByUser'">
-    <section class="comment-wrapper">
+<ng-container *ngIf="comment?.type === 'sentByUser'">
+  <section class="user">
 
-      <img [src]="comment.photoURL" asset="profile.png" />
-      <span class="text-wrapper">
-        <span class="username">{{ comment.username }}</span>
-        <span class="date">{{ comment.createdAt?.toDate() | date:'MMMM d, yyyy h:mm a' }}</span>
-        <div class="text">{{ comment.text }}</div>
-      </span>
-    
-    </section>
-  </ng-container>
+    <img [src]="comment.user.photoURL" asset="profile.png" />
+    <article>
+      <span class="username">{{ comment.user.username }}</span>
+      <span class="date">{{ comment.createdAt?.toDate() | date:'MMMM d, yyyy h:mm a' }}</span>
+      <div class="text">{{ comment.text }}</div>
+    </article>
   
-  <ng-container *ngIf="comment.type === 'notification'">
+  </section>
+</ng-container>
 
-    <section class="notification">
-      <div class="notification-icon-item">
-        <ion-icon name="notifications"></ion-icon>
-      </div>
-      <div class="notification-text-item">
-        {{ comment.text }}
-      </div>
-    </section>
+<ng-container *ngIf="comment?.type === 'notification'">
 
-  </ng-container>
+  <section class="notification">
+    <div>
+      <ion-icon name="notifications"></ion-icon>
+    </div>
+    <div>
+      {{ comment.text }}
+    </div>
+  </section>
+
 </ng-container>

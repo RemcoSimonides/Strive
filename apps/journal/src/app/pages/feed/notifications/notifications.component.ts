@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 
 @Component({
   selector: 'strive-notifications',
   templateUrl: 'notifications.component.html',
-  styleUrls: ['./notifications.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsPage implements OnInit, OnDestroy {
 
@@ -19,6 +19,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
   sub: Subscription
 
   constructor(
+    private dicussion: DiscussionService,
     private notification: NotificationService,
     private seo: SeoService,
     public user: UserService
@@ -32,7 +33,14 @@ export class NotificationsPage implements OnInit, OnDestroy {
 
     this.notifications$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').orderBy('createdAt', 'desc'), { uid: profile.id })
+        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').orderBy('createdAt', 'desc'), { uid: profile.id }).pipe(
+          map(notifications => notifications.map(notification => {
+            return {
+              ...notification,
+              'discussion$': this.dicussion.valueChanges(notification.discussionId)
+            }
+          }))
+        )
         : of([]))
     )
 

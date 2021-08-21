@@ -14,6 +14,7 @@ import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.fir
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 
 
 @Pipe({ name: 'source' })
@@ -65,14 +66,13 @@ export class NotificationComponent {
     })
   }
 
-  async openDiscussion() {
-    // const modal = await this.modalCtrl.create({
-    //   component: DiscussionModalPage,
-    //   componentProps: {
-    //     discussionId: this.notification.discussionId,
-    //   }
-    // })
-    // await modal.present()
+  openDiscussion() {
+    this.modalCtrl.create({
+      component: DiscussionModalPage,
+      componentProps: {
+        discussionId: this.notification.discussionId,
+      }
+    }).then(modal => modal.present())
   }
 
   public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {

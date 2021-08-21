@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="!!user.uid; else notLoggedIn">
   <ion-content>
-    <section fxLayout="column" fxLayoutAlign="start" fxLayoutGap="24px">
+    <section fxLayout="column" fxLayoutAlign="start">
       <ng-container *ngIf="notifications$ | async as notifications; else empty">
         <ng-container *ngIf="notifications.length; else empty">
           <ng-container *ngFor="let notification of notifications; let isLast = last">
