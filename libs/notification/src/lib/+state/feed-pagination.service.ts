@@ -53,13 +53,11 @@ export class FeedPaginationService {
     this.data = this._data.asObservable().pipe(
       scan((acc, val) => { 
         const array = acc.concat(val)
-        console.log('array: ', array);
         const uniqueArrray = this.getUnique(array, 'id')
 
         const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? -1 : 1)
         return orderedArray
       }),
-      tap(console.log)
     )
   }
 
@@ -97,7 +95,6 @@ export class FeedPaginationService {
         }
       })),
       tap((arr: Notification[]) => {
-        console.log('arr: ', arr);
         this._data.next(arr)
         this._loading.next(false)
         this._refreshing.next(false)

@@ -36,18 +36,4 @@ export class PostComponent implements OnInit {
     }    
   }
 
-  // Depricated Discussion
-  // async goToPostDiscussion(): Promise<void> {
-    // const postDiscussionParams: PostDiscussionParams = {
-    //   goalID: '',
-    //   postID: ''
-    // }
-  
-    // var splitted = this._postRef.split("/")
-    // postDiscussionParams.goalID = splitted[1]
-    // postDiscussionParams.postID = splitted[3]
-
-    // this.navCtrl.push('PostDiscussionPage', { postDiscussionParams })
-  // }
-
 }
