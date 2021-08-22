@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
@@ -28,7 +28,7 @@ import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder
 // Other
 import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
-import { tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -38,12 +38,12 @@ import { tap } from 'rxjs/operators';
 export class ProfilePage implements OnInit {
 
   private backBtnSubscription: Subscription
-  private rightsSubscription: Subscription
 
   public enumExercises = enumExercises
 
   public isOwner = false
   public isSpectator = false
+  public isSpectator$: Observable<boolean>
 
   public profileId: string
   public profile$: Observable<Profile>
@@ -66,7 +66,6 @@ export class ProfilePage implements OnInit {
     public platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
-    private router: Router,
     private seo: SeoService,
     private userSpectateService: UserSpectateService,
     public screensize: ScreensizeService
@@ -76,19 +75,13 @@ export class ProfilePage implements OnInit {
     this.profileId = this.route.snapshot.paramMap.get('id')
     this.profileForm.disable();
 
-    this.rightsSubscription = this.user.profile$.subscribe(async profile => {
-      if (!!profile) {
-        if (!this.profileId) return this.router.navigateByUrl(`profile/${this.user.uid}`);
-
+    this.isSpectator$ = this.user.profile$.pipe(
+      tap(profile => {
         this.isOwner = profile.id === this.profileId
-        if (!this.isOwner) {
-          this.isSpectator = (await this.userSpectateService.getSpectator(profile.id, this.profileId)).isSpectator
-        }
-      } else {
-        this.isOwner = false
-        this.isSpectator = false
-      }
-    })
+      }),
+      switchMap(profile => this.userSpectateService.valueChanges(profile.id, { uid: this.profileId })),
+      map(spectator => spectator?.isSpectator ?? false)
+    )
 
     if (!!this.profileId) {
       this.profile$ = this.profileService.valueChanges(this.profileId, { uid: this.profileId }).pipe(
@@ -162,9 +155,9 @@ export class ProfilePage implements OnInit {
     this.profileForm.disabled ? this.profileForm.enable() : this.profileForm.disable()
   }
 
-  async toggleSpectate() {
+  toggleSpectate(spectate) {
     if (this.user.uid) {
-      this.userSpectateService.toggleSpectate(this.profileId)
+      this.userSpectateService.toggleSpectate(this.profileId, spectate)
     } else {
       this.openAuthModal()
     }

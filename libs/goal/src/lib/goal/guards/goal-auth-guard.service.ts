@@ -18,20 +18,19 @@ import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+
 })
 export class GoalAuthGuardService implements CanActivate {
 
-  private _goalId: string
   private _needsToBeAdmin: boolean = false
 
   constructor(
     private afs: AngularFirestore,
     private goalService: GoalService,
-    private goalStakeholderService: GoalStakeholderService,
+    private stakeholder: GoalStakeholderService,
     private router: Router,
     private user: UserService
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-    this._goalId = next.params.id
+    const goalId = next.params.id as string
 
     const uid = await this.user.getUID()
     if (!uid) {
@@ -39,16 +38,13 @@ export class GoalAuthGuardService implements CanActivate {
       return false
     }
 
-    const index = next.url.findIndex(segment => segment.path === 'edit')
-    if (index > -1) {
-      this._needsToBeAdmin = true
-    }
+    this._needsToBeAdmin = next.url.some(segment => segment.path === 'edit')
 
     // get goal
-    const goal = await this.goalService.getValue(this._goalId);
+    const goal = await this.goalService.getValue(goalId);
 
     // get stakeholder
-    const stakeholder = await this.goalStakeholderService.getValue(uid, { goalId: this._goalId });
+    const stakeholder = await this.stakeholder.getValue(uid, { goalId });
     
     let access: boolean = false
     if (stakeholder) {

@@ -1,88 +1,74 @@
 import { Injectable } from '@angular/core';
-// Rxjs
-import { first, take } from 'rxjs/operators';
 // Angularfire
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Spectator, createSpectator } from './spectator.firestore';
+import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
+import { ProfileService } from '@strive/user/user/+state/profile.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserSpectateService {
+export class UserSpectateService extends FireCollection<Spectator> {
+  readonly path = `Users/:uid/Spectators`
+  readonly idKey = 'uid'
 
   constructor(
-    private afs: AngularFirestore,
-    private db: FirestoreService,
-    private user: UserService
-  ) { }
-
-  getCurrentSpectator(uidToBeSpectated: string) {
-    return this.getSpectator(this.user.uid, uidToBeSpectated)
+    db: AngularFirestore,
+    private user: UserService,
+    private profile: ProfileService
+  ) {
+    super(db)
   }
 
-  async getSpectator(uidSpectator: string, uidToBeSpectated: string) {
-    return await this.db.docWithId$<Spectator>(`Users/${uidToBeSpectated}/Spectators/${uidSpectator}`).pipe(first()).toPromise()
+  protected fromFirestore(snapshot: DocumentSnapshot<Spectator>) {
+    return snapshot.exists
+      ? createSpectator({ ...snapshot.data(), uid: snapshot.id })
+      : undefined
   }
 
-  async getSpectators(uid: String): Promise<Spectator[]> {
-    return this.db.colWithIds$<Spectator[]>(`Users/${uid}/Spectators`, ref => ref.where('isSpectator', '==', true)).pipe(take(1)).toPromise()
-  }
+  async onCreate(spectator: Spectator, { write, params }: WriteOptions) {
+    const uid = spectator.uid
+    const [current, toBeSpectated] = await Promise.all([
+      this.profile.getValue(uid, { uid }),
+      this.profile.getValue(params.uid, { uid: params.uid })
+    ])
 
-  async getSpectating(uid: string): Promise<Spectator[]> {
-    return this.db.collectionGroupWithIds$<Spectator[]>(`Spectators`, ref => ref.where('uid', '==', uid)).pipe(take(1)).toPromise()
-  }
-
-  /**
-   * 
-   * @param targetUID the uid of the user that is going to be spectated
-   */
-  toggleSpectate(targetUID: string) {
-    this.afs.doc<Spectator>(`Users/${targetUID}/Spectators/${this.user.uid}`)
-      .snapshotChanges()
-      .pipe(take(1))
-      .toPromise()
-      .then(async spectatorSnap => {
-
-        if (spectatorSnap.payload.exists) {
-
-          const spectator: Spectator = spectatorSnap.payload.data()
-
-          await this.upsert(targetUID, {
-            isSpectator: !spectator.isSpectator
-          })
-
-        } else {
-          await this.create(targetUID)
-        }
-      })
-
-  }
-
-  /**
-   * 
-   * @param uid uid of the user which is going to be spectated
-   */
-  private async create(uid: string) {
-    const [current, toBeSpectated] = await Promise.all([this.user.getProfile(), this.user.getProfile(uid)])
-
-    const spectator = createSpectator({
-      uid: current.id,
+    const ref = this.getRef(uid, { uid: params.uid })
+    write.update(ref, createSpectator({
+      uid,
       username: current.username,
       photoURL: current.photoURL,
       isSpectator: true,
       profileId: toBeSpectated.id,
       profileUsername: toBeSpectated.username,
       profilePhotoURL: toBeSpectated.photoURL
-    })
-
-    await this.upsert(uid, spectator)
+    }))
   }
 
-  private upsert(targetUID: string, spectator: Partial<Spectator>) {
-    return this.db.upsert(`Users/${targetUID}/Spectators/${this.user.uid}`, spectator)
+  getCurrentSpectator(uidToBeSpectated: string) {
+    return this.getSpectator(this.user.uid, uidToBeSpectated)
   }
+
+  getSpectator(uidSpectator: string, uidToBeSpectated: string) {
+    return this.getValue(uidSpectator, { uid: uidToBeSpectated })
+  }
+
+  getSpectators(uid: string) {
+    return this.getValue(ref => ref.where('isSpectator', '==', true), { uid })
+  }
+
+  getSpectating(uid: string) {
+    return this.getGroup(ref => ref.where('uid', '==', uid))
+  }
+
+  /**
+   * @param uid the uid of the user that is going to be spectated
+   */
+  toggleSpectate(uid: string, spectate: boolean) {
+    this.upsert({ uid: this.user.uid, isSpectator: spectate }, { params: { uid }})
+  }
+
 }

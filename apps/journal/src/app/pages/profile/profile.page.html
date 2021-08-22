@@ -61,7 +61,12 @@
           </article>
   
           <ng-container *ngIf="!isOwner">
-            <ion-button (click)="toggleSpectate()" fill="outline">{{ isSpectator ? 'Stop Following' : 'Follow' }}</ion-button>
+            <ng-container *ngIf="isSpectator$ | async else notSpectator">
+              <ion-button (click)="toggleSpectate(false)" fill="outline">Stop Following</ion-button>
+            </ng-container>
+            <ng-template #notSpectator>
+              <ion-button (click)="toggleSpectate(true)" fill="outline">Follow</ion-button>
+            </ng-template>
           </ng-container>
         </article>
 
