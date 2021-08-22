@@ -20,6 +20,7 @@ async function sendNotificationNewPost(goalId: string, postId: string, post: Pos
 
   const source: Source = {
     goal: post.goal,
+    user: post.author,
     postId
   }
 
