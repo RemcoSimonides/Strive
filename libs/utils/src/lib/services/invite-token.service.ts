@@ -56,19 +56,17 @@ export class InviteTokenService {
   /**
    * @param id can be id of goal or collective goal
    */
-  async getShareLink(id: string, isCollectiveGoal: boolean, isPublic: boolean, isAdmin: boolean): Promise<string> {
+  async getShareLink(id: string, isCollectiveGoal: boolean, isSecret: boolean, isAdmin: boolean): Promise<string> {
 
     const parsedUrl = new URL(window.location.href)
 
-    if (isPublic) {
-      return parsedUrl.href
-    } else {
-
+    if (isSecret) {
       if (isAdmin) {
         const token = await this.createInviteLink(id, isCollectiveGoal)
         return `${parsedUrl.href}?invite_token=${token}`
       } else return undefined
-
+    } else {
+      return parsedUrl.href
     }
 
   }

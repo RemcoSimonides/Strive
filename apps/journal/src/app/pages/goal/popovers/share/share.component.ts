@@ -11,7 +11,7 @@ export class GoalSharePopoverPage implements OnInit {
 
   public goal: Goal
   public isAdmin = false
-  public isPublic = false
+  public isSecret = false
 
   constructor(
     private navParams: NavParams,
@@ -22,7 +22,7 @@ export class GoalSharePopoverPage implements OnInit {
     this.isAdmin = this.navParams.data.isAdmin
     this.goal = this.navParams.data.goal
 
-    this.isPublic = this.goal.publicity === 'public'
+    this.isSecret = this.goal.publicity !== 'public'
   }
 
   public close() {

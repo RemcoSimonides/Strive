@@ -13,7 +13,7 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-icon *ngIf="collectiveGoal.isPublic === false" name="lock-closed"></ion-icon>
+            <ion-icon *ngIf="collectiveGoal.isSecret" name="lock-closed"></ion-icon>
             <span class="title">{{ collectiveGoal.title }}</span>
             <!-- <span *ngIf="collectiveGoal.isFinished"> (finished)</span> TODO: can collective goal be finished? -->
           </ion-col>
@@ -22,7 +22,7 @@
               <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
             </ion-button>
             <ng-container *ngIf="!!user.uid">
-              <ion-button (click)="openOptionsPopover(collectiveGoal, $event)" fill="clear" class="ion-no-padding">
+              <ion-button (click)="openOptionsPopover($event)" fill="clear" class="ion-no-padding">
                 <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
               </ion-button>
             </ng-container>

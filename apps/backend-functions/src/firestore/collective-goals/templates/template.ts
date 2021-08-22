@@ -43,19 +43,19 @@ export const useTemplate = functions.https.onCall(async (
   ])
 
   let publicity: GoalPublicityType
-  if (collectiveGoal.isPublic && template.goalIsPublic) {
-    publicity = 'public'
-  } else if (!collectiveGoal.isPublic && template.goalIsPublic) {
+  if (collectiveGoal.isSecret && template.goalIsSecret) {
+    publicity = 'private'
+  } else if (collectiveGoal.isSecret && !template.goalIsSecret) {
     publicity = 'collectiveGoalOnly'
   } else {
-    publicity = 'private'
+    publicity = 'public'
   }
 
   // Create goal
   const goal = createGoal({
     title: template.goalTitle,
     description: template.goalDescription ?? '',
-    publicity: publicity,
+    publicity,
     deadline: template.goalDeadline,
     shortDescription: template.goalShortDescription,
     image: template.goalImage,

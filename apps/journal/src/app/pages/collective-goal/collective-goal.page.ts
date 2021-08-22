@@ -83,7 +83,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
       this.isSpectator = stakeholder?.isSpectator ?? false
 
       if (!!collectiveGoal) {
-        let access = collectiveGoal.isPublic
+        let access = !collectiveGoal.isSecret
         if (!access && !!stakeholder) access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
         if (!access) access = await this.inviteTokenService.checkInviteToken('collectiveGoal', this.collectiveGoalId)  
         access ? this.initCollectiveGoal(collectiveGoal) : this.initNoAccess()
@@ -96,7 +96,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   async initCollectiveGoal(collectiveGoal: CollectiveGoal) {
     if (!this.canAccess) {
       this.canAccess = true
-      this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, collectiveGoal.isPublic)
+      this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, collectiveGoal.isSecret)
       this.stakeholders$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
       this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, ref => ref.orderBy('numberOfTimesUsed', 'desc'))
   
@@ -136,13 +136,12 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   //Collective Goal Section
-  async openOptionsPopover(collectiveGoal: CollectiveGoal, ev: UIEvent) {
+  async openOptionsPopover(ev: UIEvent) {
     const popover = await this.popoverCtrl.create({
       component: CollectiveGoalOptionsPage,
       event: ev,
       componentProps: {
-        isAdmin: this.isAdmin,
-        isPublic: collectiveGoal.isPublic
+        isAdmin: this.isAdmin
       }
     })
     await popover.present()
@@ -199,7 +198,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   public async openSharePopover(collectiveGoal: CollectiveGoal, ev: UIEvent) {
     if (this.platform.is('android') || this.platform.is('ios') || navigator.share) {
 
-      const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, collectiveGoal.isPublic, this.isAdmin)
+      const ref = await this.inviteTokenService.getShareLink(this.collectiveGoalId, true, collectiveGoal.isSecret, this.isAdmin)
       await Share.share({
         title: collectiveGoal.title,
         text: 'Check out this collective goal',
@@ -219,15 +218,11 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     }
   }
 
-  async createGoal() {
-    const collectiveGoal = await this.collectiveGoalService.getValue(this.collectiveGoalId)
+  createGoal() {
     this.modalCtrl.create({
       component: UpsertGoalModalComponent,
       componentProps: {
-        collectiveGoalId: this.collectiveGoalId,
-        collectiveGoalTitle: collectiveGoal.title,
-        collectiveGoalIsPublic: collectiveGoal.isPublic,
-        collectiveGoalImage: collectiveGoal.image
+        collectiveGoalId: this.collectiveGoalId
       }
     }).then(modal => modal.present())
   }

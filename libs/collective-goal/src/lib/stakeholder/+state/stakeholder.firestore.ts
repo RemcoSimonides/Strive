@@ -10,7 +10,7 @@ export interface CollectiveGoalStakeholder {
   isSpectator: boolean;
   collectiveGoalId: string;
   collectiveGoalTitle: string;
-  collectiveGoalIsPublic: boolean;
+  collectiveGoalIsSecret: boolean;
   updatedBy?: string;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
@@ -27,7 +27,7 @@ export function createCollectiveGoalStakeholder(params: Partial<CollectiveGoalSt
     isAchiever: false,
     isSpectator: false,
     collectiveGoalId: '',
-    collectiveGoalIsPublic: false,
+    collectiveGoalIsSecret: false,
     collectiveGoalTitle: '',
     ...params
   }

@@ -42,7 +42,7 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
     const stakeholder = createCollectiveGoalStakeholder({
       uid: this.user.uid,
       collectiveGoalId: collectiveGoal.id,
-      collectiveGoalIsPublic: collectiveGoal.isPublic,
+      collectiveGoalIsSecret: collectiveGoal.isSecret,
       collectiveGoalTitle: collectiveGoal.title,
       isAdmin: true
     })
@@ -68,12 +68,12 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
     await this.db.doc(`CollectiveGoals/${collectiveGoalId}`).delete()
   }
 
-  public getGoals(id: string, publicOnly: boolean): Observable<Goal[]> {
+  public getGoals(id: string, secret: boolean): Observable<Goal[]> {
     let query: QueryFn
-    if (publicOnly) {
-      query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '==', 'public').orderBy('createdAt', 'desc')
-    } else {
+    if (secret) {
       query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '!=', 'private').orderBy('publicity').orderBy('createdAt', 'desc')
+    } else {
+      query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '==', 'public').orderBy('createdAt', 'desc')
     }
 
     return this.goalService.valueChanges(query).pipe(

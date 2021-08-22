@@ -43,8 +43,8 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
       this.fire.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).pipe(take(1)).toPromise()
     ])
 
-    if (collectiveGoal.title) stakeholder.collectiveGoalTitle = collectiveGoal.title
-    if (collectiveGoal.isPublic !== undefined) stakeholder.collectiveGoalIsPublic = collectiveGoal.isPublic
+    stakeholder.collectiveGoalTitle = collectiveGoal.title
+    stakeholder.collectiveGoalIsSecret = collectiveGoal.isSecret
 
     const ref = this.getRef(uid, { collectiveGoalId })
     write.update(ref, createCollectiveGoalStakeholder({
@@ -56,10 +56,10 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     }))
   }
 
-  public getCollectiveGoals(uid: string, isPublic?: boolean): Observable<CollectiveGoal[]> {
+  public getCollectiveGoals(uid: string, isSecret?: boolean): Observable<CollectiveGoal[]> {
     let query: QueryGroupFn<CollectiveGoalStakeholder>
-    if (isPublic !== undefined) {
-      query = ref => ref.where('uid', '==', uid).where('collectiveGoalIsPublic', '==', isPublic).orderBy('createdAt', 'desc')
+    if (isSecret !== undefined) {
+      query = ref => ref.where('uid', '==', uid).where('collectiveGoalIsSecret', '==', isSecret).orderBy('createdAt', 'desc')
     } else {
       query = ref => ref.where('uid', '==', uid).orderBy('createdAt', 'desc')
     }

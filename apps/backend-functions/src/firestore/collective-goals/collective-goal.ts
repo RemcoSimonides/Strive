@@ -11,7 +11,7 @@ export const collectiveGoalCreatedHandler = functions.firestore.document(`Collec
     const collectiveGoal = createCollectiveGoal(snapshot.data())
     const collectiveGoalId = snapshot.id
 
-    if (collectiveGoal.isPublic) {
+    if (!collectiveGoal.isSecret) {
       addToAlgolia('collectiveGoal', collectiveGoalId, {
         collectiveGoalId,
         ...collectiveGoal
@@ -60,14 +60,17 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
 
     // update collective goal data in other collections
     if (before.title !== after.title
-     || before.isPublic !== after.isPublic
+     || before.isSecret !== after.isSecret
      || before.image !== after.image) {
       updateCollectiveGoalStakeholders(collectiveGoalId, after)
     }
 
     // public
-    if (before.isPublic !== after.isPublic) {
-      if (after.isPublic) { // made public
+    if (before.isSecret !== after.isSecret) {
+      if (after.isSecret) { // made secret
+        // delete goal from Algolia index
+        deleteFromAlgolia('collectiveGoal', collectiveGoalId)
+      } else { // made public
 
         // add to algolia
         addToAlgolia('collectiveGoal', collectiveGoalId, {
@@ -75,10 +78,6 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
           ...after
         })
 
-      } else { // made private
-
-        // delete goal from Algolia index
-        deleteFromAlgolia('collectiveGoal', collectiveGoalId)
       }
     } else if (before.title !== after.title 
       || before.image !== after.image 
@@ -98,7 +97,7 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
     }
   })
 
-async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { title, isPublic, image }: CollectiveGoal) {
+async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { title, isSecret, image }: CollectiveGoal) {
 
   const stakeholdersSnap = await db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`).get()
 
@@ -107,7 +106,7 @@ async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { titl
     const promise = stakeholderSnap.ref.update({
       collectiveGoalId,
       collectiveGoalTitle: title,
-      collectiveGoalIsPublic: isPublic,
+      collectiveGoalIsSecret: isSecret,
       collectiveGoalImage: image
     })
     promises.push(promise)

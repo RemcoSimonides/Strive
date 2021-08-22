@@ -37,7 +37,7 @@ function createGoalFormControl(params?: Goal) {
     numberOfCustomSupports: new FormControl(goal.numberOfCustomSupports),
     numberOfSupporters: new FormControl(goal.numberOfSupporters),
     publicity: new FormControl(goal.publicity),
-    isPublic: new FormControl(goal.publicity === 'private' ? false : true),
+    isSecret: new FormControl(goal.publicity === 'private'),
     shortDescription: new FormControl(goal.shortDescription),
     title: new FormControl(goal.title, Validators.required),
     totalNumberOfCustomSupports: new FormControl(goal.totalNumberOfCustomSupports),

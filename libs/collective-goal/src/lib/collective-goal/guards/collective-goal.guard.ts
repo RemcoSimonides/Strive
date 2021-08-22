@@ -17,9 +17,8 @@ export class CollectiveGoalGuard implements CanActivate {
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const collectiveGoalId = next.params.id as string
     const collectiveGoal = await this.collectiveGoalService.getValue(collectiveGoalId)
-    if (collectiveGoal.isPublic) {
-      return true
-    } else {
+
+    if (collectiveGoal.isSecret) {
       const uid = await this.user.getUID()
       if (!uid) {
         this.router.navigate(['/explore'])
@@ -32,6 +31,8 @@ export class CollectiveGoalGuard implements CanActivate {
         this.router.navigate(['/explore'])
         return false
       }
+    } else {
+      return true
     }
   }
 }

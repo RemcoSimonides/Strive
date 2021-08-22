@@ -70,7 +70,7 @@ export class UpsertGoalModalComponent implements OnInit {
       loading.present()
       
       try {
-        const publicity = this.determinePublicity(this.goalForm.value.isPublic)
+        const publicity = this.determinePublicity(this.goalForm.value.isSecret)
         this.goalForm.publicity.setValue(publicity)
 
         const goal = createGoal({ ...this.goalForm.value, id: this.goalId })
@@ -93,9 +93,9 @@ export class UpsertGoalModalComponent implements OnInit {
     }
   }
 
-  private determinePublicity(goalIsPublic: boolean): GoalPublicityType {
-    if (!goalIsPublic) return 'private'
-    if (!!this.collectiveGoal && !this.collectiveGoal.isPublic) return 'collectiveGoalOnly'
+  private determinePublicity(isSecret: boolean): GoalPublicityType {
+    if (isSecret) return 'private'
+    if (!!this.collectiveGoal && this.collectiveGoal.isSecret) return 'collectiveGoalOnly'
     return 'public'
   }
 

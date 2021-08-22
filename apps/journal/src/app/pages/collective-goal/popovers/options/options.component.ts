@@ -10,7 +10,7 @@ export class CollectiveGoalOptionsPage implements OnInit {
 
   public enumCollectiveGoalOptions = enumCollectiveGoalOptions
 
-  public isAdmin: boolean = false
+  public isAdmin = false
 
   constructor(
     private navParams: NavParams,
@@ -21,7 +21,7 @@ export class CollectiveGoalOptionsPage implements OnInit {
     this.isAdmin = this.navParams.data.isAdmin
   }
 
-  async close(goalOption: enumCollectiveGoalOptions){
+  close(goalOption: enumCollectiveGoalOptions){
     this.popoverCtrl.dismiss(goalOption)
   }
 

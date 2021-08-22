@@ -12,7 +12,7 @@ function createTemplateFormControl(params?: Template) {
     goalShortDescription: new FormControl(template.goalShortDescription),
     goalDescription: new FormControl(template.goalDescription),
     goalImage: new FormControl(template.goalImage),
-    goalIsPublic: new FormControl(template.goalIsPublic),
+    goalIsSecret: new FormControl(template.goalIsSecret),
     goalDeadline: new FormControl(template.goalDeadline),
     roadmapTemplate: new FormControl(template.roadmapTemplate)
   }

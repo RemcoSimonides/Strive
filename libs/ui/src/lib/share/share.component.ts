@@ -14,7 +14,7 @@ import { Clipboard }  from '@capacitor/clipboard';
 export class ShareComponent implements OnInit {
 
   @Input() isAdmin: boolean
-  @Input() isPublic: boolean
+  @Input() isSecret: boolean
 
   @Input() id: string
   @Input() @boolean isCollectiveGoal: boolean
@@ -31,7 +31,7 @@ export class ShareComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.ref = await this.inviteTokenService.getShareLink(this.id, this.isCollectiveGoal, this.isPublic, this.isAdmin)
+    this.ref = await this.inviteTokenService.getShareLink(this.id, this.isCollectiveGoal, this.isSecret, this.isAdmin)
 
     // define image
     if (this.image.toLowerCase() === 'assets/goal.jpg') {

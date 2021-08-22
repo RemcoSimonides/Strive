@@ -11,7 +11,7 @@ export interface Template {
   goalShortDescription: string;
   goalDescription: string;
   goalImage: string;
-  goalIsPublic: boolean;
+  goalIsSecret: boolean;
   goalDeadline: string;
   roadmapTemplate: MilestoneTemplate[];
   updatedBy?: string;
@@ -32,7 +32,7 @@ export function createTemplate(params: Partial<Template> = {}): Template {
     goalDescription: '',
     goalDeadline: '',
     goalImage: '',
-    goalIsPublic: false,
+    goalIsSecret: false,
     goalShortDescription: '',
     ...params
   }

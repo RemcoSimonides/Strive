@@ -230,8 +230,8 @@ export class GoalPage implements OnInit, OnDestroy {
 
     if (this.platform.is('android') || this.platform.is('ios')) {
 
-      const isPublic: boolean = goal.publicity === 'public' ? true : false
-      const ref = await this.inviteTokenService.getShareLink(this.goalId, false, isPublic, this.isAdmin)
+      const isSecret = goal.publicity !== 'public'
+      const ref = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, this.isAdmin)
 
       await Share.share({
         title: goal.title,

@@ -3,7 +3,7 @@
 <share-button button="whatsapp" theme="outline"></share-button>
 <share-button button="email" theme="outline"></share-button>
 
-<ng-container *ngIf="isPublic || (!isPublic && isAdmin)">
+<ng-container *ngIf="!isSecret || (isSecret && isAdmin)">
   <section class="share_link" fxLayout="column" fxLayoutAlign="start center">
     <code>{{ ref }}</code>
     <ion-button (click)="copyUrl()" fill="clear" size="small" >

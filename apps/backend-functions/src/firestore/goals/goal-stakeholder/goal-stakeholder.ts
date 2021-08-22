@@ -120,7 +120,7 @@ async function upsertCollectiveGoalStakeholder(goal: Goal, stakeholderId: string
       isSpectator: false,
       collectiveGoalId: collectiveGoalId,
       collectiveGoalTitle: collectiveGoal.title,
-      collectiveGoalIsPublic: collectiveGoal.isPublic,
+      collectiveGoalIsSecret: collectiveGoal.isSecret,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     })
