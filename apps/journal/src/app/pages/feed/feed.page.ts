@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
 import { Observable, of, Subscription } from 'rxjs';
 // Strive
-import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { FeedPaginationService } from '@strive/notification/+state/feed-pagination.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
-import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';

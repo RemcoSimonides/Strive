@@ -15,6 +15,7 @@ import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.pa
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 
 
 @Pipe({ name: 'source' })
@@ -67,12 +68,22 @@ export class NotificationComponent {
   }
 
   openDiscussion() {
-    this.modalCtrl.create({
-      component: DiscussionModalPage,
-      componentProps: {
-        discussionId: this.notification.discussionId,
-      }
-    }).then(modal => modal.present())
+    if (this.user.uid) {
+      this.modalCtrl.create({
+        component: DiscussionModalPage,
+        componentProps: {
+          discussionId: this.notification.discussionId,
+        }
+      }).then(modal => modal.present())
+    } else {
+      this.modalCtrl.create({
+        component: AuthModalPage,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      }).then(modal => modal.present())
+    }
+
   }
 
   public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {

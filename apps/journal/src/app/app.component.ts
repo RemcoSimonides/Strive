@@ -11,7 +11,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 // Pages
 import { TabsPage } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
-import { AuthModalPage, enumAuthSegment } from './pages/auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { Observable, of, Subscription } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';

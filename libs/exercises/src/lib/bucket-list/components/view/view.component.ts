@@ -28,6 +28,7 @@ export class ViewComponent implements OnInit {
   ngOnInit() {
     this.bucketList$ = this.service.valueChanges('BucketList', { uid: this.uid }).pipe(
       map(bucketlist => {
+        if (!bucketlist) return { items: [] };
         if (!this.isOwner && this.isSpectator) bucketlist.items = bucketlist.items.filter(item => item.privacy !== 'private')
         if (!this.isOwner && !this.isSpectator) bucketlist.items = bucketlist.items.filter(item => item.privacy === 'public')
         return bucketlist

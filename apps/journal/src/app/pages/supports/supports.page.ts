@@ -11,7 +11,7 @@ import { Observable, Subscription } from 'rxjs';
 // interfaces
 import { Support } from '@strive/support/+state/support.firestore'
 // components
-import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 
 @Component({
   selector: 'app-supports',

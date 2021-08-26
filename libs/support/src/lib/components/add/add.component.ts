@@ -16,7 +16,7 @@ import { Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
-import { AuthModalPage, enumAuthSegment } from 'apps/journal/src/app/pages/auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 
 @Component({

@@ -28,7 +28,7 @@ import { AppComponent } from './app.component';
 // Pages
 import { TabsPage } from './pages/tabs/tabs';
 import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
-import { AuthModalModule } from './pages/auth/auth-modal.module';
+import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
 
 // FontAwesome
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';

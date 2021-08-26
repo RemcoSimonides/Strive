@@ -16,7 +16,7 @@ import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 // Pages
-import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 

@@ -4,8 +4,10 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { GoalFeedPaginationService } from '@strive/notification/+state/goal-feed-pagination.service';
+import { switchMap } from 'rxjs/operators';
+import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 @Component({
   selector: '[goal] journal-goal-posts',
@@ -31,7 +33,9 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.feed.reset()
     this.feed.init(`Goals/${this.goal.id}/Notifications`)
 
-    this.sub = this.stakeholder.valueChanges(this.user.uid, { goalId: this.goal.id }).subscribe(stakeholder => {
+    this.sub = this.user.profile$.pipe(
+      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.id, { goalId: this.goal.id }) : of(createGoalStakeholder()))
+    ).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
     })
   }

@@ -9,7 +9,7 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { ProfileService } from '@strive/user/user/+state/profile.service';
 // Rxjs
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page';
@@ -21,12 +21,12 @@ import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-sel
 import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
 // Interfaces
-import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
+import { createSpectator, Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
-import { AuthModalPage, enumAuthSegment } from '../auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
 import { map, switchMap, tap } from 'rxjs/operators';
 
@@ -77,13 +77,13 @@ export class ProfilePage implements OnInit {
 
     this.isSpectator$ = this.user.profile$.pipe(
       tap(profile => {
-        this.isOwner = profile.id === this.profileId
+        this.isOwner = profile?.id === this.profileId
       }),
-      switchMap(profile => this.userSpectateService.valueChanges(profile.id, { uid: this.profileId })),
+      switchMap(profile => profile ? this.userSpectateService.valueChanges(profile.id, { uid: this.profileId }) : of(createSpectator())),
       map(spectator => spectator?.isSpectator ?? false)
     )
 
-    if (!!this.profileId) {
+    if (this.profileId) {
       this.profile$ = this.profileService.valueChanges(this.profileId, { uid: this.profileId }).pipe(
         tap(profile => {
           if (!!profile) {
@@ -112,7 +112,7 @@ export class ProfilePage implements OnInit {
     }
   } 
 
-  async openAuthModal() {
+  openAuthModal() {
     this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
@@ -121,14 +121,14 @@ export class ProfilePage implements OnInit {
     }).then(modal => modal.present())
   }
 
-  public presentProfileOptionsPopover(ev: UIEvent) {
+  presentProfileOptionsPopover(ev: UIEvent) {
     this.popoverCtrl.create({
       component: ProfileOptionsPage,
       event: ev
     }).then(popover => popover.present())
   }
 
-  public async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
+  async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
     if (!this.isOwner) return
 
     const popover = await this.popoverCtrl.create({
@@ -144,7 +144,7 @@ export class ProfilePage implements OnInit {
     popover.present()
   }
 
-  public updateUsername(){
+  updateUsername(){
     if (this.profileForm.enabled) {
       const username = this.profileForm.username.value as string
       if (!username) return
@@ -163,7 +163,7 @@ export class ProfilePage implements OnInit {
     }
   }
 
-  async openExercise(enumExercise: enumExercises) {
+  openExercise(enumExercise: enumExercises) {
     if (!this.isOwner) return
 
     let component

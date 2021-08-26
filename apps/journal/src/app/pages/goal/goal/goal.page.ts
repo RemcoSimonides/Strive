@@ -12,6 +12,7 @@ import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/opt
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalSharePopoverPage } from '../popovers/share/share.component';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Strive Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -93,16 +94,25 @@ export class GoalPage implements OnInit, OnDestroy {
     this.sub.unsubscribe()
   }
 
-  public openDiscussion() {
-    this.modalCtrl.create({
-      component: DiscussionModalPage,
-      componentProps: {
-        discussionId: this.goalId
-      }
-    }).then(modal => modal.present())
+  openDiscussion() {
+    if (this.user.uid) {
+      this.modalCtrl.create({
+        component: DiscussionModalPage,
+        componentProps: {
+          discussionId: this.goalId
+        }
+      }).then(modal => modal.present())
+    } else {
+      this.modalCtrl.create({
+        component: AuthModalPage,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      }).then(modal => modal.present())
+    }
   }
 
-  public async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
+  async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
     const popover = await this.popoverCtrl.create({
       component: GoalOptionsPopoverPage,
       event: ev,

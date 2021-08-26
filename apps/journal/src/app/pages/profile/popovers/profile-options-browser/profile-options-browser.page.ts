@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Components
-import { enumAuthSegment, AuthModalPage } from 'apps/journal/src/app/pages/auth/auth-modal.page';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { FcmService } from '@strive/utils/services/fcm.service';
 
 @Component({
