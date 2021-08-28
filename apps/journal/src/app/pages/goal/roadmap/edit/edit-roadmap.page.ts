@@ -56,8 +56,8 @@ export class EditRoadmapPage implements OnInit {
     private templateService: TemplateService,
     public screensize: ScreensizeService
   ) {
-    const { extras } = this.router.getCurrentNavigation()
-    this.mode = extras.state?.mode ? 'create' : 'update'
+    const extras = this.router.getCurrentNavigation()
+    this.mode = extras?.extras.state?.mode ? 'create' : 'update'
   }
 
   async ngOnInit() {
@@ -98,7 +98,35 @@ export class EditRoadmapPage implements OnInit {
     }
   }
 
-  async save() {
+  async presave() {
+    const description = this.milestoneForm.description.value
+    if (description) {
+      const alert = await this.alertCtrl.create({
+        header: `Milestone hasn't been added yet`,
+        subHeader: `Do you want to add '${description}' to the roadmap?`,
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel'
+          },
+          {
+            text: 'Yes, add and save',
+            role: 'add'
+          }
+        ]
+      })
+      await alert.present()
+      await alert.onDidDismiss().then(res => {
+        if (res.role === 'add') {
+          this.addMilestone()
+        }
+        this.save()
+      })
+    }
+    this.save()
+  }
+
+  private async save() {
     const loading = await this.loadingCtrl.create({ spinner: 'lines' })
     loading.present()
 

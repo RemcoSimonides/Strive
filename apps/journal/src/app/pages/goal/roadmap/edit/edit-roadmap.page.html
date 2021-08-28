@@ -8,7 +8,7 @@
     </ion-buttons>
     <ion-title color="primary">{{ mode === 'create' ? 'Setup' : 'Edit' }} Roadmap</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="save()">
+      <ion-button (click)="presave()">
         <ion-icon name="checkmark"></ion-icon>Save
       </ion-button>
     </ion-buttons>
@@ -38,7 +38,7 @@
     <ion-button (click)="cancel()" color="primary" fill="clear">
       <ion-icon name="close" color="primary"></ion-icon>{{ mode === 'create' ? 'Skip' : 'Cancel' }}
     </ion-button>
-    <ion-button (click)="save()" color="primary" fill="clear">
+    <ion-button (click)="presave()" color="primary" fill="clear">
       <ion-icon name="checkmark" color="primary"></ion-icon>Save
     </ion-button>
   </section>
