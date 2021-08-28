@@ -112,11 +112,6 @@ export class GoalViewPage implements OnInit, OnDestroy {
 
   public segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
-    this.router.navigate(['.'], {
-      relativeTo: this.route,
-      queryParams: { t: this.segmentChoice },
-      replaceUrl: true
-    })
     if (this.segmentChoice === 'roadmap') {
       initMilestonesAnimation()
     }

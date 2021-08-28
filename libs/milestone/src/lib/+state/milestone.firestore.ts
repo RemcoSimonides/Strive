@@ -69,7 +69,7 @@ export function createMilestoneTemplate(params: Partial<MilestoneTemplate> = {})
     id: !!params.id ? params.id : '',
     deadline: '',
     description: '',
-    sequenceNumber: '',
+    sequenceNumber: '1',
     ...params
   }
 }

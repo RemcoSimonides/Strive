@@ -14,16 +14,19 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
-    <section fxLayout fxLayoutAlign="center" class="limited-width">
-      <article class="new_sequenceNumber">
-        <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
-      </article>
-      <ion-searchbar placeholder="Add milestone" 
-        search-icon="add"
-        (keydown.enter)="addMilestone(addMilestonebar.value)"
-        #addMilestonebar>
-      </ion-searchbar>
-    </section>
+    <form [formGroup]="milestoneForm">
+      <ion-item>
+        <ion-input
+          formControlName="sequenceNumber"
+          (ionInput)="onSequenceNumberInput($event, 'milestone', milestoneForm.sequenceNumber.value)"
+          ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="add"></ion-icon>
+        <ion-input formControlName="description" placeholder="Add milestone..." (keydown.enter)="addMilestone()"></ion-input>
+        <ion-button (click)="addMilestone()">add</ion-button>
+      </ion-item>
+    </form>
   </ion-toolbar>
 </ion-header>
 
@@ -40,20 +43,22 @@
     </ion-button>
   </section>
 
-  <section fxLayout fxLayoutAlign="center" class="limited-width">
-    <article class="new_sequenceNumber">
-      <ion-input [(ngModel)]="newSequenceNumber"></ion-input>
-    </article>
-    <ion-searchbar placeholder="Add milestone" 
-      search-icon="add"
-      (keydown.enter)="addMilestone(addMilestonebar.value)"
-      #addMilestonebar>
-    </ion-searchbar>
+  <section>
+    <form [formGroup]="milestoneForm">
+      <ion-item>
+        <ion-input formControlName="sequenceNumber" (ionInput)="onSequenceNumberInput($event, 'milestone', milestoneForm.sequenceNumber.value)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="add"></ion-icon>
+        <ion-input formControlName="description" placeholder="Add milestone..." (keydown.enter)="addMilestone()"></ion-input>
+        <ion-button (click)="addMilestone()">add</ion-button>
+      </ion-item>
+    </form>
   </section>
 </ng-template>
 
 <ion-content class="ion-padding">
-  <section fxLayout fxLayoutAlign="center" class="limited-width">
+  <section fxLayout fxLayoutAlign="center">
 
     <ng-container *ngIf="roadmapForm.controls.length === 0 else list">
       <article class="explanation">
@@ -64,10 +69,10 @@
 
     <ng-template #list>
       <ion-list>
-        <ion-item *ngFor="let control of roadmapForm.controls">
+        <ion-item *ngFor="let control of roadmapForm.controls; let i = index">
           <ion-input [ngStyle]="{'margin-left': getMargin(control.value.sequenceNumber)}"
             class="sequenceNumber"
-            (ionInput)="onSequenceNumberInput($event, control.value.sequenceNumber)"
+            (ionInput)="onSequenceNumberInput($event, 'roadmap', control.value.sequenceNumber)"
             (ionFocus)="onSequenceNumberFocus(control.value.sequenceNumber)"
             (ionBlur)="onSequenceNumberBlur($event, control.value.sequenceNumber)"
             [formControl]="control.sequenceNumber">
@@ -80,10 +85,11 @@
             displayFormat="DD-MM-YY"
             pickerFormat="DDDD MMMM YYYY"
             [formControl]="control.deadline"
-            (click)="_openingDatetime($event, control.value)"
-            (ionChange)="onDeadlineDateChange($event, control.value)">
+            (click)="openingDatetime($event, control.value)"
+            (ionChange)="onDeadlineDateChange($event, control.value)"
+            #datetime>
           </ion-datetime>
-          <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon>
+          <fa-icon [icon]="['fas', 'stopwatch']" (click)="openDateTime(i)"></fa-icon>
           <ion-icon name="trash" (click)="deleteMilestone(control.value.sequenceNumber)"></ion-icon>
         </ion-item>
       </ion-list>

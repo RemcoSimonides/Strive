@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 // Ionic
-import { LoadingController, IonSearchbar, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, AlertController, Platform } from '@ionic/angular';
 // Services
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
@@ -24,7 +24,10 @@ import { MilestoneTemplateForm } from '@strive/milestone/forms/milestone.form';
 })
 export class EditRoadmapPage implements OnInit {
 
-  @ViewChild('addMilestonebar') addMilestonebar: IonSearchbar;
+  @ViewChildren('datetime') dateControllers: QueryList<any>;
+
+  milestoneForm = new MilestoneTemplateForm()
+  roadmapForm = new FormArray([])
 
   // For templates
   private collectiveGoalId: string
@@ -32,11 +35,8 @@ export class EditRoadmapPage implements OnInit {
   // For goals
   private goalId: string
   private goal: Goal
-  // For both
-  public roadmapForm = new FormArray([])
-  
-  public newSequenceNumber = '1'
 
+  // For both
   private prevSeqNo: string
   private prevMilestoneIndex: number
 
@@ -138,7 +138,7 @@ export class EditRoadmapPage implements OnInit {
       const from = this.prevMilestoneIndex
       const to = this.findIndexForNewSequenceNumberPosition(newSequenceNumber)
 
-      // Following three lines reorder the array
+      // Reorder the array
       const temp = this.roadmapForm.at(from)
       if (!!temp) { // temp is undefined when milestone is removed
         this.roadmapForm.removeAt(from)
@@ -149,60 +149,70 @@ export class EditRoadmapPage implements OnInit {
     }
   }
 
-  public async onSequenceNumberInput(event: CustomEvent, oldValue: string) {
+  public async onSequenceNumberInput(event: CustomEvent, form: 'milestone' | 'roadmap', oldValue: string) {
+    const typedValue = event.detail.data
+    const control = form === 'milestone'
+      ? this.milestoneForm.sequenceNumber
+      : this.roadmapForm.controls[this.prevMilestoneIndex].get('sequenceNumber')
+
+    const undo = () => {
+      // Attempt to cancel the change!
+      setTimeout(() => {
+        control.setValue(oldValue)
+      }, 0);
+    }
+
     if (event.detail.inputType === 'insertText') {
-      if (event.detail.data === '.') {
-        // Only dot is allowed other than number
-      } else if (!isNaN(event.detail.data)) { 
-        const valueToBeChecked: string = !oldValue ? event.detail.data : `${oldValue}${event.detail.data}`
+      if (typedValue === '.') {
+        // Only dot is allowed other than number but only one in a row
+        if (oldValue.endsWith('.')) {
+          undo()
+        }
+
+      } else if (!isNaN(typedValue)) { 
+        const valueToBeChecked: string = !oldValue ? typedValue : `${oldValue}${typedValue}`
 
         if (!this.checkSequenceNumberValidity(valueToBeChecked)){
-          // Attempt to cancel the change!
-          setTimeout(() => {
-            this.roadmapForm.controls[this.prevMilestoneIndex].get('sequenceNumber').setValue(oldValue)
-          }, 0);
+          if (typedValue === '1') {
+            oldValue = oldValue.slice(0, -1)
+          }
+          undo()
           return
         }
       } else {
-
-        // Attempt to cancel the change!
-        setTimeout(() => {
-          this.roadmapForm.controls[this.prevMilestoneIndex].get('sequenceNumber').setValue(oldValue)
-        }, 0)
+        undo()
         return
       }
     }
   }
 
-  async addMilestone(description: string) {
-    //Prevent adding empty descriptions
-    if (!description) return
+  async addMilestone() {
+    if (this.milestoneForm.invalid) return
+
+    const { sequenceNumber, description } = this.milestoneForm.value as MilestoneTemplate
 
     //Prevent adding invalid sequence number
-    if (!this.checkSequenceNumberValidity(this.newSequenceNumber)) return
+    if (!this.checkSequenceNumberValidity(sequenceNumber)) return
 
     const id = await this.db.getNewId()
-    const indexForNewMilestone = this.findIndexForNewSequenceNumberPosition(this.newSequenceNumber)
-    const control = new MilestoneTemplateForm({
-      id,
-      sequenceNumber: this.newSequenceNumber,
-      description
-    })
+    const indexForNewMilestone = this.findIndexForNewSequenceNumberPosition(sequenceNumber)
+    const control = new MilestoneTemplateForm({ id, sequenceNumber, description })
     this.roadmapForm.insert(indexForNewMilestone, control)
 
     this.resetSequenceNumbers()
-    this.newSequenceNumber = this.incrementSeqNo(this.newSequenceNumber, 1)
-    this.addMilestonebar.value = ""
+
+    this.milestoneForm.incrementSeqNo(1)
+    this.milestoneForm.description.reset()
   }
 
-  public async deleteMilestone(sequenceNumber: string): Promise<void> {
+  async deleteMilestone(sequenceNumber: string): Promise<void> {
     const index = this.roadmapForm.controls.findIndex(control => control.value.sequenceNumber === sequenceNumber)
 
     // check if milestone has supports -> then give a warning. Supports will be deleted if deleted
     const milestoneId = this.roadmapForm.controls[index].value.id as string
     const milestone = await this.milestoneService.getValue(milestoneId, { goalId: this.goalId });
 
-    if (milestone.numberOfMoneySupports > 0 || milestone.numberOfCustomSupports > 0) {
+    if (milestone?.numberOfMoneySupports > 0 || milestone?.numberOfCustomSupports > 0) {
 
       const alert = await this.alertCtrl.create({
         header: `Milestone has active supports`,
@@ -224,7 +234,7 @@ export class EditRoadmapPage implements OnInit {
           // delete milestone
           this.roadmapForm.removeAt(index)
           this.resetSequenceNumbers()
-          this.newSequenceNumber = this.incrementSeqNo(this.newSequenceNumber, -1)
+          this.milestoneForm.incrementSeqNo(-1)
         }
       })
 
@@ -233,7 +243,7 @@ export class EditRoadmapPage implements OnInit {
       // delete milestone
       this.roadmapForm.removeAt(index)
       this.resetSequenceNumbers()
-      this.newSequenceNumber = this.incrementSeqNo(this.newSequenceNumber, -1)
+      this.milestoneForm.incrementSeqNo(-1)
 
     }
   }
@@ -242,7 +252,8 @@ export class EditRoadmapPage implements OnInit {
     if (!!this.roadmapForm.controls.length) {
       const lastIndex = this.roadmapForm.controls.length - 1
       const lastSeqno = this.roadmapForm.controls[lastIndex].value.sequenceNumber
-      this.newSequenceNumber = this.incrementSeqNo(lastSeqno, 1)
+      const nextSeqno = this.incrementSeqNo(lastSeqno, 1)
+      this.milestoneForm.sequenceNumber.setValue(nextSeqno)
     }
   }
 
@@ -284,7 +295,7 @@ export class EditRoadmapPage implements OnInit {
     }
   }
 
-  private checkSequenceNumberValidity(sequenceNumber): boolean {
+  private checkSequenceNumberValidity(sequenceNumber: string): boolean {
 
     //Check type
     if (typeof sequenceNumber !== 'string') return false
@@ -357,26 +368,43 @@ export class EditRoadmapPage implements OnInit {
 
   private determineNextSequenceNumber() {
     const roadmapTemplate: MilestoneTemplate[] = this.roadmapForm.value
-    const elements = this.newSequenceNumber.split('.')
+    const elements = this.milestoneForm.sequenceNumber.value.split('.')
 
     let siblings
+    if (elements.length > 2) {
+      elements.pop()
+      const pre = elements.join('.') + '.'
+      siblings = roadmapTemplate.filter(m => m.sequenceNumber.includes(pre))
+    }
+
+    if (!siblings?.length) elements.pop()
+
     if (elements.length > 1) {
       elements.pop();
       const pre = elements.join('.') + '.'
       siblings = roadmapTemplate.filter(m => m.sequenceNumber.includes(pre))
-    } else {
+    }
+    
+    if (!siblings?.length) {
+      elements.pop()
       siblings = roadmapTemplate.filter(m => getNrOfDotsInSeqno(m.sequenceNumber) === 0)
     }
 
-    this.newSequenceNumber = this.incrementSeqNo(siblings.pop().sequenceNumber, 1)
+    const nextSeqno = this.incrementSeqNo(siblings.pop().sequenceNumber, 1)
+    this.milestoneForm.sequenceNumber.setValue(nextSeqno)
   }
 
-  public getMargin(sequenceNumber: string): string {
+  getMargin(sequenceNumber: string): string {
     const numberOfDots = getNrOfDotsInSeqno(sequenceNumber)
     return (numberOfDots * 10).toString() + 'px'
   }
 
-  public async _openingDatetime($event, milestone: MilestoneTemplate): Promise<void> {
+  openDateTime(index: number) {
+    const control = this.dateControllers.get(index)
+    control.el.click()
+  }
+
+  async openingDatetime($event, milestone: MilestoneTemplate): Promise<void> {
     event.stopPropagation(); //prevents roadmap from collapsing in or out :)
     
     // empty value

@@ -5,6 +5,7 @@ h1 {
 
 section {
   max-width: 900px;
+  width: 100%;
   margin: auto;
 
   ion-list {
@@ -29,9 +30,18 @@ section {
   }
 }
 
-.new_sequenceNumber {
-  max-width: 10%;
-  display: flex;
+form {
+  display: grid;
+  grid-template-columns: 60px auto;
+
+  ion-item {
+    --border-style: none;
+    --highlight-background: var(--ion-color-primary);
+  }
+
+  ion-icon {
+    margin-right: 8px;
+  }
 }
 
 .sequenceNumber {

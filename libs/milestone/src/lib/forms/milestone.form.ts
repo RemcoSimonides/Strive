@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms'
+import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
 import { createMilestone, createMilestoneLink, createMilestoneTemplate, Milestone, MilestoneLink, MilestoneTemplate } from "../+state/milestone.firestore";
 import { ProfileLinkForm } from '@strive/user/user/forms/user.form'
@@ -6,8 +6,8 @@ import { ProfileLinkForm } from '@strive/user/user/forms/user.form'
 function createMilestoneFormControl(params: Milestone) {
   const milestone = createMilestone(params)
   return {
-    sequenceNumber: new FormControl(milestone.sequenceNumber),
-    description: new FormControl(milestone.sequenceNumber),
+    sequenceNumber: new FormControl(milestone.sequenceNumber, Validators.required),
+    description: new FormControl(milestone.description, Validators.required),
     status: new FormControl(milestone.status),
     deadline: new FormControl(milestone.deadline),
     achiever: new ProfileLinkForm(milestone.achiever)
@@ -67,4 +67,11 @@ export class MilestoneTemplateForm extends FormEntity<MilestoneTemplateFormContr
   get deadline() { return this.get('deadline') }
   get description() { return this.get('description') }
   get sequenceNumber() { return this.get('sequenceNumber') }
+
+  incrementSeqNo(delta: -1 | 1) {
+    const elements = this.sequenceNumber.value.split('.')
+    const last = elements.pop()
+    elements.push((+last + delta).toString())
+    this.sequenceNumber.setValue(elements.join('.'))
+  }
 }
