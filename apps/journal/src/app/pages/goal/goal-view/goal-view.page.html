@@ -8,14 +8,14 @@
 
 <ng-container *ngIf="canAccess && !pageIsLoading">
   <ion-toolbar>
-    <ion-segment value="Goal" (ionChange)="segmentChanged($event)" class="ion-align-self-center">
-      <ion-segment-button value="Goal">
+    <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" class="ion-align-self-center">
+      <ion-segment-button value="goal">
         Goal
       </ion-segment-button>
-      <ion-segment-button value="Roadmap">
+      <ion-segment-button value="roadmap">
         Roadmap
       </ion-segment-button>
-      <ion-segment-button value="Posts">
+      <ion-segment-button value="story">
         Story
       </ion-segment-button>
     </ion-segment>
@@ -24,17 +24,17 @@
 
 <ion-content class="ion-padding" [ngSwitch]="segmentChoice" *ngIf="canAccess && !pageIsLoading">
 
-  <section *ngSwitchCase="'Goal'">
+  <section *ngSwitchCase="'goal'">
     <journal-goal></journal-goal>
   </section>
 
   <!-- Roadmap -->
-  <section *ngSwitchCase="'Roadmap'">
+  <section *ngSwitchCase="'roadmap'">
     <journal-goal-roadmap [goal]="goal"></journal-goal-roadmap>
   </section>
 
   <!-- Posts -->
-  <section *ngSwitchCase="'Posts'">
+  <section *ngSwitchCase="'story'">
     <journal-goal-posts [goal]="goal"></journal-goal-posts>
   </section>
 

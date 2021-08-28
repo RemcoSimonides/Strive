@@ -54,11 +54,11 @@ export class UpsertGoalModalComponent implements OnInit {
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
-  public dismiss(){
+  dismiss(){
     this.modalCtrl.dismiss()
   }
 
-  public async upsert() {
+  async upsert() {
     if (!this.goalForm.valid){
       console.log('invalid value(s)')
     } else {
@@ -76,7 +76,7 @@ export class UpsertGoalModalComponent implements OnInit {
         const goal = createGoal({ ...this.goalForm.value, id: this.goalId })
         await this.goalService.upsert(goal);
         if (this.mode === 'create') {
-          await this.navCtrl.navigateForward(`/goal/${this.goalId}`);
+          await this.navCtrl.navigateForward(`/goal/${this.goalId}/edit`, );
         }
 
         await loading.dismiss()

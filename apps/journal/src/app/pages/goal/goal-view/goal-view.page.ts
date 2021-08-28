@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router'
 // Ionic
 import { IonInfiniteScroll, NavController, Platform } from '@ionic/angular'
 // Rxjs
@@ -26,7 +26,7 @@ declare const initMilestonesAnimation: Function;
   templateUrl: './goal-view.page.html',
   styleUrls: ['./goal-view.page.scss'],
 })
-export class GoalViewPage implements OnInit {
+export class GoalViewPage implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   pageIsLoading = true
   canAccess = false
@@ -36,9 +36,10 @@ export class GoalViewPage implements OnInit {
 
   stakeholders: GoalStakeholder[]
 
-  segmentChoice: 'Goal' | 'Roadmap' | 'Posts' = 'Goal'
+  segmentChoice: 'goal' | 'roadmap' | 'story' = 'goal'
 
   backBtnSubscription: Subscription
+  accessSubscription: Subscription
 
   constructor(
     public user: UserService,
@@ -49,6 +50,7 @@ export class GoalViewPage implements OnInit {
     private navCtrl: NavController,
     private platform: Platform,
     private route: ActivatedRoute,
+    private router: Router,
     private seo: SeoService
   ) { }
 
@@ -56,12 +58,15 @@ export class GoalViewPage implements OnInit {
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal = await this.goalService.getValue(this.goalId)
 
+    const { t } = this.route.snapshot.queryParams;
+    this.segmentChoice = ['goal', 'roadmap', 'story'].includes(t) ? t : 'goal'
+
     if (!this.goal) {
       this.initNoAccess()
       return
     }
 
-    this.user.profile$.pipe(
+    this.accessSubscription = this.user.profile$.pipe(
       switchMap((profile: Profile) => !!profile ? this.stakeholder.valueChanges(profile.id, { goalId: this.goalId }) : of({})),
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
       let access = this.goal.publicity === 'public'
@@ -69,6 +74,10 @@ export class GoalViewPage implements OnInit {
       if (!access && !!stakeholder) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
       access ? this.initGoal() : this.initNoAccess();
     })
+  }
+
+  ngOnDestroy() {
+    this.accessSubscription.unsubscribe()
   }
 
   private initGoal() {
@@ -103,7 +112,12 @@ export class GoalViewPage implements OnInit {
 
   public segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
-    if (this.segmentChoice === 'Roadmap') {
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams: { t: this.segmentChoice },
+      replaceUrl: true
+    })
+    if (this.segmentChoice === 'roadmap') {
       initMilestonesAnimation()
     }
   }
