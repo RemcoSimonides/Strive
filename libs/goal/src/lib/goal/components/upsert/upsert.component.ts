@@ -76,7 +76,7 @@ export class UpsertGoalModalComponent implements OnInit {
         const goal = createGoal({ ...this.goalForm.value, id: this.goalId })
         await this.goalService.upsert(goal);
         if (this.mode === 'create') {
-          await this.navCtrl.navigateForward(`/goal/${this.goalId}/edit`, );
+          await this.navCtrl.navigateForward(`/goal/${this.goalId}/edit`, { state: { mode: 'create' }});
         }
 
         await loading.dismiss()

@@ -13,7 +13,6 @@ export interface Goal {
     roadmapTemplate: MilestoneTemplate[];
     isOverdue: boolean;
     isFinished: boolean;
-    isLocked: boolean;
     publicity: GoalPublicityType;
     numberOfAchievers: number;
     numberOfSupporters: number;
@@ -38,7 +37,6 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     description: '',
     image: '',
     isFinished: false,
-    isLocked: false,
     isOverdue: false,
     roadmapTemplate: [],
     numberOfAchievers: 0,

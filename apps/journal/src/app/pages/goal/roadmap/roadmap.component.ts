@@ -164,12 +164,8 @@ export class RoadmapComponent implements OnInit, OnDestroy {
     popover.present()
   }
 
-  async editRoadmap() {
-    const loading = await this.loadingCtrl.create({ spinner: 'lines' })
-    await loading.present()
-
-    await this.goalService.toggleLock(this.goal.id, true)
-    await this.router.navigate(['edit'], { relativeTo: this.route })
+  editRoadmap() {
+    this.router.navigate(['edit'], { relativeTo: this.route })
   }
 
   private getMilestone(index: number[]): Milestone {

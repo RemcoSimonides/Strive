@@ -3,10 +3,10 @@
   <ion-toolbar>
     <ion-buttons slot="secondary">
       <ion-button (click)="cancel()">
-        <ion-icon name="close"></ion-icon>Cancel
+        <ion-icon name="close"></ion-icon>{{ mode === 'create' ? 'Skip' : 'Cancel' }}
       </ion-button>
     </ion-buttons>
-    <ion-title color="primary">Edit Roadmap</ion-title>
+    <ion-title color="primary">{{ mode === 'create' ? 'Setup' : 'Edit' }} Roadmap</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="save()">
         <ion-icon name="checkmark"></ion-icon>Save
@@ -32,14 +32,14 @@
 
 <!-- Browser header -->
 <ng-template #desktop>
-  <h1>Edit Roadmap</h1>
+  <h1>{{ mode === 'create' ? 'Setup' : 'Edit' }} Roadmap</h1>
 
   <section fxLayout fxLayoutAlign="center">
     <ion-button (click)="cancel()" color="primary" fill="clear">
-      <ion-icon name="close" color="primary"></ion-icon>Cancel
+      <ion-icon name="close" color="primary"></ion-icon>{{ mode === 'create' ? 'Skip' : 'Cancel' }}
     </ion-button>
     <ion-button (click)="save()" color="primary" fill="clear">
-      <ion-icon name="checkmark" color="primary"></ion-icon>Save changes
+      <ion-icon name="checkmark" color="primary"></ion-icon>Save
     </ion-button>
   </section>
 
@@ -62,7 +62,8 @@
 
     <ng-container *ngIf="roadmapForm.controls.length === 0 else list">
       <article class="explanation">
-        <span class="center">This is how it works</span>
+        <p *ngIf="mode === 'create'">Let's set up your roadmap</p>
+        <p>This is how it works</p>
         <ion-img src="assets/pages/roadmap/How to edit roadmap.gif"></ion-img>
       </article>
     </ng-container>

@@ -48,10 +48,6 @@ export class GoalService extends FireCollection<Goal> {
     return this.stakeholder.add(stakeholder, { write, params: { goalId: goal.id }})
   }
 
-  public toggleLock(goalId: string, isLocked: boolean) {
-    return this.update(goalId, { isLocked });
-  }
-
   getStakeholderGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<Goal[]> {
     let query: QueryGroupFn<GoalStakeholder>;
     if (publicOnly) {

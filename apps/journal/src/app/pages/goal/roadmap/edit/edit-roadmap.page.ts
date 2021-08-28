@@ -29,6 +29,8 @@ export class EditRoadmapPage implements OnInit {
   milestoneForm = new MilestoneTemplateForm()
   roadmapForm = new FormArray([])
 
+  mode: 'create' | 'update'
+
   // For templates
   private collectiveGoalId: string
   private templateId: string
@@ -53,9 +55,13 @@ export class EditRoadmapPage implements OnInit {
     private seo: SeoService,
     private templateService: TemplateService,
     public screensize: ScreensizeService
-  ) { }
+  ) {
+    const { extras } = this.router.getCurrentNavigation()
+    this.mode = extras.state?.mode ? 'create' : 'update'
+  }
 
   async ngOnInit() {
+    const tag = this.mode === 'create' ? 'Create' : 'Edit'
     if (!this.router.url.includes('template')) {
       this.goalId = this.route.snapshot.paramMap.get('id')
 
@@ -64,7 +70,7 @@ export class EditRoadmapPage implements OnInit {
         this.roadmapForm.push(new MilestoneTemplateForm(milestoneTemplate))
       }
 
-      this.seo.generateTags({ title: `Edit ${this.goal.title} - Strive Journal` })
+      this.seo.generateTags({ title: `${tag} Roadmap - Strive Journal` })
 
     } else if (this.router.url.includes('template')) {
       this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
@@ -75,17 +81,16 @@ export class EditRoadmapPage implements OnInit {
         this.roadmapForm.push(new MilestoneTemplateForm(milestoneTemplate))
       }
 
-      this.seo.generateTags({ title: `Edit ${template.title} - Strive Journal` })
+      this.seo.generateTags({ title: `${tag} Template Roadmap - Strive Journal` })
     }
 
     this.setInitialSequenceNumber()
-    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
   cancel() {
     if (this.goalId) {
-      this.goalService.toggleLock(this.goalId, false)
-      this.router.navigateByUrl(`goal/${this.goalId}`)
+      const url = this.mode === 'create' ? `goal/${this.goalId}` : `goal/${this.goalId}?t=roadmap`
+      this.router.navigateByUrl(url)
     }
 
     if (this.collectiveGoalId && this.templateId) {
@@ -107,10 +112,9 @@ export class EditRoadmapPage implements OnInit {
       // Start conversion to create milestones
       await this.roadmapService.startConversion(this.goalId, this.roadmapForm.value)
 
-      await this.goalService.toggleLock(this.goalId, false)
-
       loading.dismiss()
-      this.router.navigateByUrl(`goal/${this.goalId}`)
+      const url = this.mode === 'create' ? `goal/${this.goalId}` : `goal/${this.goalId}?t=roadmap`
+      this.router.navigateByUrl(url)
 
     } else if (this.collectiveGoalId && this.templateId) {
 
