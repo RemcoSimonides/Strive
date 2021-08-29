@@ -58,8 +58,7 @@ export class FeedPaginationService {
 
         const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? -1 : 1)
         return orderedArray
-      }),
-      tap(console.log)
+      })
     )
   }
 
