@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ModalController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { BucketList } from '../../+state/bucket-list.firestore';
 import { BucketListService } from '../../+state/bucket-list.service';
 import { BucketListUpsertComponent } from '../upsert/upsert.component';
@@ -21,8 +21,10 @@ export class ViewComponent implements OnInit {
   @Input() uid: string;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
-    private service: BucketListService
+    private service: BucketListService,
+    private toast: ToastController
   ) { }
 
   ngOnInit() {
@@ -32,14 +34,38 @@ export class ViewComponent implements OnInit {
         if (!this.isOwner && this.isSpectator) bucketlist.items = bucketlist.items.filter(item => item.privacy !== 'private')
         if (!this.isOwner && !this.isSpectator) bucketlist.items = bucketlist.items.filter(item => item.privacy === 'public')
         return bucketlist
-      })
+      }),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     )
   }
 
-  toggle(list: BucketList, index: number) {
+  async toggle(list: BucketList, index: number) {
     if (!this.isOwner) return
     list.items[index].completed = !list.items[index].completed
     this.service.upsert(list, { params: { uid: this.uid }});
+
+    const toast = await this.toast.create({
+      header: 'Item completed',
+      position: 'bottom',
+      duration: 5000,
+      buttons: [
+        {
+          side: 'end',
+          text: 'Undo',
+          role: 'cancel',
+          handler: () => {
+            list.items[index].completed = !list.items[index].completed
+            this.cdr.markForCheck()
+          }
+        }
+      ]
+    })
+    await toast.present()
+    const { role } = await toast.onDidDismiss()
+    if (role === 'cancel') {
+      list.items[index].completed = false
+      this.service.upsert(list, { params: { uid: this.uid }});
+    }
   }
 
   edit() {
