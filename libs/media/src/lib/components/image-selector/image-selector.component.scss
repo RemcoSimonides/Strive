@@ -14,6 +14,12 @@ section {
   }
   article.drop-zone {
     border: 2px dashed var(--ion-color-primary);
+    div {
+      margin-bottom: 1em;
+      img {
+        width: 100px;
+      }
+    }
   }
 }
 
@@ -24,4 +30,9 @@ image-cropper {
 .croppedImage {
   max-height: 200px;
   max-width: 200px;
+}
+
+.caption {
+  font-size: small;
+  opacity: 50%;
 }
