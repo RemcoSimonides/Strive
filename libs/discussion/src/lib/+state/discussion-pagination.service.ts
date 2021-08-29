@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
+import { createComment } from './comment.firestore';
 
 // Options to reproduce firestore queries consistently
 interface QueryConfig {
@@ -36,7 +37,7 @@ export class DiscussionPaginationService {
     constructor(private afs: AngularFirestore) {}
 
     listenToUpdates() {
-      const updates: AngularFirestoreCollection = this.afs.collection(this.query.path, ref => {
+      const updates = this.afs.collection(this.query.path, ref => {
         return ref
           .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
           .limit(1)
@@ -45,7 +46,7 @@ export class DiscussionPaginationService {
       this.subscription = updates.snapshotChanges().pipe(
         tap(arr => {
           let values = arr.map(snap => {
-            const data = snap.payload.doc.data()
+            const data = createComment(snap.payload.doc.data())
             const doc = snap.payload.doc
             const id = snap.payload.doc.id
             const append = true

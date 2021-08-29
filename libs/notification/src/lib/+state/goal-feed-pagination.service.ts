@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { scan, tap, take, map } from 'rxjs/operators';
 import { Notification } from './notification.firestore';
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
+import { createNotification } from './notification.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoalFeedPaginationService {
+
+  subscription: Subscription
 
   // Source data
   private _done = new BehaviorSubject(false);
@@ -32,6 +35,27 @@ export class GoalFeedPaginationService {
     private discussion: DiscussionService
   ) {}
 
+  listenToUpdates() {
+    const updates = this.afs.collection(this.path, ref => ref
+      .where('type', '==', 'feed')
+      .orderBy('createdAt', 'desc')
+      .limit(1)
+    )
+
+    this.subscription = updates.snapshotChanges().pipe(
+      tap(arr => {
+        const values = arr.map(snap => {
+          const data = createNotification(snap.payload.doc.data())
+          const doc = snap.payload.doc
+          const id = snap.payload.doc.id
+          const append = true
+          return { ...data, doc, id, append }
+        })
+        this._data.next(values)
+      })
+    ).subscribe()
+  }
+
   /**
    * Initial query sets options and defines the Observable
    * @param path path to collection
@@ -51,11 +75,25 @@ export class GoalFeedPaginationService {
 
     // Create the observable array for consumption in components
     this.data = this._data.asObservable().pipe(
-      scan((acc, val) => { 
-        const array = acc.concat(val)
-        const uniqueArrray = this.getUnique(array, 'id')
-        const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? -1 : 1)
-        return orderedArray
+      scan((acc, val) => {
+        if (val.length) {
+          if (val.length === 1 && val[0].append) {
+            const found = acc.some(notification => notification.id === val[0].id)
+            if (!found && val[0].createdAt) {
+              acc.unshift(val[0])
+              return acc
+            } else {
+              return acc
+            }
+          } else {
+            const array = acc.concat(val)
+            const uniqueArrray = this.getUnique(array, 'id')
+            const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? -1 : 1)
+            return orderedArray
+          }
+        } else {
+          return acc
+        }
       })
     )
   }
@@ -116,10 +154,11 @@ export class GoalFeedPaginationService {
 
   // Refresh the page
   refresh(path: string) {
+    this.subscription.unsubscribe();
     this._refreshing.next(true)
     this.reset()
-    this._done.next(false)
     this.init(path)
+    this.listenToUpdates()
   }
 
   private getUnique(arr: Notification[], comp: string) {

@@ -32,6 +32,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     // Posts
     this.feed.reset()
     this.feed.init(`Goals/${this.goal.id}/Notifications`)
+    this.feed.listenToUpdates()
 
     this.sub = this.user.profile$.pipe(
       switchMap(profile => profile ? this.stakeholder.valueChanges(profile.id, { goalId: this.goal.id }) : of(createGoalStakeholder()))
@@ -66,16 +67,12 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   public async createCustomPost() {
-    const modal = await this.modalCtrl.create({
+    this.modalCtrl.create({
       component: UpsertPostModal,
       componentProps: {
         goal: this.goal,
         postId: undefined
       }
-    })
-    await modal.present()
-    await modal.onDidDismiss().then(async (data) => {
-      this.feed.refresh(`Goals/${this.goal.id}/Notifications`)
-    })
+    }).then(modal => modal.present())
   }
 }
