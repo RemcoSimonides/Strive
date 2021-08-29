@@ -42,7 +42,7 @@ export class ImageSelectorComponent implements OnInit {
   croppedImage: string;
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
 
-  defaultImage: 'goal.jpg' | 'collective-goal.jpg' | 'profile.png'
+  @Input() defaultImage: 'goal.jpg' | 'collective-goal.jpg' | 'profile.png'
 
   @Input() form: FormControl;
   @Input() storagePath: string;
@@ -56,12 +56,6 @@ export class ImageSelectorComponent implements OnInit {
 
   ngOnInit() {
     this.resetState();
-
-    this.defaultImage = this.storagePath.includes('profiles')
-      ? 'profile.png'
-      : this.storagePath.includes('collectiveGoals')
-        ? 'collective-goal.jpg'
-        : 'goal.jpg'
   }
 
   @HostListener('drop', ['$event'])

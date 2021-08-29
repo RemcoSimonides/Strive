@@ -7,7 +7,7 @@
     <p>{{ cropDimensions }}</p>
     <p>Drag 'n drop an Image</p>
     <p>or <a (click)="selectImage()">choose a file</a></p>
-    <div fxLayout="column" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="start center" *ngIf="defaultImage">
       <span class="caption">Image used if not customized:</span>
       <img [asset]="defaultImage">
     </div>

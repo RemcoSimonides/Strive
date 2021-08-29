@@ -67,7 +67,11 @@
         ></ion-datetime>
       </ion-item>
       
-      <media-image-selector [form]="templateForm.goalImage" [storagePath]="'collectiveGoals/' + collectiveGoalId + '/templates/' + templateId"></media-image-selector>
+      <media-image-selector 
+        [form]="templateForm.goalImage"
+        [storagePath]="'collectiveGoals/' + collectiveGoalId + '/templates/' + templateId"
+        defaultImage="goal.jpg"
+      ></media-image-selector>
 
     </ng-container>
   </form>

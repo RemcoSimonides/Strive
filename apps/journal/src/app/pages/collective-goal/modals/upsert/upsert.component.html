@@ -51,7 +51,11 @@
         ></ion-datetime>
       </ion-item>
 
-      <media-image-selector [form]="collectiveGoalForm.image" [storagePath]="'collectiveGoals/' + collectiveGoalId"></media-image-selector>
+      <media-image-selector 
+        [form]="collectiveGoalForm.image"
+        [storagePath]="'collectiveGoals/' + collectiveGoalId"
+        defaultImage="collective-goal.jpg"
+      ></media-image-selector>
 
       <ion-button (click)="upsertCollectiveGoal()" clear>{{ state | titlecase }}</ion-button>
   </form>

@@ -46,7 +46,11 @@
       ></ion-datetime>
     </ion-item>
 
-    <media-image-selector [form]="goalForm.image" [storagePath]="'goals/' + goalId"></media-image-selector>
+    <media-image-selector
+      [form]="goalForm.image"
+      [storagePath]="'goals/' + goalId"
+      defaultImage="goal.jpg"  
+    ></media-image-selector>
   </form>
 
   <ion-button (click)="upsert()" clear>{{ mode === 'create' ? 'Create' : 'Update'}}</ion-button>
