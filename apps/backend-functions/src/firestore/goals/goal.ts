@@ -44,12 +44,16 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onDelete(async snapshot => {
 
     const goalId = snapshot.id
+    const goal = createGoal(snapshot.data()) 
 
-    try {
-      deleteFromAlgolia('goal', goalId)
-    } catch (err) {
-      console.log('deleting from Algolia error', err)
+    if (goal.publicity === 'public') {
+      try {
+        deleteFromAlgolia('goal', goalId)
+      } catch (err) {
+        console.log('deleting from Algolia error', err)
+      }
     }
+
     deleteScheduledTask(goalId)
 
     //delete subcollections too
@@ -58,7 +62,8 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     deleteCollection(db, `Goals/${goalId}/Posts`, 500)
     deleteCollection(db, `Goals/${goalId}/InviteTokens`, 500)
     deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500)
-    deleteCollection(db, `Goals/${goalId}/Notificaitons`, 500)
+    deleteCollection(db, `Goals/${goalId}/Notifications`, 500)
+    db.doc(`Discussions/${goalId}`).delete()
   })
 
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)

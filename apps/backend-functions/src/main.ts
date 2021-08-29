@@ -24,6 +24,8 @@ export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/i
 export { postCreatedHandler } from './firestore/goals/posts/post';
 export { commentCreatedHandler } from './firestore/discussions/comments/comment';
 
+export { discussionDeletedHandler } from './firestore/discussions/discussion';
+
 // http
 export { duplicateGoal } from './firestore/goals/goal'
 export { useTemplate } from './firestore/collective-goals/templates/template'
