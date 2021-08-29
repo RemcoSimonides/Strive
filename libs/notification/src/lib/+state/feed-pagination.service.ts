@@ -4,6 +4,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { scan, tap, take, map } from 'rxjs/operators';
 import { Notification } from './notification.firestore';
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
+import { createNotification } from './notification.model';
 
 
 @Injectable({
@@ -21,9 +22,9 @@ export class FeedPaginationService {
 
   // Observable data
   data: Observable<any>;
-  done: Observable<boolean> = this._done.asObservable();
-  loading: Observable<boolean> = this._loading.asObservable();
-  refreshing: Observable<boolean> = this._refreshing.asObservable();
+  done: Observable<boolean> = this._done.asObservable()
+  loading: Observable<boolean> = this._loading.asObservable()
+  refreshing: Observable<boolean> = this._refreshing.asObservable()
 
   discussionIds: string[] = []
 
@@ -58,6 +59,7 @@ export class FeedPaginationService {
         const orderedArray = uniqueArrray.sort((a, b) => (a.createdAt.seconds > b.createdAt.seconds) ? -1 : 1)
         return orderedArray
       }),
+      tap(console.log)
     )
   }
 
@@ -87,7 +89,7 @@ export class FeedPaginationService {
     // Map snapshot with doc ref (needed for cursor)
     return col.snapshotChanges().pipe(
       map(docs => docs.map(doc => {
-        const data = doc.payload.doc.data();
+        const data = createNotification(doc.payload.doc.data())
         return {
           ...data,
           id: doc.payload.doc.id,
@@ -118,8 +120,6 @@ export class FeedPaginationService {
   // Refresh the page
   refresh(path: string) {
     this._refreshing.next(true)
-    this.reset()
-    this._done.next(false)
     this.init(path)
   }
 

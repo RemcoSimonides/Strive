@@ -43,10 +43,10 @@ export class FeedPage implements OnInit, OnDestroy {
     this.seo.generateTags({ title: `Home - Strive Journal` });
 
     this.userSubscription = this.user.profile$.subscribe(profile => {
-      this.feed.reset()
-
       if (profile) {
         this.feed.init(`Users/${profile.id}/Notifications`)
+      } else {
+        this.feed.reset()
       }
       this.cdr.markForCheck()
     })
