@@ -39,12 +39,14 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     const uid = stakeholder.uid
 
     const [profile, collectiveGoal] = await Promise.all([
-      this.fire.docWithId$<Profile>(`Users/${uid}/Profile/${uid}`).pipe(take(1)).toPromise(),
-      this.fire.docWithId$<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).pipe(take(1)).toPromise()
+      this.db.doc<Profile>(`Users/${uid}/Profile/${uid}`).valueChanges().pipe(take(1)).toPromise(),
+      this.db.doc<CollectiveGoal>(`CollectiveGoals/${collectiveGoalId}`).valueChanges().pipe(take(1)).toPromise()
     ])
 
-    stakeholder.collectiveGoalTitle = collectiveGoal.title
-    stakeholder.collectiveGoalIsSecret = collectiveGoal.isSecret
+    if (collectiveGoal) {
+      stakeholder.collectiveGoalTitle = collectiveGoal.title ?? ''
+      stakeholder.collectiveGoalIsSecret = collectiveGoal.isSecret ?? false
+    }
 
     const ref = this.getRef(uid, { collectiveGoalId })
     write.update(ref, createCollectiveGoalStakeholder({
