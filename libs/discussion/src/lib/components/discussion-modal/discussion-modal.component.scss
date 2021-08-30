@@ -1,0 +1,9 @@
+ion-item {
+  --border-style: none;
+  --highlight-background: var(--ion-color-primary);
+
+  ion-icon:hover {
+    color: var(--ion-color-primary);
+    cursor: pointer;
+  }
+}

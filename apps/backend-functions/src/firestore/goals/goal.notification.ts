@@ -12,7 +12,7 @@ import { getReceiver } from '../../shared/support/receiver'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent, Source } from '@strive/notification/+state/notification.firestore'
-import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoalLink, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
@@ -30,7 +30,8 @@ export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goa
   const source: Source = {
     goal: createGoalLink({ ...goal, id: goalId })
   }
-  await addDiscussion(`General discussion`, source, 'public', goalId)
+  const audience = getAudience(goal.publicity)
+  await addDiscussion(`General discussion`, source, audience, goalId)
 
   // New Goal
   if (goal.collectiveGoalId && (goal.publicity === 'public' || goal.publicity === 'collectiveGoalOnly')) {

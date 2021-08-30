@@ -14,7 +14,7 @@ export async function handleNotificationsOfBucketListCreated(uid: string) {
   const discussionId = `${uid}bucketlist`
   const source: Source = { user: createProfileLink({...profile, uid }) }
 
-  addDiscussion(`Bucket List`, source, 'public', discussionId, uid)
+  addDiscussion(`Bucket List`, source, 'spectators', discussionId, uid)
 
   const notification = createNotification({
     discussionId,

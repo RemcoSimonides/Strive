@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavParams, IonContent, ModalController } from '@ionic/angular';
 // Rxjs
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
 // Interfaces
 import { Comment, createComment } from '@strive/discussion/+state/comment.firestore';
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
@@ -20,19 +20,26 @@ import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 })
 export class DiscussionModalPage implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea: IonContent
-  scrolledToBottom: boolean = true
+  scrolledToBottom = true
 
   subscription: Subscription
 
   discussionId: string
   comments: Comment[] = []
   _comment: string
-  discussion: Discussion
+  discussion$: Observable<Discussion>
+
+  visibility = {
+    public: 'Messages visible to everyone',
+    team: 'Messages only visible to team',
+    adminsAndRequestor: 'Visible to Requestor and Admins only',
+    achievers: 'Visisble to Achievers only',
+    spectators: 'Visible to spectators only'
+  }
 
   constructor(
     public user: UserService,
-    private db: FirestoreService,
-    private discussionService: DiscussionService,
+    private discussion: DiscussionService,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     public paginationService: DiscussionPaginationService,
@@ -40,16 +47,14 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.discussionId = this.navParams.get('discussionId')
-    this.discussion = await this.db.docWithId$<Discussion>(`Discussions/${this.discussionId}`).pipe(take(1)).toPromise()
+    this.discussion$ = this.discussion.valueChanges(this.discussionId)
 
     this.paginationService.init(`Discussions/${this.discussionId}/Comments`, 'createdAt', { reverse: true, prepend: true, limit: 10 })
     this.paginationService.listenToUpdates()
 
     this.subscription = this.paginationService.data.subscribe(data => {
-      if (data) {
-        if (this.scrolledToBottom) {
-          this.scrollToBottom()
-        }
+      if (data && this.scrolledToBottom) {
+        this.contentArea?.scrollToBottom()
       }
     })
 
@@ -83,22 +88,11 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
     const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
     const currentScrollDepth = $event.detail.scrollTop;
 
-    if (scrollHeight === currentScrollDepth) {
-      this.scrolledToBottom = true
-    } else {
-      this.scrolledToBottom = false
-    }
-
+    this.scrolledToBottom = scrollHeight === currentScrollDepth
   }
 
-  scrollToBottom() {
-    this.contentArea.scrollToBottom()
-  }
-
-  async addReply(): Promise<void> {
-
-    // do not allow empty enters
-    if (this._comment == '') return
+  async addReply() {
+    if (!this._comment) return
 
     const { uid, displayName, photoURL } = await this.user.getFirebaseUser();
 
@@ -107,12 +101,12 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
       type: 'sentByUser',
       user: createProfileLink({ uid, username: displayName, photoURL })
     })
-    this.discussionService.comment.add(comment, { params: { discussionId: this.discussionId }})
+    this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
 
     this._comment = ''
   }
 
-  public loadData(event) {
+  loadData(event) {
 
     this.paginationService.loading.pipe(take(1)).subscribe(value => {
       if (value) {

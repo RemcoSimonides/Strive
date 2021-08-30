@@ -3,6 +3,8 @@ import { enumEvent, Source } from '@strive/notification/+state/notification.fire
 import { createPost, Post } from '@strive/post/+state/post.firestore';
 import { sendNotificationToGoalStakeholders, sendNotificationToGoal, addDiscussion } from '../../../shared/notification/notification'
 import { createNotification } from '@strive/notification/+state/notification.model';
+import { getDocument } from 'apps/backend-functions/src/shared/utils';
+import { getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)
   .onCreate(async (snapshot, context) => {
@@ -24,7 +26,10 @@ async function sendNotificationNewPost(goalId: string, postId: string, post: Pos
     postId
   }
 
-  await addDiscussion(post.content.title, source, 'public', postId)
+  const goal = await getDocument<Goal>(`Goals/${goalId}`)
+  const audience = getAudience(goal.publicity)
+
+  await addDiscussion(post.content.title, source, audience, postId)
 
   const notification = createNotification({
     discussionId: postId,

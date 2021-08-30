@@ -6,10 +6,10 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Discussion</ion-title>
-    <ion-title size="small" *ngIf="discussion?.audience === 'public'"></ion-title>
-    <ion-title size="small" *ngIf="discussion?.audience === 'adminsAndRequestor'">Requestor and Admins only</ion-title>
-    <ion-title size="small" *ngIf="discussion?.audience === 'achievers'">Achievers only</ion-title>
+    <ng-container *ngIf="discussion$ | async as discussion">
+      <ion-title>{{ discussion.title }}</ion-title>
+      <ion-title size="small">{{ visibility[discussion.audience] }}</ion-title>
+    </ng-container>
   </ion-toolbar>
 </ion-header>
 
@@ -21,20 +21,15 @@
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
-  <div *ngFor="let comment of paginationService.data | async">
+  <ng-container *ngFor="let comment of paginationService.data | async">
     <app-comment [comment]="comment"></app-comment>
-  </div>
+  </ng-container>
 
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-input type="text" placeholder="Reply..." [(ngModel)]="_comment" (keydown.enter)="addReply()"></ion-input>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-toolbar>
+  <ion-item>
+    <ion-input type="text" placeholder="Reply..." [(ngModel)]="_comment" (keydown.enter)="addReply()"></ion-input>
+    <ion-icon name="send" (click)="addReply()"></ion-icon>
+  </ion-item>
 </ion-footer>

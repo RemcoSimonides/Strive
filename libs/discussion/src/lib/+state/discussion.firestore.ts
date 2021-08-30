@@ -1,7 +1,7 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { Source } from '@strive/notification/+state/notification.firestore'
 
-export type AudienceType = 'public' | 'stakeholders' | 'adminsAndRequestor' | 'achievers'
+export type AudienceType = 'public' | 'collectiveGoal' | 'team' | 'adminsAndRequestor' | 'achievers' | 'spectators'
 
 export interface Discussion {
   id?: string;

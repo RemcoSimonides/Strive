@@ -1,7 +1,17 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
+import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
 
 export type GoalPublicityType = 'public' | 'collectiveGoalOnly' | 'private'
+
+/** For discussion */
+export function getAudience(publicity: GoalPublicityType): AudienceType {
+  return publicity === 'public'
+    ? 'public'
+    : publicity === 'collectiveGoalOnly'
+      ? 'collectiveGoal'
+      : 'team'
+}
 
 export interface Goal {
     id?: string;

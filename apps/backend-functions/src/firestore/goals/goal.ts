@@ -1,6 +1,6 @@
 import { db, functions } from '../../internals/firebase';
 
-import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoal, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
@@ -88,6 +88,9 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     }
 
     if (before.publicity !== after.publicity) {
+      const audience = getAudience(after.publicity)
+      db.doc(`Discussions/${goalId}`).update({ audience })
+
       if (after.publicity === 'public') {
         // add to algolia
         addToAlgolia('goal', goalId, {
