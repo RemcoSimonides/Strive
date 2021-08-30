@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { AngularFireFunctions } from '@angular/fire/functions';
 import { ToastController, Platform } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
 import { tap, take } from 'rxjs/operators';
@@ -14,7 +13,6 @@ export class FcmService {
 
   constructor(
     private afMessaging: AngularFireMessaging,
-    private fun: AngularFireFunctions,
     private toastController: ToastController,
     private _platform: Platform,
     private user: UserService
@@ -26,7 +24,7 @@ export class FcmService {
     this.user.addFCMToken(token);
   }
 
-  async registerFCM(): Promise<void> {
+  async registerFCM() {
     // if ((this._platform.is('android') || this._platform.is('ios')) && !this._platform.is('mobileweb')) {
     //   await this.registerCapacitor()
     // } else {
