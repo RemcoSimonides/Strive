@@ -143,14 +143,16 @@ async function sendFinishedGoalNotification(goalId: string, goal: Goal) {
 
   sendNotificationToGoalStakeholders(goalId, notification, '', true, true, false)
 
-  const stakeholdersSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
-  for (const doc of stakeholdersSnap.docs) {
-    const stakeholder = createGoalStakeholder(doc.data())
-
-    if (!stakeholder.isAdmin && !stakeholder.isAchiever) return
-
-    notification.source.user = createProfileLink(stakeholder)
-    sendNotificationToUserSpectators(stakeholder.uid, notification)
+  if (goal.publicity === 'public') {
+    const stakeholdersSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
+    for (const doc of stakeholdersSnap.docs) {
+      const stakeholder = createGoalStakeholder(doc.data())
+  
+      if (!stakeholder.isAdmin && !stakeholder.isAchiever) return
+  
+      notification.source.user = createProfileLink(stakeholder)
+      sendNotificationToUserSpectators(stakeholder.uid, notification)
+    }
   }
 }
 
