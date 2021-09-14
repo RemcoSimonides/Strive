@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-// Angularfire2
-import { AngularFirestore } from '@angular/fire/firestore';
+// Angularfire
+import { doc, Firestore, getDoc, DocumentSnapshot } from '@angular/fire/firestore';
 //Rxjs
 import { take } from 'rxjs/operators';
 // Services
@@ -21,7 +21,7 @@ export class GoalAuthGuardService implements CanActivate {
   private _needsToBeAdmin: boolean = false
 
   constructor(
-    private afs: AngularFirestore,
+    private db: Firestore,
     private goalService: GoalService,
     private stakeholder: GoalStakeholderService,
     private router: Router,
@@ -84,15 +84,11 @@ export class GoalAuthGuardService implements CanActivate {
 
   private async checkAccessToCollectiveGoal(collectiveGoalId: string, uid: string): Promise<boolean> {
 
-    return this.afs.doc<CollectiveGoalStakeholder>(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${uid}`)
-      .snapshotChanges()
-      .pipe(take(1))
-      .toPromise()
-      .then(collectiveGoalStakeholderSnap => {
+    return getDoc(doc(this.db, `CollectiveGoals/${collectiveGoalId}/CGStakeholders/${uid}`))
+      .then((snap: DocumentSnapshot<CollectiveGoalStakeholder>) => {
+        if (snap.exists()) {
 
-        if (collectiveGoalStakeholderSnap.payload.exists) {
-
-          const collectiveGoalStakeholder: CollectiveGoalStakeholder = collectiveGoalStakeholderSnap.payload.data()
+          const collectiveGoalStakeholder = snap.data()
           // Check if user has any roles active
           if (collectiveGoalStakeholder.isAdmin, collectiveGoalStakeholder.isAchiever, collectiveGoalStakeholder.isSpectator) {
             return true

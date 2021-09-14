@@ -1,13 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavParams, IonContent, ModalController } from '@ionic/angular';
 // Rxjs
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 // Services
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
 // Interfaces
 import { Comment, createComment } from '@strive/discussion/+state/comment.firestore';
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
@@ -20,6 +19,13 @@ import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 })
 export class DiscussionModalPage implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea: IonContent
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
+
   scrolledToBottom = true
 
   subscription: Subscription
@@ -45,7 +51,7 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
     public paginationService: DiscussionPaginationService,
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     this.discussionId = this.navParams.get('discussionId')
     this.discussion$ = this.discussion.valueChanges(this.discussionId)
 
@@ -57,7 +63,6 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
         this.contentArea?.scrollToBottom()
       }
     })
-
   }
 
   dismiss() {

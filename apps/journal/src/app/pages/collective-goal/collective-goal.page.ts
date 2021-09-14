@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { orderBy } from '@angular/fire/firestore';
 // Ionic
 import { ModalController, PopoverController, AlertController, NavController, Platform } from '@ionic/angular';
 // Rxjs
 import { Observable,  Subscription, of, combineLatest } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 // Modals
 import { UpsertCollectiveGoalPage } from './modals/upsert/upsert.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
@@ -22,7 +23,7 @@ import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+
 import { Template } from '@strive/template/+state/template.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
+import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 
 import { Share } from '@capacitor/share';
 
@@ -98,7 +99,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
       this.canAccess = true
       this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, collectiveGoal.isSecret)
       this.stakeholders$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
-      this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, ref => ref.orderBy('numberOfTimesUsed', 'desc'))
+      this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, [orderBy('numberOfTimesUsed', 'desc')])
   
       // SEO
       this.seo.generateTags({
@@ -107,7 +108,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
         // image: collectiveGoal.image
       })
   
-      this.pageIsLoading = false  
+      this.pageIsLoading = false
     }
   }
 

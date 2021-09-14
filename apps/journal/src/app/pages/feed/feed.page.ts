@@ -10,6 +10,7 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { limit, where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'strive-feed',
@@ -53,13 +54,13 @@ export class FeedPage implements OnInit, OnDestroy {
 
     this.decisions$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges(ref => ref.where('needsDecision', '==', true), { uid: profile.id })
+        ? this.notification.valueChanges([where('needsDecision', '==', true)], { uid: profile.id })
         : of([])),
     )
 
     this.unreadNotifications$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('isRead', '==', false).limit(1), { uid: profile.id }).pipe(map(notifications => !!notifications.length))
+        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.id }).pipe(map(notifications => !!notifications.length))
         : of(false)
       )
     )

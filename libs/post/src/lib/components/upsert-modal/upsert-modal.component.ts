@@ -29,7 +29,7 @@ export class UpsertPostModal implements OnInit {
     this.postId = this.navParams.get('postId') as string
 
     const isEvidence = !!this.postId;
-    if (!this.postId) this.postId = this.postService.db.createId()
+    if (!this.postId) this.postId = this.postService.createId()
 
     if (!goal) throw new Error('No goal to post the post at')
 

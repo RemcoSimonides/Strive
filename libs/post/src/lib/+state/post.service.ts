@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // Services
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
+import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
@@ -14,8 +14,8 @@ export class PostService extends FireCollection<Post> {
   readonly path = 'Goals/:goalId/Posts'
 
   constructor(
-    public db: AngularFirestore,
-    private afAuth: AngularFireAuth
+    public db: Firestore,
+    private afAuth: Auth
   ) {
     super(db)
   }

@@ -1,20 +1,44 @@
-import { AngularFirestore, AngularFirestoreCollection, CollectionReference, DocumentChangeAction, DocumentData, DocumentReference, DocumentSnapshot, QueryDocumentSnapshot, QueryFn, QueryGroupFn } from '@angular/fire/firestore';
+import { 
+  Firestore,
+  CollectionReference,
+  DocumentData,
+  DocumentReference,
+  DocumentSnapshot,
+  QueryDocumentSnapshot,
+  WriteBatch,
+  writeBatch,
+  Transaction,
+  runTransaction,
+  FieldValue,
+  serverTimestamp,
+  doc,
+  docSnapshots,
+  collection,
+  collectionGroup,
+  query,
+  getDoc,
+  getDocs,
+  collectionSnapshots,
+  Query,
+  QueryConstraint,
+} from '@angular/fire/firestore';
 import { Observable, of, combineLatest } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import firebase from 'firebase/app'
+import { map } from 'rxjs/operators';
+import { shareWithDelay } from '../share.delay';
 
 ////////////
 // TYEPES //
 ////////////
-
-export type Firestore = firebase.firestore.Firestore;
-export type Reference<E = any> = firebase.firestore.DocumentReference<E>;
-export type WriteBatch = firebase.firestore.WriteBatch;
-export type Transaction = firebase.firestore.Transaction;
-export type AtomicWrite  = WriteBatch | Transaction;
+export type {
+  Firestore,
+  DocumentReference,
+  WriteBatch,
+  Transaction,
+  Timestamp,
+  FieldValue
+} from 'firebase/firestore'
+export type AtomicWrite = WriteBatch | Transaction;
 export type Params = Record<string, string>;
-export type Timestamp = firebase.firestore.Timestamp;
-export type FieldValue = firebase.firestore.FieldValue;
 export interface WriteOptions {
   params?: Params;
   write?: AtomicWrite;
@@ -84,6 +108,13 @@ function isNotUndefined<D>(doc: D | undefined): doc is D {
 function isNotNull<D>(doc: D | null): doc is D {
   return doc !== null;
 }
+function isQueryConstraint(object: QueryConstraint | unknown): object is QueryConstraint {
+  return !!object['type'];
+}
+function isQueryConstraintArray(array: Array<QueryConstraint | unknown>): array is QueryConstraint[] {
+  return array.length && isQueryConstraint(array[0])
+}
+
 
 
 
@@ -93,7 +124,8 @@ function isNotNull<D>(doc: D | null): doc is D {
 
 
 export abstract class FireCollection<E extends DocumentData> {
-  private memo: Record<string, Observable<E | undefined>> = {};
+  // private memoPath: Record<string, Observable<E | undefined>> = {};
+  // private memoQuery: Map<Query, Observable<DocumentReference<E>[]>> = new Map();
   protected readonly abstract path: string;
   protected idKey = 'id';
   protected memorize = false;
@@ -102,21 +134,41 @@ export abstract class FireCollection<E extends DocumentData> {
   protected onUpdate?(entity: Partial<E>, options: WriteOptions): any;
   protected onDelete?(id: string, options: WriteOptions): any;
 
-  constructor(protected db: AngularFirestore ) {}
+  constructor(protected db: Firestore) {}
 
   get timestamp(): FieldValue {
-    return firebase.firestore.FieldValue.serverTimestamp();
+    return serverTimestamp();
   }
 
-  private fromMemo(path: string, id: string): Observable<E | undefined> {
-    if (!this.memo[id]) {
-      this.memo[id] = this.db.doc<E>(getDocPath(path, id)).snapshotChanges().pipe(
-        map(action => this.fromFirestore(action.payload)),
-        shareReplay(1)
-      );
-    }
-    return this.memo[id];
+  typedDocument<T>(firestore: Firestore, path: string): DocumentReference<T> {
+    return doc(firestore, path) as DocumentReference<T>
   }
+  typedCollection<T>(firestore: Firestore, path: string): CollectionReference<T> {
+    return collection(firestore, path) as CollectionReference<T>
+  }
+  typedCollectionGroup<T>(firestore: Firestore, path: string): Query<T> {
+    return collectionGroup(firestore, path) as Query<T>
+  }
+  createId() {
+    return doc(collection(this.db, 'creatingId')).id;
+  }
+
+  // private fromMemo(key: string | Query<any>, cb: () => Observable<any>): Observable<any> {
+  //   if (!this.memorize) return cb();
+  //   if (typeof key === 'string') {
+  //     if (!this.memoPath[key]) {
+  //       this.memoPath[key] = cb().pipe(shareWithDelay());
+  //     }
+  //     return this.memoPath[key];
+  //   }
+  //   for (const query of this.memoQuery.keys()) {
+  //     if (typeof query !== 'string' && query.isEqual(key)) {
+  //       return this.memoQuery.get(query)!;
+  //     }
+  //   }
+  //   this.memoQuery.set(key, cb().pipe(shareWithDelay()));
+  //   return this.memoQuery.get(key)!;
+  // }
 
   /** Generate a path for the document or collection based on params */
   protected getPath(params?: Params) {
@@ -141,32 +193,31 @@ export abstract class FireCollection<E extends DocumentData> {
 
 
   batch() {
-    return this.db.firestore.batch();
+    return writeBatch(this.db);
   }
 
-  runTransaction(cb: Parameters<Firestore['runTransaction']>[0]) {
-    return this.db.firestore.runTransaction(tx => cb(tx));
-  }
 
   /** The Angular Fire collection */
-  getCollection(params?: Params): AngularFirestoreCollection<E>
-  getCollection(queryFn?: QueryFn): AngularFirestoreCollection<E>
-  getCollection(queryOrParams?: Params | QueryFn, queryFn?: QueryFn): AngularFirestoreCollection<E> {
-    if (!queryOrParams) {
-      return this.db.collection<E>(this.path);
-    } else if (typeof queryOrParams === 'function') {
-      return this.db.collection<E>(this.path, queryOrParams);
-    } else {
-      const path = this.getPath(queryOrParams);
+  getCollection(params?: Params): CollectionReference<E> | Query<E>
+  getCollection(queryConstraints?: QueryConstraint[]): CollectionReference<E> | Query<E>
+  getCollection(paramsOrQueryContraints?: Params | QueryConstraint[], queryConstraints?: QueryConstraint[]): CollectionReference<E> | Query<E> {
+    if (!paramsOrQueryContraints) {
+      return this.typedCollection<E>(this.db, this.path);
+    } else if (!Array.isArray(paramsOrQueryContraints)) {
+      // Params
+      const constraints = queryConstraints ? queryConstraints : [];
+      const path = this.getPath(paramsOrQueryContraints);
       assertPath(path);
-      return this.db.collection<E>(path, queryFn);
+      return query(this.typedCollection<E>(this.db, path), ...constraints);
+    } else {
+      return query(this.typedCollection<E>(this.db, this.path), ...queryConstraints);
     }
   }
 
   /** The angular fire collection group (based on the last collectionId in the path) */
-  getCollectionGroup(queryGroupFn?: QueryGroupFn<E>) {
-    const collectionId: string = this.path.split('/').pop() as string;
-    return this.db.collectionGroup<E>(collectionId, queryGroupFn);
+  getCollectionGroup<E>(queryConstraints: QueryConstraint[] = []): Query<E> {
+    const collectionId = this.path.split('/').pop();
+    return query(this.typedCollectionGroup<E>(this.db, collectionId), ...queryConstraints);
   }
 
 
@@ -185,17 +236,17 @@ export abstract class FireCollection<E extends DocumentData> {
     const path = this.getPath(params);
     // If path targets a collection ( odd number of segments after the split )
     if (typeof idOrParams === 'string') {
-      return this.db.doc<E>(getDocPath(path, idOrParams)).ref;
+      return doc(this.db, getDocPath(path, idOrParams));
     }
     if (Array.isArray(idOrParams)) {
-      return idOrParams.map(id => this.db.doc<E>(getDocPath(path, id)).ref);
+      return idOrParams.map(id => doc(this.db, getDocPath(path, id)));
     } else if (typeof idOrParams === 'object') {
       const subpath = this.getPath(idOrParams);
       assertPath(subpath);
-      return this.db.collection<E>(subpath).ref;
+      return collection(this.db, subpath);
     } else {
       assertPath(path);
-      return this.db.collection<E>(path, idOrParams).ref;
+      return collection(this.db, path, idOrParams);
     }
   }
 
@@ -204,10 +255,10 @@ export abstract class FireCollection<E extends DocumentData> {
   public async getValue(params?: Params): Promise<E[]>;
   public async getValue(ids?: string[], params?: Params): Promise<E[]>;
   // tslint:disable-next-line: unified-signatures
-  public async getValue(query?: QueryFn, params?: Params): Promise<E[]>;
+  public async getValue(queryConstraints?: QueryConstraint[], params?: Params): Promise<E[]>;
   public async getValue(id: string, params?: Params): Promise<E | undefined>;
   public async getValue(
-    idOrQuery?: string | string[] | QueryFn | Params,
+    idOrQuery?: string | string[] | QueryConstraint[] | Params,
     params: Params = {}
   ): Promise<E | E[] | undefined> {
     if (typeof idOrQuery === 'object' && !Array.isArray(idOrQuery)) {
@@ -216,26 +267,27 @@ export abstract class FireCollection<E extends DocumentData> {
     const path = this.getPath(params);
     // If path targets a collection ( odd number of segments after the split )
     if (typeof idOrQuery === 'string') {
-      const snapshot = await this.db.doc<E>(getDocPath(path, idOrQuery)).ref.get();
-      return this.fromFirestore(snapshot as DocumentSnapshot<E>);
+      const snapshot = await getDoc(this.typedDocument<E>(this.db, getDocPath(path, idOrQuery)));
+      return this.fromFirestore(snapshot);
     }
     let docs: QueryDocumentSnapshot<E>[];
     if (Array.isArray(idOrQuery)) {
-      const promises = idOrQuery.map(id => this.db.doc<E>(getDocPath(path, id)).ref.get());
-      docs = await Promise.all(promises) as QueryDocumentSnapshot<E>[];
-    } else if (typeof idOrQuery === 'function') {
-      assertPath(path);
-      const { ref } = this.db.collection<E>(path);
-      const snaphot = await idOrQuery(ref).get();
-      docs = snaphot.docs as QueryDocumentSnapshot<E>[];
+      if (isQueryConstraintArray(idOrQuery)) {
+        assertPath(path);
+        const snaphot = await getDocs(query(this.typedCollection<E>(this.db, path), ...idOrQuery));
+        docs = snaphot.docs;
+      } else {
+        const promises = idOrQuery.map(id => getDoc(this.typedDocument<E>(this.db, getDocPath(path, id))));
+        docs = await Promise.all(promises);
+      }
     } else if (typeof idOrQuery === 'object') {
       const subpath = this.getPath(idOrQuery);
       assertPath(subpath);
-      const snapshot = await this.db.collection(subpath).ref.get();
-      docs = snapshot.docs as QueryDocumentSnapshot<E>[];
+      const snapshot = await getDocs(this.typedCollection<E>(this.db, subpath));
+      docs = snapshot.docs;
     } else {
       assertPath(path);
-      const snapshot = await this.db.collection(path, idOrQuery).ref.get();
+      const snapshot = await getDocs(collection(this.db, path, idOrQuery));
       docs = snapshot.docs as QueryDocumentSnapshot<E>[];
     }
     return docs
@@ -248,10 +300,10 @@ export abstract class FireCollection<E extends DocumentData> {
   public valueChanges(params?: Params): Observable<E[]>;
   public valueChanges(ids?: string[], params?: Params): Observable<E[]>;
   // tslint:disable-next-line: unified-signatures
-  public valueChanges(query?: QueryFn, params?: Params): Observable<E[]>;
+  public valueChanges(query?: QueryConstraint[], params?: Params): Observable<E[]>;
   public valueChanges(id?: string | null, params?: Params): Observable<E | undefined>;
   public valueChanges(
-    idOrQuery?: string | string[] | QueryFn | Params | null,
+    idOrQuery?: string | string[] | QueryConstraint[] | Params | null,
     params: Params = {}
   ): Observable<E | E[] | undefined> {
     if (idOrQuery === null) {
@@ -263,42 +315,44 @@ export abstract class FireCollection<E extends DocumentData> {
     const path = this.getPath(params);
     // If one ID
     if (typeof idOrQuery === 'string') {
-      if (this.memorize) {
-        return this.fromMemo(path, idOrQuery);
-      }
-      return this.db.doc<E>(getDocPath(path, idOrQuery)).snapshotChanges().pipe(
-        map(action => this.fromFirestore(action.payload))
-      );
+      // if (this.memorize) {
+      //   return this.fromMemo(path, idOrQuery);
+      // }
+      return docSnapshots(this.typedDocument<E>(this.db, getDocPath(path, idOrQuery))).pipe(
+        map(data => this.fromFirestore(data))
+      )
     }
-    // If list of IDs
+
+    let actions$: Observable<QueryDocumentSnapshot<E>[]>;
+
     if (Array.isArray(idOrQuery)) {
-      if (!idOrQuery.length) return of([]);
-      if (this.memorize) {
-        return combineLatest(idOrQuery.map(id => this.fromMemo(path, id))).pipe(
+      if (isQueryConstraintArray(idOrQuery)) {
+        assertPath(path);
+        actions$ = collectionSnapshots(query(this.typedCollection<E>(this.db, path), ...idOrQuery))
+      } else {
+        // If list of IDs
+        if (!idOrQuery.length) return of([]);
+        // if (this.memorize) {
+        //   return combineLatest(idOrQuery.map(id => this.fromMemo(path, id))).pipe(
+        //     map(docs => docs.filter(isNotUndefined))
+        //   );
+        // }
+        const changes = idOrQuery.map(id => docSnapshots(this.typedDocument<E>(this.db, getDocPath(path, id))));
+        return combineLatest(changes).pipe(
+          map(snapshots => snapshots.map(snapshot => this.fromFirestore(snapshot))),
           map(docs => docs.filter(isNotUndefined))
         );
       }
-      const changes = idOrQuery.map(id => this.db.doc<E>(getDocPath(path, id)).snapshotChanges());
-      return combineLatest(changes).pipe(
-        map(actions => actions.map(action => this.fromFirestore(action.payload))),
-        map(docs => docs.filter(isNotUndefined))
-      );
-    }
-
-    let actions$: Observable<DocumentChangeAction<E>[]>;
-    if (typeof idOrQuery === 'function') {
-      assertPath(path);
-      actions$ = this.db.collection<E>(path, idOrQuery).snapshotChanges();
-    } else if (typeof idOrQuery === 'object') {
+    } else if (typeof idOrQuery === 'object' && !Array.isArray(idOrQuery)) {
       const subpath = this.getPath(idOrQuery);
       assertPath(subpath);
-      actions$ = this.db.collection<E>(subpath).snapshotChanges();
+      actions$ = collectionSnapshots(this.typedCollection<E>(this.db, subpath));
     } else {
       assertPath(path);
-      actions$ = this.db.collection<E>(path, idOrQuery).snapshotChanges();
+      actions$ = collectionSnapshots(this.typedCollection<E>(this.db, path));
     }
     return actions$.pipe(
-      map(actions => actions.map(action => this.fromFirestore(action.payload.doc))),
+      map(snapshots => snapshots.map(snapshot => this.fromFirestore(snapshot))),
       map(docs => docs.filter(isNotUndefined))
     );
   }
@@ -307,19 +361,18 @@ export abstract class FireCollection<E extends DocumentData> {
   ///////////
   // GROUP //
   ///////////
-  public async getGroup(queryFn?: QueryGroupFn<E>) {
-    const collectionGroup = this.getCollectionGroup(queryFn);
-    const collection = await collectionGroup.get().toPromise();
-    const docs = collection.docs as QueryDocumentSnapshot<E>[];
+  public async getGroup(queryConstraints: QueryConstraint[] = []) {
+    const collection = await getDocs(this.getCollectionGroup<E>(queryConstraints));
+    const docs = collection.docs;
     return docs
       .map(doc => this.fromFirestore(doc))
       .filter(isNotUndefined);
   }
 
-  public groupChanges(queryFn?: QueryGroupFn<E>) {
-    const collectionGroup = this.getCollectionGroup(queryFn);
-    return collectionGroup.snapshotChanges().pipe(
-      map(actions => actions.map(action => this.fromFirestore(action.payload.doc))),
+  public groupChanges(queryConstraints: QueryConstraint[] = []) {
+    const collectionGroupQuery = this.getCollectionGroup<E>(queryConstraints);
+    return collectionSnapshots(collectionGroupQuery).pipe(
+      map(snapshots => snapshots.map(snapshot => this.fromFirestore(snapshot))),
       map(docs => docs.filter(isNotUndefined)),
     );
   }
@@ -342,10 +395,12 @@ export abstract class FireCollection<E extends DocumentData> {
       const id: string | undefined = doc[this.idKey];
       if (!id) return false;
       const ref = this.getRef(id, options.params);
-      const { exists } = await (isTransaction(options?.write) ? options?.write.get(ref) : ref.get());
+      const snap = await (isTransaction(options?.write) ? options?.write.get(ref) : getDoc(ref));
+      const exists = snap.exists()
       return exists;
     };
     if (!Array.isArray(documents)) {
+      const exists = await doesExist(documents)
       return (await doesExist(documents))
         ? this.update(documents, options).then(_ => documents[this.idKey] as string)
         : this.add(documents, options);
@@ -378,10 +433,10 @@ export abstract class FireCollection<E extends DocumentData> {
     const docs = Array.isArray(documents) ? documents : [documents];
     const { write = this.batch(), ctx, params } = options;
     const path = this.getPath(options.params);
-    const operations = docs.map(async doc => {
-      const id = doc[this.idKey] || this.db.createId();
-      const data = await this.toFirestore({ ...doc, [this.idKey]: id, createdAt: this.timestamp, updatedAt: this.timestamp });
-      const { ref } = this.db.doc(getDocPath(path, id));
+    const operations = docs.map(async docData => {
+      const id = docData[this.idKey] || this.createId();
+      const data = await this.toFirestore({ ...docData, [this.idKey]: id, createdAt: this.timestamp, updatedAt: this.timestamp });
+      const ref = doc(this.db, getDocPath(path, id));
       
       (write as WriteBatch).set(ref, (data));
       if (this.onCreate) {
@@ -408,7 +463,7 @@ export abstract class FireCollection<E extends DocumentData> {
     const ids: string[] = Array.isArray(id) ? id : [id];
 
     const operations = ids.map(async docId => {
-      const { ref } = this.db.doc(getDocPath(path, docId));
+      const ref = doc(this.db, getDocPath(path, docId));
       write.delete(ref);
       if (this.onDelete) {
         await this.onDelete(docId, { write, ctx });
@@ -425,7 +480,7 @@ export abstract class FireCollection<E extends DocumentData> {
   async removeAll(options: WriteOptions = {}) {
     const path = this.getPath(options.params);
     assertPath(path);
-    const snapshot = await this.db.collection(path).ref.get();
+    const snapshot = await getDocs(collection(this.db, path));
     const ids = snapshot.docs.map(doc => doc.id);
     return this.remove(ids, options);
   }
@@ -481,13 +536,13 @@ export abstract class FireCollection<E extends DocumentData> {
 
     // If update depends on the entity, use transaction
     if (stateFunction) {
-      return this.db.firestore.runTransaction(async tx => {
+      return runTransaction(this.db, async tx => {
         const operations = ids.map(async id => {
-          const { ref } = this.db.doc(getDocPath(path, id));
+          const ref = doc(this.db, getDocPath(path, id));
           const snapshot = (await tx.get(ref)) as QueryDocumentSnapshot<E>;
-          const doc = this.fromFirestore(snapshot);
-          if (doc && stateFunction) {
-            const data = await stateFunction(Object.freeze(doc), tx);
+          const docData = this.fromFirestore(snapshot);
+          if (docData && stateFunction) {
+            const data = await stateFunction(Object.freeze(docData), tx);
             tx.update(ref, await this.toFirestore({ ...data, updatedAt: this.timestamp }));
             if (this.onUpdate) {
               await this.onUpdate(data, { write: tx, ctx });
@@ -500,14 +555,14 @@ export abstract class FireCollection<E extends DocumentData> {
     } else {
       const { write = this.batch() } = options;
       const operations = ids.map(async docId => {
-        const doc = Object.freeze(getData(docId));
+        const docData = Object.freeze(getData(docId));
         if (!docId) {
-          throw new Error(`Document should have an unique id to be updated, but none was found in ${doc}`);
+          throw new Error(`Document should have an unique id to be updated, but none was found in ${docData}`);
         }
-        const { ref } = this.db.doc(getDocPath(path, docId));
-        write.update(ref, await this.toFirestore({ ...doc, updatedAt: this.timestamp }));
+        const ref = this.typedDocument<E>(this.db, getDocPath(path, docId));
+        (write as WriteBatch).update(ref, await this.toFirestore({ ...docData, updatedAt: this.timestamp }))
         if (this.onUpdate) {
-          await this.onUpdate(doc, { write, ctx });
+          await this.onUpdate(docData, { write, ctx });
         }
       });
       await Promise.all(operations);

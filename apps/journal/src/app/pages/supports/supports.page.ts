@@ -12,6 +12,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Support } from '@strive/support/+state/support.firestore'
 // components
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-supports',
@@ -44,9 +45,9 @@ export class SupportsPage implements OnInit {
 
     this.user.user$.subscribe(user => {
       if (user) {
-        this.supportsOpen$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('supporter.uid', '==', user.id).where('status', '==', 'open'))
-        this.supportsToGet$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'waiting_to_be_paid'))
-        this.supportsToGive$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('supporter.uid', '==', user.id).where('status', '==', 'waiting_to_be_paid'))
+        this.supportsOpen$ = this.db.collectionGroupWithIds$(`Supports`, [where('supporter.uid', '==', user.id), where('status', '==', 'open')])
+        this.supportsToGet$ = this.db.collectionGroupWithIds$(`Supports`, [where('receiver.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
+        this.supportsToGive$ = this.db.collectionGroupWithIds$(`Supports`, [where('supporter.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
         // this._supportsGotten$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'paid'))
       }
 

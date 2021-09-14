@@ -32,7 +32,7 @@ export class UpsertCollectiveGoalPage implements OnInit {
   ngOnInit() {
     this.collectiveGoalId = this.navParam.data.id
     this.state = !!this.collectiveGoalId ? 'update' : 'create'
-    if (!this.collectiveGoalId) this.collectiveGoalId = this.service.db.createId();
+    if (!this.collectiveGoalId) this.collectiveGoalId = this.service.createId();
     this.collectiveGoalForm = new CollectiveGoalForm(this.navParam.data.data)
     this.loadingCtrl.getTop().then(v => v ? this.loadingCtrl.dismiss() : undefined)
   }

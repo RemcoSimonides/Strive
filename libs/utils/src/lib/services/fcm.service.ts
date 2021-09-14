@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFireMessaging } from '@angular/fire/messaging';
+import { Messaging, getToken, onMessage, Unsubscribe } from '@angular/fire/messaging';
 import { ToastController, Platform } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
-import { tap, take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({
@@ -12,14 +10,14 @@ import { UserService } from '@strive/user/user/+state/user.service';
 export class FcmService {
 
   constructor(
-    private afMessaging: AngularFireMessaging,
+    private messaging: Messaging,
     private toastController: ToastController,
     private _platform: Platform,
     private user: UserService
   ) { }
 
   private async getPermission() {
-    const token = await this.afMessaging.requestToken.pipe(take(1)).toPromise()
+    const token = await getToken(this.messaging);
     console.log('Permission granted! Save to the server!', token);
     this.user.addFCMToken(token);
   }
@@ -74,14 +72,11 @@ export class FcmService {
 
   }
 
-  showMessages(): Observable<any> {
-    return this.afMessaging.messages.pipe(
-      tap(msg => {
-        const body: any = (msg as any).notification.body;
-        console.log('msg body', body)
-        this.makeToast(body);
-      })
-    );
+  showMessages(): Unsubscribe {
+    return onMessage(this.messaging, msg => {
+      const { body } = msg.notification;
+      this.makeToast(body)
+    })
   }
 
   // sub(topic) {

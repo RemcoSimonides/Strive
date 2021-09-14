@@ -42,7 +42,7 @@ export class UpsertGoalModalComponent implements OnInit {
       this.mode = 'update'
     } else {
       this.mode = 'create'
-      this.goalId = this.goalService.db.createId()
+      this.goalId = this.goalService.createId()
     }
 
     const collectiveGoalId = this.navParams.data.collectiveGoalId as string

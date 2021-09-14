@@ -8,6 +8,7 @@ import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 
 import { getNrOfDotsInSeqno } from '@strive/milestone/+state/milestone.model';
 import { BehaviorSubject } from 'rxjs';
+import { orderBy, where } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +23,7 @@ export class RoadmapService {
   ) {}
 
   async getStructuredMilestones(goalId: string): Promise<MilestonesLeveled[]> {
-    const milestones = await this.milestoneService.getValue(ref => ref.orderBy('sequenceNumber'), { goalId })
+    const milestones = await this.milestoneService.getValue([orderBy('sequenceNumber')], { goalId })
     return this.structureMilestones(milestones)
   }
 
@@ -32,7 +33,7 @@ export class RoadmapService {
   }
 
   async getMilestoneWithSeqno(goalId: string, sequenceNumber: string): Promise<Milestone> {
-    const milestones = await this.milestoneService.getValue(ref => ref.where('sequenceNumber', '==', sequenceNumber), { goalId })
+    const milestones = await this.milestoneService.getValue([where('sequenceNumber', '==', sequenceNumber)], { goalId })
     if (!!milestones) return milestones[0]
   }
 

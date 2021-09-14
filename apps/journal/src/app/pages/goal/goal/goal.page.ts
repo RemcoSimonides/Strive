@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { httpsCallable, Functions } from '@angular/fire/functions';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
@@ -50,7 +50,7 @@ export class GoalPage implements OnInit, OnDestroy {
 
   constructor(
     private alertCtrl: AlertController,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private goalService: GoalService,
     private collectiveGoalService: CollectiveGoalService,
     private inviteTokenService: InviteTokenService,
@@ -149,8 +149,8 @@ export class GoalPage implements OnInit, OnDestroy {
     })
     loading.present()
 
-    const duplicateGoalFn = this.functions.httpsCallable('duplicateGoal');
-    const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).toPromise();
+    const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
+    const { error, result } = await duplicateGoalFn({ goalId: this.goalId }) as any;
 
     if (!!error) {
       loading.dismiss();

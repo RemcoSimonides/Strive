@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
 import { Milestone } from '@strive/milestone/+state/milestone.firestore'
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireCollection<Milestone> {
   readonly path = 'Goals/:goalId/Milestones';
 
-  constructor(db: AngularFirestore) {
+  constructor(db: Firestore) {
     super(db)
   }
 

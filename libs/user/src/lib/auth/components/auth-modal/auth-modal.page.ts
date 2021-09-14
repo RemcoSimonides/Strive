@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, setPersistence } from '@angular/fire/auth';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 // Ionic
 import { NavParams, LoadingController, Platform, AlertController, ModalController, NavController } from '@ionic/angular';
 // Rxjs
@@ -14,7 +14,6 @@ import { createProfile } from '@strive/user/user/+state/user.firestore';
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
-import firebase from 'firebase';
 
 export enum enumAuthSegment {
   login,
@@ -67,10 +66,10 @@ export class AuthModalPage implements OnInit {
   }
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private afAuth: Auth,
     private alertCtrl: AlertController,
     private fcmService: FcmService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navParams: NavParams,
@@ -82,14 +81,6 @@ export class AuthModalPage implements OnInit {
   ngOnInit() {
     const segmentChoice = this.navParams.data.authSegment
     this.authSegmentChoice = !!segmentChoice ? segmentChoice : enumAuthSegment.login
-  }
-
-  fixesAnIssue() {
-    // TODO remove when fixed
-    // https://github.com/angular/angularfire/issues/2864
-    // https://github.com/firebase/firebase-js-sdk/issues/4932
-    // next line doesnt get called but it does fix an issue 
-    this.afAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
   }
 
   ionViewDidEnter() {
@@ -147,7 +138,7 @@ export class AuthModalPage implements OnInit {
 
       try {
 
-        await this.afAuth.signInWithEmailAndPassword(email, password)
+        await signInWithEmailAndPassword(this.afAuth, email, password)
         loading.dismiss()
         await this.fcmService.registerFCM()
         this.modalCtrl.dismiss()
@@ -170,7 +161,7 @@ export class AuthModalPage implements OnInit {
       loading.present()
 
       try {
-        const { user } = await this.afAuth.createUserWithEmailAndPassword(this.signupForm.value.email, this.signupForm.value.password)
+        const { user } = await createUserWithEmailAndPassword(this.afAuth, this.signupForm.value.email, this.signupForm.value.password)
         const profile = createProfile({ id: user.uid, username: this.signupForm.value.username })
 
         await Promise.all([
@@ -187,8 +178,8 @@ export class AuthModalPage implements OnInit {
       }
       
       try {
-        const useTemplateFn = this.functions.httpsCallable('useTemplate')
-        const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }).toPromise();
+        const useTemplateFn = httpsCallable(this.functions, 'useTemplate')
+        const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }) as any;
 
         await this.fcmService.registerFCM()
         this.modalCtrl.dismiss()
@@ -219,7 +210,7 @@ export class AuthModalPage implements OnInit {
 
       try {
 
-        await this.afAuth.sendPasswordResetEmail(email)
+        await sendPasswordResetEmail(this.afAuth, email)
         loading.dismiss()
         this.alertCtrl.create({
           message: 'Check your inbox for a password reset link',

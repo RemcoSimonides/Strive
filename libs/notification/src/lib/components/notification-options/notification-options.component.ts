@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Firestore, deleteDoc, doc } from '@angular/fire/firestore';
 import { NavParams, PopoverController } from '@ionic/angular';
 
 
@@ -13,7 +13,7 @@ export class NotificationOptionsPopover implements OnInit {
   reference: string
 
   constructor(
-    private db: AngularFirestore,
+    private db: Firestore,
     private navParams: NavParams,
     private popoverCtrl: PopoverController
   ) { }
@@ -29,7 +29,7 @@ export class NotificationOptionsPopover implements OnInit {
 
   async delete() {
     if (!this.isAdmin) return
-    await this.db.doc(this.reference).delete()
+    await deleteDoc(doc(this.db, this.reference))
     this.dismiss(true)
   }
 

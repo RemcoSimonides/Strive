@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, On
 import { BehaviorSubject } from 'rxjs';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { FormControl } from '@angular/forms';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { Storage, deleteObject, ref, uploadBytes } from '@angular/fire/storage';
 import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
 import { SafeUrl } from '@angular/platform-browser';
 import { Platform } from '@ionic/angular';
@@ -50,7 +50,7 @@ export class ImageSelectorComponent implements OnInit {
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
   constructor(
-    private afStorage: AngularFireStorage,
+    private afStorage: Storage,
     public platform: Platform
   ) { }
 
@@ -126,7 +126,7 @@ export class ImageSelectorComponent implements OnInit {
 
   remove() {
     try {
-      this.afStorage.ref(this.form.value).delete()
+      deleteObject(ref(this.afStorage, this.form.value))
     } catch (err) { console.error(err) }
     this.form.setValue('');
     this.step.next('drop')
@@ -143,7 +143,7 @@ export class ImageSelectorComponent implements OnInit {
 
       const blob = b64toBlob(this.croppedImage)
       const path = `${this.storagePath}/${this.file.name}`
-      this.afStorage.upload(path, blob)
+      uploadBytes(ref(this.afStorage, path), blob)
       this.form.setValue(path)
       this.form.markAsDirty()
       this.step.next('show')

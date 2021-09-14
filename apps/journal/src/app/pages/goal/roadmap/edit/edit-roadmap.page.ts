@@ -226,7 +226,7 @@ export class EditRoadmapPage implements OnInit {
     //Prevent adding invalid sequence number
     if (!this.checkSequenceNumberValidity(sequenceNumber)) return
 
-    const id = await this.db.getNewId()
+    const id = this.db.getNewId()
     const indexForNewMilestone = this.findIndexForNewSequenceNumberPosition(sequenceNumber)
     const control = new MilestoneTemplateForm({ id, sequenceNumber, description })
     this.roadmapForm.insert(indexForNewMilestone, control)

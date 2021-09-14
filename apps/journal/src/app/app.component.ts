@@ -15,8 +15,9 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { Observable, of, Subscription } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
-import { AngularFireMessaging } from '@angular/fire/messaging';
 import { NotificationService } from '@strive/notification/+state/notification.service';
+import { Unsubscribe } from '@firebase/util';
+import { limit, where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,7 @@ export class AppComponent implements OnDestroy {
 
   private profileSubscription: Subscription
   private screenSizeSubscription: Subscription
-  private fcmSubscription: Subscription
+  private fcmUnsubscribe: Unsubscribe
 
   constructor(
     public screensize: ScreensizeService,
@@ -47,7 +48,6 @@ export class AppComponent implements OnDestroy {
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private messaging: AngularFireMessaging,
     private notification: NotificationService
   ) {
     this.initializeApp();
@@ -56,7 +56,7 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy() {
     this.profileSubscription.unsubscribe()
     this.screenSizeSubscription.unsubscribe()
-    this.fcmSubscription.unsubscribe()
+    this.fcmUnsubscribe()
   }
 
   initializeApp() {
@@ -71,7 +71,7 @@ export class AppComponent implements OnDestroy {
       }
 
       if (this.platform.is('mobileweb')) {
-        this.fcmSubscription = this.fcm.showMessages().subscribe()
+        this.fcmUnsubscribe = this.fcm.showMessages()
       }
 
       this.openAuthModalOnStartup()
@@ -79,7 +79,7 @@ export class AppComponent implements OnDestroy {
       this.unreadNotifications$ = this.user.profile$.pipe(
         switchMap(profile => {
           return profile
-          ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').where('isRead', '==', false).limit(1), { uid: profile.id}).pipe(map(notifications => !!notifications.length))
+          ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.id}).pipe(map(notifications => !!notifications.length))
           : of(false)
         })
       )

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot, where, WriteBatch } from '@angular/fire/firestore';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
@@ -16,7 +16,7 @@ export class UserSpectateService extends FireCollection<Spectator> {
   readonly idKey = 'uid'
 
   constructor(
-    db: AngularFirestore,
+    db: Firestore,
     private user: UserService,
     private profile: ProfileService
   ) {
@@ -36,8 +36,8 @@ export class UserSpectateService extends FireCollection<Spectator> {
       this.profile.getValue(params.uid, { uid: params.uid })
     ])
 
-    const ref = this.getRef(uid, { uid: params.uid })
-    write.update(ref, createSpectator({
+    const ref = this.getRef(uid, { uid: params.uid });
+    const data = createSpectator({
       uid,
       username: current.username,
       photoURL: current.photoURL,
@@ -45,7 +45,8 @@ export class UserSpectateService extends FireCollection<Spectator> {
       profileId: toBeSpectated.id,
       profileUsername: toBeSpectated.username,
       profilePhotoURL: toBeSpectated.photoURL
-    }))
+    });
+    (write as WriteBatch).update(ref, { ...data })
   }
 
   getCurrentSpectator(uidToBeSpectated: string) {
@@ -57,11 +58,11 @@ export class UserSpectateService extends FireCollection<Spectator> {
   }
 
   getSpectators(uid: string) {
-    return this.getValue(ref => ref.where('isSpectator', '==', true), { uid })
+    return this.getValue([where('isSpectator', '==', true)], { uid })
   }
 
   getSpectating(uid: string) {
-    return this.getGroup(ref => ref.where('uid', '==', uid))
+    return this.getGroup([where('uid', '==', uid)])
   }
 
   /**

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 // Angularfire
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Auth, user } from '@angular/fire/auth';
 // Rxjs
 import { Observable } from 'rxjs';
 // Services
@@ -18,6 +18,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
+import { orderBy, where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'support-add',
@@ -41,7 +42,7 @@ export class AddSupportModalComponent implements OnInit {
   public support = new SupportForm()
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private afAuth: Auth,
     private db: FirestoreService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
@@ -57,29 +58,29 @@ export class AddSupportModalComponent implements OnInit {
     this.origin = !!this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
-    this.afAuth.authState.subscribe(authState => {
+    user(this.afAuth).subscribe(user => {
       const reference = `Goals/${this.goalId}/Supports`
       let milestoneLevel: string
 
       if (this.origin === 'milestone') {
         this.nrOfDotsInSeqno = getNrOfDotsInSeqno(this.milestone.sequenceNumber)
         milestoneLevel = `path.level${this.nrOfDotsInSeqno + 1}id`
-        this.supports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id))
+        this.supports$ = this.db.col$(reference, [where(milestoneLevel, '==', this.milestone.id)])
       } else {
-        this.supports$ = this.db.col$(reference, ref => ref.orderBy('createdAt', 'desc'))
+        this.supports$ = this.db.col$(reference, [orderBy('createdAt', 'desc')])
       }
     
-      if (!!authState) {
-        const { uid, displayName, photoURL } = authState
+      if (!!user) {
+        const { uid, displayName, photoURL } = user
   
         this.support.supporter.uid.patchValue(uid)
         this.support.supporter.username.patchValue(displayName)
         this.support.supporter.photoURL.patchValue(photoURL)
         
         if (this.origin === 'milestone') {
-          this.mySupports$ = this.db.col$(reference, ref => ref.where(milestoneLevel, '==', this.milestone.id).where('supporter.uid', '==', uid))
+          this.mySupports$ = this.db.col$(reference, [where(milestoneLevel, '==', this.milestone.id), where('supporter.uid', '==', uid)])
         } else {
-          this.mySupports$ = this.db.col$(reference, ref => ref.where('supporter.uid', '==', uid).orderBy('createdAt', 'desc'))
+          this.mySupports$ = this.db.col$(reference, [where('supporter.uid', '==', uid), orderBy('createdAt', 'desc')])
         }
       }
     })

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 // Services
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Components
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -16,7 +16,7 @@ import { FcmService } from '@strive/utils/services/fcm.service';
 export class ProfileOptionsBrowserPage {
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private auth: Auth,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private router: Router,
@@ -35,7 +35,7 @@ export class ProfileOptionsBrowserPage {
   }
 
   async signOut() {
-    await this.afAuth.signOut()
+    await this.auth.signOut()
     this.popoverCtrl.dismiss()
 
     // open auth modal

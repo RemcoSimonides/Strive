@@ -6,6 +6,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
+import { orderBy, where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'strive-notifications',
@@ -33,7 +34,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
 
     this.notifications$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges(ref => ref.where('type', '==', 'notification').orderBy('createdAt', 'desc'), { uid: profile.id }).pipe(
+        ? this.notification.valueChanges([where('type', '==', 'notification'), orderBy('createdAt', 'desc')], { uid: profile.id }).pipe(
           map(notifications => notifications.map(notification => {
             return {
               ...notification,

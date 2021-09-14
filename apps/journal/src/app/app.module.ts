@@ -10,13 +10,13 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 // Angularfire / firebase
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
+import { provideMessaging, getMessaging } from '@angular/fire/messaging';
+import { PerformanceModule } from '@angular/fire/performance';
 
 // Environments
 import { environment } from 'environments/environment';
@@ -52,15 +52,15 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   ],
   imports: [
     // Angular
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-    AngularFireFunctionsModule,
-    AngularFireMessagingModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
+    provideFunctions(() => getFunctions()),
+    provideMessaging(() => getMessaging()),
     //enable offline persistance
     // AngularFirestoreModule.enablePersistence(),
-    AngularFirePerformanceModule,
+    PerformanceModule,
     AppRoutingModule,
     BrowserModule,
     CommonModule,

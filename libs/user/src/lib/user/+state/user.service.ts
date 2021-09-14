@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Auth, user, updateProfile } from '@angular/fire/auth';
+import { arrayUnion } from '@angular/fire/firestore';
 import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Rxjs
 import { Observable, of } from 'rxjs';
@@ -18,30 +19,30 @@ export class UserService {
   uid: string = undefined
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private auth: Auth,
     private db: FirestoreService
   ) {
 
-    this.user$ = this.afAuth.authState.pipe(
-      switchMap(user => user ? db.docWithId$(userPath(user.uid)) : of(null))
+    this.user$ = user(this.auth).pipe(
+      switchMap(user => user ? db.docWithId$(userPath(user.uid)) : of (null))
     )
 
-    this.profile$ = this.afAuth.authState.pipe(
+    this.profile$ = user(this.auth).pipe(
       switchMap(user => user ? db.docWithId$(profilePath(user.uid)) : of(null)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     )
 
-    this.afAuth.authState.pipe(tap(user => this.uid = !!user ? user.uid : '' )).subscribe()
+    user(this.auth).pipe(tap(user => this.uid = !!user ? user.uid : '' )).subscribe()
   }
 
   get isLoggedIn$() {
-    return this.afAuth.authState.pipe(map(user => !!user))
+    return user(this.auth).pipe(map(user => !!user))
   }
 
   async getUID(): Promise<string> {
     if (this.uid === undefined) {
       return await new Promise((resolve) => {
-        this.afAuth.authState.pipe(take(1)).subscribe(user => resolve(user.uid))
+        user(this.auth).pipe(take(1)).subscribe(user => resolve(user.uid))
       })
     } else {
       return this.uid
@@ -53,7 +54,7 @@ export class UserService {
   }
 
   async getFirebaseUser() {
-    return this.afAuth.currentUser
+    return await user(this.auth).pipe(take(1)).toPromise();
   }
 
   getProfile$(uid = this.uid) {
@@ -66,12 +67,13 @@ export class UserService {
 
   async upsertProfile(profile: Partial<Profile>, uid = this.uid) {
     this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, profile);
+    const _user = await this.getFirebaseUser()
 
     if (profile.username || profile.photoURL) {
-      const currentUser = await this.afAuth.currentUser
-      currentUser.updateProfile({
-        displayName: profile.username ?? currentUser.displayName,
-        photoURL: profile.photoURL ?? currentUser.photoURL
+      // should be this.auth insted of _user?
+      updateProfile(_user, {
+        displayName: profile.username ?? _user.displayName,
+        photoURL: profile.photoURL ?? _user.photoURL
       })
     }
   }
@@ -83,7 +85,7 @@ export class UserService {
 
   addFCMToken(token: string) {
     return this.upsertProfile({
-      fcmTokens: this.db.getArrayUnion(token) as any
+      fcmTokens: arrayUnion(token) as any
     })
   }
 

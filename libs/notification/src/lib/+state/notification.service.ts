@@ -5,7 +5,7 @@ import {
   SupportDecisionMeta
 } from './notification.firestore';
 import { FireCollection } from '@strive/utils/services/collection.service';
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { createSupportDecisionMeta } from './notification.model';
 
@@ -17,7 +17,7 @@ export class NotificationService extends FireCollection<Notification> {
   
   constructor(
     private user: UserService,
-    db: AngularFirestore
+    db: Firestore
   ) { 
     super(db)
   }

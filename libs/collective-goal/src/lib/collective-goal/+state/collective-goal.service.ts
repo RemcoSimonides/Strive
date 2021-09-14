@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { AngularFirestore, DocumentSnapshot, QueryFn } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot, doc, deleteDoc, QueryConstraint, where, orderBy } from '@angular/fire/firestore';
 // Services
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
@@ -18,7 +18,7 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
   readonly path = 'CollectiveGoals'
 
   constructor(
-    public db: AngularFirestore,
+    public db: Firestore,
     private goalService: GoalService,
     private user: UserService,
     private stakeholder: CollectiveGoalStakeholderService
@@ -65,18 +65,18 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
   }
 
   public async delete(collectiveGoalId: string) {
-    await this.db.doc(`CollectiveGoals/${collectiveGoalId}`).delete()
+    await deleteDoc(doc(this.db, `CollectiveGoals/${collectiveGoalId}`))
   }
 
   public getGoals(id: string, secret: boolean): Observable<Goal[]> {
-    let query: QueryFn
+    let constraints: QueryConstraint[]
     if (secret) {
-      query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '!=', 'private').orderBy('publicity').orderBy('createdAt', 'desc')
+      constraints = [where('collectiveGoalId', '==', id), where('publicity', '!=', 'private'), orderBy('publicity'), orderBy('createdAt', 'desc')]
     } else {
-      query = ref => ref.where('collectiveGoalId', '==', id).where('publicity', '==', 'public').orderBy('createdAt', 'desc')
+      constraints = [where('collectiveGoalId', '==', id), where('publicity', '==', 'public'), orderBy('createdAt', 'desc')]
     }
 
-    return this.goalService.valueChanges(query).pipe(
+    return this.goalService.valueChanges(constraints).pipe(
       map(goals => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
     )
   }

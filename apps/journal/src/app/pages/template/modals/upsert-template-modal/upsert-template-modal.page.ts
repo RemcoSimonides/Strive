@@ -65,7 +65,7 @@ export class UpsertTemplateModalPage implements OnInit {
     this.collectiveGoalId = collectiveGoalId
     this.templateForm = new TemplateForm(template)
     this.newTemplate = !template
-    this.templateId = !!template ? template.id : this.templateService.db.createId()
+    this.templateId = !!template ? template.id : this.templateService.createId()
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 

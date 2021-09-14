@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { PopoverController } from '@ionic/angular';
 import { FcmService } from '@strive/utils/services/fcm.service';
 
@@ -11,7 +11,7 @@ import { FcmService } from '@strive/utils/services/fcm.service';
 export class ProfileOptionsPage {
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private auth: Auth,
     private popoverCtrl: PopoverController,
     private fcm: FcmService
   ) { }
@@ -22,7 +22,7 @@ export class ProfileOptionsPage {
   }
 
   signOut() {
-    this.afAuth.signOut()
+    this.auth.signOut()
     this.popoverCtrl.dismiss()
   }
 }

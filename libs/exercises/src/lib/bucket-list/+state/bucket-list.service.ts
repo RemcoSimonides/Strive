@@ -1,4 +1,4 @@
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 // Strive
 import { BucketList } from './bucket-list.firestore';
@@ -8,7 +8,7 @@ import { FireCollection } from '@strive/utils/services/collection.service';
 export class BucketListService extends FireCollection<BucketList> {
   readonly path = 'Users/:uid/Exercises'
 
-  constructor(db: AngularFirestore) {
+  constructor(db: Firestore) {
     super(db)
   }
 

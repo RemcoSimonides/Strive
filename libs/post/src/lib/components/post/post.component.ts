@@ -1,8 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-// Angularfire
-import { FirestoreService } from '@strive/utils/services/firestore.service';
-// Rxjs
-import { take } from 'rxjs/operators';
+import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 // Interface
 import { Post } from '../../+state/post.firestore'
 
@@ -18,18 +15,15 @@ export class PostComponent implements OnInit {
   @Input() postRef: string
   
   constructor(
-    private db: FirestoreService,
+    private db: Firestore,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     if (!!this.postRef) {
-      this.db.doc<Post>(this.postRef).snapshotChanges().pipe(take(1)).toPromise().then(snap => {
-        if (snap.payload.exists) {
-          
-          // Post does exist
-          this.post = snap.payload.data()
-
+      getDoc(doc(this.db, this.postRef)).then(snap => {
+        if (snap.exists()) {
+          this.post = snap.data() as Post;
           this.cdr.markForCheck()
         }
       })

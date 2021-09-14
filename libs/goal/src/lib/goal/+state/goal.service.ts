@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Firestore, DocumentSnapshot, Query, QueryConstraint, where, orderBy, collectionGroup } from '@angular/fire/firestore';
 // Rxjs
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -7,7 +8,6 @@ import { FireCollection, WriteOptions } from '@strive/utils/services/collection.
 import { GoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 // Interfaces
 import { Goal, createGoal } from './goal.firestore'
-import { AngularFirestore, DocumentSnapshot, QueryGroupFn } from '@angular/fire/firestore';
 import { createGoalStakeholder, enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 
@@ -16,7 +16,7 @@ export class GoalService extends FireCollection<Goal> {
   readonly path = `Goals`
 
   constructor(
-    public db: AngularFirestore,
+    public db: Firestore,
     private stakeholder: GoalStakeholderService,
     private user: UserService
   ) { 
@@ -49,14 +49,14 @@ export class GoalService extends FireCollection<Goal> {
   }
 
   getStakeholderGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<Goal[]> {
-    let query: QueryGroupFn<GoalStakeholder>;
+    let constraints: QueryConstraint[];
     if (publicOnly) {
-      query = ref => ref.where('goalPublicity', '==', 'public').where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')
+      constraints = [where('goalPublicity', '==', 'public'), where('uid', '==', uid), where(role, '==', true), orderBy('createdAt', 'desc')]
     } else {
-      query = ref => ref.where('uid', '==', uid).where(role, '==', true).orderBy('createdAt', 'desc')
+      constraints = [where('uid', '==', uid), where(role, '==', true), orderBy('createdAt', 'desc')]
     }
 
-    return this.stakeholder.groupChanges(query).pipe(
+    return this.stakeholder.groupChanges(constraints).pipe(
       switchMap(stakeholders => {
         const goalIds = stakeholders.map(stakeholder => stakeholder.goalId)
         return this.valueChanges(goalIds)

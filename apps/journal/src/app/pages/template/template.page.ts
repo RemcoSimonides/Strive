@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, PopoverController, ModalController, Platform, NavController } from '@ionic/angular';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 // Rxjs
 import { Observable, Subscription, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -43,7 +43,7 @@ export class TemplatePage implements OnInit {
     private collectiveGoalService: CollectiveGoalService,
     private stakeholder: CollectiveGoalStakeholderService,
     private db: FirestoreService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -115,8 +115,8 @@ export class TemplatePage implements OnInit {
     })
     loading.present();
 
-    const useTemplateFn = this.functions.httpsCallable('useTemplate')
-    const { error, result } = await useTemplateFn({ collectiveGoalId: this.collectiveGoalId, templateId: this.templateId }).toPromise()
+    const useTemplateFn = httpsCallable(this.functions, 'useTemplate')
+    const { error, result } = await useTemplateFn({ collectiveGoalId: this.collectiveGoalId, templateId: this.templateId }) as any
 
     if (!!error) {
       await loading.dismiss()

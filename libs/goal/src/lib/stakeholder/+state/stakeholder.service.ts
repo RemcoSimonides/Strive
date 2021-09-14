@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot, getDoc, WriteBatch } from '@angular/fire/firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-// Rxjs
-import { take } from 'rxjs/operators';
 // Interfaces
 import { Profile } from '@strive/user/user/+state/user.firestore'
 import { GoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
@@ -25,7 +23,7 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
   readonly path = 'Goals/:goalId/GStakeholders'
   readonly idKey = 'uid'
 
-  constructor(db: AngularFirestore, private user: UserService) {
+  constructor(db: Firestore, private user: UserService) {
     super(db)
   }
 
@@ -45,8 +43,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     const uid = stakeholder.uid
 
     const [profile, goal] = await Promise.all([
-      this.db.doc<Profile>(`Users/${uid}/Profile/${uid}`).valueChanges().pipe(take(1)).toPromise(),
-      this.db.doc<Goal>(`Goals/${goalId}`).valueChanges().pipe(take(1)).toPromise()
+      getDoc(this.typedDocument<Profile>(this.db, `Users/${uid}/Profile/${uid}`)).then(snap => snap.data()),
+      getDoc(this.typedDocument<Goal>(this.db, `Goals/${goalId}`)).then(snap => snap.data())
     ])
 
     if (!!goal) {
@@ -57,13 +55,13 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     }
 
     const ref = this.getRef(uid, { goalId })
-    write.update(ref, createGoalStakeholder({
-        ...stakeholder,  
-        username: profile.username,
-        photoURL: profile.photoURL,
-        uid,
-        goalId,
-      })
-    )
+    const data = createGoalStakeholder({
+      ...stakeholder,  
+      username: profile.username,
+      photoURL: profile.photoURL,
+      uid,
+      goalId
+    });
+    (write as WriteBatch).update(ref, { ...data })
   }
 }

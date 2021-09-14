@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
+import { where } from '@angular/fire/firestore';
 import { take } from 'rxjs/operators';
 
 // Strive
@@ -102,7 +103,7 @@ export class NotificationComponent {
     if (!isSupportDecisionNotification(notification)) return
     if (notification.meta.status === 'finalized') return
 
-    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder[]>(`Goals/${notification.source.goal.id}/GStakeholders`, ref => ref.where('isAchiever', '==', true)).pipe(take(1)).toPromise()
+    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder>(`Goals/${notification.source.goal.id}/GStakeholders`, [where('isAchiever', '==', true)]).pipe(take(1)).toPromise()
 
     const chooseAchieverModal = await this.modalCtrl.create({
       component: ChooseAchieverModal,

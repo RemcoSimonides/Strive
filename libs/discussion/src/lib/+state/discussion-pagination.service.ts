@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { collection, CollectionReference, collectionSnapshots, DocumentData, Firestore, limit, orderBy, Query, query, startAfter } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
 import { createComment } from './comment.firestore';
 
@@ -34,23 +34,19 @@ export class DiscussionPaginationService {
     done: Observable<boolean> = this._done.asObservable()
     loading: Observable<boolean> = this._loading.asObservable()
   
-    constructor(private afs: AngularFirestore) {}
+    constructor(private db: Firestore) {}
 
     listenToUpdates() {
-      const updates = this.afs.collection(this.query.path, ref => {
-        return ref
-          .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-          .limit(1)
-      })
+      const ref = collection(this.db, this.query.path)
+      const constraints = [orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc'), limit(1)]
+      const _query = query(ref, ...constraints)
 
-      this.subscription = updates.snapshotChanges().pipe(
-        tap(arr => {
-          let values = arr.map(snap => {
-            const data = createComment(snap.payload.doc.data())
-            const doc = snap.payload.doc
-            const id = snap.payload.doc.id
-            const append = true
-            return { ...data, doc, id, append }
+      this.subscription = collectionSnapshots(_query).pipe(
+        tap(docs => {
+          let values = docs.map(doc => {
+            const data = createComment(doc.data())
+            const id = doc.id
+            return { ...data, doc, id, append: true }
           })
           this._data.next(values)
         })
@@ -68,11 +64,9 @@ export class DiscussionPaginationService {
         ...opts
       }
   
-      const first = this.afs.collection(this.query.path, ref => {
-        return ref
-                .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-                .limit(this.query.limit)
-      })
+      const ref = collection(this.db, this.query.path)
+      const constraints = [orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc'), limit(this.query.limit)]
+      const first = query(ref, ...constraints)
   
       this.mapAndUpdate(first)
   
@@ -104,17 +98,17 @@ export class DiscussionPaginationService {
   
     // Retrieves additional data from firestore
     more() {
-      const more = this.afs.collection(this.query.path, ref => {
-        return ref
-                .orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc')
-                .limit(this.query.limit)
-                .startAfter(this._cursor)
-      })
-      this.mapAndUpdate(more)
+      const ref = collection(this.db, this.query.path)
+      const constraints = [
+        orderBy(this.query.field, this.query.reverse ? 'desc' : 'asc'),
+        limit(this.query.limit),
+        startAfter(this._cursor)
+      ]
+      this.mapAndUpdate(query(ref, ...constraints))
     }  
   
     // Maps the snapshot to usable format the updates source
-    private mapAndUpdate(col: AngularFirestoreCollection<any>) {
+    private mapAndUpdate(col: Query<DocumentData>) {
 
       if (this._done.value || this._loading.value) { return };
   
@@ -122,12 +116,11 @@ export class DiscussionPaginationService {
       this._loading.next(true)
   
       // Map snapshot with doc ref (needed for cursor)
-      return col.snapshotChanges().pipe(
-        tap(arr => {
-          let values = arr.map(snap => {
-            const data = snap.payload.doc.data()
-            const doc = snap.payload.doc
-            const id = snap.payload.doc.id
+      return collectionSnapshots(col).pipe(
+        tap(docs => {
+          let values = docs.map(doc => {
+            const data = doc.data()
+            const id = doc.id
             return { ...data, doc, id }
           })
 

@@ -1,13 +1,34 @@
 import { Injectable } from '@angular/core';
-import firebase from 'firebase/app';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, AngularFirestoreCollectionGroup, QueryFn, DocumentSnapshot, Action, DocumentSnapshotExists, QueryDocumentSnapshot } from '@angular/fire/firestore'
+import { 
+  Firestore,
+  serverTimestamp,
+  doc,
+  collection,
+  CollectionReference,
+  QueryConstraint,
+  query,
+  Query,
+  DocumentReference,
+  collectionGroup,
+  docSnapshots,
+  collectionSnapshots,
+  getDoc,
+  updateDoc,
+  setDoc,
+  addDoc
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { take, tap, map } from 'rxjs/operators'
-import { FieldValue } from '@firebase/firestore-types';
+import { map } from 'rxjs/operators'
 
-// types
-type CollectionPredicate<T> = string | AngularFirestoreCollection<T>;
-type DocPredicate<T> = string | AngularFirestoreDocument<T>;
+function typedDocument<T>(firestore: Firestore, path: string): DocumentReference<T> {
+  return doc(firestore, path) as DocumentReference<T>
+}
+function typedCollection<T>(firestore: Firestore, path: string): CollectionReference<T> {
+  return collection(firestore, path) as CollectionReference<T>
+}
+function typedCollectionGroup<T>(firestore: Firestore, path: string): Query<T> {
+  return collectionGroup(firestore, path) as Query<T>
+}
 
 /**
  * CODE FROM: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/
@@ -18,18 +39,10 @@ type DocPredicate<T> = string | AngularFirestoreDocument<T>;
 })
 export class FirestoreService {
 
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: Firestore) { }
 
-  get timestamp(): FieldValue {
-    return firebase.firestore.FieldValue.serverTimestamp();
-  }
-
-  getArrayUnion(value): FieldValue {
-    return firebase.firestore.FieldValue.arrayUnion(value)
-  }
-
-  async getNewId(): Promise<string> {
-    return await this.afs.createId();
+  getNewId() {
+    return doc(collection(this.afs, 'createNewId')).id;
   }
 
   /**
@@ -38,12 +51,13 @@ export class FirestoreService {
    * @param queryFn query (filter/order)
    * @returns reference 
    */
-  col<T>(ref: CollectionPredicate<T>, queryFn?: any): AngularFirestoreCollection<T> {
-    return typeof ref === 'string' ? this.afs.collection<T>(ref, queryFn) : ref;
+  col<T>(ref: Query<T> | string, queryConstraints: QueryConstraint[] = []): Query<T> {
+    const typedRef = typeof ref === 'string' ? typedCollection<T>(this.afs, ref) : ref
+    return typeof ref === 'string' ? query(typedRef, ...queryConstraints) : ref;
   }
 
-  collectionGroup<T>(ref: CollectionPredicate<T>, queryFn?: any): AngularFirestoreCollectionGroup<T> {
-    return typeof ref === 'string' ? this.afs.collectionGroup<T>(ref, queryFn) : null
+  collectionGroup<T>(ref: Query<T> | string, queryConstraints: QueryConstraint[] = []): Query<T> {
+    return typeof ref === 'string' ? query(typedCollectionGroup<T>(this.afs, ref), ...queryConstraints) : null;
   }
 
   /**
@@ -51,8 +65,8 @@ export class FirestoreService {
    * @param ref Referenc to document
    * @returns Reference
    */
-  doc<T>(ref: DocPredicate<T>): AngularFirestoreDocument<T> {
-    return typeof ref === 'string' ? this.afs.doc<T>(ref) : ref;
+  doc<T>(ref: DocumentReference<T> | string): DocumentReference<T> {
+    return typeof ref === 'string' ? typedDocument<T>(this.afs, ref) : ref;
   }
 
   /**
@@ -60,24 +74,18 @@ export class FirestoreService {
    * @param ref Reference to document
    * @returns observable of the document
    */
-  doc$<T>(ref: DocPredicate<T>): Observable<T> {
-    return this.doc(ref).snapshotChanges()
-      .pipe(
-        map(doc => {
-          return doc.payload.data() as T;
-        })
-      )
+  doc$<T>(ref: DocumentReference<T> | string): Observable<T> {
+    return docSnapshots(this.doc(ref)).pipe(map(doc => doc.data()))
   }
 
-  docWithId$<T>(ref: DocPredicate<T>): Observable<T> {
-    return this.doc(ref).snapshotChanges()
-      .pipe(
-        map(doc => {
-          const data: any = doc.payload.data()
-          const id = doc.payload.id
-          return { id, ...data }
-        })
-      )
+  docWithId$<T>(ref: DocumentReference<T> | string): Observable<T> {
+    return docSnapshots(this.doc(ref)).pipe(
+      map(doc => {
+        const data = doc.data()
+        const id = doc.id
+        return { id, ...data }
+      })
+    )
   }
 
   /**
@@ -86,14 +94,10 @@ export class FirestoreService {
    * @param queryFn query (filter/order)
    * @returns Observable of collection
    */
-  col$<T>(ref: CollectionPredicate<T>, queryFn?: QueryFn): Observable<T[]> {
-    return this.col(ref, queryFn).snapshotChanges()
-      .pipe(
-        map(docs => {
-          return docs.map(a => a.payload.doc.data() as T)
-        })
-      )
-
+  col$<T>(ref: CollectionReference<T> | string, queryConstraints: QueryConstraint[] = []): Observable<T[]> {
+    return collectionSnapshots(this.col(ref, queryConstraints))
+      .pipe(map(docs => docs.map(a => a.data()))
+    )
   }
 
   /**
@@ -102,27 +106,26 @@ export class FirestoreService {
    * @param queryFn query (filter/order)
    * @returns Observable of collection including its ID
    */
-  colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?: QueryFn): Observable<any[]> {
-    return this.col(ref, queryFn).snapshotChanges()
+  colWithIds$<T>(ref: CollectionReference<T> | string, queryConstraints: QueryConstraint[] = []): Observable<T[]> {
+    return collectionSnapshots(this.col(ref, queryConstraints))
       .pipe(
-        map(actions => {
-          return actions.map(a => {
-            const data: any = a.payload.doc.data()
-            const id = a.payload.doc.id
+        map(docs => {
+          return docs.map(doc => {
+            const data = doc.data()
+            const id = doc.id
             return { id, ...data }
           })
         })
       )
   }
 
-  collectionGroupWithIds$<T>(ref: CollectionPredicate<T>, queryFn?: QueryFn): Observable<any[]> {
-
-    return this.collectionGroup(ref, queryFn).snapshotChanges()
+  collectionGroupWithIds$<T>(ref: CollectionReference<T> | string, queryConstraints: QueryConstraint[] = []): Observable<T[]> {
+    return collectionSnapshots(this.collectionGroup(ref, queryConstraints))
       .pipe(
-        map(actions => {
-          return actions.map(a => {
-            const data: any = a.payload.doc.data()
-            const id = a.payload.doc.id
+        map(docs => {
+          return docs.map(doc => {
+            const data = doc.data()
+            const id = doc.id
             return { id, ...data }
           })
         })
@@ -134,11 +137,9 @@ export class FirestoreService {
    * @param ref Reference to document
    * @param data Object with the new data
    */
-  upsert<T>(ref: DocPredicate<T>, data: any) {
-    const doc = this.doc(ref).snapshotChanges().pipe(take(1)).toPromise()
-  
-    return doc.then(snap => {
-      return snap.payload.exists ? this.update(ref, data) : this.set(ref, data)
+  upsert<T>(ref: DocumentReference<T> | string, data: any) {
+    return getDoc(this.doc(ref)).then(doc => {
+      return doc.exists ? this.update(ref, data) : this.set(ref, data)
     })
   }
 
@@ -147,10 +148,10 @@ export class FirestoreService {
    * @param ref Reference to document
    * @param data Object with the new data
    */
-  update<T>(ref: DocPredicate<T>, data: any) {
-    return this.doc(ref).update({
+  update<T>(ref: DocumentReference<T> | string, data: any) {
+    return updateDoc(this.doc(ref), {
       ...data,
-      updatedAt: this.timestamp
+      updatedAt: serverTimestamp()
     })
   }
 
@@ -159,10 +160,10 @@ export class FirestoreService {
    * @param ref Reference to to-be-made document
    * @param data Object with the new data
    */
-  set<T>(ref: DocPredicate<T>, data: any) {
-    const timestamp = this.timestamp
+  set<T>(ref: DocumentReference<T> | string, data: any) {
+    const timestamp = serverTimestamp()
 
-    return this.doc(ref).set({
+    return setDoc(this.doc(ref), {
       ...data,
       updatedAt: timestamp,
       createdAt: timestamp
@@ -174,49 +175,14 @@ export class FirestoreService {
    * @param ref Reference to collection
    * @param data Object with the new data
    */
-  add<T>(ref: CollectionPredicate<T>, data: any) {
-    const timestamp = this.timestamp
-    return this.col(ref).add({
+  add<T>(ref: CollectionReference<T> | string, data: any) {
+    const timestamp = serverTimestamp()
+    const _ref = typeof ref === 'string' ? typedCollection<T>(this.afs, ref) : ref;
+    return addDoc(_ref, {
       ...data,
       updatedAt: timestamp,
       createdAt: timestamp
     })
-  }
-
-  /**
-   * used to test a query
-   * @param ref 
-   */
-  inspectDoc(ref: DocPredicate<any>): void {
-    const tick = new Date().getTime()
-    this.doc(ref)
-        .snapshotChanges()
-        .pipe(
-          take(1),
-          tap(d => {
-            const tock = new Date().getTime() - tick
-            console.log(`Loaded Document in ${tock}ms`, d.payload.data())
-          })
-        )
-        .subscribe()
-  }
-
-  /**
-   * Used to test a query
-   * @param ref 
-   */
-  inspectCol(ref: CollectionPredicate<any>): void {
-    const tick = new Date().getTime()
-    this.col(ref)
-        .snapshotChanges()
-        .pipe(
-          take(1),
-          tap(c => {
-          const tock = new Date().getTime() - tick
-          console.log(`Loaded Collection in ${tock}ms`, c)
-        })
-        )
-        .subscribe()
   }
 
 }
