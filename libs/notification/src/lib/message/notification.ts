@@ -29,7 +29,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
   switch (event) {
     case enumEvent.cgGoalCreated:
       switch (target) {
-        case 'user':
+        case 'stakeholder':
           return {
             ...get('collectiveGoal', source),
             message: [

@@ -13,12 +13,12 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'
 import { CollectiveGoalSharePopoverPage } from './popovers/share/share.component';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
+import { TemplateService } from '@strive/template/+state/template.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -55,8 +55,8 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     public user: UserService,
     private collectiveGoalService: CollectiveGoalService,
     private stakeholder: CollectiveGoalStakeholderService,
-    private db: FirestoreService,
     private inviteTokenService: InviteTokenService,
+    private template: TemplateService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private platform: Platform,
@@ -98,8 +98,8 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     if (!this.canAccess) {
       this.canAccess = true
       this.goals$ = this.collectiveGoalService.getGoals(this.collectiveGoalId, collectiveGoal.isSecret)
-      this.stakeholders$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/CGStakeholders`)
-      this.templates$ = this.db.colWithIds$(`CollectiveGoals/${this.collectiveGoalId}/Templates`, [orderBy('numberOfTimesUsed', 'desc')])
+      this.stakeholders$ = this.stakeholder.valueChanges({ collectiveGoalId: this.collectiveGoalId })
+      this.templates$ = this.template.valueChanges([orderBy('numberOfTimesUsed', 'desc')], { collectiveGoalId: this.collectiveGoalId })
   
       // SEO
       this.seo.generateTags({
@@ -193,7 +193,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   public saveDescription(description: string) {
-    this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}`, { description })
+    this.collectiveGoalService.upsert({ id: this.collectiveGoalId, description });
   }
 
   public async openSharePopover(collectiveGoal: CollectiveGoal, ev: UIEvent) {
@@ -239,7 +239,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
           text: 'Yes',
           handler: () => {
             this.stakeholder.upsert({
-              uid: stakeholder.id,
+              uid: stakeholder.uid,
               isAdmin: !stakeholder.isAdmin
             }, { params: { collectiveGoalId: this.collectiveGoalId }})
           }

@@ -1,7 +1,6 @@
 import { FieldValue } from '@firebase/firestore-types';
 
 export interface CollectiveGoalStakeholder {
-  id?: string;
   uid: string;
   username: string;
   photoURL: string;
@@ -19,7 +18,6 @@ export interface CollectiveGoalStakeholder {
 /** A factory function that creates a CollectiveGoalStakeholderDocument */
 export function createCollectiveGoalStakeholder(params: Partial<CollectiveGoalStakeholder> = {}): CollectiveGoalStakeholder {
   return {
-    id: !!params.id ? params.id : '',
     uid: '',
     username: '',
     photoURL: '',
