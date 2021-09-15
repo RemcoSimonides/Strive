@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Ionic
 import { LoadingController, AlertController, Platform } from '@ionic/angular';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { TemplateService } from '@strive/template/+state/template.service';
 import { SeoService } from '@strive/utils/services/seo.service';
@@ -44,7 +43,6 @@ export class EditRoadmapPage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private db: FirestoreService,
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
     private milestoneService: MilestoneService,
@@ -226,7 +224,7 @@ export class EditRoadmapPage implements OnInit {
     //Prevent adding invalid sequence number
     if (!this.checkSequenceNumberValidity(sequenceNumber)) return
 
-    const id = this.db.getNewId()
+    const id = this.milestoneService.createId()
     const indexForNewMilestone = this.findIndexForNewSequenceNumberPosition(sequenceNumber)
     const control = new MilestoneTemplateForm({ id, sequenceNumber, description })
     this.roadmapForm.insert(indexForNewMilestone, control)

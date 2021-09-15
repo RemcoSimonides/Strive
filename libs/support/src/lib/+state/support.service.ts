@@ -1,40 +1,22 @@
 import { Injectable } from '@angular/core';
+import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
-import { SupportStatus, NotificationSupport, createSupport } from '@strive/support/+state/support.firestore';
+import { createSupport } from '@strive/support/+state/support.firestore';
 import { Support } from '@strive/support/+state/support.firestore';
-import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class SupportService {
+export class SupportService extends FireCollection<Support> {
+  readonly path = 'Goals/:goalId/Supports'
 
-  constructor(private db: FirestoreService) { }
-
-  async get(goalId: string, supportId: string) {
-    const support = await this.db.doc$(`Goals/${goalId}/Supports/${supportId}`).pipe(take(1)).toPromise()
-    return createSupport(support)
+  constructor(protected db: Firestore) {
+    super(db)
   }
 
-  async changeSupportStatus(goalId: string, supportId: string, status: SupportStatus): Promise<void> {
-    this.db.upsert(`Goals/${goalId}/Supports/${supportId}`, { status })
-  }
-
-  async changeSupportStatusDependantOnDecision(goalId: string, supports: NotificationSupport[]): Promise<void> {
-    supports.forEach(support => {
-      if (support.decision === 'give') {
-        this.changeSupportStatus(goalId, support.id, 'waiting_to_be_paid')
-      } else if (support.decision === 'keep') {
-        this.changeSupportStatus(goalId, support.id, 'rejected')
-      }  
-    })
-  }
-
-  addSupport(goalId: string, support: Support) {
-    this.db.add(`Goals/${goalId}/Supports`, support)
-  }
-
-  async upsert(goalId: string, supportId: string, data: Partial<Support>) {
-    this.db.upsert(`Goals/${goalId}/Supports/${supportId}`, data)
+  protected fromFirestore(snapshot: DocumentSnapshot<Support>) {
+    return (snapshot.exists())
+      ? createSupport({ ...snapshot.data(), id: snapshot.id })
+      : undefined
   }
 }

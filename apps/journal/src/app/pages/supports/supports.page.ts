@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, Platform, ModalController } from '@ionic/angular';
-// angularfire
-import { FirestoreService } from '@strive/utils/services/firestore.service';
-// services
+// Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/+state/support.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-// rxjs
+// Rxjs
 import { Observable, Subscription } from 'rxjs';
-// interfaces
+// Interfaces
 import { Support } from '@strive/support/+state/support.firestore'
-// components
+// Components
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { where } from '@angular/fire/firestore';
 
@@ -32,12 +30,11 @@ export class SupportsPage implements OnInit {
 
   constructor(
     public user: UserService,
-    private db: FirestoreService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
     private seo: SeoService,
-    private supportService: SupportService
+    private support: SupportService
   ) { }
 
   ngOnInit() {
@@ -45,9 +42,9 @@ export class SupportsPage implements OnInit {
 
     this.user.user$.subscribe(user => {
       if (user) {
-        this.supportsOpen$ = this.db.collectionGroupWithIds$(`Supports`, [where('supporter.uid', '==', user.id), where('status', '==', 'open')])
-        this.supportsToGet$ = this.db.collectionGroupWithIds$(`Supports`, [where('receiver.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
-        this.supportsToGive$ = this.db.collectionGroupWithIds$(`Supports`, [where('supporter.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
+        this.supportsOpen$ = this.support.groupChanges([where('supporter.uid', '==', user.id), where('status', '==', 'open')])
+        this.supportsToGet$ = this.support.groupChanges([where('receiver.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
+        this.supportsToGive$ = this.support.groupChanges([where('supporter.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
         // this._supportsGotten$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'paid'))
       }
 
@@ -69,18 +66,17 @@ export class SupportsPage implements OnInit {
     }
   }
 
-  async openAuthModal() {
-    const modal = await this.modalCtrl.create({
+  openAuthModal() {
+    this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: enumAuthSegment.login
       }
-    })
-    await modal.present()
+    }).then(modal => modal.present())
   }
 
-  async supportPaid(support: Support) {
-    await this.supportService.changeSupportStatus(support.goal.id, support.id, 'paid')
+  supportPaid(support: Support) {
+    this.support.update(support.id, { status: 'paid' }, { params: { goalId: support.goal.id }})
   }
   
 }

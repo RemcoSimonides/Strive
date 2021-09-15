@@ -6,7 +6,6 @@ import { Auth, user } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 import { getNrOfDotsInSeqno, getPartOfSeqno } from '@strive/milestone/+state/milestone.model';
@@ -43,7 +42,6 @@ export class AddSupportModalComponent implements OnInit {
 
   constructor(
     private afAuth: Auth,
-    private db: FirestoreService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private navParams: NavParams,
@@ -59,15 +57,15 @@ export class AddSupportModalComponent implements OnInit {
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
     user(this.afAuth).subscribe(user => {
-      const reference = `Goals/${this.goalId}/Supports`
       let milestoneLevel: string
+      const params = { goalId: this.goalId }
 
       if (this.origin === 'milestone') {
         this.nrOfDotsInSeqno = getNrOfDotsInSeqno(this.milestone.sequenceNumber)
         milestoneLevel = `path.level${this.nrOfDotsInSeqno + 1}id`
-        this.supports$ = this.db.col$(reference, [where(milestoneLevel, '==', this.milestone.id)])
+        this.supports$ = this.supportService.valueChanges([where(milestoneLevel, '==', this.milestone.id)], params)
       } else {
-        this.supports$ = this.db.col$(reference, [orderBy('createdAt', 'desc')])
+        this.supports$ = this.supportService.valueChanges([orderBy('createdAt', 'desc')], params)
       }
     
       if (!!user) {
@@ -78,9 +76,9 @@ export class AddSupportModalComponent implements OnInit {
         this.support.supporter.photoURL.patchValue(photoURL)
         
         if (this.origin === 'milestone') {
-          this.mySupports$ = this.db.col$(reference, [where(milestoneLevel, '==', this.milestone.id), where('supporter.uid', '==', uid)])
+          this.mySupports$ = this.supportService.valueChanges([where(milestoneLevel, '==', this.milestone.id), where('supporter.uid', '==', uid)], params)
         } else {
-          this.mySupports$ = this.db.col$(reference, [where('supporter.uid', '==', uid), orderBy('createdAt', 'desc')])
+          this.mySupports$ = this.supportService.valueChanges([where('supporter.uid', '==', uid), orderBy('createdAt', 'desc')], params)
         }
       }
     })
@@ -112,7 +110,7 @@ export class AddSupportModalComponent implements OnInit {
       await this.determinePath(this.goalId, this.milestone.sequenceNumber, this.support)
     }
 
-    this.supportService.addSupport(this.goalId, this.support.value)
+    this.supportService.add(this.support.value, { params: { goalId: this.goalId }})
     this.support.reset();
 
     //Increase number of custom supports
