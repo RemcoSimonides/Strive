@@ -1,4 +1,4 @@
-import { db, functions } from '../../internals/firebase';
+import { db, functions, serverTimestamp } from '../../internals/firebase';
 
 import { createGoal, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
 // Shared
@@ -12,6 +12,7 @@ import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakehold
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
+import { Timestamp } from '@firebase/firestore-types';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onCreate(async snapshot => {
@@ -129,6 +130,7 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
   }
 
   const uid = context.auth.uid;
+  const timestamp = serverTimestamp()
 
   // Duplicate goal
   const goal = await getDocument<Goal>(`Goals/${data.goalId}`)
@@ -141,6 +143,9 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     deadline: goal.deadline,
     roadmapTemplate: goal.roadmapTemplate,
     collectiveGoalId: goal.collectiveGoalId,
+    createdAt: timestamp as Timestamp,
+    updatedAt: timestamp as Timestamp,
+    updatedBy: uid
   })
   const { id } = await db.collection(`Goals`).add(newGoal)
   db.doc(`Goals/${id}`).update({ id });
@@ -156,7 +161,10 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     goalId: id,
     goalTitle: goal.title,
     goalPublicity: goal.publicity,
-    goalImage: goal.image
+    goalImage: goal.image,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    updatedBy: uid
   })
   await db.doc(`Goals/${id}/GStakeholders/${uid}`).set(stakeholder)
 

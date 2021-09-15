@@ -150,7 +150,7 @@ export class GoalPage implements OnInit, OnDestroy {
     loading.present()
 
     const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
-    const { error, result } = await duplicateGoalFn({ goalId: this.goalId }) as any;
+    const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).then(res => res.data) as { error: string, result: string }
 
     if (!!error) {
       loading.dismiss();

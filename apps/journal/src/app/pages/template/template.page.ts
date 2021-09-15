@@ -116,7 +116,7 @@ export class TemplatePage implements OnInit {
     loading.present();
 
     const useTemplateFn = httpsCallable(this.functions, 'useTemplate')
-    const { error, result } = await useTemplateFn({ collectiveGoalId: this.collectiveGoalId, templateId: this.templateId }) as any
+    const { error, result } = await useTemplateFn({ collectiveGoalId: this.collectiveGoalId, templateId: this.templateId }).then(res => res.data) as { result: string, error: string }
 
     if (!!error) {
       await loading.dismiss()

@@ -179,7 +179,7 @@ export class AuthModalPage implements OnInit {
       
       try {
         const useTemplateFn = httpsCallable(this.functions, 'useTemplate')
-        const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }) as any;
+        const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }).then(res => res.data) as { error: string, result: string };
 
         await this.fcmService.registerFCM()
         this.modalCtrl.dismiss()

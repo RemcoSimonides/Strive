@@ -1,4 +1,4 @@
-import { db, functions, increment } from '../../../internals/firebase';
+import { db, functions, increment, serverTimestamp } from '../../../internals/firebase';
 import { createTemplate, createTemplateLink, Template } from '@strive/template/+state/template.firestore'
 import { createCollectiveGoal, CollectiveGoal, createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore'
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
@@ -11,6 +11,7 @@ import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakehold
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
+import { Timestamp } from '@firebase/firestore-types';
 
 export const templateCreatedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}/Templates/{templateId}`)
   .onCreate((snapshot, context) => {
@@ -35,6 +36,7 @@ export const useTemplate = functions.https.onCall(async (
   }
 
   const uid = context.auth.uid;
+  const timestamp = serverTimestamp()
 
   const [ template, collectiveGoal, profile ] = await Promise.all([
     getDocument<Template>(`CollectiveGoals/${data.collectiveGoalId}/Templates/${data.templateId}`),
@@ -60,7 +62,10 @@ export const useTemplate = functions.https.onCall(async (
     shortDescription: template.goalShortDescription,
     image: template.goalImage,
     roadmapTemplate: template.roadmapTemplate,
-    collectiveGoalId: data.collectiveGoalId
+    collectiveGoalId: data.collectiveGoalId,
+    createdAt: timestamp as Timestamp,
+    updatedAt: timestamp as Timestamp,
+    updatedBy: uid
   })
   const { id } = await db.collection(`Goals`).add(goal)
 
@@ -76,7 +81,10 @@ export const useTemplate = functions.https.onCall(async (
     isAchiever: true,
     uid,
     username: profile.username,
-    photoURL: profile.photoURL
+    photoURL: profile.photoURL,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    updatedBy: uid
   })
   const p = db.doc(`Goals/${id}/GStakeholders/${uid}`).set(stakeholder)
   promises.push(p)
