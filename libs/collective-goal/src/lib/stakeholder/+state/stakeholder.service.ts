@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Firestore, DocumentSnapshot, getDoc, QueryConstraint, orderBy, where, WriteBatch } from '@angular/fire/firestore';
-// Rxjs
-import { Observable, combineLatest, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Firestore, DocumentSnapshot, getDoc, WriteBatch } from '@angular/fire/firestore';
 // Interfaces
 import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from './stakeholder.firestore';
 import { CollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({ providedIn: 'root' })
@@ -16,10 +12,7 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
   readonly path = 'CollectiveGoals/:collectiveGoalId/CGStakeholders'
   readonly idKey = 'uid'
 
-  constructor(
-    db: Firestore,
-    private fire: FirestoreService,
-    private user: UserService) {
+  constructor(db: Firestore, private user: UserService) {
     super(db)
   }
 
@@ -58,23 +51,6 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     });
 
     (write as WriteBatch).update(ref, {...data});
-  }
-
-  public getCollectiveGoals(uid: string, isSecret?: boolean): Observable<CollectiveGoal[]> {
-    let constraints: QueryConstraint[]
-    if (isSecret !== undefined) {
-      constraints = [where('uid', '==', uid), where('collectiveGoalIsSecret', '==', isSecret), orderBy('createdAt', 'desc')]
-    } else {
-      constraints = [where('uid', '==', uid), orderBy('createdAt', 'desc')]
-    }
-
-    return this.groupChanges(constraints).pipe(
-      switchMap(stakeholders => {
-        const ids = stakeholders.map(stakeholder => stakeholder.collectiveGoalId)
-        const observables = ids.map(id => this.fire.docWithId$<CollectiveGoal>(`CollectiveGoals/${id}`))
-        return observables.length ? combineLatest<CollectiveGoal[]>(observables) : of([])
-      })
-    )
   }
 }
 

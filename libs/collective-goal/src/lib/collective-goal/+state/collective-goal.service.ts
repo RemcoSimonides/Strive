@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 // Angularfire
 import { Firestore, DocumentSnapshot, doc, deleteDoc, QueryConstraint, where, orderBy } from '@angular/fire/firestore';
 // Services
@@ -8,9 +10,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 // Interfaces
 import { CollectiveGoal, createCollectiveGoal } from './collective-goal.firestore';
-import { map } from 'rxjs/operators';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { Observable } from 'rxjs';
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Injectable({ providedIn: 'root' })
@@ -78,6 +78,23 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
 
     return this.goalService.valueChanges(constraints).pipe(
       map(goals => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+    )
+  }
+
+  getCollectiveGoalsOfStakeholder(uid: string, isSecret?: boolean): Observable<CollectiveGoal[]> {
+    let constraints: QueryConstraint[]
+    if (isSecret !== undefined) {
+      constraints = [where('uid', '==', uid), where('collectiveGoalIsSecret', '==', isSecret), orderBy('createdAt', 'desc')]
+    } else {
+      constraints = [where('uid', '==', uid), orderBy('createdAt', 'desc')]
+    }
+
+    return this.stakeholder.groupChanges(constraints).pipe(
+      switchMap(stakeholders => {
+        const ids = stakeholders.map(stakeholder => stakeholder.collectiveGoalId)
+        const observables = ids.map(id => this.valueChanges(id))
+        return observables.length ? combineLatest(observables) : of([])
+      })
     )
   }
 

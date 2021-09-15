@@ -5,10 +5,9 @@ import { Platform, NavController, ModalController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs'
 
 // Services
-import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { SeoService } from '@strive/utils/services/seo.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { UserService } from '@strive/user/user/+state/user.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 // Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
@@ -36,7 +35,7 @@ export class GoalsPage implements OnInit, OnDestroy {
 
   constructor(
     public user: UserService,
-    private collectiveGoalStakeholderService: CollectiveGoalStakeholderService,
+    private collectiveGoalService: CollectiveGoalService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -52,7 +51,7 @@ export class GoalsPage implements OnInit, OnDestroy {
         // const spectatorGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.spectator, false)
         // this.goals$ = filterDuplicateGoals([achieverGoals, spectatorGoals])
 
-        this.collectiveGoals$ = this.collectiveGoalStakeholderService.getCollectiveGoals(profile.id)
+        this.collectiveGoals$ = this.collectiveGoalService.getCollectiveGoalsOfStakeholder(profile.id)
       }
     })
 
