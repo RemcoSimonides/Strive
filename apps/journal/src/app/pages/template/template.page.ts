@@ -14,7 +14,6 @@ import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeh
 import { TemplateService } from '@strive/template/+state/template.service';
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { SeoService } from '@strive/utils/services/seo.service';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
 import { Milestone, MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
@@ -42,7 +41,6 @@ export class TemplatePage implements OnInit {
     public user: UserService,
     private collectiveGoalService: CollectiveGoalService,
     private stakeholder: CollectiveGoalStakeholderService,
-    private db: FirestoreService,
     private functions: Functions,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
@@ -98,7 +96,7 @@ export class TemplatePage implements OnInit {
     }
   }
 
-  public async useTemplate() {
+  async useTemplate() {
     if (!this.user.uid) {
       this.modalCtrl.create({
         component: AuthModalPage,
@@ -126,7 +124,7 @@ export class TemplatePage implements OnInit {
     loading.dismiss()
   }
 
-  public presentTemplateOptionsPopover(ev: UIEvent) {
+  presentTemplateOptionsPopover(ev: UIEvent) {
     this.popoverCtrl.create({
       component: TemplateOptionsPopoverPage,
       event: ev,
@@ -138,8 +136,8 @@ export class TemplatePage implements OnInit {
     }).then(popover => popover.present())
   }
 
-  public saveDescription(description: string) {
-    this.db.upsert(`CollectiveGoals/${this.collectiveGoalId}/Templates/${this.templateId}`, { description })
+  saveDescription(description: string) {
+    this.template.update(this.templateId, { description }, { params: { collectiveGoalId: this.collectiveGoalId }})
   }
 
   updateRoadmap(deadline: string, context: Milestone, template: Template) {

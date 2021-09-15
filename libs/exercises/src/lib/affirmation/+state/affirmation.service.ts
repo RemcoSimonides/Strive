@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-
-// Rxjs
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { Firestore } from '@angular/fire/firestore';
 
 // Strive
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { FireCollection } from '@strive/utils/services/collection.service';
 import { Affirmations } from './affirmation.firestore';
 
 @Injectable({providedIn: 'root'})
-export class AffirmationService {
+export class AffirmationService extends FireCollection<Affirmations> {
+  readonly path = 'Users/:uid/Exercises'
 
-  constructor(private db: FirestoreService) { }
-
-  public getAffirmations$(uid: string): Observable<Affirmations> {
-    return this.db.docWithId$<Affirmations>(`Users/${uid}/Exercises/Affirmations`)
+  constructor(db: Firestore) {
+    super(db)
   }
 
-  async getAffirmations(uid: string): Promise<Affirmations> {
-    return await this.getAffirmations$(uid).pipe(first()).toPromise()
+  getAffirmations$(uid: string) {
+    return this.valueChanges('Affirmations', { uid })
   }
 
-  async saveAffirmations(uid: string, affirmations: Affirmations): Promise<void> {
-    await this.db.upsert(`Users/${uid}/Exercises/Affirmations`, affirmations)
+  getAffirmations(uid: string) {
+    return this.getValue('Affirmations', { uid })
+  }
+
+  saveAffirmations(uid: string, affirmations: Affirmations) {
+    return this.upsert({ ...affirmations, id: 'Affirmations' }, { params: { uid }})
   }
 }
