@@ -21,7 +21,7 @@ export class PostService extends FireCollection<Post> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Post>) {
-    return snapshot.exists
+    return snapshot.exists()
       ? createPost({ ...snapshot.data(), id: snapshot.id })
       : undefined
   }

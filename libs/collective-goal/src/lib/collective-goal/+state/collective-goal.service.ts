@@ -27,7 +27,7 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<CollectiveGoal>) {
-    return snapshot.exists
+    return snapshot.exists()
       ? createCollectiveGoal({ ...snapshot.data(), id: snapshot.id })
       : undefined
   }

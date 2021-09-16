@@ -14,7 +14,7 @@ export class MilestoneService extends FireCollection<Milestone> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Milestone>) {
-    return (snapshot.exists)
+    return snapshot.exists()
       ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
       : undefined
   }

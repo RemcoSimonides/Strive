@@ -184,11 +184,9 @@ export abstract class FireCollection<E extends DocumentData> {
 
   /** Function triggered when getting data from firestore */
   protected fromFirestore(snapshot: DocumentSnapshot<E> | QueryDocumentSnapshot<E>): E | undefined {
-    if (snapshot.exists) {
-      return { ...snapshot.data() as any, [this.idKey]: snapshot.id };
-    } else {
-      return undefined;
-    }
+    return snapshot.exists()
+      ? { ...snapshot.data() as any, [this.idKey]: snapshot.id }
+      : undefined;
   }
 
 
@@ -395,8 +393,7 @@ export abstract class FireCollection<E extends DocumentData> {
       const id: string | undefined = doc[this.idKey];
       if (!id) return false;
       const ref = this.getRef(id, options.params);
-      const snap = await (isTransaction(options?.write) ? options?.write.get(ref) : getDoc(ref));
-      const exists = snap.exists()
+      const exists = await (isTransaction(options?.write) ? options?.write.get(ref) : getDoc(ref)).then((snap => snap.exists()));
       return exists;
     };
     if (!Array.isArray(documents)) {

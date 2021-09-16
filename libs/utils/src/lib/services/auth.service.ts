@@ -203,7 +203,7 @@ export class FireAuth<Profile = unknown, Roles extends Record<string, any> = any
       return this.config.fromFirestore(snapshot);
     }
     // Default
-    return snapshot.exists
+    return snapshot.exists()
       ? { ...snapshot.data(), [this.idKey]: snapshot.id } as Profile
       : undefined;
   }

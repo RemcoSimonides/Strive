@@ -24,7 +24,7 @@ export class GoalService extends FireCollection<Goal> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Goal>) {
-    return snapshot.exists
+    return snapshot.exists()
       ? createGoal({ ...snapshot.data(), id: snapshot.id })
       : undefined
   }

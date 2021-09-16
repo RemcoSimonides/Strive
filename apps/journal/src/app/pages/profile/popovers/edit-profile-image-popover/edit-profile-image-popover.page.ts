@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavParams, PopoverController } from '@ionic/angular';
+import { ProfileService } from '@strive/user/user/+state/profile.service';
 // Strive
 import { UserService } from '@strive/user/user/+state/user.service';
 
@@ -16,7 +17,8 @@ export class EditProfileImagePopoverPage implements OnInit {
   constructor(
     private navParams: NavParams,
     private popoverCtrl: PopoverController,
-    public user: UserService
+    public user: UserService,
+    private profile: ProfileService
   ) { }
 
   ngOnInit() {
@@ -28,8 +30,7 @@ export class EditProfileImagePopoverPage implements OnInit {
       throw new Error('Nothing to update')
     }
 
-    // update profile
-    this.user.upsertProfile({ photoURL: this.form.value })
+    this.profile.update(this.user.uid, { photoURL: this.form.value })
     this.popoverCtrl.dismiss(this.form.value)
   }
 

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { where } from '@angular/fire/firestore';
-import { take } from 'rxjs/operators';
 
 // Strive
 import { Notification, SupportDecisionMeta, GoalRequest } from '@strive/notification/+state/notification.firestore';
@@ -9,9 +8,7 @@ import { NotificationOptionsPopover } from '@strive/notification/components/noti
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { NotificationSupport } from '@strive/support/+state/support.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
@@ -44,7 +41,6 @@ export class NotificationComponent {
   constructor(
     private user: UserService,
     private cdr: ChangeDetectorRef,
-    private db: FirestoreService,
     private goalStakeholderService: GoalStakeholderService,
     private modalCtrl: ModalController,
     private notificationService: NotificationService,
@@ -87,7 +83,7 @@ export class NotificationComponent {
 
   }
 
-  public async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {
+  async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {
     notification.meta.status = isAccepted ? 'accepted' : 'rejected'
 
     await this.goalStakeholderService.upsert({
@@ -99,11 +95,11 @@ export class NotificationComponent {
     await this.notificationService.update(notification.id, { needsDecision: false, meta: notification.meta }, { params: { uid: this.user.uid }})
   }
 
-  public async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
+  async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
     if (!isSupportDecisionNotification(notification)) return
     if (notification.meta.status === 'finalized') return
 
-    const stakeholders: GoalStakeholder[] = await this.db.colWithIds$<GoalStakeholder>(`Goals/${notification.source.goal.id}/GStakeholders`, [where('isAchiever', '==', true)]).pipe(take(1)).toPromise()
+    const stakeholders = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: notification.source.goal.id })
 
     const chooseAchieverModal = await this.modalCtrl.create({
       component: ChooseAchieverModal,

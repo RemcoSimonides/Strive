@@ -139,7 +139,7 @@ export class FirestoreService {
    */
   upsert<T>(ref: DocumentReference<T> | string, data: any) {
     return getDoc(this.doc(ref)).then(doc => {
-      return doc.exists ? this.update(ref, data) : this.set(ref, data)
+      return doc.exists() ? this.update(ref, data) : this.set(ref, data)
     })
   }
 

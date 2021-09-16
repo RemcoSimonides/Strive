@@ -1,30 +1,31 @@
 import { Injectable } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
 // Rxjs
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
 // Services
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
 import { DailyGratefulness } from '@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore'
 
 @Injectable({
   providedIn: 'root'
 })
-export class DailyGratefulnessService {
+export class DailyGratefulnessService extends FireCollection<DailyGratefulness> {
+  readonly path = 'Users/:uid/Exercises'
 
-  constructor(
-    private db: FirestoreService
-  ) { }
-
-  public getDailyGratefulnessSettings$(uid: string): Observable<DailyGratefulness> {
-    return this.db.docWithId$<DailyGratefulness>(`Users/${uid}/Exercises/DailyGratefulness`)
+  constructor(db: Firestore) {
+    super(db)
   }
 
-  public async getDailyGratefulnessSettings(uid: string): Promise<DailyGratefulness> {
-    return await this.getDailyGratefulnessSettings$(uid).pipe(first()).toPromise()
+  getDailyGratefulnessSettings$(uid: string): Observable<DailyGratefulness> {
+    return this.valueChanges('DailyGratefulness', { uid })
   }
 
-  async save(uid: string, dailyGratefulnessSettings: Partial<DailyGratefulness>) {
-    await this.db.upsert(`Users/${uid}/Exercises/DailyGratefulness`, dailyGratefulnessSettings)
+  getDailyGratefulnessSettings(uid: string): Promise<DailyGratefulness> {
+    return this.getValue('DailyGratefulness', { uid })
+  }
+
+  save(uid: string, dailyGratefulnessSettings: Partial<DailyGratefulness>) {
+    return this.upsert({ ...dailyGratefulnessSettings, id: 'DailyGratefulness' }, { params: { uid }})
   }
 }

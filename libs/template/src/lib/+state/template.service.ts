@@ -20,7 +20,7 @@ export class TemplateService extends FireCollection<Template> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Template>) {
-    return (snapshot.exists)
+    return (snapshot.exists())
       ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
       : undefined
   }

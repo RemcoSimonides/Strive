@@ -24,7 +24,7 @@ export class UserSpectateService extends FireCollection<Spectator> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Spectator>) {
-    return snapshot.exists
+    return snapshot.exists()
       ? createSpectator({ ...snapshot.data(), uid: snapshot.id })
       : undefined
   }

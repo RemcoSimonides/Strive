@@ -17,7 +17,7 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
   }
 
   fromFirestore(snapshot: DocumentSnapshot<CollectiveGoalStakeholder>) {
-    return snapshot.exists
+    return snapshot.exists()
       ? { ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }
       : undefined
   }

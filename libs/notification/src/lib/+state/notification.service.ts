@@ -23,7 +23,7 @@ export class NotificationService extends FireCollection<Notification> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Notification>) {
-    return snapshot.exists
+    return snapshot.exists()
       ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
       : undefined
   }
