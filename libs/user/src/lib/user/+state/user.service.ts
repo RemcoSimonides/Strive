@@ -1,38 +1,42 @@
 import { Injectable } from '@angular/core';
-import { Auth, user, updateProfile } from '@angular/fire/auth';
-import { arrayUnion } from '@angular/fire/firestore';
-import { FirestoreService } from '@strive/utils/services/firestore.service';
+import { Auth, user } from '@angular/fire/auth';
+import { arrayUnion, DocumentSnapshot, Firestore } from '@angular/fire/firestore';
+import { FireCollection } from '@strive/utils/services/collection.service';
 // Rxjs
 import { Observable, of } from 'rxjs';
-import { distinctUntilChanged, first, map, switchMap, take, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, take, tap } from 'rxjs/operators';
+import { ProfileService } from './profile.service';
 // Interfaces
-import { createUser, Profile, User } from './user.firestore';
-
-const userPath = (uid: string) => `Users/${uid}`
-const profilePath = (uid: string) => `Users/${uid}/Profile/${uid}`
+import { Profile, User } from './user.firestore';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class UserService extends FireCollection<User> {
+  readonly path = 'Users'
+  readonly idKey = 'uid'
 
   user$: Observable<User>
   profile$: Observable<Profile>
   uid: string = undefined
 
-  constructor(
-    private auth: Auth,
-    private db: FirestoreService
-  ) {
+  constructor(db: Firestore, private auth: Auth, private profile: ProfileService) {
+    super(db)
 
     this.user$ = user(this.auth).pipe(
-      switchMap(user => user ? db.docWithId$(userPath(user.uid)) : of (null))
+      switchMap(user => user ? this.valueChanges(user.uid) : of (null))
     )
 
     this.profile$ = user(this.auth).pipe(
-      switchMap(user => user ? db.docWithId$(profilePath(user.uid)) : of(null)),
+      switchMap(user => user ? this.profile.valueChanges(user.uid, { uid: user.uid }) : of(null)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     )
 
     user(this.auth).pipe(tap(user => this.uid = !!user ? user.uid : '' )).subscribe()
+  }
+
+  protected fromFirestore(snapshot: DocumentSnapshot<User>) {
+    return snapshot.exists()
+      ? { ...snapshot.data(), uid: snapshot.id }
+      : undefined
   }
 
   get isLoggedIn$() {
@@ -49,44 +53,20 @@ export class UserService {
     }
   }
 
-  async getUser(uid: string = this.uid) {
-    return this.db.docWithId$<User>(userPath(uid)).pipe(first()).toPromise()
-  }
-
   async getFirebaseUser() {
     return await user(this.auth).pipe(take(1)).toPromise();
   }
 
-  getProfile$(uid = this.uid) {
-    return this.db.docWithId$<Profile>(profilePath(uid))
-  }
-
-  async getProfile(uid = this.uid) {
-    return this.getProfile$(uid).pipe(first()).toPromise()
-  }
-
-  async upsertProfile(profile: Partial<Profile>, uid = this.uid) {
-    this.db.upsert<Profile>(`Users/${uid}/Profile/${uid}`, profile);
-    const _user = await this.getFirebaseUser()
-
-    if (profile.username || profile.photoURL) {
-      // should be this.auth insted of _user?
-      updateProfile(_user, {
-        displayName: profile.username ?? _user.displayName,
-        photoURL: profile.photoURL ?? _user.photoURL
-      })
-    }
-  }
-
-  createUser(uid: string, email: string) {
-    const user = createUser({ id: uid, email });
-    return this.db.set(`Users/${uid}`, user);
+  upsertProfile(profile: Partial<Profile>, uid = this.uid) {
+    return this.profile.upsert({ ...profile, uid }, { params: { uid }})
   }
 
   addFCMToken(token: string) {
-    return this.upsertProfile({
+    // TODO move FCMtokens to User doc
+    this.profile.upsert({
+      uid: this.uid,
       fcmTokens: arrayUnion(token) as any
-    })
+    }, { params: { uid: this.uid }})
   }
 
 }

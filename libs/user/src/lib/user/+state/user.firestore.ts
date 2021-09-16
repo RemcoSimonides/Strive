@@ -2,6 +2,7 @@ import { FieldValue } from '@firebase/firestore-types';
 
 export interface User {
     id?: string;
+    uid: string;
     email: string;
     firstName: string;
     lastName: string;
@@ -15,6 +16,7 @@ export interface User {
 export function createUser(params: Partial<User> = {}): User {
   return {
     id: !!params.id ? params.id : '',
+    uid: '',
     email: '',
     firstName: '',
     lastName: '',
@@ -27,6 +29,7 @@ export function createUser(params: Partial<User> = {}): User {
 
 export interface Profile {
   id?: string;
+  uid: string;
   username: string;
   photoURL: string;
   numberOfSpectating: number;
@@ -39,6 +42,7 @@ export interface Profile {
 export function createProfile(params: Partial<Profile> = {}): Profile {
   return {
     id: !!params.id ? params.id : '',
+    uid: '',
     username: '',
     photoURL: '',
     numberOfSpectating: 0,

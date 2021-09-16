@@ -165,7 +165,7 @@ export class AuthModalPage implements OnInit {
         const profile = createProfile({ id: user.uid, username: this.signupForm.value.username })
 
         await Promise.all([
-          this.user.createUser(user.uid, this.signupForm.value.email),
+          this.user.add({ uid: user.uid, email: this.signupForm.value.email }),
           this.user.upsertProfile(profile, user.uid)
         ])
 
