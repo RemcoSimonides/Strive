@@ -63,10 +63,12 @@ export class UserService extends FireCollection<User> {
 
   addFCMToken(token: string) {
     // TODO move FCMtokens to User doc
-    this.profile.upsert({
-      uid: this.uid,
-      fcmTokens: arrayUnion(token) as any
-    }, { params: { uid: this.uid }})
+    if (token) {
+      this.profile.upsert({
+        uid: this.uid,
+        fcmTokens: arrayUnion(token) as any
+      }, { params: { uid: this.uid }})
+    }
   }
 
 }
