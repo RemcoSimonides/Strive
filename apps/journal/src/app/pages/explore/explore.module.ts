@@ -13,8 +13,6 @@ import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.mo
 import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module'
 import { ImageModule } from '@strive/media/directives/image.module';
 
-import { ScrollVanishDirectiveModule } from '@strive/ui/directives/scroll-vanish.directive'
-
 const routes: Routes = [
   {
     path: '',
@@ -33,7 +31,6 @@ const routes: Routes = [
     // Strive
     ThumbnailListModule,
     RectangleThumbnailModule,
-    ScrollVanishDirectiveModule,
     ImageModule
   ],
   declarations: [

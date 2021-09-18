@@ -7,7 +7,7 @@
 </ng-container>
 
 <ng-container *ngIf="canAccess && !pageIsLoading">
-  <ion-toolbar>
+  <ion-toolbar mode="md">
     <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" class="ion-align-self-center">
       <ion-segment-button value="goal">
         Goal

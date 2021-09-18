@@ -57,7 +57,7 @@ export class PostsComponent implements OnInit, OnDestroy {
 
   public refreshPosts($event) {
     this.feed.refresh(`Goals/${this.goal.id}/Notifications`)
-    this.feed.refreshing.subscribe(refreshing => {
+    this.feed.refreshing$.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
           $event.target.complete();

@@ -112,20 +112,11 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
   }
 
   loadData(event) {
+    this.paginationService.more()
+    event.target.complete();
 
-    this.paginationService.loading.pipe(take(1)).subscribe(value => {
-      if (value) {
-        return
-      } else {
-
-        this.paginationService.more()
-        event.target.complete();
-
-        if (this.paginationService.done) {
-          event.target.disabled = true
-        }
-
-      }
-    })
+    if (this.paginationService.done) {
+      event.target.disabled = true
+    }
   }
 }

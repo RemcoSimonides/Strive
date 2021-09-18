@@ -31,10 +31,12 @@ export class DiscussionPaginationService {
     // Observable data
     updates: Observable<any>
     data: Observable<any>;
-    done: Observable<boolean> = this._done.asObservable()
-    loading: Observable<boolean> = this._loading.asObservable()
+    done$: Observable<boolean> = this._done.asObservable()
+    loading$: Observable<boolean> = this._loading.asObservable()
   
     constructor(private db: Firestore) {}
+
+    get done() { return this._done.value }
 
     listenToUpdates() {
       const ref = collection(this.db, this.query.path)

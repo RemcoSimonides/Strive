@@ -93,7 +93,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
   doRefresh($event) {
     this.feed.refresh(`Users/${this.user.uid}/Notifications`)
-    this.feed.refreshing.subscribe(refreshing => {
+    this.feed.refreshing$.subscribe(refreshing => {
       if (refreshing === false) {
         setTimeout(() => {
           $event.target.complete();

@@ -22,9 +22,9 @@ export class FeedPaginationService {
 
   // Observable data
   data: Observable<any>;
-  done: Observable<boolean> = this._done.asObservable()
-  loading: Observable<boolean> = this._loading.asObservable()
-  refreshing: Observable<boolean> = this._refreshing.asObservable()
+  done$: Observable<boolean> = this._done.asObservable()
+  loading$: Observable<boolean> = this._loading.asObservable()
+  refreshing$: Observable<boolean> = this._refreshing.asObservable()
 
   discussionIds: string[] = []
 
@@ -32,6 +32,8 @@ export class FeedPaginationService {
     private db: Firestore,
     private discussion: DiscussionService
   ) {}
+
+  get done() { return this._done.value }
 
   /**
    * Initial query sets options and defines the Observable

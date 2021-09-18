@@ -24,9 +24,9 @@ export class GoalFeedPaginationService {
 
   // Observable data
   data: Observable<any>;
-  done: Observable<boolean> = this._done.asObservable();
-  loading: Observable<boolean> = this._loading.asObservable();
-  refreshing: Observable<boolean> = this._refreshing.asObservable();
+  done$: Observable<boolean> = this._done.asObservable();
+  loading$: Observable<boolean> = this._loading.asObservable();
+  refreshing$: Observable<boolean> = this._refreshing.asObservable();
 
   discussionIds: string[] = []
 
@@ -34,6 +34,8 @@ export class GoalFeedPaginationService {
     private db: Firestore,
     private discussion: DiscussionService
   ) {}
+
+  get done() { return this._done.value }
 
   listenToUpdates() {
     const ref = collection(this.db, this.path)
