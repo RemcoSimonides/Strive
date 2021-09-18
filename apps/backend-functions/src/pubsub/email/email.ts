@@ -21,14 +21,14 @@ export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun
   const dateWeekAgo = moment(context.timestamp).subtract(7, 'days').toDate()
 
   // get users
-  const users = await getCollection<IUser>(`Users`)
+  const users = await getCollection<IUser>(`Users`, 'uid')
 
   for (const user of users) {
     let mail =  `
     <h1>Strive Journal update</h1>
     <h2>Missed notifications</h2>`
 
-    const data = await getData(user.id, dateWeekAgo)
+    const data = await getData(user.uid, dateWeekAgo)
     if (!hasNewNotifications(data)) continue
     mail += getGoalUpdatesHTML(data)
     mail += getCollectiveGoalUpdatesHTML(data)

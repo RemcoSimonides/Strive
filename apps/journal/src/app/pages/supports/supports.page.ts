@@ -42,10 +42,10 @@ export class SupportsPage implements OnInit {
 
     this.user.user$.subscribe(user => {
       if (user) {
-        this.supportsOpen$ = this.support.groupChanges([where('supporter.uid', '==', user.id), where('status', '==', 'open')])
-        this.supportsToGet$ = this.support.groupChanges([where('receiver.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
-        this.supportsToGive$ = this.support.groupChanges([where('supporter.uid', '==', user.id), where('status', '==', 'waiting_to_be_paid')])
-        // this._supportsGotten$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.id).where('status', '==', 'paid'))
+        this.supportsOpen$ = this.support.groupChanges([where('supporter.uid', '==', user.uid), where('status', '==', 'open')])
+        this.supportsToGet$ = this.support.groupChanges([where('receiver.uid', '==', user.uid), where('status', '==', 'waiting_to_be_paid')])
+        this.supportsToGive$ = this.support.groupChanges([where('supporter.uid', '==', user.uid), where('status', '==', 'waiting_to_be_paid')])
+        // this._supportsGotten$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.uid).where('status', '==', 'paid'))
       }
 
       this.pageIsLoading = false

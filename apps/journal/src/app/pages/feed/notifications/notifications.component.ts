@@ -34,7 +34,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
 
     this.notifications$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges([where('type', '==', 'notification'), orderBy('createdAt', 'desc')], { uid: profile.id }).pipe(
+        ? this.notification.valueChanges([where('type', '==', 'notification'), orderBy('createdAt', 'desc')], { uid: profile.uid }).pipe(
           map(notifications => notifications.map(notification => {
             return {
               ...notification,
@@ -46,7 +46,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
     )
 
     this.sub = combineLatest([
-      this.user.profile$.pipe(map(profile => profile?.id)),
+      this.user.profile$.pipe(map(profile => profile?.uid)),
       this.notifications$.pipe(
         map(notifications => notifications.filter(notification => !notification.isRead)),
         filter(unreadNotifications => !!unreadNotifications.length),

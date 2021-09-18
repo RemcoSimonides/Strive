@@ -72,9 +72,9 @@ export class TemplatePage implements OnInit {
     )
 
     this.isAdmin = this.user.profile$.pipe(
-      switchMap(userProfile => {
-        if (!!userProfile) {
-          return this.stakeholder.valueChanges(userProfile.id, { collectiveGoalId: this.collectiveGoalId }).pipe(map(stakeholder => !!stakeholder?.isAdmin))
+      switchMap(profile => {
+        if (!!profile) {
+          return this.stakeholder.valueChanges(profile.uid, { collectiveGoalId: this.collectiveGoalId }).pipe(map(stakeholder => !!stakeholder?.isAdmin))
         } else {
           return of(false)
         }

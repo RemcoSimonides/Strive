@@ -14,7 +14,7 @@ export class TabsPage {
 
   active$ = combineLatest([
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd), startWith({ url: this.router.url })),
-    this.user.profile$.pipe(map(profile => profile?.id))
+    this.user.profile$.pipe(map(profile => profile?.uid))
   ]).pipe(
     map(([nav, uid]) => uid ? nav['url'] === `/profile/${uid}` : nav['url'] === '/profile/')
   );

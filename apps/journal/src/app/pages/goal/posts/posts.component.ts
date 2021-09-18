@@ -35,7 +35,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.feed.listenToUpdates()
 
     this.sub = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.id, { goalId: this.goal.id }) : of(createGoalStakeholder()))
+      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goal.id }) : of(createGoalStakeholder()))
     ).subscribe(stakeholder => {
       this.isAdmin = stakeholder.isAdmin ?? false
     })

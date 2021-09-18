@@ -5,7 +5,7 @@ import { createProfile, createProfileLink, createUser, Profile, ProfileLink, Use
 function createUserFormControl(params: User) {
   const user = createUser(params)
   return {
-    id: new FormControl(user.id),
+    uid: new FormControl(user.uid),
     email: new FormControl(user.email),
     firstName: new FormControl(user.firstName),
     lastName: new FormControl(user.lastName)
@@ -19,7 +19,7 @@ export class UserForm extends FormEntity<UserFormControl> {
     super(createUserFormControl(user))
   }
 
-  get id() { return this.get('id') }
+  get uid() { return this.get('uid') }
   get email() { return this.get('email') }
   get firstName() { return this.get('firstName') }
   get lastName() { return this.get('lastName') }
@@ -28,7 +28,7 @@ export class UserForm extends FormEntity<UserFormControl> {
 function createProfileFormControl(params: Profile) {
   const profile = createProfile(params)
   return {
-    id: new FormControl(profile.id),
+    uid: new FormControl(profile.uid),
     username: new FormControl(profile.username),
     photoURL: new FormControl(profile.photoURL),
   }
@@ -41,7 +41,7 @@ export class ProfileForm extends FormEntity<ProfileFormControl> {
     super(createProfileFormControl(profile))
   }
 
-  get id() { return this.get('id') }
+  get uid() { return this.get('uid') }
   get username() { return this.get('username') }
   get photoURL() { return this.get('photoURL') }
 }

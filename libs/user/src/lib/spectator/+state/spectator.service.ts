@@ -42,7 +42,7 @@ export class UserSpectateService extends FireCollection<Spectator> {
       username: current.username,
       photoURL: current.photoURL,
       isSpectator: true,
-      profileId: toBeSpectated.id,
+      profileId: toBeSpectated.uid,
       profileUsername: toBeSpectated.username,
       profilePhotoURL: toBeSpectated.photoURL
     });

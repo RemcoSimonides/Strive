@@ -5,22 +5,13 @@ export interface ErrorResultResponse {
   result: any;
 }
 
-export const converter = <T>(factory?: Function) => {
-  return {
-    toFirestore(model: T): T { return model },
-    fromFirestore(snap: admin.firestore.QueryDocumentSnapshot<T>) {
-      const data = { ...snap.data(), id: snap.id }
-      return !!factory ? factory(data) : data;
-    }
-  }
-}
 
-export function getDocument<T>(path: string): Promise<T> {
+export function getDocument<T>(path: string, idKey = 'id'): Promise<T> {
   const db = admin.firestore();
   return db
     .doc(path)
     .get()
-    .then(doc => ({ id: doc.id, ...doc.data() as T}));
+    .then(doc => ({ [idKey]: doc.id, ...doc.data() as T}));
 }
 
 export function getCollectionRef<T>(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
@@ -30,8 +21,8 @@ export function getCollectionRef<T>(path: string): Promise<FirebaseFirestore.Que
     .get();
 }
 
-export function getCollection<T>(path: string): Promise<T[]> {
-  return getCollectionRef(path).then(collection => collection.docs.map(doc => ({ id: doc.id, ...doc.data() as T })));
+export function getCollection<T>(path: string, idKey = 'id'): Promise<T[]> {
+  return getCollectionRef(path).then(collection => collection.docs.map(doc => ({ [idKey]: doc.id, ...doc.data() as T })));
 }
 
 export function deleteCollection(db, collectionPath, batchSize) {

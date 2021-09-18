@@ -55,7 +55,7 @@
   <thumbnail-list type="user">
     <ng-container *ngFor="let user of algolia.profileResults | async">
       <ng-template #thumb>
-        <rectangle-thumbnail type="user" [image]="user.photoURL" [routerLink]="'/profile/' + user.id">
+        <rectangle-thumbnail type="user" [image]="user.photoURL" [routerLink]="'/profile/' + user.uid">
           <ng-template #thumbTitle>
             {{ user.username }}
           </ng-template>

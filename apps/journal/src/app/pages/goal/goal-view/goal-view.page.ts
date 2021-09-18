@@ -67,7 +67,7 @@ export class GoalViewPage implements OnInit, OnDestroy {
     }
 
     this.accessSubscription = this.user.profile$.pipe(
-      switchMap((profile: Profile) => !!profile ? this.stakeholder.valueChanges(profile.id, { goalId: this.goalId }) : of({})),
+      switchMap(profile => !!profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of({})),
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
       let access = this.goal.publicity === 'public'
       if (!access && !!stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)

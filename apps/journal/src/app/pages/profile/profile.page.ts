@@ -77,9 +77,9 @@ export class ProfilePage implements OnInit {
 
     this.isSpectator$ = this.user.profile$.pipe(
       tap(profile => {
-        this.isOwner = profile?.id === this.profileId
+        this.isOwner = profile?.uid === this.profileId
       }),
-      switchMap(profile => profile ? this.userSpectateService.valueChanges(profile.id, { uid: this.profileId }) : of(createSpectator())),
+      switchMap(profile => profile ? this.userSpectateService.valueChanges(profile.uid, { uid: this.profileId }) : of(createSpectator())),
       map(spectator => spectator?.isSpectator ?? false)
     )
 

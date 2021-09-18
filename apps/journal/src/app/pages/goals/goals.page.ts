@@ -46,12 +46,12 @@ export class GoalsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.user.profile$.subscribe((profile: Profile) => {
       if (!!profile) {
-        this.goals$ = this.goalService.getStakeholderGoals(profile.id, enumGoalStakeholder.achiever, false);
+        this.goals$ = this.goalService.getStakeholderGoals(profile.uid, enumGoalStakeholder.achiever, false);
         // TODO Create separate section for goals you spectate (they are not YOUR goals)
-        // const spectatorGoals = this.goalStakeholderService.getGoals(profile.id, enumGoalStakeholder.spectator, false)
+        // const spectatorGoals = this.goalStakeholderService.getGoals(profile.uid, enumGoalStakeholder.spectator, false)
         // this.goals$ = filterDuplicateGoals([achieverGoals, spectatorGoals])
 
-        this.collectiveGoals$ = this.collectiveGoalService.getCollectiveGoalsOfStakeholder(profile.id)
+        this.collectiveGoals$ = this.collectiveGoalService.getCollectiveGoalsOfStakeholder(profile.uid)
       }
     })
 

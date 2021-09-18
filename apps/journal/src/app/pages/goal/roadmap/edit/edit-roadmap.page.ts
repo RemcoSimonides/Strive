@@ -312,7 +312,7 @@ export class EditRoadmapPage implements OnInit {
         return i === -1 ? this.roadmapForm.controls.length : i
       }
       case 3: {
-        const parentSeqNo = `${elements[0]}.${elements[2]}`
+        const parentSeqNo = `${elements[0]}.${elements[1]}`
         const index = this.roadmapForm.controls.findIndex(ctrl => ctrl.value.sequenceNumber === this.incrementSeqNo(parentSeqNo, 1))
         if (index === -1) {
           const parentOfParentSeqNo = elements.shift()

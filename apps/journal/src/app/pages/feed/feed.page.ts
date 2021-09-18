@@ -45,7 +45,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
     this.userSubscription = this.user.profile$.subscribe(profile => {
       if (profile) {
-        this.feed.init(`Users/${profile.id}/Notifications`)
+        this.feed.init(`Users/${profile.uid}/Notifications`)
       } else {
         this.feed.reset()
       }
@@ -54,13 +54,13 @@ export class FeedPage implements OnInit, OnDestroy {
 
     this.decisions$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges([where('needsDecision', '==', true)], { uid: profile.id })
+        ? this.notification.valueChanges([where('needsDecision', '==', true)], { uid: profile.uid })
         : of([])),
     )
 
     this.unreadNotifications$ = this.user.profile$.pipe(
       switchMap(profile => profile
-        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.id }).pipe(map(notifications => !!notifications.length))
+        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.uid }).pipe(map(notifications => !!notifications.length))
         : of(false)
       )
     )

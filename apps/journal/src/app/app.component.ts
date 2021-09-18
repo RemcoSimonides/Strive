@@ -79,7 +79,7 @@ export class AppComponent implements OnDestroy {
       this.unreadNotifications$ = this.user.profile$.pipe(
         switchMap(profile => {
           return profile
-          ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.id}).pipe(map(notifications => !!notifications.length))
+          ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.uid }).pipe(map(notifications => !!notifications.length))
           : of(false)
         })
       )
