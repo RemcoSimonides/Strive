@@ -86,7 +86,7 @@ export class FeedPage implements OnInit, OnDestroy {
     this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
-        authSegment: enumAuthSegment.login
+        authSegment: enumAuthSegment.register
       }
     }).then(modal => modal.present())
   }

@@ -68,11 +68,13 @@
 </ng-template>
 
 <ng-template #notLoggedIn>
-  <div class="not-logged-in">
-    <p>
-      <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
-    </p>
-  </div>
+  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px" class="empty">
+    <article>
+      <span class="fat-text-button" (click)="openLoginModal()">Sign up</span>to journal about your goals and to help others achieve their goals
+    </article>
+    <article><span class="fat-text-button" routerLink="/explore">Explore</span>goals</article>
+    <article><span class="fat-text-button" routerLink="/explore">Find</span>friends</article>
+  </section>
 </ng-template>
 
 
