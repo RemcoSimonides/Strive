@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { FcmService } from '@strive/utils/services/fcm.service';
+import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 
 @Component({
   selector: 'app-profile-options',
@@ -12,6 +13,7 @@ export class ProfileOptionsPage {
 
   constructor(
     private auth: Auth,
+    private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private fcm: FcmService
   ) { }
@@ -24,5 +26,13 @@ export class ProfileOptionsPage {
   signOut() {
     this.auth.signOut()
     this.popoverCtrl.dismiss()
+
+    // open auth modal
+    this.modalCtrl.create({
+      component: AuthModalPage,
+      componentProps: {
+        authSegment: enumAuthSegment.login
+      }
+    }).then(modal => modal.present())
   }
 }

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-// import { ProfileOptionsBrowserPageRoutingModule } from './profile-options-browser-routing.module';
 import { RouterModule } from '@angular/router';
 
 import { ProfileOptionsBrowserPage } from './profile-options-browser.page';
