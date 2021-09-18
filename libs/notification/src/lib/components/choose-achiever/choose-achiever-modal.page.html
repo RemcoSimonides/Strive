@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -13,7 +13,7 @@
 
 <ion-content class="ion-padding">
 
-  <ion-list>
+  <ion-list mode="md">
     <ion-item *ngFor="let achiever of achievers">
       <ion-thumbnail slot="start">
         <img [ref]="achiever.photoURL" asset="profile.png">

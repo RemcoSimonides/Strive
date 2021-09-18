@@ -120,7 +120,7 @@
   </ng-container>
 
   <section>
-    <ion-list>
+    <ion-list mode="md">
       <h3>Team</h3>
       <ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="'/profile/' + (stakeholder.uid)">
         {{ stakeholder.username }}

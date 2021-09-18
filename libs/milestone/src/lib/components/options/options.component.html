@@ -1,4 +1,4 @@
-<ion-list lines="none" *ngIf="!!milestone">
+<ion-list mode="md" lines="none" *ngIf="!!milestone">
   <ion-item (click)="assignMe()" *ngIf="!isAlreadyAssigned && isNotCompleted" button>Assign Me</ion-item>
   <ion-item (click)="unassignMe()" *ngIf="isAlreadyAssigned && isNotCompleted" button>Unassign Me</ion-item>
   <ion-item *ngIf="!isNotCompleted">No Actions Available</ion-item>
