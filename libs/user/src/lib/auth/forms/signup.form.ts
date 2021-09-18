@@ -26,7 +26,7 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
     ]),
     password: new FormControl(signup.password, [
       Validators.required,
-      Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9 !@#\$%\^&\*]+$'),
+      // Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9 !@#\$%\^&\*]+$'),
       Validators.minLength(8),
     ]),
     username: new FormControl(signup.username, [

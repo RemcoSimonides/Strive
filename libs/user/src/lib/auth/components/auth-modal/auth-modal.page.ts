@@ -57,7 +57,7 @@ export class AuthModalPage implements OnInit {
     'password': [
       { type: 'required', message: 'Password is required.' },
       { type: 'minlength', message: 'Password must be at least 8 characters long.' },
-      { type: 'pattern', message: 'Password must contain small letters, capital letters and numbers' }
+      // { type: 'pattern', message: 'Password must contain small letters, capital letters and numbers' }
     ],
     // Please ask 'How old are you' instead of date of birth
     // 'dateofbirth': [
