@@ -15,12 +15,11 @@
   </ion-toolbar>
   <ion-toolbar>
     <form [formGroup]="milestoneForm">
-      <ion-item>
-        <ion-input
-          formControlName="sequenceNumber"
-          (ionInput)="onSequenceNumberInput($event, 'milestone', milestoneForm.sequenceNumber.value)"
-          ></ion-input>
-      </ion-item>
+      <ion-input
+        class="seqno"
+        formControlName="sequenceNumber"
+        (ionInput)="onSequenceNumberInput($event, 'milestone', milestoneForm.sequenceNumber.value)"
+        ></ion-input>
       <ion-item>
         <ion-icon name="add"></ion-icon>
         <ion-input formControlName="description" placeholder="Add milestone..." (keydown.enter)="addMilestone()"></ion-input>
