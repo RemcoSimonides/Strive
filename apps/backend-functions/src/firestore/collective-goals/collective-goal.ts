@@ -117,7 +117,7 @@ async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { titl
 
 async function emptyCollectiveGoalIdOnGoals(collectiveGoalId: string) {
 
-  const goalsColSnap = await db.collection(`Goals`).where('collectiveGoal.id', '==', collectiveGoalId).get()
+  const goalsColSnap = await db.collection(`Goals`).where('collectiveGoalId', '==', collectiveGoalId).get()
   if (!goalsColSnap) return
   
   const promises: any[] = []
