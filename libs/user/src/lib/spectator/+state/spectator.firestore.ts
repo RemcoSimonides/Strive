@@ -2,7 +2,6 @@ import { FieldValue } from '@firebase/firestore-types';
 
 // TODO rework to record on Profile
 export interface Spectator {
-  id?: string;
   uid: string;
   username: string;
   photoURL: string;
@@ -17,7 +16,6 @@ export interface Spectator {
 //** A factory function that creates a SpectatorDocument */
 export function createSpectator(params: Partial<Spectator> = {}): Spectator {
   return {
-    id: !!params.id ? params.id : '',
     uid: '',
     photoURL: '',
     username: '',
