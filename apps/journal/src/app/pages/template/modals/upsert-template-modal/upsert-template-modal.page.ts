@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController, NavParams, NavController } from '@ionic/angular';
 
 // Services
@@ -15,6 +15,12 @@ import { TemplateForm } from '@strive/template/forms/template.form';
   styleUrls: ['./upsert-template-modal.page.scss'],
 })
 export class UpsertTemplateModalPage implements OnInit {
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   public templateId: string
   public templateForm: TemplateForm

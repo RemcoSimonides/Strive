@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { DailyGratefulness } from '../../+state/daily-gratefulness.firestore';
@@ -10,6 +10,12 @@ import { DailyGratefulnessService } from '../../+state/daily-gratefulness.servic
   styleUrls: ['./upsert.component.scss']
 })
 export class DailyGratefulnessUpsertComponent implements OnInit {
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   public dailyGratefulness: DailyGratefulness
 

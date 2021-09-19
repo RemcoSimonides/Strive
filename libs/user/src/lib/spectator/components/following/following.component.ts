@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 
@@ -12,6 +12,11 @@ import { UserSpectateService } from '../../+state/spectator.service';
 })
 
 export class FollowingComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   spectating: Spectator[] = [];
 

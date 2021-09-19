@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 // Angularfire
 import { Auth, user } from '@angular/fire/auth';
@@ -25,6 +25,11 @@ import { orderBy, where } from '@angular/fire/firestore';
   styleUrls: ['./add.component.scss'],
 })
 export class AddSupportModalComponent implements OnInit {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   public origin: 'goal' | 'milestone'
 

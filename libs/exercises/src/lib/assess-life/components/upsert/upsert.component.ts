@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -7,6 +7,12 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./upsert.component.scss']
 })
 export class AssessLifeUpsertComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
+
   constructor(private modalCtrl: ModalController) { }
 
   dismiss() {

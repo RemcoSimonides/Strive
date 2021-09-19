@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { BucketListService } from '../../+state/bucket-list.service';
@@ -15,6 +15,12 @@ import { BucketListItem } from '../../+state/bucket-list.firestore';
 })
 
 export class BucketListUpsertComponent implements OnInit, OnDestroy {
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   itemsForm = new FormArray([])
 

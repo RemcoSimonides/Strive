@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 // Ionic
 import { NavParams, ModalController } from '@ionic/angular';
 // Interfaces
@@ -11,6 +11,11 @@ import { createProfileLink } from '@strive/user/user/+state/user.firestore';
   styleUrls: ['./choose-achiever-modal.page.scss'],
 })
 export class ChooseAchieverModal implements OnInit {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   public achievers: GoalStakeholder[]
 

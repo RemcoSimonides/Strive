@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 //Ionic
 import { NavParams, ModalController } from '@ionic/angular'
 import { PostForm } from '@strive/post/forms/post.form';
@@ -13,6 +13,11 @@ import { createPost } from '@strive/post/+state/post.firestore';
   styleUrls: ['./upsert-modal.component.scss'],
 })
 export class UpsertPostModal implements OnInit {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   public postForm = new PostForm();
   public postId: string;

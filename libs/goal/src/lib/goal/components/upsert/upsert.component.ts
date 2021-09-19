@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 //ionic
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
@@ -17,6 +17,11 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
   styleUrls: ['./upsert.component.scss']
 })
 export class UpsertGoalModalComponent implements OnInit {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   private collectiveGoal: CollectiveGoal
 

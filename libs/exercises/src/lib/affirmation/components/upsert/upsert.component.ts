@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { Affirmations } from '../../+state/affirmation.firestore';
@@ -12,6 +12,12 @@ import { AffirmationExplanationComponent } from '../explanation/explanation.comp
   styleUrls: ['./upsert.component.scss']
 })
 export class AffirmationUpsertComponent implements OnInit {
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   private suggestionsCopy: AffirmationSuggestion[]
   enumAffirmationCategory = enumAffirmationCategory

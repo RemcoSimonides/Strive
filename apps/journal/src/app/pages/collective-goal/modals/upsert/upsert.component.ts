@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // Ionic
 import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular';
@@ -14,6 +14,12 @@ import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+s
   styleUrls: ['./upsert.component.scss'],
 })
 export class UpsertCollectiveGoalPage implements OnInit {
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    // would be nice to prevent the navigation too
+    this.modalCtrl.dismiss()
+  }
 
   collectiveGoalId: string
   collectiveGoalForm: CollectiveGoalForm
