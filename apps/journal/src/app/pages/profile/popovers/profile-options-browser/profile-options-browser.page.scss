@@ -1,0 +1,9 @@
+.badge:after {
+  position: absolute;
+  margin-left: 4px;
+  content: "";
+  font-size: 30%;
+  padding: .6em;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+}

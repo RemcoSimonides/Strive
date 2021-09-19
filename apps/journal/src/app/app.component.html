@@ -37,7 +37,7 @@
 
               <!-- Notifications -->
               <ion-item routerDirection="root" routerLink="/notifications">
-                <ion-icon slot="start" name="notifications" [ngClass]="{'badge': unreadNotifications$ | async}" class="badge"></ion-icon>
+                <ion-icon slot="start" name="notifications" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
                 <ion-label>
                   <span>Notifications</span>
                 </ion-label>
@@ -104,31 +104,30 @@
             </ion-col>
             <ion-col size="8" class="ion-no-padding">
               <section class="navbar ion-align-self-end buttons-container">
-                <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link"
-                  class="link">
+                <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
+                  Home
+                </ion-button>
+                <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
                   Explore
                 </ion-button>
 
                 <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInMain">
-                  <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link" class="link">
+                  <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
                     Goals
                   </ion-button>
-                  <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link" class="link">
+                  <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
                     Supports
                   </ion-button>
-                  <ion-button fill="clear" routerLink="/notifications" routerDirection="root" routerLinkActive="active-link" class="link">
-                    <span [ngClass]="{'badge': unreadNotifications$ | async}">Notifications</span>
-                  </ion-button>
-                  <ion-avatar (click)="openProfilePopover($event)">
+                  <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openProfilePopover($event)">
                     <img [ref]="profile.photoURL" asset="profile.png"/>
                   </ion-avatar>
                 </ng-container>
 
                 <ng-template #notLoggedInMain>
-                  <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)" class="link">
+                  <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)">
                     Log In
                   </ion-button>
-                  <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.register)" class="link">
+                  <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.register)">
                     Sign Up
                   </ion-button>
                 </ng-template>

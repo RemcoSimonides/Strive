@@ -20,6 +20,17 @@
     padding: 4px;
     margin: 4px;
   }
+
+  .badge:after {
+    position: absolute;
+    right: 0;
+    top: 0;
+    content: "";
+    font-size: 30%;
+    padding: .6em;
+    border-radius: 50%;
+    background: var(--ion-color-primary);
+  }
 }
 
 
@@ -43,6 +54,7 @@ ion-router-outlet {
   justify-content: flex-end;
   padding-top: 4px;
   height: 100%;
+  margin-right: 12px;
 
   ion-button {
     margin-top: auto;
@@ -52,6 +64,15 @@ ion-router-outlet {
   .buttons-container {
     display: flex;
     align-items: center;
+  }
+
+  .badge:after {
+    position: absolute;
+    content: "";
+    font-size: 30%;
+    padding: .6em;
+    border-radius: 50%;
+    background: var(--ion-color-primary);
   }
 }
 
@@ -66,13 +87,14 @@ ion-router-outlet {
 }
 
 ion-avatar {
-  min-height: 40px;
-  min-width: 40px;
+  height: 40px;
+  width: 40px;
   cursor: pointer;
+  margin-top: auto;
+  margin-bottom: auto;
   img {
     border-radius: 50%;
     object-fit: cover;
-    margin-top: 11px;
     height: 40px;
     width: 40px;
   }

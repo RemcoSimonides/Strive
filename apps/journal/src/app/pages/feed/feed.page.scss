@@ -1,3 +1,14 @@
+.badge:after {
+  position: absolute;
+  right: 0;
+  top: 0;
+  content: "";
+  font-size: 30%;
+  padding: .6em;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+}
+
 ion-content {
   background: #efefef;
 }
