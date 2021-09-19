@@ -581,7 +581,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.user.username,
                 link: `profile/${source.user.uid}`
               },
-              { text: ` is now spectating you` }
+              { text: ` is now following you` }
             ]
           }
 

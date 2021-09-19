@@ -205,8 +205,8 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
 
     case enumEvent.userSpectatorAdded:
       return createPushMessage({
-        title: 'New spectator',
-        body: `${source.user.username} is spectating you`,
+        title: 'New follower',
+        body: `${source.user.username} is following you`,
         url: `/profile/${source.user.uid}`
       })
     
