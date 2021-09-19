@@ -16,8 +16,8 @@ export class AffirmationUpsertComponent implements OnInit {
   private suggestionsCopy: AffirmationSuggestion[]
   enumAffirmationCategory = enumAffirmationCategory
 
-  public affirmations: Affirmations = <Affirmations>{ times: ['', '', ''], affirmations: [] }
-  public suggestions = suggestions
+  affirmations = <Affirmations>{ times: ['', '', ''], affirmations: [] }
+  suggestions = suggestions
 
   constructor(
     private user: UserService,
@@ -27,8 +27,9 @@ export class AffirmationUpsertComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.affirmations = await this.service.getAffirmations(this.user.uid)
-    
+    const affirmations = await this.service.getAffirmations(this.user.uid)
+    if (affirmations) this.affirmations = affirmations
+
     this.addEmptyAffirmation()
     
     this.shuffle(this.suggestions)
