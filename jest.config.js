@@ -16,5 +16,6 @@ module.exports = {
     '<rootDir>/libs/media',
     '<rootDir>/libs/exercises',
     '<rootDir>/libs/template',
+    '<rootDir>/apps/admin',
   ],
 };

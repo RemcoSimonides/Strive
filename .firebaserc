@@ -8,6 +8,9 @@
       "hosting": {
         "journal": [
           "strive-journal"
+        ],
+        "admin": [
+          "strive-admin"
         ]
       }
     },

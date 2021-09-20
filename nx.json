@@ -25,6 +25,28 @@
     }
   },
   "projects": {
+    "admin": {
+      "tags": []
+    },
+    "admin-e2e": {
+      "tags": [],
+      "implicitDependencies": ["admin"]
+    },
+    "backend-functions": {
+      "tags": []
+    },
+    "collective-goal": {
+      "tags": []
+    },
+    "discussion": {
+      "tags": []
+    },
+    "exercises": {
+      "tags": []
+    },
+    "goal": {
+      "tags": []
+    },
     "journal": {
       "tags": []
     },
@@ -32,7 +54,22 @@
       "tags": [],
       "implicitDependencies": ["journal"]
     },
-    "backend-functions": {
+    "media": {
+      "tags": []
+    },
+    "milestone": {
+      "tags": []
+    },
+    "notification": {
+      "tags": []
+    },
+    "post": {
+      "tags": []
+    },
+    "support": {
+      "tags": []
+    },
+    "template": {
       "tags": []
     },
     "ui": {
@@ -41,37 +78,7 @@
     "user": {
       "tags": []
     },
-    "collective-goal": {
-      "tags": []
-    },
     "utils": {
-      "tags": []
-    },
-    "goal": {
-      "tags": []
-    },
-    "post": {
-      "tags": []
-    },
-    "discussion": {
-      "tags": []
-    },
-    "milestone": {
-      "tags": []
-    },
-    "support": {
-      "tags": []
-    },
-    "notification": {
-      "tags": []
-    },
-    "media": {
-      "tags": []
-    },
-    "exercises": {
-      "tags": []
-    },
-    "template": {
       "tags": []
     }
   }
