@@ -23,7 +23,7 @@ export class ProfileService extends FireCollection<Profile> {
 
   async onUpdate(profile: Profile) {
     const _user = await user(this.auth).pipe(take(1)).toPromise()
-    if (profile.username || profile.photoURL) {
+    if (_user && (profile.username || profile.photoURL)) {
       updateProfile(_user, {
         displayName: profile.username ?? _user.displayName,
         photoURL: profile.photoURL ?? _user.photoURL

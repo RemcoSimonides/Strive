@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Users</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="profiles$ | async as profiles; else loading">
+    <table>
+      <tr>
+        <th>uid</th>
+        <th>username</th>
+        <th>created at</th>
+      </tr>
+      <tr *ngFor="let profile of profiles">
+        <td>{{ profile.uid }}</td>
+        <td>{{ profile.username }}</td>
+        <td>{{ profile.createdAt.toDate() | date:'fullDate' }}</td>
+      </tr>
+    </table>
+  </ng-container>
+
+  <ng-template #loading>
+    <strive-page-loading></strive-page-loading>
+  </ng-template>
+</ion-content>

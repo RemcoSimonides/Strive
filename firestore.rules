@@ -13,6 +13,7 @@ service cloud.firestore {
       allow read: if collection == "GStakeholders"
       allow read: if collection == "Spectators"
       allow read: if collection == "Supports"
+      allow read: if collection == "Profile"
     }
 
     match /{path=**}/Comments/{id} {

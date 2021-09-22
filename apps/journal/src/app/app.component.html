@@ -4,19 +4,17 @@
   <section class="sidemenu">
     <ion-menu side="end" contentId="main">
       <ion-content>
-        <article #header>
-          <ng-container *ngIf="user.profile$ | async as profile">
-            <ion-row class="ion-justify-content-center">
-              <img [ref]="profile.photoURL"
-                asset="profile.png"
-                routerDirection="root"
-                [routerLink]="'/profile/' + user.uid" />  
-            </ion-row>
-            <ion-row class="ion-justify-content-center">
-              <h3>{{ profile.username }}</h3>
-            </ion-row>
-          </ng-container>
-        </article>
+        <ng-container *ngIf="user.profile$ | async as profile">
+          <ion-row class="ion-justify-content-center">
+            <img [ref]="profile.photoURL"
+              asset="profile.png"
+              routerDirection="root"
+              [routerLink]="'/profile/' + user.uid" />
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <h3>{{ profile.username }}</h3>
+          </ion-row>
+        </ng-container>
         <ion-list>
           <ion-menu-toggle auto-hide="false">
             <ng-container *ngIf="user.profile$ | async">
@@ -24,7 +22,7 @@
               <ion-item routerDirection="root" routerLink="/feed">
                 <ion-icon slot="start" name="home-sharp"></ion-icon>
                 <ion-label>Home</ion-label>
-              </ion-item>              
+              </ion-item>
             </ng-container>
 
             <!-- Explore -->
@@ -80,7 +78,7 @@
 
   <!-- Mobile -->
   <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
-    <ion-nav id="main" [root]="rootPage"></ion-nav>
+    <ion-nav [root]="rootPage"></ion-nav>
   </ng-container>
 
   <ng-template #desktop>
@@ -158,6 +156,6 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-router-outlet class="main-content-wrapper" id="main"></ion-router-outlet>
+    <ion-router-outlet id="main"></ion-router-outlet>
   </ng-template>
 </ion-app>

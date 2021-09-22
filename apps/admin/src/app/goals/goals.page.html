@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Goals</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="goals$ | async as goals; else loading">
+    <table>
+      <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>created at</th>
+      </tr>
+      <tr *ngFor="let goal of goals">
+        <td>{{ goal.id }}</td>
+        <td>{{ goal.title }}</td>
+        <td>{{ goal.createdAt.toDate() | date:'fullDate' }}</td>
+      </tr>
+    </table>
+  </ng-container>
+
+  <ng-template #loading>
+    <strive-page-loading></strive-page-loading>
+  </ng-template>
+</ion-content>

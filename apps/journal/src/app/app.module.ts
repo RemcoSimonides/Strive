@@ -51,7 +51,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     ProfileOptionsBrowserPage,
   ],
   imports: [
-    // Angular
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),

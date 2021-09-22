@@ -17,8 +17,12 @@
             "polyfills": "apps/admin/src/polyfills.ts",
             "tsConfig": "apps/admin/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["apps/admin/src/favicon.ico", "apps/admin/src/assets"],
-            "styles": ["apps/admin/src/styles.scss"],
+            "assets": ["apps/admin/src/favicon.ico", "apps/admin/src/assets", {
+              "glob": "**/*.svg",
+              "input": "node_modules/ionicons/dist/ionicons/svg",
+              "output": "./svg"
+            }],
+            "styles": ["apps/admin/src/theme/variables.scss", "apps/admin/src/global.scss"],
             "scripts": []
           },
           "configurations": {

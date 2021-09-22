@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'admin';
+  public appPages = [
+    { title: 'Users', url: '/users', icon: 'people' },
+    { title: 'Goals', url: '/goals', icon: 'flag' },
+    { title: 'Collective Goals', url: '/collective-goals', icon: 'golf' },
+  ];
 }
