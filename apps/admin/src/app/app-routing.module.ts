@@ -1,23 +1,21 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuardService } from '@strive/user/auth/guard/auth-guard.service';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'users',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
-    path: 'users',
-    loadChildren: () => import('./users/users.module').then(m => m.UsersPageModule)
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
   },
   {
-    path: 'goals',
-    loadChildren: () => import('./goals/goals.module').then(m => m.GoalsPageModule)
-  },
-  {
-    path: 'collective-goals',
-    loadChildren: () => import('./collective-goals/collective-goals.module').then(m => m.CollectiveGoalsPageModule)
+    path: 'a',
+    canActivate: [AuthGuardService],
+    loadChildren: () => import('./shell/shell.module').then(m => m.ShellModule)
   }
 ];
 

@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Log in</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <section fxLayout="column" fxLayoutAlign="start center">
+    <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input formControlName="email" type="email">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="loginUser()">
+        </ion-input>
+        <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
+      </ion-item>
+
+      <div fxLayout="row" fxLayoutAlign="center">
+        <ion-button class="submit_button" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
+      </div>
+    </form>
+  </section>
+
+</ion-content>
