@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
-import { arrayUnion, DocumentSnapshot, Firestore } from '@angular/fire/firestore';
+import { arrayUnion, doc, DocumentSnapshot, Firestore, getDoc } from '@angular/fire/firestore';
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Rxjs
 import { Observable, of } from 'rxjs';
@@ -55,6 +55,11 @@ export class UserService extends FireCollection<User> {
 
   async getFirebaseUser() {
     return await user(this.auth).pipe(take(1)).toPromise();
+  }
+
+  async isStriveAdmin(uid: string) {
+    const snap = await getDoc(doc(this.db, `striveAdmin/${uid}`))
+    return snap.exists()
   }
 
   upsertProfile(profile: Partial<Profile>, uid = this.uid) {

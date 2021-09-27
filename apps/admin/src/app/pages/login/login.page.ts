@@ -3,6 +3,7 @@ import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Component({
   selector: 'strive-login',
@@ -21,7 +22,8 @@ export class LoginPage {
     private alertCtrl: AlertController,
     private auth: Auth,
     private loadingCtrl: LoadingController,
-    private router: Router
+    private router: Router,
+    private user: UserService
   ) {}
 
   async loginUser() {
@@ -39,9 +41,22 @@ export class LoginPage {
 
       try {
 
-        await signInWithEmailAndPassword(this.auth, email, password)
+        const { user } = await signInWithEmailAndPassword(this.auth, email, password)
+        const isAdmin = await this.user.isStriveAdmin(user.uid)
+
+        if (isAdmin) {
+          this.router.navigate(['/a/users'])
+        } else {
+          this.auth.signOut()
+          this.alertCtrl.create({
+            message: 'Not a Strive Admin',
+            buttons: [{ text: 'Ok' }]
+          }).then(alert => alert.present())
+        }
+
+        console.log('isAdmin: ', isAdmin)
         loading.dismiss()
-        this.router.navigate(['/a/users'])
+        // this.router.navigate(['/a/users'])
 
       } catch (error) {
 
