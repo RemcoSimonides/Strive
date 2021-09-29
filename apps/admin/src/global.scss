@@ -24,3 +24,34 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+// ADMIN PANEL
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table td, table th {
+  padding: 8px;
+}
+
+table tr:nth-child(even){background-color: var(--ion-color-medium-shade);}
+
+table tr:hover {
+  background-color: var(--ion-color-primary-tint);
+  cursor: pointer;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-contrast);
+}
+
+h3 {
+  color: var(--ion-color-primary);
+}

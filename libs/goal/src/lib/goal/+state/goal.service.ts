@@ -62,7 +62,7 @@ export class GoalService extends FireCollection<Goal> {
         return this.valueChanges(goalIds)
       }),
       // Sort finished goals to the end
-      map((goals: Goal[]) => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+      map(goals => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
     )
   }
 

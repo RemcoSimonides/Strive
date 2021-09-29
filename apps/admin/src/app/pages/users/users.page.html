@@ -15,7 +15,7 @@
         <th>username</th>
         <th>created at</th>
       </tr>
-      <tr *ngFor="let profile of profiles">
+      <tr *ngFor="let profile of profiles" [routerLink]="['/a/users/', profile.uid]">
         <td>{{ profile.uid }}</td>
         <td>{{ profile.username }}</td>
         <td>{{ profile.createdAt.toDate() | date:'fullDate' }}</td>

@@ -12,6 +12,10 @@ const routes: Routes = [
   {
     path: '',
     component: UsersPage
+  },
+  {
+    path: ':uid',
+    loadChildren: () => import('./user/user.module').then(m => m.UserPageModule)
   }
 ];
 

@@ -1,0 +1,43 @@
+<ion-content>
+  <ng-container *ngIf="profile$ | async as profile">
+
+    <ion-card>
+      <ion-card-content>
+        <p>Created at: {{ profile.createdAt?.toDate() | date:'medium' }}</p>
+        <p>Updated at: {{ profile.updatedAt?.toDate() | date:'medium' }}</p>
+        <p>Spectators: {{ profile.numberOfSpectators }}</p>
+        <p>Spectating: {{ profile.numberOfSpectating }}</p>
+
+        <form [formGroup]="profileForm" (ngSubmit)="update()">
+          <ion-item>
+            <ion-label position="floating"></ion-label>
+            <ion-input formControlName="username"></ion-input>
+          </ion-item>
+        
+          <media-image-selector
+            [form]="profileForm.photoURL"
+            [storagePath]="'profiles/' + profile.uid"
+          ></media-image-selector>
+        
+          <div fxLayout="row" fxLayoutAlign="center">
+            <ion-button class="submit_button" type="submit" [disabled]="!profileForm.valid">Update</ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <h3>Goals</h3>
+    <thumbnail-list type="goal">
+      <ng-container *ngFor="let goal of goals$ | async">
+        <ng-template #thumb>
+          <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="'/goal/' + goal.id">
+            <ng-template #thumbTitle>
+              {{ goal.title }}
+            </ng-template>
+          </rectangle-thumbnail>
+        </ng-template>
+      </ng-container>
+    </thumbnail-list>
+
+  </ng-container>
+</ion-content>
