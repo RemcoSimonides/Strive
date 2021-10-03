@@ -8,7 +8,7 @@ import { IonicModule } from '@ionic/angular';
 // Pages
 import { TemplatePage } from './template.page';
 // Modals
-import { UpsertTemplateModalPageModule } from './modals/upsert-template-modal/upsert-template-modal.module'
+import { UpsertTemplateModalPageModule } from '@strive/template/modals/upsert/upsert-template-modal.module';
 // Popover
 import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page'
 // Components

@@ -2,9 +2,9 @@ import { Component, Input } from '@angular/core';
 // Ionic
 import { ModalController, Platform } from '@ionic/angular';
 // Pages
-import { UpsertCollectiveGoalPage } from 'apps/journal/src/app/pages/collective-goal/modals/upsert/upsert.component';
+import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { UpsertTemplateModalPage } from 'apps/journal/src/app/pages/template/modals/upsert-template-modal/upsert-template-modal.page';
+import { UpsertTemplateModalPage } from '@strive/template/modals/upsert/upsert-template-modal.page';
 
 type Type = 'collectiveGoal' | 'goal' | 'template'
 

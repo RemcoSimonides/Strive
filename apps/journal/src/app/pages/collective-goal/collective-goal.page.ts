@@ -7,7 +7,7 @@ import { ModalController, PopoverController, AlertController, NavController, Pla
 import { Observable,  Subscription, of, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Modals
-import { UpsertCollectiveGoalPage } from './modals/upsert/upsert.component'
+import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 // Popovers
 import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'

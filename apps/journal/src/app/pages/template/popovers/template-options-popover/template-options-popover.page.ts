@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 // Ionic
 import { PopoverController, NavParams, ModalController } from '@ionic/angular'
 import { TemplateService } from '@strive/template/+state/template.service';
-import { UpsertTemplateModalPage } from '../../modals/upsert-template-modal/upsert-template-modal.page';
+import { UpsertTemplateModalPage } from '@strive/template/modals/upsert/upsert-template-modal.page';
 
 @Component({
   selector: 'app-template-options-popover',
