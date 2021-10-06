@@ -1,0 +1,19 @@
+<ion-segment scrollable value="goal" (ionChange)="segmentChanged($event)">
+	<ion-segment-button value="goal">
+		<ion-icon name="flag"></ion-icon>
+	</ion-segment-button>
+	<ion-segment-button value="team">
+		<ion-icon name="people"></ion-icon>
+	</ion-segment-button>
+	<ion-segment-button value="roadmap">
+		<ion-icon name="map"></ion-icon>
+	</ion-segment-button>
+	<ion-segment-button value="story">
+		<ion-icon name="list"></ion-icon>
+	</ion-segment-button>
+</ion-segment>
+
+<ion-content [ngSwitch]="segmentChoice">
+	<strive-goal *ngSwitchCase="'goal'" [id]="id$ | async"></strive-goal>
+	<strive-team *ngSwitchCase="'team'" [id]="id$ | async"></strive-team>
+</ion-content>

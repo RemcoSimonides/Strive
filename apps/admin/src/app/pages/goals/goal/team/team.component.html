@@ -1,0 +1,18 @@
+<ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
+	<table>
+		<tr>
+			<th>uid</th>
+			<th>username</th>
+			<th>created at</th>
+		</tr>
+		<tr *ngFor="let stakeholder of stakeholders" [routerLink]="['/a/users/', stakeholder.uid]">
+			<td>{{ stakeholder.uid }}</td>
+			<td>{{ stakeholder.username }}</td>
+			<td>{{ stakeholder.createdAt.toDate() | date:'fullDate' }}</td>
+		</tr>
+	</table>
+</ng-container>
+
+<ng-template #loading>
+	<strive-page-loading></strive-page-loading>
+</ng-template>

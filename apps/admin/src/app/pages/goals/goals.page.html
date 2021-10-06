@@ -15,7 +15,7 @@
         <th>title</th>
         <th>created at</th>
       </tr>
-      <tr *ngFor="let goal of goals">
+      <tr *ngFor="let goal of goals" [routerLink]="['/a/goals/', goal.id]">
         <td>{{ goal.id }}</td>
         <td>{{ goal.title }}</td>
         <td>{{ goal.createdAt.toDate() | date:'fullDate' }}</td>

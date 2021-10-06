@@ -13,6 +13,10 @@ const routes: Routes = [
   {
     path: '',
     component: GoalsPage
+  },
+  {
+    path: ':id',
+    loadChildren: () => import('./goal/view.module').then(m => m.GoalViewModule)
   }
 ];
 
