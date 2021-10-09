@@ -1,27 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { EditRoadmapPage } from './edit-roadmap.page';
-
+import { RoadmapComponent } from './roadmap.component';
 import { EditRoadmapModule } from '@strive/milestone/components/edit-roadmap/edit-roadmap.module';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: EditRoadmapPage
-  }
-];
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    RouterModule.forChild(routes),
+    RouterModule,
+    PageLoadingModule,
     EditRoadmapModule
   ],
-  declarations: [EditRoadmapPage]
+  declarations: [RoadmapComponent],
+  exports: [RoadmapComponent]
 })
-export class EditRoadmapPageModule {}
+export class RoadmapModule {}

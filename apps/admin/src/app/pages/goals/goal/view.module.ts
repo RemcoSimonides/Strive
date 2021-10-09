@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { GoalViewPage } from './view.page';
 import { GoalPageModule } from './goal/goal.module';
 import { TeamModule } from './team/team.module';
+import { RoadmapModule } from './roadmap/roadmap.module';
 
 const routes: Routes = [
   {
@@ -24,7 +25,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     GoalPageModule,
-    TeamModule
+    TeamModule,
+    RoadmapModule
   ],
   declarations: [GoalViewPage]
 })

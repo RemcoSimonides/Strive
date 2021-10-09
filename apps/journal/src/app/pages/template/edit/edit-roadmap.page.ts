@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore';
-import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TemplateService } from '@strive/template/+state/template.service';
 
 @Component({
   selector: 'journal-edit-roadmap',
@@ -16,50 +16,48 @@ import { map } from 'rxjs/operators';
 })
 export class EditRoadmapPage implements OnInit {
 
-  goalId: string;
+  private collectiveGoalId: string;
+  private templateId: string;
+
   mode: 'create' | 'update'
   roadmap$: Observable<MilestoneTemplate[]>
 
   constructor(
     private goal: GoalService,
     private loadingCtrl: LoadingController,
-    private roadmap: RoadmapService,
     private route: ActivatedRoute,
     private router: Router,
-    private seo: SeoService
+    private seo: SeoService,
+    private template: TemplateService
   ) {
     const extras = this.router.getCurrentNavigation()
     this.mode = extras?.extras.state?.mode ? 'create' : 'update'
 
-    this.goalId = this.route.snapshot.paramMap.get('id')
-    this.roadmap$ = this.goal.valueChanges(this.goalId).pipe(
-      map(goal => goal.roadmapTemplate)
+    this.collectiveGoalId = this.route.snapshot.paramMap.get('id')
+    this.templateId = this.route.snapshot.paramMap.get('templateId')
+
+    this.roadmap$ = this.template.valueChanges(this.templateId, { collectiveGoalId: this.collectiveGoalId }).pipe(
+      map(template => template.roadmapTemplate)
     )
   }
 
   ngOnInit() {
     const tag = this.mode === 'create' ? 'Create' : 'Edit'
-    this.seo.generateTags({ title: `${tag} Roadmap - Strive Journal` })
+    this.seo.generateTags({ title: `${tag} Template Roadmap - Strive Journal` })
   }
 
   async save(roadmapTemplate: MilestoneTemplate[]) {
     const loading = await this.loadingCtrl.create({ spinner: 'lines' })
     loading.present()
 
-    // Save roadmap template object
-    await this.goal.update(this.goalId, { roadmapTemplate })
-
-    // Start conversion to create milestones
-    await this.roadmap.startConversion(this.goalId, roadmapTemplate)
+    // Save milestone object
+    await this.template.update(this.templateId, { roadmapTemplate }, { params: { collectiveGoalId: this.collectiveGoalId }})
 
     loading.dismiss()
-    const url = this.mode === 'create' ? `goal/${this.goalId}` : `goal/${this.goalId}?t=roadmap`
-    this.router.navigateByUrl(url)
+    this.router.navigateByUrl(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
   }
 
   cancel() {
-    const url = this.mode === 'create' ? `goal/${this.goalId}` : `goal/${this.goalId}?t=roadmap`
-    this.router.navigateByUrl(url)
+    this.router.navigateByUrl(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
   }
-
 }

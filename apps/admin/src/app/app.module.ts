@@ -19,6 +19,12 @@ import { provideMessaging, getMessaging } from '@angular/fire/messaging';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+// FontAwesome
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -30,9 +36,16 @@ import { AppRoutingModule } from './app-routing.module';
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     provideFunctions(() => getFunctions()),
-    provideMessaging(() => getMessaging())
+    provideMessaging(() => getMessaging()),
+
+    // Libraries
+    FontAwesomeModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas, far, fab)
+  }
+}

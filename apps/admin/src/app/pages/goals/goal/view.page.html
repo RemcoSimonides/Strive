@@ -14,6 +14,9 @@
 </ion-segment>
 
 <ion-content [ngSwitch]="segmentChoice">
-	<strive-goal *ngSwitchCase="'goal'" [id]="id$ | async"></strive-goal>
-	<strive-team *ngSwitchCase="'team'" [id]="id$ | async"></strive-team>
+	<ng-container *ngIf="id$ | async as id">
+		<strive-goal *ngSwitchCase="'goal'" [id]="id"></strive-goal>
+		<strive-team *ngSwitchCase="'team'" [id]="id"></strive-team>
+		<strive-roadmap *ngSwitchCase="'roadmap'" [id]="id"></strive-roadmap>
+	</ng-container>
 </ion-content>
