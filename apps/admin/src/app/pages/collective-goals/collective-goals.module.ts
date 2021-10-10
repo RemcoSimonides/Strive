@@ -12,6 +12,10 @@ const routes: Routes = [
   {
     path: '',
     component: CollectiveGoalsPage
+  },
+  {
+    path: ':id',
+    loadChildren: () => import('./collective-goal/view.module').then(m => m.CollectiveGoalViewModule)
   }
 ];
 

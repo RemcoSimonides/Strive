@@ -15,7 +15,7 @@
         <th>title</th>
         <th>created at</th>
       </tr>
-      <tr *ngFor="let collectiveGoal of collectiveGoals">
+      <tr *ngFor="let collectiveGoal of collectiveGoals" [routerLink]="['/a/collective-goals/', collectiveGoal.id]">
         <td>{{ collectiveGoal.id }}</td>
         <td>{{ collectiveGoal.title }}</td>
         <td>{{ collectiveGoal.createdAt.toDate() | date:'fullDate' }}</td>
