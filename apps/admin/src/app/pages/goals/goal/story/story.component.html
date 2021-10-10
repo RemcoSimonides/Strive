@@ -1,0 +1,8 @@
+<ng-container *ngFor="let notification of feed$ | async">
+  <strive-notification
+    [goalId]="id"
+    [notification]="notification"
+    [isAdmin]="true"
+    [reference]="'Goals/' + id + '/Notifications/' + notification.id"
+  ></strive-notification>
+</ng-container>

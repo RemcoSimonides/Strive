@@ -11,6 +11,7 @@ import { NotificationOptionsPopoverModule } from '../notification-options/notifi
 import { PostComponentModule } from '@strive/post/components/post/post.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { MessagePipeModule } from '../../pipes/message.pipe';
+import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { MessagePipeModule } from '../../pipes/message.pipe';
     NotificationOptionsPopoverModule,
     PostComponentModule,
     ImageModule,
-    MessagePipeModule
+    MessagePipeModule,
+    DiscussionModalModule
   ],
   exports: [NotificationComponent],
   declarations: [NotificationComponent, SourcePipe],

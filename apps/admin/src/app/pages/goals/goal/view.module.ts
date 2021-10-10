@@ -9,6 +9,7 @@ import { GoalViewPage } from './view.page';
 import { GoalPageModule } from './goal/goal.module';
 import { TeamModule } from './team/team.module';
 import { RoadmapModule } from './roadmap/roadmap.module';
+import { StoryModule } from './story/story.module';
 
 const routes: Routes = [
   {
@@ -26,7 +27,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     GoalPageModule,
     TeamModule,
-    RoadmapModule
+    RoadmapModule,
+    StoryModule
   ],
   declarations: [GoalViewPage]
 })

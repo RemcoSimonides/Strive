@@ -80,7 +80,6 @@ export class NotificationComponent {
         }
       }).then(modal => modal.present())
     }
-
   }
 
   async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {

@@ -2,13 +2,12 @@ import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/
 import { NavParams, IonContent, ModalController } from '@ionic/angular';
 // Rxjs
 import { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 // Services
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { Comment, createComment } from '@strive/discussion/+state/comment.firestore';
+import { createComment } from '@strive/discussion/+state/comment.firestore';
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { createProfileLink } from '@strive/user/user/+state/user.firestore';
 
@@ -31,7 +30,6 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
   subscription: Subscription
 
   discussionId: string
-  comments: Comment[] = []
   _comment: string
   discussion$: Observable<Discussion>
 

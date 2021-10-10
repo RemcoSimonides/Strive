@@ -25,6 +25,10 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
+// Pages
+import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -39,7 +43,10 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
     provideMessaging(() => getMessaging()),
 
     // Libraries
-    FontAwesomeModule
+    FontAwesomeModule,
+
+    // Strive
+    AuthModalModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
