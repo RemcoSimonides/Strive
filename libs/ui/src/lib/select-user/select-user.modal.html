@@ -1,0 +1,12 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="md">
+    <ion-searchbar (ionChange)="search($event.target.value)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list mode="md">
+    <ion-item *ngFor="let profile of algolia.profileResults | async" button (click)="select(profile.uid)">
+      {{ profile.username }}
+    </ion-item>
+  </ion-list>
+</ion-content>

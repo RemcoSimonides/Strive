@@ -1,16 +1,22 @@
 <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
-	<table>
-		<tr>
-			<th>uid</th>
-			<th>username</th>
-			<th>created at</th>
-		</tr>
-		<tr *ngFor="let stakeholder of stakeholders" [routerLink]="['/a/users/', stakeholder.uid]">
-			<td>{{ stakeholder.uid }}</td>
-			<td>{{ stakeholder.username }}</td>
-			<td>{{ stakeholder.createdAt.toDate() | date:'fullDate' }}</td>
-		</tr>
-	</table>
+	<ion-button (click)="add()">Add</ion-button>
+	<ion-list mode="md">
+		<ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="['/a/users/', stakeholder.uid]">
+			{{ stakeholder.username }}
+			<fa-icon [icon]="['fas', 'user-tie']" slot="end"
+			 [ngStyle]="{'opacity': stakeholder.isAdmin ? '1' : '0.3' }"
+			 (click)="toggleAdmin(stakeholder, $event)"
+			></fa-icon>
+			<fa-icon [icon]="['fas', 'flag']" slot="end"
+				[ngStyle]="{'opacity': stakeholder.isAchiever ? '1' : '0.3' }"
+				(click)="toggleAchiever(stakeholder, $event)"
+			></fa-icon>
+			<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"
+				[ngStyle]="{'opacity': stakeholder.isSupporter ? '1' : '0.3' }"
+				(click)="toggleSupporter(stakeholder, $event)"
+			></fa-icon>
+		</ion-item>
+	</ion-list>
 </ng-container>
 
 <ng-template #loading>

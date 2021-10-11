@@ -6,17 +6,51 @@
 
 			<form [formGroup]="goalForm" (ngSubmit)="update()">
 				<ion-item>
-					<ion-label position="floating"></ion-label>
+					<ion-label position="floating">Title</ion-label>
 					<ion-input formControlName="title"></ion-input>
+				</ion-item>
+
+				<ion-item>
+					<ion-label position="stacked">Short description</ion-label>
+					<ion-textarea
+						formControlName="shortDescription"
+						type="text"
+						maxlength="256"
+						autosize
+					></ion-textarea>
+				</ion-item>
+
+				<ion-item>
+					<ion-label position="stacked">Secret</ion-label>
+					<ion-toggle formControlName="isSecret"></ion-toggle>
+				</ion-item>
+
+				<ion-item>
+					<ion-label position="stacked">End date &#40;optional&#41;</ion-label>
+					<ion-datetime
+						placeholder="-- -- --"
+						displayFormat="DDDD DD MMMM YYYY"
+						pickerFormat="DDDD MMMM YYYY" 
+						formControlName="deadline"
+						(click)="openingDatetime($event)"
+					></ion-datetime>
 				</ion-item>
 		
 				<media-image-selector
 					[form]="goalForm.image"
 					[storagePath]="'goals/' + goal.id"
 				></media-image-selector>
+
+				<strive-text-editor
+					[description]="goal.description"
+					[isAdmin]="true" 
+				></strive-text-editor>
 		
-				<div fxLayout="row" fxLayoutAlign="center">
+				<div fxLayout="row" fxLayoutAlign="space-between">
 					<ion-button class="submit_button" type="submit" [disabled]="!goalForm.valid">Update</ion-button>
+					<ion-button (click)="finish()" color="secondary">Finish</ion-button>
+					<ion-button (click)="duplicate()" color="tertiary">Duplicate</ion-button>
+					<ion-button (click)="delete()" color="warning">Delete</ion-button>
 				</div>
 			</form>
 		</ion-card-content>

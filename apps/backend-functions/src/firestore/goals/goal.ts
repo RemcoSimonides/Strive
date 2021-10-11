@@ -119,7 +119,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     }
   })
 
-export const duplicateGoal = functions.https.onCall(async (data: { goalId: string }, context: CallableContext): Promise<ErrorResultResponse> => {
+export const duplicateGoal = functions.https.onCall(async (data: { goalId: string, uid: string }, context: CallableContext): Promise<ErrorResultResponse> => {
 
   if (!context.auth) {
     logger.error(`UNAUTHORIZED - User needs to be authorized`)
@@ -129,7 +129,7 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     }
   }
 
-  const uid = context.auth.uid;
+  const uid = data.uid ? data.uid : context.auth.uid;
   const timestamp = serverTimestamp()
 
   // Duplicate goal

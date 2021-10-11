@@ -31,7 +31,7 @@ export class ExplorePage implements OnInit {
     this.seo.generateTags({ title: `Explore - Strive Journal` })
   }
 
-  async search(event): Promise<void> {
+  search(event) {
     const query = event.target.value
 
     if (query !== undefined) {

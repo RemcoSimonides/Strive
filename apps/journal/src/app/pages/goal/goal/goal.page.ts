@@ -219,7 +219,7 @@ export class GoalPage implements OnInit, OnDestroy {
     }).then(alert => alert.present())
   }
   
-  public supportGoal() {
+  supportGoal() {
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
@@ -228,7 +228,7 @@ export class GoalPage implements OnInit, OnDestroy {
     }).then(modal => modal.present())
   }
 
-  public requestToJoinGoal() {
+  requestToJoinGoal() {
     return this.stakeholder.upsert({
       uid: this.user.uid,
       isSpectator: true,
@@ -236,7 +236,7 @@ export class GoalPage implements OnInit, OnDestroy {
     }, { params: { goalId: this.goalId }})
   }
 
-  public async openSharePopover(ev: UIEvent, goal: Goal) {
+  async openSharePopover(ev: UIEvent, goal: Goal) {
 
     if (this.platform.is('android') || this.platform.is('ios')) {
 
@@ -262,11 +262,11 @@ export class GoalPage implements OnInit, OnDestroy {
     }
   }
 
-  public saveDescription(description: string) {
+  saveDescription(description: string) {
     return this.goalService.updateDescription(this.goalId, description)
   }
 
-  public async toggleAdmin(stakeholder: GoalStakeholder, event: Event) {
+  async toggleAdmin(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
     this.alertCtrl.create({
@@ -289,7 +289,7 @@ export class GoalPage implements OnInit, OnDestroy {
     }).then(alert => alert.present())
   }
 
-  public toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
+  toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
     return this.stakeholder.upsert({
@@ -298,7 +298,7 @@ export class GoalPage implements OnInit, OnDestroy {
     }, { params: { goalId: this.goalId }})
   }
 
-  public toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
+  toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
     event.preventDefault()
     event.stopPropagation()
     return this.stakeholder.upsert({
