@@ -54,11 +54,12 @@ export class UserPage {
   }
 
   update() {
-    if (this.profileForm.invalid) {
-      console.error('invalid form')
-      return
-    }
+    console.error('users can update the user name themselves')
+    // if (this.profileForm.invalid) {
+    //   console.error('invalid form')
+    //   return
+    // }
 
-    this.profile.update(this.profileForm.value, { params: { uid: this.profileForm.uid.value }})
+    // this.profile.update(this.profileForm.value, { params: { uid: this.profileForm.uid.value }})
   }
 }

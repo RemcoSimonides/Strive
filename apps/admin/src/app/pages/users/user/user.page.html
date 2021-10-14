@@ -11,7 +11,7 @@
         <form [formGroup]="profileForm" (ngSubmit)="update()">
           <ion-item>
             <ion-label position="floating"></ion-label>
-            <ion-input formControlName="username"></ion-input>
+            <ion-input formControlName="username" disabled></ion-input>
           </ion-item>
         
           <media-image-selector
