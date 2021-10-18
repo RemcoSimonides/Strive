@@ -48,7 +48,10 @@ import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-mo
     // Strive
     AuthModalModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: 'APP_NAME', useValue: 'admin' }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

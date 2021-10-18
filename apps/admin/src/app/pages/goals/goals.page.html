@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content>
+	<ion-button (click)="add()">Add</ion-button>
   <ng-container *ngIf="goals$ | async as goals; else loading">
     <table>
       <tr>

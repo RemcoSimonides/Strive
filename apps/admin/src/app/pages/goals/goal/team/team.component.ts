@@ -31,7 +31,7 @@ export class TeamComponent implements OnInit {
   async add() {
     const modal = await this.modalCtrl.create({ component: SelectUserModal })
     modal.onDidDismiss().then(async res => {
-      const uid = res.data as string;
+      const uid = res.data as string
       if (uid) {
         const { username, photoURL } = await this.profile.getValue(uid, { uid })
         const stakeholder = createGoalStakeholder({ username, photoURL, uid });

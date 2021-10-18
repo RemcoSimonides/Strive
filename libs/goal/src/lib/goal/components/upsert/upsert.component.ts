@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 //ionic
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
@@ -30,6 +30,7 @@ export class UpsertGoalModalComponent implements OnInit {
   public mode: 'update' | 'create'
 
   constructor(
+    @Inject('APP_NAME') private appName: string,
     private alertCtrl: AlertController,
     private collectiveGoalService: CollectiveGoalService,
     private goalService: GoalService,
@@ -79,9 +80,13 @@ export class UpsertGoalModalComponent implements OnInit {
         this.goalForm.publicity.setValue(publicity)
 
         const goal = createGoal({ ...this.goalForm.value, id: this.goalId })
-        await this.goalService.upsert(goal);
+        await this.goalService.upsert(goal, { params: { uid: this.navParams.data?.uid }})
         if (this.mode === 'create') {
-          await this.navCtrl.navigateForward(`/goal/${this.goalId}/edit`, { state: { mode: 'create' }});
+          if (this.appName === 'journal') {
+            await this.navCtrl.navigateForward(`/goal/${this.goalId}/edit`, { state: { mode: 'create' }});
+          } else if (this.appName === 'admin') {
+            await this.navCtrl.navigateForward(`/a/goals/${this.goalId}`)
+          }
         }
 
         await loading.dismiss()

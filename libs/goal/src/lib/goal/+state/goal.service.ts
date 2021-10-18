@@ -35,9 +35,10 @@ export class GoalService extends FireCollection<Goal> {
     return goal
   }
 
-  onCreate(goal: Goal, { write }: WriteOptions) {
+  onCreate(goal: Goal, { write, params }: WriteOptions) {
+    const uid = params?.uid || this.user.uid;
     const stakeholder = createGoalStakeholder({
-      uid: this.user.uid,
+      uid,
       goalId: goal.id,
       goalTitle: goal.title,
       goalImage: goal.image,

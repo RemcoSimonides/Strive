@@ -27,6 +27,7 @@
     </ion-card>
 
     <h3>Goals</h3>
+    <ion-button (click)="createGoal(profile.uid)">Create Goal</ion-button>
     <thumbnail-list type="goal">
       <ng-container *ngFor="let goal of goals$ | async">
         <ng-template #thumb>

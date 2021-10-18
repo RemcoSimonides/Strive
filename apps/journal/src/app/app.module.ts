@@ -83,7 +83,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: 'APP_NAME', useValue: 'journal' }
   ],
   bootstrap: [AppComponent],
 })

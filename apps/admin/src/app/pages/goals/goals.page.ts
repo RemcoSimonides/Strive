@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { orderBy } from '@angular/fire/firestore';
+import { ModalController } from '@ionic/angular';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
+import { SelectUserModal } from '@strive/ui/select-user/select-user.modal';
 
 @Component({
   selector: 'strive-goals',
@@ -12,5 +15,20 @@ export class GoalsPage {
 
   goals$ = this.goal.valueChanges([orderBy('createdAt', 'desc')]);
 
-  constructor(private goal: GoalService) {}
+  constructor(
+    private goal: GoalService,
+    private modalCtrl: ModalController
+  ) {}
+
+  async add() {
+    const selectUserModal = await this.modalCtrl.create({ component: SelectUserModal })
+    selectUserModal.onDidDismiss().then(res => {
+      const uid = res.data as string
+      this.modalCtrl.create({
+        component: UpsertGoalModalComponent,
+        componentProps: { uid }
+      }).then(modal => modal.present())
+    })
+    selectUserModal.present()
+  }
 }
