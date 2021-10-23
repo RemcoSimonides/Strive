@@ -6,9 +6,19 @@
       </ion-buttons>
       <ion-title>Home</ion-title>
       <ion-buttons slot="end">
-        <ion-button routerLink="../notifications">
-          <ion-icon slot="icon-only" name="notifications-sharp" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
-        </ion-button>
+        <ng-container *ngIf="user.uid else notLoggedInHeader">
+          <ion-button routerLink="../notifications">
+            <ion-icon slot="icon-only" name="notifications-sharp" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
+          </ion-button>
+        </ng-container>
+        <ng-template #notLoggedInHeader>
+          <ion-button color="primary" (click)="openAuthModal(enumAuthSegment.login)">
+            Log in
+          </ion-button>
+          <ion-button color="primary" (click)="openAuthModal(enumAuthSegment.register)">
+            Sign up
+          </ion-button>
+        </ng-template>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -68,36 +78,40 @@
 </ng-template>
 
 <ng-template #notLoggedIn>
-  <ion-content class="ion-no-padding">
+  <ion-content class="ion-no-padding" class="home">
     <header fxLayout="column" fxLayoutAlign="center center">
       <h1>Focus on your Long-term Goals</h1>
-      <h2>and Support Others</h2>
-      <ng-container *ngIf="pwa.showInstallPromotion$ | async">
+      <h2>Journal &#8226; Achieve together &#8226; Support others &#8226; Bucketlist &#8226; Mind Exercises</h2>
+      <ng-container *ngIf="pwa.showInstallPromotion$ | async else signUp">
         <ion-button (click)="pwa.showInstallPromotion()">install app</ion-button>
       </ng-container>
+      <ng-template #signUp>
+        <ion-button (click)="openAuthModal(enumAuthSegment.register)">sign up</ion-button>
+      </ng-template>
     </header>
-    <section class="goals">
-      <h3>Goals</h3>
 
+    <section>
+      <h3>Goals</h3>
+      <p>What do you want to achieve? Describe, visualize it and make a detailed plan. Ask friends and family to support you. And eventually look back on your life and see what you've achieved.</p>
       <article class="grid">
         <ng-container *ngFor="let goal of goals$ | async">
-          <span fxLayout fxLayoutGap="8px" [routerLink]="['/goal/', goal.id]">
+          <div fxLayout fxLayoutGap="8px" [routerLink]="['/goal/', goal.id]">
             <img [ref]="goal.image" asset="goal.jpg" width="75" height="75">
             <div fxLayout="column">
               <b>{{ goal.title }}</b>
               {{ goal.numberOfAchievers }} achievers - {{ goal.numberOfSupporters}} supporters
             </div>
-          </span>
+          </div>
         </ng-container>
       </article>
-
     </section>
-    <section class="exercises">
-      <h3>Exercises</h3>
 
+    <section>
+      <h3>Exercises</h3>
+      <p>The belief in yourself is your biggest power. Strengten this power by doing these exercises.</p>
       <article class="grid">
         <ng-container *ngFor="let exercise of exercises | slice:0:4">
-          <div fxLayout fxLayoutGap="8px">
+          <div fxLayout fxLayoutGap="8px" (click)="openAuthModal(enumAuthSegment.register)">
             <img [asset]="exercise.image" width="75" height="75">
             <div fxLayout="column">
               <b>{{ exercise.title }}</b>
@@ -106,6 +120,27 @@
         </ng-container>
       </article>
     </section>
+
+    <section>
+      <h3>Collective Goals</h3>
+      <p>You're not alone trying to achieve something. Connect with others working on the same goal. Use templates created by people who walked the path before.</p>
+      <article class="grid">
+        <ng-container *ngFor="let collectiveGoal of collectiveGoals$ | async">
+          <div fxLayout fxLayoutGap="8px" [routerLink]="['/collective-goal/', collectiveGoal.id]">
+            <img [ref]="collectiveGoal.image" asset="collectiveGoal.jpg" width="75" height="75">
+            <div fxLayout="column">
+              <b>{{ collectiveGoal.title }}</b>
+              {{ collectiveGoal.numberOfAchievers }} achievers
+            </div>
+          </div>
+        </ng-container>
+      </article>
+    </section>
+
+    <footer>
+      <a routerLink="/terms">Terms of Use</a><br/>
+      <a routerLink="/privacy-policy">Privacy Policy</a>
+    </footer>
   </ion-content>
 </ng-template>
 

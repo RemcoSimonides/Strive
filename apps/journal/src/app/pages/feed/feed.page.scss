@@ -35,25 +35,50 @@ section {
 }
 
 // HOME
-header {
-  background-image: url('/assets/images/home_goal_banner.jpeg');
-  background-size: cover;
-  background-position: center;
-  height: 60vh;
-}
+.home {
+  header {
+    background-image: url('/assets/images/home_goal_banner.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
 
-.goals {
+    h1 {
+      font-size: 64px;
+      padding: 0 24px;
+      text-align: center;
+      color: white;
+    }
+    h2 {
+      font-size: 16px;
+      padding: 0 24px;
+      text-align: center;
+      color: white;
+    }
+
+    @media only screen and (max-width: 568px) {
+      h1 {
+        font-size: 48px;
+      }
+    }
+  }
+
+  h3 {
+    color: var(--ion-color-primary);
+  }
+  
   img {
     border-radius: 12px;
   }
-}
+  
+  .grid {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
 
-.exercises img {
-  border-radius: 12px;
-}
-
-.grid {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  footer {
+    margin-top: 16px;
+    background-color: #F7F7F7;
+    padding: 24px;
+  }
 }

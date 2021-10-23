@@ -14,6 +14,7 @@ import { limit, where } from '@angular/fire/firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
+import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 @Component({
   selector: 'strive-feed',
@@ -23,17 +24,20 @@ import { PWAService } from '@strive/utils/services/pwa.service';
 })
 export class FeedPage implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  enumAuthSegment = enumAuthSegment
   
   decisions$: Observable<Notification[]>
   unreadNotifications$: Observable<boolean>
 
   goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
+  collectiveGoals$ = this.collectiveGoal.valueChanges(['lidJJc63GYEL499jfnei', 'ZwHs8v6Fivgeb53Wpr6v', 'REsVPNUXsbIAUyBJsGZB', 'XGtfe77pCKh1QneOipI7'])
   exercises = exercises
 
   private backBtnSubscription: Subscription
   private userSubscription: Subscription
 
   constructor(
+    private collectiveGoal: CollectiveGoalService,
     private goal: GoalService,
     public user: UserService,
     private modalCtrl: ModalController,
@@ -48,7 +52,7 @@ export class FeedPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.seo.generateTags({ title: `Home - Strive Journal` });
+    this.seo.generateTags({ title: `Strive Journal` });
 
     this.userSubscription = this.user.profile$.subscribe(profile => {
       if (profile) {
@@ -89,11 +93,11 @@ export class FeedPage implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe()
   }
 
-  openLoginModal() {
+  openAuthModal(segment: enumAuthSegment) {
     this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
-        authSegment: enumAuthSegment.register
+        authSegment: segment
       }
     }).then(modal => modal.present())
   }
