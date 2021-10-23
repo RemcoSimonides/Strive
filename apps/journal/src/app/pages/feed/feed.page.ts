@@ -11,6 +11,9 @@ import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { limit, where } from '@angular/fire/firestore';
+import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { exercises } from '@strive/exercises/utils';
+import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({
   selector: 'strive-feed',
@@ -22,21 +25,25 @@ export class FeedPage implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   
   decisions$: Observable<Notification[]>
-
   unreadNotifications$: Observable<boolean>
+
+  goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
+  exercises = exercises
 
   private backBtnSubscription: Subscription
   private userSubscription: Subscription
 
   constructor(
+    private goal: GoalService,
     public user: UserService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public feed: FeedPaginationService,
     private notification: NotificationService,
-    public platform: Platform,
+    private platform: Platform,
     private seo: SeoService,
     private cdr: ChangeDetectorRef,
+    public pwa: PWAService,
     public screensize: ScreensizeService
   ) { }
 

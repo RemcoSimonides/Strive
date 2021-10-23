@@ -141,31 +141,12 @@
         <h3 class="padding">Exercises</h3>
         <ion-grid>
           <ion-row>
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.affirmations)" >
-              <img asset="affirmations.jpg"/>
-              <div class="card-title">Affirmations</div>
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.bucketlist)">
-              <img asset="bucketlist.jpg"/>
-              <div class="card-title">Bucket List</div>
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.dear_future_self)">            
-              <img asset="dear_future_self.jpg"/>
-              <div class="card-title">Dear Future Self</div>
-
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.daily_gratefulness)">            
-              <img asset="daily_gratefulness.jpg"/>
-              <div class="card-title">Daily Gratefulness</div>
-            </ion-card>
-      
-            <ion-card class="exercise-card ion-no-padding" (click)="openExercise(enumExercises.assess_life)">
-              <img asset="assess_life_man.jpg"/>
-              <div class="card-title">Assess Life</div>
-            </ion-card>
+            <ng-container *ngFor="let exercise of exercises">
+              <ion-card class="exercise-card ion-no-padding" (click)="openExercise(exercise.enum)" >
+                <img [asset]="exercise.image"/>
+                <div class="card-title">{{ exercise.title }}</div>
+              </ion-card>
+            </ng-container>
           </ion-row>        
         </ion-grid>
       </section>

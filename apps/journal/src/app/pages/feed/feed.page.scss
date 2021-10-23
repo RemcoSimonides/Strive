@@ -33,3 +33,27 @@ section {
   height: 100%;
   text-align: center;
 }
+
+// HOME
+header {
+  background-image: url('/assets/images/home_goal_banner.jpeg');
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+}
+
+.goals {
+  img {
+    border-radius: 12px;
+  }
+}
+
+.exercises img {
+  border-radius: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}

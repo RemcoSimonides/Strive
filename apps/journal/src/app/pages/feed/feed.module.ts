@@ -12,6 +12,7 @@ import { FeedPage } from './feed.page';
 // Components
 import { NotificationModule } from '@strive/notification/components/notification/notification.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { ImageModule } from '@strive/media/directives/image.module';
 
 // Pipes
 import { MilestonePathPipeModule } from '@strive/milestone/pipes/path.pipe'
@@ -32,7 +33,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MilestonePathPipeModule,
     NotificationModule,
-    PageLoadingModule
+    PageLoadingModule,
+    ImageModule
   ],
   declarations: [
     FeedPage,

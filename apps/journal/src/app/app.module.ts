@@ -39,6 +39,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 // Directive
 import { ImageModule } from '@strive/media/directives/image.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { PWAService } from '@strive/utils/services/pwa.service';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary, pwa: PWAService) {
     library.addIconPacks(fas, far, fab)
+    pwa.addEventListeners()
   }
 }

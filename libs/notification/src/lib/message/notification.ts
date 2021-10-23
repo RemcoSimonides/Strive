@@ -108,7 +108,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.goal.title,
                 link: `goal/${source.goal.id}`
               },
-              { text: `'. Can you help you?` }
+              { text: `'. Can you help out?` }
             ]
           }
       

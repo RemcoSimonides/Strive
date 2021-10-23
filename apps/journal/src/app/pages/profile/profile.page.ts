@@ -29,6 +29,7 @@ import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { enumExercises, exercises } from '@strive/exercises/utils';
 
 @Component({
   selector: 'app-profile',
@@ -39,7 +40,8 @@ export class ProfilePage implements OnInit {
 
   private backBtnSubscription: Subscription
 
-  public enumExercises = enumExercises
+  enumExercises = enumExercises
+  exercises = exercises
 
   public isOwner = false
   public isSpectator = false
@@ -201,10 +203,3 @@ export class ProfilePage implements OnInit {
   }
 }
 
-enum enumExercises {
-  affirmations,
-  bucketlist,
-  dear_future_self,
-  daily_gratefulness,
-  assess_life
-}

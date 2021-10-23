@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
 
 const routes: Routes = [
-  { path: '', redirectTo: 'explore', pathMatch: 'full' },
+  { path: '', redirectTo: 'feed', pathMatch: 'full' },
   { path: 'explore', loadChildren: () => import('./pages/explore/explore.module').then(m => m.ExplorePageModule) },
   { path: 'goals', loadChildren: () => import('./pages/goals/goals.module').then(m => m.GoalsPageModule) },
   { path: 'goal/:id', loadChildren: () => import('./pages/goal/goal-view/goal-view.module').then(m => m.GoalViewPageModule) },

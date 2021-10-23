@@ -68,13 +68,45 @@
 </ng-template>
 
 <ng-template #notLoggedIn>
-  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px" class="empty">
-    <article>
-      <span class="fat-text-button" (click)="openLoginModal()">Sign up</span>to journal about your goals and to help others achieve their goals
-    </article>
-    <article><span class="fat-text-button" routerLink="/explore">Explore</span>goals</article>
-    <article><span class="fat-text-button" routerLink="/explore">Find</span>friends</article>
-  </section>
+  <ion-content class="ion-no-padding">
+    <header fxLayout="column" fxLayoutAlign="center center">
+      <h1>Focus on your Long-term Goals</h1>
+      <h2>and Support Others</h2>
+      <ng-container *ngIf="pwa.showInstallPromotion$ | async">
+        <ion-button (click)="pwa.showInstallPromotion()">install app</ion-button>
+      </ng-container>
+    </header>
+    <section class="goals">
+      <h3>Goals</h3>
+
+      <article class="grid">
+        <ng-container *ngFor="let goal of goals$ | async">
+          <span fxLayout fxLayoutGap="8px" [routerLink]="['/goal/', goal.id]">
+            <img [ref]="goal.image" asset="goal.jpg" width="75" height="75">
+            <div fxLayout="column">
+              <b>{{ goal.title }}</b>
+              {{ goal.numberOfAchievers }} achievers - {{ goal.numberOfSupporters}} supporters
+            </div>
+          </span>
+        </ng-container>
+      </article>
+
+    </section>
+    <section class="exercises">
+      <h3>Exercises</h3>
+
+      <article class="grid">
+        <ng-container *ngFor="let exercise of exercises | slice:0:4">
+          <div fxLayout fxLayoutGap="8px">
+            <img [asset]="exercise.image" width="75" height="75">
+            <div fxLayout="column">
+              <b>{{ exercise.title }}</b>
+            </div>
+          </div>
+        </ng-container>
+      </article>
+    </section>
+  </ion-content>
 </ng-template>
 
 
