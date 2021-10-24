@@ -145,9 +145,24 @@ export class AuthModalPage implements OnInit {
 
       } catch (error) {
 
+        let message: string;
+        switch (error.code) {
+          case 'auth/wrong-password':
+            message = 'Wrong password'
+            break
+
+          case 'auth/user-not-found':
+            message = 'User not found'
+            break
+        
+          default:
+            message = error.message
+            break
+        }
+
         loading.dismiss()
         this.alertCtrl.create({
-          message: error.message,
+          message,
           buttons: [{ text: 'Ok', role: 'cancel' }]
         }).then(alert => alert.present())
       }
