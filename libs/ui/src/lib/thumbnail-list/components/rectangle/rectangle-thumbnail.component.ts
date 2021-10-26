@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
   selector: '[type][image] rectangle-thumbnail',
@@ -22,6 +22,6 @@ export class RectangleThumbnailComponent {
 
   @ContentChild('thumbTitle') title: TemplateRef<any>
 
-  constructor(public platform: Platform) { }
+  constructor(public screensize: ScreensizeService) { }
 
 }

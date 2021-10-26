@@ -1,21 +1,21 @@
 <!-- Mobile -->
-<ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
+<ng-container *ngIf="(screensize.isDesktop$ | async) === false else browser">
 
-  <ion-slides [options]="goalSlideOptions">
+  <swiper [spaceBetween]="20" [width]="165" [freeMode]="true">
     <!-- CREATE -->
     <ng-container *ngIf="canCreate">
-      <ion-slide>
+      <ng-template swiperSlide>
         <strive-create-thumbnail [type]="type" [collectiveGoalId]="collectiveGoalId" [limitReached]="limitReached"></strive-create-thumbnail>
-      </ion-slide>
+      </ng-template>
     </ng-container>
 
     <ng-container *ngFor="let thumb of thumbs.changes | async">
-      <ion-slide>
+      <ng-template swiperSlide>
         <ng-container *ngTemplateOutlet="thumb"></ng-container>
-      </ion-slide>
+      </ng-template>
     </ng-container>
 
-  </ion-slides>
+  </swiper>
 
 </ng-container>
 

@@ -1,5 +1,5 @@
 <!-- Mobile -->
-<ng-container *ngIf="platform.is('android') || platform.is('ios') else browser">
+<ng-container *ngIf="(screensize.isDesktop$ | async) === false else browser">
   <ion-card>
     <div class="image-container">
       <img [ref]="image" [asset]="assets[type]"/>

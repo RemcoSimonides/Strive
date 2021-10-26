@@ -1,6 +1,6 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation } from '@angular/core';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 export interface IThumbnail {
   id: string;
@@ -13,7 +13,8 @@ export interface IThumbnail {
   selector: '[type] thumbnail-list',
   templateUrl: 'thumbnail-list.component.html',
   styleUrls: ['./thumbnail-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class ThumbnailListComponent {
 
@@ -24,15 +25,6 @@ export class ThumbnailListComponent {
 
   @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
 
-  goalSlideOptions = goalSlideOptions
+  constructor(public screensize: ScreensizeService) {}
 
-  constructor(public platform: Platform) {}
-
-}
-
-// https://swiperjs.com/api/
-const goalSlideOptions = {
-  spaceBetween: 20,
-  width: 165,
-  freeMode: true
 }

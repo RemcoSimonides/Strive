@@ -6,13 +6,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ThumbnailListComponent } from './thumbnail-list.component';
 import { CreateThumbnailModule } from './components/create-thumbnail/create.module';
 import { IonicModule } from '@ionic/angular';
+import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     FlexLayoutModule,
-    CreateThumbnailModule
+    CreateThumbnailModule,
+    SwiperModule
   ],
   exports: [ThumbnailListComponent],
   declarations: [ThumbnailListComponent]
