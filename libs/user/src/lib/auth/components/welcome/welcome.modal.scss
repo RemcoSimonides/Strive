@@ -1,0 +1,33 @@
+@import 'swiper/scss';
+@import 'swiper/scss/pagination';
+
+:host {
+  display: block;
+}
+
+swiper {
+  height: 100%;
+  width: 100%;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--ion-color-primary);
+}
+
+.swiper-slide {
+  padding-bottom: 32px;
+}
+
+section {
+  height: 100%;
+  max-height: 100%;
+
+  img {
+    height: 40%;
+  }
+}
+
+h1 {
+  color: var(--ion-color-primary);
+  text-align: center;
+}

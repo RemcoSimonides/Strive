@@ -1,0 +1,30 @@
+<h1>Welcome to Strive Journal!</h1>
+<!-- <swiper #swiper pagination> -->
+<swiper #swiper>
+  <ng-template swiperSlide>
+    <section fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="12px">
+      <article>
+        <p>
+          Activate push notifications for the best experience.<br/>
+          You can turn them off any time.
+        </p>
+      </article>
+      <img asset="notifications.png"/>
+      <article fxLayout="column">
+        <ion-button (click)="pushNotifications()">activate notifications</ion-button>
+        <ion-button (click)="dismiss()" fill="clear">skip</ion-button>
+      </article>
+    </section>
+  </ng-template>
+  <ng-template swiperSlide>
+    <section fxLayout="column" fxLayoutAlign="space-between center">
+      <ion-button (click)="dismiss('explore')">explore around</ion-button>
+      
+      <article fxLayout="column">
+        <ion-button (click)="createGoal()">create first goal</ion-button>
+        <ion-button (click)="dismiss()" fill="clear">skip</ion-button>
+      </article>
+
+    </section>
+  </ng-template>
+</swiper>

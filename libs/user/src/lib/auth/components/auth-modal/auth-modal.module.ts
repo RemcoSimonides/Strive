@@ -9,6 +9,7 @@ import { AuthModalPage } from './auth-modal.page';
 
 import { TermsModule } from '@strive/ui/static-information/terms/terms.module';
 import { PrivacyPolicyModule } from '@strive/ui/static-information/privacy/privacy-policy.module';
+import { WelcomeModalModule } from '../welcome/welcome.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { PrivacyPolicyModule } from '@strive/ui/static-information/privacy/priva
     IonicModule,
     TermsModule,
     ReactiveFormsModule,
-    PrivacyPolicyModule
+    PrivacyPolicyModule,
+    WelcomeModalModule
   ],
   declarations: [AuthModalPage]
 })

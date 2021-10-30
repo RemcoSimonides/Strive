@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, setPersistence } from '@angular/fire/auth';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from '@angular/fire/auth';
 // Ionic
-import { NavParams, LoadingController, Platform, AlertController, ModalController, NavController } from '@ionic/angular';
+import { NavParams, LoadingController, Platform, AlertController, ModalController } from '@ionic/angular';
 // Rxjs
 import { Subscription } from 'rxjs';
 // Services
@@ -14,6 +13,7 @@ import { createProfile } from '@strive/user/user/+state/user.firestore';
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
+import { WelcomeModal } from '../welcome/welcome.modal';
 
 export enum enumAuthSegment {
   login,
@@ -69,11 +69,9 @@ export class AuthModalPage implements OnInit {
     private afAuth: Auth,
     private alertCtrl: AlertController,
     private fcmService: FcmService,
-    private functions: Functions,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private navCtrl: NavController,
     public platform: Platform,
     private user: UserService
   ) { }
@@ -192,24 +190,9 @@ export class AuthModalPage implements OnInit {
         }).then(alert => alert.present())
       }
       
-      try {
-        const useTemplateFn = httpsCallable(this.functions, 'useTemplate')
-        const { error, result } = await useTemplateFn({ collectiveGoalId: 'XGtfe77pCKh1QneOipI7', templateId: 'ScA150CYoGsk4xQDcVYM' }).then(res => res.data) as { error: string, result: string };
-
-        await this.fcmService.registerFCM()
-        this.modalCtrl.dismiss()
-
-        loading.dismiss()
-        if (!!error) {
-          throw new Error(result)
-        } else {
-          this.navCtrl.navigateRoot(`/goal/${result}`)
-        }
-
-      } catch (error) {
-        loading.dismiss()
-        this.modalCtrl.dismiss()
-      }
+      this.modalCtrl.dismiss()
+      loading.dismiss()
+      this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
     }
   }
 
