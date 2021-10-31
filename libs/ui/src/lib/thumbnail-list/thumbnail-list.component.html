@@ -1,7 +1,7 @@
 <!-- Mobile -->
 <ng-container *ngIf="(screensize.isDesktop$ | async) === false else browser">
 
-  <swiper [spaceBetween]="20" [width]="165" [freeMode]="true">
+  <swiper [spaceBetween]="16" [width]="width">
     <!-- CREATE -->
     <ng-container *ngIf="canCreate">
       <ng-template swiperSlide>
@@ -21,7 +21,7 @@
 
 <!-- Browser -->
 <ng-template #browser>
-  <section fxLayout="row wrap">
+  <section class="browser" fxLayout fxLayoutAlign="space-between" fxLayoutGap="16px">
     <!-- CREATE -->
     <ng-container *ngIf="canCreate">
       <strive-create-thumbnail [type]="type" [collectiveGoalId]="collectiveGoalId"></strive-create-thumbnail>

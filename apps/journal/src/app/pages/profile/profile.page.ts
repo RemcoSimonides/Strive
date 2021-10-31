@@ -147,7 +147,7 @@ export class ProfilePage implements OnInit {
   }
 
   updateUsername(){
-    if (this.profileForm.enabled) {
+    if (this.profileForm.enabled && this.profileForm.valid) {
       const username = this.profileForm.username.value as string
       if (!username) return
   

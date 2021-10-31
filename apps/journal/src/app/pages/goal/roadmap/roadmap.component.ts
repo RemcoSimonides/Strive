@@ -177,7 +177,7 @@ export class RoadmapComponent implements OnInit, OnDestroy {
     const modal = await this.modalCtrl.create({
       component: UpsertPostModal,
       componentProps: {
-        milestone: milestone,
+        milestone,
         goal: this.goal,
         postId: milestone.id
       }

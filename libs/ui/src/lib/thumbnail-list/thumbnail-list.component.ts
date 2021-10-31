@@ -23,6 +23,8 @@ export class ThumbnailListComponent {
   @Input() collectiveGoalId: string
   @Input() limitReached = false
 
+  @Input() width = 160
+
   @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
 
   constructor(public screensize: ScreensizeService) {}

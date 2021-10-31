@@ -38,6 +38,7 @@
           <div fxLayout fxLayoutAlign="center center" fxLayoutGap="12px">
             <ng-container *ngIf="isOwner else username">
               <ion-input type="text" 
+                maxlength="16"
                 [ngStyle]="{'max-width': profileForm.username.value ? profileForm.username.value.length + 1.5 + 'ch' : '1.5ch'}" 
                 [formControl]="profileForm.username" 
                 (keydown.enter)="updateUsername()">

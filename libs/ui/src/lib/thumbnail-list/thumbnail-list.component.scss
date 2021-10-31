@@ -1,5 +1,16 @@
 @import "~swiper/scss";
 
-.swiper-slide {
-  text-align: center;
+.swiper-slide:nth-child(1) {
+  margin-left: 16px;
+}
+
+.browser {
+  row-gap: 12px;
+  margin: 0 16px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .small-thumbnail-column:nth-child(n+4) {  
+    display: none !important;
+  }
 }

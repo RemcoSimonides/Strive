@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms'
+import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form'
 import { createProfile, createProfileLink, createUser, Profile, ProfileLink, User } from "../+state/user.firestore";
 
@@ -29,7 +29,7 @@ function createProfileFormControl(params: Profile) {
   const profile = createProfile(params)
   return {
     uid: new FormControl(profile.uid),
-    username: new FormControl(profile.username),
+    username: new FormControl(profile.username, Validators.maxLength(16)),
     photoURL: new FormControl(profile.photoURL),
   }
 }

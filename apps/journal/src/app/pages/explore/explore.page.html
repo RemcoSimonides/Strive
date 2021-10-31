@@ -25,47 +25,51 @@
 
 <ion-content class="ion-no-padding" #scrollArea scrollEvents="true">
 
-  <h3>Collective Goals</h3>
-  <thumbnail-list type="collectiveGoal">
-    <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
-      <ng-template #thumb>
-        <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="'/collective-goal/' + collectiveGoal.id">
-          <ng-template #thumbTitle>
-            {{ collectiveGoal.title }}
-          </ng-template>
-        </rectangle-thumbnail>
-      </ng-template>
-    </ng-container>
-  </thumbnail-list>
+  <div class="max-width">
+    <h3>Goals</h3>
+    <thumbnail-list type="goal" [width]="250">
+      <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
+        <ng-template #thumb>
+          <section class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+            <ng-container *ngFor="let goal of rows; let i = index">
+              <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpg" [routerLink]="'/goal/' + goal.id">
+                <small>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</small>
+              </small-thumbnail>
+            </ng-container>
+          </section>
 
-  <h3>Goals</h3>
-  <thumbnail-list type="goal">
-    <ng-container *ngFor="let goal of algolia.goalResults | async">
-      <ng-template #thumb>
-        <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="'/goal/' + goal.id">
-          <ng-template #thumbTitle>
-            {{ goal.title }}
-          </ng-template>
-        </rectangle-thumbnail>
-      </ng-template>
-    </ng-container>
-  </thumbnail-list>
+        </ng-template>
+      </ng-container>
+    </thumbnail-list>
 
-  <h3>Users</h3>
-  <thumbnail-list type="user">
-    <ng-container *ngFor="let user of algolia.profileResults | async">
-      <ng-template #thumb>
-        <rectangle-thumbnail type="user" [image]="user.photoURL" [routerLink]="'/profile/' + user.uid">
-          <ng-template #thumbTitle>
-            {{ user.username }}
-          </ng-template>
-        </rectangle-thumbnail>
-      </ng-template>
-    </ng-container>
-  </thumbnail-list>
+    <h3>Collective Goals</h3>
+    <thumbnail-list type="collectiveGoal">
+      <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
+        <ng-template #thumb>
+          <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+            <ng-template #thumbTitle>
+              {{ collectiveGoal.title }}
+            </ng-template>
+          </rectangle-thumbnail>
+        </ng-template>
+      </ng-container>
+    </thumbnail-list>
 
-  <section fxLayout fxLayoutAlign="center">
-    <img asset="search-by-algolia-light-background.svg"/>
-  </section>
+    <h3>Users</h3>
+    <thumbnail-list type="user" [width]="250">
+      <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
+        <ng-template #thumb>
+          <section class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+            <ng-container *ngFor="let profile of rows">
+              <small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%"></small-thumbnail>
+            </ng-container>
+          </section>
+        </ng-template>
+      </ng-container>
+    </thumbnail-list>
 
+    <section fxLayout fxLayoutAlign="center">
+      <img asset="search-by-algolia-light-background.svg"/>
+    </section>
+  </div>
 </ion-content>

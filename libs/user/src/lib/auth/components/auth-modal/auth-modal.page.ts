@@ -46,7 +46,7 @@ export class AuthModalPage implements OnInit {
     'username': [
       { type: 'required', message: 'Name is required.' },
       { type: 'minlength', message: 'Name must be at least 3 characters long.' },
-      { type: 'maxlength', message: 'Name cannot be more than 50 characters long.' },
+      { type: 'maxlength', message: 'Name cannot be more than 16 characters long.' },
       { type: 'pattern', message: 'Your name can only contain only letters and numbers.' }
     ],
     'email': [

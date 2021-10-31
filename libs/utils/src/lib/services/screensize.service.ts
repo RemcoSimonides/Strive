@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Rxjs
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({

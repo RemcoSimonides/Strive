@@ -31,7 +31,7 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
     ]),
     username: new FormControl(signup.username, [
       Validators.required,
-      Validators.maxLength(50),
+      Validators.maxLength(16),
       Validators.minLength(2),
       Validators.pattern('^[0-9a-zA-Z ]+$')
     ])
