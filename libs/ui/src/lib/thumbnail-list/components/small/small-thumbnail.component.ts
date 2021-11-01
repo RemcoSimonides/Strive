@@ -7,8 +7,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SmallThumbnailComponent {
-  @Input() image: string;
-  @Input() asset: string;
-  @Input() title: string;
+  @Input() image: string
+  @Input() asset: string
+  @Input() title: string
   @Input() borderRadius = "12px"
 }

@@ -36,7 +36,7 @@ export class AlgoliaService {
     this.lastQuery = query
 
     this.searchGoals(query, 8)
-    this.searchCollectiveGoals(query, 8)
+    this.searchCollectiveGoals(query, 4)
     this.searchProfiles(query, 8)
   }
 

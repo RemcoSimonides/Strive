@@ -43,14 +43,11 @@
     </thumbnail-list>
 
     <h3>Collective Goals</h3>
-    <thumbnail-list type="collectiveGoal">
+    <thumbnail-list type="collectiveGoal" [width]="250">
       <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
         <ng-template #thumb>
-          <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="'/collective-goal/' + collectiveGoal.id">
-            <ng-template #thumbTitle>
-              {{ collectiveGoal.title }}
-            </ng-template>
-          </rectangle-thumbnail>
+          <large-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+          </large-thumbnail>
         </ng-template>
       </ng-container>
     </thumbnail-list>

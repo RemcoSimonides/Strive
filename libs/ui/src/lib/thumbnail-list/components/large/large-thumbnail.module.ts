@@ -1,10 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
 import { RouterModule } from "@angular/router";
-import { FlexLayoutModule } from '@angular/flex-layout';
-
-import { SmallThumbnailComponent } from "./small-thumbnail.component";
 import { ImageModule } from "@strive/media/directives/image.module";
+import { LargeThumbnailComponent } from "./large-thumbnail.component";
 
 @NgModule({
   imports: [
@@ -13,7 +12,7 @@ import { ImageModule } from "@strive/media/directives/image.module";
     FlexLayoutModule,
     ImageModule
   ],
-  exports: [SmallThumbnailComponent],
-  declarations: [SmallThumbnailComponent]
+  exports: [LargeThumbnailComponent],
+  declarations: [LargeThumbnailComponent]
 })
-export class SmallThumbnailModule { }
+export class LargeThumbnailModule { }

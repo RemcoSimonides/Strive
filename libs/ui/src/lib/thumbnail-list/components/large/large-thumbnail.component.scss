@@ -1,14 +1,13 @@
 :host {
   display: flex;
-  min-width: 250px;
-  cursor: pointer;
+  flex-direction: column;
 }
 
 img {
   object-fit: cover;
-  height: 80px;
-  width: 80px;
-  margin-right: 16px;
+  border-radius: 12px;
+  height: 250px;
+  width: 250px;
   background-color: lightgray;
 }
 
