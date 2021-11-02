@@ -42,6 +42,8 @@
       </ng-container>
     </thumbnail-list>
 
+    <banner></banner>
+
     <h3>Collective Goals</h3>
     <thumbnail-list type="collectiveGoal" [width]="250">
       <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
