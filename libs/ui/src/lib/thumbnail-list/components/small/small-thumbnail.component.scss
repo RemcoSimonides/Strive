@@ -12,6 +12,13 @@ img {
   background-color: lightgray;
 }
 
-span {
-  font-weight: 500;
+section {
+  min-width: 0;
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+  }
 }
