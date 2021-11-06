@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({
-  selector: '[image][asset][title] small-thumbnail',
+  selector: '[asset][title] small-thumbnail',
   templateUrl: 'small-thumbnail.component.html',
   styleUrls: ['./small-thumbnail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

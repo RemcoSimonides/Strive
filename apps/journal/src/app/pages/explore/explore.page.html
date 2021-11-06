@@ -26,7 +26,7 @@
 <ion-content class="ion-no-padding" #scrollArea scrollEvents="true">
 
   <div class="max-width">
-    <h3>Goals</h3>
+    <h2>Goals</h2>
     <thumbnail-list type="goal" [width]="250">
       <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
         <ng-template #thumb>
@@ -42,7 +42,7 @@
       </ng-container>
     </thumbnail-list>
 
-    <h3>Collective Goals</h3>
+    <h2>Collective Goals</h2>
     <thumbnail-list type="collectiveGoal" [width]="250">
       <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
         <ng-template #thumb>
@@ -54,7 +54,7 @@
 
     <banner></banner>
 
-    <h3>Users</h3>
+    <h2>Users</h2>
     <thumbnail-list type="user" [width]="250">
       <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
         <ng-template #thumb>
@@ -67,8 +67,6 @@
       </ng-container>
     </thumbnail-list>
 
-    <section fxLayout fxLayoutAlign="center">
-      <img asset="search-by-algolia-light-background.svg"/>
-    </section>
+    <img class="algolia_search" asset="search-by-algolia-light-background.svg"/>
   </div>
 </ion-content>

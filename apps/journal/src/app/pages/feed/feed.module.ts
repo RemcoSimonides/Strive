@@ -13,6 +13,7 @@ import { FeedPage } from './feed.page';
 import { NotificationModule } from '@strive/notification/components/notification/notification.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
 
 // Pipes
 import { MilestonePathPipeModule } from '@strive/milestone/pipes/path.pipe'
@@ -34,7 +35,8 @@ const routes: Routes = [
     MilestonePathPipeModule,
     NotificationModule,
     PageLoadingModule,
-    ImageModule
+    ImageModule,
+    SmallThumbnailModule
   ],
   declarations: [
     FeedPage,

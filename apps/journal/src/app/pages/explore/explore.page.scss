@@ -1,4 +1,4 @@
-h3 {
+h2 {
   color: var(--ion-color-primary);
   padding-left: 16px;
 }
@@ -9,5 +9,10 @@ div.max-width {
 }
 
 banner {
-  margin: 16px 16px 0 16px;
+  margin: 32px 16px 0 16px;
+}
+
+.algolia_search {
+  display: block;
+  margin: 16px auto;
 }
