@@ -1,6 +1,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 img {
@@ -8,7 +9,6 @@ img {
   border-radius: 12px;
   min-width: 220px;
   min-height: 220px;
-  height: 100%;
   background-color: lightgray;
 }
 

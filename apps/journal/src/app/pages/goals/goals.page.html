@@ -4,37 +4,29 @@
   <ng-container *ngIf="!!user.uid else notLoggedIn">
 
     <!-- Goals -->
-    <h3>Your Goals</h3>
-
-    <thumbnail-list type="goal" [canCreate]="true">
+    <h2>Your Goals</h2>
+    <section class="goals">
+      <small-thumbnail title="CREATE GOAL" asset="create_goal.jpeg"></small-thumbnail>
       <ng-container *ngFor="let goal of goals$ | async">
-        <ng-template #thumb>
-          <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="'/goal/' + goal.id">
-            <ng-template #thumbTitle>
-              <h5>{{ goal.title }}</h5>
-              <p>{{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}</p>
-              <p>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</p>
-            </ng-template>
-          </rectangle-thumbnail>
-        </ng-template>
+        <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.isFinished" [routerLink]="'/goal/' + goal.id">
+          <small>
+            {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
+            {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
+          </small>
+        </small-thumbnail>
       </ng-container>
-    </thumbnail-list>
+    </section>
 
     <!-- Collective goals -->
-    <h3>Your Collective Goals</h3>
-
-    <thumbnail-list type="collectiveGoal" [canCreate]="true">
+    <h2>Your Collective Goals</h2>
+    <section class="collective">
+      <large-thumbnail title="CREATE COLLECTIVE GOAL" asset="create_goal.jpeg"></large-thumbnail>
       <ng-container *ngFor="let collectiveGoal of collectiveGoals$ | async">
-        <ng-template #thumb>
-          <rectangle-thumbnail type="collectiveGoal" [image]="collectiveGoal.image" [routerLink]="['/collective-goal', collectiveGoal.id]">
-            <ng-template #thumbTitle>
-              <h5>{{ collectiveGoal.title }}</h5>
-              <p>{{ collectiveGoal.numberOfAchievers }} Achiever{collectiveGoal.numberOfAchievers, plural, =1 {} other {s}}</p>
-            </ng-template>
-          </rectangle-thumbnail>
-        </ng-template>
+        <large-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="['/collective-goal', collectiveGoal.id]">
+          <small>{{ collectiveGoal.numberOfAchievers }} Achiever{collectiveGoal.numberOfAchievers, plural, =1 {} other {s}}</small>
+        </large-thumbnail>
       </ng-container>
-    </thumbnail-list>
+    </section>
 
   </ng-container>
 </ion-content>

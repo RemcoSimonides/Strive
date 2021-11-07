@@ -1,4 +1,7 @@
-<img [ref]="image" [asset]="asset" [ngStyle]="{ 'border-radius': borderRadius }"/>
+<picture [ngStyle]="{ 'border-radius': borderRadius }">
+  <img [ref]="image" [asset]="asset"/>
+  <div *ngIf="isFinished">finished</div>
+</picture>
 <section fxLayout="column" fxLayoutAlign="center">
   <span>{{ title }}</span>
   <ng-content></ng-content>

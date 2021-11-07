@@ -4,8 +4,8 @@
       <img
         class="source_image"
         [ref]="_message.image"
-        [asset]="(_message.link | source) === 'user' ? 'profile.png' : 'goal.jpg'"
-        [ngStyle]="{'border-radius': (_message.link | source) === 'user' ? '50%' : 'none'}"
+        [asset]="(_message.link | source) === 'user' ? 'profile.png' : 'goal.jpeg'"
+        [ngStyle]="{'border-radius': (_message.link | source) === 'user' ? '50%' : '12px'}"
         [routerLink]="_message.link"
       />
     </article>

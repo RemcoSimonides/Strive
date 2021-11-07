@@ -4,12 +4,33 @@
   cursor: pointer;
 }
 
-img {
-  object-fit: cover;
+picture {
+  position: relative;
   height: 80px;
   width: 80px;
+  min-width: 80px;
   margin-right: 16px;
-  background-color: lightgray;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    background-color: lightgray;
+  }
+
+  div {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background: rgba(247, 148, 29, .6);
+  }
 }
 
 section {

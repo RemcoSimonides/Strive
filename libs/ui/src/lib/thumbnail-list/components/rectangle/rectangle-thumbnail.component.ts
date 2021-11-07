@@ -10,9 +10,9 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 export class RectangleThumbnailComponent {
 
   public assets = {  
-    collectiveGoal: 'collective-goal.jpg',
-    goal: 'goal.jpg',
-    template: 'goal.jpg',
+    collectiveGoal: 'collective-goal.jpeg',
+    goal: 'goal.jpeg',
+    template: 'goal.jpeg',
     user: 'profile.png'
   }
 

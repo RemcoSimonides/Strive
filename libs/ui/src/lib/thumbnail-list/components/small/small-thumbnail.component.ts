@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { boolean } from "@strive/utils/decorators/decorators";
 
 @Component({
   selector: '[asset][title] small-thumbnail',
@@ -10,5 +11,6 @@ export class SmallThumbnailComponent {
   @Input() image: string
   @Input() asset: string
   @Input() title: string
+  @Input() @boolean isFinished: boolean
   @Input() borderRadius = "12px"
 }

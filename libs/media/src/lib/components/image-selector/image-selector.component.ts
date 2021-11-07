@@ -42,7 +42,7 @@ export class ImageSelectorComponent implements OnInit {
   croppedImage: string;
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
 
-  @Input() defaultImage: 'goal.jpg' | 'collective-goal.jpg' | 'profile.png'
+  @Input() defaultImage: 'goal.jpeg' | 'collective-goal.jpeg' | 'profile.png'
 
   @Input() form: FormControl;
   @Input() storagePath: string;

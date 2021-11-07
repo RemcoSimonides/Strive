@@ -34,7 +34,7 @@ export class ShareComponent implements OnInit {
     this.ref = await this.inviteTokenService.getShareLink(this.id, this.isCollectiveGoal, this.isSecret, this.isAdmin)
 
     // define image
-    if (this.image.toLowerCase() === 'assets/goal.jpg') {
+    if (this.image.toLowerCase() === 'assets/goal.jpeg') {
       // set default Strive Journal image
       this.image = ''
     }

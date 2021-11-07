@@ -1,4 +1,20 @@
-h3 {
+h2 {
   color: var(--ion-color-primary);
   padding-left: 16px;
+}
+
+section {
+  padding: 0 16px;
+}
+
+section.goals {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 16px;
+}
+
+section.collective {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-gap: 16px;
 }
