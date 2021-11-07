@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Platform } from '@ionic/angular';
 // Rxjs
 import { Subscription } from 'rxjs';
@@ -6,37 +6,47 @@ import { Subscription } from 'rxjs';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { debounceTime, startWith } from 'rxjs/operators';
+import { exercises } from '@strive/exercises/utils';
 
 @Component({
   selector: 'app-explore',
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
 })
-export class ExplorePage implements OnInit {
+export class ExplorePage implements OnDestroy {
+  segmentChoice: 'overview' | 'search' = 'overview'
+  exercises = exercises
+
+  searchForm = new FormGroup({
+    query: new FormControl(''),
+    type: new FormControl('all')
+  })
 
   private backBtnSubscription: Subscription
+  private searchSubscription: Subscription
 
   constructor(
     public algolia: AlgoliaService,
     public platform: Platform,
     public screensize: ScreensizeService,
     private seo: SeoService,
-  ) {}
+  ) {
+    this.searchSubscription = this.searchForm.valueChanges.pipe(
+      debounceTime(500),
+      startWith(this.searchForm.value)
+    ).subscribe(({ query, type }) => {
+      this.algolia.search(query)
 
-  async ngOnInit() {
-    if (this.algolia.lastQuery === '') {
-      this.algolia.search('')
-    }
+      this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
+    })
 
     this.seo.generateTags({ title: `Explore - Strive Journal` })
   }
 
-  search(event) {
-    const query = event.target.value
-
-    if (query !== undefined) {
-      this.algolia.search(query)
-    }
+  ngOnDestroy() {
+    this.searchSubscription.unsubscribe()
   }
 
   ionViewDidEnter() { 
@@ -51,4 +61,7 @@ export class ExplorePage implements OnInit {
     }
   }
 
+  setType(type: string) {
+    this.searchForm.get('type').setValue(type)
+  }
 }

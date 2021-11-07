@@ -1,6 +1,8 @@
-h2 {
-  color: var(--ion-color-primary);
-  padding-left: 16px;
+ion-toolbar {
+  ion-select {
+    margin: auto;
+    width: fit-content;
+  }
 }
 
 div.max-width {
@@ -8,11 +10,59 @@ div.max-width {
   max-width: 1600px;
 }
 
-banner {
-  margin: 32px 16px 0 16px;
+
+h2 {
+  color: var(--ion-color-primary);
 }
 
-.algolia_search {
+
+header {
+  padding: 96px;
+  background-image: url("/assets/images/banner.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+
+  form {
+    width: 100%;
+
+    ion-select {
+      width: 200px;
+    }
+  }
+}
+
+section {
+  padding: 0 48px;
+
+  ion-button {
+    text-transform: lowercase;
+  }
+}
+
+section.search {
+  padding-top: 16px;
+}
+
+banner {
+  margin: 16px 48px 0 48px;
+}
+
+img.algolia {
   display: block;
   margin: 16px auto;
+}
+
+@media only screen and (max-width: 1024px) {
+  header {
+    padding: 48px 96px;
+  }
+
+  section {
+    padding: 0 16px;
+  }
+
+  banner {
+    margin: 16px 16px 0 16px;
+  }
 }

@@ -1,7 +1,7 @@
 <ion-app>
 
   <!-- Side menu -->
-  <section class="sidemenu">
+  <!-- <section class="sidemenu">
     <ion-menu side="end" contentId="main">
       <ion-content>
         <ng-container *ngIf="user.profile$ | async as profile">
@@ -18,14 +18,12 @@
         <ion-list>
           <ion-menu-toggle auto-hide="false">
             <ng-container *ngIf="user.profile$ | async">
-              <!-- Feed -->
               <ion-item routerDirection="root" routerLink="/feed">
                 <ion-icon slot="start" name="home-sharp"></ion-icon>
                 <ion-label>Home</ion-label>
               </ion-item>
             </ng-container>
 
-            <!-- Explore -->
             <ion-item routerDirection="root" routerLink="/explore">
               <ion-icon slot="start" name="earth-sharp"></ion-icon>
               <ion-label>Explore</ion-label>
@@ -33,24 +31,20 @@
 
             <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInSide">
 
-              <!-- Notifications -->
               <ion-item routerDirection="root" routerLink="/notifications">
                 <ion-icon slot="start" name="notifications" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
                 <ion-label>
                   <span>Notifications</span>
                 </ion-label>
               </ion-item>
-              <!-- Goals -->
               <ion-item routerDirection="root" routerLink="/goals">
                 <ion-icon slot="start" name="flag"></ion-icon>
                 <ion-label>Goals</ion-label>
               </ion-item>
-              <!-- Supports -->
               <ion-item routerDirection="root" routerLink="/supports">
                 <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="start"></fa-icon>
                 <ion-label>Supports</ion-label>
               </ion-item>
-              <!-- Profile -->
               <ion-item routerDirection="root" [routerLink]="'/profile/' + user.uid">
                 <ion-icon slot="start" name="person"></ion-icon>
                 <ion-label>Profile</ion-label>
@@ -58,12 +52,10 @@
             </ng-container>
 
             <ng-template #notLoggedInSide>
-              <!-- Log in -->
               <ion-item button (click)="openAuthModal(enumAuthSegment.login)">
                 <ion-icon slot="start" name="key"></ion-icon>
                 <ion-label>Log in</ion-label>
               </ion-item>
-              <!-- Sign up -->
               <ion-item button (click)="openAuthModal(enumAuthSegment.register)">
                 <ion-icon slot="start" name="key"></ion-icon>
                 <ion-label>Sign up</ion-label>
@@ -74,7 +66,7 @@
         </ion-list>
       </ion-content>
     </ion-menu>
-  </section>
+  </section> -->
 
   <!-- Mobile -->
   <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
@@ -85,74 +77,41 @@
     <!-- Main navbar -->
     <ion-header>
       <ion-toolbar>
-        <ion-row>
+        <header fxLayout fxLayoutAlign="space-between center">
+          <a [routerLink]="user.uid ? '/feed' : '/explore'">
+            <img asset="logo.png" class="logo">
+          </a>
+          <section fxLayout>
+            <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
+              Home
+            </ion-button>
+            <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
+              Explore
+            </ion-button>
 
-          <ng-container *ngIf="(screensize.size$ | async) === 'desktop'; else tablet">
-            <ion-col size="1" class="ion-no-padding">
-              <a [routerLink]="user.uid ? '/feed' : '/explore'">
-                <img asset="logo.png" class="logo">
-              </a>
-            </ion-col>
-            <ion-col size="3" class="ion-no-padding searchbar-container">
-              <ion-searchbar
-                (ionChange)="search($event)"
-                placeholder='Try "Eat Healthy"'
-                (keydown.enter)="goToSearchResults($event)">
-              </ion-searchbar>
-            </ion-col>
-            <ion-col size="8" class="ion-no-padding">
-              <section class="navbar ion-align-self-end buttons-container">
-                <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
-                  Home
-                </ion-button>
-                <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
-                  Explore
-                </ion-button>
+            <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInMain">
+              <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
+                Goals
+              </ion-button>
+              <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
+                Supports
+              </ion-button>
+              <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openProfilePopover($event)">
+                <img [ref]="profile.photoURL" asset="profile.png"/>
+              </ion-avatar>
+            </ng-container>
 
-                <ng-container *ngIf="user.profile$ | async as profile; else notLoggedInMain">
-                  <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
-                    Goals
-                  </ion-button>
-                  <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
-                    Supports
-                  </ion-button>
-                  <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openProfilePopover($event)">
-                    <img [ref]="profile.photoURL" asset="profile.png"/>
-                  </ion-avatar>
-                </ng-container>
+            <ng-template #notLoggedInMain>
+              <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)">
+                Log In
+              </ion-button>
+              <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.register)">
+                Sign Up
+              </ion-button>
+            </ng-template>
 
-                <ng-template #notLoggedInMain>
-                  <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)">
-                    Log In
-                  </ion-button>
-                  <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.register)">
-                    Sign Up
-                  </ion-button>
-                </ng-template>
-  
-              </section>
-            </ion-col>
-          </ng-container>
-        </ion-row>
-  
-        <ng-template #tablet>
-          <ion-col size="2" class="ion-no-padding">
-            <a [routerLink]="user.uid ? '/feed' : '/explore'">
-              <img asset="logo.png" class="logo ion-text-left">
-            </a>
-          </ion-col>
-          <ion-col size="9" class="ion-no-padding searchbar-container">
-            <ion-searchbar
-              (ionChange)="search($event)"
-              placeholder='Try "Eat Healthy"'
-              (keydown.enter)="goToSearchResults($event)">
-            </ion-searchbar>
-          </ion-col>
-          <ion-col size="1" class="ion-no-padding">
-            <ion-menu-button></ion-menu-button>
-          </ion-col>
-        </ng-template>
-  
+          </section>
+        </header>  
       </ion-toolbar>
     </ion-header>
 

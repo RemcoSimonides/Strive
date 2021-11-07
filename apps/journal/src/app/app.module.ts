@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouteReuseStrategy } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Ionic
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -65,6 +66,7 @@ import { PWAService } from '@strive/utils/services/pwa.service';
     BrowserModule,
     CommonModule,
     FormsModule,
+    FlexLayoutModule,
     IonicModule.forRoot(),
     ReactiveFormsModule,
 

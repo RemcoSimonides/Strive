@@ -38,33 +38,10 @@ ion-router-outlet {
   margin-top: 65px;
 }
 
-.logo {
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;  min-height: 40px;
-  max-height: 40px;
-  margin: 12px;
-  cursor: pointer;
-}
-
-.navbar {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 4px;
-  height: 100%;
-  margin-right: 12px;
-
-  ion-button {
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-
-  .buttons-container {
-    display: flex;
-    align-items: center;
-  }
+header {
+  margin: auto;
+  max-width: 1600px;
+  padding-right: 16px;
 
   .badge:after {
     position: absolute;
@@ -76,22 +53,24 @@ ion-router-outlet {
   }
 }
 
-.searchbar-container {
-  display: flex;
-  align-items: center;
-  padding-left: 8px;
-
-  ion-searchbar {
-    padding: 0;
-  }
+.logo {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  min-height: 40px;
+  max-height: 40px;
+  margin: 12px;
+  cursor: pointer;
 }
 
 ion-avatar {
   height: 40px;
   width: 40px;
+  background-color: lightgray;
   cursor: pointer;
-  margin-top: auto;
-  margin-bottom: auto;
+  margin: auto;
   img {
     border-radius: 50%;
     object-fit: cover;

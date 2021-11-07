@@ -32,7 +32,7 @@ export class AppComponent implements OnDestroy {
   unreadNotifications$: Observable<boolean>
 
   private profileSubscription: Subscription
-  private screenSizeSubscription: Subscription
+  // private screenSizeSubscription: Subscription
   private fcmUnsubscribe: Unsubscribe
 
   constructor(
@@ -40,7 +40,7 @@ export class AppComponent implements OnDestroy {
     public user: UserService,
     private fcm: FcmService,
     private algolia: AlgoliaService,
-    private menuCtrl: MenuController,
+    // private menuCtrl: MenuController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
@@ -55,7 +55,7 @@ export class AppComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.profileSubscription.unsubscribe()
-    this.screenSizeSubscription.unsubscribe()
+    // this.screenSizeSubscription.unsubscribe()
     this.fcmUnsubscribe()
   }
 
@@ -88,9 +88,9 @@ export class AppComponent implements OnDestroy {
   }
 
   initializeMenu() {
-    this.screenSizeSubscription = this.screensize.isTablet$.subscribe(isTablet => {
-      this.menuCtrl.enable(isTablet)
-    })
+    // this.screenSizeSubscription = this.screensize.isTablet$.subscribe(isTablet => {
+    //   this.menuCtrl.enable(isTablet)
+    // })
   }
 
   async openAuthModalOnStartup() {

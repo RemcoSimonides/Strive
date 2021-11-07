@@ -16,7 +16,16 @@
         <!-- <ion-menu-button></ion-menu-button> -->
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-searchbar (ionChange)="search($event)" placeholder='Try "Plastic free"'></ion-searchbar>
+      <form [formGroup]="searchForm">
+        <ion-searchbar formControlName="query" placeholder='Try "Plastic free"'></ion-searchbar>
+        <ion-select placeholder="Type" interface="popover" formControlName="type">
+          <ion-select-option value="all">All</ion-select-option>
+          <ion-select-option value="goals">Goals</ion-select-option>
+          <ion-select-option value="users">Users</ion-select-option>
+          <ion-select-option value="exercises">Exercises</ion-select-option>
+          <ion-select-option value="collectiveGoals">Collective Goals</ion-select-option>
+        </ion-select>
+      </form>
     </ion-toolbar>
   
   </ion-header>
@@ -25,48 +34,109 @@
 
 <ion-content class="ion-no-padding" #scrollArea scrollEvents="true">
 
-  <div class="max-width">
-    <h2>Goals</h2>
-    <thumbnail-list type="goal" [width]="250">
-      <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
-        <ng-template #thumb>
-          <section fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
-            <ng-container *ngFor="let goal of rows; let i = index">
-              <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpg" [routerLink]="'/goal/' + goal.id">
-                <small>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</small>
-              </small-thumbnail>
-            </ng-container>
-          </section>
+  <div class="max-width" [ngSwitch]="segmentChoice">
+    <ng-container *ngIf="(screensize.isMobile$ | async) === false">
+      <header fxLayout>
+        <form [formGroup]="searchForm">
+          <ion-searchbar
+            formControlName="query"
+            placeholder='Try "Eat Healthy"'>
+          </ion-searchbar>
+          <ion-select placeholder="Type" interface="popover" formControlName="type">
+            <ion-select-option value="all">All</ion-select-option>
+            <ion-select-option value="goals">Goals</ion-select-option>
+            <ion-select-option value="users">Users</ion-select-option>
+            <ion-select-option value="exercises">Exercises</ion-select-option>
+            <ion-select-option value="collectiveGoals">Collective Goals</ion-select-option>
+          </ion-select>
+        </form>
+      </header>
+    </ng-container>
 
-        </ng-template>
+    <div *ngSwitchCase="'overview'">
+      <section fxLayout fxLayoutAlign="space-between end">
+        <h2>Goals</h2>
+        <ion-button fill="clear" (click)="setType('goals')">view more</ion-button>
+      </section>
+      <thumbnail-list type="goal" [width]="250">
+        <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
+          <ng-template #thumb>
+            <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+              <ng-container *ngFor="let goal of rows; let i = index">
+                <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpg" [routerLink]="'/goal/' + goal.id">
+                  <small>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</small>
+                </small-thumbnail>
+              </ng-container>
+            </article>
+  
+          </ng-template>
+        </ng-container>
+      </thumbnail-list>
+  
+      <section fxLayout fxLayoutAlign="space-between end">
+        <h2>Collective Goals</h2>
+        <ion-button fill="clear" (click)="setType('collectiveGoals')">view more</ion-button>
+      </section>
+      <thumbnail-list type="collectiveGoal" [width]="250">
+        <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
+          <ng-template #thumb>
+            <large-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+            </large-thumbnail>
+          </ng-template>
+        </ng-container>
+      </thumbnail-list>
+  
+      <banner></banner>
+  
+      <section fxLayout fxLayoutAlign="space-between end">
+        <h2>Users</h2>
+        <ion-button fill="clear" (click)="setType('users')">view more</ion-button>
+      </section>
+      <thumbnail-list type="user" [width]="250">
+        <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
+          <ng-template #thumb>
+            <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+              <ng-container *ngFor="let profile of rows">
+                <small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%"></small-thumbnail>
+              </ng-container>
+            </article>
+          </ng-template>
+        </ng-container>
+      </thumbnail-list>
+    </div>
+
+
+    <section *ngSwitchCase="'search'" fxLayout="column" fxLayoutGap="16px" class="search">
+      <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
+        <ng-container *ngFor="let goal of algolia.goalResults | async">
+          <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpg" [routerLink]="'/goal/' + goal.id">
+            <small>Type: Goal</small>
+          </small-thumbnail>
+        </ng-container>
       </ng-container>
-    </thumbnail-list>
-
-    <h2>Collective Goals</h2>
-    <thumbnail-list type="collectiveGoal" [width]="250">
-      <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
-        <ng-template #thumb>
-          <large-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
-          </large-thumbnail>
-        </ng-template>
+      <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'users'">
+        <ng-container *ngFor="let profile of algolia.profileResults | async">
+          <small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%">
+            <small>Type: User</small>
+          </small-thumbnail>
+        </ng-container>
       </ng-container>
-    </thumbnail-list>
-
-    <banner></banner>
-
-    <h2>Users</h2>
-    <thumbnail-list type="user" [width]="250">
-      <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
-        <ng-template #thumb>
-          <section fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
-            <ng-container *ngFor="let profile of rows">
-              <small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%"></small-thumbnail>
-            </ng-container>
-          </section>
-        </ng-template>
+      <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'collectiveGoals'">
+        <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
+          <small-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+            <small>Type: Collective Goal</small>
+          </small-thumbnail>
+        </ng-container>
       </ng-container>
-    </thumbnail-list>
+      <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
+        <ng-container *ngFor="let exercise of exercises">
+          <small-thumbnail [title]="exercise.title" [asset]="exercise.image">
+            <small>Type: Exercise</small>
+          </small-thumbnail>
+        </ng-container>
+      </ng-container>
+    </section>
 
-    <img class="algolia_search" asset="search-by-algolia-light-background.svg"/>
+    <img class="algolia" asset="search-by-algolia-light-background.svg"/>
   </div>
 </ion-content>
