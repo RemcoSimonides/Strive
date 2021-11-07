@@ -72,6 +72,22 @@
           </ng-template>
         </ng-container>
       </thumbnail-list>
+
+      <section fxLayout fxLayoutAlign="space-between end">
+        <h2>Exercises</h2>
+        <ion-button fill="clear" (click)="setType('exercises')">view more</ion-button>
+      </section>
+      <thumbnail-list type="user" [width]="250">
+        <ng-container *ngFor="let rows of exercises$ | async | rows:2">
+          <ng-template #thumb>
+            <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+              <ng-container *ngFor="let exercise of rows">
+                <small-thumbnail [title]="exercise.title" [asset]="exercise.image"></small-thumbnail>
+              </ng-container>
+            </article>
+          </ng-template>
+        </ng-container>
+      </thumbnail-list>
     </div>
 
 
@@ -98,7 +114,7 @@
         </ng-container>
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
-        <ng-container *ngFor="let exercise of exercises">
+        <ng-container *ngFor="let exercise of exercises$ | async">
           <small-thumbnail [title]="exercise.title" [asset]="exercise.image">
             <small>Type: Exercise</small>
           </small-thumbnail>

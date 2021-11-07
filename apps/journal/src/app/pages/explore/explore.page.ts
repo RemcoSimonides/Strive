@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Platform } from '@ionic/angular';
 // Rxjs
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 // Services
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { SeoService } from '@strive/utils/services/seo.service';
@@ -17,12 +17,14 @@ import { exercises } from '@strive/exercises/utils';
 })
 export class ExplorePage implements OnDestroy {
   segmentChoice: 'overview' | 'search' = 'overview'
-  exercises = exercises
 
   searchForm = new FormGroup({
     query: new FormControl(''),
     type: new FormControl('all')
   })
+
+  private _exercises = new BehaviorSubject(exercises)
+  exercises$ = this._exercises.asObservable()
 
   private backBtnSubscription: Subscription
   private searchSubscription: Subscription
@@ -52,9 +54,13 @@ export class ExplorePage implements OnDestroy {
           this.algolia.searchProfiles(query, undefined)
           break
       
+        case 'exercises':
         default:
           const hpp = query ? undefined : { goals: 8, collectiveGoals: 5, profiles: 8 } 
           this.algolia.search(query, hpp)
+
+          const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
+          this._exercises.next(filteredExercises)
           break
       }
 
