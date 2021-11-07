@@ -37,9 +37,27 @@ export class ExplorePage implements OnDestroy {
       debounceTime(500),
       startWith(this.searchForm.value)
     ).subscribe(({ query, type }) => {
-      this.algolia.search(query)
-
       this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
+      
+      switch (type) {
+        case 'goals':
+          this.algolia.searchGoals(query, undefined)
+          break
+
+        case 'collectiveGoals':
+          this.algolia.searchCollectiveGoals(query, undefined)
+          break
+
+        case 'users':
+          this.algolia.searchProfiles(query, undefined)
+          break
+      
+        default:
+          const hpp = query ? undefined : { goals: 8, collectiveGoals: 5, profiles: 8 } 
+          this.algolia.search(query, hpp)
+          break
+      }
+
     })
 
     this.seo.generateTags({ title: `Explore - Strive Journal` })

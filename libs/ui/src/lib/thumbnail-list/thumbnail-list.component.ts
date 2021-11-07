@@ -1,6 +1,8 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation, AfterContentInit } from '@angular/core';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 export interface IThumbnail {
   id: string;
@@ -16,7 +18,7 @@ export interface IThumbnail {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ThumbnailListComponent {
+export class ThumbnailListComponent implements AfterContentInit {
 
   @Input() type:'collectiveGoal' | 'goal' | 'template' | 'user'
   @Input() canCreate = false
@@ -26,7 +28,13 @@ export class ThumbnailListComponent {
   @Input() width = 160
 
   @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
+  changes: Observable<any>
 
   constructor(public screensize: ScreensizeService) {}
 
+  ngAfterContentInit() {
+    this.changes = this.thumbs.changes.pipe(
+      startWith(this.thumbs)
+    )
+  }
 }

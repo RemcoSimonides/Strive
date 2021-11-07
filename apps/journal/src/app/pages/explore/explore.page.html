@@ -1,47 +1,16 @@
-<ng-container *ngIf="screensize.isMobile$ | async">
-  <ion-header>
 
-    <!-- <ng-container *ngIf="(screensize.isDesktop$ | async) === false">
-      <ion-toolbar [myScrollVanish]="scrollArea" color="primary">
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-          <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-title>Explore</ion-title>
-      </ion-toolbar>
-    </ng-container> -->
-  
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <!-- <ion-menu-button></ion-menu-button> -->
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <form [formGroup]="searchForm">
-        <ion-searchbar formControlName="query" placeholder='Try "Plastic free"'></ion-searchbar>
-        <ion-select placeholder="Type" interface="popover" formControlName="type">
-          <ion-select-option value="all">All</ion-select-option>
-          <ion-select-option value="goals">Goals</ion-select-option>
-          <ion-select-option value="users">Users</ion-select-option>
-          <ion-select-option value="exercises">Exercises</ion-select-option>
-          <ion-select-option value="collectiveGoals">Collective Goals</ion-select-option>
-        </ion-select>
-      </form>
-    </ion-toolbar>
-  
-  </ion-header>
-</ng-container>
 
 
 <ion-content class="ion-no-padding" #scrollArea scrollEvents="true">
 
   <div class="max-width" [ngSwitch]="segmentChoice">
-    <ng-container *ngIf="(screensize.isMobile$ | async) === false">
-      <header fxLayout>
-        <form [formGroup]="searchForm">
-          <ion-searchbar
-            formControlName="query"
-            placeholder='Try "Eat Healthy"'>
-          </ion-searchbar>
+    <header fxLayout>
+      <form [formGroup]="searchForm">
+        <ion-searchbar
+          formControlName="query"
+          placeholder='Try "Eat Healthy"'>
+        </ion-searchbar>
+        <ion-card>
           <ion-select placeholder="Type" interface="popover" formControlName="type">
             <ion-select-option value="all">All</ion-select-option>
             <ion-select-option value="goals">Goals</ion-select-option>
@@ -49,9 +18,9 @@
             <ion-select-option value="exercises">Exercises</ion-select-option>
             <ion-select-option value="collectiveGoals">Collective Goals</ion-select-option>
           </ion-select>
-        </form>
-      </header>
-    </ng-container>
+        </ion-card>
+      </form>
+    </header>
 
     <div *ngSwitchCase="'overview'">
       <section fxLayout fxLayoutAlign="space-between end">
@@ -106,7 +75,7 @@
     </div>
 
 
-    <section *ngSwitchCase="'search'" fxLayout="column" fxLayoutGap="16px" class="search">
+    <section *ngSwitchCase="'search'" class="search">
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
         <ng-container *ngFor="let goal of algolia.goalResults | async">
           <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpg" [routerLink]="'/goal/' + goal.id">
