@@ -11,6 +11,8 @@ import { GoalsPage } from './goals.page';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
 import { LargeThumbnailModule } from '@strive/ui/thumbnail-list/components/large/large-thumbnail.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
+import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
+import { UpsertCollectiveGoalModule } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.module';
 
 const routes: Routes = [
   {
@@ -27,7 +29,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SmallThumbnailModule,
     LargeThumbnailModule,
-    HeaderModule
+    HeaderModule,
+    UpsertGoalModalModule,
+    UpsertCollectiveGoalModule
   ],
   declarations: [GoalsPage]
 })
