@@ -23,7 +23,7 @@
         </ion-label>
       </ion-item>
       
-      <ion-list-header>Support To Get</ion-list-header>
+      <ion-list-header>Support to get</ion-list-header>
       <ion-item *ngFor='let support of supportsToGet$ | async'>
         <ion-label>
           <ion-text>
@@ -35,7 +35,7 @@
         <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Got it</ion-button>
       </ion-item>
 
-      <ion-list-header>Supports To Give</ion-list-header>
+      <ion-list-header>Supports to give</ion-list-header>
       <ion-item *ngFor="let support of supportsToGive$ | async">
         <ion-label>
           <ion-text>

@@ -16,6 +16,7 @@ import { LargeThumbnailModule } from '@strive/ui/thumbnail-list/components/large
 import { RowsPipeModule } from '@strive/ui/thumbnail-list/pipes/rows.pipe';
 import { BannerModule } from '@strive/ui/thumbnail-list/components/banner/banner.module';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { ThumbnailGridModule } from '@strive/ui/thumbnail-list/grid/thumbnail-grid.module';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
     RectangleThumbnailModule,
     SmallThumbnailModule,
     LargeThumbnailModule,
+    ThumbnailGridModule,
     RowsPipeModule,
     BannerModule,
     ImageModule,

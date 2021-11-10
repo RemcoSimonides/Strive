@@ -83,23 +83,24 @@
     </section>
   
     <!-- Achieving Goals overview -->
-    <h3 class="padding">Achieving Goals</h3>
+    <h2 class="padding">Achieving Goals</h2>
   
     <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
       <ng-container *ngIf="achievingGoals.length > 0 else noAchievingGoals">
-  
-        <thumbnail-list type="goal">
+
+        <strive-thumbnail-grid>
           <ng-container *ngFor="let goal of achievingGoals$ | async">
             <ng-template #thumb>
-              <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">
-                <ng-template #thumbTitle>
-                  {{ goal.title }}
-                </ng-template>
-              </rectangle-thumbnail>
+              <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.isFinished" [routerLink]="'/goal/' + goal.id">
+                <small>
+                  {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
+                  {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
+                </small>
+              </small-thumbnail>
             </ng-template>
           </ng-container>
-        </thumbnail-list>
-          
+        </strive-thumbnail-grid>
+  
       </ng-container>
       <ng-template #noAchievingGoals>
         <span class="padding">Not achieving any goals</span>
@@ -108,22 +109,23 @@
 
 
     <!-- Supporting Goals overview -->
-    <h3 class="padding">Supporting Goals</h3>
+    <h2 class="padding">Supporting Goals</h2>
 
     <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
       <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
 
-        <thumbnail-list type="goal">
+        <strive-thumbnail-grid>
           <ng-container *ngFor="let goal of supportingGoals$ | async">
             <ng-template #thumb>
-              <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">
-                <ng-template #thumbTitle>
-                  {{ goal.title }}
-                </ng-template>
-              </rectangle-thumbnail>
+              <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.isFinished" [routerLink]="'/goal/' + goal.id">
+                <small>
+                  {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
+                  {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
+                </small>
+              </small-thumbnail>
             </ng-template>
           </ng-container>
-        </thumbnail-list>
+        </strive-thumbnail-grid>
 
       </ng-container>
       <ng-template #noSupportingGoals>
@@ -139,7 +141,7 @@
         <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
 
         <!-- Exercises -->
-        <h3 class="padding">Exercises</h3>
+        <h2 class="padding">Exercises</h2>
         <ion-grid>
           <ion-row>
             <ng-container *ngFor="let exercise of exercises">

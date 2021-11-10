@@ -12,6 +12,7 @@ export class RowsPipe implements PipeTransform {
         inter = []
       }
     })
+    if (inter.length) result.push(inter)
     return result
   }
 }

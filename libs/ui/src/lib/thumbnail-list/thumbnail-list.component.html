@@ -3,13 +3,13 @@
 
   <swiper [spaceBetween]="16" [width]="width">
     <!-- CREATE -->
-    <ng-container *ngIf="canCreate">
+    <!-- <ng-container *ngIf="canCreate">
       <ng-template swiperSlide>
         <strive-create-thumbnail [type]="type" [collectiveGoalId]="collectiveGoalId" [limitReached]="limitReached"></strive-create-thumbnail>
       </ng-template>
-    </ng-container>
+    </ng-container> -->
 
-    <ng-container *ngFor="let thumb of changes | async">
+    <ng-container *ngFor="let thumb of thumbs.changes | async">
       <ng-template swiperSlide>
         <ng-container *ngTemplateOutlet="thumb"></ng-container>
       </ng-template>
@@ -23,9 +23,9 @@
 <ng-template #browser>
   <section class="browser" fxLayout fxLayoutAlign="space-between" fxLayoutGap="16px">
     <!-- CREATE -->
-    <ng-container *ngIf="canCreate">
+    <!-- <ng-container *ngIf="canCreate">
       <strive-create-thumbnail [type]="type" [collectiveGoalId]="collectiveGoalId"></strive-create-thumbnail>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container *ngFor="let thumb of thumbs.changes | async">
       <ng-container *ngTemplateOutlet="thumb"></ng-container>

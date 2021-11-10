@@ -20,11 +20,12 @@ import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/c
 import { FollowingModule } from '@strive/user/spectator/components/following/following.module';
 import { FollowersModule } from '@strive/user/spectator/components/followers/followers.module';
 // Strive
-import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
-import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
+import { ThumbnailGridModule } from '@strive/ui/thumbnail-list/grid/thumbnail-grid.module';
+import { RowsPipeModule } from '@strive/ui/thumbnail-list/pipes/rows.pipe';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -38,8 +39,9 @@ const routes: Routes = [
     FlexLayoutModule,
     IonicModule,
     RouterModule.forChild(routes),
-    ThumbnailListModule,
-    RectangleThumbnailModule,
+    ThumbnailGridModule,
+    SmallThumbnailModule,
+    RowsPipeModule,
     PageLoadingModule,
     ImageModule,
     ImageSelectorModule,

@@ -1,0 +1,24 @@
+<!-- Mobile -->
+<ng-container *ngIf="(screensize.isDesktop$ | async) === false else browser">
+  <swiper [spaceBetween]="16" width="250">
+
+    <ng-container *ngFor="let row of thumbs.changes | async | rows:2">
+      <ng-template swiperSlide>
+        <div fxLayout="column" fxLayoutGap="16px">
+          <ng-container *ngFor="let thumb of row">
+            <ng-container *ngTemplateOutlet="thumb"></ng-container>
+          </ng-container>
+        </div>
+      </ng-template>
+    </ng-container>
+
+  </swiper>
+</ng-container>
+
+<ng-template #browser>
+  <section class="grid">
+    <ng-container *ngFor="let thumb of thumbs.changes | async">
+      <ng-container *ngTemplateOutlet="thumb"></ng-container>
+    </ng-container>
+  </section>
+</ng-template>

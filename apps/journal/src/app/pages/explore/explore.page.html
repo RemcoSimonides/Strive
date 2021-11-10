@@ -27,7 +27,7 @@
         <h2>Goals</h2>
         <ion-button fill="clear" (click)="setType('goals')">view more</ion-button>
       </section>
-      <thumbnail-list type="goal" [width]="250">
+      <thumbnail-list [width]="250">
         <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
@@ -46,22 +46,22 @@
         <h2>Collective Goals</h2>
         <ion-button fill="clear" (click)="setType('collectiveGoals')">view more</ion-button>
       </section>
-      <thumbnail-list type="collectiveGoal" [width]="250">
+      <thumbnail-list [width]="250">
         <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
           <ng-template #thumb>
-            <large-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+            <large-thumbnail fxFlex [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
             </large-thumbnail>
           </ng-template>
         </ng-container>
       </thumbnail-list>
-  
+
       <banner></banner>
   
       <section fxLayout fxLayoutAlign="space-between end">
         <h2>Users</h2>
         <ion-button fill="clear" (click)="setType('users')">view more</ion-button>
       </section>
-      <thumbnail-list type="user" [width]="250">
+      <thumbnail-list [width]="250">
         <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
@@ -73,11 +73,12 @@
         </ng-container>
       </thumbnail-list>
 
-      <section fxLayout fxLayoutAlign="space-between end">
+      <!-- <section fxLayout fxLayoutAlign="space-between end">
         <h2>Exercises</h2>
         <ion-button fill="clear" (click)="setType('exercises')">view more</ion-button>
       </section>
-      <thumbnail-list type="user" [width]="250">
+
+      <thumbnail-list [width]="250">
         <ng-container *ngFor="let rows of exercises$ | async | rows:2">
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
@@ -87,7 +88,7 @@
             </article>
           </ng-template>
         </ng-container>
-      </thumbnail-list>
+      </thumbnail-list> -->
     </div>
 
 

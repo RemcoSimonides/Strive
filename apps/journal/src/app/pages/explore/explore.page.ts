@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Platform } from '@ionic/angular';
 // Rxjs
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -14,6 +14,7 @@ import { exercises } from '@strive/exercises/utils';
   selector: 'app-explore',
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplorePage implements OnDestroy {
   segmentChoice: 'overview' | 'search' = 'overview'
