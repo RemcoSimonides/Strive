@@ -10,7 +10,7 @@ export interface IThumbnail {
 }
 
 @Component({
-  selector: 'thumbnail-list',
+  selector: 'strive-thumbnail-list',
   templateUrl: 'thumbnail-list.component.html',
   styleUrls: ['./thumbnail-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

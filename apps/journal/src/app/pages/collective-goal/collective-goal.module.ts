@@ -15,8 +15,8 @@ import { CollectiveGoalGuard } from '@strive/collective-goal/collective-goal/gua
 import { UpsertCollectiveGoalModule } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.module';
 
 // Strive
-import { ThumbnailGridModule } from '@strive/ui/thumbnail-list/grid/thumbnail-grid.module';
-import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
+import { ThumbnailGridModule } from '@strive/ui/thumbnail/layout/grid/thumbnail-grid.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 import { HeaderModule } from '@strive/ui/header/header.module';

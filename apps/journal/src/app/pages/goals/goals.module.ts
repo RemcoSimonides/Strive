@@ -8,8 +8,8 @@ import { IonicModule } from '@ionic/angular';
 import { GoalsPage } from './goals.page';
 
 // Strive
-import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
-import { LargeThumbnailModule } from '@strive/ui/thumbnail-list/components/large/large-thumbnail.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
+import { LargeThumbnailModule } from '@strive/ui/thumbnail/components/large/large-thumbnail.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { UpsertCollectiveGoalModule } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.module';

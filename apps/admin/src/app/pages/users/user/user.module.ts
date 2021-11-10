@@ -8,8 +8,8 @@ import { IonicModule } from '@ionic/angular';
 import { UserPage } from './user.page';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
-import { ThumbnailGridModule } from '@strive/ui/thumbnail-list/grid/thumbnail-grid.module';
-import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
+import { ThumbnailGridModule } from '@strive/ui/thumbnail/layout/grid/thumbnail-grid.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
 
 const routes: Routes = [
   {

@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { SwiperModule } from 'swiper/angular';
-import { RowsPipeModule } from '../pipes/rows.pipe';
+import { RowsPipeModule } from '../../pipes/rows.pipe';
 
 import { ThumbnailGridComponent } from './thumbnail-grid.component'
 
