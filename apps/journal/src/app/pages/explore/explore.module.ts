@@ -10,7 +10,6 @@ import { ExplorePage } from './explore.page';
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module'
-import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module'
 import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
 import { LargeThumbnailModule } from '@strive/ui/thumbnail-list/components/large/large-thumbnail.module';
 import { RowsPipeModule } from '@strive/ui/thumbnail-list/pipes/rows.pipe';
@@ -35,7 +34,6 @@ const routes: Routes = [
     
     // Strive
     ThumbnailListModule,
-    RectangleThumbnailModule,
     SmallThumbnailModule,
     LargeThumbnailModule,
     ThumbnailGridModule,

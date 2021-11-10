@@ -73,21 +73,23 @@
 
   <!-- Templates overview -->
   <ng-container *ngIf="templates$ | async as templates">
-    <h3 class="padding">Templates</h3>
+    <h2 class="padding">Templates</h2>
 
     <ng-container *ngIf="templates.length > 0 || isAdmin else noTemplate">
-      <thumbnail-list type="template" [canCreate]="isAdmin" [collectiveGoalId]="collectiveGoalId">
-        <ng-container *ngFor="let template of templates$ | async">
+      <strive-thumbnail-grid>
+        <ng-container *ngIf="isAdmin">
           <ng-template #thumb>
-            <rectangle-thumbnail type="template" [image]="template.goalImage" [routerLink]="['template/', template.id]">
-              <ng-template #thumbTitle>
-                <h5>{{ template.title }}</h5>
-                <p>{{ template.numberOfTimesUsed }} time{template.numberOfTimesUsed, plural, =1 {} other {s}} used</p>
-              </ng-template>
-            </rectangle-thumbnail>
+            <small-thumbnail title="CREATE TEMPLATE" asset="create_goal.jpeg" (click)="createTemplate()"></small-thumbnail>
           </ng-template>
         </ng-container>
-      </thumbnail-list>
+        <ng-container *ngFor="let template of templates$ | async">
+          <ng-template #thumb>
+            <small-thumbnail [title]="template.title" [image]="template.goalImage" asset="goal.jpeg" [routerLink]="['template/', template.id]">
+              <small>{{ template.numberOfTimesUsed }} time{template.numberOfTimesUsed, plural, =1 {} other {s}} used</small>
+            </small-thumbnail>
+          </ng-template>
+        </ng-container>
+      </strive-thumbnail-grid>
     </ng-container>
 
     <ng-template #noTemplate>
@@ -96,22 +98,26 @@
   </ng-container>
 
   <!-- Goals overview -->
-  <h3 class="padding">Goals</h3>
+  <h2 class="padding">Goals</h2>
   <ng-container *ngIf="goals$ | async as goals">
     <ng-container *ngIf="goals.length > 0 || !!user.uid else noGoal">
-      <thumbnail-list type="goal" [canCreate]="!!user.uid" [collectiveGoalId]="collectiveGoalId">
-        <ng-container *ngFor="let goal of goals$ | async">
+      <strive-thumbnail-grid>
+        <ng-container *ngIf="!!user.uid">
           <ng-template #thumb>
-            <rectangle-thumbnail type="goal" [image]="goal.image" [isFinished]="goal.isFinished" [routerLink]="['/goal', goal.id]">
-              <ng-template #thumbTitle>
-                <h5>{{ goal.title }}</h5>
-                <p>{{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}</p>
-                <p>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</p>
-              </ng-template>
-            </rectangle-thumbnail>
+            <small-thumbnail title="CREATE GOAL" asset="create_goal.jpeg" (click)="createGoal()"></small-thumbnail>
           </ng-template>
         </ng-container>
-      </thumbnail-list>
+        <ng-container *ngFor="let goal of goals$ | async">
+          <ng-template #thumb>
+            <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="['/goal', goal.id]">
+              <small>
+                {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
+                {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
+              </small>
+            </small-thumbnail>
+          </ng-template>
+        </ng-container>
+      </strive-thumbnail-grid>
     </ng-container>
 
     <ng-template #noGoal>
@@ -121,7 +127,7 @@
 
   <section>
     <ion-list mode="md">
-      <h3>Team</h3>
+      <h2>Team</h2>
       <ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="'/profile/' + (stakeholder.uid)">
         {{ stakeholder.username }}
         <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>

@@ -15,12 +15,13 @@ import { CollectiveGoalGuard } from '@strive/collective-goal/collective-goal/gua
 import { UpsertCollectiveGoalModule } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.module';
 
 // Strive
-import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module';
-import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module';
+import { ThumbnailGridModule } from '@strive/ui/thumbnail-list/grid/thumbnail-grid.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
+import { UpsertTemplateModalPageModule } from '@strive/template/modals/upsert/upsert-template-modal.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 
@@ -49,12 +50,13 @@ const routes: Routes = [
     UpsertCollectiveGoalModule,
 
     // Strive
-    ThumbnailListModule,
-    RectangleThumbnailModule,
+    ThumbnailGridModule,
+    SmallThumbnailModule,
     PageLoadingModule,
     PageNotFoundModule,
     HeaderModule,
     UpsertGoalModalModule,
+    UpsertTemplateModalPageModule,
     TextEditorModule,
     ImageModule
   ],

@@ -8,8 +8,8 @@ import { IonicModule } from '@ionic/angular';
 import { UserPage } from './user.page';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
-import { ThumbnailListModule } from '@strive/ui/thumbnail-list/thumbnail-list.module'
-import { RectangleThumbnailModule } from '@strive/ui/thumbnail-list/components/rectangle/rectangle-thumbnail.module'
+import { ThumbnailGridModule } from '@strive/ui/thumbnail-list/grid/thumbnail-grid.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail-list/components/small/small-thumbnail.module';
 
 const routes: Routes = [
   {
@@ -27,8 +27,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingModule,
     ImageSelectorModule,
-    ThumbnailListModule,
-    RectangleThumbnailModule
+    ThumbnailGridModule,
+    SmallThumbnailModule
   ],
   declarations: [UserPage]
 })

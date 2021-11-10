@@ -28,17 +28,14 @@
 
     <h3>Goals</h3>
     <ion-button (click)="createGoal(profile.uid)">Create Goal</ion-button>
-    <thumbnail-list type="goal">
+    <strive-thumbnail-grid>
       <ng-container *ngFor="let goal of goals$ | async">
         <ng-template #thumb>
-          <rectangle-thumbnail type="goal" [image]="goal.image" [routerLink]="'/goal/' + goal.id">
-            <ng-template #thumbTitle>
-              {{ goal.title }}
-            </ng-template>
-          </rectangle-thumbnail>
+          <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
+          </small-thumbnail>
         </ng-template>
       </ng-container>
-    </thumbnail-list>
+    </strive-thumbnail-grid>
 
   </ng-container>
 </ion-content>

@@ -17,17 +17,10 @@ export interface IThumbnail {
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class ThumbnailListComponent {
-
-  // @Input() type:'collectiveGoal' | 'goal' | 'template' | 'user'
-  // @Input() canCreate = false
-  // @Input() collectiveGoalId: string
-  // @Input() limitReached = false
-
   @Input() width = 160
 
   @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
 
-  constructor(
-    public screensize: ScreensizeService) {}
+  constructor(public screensize: ScreensizeService) {}
 
 }
