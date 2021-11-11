@@ -19,7 +19,7 @@ section {
 
   ion-icon {
     &:hover  {
-      color: black;
+      color: var(--ion-color-dark);
       cursor: pointer;
     }
   }
@@ -34,7 +34,7 @@ section {
       width: 100px;
       height: 100px;
       margin: 0 0 12px 12px;
-      box-shadow: 0px 11px 20px -3px rgba(142, 136, 146, 0.75);
+      box-shadow: 0px 6px 12px -6px var(--ion-color-medium);
       cursor: pointer;
     }
   }
@@ -61,7 +61,6 @@ h2 {
 
 ion-input {
   max-width: 200px;
-  color: #444;
   font-size: 26px;
   font-weight: 500;
 }

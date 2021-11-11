@@ -15,7 +15,11 @@ ion-label {
   opacity: 1 !important;
 }
 
-ion-icon:hover {
-  color: black;
-  cursor: pointer;
+ion-icon {
+  color: var(--ion-color-step-550);
+
+  &:hover {
+    color: var(--ion-color-dark);
+    cursor: pointer;
+  }
 }
