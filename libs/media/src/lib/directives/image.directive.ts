@@ -1,7 +1,7 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { getAssetPath } from '../+state/media.model';
-import { getImgIxResourceUrl, getImgSize, ImageParameters } from './imgix-helpers';
+import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers';
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
@@ -43,6 +43,14 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.parameters.next({ ...this.parameters.getValue(), ar });
   }
 
+  @Input() set height(h: number) {
+    this.parameters.next({ ...this.parameters.getValue(), h })
+  }
+
+  @Input() set width(w: number) {
+    this.parameters.next({ ...this.parameters.getValue(), w})
+  }
+
   /**
    * The placeholder asset to display.
    * Just specify the file name, and the component
@@ -71,7 +79,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, ref]) => {
       if (!!ref) {
         // ref
-        this.srcset = await this.generateImageSrcset(ref, params);
+        this.srcset = getImgIxResourceUrl(ref, params);
         this.src = this.srcset.split(' ')[0];
       } else {
         // asset
@@ -84,17 +92,5 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  async generateImageSrcset(storagePath: string, _parameters: ImageParameters): Promise<string> {
-    const params: ImageParameters[] = getImgSize(storagePath).map(size => ({ ..._parameters, w: size }));
-    let tokens: string[] = [];
-
-    const urls = params.map((param, index) => {
-      if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(storagePath, param)} ${param.w}w`;
-    })
-
-    return urls.join(', ');
   }
 }

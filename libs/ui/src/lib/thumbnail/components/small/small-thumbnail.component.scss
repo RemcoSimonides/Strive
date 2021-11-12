@@ -2,6 +2,9 @@
   display: flex;
   min-width: 250px;
   cursor: pointer;
+  background: var(--ion-card-background);
+  border-radius: 12px;
+  padding: 6px;
 }
 
 picture {

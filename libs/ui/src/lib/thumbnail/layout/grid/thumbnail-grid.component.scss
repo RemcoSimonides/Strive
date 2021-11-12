@@ -4,11 +4,8 @@
   margin-left: 16px;
 }
 
-.grid {
+section.grid {
   padding: 0 16px;
-}
-
-section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 16px;
