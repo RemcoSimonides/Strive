@@ -24,20 +24,21 @@
           <ion-item>
             <ion-input formControlName="description"
               type="text"
-              placeholder="e.g. 'Bottle of wine' or '$20'"
+              [placeholder]="goal.isFinished ? 'Cant support more because goal finished' : 'e.g. Bottle of wine or $20'"
+              [disabled]="goal.isFinished"
               (keydown.enter)="addSupport(goal)"></ion-input>
             <ion-button slot="end" 
               (click)="addSupport(goal)"
               color="secondary"
-              [disabled]="goal.isLocked">
+              [disabled]="goal.isFinished">
               ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
             </ion-button>
           </ion-item>
         </form>
         <ion-item *ngFor="let support of mySupports$ | async">
-          <ion-thumbnail slot="start">
+          <ion-avatar slot="start">
             <img [ref]="support.supporter.photoURL" asset="profile.png">
-          </ion-thumbnail>
+          </ion-avatar>
           <ion-label class="ion-text-wrap">
             <ion-text>{{ support.description }}</ion-text>
             <ng-container *ngIf="origin === 'milestone'">
@@ -56,9 +57,9 @@
     <ng-container *ngIf="supports.length else empty">
       <ion-list>
         <ion-item *ngFor="let support of supports">
-          <ion-thumbnail slot="start">
+          <ion-avatar slot="start">
             <img [ref]="support?.supporter.photoURL" asset="profile.png">
-          </ion-thumbnail>
+          </ion-avatar>
           <ion-label class="ion-text-wrap">
             <ion-text>{{ support.description }}</ion-text>
             <ng-container *ngIf="origin === 'milestone'">

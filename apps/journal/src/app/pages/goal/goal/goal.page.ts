@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { httpsCallable, Functions } from '@angular/fire/functions';
@@ -25,6 +25,8 @@ import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { switchMap } from 'rxjs/operators';
+import { TeamModal } from '@strive/goal/goal/modals/team/team.modal';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
   selector: 'journal-goal',
@@ -39,7 +41,6 @@ export class GoalPage implements OnInit, OnDestroy {
   public goal$: Observable<Goal>
   public collectiveGoal$: Observable<CollectiveGoal | undefined>
 
-  public stakeholders$: Observable<GoalStakeholder[]>
   public stakeholder$: Observable<GoalStakeholder>
 
   public isAdmin = false
@@ -47,6 +48,8 @@ export class GoalPage implements OnInit, OnDestroy {
   public hasOpenRequestToJoin = false
 
   private sub: Subscription
+
+  @Output() segmentChange = new EventEmitter<'goal' | 'roadmap' | 'story'>()
 
   constructor(
     private alertCtrl: AlertController,
@@ -62,13 +65,13 @@ export class GoalPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private stakeholder: GoalStakeholderService,
     public user: UserService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public screensize: ScreensizeService
   ) { }
 
   ngOnInit() { 
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal$ = this.goalService.valueChanges(this.goalId)
-    this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.goalId })
 
     this.collectiveGoal$ = this.goal$.pipe(
       switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.valueChanges(goal.collectiveGoalId) : of(undefined))
@@ -228,12 +231,50 @@ export class GoalPage implements OnInit, OnDestroy {
     }).then(modal => modal.present())
   }
 
-  requestToJoinGoal() {
-    return this.stakeholder.upsert({
-      uid: this.user.uid,
-      isSpectator: true,
-      hasOpenRequestToJoin: true
-    }, { params: { goalId: this.goalId }})
+  getJoinText() {
+    if (this.isAchiever) return 'joined'
+    if (this.isAdmin) return 'join'
+    if (this.hasOpenRequestToJoin) return 'requested...'
+    return 'request join'
+  }
+
+  async join() {
+    if (!this.user.uid) {
+      const modal = await this.modalCtrl.create({
+        component: AuthModalPage,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      })
+      modal.onDidDismiss().then(({ data: loggedIn }) => {
+        if (loggedIn) this.join()
+      })
+      return modal.present()
+    }
+
+    if (!this.isAchiever && !this.hasOpenRequestToJoin) {
+      if (this.isAdmin) {
+        return this.stakeholder.upsert({
+          uid: this.user.uid,
+          isAchiever: true
+        }, { params: { goalId: this.goalId }})
+      } else {
+        return this.stakeholder.upsert({
+          uid: this.user.uid,
+          isSpectator: true,
+          hasOpenRequestToJoin: true
+        }, { params: { goalId: this.goalId }})
+      }
+    }
+    
+    this.openTeamModal()
+  }
+
+  openTeamModal() {
+    this.modalCtrl.create({
+      component: TeamModal,
+      componentProps: { goalId: this.goalId }
+    }).then(modal => modal.present())
   }
 
   async openSharePopover(ev: UIEvent, goal: Goal) {
@@ -264,46 +305,5 @@ export class GoalPage implements OnInit, OnDestroy {
 
   saveDescription(description: string) {
     return this.goalService.updateDescription(this.goalId, description)
-  }
-
-  async toggleAdmin(stakeholder: GoalStakeholder, event: Event) {
-    event.preventDefault()
-    event.stopPropagation()
-    this.alertCtrl.create({
-      subHeader: `Are you sure you want to make ${stakeholder.username} an admin?`,
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-            this.stakeholder.upsert({
-              uid: stakeholder.uid,
-              isAdmin: !stakeholder.isAdmin
-            }, { params: { goalId: this.goalId }})
-          }
-        },
-        {
-          text: 'No',
-          role: 'cancel'
-        }
-      ]
-    }).then(alert => alert.present())
-  }
-
-  toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
-    event.preventDefault()
-    event.stopPropagation()
-    return this.stakeholder.upsert({
-      uid: stakeholder.uid,
-      isAchiever: !stakeholder.isAchiever
-    }, { params: { goalId: this.goalId }})
-  }
-
-  toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
-    event.preventDefault()
-    event.stopPropagation()
-    return this.stakeholder.upsert({
-      uid: stakeholder.uid,
-      isSupporter: !stakeholder.isSupporter
-    }, { params: { goalId: this.goalId }})
   }
 }

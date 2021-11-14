@@ -14,43 +14,64 @@ h1 {
   height: 70px;
 }
 
-.stats {
-  span {
-    font-size: 26px;
+ion-card {
+  border-radius: 12px;
+  margin: 0;
+}
+
+ion-card.team {
+  padding: 24px 8px;
+
+  ion-button {
+    fa-icon {
+      margin-right: 0.3em;
+    }
+  }
+
+  span.number {
     color: var(--ion-color-medium);
+    font-size: 26px;
   }
 }
 
-.image-container {
+.properties {
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 20px;
+    margin-right: 8px;
+  }
+}
+
+picture {
   position: relative;
-  display: inline-block;
-  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
 
   img {
     object-fit: cover;
     width: 100%;
-    max-width: 360px;
-    height: 200px;
-    border-radius: 10px;
-    margin: auto;
-    display: block;
+    height: 100%;
   }
 
-  .after {
+  div {
     position: absolute;
-    text-align: center;
     top: 0;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    color: #fff;
+    align-items: center;
+    color: var(--ion-color-primary-contrast);
     background: rgba(247, 148, 29, 0.6);
-    border-radius: 10px;
   }
 }
 
+.collective-goal {
+  margin-top: -24px;
+}
+
 strive-text-editor {
-  padding-bottom: 90px;
+  margin: 0 16px;
 }

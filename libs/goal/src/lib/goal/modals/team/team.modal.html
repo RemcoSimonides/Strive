@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Team</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list mode="md">
+    <ion-list-header>Team</ion-list-header>
+    <ion-item *ngFor="let stakeholder of stakeholders$ | async" button (click)="navTo(stakeholder.uid)">
+      <ion-avatar slot="start">
+        <img [ref]="stakeholder.photoURL" asset="profile.png"/>
+      </ion-avatar>
+      {{ stakeholder.username }}
+      <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>
+      <ion-button *ngIf="(isAdmin$ | async) && !stakeholder.isAdmin" fill="clear" slot="end" (click)="toggleAdmin(stakeholder, $event)">
+        <fa-icon  [icon]="['fas', 'user-tie']"></fa-icon>
+      </ion-button>
+      <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" fill="clear" slot="end"></fa-icon>
+      <ion-button *ngIf="(isAdmin$ | async) && !stakeholder.isAchiever" slot="end" (click)="toggleAchiever(stakeholder, $event)">
+        <fa-icon [icon]="['fas', 'flag']"></fa-icon>
+      </ion-button>
+      <fa-icon *ngIf="stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+      <ion-button *ngIf="(isAdmin$ | async) && !stakeholder.isSupporter" fill="clear" (click)="toggleSupporter(stakeholder, $event)" slot="end">
+        <fa-icon [icon]="['fas', 'hand-holding-heart']"></fa-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>  
+</ion-content>

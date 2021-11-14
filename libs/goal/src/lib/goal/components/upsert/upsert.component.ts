@@ -26,7 +26,7 @@ export class UpsertGoalModalComponent implements OnInit {
   private collectiveGoal: CollectiveGoal
 
   public goalId: string
-  public goalForm = new GoalForm()
+  public goalForm: GoalForm
   public mode: 'update' | 'create'
 
   constructor(
@@ -38,26 +38,27 @@ export class UpsertGoalModalComponent implements OnInit {
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private navParams: NavParams,
-  ) { }
-
-  async ngOnInit() {
+  ) {
     const goal = this.navParams.data.currentGoal as Goal
-    if (!!goal) {
-      this.goalForm.reset(goal)
-      this.goalId = goal.id
+    if (goal) {
       this.mode = 'update'
+      this.goalForm = new GoalForm(goal)
+      this.goalId = goal.id
     } else {
       this.mode = 'create'
+      this.goalForm = new GoalForm()
       this.goalId = this.goalService.createId()
     }
 
+    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
+  }
+
+  async ngOnInit() {
     const collectiveGoalId = this.navParams.data.collectiveGoalId as string
-    if (!!collectiveGoalId) {
+    if (collectiveGoalId) {
       this.goalForm.collectiveGoalId.setValue(collectiveGoalId)
       this.collectiveGoal = await this.collectiveGoalService.getValue(collectiveGoalId);
     }
-
-    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
   dismiss(){

@@ -31,7 +31,7 @@ picture {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #fff;
+    color: var(--ion-color-primary-contrast);;
     background: rgba(247, 148, 29, .6);
   }
 }

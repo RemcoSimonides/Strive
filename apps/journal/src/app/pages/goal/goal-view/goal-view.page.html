@@ -7,25 +7,23 @@
 </ng-container>
 
 <ng-container *ngIf="canAccess && !pageIsLoading">
-  <ion-toolbar mode="md">
-    <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" class="ion-align-self-center">
-      <ion-segment-button value="goal">
-        Goal
-      </ion-segment-button>
-      <ion-segment-button value="roadmap">
-        Roadmap
-      </ion-segment-button>
-      <ion-segment-button value="story">
-        Story
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
+  <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" class="ion-align-self-center" mode="md">
+    <ion-segment-button value="goal">
+      Goal
+    </ion-segment-button>
+    <ion-segment-button value="roadmap">
+      Roadmap
+    </ion-segment-button>
+    <ion-segment-button value="story">
+      Story
+    </ion-segment-button>
+  </ion-segment>
 </ng-container>
 
 <ion-content class="ion-padding" [ngSwitch]="segmentChoice" *ngIf="canAccess && !pageIsLoading">
 
   <section *ngSwitchCase="'goal'">
-    <journal-goal></journal-goal>
+    <journal-goal (segmentChange)="segmentChoice = $event"></journal-goal>
   </section>
 
   <!-- Roadmap -->

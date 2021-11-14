@@ -118,7 +118,7 @@ export class AuthModalPage implements OnInit {
   }
 
   closeAuthModal() {
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss(false)
   }
 
   async loginUser() {
@@ -139,7 +139,7 @@ export class AuthModalPage implements OnInit {
         await signInWithEmailAndPassword(this.afAuth, email, password)
         loading.dismiss()
         await this.fcmService.registerFCM()
-        this.modalCtrl.dismiss()
+        this.modalCtrl.dismiss(true)
 
       } catch (error) {
 
@@ -182,17 +182,17 @@ export class AuthModalPage implements OnInit {
           this.user.upsertProfile(profile, user.uid)
         ])
 
+        this.modalCtrl.dismiss(true)
+        this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
+
       } catch(error) {
-        loading.dismiss()
         this.alertCtrl.create({
           message: error.message,
           buttons: [{ text: 'Ok', role: 'cancel' }]
         }).then(alert => alert.present())
       }
       
-      this.modalCtrl.dismiss()
       loading.dismiss()
-      this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
     }
   }
 

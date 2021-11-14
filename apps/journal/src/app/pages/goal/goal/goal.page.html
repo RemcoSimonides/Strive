@@ -1,104 +1,134 @@
 <ng-container *ngIf="goal$ | async as goal">
-  <section fxLayout fxLayoutAlign="space-between center">
-    <article fxLayout="column">
-      <h1>{{ goal.title }}</h1>
-      <ng-container *ngIf="goal.publicity === 'private'">
-        <div fxLayout fxLayoutAlign="start center">
-          <!-- <ion-icon name="lock-closed"></ion-icon> -->
-          <span>Access: Private</span>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="!!goal.isFinished">
-        <span>Status: Finished</span>
-      </ng-container>
-      <ng-container *ngIf="!!goal.deadline">
-        <div [ngStyle]="{ 'color': goal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
-          <!-- <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> -->
-          <span>Deadline: {{ goal.deadline | date:'fullDate' }}</span>
-        </div>
-      </ng-container>
-    </article>
+  <h1>{{ goal.title }}</h1>
 
-    <article fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
-      <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
-        <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
-      </ion-button>
-      <ion-button (click)="supportGoal()" color="secondary" class="ion-no-padding action-button" fill="clear">
-        <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-      </ion-button>
-      <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
-        <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
-      </ion-button>
-      <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="!!user.uid">
-        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </article>
-  </section>
-
-  <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="24px">
-    <article fxLayout="column" fxLayoutGap="24px" fxFlex>
-      <i>{{ goal.shortDescription }}</i>
-
+  <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
+    <article fxLayout="column" fxFlex fxFlexOrder.lt-sm="2">
+      <picture>
+        <img [ref]="goal.image" asset="goal.jpeg" [width]="500" [height]="500"/>
+        <div *ngIf="goal.isFinished">finished</div>
+      </picture>
       <ng-container *ngIf="collectiveGoal$ | async as collectiveGoal">
-        <ion-card fxLayout>
+        <ion-card fxLayout class="collective-goal">
           <article fxLayout="column" fxFlex fxLayoutAlign="center center">
-            this goal is part of
+            this goal is part of collective goal
             <a [routerLink]="'../../collective-goal/' + ( collectiveGoal.id )"><b>{{ collectiveGoal.title }}</b></a>
           </article>
           <img class="collective-goal-image" [ref]="collectiveGoal.image" asset="collective-goal.jpeg">
         </ion-card>
       </ng-container>
+    </article>
 
+    <article fxLayout="column" fxLayoutGap="16px" fxFlex fxFlexOrder.lt-sm="1">
+      <ion-card fxLayout fxLayoutAlign="space-evenly" class="team">
+        <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
+          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.isFinished || hasOpenRequestToJoin">
+            <ion-icon slot="start" name="flag"></ion-icon>
+            <span> {{ getJoinText() }}</span>
+          </ion-button>
+          <div fxLayout="column" fxLayoutAlign="start center" (click)="openTeamModal()">
+            <strong>Achievers</strong>
+            <span class="number">{{ goal.numberOfAchievers || '0' }}</span>
+          </div>
+        </article>
+        <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
+          <ion-button (click)="supportGoal()" color="secondary" fill="outline">
+            <fa-icon slot="start" [icon]="['fas', 'hand-holding-heart']"></fa-icon>
+            <span> support</span>
+          </ion-button>
+          <div fxLayout="column" fxLayoutAlign="start center" (click)="openTeamModal()">
+            <strong>Supporters</strong>
+            <span class="number">{{ goal.numberOfSupporters || '0' }}</span>
+          </div>
+        </article>
+      </ion-card>
 
-      <div fxLayout fxLayoutAlign="space-evenly">
-        <div fxLayout="column" fxLayoutAlign="center center" class="stats">
-          <strong>Achievers</strong>
-          <span>{{ goal.numberOfAchievers || '0' }}</span>
+      <!-- Options -->
+      <ng-container *ngIf="screensize.isMobile$ | async else desktopOptions">
+        <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
+          <ion-button (click)="openTeamModal()" class="ion-no-padding action-button" fill="clear">
+            <ion-icon slot="icon-only" name="people-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
+            <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
+            <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="!!user.uid">
+            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+          </ion-button>
         </div>
-        <div fxLayout="column" fxLayoutAlign="center center" class="stats">
-          <strong>Supporters</strong>
-          <span>{{ goal.numberOfSupporters || '0' }}</span>
+      </ng-container>
+      <ng-template #desktopOptions>
+        <div fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="16px">
+          <ion-button (click)="openTeamModal()" fill="clear">
+            <ion-icon slot="start" name="people-outline"></ion-icon>
+            <span>team</span>
+          </ion-button>
+  
+          <ion-button (click)="openDiscussion()" fill="clear">
+            <ion-icon slot="start" name="chatbox-outline"></ion-icon>
+            <span>chat</span>
+          </ion-button>
+  
+          <ion-button (click)="openSharePopover($event, goal)" fill="clear">
+            <ion-icon slot="start" name="share-social-outline"></ion-icon>
+            <span>share</span>
+          </ion-button>
+          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" *ngIf="!!user.uid">
+            <span>more options</span>
+          </ion-button>
         </div>
+      </ng-template>
+
+      <div fxHide.lt-sm>
+        <ng-container *ngTemplateOutlet="properties"></ng-container>
       </div>
 
-      <!-- Can only REQUEST to participate if not admin and not achiever  -->
-      <ng-container *ngIf="!isAdmin && !isAchiever && !goal.isFinished && !!user.uid">
-        <ng-container *ngIf="hasOpenRequestToJoin else pending">
-          <ion-button disabled><ion-icon name="flag"></ion-icon> Request pending</ion-button>
-        </ng-container>
-        <ng-template #pending>
-          <ion-button (click)="requestToJoinGoal()"><ion-icon name="flag"></ion-icon> Request to participate</ion-button>
-        </ng-template>
-      </ng-container>
-    </article>
-    <article fxLayout="column" fxLayoutAlign="center" class="image-container">
-      <img [ref]="goal.image" asset="goal.jpeg"/>
-      <div class="after" *ngIf="goal.isFinished">finished</div>
     </article>
 
-      <!-- Only a stakeholder can join the discussion -->
-      <!-- <span *ngIf="isSupporter || isAdmin || isAchiever">
-        <ion-button color="primary" fill="solid" routerLink="/discussion"><ion-icon name="chatboxes"></ion-icon> Discussion</ion-button>
-      </span> -->
-
+    <article fxHide.gt-sm fxFlexOrder="3">
+      <ng-container *ngTemplateOutlet="properties"></ng-container>
+    </article>
   </section>
 
   <strive-text-editor [description]="goal.description"
-    [isAdmin]="isAdmin" 
+    [isAdmin]="isAdmin"
     (update)="saveDescription($event)"
   ></strive-text-editor>
 
-</ng-container>
+  <section fxLayout>
+    <ion-button fill="clear" (click)="segmentChange.next('roadmap')">
+      see roadmap
+    </ion-button>
+    <ion-button fill="clear" (click)="segmentChange.next('story')">
+      see story
+    </ion-button>
+  </section>
 
-<ion-list mode="md">
-  <ion-list-header>Team</ion-list-header>
-  <ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="'/profile/' + (stakeholder.uid)">
-    {{ stakeholder.username }}
-    <fa-icon *ngIf="stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end"></fa-icon>
-    <fa-icon *ngIf="isAdmin && !stakeholder.isAdmin" [icon]="['fas', 'user-tie']" slot="end" style="opacity: 0.3;" (click)="toggleAdmin(stakeholder, $event)"></fa-icon>
-    <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end"></fa-icon>
-    <fa-icon *ngIf="isAdmin && !stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end" style="opacity: 0.3;" (click)="toggleAchiever(stakeholder, $event)"></fa-icon>
-    <fa-icon *ngIf="stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-    <fa-icon *ngIf="isAdmin && !stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end" style="opacity: 0.3;" (click)="toggleSupporter(stakeholder, $event)"></fa-icon>
-  </ion-item>
-</ion-list>
+  <ng-template #properties>
+    <article class="properties" fxLayout="column" fxLayoutGap="24px">
+      <!-- Status -->
+      <div fxLayout fxLayoutAlign="start center">
+        <ion-icon name="pulse"></ion-icon>
+        <span>Status: <b>{{ goal.isFinished ? 'Finished' : 'Active' }}</b></span>
+      </div>
+  
+      <!-- Privacy -->
+      <div fxLayout fxLayoutAlign="start center">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <span>Access: <b>{{ goal.publicity === 'public' ? 'Everyone can access' : goal.publicity === 'collectiveGoal' ? 'People with access to collective goal or an invite' : 'Invites only' }}</b></span>
+      </div>
+  
+      <!-- Deadline -->
+      <ng-container *ngIf="!!goal.deadline">
+        <div fxLayout fxLayoutAlign="start center" [ngStyle]="{ 'color': goal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
+          <ion-icon name="timer-outline"></ion-icon>
+          <span>Deadline: <b>{{ goal.deadline | date:'fullDate' }}</b></span>
+        </div>
+      </ng-container>
+  
+    </article>
+  </ng-template>
+
+</ng-container>
