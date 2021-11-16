@@ -78,11 +78,11 @@
     <ion-header>
       <ion-toolbar>
         <header fxLayout fxLayoutAlign="space-between center">
-          <a [routerLink]="user.uid ? '/feed' : '/explore'">
+          <a routerLink="/">
             <img asset="logo.png" class="logo">
           </a>
           <section fxLayout>
-            <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
+            <ion-button fill="clear" routerLink="/" routerDirection="root" routerLinkActive="active-link">
               Home
             </ion-button>
             <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">

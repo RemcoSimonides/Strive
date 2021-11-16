@@ -98,10 +98,12 @@ export class AppComponent implements OnDestroy {
       const isLoggedIn = await this.user.isLoggedIn$.pipe(first()).toPromise()
       if (isLoggedIn) return
 
-      const doNotShowAuthPages = ['/terms', '/privacy-policy', '/feed']
+      const doNotShowExact = ['/terms', '/privacy-policy', '/feed', '/']
+      const doNotShowPartial = ['/goal/']
       const doShowSignUpModalPages = ['/explore']
 
-      if (doNotShowAuthPages.some(page => page === event.url)) return
+      if (doNotShowExact.some(page => page === event.url)) return
+      if (doNotShowPartial.some(part => event.url.includes(part))) return
       if (doShowSignUpModalPages.some(page => page === event.url)) {
         this.openAuthModal(enumAuthSegment.register)
       } else {
