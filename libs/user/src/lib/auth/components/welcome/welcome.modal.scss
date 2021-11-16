@@ -10,15 +10,46 @@ h1 {
   text-align: center;
 }
 
+p {
+  color: var(--ion-color-light-contrast);
+}
+
 swiper {
   height: 100%;
   width: 100%;
 
   section {
     height: 100%;
-    
+  }
+
+  ion-button {
+    width: fit-content;
+  }
+
+  section.notification {    
     img {
       height: 40%;
+    }
+  }
+
+  section.goal {
+    margin-top: 16px;
+
+    img {
+      height: 50%;
+    }
+
+    ion-button.explore {
+      margin-left: auto;
+      margin-right: 16px;
+    }
+
+    article {
+      width: 100%;
+      ion-button.create-goal {
+        margin-left: 16px;
+        margin-right: auto;
+      }
     }
   }
 }
@@ -30,6 +61,3 @@ swiper {
 .swiper-slide {
   padding-bottom: 32px;
 }
-
-
-

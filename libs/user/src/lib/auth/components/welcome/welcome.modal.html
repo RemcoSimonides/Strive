@@ -1,8 +1,7 @@
 <h1>Welcome to Strive Journal!</h1>
-<!-- <swiper #swiper pagination> -->
 <swiper #swiper>
   <ng-template swiperSlide>
-    <section fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="12px">
+    <section class="notification" fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="12px">
       <article>
         <p>
           Activate push notifications for the best experience.<br/>
@@ -10,21 +9,22 @@
         </p>
       </article>
       <img asset="notifications.png"/>
-      <article fxLayout="column">
+      <article fxLayout="column" fxLayoutAlign="start center">
         <ion-button (click)="pushNotifications()">activate notifications</ion-button>
-        <ion-button (click)="dismiss()" fill="clear">skip</ion-button>
+        <ion-button (click)="next()" fill="clear">skip</ion-button>
       </article>
     </section>
   </ng-template>
-  <ng-template swiperSlide>
-    <section fxLayout="column" fxLayoutAlign="space-between center">
-      <ion-button (click)="dismiss('explore')">explore around</ion-button>
-      
-      <article fxLayout="column">
-        <ion-button (click)="createGoal()">create first goal</ion-button>
-        <ion-button (click)="dismiss()" fill="clear">skip</ion-button>
-      </article>
-
-    </section>
-  </ng-template>
+  <ng-container *ngIf="showStep2">
+    <ng-template swiperSlide>
+      <section class="goal" fxLayout="column" fxLayoutAlign="space-between center">
+        <ion-button class="explore" (click)="dismiss('/explore')">explore around</ion-button>
+        <img asset="astronauts.png"/>
+        <article fxLayout="column" fxLayoutAlign="start center">
+          <ion-button class="create-goal" (click)="createGoal()">create first goal</ion-button>
+          <ion-button (click)="dismiss()" fill="clear">skip</ion-button>
+        </article>
+      </section>
+    </ng-template>
+  </ng-container>
 </swiper>
