@@ -1,5 +1,4 @@
 @import 'swiper/scss';
-@import 'swiper/scss/pagination';
 
 :host {
   display: block;
@@ -33,8 +32,6 @@ swiper {
   }
 
   section.goal {
-    margin-top: 16px;
-
     img {
       height: 50%;
     }

@@ -1,20 +1,18 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { ModalController } from "@ionic/angular";
+import { SwiperComponent } from "swiper/angular";
 
 import { FcmService } from "@strive/utils/services/fcm.service";
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
-import SwiperCore, { Pagination } from 'swiper';
-import { SwiperComponent } from "swiper/angular";
-SwiperCore.use([ Pagination ]);
 
 @Component({
   selector: 'auth-welcome-modal',
   templateUrl: './welcome.modal.html',
   styleUrls: ['./welcome.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WelcomeModal {
   @ViewChild('swiper') swiper: SwiperComponent;
