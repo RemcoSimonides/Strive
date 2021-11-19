@@ -33,7 +33,7 @@ export class AlgoliaService {
   searchGoals(query: string, hitsPerPage: number): void {
     this.goalsIndex.search(query, {
       hitsPerPage,
-      attributesToRetrieve: ['goalId', 'title', 'shortDescription', 'image', 'numberOfSupporters', 'numberOfAchievers']
+      attributesToRetrieve: ['goalId', 'title', 'image', 'numberOfSupporters', 'numberOfAchievers']
     }).then((data) => {
       const hits = data.hits.map(hit => {
         return {

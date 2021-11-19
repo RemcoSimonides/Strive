@@ -37,7 +37,8 @@ picture {
 }
 
 section {
-  min-width: 0;
+  display: grid;
+  align-content: center;
 
   span {
     white-space: nowrap;

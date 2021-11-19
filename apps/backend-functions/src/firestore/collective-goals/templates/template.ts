@@ -59,7 +59,6 @@ export const useTemplate = functions.https.onCall(async (
     description: template.goalDescription ?? '',
     publicity,
     deadline: template.goalDeadline,
-    shortDescription: template.goalShortDescription,
     image: template.goalImage,
     roadmapTemplate: template.roadmapTemplate,
     collectiveGoalId: data.collectiveGoalId,

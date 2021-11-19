@@ -41,14 +41,6 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Short description of goal</ion-label>
-        <ion-textarea formControlName="goalShortDescription"
-                      type="text"
-                      maxLength="256"
-                      autosize></ion-textarea>
-      </ion-item>
-
-      <ion-item>
         <ion-label position="stacked">Is the goal secret?</ion-label>
         <ion-select formControlName="goalIsSecret" [value]="false" interface="popover">
           <ion-select-option [value]="false">No</ion-select-option>

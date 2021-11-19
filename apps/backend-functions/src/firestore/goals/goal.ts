@@ -103,7 +103,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
         deleteFromAlgolia('goal', goalId)
       }
 
-    } else if (before.title !== after.title || before.image !== after.image || before.shortDescription !== after.shortDescription) {
+    } else if (before.title !== after.title || before.image !== after.image) {
       updateAlgoliaObject('goal', goalId, after)
     }
 
@@ -137,7 +137,6 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
   const newGoal = createGoal({
     title: goal.title,
     description: goal.description,
-    shortDescription: goal.shortDescription,
     image: goal.image,
     publicity: goal.publicity,
     deadline: goal.deadline,

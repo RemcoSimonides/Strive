@@ -9,7 +9,6 @@ function createTemplateFormControl(params?: Template) {
     description: new FormControl(template.description),
     deadline: new FormControl(template.deadline),
     goalTitle: new FormControl(template.goalTitle, Validators.required),
-    goalShortDescription: new FormControl(template.goalShortDescription),
     goalDescription: new FormControl(template.goalDescription),
     goalImage: new FormControl(template.goalImage),
     goalIsSecret: new FormControl(template.goalIsSecret),

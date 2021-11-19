@@ -85,7 +85,6 @@ export class GoalViewPage implements OnInit, OnDestroy {
     this.pageIsLoading = false
     this.seo.generateTags({
       title: `${this.goal.title} - Strive Journal`,
-      description: this.goal.shortDescription,
       image: this.goal.image
     })
   }

@@ -16,7 +16,6 @@ export function getAudience(publicity: GoalPublicityType): AudienceType {
 export interface Goal {
     id?: string;
     title: string;
-    shortDescription: string;
     description: string;
     image: string;
     collectiveGoalId: string;
@@ -53,7 +52,6 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     numberOfCustomSupports: 0,
     numberOfSupporters: 0,
     publicity: 'public',
-    shortDescription: '',
     title: '',
     totalNumberOfCustomSupports: 0,
     collectiveGoalId: '',

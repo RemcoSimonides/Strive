@@ -8,7 +8,6 @@ export interface Template {
   deadline: string;
   numberOfTimesUsed: number;
   goalTitle: string;
-  goalShortDescription: string;
   goalDescription: string;
   goalImage: string;
   goalIsSecret: boolean;
@@ -33,7 +32,6 @@ export function createTemplate(params: Partial<Template> = {}): Template {
     goalDeadline: '',
     goalImage: '',
     goalIsSecret: false,
-    goalShortDescription: '',
     ...params
   }
 }
