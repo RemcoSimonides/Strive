@@ -12,9 +12,14 @@ import { NotificationService } from '@strive/notification/+state/notification.se
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { limit, where } from '@angular/fire/firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
-import { exercises } from '@strive/exercises/utils';
+import { enumExercises, exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
+import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
+import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
+import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
+import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
+import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 
 @Component({
   selector: 'strive-feed',
@@ -93,13 +98,37 @@ export class FeedPage implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe()
   }
 
-  openAuthModal(segment: enumAuthSegment) {
-    this.modalCtrl.create({
+  async openAuthModal(segment: enumAuthSegment, exercise?: enumExercises) {
+    const modal = await this.modalCtrl.create({
       component: AuthModalPage,
       componentProps: {
         authSegment: segment
       }
-    }).then(modal => modal.present())
+    })
+    modal.onDidDismiss().then(({ data: loggedIn }) => {
+      if (loggedIn && exercise) {
+        let component
+        switch (exercise) {
+          case enumExercises.affirmations:
+            component = AffirmationUpsertComponent
+            break
+          case enumExercises.bucketlist:
+            component = BucketListUpsertComponent
+            break
+          case enumExercises.dear_future_self:
+            component = DearFutureSelfUpsertComponent
+            break
+          case enumExercises.daily_gratefulness:
+            component = DailyGratefulnessUpsertComponent
+            break
+          case enumExercises.assess_life:
+            component = AssessLifeUpsertComponent
+            break
+        }
+        this.modalCtrl.create({ component }).then(modal => modal.present())
+      }
+    })
+    modal.present()
   }
 
   doRefresh($event) {

@@ -1,9 +1,9 @@
 export enum enumExercises {
-  affirmations,
-  bucketlist,
-  dear_future_self,
-  daily_gratefulness,
-  assess_life
+  bucketlist = 'bucketlist',
+  dear_future_self = 'dear_future_self',
+  daily_gratefulness = 'daily_gratefulness',
+  assess_life = 'assess_life',
+  affirmations = 'affirmations'
 }
 
 export const exercises = [

@@ -107,7 +107,7 @@
       <p>The belief in yourself is your biggest power. Strengten this power by doing these exercises.</p>
       <article class="grid">
         <ng-container *ngFor="let exercise of exercises | slice:0:4">
-          <small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openAuthModal(enumAuthSegment.register)">
+          <small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openAuthModal(enumAuthSegment.register, exercise.enum)">
           </small-thumbnail>
         </ng-container>
       </article>
