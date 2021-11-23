@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
+import { GoogleAuthProvider } from 'firebase/auth';
 // Ionic
 import { NavParams, LoadingController, Platform, AlertController, ModalController } from '@ionic/angular';
 // Rxjs
@@ -103,6 +104,39 @@ export class AuthModalPage implements OnInit {
     }
   }
 
+  async loginWithGoogle() {
+    try {
+      const credentials = await signInWithPopup(this.afAuth, new GoogleAuthProvider())
+      const { displayName, uid, email } = credentials.user;
+
+      const user = await this.user.getValue(uid)
+      if (!user) {
+        const profile = createProfile({ username: displayName, uid })
+        await Promise.all([
+          this.user.add({ uid, email }),
+          this.user.upsertProfile(profile, uid)
+        ])
+        const top = await this.modalCtrl.getTop()
+        if (top) top.dismiss(true)
+        this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
+      } else {
+        const top = await this.modalCtrl.getTop()
+        if (top) top.dismiss(true)
+      }
+  
+    } catch (error) {
+      switch (error.code) {
+        case 'auth/popup-closed-by-user':
+          break
+        default:
+          this.alertCtrl.create({
+            message: error,
+            buttons: [{ text: 'Ok', role: 'cancel' }]
+          }).then(alert => alert.present())
+      }
+    }
+  }
+
   onEnter() {
     switch (this.authSegmentChoice) {
       case enumAuthSegment.login:
@@ -138,7 +172,6 @@ export class AuthModalPage implements OnInit {
 
         await signInWithEmailAndPassword(this.afAuth, email, password)
         loading.dismiss()
-        await this.fcmService.registerFCM()
         this.modalCtrl.dismiss(true)
 
       } catch (error) {

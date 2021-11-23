@@ -14,17 +14,22 @@
     <ng-container *ngSwitchCase="enumAuthSegment.login">
 
       <section fxLayout="column" fxLayoutAlign="start center">
+        <article>
+          <ion-button fill="outline" (click)="loginWithGoogle('google')">
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            Continue with Google
+          </ion-button>
+        </article>
+
         <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input formControlName="email" type="email">
-            </ion-input>
+            <ion-input formControlName="email" type="email"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label position="floating">Password</ion-label>
-            <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()">
-            </ion-input>
+            <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()"></ion-input>
             <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
           </ion-item>
 
@@ -33,22 +38,25 @@
           </div>
         </form>
 
-        <div fxLayout fxLayoutAlign="center">
-          <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.forgot_password">I forgot my password</span>
-        </div>
+        <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.forgot_password">I forgot my password</span>
 
         <hr />
 
-        <div fxLayout fxLayoutAlign="center">
-          <span>Don't have an account?</span>
-          <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.register">Sign Up</span>
-        </div>
+        <span>Don't have an account?</span>
+        <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.register">Sign Up</span>
       </section>
 
     </ng-container>
     <ng-container *ngSwitchCase="enumAuthSegment.register">
 
       <section fxLayout="column" fxLayoutAlign="start center">
+        <article>
+          <ion-button fill="outline" (click)="loginWithGoogle('google')">
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            Continue with Google
+          </ion-button>
+        </article>
+
         <form [formGroup]="signupForm" (ngSubmit)="signUpUser()">
 
           <ion-item>
@@ -66,8 +74,7 @@
 
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input formControlName="email" type="email">
-            </ion-input>
+            <ion-input formControlName="email" type="email"></ion-input>
           </ion-item>
 
           <ng-container *ngFor="let validation of validation_messages.email">
@@ -107,10 +114,10 @@
 
         <hr />
 
-        <div fxLayout fxLayoutAlign="center">
+        <article fxLayout fxLayoutAlign="center">
           <span>Already a member?</span>
           <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.login">Log in</span>
-        </div>
+        </article>
       </section>
 
     </ng-container>
