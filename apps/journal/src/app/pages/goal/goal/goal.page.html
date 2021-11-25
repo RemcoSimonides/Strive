@@ -5,7 +5,7 @@
     <article fxLayout="column" fxFlex fxFlexOrder.lt-sm="2">
       <picture>
         <img [ref]="goal.image" asset="goal.jpeg" [width]="500" [height]="500"/>
-        <div *ngIf="goal.isFinished">finished</div>
+        <div *ngIf="goal.status === 'finished'">finished</div>
       </picture>
       <ng-container *ngIf="collectiveGoal$ | async as collectiveGoal">
         <ion-card fxLayout class="collective-goal">
@@ -21,7 +21,7 @@
     <article fxLayout="column" fxLayoutGap="16px" fxFlex fxFlexOrder.lt-sm="1">
       <ion-card fxLayout fxLayoutAlign="space-evenly" class="team">
         <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
-          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.isFinished || hasOpenRequestToJoin">
+          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.status === 'finished' || hasOpenRequestToJoin">
             <ion-icon slot="start" name="flag"></ion-icon>
             <span> {{ getJoinText() }}</span>
           </ion-button>
@@ -111,7 +111,17 @@
       <!-- Status -->
       <div fxLayout fxLayoutAlign="start center">
         <ion-icon name="pulse"></ion-icon>
-        <span>Status: <b>{{ goal.isFinished ? 'Finished' : 'Active' }}</b></span>
+        <span>Status: </span> 
+        <ng-container *ngIf="isAdmin else statusNoAdmin">
+          <ion-select placeholder="Select Status" interface="popover" [value]="goal.status" (ionChange)="updateStatus($event, goal)">
+            <ion-select-option value="bucketlist">Bucket List</ion-select-option>
+            <ion-select-option value="active">Active</ion-select-option>
+            <ion-select-option value="finished">Finished</ion-select-option>
+          </ion-select>
+        </ng-container>
+        <ng-template #statusNoAdmin>
+          <b>{{ goal.status | titlecase }}</b>
+        </ng-template>
       </div>
   
       <!-- Privacy -->

@@ -117,7 +117,7 @@ async function getUserData(uid: string, fromDate: Date): Promise<User> {
     db.collection(`Users/${uid}/Notifications`)
       .where('createdAt', '>=', fromDate)
       .get()
-      .then(notifications => notifications.docs.map(doc => createNotification(doc.data())).filter(notifications => notifications.event >= 40000 && notifications.event < 50000))
+      .then(notificationsSnap => notificationsSnap.docs.map(doc => createNotification(doc.data())).filter(n => n.event >= 40000 && n.event < 50000))
   ])
 
   return {
@@ -154,7 +154,7 @@ function getNotificationListHTML(notifications: Notification[]): string {
 
   notifications.forEach(notification => {
     const date = moment.unix(notification.createdAt?.seconds ?? 0).format('MMM Do, h:mm a')
-    const message = getNotificationMessage(notification).message.map(message => message.text).join(' ')
+    const message = getNotificationMessage(notification).message.map(m => m.text).join(' ')
 
     html += `<li>${date}: ${message}</li>`
   })

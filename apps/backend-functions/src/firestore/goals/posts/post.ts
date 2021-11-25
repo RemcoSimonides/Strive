@@ -3,7 +3,7 @@ import { enumEvent, Source } from '@strive/notification/+state/notification.fire
 import { createPost, Post } from '@strive/post/+state/post.firestore';
 import { sendNotificationToGoalStakeholders, sendNotificationToGoal, addDiscussion } from '../../../shared/notification/notification'
 import { createNotification } from '@strive/notification/+state/notification.model';
-import { getDocument } from 'apps/backend-functions/src/shared/utils';
+import { getDocument } from '../../../shared/utils';
 import { getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)

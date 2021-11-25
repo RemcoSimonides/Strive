@@ -3,6 +3,7 @@ import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
 
 export type GoalPublicityType = 'public' | 'collectiveGoalOnly' | 'private'
+export type GoalStatus = 'bucketlist' | 'active' | 'finished'
 
 /** For discussion */
 export function getAudience(publicity: GoalPublicityType): AudienceType {
@@ -21,7 +22,7 @@ export interface Goal {
     collectiveGoalId: string;
     roadmapTemplate: MilestoneTemplate[];
     isOverdue: boolean;
-    isFinished: boolean;
+    status: GoalStatus;
     publicity: GoalPublicityType;
     numberOfAchievers: number;
     numberOfSupporters: number;
@@ -45,7 +46,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     id: !!params.id ? params.id : '',
     description: '',
     image: '',
-    isFinished: false,
+    status: 'bucketlist',
     isOverdue: false,
     roadmapTemplate: [],
     numberOfAchievers: 0,

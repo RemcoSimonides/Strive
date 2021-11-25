@@ -24,13 +24,13 @@
           <ion-item>
             <ion-input formControlName="description"
               type="text"
-              [placeholder]="goal.isFinished ? 'Cant support more because goal finished' : 'e.g. Bottle of wine or $20'"
-              [disabled]="goal.isFinished"
+              [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : 'e.g. Bottle of wine or $20'"
+              [disabled]="goal.status === 'finished'"
               (keydown.enter)="addSupport(goal)"></ion-input>
             <ion-button slot="end" 
               (click)="addSupport(goal)"
               color="secondary"
-              [disabled]="goal.isFinished">
+              [disabled]="goal.status === 'finished'">
               ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
             </ion-button>
           </ion-item>

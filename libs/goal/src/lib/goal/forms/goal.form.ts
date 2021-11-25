@@ -28,7 +28,7 @@ function createGoalFormControl(params?: Goal) {
   return {
     description: new FormControl(goal.description),
     image: new FormControl(goal.image),
-    isFinished: new FormControl(goal.isFinished),
+    status: new FormControl(goal.status),
     isOverdue: new FormControl(goal.isOverdue),
     deadline: new FormControl(goal.deadline),
     roadmapTemplate: new FormControl(goal.roadmapTemplate),

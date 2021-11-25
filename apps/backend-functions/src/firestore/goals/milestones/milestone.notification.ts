@@ -10,7 +10,7 @@ import { createMilestone, createMilestoneLink, Milestone } from '@strive/milesto
 import { createNotification, createSupportDecisionMeta, increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { ProfileLink } from '@strive/user/user/+state/user.firestore';
-import { converter } from 'apps/backend-functions/src/shared/utils';
+import { converter } from '../../../shared/utils';
 
 const db = admin.firestore()
 

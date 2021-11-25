@@ -34,7 +34,6 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
         goalId: goalId,
         goalTitle: goal.title,
         goalImage: goal.image,
-        goalIsFinished: goal.isFinished,
         goalPublicity: goal.publicity,
         isSupporter: true,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),

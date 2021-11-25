@@ -39,7 +39,7 @@ async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: Dai
 
     const hours = new Date().getHours()
     const [ setHours, setMinutes ] = dailyGratefulnessSettings.time.split(':').map(time => +time)
-    let scheduledDate = moment(new Date().setHours(setHours, setMinutes))
+    const scheduledDate = moment(new Date().setHours(setHours, setMinutes))
 
     if (hours > setHours) {
       // time passed so set date to tomorrow

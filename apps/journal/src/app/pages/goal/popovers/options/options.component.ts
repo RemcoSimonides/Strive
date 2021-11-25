@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 // Ionic
 import { PopoverController, NavParams } from '@ionic/angular'
+import { GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
 
 export enum enumGoalOptions {
   editNotificationSettings,
@@ -20,7 +21,7 @@ export class GoalOptionsPopoverPage implements OnInit {
   public enumGoalOptions = enumGoalOptions
 
   public isAdmin = false
-  public isFinished = false
+  public status: GoalStatus
 
   constructor(
     private navParams: NavParams,
@@ -29,7 +30,7 @@ export class GoalOptionsPopoverPage implements OnInit {
 
   ngOnInit() {
     this.isAdmin = this.navParams.data.isAdmin
-    this.isFinished = this.navParams.data.isFinished
+    this.status = this.navParams.data.status
   }
 
   async close(goalOption: enumGoalOptions){

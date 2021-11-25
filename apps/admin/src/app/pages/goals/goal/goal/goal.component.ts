@@ -66,7 +66,7 @@ export class GoalComponent implements OnInit {
   }
 
   finish() {
-    this.goal.finishGoal(this.id)
+    this.goal.update(this.id, { status: 'finished' })
   }
 
   async duplicate() {

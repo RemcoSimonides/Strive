@@ -77,15 +77,13 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     // notifications
     handleNotificationsOfChangedGoal(goalId, before, after)
 
-    if (before.isFinished !== after.isFinished || before.publicity !== after.publicity || before.title !== after.title) {
+    if (before.status !== after.status || before.publicity !== after.publicity || before.title !== after.title) {
       // update value on stakeholder docs
       updateGoalStakeholders(goalId, after)
     }
 
-    if (before.isFinished !== after.isFinished) {
-      if (after.isFinished) {
-        handleUnfinishedMilestones(goalId)
-      }
+    if (before.status !== 'finished' && after.status === 'finished') {
+      handleUnfinishedMilestones(goalId)
     }
 
     if (before.publicity !== after.publicity) {
@@ -190,8 +188,7 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
   const promises = stakeholderSnaps.docs.map(doc => doc.ref.update({
     goalId,
     goalTitle: after.title,
-    goalPublicity: after.publicity,
-    goalIsFinished: after.isFinished
+    goalPublicity: after.publicity
   }))
   return Promise.all(promises)
 }

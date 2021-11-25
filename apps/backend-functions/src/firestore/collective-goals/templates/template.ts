@@ -4,7 +4,7 @@ import { createCollectiveGoal, CollectiveGoal, createCollectiveGoalLink } from '
 import { sendNotificationToCollectiveGoalStakeholders } from '../../../shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
-import { ErrorResultResponse, getDocument } from 'apps/backend-functions/src/shared/utils';
+import { ErrorResultResponse, getDocument } from '../../../shared/utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createGoal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';

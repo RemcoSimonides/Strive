@@ -45,7 +45,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
   console.log('executing handle notification of changed goal')
 
   // finished goal
-  if (!before.isFinished && after.isFinished) {
+  if (before.status !== 'finished' && after.status === 'finished') {
   
     // Send finished goal notification to admins and achievers (no supporters)
     sendFinishedGoalNotification(goalId, after)

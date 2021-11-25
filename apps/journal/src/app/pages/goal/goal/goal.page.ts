@@ -121,7 +121,7 @@ export class GoalPage implements OnInit, OnDestroy {
       event: ev,
       componentProps: {
         isAdmin: this.isAdmin,
-        isFinished: goal.isFinished
+        status: goal.status
       }
     })
     await popover.present()
@@ -132,9 +132,6 @@ export class GoalPage implements OnInit, OnDestroy {
           break
         case enumGoalOptions.duplicateGoal:
           this.duplicateGoal()
-          break
-        case enumGoalOptions.finishGoal:
-          this.finishGoal(goal)
           break
         case enumGoalOptions.editGoal:
           this.editGoal(goal)
@@ -163,24 +160,35 @@ export class GoalPage implements OnInit, OnDestroy {
     loading.dismiss();
   }
 
-  private finishGoal(goal: Goal) {
-    this.alertCtrl.create({
-      header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
-      subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
-      buttons: [
-        {
-          text: 'Yes',
-          handler: async () => {
-            await this.goalService.finishGoal(this.goalId)
-            this.startPostCreation(goal)
+  updateStatus($event, goal: Goal) {
+    const status = $event.detail.value;
+    if (!this.isAdmin) return;
+
+    if (status === 'finished') {
+      this.alertCtrl.create({
+        header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
+        subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
+        buttons: [
+          {
+            text: 'Yes',
+            handler: async () => {
+              await this.goalService.update(this.goalId, { status: 'finished' })
+              this.startPostCreation(goal)
+            }
+          },
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {
+              $event.target.value = goal.status;
+            }
           }
-        },
-        {
-          text: 'No',
-          role: 'cancel'
-        }
-      ]
-    }).then(alert => alert.present())
+        ]
+      }).then(alert => alert.present())
+    } else {
+      this.goalService.update(this.goalId, { status })
+    }
+
   }
 
   private startPostCreation(goal: Goal) {

@@ -49,7 +49,7 @@ export class UserPage {
           const goalIds = stakeholders.map(stakeholder => stakeholder.goalId)
           return this.goal.valueChanges(goalIds)
         }),
-        map(goals => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1))
+        map(goals => goals.sort((a, b) => a.status === b.status ? 0 : a.status ? 1 : -1))
       )
     })
   }

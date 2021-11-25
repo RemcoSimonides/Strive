@@ -8,7 +8,7 @@
     <section class="goals">
       <small-thumbnail title="CREATE GOAL" asset="create_goal.jpeg" (click)="createGoal()"></small-thumbnail>
       <ng-container *ngFor="let goal of goals$ | async">
-        <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.isFinished" [routerLink]="'/goal/' + goal.id">
+        <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.status === 'finished'" [routerLink]="'/goal/' + goal.id">
           <small>
             {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
             {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}

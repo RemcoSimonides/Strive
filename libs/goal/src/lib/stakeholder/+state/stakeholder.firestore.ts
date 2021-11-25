@@ -14,7 +14,6 @@ export interface GoalStakeholder {
   goalTitle: string;
   goalImage: string;
   goalPublicity: GoalPublicityType;
-  goalIsFinished: boolean;
   updatedBy?: string;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
@@ -40,7 +39,6 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     hasOpenRequestToJoin: false,
     goalId: '',
     goalImage: '',
-    goalIsFinished: false,
     goalPublicity: 'private',
     goalTitle: '',
     ...params

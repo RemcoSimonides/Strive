@@ -50,7 +50,6 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     if (!!goal) {
       stakeholder.goalTitle = goal.title
       stakeholder.goalPublicity = goal.publicity;
-      stakeholder.goalIsFinished = goal.isFinished;
       stakeholder.goalImage = goal.image;
     }
 

@@ -3,10 +3,9 @@ import { db, admin, functions } from '../../../internals/firebase';
 import { createNotification, isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
 import { Profile } from '@strive/user/user/+state/user.firestore';
-import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
-import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
+import { deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { Notification } from '@strive/notification/+state/notification.firestore';
-import { getDocument } from 'apps/backend-functions/src/shared/utils';
+import { getDocument } from '../../../shared/utils';
 import { getPushMessage } from '@strive/notification/message/push-notification';
 
 export const notificationCreatedHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)

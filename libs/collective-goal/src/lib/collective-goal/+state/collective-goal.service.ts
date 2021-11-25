@@ -77,7 +77,7 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
     }
 
     return this.goalService.valueChanges(constraints).pipe(
-      map(goals => goals.sort((a, b) => a.isFinished === b.isFinished ? 0 : a.isFinished ? 1 : -1)),
+      map(goals => goals.sort((a, b) => a.status === b.status ? 0 : a.status ? 1 : -1)),
     )
   }
 
