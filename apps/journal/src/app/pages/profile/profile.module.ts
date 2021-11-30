@@ -26,6 +26,9 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
+import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
+import { GoalOptionsModule } from './popovers/goal-options/goal-options.module';
+import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -46,6 +49,9 @@ const routes: Routes = [
     ImageModule,
     ImageSelectorModule,
     FollowingModule,
+    StatusPipeModule,
+    GoalOptionsModule,
+    UpsertGoalModalModule,
 
     // Exercises
     BucketListViewModule,

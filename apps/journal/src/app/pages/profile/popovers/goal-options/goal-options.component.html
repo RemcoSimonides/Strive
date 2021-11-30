@@ -1,0 +1,6 @@
+<ion-list mode="md">
+  <ion-item *ngIf="goal.status !== 'finished'" button (click)="setStatus('finished')">Mark as Finished</ion-item>
+  <ion-item *ngIf="goal.status === 'bucketlist'" button (click)="setStatus('active')">Set as 'Current Focus'</ion-item>
+  <ion-item *ngIf="goal.status === 'active'" button (click)="setStatus('bucketlist')">Set as 'In Future'</ion-item>
+  <ion-item button lines="none" (click)="goTo()">More info</ion-item>
+</ion-list>

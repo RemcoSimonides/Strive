@@ -23,11 +23,24 @@
     </ion-item>
   
     <ion-item>
-      <ion-label position="stacked">Secret</ion-label>
-      <ion-toggle formControlName="isSecret"></ion-toggle>
+      <ion-label position="stacked">When Focus?</ion-label>
+      <ion-select placeholder="Select Status" interface="popover" formControlName="status">
+        <ion-select-option value="bucketlist">In future (bucket list)</ion-select-option>
+        <ion-select-option value="active">Current focus</ion-select-option>
+        <ion-select-option value="finished">Already finished (journaling)</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
+      <ion-label position="stacked">Visible to</ion-label>
+      <ion-select interface="popover" formControlName="isSecret"> 
+        <ion-select-option [value]="false">Everyone</ion-select-option>
+        <ion-select-option [value]="true">Only you</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- TODO move it to editable on goal page or on edit goal only -->
+    <!-- <ion-item>
       <ion-label position="stacked">End date &#40;optional&#41;</ion-label>
       <ion-datetime
         placeholder="-- -- --"
@@ -36,13 +49,15 @@
         formControlName="deadline"
         (click)="openingDatetime($event)"
       ></ion-datetime>
-    </ion-item>
+    </ion-item> -->
 
-    <media-image-selector
-      [form]="goalForm.image"
-      [storagePath]="'goals/' + goalId"
-      defaultImage="goal.jpeg"  
-    ></media-image-selector>
+    <ion-item>
+      <media-image-selector
+        [form]="goalForm.image"
+        [storagePath]="'goals/' + goalId"
+        defaultImage="goal.jpeg"
+      ></media-image-selector>
+    </ion-item>
   </form>
 
   <ion-button (click)="upsert()" clear>{{ mode === 'create' ? 'Create' : 'Update'}}</ion-button>

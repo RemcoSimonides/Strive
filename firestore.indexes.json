@@ -48,6 +48,15 @@
       "collectionGroup": "GStakeholders",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
+        { "fieldPath": "isSupporter", "order": "ASCENDING" },
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "GStakeholders",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
         { "fieldPath": "goalPublicity", "order": "ASCENDING" },
         { "fieldPath": "isSupporter", "order": "ASCENDING" },
         { "fieldPath": "uid", "order": "ASCENDING" },

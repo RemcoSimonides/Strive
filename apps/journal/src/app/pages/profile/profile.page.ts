@@ -28,8 +28,10 @@ import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder
 // Other
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { enumExercises, exercises } from '@strive/exercises/utils';
+import { GoalOptions } from './popovers/goal-options/goal-options.component';
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
 @Component({
   selector: 'app-profile',
@@ -43,7 +45,8 @@ export class ProfilePage implements OnInit {
   enumExercises = enumExercises
   exercises = exercises
 
-  public isOwner = false
+  isOwner$: Observable<boolean>
+
   public isSpectator = false
   public isSpectator$: Observable<boolean>
 
@@ -77,10 +80,13 @@ export class ProfilePage implements OnInit {
     this.profileId = this.route.snapshot.paramMap.get('id')
     this.profileForm.disable();
 
+    this.isOwner$ = this.user.profile$.pipe(
+      map(profile => profile?.uid === this.profileId),
+      startWith(false),
+      distinctUntilChanged()
+    )
+
     this.isSpectator$ = this.user.profile$.pipe(
-      tap(profile => {
-        this.isOwner = profile?.uid === this.profileId
-      }),
       switchMap(profile => profile ? this.userSpectateService.valueChanges(profile.uid, { uid: this.profileId }) : of(createSpectator())),
       map(spectator => spectator?.isSpectator ?? false)
     )
@@ -95,8 +101,12 @@ export class ProfilePage implements OnInit {
         })
       )
 
-      this.achievingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !this.isOwner);
-      this.supportingGoals$ = this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !this.isOwner)
+      this.achievingGoals$ = this.isOwner$.pipe(
+        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !isOwner))
+      )
+      this.supportingGoals$ = this.isOwner$.pipe(
+        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner))
+      )
     }
   }
 
@@ -130,9 +140,24 @@ export class ProfilePage implements OnInit {
     }).then(popover => popover.present())
   }
 
-  async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
-    if (!this.isOwner) return
+  createGoal() {
+    this.modalCtrl.create({
+      component: UpsertGoalModalComponent
+    }).then(modal => modal.present())
+  }
 
+  openGoalOptions(goal: Goal, ev: UIEvent) {
+    ev.stopPropagation()
+    ev.preventDefault()
+
+    this.popoverCtrl.create({
+      component: GoalOptions,
+      componentProps: { goal },
+      event: ev
+    }).then(popover => popover.present())
+  }
+
+  async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverPage,
       componentProps: { storagePath: profile.photoURL },
@@ -166,8 +191,6 @@ export class ProfilePage implements OnInit {
   }
 
   openExercise(enumExercise: enumExercises) {
-    if (!this.isOwner) return
-
     let component
     switch (enumExercise) {
       case enumExercises.affirmations:

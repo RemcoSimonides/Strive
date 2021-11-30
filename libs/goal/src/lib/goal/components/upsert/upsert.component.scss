@@ -1,18 +1,12 @@
 ion-toolbar {
-    --background: var(--ion-color-primary);
-    color: var(--ion-color-primary-contrast);
+  --background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
 }
 
 ion-fab {
-    margin-right: 15px;
+  margin-right: 15px;
 }
 
-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: 40%;
-    max-height: 25%;
+media-image-selector {
+  width: 100%;
 }

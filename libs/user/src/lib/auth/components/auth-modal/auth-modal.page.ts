@@ -127,6 +127,7 @@ export class AuthModalPage implements OnInit {
     } catch (error) {
       switch (error.code) {
         case 'auth/popup-closed-by-user':
+        case 'auth/popup-blocked':
           break
         default:
           this.alertCtrl.create({
