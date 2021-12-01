@@ -1,26 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
-
-import { IonicModule } from '@ionic/angular';
-
-import { PrivacyPolicy } from './privacy-policy.page';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: PrivacyPolicy
-  }
-];
+import { PrivacyPolicy } from './privacy-policy.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
+  imports: [CommonModule],
   declarations: [PrivacyPolicy],
   exports: [PrivacyPolicy]
 })
