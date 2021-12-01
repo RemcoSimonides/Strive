@@ -30,7 +30,7 @@ export class EditProfileImagePopoverPage implements OnInit {
       throw new Error('Nothing to update')
     }
 
-    this.profile.update(this.user.uid, { photoURL: this.form.value })
+    this.profile.update({ uid: this.user.uid, photoURL: this.form.value }, { params: { uid: this.user.uid }})
     this.popoverCtrl.dismiss(this.form.value)
   }
 
