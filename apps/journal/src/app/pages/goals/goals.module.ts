@@ -13,6 +13,7 @@ import { LargeThumbnailModule } from '@strive/ui/thumbnail/components/large/larg
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { UpsertCollectiveGoalModule } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.module';
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
     IonicModule,
     FlexLayoutModule,
     RouterModule.forChild(routes),
+    PageLoadingModule,
     SmallThumbnailModule,
     LargeThumbnailModule,
     HeaderModule,

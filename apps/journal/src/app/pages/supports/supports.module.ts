@@ -9,6 +9,7 @@ import { SupportsPage } from './supports.page';
 
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { MilestonePathPipeModule } from '@strive/milestone/pipes/path.pipe'
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 const routes: Routes = [
   {
@@ -24,7 +25,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     HeaderModule,
-    MilestonePathPipeModule
+    MilestonePathPipeModule,
+    PageLoadingModule
   ],
   declarations: [
     SupportsPage,

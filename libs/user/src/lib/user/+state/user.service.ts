@@ -22,7 +22,7 @@ export class UserService extends FireCollection<User> {
     super(db)
 
     this.user$ = user(this.auth).pipe(
-      switchMap(user => user ? this.valueChanges(user.uid) : of (null))
+      switchMap(user => user ? this.valueChanges(user.uid) : of(null))
     )
 
     this.profile$ = user(this.auth).pipe(
@@ -30,7 +30,10 @@ export class UserService extends FireCollection<User> {
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     )
 
-    user(this.auth).pipe(tap(user => this.uid = !!user ? user.uid : '' )).subscribe()
+    user(this.auth).pipe(
+      tap(user => this.uid = !!user ? user.uid : '' ),
+      tap(val => console.log(val === undefined ? 'undefined' : val))
+    ).subscribe()
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<User>) {

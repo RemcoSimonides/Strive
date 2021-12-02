@@ -58,6 +58,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.seo.generateTags({ title: `Strive Journal` });
+    console.log('on init')
 
     this.userSubscription = this.user.profile$.subscribe(profile => {
       if (profile) {

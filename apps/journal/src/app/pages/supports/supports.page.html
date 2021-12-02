@@ -1,14 +1,16 @@
 <strive-header title="Supports" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
-<div class="not-logged-in" *ngIf="pageIsLoading">
-  <ion-spinner name="lines" color="primary"></ion-spinner>
-</div>
+<ng-container *ngIf="pageIsLoading || user.uid === undefined">
+  <strive-page-loading></strive-page-loading>
+</ng-container>
 
-<div class="not-logged-in" *ngIf="!user.uid && !pageIsLoading">
-  <p>
+<ng-container *ngIf="user.uid === '' && !pageIsLoading">
+  <div class="not-logged-in">
+    <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
-  </p>
-</div>
+    </p>
+  </div>  
+</ng-container>
 
 <ion-content class="ion-padding" *ngIf="!!user.uid && !pageIsLoading">
   <div class="vertical-align-content">

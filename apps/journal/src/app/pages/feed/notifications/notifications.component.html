@@ -1,23 +1,25 @@
 <strive-header title="Notifications"></strive-header>
 
-<ng-container *ngIf="!!user.uid; else notLoggedIn">
-  <ion-content>
-    <section fxLayout="column" fxLayoutAlign="start">
-      <ng-container *ngIf="notifications$ | async as notifications; else empty">
-        <ng-container *ngIf="notifications.length; else empty">
-          <ng-container *ngFor="let notification of notifications; let isLast = last">
-            <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
-            <span *ngIf="!isLast" class="divider"></span>
-          </ng-container>
-        </ng-container>  
-      </ng-container>
+<ng-container *ngIf="user.uid !== undefined else loading">
+  <ng-container *ngIf="!!user.uid; else notLoggedIn">
+    <ion-content>
+      <section fxLayout="column" fxLayoutAlign="start">
+        <ng-container *ngIf="notifications$ | async as notifications; else empty">
+          <ng-container *ngIf="notifications.length; else empty">
+            <ng-container *ngFor="let notification of notifications; let isLast = last">
+              <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+              <span *ngIf="!isLast" class="divider"></span>
+            </ng-container>
+          </ng-container>  
+        </ng-container>
 
-      <ng-template #empty>
-        No notifications
-      </ng-template>
-    </section>
-  </ion-content>
-</ng-container>
+        <ng-template #empty>
+          No notifications
+        </ng-template>
+      </section>
+    </ion-content>
+  </ng-container>
+</ng-container> 
 
 <ng-template #notLoggedIn>
   <div class="not-logged-in">
@@ -25,4 +27,8 @@
       <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
     </p>
   </div>
+</ng-template>
+
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
 </ng-template>
