@@ -83,7 +83,8 @@ export class ProfilePage implements OnInit {
     this.isOwner$ = this.user.profile$.pipe(
       map(profile => profile?.uid === this.profileId),
       startWith(false),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      shareReplay({ bufferSize: 1, refCount: true }),
     )
 
     this.isSpectator$ = this.user.profile$.pipe(
@@ -102,9 +103,11 @@ export class ProfilePage implements OnInit {
       )
 
       this.achievingGoals$ = this.isOwner$.pipe(
-        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !isOwner))
+        distinctUntilChanged(),
+        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !isOwner)),
       )
       this.supportingGoals$ = this.isOwner$.pipe(
+        distinctUntilChanged(),
         switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner))
       )
     }
