@@ -206,7 +206,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
 
     case enumEvent.gMilestoneDeadlinePassed:
       switch (target) {
-        case 'goal':
+        case 'stakeholder':
           return {
             ...get('goal', source),
             message: [
@@ -218,6 +218,13 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
               {
                 text: `' has passed the due date`
               }
+            ]
+          }
+        case 'goal':
+          return {
+            ...get('goal', source),
+            message: [
+              { text: `Milestone '${source.milestone.description}' has passed the due date` }
             ]
           }
       }
