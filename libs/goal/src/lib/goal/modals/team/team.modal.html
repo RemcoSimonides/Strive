@@ -22,8 +22,8 @@
       <ion-button *ngIf="(isAdmin$ | async) && !stakeholder.isAdmin" fill="clear" slot="end" (click)="toggleAdmin(stakeholder, $event)">
         <fa-icon  [icon]="['fas', 'user-tie']"></fa-icon>
       </ion-button>
-      <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" fill="clear" slot="end"></fa-icon>
-      <ion-button *ngIf="(isAdmin$ | async) && !stakeholder.isAchiever" slot="end" (click)="toggleAchiever(stakeholder, $event)">
+      <fa-icon *ngIf="stakeholder.isAchiever" [icon]="['fas', 'flag']" slot="end"></fa-icon>
+      <ion-button *ngIf="(isAdmin$ | async) && !stakeholder.isAchiever" fill="clear" slot="end" (click)="toggleAchiever(stakeholder, $event)">
         <fa-icon [icon]="['fas', 'flag']"></fa-icon>
       </ion-button>
       <fa-icon *ngIf="stakeholder.isSupporter" [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
