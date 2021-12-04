@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
 // Ionic
-import { IonInfiniteScroll, NavController, Platform } from '@ionic/angular'
+import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular'
 // Rxjs
-import { Subscription, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Subscription, of, Observable } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -15,8 +15,8 @@ import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-
-import { Profile } from '@strive/user/user/+state/user.firestore';
+// Components
+import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
 // Animation for Roadmap
 declare const initMilestonesAnimation: Function;
@@ -34,7 +34,7 @@ export class GoalViewPage implements OnInit, OnDestroy {
   goalId: string
   goal: Goal
 
-  stakeholders: GoalStakeholder[]
+  isAdmin$: Observable<boolean>
 
   segmentChoice: 'goal' | 'roadmap' | 'story' = 'goal'
 
@@ -47,16 +47,21 @@ export class GoalViewPage implements OnInit, OnDestroy {
     private goalAuthGuardService: GoalAuthGuardService,
     public stakeholder: GoalStakeholderService,
     private inviteTokenService: InviteTokenService,
+    private modalCtrl: ModalController,
     private navCtrl: NavController,
     private platform: Platform,
     private route: ActivatedRoute,
-    private router: Router,
     private seo: SeoService
   ) { }
 
   async ngOnInit() {
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal = await this.goalService.getValue(this.goalId)
+
+    this.isAdmin$ = this.user.profile$.pipe(
+      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of(undefined)),
+      map(stakeholder => stakeholder?.isAdmin ?? false)
+    )
 
     const { t } = this.route.snapshot.queryParams;
     this.segmentChoice = ['goal', 'roadmap', 'story'].includes(t) ? t : 'goal'
@@ -114,5 +119,15 @@ export class GoalViewPage implements OnInit, OnDestroy {
     if (this.segmentChoice === 'roadmap') {
       initMilestonesAnimation()
     }
+  }
+
+  createCustomPost() {
+    this.modalCtrl.create({
+      component: UpsertPostModal,
+      componentProps: {
+        goal: this.goal,
+        postId: undefined
+      }
+    }).then(modal => modal.present())
   }
 }

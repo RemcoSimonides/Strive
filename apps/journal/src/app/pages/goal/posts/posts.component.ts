@@ -65,14 +65,4 @@ export class PostsComponent implements OnInit, OnDestroy {
       }
     })
   }
-
-  public async createCustomPost() {
-    this.modalCtrl.create({
-      component: UpsertPostModal,
-      componentProps: {
-        goal: this.goal,
-        postId: undefined
-      }
-    }).then(modal => modal.present())
-  }
 }

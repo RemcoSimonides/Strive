@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
+import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
@@ -11,7 +11,6 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakehol
 import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
 
 // Strive Components
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
@@ -41,8 +40,6 @@ export class RoadmapComponent implements OnInit, OnDestroy {
   constructor(
     private alertCtrl: AlertController,
     private cdr: ChangeDetectorRef,
-    private goalService: GoalService,
-    private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private milestone: MilestoneService,
@@ -55,15 +52,8 @@ export class RoadmapComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.stakeholder$ = this.user.profile$.pipe(
-      switchMap(profile => {
-        if (!!profile) {
-          return this.stakeholderService.valueChanges(this.user.uid, { goalId: this.goal.id }).pipe(
-            map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
-          )
-        } else {
-          return of(createGoalStakeholder())
-        }
-      })
+      switchMap(profile => profile ? this.stakeholderService.valueChanges(profile.uid, { goalId: this.goal.id }) : of(undefined)),
+      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
     )
 
     this.sub = this.service.converting.pipe(pairwise()).subscribe(async ([prev, next]) => {

@@ -37,3 +37,11 @@
   </section>
 
 </ion-content>
+
+<ion-fab *ngIf="segmentChoice === 'story'" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
+</ion-fab>
+
+<ion-fab *ngIf="segmentChoice === 'roadmap' && (isAdmin$ | async)" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button [routerLink]="['edit']"><ion-icon name="build"></ion-icon></ion-fab-button>
+</ion-fab>

@@ -39,8 +39,4 @@
     </ng-template>
   </strive-roadmap>
 
-  <!-- Only admins can edit the roadmap -->
-  <ion-fab *ngIf="stakeholder.isAdmin" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="editRoadmap()"><ion-icon name="build"></ion-icon></ion-fab-button>
-  </ion-fab>
 </ng-container>
