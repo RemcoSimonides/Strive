@@ -134,7 +134,7 @@
   
       <!-- Deadline -->
       <ng-container *ngIf="!!goal.deadline">
-        <div fxLayout fxLayoutAlign="start center" [ngStyle]="{ 'color': goal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
+        <div fxLayout fxLayoutAlign="start center" [ngStyle]="{ 'color': isOverdue(goal.deadline) ? 'var(--ion-color-danger-tint)' : 'inherit'}">
           <ion-icon name="timer-outline"></ion-icon>
           <span>Deadline: <b>{{ goal.deadline | date:'fullDate' }}</b></span>
         </div>

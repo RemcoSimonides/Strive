@@ -271,4 +271,8 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
       isAchiever: !stakeholder.isAchiever,
     }, { params: { collectiveGoalId: this.collectiveGoalId }})
   }
+
+  isOverdue(deadline: string) {
+    return new Date(deadline) < new Date()
+  }
 }

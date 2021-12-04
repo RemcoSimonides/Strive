@@ -8,7 +8,6 @@ function createCollectiveGoalFormControl(params?: CollectiveGoal) {
     deadline: new FormControl(collectiveGoal.deadline),
     description: new FormControl(collectiveGoal.description),
     image: new FormControl(collectiveGoal.image),
-    isOverdue: new FormControl(collectiveGoal.isOverdue),
     isSecret: new FormControl(collectiveGoal.isSecret, Validators.required),
     numberOfAchievers: new FormControl(collectiveGoal.numberOfAchievers),
     shortDescription: new FormControl(collectiveGoal.shortDescription),

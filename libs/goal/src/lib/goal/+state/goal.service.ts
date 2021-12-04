@@ -32,6 +32,7 @@ export class GoalService extends FireCollection<Goal> {
   protected toFirestore(goal: Goal): Goal {
     if (!!goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
     goal.updatedBy = this.user.uid
+    console.log('final goal ', goal)
     return goal
   }
 

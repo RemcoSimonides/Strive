@@ -6,8 +6,6 @@ export interface CollectiveGoal {
     shortDescription: string;
     description: string;
     isSecret: boolean;
-    // TODO remove isOverdue field
-    isOverdue: boolean;
     deadline: string;
     image: string;
     numberOfAchievers: number;
@@ -23,7 +21,6 @@ export function createCollectiveGoal(params: Partial<CollectiveGoal> = {}): Coll
     deadline: '',
     description: '',
     image: '',
-    isOverdue: false,
     isSecret: false,
     numberOfAchievers: 0,
     shortDescription: '',

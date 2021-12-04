@@ -9,7 +9,6 @@ export type ScheduledTask =
   | ScheduledTaskCollectiveGoalInviteLinkDeadline
   | ScheduledTaskMilestoneDeadline
   | ScheduledTaskGoalDeadline
-  | ScheduledTaskCollectiveGoalDeadline
   | ScheduledTaskUserExerciseAffirmations
 
 export enum enumWorkerType {
@@ -17,7 +16,6 @@ export enum enumWorkerType {
   deleteInviteTokenCollectiveGoal = 'deleteInviteLinkCollectiveGoal',
   milestoneDeadline = 'milestoneDeadline',
   goalDeadline = 'goalDeadline',
-  collectiveGoalDeadline = 'collectiveGoalDeadline',
   userExerciseAffirmation = 'userExerciseAffirmation',
   userExerciseDailyGratefulnessReminder = 'userExerciseDailyGratefulnessReminder',
 }
@@ -46,12 +44,6 @@ export interface ScheduledTaskMilestoneDeadline extends ScheduledTaskBase {
 export interface ScheduledTaskGoalDeadline extends ScheduledTaskBase {
   options: {
     goalId: string;
-  };
-}
-
-export interface ScheduledTaskCollectiveGoalDeadline extends ScheduledTaskBase {
-  options: {
-    collectiveGoalId: string;
   };
 }
 

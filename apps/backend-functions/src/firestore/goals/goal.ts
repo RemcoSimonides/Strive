@@ -104,17 +104,6 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     } else if (before.title !== after.title || before.image !== after.image) {
       updateAlgoliaObject('goal', goalId, after)
     }
-
-    // deadline
-    if (before.deadline !== after.deadline) {
-      if (!after.isOverdue) {
-        upsertScheduledTask(goalId, {
-          worker: enumWorkerType.goalDeadline,
-          performAt: after.deadline ? after.deadline : '',
-          options: { goalId}
-        })
-      }
-    }
   })
 
 export const duplicateGoal = functions.https.onCall(async (data: { goalId: string, uid: string }, context: CallableContext): Promise<ErrorResultResponse> => {

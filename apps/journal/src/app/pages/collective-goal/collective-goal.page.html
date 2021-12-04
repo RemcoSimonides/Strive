@@ -31,7 +31,7 @@
 
         <ng-container *ngIf="collectiveGoal.deadline">
           <ion-row>
-            <div id="deadline" [ngStyle]="{ 'color': collectiveGoal.isOverdue ? 'var(--ion-color-danger-tint)' : 'inherit'}">
+            <div id="deadline" [ngStyle]="{ 'color': isOverdue(collectiveGoal.deadline) ? 'var(--ion-color-danger-tint)' : 'inherit'}">
               <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon> {{ collectiveGoal.deadline | date:'fullDate' }}
             </div>
           </ion-row>

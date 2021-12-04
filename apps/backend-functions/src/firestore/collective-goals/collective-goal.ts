@@ -19,14 +19,14 @@ export const collectiveGoalCreatedHandler = functions.firestore.document(`Collec
       })
     }
 
-    if (!!collectiveGoal.deadline) {
-      upsertScheduledTask(collectiveGoalId, {
-        worker: enumWorkerType.collectiveGoalDeadline,
-        performAt: collectiveGoal.deadline,
-        options: { collectiveGoalId },
-        status: 'scheduled'
-      })
-    }
+    // if (collectiveGoal.deadline) {
+      // upsertScheduledTask(collectiveGoalId, {
+      //   worker: enumWorkerType.collectiveGoalDeadline,
+      //   performAt: collectiveGoal.deadline,
+      //   options: { collectiveGoalId },
+      //   status: 'scheduled'
+      // })
+    // }
   })
 
 export const collectiveGoalDeletedHandler = functions.firestore.document(`CollectiveGoals/{collectiveGoalId}`)
@@ -87,15 +87,15 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
     }
 
     // deadline
-    if (before.deadline !== after.deadline && !after.isOverdue) {
-      upsertScheduledTask(collectiveGoalId, {
-        worker: enumWorkerType.collectiveGoalDeadline,
-        performAt: after.deadline,
-        options: {
-          collectiveGoalId: collectiveGoalId
-        }
-      })
-    }
+    // if (before.deadline !== after.deadline) {
+    //   upsertScheduledTask(collectiveGoalId, {
+    //     worker: enumWorkerType.collectiveGoalDeadline,
+    //     performAt: after.deadline,
+    //     options: {
+    //       collectiveGoalId: collectiveGoalId
+    //     }
+    //   })
+    // }
   })
 
 async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { title, isSecret, image }: CollectiveGoal) {

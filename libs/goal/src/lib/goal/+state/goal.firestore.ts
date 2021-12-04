@@ -21,7 +21,6 @@ export interface Goal {
     image: string;
     collectiveGoalId: string;
     roadmapTemplate: MilestoneTemplate[];
-    isOverdue: boolean;
     status: GoalStatus;
     publicity: GoalPublicityType;
     numberOfAchievers: number;
@@ -47,7 +46,6 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     description: '',
     image: '',
     status: 'bucketlist',
-    isOverdue: false,
     roadmapTemplate: [],
     numberOfAchievers: 0,
     numberOfCustomSupports: 0,

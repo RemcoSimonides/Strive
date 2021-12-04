@@ -311,4 +311,8 @@ export class GoalPage implements OnInit, OnDestroy {
   saveDescription(description: string) {
     return this.goalService.updateDescription(this.goalId, description)
   }
+
+  isOverdue(deadline: string) {
+    return new Date(deadline) < new Date()
+  }
 }

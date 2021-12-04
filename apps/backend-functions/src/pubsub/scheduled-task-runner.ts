@@ -57,8 +57,6 @@ const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
   deleteInviteLinkCollectiveGoal: (options) => deleteInviteLinkCollectiveGoal(options),
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
-  goalDeadline: (options) => goalDeadlineHandler(options),
-  collectiveGoalDeadline: (options) => collectiveGoalDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
   userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options)
 }
@@ -79,20 +77,6 @@ async function milestoneDeadlineHandler(options) {
   // set status to overdue
   return db.doc(`Goals/${options.goalId}/Milestones/${options.milestoneId}`).update({
     status: 'overdue'
-  })
-}
-
-function goalDeadlineHandler(options) {
-  // set overdue
-  return db.doc(`Goals/${options.goalId}`).update({
-    isOverdue: true
-  })
-}
-
-function collectiveGoalDeadlineHandler(options) {
-  // set overdue
-  return db.doc(`CollectiveGoals/${options.collectiveGoalId}`).update({
-    isOverdue: true
   })
 }
 
