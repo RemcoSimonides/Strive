@@ -81,6 +81,7 @@ export class UpsertGoalModalComponent implements OnInit {
         this.goalForm.publicity.setValue(publicity)
 
         const goal = createGoal({ ...this.goalForm.value, id: this.goalId })
+        delete goal['isSecret'] // remove isSecret value from Form
         await this.goalService.upsert(goal, { params: { uid: this.navParams.data?.uid }})
         if (this.mode === 'create') {
           if (this.appName === 'journal') {
@@ -106,7 +107,7 @@ export class UpsertGoalModalComponent implements OnInit {
 
   private determinePublicity(isSecret: boolean): GoalPublicityType {
     if (isSecret) return 'private'
-    if (!!this.collectiveGoal && this.collectiveGoal.isSecret) return 'collectiveGoalOnly'
+    if (this.collectiveGoal?.isSecret) return 'collectiveGoalOnly'
     return 'public'
   }
 

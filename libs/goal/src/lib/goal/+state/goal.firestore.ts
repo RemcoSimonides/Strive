@@ -15,22 +15,22 @@ export function getAudience(publicity: GoalPublicityType): AudienceType {
 }
 
 export interface Goal {
-    id?: string;
-    title: string;
-    description: string;
-    image: string;
-    collectiveGoalId: string;
-    roadmapTemplate: MilestoneTemplate[];
-    status: GoalStatus;
-    publicity: GoalPublicityType;
-    numberOfAchievers: number;
-    numberOfSupporters: number;
-    numberOfCustomSupports: number;
-    totalNumberOfCustomSupports: number;
-    deadline?: string;
-    updatedBy?: string;
-    updatedAt?: Timestamp;
-    createdAt?: Timestamp;
+  id?: string;
+  title: string;
+  description: string;
+  image: string;
+  collectiveGoalId: string;
+  roadmapTemplate: MilestoneTemplate[];
+  status: GoalStatus;
+  publicity: GoalPublicityType;
+  numberOfAchievers: number;
+  numberOfSupporters: number;
+  numberOfCustomSupports: number;
+  totalNumberOfCustomSupports: number;
+  deadline?: string;
+  updatedBy?: string;
+  updatedAt?: Timestamp;
+  createdAt?: Timestamp;
 }
 
 export interface GoalLink {
