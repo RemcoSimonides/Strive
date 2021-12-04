@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin'
 import * as moment from 'moment'
+import { logger } from 'firebase-functions'
 // Functions
 import { 
   sendNotificationToGoal,
@@ -25,7 +26,7 @@ const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
 
 export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goal): Promise<void> {
-  console.log('executting handle notification of created goal')
+  logger.log('executting handle notification of created goal')
 
   const source: Source = {
     goal: createGoalLink({ ...goal, id: goalId })
@@ -42,7 +43,7 @@ export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goa
 }
 
 export async function handleNotificationsOfChangedGoal(goalId: string, before: Goal, after: Goal): Promise<void> {
-  console.log('executing handle notification of changed goal')
+  logger.log('executing handle notification of changed goal')
 
   // finished goal
   if (before.status !== 'finished' && after.status === 'finished') {
@@ -81,7 +82,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
 
 // NEW GOAL NOTIFICATION
 async function sendNewGoalNotification(goalId: string, goal: Goal) {
-  console.log(`Sending New Goal Notification to Goal`)
+  logger.log(`Sending New Goal Notification to Goal`)
   const notification = createNotification({
     discussionId: goalId,
     event: enumEvent.gNew,
@@ -94,7 +95,7 @@ async function sendNewGoalNotification(goalId: string, goal: Goal) {
 
   if (goal.publicity === 'public') {
 
-    console.log(`Sending New Goal Notification to User Spectators`)
+    logger.log(`Sending New Goal Notification to User Spectators`)
     const goalStakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
     for (const snap of goalStakeholderColSnap.docs) {
       notification.source.user = createProfileLink(snap.data())
@@ -106,7 +107,7 @@ async function sendNewGoalNotification(goalId: string, goal: Goal) {
 async function sendNewGoalNotificationInCollectiveGoal(goalId: string, goal: Goal) {
 
   if (!goal.collectiveGoalId) return
-  console.log(`Sending New Goal Notification to Collective Goal (${goal.collectiveGoalId}) stakeholders`)
+  logger.log(`Sending New Goal Notification to Collective Goal (${goal.collectiveGoalId}) stakeholders`)
 
   const collectiveGoalSnap = await db.doc(`CollectiveGoals/${goal.collectiveGoalId}`).get()
   const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data());

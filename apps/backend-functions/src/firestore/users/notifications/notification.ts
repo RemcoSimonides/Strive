@@ -1,4 +1,5 @@
 import { db, admin, functions } from '../../../internals/firebase';
+import { logger } from 'firebase-functions';
 // Interfaces
 import { createNotification, isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
@@ -18,7 +19,7 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
     // send push notification
     const profile = await getDocument<Profile>(`Users/${userId}/Profile/${userId}`)
 
-    console.log(`gonna send notification to ${profile.username}`)
+    logger.log(`gonna send notification to ${profile.username}`)
     if (!!profile.fcmTokens.length) {
 
       // TODO
@@ -28,13 +29,13 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
       // GOOD LUCK!
       const message = getPushMessage(notification)
       
-      console.log('sending notification to devices', profile.fcmTokens)
+      logger.log('sending notification to devices', profile.fcmTokens)
 
       admin.messaging().sendToDevice(profile.fcmTokens, {
         notification: { ...message },
         data: { url: message.url }
       }).catch((err => {
-        console.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
+        logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
       }))
 
     }

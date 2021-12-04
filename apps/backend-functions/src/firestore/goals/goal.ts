@@ -1,4 +1,5 @@
 import { db, functions, serverTimestamp } from '../../internals/firebase';
+import { logger } from 'firebase-functions';
 
 import { createGoal, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
 // Shared
@@ -11,7 +12,6 @@ import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
-import { logger } from 'firebase-functions';
 import { Timestamp } from '@firebase/firestore-types';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
@@ -51,7 +51,7 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
       try {
         deleteFromAlgolia('goal', goalId)
       } catch (err) {
-        console.log('deleting from Algolia error', err)
+        logger.log('deleting from Algolia error', err)
       }
     }
 

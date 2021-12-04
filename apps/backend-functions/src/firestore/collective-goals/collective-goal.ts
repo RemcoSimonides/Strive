@@ -1,3 +1,4 @@
+import { logger } from 'firebase-functions';
 import { db, functions } from '../../internals/firebase';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { deleteScheduledTask, upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
@@ -36,7 +37,7 @@ export const collectiveGoalDeletedHandler = functions.firestore.document(`Collec
     try {
       deleteFromAlgolia('collectiveGoal', collectiveGoalId)
     } catch (err) {
-      console.log('deleting from Algolia error', err)
+      logger.log('deleting from Algolia error', err)
     }
     deleteScheduledTask(collectiveGoalId)
 

@@ -125,7 +125,7 @@ export class GoalPage implements OnInit, OnDestroy {
     await popover.onDidDismiss().then((data) => {
       switch (data.data) {
         case enumGoalOptions.editNotificationSettings:
-          console.log('not supported yet')
+          console.warn('not supported yet')
           break
         case enumGoalOptions.duplicateGoal:
           this.duplicateGoal()

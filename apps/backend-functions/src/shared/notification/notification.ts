@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import { logger } from 'firebase-functions';
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { AudienceType, createDiscussion } from '@strive/discussion/+state/discussion.firestore';
@@ -59,7 +60,7 @@ export function sendNotificationToUsers(notification: Partial<Notification>, rec
  */
 export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, except: string, isAdmin: boolean, isAchiever: boolean) {
 
-  console.log('executing Send Notification to Collective Goal Stakeholder(s)')
+  logger.log('executing Send Notification to Collective Goal Stakeholder(s)')
   notification.target = 'stakeholder'
   const receivers = await getCollectiveGoalStakeholders(collectiveGoalId, except, isAdmin, isAchiever)
   return sendNotificationToUsers(notification, receivers)
@@ -88,17 +89,17 @@ async function getCollectiveGoalStakeholders(collectiveGoalId: string, except: s
  * @param notification Check notification interface to see when to pass which data 
  */
 export function sendNotificationToGoal(goalId: string, notification: Partial<Notification>) {
-  console.log(`executing Send Notification to Goal ${goalId}`)
+  logger.log(`executing Send Notification to Goal ${goalId}`)
 
   notification.updatedAt = serverTimestamp() as Timestamp
   notification.createdAt = serverTimestamp() as Timestamp
   notification.target = 'goal'
 
-  if (!!notification.id) {
-    console.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, JSON.stringify(notification))
+  if (notification.id) {
+    logger.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, JSON.stringify(notification))
     db.doc(`Goals/${goalId}/Notifications/${notification.id}`).set(notification)
   } else {
-    console.log(`adding notification to goal ${goalId}`, JSON.stringify(notification))
+    logger.log(`adding notification to goal ${goalId}`, JSON.stringify(notification))
     db.collection(`Goals/${goalId}/Notifications`).add(notification)
   }
 

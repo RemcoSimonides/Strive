@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Template } from '@strive/template/+state/template.firestore';
 import { TemplateService } from '@strive/template/+state/template.service';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 
 @Component({
@@ -21,8 +20,6 @@ export class TemplatesComponent implements OnInit {
   ) {}
 
 	ngOnInit() {
-    this.templates$ = this.template.valueChanges({ collectiveGoalId: this.id }).pipe(
-      tap(console.log)
-    )
+    this.templates$ = this.template.valueChanges({ collectiveGoalId: this.id })
 	}
 }

@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import { logger } from 'firebase-functions';
 // Functions
 import { 
   addDiscussion,
@@ -154,7 +155,7 @@ function sendNewAdminNotification(goalId: string, goalStakeholder: GoalStakehold
 
 // REQUEST TO JOIN
 async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
-  console.log(`send 'New Request To Join Goal' Notification In Goal`)
+  logger.log(`send 'New Request To Join Goal' Notification In Goal`)
 
   const source: Source = {
     goal: createGoalLink({

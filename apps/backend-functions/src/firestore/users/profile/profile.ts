@@ -1,4 +1,5 @@
 import { db, functions, admin } from '../../../internals/firebase';
+import { logger } from 'firebase-functions';
 
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../../shared/algolia/algolia';
@@ -37,11 +38,11 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
 
     if (before.fcmTokens.length < after.fcmTokens.length) {
       admin.messaging().subscribeToTopic(after.fcmTokens, 'notifications')
-        .then(res => { console.log('Successfully subscribed to topic:', res) })
-        .catch(err => { console.log('Error subscribing tot topic', err) })
+        .then(res => { logger.log('Successfully subscribed to topic:', res) })
+        .catch(err => { logger.log('Error subscribing tot topic', err) })
     }
 
-    console.log('updating Algolia')
+    logger.log('updating Algolia')
     updateAlgoliaObject('user', uid, {
       uid,
       username: after.username,
@@ -53,7 +54,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
               
       if (!after.username || !after.photoURL) {
         // TODO prevent this with firestore rules
-        console.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
+        logger.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
         return
       }
 
@@ -88,7 +89,7 @@ async function updateGoalStakeholders(uid: string, after: Profile) {
 }
 
 async function updateSpectators(uid: string, after: Profile) {
-  console.log('uid: ', uid);
+  logger.log('uid: ', uid);
   const spectating: Partial<Spectator> = {
     username: after.username,
     photoURL: after.photoURL

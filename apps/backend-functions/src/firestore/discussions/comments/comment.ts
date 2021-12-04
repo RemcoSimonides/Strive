@@ -1,3 +1,4 @@
+import { logger } from 'firebase-functions';
 import { admin, db, functions } from '../../../internals/firebase';
 import { Comment, createComment } from '@strive/discussion/+state/comment.firestore';
 import { createDiscussion, Discussion } from '@strive/discussion/+state/discussion.firestore';
@@ -13,7 +14,7 @@ export const commentCreatedHandler = functions.firestore.document(`Discussions/{
     const comment = createComment(snapshot.data())
     const discussionId: string = context.params.discussionId
 
-    console.log(`comment created in discussion ${discussionId}: `, comment)
+    logger.log(`comment created in discussion ${discussionId}: `, comment)
 
     const discussionRef = db.doc(`Discussions/${discussionId}`)
     const discussionSnap = await discussionRef.get()
@@ -33,7 +34,7 @@ export const commentCreatedHandler = functions.firestore.document(`Discussions/{
   })
 
 function sendNewMessageNotificationToParticipants(discussionId: string, discussion: Discussion, comment: Comment) {
-  console.log(`Sending New Message Notification to Participants`)
+  logger.log(`Sending New Message Notification to Participants`)
 
   if (!discussion.commentators?.length) return
 

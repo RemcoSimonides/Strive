@@ -1,4 +1,5 @@
 import { db, functions } from '../../internals/firebase';
+import { logger } from 'firebase-functions';
 
 import * as moment from 'moment'
 import * as sgMail from '@sendgrid/mail'
@@ -211,11 +212,11 @@ async function submitEmail(mail: string, receiverEmailAddress: string) {
   sgMail.setApiKey(config.sendgrid.apikey)
 
   try {
-    console.log('going to send email template: ', JSON.stringify(msg));
+    logger.log('going to send email template: ', JSON.stringify(msg));
     await sgMail.send(msg)
-    console.log('sent 🙂')
+    logger.log('sent 🙂')
   } catch (err) {
-    console.log('err: ', err)
+    logger.error('err: ', err)
   }
 }
 
@@ -232,11 +233,11 @@ async function sendTemplateEmail(to: string, templateId: string, data: Record<st
   }
 
   try {
-    console.log('going to send email template: ', JSON.stringify(msg));
+    logger.log('going to send email template: ', JSON.stringify(msg));
     await sgMail.send(msg)
-    console.log('sent 🙂')
+    logger.log('sent 🙂')
   } catch (err) {
-    console.log('err: ', err)
+    logger.error('err: ', err)
   }
 }
 

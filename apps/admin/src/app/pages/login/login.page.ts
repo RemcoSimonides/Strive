@@ -54,7 +54,6 @@ export class LoginPage {
           }).then(alert => alert.present())
         }
 
-        console.log('isAdmin: ', isAdmin)
         loading.dismiss()
         // this.router.navigate(['/a/users'])
 
