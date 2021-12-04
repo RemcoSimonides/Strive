@@ -14,7 +14,6 @@ import { Observable, of, Subscription } from 'rxjs';
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
-import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
@@ -199,10 +198,6 @@ export class ProfilePage implements OnInit {
     switch (enumExercise) {
       case enumExercises.affirmations:
         component = AffirmationUpsertComponent
-        break
-      
-      case enumExercises.bucketlist:
-        component = BucketListUpsertComponent
         break
       
       case enumExercises.dear_future_self:

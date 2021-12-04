@@ -7,7 +7,6 @@ export { scheduledEmailRunner } from './pubsub/email/email';
 // firestorage
 export { userSpectatorChangeHandler, userSpectatorCreatedHandler } from './firestore/users/user-spectators/user-spectator';
 export { affirmationsCreatedHandler, affirmationsChangeHandler } from './firestore/users/exercises/affirmation';
-export { bucketListCreatedHandler, bucketListChangeHandler } from  './firestore/users/exercises/bucketlist';
 export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler } from './firestore/users/exercises/daily_gratefulness';
 export { profileCreatedHandler, profileChangeHandler, profileDeletedHandler } from './firestore/users/profile/profile';
 export { notificationCreatedHandler, notificationChangeHandler, notificationDeletedHandler } from './firestore/users/notifications/notification';

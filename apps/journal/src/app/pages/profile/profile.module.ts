@@ -10,8 +10,6 @@ import { ProfilePage } from './profile.page';
 import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page'
 import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 
-import { BucketListViewModule } from '@strive/exercises/bucket-list/components/view/view.module';
-import { BucketListUpsertModule } from '@strive/exercises/bucket-list/components/upsert/upsert.module';
 import { AffirmationsViewModule } from '@strive/exercises/affirmation/components/view/view.module';
 import { AffirmationUpsertModule } from '@strive/exercises/affirmation/components/upsert/upsert.module';
 import { DailyGratefulnessUpsertModule } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.module';
@@ -54,8 +52,6 @@ const routes: Routes = [
     UpsertGoalModalModule,
 
     // Exercises
-    BucketListViewModule,
-    BucketListUpsertModule,
     AffirmationsViewModule,
     AffirmationUpsertModule,
     DailyGratefulnessUpsertModule,

@@ -3,7 +3,6 @@ import { db, functions, admin } from '../internals/firebase';
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { sendNotificationMilestoneDeadlinePassed } from './notifications/milestone.notification';
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
-import { sendBucketListYearlyReminder, rescheduleYearlyReminder } from './user-exercises/bucketlist';
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
 import { getDocument } from '../shared/utils';
 
@@ -24,7 +23,6 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
 
   const reschedulingTasks = [
     'userExerciseAffirmation',
-    'userExerciseBucketListYearlyReminder',
     'userExerciseDailyGratefulness'
   ]
 
@@ -62,7 +60,6 @@ const workers: IWorkers = {
   goalDeadline: (options) => goalDeadlineHandler(options),
   collectiveGoalDeadline: (options) => collectiveGoalDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
-  userExerciseBucketListYearlyReminder: (options) => userExerciseBucketListYearlyReminderHandler(options),
   userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options)
 }
 
@@ -108,14 +105,6 @@ async function userExerciseAffirmationsHandler(options) {
 
   // reschedule task for tomorrow
   scheduleNextAffirmation(options.userId, affirmations)
-}
-
-async function userExerciseBucketListYearlyReminderHandler(options) {
-  // send notification to self (and a push notification)
-  sendBucketListYearlyReminder(options.userId)
-
-  // reschedule for next year
-  rescheduleYearlyReminder(options.userId)
 }
 
 async function userExerciseDailyGratefulnessReminderHandler(options) {

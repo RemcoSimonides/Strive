@@ -209,27 +209,6 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         body: `${source.user.username} is following you`,
         url: `/profile/${source.user.uid}`
       })
-    
-    case enumEvent.userExerciseBucketListCreated:
-      return createPushMessage({
-        title: source.user.username,
-        body: `Created a Bucket List!`,
-        url: `/profile/${source.user.uid}`
-      })
-
-    case enumEvent.userExerciseBucketListItemsAdded:
-      return createPushMessage({
-        title: source.user.username,
-        body: `Added items to Bucket List`,
-        url: `/profile/${source.user.uid}`
-      })
-    
-    case enumEvent.userExerciseBucketListYearlyReminder:
-      return createPushMessage({
-        title: 'Bucket List reminder',
-        body: `How is it going? Are you still doing the things you want to do?`,
-        url: `/profile/${source.user.uid}`
-      })
 
     default:
       throwError(event, target)

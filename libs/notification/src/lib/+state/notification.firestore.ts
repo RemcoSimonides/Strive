@@ -6,7 +6,6 @@ import { MilestoneLink } from '@strive/milestone/+state/milestone.firestore';
 import { ProfileLink } from '@strive/user/user/+state/user.firestore';
 import { CollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { TemplateLink } from '@strive/template/+state/template.firestore';
-import { BucketListItem } from '@strive/exercises/bucket-list/+state/bucket-list.firestore';
 import { Comment } from '@strive/discussion/+state/comment.firestore';
 
 export enum enumEvent {
@@ -65,11 +64,6 @@ export enum enumEvent {
   // 400000 -> 499999 = user events
   userSpectatorAdded = 400001,
   userSpectatorRemoved = 400002,
-      // 420000 -> 429999 = exercise events
-  userExerciseBucketListCreated = 420000,
-  userExerciseBucketListItemsAdded = 420001,
-  userExerciseBucketListItemCompleted = 420002,
-  userExerciseBucketListYearlyReminder = 420003
 }
 
 /**
@@ -107,7 +101,6 @@ export interface Source {
   template?: TemplateLink;
   postId?: string;
   support?: Support;
-  bucketList?: BucketListItem[];
   comment?: Comment;
 }
 

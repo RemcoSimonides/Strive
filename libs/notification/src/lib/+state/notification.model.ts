@@ -27,7 +27,6 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
       support: createSupport(),
       collectiveGoal: createCollectiveGoalLink(),
       template: createTemplateLink(),
-      bucketList: [],
       comment: createComment()
     },
     isRead: false,

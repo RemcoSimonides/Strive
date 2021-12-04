@@ -16,7 +16,6 @@ import { enumExercises, exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
-import { BucketListUpsertComponent } from '@strive/exercises/bucket-list/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
@@ -58,8 +57,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.seo.generateTags({ title: `Strive Journal` });
-    console.log('on init')
-
+    
     this.userSubscription = this.user.profile$.subscribe(profile => {
       if (profile) {
         this.feed.init(`Users/${profile.uid}/Notifications`)
@@ -112,9 +110,6 @@ export class FeedPage implements OnInit, OnDestroy {
         switch (exercise) {
           case enumExercises.affirmations:
             component = AffirmationUpsertComponent
-            break
-          case enumExercises.bucketlist:
-            component = BucketListUpsertComponent
             break
           case enumExercises.dear_future_self:
             component = DearFutureSelfUpsertComponent
