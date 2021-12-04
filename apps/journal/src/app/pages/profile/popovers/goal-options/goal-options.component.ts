@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ModalController, NavParams, PopoverController } from '@ionic/angular';
 import { Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 @Component({
   selector: 'journal-goal-options',
@@ -13,19 +15,19 @@ import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-mod
 export class GoalOptions {
 
   goal: Goal = this.navParams.data.goal;
+  stakeholder: GoalStakeholder = this.navParams.data.stakeholder;
 
   constructor(
     private alertCtrl: AlertController,
-    private goalService: GoalService,
+    private goalStakeholderService: GoalStakeholderService,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private popoverCtrl: PopoverController,
-    private router: Router
+    private router: Router,
+    private user: UserService
   ) {}
 
   setStatus(status: GoalStatus) {
-    // TODO pop-up when marking as finished
-
     if (status === 'finished') {
       this.alertCtrl.create({
         header: `Are you sure its finished?`,
@@ -33,7 +35,7 @@ export class GoalOptions {
           {
             text: 'Yes',
             handler: async () => {
-              await this.goalService.update(this.goal.id, { status: 'finished' })
+              await this.goalStakeholderService.update({ uid: this.user.uid, status: 'finished' }, { params: { goalId: this.goal.id }})
               this.modalCtrl.create({
                 component: UpsertPostModal,
                 componentProps: {
@@ -50,7 +52,7 @@ export class GoalOptions {
         ]
       }).then(alert => alert.present())
     } else {
-      this.goalService.update({ id: this.goal.id, status })
+      this.goalStakeholderService.update({ uid: this.user.uid, status }, { params: { goalId: this.goal.id }})
     }
     this.popoverCtrl.dismiss()
   }

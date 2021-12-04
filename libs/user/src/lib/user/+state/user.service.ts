@@ -31,8 +31,7 @@ export class UserService extends FireCollection<User> {
     )
 
     user(this.auth).pipe(
-      tap(user => this.uid = !!user ? user.uid : '' ),
-      tap(val => console.log(val === undefined ? 'undefined' : val))
+      tap(user => this.uid = !!user ? user.uid : '' )
     ).subscribe()
   }
 

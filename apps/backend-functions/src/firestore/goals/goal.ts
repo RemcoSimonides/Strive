@@ -8,7 +8,7 @@ import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shar
 import { handleNotificationsOfCreatedGoal, handleNotificationsOfChangedGoal } from './goal.notification';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared/utils';
-import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
@@ -184,12 +184,15 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
 })
 
 async function updateGoalStakeholders(goalId: string, after: Goal) {
-  const stakeholderSnaps = await db.collection(`Goals/${goalId}/GStakeholders`).get()
-  const promises = stakeholderSnaps.docs.map(doc => doc.ref.update({
+  const data: Partial<GoalStakeholder> = {
     goalId,
     goalTitle: after.title,
     goalPublicity: after.publicity
-  }))
+  }
+  if (after.status === 'finished') data.status = 'finished'
+  
+  const stakeholderSnaps = await db.collection(`Goals/${goalId}/GStakeholders`).get()
+  const promises = stakeholderSnaps.docs.map(doc => doc.ref.update(data))
   return Promise.all(promises)
 }
 

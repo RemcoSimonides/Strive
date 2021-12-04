@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, DocumentSnapshot, Query, QueryConstraint, where, orderBy, collectionGroup } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot, QueryConstraint, where, orderBy } from '@angular/fire/firestore';
 // Rxjs
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Services
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
@@ -39,6 +39,7 @@ export class GoalService extends FireCollection<Goal> {
     const uid = params?.uid || this.user.uid;
     const stakeholder = createGoalStakeholder({
       uid,
+      status: goal.status,
       goalId: goal.id,
       goalTitle: goal.title,
       goalImage: goal.image,
@@ -49,7 +50,7 @@ export class GoalService extends FireCollection<Goal> {
     return this.stakeholder.add(stakeholder, { write, params: { goalId: goal.id }})
   }
 
-  getStakeholderGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<Goal[]> {
+  getStakeholderGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<{ goal: Goal, stakeholder: GoalStakeholder }[]> {
     let constraints: QueryConstraint[];
     if (publicOnly) {
       constraints = [where('goalPublicity', '==', 'public'), where('uid', '==', uid), where(role, '==', true), orderBy('createdAt', 'desc')]
@@ -60,13 +61,23 @@ export class GoalService extends FireCollection<Goal> {
     return this.stakeholder.groupChanges(constraints).pipe(
       switchMap(stakeholders => {
         const goalIds = stakeholders.map(stakeholder => stakeholder.goalId)
-        return this.valueChanges(goalIds)
+        return combineLatest([
+          of(stakeholders),
+          this.valueChanges(goalIds)
+        ]).pipe(
+          map(([stakeholders, goals]) => {
+            return stakeholders.map(stakeholder => ({
+              stakeholder,
+              goal: goals.find(goal => goal.id === stakeholder.goalId)
+            }))
+          })
+        )
       }),
       // Sort finished goals to the end
-      map(goals => goals.sort((a, b) => {
+      map(result => result.sort((a, b) => {
         const order = ['active', 'bucketlist', 'finished']
-        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
-        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
+        if (order.indexOf(a.stakeholder.status) > order.indexOf(b.stakeholder.status)) return 1
+        if (order.indexOf(a.stakeholder.status) < order.indexOf(b.stakeholder.status)) return -1
         return 0
       })),
     )

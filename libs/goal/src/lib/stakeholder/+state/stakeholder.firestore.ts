@@ -1,5 +1,5 @@
 import { FieldValue } from '@firebase/firestore-types';
-import { GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalPublicityType, GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
 
 export interface GoalStakeholder {
   uid: string;
@@ -10,6 +10,7 @@ export interface GoalStakeholder {
   isSupporter: boolean;
   isSpectator: boolean;
   hasOpenRequestToJoin: boolean;
+  status: GoalStatus;
   goalId: string;
   goalTitle: string;
   goalImage: string;
@@ -37,6 +38,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     isSpectator: false,
     isSupporter: false,
     hasOpenRequestToJoin: false,
+    status: 'bucketlist',
     goalId: '',
     goalImage: '',
     goalPublicity: 'private',

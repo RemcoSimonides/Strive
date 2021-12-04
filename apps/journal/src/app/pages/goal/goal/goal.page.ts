@@ -24,7 +24,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { TeamModal } from '@strive/goal/goal/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
@@ -77,18 +77,15 @@ export class GoalPage implements OnInit, OnDestroy {
       switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.valueChanges(goal.collectiveGoalId) : of(undefined))
     )
     
-    this.sub = this.user.profile$.pipe(
-      switchMap(profile => {
-        if (!!profile) {
-          return this.stakeholder.valueChanges(this.user.uid, { goalId: this.goalId })
-        } else {
-          return of(createGoalStakeholder())
-        }
-      })
-    ).subscribe(stakeholder => {
-      this.isAdmin = stakeholder?.isAdmin ?? false
-      this.isAchiever = stakeholder?.isAchiever ?? false
-      this.hasOpenRequestToJoin = stakeholder?.hasOpenRequestToJoin ?? false
+    this.stakeholder$ = this.user.profile$.pipe(
+      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of(undefined)),
+      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
+    )
+
+    this.sub = this.stakeholder$.subscribe(stakeholder => {
+      this.isAdmin = stakeholder.isAdmin
+      this.isAchiever = stakeholder.isAchiever
+      this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
       this.cdr.markForCheck()
     })
   }
@@ -161,9 +158,9 @@ export class GoalPage implements OnInit, OnDestroy {
   }
 
   updateStatus($event, goal: Goal) {
-    const status = $event.detail.value;
-    if (!this.isAdmin) return;
+    if (!this.isAchiever) return;
 
+    const status = $event.detail.value;
     if (status === 'finished') {
       this.alertCtrl.create({
         header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
@@ -172,7 +169,7 @@ export class GoalPage implements OnInit, OnDestroy {
           {
             text: 'Yes',
             handler: async () => {
-              await this.goalService.update(this.goalId, { status: 'finished' })
+              await this.stakeholder.update(this.user.uid, { status: 'finished' }, { params: { goalId: this.goalId }})
               this.startPostCreation(goal)
             }
           },
@@ -186,7 +183,7 @@ export class GoalPage implements OnInit, OnDestroy {
         ]
       }).then(alert => alert.present())
     } else {
-      this.goalService.update(this.goalId, { status })
+      this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
     }
 
   }

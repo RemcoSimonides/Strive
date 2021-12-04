@@ -54,6 +54,21 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     if (before.isSupporter !== after.isSupporter) {
       changeNumberOfSupporters(goalId, after.isSupporter)
     }
+
+    if (before.status !== after.status) {
+
+      if (after.status === 'bucketlist') {
+        const snap = await db.collection(`Goals/${after.goalId}/GStakeholders`).where('status', '==', 'active').get()
+        // keep goal status active if any stakeholder has status active
+        if (snap.size) return
+      }
+      
+      const goalSnap = await db.doc(`Goals/${after.goalId}`).get()
+      const goal = createGoal({ ...goalSnap.data(), id: goalSnap.id })
+      // only update if status changed
+      if (goal.status === after.status) return
+      goalSnap.ref.update({ status: after.status });
+    }
   })
 
 function changeNumberOfAchievers(goalId: string, isAchiever: boolean) {

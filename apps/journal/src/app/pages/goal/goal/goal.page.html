@@ -111,16 +111,18 @@
       <!-- Status -->
       <div fxLayout fxLayoutAlign="start center">
         <ion-icon name="pulse"></ion-icon>
-        <span>Status: </span> 
-        <ng-container *ngIf="isAdmin else statusNoAdmin">
-          <ion-select placeholder="Select Status" interface="popover" [value]="goal.status" (ionChange)="updateStatus($event, goal)">
-            <ion-select-option value="bucketlist">Bucket List</ion-select-option>
-            <ion-select-option value="active">Active</ion-select-option>
-            <ion-select-option value="finished">Finished</ion-select-option>
-          </ion-select>
+        <span>Status: </span>
+        <ng-container *ngIf="stakeholder$ | async as stakeholder; else statusNoAchiever">
+          <ng-container *ngIf="stakeholder.isAchiever; else statusNoAchiever">
+            <ion-select placeholder="Select Status" interface="popover" [value]="stakeholder.status" (ionChange)="updateStatus($event, goal)">
+              <ion-select-option value="bucketlist">In Future</ion-select-option>
+              <ion-select-option value="active">Current Focus</ion-select-option>
+              <ion-select-option value="finished">Finished</ion-select-option>
+            </ion-select>
+          </ng-container>
         </ng-container>
-        <ng-template #statusNoAdmin>
-          <b>{{ goal.status | titlecase }}</b>
+        <ng-template #statusNoAchiever>
+          <b>&nbsp;{{ goal.status | titlecase }}</b>
         </ng-template>
       </div>
   

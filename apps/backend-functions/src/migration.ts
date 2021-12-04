@@ -1,24 +1,32 @@
+import { Goal } from "@strive/goal/goal/+state/goal.firestore";
+import { GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
 import { db, functions } from "./internals/firebase";
+import { logger } from 'firebase-functions';
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
-  // try {
-  //   const templatesSnap = await db.collectionGroup('Templates').get()
-  //   const promises = []
-  //   for (const doc of templatesSnap.docs) {
-  //     const template = doc.data()
+  try {
 
-  //     template.roadmapTemplate = template.milestoneTemplateObject
-  //     delete template.milestoneTemplateObject
+    // const goalsSnap = await db.collection('Goals').get()
 
-  //     const promise = doc.ref.update(template)
-  //     promises.push(promise)
-  //   }
-  //   await Promise.all(promises)
+    // const promises = []
+    // for (const doc of goalsSnap.docs) {
+    //   const goal = doc.data() as Goal
 
-  //   res.status(200).send('all good')
-  // } catch (err) {
-  //   console.error(err)
-  //   res.status(400).send('Oh no! ABORT!')
-  // }
+    //   const goalStakeholdersSnap = await db.collectionGroup('GStakeholders').get()
+
+    //   for (const snap of goalStakeholdersSnap.docs) {
+    //     const stakeholder = snap.data() as GoalStakeholder
+    //     stakeholder.status = goal.status
+    //     const promise = snap.ref.update(stakeholder)
+    //     promises.push(promise)
+    //   }
+    // }
+    // await Promise.all(promises)
+
+    res.status(200).send('all good')
+  } catch (err) {
+    console.error(err)
+    res.status(400).send('Oh no! ABORT!')
+  }
 })

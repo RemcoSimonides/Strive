@@ -22,7 +22,7 @@
                  autofocus></ion-input>
     </ion-item>
   
-    <ion-item>
+    <ion-item *ngIf="mode === 'create'">
       <ion-label position="stacked">When Focus?</ion-label>
       <ion-select placeholder="Select Status" interface="popover" formControlName="status">
         <ion-select-option value="bucketlist">In future (bucket list)</ion-select-option>

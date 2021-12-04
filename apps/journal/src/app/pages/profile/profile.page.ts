@@ -24,7 +24,7 @@ import { FollowersComponent } from '@strive/user/spectator/components/followers/
 import { createSpectator, Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { Profile } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { ProfileForm } from '@strive/user/user/forms/user.form';
@@ -54,7 +54,7 @@ export class ProfilePage implements OnInit {
   public profile$: Observable<Profile>
   public profileForm = new ProfileForm()
 
-  public achievingGoals$: Observable<Goal[]>
+  public achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
   public supportingGoals$: Observable<Goal[]>
 
   public spectators: Spectator[]
@@ -108,7 +108,8 @@ export class ProfilePage implements OnInit {
       )
       this.supportingGoals$ = this.isOwner$.pipe(
         distinctUntilChanged(),
-        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner))
+        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner)),
+        map(values => values.map(value => value.goal))
       )
     }
   }
@@ -149,13 +150,13 @@ export class ProfilePage implements OnInit {
     }).then(modal => modal.present())
   }
 
-  openGoalOptions(goal: Goal, ev: UIEvent) {
+  openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, ev: UIEvent) {
     ev.stopPropagation()
     ev.preventDefault()
 
     this.popoverCtrl.create({
       component: GoalOptions,
-      componentProps: { goal },
+      componentProps: { goal, stakeholder },
       event: ev
     }).then(popover => popover.present())
   }

@@ -43,7 +43,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
       
         default:
-          throwError(event, target)  
+          throwError(event, target)
           break;
       }
 

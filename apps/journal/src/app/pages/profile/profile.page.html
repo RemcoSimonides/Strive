@@ -88,21 +88,20 @@
       <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
         <ng-container *ngIf="achievingGoals.length > 0 else noBucketList">
           <ion-list class="bucketlist" mode="md">
-            <ng-container *ngFor="let goal of achievingGoals; let last = last">
-              <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', goal.id]">
-                <ion-thumbnail slot="start" [ngClass]="{'gradient-border': goal.status === 'active'}">
-                  <img [ref]="goal.image" asset="goal.jpeg"/>
-                  <div *ngIf="goal.status === 'finished'">finished</div>
+            <ng-container *ngFor="let value of achievingGoals; let last = last">
+              <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', value.goal.id]">
+                <ion-thumbnail slot="start" [ngClass]="{'gradient-border': value.stakeholder.status === 'active'}">
+                  <img [ref]="value.goal.image" asset="goal.jpeg"/>
+                  <div *ngIf="value.stakeholder.status === 'finished'">finished</div>
                 </ion-thumbnail>
                 <article>
                   <ion-label fxLayout="column">
-                    <b>{{ goal.title }}</b>
+                    <b>{{ value.goal.title }}</b>
                     <small fxLayout fxLayoutGap="4px">
-                      <ion-icon name="pulse"></ion-icon><span>{{ goal.status | status }}</span>
-                      <!-- <ion-icon name="eye-outline"></ion-icon><span>{{ goal.publicity === public ? 'Everyone can see' : 'Only you' }} -</span> -->
-                      <ion-icon name="flag-outline"></ion-icon><span>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</span></small>
+                      <ion-icon name="pulse"></ion-icon><span>{{ value.stakeholder.status | status }}</span>
+                      <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span></small>
                   </ion-label>
-                  <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="openGoalOptions(goal, $event)">
+                  <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="openGoalOptions(value.goal, value.stakeholder, $event)">
                     <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
                   </ion-button>
                 </article>

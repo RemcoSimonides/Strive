@@ -3,6 +3,7 @@ import { Platform, NavController, ModalController } from '@ionic/angular';
 
 // Rxjs
 import { Observable, Subscription } from 'rxjs'
+import { map } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
@@ -48,7 +49,9 @@ export class GoalsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.user.profile$.subscribe((profile: Profile) => {
       if (!!profile) {
-        this.goals$ = this.goalService.getStakeholderGoals(profile.uid, enumGoalStakeholder.achiever, false);
+        this.goals$ = this.goalService.getStakeholderGoals(profile.uid, enumGoalStakeholder.achiever, false).pipe(
+          map(values => values.map(value => value.goal))
+        );
         // TODO Create separate section for goals you spectate (they are not YOUR goals)
         // const spectatorGoals = this.goalStakeholderService.getGoals(profile.uid, enumGoalStakeholder.spectator, false)
         // this.goals$ = filterDuplicateGoals([achieverGoals, spectatorGoals])

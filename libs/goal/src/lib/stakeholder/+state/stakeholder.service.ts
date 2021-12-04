@@ -47,10 +47,12 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
       getDoc(this.typedDocument<Goal>(this.db, `Goals/${goalId}`)).then(snap => snap.data())
     ])
 
-    if (!!goal) {
+    if (goal) {
+      // TODO if max number of active goals, then put in buckeltist if goal is active and user already has max active goals;
+      stakeholder.status = goal.status
       stakeholder.goalTitle = goal.title
-      stakeholder.goalPublicity = goal.publicity;
-      stakeholder.goalImage = goal.image;
+      stakeholder.goalPublicity = goal.publicity
+      stakeholder.goalImage = goal.image
     }
 
     const ref = this.getRef(uid, { goalId })
