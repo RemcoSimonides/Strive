@@ -35,7 +35,10 @@ export enum enumEvent {
   cgTemplateUpdated = 103002,
   cgTemplateRoadmapUpdated = 103002,
   // 200000 -> 299999 = goal events
-  gNew = 200001,
+  gNew = 200001, //deprecated
+  gNewBucketlist = 200010,
+  gNewActive = 200011,
+  gNewFinished = 200012,
   gFinished = 200002,
   gUpdated = 200003,
   gRoadmapUpdated = 204001,

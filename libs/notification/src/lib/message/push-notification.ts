@@ -1,3 +1,4 @@
+import { GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
 import { enumEvent, Notification } from '../+state/notification.firestore';
 
 interface PushMessage {
@@ -45,10 +46,25 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         url: `/collective-goal/${source.collectiveGoal.id}/template/${source.template.id}`
       })
 
-    case enumEvent.gNew:
+    case enumEvent.gNew: // deprecated
       return createPushMessage({
         title: source.user.username,
         body: `Started goal '${source.goal.title}'`,
+        url: `/goal/${source.goal.id}`
+      })
+
+    case enumEvent.gNewBucketlist:
+    case enumEvent.gNewActive:
+    case enumEvent.gNewFinished:
+      const messages: Record<GoalStatus, string> = {
+        bucketlist: `Added goal to Bucket list '${source.goal.title}'`,
+        active: `Started goal '${source.goal.title}'`,
+        finished: `Started journaling about '${source.goal.title}'`
+      }  
+
+      return createPushMessage({
+        title: source.user.username,
+        body: messages[event],
         url: `/goal/${source.goal.id}`
       })
 

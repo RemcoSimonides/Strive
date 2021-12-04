@@ -88,7 +88,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           break;
       }
 
-    case enumEvent.gNew:
+    case enumEvent.gNew: // deprecated 4/12/2012
 
       switch (target) {
         case 'goal':
@@ -115,6 +115,50 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         default:
           throwError(event, target)
           break;
+      }
+
+    case enumEvent.gNewBucketlist:
+    case enumEvent.gNewActive:
+    case enumEvent.gNewFinished:
+      switch (target) {
+        case 'goal':
+          return {
+            ...get('goal', source),
+            message: [
+              { text: `New goal is created! Best of luck` }
+            ]
+          }
+
+        case 'spectator':
+          let message: NotificationMessageText[];
+          if (event === enumEvent.gNewBucketlist) {
+            message = [
+              { text: `Added '` },
+              { text: source.goal.title, link: `goal/${source.goal.id}` },
+              { text: `' to bucket list` }
+            ]
+          } else if (event === enumEvent.gNewActive) {
+            message = [
+              { text: `Started goal '` },
+              { text: source.goal.title, link: `goal/${source.goal.id}` },
+              { text: `'.` }
+            ]
+          } else if (event === enumEvent.gNewFinished) {
+            message = [
+              { text: `Started journaling about '` },
+              { text: source.goal.title, link: `goal/${source.goal.id}` },
+              { text: `'.` }
+            ]
+          }
+
+          return {
+            ...get('user', source),
+            message
+          }
+      
+        default:
+          throwError(event, target)
+          break
       }
 
     case enumEvent.gFinished:

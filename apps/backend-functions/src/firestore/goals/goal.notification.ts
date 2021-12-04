@@ -13,7 +13,7 @@ import { getReceiver } from '../../shared/support/receiver'
 // Interfaces
 import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent, Source } from '@strive/notification/+state/notification.firestore'
-import { createGoalLink, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoalLink, getAudience, Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
@@ -83,9 +83,16 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
 // NEW GOAL NOTIFICATION
 async function sendNewGoalNotification(goalId: string, goal: Goal) {
   logger.log(`Sending New Goal Notification to Goal`)
+
+  const event: Record<GoalStatus, enumEvent> = {
+    bucketlist: enumEvent.gNewBucketlist,
+    active: enumEvent.gNewActive,
+    finished: enumEvent.gNewFinished
+  }
+
   const notification = createNotification({
     discussionId: goalId,
-    event: enumEvent.gNew,
+    event: event[goal.status],
     type: 'feed',
     source: {
       goal: createGoalLink({ ...goal, id: goalId })
