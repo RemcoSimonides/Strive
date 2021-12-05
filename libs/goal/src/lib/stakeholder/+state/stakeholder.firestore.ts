@@ -12,8 +12,6 @@ export interface GoalStakeholder {
   hasOpenRequestToJoin: boolean;
   status: GoalStatus;
   goalId: string;
-  goalTitle: string;
-  goalImage: string;
   goalPublicity: GoalPublicityType;
   updatedBy?: string;
   updatedAt?: FieldValue;
@@ -40,9 +38,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     hasOpenRequestToJoin: false,
     status: 'bucketlist',
     goalId: '',
-    goalImage: '',
     goalPublicity: 'private',
-    goalTitle: '',
     ...params
   }
 }

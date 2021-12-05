@@ -37,7 +37,6 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     ])
 
     if (collectiveGoal) {
-      stakeholder.collectiveGoalTitle = collectiveGoal.title ?? ''
       stakeholder.collectiveGoalIsSecret = collectiveGoal.isSecret ?? false
     }
 

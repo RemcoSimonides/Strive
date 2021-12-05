@@ -77,7 +77,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     // notifications
     handleNotificationsOfChangedGoal(goalId, before, after)
 
-    if (before.status !== after.status || before.publicity !== after.publicity || before.title !== after.title) {
+    if (before.status !== after.status || before.publicity !== after.publicity) {
       // update value on stakeholder docs
       updateGoalStakeholders(goalId, after)
     }
@@ -145,9 +145,7 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
     isAchiever: true,
     isAdmin: true,
     goalId: id,
-    goalTitle: goal.title,
     goalPublicity: goal.publicity,
-    goalImage: goal.image,
     createdAt: timestamp,
     updatedAt: timestamp,
     updatedBy: uid
@@ -175,7 +173,6 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
 async function updateGoalStakeholders(goalId: string, after: Goal) {
   const data: Partial<GoalStakeholder> = {
     goalId,
-    goalTitle: after.title,
     goalPublicity: after.publicity
   }
   if (after.status === 'finished') data.status = 'finished'

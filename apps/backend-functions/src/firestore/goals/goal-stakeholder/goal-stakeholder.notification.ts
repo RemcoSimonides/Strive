@@ -32,137 +32,121 @@ export async function handleNotificationsOfStakeholderCreated(goal: Goal, stakeh
   if (!goal.numberOfAchievers && !goal.numberOfSupporters) return
 
   if (stakeholder.isAdmin) {
-    sendNewAdminNotification(goal.id, stakeholder)
+    sendNewAdminNotification(goal, stakeholder)
   }
 
   if (stakeholder.isAchiever) {
-    sendNewAchieverNotificationInGoal(goal.id, stakeholder)
+    sendNewAchieverNotificationInGoal(goal, stakeholder)
 
     if (stakeholder.goalPublicity === 'public') {
-      sendNewAchieverNotificationToUserSpectators(goal.id, stakeholder)
+      sendNewAchieverNotificationToUserSpectators(goal, stakeholder)
     }
   }
 
   if (stakeholder.hasOpenRequestToJoin) {
     const discussionId = `RtjG${stakeholder.uid}${goal.id}`
-    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goal.id, stakeholder)
+    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goal, stakeholder)
   }
 
 }
 
-export async function handleNotificationsOfStakeholderChanged(goalId: string, before: GoalStakeholder, after: GoalStakeholder) {
+export async function handleNotificationsOfStakeholderChanged(goal: Goal, before: GoalStakeholder, after: GoalStakeholder) {
 
   const becameAdmin = !before.isAdmin && after.isAdmin
   const becameAchiever = !before.isAchiever && after.isAchiever
 
   // Adding admins and achievers to goal chat so they receive notifications
   if (becameAdmin || becameAchiever) {
-    db.doc(`Discussions/${goalId}`).update({
+    db.doc(`Discussions/${goal.id}`).update({
       commentators: arrayUnion(after.uid)
     })
   }
 
   if (becameAdmin) {
-    sendNewAdminNotification(goalId, after)
+    sendNewAdminNotification(goal, after)
   }
 
   if (becameAchiever) {
-    sendNewAchieverNotificationInGoal(goalId, after)
+    sendNewAchieverNotificationInGoal(goal, after)
       
     if (after.goalPublicity === 'public') {
-      sendNewAchieverNotificationToUserSpectators(goalId, after)
+      sendNewAchieverNotificationToUserSpectators(goal, after)
     }
   }
 
   // requests
-  const discussionId = `RtjG${after.uid}${goalId}`
+  const discussionId = `RtjG${after.uid}${goal.id}`
 
   if (!before.hasOpenRequestToJoin && after.hasOpenRequestToJoin) {
-    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goalId, after)
+    await sendNewRequestToJoinGoalNotificationInGoal(discussionId, goal, after)
   }
 
   if (before.hasOpenRequestToJoin && !after.hasOpenRequestToJoin) {
     if (!before.isAchiever && after.isAchiever) {
       // if stakeholder is now achiever, then request is accepted
-      sendRequestToJoinGoalAcceptedNotification(discussionId, goalId, after)
+      sendRequestToJoinGoalAcceptedNotification(discussionId, goal, after)
     } else {
-      sendRequestToJoinGoalRejectedNotification(discussionId, goalId, after)
+      sendRequestToJoinGoalRejectedNotification(discussionId, goal, after)
     }
   }
 }
 
 // NEW ACHIEVER
-function sendNewAchieverNotificationToUserSpectators(goalId: string, stakeholder: GoalStakeholder) {
+function sendNewAchieverNotificationToUserSpectators(goal: Goal, stakeholder: GoalStakeholder) {
 
   const notification = createNotification({
-    discussionId: goalId,
+    discussionId: goal.id,
     event: enumEvent.gStakeholderAchieverAdded,
     type: 'notification',
     source: {
       user: createProfileLink(stakeholder),
-      goal: createGoalLink({
-        id: goalId,
-        title: stakeholder.goalTitle,
-        image: stakeholder.goalImage
-      })
+      goal: createGoalLink(goal)
     }
   })
   sendNotificationToUserSpectators(stakeholder.uid, notification)
 }
 
-function sendNewAchieverNotificationInGoal(goalId: string, goalStakeholder: GoalStakeholder) {
+function sendNewAchieverNotificationInGoal(goal: Goal, goalStakeholder: GoalStakeholder) {
 
   const notification = createNotification({
-    discussionId: goalId,
+    discussionId: goal.id,
     event: enumEvent.gStakeholderAchieverAdded,
     type: 'feed',
     source: {
       user: createProfileLink(goalStakeholder),
-      goal: createGoalLink({
-        id: goalId,
-        title: goalStakeholder.goalTitle,
-        image: goalStakeholder.goalImage
-      })
+      goal: createGoalLink(goal)
     },
   })
-  sendNotificationToGoal(goalId, notification)
+  sendNotificationToGoal(goal.id, notification)
 
   // send to all achievers and admins
-  sendNotificationToGoalStakeholders(goalId, notification, goalStakeholder.updatedBy, true, true, true)
+  sendNotificationToGoalStakeholders(goal.id, notification, goalStakeholder.updatedBy, true, true, true)
 
 }
 
-function sendNewAdminNotification(goalId: string, goalStakeholder: GoalStakeholder) {
+function sendNewAdminNotification(goal: Goal, goalStakeholder: GoalStakeholder) {
 
   const notification = createNotification({
-    discussionId: goalId,
+    discussionId: goal.id,
     event: enumEvent.gStakeholderAdminAdded,
     type: 'feed',
     source: {
-      goal: createGoalLink({
-        id: goalId,
-        title: goalStakeholder.goalTitle,
-        image: goalStakeholder.goalImage
-      }),
+      goal: createGoalLink(goal),
       user: createProfileLink(goalStakeholder)
     },
   })
-  sendNotificationToGoal(goalId, notification)
+  sendNotificationToGoal(goal.id, notification)
 
-  sendNotificationToGoalStakeholders(goalId, notification, goalStakeholder.updatedBy, true)
+  sendNotificationToGoalStakeholders(goal.id, notification, goalStakeholder.updatedBy, true)
 
 }
 
 // REQUEST TO JOIN
-async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
+async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, goal: Goal, goalStakeholder: GoalStakeholder) {
   logger.log(`send 'New Request To Join Goal' Notification In Goal`)
 
   const source: Source = {
-    goal: createGoalLink({
-      id: goalId,
-      title: goalStakeholder.goalTitle,
-      image: goalStakeholder.goalImage
-    }),
+    goal: createGoalLink(goal),
     user: createProfileLink(goalStakeholder)
   }
 
@@ -178,39 +162,31 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
     source,
     meta
   })
-  sendNotificationToGoalStakeholders(goalId, goalStakeholdersNotification, goalStakeholder.uid, true)
+  sendNotificationToGoalStakeholders(goal.id, goalStakeholdersNotification, goalStakeholder.uid, true)
 }
 
-function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
+function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goal: Goal, goalStakeholder: GoalStakeholder) {
 
   const notification = createNotification({
     discussionId,
     event: enumEvent.gStakeholderRequestToJoinAccepted,
     type: 'notification',
     source: {
-      goal: createGoalLink({
-        id: goalId,
-        title: goalStakeholder.goalTitle,
-        image: goalStakeholder.goalImage
-      }),
+      goal: createGoalLink(goal),
       user: createProfileLink(goalStakeholder)
     }
   })
   sendNotificationToUsers(notification, [goalStakeholder.uid])
 }
 
-function sendRequestToJoinGoalRejectedNotification(discussionId: string, goalId: string, goalStakeholder: GoalStakeholder) {
+function sendRequestToJoinGoalRejectedNotification(discussionId: string, goal: Goal, goalStakeholder: GoalStakeholder) {
 
   const notification = createNotification({
     discussionId,
     event: enumEvent.gStakeholderRequestToJoinRejected,
     type: 'notification',
     source: {
-      goal: createGoalLink({
-        id: goalId,
-        title: goalStakeholder.goalTitle,
-        image: goalStakeholder.goalImage
-      }),
+      goal: createGoalLink(goal),
       user: createProfileLink(goalStakeholder)
     }
   })

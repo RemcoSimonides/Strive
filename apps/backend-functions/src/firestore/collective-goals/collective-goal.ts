@@ -60,9 +60,7 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
     const collectiveGoalId = context.params.collectiveGoalId
 
     // update collective goal data in other collections
-    if (before.title !== after.title
-     || before.isSecret !== after.isSecret
-     || before.image !== after.image) {
+    if (before.isSecret !== after.isSecret) {
       updateCollectiveGoalStakeholders(collectiveGoalId, after)
     }
 
@@ -106,9 +104,7 @@ async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { titl
   stakeholdersSnap.forEach(stakeholderSnap => {
     const promise = stakeholderSnap.ref.update({
       collectiveGoalId,
-      collectiveGoalTitle: title,
       collectiveGoalIsSecret: isSecret,
-      collectiveGoalImage: image
     })
     promises.push(promise)
   })

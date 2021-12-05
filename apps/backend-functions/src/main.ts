@@ -2,7 +2,7 @@
 
 // pubsub
 export { scheduledTasksRunner } from './pubsub/scheduled-task-runner';
-export { scheduledEmailRunner } from './pubsub/email/email';
+// export { scheduledEmailRunner } from './pubsub/email/email';
 
 // firestorage
 export { userSpectatorChangeHandler, userSpectatorCreatedHandler } from './firestore/users/user-spectators/user-spectator';

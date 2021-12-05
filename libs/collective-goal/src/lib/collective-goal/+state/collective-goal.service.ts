@@ -43,7 +43,6 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
       uid: this.user.uid,
       collectiveGoalId: collectiveGoal.id,
       collectiveGoalIsSecret: collectiveGoal.isSecret,
-      collectiveGoalTitle: collectiveGoal.title,
       isAdmin: true
     })
     return this.stakeholder.add(stakeholder, { write, params: { collectiveGoalId: collectiveGoal.id }})

@@ -41,8 +41,6 @@ export class GoalService extends FireCollection<Goal> {
       uid,
       status: goal.status,
       goalId: goal.id,
-      goalTitle: goal.title,
-      goalImage: goal.image,
       goalPublicity: goal.publicity,
       isAdmin: true,
       isAchiever: true

@@ -73,9 +73,7 @@ export const useTemplate = functions.https.onCall(async (
   // Create stakeholder
   const stakeholder = createGoalStakeholder({
     goalId: id,
-    goalImage: template.goalImage,
     goalPublicity: publicity,
-    goalTitle: template.goalTitle,
     isAdmin: true,
     isAchiever: true,
     uid,

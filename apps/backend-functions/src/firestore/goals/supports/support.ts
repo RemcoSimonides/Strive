@@ -1,6 +1,6 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
-import { createSupport, Support } from '@strive/support/+state/support.firestore'
+import { createSupport } from '@strive/support/+state/support.firestore'
 import { handleNotificationsOfCreatedSupport, handleNotificationsOfChangedSupport, sendSupportDeletedNotification } from './support.notification'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
@@ -32,8 +32,6 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
         username: support.supporter.username,
         photoURL: support.supporter.username,
         goalId: goalId,
-        goalTitle: goal.title,
-        goalImage: goal.image,
         goalPublicity: goal.publicity,
         isSupporter: true,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),

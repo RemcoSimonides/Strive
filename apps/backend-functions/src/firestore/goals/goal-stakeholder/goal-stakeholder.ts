@@ -16,7 +16,6 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
     const goalId = context.params.goalId
     const stakeholderId = snapshot.id
 
-    // check if goal has collective goal
     const goalSnap = await db.doc(`Goals/${goalId}`).get()
     const goal = createGoal({ ...goalSnap.data(), id: goalId })
 
@@ -41,8 +40,11 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     const stakeholderId = context.params.stakeholderId
     const goalId = context.params.goalId
 
+    const goalSnap = await db.doc(`Goals/${goalId}`).get()
+    const goal = createGoal({ ...goalSnap.data(), id: goalId })
+
     // notifications
-    handleNotificationsOfStakeholderChanged(goalId, before, after)
+    handleNotificationsOfStakeholderChanged(goal, before, after)
 
     // isAchiever changed
     if (before.isAchiever !== after.isAchiever) {
@@ -55,7 +57,7 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
       changeNumberOfSupporters(goalId, after.isSupporter)
     }
 
-    if (before.status !== after.status) {
+    if (before.status !== after.status && goal.status !== after.status) {
 
       if (after.status === 'bucketlist') {
         const snap = await db.collection(`Goals/${after.goalId}/GStakeholders`).where('status', '==', 'active').get()
@@ -63,10 +65,6 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
         if (snap.size) return
       }
       
-      const goalSnap = await db.doc(`Goals/${after.goalId}`).get()
-      const goal = createGoal({ ...goalSnap.data(), id: goalSnap.id })
-      // only update if status changed
-      if (goal.status === after.status) return
       goalSnap.ref.update({ status: after.status });
     }
   })
@@ -134,7 +132,6 @@ async function upsertCollectiveGoalStakeholder(goal: Goal, stakeholderId: string
       isAdmin: false,
       isSpectator: false,
       collectiveGoalId: collectiveGoalId,
-      collectiveGoalTitle: collectiveGoal.title,
       collectiveGoalIsSecret: collectiveGoal.isSecret,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       createdAt: admin.firestore.FieldValue.serverTimestamp()
