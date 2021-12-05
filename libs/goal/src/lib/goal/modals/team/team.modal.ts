@@ -5,8 +5,9 @@ import { AlertController, ModalController, NavParams } from "@ionic/angular";
 import { createGoalStakeholder, GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
 import { GoalStakeholderService } from "@strive/goal/stakeholder/+state/stakeholder.service";
 import { UserService } from "@strive/user/user/+state/user.service";
-import { Observable, of } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { combineLatest, Observable, of } from "rxjs";
+import { map, startWith, switchMap } from "rxjs/operators";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: 'goal-team-modal',
@@ -25,6 +26,8 @@ export class TeamModal implements OnInit {
   isAdmin$: Observable<boolean>
   isAchiever$: Observable<boolean>
   hasOpenRequestToJoin$: Observable<boolean>
+
+  filter = new FormControl()
 
   constructor(
     private alertCtrl: AlertController,
@@ -48,13 +51,23 @@ export class TeamModal implements OnInit {
     if (!this.goalId) return
 
     this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.goalId })
+
+    this.stakeholders$ = combineLatest([
+      this.filter.valueChanges.pipe(startWith(this.filter.value)),
+      this.stakeholder.valueChanges({ goalId: this.goalId })
+    ]).pipe(
+      map(([ filter, stakeholders ]) => filter
+        ? stakeholders.filter(stakeholder => stakeholder[filter])
+        : stakeholders
+    ))
+
     const stakeholder$ = this.user.profile$.pipe(
       switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of()),
       map(stakeholder =>  createGoalStakeholder(stakeholder))
     )
     this.isAdmin$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAdmin))
     this.isAchiever$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAchiever))
-    this.hasOpenRequestToJoin$ = stakeholder$.pipe(map(stakeholder => stakeholder.hasOpenRequestToJoin))
+    this.hasOpenRequestToJoin$ = stakeholder$.pipe(map(stakeholder => stakeholder.hasOpenRequestToJoin))  
   }
 
   dismiss() {

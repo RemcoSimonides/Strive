@@ -45,9 +45,6 @@
       <!-- Options -->
       <ng-container *ngIf="screensize.isMobile$ | async else desktopOptions">
         <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
-          <ion-button (click)="openTeamModal()" class="ion-no-padding action-button" fill="clear">
-            <ion-icon slot="icon-only" name="people-outline"></ion-icon>
-          </ion-button>
           <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
             <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
           </ion-button>
@@ -61,11 +58,6 @@
       </ng-container>
       <ng-template #desktopOptions>
         <div fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="16px">
-          <ion-button (click)="openTeamModal()" fill="clear">
-            <ion-icon slot="start" name="people-outline"></ion-icon>
-            <span>team</span>
-          </ion-button>
-  
           <ion-button (click)="openDiscussion()" fill="clear">
             <ion-icon slot="start" name="chatbox-outline"></ion-icon>
             <span>chat</span>

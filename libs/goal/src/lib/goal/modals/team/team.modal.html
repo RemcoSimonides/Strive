@@ -11,8 +11,13 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-select placeholder="Role" interface="popover" [formControl]="filter">
+    <ion-select-option [value]="null">All roles</ion-select-option>
+    <ion-select-option value="isAchiever">Achievers</ion-select-option>
+    <ion-select-option value="isSupporter">Supporters</ion-select-option>
+    <ion-select-option value="isAdmin">Admins</ion-select-option>
+  </ion-select>
   <ion-list mode="md">
-    <ion-list-header>Team</ion-list-header>
     <ion-item *ngFor="let stakeholder of stakeholders$ | async" button (click)="navTo(stakeholder.uid)">
       <ion-avatar slot="start">
         <img [ref]="stakeholder.photoURL" asset="profile.png"/>
