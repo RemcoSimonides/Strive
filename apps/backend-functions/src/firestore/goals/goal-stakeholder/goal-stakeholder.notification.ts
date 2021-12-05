@@ -158,6 +158,7 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
   const goalStakeholdersNotification = createNotification({
     discussionId,
     event: enumEvent.gStakeholderRequestToJoinPending,
+    needsDecision: true,
     type: 'feed',
     source,
     meta
