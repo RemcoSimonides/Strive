@@ -74,7 +74,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
     //Get current users' rights
     this.profileSubscription = this.user.profile$.pipe(
-      map(profile => !!profile ? this.stakeholder.valueChanges(this.user.uid, { collectiveGoalId: this.collectiveGoalId }) : of(undefined)),
+      map(profile => profile ? this.stakeholder.valueChanges(profile.uid, { collectiveGoalId: this.collectiveGoalId }) : of(undefined)),
       switchMap(stakeholder$ => combineLatest([
         stakeholder$,
         this.collectiveGoal$

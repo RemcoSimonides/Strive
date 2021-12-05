@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 // Ionic
 import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular';
 // Service
@@ -14,10 +15,8 @@ import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+s
   styleUrls: ['./upsert.component.scss'],
 })
 export class UpsertCollectiveGoalPage implements OnInit {
-
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -30,10 +29,18 @@ export class UpsertCollectiveGoalPage implements OnInit {
     private alertCtrl: AlertController,
     private service: CollectiveGoalService,
     private loadingCtrl: LoadingController,
+    private location: Location,
     private modalCtrl: ModalController,
     private router: Router,
     private navParam: NavParams,
-  ) { }
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    this.modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   ngOnInit() {
     this.collectiveGoalId = this.navParam.data.id
@@ -44,7 +51,7 @@ export class UpsertCollectiveGoalPage implements OnInit {
   }
 
   dismiss(){
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   public async upsertCollectiveGoal() {
@@ -72,10 +79,12 @@ export class UpsertCollectiveGoalPage implements OnInit {
       this.service.upsert(collectiveGoal);
       if (this.state === 'create') {
         this.router.navigateByUrl(`/collective-goal/${this.collectiveGoalId}`)
+        this.modalCtrl.dismiss()
+      } else {
+        this.dismiss()
       }
 
       loading.dismiss();
-      this.modalCtrl.dismiss();
 
     } catch(error) {
       loading.dismiss();
@@ -86,7 +95,7 @@ export class UpsertCollectiveGoalPage implements OnInit {
     }
   }
 
-  public async openDatetime($event): Promise<void> {
+  openDatetime($event) {
     // empty value
     $event.target.value = ""
     // set min

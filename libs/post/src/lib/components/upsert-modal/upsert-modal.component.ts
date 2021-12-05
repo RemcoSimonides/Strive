@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 //Ionic
 import { NavParams, ModalController } from '@ionic/angular'
 import { PostForm } from '@strive/post/forms/post.form';
@@ -15,7 +16,6 @@ import { createPost } from '@strive/post/+state/post.firestore';
 export class UpsertPostModal implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -23,12 +23,20 @@ export class UpsertPostModal implements OnInit {
   public postId: string;
 
   constructor(
+    private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams, // { goal: Goal, milestone: Milestone, postId: string }
     private postService: PostService
-  ) { }
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
-  ngOnInit() {
+  ngOnInit() { 
     const goal = this.navParams.get('goal') as Goal
     const milestone = this.navParams.get('milestone') as Milestone
     this.postId = this.navParams.get('postId') as string
@@ -54,8 +62,8 @@ export class UpsertPostModal implements OnInit {
     this.postForm.get('isEvidence').setValue(isEvidence)
   }
 
-  cancel() {
-    this.modalCtrl.dismiss()
+  dismiss() {
+    this.location.back()
   }
 
   async submitPost() {
@@ -64,7 +72,7 @@ export class UpsertPostModal implements OnInit {
       ...this.postForm.value
     })
     await this.postService.add(post, { params: { goalId: post.goal.id }});
-    this.modalCtrl.dismiss()
+    this.dismiss()
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -9,13 +10,22 @@ import { ModalController } from '@ionic/angular';
 export class AssessLifeUpsertComponent {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(
+    private location: Location,
+    private modalCtrl: ModalController
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 }

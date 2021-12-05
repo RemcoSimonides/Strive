@@ -1,6 +1,6 @@
 <ion-content class="ion-padding">
   <ng-container *ngIf="authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register || authSegmentChoice === enumAuthSegment.forgot_password; else previous">
-    <ion-button fill="clear" (click)="closeAuthModal()">
+    <ion-button fill="clear" (click)="dismiss(false)">
       <ion-icon name="close" slot="icon-only"></ion-icon>
     </ion-button>
   </ng-container>

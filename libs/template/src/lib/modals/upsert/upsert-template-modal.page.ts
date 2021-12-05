@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { AlertController, LoadingController, ModalController, NavParams, NavController } from '@ionic/angular';
 
 // Services
@@ -15,10 +16,8 @@ import { TemplateForm } from '@strive/template/forms/template.form';
   styleUrls: ['./upsert-template-modal.page.scss'],
 })
 export class UpsertTemplateModalPage implements OnInit {
-
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -60,11 +59,19 @@ export class UpsertTemplateModalPage implements OnInit {
     private alertCtrl: AlertController,
     private collectiveGoalService: CollectiveGoalService,
     private loadingCtrl: LoadingController,
+    private location: Location,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private navParams: NavParams,
     private templateService: TemplateService
-  ) { }
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    this.modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   ngOnInit() {
     const { template, collectiveGoalId } = this.navParams.data
@@ -76,7 +83,7 @@ export class UpsertTemplateModalPage implements OnInit {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   public async save() {
@@ -92,10 +99,13 @@ export class UpsertTemplateModalPage implements OnInit {
       try {
         const template = createTemplate({ ...this.templateForm.value, id: this.templateId })
         await this.templateService.upsert(template, { params: {collectiveGoalId: this.collectiveGoalId}})
-        if (this.newTemplate) this.navCtrl.navigateForward(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
-
+        if (this.newTemplate) {
+          this.navCtrl.navigateForward(`collective-goal/${this.collectiveGoalId}/template/${this.templateId}`)
+          this.modalCtrl.dismiss()
+        } else {
+          this.dismiss()
+        }
         loading.dismiss()
-        this.modalCtrl.dismiss()
 
       } catch(error) {
         loading.dismiss()

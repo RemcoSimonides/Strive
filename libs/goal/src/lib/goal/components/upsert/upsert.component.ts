@@ -1,4 +1,5 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 //ionic
 import { AlertController, LoadingController, ModalController, NavController, NavParams  } from '@ionic/angular'
 
@@ -19,7 +20,6 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 export class UpsertGoalModalComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -35,6 +35,7 @@ export class UpsertGoalModalComponent implements OnInit {
     private collectiveGoalService: CollectiveGoalService,
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
+    private location: Location,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private navParams: NavParams,
@@ -51,6 +52,13 @@ export class UpsertGoalModalComponent implements OnInit {
     }
 
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
+
+    window.history.pushState(null, null, window.location.href)
+    this.modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
   }
 
   async ngOnInit() {
@@ -62,7 +70,7 @@ export class UpsertGoalModalComponent implements OnInit {
   }
 
   dismiss(){
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   async upsert() {
@@ -89,10 +97,12 @@ export class UpsertGoalModalComponent implements OnInit {
           } else if (this.appName === 'admin') {
             await this.navCtrl.navigateForward(`/a/goals/${this.goalId}`)
           }
+          this.modalCtrl.dismiss()
+        } else {
+          this.dismiss()
         }
 
         await loading.dismiss()
-        await this.modalCtrl.dismiss()
 
       } catch(error) {
         await loading.dismiss()
@@ -111,7 +121,7 @@ export class UpsertGoalModalComponent implements OnInit {
     return 'public'
   }
 
-  public openingDatetime($event) {
+  openingDatetime($event) {
     // empty value
     $event.target.value = ""
     

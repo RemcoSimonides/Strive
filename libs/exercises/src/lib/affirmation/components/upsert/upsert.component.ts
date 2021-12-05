@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { Affirmations } from '../../+state/affirmation.firestore';
@@ -12,10 +13,8 @@ import { AffirmationExplanationComponent } from '../explanation/explanation.comp
   styleUrls: ['./upsert.component.scss']
 })
 export class AffirmationUpsertComponent implements OnInit {
-
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -28,9 +27,17 @@ export class AffirmationUpsertComponent implements OnInit {
   constructor(
     private user: UserService,
     private service: AffirmationService,
+    private location: Location,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
-  ) { }
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   async ngOnInit() {
     const affirmations = await this.service.getAffirmations(this.user.uid)
@@ -43,7 +50,7 @@ export class AffirmationUpsertComponent implements OnInit {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   async removeSetTime(index: number) {
@@ -124,7 +131,7 @@ export class AffirmationUpsertComponent implements OnInit {
   save() {
     this.affirmations.affirmations = this.affirmations.affirmations.filter(affirmation => affirmation !== '')
     this.service.saveAffirmations(this.user.uid, this.affirmations)
-    this.modalCtrl.dismiss()
+    this.dismiss()
   }
 
   private shuffle(array) {

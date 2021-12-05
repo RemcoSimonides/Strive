@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { Location } from "@angular/common";
 import { AlertController, ModalController, NavParams } from "@ionic/angular";
 import { createGoalStakeholder, GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
 import { GoalStakeholderService } from "@strive/goal/stakeholder/+state/stakeholder.service";
@@ -16,7 +17,6 @@ import { map, switchMap } from "rxjs/operators";
 export class TeamModal implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
   goalId: string
@@ -32,19 +32,25 @@ export class TeamModal implements OnInit {
     private navParams: NavParams,
     private router: Router,
     private stakeholder: GoalStakeholderService,
-    private user: UserService
-  ) { }
+    private user: UserService,
+    private location: Location
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   ngOnInit() {
     this.goalId = this.navParams.data.goalId as string
-
     if (!this.goalId) return
+
     this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.goalId })
     const stakeholder$ = this.user.profile$.pipe(
-      switchMap(profile => profile
-        ? this.stakeholder.valueChanges(this.user.uid, { goalId: this.goalId })
-        : of(createGoalStakeholder())
-      )
+      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of()),
+      map(stakeholder =>  createGoalStakeholder(stakeholder))
     )
     this.isAdmin$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAdmin))
     this.isAchiever$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAchiever))
@@ -52,7 +58,7 @@ export class TeamModal implements OnInit {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   navTo(uid: string) {

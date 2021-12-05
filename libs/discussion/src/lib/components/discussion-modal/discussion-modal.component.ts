@@ -1,4 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 import { NavParams, IonContent, ModalController } from '@ionic/angular';
 // Rxjs
 import { Observable, Subscription } from 'rxjs';
@@ -21,7 +22,6 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -44,10 +44,18 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
   constructor(
     public user: UserService,
     private discussion: DiscussionService,
+    private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     public paginationService: DiscussionPaginationService,
-  ) {}
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    this.modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   ngOnInit() {
     this.discussionId = this.navParams.get('discussionId')
@@ -64,7 +72,7 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   ngOnDestroy() {

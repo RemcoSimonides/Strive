@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { NavParams, ModalController } from '@ionic/angular';
 // Angularfire
 import { Auth, user } from '@angular/fire/auth';
@@ -27,7 +28,6 @@ import { orderBy, where } from '@angular/fire/firestore';
 export class AddSupportModalComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
@@ -48,12 +48,20 @@ export class AddSupportModalComponent implements OnInit {
   constructor(
     private afAuth: Auth,
     private goalService: GoalService,
+    private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private roadmap: RoadmapService,
     private supportService: SupportService,
     public user: UserService
-  ) { }
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   ngOnInit() {
     this.goalId = this.navParams.get('goalId')
@@ -99,7 +107,7 @@ export class AddSupportModalComponent implements OnInit {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.location.back()
   }
 
   async addSupport(goal: Goal) {

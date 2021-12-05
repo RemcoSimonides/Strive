@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
 // Ionic
 import { NavParams, LoadingController, Platform, AlertController, ModalController } from '@ionic/angular';
-// Rxjs
-import { Subscription } from 'rxjs';
 // Services
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -30,8 +29,20 @@ export enum enumAuthSegment {
   styleUrls: ['./auth-modal.page.scss'],
 })
 export class AuthModalPage implements OnInit {
-
-  private backBtnSubscription: Subscription
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
+      window.history.pushState(null, null, window.location.href);
+      this.authSegmentChoice = enumAuthSegment.login
+    } else if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
+      window.history.pushState(null, null, window.location.href);
+      this.authSegmentChoice = enumAuthSegment.register
+    } else {
+      console.log('dismissing modal: ', this.success)
+      this.modalCtrl.dismiss(this.success)
+    }
+  }
+  private success: boolean = false;
 
   public passwordType = 'password';
   public passwordIcon = 'eye-off-outline';
@@ -71,37 +82,23 @@ export class AuthModalPage implements OnInit {
     private alertCtrl: AlertController,
     private fcmService: FcmService,
     private loadingCtrl: LoadingController,
+    private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     public platform: Platform,
     private user: UserService
-  ) { }
+  ) {
+    this.modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   ngOnInit() {
+    window.history.pushState(null, null, window.location.href);
     const segmentChoice = this.navParams.data.authSegment
     this.authSegmentChoice = !!segmentChoice ? segmentChoice : enumAuthSegment.login
-  }
-
-  ionViewDidEnter() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
-        
-        if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
-          this.authSegmentChoice = enumAuthSegment.login
-        }
-
-        if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
-          this.authSegmentChoice = enumAuthSegment.register
-        }
-
-      });
-    }
-  }
-
-  ionViewWillLeave() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe();
-    }
   }
 
   async loginWithGoogle() {
@@ -117,11 +114,14 @@ export class AuthModalPage implements OnInit {
           this.user.upsertProfile(profile, uid)
         ])
         const top = await this.modalCtrl.getTop()
-        if (top) top.dismiss(true)
+        if (top) {
+          top.dismiss(true)
+          this.dismiss(true)
+        }
         this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
       } else {
         const top = await this.modalCtrl.getTop()
-        if (top) top.dismiss(true)
+        if (top) this.dismiss(true)
       }
   
     } catch (error) {
@@ -152,8 +152,9 @@ export class AuthModalPage implements OnInit {
     }
   }
 
-  closeAuthModal() {
-    this.modalCtrl.dismiss(false)
+  dismiss(success: boolean) {
+    this.success = success;
+    this.location.back()
   }
 
   async loginUser() {
@@ -173,7 +174,7 @@ export class AuthModalPage implements OnInit {
 
         await signInWithEmailAndPassword(this.afAuth, email, password)
         loading.dismiss()
-        this.modalCtrl.dismiss(true)
+        this.dismiss(true)
 
       } catch (error) {
 
@@ -217,6 +218,7 @@ export class AuthModalPage implements OnInit {
         ])
 
         this.modalCtrl.dismiss(true)
+        this.dismiss(true)
         this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
 
       } catch(error) {

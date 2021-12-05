@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { DailyGratefulness } from '../../+state/daily-gratefulness.firestore';
@@ -10,20 +11,26 @@ import { DailyGratefulnessService } from '../../+state/daily-gratefulness.servic
   styleUrls: ['./upsert.component.scss']
 })
 export class DailyGratefulnessUpsertComponent implements OnInit {
-
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
 
   public dailyGratefulness: DailyGratefulness
 
   constructor(
+    private location: Location,
     private modalCtrl: ModalController,
     private service: DailyGratefulnessService,
     private user: UserService
-  ) { }
+  ) {
+    window.history.pushState(null, null, window.location.href)
+    modalCtrl.getTop().then(modal => {
+      modal.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
+      })
+    })
+  }
 
   async ngOnInit() {
     this.dailyGratefulness = await this.service.getDailyGratefulnessSettings(this.user.uid);
@@ -46,10 +53,7 @@ export class DailyGratefulnessUpsertComponent implements OnInit {
     this.service.save(this.user.uid, this.dailyGratefulness)
     this.dismiss()
   }
-
-  
-
   dismiss() {
-    this.modalCtrl.dismiss();
+    this.location.back()
   }
 }
