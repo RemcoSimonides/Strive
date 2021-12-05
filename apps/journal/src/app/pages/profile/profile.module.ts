@@ -27,6 +27,7 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
 import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
 import { GoalOptionsModule } from './popovers/goal-options/goal-options.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
   { path: '', component: ProfilePage },
@@ -47,9 +48,11 @@ const routes: Routes = [
     ImageModule,
     ImageSelectorModule,
     FollowingModule,
+    FollowersModule,
     StatusPipeModule,
     GoalOptionsModule,
     UpsertGoalModalModule,
+    FontAwesomeModule,
 
     // Exercises
     AffirmationsViewModule,

@@ -99,7 +99,8 @@
                     <b>{{ value.goal.title }}</b>
                     <small fxLayout fxLayoutGap="4px">
                       <ion-icon name="pulse"></ion-icon><span>{{ value.stakeholder.status | status }}</span>
-                      <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span></small>
+                      <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                    </small>
                   </ion-label>
                   <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="openGoalOptions(value.goal, value.stakeholder, $event)">
                     <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
@@ -116,29 +117,35 @@
     </section>
 
     <!-- Supporting Goals overview -->
-    <h2 class="padding">Supporting Goals</h2>
-
-    <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
-      <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
-
-        <strive-thumbnail-grid>
-          <ng-container *ngFor="let goal of supportingGoals">
-            <ng-template #thumb>
-              <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.status === 'finished'" [routerLink]="'/goal/' + goal.id">
-                <small>
-                  {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
-                  {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
-                </small>
-              </small-thumbnail>
-            </ng-template>
-          </ng-container>
-        </strive-thumbnail-grid>
-
+    <section fxLayout="column">
+      <h2 class="padding">Supporting Goals</h2>
+      <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
+        <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
+          <ion-list class="bucketlist" mode="md">
+            <ng-container *ngFor="let goal of supportingGoals; let last = last">
+              <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', goal.id]">
+                <ion-thumbnail slot="start">
+                  <img [ref]="goal.image" asset="goal.jpeg"/>
+                  <div *ngIf="goal.status === 'finished'">finished</div>
+                </ion-thumbnail>
+                <article>
+                  <ion-label fxLayout="column">
+                    <b>{{ goal.title }}</b>
+                    <small fxLayout fxLayoutGap="4px">
+                      <ion-icon name="flag-outline"></ion-icon><span>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                      <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon><span>{{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}</span>
+                    </small>
+                  </ion-label>
+                </article>
+              </ion-item>
+            </ng-container>
+          </ion-list>
+        </ng-container>
+        <ng-template #noSupportingGoals>
+          <span class="padding">Not supporting any goals</span>
+        </ng-template>
       </ng-container>
-      <ng-template #noSupportingGoals>
-        <span class="padding">Not supporting any goals</span>
-      </ng-template>
-    </ng-container>
+    </section>
 
     <ng-container *ngIf="isOwner$ | async as isOwner">
       <section fxLayout="column">
