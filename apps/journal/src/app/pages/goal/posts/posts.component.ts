@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { GoalFeedPaginationService } from '@strive/notification/+state/goal-feed-pagination.service';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 @Component({
@@ -15,14 +13,12 @@ import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakehold
   styleUrls: ['./posts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostsComponent implements OnInit, OnDestroy {
+export class PostsComponent implements OnInit {
   @Input() goal: Goal
 
-  isAdmin = false
-  private sub: Subscription
+  isAdmin$: Observable<boolean>
 
   constructor(
-    private modalCtrl: ModalController,
     private user: UserService,
     private stakeholder: GoalStakeholderService,
     public feed: GoalFeedPaginationService,
@@ -34,15 +30,11 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.feed.init(`Goals/${this.goal.id}/Notifications`)
     this.feed.listenToUpdates()
 
-    this.sub = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goal.id }) : of(createGoalStakeholder()))
-    ).subscribe(stakeholder => {
-      this.isAdmin = stakeholder.isAdmin ?? false
-    })
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.isAdmin$ = this.user.profile$.pipe(
+      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goal.id }) : of(undefined)),
+      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder()),
+      map(stakeholder => stakeholder.isAdmin)
+    )
   }
 
   //Posts section

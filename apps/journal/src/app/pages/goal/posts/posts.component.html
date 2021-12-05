@@ -6,7 +6,7 @@
   <ng-container *ngIf="!!notifications.length else noPosts">
     <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
       <ng-container *ngFor="let notification of notifications">
-        <strive-notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></strive-notification>
+        <strive-notification [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin$ | async" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></strive-notification>
       </ng-container>
 
       <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
