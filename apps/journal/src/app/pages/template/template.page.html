@@ -36,7 +36,10 @@
         </ion-card-content>
       </ion-card>
 
-      <h3>Roadmap</h3>
+      <article fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
+        <h2>Roadmap</h2>
+        <ion-button *ngIf="isAdmin | async" fill="clear" [routerLink]="['edit']">edit</ion-button>
+      </article>
       <strive-roadmap 
         [structuredMilestones]="structuredMilestones"
         [isAdmin]="isAdmin | async"

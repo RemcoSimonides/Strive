@@ -27,7 +27,6 @@ export class EditRoadmapComponent implements OnInit {
   private prevSeqNo: string
   private prevMilestoneIndex: number
 
-
   @Input() mode: 'create' | 'update'
   @Input() roadmapObservable: Observable<MilestoneTemplate[]>
   @Input() goalId: string
@@ -367,12 +366,12 @@ export class EditRoadmapComponent implements OnInit {
 
   openDateTime(index: number) {
     const control = this.dateControllers.get(index)
-    control.el.click()
+    control.open()
   }
 
   openingDatetime($event, milestone: MilestoneTemplate) {
     event.stopPropagation(); //prevents roadmap from collapsing in or out :)
-    
+
     // empty value
     $event.target.value = ""
 
@@ -389,11 +388,7 @@ export class EditRoadmapComponent implements OnInit {
       const parentSeqNo = elements.join('.')
       const rodmapTemplate: MilestoneTemplate[] = this.roadmapForm.value;
       const parent = rodmapTemplate.find(milestone => milestone.sequenceNumber === parentSeqNo)
-      if (!!parent.deadline) $event.target.max = parent.deadline
+      if (parent.deadline) $event.target.max = parent.deadline
     }
-  }
-
-  onDeadlineDateChange($event, milestone: MilestoneTemplate) {
-    milestone.deadline = $event.detail.value
   }
 }

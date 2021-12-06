@@ -83,6 +83,7 @@
             placeholder="-- -- --"
             displayFormat="DD-MM-YY"
             pickerFormat="DDDD MMMM YYYY"
+            max="2500"
             [formControl]="control.deadline"
             (click)="openingDatetime($event, control.value)"
             (ionChange)="onDeadlineDateChange($event, control.value)"

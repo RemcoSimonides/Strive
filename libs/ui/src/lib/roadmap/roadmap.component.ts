@@ -36,7 +36,6 @@ export class RoadmapComponent {
 
   editRoadmap() {
     if (!this.isAdmin) return
-    this.loadingCtrl.create({ spinner: 'lines' }).then(loading => loading.present())
     this.router.navigateByUrl(`${this.router.url}/edit`)
   }
 
