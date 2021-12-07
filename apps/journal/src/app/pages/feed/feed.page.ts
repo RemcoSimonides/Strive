@@ -34,7 +34,7 @@ export class FeedPage implements OnInit, OnDestroy {
   unreadNotifications$: Observable<boolean>
 
   goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
-  collectiveGoals$ = this.collectiveGoal.valueChanges(['lidJJc63GYEL499jfnei', 'ZwHs8v6Fivgeb53Wpr6v', 'REsVPNUXsbIAUyBJsGZB', 'XGtfe77pCKh1QneOipI7'])
+  collectiveGoals$ = this.collectiveGoal.valueChanges(['NG03OJqJNB0ZmiYyVdkK', 'Heax8uzGOWcnooaDePkJ', 'rFGdiK8iIWwMPXGZ6OWM', 'XGtfe77pCKh1QneOipI7'])
   exercises = exercises
 
   private backBtnSubscription: Subscription
