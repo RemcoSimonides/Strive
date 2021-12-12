@@ -5,7 +5,7 @@ import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Milestone } from '@strive/milestone/+state/milestone.firestore'
-import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'milestone-options',
@@ -41,7 +41,7 @@ export class MilestoneOptionsPopover implements OnInit {
 
   async assignMe() {
     const currentUser = await this.user.getFirebaseUser();
-    this.milestone.achiever = createProfileLink({
+    this.milestone.achiever = createUserLink({
       username: currentUser.displayName,
       photoURL: currentUser.photoURL,
       uid: currentUser.uid
@@ -51,7 +51,7 @@ export class MilestoneOptionsPopover implements OnInit {
   }
 
   async unassignMe() {
-    this.milestone.achiever = createProfileLink()
+    this.milestone.achiever = createUserLink()
     await this.milestoneService.upsert({ achiever: this.milestone.achiever, id: this.milestone.id }, { params: { goalId: this.goalId }})
     this.dismiss(this.milestone)
   }

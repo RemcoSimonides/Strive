@@ -1,27 +1,27 @@
-import { db, functions, admin } from '../../../internals/firebase';
+import { db, functions, admin } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
-import { Profile } from '@strive/user/user/+state/user.firestore';
-import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../../shared/algolia/algolia';
+import { createUser, User } from '@strive/user/user/+state/user.firestore';
+import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
-export const profileCreatedHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
+export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
   .onCreate(async (snapshot, context) => {
 
     const uid = snapshot.id
-    const profile = snapshot.data() as Profile
+    const user = createUser({ ...snapshot.data(), uid: snapshot.id })
 
     addToAlgolia('user', uid, {
       uid,
-      username: profile.username,
-      photoURL: profile.photoURL,
-      numberOfSpectators: profile.numberOfSpectators
+      username: user.username,
+      photoURL: user.photoURL,
+      numberOfSpectators: user.numberOfSpectators
     })
   })
 
-export const profileDeletedHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
+export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
   .onDelete(async (snapshot, context) => {
 
     const uid = snapshot.id
@@ -29,18 +29,12 @@ export const profileDeletedHandler = functions.firestore.document(`Users/{userId
 
   })
 
-export const profileChangeHandler = functions.firestore.document(`Users/{userId}/Profile/{uid}`)
+export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
   .onUpdate(async (snapshot, context) => {
 
-    const before = snapshot.before.data() as Profile
-    const after = snapshot.after.data() as Profile
-    const uid = context.params.userId
-
-    if (before.fcmTokens.length < after.fcmTokens.length) {
-      admin.messaging().subscribeToTopic(after.fcmTokens, 'notifications')
-        .then(res => { logger.log('Successfully subscribed to topic:', res) })
-        .catch(err => { logger.log('Error subscribing tot topic', err) })
-    }
+    const uid = context.params.uid
+    const before = createUser({ ...snapshot.before.data(), uid: snapshot.before.id })
+    const after = createUser({ ...snapshot.after.data(), uid: snapshot.after.id })
 
     logger.log('updating Algolia')
     updateAlgoliaObject('user', uid, {
@@ -66,7 +60,7 @@ export const profileChangeHandler = functions.firestore.document(`Users/{userId}
     }
   })
 
-async function updateCollectiveGoalStakeholders(uid: string, after: Profile) {
+async function updateCollectiveGoalStakeholders(uid: string, after: User) {
   const data: Partial<CollectiveGoalStakeholder> = {
     username: after.username,
     photoURL: after.photoURL
@@ -77,7 +71,7 @@ async function updateCollectiveGoalStakeholders(uid: string, after: Profile) {
   return Promise.all(promises)
 }
 
-async function updateGoalStakeholders(uid: string, after: Profile) {
+async function updateGoalStakeholders(uid: string, after: User) {
   const data: Partial<GoalStakeholder> = {
     username: after.username,
     photoURL: after.photoURL
@@ -88,7 +82,7 @@ async function updateGoalStakeholders(uid: string, after: Profile) {
   return Promise.all(promises)
 }
 
-async function updateSpectators(uid: string, after: Profile) {
+async function updateSpectators(uid: string, after: User) {
   logger.log('uid: ', uid);
   const spectating: Partial<Spectator> = {
     username: after.username,

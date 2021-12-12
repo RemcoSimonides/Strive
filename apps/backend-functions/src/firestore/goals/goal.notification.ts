@@ -18,7 +18,7 @@ import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakehold
 import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
 import { createCollectiveGoal, createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { createProfileLink, ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore';
 import { converter } from '../../shared/utils';
 
@@ -105,7 +105,7 @@ async function sendNewGoalNotification(goalId: string, goal: Goal) {
     logger.log(`Sending New Goal Notification to User Spectators`)
     const goalStakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
     for (const snap of goalStakeholderColSnap.docs) {
-      notification.source.user = createProfileLink(snap.data())
+      notification.source.user = createUserLink({ ...snap.data(), uid: snap.id })
       sendNotificationToUserSpectators(snap.id, notification)
     }
   }
@@ -117,7 +117,7 @@ async function sendNewGoalNotificationInCollectiveGoal(goalId: string, goal: Goa
   logger.log(`Sending New Goal Notification to Collective Goal (${goal.collectiveGoalId}) stakeholders`)
 
   const collectiveGoalSnap = await db.doc(`CollectiveGoals/${goal.collectiveGoalId}`).get()
-  const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data());
+  const collectiveGoal = createCollectiveGoal({ ...collectiveGoalSnap.data(), id: collectiveGoalSnap.id });
 
   const notification = createNotification({
     discussionId: goalId,
@@ -154,11 +154,11 @@ async function sendFinishedGoalNotification(goalId: string, goal: Goal) {
   if (goal.publicity === 'public') {
     const stakeholdersSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
     for (const doc of stakeholdersSnap.docs) {
-      const stakeholder = createGoalStakeholder(doc.data())
+      const stakeholder = createGoalStakeholder({ ...doc.data(), uid: doc.id })
   
       if (!stakeholder.isAdmin && !stakeholder.isAchiever) return
   
-      notification.source.user = createProfileLink(stakeholder)
+      notification.source.user = createUserLink(stakeholder)
       sendNotificationToUserSpectators(stakeholder.uid, notification)
     }
   }
@@ -167,7 +167,7 @@ async function sendFinishedGoalNotification(goalId: string, goal: Goal) {
 async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goal) {
 
   const supporters: Record<string, NotificationSupport[]> = {}
-  const receiver: ProfileLink | undefined = await getReceiver(goalId, db)
+  const receiver: UserLink | undefined = await getReceiver(goalId, db)
 
   // get unfinished milestones and then its supports
   const milestonesSnap = await db.collection(`Goals/${goalId}/Milestones`)
@@ -194,7 +194,7 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
 
   for (const supportsSnap of supportsSnaps) {
     for (const snap of supportsSnap.docs) {
-      const support = { ...snap.data() as Support, id: snap.id }
+      const support = createSupport({ ...snap.data(), id: snap.id })
       const uid = support.supporter.uid
       const milestone = milestones.find(m => m.id === support.milestone.id)
 
@@ -212,8 +212,6 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
       }
     }
   }
-
-  const date = new Date()
 
   for (const [uid, supportNotifications] of Object.entries(supporters)) {
     const meta = createSupportDecisionMeta({

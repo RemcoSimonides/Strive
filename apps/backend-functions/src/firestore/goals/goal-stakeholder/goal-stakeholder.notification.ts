@@ -14,7 +14,7 @@ import { enumEvent, Source } from '@strive/notification/+state/notification.fire
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createGoalRequest, createNotification } from '@strive/notification/+state/notification.model'
 import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { createProfileLink } from '@strive/user/user/+state/user.firestore'
+import { createUserLink } from '@strive/user/user/+state/user.firestore'
 
 const db = admin.firestore()
 const { arrayUnion } = admin.firestore.FieldValue
@@ -99,7 +99,7 @@ function sendNewAchieverNotificationToUserSpectators(goal: Goal, stakeholder: Go
     event: enumEvent.gStakeholderAchieverAdded,
     type: 'notification',
     source: {
-      user: createProfileLink(stakeholder),
+      user: createUserLink(stakeholder),
       goal: createGoalLink(goal)
     }
   })
@@ -113,7 +113,7 @@ function sendNewAchieverNotificationInGoal(goal: Goal, goalStakeholder: GoalStak
     event: enumEvent.gStakeholderAchieverAdded,
     type: 'feed',
     source: {
-      user: createProfileLink(goalStakeholder),
+      user: createUserLink(goalStakeholder),
       goal: createGoalLink(goal)
     },
   })
@@ -132,7 +132,7 @@ function sendNewAdminNotification(goal: Goal, goalStakeholder: GoalStakeholder) 
     type: 'feed',
     source: {
       goal: createGoalLink(goal),
-      user: createProfileLink(goalStakeholder)
+      user: createUserLink(goalStakeholder)
     },
   })
   sendNotificationToGoal(goal.id, notification)
@@ -147,7 +147,7 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
 
   const source: Source = {
     goal: createGoalLink(goal),
-    user: createProfileLink(goalStakeholder)
+    user: createUserLink(goalStakeholder)
   }
 
   await addDiscussion(`Request to become Achiever`, source, 'adminsAndRequestor', discussionId, goalStakeholder.uid)
@@ -174,7 +174,7 @@ function sendRequestToJoinGoalAcceptedNotification(discussionId: string, goal: G
     type: 'notification',
     source: {
       goal: createGoalLink(goal),
-      user: createProfileLink(goalStakeholder)
+      user: createUserLink(goalStakeholder)
     }
   })
   sendNotificationToUsers(notification, [goalStakeholder.uid])
@@ -188,7 +188,7 @@ function sendRequestToJoinGoalRejectedNotification(discussionId: string, goal: G
     type: 'notification',
     source: {
       goal: createGoalLink(goal),
-      user: createProfileLink(goalStakeholder)
+      user: createUserLink(goalStakeholder)
     }
   })
   sendNotificationToUsers(notification, [goalStakeholder.uid])

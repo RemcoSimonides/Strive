@@ -3,9 +3,9 @@ import { Firestore, DocumentSnapshot, getDoc, WriteBatch } from '@angular/fire/f
 // Interfaces
 import { CollectiveGoalStakeholder, createCollectiveGoalStakeholder } from './stakeholder.firestore';
 import { CollectiveGoal } from '../../collective-goal/+state/collective-goal.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { User } from '@strive/user/user/+state/user.firestore';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalStakeholderService extends FireCollection<CollectiveGoalStakeholder> {
@@ -31,8 +31,8 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     const collectiveGoalId = params?.collectiveGoalId ? params.collectiveGoalId : stakeholder.collectiveGoalId
     const uid = stakeholder.uid
 
-    const [profile, collectiveGoal] = await Promise.all([
-      getDoc(this.typedDocument<Profile>(this.db, `Users/${uid}/Profile/${uid}`)).then(snap => snap.data()),
+    const [user, collectiveGoal] = await Promise.all([
+      getDoc(this.typedDocument<User>(this.db, `Users/${uid}`)).then(snap => snap.data()),
       getDoc(this.typedDocument<CollectiveGoal>(this.db, `CollectiveGoals/${collectiveGoalId}`)).then(snap => snap.data())
     ])
 
@@ -43,8 +43,8 @@ export class CollectiveGoalStakeholderService extends FireCollection<CollectiveG
     const ref = this.getRef(uid, { collectiveGoalId });
     const data = createCollectiveGoalStakeholder({
       ...stakeholder,
-      username: profile.username,
-      photoURL: profile.photoURL,
+      username: user.username,
+      photoURL: user.photoURL,
       uid,
       collectiveGoalId
     });

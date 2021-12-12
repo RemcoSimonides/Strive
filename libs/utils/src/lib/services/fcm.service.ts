@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Messaging, getToken, onMessage, Unsubscribe } from '@angular/fire/messaging';
-import { ToastController, Platform } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { PersonalService } from '@strive/user/user/+state/personal.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +13,13 @@ export class FcmService {
   constructor(
     private messaging: Messaging,
     private toastController: ToastController,
-    private _platform: Platform,
-    private user: UserService
+    private personal: PersonalService
   ) { }
 
   private async getPermission() {
     const token = await getToken(this.messaging);
     console.log('Permission granted! Save to the server!', token);
-    this.user.addFCMToken(token);
+    this.personal.addFCMToken(token);
   }
 
   async registerFCM() {
@@ -43,7 +43,7 @@ export class FcmService {
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
       (token: Token) => {
-        this.user.addFCMToken(token.value)
+        this.personal.addFCMToken(token.value)
         console.log('Push registration success, token: ' + token.value);
       }
     );

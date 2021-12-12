@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin'
 import * as moment from 'moment'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
-import { Profile } from '@strive/user/user/+state/user.firestore'
+import { Personal } from '@strive/user/user/+state/user.firestore'
 import { getDocument } from '../../shared/utils'
 
 const db = admin.firestore()
@@ -38,10 +38,10 @@ const db = admin.firestore()
 
 export async function sendDailyGratefulnessPushNotification(uid: string) {
 
-  const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
-  if (!!profile.fcmTokens.length) {
+  const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
+  if (personal.fcmTokens.some(token => token)) {
 
-    return admin.messaging().sendToDevice(profile.fcmTokens as string[], {
+    return admin.messaging().sendToDevice(personal.fcmTokens, {
       notification: {
         title: `Daily Gratefulness Reminder`,
         body: `Name three things you were grateful for today`,

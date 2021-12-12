@@ -1,44 +1,21 @@
 import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form'
-import { createProfile, createProfileLink, createUser, Profile, ProfileLink, User } from "../+state/user.firestore";
+import { createUserLink, createUser, User, UserLink } from "../+state/user.firestore";
 
 function createUserFormControl(params: User) {
   const user = createUser(params)
   return {
     uid: new FormControl(user.uid),
-    email: new FormControl(user.email),
-    firstName: new FormControl(user.firstName),
-    lastName: new FormControl(user.lastName)
+    username: new FormControl(user.username, Validators.maxLength(16)),
+    photoURL: new FormControl(user.photoURL),
   }
 }
 
 export type UserFormControl = ReturnType<typeof createUserFormControl>
 
 export class UserForm extends FormEntity<UserFormControl> {
-  constructor(user: User) {
+  constructor(user?: User) {
     super(createUserFormControl(user))
-  }
-
-  get uid() { return this.get('uid') }
-  get email() { return this.get('email') }
-  get firstName() { return this.get('firstName') }
-  get lastName() { return this.get('lastName') }
-}
-
-function createProfileFormControl(params: Profile) {
-  const profile = createProfile(params)
-  return {
-    uid: new FormControl(profile.uid),
-    username: new FormControl(profile.username, Validators.maxLength(16)),
-    photoURL: new FormControl(profile.photoURL),
-  }
-}
-
-export type ProfileFormControl = ReturnType<typeof createProfileFormControl>
-
-export class ProfileForm extends FormEntity<ProfileFormControl> {
-  constructor(profile?: Profile) {
-    super(createProfileFormControl(profile))
   }
 
   get uid() { return this.get('uid') }
@@ -46,20 +23,20 @@ export class ProfileForm extends FormEntity<ProfileFormControl> {
   get photoURL() { return this.get('photoURL') }
 }
 
-function createProfileLinkFormControl(params: ProfileLink) {
-  const profileLink = createProfileLink(params)
+function createUserLinkFormControl(params: UserLink) {
+  const userLink = createUserLink(params)
   return {
-    uid: new FormControl(profileLink.uid),
-    username: new FormControl(profileLink.username),
-    photoURL: new FormControl(profileLink.photoURL)
+    uid: new FormControl(userLink.uid),
+    username: new FormControl(userLink.username),
+    photoURL: new FormControl(userLink.photoURL)
   }
 }
 
-export type ProfileLinkFormControl = ReturnType<typeof createProfileLinkFormControl>
+export type UserLinkFormControl = ReturnType<typeof createUserLinkFormControl>
 
-export class ProfileLinkForm extends FormEntity<ProfileLinkFormControl> {
-  constructor(profileLink: ProfileLink) {
-    super(createProfileLinkFormControl(profileLink))
+export class UserLinkForm extends FormEntity<UserLinkFormControl> {
+  constructor(userLink: UserLink) {
+    super(createUserLinkFormControl(userLink))
   }
 
   get uid() { return this.get('uid') }

@@ -14,7 +14,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Components
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
@@ -58,9 +58,9 @@ export class GoalViewPage implements OnInit, OnDestroy {
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal = await this.goalService.getValue(this.goalId)
 
-    this.isAdmin$ = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of(undefined)),
-      map(stakeholder => stakeholder?.isAdmin ?? false)
+    this.isAdmin$ = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
+      map(stakeholder => createGoalStakeholder(stakeholder).isAdmin)
     )
 
     const { t } = this.route.snapshot.queryParams;
@@ -71,8 +71,8 @@ export class GoalViewPage implements OnInit, OnDestroy {
       return
     }
 
-    this.accessSubscription = this.user.profile$.pipe(
-      switchMap(profile => !!profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of({})),
+    this.accessSubscription = this.user.user$.pipe(
+      switchMap(user => !!user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
       let access = this.goal.publicity === 'public'
       if (!access && !!stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)

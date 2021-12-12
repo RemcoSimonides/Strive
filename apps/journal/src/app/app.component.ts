@@ -31,7 +31,6 @@ export class AppComponent implements OnDestroy {
 
   unreadNotifications$: Observable<boolean>
 
-  private profileSubscription: Subscription
   // private screenSizeSubscription: Subscription
   private fcmUnsubscribe: Unsubscribe
 
@@ -54,7 +53,6 @@ export class AppComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.profileSubscription.unsubscribe()
     // this.screenSizeSubscription.unsubscribe()
     this.fcmUnsubscribe()
   }
@@ -76,12 +74,11 @@ export class AppComponent implements OnDestroy {
 
       this.openAuthModalOnStartup()
 
-      this.unreadNotifications$ = this.user.profile$.pipe(
-        switchMap(profile => {
-          return profile
-          ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.uid }).pipe(map(notifications => !!notifications.length))
+      this.unreadNotifications$ = this.user.user$.pipe(
+        switchMap(user => user
+          ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: user.uid }).pipe(map(notifications => !!notifications.length))
           : of(false)
-        })
+        )
       )
       
     });
@@ -138,7 +135,7 @@ export class AppComponent implements OnDestroy {
 
   }
 
-  async openProfilePopover(ev: UIEvent): Promise<void> {
+  async openUserPopover(ev: UIEvent): Promise<void> {
     this.popoverCtrl.create({
       component: ProfileOptionsBrowserPage,
       event: ev,

@@ -8,7 +8,7 @@ import { ErrorResultResponse, getDocument } from '../../../shared/utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createGoal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore';
+import { User } from '@strive/user/user/+state/user.firestore';
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
 import { Timestamp } from '@firebase/firestore-types';
@@ -38,10 +38,10 @@ export const useTemplate = functions.https.onCall(async (
   const uid = context.auth.uid;
   const timestamp = serverTimestamp()
 
-  const [ template, collectiveGoal, profile ] = await Promise.all([
+  const [ template, collectiveGoal, user ] = await Promise.all([
     getDocument<Template>(`CollectiveGoals/${data.collectiveGoalId}/Templates/${data.templateId}`),
     getDocument<CollectiveGoal>(`CollectiveGoals/${data.collectiveGoalId}`),
-    getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
+    getDocument<User>(`Users/${uid}`)
   ])
 
   let publicity: GoalPublicityType
@@ -77,8 +77,8 @@ export const useTemplate = functions.https.onCall(async (
     isAdmin: true,
     isAchiever: true,
     uid,
-    username: profile.username,
-    photoURL: profile.photoURL,
+    username: user.username,
+    photoURL: user.photoURL,
     createdAt: timestamp,
     updatedAt: timestamp,
     updatedBy: uid

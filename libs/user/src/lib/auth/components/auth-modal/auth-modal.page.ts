@@ -5,15 +5,15 @@ import { GoogleAuthProvider } from 'firebase/auth';
 // Ionic
 import { NavParams, LoadingController, Platform, AlertController, ModalController } from '@ionic/angular';
 // Services
-import { FcmService } from '@strive/utils/services/fcm.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { createProfile } from '@strive/user/user/+state/user.firestore';
+import { createPersonal, createUser } from '@strive/user/user/+state/user.firestore';
 // Strive
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
 import { WelcomeModal } from '../welcome/welcome.modal';
+import { PersonalService } from '@strive/user/user/+state/personal.service';
 
 export enum enumAuthSegment {
   login,
@@ -38,7 +38,6 @@ export class AuthModalPage implements OnInit {
       window.history.pushState(null, null, window.location.href);
       this.authSegmentChoice = enumAuthSegment.register
     } else {
-      console.log('dismissing modal: ', this.success)
       this.modalCtrl.dismiss(this.success)
     }
   }
@@ -70,21 +69,17 @@ export class AuthModalPage implements OnInit {
       { type: 'required', message: 'Password is required.' },
       { type: 'minlength', message: 'Password must be at least 8 characters long.' },
       // { type: 'pattern', message: 'Password must contain small letters, capital letters and numbers' }
-    ],
-    // Please ask 'How old are you' instead of date of birth
-    // 'dateofbirth': [
-    //   { type: 'required', message: 'Please fill in your date of birth.'}
-    // ]
+    ]
   }
 
   constructor(
     private afAuth: Auth,
     private alertCtrl: AlertController,
-    private fcmService: FcmService,
     private loadingCtrl: LoadingController,
     private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
+    private personal: PersonalService,
     public platform: Platform,
     private user: UserService
   ) {
@@ -108,10 +103,11 @@ export class AuthModalPage implements OnInit {
 
       const user = await this.user.getValue(uid)
       if (!user) {
-        const profile = createProfile({ username: displayName, uid })
+        const user = createUser({ username: displayName, uid })
+        const personal = createPersonal({ uid, email })
         await Promise.all([
-          this.user.add({ uid, email }),
-          this.user.upsertProfile(profile, uid)
+          this.user.upsert(user),
+          this.personal.add(personal, { params: { uid }}),
         ])
         const top = await this.modalCtrl.getTop()
         if (top) {
@@ -210,11 +206,12 @@ export class AuthModalPage implements OnInit {
 
       try {
         const { user } = await createUserWithEmailAndPassword(this.afAuth, this.signupForm.value.email, this.signupForm.value.password)
-        const profile = createProfile({ uid: user.uid, username: this.signupForm.value.username })
+        const profile = createUser({ uid: user.uid, username: this.signupForm.value.username })
+        const personal = createPersonal({ uid: user.uid, email: user.email })
 
         await Promise.all([
-          this.user.add({ uid: user.uid, email: this.signupForm.value.email }),
-          this.user.upsertProfile(profile, user.uid)
+          this.user.add(profile),
+          this.personal.add(personal)
         ])
 
         this.modalCtrl.dismiss(true)

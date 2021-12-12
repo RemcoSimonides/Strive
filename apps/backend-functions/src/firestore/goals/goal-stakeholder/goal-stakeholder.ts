@@ -5,7 +5,7 @@ import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakeholderChanged } from './goal-stakeholder.notification'
-import { createProfile } from '@strive/user/user/+state/user.firestore';
+import { createUser } from '@strive/user/user/+state/user.firestore';
 import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 
@@ -116,18 +116,18 @@ async function upsertCollectiveGoalStakeholder(goal: Goal, stakeholderId: string
     // note: collectiveGoalStakeholder is not deleted even if stakeholder does not have any rights anymore.
   } else {
 
-    const [profileSnap, collectiveGoalSnap] = await Promise.all([
-      db.doc(`Users/${stakeholderId}/Profile/${stakeholderId}`).get(),
+    const [userSnap, collectiveGoalSnap] = await Promise.all([
+      db.doc(`Users/${stakeholderId}`).get(),
       db.doc(`CollectiveGoals/${collectiveGoalId}`).get()
     ])
-    const profile = createProfile(profileSnap.data())
+    const user = createUser({ ...userSnap.data(), uid: userSnap.id })
     const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data())
 
     // create new stakeholder
     const collectiveGoalStakeholder = createCollectiveGoalStakeholder({
       uid: stakeholderId,
-      username: profile.username,
-      photoURL: profile.photoURL,
+      username: user.username,
+      photoURL: user.photoURL,
       isAchiever,
       isAdmin: false,
       isSpectator: false,

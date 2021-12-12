@@ -1,5 +1,5 @@
 import { FieldValue } from '@firebase/firestore-types';
-import { createProfileLink, ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 import { setDateToEndOfDay } from '@strive/utils/helpers';
 
 export type MilestoneStatus = 
@@ -17,7 +17,7 @@ export interface Milestone {
   numberOfMoneySupports: number;
   status: MilestoneStatus
   deadline: string;
-  achiever: ProfileLink;
+  achiever: UserLink;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
@@ -51,7 +51,7 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     numberOfCustomSupports: 0,
     numberOfMoneySupports: 0,
     status: 'pending',
-    achiever: createProfileLink(params.achiever),
+    achiever: createUserLink(params.achiever),
     ...params
   }
 }

@@ -8,17 +8,17 @@
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="profiles$ | async as profiles; else loading">
+  <ng-container *ngIf="users$ | async as users; else loading">
     <table>
       <tr>
         <th>uid</th>
         <th>username</th>
         <th>created at</th>
       </tr>
-      <tr *ngFor="let profile of profiles" [routerLink]="['/a/users/', profile.uid]">
-        <td>{{ profile.uid }}</td>
-        <td>{{ profile.username }}</td>
-        <td>{{ profile.createdAt.toDate() | date:'fullDate' }}</td>
+      <tr *ngFor="let user of users" [routerLink]="['/a/users/', user.uid]">
+        <td>{{ user.uid }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.createdAt.toDate() | date:'fullDate' }}</td>
       </tr>
     </table>
   </ng-container>

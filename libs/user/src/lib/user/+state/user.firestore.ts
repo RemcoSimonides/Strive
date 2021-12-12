@@ -1,60 +1,52 @@
 import { FieldValue } from '@firebase/firestore-types';
 
-export interface User {
+export interface Personal {
     uid: string;
     email: string;
-    firstName: string;
-    lastName: string;
-    // dateOfBirth?: string;
+    fcmTokens: string[]; // one token per used device
     // walletBalance: number;
-    // posts?: { [goalPostId: string ]: true };
     updatedAt?: FieldValue;
     createdAt?: FieldValue;
 }
 
-export function createUser(params: Partial<User> = {}): User {
+export function createPersonal(params: Partial<Personal> = {}): Personal {
   return {
     uid: '',
     email: '',
-    firstName: '',
-    lastName: '',
-    // dateOfBirth: '',
+    fcmTokens: [],
     // walletBalance: 0
-    // posts: [],
     ...params
   }
 }
 
-export interface Profile {
+export interface User {
   uid: string;
   username: string;
   photoURL: string;
   numberOfSpectating: number;
   numberOfSpectators: number;
-  fcmTokens: string[]; // one token per used device
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
 
-export function createProfile(params: Partial<Profile> = {}): Profile {
+export function createUser(params: Partial<User> = {}): User {
   return {
     uid: '',
     username: '',
     photoURL: '',
     numberOfSpectating: 0,
     numberOfSpectators: 0,
-    fcmTokens: [],
     ...params
   }
 }
 
-export interface ProfileLink {
+export interface UserLink {
   uid: string,
   username: string,
   photoURL: string
 }
 
-export function createProfileLink(params: Partial<ProfileLink> = {}): ProfileLink {
+export function createUserLink(params: Partial<UserLink> = {}): UserLink {
   return {
     uid: params.uid ?? '',
     username: params.username ?? '',

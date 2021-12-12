@@ -61,8 +61,8 @@ export class TeamModal implements OnInit {
         : stakeholders
     ))
 
-    const stakeholder$ = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of()),
+    const stakeholder$ = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of()),
       map(stakeholder =>  createGoalStakeholder(stakeholder))
     )
     this.isAdmin$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAdmin))

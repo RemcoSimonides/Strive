@@ -51,9 +51,9 @@ export class RoadmapComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-    this.stakeholder$ = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholderService.valueChanges(profile.uid, { goalId: this.goal.id }) : of(undefined)),
-      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
+    this.stakeholder$ = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: this.goal.id }) : of(undefined)),
+      map(stakeholder => createGoalStakeholder(stakeholder))
     )
 
     this.sub = this.service.converting.pipe(pairwise()).subscribe(async ([prev, next]) => {

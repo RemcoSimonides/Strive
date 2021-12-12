@@ -30,10 +30,9 @@ export class PostsComponent implements OnInit {
     this.feed.init(`Goals/${this.goal.id}/Notifications`)
     this.feed.listenToUpdates()
 
-    this.isAdmin$ = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goal.id }) : of(undefined)),
-      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder()),
-      map(stakeholder => stakeholder.isAdmin)
+    this.isAdmin$ = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goal.id }) : of(undefined)),
+      map(stakeholder => createGoalStakeholder(stakeholder).isAdmin)
     )
   }
 

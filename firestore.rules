@@ -31,10 +31,10 @@ service cloud.firestore {
     }
 
     match /Users/{uid} {
+      allow read;
+      allow write: if isOwner(uid);
 
-      allow get: if isOwner(uid)
-      allow create;
-
+      // TODO remove these rules
       match /Profile/{userId} {
         allow read;
         allow write: if isOwner(userId);
@@ -54,6 +54,11 @@ service cloud.firestore {
       match /Exercises/{exerciseId} {
         allow read;
         allow write: if isOwner(uid)
+      }
+
+      match /Personal/{userId} {
+        allow get: if isOwner(uid)
+        allow create;
       }
 
     }

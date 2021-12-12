@@ -32,9 +32,9 @@ export class NotificationsPage implements OnInit, OnDestroy {
     // const date = new Date();
     // date.setDate(date.getDate() - 14);
 
-    this.notifications$ = this.user.profile$.pipe(
-      switchMap(profile => profile
-        ? this.notification.valueChanges([where('type', '==', 'notification'), orderBy('createdAt', 'desc')], { uid: profile.uid }).pipe(
+    this.notifications$ = this.user.user$.pipe(
+      switchMap(user => user
+        ? this.notification.valueChanges([where('type', '==', 'notification'), orderBy('createdAt', 'desc')], { uid: user.uid }).pipe(
           map(notifications => notifications.map(notification => {
             return {
               ...notification,
@@ -46,7 +46,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
     )
 
     this.sub = combineLatest([
-      this.user.profile$.pipe(map(profile => profile?.uid)),
+      this.user.user$.pipe(map(user => user?.uid)),
       this.notifications$.pipe(
         map(notifications => notifications.filter(notification => !notification.isRead)),
         filter(unreadNotifications => !!unreadNotifications.length),

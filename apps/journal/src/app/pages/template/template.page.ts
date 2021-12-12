@@ -18,6 +18,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { Template } from '@strive/template/+state/template.firestore'
 import { Milestone, MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
+import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Component({
   selector: 'app-template',
@@ -71,14 +72,9 @@ export class TemplatePage implements OnInit {
       map(collectiveGoal => collectiveGoal.deadline)
     )
 
-    this.isAdmin = this.user.profile$.pipe(
-      switchMap(profile => {
-        if (!!profile) {
-          return this.stakeholder.valueChanges(profile.uid, { collectiveGoalId: this.collectiveGoalId }).pipe(map(stakeholder => !!stakeholder?.isAdmin))
-        } else {
-          return of(false)
-        }
-      })
+    this.isAdmin = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { collectiveGoalId: this.collectiveGoalId }) : of(undefined)),
+      map(stakeholder => createCollectiveGoalStakeholder(stakeholder).isAdmin)
     )
   }
 

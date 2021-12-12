@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Firestore, CollectionReference, collection, where, orderBy, limit, query, startAfter, Query, collectionSnapshots } from '@angular/fire/firestore';
+import { Firestore, collection, where, orderBy, limit, query, startAfter, Query, collectionSnapshots } from '@angular/fire/firestore';
 import { scan, tap, take, map } from 'rxjs/operators';
 import { Notification } from './notification.firestore';
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';

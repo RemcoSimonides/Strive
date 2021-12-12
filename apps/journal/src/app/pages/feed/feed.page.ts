@@ -58,24 +58,21 @@ export class FeedPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.seo.generateTags({ title: `Strive Journal` });
     
-    this.userSubscription = this.user.profile$.subscribe(profile => {
-      if (profile) {
-        this.feed.init(`Users/${profile.uid}/Notifications`)
-      } else {
-        this.feed.reset()
-      }
+    this.userSubscription = this.user.user$.subscribe(user => {
+      console.log('user: ', user);
+      user ? this.feed.init(`Users/${user.uid}/Notifications`) : this.feed.reset()
       this.cdr.markForCheck()
     })
 
-    this.decisions$ = this.user.profile$.pipe(
-      switchMap(profile => profile
-        ? this.notification.valueChanges([where('needsDecision', '==', true)], { uid: profile.uid })
+    this.decisions$ = this.user.user$.pipe(
+      switchMap(user => user
+        ? this.notification.valueChanges([where('needsDecision', '==', true)], { uid: user.uid })
         : of([])),
     )
 
-    this.unreadNotifications$ = this.user.profile$.pipe(
-      switchMap(profile => profile
-        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.uid }).pipe(map(notifications => !!notifications.length))
+    this.unreadNotifications$ = this.user.user$.pipe(
+      switchMap(user => user
+        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: user.uid }).pipe(map(notifications => !!notifications.length))
         : of(false)
       )
     )

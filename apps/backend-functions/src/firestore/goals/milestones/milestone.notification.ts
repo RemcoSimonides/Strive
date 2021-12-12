@@ -9,7 +9,7 @@ import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.
 import { createMilestone, createMilestoneLink, Milestone } from '@strive/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta, increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
-import { ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { UserLink } from '@strive/user/user/+state/user.firestore';
 import { converter } from '../../../shared/utils';
 
 const db = admin.firestore()
@@ -39,7 +39,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   // send notification to supporters of this milestone and submilestones 
   // overwrite notification to supporters // send notification if person does not want level 1/2/3 milestone notifications but does support them
   const supporters: Record<string, NotificationSupport[]> = {}
-  const receiver: ProfileLink = !!after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
+  const receiver: UserLink = !!after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
 
   // get milestones (including unfinished submilestones)
   const milestones: Milestone[] = [after]

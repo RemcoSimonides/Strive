@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
 import { createMilestone, createMilestoneLink, createMilestoneTemplate, Milestone, MilestoneLink, MilestoneTemplate } from "../+state/milestone.firestore";
-import { ProfileLinkForm } from '@strive/user/user/forms/user.form'
+import { UserLinkForm } from '@strive/user/user/forms/user.form'
 
 function createMilestoneFormControl(params: Milestone) {
   const milestone = createMilestone(params)
@@ -10,7 +10,7 @@ function createMilestoneFormControl(params: Milestone) {
     description: new FormControl(milestone.description, Validators.required),
     status: new FormControl(milestone.status),
     deadline: new FormControl(milestone.deadline),
-    achiever: new ProfileLinkForm(milestone.achiever)
+    achiever: new UserLinkForm(milestone.achiever)
   }
 }
 

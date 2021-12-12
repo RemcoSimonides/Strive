@@ -3,7 +3,7 @@ import { NotificationSupport, Support } from '@strive/support/+state/support.fir
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { GoalLink } from '@strive/goal/goal/+state/goal.firestore';
 import { MilestoneLink } from '@strive/milestone/+state/milestone.firestore';
-import { ProfileLink } from '@strive/user/user/+state/user.firestore';
+import { UserLink } from '@strive/user/user/+state/user.firestore';
 import { CollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { TemplateLink } from '@strive/template/+state/template.firestore';
 import { Comment } from '@strive/discussion/+state/comment.firestore';
@@ -97,7 +97,7 @@ export interface Notification<Meta extends NotificationMeta = any> {
 
 // add all information you have :)
 export interface Source {
-  user?: ProfileLink,
+  user?: UserLink,
   goal?: GoalLink;
   milestone?: MilestoneLink,
   collectiveGoal?: CollectiveGoalLink,

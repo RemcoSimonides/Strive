@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity } from '@strive/utils/form/entity.form';
 import { createSupport, Support } from '../+state/support.firestore';
 import { GoalLinkForm } from '@strive/goal/goal/forms/goal.form';
-import { ProfileLinkForm } from '@strive/user/user/forms/user.form';
+import { UserLinkForm } from '@strive/user/user/forms/user.form';
 import { MilestoneLinkForm } from '@strive/milestone/forms/milestone.form';
 
 function createSupportFormControl(params?: Support) {
@@ -20,8 +20,8 @@ function createSupportFormControl(params?: Support) {
       level3id: new FormControl(support.path.level3id),
       level3description: new FormControl(support.path.level3description),
     }),
-    supporter: new ProfileLinkForm(support.supporter),
-    receiver: new ProfileLinkForm(support.receiver)
+    supporter: new UserLinkForm(support.supporter),
+    receiver: new UserLinkForm(support.receiver)
   }
 }
 

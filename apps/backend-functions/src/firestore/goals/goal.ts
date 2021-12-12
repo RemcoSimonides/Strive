@@ -10,7 +10,7 @@ import { handleNotificationsOfCreatedGoal, handleNotificationsOfChangedGoal } fr
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared/utils';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore';
+import { User } from '@strive/user/user/+state/user.firestore';
 import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
 import { Timestamp } from '@firebase/firestore-types';
 
@@ -137,11 +137,11 @@ export const duplicateGoal = functions.https.onCall(async (data: { goalId: strin
   db.doc(`Goals/${id}`).update({ id });
 
   // Create stakeholder
-  const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
+  const user = await getDocument<User>(`Users/${uid}`)
   const stakeholder = createGoalStakeholder({
     uid: uid,
-    username: profile.username,
-    photoURL: profile.photoURL,
+    username: user.username,
+    photoURL: user.photoURL,
     isAchiever: true,
     isAdmin: true,
     goalId: id,

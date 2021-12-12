@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProfileService } from '@strive/user/user/+state/profile.service';
-import { ProfileForm } from '@strive/user/user/forms/user.form';
-import { Profile } from '@strive/user/user/+state/user.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { UserForm } from '@strive/user/user/forms/user.form';
+import { User } from '@strive/user/user/+state/user.firestore';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
@@ -21,24 +20,23 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 })
 export class UserPage {
 
-  profile$: Observable<Profile>
+  user$: Observable<User>
   goals$: Observable<Goal[]>
 
-  profileForm = new ProfileForm()
+  userForm = new UserForm()
 
   constructor(
     private modalCtrl: ModalController,
-    private profile: ProfileService,
-    private route: ActivatedRoute,
     private user: UserService,
+    private route: ActivatedRoute,
     private goal: GoalService,
     private stakeholder: GoalStakeholderService,
   ) {
     this.route.params.subscribe(params => {
       const uid = params.uid as string
 
-      this.profile$ = this.profile.valueChanges(uid, { uid }).pipe(
-        tap(profile => this.profileForm.patchValue(profile))
+      this.user$ = this.user.valueChanges(uid, { uid }).pipe(
+        tap(user => this.userForm.patchValue(user))
       )
 
       this.goals$ = this.stakeholder.groupChanges([
@@ -56,12 +54,12 @@ export class UserPage {
 
   update() {
     console.error('users can update the user name themselves')
-    // if (this.profileForm.invalid) {
+    // if (this.userForm.invalid) {
     //   console.error('invalid form')
     //   return
     // }
 
-    // this.profile.update(this.profileForm.value, { params: { uid: this.profileForm.uid.value }})
+    // this.user.update(this.userForm.value, { params: { uid: this.userForm.uid.value }})
   }
 
   createGoal(uid: string) {

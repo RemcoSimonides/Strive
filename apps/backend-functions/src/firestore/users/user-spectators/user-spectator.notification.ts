@@ -3,7 +3,7 @@ import { Spectator } from '@strive/user/spectator/+state/spectator.firestore'
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
-import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 export function handleNotificationsOfCreatedUserSpectator(userSpectator: Spectator) {
   sendNotificationToUserBeingSpectated(userSpectator)
@@ -19,7 +19,7 @@ async function sendNotificationToUserBeingSpectated(userSpectator: Spectator) {
     event: enumEvent.userSpectatorAdded,
     type: 'notification',
     source: {
-      user: createProfileLink(userSpectator)
+      user: createUserLink(userSpectator)
     },
   })
   sendNotificationToUsers(notification, [userSpectator.profileId])

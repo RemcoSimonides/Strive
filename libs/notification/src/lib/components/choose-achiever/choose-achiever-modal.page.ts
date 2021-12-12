@@ -3,7 +3,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 // Interfaces
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'app-choose-achiever-modal',
@@ -33,7 +33,7 @@ export class ChooseAchieverModal implements OnInit {
   }
 
   achieverChosen(achiever: GoalStakeholder) {
-    const receiver = createProfileLink(achiever)
+    const receiver = createUserLink(achiever)
     this.modalCtrl.dismiss(receiver)
   }
 

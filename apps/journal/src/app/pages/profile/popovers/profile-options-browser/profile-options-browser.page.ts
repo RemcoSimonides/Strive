@@ -30,9 +30,9 @@ export class ProfileOptionsBrowserPage {
     private fcm: FcmService,
     private notification: NotificationService
   ) {
-    this.unreadNotifications$ = this.user.profile$.pipe(
-      switchMap(profile => profile
-        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: profile.uid }).pipe(map(notifications => !!notifications.length))
+    this.unreadNotifications$ = this.user.user$.pipe(
+      switchMap(user => user
+        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: user.uid }).pipe(map(notifications => !!notifications.length))
         : of(false)
       )
     )

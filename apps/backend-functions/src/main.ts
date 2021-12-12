@@ -8,7 +8,7 @@ export { scheduledTasksRunner } from './pubsub/scheduled-task-runner';
 export { userSpectatorChangeHandler, userSpectatorCreatedHandler } from './firestore/users/user-spectators/user-spectator';
 export { affirmationsCreatedHandler, affirmationsChangeHandler } from './firestore/users/exercises/affirmation';
 export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler } from './firestore/users/exercises/daily_gratefulness';
-export { profileCreatedHandler, profileChangeHandler, profileDeletedHandler } from './firestore/users/profile/profile';
+export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user';
 export { notificationCreatedHandler, notificationChangeHandler, notificationDeletedHandler } from './firestore/users/notifications/notification';
 
 export { collectiveGoalCreatedHandler, collectiveGoalChangeHandler, collectiveGoalDeletedHandler } from './firestore/collective-goals/collective-goal';
@@ -28,4 +28,4 @@ export { discussionDeletedHandler } from './firestore/discussions/discussion';
 // http
 export { duplicateGoal } from './firestore/goals/goal'
 export { useTemplate } from './firestore/collective-goals/templates/template'
-export { migrate } from './migration'
+// export { migrate } from './migration'

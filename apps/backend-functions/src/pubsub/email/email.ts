@@ -114,7 +114,7 @@
 
 // async function getUserData(uid: string, fromDate: Date): Promise<User> {
 //   const [ profile, notifications ] = await Promise.all([
-//     getDocument<Profile>(`Users/${uid}/Profile/${uid}`),
+//     getDocument<Profile>(`Users/${uid}`),
 //     db.collection(`Users/${uid}/Notifications`)
 //       .where('createdAt', '>=', fromDate)
 //       .get()

@@ -11,7 +11,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
-import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 
@@ -116,7 +116,7 @@ export class NotificationComponent {
   public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
     if (!isSupportDecisionNotification(notification)) return
     if (notification.meta.status === 'finalized') return
-    support.receiver = createProfileLink();
+    support.receiver = createUserLink();
   }
 
   public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {

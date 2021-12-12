@@ -42,11 +42,11 @@ export const userSpectatorChangeHandler = functions.firestore.document(`Users/{u
 })  
 
 function changeNumberOfSpectators(uidToBeSpectated: string, change: number) {
-  const ref = db.doc(`Users/${uidToBeSpectated}/Profile/${uidToBeSpectated}`)
+  const ref = db.doc(`Users/${uidToBeSpectated}`)
   return ref.update({ numberOfSpectators: increment(change) })
 }
 
 function changeNumberOfSpectating(uidSpectator: string, change: number) {
-  const ref = db.doc(`Users/${uidSpectator}/Profile/${uidSpectator}`)
+  const ref = db.doc(`Users/${uidSpectator}`)
   return ref.update({ numberOfSpectating: increment(change) })
 }

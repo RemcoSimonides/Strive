@@ -3,9 +3,8 @@ import { logger } from 'firebase-functions';
 // Interfaces
 import { createNotification, isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
-import { Profile } from '@strive/user/user/+state/user.firestore';
+import { Personal } from '@strive/user/user/+state/user.firestore';
 import { deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
-import { Notification } from '@strive/notification/+state/notification.firestore';
 import { getDocument } from '../../../shared/utils';
 import { getPushMessage } from '@strive/notification/message/push-notification';
 
@@ -14,13 +13,12 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
 
     const notification = createNotification(snapshot.data())
     const userId = context.params.userId
-    const notificationId = snapshot.id
 
     // send push notification
-    const profile = await getDocument<Profile>(`Users/${userId}/Profile/${userId}`)
+    const personal = await getDocument<Personal>(`Users/${userId}/Personal/${userId}`)
 
-    logger.log(`gonna send notification to ${profile.username}`)
-    if (!!profile.fcmTokens.length) {
+    logger.log(`gonna send notification to ${personal?.email}`)
+    if (personal.fcmTokens.some(token => token)) {
 
       // TODO
       // Try to define a tag for each too so they get aggregated
@@ -29,9 +27,9 @@ export const notificationCreatedHandler = functions.firestore.document(`Users/{u
       // GOOD LUCK!
       const message = getPushMessage(notification)
       
-      logger.log('sending notification to devices', profile.fcmTokens)
+      logger.log('sending notification to devices', personal.fcmTokens)
 
-      admin.messaging().sendToDevice(profile.fcmTokens, {
+      admin.messaging().sendToDevice(personal.fcmTokens, {
         notification: { ...message },
         data: { url: message.url }
       }).catch((err => {
@@ -50,8 +48,8 @@ export const notificationDeletedHandler = functions.firestore.document(`Users/{u
 export const notificationChangeHandler = functions.firestore.document(`Users/{userId}/Notifications/{notificationId}`)
   .onUpdate(async (snapshot, context) => {
 
-    const before = snapshot.before.data() as Notification
-    const after = snapshot.after.data() as Notification
+    const before = createNotification({ ...snapshot.before.data(), id: snapshot.before.id })
+    const after = createNotification({ ...snapshot.after.data(), id: snapshot.after.id })
     const notificationId = context.params.notificationId
 
     if (isSupportDecisionNotification(before) && isSupportDecisionNotification(after)) {

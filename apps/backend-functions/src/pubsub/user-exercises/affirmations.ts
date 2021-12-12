@@ -1,7 +1,7 @@
 import { admin } from '../../internals/firebase';
 import * as moment from 'moment'
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore';
+import { Personal } from '@strive/user/user/+state/user.firestore';
 import { ScheduledTaskUserExerciseAffirmations, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { getDocument } from '../../shared/utils';
@@ -11,10 +11,10 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
   if  (affirmations.affirmations.length >= 1) {
 
     const randomAffirmation = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)];
-    const profile = await getDocument<Profile>(`Users/${uid}/Profile/${uid}`)
+    const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
 
-    if (!!profile.fcmTokens.length) {
-      return admin.messaging().sendToDevice(profile.fcmTokens as string[], {
+    if (personal.fcmTokens.some(token => token)) {
+      return admin.messaging().sendToDevice(personal.fcmTokens, {
         notification: {
           title: `Repeat out loud 5 times`,
           body: `${randomAffirmation}`,

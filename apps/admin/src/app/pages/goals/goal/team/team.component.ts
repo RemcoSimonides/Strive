@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { SelectUserModal } from '@strive/ui/select-user/select-user.modal';
-import { ProfileService } from '@strive/user/user/+state/profile.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 import { Observable } from 'rxjs';
 
 
@@ -20,7 +20,7 @@ export class TeamComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private profile: ProfileService,
+    private user: UserService,
 		private stakeholder: GoalStakeholderService
   ) {}
 
@@ -33,7 +33,7 @@ export class TeamComponent implements OnInit {
     modal.onDidDismiss().then(async res => {
       const uid = res.data as string
       if (uid) {
-        const { username, photoURL } = await this.profile.getValue(uid, { uid })
+        const { username, photoURL } = await this.user.getValue(uid, { uid })
         const stakeholder = createGoalStakeholder({ username, photoURL, uid });
         this.stakeholder.upsert(stakeholder, { params: { goalId: this.id }});
       }

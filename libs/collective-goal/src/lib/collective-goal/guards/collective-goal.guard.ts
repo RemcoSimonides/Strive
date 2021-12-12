@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { UserService } from '@strive/user/user/+state/user.service';
 // Services
 import { CollectiveGoalService } from '../+state/collective-goal.service';
 import { CollectiveGoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
-import { UserService } from '@strive/user/user/+state/user.service';
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalGuard implements CanActivate {
 

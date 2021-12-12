@@ -10,7 +10,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { createComment } from '@strive/discussion/+state/comment.firestore';
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
-import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'strive-discussion',
@@ -110,7 +110,7 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
     const comment = createComment({
       text: this._comment,
       type: 'sentByUser',
-      user: createProfileLink({ uid, username: displayName, photoURL })
+      user: createUserLink({ uid, username: displayName, photoURL })
     })
     this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
 

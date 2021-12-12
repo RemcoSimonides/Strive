@@ -1,7 +1,7 @@
 import { FieldValue } from '@firebase/firestore-types';
 import { GoalLink, createGoalLink } from '@strive/goal/goal/+state/goal.firestore'
 import { MilestoneLink, createMilestoneLink } from '@strive/milestone/+state/milestone.firestore'
-import { ProfileLink, createProfileLink } from '@strive/user/user/+state/user.firestore'
+import { UserLink, createUserLink } from '@strive/user/user/+state/user.firestore'
 
 export type SupportDecision = 'give' | 'keep'
 export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
@@ -21,8 +21,8 @@ export interface Support {
     level3id: string;
     level3description: string;
   };
-  supporter: ProfileLink;
-  receiver?: ProfileLink;
+  supporter: UserLink;
+  receiver?: UserLink;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
@@ -32,7 +32,7 @@ export interface NotificationSupport {
   description: string;
   decision: SupportDecision;
   finished: boolean;
-  receiver: ProfileLink;
+  receiver: UserLink;
 }
 
 /** A factory function that creates a SupportDocument. */
@@ -51,8 +51,8 @@ export function createSupport(params: Partial<Support> = {}): Support {
       level3id: '',
       level3description: ''
     },
-    supporter: createProfileLink(params.supporter),
-    receiver: createProfileLink(params.receiver),
+    supporter: createUserLink(params.supporter),
+    receiver: createUserLink(params.receiver),
     ...params
   }
 }
@@ -64,7 +64,7 @@ export function createNotificationSupport(params: Partial<NotificationSupport> =
     description: '',
     decision: params.finished ? 'give' : 'keep',
     finished: false,
-    receiver: createProfileLink(params.receiver),
+    receiver: createUserLink(params.receiver),
     ...params
   }
 }

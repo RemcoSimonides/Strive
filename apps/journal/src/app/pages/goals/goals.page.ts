@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Platform, NavController, ModalController } from '@ionic/angular';
 
 // Rxjs
-import { Observable, Subscription } from 'rxjs'
-import { map } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
@@ -17,7 +17,6 @@ import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/c
 
 // Pages
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { Profile } from '@strive/user/user/+state/user.firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
@@ -28,18 +27,17 @@ import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goa
   templateUrl: './goals.page.html',
   styleUrls: ['./goals.page.scss'],
 })
-export class GoalsPage implements OnInit, OnDestroy {
+export class GoalsPage implements OnInit {
 
   goals$: Observable<Goal[]>
   collectiveGoals$: Observable<CollectiveGoal[]>
 
-  sub: Subscription
   backBtnSubscription: Subscription
 
   constructor(
     public user: UserService,
-    private collectiveGoalService: CollectiveGoalService,
-    private goalService: GoalService,
+    private collectiveGoal: CollectiveGoalService,
+    private goal: GoalService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
@@ -47,24 +45,16 @@ export class GoalsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.user.profile$.subscribe((profile: Profile) => {
-      if (!!profile) {
-        this.goals$ = this.goalService.getStakeholderGoals(profile.uid, enumGoalStakeholder.achiever, false).pipe(
-          map(values => values.map(value => value.goal))
-        );
-        // TODO Create separate section for goals you spectate (they are not YOUR goals)
-        // const spectatorGoals = this.goalStakeholderService.getGoals(profile.uid, enumGoalStakeholder.spectator, false)
-        // this.goals$ = filterDuplicateGoals([achieverGoals, spectatorGoals])
+    this.goals$ = this.user.user$.pipe(
+      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([])),
+      map(values => values.map(value => value.goal))
+    )
 
-        this.collectiveGoals$ = this.collectiveGoalService.getCollectiveGoalsOfStakeholder(profile.uid)
-      }
-    })
+    this.collectiveGoals$ = this.user.user$.pipe(
+      switchMap(user => user ? this.collectiveGoal.getCollectiveGoalsOfStakeholder(user.uid) : of([]))
+    )
 
     this.seo.generateTags({ title: `Goals - Strive Journal` })
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   ionViewDidEnter() { 

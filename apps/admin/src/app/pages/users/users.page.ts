@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ProfileService } from '@strive/user/user/+state/profile.service';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Component({
   selector: 'strive-users',
@@ -9,7 +9,7 @@ import { ProfileService } from '@strive/user/user/+state/profile.service';
 })
 export class UsersPage {
 
-  profiles$ = this.profile.groupChanges()
+  users$ = this.user.valueChanges()
 
-  constructor(private profile: ProfileService) {}
+  constructor(private user: UserService) {}
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, DocumentSnapshot, getDoc, WriteBatch } from '@angular/fire/firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 // Interfaces
-import { Profile } from '@strive/user/user/+state/user.firestore'
+import { User } from '@strive/user/user/+state/user.firestore'
 import { GoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -42,8 +42,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     const goalId = params?.goalId ? params.goalId : stakeholder.goalId
     const uid = stakeholder.uid
 
-    const [profile, goal] = await Promise.all([
-      getDoc(this.typedDocument<Profile>(this.db, `Users/${uid}/Profile/${uid}`)).then(snap => snap.data()),
+    const [user, goal] = await Promise.all([
+      getDoc(this.typedDocument<User>(this.db, `Users/${uid}`)).then(snap => snap.data()),
       getDoc(this.typedDocument<Goal>(this.db, `Goals/${goalId}`)).then(snap => snap.data())
     ])
 
@@ -56,8 +56,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     const ref = this.getRef(uid, { goalId })
     const data = createGoalStakeholder({
       ...stakeholder,  
-      username: profile.username,
-      photoURL: profile.photoURL,
+      username: user.username,
+      photoURL: user.photoURL,
       uid,
       goalId
     });

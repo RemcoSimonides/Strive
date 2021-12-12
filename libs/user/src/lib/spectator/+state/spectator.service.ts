@@ -6,7 +6,6 @@ import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
 import { Spectator, createSpectator } from './spectator.firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-import { ProfileService } from '@strive/user/user/+state/profile.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +14,7 @@ export class UserSpectateService extends FireCollection<Spectator> {
   readonly path = `Users/:uid/Spectators`
   readonly idKey = 'uid'
 
-  constructor(
-    db: Firestore,
-    private user: UserService,
-    private profile: ProfileService
-  ) {
+  constructor(db: Firestore, private user: UserService) {
     super(db)
   }
 
@@ -32,8 +27,8 @@ export class UserSpectateService extends FireCollection<Spectator> {
   async onCreate(spectator: Spectator, { write, params }: WriteOptions) {
     const uid = spectator.uid
     const [current, toBeSpectated] = await Promise.all([
-      this.profile.getValue(uid, { uid }),
-      this.profile.getValue(params.uid, { uid: params.uid })
+      this.user.getValue(uid),
+      this.user.getValue(params.uid)
     ])
 
     const ref = this.getRef(uid, { uid: params.uid });

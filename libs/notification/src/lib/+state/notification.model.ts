@@ -2,7 +2,7 @@ import { createCollectiveGoalLink } from '@strive/collective-goal/collective-goa
 import { createGoalLink } from '@strive/goal/goal/+state/goal.firestore';
 import { createMilestoneLink } from '@strive/milestone/+state/milestone.firestore';
 import { createSupport } from '@strive/support/+state/support.firestore';
-import { createProfileLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { GoalRequest, Notification, SupportDecisionMeta } from './notification.firestore';
 import { createComment } from '@strive/discussion/+state/comment.firestore';
 import { createTemplateLink } from '@strive/template/+state/template.firestore';
@@ -20,7 +20,7 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
     target: 'user',
     event: 0,
     source: {
-      user: createProfileLink(),
+      user: createUserLink(),
       goal: createGoalLink(),
       milestone: createMilestoneLink(),
       postId: '',

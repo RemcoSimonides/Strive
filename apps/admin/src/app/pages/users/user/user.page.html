@@ -1,33 +1,33 @@
 <ion-content>
-  <ng-container *ngIf="profile$ | async as profile">
+  <ng-container *ngIf="user$ | async as user">
 
     <ion-card>
       <ion-card-content>
-        <p>Created at: {{ profile.createdAt?.toDate() | date:'medium' }}</p>
-        <p>Updated at: {{ profile.updatedAt?.toDate() | date:'medium' }}</p>
-        <p>Spectators: {{ profile.numberOfSpectators }}</p>
-        <p>Spectating: {{ profile.numberOfSpectating }}</p>
+        <p>Created at: {{ user.createdAt?.toDate() | date:'medium' }}</p>
+        <p>Updated at: {{ user.updatedAt?.toDate() | date:'medium' }}</p>
+        <p>Spectators: {{ user.numberOfSpectators }}</p>
+        <p>Spectating: {{ user.numberOfSpectating }}</p>
 
-        <form [formGroup]="profileForm" (ngSubmit)="update()">
+        <form [formGroup]="userForm" (ngSubmit)="update()">
           <ion-item>
             <ion-label position="floating"></ion-label>
             <ion-input formControlName="username" disabled></ion-input>
           </ion-item>
         
           <media-image-selector
-            [form]="profileForm.photoURL"
-            [storagePath]="'profiles/' + profile.uid"
+            [form]="userForm.photoURL"
+            [storagePath]="'profiles/' + user.uid"
           ></media-image-selector>
         
           <div fxLayout="row" fxLayoutAlign="center">
-            <ion-button class="submit_button" type="submit" [disabled]="!profileForm.valid">Update</ion-button>
+            <ion-button class="submit_button" type="submit" [disabled]="!userForm.valid">Update</ion-button>
           </div>
         </form>
       </ion-card-content>
     </ion-card>
 
     <h3>Goals</h3>
-    <ion-button (click)="createGoal(profile.uid)">Create Goal</ion-button>
+    <ion-button (click)="createGoal(user.uid)">Create Goal</ion-button>
     <ng-container *ngIf="goals$ | async as goals">
       <strive-thumbnail-grid>
         <ng-container *ngFor="let goal of goals">

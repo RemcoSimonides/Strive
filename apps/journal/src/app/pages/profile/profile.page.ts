@@ -7,7 +7,6 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { SeoService } from '@strive/utils/services/seo.service';
-import { ProfileService } from '@strive/user/user/+state/profile.service';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
@@ -21,12 +20,12 @@ import { FollowingComponent } from '@strive/user/spectator/components/following/
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
 // Interfaces
 import { createSpectator, Spectator } from '@strive/user/spectator/+state/spectator.firestore';
-import { Profile } from '@strive/user/user/+state/user.firestore';
+import { User } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { ProfileForm } from '@strive/user/user/forms/user.form';
+import { UserForm } from '@strive/user/user/forms/user.form';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { GoalOptions } from './popovers/goal-options/goal-options.component';
@@ -50,8 +49,8 @@ export class ProfilePage implements OnInit {
   public isSpectator$: Observable<boolean>
 
   public profileId: string
-  public profile$: Observable<Profile>
-  public profileForm = new ProfileForm()
+  public profile$: Observable<User>
+  public profileForm = new UserForm()
 
   public achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
   public supportingGoals$: Observable<Goal[]>
@@ -63,7 +62,6 @@ export class ProfilePage implements OnInit {
 
   constructor(
     public user: UserService,
-    private profileService: ProfileService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -79,22 +77,22 @@ export class ProfilePage implements OnInit {
     this.profileId = this.route.snapshot.paramMap.get('id')
     this.profileForm.disable();
 
-    this.isOwner$ = this.user.profile$.pipe(
-      map(profile => profile?.uid === this.profileId),
+    this.isOwner$ = this.user.user$.pipe(
+      map(user => user?.uid === this.profileId),
       startWith(false),
       distinctUntilChanged(),
       shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    this.isSpectator$ = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.userSpectateService.valueChanges(profile.uid, { uid: this.profileId }) : of(createSpectator())),
+    this.isSpectator$ = this.user.user$.pipe(
+      switchMap(user => user ? this.userSpectateService.valueChanges(user.uid, { uid: this.profileId }) : of(createSpectator())),
       map(spectator => spectator?.isSpectator ?? false)
     )
 
     if (this.profileId) {
-      this.profile$ = this.profileService.valueChanges(this.profileId, { uid: this.profileId }).pipe(
+      this.profile$ = this.user.valueChanges(this.profileId).pipe(
         tap(profile => {
-          if (!!profile) {
+          if (profile) {
             this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
             this.profileForm.patchValue(profile)
           }
@@ -160,10 +158,10 @@ export class ProfilePage implements OnInit {
     }).then(popover => popover.present())
   }
 
-  async editProfileImage(profile: Profile, ev: UIEvent): Promise<void> {
+  async editProfileImage(user: User, ev: UIEvent): Promise<void> {
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverPage,
-      componentProps: { storagePath: profile.photoURL },
+      componentProps: { storagePath: user.photoURL },
       event: ev
     })
     popover.onDidDismiss().then((imageURL => {
@@ -179,7 +177,7 @@ export class ProfilePage implements OnInit {
       const username = this.profileForm.username.value as string
       if (!username) return
   
-      this.user.upsertProfile({ username })
+      this.user.upsert({ username, uid: this.user.uid })
     }
 
     this.profileForm.disabled ? this.profileForm.enable() : this.profileForm.disable()

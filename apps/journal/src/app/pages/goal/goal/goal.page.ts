@@ -77,8 +77,8 @@ export class GoalPage implements OnInit, OnDestroy {
       switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.valueChanges(goal.collectiveGoalId) : of(undefined))
     )
     
-    this.stakeholder$ = this.user.profile$.pipe(
-      switchMap(profile => profile ? this.stakeholder.valueChanges(profile.uid, { goalId: this.goalId }) : of(undefined)),
+    this.stakeholder$ = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
       map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
     )
 

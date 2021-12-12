@@ -49,7 +49,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   isSpectator = false
 
   private backBtnSubscription: Subscription
-  private profileSubscription: Subscription
+  private userSubscription: Subscription
 
   constructor(
     private alertCtrl: AlertController,
@@ -73,8 +73,8 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
     this.collectiveGoal$ = this.collectiveGoalService.valueChanges(this.collectiveGoalId)
 
     //Get current users' rights
-    this.profileSubscription = this.user.profile$.pipe(
-      map(profile => profile ? this.stakeholder.valueChanges(profile.uid, { collectiveGoalId: this.collectiveGoalId }) : of(undefined)),
+    this.userSubscription = this.user.user$.pipe(
+      map(user => user ? this.stakeholder.valueChanges(user.uid, { collectiveGoalId: this.collectiveGoalId }) : of(undefined)),
       switchMap(stakeholder$ => combineLatest([
         stakeholder$,
         this.collectiveGoal$
@@ -134,7 +134,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.profileSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 
   //Collective Goal Section
