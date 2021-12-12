@@ -16,7 +16,7 @@ export { templateCreatedHandler } from './firestore/collective-goals/templates/t
 export { collectiveGoalInviteTokenCreatedHandler } from './firestore/collective-goals/InviteTokens/invite-token';
 
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal';
-export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder';
+export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeholderDeletedHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder';
 export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandler } from './firestore/goals/milestones/milestone';
 export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } from './firestore/goals/supports/support';
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token';

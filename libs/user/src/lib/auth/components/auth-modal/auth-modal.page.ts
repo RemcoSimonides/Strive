@@ -211,7 +211,7 @@ export class AuthModalPage implements OnInit {
 
         await Promise.all([
           this.user.add(profile),
-          this.personal.add(personal)
+          this.personal.add(personal, { params: { uid: user.uid }})
         ])
 
         this.modalCtrl.dismiss(true)

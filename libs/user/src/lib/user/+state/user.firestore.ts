@@ -25,6 +25,7 @@ export interface User {
   photoURL: string;
   numberOfSpectating: number;
   numberOfSpectators: number;
+  numberOfActiveGoals: number;
   updatedAt?: FieldValue;
   createdAt?: FieldValue;
 }
@@ -36,6 +37,7 @@ export function createUser(params: Partial<User> = {}): User {
     photoURL: '',
     numberOfSpectating: 0,
     numberOfSpectators: 0,
+    numberOfActiveGoals: 0,
     ...params
   }
 }
