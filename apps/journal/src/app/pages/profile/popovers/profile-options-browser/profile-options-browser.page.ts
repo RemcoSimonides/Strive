@@ -11,6 +11,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { NotificationService } from '@strive/notification/+state/notification.service';
+import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({
   selector: 'app-profile-options-browser',
@@ -25,6 +26,7 @@ export class ProfileOptionsBrowserPage {
     private auth: Auth,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    public pwa: PWAService,
     private router: Router,
     private user: UserService,
     private fcm: FcmService,

@@ -3,6 +3,7 @@ import { Auth } from '@angular/fire/auth';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({
   selector: 'app-profile-options',
@@ -15,6 +16,7 @@ export class ProfileOptionsPage {
     private auth: Auth,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    public pwa: PWAService,
     private fcm: FcmService
   ) { }
 
