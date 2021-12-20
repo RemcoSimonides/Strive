@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
@@ -7,26 +7,23 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })
-export class GoalSharePopoverPage implements OnInit {
+export class GoalSharePopoverPage {
 
-  public goal: Goal
-  public isAdmin = false
-  public isSecret = false
+  goal: Goal
+  isAdmin = false
+  isSecret = false
 
   constructor(
     private navParams: NavParams,
     private popoverCtrl: PopoverController
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.isAdmin = this.navParams.data.isAdmin
     this.goal = this.navParams.data.goal
 
     this.isSecret = this.goal.publicity !== 'public'
   }
 
-  public close() {
+  close() {
     this.popoverCtrl.dismiss()
   }
-
 }

@@ -1,12 +1,10 @@
-ion-toolbar {
-  --background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-}
+@import 'swiper/scss';
 
-ion-fab {
-  margin-right: 15px;
-}
+:host {
+  display: block;
 
-media-image-selector {
-  width: 100%;
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+  }
 }

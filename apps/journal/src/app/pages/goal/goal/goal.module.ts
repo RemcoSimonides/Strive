@@ -9,7 +9,7 @@ import { GoalPage } from './goal.page';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module'
 import { GoalOptionsModule } from '../popovers/options/options.module'
-import { GoalSharePopoverModule } from '../popovers/share/share.module'
+import { GoalSharePopoverModule } from '@strive/goal/goal/components/popovers/share/share.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { TeamModalModule } from '@strive/goal/goal/modals/team/team.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';

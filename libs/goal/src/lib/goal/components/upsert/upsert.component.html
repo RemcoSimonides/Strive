@@ -13,52 +13,27 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="goalForm">
-
-    <ion-item>
-      <ion-label position="stacked">Title</ion-label>
-      <ion-input formControlName="title" 
-                 type="text"
-                 autofocus></ion-input>
-    </ion-item>
-  
-    <ion-item *ngIf="mode === 'create'">
-      <ion-label position="stacked">When Focus?</ion-label>
-      <ion-select placeholder="Select Status" interface="popover" formControlName="status">
-        <ion-select-option value="bucketlist">In future (bucket list)</ion-select-option>
-        <ion-select-option value="active">Current focus</ion-select-option>
-        <ion-select-option value="finished">Already finished (journaling)</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Visible to</ion-label>
-      <ion-select interface="popover" formControlName="isSecret"> 
-        <ion-select-option [value]="false">Everyone</ion-select-option>
-        <ion-select-option [value]="true">Only you</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <!-- TODO move it to editable on goal page or on edit goal only -->
-    <!-- <ion-item>
-      <ion-label position="stacked">End date &#40;optional&#41;</ion-label>
-      <ion-datetime
-        placeholder="-- -- --"
-        displayFormat="DDDD DD MMMM YYYY"
-        pickerFormat="DDDD MMMM YYYY" 
-        formControlName="deadline"
-        (click)="openingDatetime($event)"
-      ></ion-datetime>
-    </ion-item> -->
-
-    <ion-item>
-      <media-image-selector
-        [form]="goalForm.image"
-        [storagePath]="'goals/' + goalId"
-        defaultImage="goal.jpeg"
-      ></media-image-selector>
-    </ion-item>
-  </form>
-
-  <ion-button (click)="upsert()" clear>{{ mode === 'create' ? 'Create' : 'Update'}}</ion-button>
+  <ng-container *ngIf="mode === 'create' else update">
+    <swiper #swiper [allowTouchMove]="false">
+      <ng-template swiperSlide>
+        <slide-1 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-1>
+      </ng-template>
+      <ng-template swiperSlide>
+        <slide-2 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-2>
+      </ng-template>
+      <ng-template swiperSlide>
+        <slide-3 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-3>
+      </ng-template>
+      <ng-template swiperSlide>
+        <slide-4 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-4>
+      </ng-template>
+      <ng-template swiperSlide>
+        <slide-5 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-5>
+      </ng-template>
+    </swiper>
+  </ng-container>
 </ion-content>
+
+<ng-template #update swiperSlide>
+  <slide-update [form]="goalForm" [goalId]="goalId"></slide-update>
+</ng-template>

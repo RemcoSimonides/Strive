@@ -1,0 +1,23 @@
+<h3>Accountability</h3>
+<small>Find a friend, family member or another person you trust and share your goal with them.</small>
+<small>Sharing your list will make you more accountable and give you a partner who will work with you through frustrations or roadblocks. The right partner can help you transform obstacles into opportunities and stay on track.</small>
+
+<ion-button fill="outline" (click)="openSharePopover($event)">
+  <ion-icon slot="start" name="share-social-outline"></ion-icon>
+  <span>share</span>
+</ion-button>
+
+<h3>Extra exercises</h3>
+<small>Increase the chance of you succesfully completing this goal by engraving this goal and positive mindset in your mind</small>
+
+<article class="grid">
+  <ng-container *ngFor="let exercise of exercises | slice:0:4">
+    <small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openExercise(exercise.enum)">
+    </small-thumbnail>
+  </ng-container>
+</article>
+
+<footer fxLayout="column" fxLayoutAlign="start center">
+  <ion-button (click)="stepper.emit('next')">Finish</ion-button>
+  <ion-button (click)="stepper.emit('previous')" fill="clear">Previous</ion-button>
+</footer>

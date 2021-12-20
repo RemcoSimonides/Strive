@@ -1,0 +1,50 @@
+<form [formGroup]="form">
+  <small>Without a clear target, you’ll never hit your mark. That’s why it’s crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you’ve lost one kilo? Five? Forty? Don’t know how to create a clear goal? Click on the “?” at the top</small>
+  <ion-item>
+    <ion-label position="stacked">What do you want to achieve?</ion-label>
+    <ion-input formControlName="title" 
+              type="text"
+              autofocus></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">When do you start?</ion-label>
+    <ion-select placeholder="Select Status" interface="popover" formControlName="status">
+      <ion-select-option value="bucketlist">In future (bucket list)</ion-select-option>
+      <ion-select-option value="active">Now</ion-select-option>
+      <ion-select-option value="finished">Already finished (journaling)</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Who is able to see your goal</ion-label>
+    <ion-select interface="popover" formControlName="isSecret"> 
+      <ion-select-option [value]="false">Everyone</ion-select-option>
+      <ion-select-option [value]="true">Only you</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <!-- TODO move it to editable on goal page or on edit goal only -->
+  <!-- <ion-item>
+    <ion-label position="stacked">End date &#40;optional&#41;</ion-label>
+    <ion-datetime
+      placeholder="-- -- --"
+      displayFormat="DDDD DD MMMM YYYY"
+      pickerFormat="DDDD MMMM YYYY" 
+      formControlName="deadline"
+      (click)="openingDatetime($event)"
+    ></ion-datetime>
+  </ion-item> -->
+
+  <ion-item>
+    <media-image-selector
+      [form]="form.image"
+      [storagePath]="'goals/' + goalId"
+      defaultImage="goal.jpeg"
+    ></media-image-selector>
+  </ion-item>
+</form>
+
+<footer fxLayout="column" fxLayoutAlign="start center">
+  <ion-button (click)="save()" [disabled]="form.invalid">Save</ion-button>
+</footer>

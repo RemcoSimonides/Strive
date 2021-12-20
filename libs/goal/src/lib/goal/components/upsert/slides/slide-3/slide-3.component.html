@@ -1,0 +1,14 @@
+<small>Visualizing what the end result looks like will help filtering out distractions and increase the chance of you reaching your goal. How does your end result look like?</small>
+
+<ion-item>
+  <media-image-selector
+    [form]="form.image"
+    [storagePath]="'goals/' + goalId"
+    defaultImage="goal.jpeg"
+  ></media-image-selector>
+</ion-item>
+
+<footer fxLayout="column" fxLayoutAlign="start center">
+  <ion-button (click)="step('next')">Next</ion-button>
+  <ion-button (click)="step('previous')" fill="clear">Previous</ion-button>
+</footer>

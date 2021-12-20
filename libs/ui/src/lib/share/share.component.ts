@@ -18,9 +18,6 @@ export class ShareComponent implements OnInit {
 
   @Input() id: string
   @Input() @boolean isCollectiveGoal: boolean
-  @Input() title: string
-  @Input() description: string
-  @Input() image: string
 
   public ref: string
   public isCopied = false
@@ -32,15 +29,9 @@ export class ShareComponent implements OnInit {
 
   async ngOnInit() {
     this.ref = await this.inviteTokenService.getShareLink(this.id, this.isCollectiveGoal, this.isSecret, this.isAdmin)
-
-    // define image
-    if (this.image.toLowerCase() === 'assets/goal.jpeg') {
-      // set default Strive Journal image
-      this.image = ''
-    }
   }
 
-  public copyUrl() {
+  copyUrl() {
     Clipboard.write({ string: this.ref })
   }
 }

@@ -11,7 +11,7 @@ import { DiscussionModalPage } from '@strive/discussion/components/discussion-mo
 import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/options.component';
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { GoalSharePopoverPage } from '../popovers/share/share.component';
+import { GoalSharePopoverPage } from '@strive/goal/goal/components/popovers/share/share.component'
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Strive Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
@@ -301,7 +301,7 @@ export class GoalPage implements OnInit, OnDestroy {
         component: GoalSharePopoverPage,
         event: ev,
         componentProps: {
-          goal: goal,
+          goal,
           isAdmin: this.isAdmin
         }
       }).then(popover => popover.present())

@@ -1,0 +1,44 @@
+<form [formGroup]="descriptionForm">
+  <small>All these fields are optional</small>
+  <ng-container *ngFor="let field of fields | keyvalue:keepOriginalOrder">
+    <small>{{ field.value.description }}</small>
+    <ion-item>
+      <ion-label position="stacked" color="primary">{{ field.value.title }}</ion-label>
+      <ion-textarea [formControlName]="field.key"
+                    type="text"
+                    maxlength="256"
+                    autosize></ion-textarea>
+    </ion-item>
+  </ng-container>
+
+  <!-- What sacrifices need to be made -->
+
+
+  <!--  -->
+
+
+  <!-- When -->
+
+  <!-- Who -->
+
+  <!-- How much -->
+
+  <!-- How will you know when it's finished -->
+
+  <!-- What is stopping you -->
+  <!-- Wat houdt je tegen om meer te doen van wat jij wilt en wat je dichter bij het    realiseren van je dromen en doelen brengt?  
+
+Waarom doe je niet minder van wat je liever niet meer wilt? 
+
+Welke gedachten of emoties blokkeren je en hoe kun je die doorbreken? 
+Vaak is dit een vorm van angst maar waar ben je werkelijk bang voor? -->
+
+  <!-- Anything else -->
+
+
+</form>
+
+<footer fxLayout="column" fxLayoutAlign="start center">
+  <ion-button (click)="step('next')">Next</ion-button>
+  <ion-button (click)="step('previous')" fill="clear">Previous</ion-button>
+</footer>

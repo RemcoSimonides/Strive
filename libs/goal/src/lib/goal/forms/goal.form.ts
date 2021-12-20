@@ -23,7 +23,7 @@ export class GoalLinkForm extends FormEntity<GoalLinkFormControl> {
   get image() { return this.get('image') }
 }
 
-function createGoalFormControl(params?: Goal) {
+function createGoalFormControl(params?: Partial<Goal>) {
   const goal = createGoal(params);
   return {
     description: new FormControl(goal.description),
@@ -45,12 +45,13 @@ function createGoalFormControl(params?: Goal) {
 export type GoalFormControl = ReturnType<typeof createGoalFormControl>
 
 export class GoalForm extends FormEntity<GoalFormControl> {
-  constructor(goal?: Goal) {
+  constructor(goal?: Partial<Goal>) {
     super(createGoalFormControl(goal))
   }
 
   get title() { return this.get('title') }
   get description() { return this.get('description') }
+  get isSecret() { return this.get('isSecret') }
   get publicity() { return this.get('publicity') }
   get collectiveGoalId() { return this.get('collectiveGoalId') }
   get image() { return this.get('image') }
