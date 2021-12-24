@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-// Services
-import { AuthGuardService } from '@strive/user/auth/guard/auth-guard.service'
-import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service';
 
 // Pages
 import { GoalViewPage } from './goal-view.page'
@@ -20,12 +17,7 @@ import { PostsModule } from '../posts/posts.module';
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 
 const routes: Routes = [
-  { path: '', component: GoalViewPage },
-  { 
-    path: 'edit',
-    loadChildren: () => import('../roadmap/edit/edit-roadmap.module').then(m => m.EditRoadmapPageModule),
-    canActivate: [AuthGuardService, GoalAuthGuardService]
-  },
+  { path: '', component: GoalViewPage }
 ];
 
 @NgModule({

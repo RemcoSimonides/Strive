@@ -1,7 +1,5 @@
-<strive-edit-roadmap
-  mode="update"
-  [roadmapObservable]="roadmap$"
+<strive-roadmap
+  [milestones]="milestones$ | async"
   [goalId]="id"
-  (onSave)="save($event)"
-  (onCancel)="cancel()"
-></strive-edit-roadmap>
+  [isAdmin]="true"
+></strive-roadmap>

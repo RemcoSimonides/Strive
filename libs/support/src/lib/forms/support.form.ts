@@ -12,14 +12,6 @@ function createSupportFormControl(params?: Support) {
     status: new FormControl(support.status),
     goal: new GoalLinkForm(support.goal),
     milestone: new MilestoneLinkForm(support.milestone),
-    path: new FormEntity({
-      level1id: new FormControl(support.path.level1id),
-      level1description: new FormControl(support.path.level1description),
-      level2id: new FormControl(support.path.level2id),
-      level2description: new FormControl(support.path.level2description),
-      level3id: new FormControl(support.path.level3id),
-      level3description: new FormControl(support.path.level3description),
-    }),
     supporter: new UserLinkForm(support.supporter),
     receiver: new UserLinkForm(support.receiver)
   }
@@ -37,5 +29,4 @@ export class SupportForm extends FormEntity<SupportFormControl> {
   get milestone() { return this.get('milestone') }
   get supporter() { return this.get('supporter') }
   get receiver() { return this.get('receiver') }
-  get path() { return this.get('path') }
 }

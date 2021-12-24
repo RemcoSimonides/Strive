@@ -1,48 +1,21 @@
-<ng-container *ngIf="!(roadmapService.converting | async); else updating">
- <ng-container *ngIf="structuredMilestones && !(roadmapService.converting | async); else loading">
-    <ng-container *ngIf="structuredMilestones.length; else empty">
+<!-- <ng-container *ngIf="milestones; else loading">
+  <ng-container *ngIf="milestones.length || isAdmin; else empty">
 
-      <!-- First level -->
-      <ul class="collapsible popout" data-collapsible="accordion">
-        <ng-container *ngFor="let milestoneLevelOne of structuredMilestones; let i = index">
-          <li>
-            <section class="collapsible-header" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
-              <ng-template 
-                [ngTemplateOutlet]="milestoneTemplate"
-                [ngTemplateOutletContext]="{ $implicit: milestoneLevelOne, index: [i], maxDeadline: maxDeadline }">
-              </ng-template>
-            </section>
+    <ion-item *ngFor="let milestone of milestones">
+      <ng-template
+        [ngTemplateOutlet]="milestoneTemplate"
+        [ngTemplateOutletContext]="{ $implicit: milestone }">
+      </ng-template>
+    </ion-item>
+    
+    <form [formGroup]="milestoneForm" *ngIf="isAdmin">
+      <ion-item>
+        <strive-milestone-status status="pending"></strive-milestone-status>
+        <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()"></ion-input>
+        <ion-button (click)="add()">add</ion-button>
+      </ion-item>
+    </form>
 
-            <!-- Second level -->
-            <ul class="collapsible collapsible-body" data-collapsible="accordion">
-              <ng-container *ngFor="let milestoneLevelTwo of milestoneLevelOne.submilestones; let j = index">
-                <li>
-                  <section class="collapsible-header"  fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
-                    <ng-template 
-                      [ngTemplateOutlet]="milestoneTemplate"
-                    [ngTemplateOutletContext]="{ $implicit: milestoneLevelTwo, index: [i, j], maxDeadline: milestoneLevelOne.deadline }">
-                    </ng-template>
-                  </section>
-
-                  <!-- Third level -->
-                  <ng-container *ngFor="let milestoneLevelThree of milestoneLevelTwo.submilestones; let k = index">
-                    <section class="collapsible-body third" fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
-                      <ng-template 
-                        [ngTemplateOutlet]="milestoneTemplate"
-                        [ngTemplateOutletContext]="{ $implicit: milestoneLevelThree, index: [i, j, k], maxDeadline: milestoneLevelTwo.deadline }">
-                      </ng-template>
-                    </section>
-                  </ng-container>
-                </li><!-- End level 3-->
-
-              </ng-container>
-            </ul><!-- End level 2-->
-
-          </li>
-        </ng-container>
-      </ul><!-- End level 1-->
-
-    </ng-container>
   </ng-container>
 </ng-container>
 
@@ -55,16 +28,8 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <img asset='define_roadmap.png' (click)="editRoadmap()" [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}"/>
-    <ng-container *ngIf="isAdmin; else noAdmin">
-      <h3 (click)="editRoadmap()" 
-        [ngStyle]="{'cursor': isAdmin ? 'pointer' : 'inherit'}">
-        Define your roadmap
-      </h3>
-    </ng-container>
-    <ng-template #noAdmin>
-      <h3>Roadmap is not defined</h3>
-    </ng-template>
+    <img asset='define_roadmap.png'/>
+    <h3>Roadmap is not defined</h3>
   </section>
 </ng-template>
 
@@ -72,4 +37,4 @@
   <section fxLayout fxLayoutAlign="center center">
     <ion-spinner name="lines" color="primary"></ion-spinner>
   </section>
-</ng-template>
+</ng-template> -->

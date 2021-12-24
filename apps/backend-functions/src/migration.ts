@@ -1,30 +1,27 @@
-// import { Goal } from "@strive/goal/goal/+state/goal.firestore";
-// import { GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
-// import { db, functions } from "./internals/firebase";
-// import { logger } from 'firebase-functions';
-// import { createUser } from "@strive/user/user/+state/user.firestore";
+import { db, functions } from "./internals/firebase";
+import { createMilestone } from "@strive/milestone/+state/milestone.firestore";
 
-// export const migrate = functions.https.onRequest(async (req, res) => {
+export const migrate = functions.https.onRequest(async (req, res) => {
 
-//   try {
+  try {
 
-//     const profilesSnap = await db.collectionGroup('Profile').get();
-//     const usersSnap = await db.collection('Users').get()
+    const milestonesSnap = await db.collectionGroup('Milestones').get();
 
-//     const promises = []
+    const promises = []
 
-//     for (const doc of profilesSnap.docs) {
-//       const profile = createProfile({ ...doc.data(), uid: doc.id })
+    for (const doc of milestonesSnap.docs) {
+      const milestone = createMilestone(doc.data())
+      milestone.order = +milestone.sequenceNumber.split('.')[0];
 
-//       const promise = db.collection('Users').doc(profile.uid).set(profile)
-//       promises.push(promise)
-//     }
+      const promise = db.doc(doc.ref.path).set(milestone)
+      promises.push(promise)
+    }
 
-//     await Promise.all(promises)
+    await Promise.all(promises)
 
-//     res.status(200).send('all good')
-//   } catch (err) {
-//     console.error(err)
-//     res.status(400).send('Oh no! ABORT!')
-//   }
-// })
+    res.status(200).send('all good')
+  } catch (err) {
+    console.error(err)
+    res.status(400).send('Oh no! ABORT!')
+  }
+})

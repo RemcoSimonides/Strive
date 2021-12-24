@@ -16,7 +16,7 @@ import { SlideUpdate } from './slides/slide-update/slide-update.component';
 import { SwiperModule } from 'swiper/angular';
 import { AutosizeModule } from '@strive/ui/directives/auto-resize-textarea.directive';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
-import { EditRoadmapModule } from '@strive/milestone/components/edit-roadmap/edit-roadmap.module';
+import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap.module';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
 
 @NgModule({
@@ -28,7 +28,7 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
     AutosizeModule,
     ImageSelectorModule,
     SwiperModule,
-    EditRoadmapModule,
+    RoadmapModule,
     SmallThumbnailModule
   ],
   declarations: [

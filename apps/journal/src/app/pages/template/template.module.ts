@@ -15,7 +15,7 @@ import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
-import { RoadmapModule } from '@strive/ui/roadmap/roadmap.module';
+// import { RoadmapModule } from '@strive/ui/roadmap/roadmap.module';
 // Guards
 import { CollectiveGoalGuard } from '@strive/collective-goal/collective-goal/guards/collective-goal.guard';
 // Strive
@@ -27,9 +27,7 @@ const routes: Routes = [
     path: '',
     component: TemplatePage,
     canActivate: [CollectiveGoalGuard]
-  },
-  { path: 'edit',
-    loadChildren: () => import('./edit/edit-roadmap.module').then(m => m.EditRoadmapPageModule) },
+  }
 ];
 
 @NgModule({
@@ -40,7 +38,7 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    RoadmapModule,
+    // RoadmapModule,
     HeaderModule,
     UpsertTemplateModalPageModule,
     TextEditorModule,

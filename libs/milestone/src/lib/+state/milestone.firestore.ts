@@ -12,6 +12,8 @@ export type MilestoneStatus =
 export interface Milestone {
   id?: string;
   sequenceNumber: string;
+  order: number;
+  content: string;
   description: string;
   numberOfCustomSupports: number;
   numberOfMoneySupports: number;
@@ -45,9 +47,11 @@ export interface MilestoneTemplate {
 export function createMilestone(params: Partial<Milestone> = {}): Milestone {
   return {
     id: !!params.id ? params.id : '',
+    order: 0,
+    content: '',
     sequenceNumber: '',
-    deadline: '',
-    description: params.deadline ? setDateToEndOfDay(params.deadline) : '',
+    description: '',
+    deadline: params.deadline ? setDateToEndOfDay(params.deadline) : '',
     numberOfCustomSupports: 0,
     numberOfMoneySupports: 0,
     status: 'pending',

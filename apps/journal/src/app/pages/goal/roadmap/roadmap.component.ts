@@ -1,26 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, ModalController, PopoverController } from '@ionic/angular';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 // Rxjs
-import { Observable, of, Subscription } from 'rxjs';
-import { map, pairwise, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 // Strive Service
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 
-// Strive Components
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
-import { MilestoneOptionsPopover } from '@strive/milestone/components/options/options.component';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
-
 // Strive Other
-import { Milestone, MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore';
+import { Milestone } from '@strive/milestone/+state/milestone.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { AlertController, ModalController } from '@ionic/angular';
+import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
 @Component({
   selector: '[goal] journal-goal-roadmap',
@@ -28,57 +22,35 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RoadmapComponent implements OnInit, OnDestroy {
+export class RoadmapComponent implements OnInit {
 
-  private sub: Subscription;
-
-  structuredMilestones: MilestonesLeveled[] = []
   stakeholder$: Observable<GoalStakeholder>
+
+  milestones$: Observable<Milestone[]>
 
   @Input() goal: Goal
 
   constructor(
     private alertCtrl: AlertController,
     private cdr: ChangeDetectorRef,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
     private milestone: MilestoneService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private service: RoadmapService,
+    private modalCtrl: ModalController,
     private stakeholderService: GoalStakeholderService,
     private user: UserService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.stakeholder$ = this.user.user$.pipe(
       switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: this.goal.id }) : of(undefined)),
       map(stakeholder => createGoalStakeholder(stakeholder))
     )
 
-    this.sub = this.service.converting.pipe(pairwise()).subscribe(async ([prev, next]) => {
-      if (prev && !next) {
-        // reload milestones
-        this.structuredMilestones = await this.service.getStructuredMilestones(this.goal.id)
-        this.cdr.markForCheck()
-      }
-    })
-
-    this.structuredMilestones = await this.service.getStructuredMilestones(this.goal.id)
-    this.cdr.markForCheck()
+    this.milestones$ = this.milestone.valueChanges({ goalId: this.goal.id })
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe()
-  }
-
-  updateStatus(context: Milestone, index: number[], stakeholder: GoalStakeholder, event: Event) {
-    if (context.status !== 'pending' && context.status !== 'overdue') return
+  updateStatus(milestone: Milestone, stakeholder: GoalStakeholder) {
+    if (milestone.status !== 'pending' && milestone.status !== 'overdue') return
     if (!stakeholder.isAdmin && !stakeholder.isAchiever) return
-
-    event.stopPropagation() //prevents roadmap from collapsing in or out :)
-
-    const milestone = this.getMilestone(index);
 
     this.alertCtrl.create({
       header: 'Good job!',
@@ -112,70 +84,15 @@ export class RoadmapComponent implements OnInit, OnDestroy {
     }).then(alert => alert.present())
   }
 
-  updateDeadline(deadline: string, index: number[]) {
-    const milestone = this.getMilestone(index)
-    milestone.deadline = deadline
-    this.milestone.upsert({ deadline, id: milestone.id }, { params: { goalId: this.goal.id }})
-  }
-
-  openSupportModal(event: Event, milestone: Milestone) {
-    if (milestone.status !== 'pending') return
-    event.stopPropagation() //prevents roadmap from collapsing in or out :)
-  
+  private startPostCreation(milestone: Milestone) {
     this.modalCtrl.create({
-      component: AddSupportModalComponent,
-      componentProps: {
-        goalId: this.goal.id,
-        milestone
-      }
-    }).then(modal => modal.present())
-  }
-
-  async openOptions(event: Event, context: Milestone, index: number[]) {
-    event.stopPropagation() //prevents roadmap from collapsing in or out :)
-  
-    // TODO lets see if we can do it without this popover
-    const popover = await this.popoverCtrl.create({
-      component: MilestoneOptionsPopover,
-      event: event,
-      componentProps: {
-        goalId: this.goal.id,
-        milestone: context
-      }
-    })
-    popover.onDidDismiss().then(data => {
-      if (!data.data) return
-      const milestone = this.getMilestone(index)
-      milestone.achiever = data.data.achiever
-
-      this.milestone.upsert({ achiever: data.data.achiever, id: context.id }, { params: { goalId: this.goal.id }})
-      this.cdr.markForCheck();
-    })
-    popover.present()
-  }
-
-  editRoadmap() {
-    this.router.navigate(['edit'], { relativeTo: this.route })
-  }
-
-  private getMilestone(index: number[]): Milestone {
-    const getDeepValue = (object: any, index: number[]) => index.reduce((result, key, i) => i === 0 ? result?.[key] : result?.submilestones?.[key], object);
-    return getDeepValue(this.structuredMilestones, index);
-  }
-
-  private async startPostCreation(milestone: Milestone) {
-    const modal = await this.modalCtrl.create({
       component: UpsertPostModal,
       componentProps: {
         milestone,
         goal: this.goal,
         postId: milestone.id
       }
-    })
-    await modal.present()
-    await modal.onDidDismiss().then(data => {
-      // refresh page
-      // reset imageservice
-    })
+    }).then(modal => modal.present())
   }
+
 }

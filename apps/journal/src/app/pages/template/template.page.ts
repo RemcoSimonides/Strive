@@ -12,7 +12,7 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { TemplateService } from '@strive/template/+state/template.service';
-import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
+// import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
@@ -48,7 +48,7 @@ export class TemplatePage implements OnInit {
     private navCtrl: NavController,
     public platform: Platform,
     private popoverCtrl: PopoverController,
-    private roadmapService: RoadmapService,
+    // private roadmapService: RoadmapService,
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
@@ -61,9 +61,9 @@ export class TemplatePage implements OnInit {
 
     this.template$ = this.template.valueChanges(this.templateId, { collectiveGoalId: this.collectiveGoalId }).pipe(
       tap(template => {
-        if (!this.structuredMilestones.length) {
-          this.structuredMilestones = this.roadmapService.structureMilestones(template.roadmapTemplate)
-        }
+        // if (!this.structuredMilestones.length) {
+        //   this.structuredMilestones = this.roadmapService.structureMilestones(template.roadmapTemplate)
+        // }
         this.seo.generateTags({ title: `${template.title} - Strive Journal` })
       })
     )

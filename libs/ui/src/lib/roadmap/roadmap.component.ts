@@ -1,42 +1,44 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
-import { MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore';
-import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
+// import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, TemplateRef } from '@angular/core';
+// import { Router } from '@angular/router';
 
-declare const initMilestonesAnimation: Function;
+// import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore';
+// import { MilestoneService } from '@strive/milestone/+state/milestone.service';
+// import { MilestoneForm } from '@strive/milestone/forms/milestone.form';
 
-@Directive({ selector: '[milestone]' })
-export class MilestoneDirective { }
+// @Directive({ selector: '[milestone]' })
+// export class MilestoneDirective { }
 
-@Component({
-  selector: 'strive-roadmap',
-  templateUrl: 'roadmap.component.html',
-  styleUrls: ['./roadmap.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class RoadmapComponent {
+// @Component({
+//   selector: 'strive-roadmap',
+//   templateUrl: 'roadmap.component.html',
+//   styleUrls: ['./roadmap.component.scss'],
+//   changeDetection: ChangeDetectionStrategy.OnPush
+// })
+// export class RoadmapComponent {
 
-  private _structuredMilestones: MilestonesLeveled[]
-  get structuredMilestones() { return this._structuredMilestones }
-  @Input() set structuredMilestones(value: MilestonesLeveled[]) {
-    this._structuredMilestones = value;
-    initMilestonesAnimation();
-  }
-  @Input() isAdmin: boolean
-  @Input() maxdeadline: string
+//   @Input() milestones: Milestone[]
+//   @Input() isAdmin: boolean
+//   @Input() maxdeadline: string
+//   @Input() goalId: string
 
-  @ContentChild(MilestoneDirective, { read: TemplateRef }) milestoneTemplate: MilestoneDirective;
+//   @ContentChild(MilestoneDirective, { read: TemplateRef }) milestoneTemplate: MilestoneDirective
 
-  constructor(
-    private loadingCtrl: LoadingController,
-    private router: Router,
-    public roadmapService: RoadmapService
-  ) { }
+//   private milestoneForm = new MilestoneForm()
 
-  editRoadmap() {
-    if (!this.isAdmin) return
-    this.router.navigateByUrl(`${this.router.url}/edit`)
-  }
+//   constructor(
+//     private milestoneService: MilestoneService,
+//     private router: Router
+//   ) { }
 
-}
+//   add() {
+//     const milestone = createMilestone(this.milestoneForm.value)
+//     this.milestoneService.add(milestone, { params: { goalId: this.goalId }})
+//     this.milestoneForm.reset(createMilestone())
+//   }
+
+//   // editRoadmap() {
+//   //   if (!this.isAdmin) return
+//   //   this.router.navigateByUrl(`${this.router.url}/edit`)
+//   // }
+
+// }

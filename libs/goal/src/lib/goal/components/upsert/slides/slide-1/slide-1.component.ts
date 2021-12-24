@@ -32,7 +32,7 @@ export class Slide1 {
       const goal = createGoal({ ...this.form.value, id: this.goalId })
       delete goal['isSecret'] // remove isSecret value from Form
     
-      // this.goal.upsert(goal, { params: { uid: this.navParams.data?.uid }})
+      this.goal.upsert(goal, { params: { uid: this.navParams.data?.uid }})
       this.form.markAsPristine()
     }
   }

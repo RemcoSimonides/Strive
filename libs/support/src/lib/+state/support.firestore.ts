@@ -13,14 +13,6 @@ export interface Support {
   status: SupportStatus;
   goal: GoalLink;
   milestone?: MilestoneLink;
-  path?: {
-    level1id: string;
-    level1description: string;
-    level2id: string;
-    level2description: string;
-    level3id: string;
-    level3description: string;
-  };
   supporter: UserLink;
   receiver?: UserLink;
   updatedAt?: FieldValue;
@@ -43,14 +35,6 @@ export function createSupport(params: Partial<Support> = {}): Support {
     status: 'open',
     goal: createGoalLink(params.goal),
     milestone: createMilestoneLink(params.milestone),
-    path: {
-      level1id: '',
-      level1description: '',
-      level2id: '',
-      level2description: '',
-      level3id: '',
-      level3description: ''
-    },
     supporter: createUserLink(params.supporter),
     receiver: createUserLink(params.receiver),
     ...params

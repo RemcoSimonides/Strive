@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
-import { RoadmapService } from '@strive/milestone/+state/roadmap.service';
-import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Milestone } from '@strive/milestone/+state/milestone.firestore';
+import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 
 
 @Component({
@@ -15,34 +12,16 @@ import { map } from 'rxjs/operators';
 })
 export class RoadmapComponent implements OnInit {
 
-  roadmap$: Observable<MilestoneTemplate[]>
+  milestones$: Observable<Milestone[]>
 
 	@Input() id: string
 
   constructor(
-    private goal: GoalService,
-    private loadingCtrl: LoadingController,
-    private roadmap: RoadmapService
+    private milestone: MilestoneService
   ) {}
 
 	ngOnInit() {
-    this.roadmap$ = this.goal.valueChanges(this.id).pipe(
-      map(goal => goal.roadmapTemplate)
-    )
+    this.milestones$ = this.milestone.valueChanges({ goalId: this.id })
 	}
 
-  async save(roadmapTemplate: MilestoneTemplate[]) {
-    const loading = await this.loadingCtrl.create({ spinner: 'lines' })
-    loading.present()
-
-    // Save roadmap template object
-    await this.goal.update(this.id, { roadmapTemplate })
-
-    // Start conversion to create milestones
-    await this.roadmap.startConversion(this.id, roadmapTemplate)
-
-    loading.dismiss()
-  }
-
-  cancel() {}
 }

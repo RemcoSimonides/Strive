@@ -35,8 +35,8 @@ export class TemplateOptionsPopoverPage implements OnInit {
     this.popoverCtrl.dismiss()
   }
 
-  editRoadmap() {
-    this.router.navigateByUrl(`${this.router.url}/edit`)
-    this.popoverCtrl.dismiss()
-  }
+  // editRoadmap() {
+  //   this.router.navigateByUrl(`${this.router.url}/edit`)
+  //   this.popoverCtrl.dismiss()
+  // }
 }

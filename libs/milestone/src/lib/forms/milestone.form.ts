@@ -7,7 +7,9 @@ function createMilestoneFormControl(params: Milestone) {
   const milestone = createMilestone(params)
   return {
     sequenceNumber: new FormControl(milestone.sequenceNumber, Validators.required),
-    description: new FormControl(milestone.description, Validators.required),
+    order: new FormControl(milestone.order, Validators.required),
+    content: new FormControl(milestone.content, Validators.required),
+    description: new FormControl(milestone.description),
     status: new FormControl(milestone.status),
     deadline: new FormControl(milestone.deadline),
     achiever: new UserLinkForm(milestone.achiever)
@@ -22,6 +24,8 @@ export class MilestoneForm extends FormEntity<MilestoneFormControl> {
   }
 
   get sequenceNumber() { return this.get('sequenceNumber') }
+  get order() { return this.get('order') }
+  get content() { return this.get('content') }
   get description() { return this.get('description') }
   get deadline() { return this.get('deadline') }
   get achiever() { return this.get('achiever') }

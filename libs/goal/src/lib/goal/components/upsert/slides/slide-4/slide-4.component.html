@@ -1,42 +1,9 @@
-<header>
-  <form [formGroup]="milestoneForm">
-    <ion-item>
-      <ion-icon name="add"></ion-icon>
-      <ion-input formControlName="description" placeholder="Add milestone..." (keydown.enter)="addMilestone()"></ion-input>
-      <ion-button (click)="addMilestone()">add</ion-button>
-    </ion-item>
-  </form>
-</header>
-
-<section fxLayout fxLayoutAlign="center" class="roadmap">
-
-  <ng-container *ngIf="roadmapForm.controls.length === 0 else list">
-    <article class="explanation">
-      <p *ngIf="mode === 'create'">Let's set up your roadmap</p>
-    </article>
-  </ng-container>
-
-  <ng-template #list>
-    <ion-list>
-      <ion-item *ngFor="let control of roadmapForm.controls; let i = index">
-        <ion-input [formControl]="control.description"></ion-input>
-        <ion-datetime class="ion-no-padding"
-          placeholder="-- -- --"
-          displayFormat="DD-MM-YY"
-          pickerFormat="DDDD MMMM YYYY"
-          max="2500"
-          [formControl]="control.deadline"
-          (click)="openingDatetime($event, control.value)"
-          (ionChange)="onDeadlineDateChange($event, control.value)"
-          #datetime>
-        </ion-datetime>
-        <fa-icon [icon]="['fas', 'stopwatch']" (click)="openDateTime(i)"></fa-icon>
-        <ion-icon name="trash" (click)="deleteMilestone(control.value.sequenceNumber)"></ion-icon>
-      </ion-item>
-    </ion-list>
-  </ng-template>
-
-</section>
+<strive-roadmap
+  [goalId]="goalId"
+  [milestones]="milestones$ | async"
+  [isAdmin]="true"
+  createMode
+></strive-roadmap>
 
 <footer fxLayout="column" fxLayoutAlign="start center">
   <ion-button (click)="step('next')">Next</ion-button>

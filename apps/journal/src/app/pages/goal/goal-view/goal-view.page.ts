@@ -116,9 +116,6 @@ export class GoalViewPage implements OnInit, OnDestroy {
 
   public segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
-    if (this.segmentChoice === 'roadmap') {
-      initMilestonesAnimation()
-    }
   }
 
   createCustomPost() {
