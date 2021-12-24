@@ -39,7 +39,7 @@ export class GoalPage implements OnInit, OnDestroy {
   private goalId: string
   
   public goal$: Observable<Goal>
-  public collectiveGoal$: Observable<CollectiveGoal | undefined>
+  // public collectiveGoal$: Observable<CollectiveGoal | undefined>
 
   public stakeholder$: Observable<GoalStakeholder>
 
@@ -55,7 +55,7 @@ export class GoalPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private functions: Functions,
     private goalService: GoalService,
-    private collectiveGoalService: CollectiveGoalService,
+    // private collectiveGoalService: CollectiveGoalService,
     private inviteTokenService: InviteTokenService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
@@ -73,9 +73,9 @@ export class GoalPage implements OnInit, OnDestroy {
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
-    this.collectiveGoal$ = this.goal$.pipe(
-      switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.valueChanges(goal.collectiveGoalId) : of(undefined))
-    )
+    // this.collectiveGoal$ = this.goal$.pipe(
+    //   switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.valueChanges(goal.collectiveGoalId) : of(undefined))
+    // )
     
     this.stakeholder$ = this.user.user$.pipe(
       switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),

@@ -13,7 +13,7 @@
             <ion-select-option value="goals">Goals</ion-select-option>
             <ion-select-option value="users">Users</ion-select-option>
             <ion-select-option value="exercises">Exercises</ion-select-option>
-            <ion-select-option value="collectiveGoals">Collective Goals</ion-select-option>
+            <!-- <ion-select-option value="collectiveGoals">Collective Goals</ion-select-option> -->
           </ion-select>
         </ion-card>
       </form>
@@ -39,7 +39,7 @@
         </ng-container>
       </strive-thumbnail-list>
   
-      <section fxLayout fxLayoutAlign="space-between end">
+      <!-- <section fxLayout fxLayoutAlign="space-between end">
         <h2>Collective Goals</h2>
         <ion-button fill="clear" (click)="setType('collectiveGoals')">view more</ion-button>
       </section>
@@ -50,7 +50,7 @@
             </large-thumbnail>
           </ng-template>
         </ng-container>
-      </strive-thumbnail-list>
+      </strive-thumbnail-list> -->
 
       <banner></banner>
   
@@ -104,13 +104,13 @@
           </small-thumbnail>
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'collectiveGoals'">
+      <!-- <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'collectiveGoals'">
         <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
           <small-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
             <small>Type: Collective Goal</small>
           </small-thumbnail>
         </ng-container>
-      </ng-container>
+      </ng-container> -->
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
         <ng-container *ngFor="let exercise of exercises$ | async">
           <small-thumbnail [title]="exercise.title" [asset]="exercise.image">
