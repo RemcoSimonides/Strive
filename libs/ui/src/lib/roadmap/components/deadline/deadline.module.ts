@@ -6,13 +6,16 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { MilestoneDeadlineComponent } from './deadline.component';
 
+import { DatetimeModule } from '@strive/ui/datetime/datetime.module';
+
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     FlexLayoutModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    DatetimeModule
   ],
   declarations: [
     MilestoneDeadlineComponent

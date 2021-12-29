@@ -16,19 +16,19 @@
 
   <h4>Choose time(s) to receive an affirmation</h4>
 
-  <ion-item *ngIf="affirmations.times" class="setTimeContainer">
+  <ion-item *ngIf="affirmations.times" (click)="openDatetime(0)">
     <ion-label>Set time 1</ion-label>
-    <ion-datetime class="setTimeDatetime" [(ngModel)]="affirmations.times[0]" placeholder="- - : - -" displayFormat="HH:mm"></ion-datetime>
+    <ion-text>{{ affirmations.times[0] ? (affirmations.times[0] | date:'HH:mm') : ('--:--') }}</ion-text>
     <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(0)" name="close-circle"></ion-icon>
   </ion-item>
-  <ion-item *ngIf="affirmations.times[0] !== ''" class="setTimeContainer">
+  <ion-item *ngIf="affirmations.times[0] !== ''" (click)="openDatetime(1)">
     <ion-label>Set time 2</ion-label>
-    <ion-datetime class="setTimeDatetime" [(ngModel)]="affirmations.times[1]" placeholder="- - : - -" displayFormat="HH:mm"></ion-datetime>
+    <ion-text>{{ affirmations.times[1] ? (affirmations.times[1] | date:'HH:mm') : ('--:--') }}</ion-text>
     <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(1)" name="close-circle"></ion-icon>
   </ion-item>
-  <ion-item *ngIf="affirmations.times[1] !== ''" class="setTimeContainer">
+  <ion-item *ngIf="affirmations.times[1] !== ''" (click)="openDatetime(2)">
     <ion-label>Set time 3</ion-label>
-    <ion-datetime class="setTimeDatetime" [(ngModel)]="affirmations.times[2]" placeholder="- - : - -" displayFormat="HH:mm"></ion-datetime>
+    <ion-text>{{ affirmations.times[2] ? (affirmations.times[2] | date:'HH:mm') : ('--:--') }}</ion-text>
     <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(2)" name="close-circle"></ion-icon>
   </ion-item>
 

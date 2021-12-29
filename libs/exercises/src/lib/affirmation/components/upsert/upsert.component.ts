@@ -6,6 +6,7 @@ import { Affirmations } from '../../+state/affirmation.firestore';
 import { AffirmationService } from '../../+state/affirmation.service';
 import { AffirmationSuggestion, enumAffirmationCategory, suggestions } from '../../+state/affirmation.model';
 import { AffirmationExplanationComponent } from '../explanation/explanation.component';
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
 
 @Component({
   selector: 'exercise-affirmation-upsert',
@@ -51,6 +52,22 @@ export class AffirmationUpsertComponent implements OnInit {
 
   dismiss() {
     this.location.back()
+  }
+
+  async openDatetime(index: number) {
+   const popover = await this.popoverCtrl.create({
+     component: DatetimeComponent,
+     componentProps: {
+       presentation: 'time'
+     }
+   })
+   popover.onDidDismiss().then(({ data, role }) => {
+     console.log('data role: ', data, role, index)
+    if (role === 'dismiss') {
+      this.affirmations.times[index] = data
+    }
+   })
+   popover.present()
   }
 
   async removeSetTime(index: number) {

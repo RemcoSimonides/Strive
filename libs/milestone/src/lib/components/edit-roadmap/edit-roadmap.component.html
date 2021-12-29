@@ -79,7 +79,7 @@
           <ion-input [ngStyle]="{'margin-left': getMargin(control.value.sequenceNumber)}"
             [formControl]="control.description">
           </ion-input>
-          <ion-datetime class="ion-no-padding"
+          <!-- <ion-datetime class="ion-no-padding"
             placeholder="-- -- --"
             displayFormat="DD-MM-YY"
             pickerFormat="DDDD MMMM YYYY"
@@ -88,7 +88,7 @@
             (click)="openingDatetime($event, control.value)"
             (ionChange)="onDeadlineDateChange($event, control.value)"
             #datetime>
-          </ion-datetime>
+          </ion-datetime> -->
           <fa-icon [icon]="['fas', 'stopwatch']" (click)="openDateTime(i)"></fa-icon>
           <ion-icon name="trash" (click)="deleteMilestone(control.value.sequenceNumber)"></ion-icon>
         </ion-item>

@@ -1,13 +1,4 @@
 <section fxLayout [ngClass]="{'overdue': milestone.status === 'overdue' }" (click)="openDatePicker($event)">
-  <fa-icon [icon]="['fas', 'stopwatch']"></fa-icon>
-  <ion-datetime 
-    hidden="true"
-    #datePicker 
-    displayFormat="DD-MM-YYYY"
-    pickerFormat="DDDD MMMM YYYY"
-    [value]="milestone.deadline"
-    (click)="openDatetime($event)"
-    (ionChange)="onDeadlineDateChange($event.detail.value)">
-  </ion-datetime>
-  {{ milestone.deadline ? (milestone.deadline | date:'MMM d, y') : ('-- -- --') }}
+  <fa-icon  [icon]="['fas', 'stopwatch']"></fa-icon>
+  <span>{{ milestone.deadline ? (milestone.deadline | date:'MMM d, y') : ('-- -- --') }}</span>
 </section>

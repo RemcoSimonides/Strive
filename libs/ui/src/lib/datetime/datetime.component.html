@@ -1,0 +1,9 @@
+<ion-datetime #datePicker 
+  [presentation]="presentation"
+  [max]="maxDeadline"
+  [min]="minDeadline">
+</ion-datetime>
+<section fxLayout fxLayoutAlign="space-between">
+  <ion-button fill="clear" (click)="remove()">Remove</ion-button>
+  <ion-button fill="clear" (click)="confirm()">OK</ion-button>
+</section>

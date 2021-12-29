@@ -2,7 +2,7 @@
   <ng-container *ngIf="milestones.length || isAdmin else empty">
     <ion-item *ngFor="let milestone of milestones">
       <strive-milestone-status (click)="updateStatus(milestone, $event)" [status]="milestone.status"></strive-milestone-status>
-      <section fxLayout="column" fxFlex>
+      <section fxLayout="column">
         {{ milestone.content }}
         <article fxLayout fxLayoutAlign="start center">
           <strive-milestone-deadline
@@ -20,7 +20,7 @@
         </article>
       </section>
       <ng-container *ngIf="!createMode">
-        <ion-button size="small" [disabled]="milestone.status !== 'pending'">{{ milestone.numberOfCustomSupports }}
+        <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'">{{ milestone.numberOfCustomSupports }}
           <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
         </ion-button>
       </ng-container>

@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 import { Milestone } from '@strive/milestone/+state/milestone.firestore';
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
 
 @Component({
   selector: '[milestone] strive-milestone-deadline',
@@ -8,40 +10,37 @@ import { Milestone } from '@strive/milestone/+state/milestone.firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MilestoneDeadlineComponent {
-
-  @ViewChild('datePicker') datePicker: any
-
   @Input() milestone: Milestone
   @Input() maxDeadline: string
   @Input() isAdmin = false
 
   @Output() change = new EventEmitter<string>()
 
-  openDatePicker(event: Event) {
+  constructor(private popoverCtrl: PopoverController) {}
+
+  async openDatePicker(event: Event) {
     if (!this.isAdmin) return
     if (this.milestone.status !== 'pending' && this.milestone.status !== 'overdue') return
-    event.stopPropagation(); //prevents roadmap from collapsing in or out :)
-    this.datePicker.el.click()
-  }
+    event.stopPropagation()
 
-  public openDatetime($event) {
+    const minDeadline = new Date().toISOString()
+    const maxDeadline = this.maxDeadline 
+      ? this.maxDeadline
+      : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
 
-    // empty value
-    $event.target.value = ""
-
-    // set min
-    $event.target.min = new Date().toISOString()
-
-    // set max
-    if (this.maxDeadline) {
-      $event.target.max = this.maxDeadline
-    } else {
-      $event.target.max = new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
-    }
-  }
-
-  public onDeadlineDateChange(value: string) {
-    this.milestone.deadline = value
-    this.change.emit(value);
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { minDeadline, maxDeadline }
+    })
+    popover.onDidDismiss().then(({ data, role }) => {
+      if (role === 'remove') {
+        this.milestone.deadline = ''
+        this.change.emit(this.milestone.deadline)
+      } else if (role === 'dismiss') {
+        this.milestone.deadline = data ?? ''
+        this.change.emit(this.milestone.deadline)
+      }
+    })
+    popover.present()
   }
 }

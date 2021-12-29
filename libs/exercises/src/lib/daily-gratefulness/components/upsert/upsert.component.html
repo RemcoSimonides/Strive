@@ -30,7 +30,7 @@
       <!-- DEFINE TIME -->
       <h4>SELECT TIME</h4>
       <ion-item lines="none">
-        <ion-datetime displayFormat="HH:mm" [value]="dailyGratefulness.time" (ionChange)="changedTime($event)"></ion-datetime>
+        <ion-datetime presentation="time" [(ngModel)]="dailyGratefulness.time"></ion-datetime>
       </ion-item>
     </ng-container>
   </ng-container>
