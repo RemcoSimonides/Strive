@@ -107,7 +107,7 @@ export class AddSupportModalComponent implements OnInit {
     this.support.goal.image.patchValue(goal.image)
     if (this.milestone) {
       this.support.milestone.id.patchValue(this.milestone.id)
-      this.support.milestone.description.patchValue(this.milestone.description)
+      this.support.milestone.content.patchValue(this.milestone.content)
     }
 
     this.supportService.add(this.support.value, { params: { goalId: this.goalId }})

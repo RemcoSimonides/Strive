@@ -89,19 +89,19 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
     case enumEvent.gMilestoneCompletedSuccessfully:
       return createPushMessage({
         title: source.goal.title,
-        body: `Milestone '${source.milestone.description}' succeeded`,
+        body: `Milestone '${source.milestone.content}' succeeded`,
       })
 
     case enumEvent.gMilestoneCompletedUnsuccessfully:
       return createPushMessage({
         title: source.goal.title,
-        body: `Milestone '${source.milestone.description}' failed`
+        body: `Milestone '${source.milestone.content}' failed`
       })
 
     case enumEvent.gMilestoneDeadlinePassed:
       return createPushMessage({
         title: source.goal.title,
-        body: `Milestone '${source.milestone.description}' passed due date`
+        body: `Milestone '${source.milestone.content}' passed due date`
       })
 
     case enumEvent.gStakeholderAchieverAdded:
@@ -151,7 +151,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
 
     case enumEvent.gSupportAdded:
       const text = source.support.milestone?.id
-      ? `supports milestone ${source.support.milestone.description}`
+      ? `supports milestone ${source.support.milestone.content}`
       : `supports`
 
       return createPushMessage({
@@ -180,18 +180,18 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
     case enumEvent.gSupportPendingSuccesful:
       return createPushMessage({
         title: source.goal.title,
-        body: `By you supported milestone '${source.milestone.description} succeeded'`
+        body: `By you supported milestone '${source.milestone.content} succeeded'`
       })
 
     case enumEvent.gSupportPendingFailed:
       return createPushMessage({
         title: source.goal.title,
-        body: `By you supported milestone '${source.milestone.description}' unsuccesful`
+        body: `By you supported milestone '${source.milestone.content}' unsuccesful`
       })
     
     case enumEvent.gSupportDeleted:
       const text2 = source.milestone.id
-      ? `milestone '${source.milestone.description}' has been deleted`
+      ? `milestone '${source.milestone.content}' has been deleted`
       : `goal '${source.goal.title}' has been deleted`
 
       return createPushMessage({

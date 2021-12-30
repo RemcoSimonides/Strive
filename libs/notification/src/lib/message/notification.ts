@@ -224,7 +224,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           return {
             ...get('goal', source),
             message: [
-              { text: `Milestone '${source.milestone.description}' is successfully completed` }
+              { text: `Milestone '${source.milestone.content}' is successfully completed` }
             ]
           }
       
@@ -240,7 +240,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           return {
             ...get('goal', source),
             message: [
-              { text: `Milestone '${source.milestone.description}' failed to complete` }
+              { text: `Milestone '${source.milestone.content}' failed to complete` }
             ]
           }
         default:
@@ -254,7 +254,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           return {
             ...get('goal', source),
             message: [
-              { text: `Milestone '${source.milestone.description}' of goal '` },
+              { text: `Milestone '${source.milestone.content}' of goal '` },
               {
                 text: source.goal.title,
                 link: `goal/${source.goal.id}`
@@ -268,7 +268,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           return {
             ...get('goal', source),
             message: [
-              { text: `Milestone '${source.milestone.description}' has passed the due date` }
+              { text: `Milestone '${source.milestone.content}' has passed the due date` }
             ]
           }
       }
@@ -390,7 +390,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       switch (target) {
         case 'stakeholder':
           const text = source.support.milestone?.id
-            ? ` is now supporting milestone ${source.support.milestone.description}`
+            ? ` is now supporting milestone ${source.support.milestone.content}`
             : ` is now supporting`
           
           return {
@@ -461,7 +461,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                   text: source.support.supporter.username,
                   link: `profile/${source.support.supporter.uid}`
                 },
-                { text: ` rejected paying support '${source.support.description}' for milestone '${source.support.milestone.description}' in goal '` },
+                { text: ` rejected paying support '${source.support.description}' for milestone '${source.support.milestone.content}' in goal '` },
                 {
                   text: source.goal.title,
                   link: `goal/${source.goal.id}`
@@ -498,7 +498,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           return {
             ...get('goal', source),
             message: [
-              { text: `Milestone '${source.milestone.description}' is succesfully completed 🎉` }
+              { text: `Milestone '${source.milestone.content}' is succesfully completed 🎉` }
             ]
           }
 
@@ -512,7 +512,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           return {
             ...get('goal', source),
             message: [
-              { text: `Milestone '${source.milestone.description}' has failed to complete` }
+              { text: `Milestone '${source.milestone.content}' has failed to complete` }
             ]
           }
         default:
@@ -528,7 +528,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             return {
               ...get('goal', source),
               message: [
-                { text: `Support '${source.support.description}' has been removed because milestone '${source.milestone.description}' has been deleted` }
+                { text: `Support '${source.support.description}' has been removed because milestone '${source.milestone.content}' has been deleted` }
               ]
             }
           } else {

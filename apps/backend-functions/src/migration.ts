@@ -1,20 +1,32 @@
 import { db, functions } from "./internals/firebase";
-import { createMilestone } from "@strive/milestone/+state/milestone.firestore";
+import { createNotification } from "@strive/notification/+state/notification.model";
+import { createSupport } from "@strive/support/+state/support.firestore";
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
   try {
 
-    const milestonesSnap = await db.collectionGroup('Milestones').get();
+    const notificationsSnap = await db.collectionGroup('Notifications').get()
+    const supportsSnap = await db.collectionGroup('Supports').get()
 
     const promises = []
 
-    for (const doc of milestonesSnap.docs) {
-      const milestone = createMilestone(doc.data())
-      milestone.order = +milestone.sequenceNumber.split('.')[0];
+    for (const doc of notificationsSnap.docs) {
+      const notification = createNotification(doc.data())
+      if (notification.source.milestone) {
+        notification.source.milestone.content = notification.source.milestone['description']   
+        const promise = db.doc(doc.ref.path).set(notification)
+        promises.push(promise)
+      }
+    }
 
-      const promise = db.doc(doc.ref.path).set(milestone)
-      promises.push(promise)
+    for (const doc of supportsSnap.docs) {
+      const support = createSupport(doc.data())
+      if (support.milestone) {
+        support.milestone.content = support.milestone['description']
+        const promise = db.doc(doc.ref.path).set(support)
+        promises.push(promise)
+      }
     }
 
     await Promise.all(promises)
