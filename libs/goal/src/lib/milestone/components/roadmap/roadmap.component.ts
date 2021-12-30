@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
@@ -7,18 +8,20 @@ import { MilestoneForm } from '@strive/milestone/forms/milestone.form';
 
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { boolean } from '@strive/utils/decorators/decorators';
+import { DetailsComponent } from '../details/details.component';
 
 @Component({
-  selector: '[goalId][milestones][isAdmin] strive-roadmap',
+  selector: '[goal][milestones][isAdmin] strive-roadmap',
   templateUrl: 'roadmap.component.html',
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoadmapComponent {
 
-  @Input() goalId: string
+  @Input() goal: Goal
   @Input() milestones: Milestone[]
   @Input() isAdmin: boolean
+  @Input() isAchiever: boolean
 
   @Input() @boolean createMode = false
 
@@ -28,25 +31,34 @@ export class RoadmapComponent {
 
   constructor(
     private modalCtrl: ModalController,
-    private milestone: MilestoneService,
+    private milestone: MilestoneService
   ) {}
 
   add() {
-    const milestone = createMilestone(this.milestoneForm.value)
-    this.milestone.add(milestone, { params: { goalId: this.goalId }})
-    this.milestoneForm.reset(createMilestone())
+    if (this.milestoneForm.value) {
+      const milestone = createMilestone(this.milestoneForm.value)
+      this.milestone.add(milestone, { params: { goalId: this.goal.id }})
+      this.milestoneForm.reset(createMilestone())
+    }
+  }
+
+  openDetails(milestone: Milestone) {
+    this.modalCtrl.create({
+      component: DetailsComponent,
+      componentProps: {
+        goal: this.goal,
+        isAdmin: this.isAdmin,
+        isAchiever: this.isAchiever,
+        milestone
+      },
+      initialBreakpoint: 0.3,
+      breakpoints: [0, 0.3, 1]
+    }).then(modal => modal.present())
   }
 
   updateDeadline(milestone: Milestone, deadline: string) {
     milestone.deadline = deadline
-    this.milestone.upsert({ deadline, id: milestone.id }, { params: { goalId: this.goalId }})
-  }
-
-  updateStatus(milestone: Milestone, event: Event) {
-    if (milestone.status !== 'pending' && milestone.status !== 'overdue') return
-    if (!this.isAdmin) return
-    event.stopPropagation()
-    this.changeStatus.emit(milestone)
+    this.milestone.upsert({ deadline, id: milestone.id }, { params: { goalId: this.goal.id }})
   }
 
   openSupportModal(event: Event, milestone: Milestone) {
@@ -56,7 +68,7 @@ export class RoadmapComponent {
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
-        goalId: this.goalId,
+        goalId: this.goal.id,
         milestone
       }
     }).then(modal => modal.present())

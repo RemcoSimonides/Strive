@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { Milestone } from '@strive/milestone/+state/milestone.firestore';
 import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { Observable } from 'rxjs';
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Slide4 implements OnInit {
-  @Input() goalId: string
+  @Input() goal: Goal
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
 
@@ -21,7 +22,7 @@ export class Slide4 implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.milestones$ = this.milestoneService.valueChanges({ goalId: this.goalId })
+    this.milestones$ = this.milestoneService.valueChanges({ goalId: this.goal.id })
   }
 
   step(direction: 'next' | 'previous') {

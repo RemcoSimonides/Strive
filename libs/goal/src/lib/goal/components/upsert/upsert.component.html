@@ -25,7 +25,7 @@
         <slide-3 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-3>
       </ng-template>
       <ng-template swiperSlide>
-        <slide-4 [goalId]="goalId" (stepper)="stepper($event)"></slide-4>
+        <slide-4 [goal]="goal" (stepper)="stepper($event)"></slide-4>
       </ng-template>
       <ng-template swiperSlide>
         <slide-5 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></slide-5>

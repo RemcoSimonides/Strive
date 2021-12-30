@@ -13,8 +13,6 @@ import { MilestoneService } from '@strive/milestone/+state/milestone.service';
 import { Milestone } from '@strive/milestone/+state/milestone.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { AlertController, ModalController } from '@ionic/angular';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
 @Component({
   selector: '[goal] journal-goal-roadmap',
@@ -25,16 +23,12 @@ import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-mod
 export class RoadmapComponent implements OnInit {
 
   stakeholder$: Observable<GoalStakeholder>
-
   milestones$: Observable<Milestone[]>
 
   @Input() goal: Goal
 
   constructor(
-    private alertCtrl: AlertController,
-    private cdr: ChangeDetectorRef,
     private milestone: MilestoneService,
-    private modalCtrl: ModalController,
     private stakeholderService: GoalStakeholderService,
     private user: UserService
   ) { }
@@ -47,52 +41,4 @@ export class RoadmapComponent implements OnInit {
 
     this.milestones$ = this.milestone.valueChanges({ goalId: this.goal.id })
   }
-
-  updateStatus(milestone: Milestone, stakeholder: GoalStakeholder) {
-    if (milestone.status !== 'pending' && milestone.status !== 'overdue') return
-    if (!stakeholder.isAdmin && !stakeholder.isAchiever) return
-
-    this.alertCtrl.create({
-      header: 'Good job!',
-      subHeader: 'Or didn\'t you?',
-      buttons: [
-        {
-          text: 'Succeeded',
-          role: 'succeeded',
-          handler: () => {
-            this.milestone.upsert({ status: 'succeeded', id: milestone.id }, { params: { goalId: this.goal.id }})
-            milestone.status = 'succeeded'
-            this.cdr.markForCheck()
-            this.startPostCreation(milestone)
-          }
-        },
-        {
-          text: 'Failed',
-          role: 'succeeded',
-          handler: () => {
-            this.milestone.upsert({ status: 'failed', id: milestone.id }, { params: { goalId: this.goal.id }})
-            milestone.status = 'failed'
-            this.cdr.markForCheck()
-            this.startPostCreation(milestone)
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ]
-    }).then(alert => alert.present())
-  }
-
-  private startPostCreation(milestone: Milestone) {
-    this.modalCtrl.create({
-      component: UpsertPostModal,
-      componentProps: {
-        milestone,
-        goal: this.goal,
-        postId: milestone.id
-      }
-    }).then(modal => modal.present())
-  }
-
 }

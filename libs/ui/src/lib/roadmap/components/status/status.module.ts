@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 import { MilestoneStatusComponent } from './status.component';
+import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    UpsertPostModalModule
   ],
   declarations: [
     MilestoneStatusComponent

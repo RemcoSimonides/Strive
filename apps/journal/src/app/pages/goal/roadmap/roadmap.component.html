@@ -1,8 +1,9 @@
 <ng-container *ngIf="stakeholder$ | async as stakeholder">
   <strive-roadmap
-    [goalId]="goal.id"
+    [goal]="goal"
     [milestones]="milestones$ | async"
     [isAdmin]="stakeholder.isAdmin"
+    [isAchiever]="stakeholder.isAchiever"
     (changeStatus)="updateStatus($event, stakeholder)">
   </strive-roadmap>
 </ng-container>

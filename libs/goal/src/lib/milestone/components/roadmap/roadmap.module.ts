@@ -10,9 +10,9 @@ import { RoadmapComponent } from './roadmap.component';
 import { MilestoneDeadlineModule } from '@strive/ui/roadmap/components/deadline/deadline.module';
 import { MilestoneStatusModule } from '@strive/ui/roadmap/components/status/status.module';
 
-import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 import { AddSupportModalModule } from '@strive/support/components/add/add.module';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { DetailsModule } from '../details/details.module';
 
 @NgModule({
   imports: [
@@ -25,8 +25,8 @@ import { ImageModule } from '@strive/media/directives/image.module';
     ImageModule,
     MilestoneDeadlineModule,
     MilestoneStatusModule,
-    UpsertPostModalModule,
-    AddSupportModalModule
+    AddSupportModalModule,
+    DetailsModule
   ],
   exports: [
     RoadmapComponent

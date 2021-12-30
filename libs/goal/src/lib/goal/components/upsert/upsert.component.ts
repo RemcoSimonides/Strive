@@ -7,7 +7,7 @@ import { LoadingController, ModalController, NavParams  } from '@ionic/angular'
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 
 //Interfaces
-import { Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoal, Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore'
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 // Swiper
@@ -31,6 +31,8 @@ export class UpsertGoalModalComponent {
   goalId: string
   goalForm: GoalForm
   mode: 'update' | 'create'
+
+  get goal(): Goal { return createGoal({ ...this.goalForm.value, id: this.goalId }) }
 
   constructor(
     private goalService: GoalService,
