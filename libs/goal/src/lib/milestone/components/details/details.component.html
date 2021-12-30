@@ -1,7 +1,7 @@
 <form [formGroup]="form">
   <ion-item>
     <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-    <ion-input formControlName="content" placeholder="Type milestone"></ion-input>
+    <ion-input [disabled]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-input>
     <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
       <ion-icon name="trash"></ion-icon>
     </ion-button>
