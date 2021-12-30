@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { orderBy } from '@angular/fire/firestore';
 // Rxjs
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -39,6 +39,7 @@ export class RoadmapComponent implements OnInit {
       map(stakeholder => createGoalStakeholder(stakeholder))
     )
 
-    this.milestones$ = this.milestone.valueChanges({ goalId: this.goal.id })
+    const query = [orderBy('order', 'asc')]
+    this.milestones$ = this.milestone.valueChanges(query, { goalId: this.goal.id })
   }
 }
