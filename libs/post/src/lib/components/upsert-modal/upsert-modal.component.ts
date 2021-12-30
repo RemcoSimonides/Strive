@@ -48,8 +48,8 @@ export class UpsertPostModal implements OnInit {
 
     if (!!milestone) {
       this.postForm.get('milestone').get('id').setValue(milestone.id)
-      this.postForm.get('milestone').get('description').setValue(milestone.description)
-      this.postForm.get('content').get('title').setValue(`Completed milestone '${milestone.description}'`)
+      this.postForm.get('milestone').get('content').setValue(milestone.content)
+      this.postForm.get('content').get('title').setValue(`Completed milestone '${milestone.content}'`)
     } else {
       const title = isEvidence ? `Finished goal '${goal.title}'` : ''
       this.postForm.get('content').get('title').setValue(title)

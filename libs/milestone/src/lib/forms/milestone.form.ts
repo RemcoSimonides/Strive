@@ -35,7 +35,7 @@ function createMilestoneLinkFormControl(params?: MilestoneLink) {
   const milestoneLink = createMilestoneLink(params)
   return {
     id: new FormControl(milestoneLink.id),
-    description: new FormControl(milestoneLink.description)
+    content: new FormControl(milestoneLink.content)
   }
 }
 
@@ -47,7 +47,7 @@ export class MilestoneLinkForm extends FormEntity<MilestoneLinkFormControl> {
   }
 
   get id() { return this.get('id') }
-  get description() { return this.get('description') }
+  get content() { return this.get('content') }
 }
 
 function createMilestoneTemplateFormControl(params?: Partial<MilestoneTemplate>) {

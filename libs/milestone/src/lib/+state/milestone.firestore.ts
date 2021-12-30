@@ -33,7 +33,7 @@ interface MilestoneLevelTwo extends Milestone {
 
 export interface MilestoneLink {
   id: string;
-  description: string;
+  content: string;
 }
 export interface MilestoneTemplate {
   id: string;
@@ -63,7 +63,7 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
 export function createMilestoneLink(params: Partial<MilestoneLink> = {}): MilestoneLink {
   return {
     id: params.id ?? '',
-    description: params.description ?? '',
+    content: params.content ?? '',
   }
 }
 
