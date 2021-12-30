@@ -85,9 +85,9 @@ export class GoalService extends FireCollection<Goal> {
     return this.update(goalId, { description })
   }
 
-  public duplicateGoal(goal: Goal): Promise<string> {
-    return this.add(createGoal(goal))
-  }
+  // public duplicateGoal(goal: Goal): Promise<string> {
+  //   return this.add(createGoal(goal))
+  // }
 
   private setDeadlineToEndOfDay(deadline: string): string {
     const date = new Date(deadline)

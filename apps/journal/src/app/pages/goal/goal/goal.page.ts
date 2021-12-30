@@ -127,9 +127,9 @@ export class GoalPage implements OnInit, OnDestroy {
         case enumGoalOptions.editNotificationSettings:
           console.warn('not supported yet')
           break
-        case enumGoalOptions.duplicateGoal:
-          this.duplicateGoal()
-          break
+        // case enumGoalOptions.duplicateGoal:
+        //   this.duplicateGoal()
+        //   break
         case enumGoalOptions.editGoal:
           this.editGoal(goal)
           break
@@ -139,23 +139,23 @@ export class GoalPage implements OnInit, OnDestroy {
     })
   }
 
-  public async duplicateGoal() {
-    const loading = await this.loadingCtrl.create({
-      message: `Duplicating goal`,
-      spinner: 'lines'
-    })
-    loading.present()
+  // public async duplicateGoal() {
+  //   const loading = await this.loadingCtrl.create({
+  //     message: `Duplicating goal`,
+  //     spinner: 'lines'
+  //   })
+  //   loading.present()
 
-    const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
-    const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).then(res => res.data) as { error: string, result: string }
+  //   const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
+  //   const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).then(res => res.data) as { error: string, result: string }
 
-    if (!!error) {
-      loading.dismiss();
-      throw new Error(result)
-    };
-    this.navCtrl.navigateRoot(`goal/${result}`);
-    loading.dismiss();
-  }
+  //   if (!!error) {
+  //     loading.dismiss();
+  //     throw new Error(result)
+  //   };
+  //   this.navCtrl.navigateRoot(`goal/${result}`);
+  //   loading.dismiss();
+  // }
 
   updateStatus($event, goal: Goal) {
     if (!this.isAchiever) return;

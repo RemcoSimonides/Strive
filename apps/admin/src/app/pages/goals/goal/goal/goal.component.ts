@@ -69,30 +69,30 @@ export class GoalComponent implements OnInit {
     this.goal.update(this.id, { status: 'finished' })
   }
 
-  async duplicate() {
-    const modal = await this.modalCtrl.create({ component: SelectUserModal })
-    modal.onDidDismiss().then(async res => {
-      const uid = res.data as string;
-      if (uid) {
+  // async duplicate() {
+    // const modal = await this.modalCtrl.create({ component: SelectUserModal })
+    // modal.onDidDismiss().then(async res => {
+    //   const uid = res.data as string;
+    //   if (uid) {
 
-        const loading = await this.loadingCtrl.create({
-          message: `Duplicating goal`,
-          spinner: 'lines'
-        })
-        loading.present()
+    //     const loading = await this.loadingCtrl.create({
+    //       message: `Duplicating goal`,
+    //       spinner: 'lines'
+    //     })
+    //     loading.present()
     
-        const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
-        const { error, result } = await duplicateGoalFn({ goalId: this.id, uid }).then(res => res.data) as { error: string, result: string }
+    //     const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
+    //     const { error, result } = await duplicateGoalFn({ goalId: this.id, uid }).then(res => res.data) as { error: string, result: string }
     
-        if (!!error) {
-          loading.dismiss();
-          throw new Error(result)
-        };
-        this.router.navigateByUrl(`/a/goals/${result}`);
-        loading.dismiss();
+    //     if (!!error) {
+    //       loading.dismiss();
+    //       throw new Error(result)
+    //     };
+    //     this.router.navigateByUrl(`/a/goals/${result}`);
+    //     loading.dismiss();
 
-      }
-    })
-    modal.present();
-  }
+    //   }
+    // })
+    // modal.present();
+  // }
 }

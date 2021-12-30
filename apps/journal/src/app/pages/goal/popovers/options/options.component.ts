@@ -5,7 +5,7 @@ import { GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
 
 export enum enumGoalOptions {
   editNotificationSettings,
-  duplicateGoal,
+  // duplicateGoal,
   finishGoal,
   editGoal,
   deleteGoal

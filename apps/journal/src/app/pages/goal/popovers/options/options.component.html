@@ -1,6 +1,6 @@
 <ion-list mode="md">
   <!-- <ion-item (click)="close(enumGoalOptions.EditNotificationSettings)" button>Edit Notification Settings</ion-item> -->
-  <ion-item [lines]="isAdmin ? 'inset' : 'none'" (click)="close(enumGoalOptions.duplicateGoal)" button>Duplicate Goal</ion-item>
+  <!-- <ion-item [lines]="isAdmin ? 'inset' : 'none'" (click)="close(enumGoalOptions.duplicateGoal)" button>Duplicate Goal</ion-item> -->
   <!-- <ion-item (click)="close(enumGoalOptions.leaveGoal)" *ngIf="!_isFinished" button>Leave Goal</ion-item> -->
   <ng-container *ngIf="isAdmin">
     <ion-item (click)="close(enumGoalOptions.editGoal)" button>Edit Goal</ion-item>

@@ -106,69 +106,69 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     }
   })
 
-export const duplicateGoal = functions.https.onCall(async (data: { goalId: string, uid: string }, context: CallableContext): Promise<ErrorResultResponse> => {
+// export const duplicateGoal = functions.https.onCall(async (data: { goalId: string, uid: string }, context: CallableContext): Promise<ErrorResultResponse> => {
 
-  if (!context.auth) {
-    logger.error(`UNAUTHORIZED - User needs to be authorized`)
-    return {
-      error: `UNAUTHORIZED`,
-      result: `User needs to be authorized`
-    }
-  }
+//   if (!context.auth) {
+//     logger.error(`UNAUTHORIZED - User needs to be authorized`)
+//     return {
+//       error: `UNAUTHORIZED`,
+//       result: `User needs to be authorized`
+//     }
+//   }
 
-  const uid = data.uid ? data.uid : context.auth.uid;
-  const timestamp = serverTimestamp()
+//   const uid = data.uid ? data.uid : context.auth.uid;
+//   const timestamp = serverTimestamp()
 
-  // Duplicate goal
-  const goal = await getDocument<Goal>(`Goals/${data.goalId}`)
-  const newGoal = createGoal({
-    title: goal.title,
-    description: goal.description,
-    image: goal.image,
-    publicity: goal.publicity,
-    deadline: goal.deadline,
-    roadmapTemplate: goal.roadmapTemplate,
-    collectiveGoalId: goal.collectiveGoalId,
-    createdAt: timestamp as Timestamp,
-    updatedAt: timestamp as Timestamp,
-    updatedBy: uid
-  })
-  const { id } = await db.collection(`Goals`).add(newGoal)
-  db.doc(`Goals/${id}`).update({ id });
+//   // Duplicate goal
+//   const goal = await getDocument<Goal>(`Goals/${data.goalId}`)
+//   const newGoal = createGoal({
+//     title: goal.title,
+//     description: goal.description,
+//     image: goal.image,
+//     publicity: goal.publicity,
+//     deadline: goal.deadline,
+//     roadmapTemplate: goal.roadmapTemplate,
+//     collectiveGoalId: goal.collectiveGoalId,
+//     createdAt: timestamp as Timestamp,
+//     updatedAt: timestamp as Timestamp,
+//     updatedBy: uid
+//   })
+//   const { id } = await db.collection(`Goals`).add(newGoal)
+//   db.doc(`Goals/${id}`).update({ id });
 
-  // Create stakeholder
-  const user = await getDocument<User>(`Users/${uid}`)
-  const stakeholder = createGoalStakeholder({
-    uid: uid,
-    username: user.username,
-    photoURL: user.photoURL,
-    isAchiever: true,
-    isAdmin: true,
-    goalId: id,
-    goalPublicity: goal.publicity,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-    updatedBy: uid
-  })
-  await db.doc(`Goals/${id}/GStakeholders/${uid}`).set(stakeholder)
+//   // Create stakeholder
+//   const user = await getDocument<User>(`Users/${uid}`)
+//   const stakeholder = createGoalStakeholder({
+//     uid: uid,
+//     username: user.username,
+//     photoURL: user.photoURL,
+//     isAchiever: true,
+//     isAdmin: true,
+//     goalId: id,
+//     goalPublicity: goal.publicity,
+//     createdAt: timestamp,
+//     updatedAt: timestamp,
+//     updatedBy: uid
+//   })
+//   await db.doc(`Goals/${id}/GStakeholders/${uid}`).set(stakeholder)
 
-  // Creating milestones
-  const promises: any[] = []
-  for (const milestone of goal.roadmapTemplate) {
-    const newMilestone = createMilestone({
-      description: milestone.description,
-      sequenceNumber: milestone.sequenceNumber,
-      deadline: milestone.deadline
-    })
-    const promise = db.collection(`Goals/${id}/Milestones`).add(newMilestone)
-    promises.push(promise);
-  }
-  await Promise.all(promises);
-  return {
-    error: '',
-    result: id
-  }
-})
+//   // Creating milestones
+//   const promises: any[] = []
+//   for (const milestone of goal.roadmapTemplate) {
+//     const newMilestone = createMilestone({
+//       description: milestone.description,
+//       sequenceNumber: milestone.sequenceNumber,
+//       deadline: milestone.deadline
+//     })
+//     const promise = db.collection(`Goals/${id}/Milestones`).add(newMilestone)
+//     promises.push(promise);
+//   }
+//   await Promise.all(promises);
+//   return {
+//     error: '',
+//     result: id
+//   }
+// })
 
 async function updateGoalStakeholders(goalId: string, after: Goal) {
   const data: Partial<GoalStakeholder> = {
