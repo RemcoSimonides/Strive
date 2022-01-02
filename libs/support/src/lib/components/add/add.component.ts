@@ -1,14 +1,12 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, ModalController } from '@ionic/angular';
-// Angularfire
-import { Auth, user } from '@angular/fire/auth';
 // Rxjs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { SupportService } from '@strive/support/+state/support.service'
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/+state/user.service'
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
 import { Milestone } from '@strive/milestone/+state/milestone.firestore'
@@ -17,13 +15,14 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { orderBy, where } from '@angular/fire/firestore';
+import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
   selector: 'support-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
 })
-export class AddSupportModalComponent implements OnInit {
+export class AddSupportModalComponent implements OnInit, OnDestroy {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
@@ -41,8 +40,9 @@ export class AddSupportModalComponent implements OnInit {
 
   public support = new SupportForm()
 
+  private sub: Subscription;
+
   constructor(
-    private afAuth: Auth,
     private goalService: GoalService,
     private location: Location,
     private modalCtrl: ModalController,
@@ -64,25 +64,26 @@ export class AddSupportModalComponent implements OnInit {
     this.origin = !!this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
-    user(this.afAuth).subscribe(user => {
+    this.sub = this.user.user$.subscribe(user => {
       const params = { goalId: this.goalId }
 
       this.supports$ = this.origin === 'milestone'
         ? this.supportService.valueChanges([where('milestone.id', '==', this.milestone.id)], params)
         : this.supportService.valueChanges([orderBy('createdAt', 'desc')], params)
 
+      
       if (user) {
-        const { uid, displayName, photoURL } = user
-  
-        this.support.supporter.uid.patchValue(uid)
-        this.support.supporter.username.patchValue(displayName)
-        this.support.supporter.photoURL.patchValue(photoURL)
+        this.support.supporter.patchValue(createUserLink(user))
         
         this.mySupports$ = this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('milestone.id', '==', this.milestone.id), where('supporter.uid', '==', uid)], params)
-          : this.supportService.valueChanges([where('supporter.uid', '==', uid), orderBy('createdAt', 'desc')], params)
+          ? this.supportService.valueChanges([where('milestone.id', '==', this.milestone.id), where('supporter.uid', '==', user.uid)], params)
+          : this.supportService.valueChanges([where('supporter.uid', '==', user.uid), orderBy('createdAt', 'desc')], params)
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 
   openLoginModal() {

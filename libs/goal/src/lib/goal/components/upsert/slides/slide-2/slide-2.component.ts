@@ -51,7 +51,7 @@ export class Slide2 implements OnDestroy {
     let description: string = ''
     for (const key in value) {
       if (value[key]) {
-        description += `<h2>${this.fields[key]}</h2><p>${value[key]}</p>`
+        description += `<h2>${this.fields[key].title}</h2><p>${value[key]}</p>`
       }
     }
     this.form.description.setValue(description);
