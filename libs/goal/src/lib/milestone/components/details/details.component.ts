@@ -2,9 +2,9 @@ import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Goal } from "@strive/goal/goal/+state/goal.firestore";
-import { Milestone } from "@strive/milestone/+state/milestone.firestore";
-import { MilestoneService } from "@strive/milestone/+state/milestone.service";
-import { MilestoneForm } from "@strive/milestone/forms/milestone.form";
+import { Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
+import { MilestoneService } from "@strive/goal/milestone/+state/milestone.service";
+import { MilestoneForm } from "@strive/goal/milestone/forms/milestone.form";
 import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 

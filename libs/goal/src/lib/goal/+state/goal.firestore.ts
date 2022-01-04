@@ -1,5 +1,5 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
+import { MilestoneTemplate } from '@strive/goal/milestone/+state/milestone.firestore'
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
 
 export type GoalPublicityType = 'public' | 'collectiveGoalOnly' | 'private'

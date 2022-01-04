@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
-import { Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })

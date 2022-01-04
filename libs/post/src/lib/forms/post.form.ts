@@ -3,7 +3,7 @@ import { FormEntity } from '@strive/utils/form/entity.form';
 import { createPost, Post } from "../+state/post.firestore";
 import { UserLinkForm } from '@strive/user/user/forms/user.form';
 import { GoalLinkForm } from '@strive/goal/goal/forms/goal.form';
-import { MilestoneLinkForm } from '@strive/milestone/forms/milestone.form';
+import { MilestoneLinkForm } from '@strive/goal/milestone/forms/milestone.form';
 
 function createPostFormControl(params?: Post) {
   const post = createPost(params);

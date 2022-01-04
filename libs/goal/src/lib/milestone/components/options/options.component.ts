@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
 // Services
-import { MilestoneService } from '@strive/milestone/+state/milestone.service';
+import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({

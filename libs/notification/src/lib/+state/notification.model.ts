@@ -1,6 +1,6 @@
 import { createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { createGoalLink } from '@strive/goal/goal/+state/goal.firestore';
-import { createMilestoneLink } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createSupport } from '@strive/support/+state/support.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { GoalRequest, Notification, SupportDecisionMeta } from './notification.firestore';

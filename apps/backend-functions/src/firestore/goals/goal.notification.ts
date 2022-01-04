@@ -19,7 +19,7 @@ import { createNotificationSupport, createSupport, NotificationSupport, Support 
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
 import { createCollectiveGoal, createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
-import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { converter } from '../../shared/utils';
 
 const db = admin.firestore()

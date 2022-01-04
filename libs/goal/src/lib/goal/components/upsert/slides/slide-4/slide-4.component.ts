@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { Milestone } from '@strive/milestone/+state/milestone.firestore';
-import { MilestoneService } from '@strive/milestone/+state/milestone.service';
+import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
 import { Observable } from 'rxjs';
 
 @Component({

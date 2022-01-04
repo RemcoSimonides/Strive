@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { ModalController } from '@ionic/angular';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
-import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore';
-import { MilestoneService } from '@strive/milestone/+state/milestone.service';
-import { MilestoneForm } from '@strive/milestone/forms/milestone.form';
+import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
+import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form';
 
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { boolean } from '@strive/utils/decorators/decorators';

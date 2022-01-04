@@ -16,7 +16,7 @@ import { TemplateService } from '@strive/template/+state/template.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Interfaces
 import { Template } from '@strive/template/+state/template.firestore'
-import { Milestone, MilestonesLeveled } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone, MilestonesLeveled } from '@strive/goal/milestone/+state/milestone.firestore'
 import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 

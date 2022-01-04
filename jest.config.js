@@ -10,7 +10,6 @@ module.exports = {
     '<rootDir>/libs/goal',
     '<rootDir>/libs/post',
     '<rootDir>/libs/discussion',
-    '<rootDir>/libs/milestone',
     '<rootDir>/libs/support',
     '<rootDir>/libs/notification',
     '<rootDir>/libs/media',

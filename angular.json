@@ -31,7 +31,10 @@
                 "output": "./assets"
               }
             ],
-            "styles": ["apps/admin/src/theme/variables.scss", "apps/admin/src/global.scss"],
+            "styles": [
+              "apps/admin/src/theme/variables.scss",
+              "apps/admin/src/global.scss"
+            ],
             "scripts": ["node_modules/quill/dist/quill.min.js"]
           },
           "configurations": {
@@ -491,36 +494,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/media/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      }
-    },
-    "milestone": {
-      "projectType": "library",
-      "root": "libs/milestone",
-      "sourceRoot": "libs/milestone/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/milestone/tsconfig.lib.json",
-              "libs/milestone/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/milestone/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/milestone/jest.config.js",
             "passWithNoTests": true
           }
         }

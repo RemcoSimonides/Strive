@@ -5,7 +5,7 @@ import { NavParams, ModalController } from '@ionic/angular'
 import { PostForm } from '@strive/post/forms/post.form';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { PostService } from '@strive/post/+state/post.service';
-import { Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createPost } from '@strive/post/+state/post.firestore';
 
 @Component({

@@ -11,7 +11,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared/utils';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { User } from '@strive/user/user/+state/user.firestore';
-import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { Timestamp } from '@firebase/firestore-types';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)

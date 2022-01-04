@@ -22,7 +22,7 @@ import { AssessLifeUpsertModule } from '@strive/exercises/assess-life/components
 import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/components/upsert/upsert.module';
 
 // Pipes
-import { MilestonePathPipeModule } from '@strive/milestone/pipes/path.pipe'
+import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 
 const routes: Routes = [
   {

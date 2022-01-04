@@ -1,4 +1,4 @@
-import { MilestoneTemplate } from '@strive/milestone/+state/milestone.firestore'
+import { MilestoneTemplate } from '@strive/goal/milestone/+state/milestone.firestore'
 import { FieldValue } from '@firebase/firestore-types';
 
 export interface Template {

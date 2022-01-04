@@ -9,7 +9,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createGoal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { User } from '@strive/user/user/+state/user.firestore';
-import { createMilestone } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { logger } from 'firebase-functions';
 import { Timestamp } from '@firebase/firestore-types';
 

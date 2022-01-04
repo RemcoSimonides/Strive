@@ -1,7 +1,7 @@
 import { db, functions } from '../../../internals/firebase';
 
 //Interfaces
-import { createMilestone, Milestone } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';

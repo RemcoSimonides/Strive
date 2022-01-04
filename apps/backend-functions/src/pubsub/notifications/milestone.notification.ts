@@ -1,4 +1,4 @@
-import { createMilestone, createMilestoneLink, Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { createMilestone, createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';

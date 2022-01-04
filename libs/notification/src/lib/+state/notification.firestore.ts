@@ -2,7 +2,7 @@ import { Timestamp } from '@firebase/firestore-types';
 import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
 import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { GoalLink } from '@strive/goal/goal/+state/goal.firestore';
-import { MilestoneLink } from '@strive/milestone/+state/milestone.firestore';
+import { MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { UserLink } from '@strive/user/user/+state/user.firestore';
 import { CollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { TemplateLink } from '@strive/template/+state/template.firestore';

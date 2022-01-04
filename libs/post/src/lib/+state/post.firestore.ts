@@ -1,6 +1,6 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { createGoalLink, GoalLink } from '@strive/goal/goal/+state/goal.firestore';
-import { createMilestoneLink, MilestoneLink } from '@strive/milestone/+state/milestone.firestore';
+import { createMilestoneLink, MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 
 export interface Post {

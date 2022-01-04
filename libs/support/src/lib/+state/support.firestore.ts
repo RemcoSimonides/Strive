@@ -1,6 +1,6 @@
 import { FieldValue } from '@firebase/firestore-types';
 import { GoalLink, createGoalLink } from '@strive/goal/goal/+state/goal.firestore'
-import { MilestoneLink, createMilestoneLink } from '@strive/milestone/+state/milestone.firestore'
+import { MilestoneLink, createMilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore'
 import { UserLink, createUserLink } from '@strive/user/user/+state/user.firestore'
 
 export type SupportDecision = 'give' | 'keep'

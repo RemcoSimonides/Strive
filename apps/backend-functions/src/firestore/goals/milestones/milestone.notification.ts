@@ -6,7 +6,7 @@ import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent} from '@strive/notification/+state/notification.firestore'
 import { getReceiver } from '../../../shared/support/receiver'
 import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { createMilestone, createMilestoneLink, Milestone } from '@strive/milestone/+state/milestone.firestore'
+import { createMilestone, createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta, increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { UserLink } from '@strive/user/user/+state/user.firestore';
