@@ -67,7 +67,7 @@ export class GoalService extends FireCollection<Goal> {
             return stakeholders.map(stakeholder => ({
               stakeholder,
               goal: goals.find(goal => goal.id === stakeholder.goalId)
-            }))
+            })).filter(result => !!result.goal)
           })
         )
       }),
