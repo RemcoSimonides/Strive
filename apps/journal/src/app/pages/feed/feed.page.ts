@@ -132,6 +132,10 @@ export class FeedPage implements OnInit, OnDestroy {
         }, 500);
       }
     })
+
+    setTimeout(() => {
+      $event.target.complete();
+    }, 5000);
   }
 
   loadData(event) {

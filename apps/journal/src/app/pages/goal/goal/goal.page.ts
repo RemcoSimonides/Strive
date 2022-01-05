@@ -161,6 +161,7 @@ export class GoalPage implements OnInit, OnDestroy {
     if (!this.isAchiever) return;
 
     const status = $event.detail.value;
+    if (status === goal.status) return
     if (status === 'finished') {
       this.alertCtrl.create({
         header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
@@ -168,8 +169,9 @@ export class GoalPage implements OnInit, OnDestroy {
         buttons: [
           {
             text: 'Yes',
-            handler: async () => {
-              await this.stakeholder.update(this.user.uid, { status: 'finished' }, { params: { goalId: this.goalId }})
+            handler: () => {
+              goal.status = status
+              this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
               this.startPostCreation(goal)
             }
           },
@@ -183,6 +185,7 @@ export class GoalPage implements OnInit, OnDestroy {
         ]
       }).then(alert => alert.present())
     } else {
+      goal.status = status
       this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
     }
 

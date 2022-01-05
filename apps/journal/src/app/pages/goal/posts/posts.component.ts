@@ -55,5 +55,9 @@ export class PostsComponent implements OnInit {
         }, 500);
       }
     })
+    
+    setTimeout(() => {
+      $event.target.complete();
+    }, 5000);
   }
 }
