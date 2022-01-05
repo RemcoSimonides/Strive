@@ -82,7 +82,7 @@ export class GoalViewPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.accessSubscription.unsubscribe()
+    this.accessSubscription?.unsubscribe()
   }
 
   private initGoal() {
