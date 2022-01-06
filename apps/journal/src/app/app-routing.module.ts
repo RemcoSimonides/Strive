@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'collective-goal/:id', loadChildren: () => import('./pages/collective-goal/collective-goal.module').then(m => m.CollectiveGoalPageModule), },
   { path: 'notifications', loadChildren: () => import('./pages/feed/notifications/notifications.module').then(m => m.NotificationsModule) },
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
+  { path: 'profile', redirectTo: 'profile/'},
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageModule) },
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) }

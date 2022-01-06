@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
 // Services
@@ -68,6 +69,7 @@ export class ProfilePage implements OnInit {
     public platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
+    private location: Location,
     private seo: SeoService,
     private userSpectateService: UserSpectateService,
     public screensize: ScreensizeService
@@ -78,6 +80,11 @@ export class ProfilePage implements OnInit {
     this.profileForm.disable();
 
     this.isOwner$ = this.user.user$.pipe(
+      tap(user => {
+        if (!this.profileId && user) {
+          this.location.replaceState(`/profile/${user.uid}`)
+        }
+      }),
       map(user => user?.uid === this.profileId),
       startWith(false),
       distinctUntilChanged(),
