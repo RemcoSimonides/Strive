@@ -1,4 +1,4 @@
-import { db, functions, serverTimestamp } from '../../internals/firebase';
+import { db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
 import { createGoal, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
@@ -7,17 +7,13 @@ import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { handleNotificationsOfCreatedGoal, handleNotificationsOfChangedGoal } from './goal.notification';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { deleteCollection, ErrorResultResponse, getDocument } from '../../shared/utils';
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { User } from '@strive/user/user/+state/user.firestore';
-import { createMilestone } from '@strive/goal/milestone/+state/milestone.firestore';
-import { Timestamp } from '@firebase/firestore-types';
+import { deleteCollection } from '../../shared/utils';
+import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onCreate(async snapshot => {
 
-    const goal = createGoal(snapshot.data())
+    const goal = createGoal({ ...snapshot.data(), id: snapshot.id })
     const goalId = snapshot.id
 
     // algolia
@@ -45,7 +41,7 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onDelete(async snapshot => {
 
     const goalId = snapshot.id
-    const goal = createGoal(snapshot.data()) 
+    const goal = createGoal({ ...snapshot.data(), id: snapshot.id }) 
 
     if (goal.publicity === 'public') {
       try {
@@ -70,9 +66,9 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
   .onUpdate(async (snapshot, context) => {
 
-    const before = createGoal(snapshot.before.data())
-    const after = createGoal(snapshot.after.data())
     const goalId = context.params.goalId
+    const before = createGoal({ ...snapshot.before.data(), id: goalId })
+    const after = createGoal({ ...snapshot.after.data(), id: goalId })
 
     // notifications
     handleNotificationsOfChangedGoal(goalId, before, after)
@@ -101,7 +97,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
         deleteFromAlgolia('goal', goalId)
       }
 
-    } else if (before.title !== after.title || before.image !== after.image) {
+    } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters) {
       updateAlgoliaObject('goal', goalId, after)
     }
   })
