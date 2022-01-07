@@ -7,7 +7,7 @@ import { ModalController, PopoverController, AlertController, NavController, Pla
 import { Observable,  Subscription, of, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Modals
-import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
+import { UpsertCollectiveGoalComponent } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { UpsertTemplateModalPage } from '@strive/template/modals/upsert/upsert-template-modal.page';
 // Popovers
@@ -167,7 +167,7 @@ export class CollectiveGoalComponent implements OnInit, OnDestroy {
     const collectiveGoal = await this.collectiveGoalService.getValue(this.collectiveGoalId)
 
     this.modalCtrl.create({
-      component: UpsertCollectiveGoalPage,
+      component: UpsertCollectiveGoalComponent,
       componentProps: { id: this.collectiveGoalId, data: collectiveGoal }
     }).then(modal => modal.present())
   }

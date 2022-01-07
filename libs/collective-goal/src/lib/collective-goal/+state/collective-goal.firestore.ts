@@ -17,7 +17,7 @@ export interface CollectiveGoal {
 /** A factory function that creates a CollectiveGoalDocument. */
 export function createCollectiveGoal(params: Partial<CollectiveGoal> = {}): CollectiveGoal {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ?? '',
     deadline: '',
     description: '',
     image: '',

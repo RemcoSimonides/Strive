@@ -19,7 +19,7 @@ import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/c
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
+import { UpsertCollectiveGoalComponent } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
 
 
 @Component({
@@ -88,7 +88,7 @@ export class GoalsComponent implements OnInit {
   
   createCollectiveGoal() {
     this.modalCtrl.create({
-      component: UpsertCollectiveGoalPage
+      component: UpsertCollectiveGoalComponent
     }).then(modal => modal.present())
   }
 }

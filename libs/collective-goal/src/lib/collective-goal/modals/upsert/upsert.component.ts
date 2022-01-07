@@ -10,20 +10,20 @@ import { CollectiveGoalForm } from '@strive/collective-goal/collective-goal/form
 import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 @Component({
-  selector: 'app-upsert-collective-goal',
+  selector: 'collective-goal-upsert',
   templateUrl: './upsert.component.html',
   styleUrls: ['./upsert.component.scss'],
 })
-export class UpsertCollectiveGoalPage implements OnInit {
+export class UpsertCollectiveGoalComponent implements OnInit {
+
+  collectiveGoalId: string
+  collectiveGoalForm: CollectiveGoalForm
+  state: 'create' | 'update'
+
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
-
-  collectiveGoalId: string
-  collectiveGoalForm: CollectiveGoalForm
-  
-  state: 'create' | 'update'
 
   constructor(
     private alertCtrl: AlertController,
@@ -44,7 +44,7 @@ export class UpsertCollectiveGoalPage implements OnInit {
 
   ngOnInit() {
     this.collectiveGoalId = this.navParam.data.id
-    this.state = !!this.collectiveGoalId ? 'update' : 'create'
+    this.state = this.collectiveGoalId ? 'update' : 'create'
     if (!this.collectiveGoalId) this.collectiveGoalId = this.service.createId();
     this.collectiveGoalForm = new CollectiveGoalForm(this.navParam.data.data)
     this.loadingCtrl.getTop().then(v => v ? this.loadingCtrl.dismiss() : undefined)

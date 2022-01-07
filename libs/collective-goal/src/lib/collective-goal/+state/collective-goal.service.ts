@@ -5,13 +5,13 @@ import { map, switchMap } from 'rxjs/operators';
 import { Firestore, DocumentSnapshot, doc, deleteDoc, QueryConstraint, where, orderBy } from '@angular/fire/firestore';
 // Services
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
+import { CollectiveGoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 // Interfaces
 import { CollectiveGoal, createCollectiveGoal } from './collective-goal.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
+import { createCollectiveGoalStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
 
 @Injectable({ providedIn: 'root' })
 export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
@@ -33,7 +33,7 @@ export class CollectiveGoalService extends FireCollection<CollectiveGoal> {
   }
 
   protected toFirestore(collectiveGoal: CollectiveGoal): CollectiveGoal {
-    if (!!collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
+    if (collectiveGoal.deadline) collectiveGoal.deadline = this.setDeadlineToEndOfDay(collectiveGoal.deadline)
     collectiveGoal.updatedBy = this.user.uid
     return collectiveGoal
   }

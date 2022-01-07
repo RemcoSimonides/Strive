@@ -9,7 +9,9 @@
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/admin",
             "index": "apps/admin/src/index.html",
@@ -35,7 +37,9 @@
               "apps/admin/src/theme/variables.scss",
               "apps/admin/src/global.scss"
             ],
-            "scripts": ["node_modules/quill/dist/quill.min.js"]
+            "scripts": [
+              "node_modules/quill/dist/quill.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -99,7 +103,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/admin"],
+          "outputs": [
+            "coverage/apps/admin"
+          ],
           "options": {
             "jestConfig": "apps/admin/jest.config.js",
             "passWithNoTests": true
@@ -128,7 +134,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/admin-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/admin-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
@@ -145,7 +153,9 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": ["apps/backend-functions/src/package.json"],
+            "assets": [
+              "apps/backend-functions/src/package.json"
+            ],
             "buildLibsFromSource": true
           },
           "configurations": {
@@ -175,7 +185,10 @@
               "apps/backend-functions/tsconfig.app.json",
               "apps/backend-functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/backend-functions/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/backend-functions/**/*"
+            ]
           }
         },
         "test": {
@@ -194,13 +207,12 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "libs/collective-goal/tsconfig.lib.json",
-              "libs/collective-goal/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/collective-goal/**/*"]
+            "lintFilePatterns": [
+              "libs/collective-goal/**/*.ts",
+              "libs/collective-goal/**/*.html"
+            ]
           }
         },
         "test": {
@@ -225,7 +237,10 @@
               "libs/discussion/tsconfig.lib.json",
               "libs/discussion/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/discussion/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/discussion/**/*"
+            ]
           }
         },
         "test": {
@@ -250,7 +265,10 @@
               "libs/exercises/tsconfig.lib.json",
               "libs/exercises/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/exercises/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/exercises/**/*"
+            ]
           }
         },
         "test": {
@@ -275,7 +293,10 @@
               "libs/goal/tsconfig.lib.json",
               "libs/goal/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/goal/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/goal/**/*"
+            ]
           }
         },
         "test": {
@@ -326,7 +347,9 @@
                 "input": "apps/journal/src/global.scss"
               }
             ],
-            "scripts": ["node_modules/quill/dist/quill.min.js"]
+            "scripts": [
+              "node_modules/quill/dist/quill.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -381,7 +404,10 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/journal/**/*.ts", "apps/journal/**/*.html"]
+            "lintFilePatterns": [
+              "apps/journal/**/*.ts",
+              "apps/journal/**/*.html"
+            ]
           }
         },
         "test": {
@@ -430,7 +456,10 @@
               "libs/media/tsconfig.lib.json",
               "libs/media/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/media/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/media/**/*"
+            ]
           }
         },
         "test": {
@@ -455,7 +484,10 @@
               "libs/notification/tsconfig.lib.json",
               "libs/notification/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/notification/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/notification/**/*"
+            ]
           }
         },
         "test": {
@@ -480,7 +512,10 @@
               "libs/post/tsconfig.lib.json",
               "libs/post/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/post/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/post/**/*"
+            ]
           }
         },
         "test": {
@@ -505,7 +540,10 @@
               "libs/support/tsconfig.lib.json",
               "libs/support/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/support/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/support/**/*"
+            ]
           }
         },
         "test": {
@@ -530,7 +568,10 @@
               "libs/template/tsconfig.lib.json",
               "libs/template/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/template/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/template/**/*"
+            ]
           }
         },
         "test": {
@@ -555,7 +596,10 @@
               "libs/ui/tsconfig.lib.json",
               "libs/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ui/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ui/**/*"
+            ]
           }
         },
         "test": {
@@ -580,7 +624,10 @@
               "libs/user/tsconfig.lib.json",
               "libs/user/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/user/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/user/**/*"
+            ]
           }
         },
         "test": {
@@ -605,7 +652,10 @@
               "libs/utils/tsconfig.lib.json",
               "libs/utils/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/utils/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/utils/**/*"
+            ]
           }
         },
         "test": {
@@ -617,5 +667,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }
