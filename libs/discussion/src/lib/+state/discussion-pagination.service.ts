@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { collection, CollectionReference, collectionSnapshots, DocumentData, Firestore, limit, orderBy, Query, query, startAfter } from '@angular/fire/firestore';
+import { collection, collectionSnapshots, DocumentData, Firestore, limit, orderBy, Query, query, startAfter } from '@angular/fire/firestore';
 import { scan, tap, take } from 'rxjs/operators';
 import { createComment } from './comment.firestore';
 
@@ -45,7 +45,7 @@ export class DiscussionPaginationService {
 
       this.subscription = collectionSnapshots(_query).pipe(
         tap(docs => {
-          let values = docs.map(doc => {
+          const values = docs.map(doc => {
             const data = createComment(doc.data())
             const id = doc.id
             return { ...data, doc, id, append: true }

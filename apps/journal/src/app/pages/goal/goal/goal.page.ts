@@ -7,7 +7,7 @@ import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
 import { Share } from '@capacitor/share';
 // Strive Components
-import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
+import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component';
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
@@ -95,7 +95,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   openDiscussion() {
     if (this.user.uid) {
       this.modalCtrl.create({
-        component: DiscussionModalPage,
+        component: DiscussionModalComponent,
         componentProps: {
           discussionId: this.goalId
         }

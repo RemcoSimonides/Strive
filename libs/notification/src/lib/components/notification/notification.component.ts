@@ -12,7 +12,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakehol
 import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
-import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
+import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 
 
@@ -67,7 +67,7 @@ export class NotificationComponent {
   openDiscussion() {
     if (this.user.uid) {
       this.modalCtrl.create({
-        component: DiscussionModalPage,
+        component: DiscussionModalComponent,
         componentProps: {
           discussionId: this.notification.discussionId,
         }

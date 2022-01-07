@@ -13,18 +13,11 @@ import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
-  selector: 'strive-discussion',
+  selector: 'discussion-page',
   templateUrl: './discussion-modal.component.html',
   styleUrls: ['./discussion-modal.component.scss'],
 })
-export class DiscussionModalPage implements OnInit, OnDestroy {
-  @ViewChild(IonContent) contentArea: IonContent
-
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-
+export class DiscussionModalComponent implements OnInit, OnDestroy {
   scrolledToBottom = true
 
   subscription: Subscription
@@ -39,6 +32,12 @@ export class DiscussionModalPage implements OnInit, OnDestroy {
     adminsAndRequestor: 'Visible to Requestor and Admins only',
     achievers: 'Visisble to Achievers only',
     spectators: 'Visible to spectators only'
+  }
+
+  @ViewChild(IonContent) contentArea: IonContent
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.modalCtrl.dismiss()
   }
 
   constructor(
