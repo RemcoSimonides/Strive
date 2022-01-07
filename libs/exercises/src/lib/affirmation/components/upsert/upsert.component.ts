@@ -14,16 +14,16 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
   styleUrls: ['./upsert.component.scss']
 })
 export class AffirmationUpsertComponent implements OnInit {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-
   private suggestionsCopy: AffirmationSuggestion[]
   enumAffirmationCategory = enumAffirmationCategory
 
   affirmations = <Affirmations>{ times: ['', '', ''], affirmations: [] }
   suggestions = suggestions
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.modalCtrl.dismiss()
+  }
 
   constructor(
     private user: UserService,
@@ -119,7 +119,7 @@ export class AffirmationUpsertComponent implements OnInit {
     }
   }
 
-  trackByFn(index: any, item: any) {
+  trackByFn(index: unknown, item: unknown) {
     return index;
   }
 

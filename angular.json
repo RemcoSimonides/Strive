@@ -255,15 +255,11 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "libs/exercises/tsconfig.lib.json",
-              "libs/exercises/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/exercises/**/*"
+            "lintFilePatterns": [
+              "libs/exercises/**/*.ts",
+              "libs/exercises/**/*.html"
             ]
           }
         },

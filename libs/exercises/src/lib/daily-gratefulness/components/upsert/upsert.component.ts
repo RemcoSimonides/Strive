@@ -11,12 +11,12 @@ import { DailyGratefulnessService } from '../../+state/daily-gratefulness.servic
   styleUrls: ['./upsert.component.scss']
 })
 export class DailyGratefulnessUpsertComponent implements OnInit {
+  dailyGratefulness: DailyGratefulness
+  
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
-
-  public dailyGratefulness: DailyGratefulness
 
   constructor(
     private location: Location,
