@@ -6,7 +6,7 @@ import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Observable, Subscription, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 // Pages / Popover / Modal
-import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page';
+import { TemplateOptionsPopoverComponent } from './popovers/template-options-popover/template-options-popover.page';
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -21,11 +21,11 @@ import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+
 import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Component({
-  selector: 'app-template',
+  selector: 'journal-template',
   templateUrl: './template.page.html',
   styleUrls: ['./template.page.scss'],
 })
-export class TemplatePage implements OnInit {
+export class TemplateComponent implements OnInit {
   private backBtnSubscription: Subscription
   
   public collectiveGoalId: string
@@ -112,7 +112,7 @@ export class TemplatePage implements OnInit {
     const useTemplateFn = httpsCallable(this.functions, 'useTemplate')
     const { error, result } = await useTemplateFn({ collectiveGoalId: this.collectiveGoalId, templateId: this.templateId }).then(res => res.data) as { result: string, error: string }
 
-    if (!!error) {
+    if (error) {
       await loading.dismiss()
       throw new Error(result)
     }
@@ -122,7 +122,7 @@ export class TemplatePage implements OnInit {
 
   presentTemplateOptionsPopover(ev: UIEvent) {
     this.popoverCtrl.create({
-      component: TemplateOptionsPopoverPage,
+      component: TemplateOptionsPopoverComponent,
       event: ev,
       componentProps: {
         isAdmin: this.isAdmin,

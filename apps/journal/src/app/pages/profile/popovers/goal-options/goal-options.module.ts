@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
-import { GoalOptions } from "./goal-options.component";
+import { GoalOptionsComponent } from "./goal-options.component";
 
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 
@@ -12,6 +12,6 @@ import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upse
     IonicModule,
     UpsertPostModalModule
   ],
-  declarations: [GoalOptions]
+  declarations: [GoalOptionsComponent]
 })
 export class GoalOptionsModule { }

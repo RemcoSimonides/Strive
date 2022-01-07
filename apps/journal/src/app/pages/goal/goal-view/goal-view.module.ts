@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 // Pages
-import { GoalViewPage } from './goal-view.page'
+import { GoalViewComponent } from './goal-view.page'
 
 import { GoalPageModule } from '../goal/goal.module';
 
@@ -17,7 +17,7 @@ import { PostsModule } from '../posts/posts.module';
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 
 const routes: Routes = [
-  { path: '', component: GoalViewPage }
+  { path: '', component: GoalViewComponent }
 ];
 
 @NgModule({
@@ -33,7 +33,7 @@ const routes: Routes = [
     UpsertPostModalModule
   ],
   declarations: [
-    GoalViewPage,
+    GoalViewComponent,
   ],
 })
 export class GoalViewPageModule {}

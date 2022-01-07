@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CollectiveGoalPage } from './collective-goal.page';
+import { CollectiveGoalComponent } from './collective-goal.page';
 
 import { CollectiveGoalOptionsPopoverModule } from './popovers/options/options.module';
 import { CollectiveGoalSharePopoverModule } from './popovers/share/share.module';
@@ -28,7 +28,7 @@ import { ImageModule } from '@strive/media/directives/image.module';
 const routes: Routes = [
   {
     path: '',
-    component: CollectiveGoalPage
+    component: CollectiveGoalComponent
   },
   { path: 'template/:templateId',
     loadChildren: () => import('../template/template.module').then(m => m.TemplatePageModule),
@@ -61,7 +61,7 @@ const routes: Routes = [
     ImageModule
   ],
   declarations: [
-    CollectiveGoalPage,
+    CollectiveGoalComponent,
   ],
   exports: []
 })

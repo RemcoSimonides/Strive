@@ -21,12 +21,12 @@ import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratef
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 
 @Component({
-  selector: 'strive-feed',
+  selector: 'journal-feed',
   templateUrl: './feed.page.html',
   styleUrls: ['./feed.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FeedPage implements OnInit, OnDestroy {
+export class FeedComponent implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   enumAuthSegment = enumAuthSegment
   

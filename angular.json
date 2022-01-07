@@ -138,7 +138,6 @@
       "sourceRoot": "apps/backend-functions/src",
       "projectType": "application",
       "prefix": "backend-functions",
-      "schematics": {},
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
@@ -170,7 +169,7 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "apps/backend-functions/tsconfig.app.json",
@@ -195,7 +194,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/collective-goal/tsconfig.lib.json",
@@ -211,11 +210,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "discussion": {
@@ -225,7 +219,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/discussion/tsconfig.lib.json",
@@ -241,11 +235,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "exercises": {
@@ -255,7 +244,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/exercises/tsconfig.lib.json",
@@ -271,11 +260,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "goal": {
@@ -285,7 +269,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/goal/tsconfig.lib.json",
@@ -301,23 +285,13 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "journal": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/journal",
       "sourceRoot": "apps/journal/src",
-      "prefix": "strive",
+      "prefix": "journal",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -405,13 +379,9 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "apps/journal/tsconfig.app.json",
-              "apps/journal/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/journal/**/*"]
+            "lintFilePatterns": ["apps/journal/**/*.ts", "apps/journal/**/*.html"]
           }
         },
         "test": {
@@ -447,33 +417,6 @@
         }
       }
     },
-    "journal-e2e": {
-      "root": "apps/journal-e2e",
-      "sourceRoot": "apps/journal-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/journal-e2e/cypress.json",
-            "tsConfig": "apps/journal-e2e/tsconfig.e2e.json",
-            "devServerTarget": "journal:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "journal:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/journal-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/journal-e2e/**/*"]
-          }
-        }
-      }
-    },
     "media": {
       "projectType": "library",
       "root": "libs/media",
@@ -481,7 +424,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/media/tsconfig.lib.json",
@@ -497,11 +440,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "notification": {
@@ -511,7 +449,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/notification/tsconfig.lib.json",
@@ -527,11 +465,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "post": {
@@ -541,7 +474,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/post/tsconfig.lib.json",
@@ -557,11 +490,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "support": {
@@ -571,7 +499,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/support/tsconfig.lib.json",
@@ -587,11 +515,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "template": {
@@ -601,7 +524,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/template/tsconfig.lib.json",
@@ -617,11 +540,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "ui": {
@@ -631,7 +549,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/ui/tsconfig.lib.json",
@@ -647,11 +565,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "user": {
@@ -661,7 +574,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/user/tsconfig.lib.json",
@@ -677,11 +590,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "utils": {
@@ -691,7 +599,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "tsConfig": [
               "libs/utils/tsconfig.lib.json",
@@ -707,66 +615,7 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/angular"
-  },
-  "schematics": {
-    "@nrwl/workspace": {
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/cypress": {
-      "cypress-project": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/node": {
-      "application": {
-        "linter": "tslint"
-      },
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/nest": {
-      "application": {
-        "linter": "tslint"
-      },
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/express": {
-      "application": {
-        "linter": "tslint"
-      },
-      "library": {
-        "linter": "tslint"
-      }
-    },
-    "@nrwl/angular:application": {
-      "style": "scss",
-      "linter": "eslint",
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "style": "scss",
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:component": {
-      "style": "scss"
-    }
-  },
-  "defaultProject": "journal"
+  }
 }

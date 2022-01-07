@@ -11,12 +11,12 @@ import { debounceTime, startWith } from 'rxjs/operators';
 import { exercises } from '@strive/exercises/utils';
 
 @Component({
-  selector: 'app-explore',
+  selector: 'journal-explore',
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExplorePage implements OnDestroy {
+export class ExploreComponent implements OnDestroy {
   segmentChoice: 'overview' | 'search' = 'overview'
 
   searchForm = new FormGroup({
@@ -56,13 +56,14 @@ export class ExplorePage implements OnDestroy {
           break
       
         case 'exercises':
-        default:
+        default: {
           const hpp = query ? undefined : { goals: 8, collectiveGoals: 5, profiles: 8 } 
           this.algolia.search(query, hpp)
 
           const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
           this._exercises.next(filteredExercises)
           break
+        }
       }
 
     })

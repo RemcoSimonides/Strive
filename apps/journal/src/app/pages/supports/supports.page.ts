@@ -13,11 +13,11 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { where } from '@angular/fire/firestore';
 
 @Component({
-  selector: 'app-supports',
+  selector: 'journal-supports',
   templateUrl: './supports.page.html',
   styleUrls: ['./supports.page.scss'],
 })
-export class SupportsPage implements OnInit {
+export class SupportsComponent implements OnInit {
 
   private backBtnSubscription: Subscription
 

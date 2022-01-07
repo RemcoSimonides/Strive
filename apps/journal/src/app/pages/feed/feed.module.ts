@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { IonicModule } from '@ionic/angular';
 
 // Pages
-import { FeedPage } from './feed.page';
+import { FeedComponent } from './feed.page';
 
 // Components
 import { NotificationModule } from '@strive/notification/components/notification/notification.module';
@@ -27,7 +27,7 @@ import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 const routes: Routes = [
   {
     path: '',
-    component: FeedPage
+    component: FeedComponent
   }
 ];
 
@@ -51,7 +51,7 @@ const routes: Routes = [
     DearFutureSelfUpsertModule
   ],
   declarations: [
-    FeedPage,
+    FeedComponent,
   ]
 })
 export class FeedPageModule {}

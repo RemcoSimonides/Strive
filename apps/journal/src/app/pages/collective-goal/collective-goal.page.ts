@@ -11,8 +11,8 @@ import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goa
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { UpsertTemplateModalPage } from '@strive/template/modals/upsert/upsert-template-modal.page';
 // Popovers
-import { CollectiveGoalOptionsPage, enumCollectiveGoalOptions } from './popovers/options/options.component'
-import { CollectiveGoalSharePopoverPage } from './popovers/share/share.component';
+import { CollectiveGoalOptionsComponent, enumCollectiveGoalOptions } from './popovers/options/options.component'
+import { CollectiveGoalSharePopoverComponent } from './popovers/share/share.component';
 // Services
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
@@ -29,11 +29,11 @@ import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+
 import { Share } from '@capacitor/share';
 
 @Component({
-  selector: 'app-collective-goal',
+  selector: 'journal-collective-goal',
   templateUrl: './collective-goal.page.html',
   styleUrls: ['./collective-goal.page.scss'],
 })
-export class CollectiveGoalPage implements OnInit, OnDestroy {
+export class CollectiveGoalComponent implements OnInit, OnDestroy {
   pageIsLoading = true
   canAccess = false
 
@@ -84,7 +84,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
       this.isAdmin = stakeholder?.isAdmin ?? false
       this.isSpectator = stakeholder?.isSpectator ?? false
 
-      if (!!collectiveGoal) {
+      if (collectiveGoal) {
         let access = !collectiveGoal.isSecret
         if (!access && !!stakeholder) access = stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSpectator
         if (!access) access = await this.inviteTokenService.checkInviteToken('collectiveGoal', this.collectiveGoalId)  
@@ -140,7 +140,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
   //Collective Goal Section
   async openOptionsPopover(ev: UIEvent) {
     const popover = await this.popoverCtrl.create({
-      component: CollectiveGoalOptionsPage,
+      component: CollectiveGoalOptionsComponent,
       event: ev,
       componentProps: {
         isAdmin: this.isAdmin
@@ -210,7 +210,7 @@ export class CollectiveGoalPage implements OnInit, OnDestroy {
 
     } else {
       this.popoverCtrl.create({
-        component: CollectiveGoalSharePopoverPage,
+        component: CollectiveGoalSharePopoverComponent,
         event: ev,
         componentProps: {
           collectiveGoal: collectiveGoal,

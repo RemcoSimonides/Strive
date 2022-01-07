@@ -3,11 +3,11 @@ import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/c
 import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({
-  selector: 'app-collective-goal-share-popover',
+  selector: 'journal-collective-goal-share-popover',
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })
-export class CollectiveGoalSharePopoverPage implements OnInit {
+export class CollectiveGoalSharePopoverComponent implements OnInit {
 
   public collectiveGoal: CollectiveGoal
   public isAdmin = false

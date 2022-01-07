@@ -27,8 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-import { TabsPage } from './pages/tabs/tabs';
-import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
+import { TabsComponent } from './pages/tabs/tabs';
+import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
 
 // FontAwesome
@@ -45,12 +45,12 @@ import { PWAService } from '@strive/utils/services/pwa.service';
 @NgModule({
   declarations: [
     AppComponent,
-    TabsPage,
-    ProfileOptionsBrowserPage,
+    TabsComponent,
+    ProfileOptionsBrowserComponent,
   ],
   entryComponents: [
-    TabsPage,
-    ProfileOptionsBrowserPage,
+    TabsComponent,
+    ProfileOptionsBrowserComponent,
   ],
   imports: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),

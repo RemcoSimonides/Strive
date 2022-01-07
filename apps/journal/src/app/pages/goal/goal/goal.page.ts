@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
-import { httpsCallable, Functions } from '@angular/fire/functions';
+import { Functions } from '@angular/fire/functions';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
 import { Share } from '@capacitor/share';
 // Strive Components
 import { DiscussionModalPage } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
-import { GoalOptionsPopoverPage, enumGoalOptions } from '../popovers/options/options.component';
+import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component';
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalSharePopoverPage } from '@strive/goal/goal/components/popovers/share/share.component'
@@ -22,8 +22,6 @@ import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { map, switchMap } from 'rxjs/operators';
 import { TeamModal } from '@strive/goal/goal/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
@@ -34,7 +32,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
   styleUrls: ['./goal.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalPage implements OnInit, OnDestroy {
+export class GoalComponent implements OnInit, OnDestroy {
 
   private goalId: string
   
@@ -114,7 +112,7 @@ export class GoalPage implements OnInit, OnDestroy {
 
   async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
     const popover = await this.popoverCtrl.create({
-      component: GoalOptionsPopoverPage,
+      component: GoalOptionsPopoverComponent,
       event: ev,
       componentProps: {
         isAdmin: this.isAdmin,

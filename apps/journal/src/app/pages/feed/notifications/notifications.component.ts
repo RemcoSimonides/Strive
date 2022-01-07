@@ -9,11 +9,11 @@ import { DiscussionService } from '@strive/discussion/+state/discussion.service'
 import { orderBy, where } from '@angular/fire/firestore';
 
 @Component({
-  selector: 'strive-notifications',
+  selector: 'journal-notifications',
   templateUrl: 'notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsPage implements OnInit, OnDestroy {
+export class NotificationsComponent implements OnInit, OnDestroy {
 
   notifications$: Observable<Notification[]>
 

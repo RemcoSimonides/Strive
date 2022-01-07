@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 // Ionic
-import { Platform, MenuController, PopoverController, ModalController, NavController } from '@ionic/angular';
+import { Platform, PopoverController, ModalController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 // Services
@@ -9,23 +9,23 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 // Pages
-import { TabsPage } from './pages/tabs/tabs'
-import { ProfileOptionsBrowserPage } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
+import { TabsComponent } from './pages/tabs/tabs'
+import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { Unsubscribe } from '@firebase/util';
 import { limit, where } from '@angular/fire/firestore';
 
 @Component({
-  selector: 'app-root',
+  selector: 'journal-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  rootPage: typeof TabsPage = TabsPage;
+  rootPage: typeof TabsComponent = TabsComponent;
 
   enumAuthSegment = enumAuthSegment
 
@@ -137,7 +137,7 @@ export class AppComponent implements OnDestroy {
 
   async openUserPopover(ev: UIEvent): Promise<void> {
     this.popoverCtrl.create({
-      component: ProfileOptionsBrowserPage,
+      component: ProfileOptionsBrowserComponent,
       event: ev,
       showBackdrop: false
     }).then(popover => popover.present())

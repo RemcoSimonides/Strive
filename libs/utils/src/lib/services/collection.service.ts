@@ -252,7 +252,7 @@ export abstract class FireCollection<E extends DocumentData> {
   /** Return the current value of the path from Firestore */
   public async getValue(params?: Params): Promise<E[]>;
   public async getValue(ids?: string[], params?: Params): Promise<E[]>;
-  // tslint:disable-next-line: unified-signatures
+  // eslint-disable-next-line: unified-signatures
   public async getValue(queryConstraints?: QueryConstraint[], params?: Params): Promise<E[]>;
   public async getValue(id: string, params?: Params): Promise<E | undefined>;
   public async getValue(
@@ -297,7 +297,7 @@ export abstract class FireCollection<E extends DocumentData> {
   /** Listen to the change of values of the path from Firestore */
   public valueChanges(params?: Params): Observable<E[]>;
   public valueChanges(ids?: string[], params?: Params): Observable<E[]>;
-  // tslint:disable-next-line: unified-signatures
+  // eslint-disable-next-line: unified-signatures
   public valueChanges(query?: QueryConstraint[], params?: Params): Observable<E[]>;
   public valueChanges(id?: string | null, params?: Params): Observable<E | undefined>;
   public valueChanges(

@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GoalsPage } from './goals.page';
+import { GoalsComponent } from './goals.page';
 
 // Strive
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
@@ -18,7 +18,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 const routes: Routes = [
   {
     path: '',
-    component: GoalsPage
+    component: GoalsComponent
   }
 ];
 
@@ -35,6 +35,6 @@ const routes: Routes = [
     UpsertGoalModalModule,
     UpsertCollectiveGoalModule
   ],
-  declarations: [GoalsPage]
+  declarations: [GoalsComponent]
 })
 export class GoalsPageModule {}

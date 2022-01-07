@@ -12,7 +12,7 @@ import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.fir
   templateUrl: './goal-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalOptions {
+export class GoalOptionsComponent {
 
   goal: Goal = this.navParams.data.goal;
   stakeholder: GoalStakeholder = this.navParams.data.stakeholder;

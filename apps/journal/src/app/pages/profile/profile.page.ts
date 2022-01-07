@@ -11,8 +11,8 @@ import { SeoService } from '@strive/utils/services/seo.service';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
-import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
-import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page';
+import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
+import { ProfileOptionsComponent } from './popovers/profile-options/profile-options.page';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
@@ -29,15 +29,15 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { UserForm } from '@strive/user/user/forms/user.form';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { enumExercises, exercises } from '@strive/exercises/utils';
-import { GoalOptions } from './popovers/goal-options/goal-options.component';
+import { GoalOptionsComponent } from './popovers/goal-options/goal-options.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'journal-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage implements OnInit {
+export class ProfileComponent implements OnInit {
 
   private backBtnSubscription: Subscription
 
@@ -143,7 +143,7 @@ export class ProfilePage implements OnInit {
 
   presentProfileOptionsPopover(ev: UIEvent) {
     this.popoverCtrl.create({
-      component: ProfileOptionsPage,
+      component: ProfileOptionsComponent,
       event: ev
     }).then(popover => popover.present())
   }
@@ -159,7 +159,7 @@ export class ProfilePage implements OnInit {
     ev.preventDefault()
 
     this.popoverCtrl.create({
-      component: GoalOptions,
+      component: GoalOptionsComponent,
       componentProps: { goal, stakeholder },
       event: ev
     }).then(popover => popover.present())
@@ -167,7 +167,7 @@ export class ProfilePage implements OnInit {
 
   async editProfileImage(user: User, ev: UIEvent): Promise<void> {
     const popover = await this.popoverCtrl.create({
-      component: EditProfileImagePopoverPage,
+      component: EditProfileImagePopoverComponent,
       componentProps: { storagePath: user.photoURL },
       event: ev
     })

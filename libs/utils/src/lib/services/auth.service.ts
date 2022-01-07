@@ -355,11 +355,11 @@
 //   }
 
 //   /** Signin with email & password, provider name, provider objet or custom token */
-//   // tslint:disable-next-line: unified-signatures
+//   // eslint-disable-next-line: unified-signatures
 //   signin(email: string, password: string, options?: AuthWriteOptions): Promise<UserCredential>;
 //   signin(authProvider: AuthProvider, options?: AuthWriteOptions): Promise<UserCredential>;
 //   signin(provider?: FireProvider, options?: AuthWriteOptions): Promise<UserCredential>;
-//   // tslint:disable-next-line: unified-signatures
+//   // eslint-disable-next-line: unified-signatures
 //   signin(token: string, options?: AuthWriteOptions): Promise<UserCredential>;
 //   async signin(
 //     provider?: FireProvider | AuthProvider | string,

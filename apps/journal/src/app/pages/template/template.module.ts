@@ -6,11 +6,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 // Pages
-import { TemplatePage } from './template.page';
+import { TemplateComponent } from './template.page';
 // Modals
 import { UpsertTemplateModalPageModule } from '@strive/template/modals/upsert/upsert-template-modal.module';
 // Popover
-import { TemplateOptionsPopoverPage } from './popovers/template-options-popover/template-options-popover.page'
+import { TemplateOptionsPopoverComponent } from './popovers/template-options-popover/template-options-popover.page'
 // Components
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from '@strive/ui/header/header.module';
@@ -25,7 +25,7 @@ import { ImageModule } from '@strive/media/directives/image.module';
 const routes: Routes = [
   {
     path: '',
-    component: TemplatePage,
+    component: TemplateComponent,
     canActivate: [CollectiveGoalGuard]
   }
 ];
@@ -45,8 +45,8 @@ const routes: Routes = [
     ImageModule
   ],
   declarations: [
-    TemplatePage,
-    TemplateOptionsPopoverPage,
+    TemplateComponent,
+    TemplateOptionsPopoverComponent,
   ]
 })
 export class TemplatePageModule {}

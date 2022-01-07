@@ -10,7 +10,7 @@ import { combineLatest } from 'rxjs';
   templateUrl: 'tabs.html',
   styleUrls: ['./tabs.scss']
 })
-export class TabsPage {
+export class TabsComponent {
 
   active$ = combineLatest([
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd), startWith({ url: this.router.url })),

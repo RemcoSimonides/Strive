@@ -8,12 +8,12 @@ import { NotificationModule } from '@strive/notification/components/notification
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
-import { NotificationsPage } from './notifications.component';
+import { NotificationsComponent } from './notifications.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: NotificationsPage
+    component: NotificationsComponent
   }
 ];
 
@@ -28,6 +28,6 @@ const routes: Routes = [
     PageLoadingModule
   ],
   exports: [],
-  declarations: [NotificationsPage]
+  declarations: [NotificationsComponent]
 })
 export class NotificationsModule { }

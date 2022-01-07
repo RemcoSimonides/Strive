@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { CollectiveGoalSharePopoverPage } from './share.component';
+import { CollectiveGoalSharePopoverComponent } from './share.component';
 
 import { ShareModule } from '@strive/ui/share/share.module';
 
@@ -10,7 +10,7 @@ import { ShareModule } from '@strive/ui/share/share.module';
     CommonModule,
     ShareModule
   ],
-  exports: [CollectiveGoalSharePopoverPage],
-  declarations: [CollectiveGoalSharePopoverPage],
+  exports: [CollectiveGoalSharePopoverComponent],
+  declarations: [CollectiveGoalSharePopoverComponent],
 })
 export class CollectiveGoalSharePopoverModule {}

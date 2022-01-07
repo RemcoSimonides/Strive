@@ -6,9 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ProfilePage } from './profile.page';
-import { ProfileOptionsPage } from './popovers/profile-options/profile-options.page'
-import { EditProfileImagePopoverPage } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
+import { ProfileComponent } from './profile.page';
+import { ProfileOptionsComponent } from './popovers/profile-options/profile-options.page'
+import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 
 import { AffirmationsViewModule } from '@strive/exercises/affirmation/components/view/view.module';
 import { AffirmationUpsertModule } from '@strive/exercises/affirmation/components/upsert/upsert.module';
@@ -30,7 +30,7 @@ import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upser
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
-  { path: '', component: ProfilePage },
+  { path: '', component: ProfileComponent },
 ];
 
 @NgModule({
@@ -62,13 +62,13 @@ const routes: Routes = [
     DearFutureSelfUpsertModule
   ],
   declarations: [
-    ProfilePage,
-    ProfileOptionsPage,
-    EditProfileImagePopoverPage
+    ProfileComponent,
+    ProfileOptionsComponent,
+    EditProfileImagePopoverComponent
   ],
   entryComponents: [
-    ProfileOptionsPage,
-    EditProfileImagePopoverPage
+    ProfileOptionsComponent,
+    EditProfileImagePopoverComponent
   ]
 })
 export class ProfilePageModule {}

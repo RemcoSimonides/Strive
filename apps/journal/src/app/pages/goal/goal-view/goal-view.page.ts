@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 // Ionic
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular'
 // Rxjs
 import { Subscription, of, Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -18,15 +18,12 @@ import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder
 // Components
 import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
-// Animation for Roadmap
-declare const initMilestonesAnimation: Function;
-
 @Component({
   selector: 'journal-goal-view',
   templateUrl: './goal-view.page.html',
   styleUrls: ['./goal-view.page.scss'],
 })
-export class GoalViewPage implements OnInit, OnDestroy {
+export class GoalViewComponent implements OnInit, OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   pageIsLoading = true
   canAccess = false
@@ -72,11 +69,11 @@ export class GoalViewPage implements OnInit, OnDestroy {
     }
 
     this.accessSubscription = this.user.user$.pipe(
-      switchMap(user => !!user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
+      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
       let access = this.goal.publicity === 'public'
-      if (!access && !!stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
-      if (!access && !!stakeholder) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
+      if (!access && stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
+      if (!access && stakeholder) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
       access ? this.initGoal() : this.initNoAccess();
     })
   }

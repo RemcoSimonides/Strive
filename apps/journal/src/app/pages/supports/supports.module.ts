@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { SupportsPage } from './supports.page';
+import { SupportsComponent } from './supports.page';
 
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
@@ -14,7 +14,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 const routes: Routes = [
   {
     path: '',
-    component: SupportsPage
+    component: SupportsComponent
   }
 ];
 
@@ -29,7 +29,7 @@ const routes: Routes = [
     PageLoadingModule
   ],
   declarations: [
-    SupportsPage,
+    SupportsComponent,
   ]
 })
 export class SupportsPageModule {}

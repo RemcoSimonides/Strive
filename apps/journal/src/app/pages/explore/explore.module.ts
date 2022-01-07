@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ExplorePage } from './explore.page';
+import { ExploreComponent } from './explore.page';
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail/layout/list/thumbnail-list.module'
@@ -19,7 +19,7 @@ import { ImageModule } from '@strive/media/directives/image.module';
 const routes: Routes = [
   {
     path: '',
-    component: ExplorePage
+    component: ExploreComponent
   }
 ];
 
@@ -40,7 +40,7 @@ const routes: Routes = [
     ImageModule,
   ],
   declarations: [
-    ExplorePage
+    ExploreComponent
   ]
 })
 export class ExplorePageModule {}

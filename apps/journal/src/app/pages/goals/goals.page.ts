@@ -23,11 +23,11 @@ import { UpsertCollectiveGoalPage } from '@strive/collective-goal/collective-goa
 
 
 @Component({
-  selector: 'app-goals',
+  selector: 'journal-goals',
   templateUrl: './goals.page.html',
   styleUrls: ['./goals.page.scss'],
 })
-export class GoalsPage implements OnInit {
+export class GoalsComponent implements OnInit {
 
   goals$: Observable<Goal[]>
   collectiveGoals$: Observable<CollectiveGoal[]>

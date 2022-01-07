@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({
-  selector: 'app-collective-goal-options',
+  selector: 'journal-collective-goal-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
 })
-export class CollectiveGoalOptionsPage implements OnInit {
+export class CollectiveGoalOptionsComponent implements OnInit {
 
   public enumCollectiveGoalOptions = enumCollectiveGoalOptions
 

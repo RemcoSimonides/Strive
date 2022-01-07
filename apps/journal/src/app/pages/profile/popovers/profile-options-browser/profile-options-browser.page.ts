@@ -14,11 +14,11 @@ import { NotificationService } from '@strive/notification/+state/notification.se
 import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({
-  selector: 'app-profile-options-browser',
+  selector: 'journal-profile-options-browser',
   templateUrl: './profile-options-browser.page.html',
   styleUrls: ['./profile-options-browser.page.scss'],
 })
-export class ProfileOptionsBrowserPage {
+export class ProfileOptionsBrowserComponent {
 
   unreadNotifications$: Observable<boolean>
 

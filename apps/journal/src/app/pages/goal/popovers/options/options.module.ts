@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
-import { GoalOptionsPopoverPage } from './options.component';
+import { GoalOptionsPopoverComponent } from './options.component';
 
 @NgModule({
   imports: [
@@ -10,6 +10,6 @@ import { GoalOptionsPopoverPage } from './options.component';
     IonicModule
   ],
   exports: [],
-  declarations: [GoalOptionsPopoverPage],
+  declarations: [GoalOptionsPopoverComponent],
 })
 export class GoalOptionsModule { }

@@ -5,11 +5,11 @@ import { NavParams, PopoverController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 @Component({
-  selector: 'app-edit-profile-image-popover',
+  selector: 'journal-edit-profile-image-popover',
   templateUrl: './edit-profile-image-popover.page.html',
   styleUrls: ['./edit-profile-image-popover.page.scss'],
 })
-export class EditProfileImagePopoverPage implements OnInit {
+export class EditProfileImagePopoverComponent implements OnInit {
 
   form: FormControl;
 

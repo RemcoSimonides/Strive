@@ -12,11 +12,11 @@ export enum enumGoalOptions {
 }
 
 @Component({
-  selector: 'app-goal-options-popover',
+  selector: 'journal-goal-options-popover',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
 })
-export class GoalOptionsPopoverPage implements OnInit {
+export class GoalOptionsPopoverComponent implements OnInit {
 
   public enumGoalOptions = enumGoalOptions
 

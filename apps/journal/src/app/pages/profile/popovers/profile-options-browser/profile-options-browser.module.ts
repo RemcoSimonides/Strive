@@ -6,14 +6,14 @@ import { IonicModule } from '@ionic/angular';
 
 import { RouterModule } from '@angular/router';
 
-import { ProfileOptionsBrowserPage } from './profile-options-browser.page';
+import { ProfileOptionsBrowserComponent } from './profile-options-browser.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild([{ path: '', component: ProfileOptionsBrowserPage }])
+    RouterModule.forChild([{ path: '', component: ProfileOptionsBrowserComponent }])
   ]
 })
 export class ProfileOptionsBrowserPageModule {}

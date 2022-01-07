@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { GoalPage } from './goal.page';
+import { GoalComponent } from './goal.page';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module'
@@ -32,7 +32,7 @@ import { ImageModule } from '@strive/media/directives/image.module';
     TextEditorModule,
     ImageModule
   ],
-  exports: [GoalPage],
-  declarations: [GoalPage],
+  exports: [GoalComponent],
+  declarations: [GoalComponent],
 })
 export class GoalPageModule { }

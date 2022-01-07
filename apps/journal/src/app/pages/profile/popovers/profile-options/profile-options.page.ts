@@ -6,11 +6,11 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({
-  selector: 'app-profile-options',
+  selector: 'journal-profile-options',
   templateUrl: './profile-options.page.html',
   styleUrls: ['./profile-options.page.scss'],
 })
-export class ProfileOptionsPage {
+export class ProfileOptionsComponent {
 
   constructor(
     private auth: Auth,

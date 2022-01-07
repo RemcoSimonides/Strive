@@ -6,10 +6,10 @@ import { TemplateService } from '@strive/template/+state/template.service';
 import { UpsertTemplateModalPage } from '@strive/template/modals/upsert/upsert-template-modal.page';
 
 @Component({
-  selector: 'app-template-options-popover',
+  selector: 'journal-template-options-popover',
   templateUrl: './template-options-popover.page.html'
 })
-export class TemplateOptionsPopoverPage implements OnInit {
+export class TemplateOptionsPopoverComponent implements OnInit {
 
   public isAdmin = false
 
