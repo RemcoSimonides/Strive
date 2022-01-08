@@ -3,29 +3,27 @@ import { ElementRef, HostListener, Directive, OnInit, NgModule } from '@angular/
 @Directive({
   selector: 'ion-textarea [autosize]'
 })
-export class Autosize implements OnInit {
+export class AutosizeDirective implements OnInit {
   @HostListener('input', ['$event.target'])
-  onInput(textArea:HTMLTextAreaElement):void {
+  onInput(textArea:HTMLTextAreaElement) {
     this.resize();
   }
 
   constructor(public element:ElementRef) {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     setTimeout(() => this.resize(), 0);
   }
 
-  ngModelChange()
-  {
+  ngModelChange() {
     this.resize();
   }
 
-  resize():void 
-  {
-    let element = this.element.nativeElement.getElementsByClassName("native-textarea")[0];
+  resize() {
+    const element = this.element.nativeElement.getElementsByClassName("native-textarea")[0];
     if (!element) return
-    var scrollHeight = element.scrollHeight;
+    const scrollHeight = element.scrollHeight;
     element.style.height = scrollHeight + 'px';
     this.element.nativeElement.style.height = (scrollHeight + 16) + 'px';    
   }
@@ -33,7 +31,7 @@ export class Autosize implements OnInit {
 }
 
 @NgModule({
-  exports: [Autosize],
-  declarations: [Autosize]
+  exports: [AutosizeDirective],
+  declarations: [AutosizeDirective]
 })
 export class AutosizeModule { } 

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { ModalController } from '@ionic/angular';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { SelectUserModal } from '@strive/ui/select-user/select-user.modal';
+import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { Observable } from 'rxjs';
 
@@ -29,7 +29,7 @@ export class TeamComponent implements OnInit {
 	}
 
   async add() {
-    const modal = await this.modalCtrl.create({ component: SelectUserModal })
+    const modal = await this.modalCtrl.create({ component: SelectUserModalComponent })
     modal.onDidDismiss().then(async res => {
       const uid = res.data as string
       if (uid) {

@@ -29,9 +29,9 @@
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
               <ng-container *ngFor="let goal of rows; let i = index">
-                <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
+                <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
                   <small>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</small>
-                </small-thumbnail>
+                </strive-small-thumbnail>
               </ng-container>
             </article>
   
@@ -46,13 +46,13 @@
       <strive-thumbnail-list [width]="250">
         <ng-container *ngFor="let collectiveGoal of algolia.collectiveGoalResults | async">
           <ng-template #thumb>
-            <large-thumbnail fxFlex [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
-            </large-thumbnail>
+            <strive-large-thumbnail fxFlex [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="'/collective-goal/' + collectiveGoal.id">
+            </strive-large-thumbnail>
           </ng-template>
         </ng-container>
       </strive-thumbnail-list> -->
 
-      <banner></banner>
+      <strive-banner></strive-banner>
   
       <section fxLayout fxLayoutAlign="space-between end">
         <h2>Users</h2>
@@ -63,7 +63,7 @@
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
               <ng-container *ngFor="let profile of rows">
-                <small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%"></small-thumbnail>
+                <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%"></strive-small-thumbnail>
               </ng-container>
             </article>
           </ng-template>
@@ -80,7 +80,7 @@
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
               <ng-container *ngFor="let exercise of rows">
-                <small-thumbnail [title]="exercise.title" [asset]="exercise.image"></small-thumbnail>
+                <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image"></strive-small-thumbnail>
               </ng-container>
             </article>
           </ng-template>
@@ -92,16 +92,16 @@
     <section *ngSwitchCase="'search'" class="search">
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
         <ng-container *ngFor="let goal of algolia.goalResults | async">
-          <small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
+          <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
             <small>Type: Goal</small>
-          </small-thumbnail>
+          </strive-small-thumbnail>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'users'">
         <ng-container *ngFor="let profile of algolia.profileResults | async">
-          <small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%">
+          <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%">
             <small>Type: User</small>
-          </small-thumbnail>
+          </strive-small-thumbnail>
         </ng-container>
       </ng-container>
       <!-- <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'collectiveGoals'">
@@ -113,9 +113,9 @@
       </ng-container> -->
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
         <ng-container *ngFor="let exercise of exercises$ | async">
-          <small-thumbnail [title]="exercise.title" [asset]="exercise.image">
+          <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image">
             <small>Type: Exercise</small>
-          </small-thumbnail>
+          </strive-small-thumbnail>
         </ng-container>
       </ng-container>
     </section>

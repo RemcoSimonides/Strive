@@ -14,7 +14,7 @@ export class MilestoneDeadlineComponent {
   @Input() maxDeadline: string
   @Input() isAdmin = false
 
-  @Output() change = new EventEmitter<string>()
+  @Output() deadlineChange = new EventEmitter<string>()
 
   constructor(private popoverCtrl: PopoverController) {}
 
@@ -35,10 +35,10 @@ export class MilestoneDeadlineComponent {
     popover.onDidDismiss().then(({ data, role }) => {
       if (role === 'remove') {
         this.milestone.deadline = ''
-        this.change.emit(this.milestone.deadline)
+        this.deadlineChange.emit(this.milestone.deadline)
       } else if (role === 'dismiss') {
         this.milestone.deadline = data ?? ''
-        this.change.emit(this.milestone.deadline)
+        this.deadlineChange.emit(this.milestone.deadline)
       }
     })
     popover.present()

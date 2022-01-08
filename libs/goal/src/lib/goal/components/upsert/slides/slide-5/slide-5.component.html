@@ -12,8 +12,8 @@
 
 <article class="grid">
   <ng-container *ngFor="let exercise of exercises | slice:0:4">
-    <small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openExercise(exercise.enum)">
-    </small-thumbnail>
+    <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openExercise(exercise.enum)">
+    </strive-small-thumbnail>
   </ng-container>
 </article>
 

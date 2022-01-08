@@ -9,7 +9,7 @@
             [milestone]="milestone"
             [isAdmin]="isAdmin"
             fxFlex
-            (change)="updateDeadline(milestone, $event)">
+            (deadlineChange)="updateDeadline(milestone, $event)">
           </strive-milestone-deadline>
           <ng-container *ngIf="!!milestone.achiever.uid">
             <div fxLayout fxLayoutAlign="start center" fxFlex>

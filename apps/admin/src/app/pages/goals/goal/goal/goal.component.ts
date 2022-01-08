@@ -5,7 +5,7 @@ import { AlertController, LoadingController, ModalController } from '@ionic/angu
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
-import { SelectUserModal } from '@strive/ui/select-user/select-user.modal';
+import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -70,7 +70,7 @@ export class GoalComponent implements OnInit {
   }
 
   // async duplicate() {
-    // const modal = await this.modalCtrl.create({ component: SelectUserModal })
+    // const modal = await this.modalCtrl.create({ component: SelectUserModalComponent })
     // modal.onDidDismiss().then(async res => {
     //   const uid = res.data as string;
     //   if (uid) {

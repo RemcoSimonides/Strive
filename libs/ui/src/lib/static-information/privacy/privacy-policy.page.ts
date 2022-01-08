@@ -21,7 +21,7 @@ import { PrivacyPolicyModule } from "./privacy-policy.module";
     }`
   ]
 })
-export class PrivacyPolicyPage {
+export class PrivacyPolicyPageComponent {
   constructor(seo: SeoService) {
     seo.generateTags({ title: `Privacy Policy - Strive Journal` })
   }
@@ -32,8 +32,8 @@ export class PrivacyPolicyPage {
     CommonModule,
     IonicModule,
     PrivacyPolicyModule,
-    RouterModule.forChild([{ path: '', component: PrivacyPolicyPage }])
+    RouterModule.forChild([{ path: '', component: PrivacyPolicyPageComponent }])
   ],
-  declarations: [PrivacyPolicyPage]
+  declarations: [PrivacyPolicyPageComponent]
 })
 export class PrivacyPolicyPageModule { }

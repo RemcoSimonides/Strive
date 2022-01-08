@@ -56,7 +56,7 @@
                 [milestone]="milestone"
                 [maxDeadline]="maxDeadline"
                 [isAdmin]="isAdmin | async"
-                (change)="updateRoadmap($event, milestone, template)"
+                (deadlineChange)="updateRoadmap($event, milestone, template)"
               ></strive-milestone-deadline>
             </ng-container>
           </article>

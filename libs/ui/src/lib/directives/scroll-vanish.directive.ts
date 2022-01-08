@@ -7,8 +7,8 @@ import { DomController } from "@ionic/angular";
 export class ScrollVanishDirective implements OnInit {
   @Input("myScrollVanish") scrollArea;
 
-  private hidden: boolean = false;
-  private triggerDistance: number = 20;
+  private hidden = false;
+  private triggerDistance = 20;
 
   constructor(
     private element: ElementRef,
@@ -20,7 +20,7 @@ export class ScrollVanishDirective implements OnInit {
     this.initStyles();
 
     this.scrollArea.ionScroll.subscribe(scrollEvent => {
-      let delta = scrollEvent.detail.deltaY;
+      const delta = scrollEvent.detail.deltaY;
 
       if (scrollEvent.detail.currentY === 0 && this.hidden) {
         this.show();

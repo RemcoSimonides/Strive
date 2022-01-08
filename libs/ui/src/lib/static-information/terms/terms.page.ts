@@ -21,7 +21,7 @@ import { TermsModule } from "./terms.module";
     }`
   ]
 })
-export class TermsPage {
+export class TermsPageComponent {
   constructor(seo: SeoService) {
     seo.generateTags({ title: `Terms - Strive Journal` })
   }
@@ -32,8 +32,8 @@ export class TermsPage {
     CommonModule,
     IonicModule,
     TermsModule,
-    RouterModule.forChild([{ path: '', component: TermsPage }])
+    RouterModule.forChild([{ path: '', component: TermsPageComponent }])
   ],
-  declarations: [TermsPage]
+  declarations: [TermsPageComponent]
 })
 export class TermsPageModule { }

@@ -4,7 +4,7 @@ import * as QuillNamespace from 'quill';
 import ImageResize from 'quill-image-resize-module';
 import { ImageDrop } from 'quill-image-drop-module';
 
-let Quill: any = QuillNamespace;
+const Quill: any = QuillNamespace;
 Quill.register('modules/imageResize', ImageResize);
 Quill.register('modules/imageDrop', ImageDrop);
 
@@ -17,8 +17,8 @@ Quill.register('modules/imageDrop', ImageDrop);
 export class TextEditorComponent {
 
   @Input() description: string
-  @Input() isAdmin: boolean = true
-  @Input() editMode: boolean = false
+  @Input() isAdmin = true
+  @Input() editMode = false
 
   @Output() update = new EventEmitter<string>()
 

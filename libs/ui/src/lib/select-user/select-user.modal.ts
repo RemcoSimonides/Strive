@@ -7,7 +7,7 @@ import { AlgoliaService } from '@strive/utils/services/algolia.service';
   templateUrl: './select-user.modal.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectUserModal {
+export class SelectUserModalComponent {
 
   constructor(
     public algolia: AlgoliaService,

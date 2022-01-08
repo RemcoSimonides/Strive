@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
   selector: 'strive-privacy-policy',
   templateUrl: './privacy-policy.component.html'
 })
-export class PrivacyPolicy { }
+export class PrivacyPolicyComponent { }

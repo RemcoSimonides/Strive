@@ -5,7 +5,7 @@ import { AuthModalPage } from "@strive/user/auth/components/auth-modal/auth-moda
 import { UserService } from "@strive/user/user/+state/user.service";
 
 @Component({
-  selector: 'banner',
+  selector: 'strive-banner',
   templateUrl: 'banner.component.html',
   styleUrls: ['./banner.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
