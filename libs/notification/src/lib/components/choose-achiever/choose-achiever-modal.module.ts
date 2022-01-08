@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ChooseAchieverModal } from './choose-achiever-modal.page';
+import { ChooseAchieverModalComponent } from './choose-achiever-modal.page';
 import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
@@ -16,6 +16,6 @@ import { ImageModule } from '@strive/media/directives/image.module';
     RouterModule,
     ImageModule
   ],
-  declarations: [ChooseAchieverModal]
+  declarations: [ChooseAchieverModalComponent]
 })
 export class ChooseAchieverModalModule {}

@@ -44,8 +44,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.cgGoalFinised:
       switch (target) {
@@ -65,8 +66,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.cgTemplateAdded:
       switch (target) {
@@ -85,8 +87,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gNew: // deprecated 4/12/2012
 
@@ -114,8 +117,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gNewBucketlist:
     case enumEvent.gNewActive:
@@ -129,7 +133,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ]
           }
 
-        case 'spectator':
+        case 'spectator': {
           let message: NotificationMessageText[];
           if (event === enumEvent.gNewBucketlist) {
             message = [
@@ -155,11 +159,13 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('user', source),
             message
           }
+        }
       
         default:
           throwError(event, target)
           break
       }
+      break
 
     case enumEvent.gFinished:
 
@@ -214,8 +220,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gMilestoneCompletedSuccessfully:
       switch (target) {
@@ -230,8 +237,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gMilestoneCompletedUnsuccessfully:
       switch (target) {
@@ -245,8 +253,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gMilestoneDeadlinePassed:
       switch (target) {
@@ -272,6 +281,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ]
           }
       }
+      break
 
     case enumEvent.gStakeholderAchieverAdded:
 
@@ -308,8 +318,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
         default:
           throwError(event, target);
-          break;
+          break
       }
+      break
 
     case enumEvent.gStakeholderAdminAdded:
       switch (target) {
@@ -335,8 +346,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
     
     case enumEvent.gStakeholderRequestToJoinPending:
       switch (target) {
@@ -354,8 +366,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gStakeholderRequestToJoinAccepted:
       switch (target) {
@@ -369,8 +382,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gStakeholderRequestToJoinRejected:
       switch (target) {
@@ -383,16 +397,17 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
     
     case enumEvent.gSupportAdded:
       switch (target) {
-        case 'stakeholder':
+        case 'stakeholder': {
           const text = source.support.milestone?.id
-            ? ` is now supporting milestone ${source.support.milestone.content}`
-            : ` is now supporting`
-          
+          ? ` is now supporting milestone ${source.support.milestone.content}`
+          : ` is now supporting`
+        
           return {
             ...get('goal', source),
             message: [
@@ -404,11 +419,13 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
               { text: ` with ${source.support.description}` }
             ]
           }
+        }
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gSupportWaitingToBePaid:
       switch (target) {
@@ -426,8 +443,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gSupportPaid:
       switch (target) {
@@ -447,8 +465,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gSupportRejected:
       switch (target) {
@@ -489,8 +508,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gSupportPendingSuccesful:
       switch (target) {
@@ -505,6 +525,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         default:
           throwError(event, target)
       }
+      break
 
     case enumEvent.gSupportPendingFailed:
       switch (target) {
@@ -517,8 +538,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gSupportDeleted:
       switch (target) {
@@ -541,8 +563,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           }
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gRoadmapUpdated:
       switch (target) {
@@ -575,8 +598,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.gNewPost:
       switch (target) {
@@ -600,8 +624,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.discussionNewMessage:
       switch (target) {
@@ -619,8 +644,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     case enumEvent.userSpectatorAdded:
       switch (target) {
@@ -638,8 +664,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
 
         default:
           throwError(event, target)
-          break;
+          break
       }
+      break
 
     default:
       // throwError(notification, target);

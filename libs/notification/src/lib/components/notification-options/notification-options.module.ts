@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
-import { NotificationOptionsPopover } from './notification-options.component';
+import { NotificationOptionsPopoverComponent } from './notification-options.component';
 
 @NgModule({
   imports: [
@@ -10,6 +10,6 @@ import { NotificationOptionsPopover } from './notification-options.component';
     IonicModule
   ],
   exports: [],
-  declarations: [NotificationOptionsPopover]
+  declarations: [NotificationOptionsPopoverComponent]
 })
 export class NotificationOptionsPopoverModule { }

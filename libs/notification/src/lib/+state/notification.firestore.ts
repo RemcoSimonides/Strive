@@ -74,7 +74,7 @@ export enum enumEvent {
  * type notification - Shows up on the notifications page
  */
 export type NotificationTypes = 'feed' | 'notification';
-export type NotificationMeta = SupportDecisionMeta | GoalRequest | {};
+export type NotificationMeta = SupportDecisionMeta | GoalRequest;
 
 // Firestore docs
 // export type SupportDecisionNotification = Notification<SupportDecisionMeta>

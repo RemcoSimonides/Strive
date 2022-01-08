@@ -4,12 +4,12 @@ import { where } from '@angular/fire/firestore';
 
 // Strive
 import { Notification, SupportDecisionMeta, GoalRequest } from '@strive/notification/+state/notification.firestore';
-import { NotificationOptionsPopover } from '@strive/notification/components/notification-options/notification-options.component';
+import { NotificationOptionsPopoverComponent } from '@strive/notification/components/notification-options/notification-options.component';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { NotificationSupport } from '@strive/support/+state/support.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { ChooseAchieverModal } from '../choose-achiever/choose-achiever-modal.page';
+import { ChooseAchieverModalComponent } from '../choose-achiever/choose-achiever-modal.page';
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
@@ -26,7 +26,7 @@ export class SourcePipe implements PipeTransform {
 }
 
 @Component({
-  selector: '[notification][reference][isAdmin] strive-notification',
+  selector: '[notification][reference][isAdmin] notification-main',
   templateUrl: 'notification.component.html',
   styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -49,7 +49,7 @@ export class NotificationComponent {
 
   async openNotificationOptions(event): Promise<void> {
     const popover = await this.popoverCtrl.create({
-      component: NotificationOptionsPopover,
+      component: NotificationOptionsPopoverComponent,
       event: event,
       componentProps: {
         isAdmin: this.isAdmin,
@@ -101,11 +101,11 @@ export class NotificationComponent {
     const stakeholders = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: notification.source.goal.id })
 
     const chooseAchieverModal = await this.modalCtrl.create({
-      component: ChooseAchieverModal,
+      component: ChooseAchieverModalComponent,
       componentProps: { stakeholders }
     })
     chooseAchieverModal.onDidDismiss().then(data => {
-      if (!!data.data) {
+      if (data.data) {
         support.receiver = data.data
         this.cdr.markForCheck();
       }

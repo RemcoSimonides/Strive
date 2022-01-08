@@ -37,13 +37,13 @@
           <section fxLayout="column" fxLayoutAlign="center start">
 
             <ng-container *ngFor="let notification of decisions$ | async; let isLast = last">
-              <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+              <notification-main [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification-main>
               <span *ngIf="isLast" class="divider"></span>
             </ng-container>
 
             <ng-container *ngFor="let notification of notifications; let isLast = last">
               <ng-container *ngIf="!notification.needsDecision">
-                <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+                <notification-main [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification-main>
                 <span *ngIf="!isLast" class="divider"></span>
               </ng-container>
             </ng-container>

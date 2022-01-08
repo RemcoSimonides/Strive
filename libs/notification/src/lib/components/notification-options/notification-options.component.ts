@@ -7,7 +7,7 @@ import { NavParams, PopoverController } from '@ionic/angular';
   selector: 'notification-options',
   templateUrl: 'notification-options.component.html'
 })
-export class NotificationOptionsPopover implements OnInit {
+export class NotificationOptionsPopoverComponent implements OnInit {
 
   isAdmin = false
   reference: string

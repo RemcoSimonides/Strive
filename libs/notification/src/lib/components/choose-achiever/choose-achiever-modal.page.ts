@@ -6,18 +6,18 @@ import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.fir
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
-  selector: 'app-choose-achiever-modal',
+  selector: 'notification-choose-achiever-modal',
   templateUrl: './choose-achiever-modal.page.html',
   styleUrls: ['./choose-achiever-modal.page.scss'],
 })
-export class ChooseAchieverModal implements OnInit {
+export class ChooseAchieverModalComponent implements OnInit {
+  achievers: GoalStakeholder[]
+
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     // would be nice to prevent the navigation too
     this.modalCtrl.dismiss()
   }
-
-  public achievers: GoalStakeholder[]
 
   constructor(
     private modalCtrl: ModalController,

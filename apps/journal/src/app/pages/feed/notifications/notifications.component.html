@@ -7,7 +7,7 @@
         <ng-container *ngIf="notifications$ | async as notifications; else empty">
           <ng-container *ngIf="notifications.length; else empty">
             <ng-container *ngFor="let notification of notifications; let isLast = last">
-              <strive-notification [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></strive-notification>
+              <notification-main [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification-main>
               <span *ngIf="!isLast" class="divider"></span>
             </ng-container>
           </ng-container>  

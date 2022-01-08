@@ -462,15 +462,11 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "libs/notification/tsconfig.lib.json",
-              "libs/notification/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/notification/**/*"
+            "lintFilePatterns": [
+              "libs/notification/**/*.ts",
+              "libs/notification/**/*.html"
             ]
           }
         },

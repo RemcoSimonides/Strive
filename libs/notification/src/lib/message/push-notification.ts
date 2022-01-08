@@ -55,7 +55,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
 
     case enumEvent.gNewBucketlist:
     case enumEvent.gNewActive:
-    case enumEvent.gNewFinished:
+    case enumEvent.gNewFinished: {
       const messages: Record<GoalStatus, string> = {
         bucketlist: `Added goal to Bucket list '${source.goal.title}'`,
         active: `Started goal '${source.goal.title}'`,
@@ -67,6 +67,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         body: messages[event],
         url: `/goal/${source.goal.id}`
       })
+    }
 
     case enumEvent.gFinished:
       switch (target) {
@@ -85,6 +86,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         default:
           throwError(event, target)
       }
+      break
 
     case enumEvent.gMilestoneCompletedSuccessfully:
       return createPushMessage({
@@ -122,8 +124,9 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         default:
           throwError(event, target)
       }
+      break
 
-    case enumEvent.gStakeholderAchieverAdded:
+    case enumEvent.gStakeholderAdminAdded:
       return createPushMessage({
         title: source.goal.title,
         body: `${source.user.username} is now admin`
@@ -149,7 +152,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         url: `goal/${source.goal.id}`
       })
 
-    case enumEvent.gSupportAdded:
+    case enumEvent.gSupportAdded: {
       const text = source.support.milestone?.id
       ? `supports milestone ${source.support.milestone.content}`
       : `supports`
@@ -158,6 +161,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         title: source.goal.title,
         body: `${source.support.supporter.username} ${text} with ${source.support.description}`
       })
+    }
 
     case enumEvent.gSupportWaitingToBePaid:
       return createPushMessage({
@@ -189,7 +193,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         body: `By you supported milestone '${source.milestone.content}' unsuccesful`
       })
     
-    case enumEvent.gSupportDeleted:
+    case enumEvent.gSupportDeleted: {
       const text2 = source.milestone.id
       ? `milestone '${source.milestone.content}' has been deleted`
       : `goal '${source.goal.title}' has been deleted`
@@ -198,6 +202,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
         title: source.goal.title,
         body: `Support '${source.support.description}' has been removed because ${text2}`
       })
+    }
 
     case enumEvent.gRoadmapUpdated:
       return createPushMessage({
