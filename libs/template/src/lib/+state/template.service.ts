@@ -26,7 +26,7 @@ export class TemplateService extends FireCollection<Template> {
   }
 
   protected toFirestore(template: Template): Template {
-    if (!!template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
+    if (template.goalDeadline) template.goalDeadline = this.setDeadlineToEndOfDay(template.goalDeadline)
     template.updatedBy = this.user.uid
     return template
   }

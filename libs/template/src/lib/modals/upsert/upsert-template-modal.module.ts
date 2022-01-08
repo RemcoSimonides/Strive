@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { UpsertTemplateModalPage } from './upsert-template-modal.page';
+import { UpsertTemplateModalComponent } from './upsert-template-modal.page';
 import { QuillModule } from 'ngx-quill';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 
@@ -16,6 +16,6 @@ import { ImageSelectorModule } from '@strive/media/components/image-selector/ima
     QuillModule,
     ImageSelectorModule
   ],
-  declarations: [UpsertTemplateModalPage]
+  declarations: [UpsertTemplateModalComponent]
 })
 export class UpsertTemplateModalPageModule { }

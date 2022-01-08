@@ -9,7 +9,7 @@ import { map, switchMap } from 'rxjs/operators';
 // Modals
 import { UpsertCollectiveGoalComponent } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { UpsertTemplateModalPage } from '@strive/template/modals/upsert/upsert-template-modal.page';
+import { UpsertTemplateModalComponent } from '@strive/template/modals/upsert/upsert-template-modal.page';
 // Popovers
 import { CollectiveGoalOptionsComponent, enumCollectiveGoalOptions } from './popovers/options/options.component'
 import { CollectiveGoalSharePopoverComponent } from './popovers/share/share.component';
@@ -231,7 +231,7 @@ export class CollectiveGoalComponent implements OnInit, OnDestroy {
 
   createTemplate() {
     this.modalCtrl.create({
-      component: UpsertTemplateModalPage,
+      component: UpsertTemplateModalComponent,
       componentProps: {
         collectiveGoalId: this.collectiveGoalId
       }

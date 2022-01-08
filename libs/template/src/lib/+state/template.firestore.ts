@@ -21,7 +21,7 @@ export interface Template {
 /** A factory function that creates a TemplateDocument */
 export function createTemplate(params: Partial<Template> = {}): Template {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     description: '',
     title: '',
     numberOfTimesUsed: 0,

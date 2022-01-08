@@ -11,29 +11,24 @@ import { TemplateService } from '@strive/template/+state/template.service';
 import { TemplateForm } from '@strive/template/forms/template.form';
 
 @Component({
-  selector: 'app-upsert-template-modal',
+  selector: 'template-upsert-modal',
   templateUrl: './upsert-template-modal.page.html',
   styleUrls: ['./upsert-template-modal.page.scss'],
 })
-export class UpsertTemplateModalPage implements OnInit {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
+export class UpsertTemplateModalComponent implements OnInit {
+  templateId: string
+  templateForm: TemplateForm
+  collectiveGoalId: string
 
-  public templateId: string
-  public templateForm: TemplateForm
-  public collectiveGoalId: string
+  newTemplate = true
+  nextPage = false
 
-  public newTemplate = true
-  public nextPage = false
-
-  public editorStyle = {
+  editorStyle = {
     height: '300px',
     width: '100%'
   }
 
-  public editorConfig = {
+  editorConfig = {
     toolbar: {
       container: [
         ['bold', 'italic', 'underline'],
@@ -53,6 +48,11 @@ export class UpsertTemplateModalPage implements OnInit {
       },
       modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
     }
+  }
+  
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.modalCtrl.dismiss()
   }
 
   constructor(
@@ -78,7 +78,7 @@ export class UpsertTemplateModalPage implements OnInit {
     this.collectiveGoalId = collectiveGoalId
     this.templateForm = new TemplateForm(template)
     this.newTemplate = !template
-    this.templateId = !!template ? template.id : this.templateService.createId()
+    this.templateId = template ? template.id : this.templateService.createId()
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
