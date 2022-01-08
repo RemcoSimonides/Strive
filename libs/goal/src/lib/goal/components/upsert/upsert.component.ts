@@ -22,17 +22,17 @@ import { UserService } from '@strive/user/user/+state/user.service';
   encapsulation: ViewEncapsulation.None
 })
 export class UpsertGoalModalComponent {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @ViewChild('swiper') swiper: SwiperComponent;
-
   goalId: string
   goalForm: GoalForm
   mode: 'update' | 'create'
 
   get goal(): Goal { return createGoal({ ...this.goalForm.value, id: this.goalId }) }
+
+  @ViewChild('swiper') swiper: SwiperComponent;
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.modalCtrl.dismiss()
+  }
 
   constructor(
     private goalService: GoalService,

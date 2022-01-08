@@ -11,7 +11,7 @@ import { DiscussionModalComponent } from '@strive/discussion/components/discussi
 import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component';
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { GoalSharePopoverPage } from '@strive/goal/goal/components/popovers/share/share.component'
+import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
 import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Strive Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
@@ -23,7 +23,7 @@ import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { map, switchMap } from 'rxjs/operators';
-import { TeamModal } from '@strive/goal/goal/modals/team/team.modal';
+import { TeamModalComponent } from '@strive/goal/goal/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
@@ -278,7 +278,7 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   openTeamModal() {
     this.modalCtrl.create({
-      component: TeamModal,
+      component: TeamModalComponent,
       componentProps: { goalId: this.goalId }
     }).then(modal => modal.present())
   }
@@ -299,7 +299,7 @@ export class GoalComponent implements OnInit, OnDestroy {
 
     } else {
       this.popoverCtrl.create({
-        component: GoalSharePopoverPage,
+        component: GoalSharePopoverComponent,
         event: ev,
         componentProps: {
           goal,

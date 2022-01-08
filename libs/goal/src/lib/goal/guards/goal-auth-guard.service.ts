@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 // Angularfire
 import { doc, Firestore, getDoc, DocumentSnapshot } from '@angular/fire/firestore';
-//Rxjs
-import { take } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
@@ -18,7 +16,7 @@ import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+
 })
 export class GoalAuthGuardService implements CanActivate {
 
-  private _needsToBeAdmin: boolean = false
+  private _needsToBeAdmin = false
 
   constructor(
     private db: Firestore,
@@ -46,7 +44,7 @@ export class GoalAuthGuardService implements CanActivate {
     // get stakeholder
     const stakeholder = await this.stakeholder.getValue(uid, { goalId });
     
-    let access: boolean = false
+    let access = false
     if (stakeholder) {
       access = await this.checkAccess(goal, stakeholder)
     }
@@ -64,18 +62,16 @@ export class GoalAuthGuardService implements CanActivate {
       case 'public':
         return true
         
-      case 'collectiveGoalOnly':
-        
+      case 'collectiveGoalOnly': {
         if (!this.user.uid) return false
 
         let accessToCollectiveGoal: boolean
-        let accessToGoal: boolean
-        if (!!goal.collectiveGoalId) {
+        if (goal.collectiveGoalId) {
           accessToCollectiveGoal = await this.checkAccessToCollectiveGoal(goal.collectiveGoalId, this.user.uid)
         }
-        accessToGoal =  await this.checkAccessToGoal(stakeholder)
+        const accessToGoal =  await this.checkAccessToGoal(stakeholder)
         return accessToCollectiveGoal || accessToGoal ? true : false
-
+      }
       case 'private':
         if (!this.user.uid) return false
         return await this.checkAccessToGoal(stakeholder)

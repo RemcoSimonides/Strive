@@ -15,11 +15,7 @@ import { FormControl } from "@angular/forms";
   styleUrls: ['./team.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TeamModal implements OnInit {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
+export class TeamModalComponent implements OnInit {
   goalId: string
 
   stakeholders$: Observable<GoalStakeholder[]>
@@ -28,7 +24,12 @@ export class TeamModal implements OnInit {
   hasOpenRequestToJoin$: Observable<boolean>
 
   filter = new FormControl()
-
+  
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.modalCtrl.dismiss()
+  }
+  
   constructor(
     private alertCtrl: AlertController,
     private modalCtrl: ModalController,

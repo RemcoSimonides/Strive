@@ -8,11 +8,11 @@ import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
-  selector: 'milestone-options',
+  selector: 'goal-milestone-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
 })
-export class MilestoneOptionsPopover implements OnInit {
+export class MilestoneOptionsPopoverComponent implements OnInit {
 
   goalId: string
   milestone: Milestone

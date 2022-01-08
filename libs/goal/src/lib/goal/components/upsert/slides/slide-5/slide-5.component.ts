@@ -6,15 +6,15 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
-import { GoalSharePopoverPage } from '../../../popovers/share/share.component';
+import { GoalSharePopoverComponent } from '../../../popovers/share/share.component';
 
 @Component({
-  selector: 'slide-5',
+  selector: 'goal-slide-5',
   templateUrl: './slide-5.component.html',
   styleUrls: ['./slide-5.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Slide5 {
+export class Slide5Component {
   @Input() form: GoalForm
   @Input() goalId: string
 
@@ -60,7 +60,7 @@ export class Slide5 {
 
     } else {
       this.popoverCtrl.create({
-        component: GoalSharePopoverPage,
+        component: GoalSharePopoverComponent,
         event: ev,
         componentProps: {
           goal,

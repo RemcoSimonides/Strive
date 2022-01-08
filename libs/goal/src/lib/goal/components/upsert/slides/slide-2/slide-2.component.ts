@@ -5,12 +5,12 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'slide-2',
+  selector: 'goal-slide-2',
   templateUrl: './slide-2.component.html',
   styleUrls: ['./slide-2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Slide2 implements OnDestroy {
+export class Slide2Component implements OnDestroy {
   @Input() form: GoalForm
   @Input() goalId: string
 
@@ -48,7 +48,7 @@ export class Slide2 implements OnDestroy {
   })
 
   private sub: Subscription = this.descriptionForm.valueChanges.subscribe(value => {
-    let description: string = ''
+    let description = ''
     for (const key in value) {
       if (value[key]) {
         description += `<h2>${this.fields[key].title}</h2><p>${value[key]}</p>`

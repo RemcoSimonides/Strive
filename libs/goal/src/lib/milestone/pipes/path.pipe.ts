@@ -6,7 +6,7 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 })
 export class MilestonePathPipe implements PipeTransform {
 
-  end: number = 20
+  end = 20
 
   /**
    * @param value a list or a string to be sliced.

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
-import { MilestoneOptionsPopover } from './options.component';
+import { MilestoneOptionsPopoverComponent } from './options.component';
 
 @NgModule({
   imports: [
@@ -10,6 +10,6 @@ import { MilestoneOptionsPopover } from './options.component';
     IonicModule
   ],
   exports: [],
-  declarations: [MilestoneOptionsPopover],
+  declarations: [MilestoneOptionsPopoverComponent],
 })
 export class MilestoneOptionsPopoverModule { }

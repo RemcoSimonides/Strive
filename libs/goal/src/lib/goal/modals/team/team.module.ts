@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { TeamModal } from "./team.modal";
+import { TeamModalComponent } from "./team.modal";
 
 import { ImageModule } from '@strive/media/directives/image.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
@@ -19,6 +19,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
     FontAwesomeModule,
     ReactiveFormsModule
   ],
-  declarations: [TeamModal]
+  declarations: [TeamModalComponent]
 })
 export class TeamModalModule { }

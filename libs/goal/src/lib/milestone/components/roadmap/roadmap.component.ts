@@ -11,7 +11,7 @@ import { boolean } from '@strive/utils/decorators/decorators';
 import { DetailsComponent } from '../details/details.component';
 
 @Component({
-  selector: '[goal][milestones][isAdmin] strive-roadmap',
+  selector: '[goal][milestones][isAdmin] goal-strive-roadmap',
   templateUrl: 'roadmap.component.html',
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -75,26 +75,4 @@ export class RoadmapComponent {
     }).then(modal => modal.present())
   }
 
-  async openOptions(event: Event, context: Milestone, index: number[]) {
-    // event.stopPropagation() //prevents roadmap from collapsing in or out :)
-  
-    // // TODO lets see if we can do it without this popover
-    // const popover = await this.popoverCtrl.create({
-    //   component: MilestoneOptionsPopover,
-    //   event: event,
-    //   componentProps: {
-    //     goalId: this.goal.id,
-    //     milestone: context
-    //   }
-    // })
-    // popover.onDidDismiss().then(data => {
-    //   if (!data.data) return
-    //   const milestone = this.getMilestone(index)
-    //   milestone.achiever = data.data.achiever
-
-    //   this.milestone.upsert({ achiever: data.data.achiever, id: context.id }, { params: { goalId: this.goal.id }})
-    //   this.cdr.markForCheck();
-    // })
-    // popover.present()
-  }
 }

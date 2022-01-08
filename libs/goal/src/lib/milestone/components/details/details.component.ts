@@ -9,17 +9,12 @@ import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
 @Component({
-  selector: 'milestone-details',
+  selector: 'goal-milestone-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-
   private sub: Subscription
 
   form: MilestoneForm
@@ -30,6 +25,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
   @Input() isAchiever: boolean
 
   get canEdit(): boolean { return this.goal?.id && this.isAdmin }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    this.modalCtrl.dismiss()
+  }
 
   constructor(
     private alertCtrl: AlertController,

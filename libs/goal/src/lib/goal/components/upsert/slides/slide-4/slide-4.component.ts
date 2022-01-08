@@ -5,12 +5,12 @@ import { MilestoneService } from '@strive/goal/milestone/+state/milestone.servic
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'slide-4',
+  selector: 'goal-slide-4',
   templateUrl: './slide-4.component.html',
   styleUrls: ['./slide-4.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Slide4 implements OnInit {
+export class Slide4Component implements OnInit {
   @Input() goal: Goal
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
@@ -27,13 +27,5 @@ export class Slide4 implements OnInit {
 
   step(direction: 'next' | 'previous') {
     this.stepper.emit(direction)
-  }
-
-  async deleteMilestone(sequenceNumber: string): Promise<void> {
-    // TODO 
-    // const index = this.roadmapForm.controls.findIndex(control => control.value.sequenceNumber === sequenceNumber)
-    // this.roadmapForm.removeAt(index)
-    //   this.resetSequenceNumbers()
-    //   this.milestoneForm.incrementSeqNo(-1)
   }
 }

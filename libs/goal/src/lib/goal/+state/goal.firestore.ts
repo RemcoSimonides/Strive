@@ -42,7 +42,7 @@ export interface GoalLink {
 /** A factory function that creates a GoalDocument. */
 export function createGoal(params: Partial<Goal> = {}): Goal {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     description: '',
     image: '',
     status: 'bucketlist',

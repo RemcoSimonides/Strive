@@ -46,7 +46,7 @@ export interface MilestoneTemplate {
 /** A factory function that creates a MilestoneDocument. */
 export function createMilestone(params: Partial<Milestone> = {}): Milestone {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     order: 0,
     content: '',
     sequenceNumber: '',
@@ -70,7 +70,7 @@ export function createMilestoneLink(params: Partial<MilestoneLink> = {}): Milest
 /** A factory function that creates a MilestoneTemplate Object. */
 export function createMilestoneTemplate(params: Partial<MilestoneTemplate> = {}): MilestoneTemplate {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     deadline: '',
     description: '',
     sequenceNumber: '1',

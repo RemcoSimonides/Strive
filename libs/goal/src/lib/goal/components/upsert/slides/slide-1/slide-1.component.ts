@@ -6,12 +6,12 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({
-  selector: 'slide-1',
+  selector: 'goal-slide-1',
   templateUrl: './slide-1.component.html',
   styleUrls: ['./slide-1.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Slide1 {
+export class Slide1Component {
   @Input() form: GoalForm
   @Input() goalId: string
 

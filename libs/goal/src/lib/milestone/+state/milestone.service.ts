@@ -20,7 +20,7 @@ export class MilestoneService extends FireCollection<Milestone> {
   }
 
   protected toFirestore(milestone: Milestone): Milestone {
-    if (!!milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
+    if (milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
     return milestone
     // Firebase backend function handles completing submilestones (WITHOUT NOTIFICATION)
     // Firebase backend function milestoneChangeHandler handles sending notification to supporters of milestone

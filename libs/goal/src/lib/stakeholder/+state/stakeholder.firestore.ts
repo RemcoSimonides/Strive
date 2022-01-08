@@ -28,7 +28,7 @@ export enum enumGoalStakeholder {
 /** A factory function that creates a GoalStakeholderDocument */
 export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): GoalStakeholder {
   return {
-    uid: !!params.uid ? params.uid : '',
+    uid: params.uid ? params.uid : '',
     username: '',
     photoURL: '',
     isAdmin: false,

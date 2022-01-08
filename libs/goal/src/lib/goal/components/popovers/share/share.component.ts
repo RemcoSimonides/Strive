@@ -3,11 +3,11 @@ import { PopoverController, NavParams } from '@ionic/angular';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 @Component({
-  selector: 'app-goal-share-popover',
+  selector: 'goal-share-popover',
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })
-export class GoalSharePopoverPage {
+export class GoalSharePopoverComponent {
 
   goal: Goal
   isAdmin = false
