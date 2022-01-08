@@ -38,7 +38,7 @@ export class InviteTokenService {
 
     if (token) {
       const uid = this.user.uid
-      if (!!uid) {
+      if (uid) {
 
         if (collection === 'goal') {
           await this.goalStakeholderService.upsert({ uid, isSpectator: true }, { params: { goalId: id }})

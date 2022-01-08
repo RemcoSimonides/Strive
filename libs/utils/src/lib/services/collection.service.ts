@@ -512,7 +512,7 @@ export abstract class FireCollection<E extends DocumentData> {
     } else if (isEntityArray(idsOrEntity)) {
       const entityMap = new Map(idsOrEntity.map(entity => [entity[this.idKey] as string, entity]));
       ids = Array.from(entityMap.keys());
-      getData = docId => entityMap.get(docId)!;
+      getData = docId => entityMap.get(docId);
       options = stateFnOrWrite as WriteOptions || {};
     } else if (typeof stateFnOrWrite === 'function') {
       ids = Array.isArray(idsOrEntity) ? idsOrEntity : [idsOrEntity];
