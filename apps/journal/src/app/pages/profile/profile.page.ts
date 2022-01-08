@@ -25,7 +25,7 @@ import { User } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { UserForm } from '@strive/user/user/forms/user.form';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { enumExercises, exercises } from '@strive/exercises/utils';
@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit {
 
   openAuthModal() {
     this.modalCtrl.create({
-      component: AuthModalPage,
+      component: AuthModalModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

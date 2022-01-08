@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { FcmService } from '@strive/utils/services/fcm.service';
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({
@@ -31,7 +31,7 @@ export class ProfileOptionsComponent {
 
     // open auth modal
     this.modalCtrl.create({
-      component: AuthModalPage,
+      component: AuthModalModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

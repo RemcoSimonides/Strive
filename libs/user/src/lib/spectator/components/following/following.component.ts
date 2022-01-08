@@ -11,14 +11,13 @@ import { UserSpectateService } from '../../+state/spectator.service';
   templateUrl: 'following.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class FollowingComponent {
+  spectating: Spectator[] = []
+  
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
-
-  spectating: Spectator[] = [];
 
   constructor(
     private location: Location,

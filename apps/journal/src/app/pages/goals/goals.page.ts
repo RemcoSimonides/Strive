@@ -16,7 +16,7 @@ import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder
 import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 // Pages
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { UpsertCollectiveGoalComponent } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
@@ -73,7 +73,7 @@ export class GoalsComponent implements OnInit {
 
   openAuthModal() {
     this.modalCtrl.create({
-      component: AuthModalPage,
+      component: AuthModalModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

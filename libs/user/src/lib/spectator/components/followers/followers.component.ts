@@ -13,12 +13,12 @@ import { UserSpectateService } from '../../+state/spectator.service';
 })
 
 export class FollowersComponent {
+  spectators: Spectator[] = []
+
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
-
-  spectators: Spectator[] = [];
 
   constructor(
     private location: Location,

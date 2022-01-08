@@ -11,7 +11,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 // Pages
 import { TabsComponent } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
@@ -145,7 +145,7 @@ export class AppComponent implements OnDestroy {
 
   openAuthModal(segment: enumAuthSegment) {
     this.modalCtrl.create({
-      component: AuthModalPage,
+      component: AuthModalModalComponent,
       componentProps: {
         authSegment: segment
       }

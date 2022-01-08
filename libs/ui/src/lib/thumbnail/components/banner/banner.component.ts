@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 import { AffirmationUpsertComponent } from "@strive/exercises/affirmation/components/upsert/upsert.component";
-import { AuthModalPage } from "@strive/user/auth/components/auth-modal/auth-modal.page";
+import { AuthModalModalComponent } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 
 @Component({
@@ -18,7 +18,7 @@ export class BannerComponent {
   ) {}
 
   openExercise() {
-    const component = this.user.uid ? AffirmationUpsertComponent : AuthModalPage
+    const component = this.user.uid ? AffirmationUpsertComponent : AuthModalModalComponent
     this.modalCtrl.create({ component }).then(modal => modal.present())
   }
 

@@ -12,7 +12,7 @@ import { createPersonal, createUser } from '@strive/user/user/+state/user.firest
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
-import { WelcomeModal } from '../welcome/welcome.modal';
+import { WelcomeModalComponent } from '../welcome/welcome.modal';
 import { PersonalService } from '@strive/user/user/+state/personal.service';
 
 export enum enumAuthSegment {
@@ -24,36 +24,24 @@ export enum enumAuthSegment {
 }
 
 @Component({
-  selector: 'app-auth-modal',
+  selector: 'user-auth-modal',
   templateUrl: './auth-modal.page.html',
   styleUrls: ['./auth-modal.page.scss'],
 })
-export class AuthModalPage implements OnInit {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
-      window.history.pushState(null, null, window.location.href);
-      this.authSegmentChoice = enumAuthSegment.login
-    } else if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
-      window.history.pushState(null, null, window.location.href);
-      this.authSegmentChoice = enumAuthSegment.register
-    } else {
-      this.modalCtrl.dismiss(this.success)
-    }
-  }
-  private success: boolean = false;
+export class AuthModalModalComponent implements OnInit {
+  private success = false;
 
-  public passwordType = 'password';
-  public passwordIcon = 'eye-off-outline';
+  passwordType = 'password';
+  passwordIcon = 'eye-off-outline';
 
-  public loginForm = new SigninForm()
-  public signupForm = new SignupForm()
-  public resetPasswordForm = new ResetPasswordForm()
+  loginForm = new SigninForm()
+  signupForm = new SignupForm()
+  resetPasswordForm = new ResetPasswordForm()
 
-  public enumAuthSegment = enumAuthSegment
-  public authSegmentChoice = enumAuthSegment.login
+  enumAuthSegment = enumAuthSegment
+  authSegmentChoice = enumAuthSegment.login
 
-  public validation_messages = {
+  validation_messages = {
     'username': [
       { type: 'required', message: 'Name is required.' },
       { type: 'minlength', message: 'Name must be at least 3 characters long.' },
@@ -70,6 +58,19 @@ export class AuthModalPage implements OnInit {
       { type: 'minlength', message: 'Password must be at least 8 characters long.' },
       // { type: 'pattern', message: 'Password must contain small letters, capital letters and numbers' }
     ]
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
+      window.history.pushState(null, null, window.location.href);
+      this.authSegmentChoice = enumAuthSegment.login
+    } else if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
+      window.history.pushState(null, null, window.location.href);
+      this.authSegmentChoice = enumAuthSegment.register
+    } else {
+      this.modalCtrl.dismiss(this.success)
+    }
   }
 
   constructor(
@@ -93,7 +94,7 @@ export class AuthModalPage implements OnInit {
   ngOnInit() {
     window.history.pushState(null, null, window.location.href);
     const segmentChoice = this.navParams.data.authSegment
-    this.authSegmentChoice = !!segmentChoice ? segmentChoice : enumAuthSegment.login
+    this.authSegmentChoice = segmentChoice ? segmentChoice : enumAuthSegment.login
   }
 
   async loginWithGoogle() {
@@ -114,7 +115,7 @@ export class AuthModalPage implements OnInit {
           top.dismiss(true)
           this.dismiss(true)
         }
-        this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
+        this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
       } else {
         const top = await this.modalCtrl.getTop()
         if (top) this.dismiss(true)
@@ -199,34 +200,33 @@ export class AuthModalPage implements OnInit {
   }
 
   async signUpUser() {
-    if (!this.signupForm.valid) {
-    } else {
-      const loading = await this.loadingCtrl.create()
-      loading.present()
+    if (!this.signupForm.valid) return
 
-      try {
-        const { user } = await createUserWithEmailAndPassword(this.afAuth, this.signupForm.value.email, this.signupForm.value.password)
-        const profile = createUser({ uid: user.uid, username: this.signupForm.value.username })
-        const personal = createPersonal({ uid: user.uid, email: user.email })
+    const loading = await this.loadingCtrl.create()
+    loading.present()
 
-        await Promise.all([
-          this.user.add(profile),
-          this.personal.add(personal, { params: { uid: user.uid }})
-        ])
+    try {
+      const { user } = await createUserWithEmailAndPassword(this.afAuth, this.signupForm.value.email, this.signupForm.value.password)
+      const profile = createUser({ uid: user.uid, username: this.signupForm.value.username })
+      const personal = createPersonal({ uid: user.uid, email: user.email })
 
-        this.modalCtrl.dismiss(true)
-        this.dismiss(true)
-        this.modalCtrl.create({ component: WelcomeModal }).then(modal => modal.present())
+      await Promise.all([
+        this.user.add(profile),
+        this.personal.add(personal, { params: { uid: user.uid }})
+      ])
 
-      } catch(error) {
-        this.alertCtrl.create({
-          message: error.message,
-          buttons: [{ text: 'Ok', role: 'cancel' }]
-        }).then(alert => alert.present())
-      }
-      
-      loading.dismiss()
+      this.modalCtrl.dismiss(true)
+      this.dismiss(true)
+      this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
+
+    } catch(error) {
+      this.alertCtrl.create({
+        message: error.message,
+        buttons: [{ text: 'Ok', role: 'cancel' }]
+      }).then(alert => alert.present())
     }
+    
+    loading.dismiss()
   }
 
   async resetPassword(): Promise<void> {

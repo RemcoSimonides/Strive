@@ -486,7 +486,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
               "libs/post/**/*.ts",
@@ -510,7 +510,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
               "libs/support/**/*.ts",
@@ -534,7 +534,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
               "libs/template/**/*.ts",
@@ -558,7 +558,7 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
               "libs/ui/**/*.ts",
@@ -582,15 +582,11 @@
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:eslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "libs/user/tsconfig.lib.json",
-              "libs/user/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/user/**/*"
+            "lintFilePatterns": [
+              "libs/user/**/*.ts",
+              "libs/user/**/*.html"
             ]
           }
         },

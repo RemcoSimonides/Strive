@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { IonicModule } from '@ionic/angular';
 
-import { WelcomeModal } from './welcome.modal';
+import { WelcomeModalComponent } from './welcome.modal';
 
 import { SwiperModule } from 'swiper/angular';
 import { ImageModule } from '@strive/media/directives/image.module';
@@ -20,7 +20,7 @@ import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upser
     UpsertGoalModalModule
   ],
   declarations: [
-    WelcomeModal
+    WelcomeModalComponent
   ]
 })
 export class WelcomeModalModule {}

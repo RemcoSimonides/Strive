@@ -8,13 +8,13 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 
 
 @Component({
-  selector: 'auth-welcome-modal',
+  selector: 'user-auth-welcome-modal',
   templateUrl: './welcome.modal.html',
   styleUrls: ['./welcome.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WelcomeModal {
+export class WelcomeModalComponent {
   @ViewChild('swiper') swiper: SwiperComponent;
 
   showStep2 = false;

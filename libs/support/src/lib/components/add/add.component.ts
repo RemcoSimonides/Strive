@@ -13,7 +13,7 @@ import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { Support } from '@strive/support/+state/support.firestore'
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { orderBy, where } from '@angular/fire/firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
@@ -88,7 +88,7 @@ export class AddSupportModalComponent implements OnInit, OnDestroy {
 
   openLoginModal() {
     this.modalCtrl.create({
-      component: AuthModalPage,
+      component: AuthModalModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

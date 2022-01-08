@@ -7,7 +7,7 @@ import { Observable, Subscription, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 // Pages / Popover / Modal
 import { TemplateOptionsPopoverComponent } from './popovers/template-options-popover/template-options-popover.page';
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
 import { CollectiveGoalStakeholderService } from '@strive/collective-goal/stakeholder/+state/stakeholder.service';
@@ -95,7 +95,7 @@ export class TemplateComponent implements OnInit {
   async useTemplate() {
     if (!this.user.uid) {
       this.modalCtrl.create({
-        component: AuthModalPage,
+        component: AuthModalModalComponent,
         componentProps: {
           authSegment: enumAuthSegment.login
         }

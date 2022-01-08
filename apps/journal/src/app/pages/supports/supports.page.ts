@@ -9,7 +9,7 @@ import { Observable, Subscription } from 'rxjs';
 // Interfaces
 import { Support } from '@strive/support/+state/support.firestore'
 // Components
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { where } from '@angular/fire/firestore';
 
 @Component({
@@ -68,7 +68,7 @@ export class SupportsComponent implements OnInit {
 
   openAuthModal() {
     this.modalCtrl.create({
-      component: AuthModalPage,
+      component: AuthModalModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

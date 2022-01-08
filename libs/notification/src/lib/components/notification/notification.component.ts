@@ -13,7 +13,7 @@ import { ChooseAchieverModalComponent } from '../choose-achiever/choose-achiever
 import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
-import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 
 
 @Pipe({ name: 'source' })
@@ -74,7 +74,7 @@ export class NotificationComponent {
       }).then(modal => modal.present())
     } else {
       this.modalCtrl.create({
-        component: AuthModalPage,
+        component: AuthModalModalComponent,
         componentProps: {
           authSegment: enumAuthSegment.login
         }
