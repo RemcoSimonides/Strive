@@ -23,24 +23,24 @@ import { createUserLink } from '@strive/user/user/+state/user.firestore';
   styleUrls: ['./add.component.scss'],
 })
 export class AddSupportModalComponent implements OnInit, OnDestroy {
+  origin: 'goal' | 'milestone'
+
+  private goalId: string
+  goal$: Observable<Goal>
+
+  milestone: Milestone
+
+  supports$: Observable<Support[]>
+  mySupports$: Observable<Support[]>
+
+  support = new SupportForm()
+
+  private sub: Subscription;
+
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
-
-  public origin: 'goal' | 'milestone'
-
-  private goalId: string
-  public goal$: Observable<Goal>
-
-  public milestone: Milestone
-
-  public supports$: Observable<Support[]>
-  public mySupports$: Observable<Support[]>
-
-  public support = new SupportForm()
-
-  private sub: Subscription;
 
   constructor(
     private goalService: GoalService,
@@ -61,7 +61,7 @@ export class AddSupportModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.goalId = this.navParams.get('goalId')
     this.milestone = this.navParams.get('milestone')
-    this.origin = !!this.milestone ? 'milestone' : 'goal'
+    this.origin = this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
     this.sub = this.user.user$.subscribe(user => {

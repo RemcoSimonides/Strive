@@ -512,13 +512,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "libs/support/tsconfig.lib.json",
-              "libs/support/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/support/**/*"
+            "lintFilePatterns": [
+              "libs/support/**/*.ts",
+              "libs/support/**/*.html"
             ]
           }
         },

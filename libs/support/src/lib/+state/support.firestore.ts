@@ -30,7 +30,7 @@ export interface NotificationSupport {
 /** A factory function that creates a SupportDocument. */
 export function createSupport(params: Partial<Support> = {}): Support {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     description: '',
     status: 'open',
     goal: createGoalLink(params.goal),
@@ -44,7 +44,7 @@ export function createSupport(params: Partial<Support> = {}): Support {
 /** A factory function that creates a NotificationSupportDocumnet */
 export function createNotificationSupport(params: Partial<NotificationSupport> = {}): NotificationSupport {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     description: '',
     decision: params.finished ? 'give' : 'keep',
     finished: false,
