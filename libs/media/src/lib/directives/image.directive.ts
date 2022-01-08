@@ -77,7 +77,7 @@ export class ImageDirective implements OnInit, OnDestroy {
 
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, ref]) => {
-      if (!!ref) {
+      if (ref) {
         // ref
         this.srcset = getImgIxResourceUrl(ref, params);
         this.src = this.srcset.split(' ')[0];

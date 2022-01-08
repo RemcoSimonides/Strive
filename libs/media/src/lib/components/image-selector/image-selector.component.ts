@@ -61,7 +61,7 @@ export class ImageSelectorComponent implements OnInit {
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
     $event.preventDefault();
-    if (!!$event.dataTransfer.files.length) {
+    if ($event.dataTransfer.files.length) {
       this.filesSelected($event.dataTransfer.files);
     } else {
       this.resetState();
@@ -81,7 +81,7 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   private resetState() {
-    if (!!this.form.value) {
+    if (this.form.value) {
       const params: ImageParameters = { w: 1024 }
       const previewUrl = getImgIxResourceUrl(this.form.value, params)
       this.previewUrl$.next(previewUrl)
@@ -103,7 +103,7 @@ export class ImageSelectorComponent implements OnInit {
         resultType: CameraResultType.DataUrl
       })
 
-      if (!!image.dataUrl) {
+      if (image.dataUrl) {
         const file = dataUrlToFile(image.dataUrl, Date.now().toString())
         this.filesSelected(file)
       }
@@ -155,11 +155,11 @@ export class ImageSelectorComponent implements OnInit {
 }
 
 function dataUrlToFile(dataUrl: string, fileName: string) {
-  var arr = dataUrl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
+  const arr = dataUrl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
 
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n);
