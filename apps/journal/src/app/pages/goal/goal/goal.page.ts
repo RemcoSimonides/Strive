@@ -17,7 +17,7 @@ import { AuthModalPage, enumAuthSegment } from '@strive/user/auth/components/aut
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 // Strive Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
@@ -191,9 +191,9 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   private startPostCreation(goal: Goal) {
     this.modalCtrl.create({
-      component: UpsertPostModal,
+      component: UpsertPostModalComponent,
       componentProps: {
-        goal: goal,
+        goal,
         postId: goal.id
       }
     }).then(modal => modal.present())

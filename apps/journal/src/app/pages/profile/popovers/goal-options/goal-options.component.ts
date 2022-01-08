@@ -4,7 +4,7 @@ import { AlertController, ModalController, NavParams, PopoverController } from '
 import { Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 @Component({
@@ -37,7 +37,7 @@ export class GoalOptionsComponent {
             handler: async () => {
               await this.goalStakeholderService.update({ uid: this.user.uid, status: 'finished' }, { params: { goalId: this.goal.id }})
               this.modalCtrl.create({
-                component: UpsertPostModal,
+                component: UpsertPostModalComponent,
                 componentProps: {
                   goal: this.goal,
                   postId: this.goal.id

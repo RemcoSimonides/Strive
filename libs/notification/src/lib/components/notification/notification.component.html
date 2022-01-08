@@ -39,7 +39,7 @@
 
       <!-- Post -->
       <ng-container *ngIf="!!notification.source.postId">
-        <strive-post [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></strive-post>
+        <post-main [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
       </ng-container>
 
       <!-- Supports -->

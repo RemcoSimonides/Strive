@@ -4,7 +4,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 import { createMilestone, Milestone, MilestoneStatus } from '@strive/goal/milestone/+state/milestone.firestore';
 import { MilestoneService  } from '@strive/goal/milestone/+state/milestone.service';
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
 @Component({
   selector: 'strive-milestone-status',
@@ -99,7 +99,7 @@ export class MilestoneStatusComponent {
 
   private startPostCreation(milestone: Milestone) {
     this.modalCtrl.create({
-      component: UpsertPostModal,
+      component: UpsertPostModalComponent,
       componentProps: {
         milestone,
         goal: this.goal,

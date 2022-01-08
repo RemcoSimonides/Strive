@@ -4,7 +4,7 @@ import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Post } from '../../+state/post.firestore'
 
 @Component({
-  selector: 'strive-post',
+  selector: 'post-main',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,7 +20,7 @@ export class PostComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (!!this.postRef) {
+    if (this.postRef) {
       getDoc(doc(this.db, this.postRef)).then(snap => {
         if (snap.exists()) {
           this.post = snap.data() as Post;

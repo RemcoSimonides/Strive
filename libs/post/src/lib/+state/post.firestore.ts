@@ -21,7 +21,7 @@ export interface Post {
 /** A factory function that creates a PostDocument. */
 export function createPost(params: Partial<Post> = {}): Post {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     author: createUserLink(),
     content: {
       title: '',

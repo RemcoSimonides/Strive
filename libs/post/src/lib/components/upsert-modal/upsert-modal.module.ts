@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UpsertPostModal } from './upsert-modal.component';
+import { UpsertPostModalComponent } from './upsert-modal.component';
 
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 
@@ -15,6 +15,6 @@ import { ImageSelectorModule } from '@strive/media/components/image-selector/ima
     IonicModule,
     ImageSelectorModule
   ],
-  declarations: [UpsertPostModal]
+  declarations: [UpsertPostModalComponent]
 })
 export class UpsertPostModalModule {}

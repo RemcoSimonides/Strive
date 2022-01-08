@@ -13,14 +13,14 @@ import { createPost } from '@strive/post/+state/post.firestore';
   templateUrl: './upsert-modal.component.html',
   styleUrls: ['./upsert-modal.component.scss'],
 })
-export class UpsertPostModal implements OnInit {
+export class UpsertPostModalComponent implements OnInit {
+  postForm = new PostForm()
+  postId: string
+  
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
-
-  public postForm = new PostForm();
-  public postId: string;
 
   constructor(
     private location: Location,
@@ -46,7 +46,7 @@ export class UpsertPostModal implements OnInit {
 
     if (!goal) throw new Error('No goal to post the post at')
 
-    if (!!milestone) {
+    if (milestone) {
       this.postForm.get('milestone').get('id').setValue(milestone.id)
       this.postForm.get('milestone').get('content').setValue(milestone.content)
       this.postForm.get('content').get('title').setValue(`Completed milestone '${milestone.content}'`)

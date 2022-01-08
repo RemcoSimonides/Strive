@@ -16,7 +16,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Components
-import { UpsertPostModal } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
 @Component({
   selector: 'journal-goal-view',
@@ -117,7 +117,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
 
   createCustomPost() {
     this.modalCtrl.create({
-      component: UpsertPostModal,
+      component: UpsertPostModalComponent,
       componentProps: {
         goal: this.goal,
         postId: undefined

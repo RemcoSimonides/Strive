@@ -488,13 +488,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "libs/post/tsconfig.lib.json",
-              "libs/post/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/post/**/*"
+            "lintFilePatterns": [
+              "libs/post/**/*.ts",
+              "libs/post/**/*.html"
             ]
           }
         },
