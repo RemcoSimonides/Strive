@@ -39,7 +39,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   // send notification to supporters of this milestone and submilestones 
   // overwrite notification to supporters // send notification if person does not want level 1/2/3 milestone notifications but does support them
   const supporters: Record<string, NotificationSupport[]> = {}
-  const receiver: UserLink = !!after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
+  const receiver: UserLink = after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
 
   // get milestones (including unfinished submilestones)
   const milestones: Milestone[] = [after]
@@ -74,10 +74,10 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
         id: support.id,
         description: support.description,
         finished: support.milestone.id === after.id,
-        receiver: !!milestone.achiever.uid ? milestone.achiever : receiver 
+        receiver: milestone.achiever.uid ? milestone.achiever : receiver 
       })
 
-      if (!!supporters[uid]) {
+      if (supporters[uid]) {
         supporters[uid].push(supportNotification)
       } else {
         supporters[uid] = [supportNotification]
@@ -140,7 +140,7 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
   })
   sendNotificationToGoal(goalId, notification)
 
-  sendNotificationToGoalStakeholders(goalId, notification, '', true, true, true)
+  sendNotificationToGoalStakeholders(goalId, notification, milestone.updatedBy, true, true, true)
 }
 
 // Milestone failed
@@ -165,5 +165,5 @@ function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, go
   })
   sendNotificationToGoal(goalId, notification)
 
-  sendNotificationToGoalStakeholders(goalId, notification, '', true, true, true)
+  sendNotificationToGoalStakeholders(goalId, notification, milestone.updatedBy, true, true, true)
 }

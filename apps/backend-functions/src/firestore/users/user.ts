@@ -1,4 +1,4 @@
-import { db, functions, admin } from '../../internals/firebase';
+import { db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
 import { createUser, User } from '@strive/user/user/+state/user.firestore';

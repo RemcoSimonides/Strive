@@ -181,13 +181,8 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": [
-              "apps/backend-functions/tsconfig.app.json",
-              "apps/backend-functions/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/backend-functions/**/*"
+            "lintFilePatterns": [
+              "apps/backend-functions/**/*.ts"
             ]
           }
         },

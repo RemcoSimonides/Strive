@@ -66,7 +66,7 @@ async function finalizeSupports(goalId: string, supports: NotificationSupport[])
   for (const support of supports) {
     const ref = db.doc(`Goals/${goalId}/Supports/${support.id}`)
 
-    if (!!support.receiver.uid) {
+    if (support.receiver.uid) {
       const data: Partial<Support> = {
         receiver: support.receiver,
         status: 'waiting_to_be_paid'

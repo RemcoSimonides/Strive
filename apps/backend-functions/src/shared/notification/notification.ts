@@ -40,7 +40,7 @@ export function sendNotificationToUsers(notification: Partial<Notification>, rec
   notification.createdAt = serverTimestamp() as Timestamp
 
   const promises: Promise<any>[] = receivers.map(receiver => {
-    if (!!notification.id) {
+    if (notification.id) {
       return db.doc(`Users/${receiver}/Notifications/${notification.id}`).set(notification)
     } else {
       return db.collection(`Users/${receiver}/Notifications`).add(notification)

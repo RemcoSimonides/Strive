@@ -36,7 +36,7 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
         if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'complete' })
       })
-      .catch(async (err) => {
+      .catch(async () => {
         if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'error' })
       });

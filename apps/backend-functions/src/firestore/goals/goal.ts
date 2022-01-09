@@ -28,7 +28,7 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
     handleNotificationsOfCreatedGoal(goalId, goal)
 
     // deadline
-    if (!!goal.deadline) {
+    if (goal.deadline) {
       upsertScheduledTask(goalId, {
         worker: enumWorkerType.goalDeadline,
         performAt: goal.deadline,

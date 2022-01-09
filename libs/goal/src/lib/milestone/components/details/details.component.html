@@ -1,12 +1,20 @@
-<form [formGroup]="form">
-  <ion-item>
-    <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-    <ion-input [disabled]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-input>
-    <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
-      <ion-icon name="trash"></ion-icon>
-    </ion-button>
-  </ion-item>
-  <ion-item>
-    <strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
-  </ion-item>
-</form>
+<ion-content>
+  <form [formGroup]="form">
+    <ion-item>
+      <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
+      <ion-input [disabled]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-input>
+      <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
+    </ion-item>
+  </form>
+
+  <section fxLayout="column" class="ion-padding">
+    <small >Created at: {{ milestone.createdAt.toDate() | date:'longDate' }}</small>
+    <small *ngIf="milestone.finishedAt">Finished at: {{ milestone.finishedAt.toDate() | date:'longDate' }}</small>
+  </section>
+</ion-content>
+

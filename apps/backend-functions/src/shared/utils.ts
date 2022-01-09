@@ -5,12 +5,12 @@ export interface ErrorResultResponse {
   result: any;
 }
 
-export const converter = <T>(factory?: Function) => {
+export const converter = <T>(factory?: any) => {
   return {
     toFirestore(model: T): T { return model },
     fromFirestore(snap: admin.firestore.QueryDocumentSnapshot<T>, idKey = 'uid') {
       const data = { ...snap.data(), [idKey]: snap.id }
-      return !!factory ? factory(data) : data;
+      return factory ? factory(data) : data;
     }
   }
 }

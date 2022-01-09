@@ -5,8 +5,6 @@ import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { Personal } from '@strive/user/user/+state/user.firestore'
 import { getDocument } from '../../shared/utils'
 
-const db = admin.firestore()
-
 // Sentences to ask in push notification
 // Close your eyes and take a moment to reflect on all the good things that happened today or yesterday
 // Pause for a moment and think of 3 things that you are grateful for in this moment

@@ -5,6 +5,7 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { createMilestone, Milestone, MilestoneStatus } from '@strive/goal/milestone/+state/milestone.firestore';
 import { MilestoneService  } from '@strive/goal/milestone/+state/milestone.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { serverTimestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'strive-milestone-status',
@@ -72,7 +73,11 @@ export class MilestoneStatusComponent {
           text: 'Succeeded',
           role: 'succeeded',
           handler: () => {
-            this.milestoneService.upsert({ status: 'succeeded', id: this.milestone.id }, { params: { goalId: this.goal.id }})
+            this.milestoneService.upsert({
+              id: this.milestone.id,
+              status: 'succeeded',
+              finishedAt: serverTimestamp()
+            }, { params: { goalId: this.goal.id }})
             this.milestone.status = 'succeeded'
             this.cdr.markForCheck()
             this.startPostCreation(this.milestone)
@@ -82,7 +87,11 @@ export class MilestoneStatusComponent {
           text: 'Failed',
           role: 'succeeded',
           handler: () => {
-            this.milestoneService.upsert({ status: 'failed', id: this.milestone.id }, { params: { goalId: this.goal.id }})
+            this.milestoneService.upsert({
+              id: this.milestone.id,
+              status: 'failed',
+              finishedAt: serverTimestamp()
+            }, { params: { goalId: this.goal.id }})
             this.milestone.status = 'failed'
             this.cdr.markForCheck()
             this.startPostCreation(this.milestone)

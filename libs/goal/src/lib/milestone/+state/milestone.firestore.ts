@@ -1,4 +1,3 @@
-import { FieldValue } from '@firebase/firestore-types';
 import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 import { setDateToEndOfDay } from '@strive/utils/helpers';
 
@@ -20,8 +19,10 @@ export interface Milestone {
   status: MilestoneStatus
   deadline: string;
   achiever: UserLink;
-  updatedAt?: FieldValue;
-  createdAt?: FieldValue;
+  updatedBy?: string;
+  updatedAt?: any; // TODO give type FieldValue / Date / Timestamp 
+  createdAt?: any;
+  finishedAt?: any;
 }
 export interface MilestonesLeveled extends Milestone {
   submilestones?: MilestoneLevelTwo[];

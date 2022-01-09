@@ -1,7 +1,6 @@
 import { logger } from 'firebase-functions';
 import { db, functions } from '../../internals/firebase';
-import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
-import { deleteScheduledTask, upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task';
+import { deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { deleteFromAlgolia, addToAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { CollectiveGoal, createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { deleteCollection } from '../../shared/utils';
@@ -96,7 +95,7 @@ export const collectiveGoalChangeHandler = functions.firestore.document(`Collect
     // }
   })
 
-async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { title, isSecret, image }: CollectiveGoal) {
+async function updateCollectiveGoalStakeholders(collectiveGoalId: string, { isSecret }: CollectiveGoal) {
 
   const stakeholdersSnap = await db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`).get()
 

@@ -7,8 +7,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { RoadmapComponent } from './roadmap.component';
 
-import { MilestoneDeadlineModule } from '@strive/ui/roadmap/components/deadline/deadline.module';
-import { MilestoneStatusModule } from '@strive/ui/roadmap/components/status/status.module';
+import { MilestoneDeadlineModule } from '../deadline/deadline.module';
+import { MilestoneStatusModule } from '../status/status.module';
 
 import { AddSupportModalModule } from '@strive/support/components/add/add.module';
 import { ImageModule } from '@strive/media/directives/image.module';

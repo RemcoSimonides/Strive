@@ -4,12 +4,13 @@ import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
 import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
+import { UserService } from '@strive/user/user/+state/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireCollection<Milestone> {
   readonly path = 'Goals/:goalId/Milestones';
 
-  constructor(db: Firestore) {
+  constructor(db: Firestore, private user: UserService) {
     super(db)
   }
 
@@ -21,6 +22,7 @@ export class MilestoneService extends FireCollection<Milestone> {
 
   protected toFirestore(milestone: Milestone): Milestone {
     if (milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
+    milestone.updatedBy = this.user.uid
     return milestone
     // Firebase backend function handles completing submilestones (WITHOUT NOTIFICATION)
     // Firebase backend function milestoneChangeHandler handles sending notification to supporters of milestone

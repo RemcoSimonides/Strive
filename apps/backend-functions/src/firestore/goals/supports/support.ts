@@ -42,7 +42,7 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
     }
 
     //Increase number of custom supports
-    if (!!support.milestone?.id) { // Support for milestone added
+    if (support.milestone?.id) { // Support for milestone added
       increaseCustomSupportOfMilestone(goalId, support.milestone.id)
       increaseCustomSupportOfGoal(goalId, false, true)
     } else { // Support for goal added

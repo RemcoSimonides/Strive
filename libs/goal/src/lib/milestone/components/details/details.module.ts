@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { DetailsComponent } from './details.component';
 
-import { MilestoneStatusModule } from '@strive/ui/roadmap/components/status/status.module';
-import { MilestoneDeadlineModule } from '@strive/ui/roadmap/components/deadline/deadline.module';
+import { MilestoneStatusModule } from '../status/status.module';
+import { MilestoneDeadlineModule } from '../deadline/deadline.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
+    FlexLayoutModule,
     ReactiveFormsModule,
 
     MilestoneStatusModule,

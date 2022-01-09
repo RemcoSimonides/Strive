@@ -53,7 +53,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
     // Send finished goal notification to Supporters
     sendFinishedGoalNotificationToSupporter(goalId, after)
 
-    if (!!after.collectiveGoalId) {
+    if (after.collectiveGoalId) {
       if (after.publicity === 'public' || after.publicity === 'collectiveGoalOnly') {
         sendNotificationFinishedGoalInCollectiveGoal(goalId, after)
       }
@@ -62,7 +62,7 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
 
   // new (public) goal in collective goal
   if (before.publicity === 'private' && (after.publicity === 'public' || after.publicity === 'collectiveGoalOnly')) {
-    if (!!after.collectiveGoalId) {
+    if (after.collectiveGoalId) {
       sendNewGoalNotificationInCollectiveGoal(goalId, after)
     }
   }
@@ -202,10 +202,10 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
         id: support.id,
         description: support.description,
         finished: !milestone.id,
-        receiver: !!milestone.achiever.uid ? milestone.achiever : receiver
+        receiver: milestone.achiever.uid ? milestone.achiever : receiver
       })
 
-      if (!!supporters[uid]) {
+      if (supporters[uid]) {
         supporters[uid].push(supportNotification)
       } else {
         supporters[uid] = [supportNotification]
