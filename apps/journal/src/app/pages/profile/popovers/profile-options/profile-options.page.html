@@ -1,5 +1,0 @@
-<ion-list mode="md">
-  <!-- <ion-item (click)="pushNotifications()" button>Give push notification permission</ion-item> -->
-  <ion-item button *ngIf="pwa.showInstallPromotion$ | async" (click)="pwa.showInstallPromotion()">Install app</ion-item>
-  <ion-item (click)="signOut()" button lines="none">Log out</ion-item>
-</ion-list>

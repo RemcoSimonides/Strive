@@ -6,7 +6,7 @@
     <ion-title>{{ !!profileId ? (profile$ | async)?.username : 'Profile'  }}</ion-title>
     <ng-container *ngIf="isOwner$ | async">
       <ion-buttons slot="end">
-        <ion-button (click)="presentProfileOptionsPopover($event)">
+        <ion-button routerLink="/settings">
           <ion-icon slot="icon-only" name="settings"></ion-icon>
         </ion-button>
       </ion-buttons>

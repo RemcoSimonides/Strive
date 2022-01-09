@@ -17,9 +17,19 @@ export class FcmService {
   ) { }
 
   private async getPermission() {
-    const token = await getToken(this.messaging);
-    console.log('Permission granted! Save to the server!', token);
-    this.personal.addFCMToken(token);
+    try {
+      const token = await getToken(this.messaging);
+      console.log('Permission granted! Save to the server!', token);
+
+      this.personal.addFCMToken(token);
+    } catch(err) {
+      this.toastController.create({
+        message: 'Something went wrong',
+        duration: 5000,
+        position: 'bottom',
+      }).then(toast => toast.present())
+    }
+
   }
 
   async registerFCM() {

@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 import { Personal } from './user.firestore';
 
 @Injectable({ providedIn: 'root' })
-export class PersonalService extends FireCollection<Personal> {
+export class PersonalService extends FireCollection<any> {
   readonly path = 'Users/:uid/Personal'
   readonly idKey = 'uid'
 
@@ -23,9 +23,8 @@ export class PersonalService extends FireCollection<Personal> {
 
   addFCMToken(token: string) {
     if (token && this.user.uid) {
-      this.upsert({
-        uid: this.user.uid,
-        fcmTokens: arrayUnion(token) as any
+      this.update(this.user.uid, {
+        fcmTokens: arrayUnion(token)
       }, { params: { uid: this.user.uid }})
     }
   }

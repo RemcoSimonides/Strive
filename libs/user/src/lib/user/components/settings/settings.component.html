@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none">Install App</ion-item>
+
+    <ion-list-header>Notification</ion-list-header>
+    <ion-item button (click)="pushNotifications()" lines="none">Push Notifications Permission</ion-item>
+    <!-- <ion-item>Notifications</ion-item> -->
+
+    <!-- <ion-item>Contact, bugs & suggestions</ion-item> -->
+    <ion-list-header>Legal</ion-list-header>
+    <ion-item routerLink="/terms">Terms of Use</ion-item>
+    <ion-item routerLink="/privacy-policy" lines="none">Privacy Policy</ion-item>
+
+    <ion-list-header>Authentication</ion-list-header>
+    <ion-item button (click)="signOut()" lines="none">Log out</ion-item>
+  </ion-list>
+</ion-content>

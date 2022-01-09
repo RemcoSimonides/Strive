@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
   { path: 'profile', redirectTo: 'profile/'},
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
+  { path: 'settings', loadChildren: () => import('@strive/user/user/components/settings/settings.module').then(m => m.SettingsPageModule)},
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageModule) },
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) }
 ];

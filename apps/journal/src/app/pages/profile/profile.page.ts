@@ -12,7 +12,6 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
 import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
-import { ProfileOptionsComponent } from './popovers/profile-options/profile-options.page';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
@@ -139,13 +138,6 @@ export class ProfileComponent implements OnInit {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
-  }
-
-  presentProfileOptionsPopover(ev: UIEvent) {
-    this.popoverCtrl.create({
-      component: ProfileOptionsComponent,
-      event: ev
-    }).then(popover => popover.present())
   }
 
   createGoal() {
