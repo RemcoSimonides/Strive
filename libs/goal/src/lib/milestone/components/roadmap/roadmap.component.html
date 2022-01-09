@@ -1,6 +1,6 @@
 <ng-container *ngIf="milestones else loading">
   <ng-container *ngIf="milestones.length || isAdmin else empty">
-    <ion-reorder-group [disabled]="false" (ionItemReorder)="doReorder($event)">
+    <ion-reorder-group [disabled]="!isAdmin" (ionItemReorder)="doReorder($event)">
       <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn"  (click)="openDetails(milestone)" button>
         <strive-milestone-status [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
         <section fxLayout="column">
