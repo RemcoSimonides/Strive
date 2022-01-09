@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-list>
+  <ion-list mode="md">
     <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none">Install App</ion-item>
 
     <ion-list-header>Notification</ion-list-header>
