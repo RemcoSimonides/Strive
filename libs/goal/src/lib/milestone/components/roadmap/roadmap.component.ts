@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 
 import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
@@ -33,6 +33,27 @@ export class RoadmapComponent {
     private modalCtrl: ModalController,
     private milestone: MilestoneService
   ) {}
+
+  trackByFn(index: number, milestone: Milestone) {
+    return milestone.id
+  }
+
+  doReorder(ev: CustomEvent<ItemReorderEventDetail>) {
+    const { from, to } = ev.detail
+
+    const element = this.milestones[from]
+    this.milestones.splice(from, 1)
+    this.milestones.splice(to, 0, element)
+
+    this.milestones.forEach(((milestone, index) => { milestone.order = index }))
+
+    const min = Math.min(from, to)
+    const max = Math.max(from, to)
+    const milestonesToUpdate = this.milestones.filter(milestone => milestone.order >= min && milestone.order <= max).map(milestone => ({ id: milestone.id, order: milestone.order }))
+
+    this.milestone.update(milestonesToUpdate, { params: { goalId: this.goal.id }})
+    ev.detail.complete();
+  }
 
   add() {
     if (this.milestoneForm.value) {
