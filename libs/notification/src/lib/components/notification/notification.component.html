@@ -19,9 +19,7 @@
           <ng-container *ngIf="message.link; else noLink">
             <a [routerLink]="'/' + message.link">{{ message.text }}</a>
           </ng-container>
-          <ng-template #noLink>
-            {{ message.text }}
-          </ng-template>
+          <ng-template #noLink>{{ message.text }}</ng-template>
         </ng-container>
       </span>
 
