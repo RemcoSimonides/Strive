@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, LoadingController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
-import { Functions } from '@angular/fire/functions';
+import { AlertController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
@@ -51,11 +50,9 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertCtrl: AlertController,
-    private functions: Functions,
     private goalService: GoalService,
     // private collectiveGoalService: CollectiveGoalService,
     private inviteTokenService: InviteTokenService,
-    private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private platform: Platform,
@@ -125,9 +122,6 @@ export class GoalComponent implements OnInit, OnDestroy {
         case enumGoalOptions.editNotificationSettings:
           console.warn('not supported yet')
           break
-        // case enumGoalOptions.duplicateGoal:
-        //   this.duplicateGoal()
-        //   break
         case enumGoalOptions.editGoal:
           this.editGoal(goal)
           break
@@ -136,24 +130,6 @@ export class GoalComponent implements OnInit, OnDestroy {
       }
     })
   }
-
-  // public async duplicateGoal() {
-  //   const loading = await this.loadingCtrl.create({
-  //     message: `Duplicating goal`,
-  //     spinner: 'lines'
-  //   })
-  //   loading.present()
-
-  //   const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
-  //   const { error, result } = await duplicateGoalFn({ goalId: this.goalId }).then(res => res.data) as { error: string, result: string }
-
-  //   if (!!error) {
-  //     loading.dismiss();
-  //     throw new Error(result)
-  //   };
-  //   this.navCtrl.navigateRoot(`goal/${result}`);
-  //   loading.dismiss();
-  // }
 
   updateStatus($event, goal: Goal) {
     if (!this.isAchiever) return;
