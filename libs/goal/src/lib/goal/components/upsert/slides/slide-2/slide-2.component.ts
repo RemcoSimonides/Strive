@@ -30,7 +30,7 @@ export class Slide2Component implements OnDestroy {
       description: 'Being reminded of what or who inspired you to start this goal will motivate you to keep striving during hard moments.'
     },
     stop: {
-      title: 'What is hold you back?',
+      title: 'What is holding you back?',
       description: `What is stopping you? Are you stuck in your bad habits? Not having enough time? Why don't you do less of what you rather not do.`,
     },
     else: {

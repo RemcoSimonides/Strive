@@ -5,6 +5,8 @@ import { Goal } from "@strive/goal/goal/+state/goal.firestore";
 import { Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
 import { MilestoneService } from "@strive/goal/milestone/+state/milestone.service";
 import { MilestoneForm } from "@strive/goal/milestone/forms/milestone.form";
+import { createUserLink } from "@strive/user/user/+state/user.firestore";
+import { UserService } from "@strive/user/user/+state/user.service";
 import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
@@ -35,7 +37,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private location: Location,
     private milestoneService: MilestoneService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
     modalCtrl.getTop().then(modal => {
@@ -100,5 +103,14 @@ export class DetailsComponent implements OnInit, OnDestroy {
       }
     })
     alert.present()
+  }
+
+  toggleAssignMe() {
+    const achiever = this.milestone.achiever.uid ? createUserLink() : createUserLink(this.user.user)
+    this.milestone.achiever = achiever
+    this.milestoneService.upsert({
+      id: this.milestone.id,
+      achiever
+    }, { params: { goalId: this.goal.id }})
   }
 }

@@ -12,9 +12,20 @@
     </ion-item>
   </form>
 
-  <section fxLayout="column" class="ion-padding">
-    <small >Created at: {{ milestone.createdAt.toDate() | date:'longDate' }}</small>
-    <small *ngIf="milestone.finishedAt">Finished at: {{ milestone.finishedAt.toDate() | date:'longDate' }}</small>
+  <section fxLayout="column" fxLayoutGap="8px" class="ion-padding">
+    <ng-container *ngIf="goal.numberOfAchievers > 1">
+      <div fxLayout fxLayoutGap="8px">
+        <b>Assignee:</b>
+        <ng-container *ngIf="milestone.achiever.uid else empty">
+          <goal-milestone-assignee [achiever]="milestone.achiever" (click)="toggleAssignMe()" class="clickable"></goal-milestone-assignee>
+        </ng-container>
+        <ng-template #empty>
+          <i (click)="toggleAssignMe()" class="clickable">No one - Assign me</i>
+        </ng-template>
+      </div>
+    </ng-container>  
+    <small><b>Created at:</b> {{ milestone.createdAt.toDate() | date:'longDate' }}</small>
+    <small *ngIf="milestone.finishedAt"><b>Finished at:</b> {{ milestone.finishedAt.toDate() | date:'longDate' }}</small>
   </section>
 </ion-content>
 

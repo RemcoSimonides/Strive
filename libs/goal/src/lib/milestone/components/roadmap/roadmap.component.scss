@@ -7,9 +7,11 @@ h3 {
   text-align: center;
 }
 
-img {
-  max-width: 360px;
-  max-height: 360px;
+.empty {
+  img {
+    max-width: 360px;
+    max-height: 360px;
+  }
 }
 
 ion-reorder {

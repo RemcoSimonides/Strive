@@ -8,6 +8,7 @@ import { DetailsComponent } from './details.component';
 
 import { MilestoneStatusModule } from '../status/status.module';
 import { MilestoneDeadlineModule } from '../deadline/deadline.module';
+import { AssigneeModule } from '../assignee/assignee.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { MilestoneDeadlineModule } from '../deadline/deadline.module';
     ReactiveFormsModule,
 
     MilestoneStatusModule,
-    MilestoneDeadlineModule
+    MilestoneDeadlineModule,
+    AssigneeModule
   ],
   declarations: [
     DetailsComponent

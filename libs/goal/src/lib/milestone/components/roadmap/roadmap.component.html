@@ -5,18 +5,15 @@
         <strive-milestone-status [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
         <section fxLayout="column">
           {{ milestone.content }}
-          <article fxLayout fxLayoutAlign="start center">
+          <article fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
             <strive-milestone-deadline
               [milestone]="milestone"
               [isAdmin]="isAdmin"
               fxFlex
               (deadlineChange)="updateDeadline(milestone, $event)">
             </strive-milestone-deadline>
-            <ng-container *ngIf="!!milestone.achiever.uid">
-              <div fxLayout fxLayoutAlign="start center" fxFlex>
-                <img [ref]="milestone.achiever.photoURL" asset="profile.png"/>
-                {{ milestone.achiever.username }}
-              </div>
+            <ng-container *ngIf="milestone.achiever.uid">
+              <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
             </ng-container>
           </article>
         </section>
@@ -40,7 +37,7 @@
 </ng-container>
 
 <ng-template #empty>
-  <section fxLayout="column" fxLayoutAlign="center center">
+  <section fxLayout="column" fxLayoutAlign="center center" class="empty">
     <img asset='define_roadmap.png'/>
     <h3>Roadmap is not defined</h3>
   </section>

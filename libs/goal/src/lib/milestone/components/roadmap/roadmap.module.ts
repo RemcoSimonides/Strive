@@ -9,6 +9,7 @@ import { RoadmapComponent } from './roadmap.component';
 
 import { MilestoneDeadlineModule } from '../deadline/deadline.module';
 import { MilestoneStatusModule } from '../status/status.module';
+import { AssigneeModule } from '../assignee/assignee.module';
 
 import { AddSupportModalModule } from '@strive/support/components/add/add.module';
 import { ImageModule } from '@strive/media/directives/image.module';
@@ -25,6 +26,7 @@ import { DetailsModule } from '../details/details.module';
     ImageModule,
     MilestoneDeadlineModule,
     MilestoneStatusModule,
+    AssigneeModule,
     AddSupportModalModule,
     DetailsModule
   ],
