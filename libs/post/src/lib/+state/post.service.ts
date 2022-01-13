@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 // Services
-import { Auth } from '@angular/fire/auth';
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
+import { UserService } from '@strive/user/user/+state/user.service';
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
 import { createPost, Post } from './post.firestore';
@@ -15,7 +15,7 @@ export class PostService extends FireCollection<Post> {
 
   constructor(
     public db: Firestore,
-    private afAuth: Auth
+    private user: UserService
   ) {
     super(db)
   }
@@ -27,8 +27,7 @@ export class PostService extends FireCollection<Post> {
   }
 
   protected async toFirestore(post: Post): Promise<Post> {
-    const { uid, photoURL, displayName } = await this.afAuth.currentUser;
-    post.author = createUserLink({ uid, photoURL, username: displayName });
+    post.author = createUserLink(this.user.user)
     return post
   }
 
