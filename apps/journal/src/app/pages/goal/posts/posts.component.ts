@@ -3,7 +3,7 @@ import { Firestore, collection, where, orderBy, limit, query, Query, getDocs, st
 import { DocumentData, endBefore, QueryConstraint } from 'firebase/firestore';
 
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, scan, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { delay } from '@strive/utils/helpers';
 
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -29,9 +29,7 @@ export class PostsComponent implements OnInit {
   private _done = new BehaviorSubject<boolean>(false)
   private _loading = new BehaviorSubject<boolean>(false)
 
-  posts$ = this._posts.asObservable().pipe(
-    scan((acc, val) => acc.concat(val))
-  )
+  posts$ = this._posts.asObservable()
 
   isAdmin$: Observable<boolean>
 
@@ -62,8 +60,8 @@ export class PostsComponent implements OnInit {
     )
   }
 
-  private async mapAndUpdate(queryConstraints: QueryConstraint[]) {
-    if (this._done.value || this._loading.value) return
+  private async mapAndUpdate(queryConstraints: QueryConstraint[], isRefresh = false) {
+    if (!isRefresh && (this._done.value || this._loading.value)) return
     this._loading.next(true)
 
     const snapshot = await getDocs(query(this.query, ...queryConstraints))
@@ -72,14 +70,15 @@ export class PostsComponent implements OnInit {
         const data = createNotification({ ...doc.data(), id: doc.id })
         return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
       })
-      this._posts.next(posts)
+      this._posts.next([ ...this._posts.value, ...posts ])
     }
-    if (snapshot.empty || snapshot.size < this.postsPerQuery) this._done.next(true)
+    if (!isRefresh && (snapshot.empty || snapshot.size < this.postsPerQuery)) this._done.next(true)
     this._loading.next(false)
   }
 
   async more($event) {
-    const cursor = this._posts.value.pop()?.createdAt ?? null
+    const posts = this._posts.value
+    const cursor = posts[posts.length - 1].createdAt ?? null
 
     await Promise.race([
       delay(5000),
@@ -96,9 +95,8 @@ export class PostsComponent implements OnInit {
     const cursor = this._posts.value[0]?.createdAt ?? null
     await Promise.race([
       delay(5000),
-      this.mapAndUpdate([endBefore(cursor)]).then(() => delay(500))
+      this.mapAndUpdate([endBefore(cursor)], true).then(() => delay(500))
     ])
-
     $event.target.complete()
   }
 }
