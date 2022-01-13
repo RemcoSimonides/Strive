@@ -83,7 +83,6 @@ export type NotificationMeta = SupportDecisionMeta | GoalRequest;
 export interface Notification<Meta extends NotificationMeta = any> {
   id?: string; // only pass id if it needs a specific id
   discussionId: string;
-  discussion?: Discussion; // only used to join discussion data with this data
   type: NotificationTypes;
   target: 'spectator' | 'stakeholder' | 'user' | 'goal'
   event: enumEvent;
