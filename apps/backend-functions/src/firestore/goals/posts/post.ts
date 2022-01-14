@@ -14,12 +14,11 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
     const postId = context.params.postId
 
     if (!post.isEvidence) {
-      sendNotificationNewPost(goalId, postId, post)
+      await sendNotificationNewPost(goalId, postId, post)
     }
   })
 
 async function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
-
   const source: Source = {
     goal: post.goal,
     user: post.author,

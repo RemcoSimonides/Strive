@@ -70,7 +70,8 @@ export class PostsComponent implements OnInit {
         const data = createNotification({ ...doc.data(), id: doc.id })
         return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
       })
-      this._posts.next([ ...this._posts.value, ...posts ])
+      const next = isRefresh ? [...posts, ...this._posts.value] : [...this._posts.value, ...posts]
+      this._posts.next(next)
     }
     if (!isRefresh && (snapshot.empty || snapshot.size < this.postsPerQuery)) this._done.next(true)
     this._loading.next(false)

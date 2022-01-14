@@ -96,10 +96,10 @@ export function sendNotificationToGoal(goalId: string, notification: Partial<Not
   notification.target = 'goal'
 
   if (notification.id) {
-    logger.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, JSON.stringify(notification))
+    logger.log(`adding notification to goal ${goalId} with notificationId ${notification.id}`, notification)
     db.doc(`Goals/${goalId}/Notifications/${notification.id}`).set(notification)
   } else {
-    logger.log(`adding notification to goal ${goalId}`, JSON.stringify(notification))
+    logger.log(`adding notification to goal ${goalId}`, notification)
     db.collection(`Goals/${goalId}/Notifications`).add(notification)
   }
 
