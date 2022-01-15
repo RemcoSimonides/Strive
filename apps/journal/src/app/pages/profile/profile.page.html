@@ -118,7 +118,7 @@
 
     <!-- Supporting Goals overview -->
     <section fxLayout="column">
-      <h2 class="padding">Supporting Goals</h2>
+      <h2>Supporting Goals</h2>
       <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
         <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
           <ion-list class="bucketlist" mode="md">
@@ -155,7 +155,7 @@
         <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
 
         <!-- Exercises -->
-        <h2 class="padding">Exercises</h2>
+        <h2>Exercises</h2>
         <ion-grid>
           <ion-row>
             <ng-container *ngFor="let exercise of exercises">
