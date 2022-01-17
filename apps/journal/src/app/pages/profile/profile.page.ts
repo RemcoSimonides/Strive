@@ -9,7 +9,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Rxjs
-import { Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
 import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
@@ -43,6 +43,7 @@ export class ProfileComponent implements OnInit {
   enumExercises = enumExercises
   exercises = exercises
 
+  _isOwner = new BehaviorSubject<boolean>(false)
   isOwner$: Observable<boolean>
 
   public isSpectator = false
@@ -88,6 +89,7 @@ export class ProfileComponent implements OnInit {
       startWith(false),
       distinctUntilChanged(),
       shareReplay({ bufferSize: 1, refCount: true }),
+      tap(isOwner => this._isOwner.next(isOwner))
     )
 
     this.isSpectator$ = this.user.user$.pipe(
@@ -157,7 +159,8 @@ export class ProfileComponent implements OnInit {
     }).then(popover => popover.present())
   }
 
-  async editProfileImage(user: User, ev: UIEvent): Promise<void> {
+  async editProfileImage(user: User, ev: UIEvent) {
+    if (!this._isOwner.value) return
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverComponent,
       componentProps: { storagePath: user.photoURL },
