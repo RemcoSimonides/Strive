@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { UpsertCollectiveGoalComponent } from './upsert.component';
-import { AutosizeModule } from '@strive/ui/directives/auto-resize-textarea.directive';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 
 @NgModule({
@@ -12,7 +11,6 @@ import { ImageSelectorModule } from '@strive/media/components/image-selector/ima
     CommonModule,
     IonicModule,
     ReactiveFormsModule,
-    AutosizeModule,
     ImageSelectorModule
   ],
   exports: [],

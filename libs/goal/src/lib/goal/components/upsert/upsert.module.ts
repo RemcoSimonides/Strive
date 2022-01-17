@@ -14,7 +14,6 @@ import { Slide5Component } from './slides/slide-5/slide-5.component';
 import { SlideUpdateComponent } from './slides/slide-update/slide-update.component';
 
 import { SwiperModule } from 'swiper/angular';
-import { AutosizeModule } from '@strive/ui/directives/auto-resize-textarea.directive';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap.module';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
@@ -25,7 +24,6 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
     ReactiveFormsModule,
     IonicModule,
     FlexLayoutModule,
-    AutosizeModule,
     ImageSelectorModule,
     SwiperModule,
     RoadmapModule,
