@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { orderBy } from 'firebase/firestore';
+import { Observable } from 'rxjs';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'goal-slide-4',
@@ -22,7 +23,7 @@ export class Slide4Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.milestones$ = this.milestoneService.valueChanges({ goalId: this.goal.id })
+    this.milestones$ = this.milestoneService.valueChanges([orderBy('order', 'asc')], { goalId: this.goal.id })
   }
 
   step(direction: 'next' | 'previous') {

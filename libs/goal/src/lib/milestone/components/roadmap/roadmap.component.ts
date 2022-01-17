@@ -52,7 +52,7 @@ export class RoadmapComponent {
     const milestonesToUpdate = this.milestones.filter(milestone => milestone.order >= min && milestone.order <= max).map(milestone => ({ id: milestone.id, order: milestone.order }))
 
     this.milestone.update(milestonesToUpdate, { params: { goalId: this.goal.id }})
-    ev.detail.complete();
+    ev.detail.complete()
   }
 
   add() {
