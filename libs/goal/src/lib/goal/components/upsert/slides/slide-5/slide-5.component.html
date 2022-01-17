@@ -17,7 +17,7 @@
   </ng-container>
 </article>
 
-<footer fxLayout="column" fxLayoutAlign="start center">
-  <ion-button (click)="stepper.emit('next')">Finish</ion-button>
+<footer fxLayout fxLayoutAlign="space-between">
   <ion-button (click)="stepper.emit('previous')" fill="clear">Previous</ion-button>
+  <ion-button (click)="stepper.emit('next')">Finish</ion-button>
 </footer>

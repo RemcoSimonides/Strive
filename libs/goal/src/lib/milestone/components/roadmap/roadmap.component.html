@@ -2,7 +2,7 @@
   <ng-container *ngIf="milestones.length || isAdmin else empty">
     <ion-reorder-group [disabled]="!isAdmin" (ionItemReorder)="doReorder($event)">
       <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn"  (click)="openDetails(milestone)" button>
-        <strive-milestone-status [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
+        <strive-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
         <section fxLayout="column">
           {{ milestone.content }}
           <article fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
@@ -28,7 +28,7 @@
     
     <form [formGroup]="milestoneForm" *ngIf="isAdmin">
       <ion-item>
-        <strive-milestone-status status="pending"></strive-milestone-status>
+        <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
         <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()"></ion-input>
         <ion-button (click)="add()">add</ion-button>
       </ion-item>
