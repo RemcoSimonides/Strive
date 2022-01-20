@@ -13,44 +13,74 @@
 </ng-container>
 
 <ion-content class="ion-padding" *ngIf="!!user.uid && !pageIsLoading">
-  <div class="vertical-align-content">
+  <section>
 
-    <ion-list inset="false" lines="full">
-      <ion-list-header>Goals you support</ion-list-header>
-      <ion-item *ngFor="let support of supportsOpen$ | async">
-        <ion-label class="ion-text-wrap">
-          <ion-text>{{ support.description }}</ion-text>
-          <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-          </ng-template>
-        </ion-label>
-      </ion-item>
+    <h2>Goals you support</h2>
+    <ion-list mode="md">
+      <ng-container *ngIf="supportsOpen$ | async as supports">
+        <ng-container *ngIf="supports.length else notSupportingGoals">
+          <ng-container *ngFor="let support of supports; let last = last">
+            <ion-item [lines]="last ? 'none' : 'inset'">
+              <ion-label class="ion-text-wrap">
+                <ion-text>{{ support.description }}</ion-text>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+        <ng-template #notSupportingGoals>
+          <ion-item>Not supporting any goals yet</ion-item>
+        </ng-template>
+      </ng-container>
+    </ion-list>
       
-      <ion-list-header>Support to get</ion-list-header>
-      <ion-item *ngFor='let support of supportsToGet$ | async'>
-        <ion-label>
-          <ion-text>
-            {{ support.description }} from {{ support.supporter.username }}
-          </ion-text>
-          <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-          </ng-template>
-        </ion-label>
-        <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Got it</ion-button>
-      </ion-item>
-
-      <ion-list-header>Supports to give</ion-list-header>
-      <ion-item *ngFor="let support of supportsToGive$ | async">
-        <ion-label>
-          <ion-text>
-            {{ support.description }} to achiever(s) from {{ support.goal.title }}
-          </ion-text>
-          <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-          </ng-template>
-        </ion-label>
-        <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Gave it</ion-button>
-      </ion-item>
+    <h2>Support to get</h2>
+    <ion-list mode="md">
+      <ng-container *ngIf="supportsToGet$ | async as supports">
+        <ng-container *ngIf="supports.length else noSupportsToGet">
+          <ng-container *ngFor="let support of supports; let last = last">
+            <ion-item [lines]="last ? 'none' : 'inset'">
+              <ion-label>
+                <ion-text>
+                  {{ support.description }} from {{ support.supporter.username }}
+                </ion-text>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+                </ng-template>
+              </ion-label>
+              <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Got it</ion-button>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+        <ng-template #noSupportsToGet>
+          <ion-item lines="none">-</ion-item>
+        </ng-template>
+      </ng-container>
     </ion-list>
 
-  </div>
+    <h2>Supports to give</h2>
+    <ion-list mode="md">
+      <ng-container *ngIf="supportsToGive$ | async as supports">
+        <ng-container *ngIf="supports.length else noSupportsToGive">
+          <ng-container *ngFor="let support of supports; let last = last">
+            <ion-item [lines]="last ? 'none' : 'inset'">
+              <ion-label>
+                <ion-text>
+                  {{ support.description }} to achiever(s) from {{ support.goal.title }}
+                </ion-text>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+                </ng-template>
+              </ion-label>
+              <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Gave it</ion-button>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+        <ng-template #noSupportsToGive>
+          <ion-item lines="none">-</ion-item>
+        </ng-template>
+      </ng-container>
+    </ion-list>
+
+  </section>
 </ion-content>
 
 <ng-template #path let-support>
