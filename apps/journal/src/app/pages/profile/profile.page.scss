@@ -13,6 +13,7 @@ section {
   }
 
   ion-card {
+    border-radius: 12px;
     width: 100%;
     padding: 48px 12px 12px 12px;
   }
@@ -119,6 +120,7 @@ ion-input {
 
 // Exercises
 .exercise-card {
+  border-radius: 12px;
   position: relative;
   text-align: center;
   width: 260px;
@@ -129,13 +131,13 @@ ion-input {
 }
 
 .card-title {
-    position: absolute;
-    background: rgba(0, 0, 0, .4);
-    bottom: 10%;
-    font-size: 2.0em;
-    width: 100%;
-    font-weight: bold;
-    color: #fff;
+  position: absolute;
+  background: rgba(0, 0, 0, .4);
+  bottom: 10%;
+  font-size: 2.0em;
+  width: 100%;
+  font-weight: bold;
+  color: #fff;
 }
 
 h5 {
