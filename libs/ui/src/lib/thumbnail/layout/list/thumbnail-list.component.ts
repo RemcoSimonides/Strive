@@ -1,6 +1,7 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation, AfterContentInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { Subscription } from 'rxjs';
 
 export interface IThumbnail {
   id: string;
@@ -16,11 +17,23 @@ export interface IThumbnail {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class ThumbnailListComponent {
+export class ThumbnailListComponent implements AfterContentInit, OnDestroy {
   @Input() width = 160
 
   @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
 
-  constructor(public screensize: ScreensizeService) {}
+  private sub: Subscription
 
+  constructor(
+    public screensize: ScreensizeService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngAfterContentInit() {
+    this.thumbs.changes.subscribe(() => this.cdr.markForCheck())
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
+  }
 }

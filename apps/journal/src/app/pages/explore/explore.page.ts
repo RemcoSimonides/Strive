@@ -32,8 +32,8 @@ export class ExploreComponent implements OnDestroy {
 
   constructor(
     public algolia: AlgoliaService,
-    public platform: Platform,
     public screensize: ScreensizeService,
+    private platform: Platform,
     private seo: SeoService,
   ) {
     this.searchSubscription = this.searchForm.valueChanges.pipe(

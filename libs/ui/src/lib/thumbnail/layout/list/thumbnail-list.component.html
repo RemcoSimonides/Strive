@@ -17,7 +17,7 @@
 <ng-template #browser>
   <section class="browser" fxLayout fxLayoutAlign="space-between" fxLayoutGap="16px">
 
-    <ng-container *ngFor="let thumb of thumbs.changes | async">
+    <ng-container *ngFor="let thumb of thumbs">
       <ng-container *ngTemplateOutlet="thumb"></ng-container>
     </ng-container>
 
