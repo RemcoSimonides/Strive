@@ -1,55 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, Platform, ModalController } from '@ionic/angular';
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/+state/support.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 // Interfaces
 import { Support } from '@strive/support/+state/support.firestore'
 // Components
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { where } from '@angular/fire/firestore';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'journal-supports',
   templateUrl: './supports.page.html',
   styleUrls: ['./supports.page.scss'],
 })
-export class SupportsComponent implements OnInit {
-
+export class SupportsComponent {
   private backBtnSubscription: Subscription
 
-  public pageIsLoading = true
+  supportsOpen$: Observable<Support[]>
+  supportsToGive$: Observable<Support[]>
+  supportsGiven$: Observable<Support[]>
 
-  public supportsOpen$: Observable<Support[]>
-  public supportsToGet$: Observable<Support[]>
-  public supportsToGive$: Observable<Support[]>
-  public supportsGotten$: Observable<Support[]>
+  supportsToGet$: Observable<Support[]>
+  supportsGotten$: Observable<Support[]>
 
   constructor(
     public user: UserService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
-    private seo: SeoService,
+    seo: SeoService,
     private support: SupportService
-  ) { }
+  ) {
+    seo.generateTags({ title: `Supports - Strive Journal` })
 
-  ngOnInit() {
-    this.seo.generateTags({ title: `Supports - Strive Journal` })
+    const supportsGive$: Observable<Support[]> = this.user.user$.pipe(
+      switchMap(user => user ? this.support.groupChanges([where('supporter.uid', '==', user.uid)]) : of([]))
+    )
+    const supportsGet$: Observable<Support[]> = this.user.user$.pipe(
+      switchMap(user => user ? this.support.groupChanges([where('receiver.uid', '==', user.uid)]) : of([]))
+    )
 
-    this.user.user$.subscribe(user => {
-      if (user) {
-        this.supportsOpen$ = this.support.groupChanges([where('supporter.uid', '==', user.uid), where('status', '==', 'open')])
-        this.supportsToGet$ = this.support.groupChanges([where('receiver.uid', '==', user.uid), where('status', '==', 'waiting_to_be_paid')])
-        this.supportsToGive$ = this.support.groupChanges([where('supporter.uid', '==', user.uid), where('status', '==', 'waiting_to_be_paid')])
-        // this._supportsGotten$ = this.db.collectionGroupWithIds$(`Supports`, ref => ref.where('receiver.uid', '==', user.uid).where('status', '==', 'paid'))
-      }
+    this.supportsOpen$ = supportsGive$.pipe(
+      map(supports => supports.filter(support => support.status === 'open'))
+    )
 
-      this.pageIsLoading = false
-    }) 
+    this.supportsToGive$ = supportsGive$.pipe(
+      map(supports => supports.filter(support => support.status === 'waiting_to_be_paid'))
+    )
+
+    this.supportsGiven$ = supportsGive$.pipe(
+      map(supports => supports.filter(support => support.status === 'paid'))
+    )
+
+    this.supportsToGet$ = supportsGet$.pipe(
+      map(supports => supports.filter(support => support.status === 'waiting_to_be_paid'))
+    )
+
+    this.supportsGotten$ = supportsGet$.pipe(
+      map(supports => supports.filter(support => support.status === 'paid'))
+    )
   }
 
   ionViewDidEnter() { 

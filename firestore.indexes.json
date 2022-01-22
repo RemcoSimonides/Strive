@@ -80,22 +80,6 @@
       ]
     },
     {
-      "collectionGroup": "Supports",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        { "fieldPath": "status", "order": "ASCENDING" },
-        { "fieldPath": "supporter.uid", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "Supports",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        { "fieldPath": "status", "order": "ASCENDING" },
-        { "fieldPath": "receiver.uid", "order": "ASCENDING" }
-      ]
-    },
-    {
       "collectionGroup": "ScheduledTasks",
       "queryScope": "COLLECTION",
       "fields": [
@@ -160,6 +144,50 @@
     {
       "collectionGroup": "Spectators",
       "fieldPath": "uid",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "arrayConfig": "CONTAINS",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Supports",
+      "fieldPath": "supporter.uid",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "arrayConfig": "CONTAINS",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Supports",
+      "fieldPath": "receiver.uid",
       "indexes": [
         {
           "order": "ASCENDING",

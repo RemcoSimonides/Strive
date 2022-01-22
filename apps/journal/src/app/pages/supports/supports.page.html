@@ -1,10 +1,10 @@
 <strive-header title="Supports" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
-<ng-container *ngIf="pageIsLoading || user.uid === undefined">
+<ng-container *ngIf="user.uid === undefined">
   <strive-page-loading></strive-page-loading>
 </ng-container>
 
-<ng-container *ngIf="user.uid === '' && !pageIsLoading">
+<ng-container *ngIf="user.uid === ''">
   <div class="not-logged-in">
     <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
@@ -12,7 +12,7 @@
   </div>  
 </ng-container>
 
-<ion-content class="ion-padding" *ngIf="!!user.uid && !pageIsLoading">
+<ion-content class="ion-padding" *ngIf="!!user.uid">
   <section>
 
     <h2>Goals you support</h2>
@@ -75,6 +75,50 @@
           </ng-container>
         </ng-container>
         <ng-template #noSupportsToGive>
+          <ion-item lines="none">-</ion-item>
+        </ng-template>
+      </ng-container>
+    </ion-list>
+
+    <h2>Supports gotten</h2>
+    <ion-list mode="md">
+      <ng-container *ngIf="supportsGotten$ | async as supports">
+        <ng-container *ngIf="supports.length else noSupportsGotten">
+          <ng-container *ngFor="let support of supports; let last = last">
+            <ion-item [lines]="last ? 'none' : 'inset'">
+              <ion-label>
+                <ion-text>
+                  {{ support.description }} to achiever(s) from {{ support.goal.title }}
+                </ion-text>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+                </ng-template>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+        <ng-template #noSupportsGotten>
+          <ion-item lines="none">-</ion-item>
+        </ng-template>
+      </ng-container>
+    </ion-list>
+
+    <h2>Supports given</h2>
+    <ion-list mode="md">
+      <ng-container *ngIf="supportsGiven$ | async as supports">
+        <ng-container *ngIf="supports.length else noSupportsGiven">
+          <ng-container *ngFor="let support of supports; let last = last">
+            <ion-item [lines]="last ? 'none' : 'inset'">
+              <ion-label>
+                <ion-text>
+                  {{ support.description }} to achiever(s) from {{ support.goal.title }}
+                </ion-text>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
+                </ng-template>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+        <ng-template #noSupportsGiven>
           <ion-item lines="none">-</ion-item>
         </ng-template>
       </ng-container>
