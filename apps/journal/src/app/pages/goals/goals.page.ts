@@ -1,60 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { Platform, NavController, ModalController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { Platform, NavController, ModalController, PopoverController } from '@ionic/angular';
 
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 
 // Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { enumGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { CollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
+import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 // Pages
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { UpsertCollectiveGoalComponent } from '@strive/collective-goal/collective-goal/modals/upsert/upsert.component';
-
+import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 
 @Component({
   selector: 'journal-goals',
   templateUrl: './goals.page.html',
   styleUrls: ['./goals.page.scss'],
 })
-export class GoalsComponent implements OnInit {
+export class GoalsComponent {
 
-  goals$: Observable<Goal[]>
-  collectiveGoals$: Observable<CollectiveGoal[]>
+  achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
 
-  backBtnSubscription: Subscription
+  private backBtnSubscription: Subscription
 
   constructor(
     public user: UserService,
-    private collectiveGoal: CollectiveGoalService,
     private goal: GoalService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
+    private popoverCtrl: PopoverController,
     private seo: SeoService
-  ) { }
-
-  ngOnInit() {
-    this.goals$ = this.user.user$.pipe(
-      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([])),
-      map(values => values.map(value => value.goal))
+  ) {
+    this.achievingGoals$ = this.user.user$.pipe(
+      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([]))
     )
 
-    this.collectiveGoals$ = this.user.user$.pipe(
-      switchMap(user => user ? this.collectiveGoal.getCollectiveGoalsOfStakeholder(user.uid) : of([]))
-    )
-
-    this.seo.generateTags({ title: `Goals - Strive Journal` })
+    this.seo.generateTags({ title: `Bucket List - Strive Journal` })
   }
 
   ionViewDidEnter() { 
@@ -85,12 +74,23 @@ export class GoalsComponent implements OnInit {
       component: UpsertGoalModalComponent
     }).then(modal => modal.present())
   }
-  
-  createCollectiveGoal() {
-    this.modalCtrl.create({
-      component: UpsertCollectiveGoalComponent
-    }).then(modal => modal.present())
+
+  openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, ev: UIEvent) {
+    ev.stopPropagation()
+    ev.preventDefault()
+
+    this.popoverCtrl.create({
+      component: GoalOptionsComponent,
+      componentProps: { goal, stakeholder },
+      event: ev
+    }).then(popover => popover.present())
   }
+  
+  // createCollectiveGoal() {
+  //   this.modalCtrl.create({
+  //     component: UpsertCollectiveGoalComponent
+  //   }).then(modal => modal.present())
+  // }
 }
 
 // function filterDuplicateGoals(observables: Observable<Goal[]>[]) {

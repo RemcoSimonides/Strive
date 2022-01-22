@@ -2,5 +2,6 @@
   <ion-item *ngIf="stakeholder.status !== 'finished'" button (click)="setStatus('finished')">Mark as Finished</ion-item>
   <ion-item *ngIf="stakeholder.status === 'bucketlist'" button (click)="setStatus('active')">Set as 'Current Focus'</ion-item>
   <ion-item *ngIf="stakeholder.status === 'active'" button (click)="setStatus('bucketlist')">Set as 'In Future'</ion-item>
-  <ion-item button lines="none" (click)="goTo()">More info</ion-item>
+  <!-- Remove View goal if there is an action for 'finished' goals -->
+  <ion-item button lines="none" (click)="goTo()">View goal</ion-item> 
 </ion-list>

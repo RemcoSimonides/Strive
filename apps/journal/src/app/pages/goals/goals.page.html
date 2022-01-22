@@ -1,37 +1,51 @@
-<strive-header title="Goals" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
+<strive-header title="Bucket List" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
 
 <ng-container *ngIf="user.uid !== undefined else loading">
   <ng-container *ngIf="!!user.uid else notLoggedIn">
-  
     <ion-content class="ion-no-padding">
 
       <!-- Goals -->
-      <h2>Your Goals</h2>
-      <section class="goals">
-        <strive-small-thumbnail title="CREATE GOAL" asset="create_goal.jpeg" (click)="createGoal()"></strive-small-thumbnail>
-        <ng-container *ngFor="let goal of goals$ | async">
-          <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [isFinished]="goal.status === 'finished'" [routerLink]="'/goal/' + goal.id">
-            <small>
-              {{ goal.numberOfSupporters }} Supporter{goal.numberOfSupporters, plural, =1 {} other {s}}<br/>
-              {{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}
-            </small>
-          </strive-small-thumbnail>
+      <section fxLayout="column">
+        <article fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
+          <h2>Bucket List</h2>
+          <ion-button fill="clear" (click)="createGoal()">
+            <ion-icon name="add" slot="start"></ion-icon>
+            <span>add goal</span>
+          </ion-button>
+        </article>
+
+        <ng-container *ngIf="achievingGoals$ | async as achievingGoals; else loading">
+          <ng-container *ngIf="achievingGoals.length > 0 else noBucketList">
+            <ion-list class="md">
+              <ng-container *ngFor="let value of achievingGoals; let last = last">
+                <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', value.goal.id]">
+                  <ion-thumbnail slot="start" [ngClass]="{'gradient-border': value.stakeholder.status === 'active'}">
+                    <img [ref]="value.goal.image" asset="goal.jpeg"/>
+                    <div *ngIf="value.stakeholder.status === 'finished'">finished</div>
+                  </ion-thumbnail>
+                  <article>
+                    <ion-label fxLayout="column">
+                      <b>{{ value.goal.title }}</b>
+                      <small fxLayout fxLayoutGap="4px">
+                        <ion-icon name="pulse"></ion-icon><span>{{ value.stakeholder.status | status }}</span>
+                        <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                      </small>
+                    </ion-label>
+                    <ion-button fill="clear" (click)="openGoalOptions(value.goal, value.stakeholder, $event)">
+                      <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                    </ion-button>
+                  </article>
+                </ion-item>
+              </ng-container>
+            </ion-list>
+          </ng-container>
+          <ng-template #noBucketList>
+            <span class="padding">Not achieving any goals</span>
+          </ng-template>
         </ng-container>
       </section>
-  
-      <!-- Collective goals -->
-      <!-- <h2>Your Collective Goals</h2>
-      <section class="collective">
-        <strive-large-thumbnail title="CREATE COLLECTIVE GOAL" asset="create_goal.jpeg" (click)="createCollectiveGoal()"></strive-large-thumbnail>
-        <ng-container *ngFor="let collectiveGoal of collectiveGoals$ | async">
-          <strive-large-thumbnail [title]="collectiveGoal.title" [image]="collectiveGoal.image" asset="collective-goal.jpeg" [routerLink]="['/collective-goal', collectiveGoal.id]">
-            <small>{{ collectiveGoal.numberOfAchievers }} Achiever{collectiveGoal.numberOfAchievers, plural, =1 {} other {s}}</small>
-          </strive-large-thumbnail>
-        </ng-container>
-      </section> -->
-  
+
     </ion-content>
-  
   </ng-container>
 </ng-container>
 

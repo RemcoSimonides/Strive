@@ -87,7 +87,7 @@
       </article>
       <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
         <ng-container *ngIf="achievingGoals.length > 0 else noBucketList">
-          <ion-list class="bucketlist" mode="md">
+          <ion-list mode="md">
             <ng-container *ngFor="let value of achievingGoals; let last = last">
               <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', value.goal.id]">
                 <ion-thumbnail slot="start" [ngClass]="{'gradient-border': value.stakeholder.status === 'active'}">
@@ -121,7 +121,7 @@
       <h2>Supporting Goals</h2>
       <ng-container *ngIf="supportingGoals$ | async as supportingGoals">
         <ng-container *ngIf="supportingGoals.length > 0 else noSupportingGoals">
-          <ion-list class="bucketlist" mode="md">
+          <ion-list mode="md">
             <ng-container *ngFor="let goal of supportingGoals; let last = last">
               <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', goal.id]">
                 <ion-thumbnail slot="start">

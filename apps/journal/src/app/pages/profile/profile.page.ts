@@ -18,8 +18,9 @@ import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/compone
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
+import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 // Interfaces
-import { createSpectator, Spectator } from '@strive/user/spectator/+state/spectator.firestore';
+import { createSpectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { User } from '@strive/user/user/+state/user.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
@@ -28,7 +29,6 @@ import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/comp
 import { UserForm } from '@strive/user/user/forms/user.form';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { enumExercises, exercises } from '@strive/exercises/utils';
-import { GoalOptionsComponent } from './popovers/goal-options/goal-options.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
 @Component({
@@ -37,29 +37,21 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfileComponent implements OnInit {
-
   private backBtnSubscription: Subscription
 
-  enumExercises = enumExercises
   exercises = exercises
 
-  _isOwner = new BehaviorSubject<boolean>(false)
+  private _isOwner = new BehaviorSubject<boolean>(false)
   isOwner$: Observable<boolean>
 
-  public isSpectator = false
-  public isSpectator$: Observable<boolean>
+  isSpectator$: Observable<boolean>
 
-  public profileId: string
-  public profile$: Observable<User>
-  public profileForm = new UserForm()
+  profileId: string
+  profile$: Observable<User>
+  profileForm = new UserForm()
 
-  public achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
-  public supportingGoals$: Observable<Goal[]>
-
-  public spectators: Spectator[]
-  public spectating: Spectator[]
-
-  public segmentChoice = 'info'
+  achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
+  supportingGoals$: Observable<Goal[]>
 
   constructor(
     public user: UserService,
@@ -82,6 +74,7 @@ export class ProfileComponent implements OnInit {
     this.isOwner$ = this.user.user$.pipe(
       tap(user => {
         if (!this.profileId && user) {
+          // after logging in on your profile page
           this.location.replaceState(`/profile/${user.uid}`)
         }
       }),
