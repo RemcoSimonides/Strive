@@ -24,12 +24,12 @@
   </ion-header>
 </ng-container>
 
-<ng-container *ngIf="user.uid !== undefined else loading">  
+<ng-container *ngIf="user.uid !== undefined else loading">
   <ng-container *ngIf="!!user.uid; else notLoggedIn">
-    <ng-container *ngIf="feed.data | async as notifications; else loading">
+    <ng-container *ngIf="notifications$ | async as notifications; else loading">
 
       <ion-content>
-        <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
           <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
       
@@ -48,7 +48,7 @@
               </ng-container>
             </ng-container>
 
-            <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+            <ion-infinite-scroll threshold="100px" (ionInfinite)="more($event)">
               <ion-infinite-scroll-content
                 loadingSpinner="bubbles"
                 loadingText="Loading more data...">

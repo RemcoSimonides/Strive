@@ -1,16 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular';
-import { Observable, of, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ModalController, NavController, Platform } from '@ionic/angular';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 // Strive
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from '@strive/utils/services/seo.service';
-import { FeedPaginationService } from '@strive/notification/+state/feed-pagination.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { limit, where } from '@angular/fire/firestore';
+import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAfter, where } from '@angular/fire/firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
@@ -19,6 +18,11 @@ import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/compon
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
+import { DocumentData } from 'rxfire/firestore/interfaces';
+import { DiscussionService } from '@strive/discussion/+state/discussion.service';
+import { orderBy, QueryConstraint } from 'firebase/firestore';
+import { createNotification } from '@strive/notification/+state/notification.model';
+import { delay } from '@strive/utils/helpers';
 
 @Component({
   selector: 'journal-feed',
@@ -26,40 +30,58 @@ import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/compone
   styleUrls: ['./feed.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FeedComponent implements OnInit, OnDestroy {
-  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+export class FeedComponent implements OnDestroy {
+  private notificationsPerQuery = 20
+  private query: Query<DocumentData>
+
+  private _notifications = new BehaviorSubject<Notification[]>([])
+  private _done = new BehaviorSubject<boolean>(false)
+  private _loading = new BehaviorSubject<boolean>(false)
+  notifications$ = this._notifications.asObservable()
+
   enumAuthSegment = enumAuthSegment
+  exercises = exercises
   
   decisions$: Observable<Notification[]>
   unreadNotifications$: Observable<boolean>
 
   goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
   collectiveGoals$ = this.collectiveGoal.valueChanges(['NG03OJqJNB0ZmiYyVdkK', 'Heax8uzGOWcnooaDePkJ', 'rFGdiK8iIWwMPXGZ6OWM', 'XGtfe77pCKh1QneOipI7'])
-  exercises = exercises
 
   private backBtnSubscription: Subscription
   private userSubscription: Subscription
 
   constructor(
     private collectiveGoal: CollectiveGoalService,
+    private discussion: DiscussionService,
+    private db: Firestore,
     private goal: GoalService,
     public user: UserService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public feed: FeedPaginationService,
     private notification: NotificationService,
     private platform: Platform,
     private seo: SeoService,
     private cdr: ChangeDetectorRef,
     public pwa: PWAService,
     public screensize: ScreensizeService
-  ) { }
+  ) {
+    this.seo.generateTags({ title: `Strive Journal` })
 
-  ngOnInit() {
-    this.seo.generateTags({ title: `Strive Journal` });
-    
     this.userSubscription = this.user.user$.subscribe(user => {
-      user ? this.feed.init(`Users/${user.uid}/Notifications`) : this.feed.reset()
+      if (user) {
+        const ref = collection(this.db, `Users/${user.uid}/Notifications`)
+        const constraints = [
+          where('type', '==', 'feed'),
+          orderBy('createdAt', 'desc'),
+          limit(this.notificationsPerQuery)
+        ]
+        this.query = query(ref, ...constraints)
+        this.mapAndUpdate([])
+      } else {
+        this._notifications.next([])
+        this._done.next(false)
+      }
       this.cdr.markForCheck()
     })
 
@@ -123,27 +145,44 @@ export class FeedComponent implements OnInit, OnDestroy {
     modal.present()
   }
 
-  doRefresh($event) {
-    this.feed.refresh(`Users/${this.user.uid}/Notifications`)
-    this.feed.refreshing$.subscribe(refreshing => {
-      if (refreshing === false) {
-        setTimeout(() => {
-          $event.target.complete();
-        }, 500);
-      }
-    })
+  private async mapAndUpdate(queryConstraints: QueryConstraint[], isRefresh = false) {
+    if (!isRefresh && (this._done.value || this._loading.value)) return
+    this._loading.next(true)
 
-    setTimeout(() => {
-      $event.target.complete();
-    }, 5000);
+    const snapshot = await getDocs(query(this.query, ...queryConstraints))
+    if (!snapshot.empty) {
+      const notifications = snapshot.docs.map(doc => {
+        const data = createNotification({ ...doc.data(), id: doc.id })
+        return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
+      })
+      const next = isRefresh ? [...notifications, ...this._notifications.value] : [...this._notifications.value, ...notifications]
+      this._notifications.next(next)
+    }
+    if (!isRefresh && (snapshot.empty || snapshot.size < this.notificationsPerQuery)) this._done.next(true)
+    this._loading.next(false)
   }
 
-  loadData(event) {
-    this.feed.more()
-    event.target.complete();
+  async more($event) {
+    const posts = this._notifications.value
+    const cursor = posts[posts.length - 1].createdAt ?? null
 
-    if (this.feed.done) {
-      event.target.disabled = true
+    await Promise.race([
+      delay(5000),
+      this.mapAndUpdate([startAfter(cursor)])
+    ])
+
+    $event.target.complete()
+    if (this._done.value) {
+      $event.target.disabled = true
     }
+  }
+
+  async refresh($event) {
+    const cursor = this._notifications.value[0]?.createdAt ?? null
+    await Promise.race([
+      delay(5000),
+      this.mapAndUpdate([endBefore(cursor)], true).then(() => delay(500))
+    ])
+    $event.target.complete()
   }
 }
