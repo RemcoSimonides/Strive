@@ -2,3 +2,7 @@ small {
   display: block;
   margin-bottom: 16px;
 }
+
+ion-item {
+  --highlight-background: var(--ion-color-primary);
+}
