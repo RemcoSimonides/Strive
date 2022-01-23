@@ -6,6 +6,23 @@ import { UserLink, createUserLink } from '@strive/user/user/+state/user.firestor
 export type SupportDecision = 'give' | 'keep'
 export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
 
+export function getStatusLabel(support: Support) {
+  const label: Record<SupportStatus, string> = {
+    open: '',
+    rejected: 'Rejected',
+    waiting_to_be_paid: 'Waiting to be paid',
+    paid: 'Given'
+  }
+
+  if (support.status === 'open') {
+    return support.milestone?.id
+      ? 'Waiting for milestone to be completed'
+      : 'Waiting for goal to be completed'
+  } else {
+    return label[support.status]
+  }
+}
+
 export interface Support {
   id?: string;
   amount?: number;

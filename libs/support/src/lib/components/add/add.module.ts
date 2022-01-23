@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AddSupportModalComponent } from './add.component';
 
@@ -14,7 +15,8 @@ import { ImageModule } from '@strive/media/directives/image.module';
     ReactiveFormsModule,
     IonicModule,
     FontAwesomeModule,
-    ImageModule
+    ImageModule,
+    FlexLayoutModule
   ],
   declarations: [
     AddSupportModalComponent

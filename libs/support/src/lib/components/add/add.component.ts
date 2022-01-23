@@ -1,20 +1,21 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, ModalController } from '@ionic/angular';
 // Rxjs
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service'
 import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service'
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
-import { Support } from '@strive/support/+state/support.firestore'
-import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
+import { getStatusLabel, Support } from '@strive/support/+state/support.firestore'
+import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { orderBy, where } from '@angular/fire/firestore';
+import { map, switchMap } from 'rxjs/operators';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 
 @Component({
@@ -22,7 +23,7 @@ import { createUserLink } from '@strive/user/user/+state/user.firestore';
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
 })
-export class AddSupportModalComponent implements OnInit, OnDestroy {
+export class AddSupportModalComponent implements OnInit {
   origin: 'goal' | 'milestone'
 
   private goalId: string
@@ -34,8 +35,6 @@ export class AddSupportModalComponent implements OnInit, OnDestroy {
   mySupports$: Observable<Support[]>
 
   support = new SupportForm()
-
-  private sub: Subscription;
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
@@ -64,26 +63,24 @@ export class AddSupportModalComponent implements OnInit, OnDestroy {
     this.origin = this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
-    this.sub = this.user.user$.subscribe(user => {
-      const params = { goalId: this.goalId }
+    const params = { goalId: this.goalId }
+    const supports$ = this.origin === 'milestone'
+      ? this.supportService.valueChanges([where('milestone.id', '==', this.milestone.id)], params)
+      : this.supportService.valueChanges([orderBy('createdAt', 'desc')], params)
+    
+    this.supports$ = supports$.pipe(
+      map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
+    )
 
-      this.supports$ = this.origin === 'milestone'
-        ? this.supportService.valueChanges([where('milestone.id', '==', this.milestone.id)], params)
-        : this.supportService.valueChanges([orderBy('createdAt', 'desc')], params)
-
-      
-      if (user) {
-        this.support.supporter.patchValue(createUserLink(user))
-        
-        this.mySupports$ = this.origin === 'milestone'
+    this.mySupports$ = this.user.user$.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.origin === 'milestone'
           ? this.supportService.valueChanges([where('milestone.id', '==', this.milestone.id), where('supporter.uid', '==', user.uid)], params)
           : this.supportService.valueChanges([where('supporter.uid', '==', user.uid), orderBy('createdAt', 'desc')], params)
-      }
-    })
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe()
+        } else return of([])
+      })
+    )
   }
 
   openLoginModal() {
@@ -99,20 +96,15 @@ export class AddSupportModalComponent implements OnInit, OnDestroy {
     this.location.back()
   }
 
-  async addSupport(goal: Goal) {
-
+  addSupport(goal: Goal) {
     if (!this.support.description.value) return;
 
-    this.support.goal.id.patchValue(this.goalId)
-    this.support.goal.title.patchValue(goal.title)
-    this.support.goal.image.patchValue(goal.image)
-    if (this.milestone) {
-      this.support.milestone.id.patchValue(this.milestone.id)
-      this.support.milestone.content.patchValue(this.milestone.content)
-    }
+    this.support.goal.patchValue(createGoalLink({ ...goal, id: this.goalId }))
+    this.support.supporter.patchValue(createUserLink(this.user.user))
+    if (this.milestone) this.support.milestone.patchValue(createMilestoneLink(this.milestone))
 
     this.supportService.add(this.support.value, { params: { goalId: this.goalId }})
-    this.support.reset();
+    this.support.reset()
 
     //Increase number of custom supports
     //IS FIREBASE FUNCTION
@@ -122,6 +114,23 @@ export class AddSupportModalComponent implements OnInit, OnDestroy {
 
     //Send notification to achievers of goal
     //IS FIREBASE FUNCTION
+  }
+
+  getStatusLabel(support: Support) {
+    return getStatusLabel(support)
+  }
+
+  // WHAT ABOUT EDITING A SUPPORT?
+  reject(support: Support) {
+    this.supportService.update(support.id, { status: 'rejected' }, { params: { goalId: this.goalId }})
+  }
+
+  give(support: Support) {
+    this.supportService.update(support.id, { status: 'waiting_to_be_paid' }, { params: { goalId: this.goalId }})
+  }
+
+  paid(support: Support) {
+    this.supportService.update(support.id, { status: 'paid' }, { params: { goalId: this.goalId }})
   }
 
 }

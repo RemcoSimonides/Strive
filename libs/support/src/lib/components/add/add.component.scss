@@ -1,23 +1,22 @@
 ion-toolbar {
   --background: var(--ion-color-primary);
   color: var(--ion-color-primary-contrast);
-}
 
-ion-title {
-  --color: var(--ion-color-primary-contrast);
-}
-
-.arrow {
-  color: var(--ion-color-primary);
-  font-size: 20px;
+  ion-title {
+    --color: var(--ion-color-primary-contrast);
+  }
 }
 
 fa-icon {
   padding-left: 3px;
 }
 
-h4 {
+h2 {
   color: var(--ion-color-primary);
+}
+
+ion-list {
+  border-radius: 12px;
 }
 
 .fat-text-button {
