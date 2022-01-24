@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavParams, ModalController } from '@ionic/angular';
+import { NavParams, ModalController, PopoverController } from '@ionic/angular';
 // Rxjs
 import { Observable, of } from 'rxjs';
 // Services
@@ -17,6 +17,7 @@ import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/comp
 import { orderBy, where } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
+import { SupportOptionsComponent } from '../options/options.component';
 
 @Component({
   selector: 'support-add',
@@ -46,6 +47,7 @@ export class AddSupportModalComponent implements OnInit {
     private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
+    private popoverCtrl: PopoverController,
     private supportService: SupportService,
     public user: UserService
   ) {
@@ -120,17 +122,12 @@ export class AddSupportModalComponent implements OnInit {
     return getStatusLabel(support)
   }
 
-  // WHAT ABOUT EDITING A SUPPORT?
-  reject(support: Support) {
-    this.supportService.update(support.id, { status: 'rejected' }, { params: { goalId: this.goalId }})
-  }
-
-  give(support: Support) {
-    this.supportService.update(support.id, { status: 'waiting_to_be_paid' }, { params: { goalId: this.goalId }})
-  }
-
-  paid(support: Support) {
-    this.supportService.update(support.id, { status: 'paid' }, { params: { goalId: this.goalId }})
+  openOptions(support: Support, event) {
+    this.popoverCtrl.create({
+      component: SupportOptionsComponent,
+      event,
+      componentProps: { support, goalId: this.goalId }
+    }).then(popover => popover.present())
   }
 
 }

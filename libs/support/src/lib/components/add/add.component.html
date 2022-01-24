@@ -41,15 +41,10 @@
             <small>Status: {{ getStatusLabel(support) }}</small>
           </ion-label>
 
-          <ng-container *ngIf="support.status === 'open'">
-            <ion-button fill="outline" color="secondary" (click)="give(support)">Give</ion-button>
-            <ion-button fill="clear" (click)="reject(support)" tooltip="Reject Support">
-              <ion-icon slot="icon-only" name="close"></ion-icon>
+          <ng-container *ngIf="support.status === 'open' || support.status === 'waiting_to_be_paid'">
+            <ion-button fill="clear" (click)="openOptions(support, $event)">
+              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
             </ion-button>
-          </ng-container>
-
-          <ng-container *ngIf="support.status === 'waiting_to_be_paid'">
-            <ion-button fill="outline" (click)="paid(support)">Gave it</ion-button>
           </ng-container>
 
         </ion-item>

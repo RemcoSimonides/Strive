@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddSupportModalComponent } from './add.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SupportOptionsModule } from '../options/options.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ImageModule } from '@strive/media/directives/image.module';
     IonicModule,
     FontAwesomeModule,
     ImageModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    SupportOptionsModule
   ],
   declarations: [
     AddSupportModalComponent

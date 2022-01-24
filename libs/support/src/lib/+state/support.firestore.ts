@@ -4,12 +4,13 @@ import { MilestoneLink, createMilestoneLink } from '@strive/goal/milestone/+stat
 import { UserLink, createUserLink } from '@strive/user/user/+state/user.firestore'
 
 export type SupportDecision = 'give' | 'keep'
-export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
+export type SupportStatus = 'open' | 'rejected' | 'canceled' | 'waiting_to_be_paid' | 'paid'
 
 export function getStatusLabel(support: Support) {
   const label: Record<SupportStatus, string> = {
     open: '',
     rejected: 'Rejected',
+    canceled: 'Canceled',
     waiting_to_be_paid: 'Waiting to be paid',
     paid: 'Given'
   }
