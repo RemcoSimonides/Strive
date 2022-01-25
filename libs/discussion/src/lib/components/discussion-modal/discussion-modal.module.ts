@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -15,7 +16,8 @@ import { CommentModule } from '../comment/comment.module';
     FormsModule,
     IonicModule,
     RouterModule,
-    CommentModule
+    CommentModule,
+    FlexLayoutModule
   ],
   declarations: [
     DiscussionModalComponent

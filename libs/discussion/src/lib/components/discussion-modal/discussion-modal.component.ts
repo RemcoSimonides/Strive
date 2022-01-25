@@ -1,16 +1,19 @@
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, IonContent, ModalController } from '@ionic/angular';
+import { collection, DocumentData, Firestore, getDocs, limit, orderBy, query, Query, QueryConstraint, startAfter } from '@angular/fire/firestore';
 // Rxjs
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 // Services
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
-import { DiscussionPaginationService } from '../../+state/discussion-pagination.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { createComment } from '@strive/discussion/+state/comment.firestore';
-import { Discussion } from '@strive/discussion/+state/discussion.firestore';
+import { Comment, createComment } from '../../+state/comment.firestore';
+import { Discussion } from '../../+state/discussion.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
+import { delay } from '@strive/utils/helpers';
+import { filter, map, skip } from 'rxjs/operators';
+import { CommentService } from '@strive/discussion/+state/comment.service';
 
 @Component({
   selector: 'discussion-page',
@@ -18,9 +21,18 @@ import { createUserLink } from '@strive/user/user/+state/user.firestore';
   styleUrls: ['./discussion-modal.component.scss'],
 })
 export class DiscussionModalComponent implements OnInit, OnDestroy {
+  private commentsPerQuery = 20
+  private query: Query<DocumentData>
+
+  private _comments = new BehaviorSubject<Comment[]>([])
+  private _done = new BehaviorSubject<boolean>(false)
+  private _loading = new BehaviorSubject<boolean>(false)
+  comments$ = this._comments.asObservable()
+  done$ = this._done.asObservable()
+
   scrolledToBottom = true
 
-  subscription: Subscription
+  private subscription: Subscription
 
   discussionId: string
   _comment: string
@@ -42,11 +54,12 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public user: UserService,
+    private db: Firestore,
     private discussion: DiscussionService,
     private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    public paginationService: DiscussionPaginationService,
+    private commentService: CommentService
   ) {
     window.history.pushState(null, null, window.location.href)
     this.modalCtrl.getTop().then(modal => {
@@ -56,18 +69,34 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.discussionId = this.navParams.get('discussionId')
     this.discussion$ = this.discussion.valueChanges(this.discussionId)
 
-    this.paginationService.init(`Discussions/${this.discussionId}/Comments`, 'createdAt', { reverse: true, prepend: true, limit: 10 })
-    this.paginationService.listenToUpdates()
+    const ref = collection(this.db, `Discussions/${this.discussionId}/Comments`)
+    const constraints = [
+      orderBy('createdAt', 'desc'),
+      limit(this.commentsPerQuery)
+    ]
+    this.query = query(ref, ...constraints)
 
-    this.subscription = this.paginationService.data.subscribe(data => {
-      if (data && this.scrolledToBottom) {
+    this.commentService.valueChanges(
+      [orderBy('createdAt', 'desc'), limit(1)],
+      { discussionId: this.discussionId }
+    ).pipe(
+      skip(1),
+      map(comments => comments[0]),
+      filter(comment => !!comment.createdAt)
+    ).subscribe(comment => {
+      const next = [...this._comments.value, comment]
+      this._comments.next(next)
+      if (this.scrolledToBottom) {
         this.contentArea?.scrollToBottom()
       }
     })
+
+    await this.mapAndUpdate([])
+    this.contentArea?.scrollToBottom()
   }
 
   dismiss() {
@@ -78,8 +107,46 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe()
   }
 
-  ionViewWillLeave() {
-    this.paginationService.reset()
+  private async mapAndUpdate(queryConstraints: QueryConstraint[]) {
+    if (this._done.value || this._loading.value) return
+    this._loading.next(true)
+
+    const snapshot = await getDocs(query(this.query, ...queryConstraints))
+    if (!snapshot.empty) {
+      const comments = snapshot.docs.map(doc => createComment({ ...doc.data(), id: doc.id }))
+      const next = [...comments.reverse(), ...this._comments.value]
+      this._comments.next(next)
+    }
+    if (snapshot.empty || snapshot.size < this.commentsPerQuery) this._done.next(true)
+    this._loading.next(false)
+  }
+
+  async more($event) {
+    console.log('more')
+    const comments = this._comments.value
+    const cursor = comments[0]?.createdAt ?? null
+
+    await Promise.race([
+      delay(5000),
+      this.mapAndUpdate([startAfter(cursor)])
+    ])
+
+    $event.target.complete()
+  }
+
+  async addReply() {
+    if (!this._comment) return
+
+    const { uid, displayName, photoURL } = await this.user.getFirebaseUser();
+
+    const comment = createComment({
+      text: this._comment,
+      type: 'sentByUser',
+      user: createUserLink({ uid, username: displayName, photoURL })
+    })
+    this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
+
+    this._comment = ''
   }
 
   async logScrolling($event) {
@@ -99,29 +166,5 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
     const currentScrollDepth = $event.detail.scrollTop;
 
     this.scrolledToBottom = scrollHeight === currentScrollDepth
-  }
-
-  async addReply() {
-    if (!this._comment) return
-
-    const { uid, displayName, photoURL } = await this.user.getFirebaseUser();
-
-    const comment = createComment({
-      text: this._comment,
-      type: 'sentByUser',
-      user: createUserLink({ uid, username: displayName, photoURL })
-    })
-    this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
-
-    this._comment = ''
-  }
-
-  loadData(event) {
-    this.paginationService.more()
-    event.target.complete();
-
-    if (this.paginationService.done) {
-      event.target.disabled = true
-    }
   }
 }
