@@ -2,11 +2,12 @@
   <small>All these fields are optional</small>
   <ng-container *ngFor="let field of fields | keyvalue:keepOriginalOrder">
     <small>{{ field.value.description }}</small>
-    <ion-item>
+    <ion-item lines="none">
       <ion-label position="stacked" color="primary">{{ field.value.title }}</ion-label>
       <ion-textarea [formControlName]="field.key"
                     type="text"
                     maxlength="256"
+                    placeholder="..."
                     autoGrow></ion-textarea>
     </ion-item>
   </ng-container>
