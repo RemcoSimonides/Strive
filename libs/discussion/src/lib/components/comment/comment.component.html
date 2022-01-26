@@ -1,10 +1,10 @@
 <ng-container *ngIf="comment?.type === 'sentByUser'">
   <section class="user">
 
-    <img [ref]="comment.user.photoURL" asset="profile.png" />
+    <img [ref]="comment.user.photoURL" asset="profile.png" [width]="40" [height]="40"/>
     <article>
       <span class="username">{{ comment.user.username }}</span>
-      <span class="date">{{ comment.createdAt?.toDate() | date:'MMMM d, yyyy h:mm a' }}</span>
+      <span class="date">{{ comment.createdAt?.toDate() | timeAgo }}</span>
       <div class="text">{{ comment.text }}</div>
     </article>
   

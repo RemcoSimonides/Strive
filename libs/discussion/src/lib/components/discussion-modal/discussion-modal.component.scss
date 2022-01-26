@@ -2,6 +2,7 @@ section {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0 16px;
 
   ion-infinite-scroll {
     margin-bottom: auto;
@@ -12,8 +13,11 @@ ion-item {
   --border-style: none;
   --highlight-background: var(--ion-color-primary);
 
-  ion-icon:hover {
-    color: var(--ion-color-primary);
-    cursor: pointer;
+  ion-icon {
+    align-self: center;
+    &:hover {
+      color: var(--ion-color-primary);
+      cursor: pointer;
+    }
   }
 }

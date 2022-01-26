@@ -76,3 +76,11 @@ img {
 .explanation_popover_class {
   --width: 95%;
 }
+
+// To not have height: 0 in case of autoGrow used
+ion-textarea {
+  min-height: 40px;
+  textarea {
+      min-height: 40px;
+  }
+}

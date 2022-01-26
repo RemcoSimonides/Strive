@@ -60,10 +60,6 @@ export class UserService extends FireCollection<User> {
     }
   }
 
-  async getFirebaseUser() {
-    return await user(this.auth).pipe(take(1)).toPromise();
-  }
-
   async isStriveAdmin(uid: string) {
     const snap = await getDoc(doc(this.db, `striveAdmin/${uid}`))
     return snap.exists()

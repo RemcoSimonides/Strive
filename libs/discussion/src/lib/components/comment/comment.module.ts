@@ -4,12 +4,14 @@ import { IonicModule } from '@ionic/angular';
 
 import { CommentComponent } from './comment.component';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { TimeAgoPipeModule } from '../../pipes/time-ago.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    ImageModule
+    ImageModule,
+    TimeAgoPipeModule
   ],
   exports: [CommentComponent],
   declarations: [CommentComponent]

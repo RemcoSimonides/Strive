@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavParams, IonContent, ModalController } from '@ionic/angular';
+import { NavParams, IonContent, ModalController, Platform} from '@ionic/angular';
 import { collection, DocumentData, Firestore, getDocs, limit, orderBy, query, Query, QueryConstraint, startAfter } from '@angular/fire/firestore';
 // Rxjs
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -32,7 +32,7 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
 
   scrolledToBottom = true
 
-  private subscription: Subscription
+  private subs: Subscription[] = []
 
   discussionId: string
   _comment: string
@@ -59,6 +59,7 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
     private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams,
+    private platform: Platform,
     private commentService: CommentService
   ) {
     window.history.pushState(null, null, window.location.href)
@@ -67,6 +68,9 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
         if (res.role === 'backdrop') this.location.back()
       })
     })
+
+    const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
+    this.subs.push(sub)
   }
 
   async ngOnInit() {
@@ -80,7 +84,7 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
     ]
     this.query = query(ref, ...constraints)
 
-    this.commentService.valueChanges(
+    const sub = this.commentService.valueChanges(
       [orderBy('createdAt', 'desc'), limit(1)],
       { discussionId: this.discussionId }
     ).pipe(
@@ -94,6 +98,7 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
         this.contentArea?.scrollToBottom()
       }
     })
+    this.subs.push(sub)
 
     await this.mapAndUpdate([])
     this.contentArea?.scrollToBottom()
@@ -104,7 +109,7 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe()
+    this.subs.forEach(sub => sub.unsubscribe())
   }
 
   private async mapAndUpdate(queryConstraints: QueryConstraint[]) {
@@ -122,7 +127,6 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
   }
 
   async more($event) {
-    console.log('more')
     const comments = this._comments.value
     const cursor = comments[0]?.createdAt ?? null
 
@@ -137,12 +141,10 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
   async addReply() {
     if (!this._comment) return
 
-    const { uid, displayName, photoURL } = await this.user.getFirebaseUser();
-
     const comment = createComment({
       text: this._comment,
       type: 'sentByUser',
-      user: createUserLink({ uid, username: displayName, photoURL })
+      user: createUserLink(this.user.user)
     })
     this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
 
