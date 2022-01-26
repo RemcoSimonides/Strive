@@ -29,7 +29,7 @@
 
 <ion-footer>
   <ion-item>
-    <ion-textarea mode="ios" type="text" placeholder="Reply..." [(ngModel)]="_comment" (keydown.enter)="addReply()" autoGrow autofocus [rows]="2"></ion-textarea>
+    <ion-textarea type="text" placeholder="Reply..." [(ngModel)]="_comment" (keydown.enter)="addReply()" autoGrow></ion-textarea>
     <ion-icon name="send" (click)="addReply()"></ion-icon>
   </ion-item>
 </ion-footer>

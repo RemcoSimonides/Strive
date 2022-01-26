@@ -43,20 +43,8 @@
       </ion-card>
 
       <!-- Options -->
-      <ng-container *ngIf="screensize.isMobile$ | async else desktopOptions">
-        <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px">
-          <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
-            <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
-          </ion-button>
-          <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
-            <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
-          </ion-button>
-          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="!!user.uid">
-            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-          </ion-button>
-        </div>
-      </ng-container>
-      <ng-template #desktopOptions>
+
+      <ng-container *ngIf="(screensize.isMobile$ | async) === false">
         <div fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="16px">
           <ion-button (click)="openDiscussion()" fill="clear">
             <ion-icon slot="start" name="chatbox-outline"></ion-icon>
@@ -71,7 +59,7 @@
             <span>more options</span>
           </ion-button>
         </div>
-      </ng-template>
+      </ng-container>
 
       <div fxHide.lt-sm>
         <ng-container *ngTemplateOutlet="properties"></ng-container>
@@ -79,7 +67,21 @@
 
     </article>
 
-    <article fxHide.gt-xs fxFlexOrder="3">
+    <ng-container *ngIf="screensize.isMobile$ | async">
+      <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px" fxFlexOrder.lt-sm="3">
+        <ion-button (click)="openDiscussion()" class="ion-no-padding action-button" fill="clear">
+          <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
+          <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="!!user.uid">
+          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+        </ion-button>
+      </div>
+    </ng-container>
+
+    <article fxHide.gt-xs fxFlexOrder="4">
       <ng-container *ngTemplateOutlet="properties"></ng-container>
     </article>
   </section>
