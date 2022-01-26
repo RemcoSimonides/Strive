@@ -122,8 +122,17 @@
   
       <!-- Privacy -->
       <div fxLayout fxLayoutAlign="start center">
-        <ion-icon name="lock-closed-outline"></ion-icon>
-        <span>Access: <b>{{ goal.publicity === 'public' ? 'Everyone can access' : goal.publicity === 'collectiveGoal' ? 'People with access to collective goal or an invite' : 'Invites only' }}</b></span>
+        <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>
+        <span>Access: </span>
+        <ng-container *ngIf="isAdmin; else privacyNoAdmin">
+          <ion-select placeholder="Select Privacy" interface="popover" [value]="goal.publicity" (ionChange)="updatePrivacy($event, goal)">
+            <ion-select-option value="public">Everyone can access</ion-select-option>
+            <ion-select-option value="private">Invites only</ion-select-option>
+          </ion-select>
+        </ng-container>
+        <ng-template #privacyNoAdmin>
+          <span>Access: <b>{{ goal.publicity === 'public' ? 'Everyone can access' : goal.publicity === 'collectiveGoal' ? 'People with access to collective goal or an invite' : 'Invites only' }}</b></span>
+        </ng-template>
       </div>
   
       <!-- Deadline -->

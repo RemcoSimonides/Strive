@@ -165,6 +165,13 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   }
 
+  updatePrivacy($event, goal: Goal) {
+    if (!this.isAdmin) return;
+    const publicity = $event.detail.value
+    if (publicity === goal.publicity) return
+    this.goalService.update({ id: this.goalId, publicity })
+  }
+
   private startPostCreation(goal: Goal) {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
