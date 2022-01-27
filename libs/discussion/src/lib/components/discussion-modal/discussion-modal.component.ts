@@ -139,16 +139,16 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
   }
 
   async addReply() {
-    if (!this._comment) return
+    if (!this._comment.trim()) return
 
     const comment = createComment({
-      text: this._comment,
+      text: this._comment.trim(),
       type: 'sentByUser',
       user: createUserLink(this.user.user)
     })
+    this._comment = ''
     this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
 
-    this._comment = ''
   }
 
   async logScrolling($event) {
