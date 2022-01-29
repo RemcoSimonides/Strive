@@ -1,18 +1,21 @@
 <ion-content>
   <form [formGroup]="form">
-    <ion-item>
+    <ion-item class="main">
       <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-      <ion-input [disabled]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-input>
+      <ion-input [readonly]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-input>
       <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-item>
-      <strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
-    </ion-item>
   </form>
 
   <section fxLayout="column" fxLayoutGap="8px" class="ion-padding">
+    <!-- <small><b>Created at:</b> {{ milestone.createdAt.toDate() | date:'longDate' }}</small> -->
+    <small *ngIf="milestone.finishedAt"><b>Finished at:</b> {{ milestone.finishedAt.toDate() | date:'longDate' }}</small>
+    <article fxLayout>
+      <small><b>Deadline: </b></small><strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
+    </article>
+    
     <ng-container *ngIf="goal.numberOfAchievers > 1">
       <div fxLayout fxLayoutGap="8px">
         <b>Assignee:</b>
@@ -23,9 +26,30 @@
           <i (click)="toggleAssignMe()" class="clickable">No one - Assign me</i>
         </ng-template>
       </div>
-    </ng-container>  
-    <small><b>Created at:</b> {{ milestone.createdAt.toDate() | date:'longDate' }}</small>
-    <small *ngIf="milestone.finishedAt"><b>Finished at:</b> {{ milestone.finishedAt.toDate() | date:'longDate' }}</small>
+    </ng-container>
+
+    <ng-container *ngIf="isAdmin || milestone.subtasks?.length">
+      <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
+      <ion-list mode="md">
+        <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
+          <ion-icon 
+            [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
+            color="primary"
+            [ngStyle]="{ cursor: control.completed.value ? 'inherit' : 'pointed'}"
+            (click)="toggleSubtask(i)">
+          </ion-icon>
+          <ion-input [readonly]="!isAdmin" [formControl]="control.content"></ion-input>
+        </ion-item>
+        <form [formGroup]="subtaskForm" *ngIf="isAdmin">
+          <ion-item>
+            <ion-icon name="radio-button-off" color="primary"></ion-icon>
+            <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()"></ion-input>
+            <ion-button (click)="addSubtask()">add</ion-button>
+          </ion-item>
+        </form>
+      </ion-list>
+    </ng-container>
+
   </section>
 </ion-content>
 

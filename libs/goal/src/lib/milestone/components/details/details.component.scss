@@ -1,12 +1,31 @@
 :host {
   display: block;
-  margin-top: 24px;
+  margin-top: 32px;
 }
 
-strive-milestone-status {
-  margin-right: 12px;
+.main {
+  strive-milestone-status {
+    margin-right: 12px;
+  }
+
+  ion-input {
+    font-size: 20px;
+  }
+}
+
+ion-list {
+  border-radius: 12px;
+
+  ion-icon {
+    height: 16px;
+    margin-right: 12px;
+  }
 }
 
 .clickable {
   cursor: pointer;
+}
+
+ion-item {
+  --highlight-background: var(--ion-color-primary); 
 }

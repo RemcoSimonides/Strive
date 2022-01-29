@@ -7,6 +7,18 @@ h3 {
   text-align: center;
 }
 
+ion-list {
+  border-radius: 12px;
+}
+
+.milestone {
+  --inner-padding-bottom: 4px;
+
+  ion-icon {
+    margin-right: 4px !important;
+  }
+}
+
 .empty {
   img {
     max-width: 360px;

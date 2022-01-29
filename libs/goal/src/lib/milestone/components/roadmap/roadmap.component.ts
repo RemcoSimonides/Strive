@@ -74,7 +74,7 @@ export class RoadmapComponent {
         milestone
       },
       initialBreakpoint: 0.3,
-      breakpoints: [0, 0.3, 1]
+      breakpoints: [0, 0.4, 1]
     }).then(modal => modal.present())
   }
 

@@ -2,9 +2,9 @@ import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Goal } from "@strive/goal/goal/+state/goal.firestore";
-import { Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
+import { createSubtask, Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
 import { MilestoneService } from "@strive/goal/milestone/+state/milestone.service";
-import { MilestoneForm } from "@strive/goal/milestone/forms/milestone.form";
+import { MilestoneForm, SubtaskForm } from "@strive/goal/milestone/forms/milestone.form";
 import { createUserLink } from "@strive/user/user/+state/user.firestore";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { Subscription } from "rxjs";
@@ -17,9 +17,10 @@ import { debounceTime } from "rxjs/operators";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-  private sub: Subscription
+  private subs: Subscription[] = []
 
   form: MilestoneForm
+  subtaskForm = new SubtaskForm()
 
   @Input() goal: Goal
   @Input() milestone: Milestone
@@ -52,18 +53,26 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.form = new MilestoneForm(this.milestone)
 
     if (this.canEdit) {
-      this.sub = this.form.get('content').valueChanges.pipe(
+      const sub = this.form.content.valueChanges.pipe(
         debounceTime(500),
       ).subscribe(content => {
         if (this.canEdit) {
           this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         }
       })
+      const subtaskSub = this.form.subtasks.valueChanges.pipe(
+        debounceTime(500)
+      ).subscribe(subtasks => {
+        if (this.form.subtasks.valid) {
+          this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+        }
+      })
+      this.subs.push(sub, subtaskSub)
     }
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe()
+    this.subs.forEach(sub => sub.unsubscribe())
   }
 
   dismiss() {
@@ -112,5 +121,19 @@ export class DetailsComponent implements OnInit, OnDestroy {
       id: this.milestone.id,
       achiever
     }, { params: { goalId: this.goal.id }})
+  }
+
+  addSubtask() {
+    if (!this.isAdmin || !this.isAchiever) return
+    if (this.subtaskForm.valid) {
+      const control = new SubtaskForm(this.subtaskForm.value)
+      this.form.subtasks.push(control)
+      this.subtaskForm.reset(createSubtask())
+    }
+  }
+
+  toggleSubtask(index: number) {
+    const control = this.form.subtasks.at(index).get('completed')
+    control.setValue(!control.value)
   }
 }

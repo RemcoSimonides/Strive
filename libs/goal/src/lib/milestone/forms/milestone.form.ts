@@ -1,10 +1,11 @@
-import { FormControl, Validators } from '@angular/forms'
+import { FormArray, FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createMilestone, createMilestoneLink, createMilestoneTemplate, Milestone, MilestoneLink, MilestoneTemplate } from "../+state/milestone.firestore";
+import { createMilestone, createMilestoneLink, createMilestoneTemplate, createSubtask, Milestone, MilestoneLink, MilestoneTemplate, Subtask } from "../+state/milestone.firestore";
 import { UserLinkForm } from '@strive/user/user/forms/user.form'
 
 function createMilestoneFormControl(params: Milestone) {
   const milestone = createMilestone(params)
+  const subtaskControls = milestone.subtasks.map(subtask => new SubtaskForm(subtask))
   return {
     sequenceNumber: new FormControl(milestone.sequenceNumber, Validators.required),
     order: new FormControl(milestone.order, Validators.required),
@@ -12,7 +13,8 @@ function createMilestoneFormControl(params: Milestone) {
     description: new FormControl(milestone.description),
     status: new FormControl(milestone.status),
     deadline: new FormControl(milestone.deadline),
-    achiever: new UserLinkForm(milestone.achiever)
+    achiever: new UserLinkForm(milestone.achiever),
+    subtasks: new FormArray(subtaskControls ?? [])
   }
 }
 
@@ -29,6 +31,7 @@ export class MilestoneForm extends FormEntity<MilestoneFormControl> {
   get description() { return this.get('description') }
   get deadline() { return this.get('deadline') }
   get achiever() { return this.get('achiever') }
+  get subtasks() { return this.get('subtasks') }
 }
 
 function createMilestoneLinkFormControl(params?: MilestoneLink) {
@@ -48,6 +51,24 @@ export class MilestoneLinkForm extends FormEntity<MilestoneLinkFormControl> {
 
   get id() { return this.get('id') }
   get content() { return this.get('content') }
+}
+
+function createSubtaskFormControl(params?: Subtask) {
+  const subtask = createSubtask(params)
+  return {
+    content: new FormControl(subtask.content, Validators.required),
+    completed: new FormControl(subtask.completed)
+  }
+}
+
+type SubtaskFormControl = ReturnType<typeof createSubtaskFormControl>
+export class SubtaskForm extends FormEntity<SubtaskFormControl> {
+  constructor(subtask?: Subtask) {
+    super(createSubtaskFormControl(subtask))
+  }
+
+  get content() { return this.get('content') }
+  get completed() { return this.get('completed') }
 }
 
 function createMilestoneTemplateFormControl(params?: Partial<MilestoneTemplate>) {

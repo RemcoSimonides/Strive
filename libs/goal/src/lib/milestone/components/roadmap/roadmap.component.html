@@ -1,38 +1,43 @@
 <ng-container *ngIf="milestones else loading">
   <ng-container *ngIf="milestones.length || isAdmin else empty">
-    <ion-reorder-group [disabled]="!isAdmin" (ionItemReorder)="doReorder($event)">
-      <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn"  (click)="openDetails(milestone)" button>
-        <strive-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-        <section fxLayout="column">
-          {{ milestone.content }}
-          <article fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-            <strive-milestone-deadline
-              [milestone]="milestone"
-              [isAdmin]="isAdmin"
-              fxFlex
-              (deadlineChange)="updateDeadline(milestone, $event)">
-            </strive-milestone-deadline>
-            <ng-container *ngIf="milestone.achiever.uid">
-              <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
-            </ng-container>
-          </article>
-        </section>
-        <ng-container *ngIf="!createMode">
-          <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.numberOfCustomSupports }}
-            <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-          </ion-button>
-        </ng-container>
-        <ion-reorder slot="end"></ion-reorder>
-      </ion-item>
-    </ion-reorder-group>
-    
-    <form [formGroup]="milestoneForm" *ngIf="isAdmin">
-      <ion-item>
-        <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
-        <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()"></ion-input>
-        <ion-button (click)="add()">add</ion-button>
-      </ion-item>
-    </form>
+    <ion-list mode="md">
+      <ion-reorder-group [disabled]="!isAdmin" (ionItemReorder)="doReorder($event)">
+        <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone">
+          <strive-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
+          <section fxLayout="column">
+            {{ milestone.content }}
+            <article fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+              <strive-milestone-deadline
+                [milestone]="milestone"
+                [isAdmin]="isAdmin"
+                fxFlex
+                (deadlineChange)="updateDeadline(milestone, $event)">
+              </strive-milestone-deadline>
+              <ng-container *ngIf="milestone.achiever.uid">
+                <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
+              </ng-container>
+              <ng-container *ngIf="milestone.subtasks?.length">
+                <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+              </ng-container>
+            </article>
+          </section>
+          <ng-container *ngIf="!createMode">
+            <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.numberOfCustomSupports }}
+              <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+            </ion-button>
+          </ng-container>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+      </ion-reorder-group>
+      
+      <form [formGroup]="milestoneForm" *ngIf="isAdmin">
+        <ion-item lines="inset">
+          <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
+          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()"></ion-input>
+          <ion-button (click)="add()">add</ion-button>
+        </ion-item>
+      </form>
+    </ion-list>
   </ng-container>
 </ng-container>
 

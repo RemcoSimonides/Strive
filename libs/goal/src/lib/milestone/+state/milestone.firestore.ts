@@ -19,10 +19,16 @@ export interface Milestone {
   status: MilestoneStatus
   deadline: string;
   achiever: UserLink;
+  subtasks: Subtask[];
   updatedBy?: string;
   updatedAt?: any; // TODO give type FieldValue / Date / Timestamp 
   createdAt?: any;
   finishedAt?: any;
+}
+
+export interface Subtask {
+  completed: boolean;
+  content: string;
 }
 export interface MilestonesLeveled extends Milestone {
   submilestones?: MilestoneLevelTwo[];
@@ -57,6 +63,7 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     numberOfMoneySupports: 0,
     status: 'pending',
     achiever: createUserLink(params.achiever),
+    subtasks: [],
     ...params
   }
 }
@@ -65,6 +72,14 @@ export function createMilestoneLink(params: Partial<MilestoneLink> = {}): Milest
   return {
     id: params.id ?? '',
     content: params.content ?? '',
+  }
+}
+
+export function createSubtask(params: Partial<Subtask> = {}): Subtask {
+  return {
+    content: '',
+    completed: false,
+    ...params
   }
 }
 

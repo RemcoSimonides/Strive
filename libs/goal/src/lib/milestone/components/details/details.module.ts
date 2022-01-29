@@ -9,6 +9,7 @@ import { DetailsComponent } from './details.component';
 import { MilestoneStatusModule } from '../status/status.module';
 import { MilestoneDeadlineModule } from '../deadline/deadline.module';
 import { AssigneeModule } from '../assignee/assignee.module';
+import { SubtaskPipeModule } from '../../pipes/subtask.pipe';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { AssigneeModule } from '../assignee/assignee.module';
 
     MilestoneStatusModule,
     MilestoneDeadlineModule,
-    AssigneeModule
+    AssigneeModule,
+    SubtaskPipeModule
   ],
   declarations: [
     DetailsComponent
