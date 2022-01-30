@@ -632,7 +632,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       switch (target) {
         case 'user':
           return {
-            ...get('user', source),
+            ...get('goal', source),
             message: [
               { text: `New comment "${source.comment.text}" from ` },
               {
