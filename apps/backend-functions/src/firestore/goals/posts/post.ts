@@ -31,6 +31,7 @@ async function sendNotificationNewPost(goalId: string, postId: string, post: Pos
   await addDiscussion(post.content.title, source, audience, postId)
 
   const notification = createNotification({
+    id: postId,
     discussionId: postId,
     event: enumEvent.gNewPost,
     type: 'feed',

@@ -1,19 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Firestore, collection, where, orderBy, limit, query, Query, getDocs, startAfter } from '@angular/fire/firestore';
 import { DocumentData, endBefore, QueryConstraint } from 'firebase/firestore';
 
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { delay } from '@strive/utils/helpers';
 
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { UserService } from '@strive/user/user/+state/user.service';
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
+import { PostService } from '@strive/post/+state/post.service';
+import { GoalNotificationService } from '@strive/notification/+state/goal-notification.service';
 
 @Component({
   selector: '[goal] journal-goal-posts',
@@ -21,9 +20,11 @@ import { createNotification } from '@strive/notification/+state/notification.mod
   styleUrls: ['./posts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostsComponent implements OnInit {
+export class PostsComponent implements OnInit, OnDestroy {
   private postsPerQuery = 20
   private query: Query<DocumentData>
+  private sub: Subscription
+  private _isAdmin: boolean
 
   private _posts = new BehaviorSubject<Notification[]>([])
   private _done = new BehaviorSubject<boolean>(false)
@@ -31,15 +32,42 @@ export class PostsComponent implements OnInit {
 
   posts$ = this._posts.asObservable()
 
-  isAdmin$: Observable<boolean>
+  hasSyncingPosts = false
 
   @Input() goal: Goal
+  @Input() set isAdmin(isAdmin: boolean) {
+    this._isAdmin = isAdmin
+    if (isAdmin && this.goal) {
+      this.sub = this.post.getSyncingPosts$(this.goal.id).pipe(
+        tap(ids => {
+          if (ids.length) {
+            this.hasSyncingPosts = true
+            this.cdr.markForCheck()
+          }
+        }),
+        switchMap(ids => ids.length
+          ? this.goalNotification.valueChanges(ids, { goalId: this.goal.id })
+          : of([]))
+      ).subscribe(notifications => {
+        const ids = notifications.map(notification => notification.id)
+        if (ids.length) {
+          this.refreshPosts()
+          const remaining = this.post.updateSyncingPosts(ids, this.goal.id)
+          if (!remaining.length) {
+            this.hasSyncingPosts = false
+            this.cdr.markForCheck()
+          }
+        }
+      })
+    }
+  }
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private db: Firestore,
     private discussion: DiscussionService,
-    private user: UserService,
-    private stakeholder: GoalStakeholderService
+    private goalNotification: GoalNotificationService,
+    private post: PostService
   ) {}
 
   ngOnInit() {
@@ -51,13 +79,10 @@ export class PostsComponent implements OnInit {
     ]
     this.query = query(ref, ...constraints)
     this.mapAndUpdate([])
+  }
 
-    this.isAdmin$ = this.user.user$.pipe(
-      switchMap(user => user
-        ? this.stakeholder.valueChanges(user.uid, { goalId: this.goal.id })
-        : of(undefined)),
-      map(stakeholder => createGoalStakeholder(stakeholder).isAdmin)
-    )
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
   }
 
   private async mapAndUpdate(queryConstraints: QueryConstraint[], isRefresh = false) {
@@ -92,12 +117,12 @@ export class PostsComponent implements OnInit {
     }
   }
 
-  async refreshPosts($event) {
+  async refreshPosts($event?) {
     const cursor = this._posts.value[0]?.createdAt ?? null
     await Promise.race([
       delay(5000),
       this.mapAndUpdate([endBefore(cursor)], true).then(() => delay(500))
     ])
-    $event.target.complete()
+    $event?.target.complete()
   }
 }

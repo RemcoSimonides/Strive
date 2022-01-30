@@ -4,9 +4,11 @@
 
 <ng-container *ngIf="posts$ | async as notifications; else loading">
   <ng-container *ngIf="!!notifications.length else noPosts">
-    <section fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="24px">
+    <section fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <small *ngIf="hasSyncingPosts">Creating new post...</small>
+
       <ng-container *ngFor="let notification of notifications">
-        <notification-main [goalId]="goal.id" [notification]="notification" [isAdmin]="isAdmin$ | async" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></notification-main>
+        <notification-main [goalId]="goal.id" [notification]="notification" [isAdmin]="_isAdmin" [reference]="'Goals/' + goal.id + '/Notifications/' + notification.id"></notification-main>
       </ng-container>
 
       <ion-infinite-scroll threshold="100px" (ionInfinite)="more($event)">

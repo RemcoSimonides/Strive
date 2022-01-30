@@ -33,11 +33,13 @@
 
   <!-- Posts -->
   <section *ngSwitchCase="'story'">
-    <journal-goal-posts [goal]="goal"></journal-goal-posts>
+    <journal-goal-posts [goal]="goal" [isAdmin]="isAdmin$ | async"></journal-goal-posts>
   </section>
 
 </ion-content>
 
-<ion-fab *ngIf="segmentChoice === 'story'" vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
-</ion-fab>
+<ng-container *ngIf="isAdmin$ | async">
+  <ion-fab *ngIf="segmentChoice === 'story'" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
+  </ion-fab>
+</ng-container>
