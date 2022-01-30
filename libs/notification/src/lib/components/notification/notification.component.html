@@ -12,7 +12,7 @@
     <article fxLayout="column" fxFlex fxLayoutGap="4px">
       <div fxLayout fxLayoutAlign="space-between start">
         <h5 [routerLink]="_message.link">{{ _message.title }}</h5>
-        <p class="date">{{ notification.createdAt.toDate() | date:'M/d' }}</p>
+        <p class="date">{{ notification.createdAt.toDate() | date:'mediumDate' }}</p>
       </div>
       <span>
         <ng-container *ngFor="let message of _message.message">
