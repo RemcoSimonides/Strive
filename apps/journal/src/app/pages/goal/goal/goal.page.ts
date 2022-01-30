@@ -200,7 +200,7 @@ export class GoalComponent implements OnInit, OnDestroy {
           text: 'Yes',
           handler: async () => {
             await this.goalService.remove(this.goalId)
-            await this.navCtrl.navigateRoot(`/explore`)
+            await this.navCtrl.navigateRoot(`/goals`)
           }
         },
         {
