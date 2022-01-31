@@ -142,7 +142,7 @@ export class ImageSelectorComponent implements OnInit {
       }
 
       const blob = b64toBlob(this.croppedImage)
-      const path = `${this.storagePath}/${this.file.name}`
+      const path = `${this.storagePath}/main`
       uploadBytes(ref(this.afStorage, path), blob)
       this.form.setValue(path)
       this.form.markAsDirty()
