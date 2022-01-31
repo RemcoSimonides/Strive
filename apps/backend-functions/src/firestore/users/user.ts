@@ -36,15 +36,17 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
     const before = createUser({ ...snapshot.before.data(), uid: snapshot.before.id })
     const after = createUser({ ...snapshot.after.data(), uid: snapshot.after.id })
 
-    logger.log('updating Algolia')
-    updateAlgoliaObject('user', uid, {
-      uid,
-      username: after.username,
-      photoURL: after.photoURL,
-      numberOfSpectators: after.numberOfSpectators
-    })
+    if (before.username !== after.username || before.numberOfSpectators !== after.numberOfSpectators) {
+      logger.log('updating Algolia')
+      updateAlgoliaObject('user', uid, {
+        uid,
+        username: after.username,
+        photoURL: after.photoURL,
+        numberOfSpectators: after.numberOfSpectators
+      })
+    }
 
-    if (before.username !== after.username || before.photoURL !== after.photoURL) {
+    if (before.username !== after.username) {
               
       if (!after.username || !after.photoURL) {
         // TODO prevent this with firestore rules
@@ -55,7 +57,8 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
       await Promise.all([
         updateGoalStakeholders(uid, after), 
         updateSpectators(uid, after),
-        updateCollectiveGoalStakeholders(uid, after)
+        updateCollectiveGoalStakeholders(uid, after),
+        updateUsernameInNotifications(uid, after)
       ])
     }
   })
@@ -83,7 +86,6 @@ async function updateGoalStakeholders(uid: string, after: User) {
 }
 
 async function updateSpectators(uid: string, after: User) {
-  logger.log('uid: ', uid);
   const spectating: Partial<Spectator> = {
     username: after.username,
     photoURL: after.photoURL
@@ -104,4 +106,11 @@ async function updateSpectators(uid: string, after: User) {
   }
 
   return Promise.all(promises)
+}
+
+async function updateUsernameInNotifications(uid: string, after: User) {
+  // user notifications and goal notifications
+  const snaps = await db.collectionGroup(`Notifications`).where('source.user.uid', '==', uid).get()
+  logger.log(`Username edited. Going to update ${snaps.size} notifications`)
+  snaps.forEach(snap => snap.ref.update({ 'source.user.username': after.username }))
 }
