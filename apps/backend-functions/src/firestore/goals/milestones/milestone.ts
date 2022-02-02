@@ -55,16 +55,10 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
     const goalId = context.params.goalId
     const milestoneId = context.params.milestoneId
 
-    // Do not do anything with milestones which just have been set to neutral
-    if (before.status === 'pending' && after.status === 'neutral') return
-
     //Milestone succeeded
     if (before.status !== after.status) { // Something has changed
 
-      if (after.status !== 'neutral' && after.status !== 'overdue') await handleStatusChangeNotification(before, after, goalId, milestoneId)
-      if (after.status !== 'pending' && after.status !== 'overdue') await handlePotentialSubmilestones(after, goalId)
-
-      // TODO send notification if support is overdue
+      if (after.status !== 'overdue') await handleStatusChangeNotification(before, after, goalId, milestoneId)
     }
 
     if (before.deadline !== after.deadline) {
@@ -75,21 +69,3 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
       })
     }
   })
-
-async function handlePotentialSubmilestones(milestone: Milestone, goalId: string) {
-
-  // level 3 milestone doesn't have submilestones
-  if (milestone.sequenceNumber.split('.').length === 3) return
-
-  const oneSeqnoHigher = increaseSeqnoByOne(milestone.sequenceNumber)
-
-  // get all submilestones
-  const subMilestonesSnap = await db.collection(`Goals/${goalId}/Milestones`)
-    .where('status', '==', 'pending')
-    .where('sequenceNumber', '>', milestone.sequenceNumber)
-    .where('sequenceNumber', '<', oneSeqnoHigher)
-    .get()
-
-  const promises = subMilestonesSnap.docs.map(subMilestoneSnap => subMilestoneSnap.ref.update({ status: 'neutral' }))
-  return Promise.all(promises)
-}

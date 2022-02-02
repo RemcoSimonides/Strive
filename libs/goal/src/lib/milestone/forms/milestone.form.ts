@@ -7,7 +7,6 @@ function createMilestoneFormControl(params: Milestone) {
   const milestone = createMilestone(params)
   const subtaskControls = milestone.subtasks.map(subtask => new SubtaskForm(subtask))
   return {
-    sequenceNumber: new FormControl(milestone.sequenceNumber, Validators.required),
     order: new FormControl(milestone.order, Validators.required),
     content: new FormControl(milestone.content, Validators.required),
     description: new FormControl(milestone.description),
@@ -25,7 +24,6 @@ export class MilestoneForm extends FormEntity<MilestoneFormControl> {
     super(createMilestoneFormControl(milestone))
   }
 
-  get sequenceNumber() { return this.get('sequenceNumber') }
   get order() { return this.get('order') }
   get content() { return this.get('content') }
   get description() { return this.get('description') }

@@ -6,11 +6,10 @@ import { Timestamp } from '@firebase/firestore-types';
 import { enumEvent} from '@strive/notification/+state/notification.firestore'
 import { getReceiver } from '../../../shared/support/receiver'
 import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
-import { createMilestone, createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
-import { createNotification, createSupportDecisionMeta, increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
-import { createNotificationSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
+import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
+import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
+import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { UserLink } from '@strive/user/user/+state/user.firestore';
-import { converter } from '../../../shared/utils';
 
 const db = admin.firestore()
 
@@ -21,7 +20,6 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   const goal = createGoal(goalSnap.data())
 
   if (before.status !== 'pending') return;
-  if (after.status === 'neutral') return;
   if (after.status === 'overdue') {
     // send overdue notification
     // TODO this never happens because this is checked before this function is called
@@ -36,52 +34,28 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
     sendNotificationMilestoneFailed(goalId, milestoneId, goal, after)
   }
 
-  // send notification to supporters of this milestone and submilestones 
-  // overwrite notification to supporters // send notification if person does not want level 1/2/3 milestone notifications but does support them
+  // send notification to supporters of this milestone
+  // overwrite notification to supporters // send notification if person does not want milestone notifications but does support them
   const supporters: Record<string, NotificationSupport[]> = {}
   const receiver: UserLink = after.achiever.uid ? after.achiever : await getReceiver(goalId, db)
 
-  // get milestones (including unfinished submilestones)
-  const milestones: Milestone[] = [after]
-
-  const oneSeqnoHigher = increaseSeqnoByOne(after.sequenceNumber)
-  const subMilestonesSnap = await db.collection(`Goals/${goalId}/Milestones`)
-    .where('status', '==', 'pending')
-    .where('sequenceNumber', '>', after.sequenceNumber)
-    .where('sequenceNumber', '<', oneSeqnoHigher)
-    .withConverter<Milestone>(converter(createMilestone))
-    .get()
-
-  for (const snap of subMilestonesSnap.docs) {
-    milestones.push(snap.data())
-  }
-  
   // get supports
-  const supportsQuery = milestones.map(milestone => db.collection(`Goals/${goalId}/Supports`)
-    .where('milestone.id', '==', milestone.id)
-    // .withConverter<Support>(converter(createSupport))
-    .get()
-  )
-  const supportsPerMilestoneSnap = await Promise.all(supportsQuery)
+  const supportsSnap = await db.collection(`Goals/${goalId}/Supports`).where('milestone.id', '==', after.id).get()
+  for (const snap of supportsSnap.docs) {
+    const support = createSupport({ ...snap.data() as Support, id: snap.id })
+    const uid = support.supporter.uid
 
-  for (const supportsSnap of supportsPerMilestoneSnap) {
-    for (const snap of supportsSnap.docs) {
-      const support = { ...snap.data() as Support, id: snap.id };
-      const uid = support.supporter.uid
-      const milestone = milestones.find(m => m.id === support.milestone.id)
+    const supportNotification = createNotificationSupport({
+      id: support.id,
+      description: support.description,
+      finished: support.milestone.id === after.id,
+      receiver: after.achiever.uid ? after.achiever : receiver 
+    })
 
-      const supportNotification = createNotificationSupport({
-        id: support.id,
-        description: support.description,
-        finished: support.milestone.id === after.id,
-        receiver: milestone.achiever.uid ? milestone.achiever : receiver 
-      })
-
-      if (supporters[uid]) {
-        supporters[uid].push(supportNotification)
-      } else {
-        supporters[uid] = [supportNotification]
-      }
+    if (supporters[uid]) {
+      supporters[uid].push(supportNotification)
+    } else {
+      supporters[uid] = [supportNotification]
     }
   }
 

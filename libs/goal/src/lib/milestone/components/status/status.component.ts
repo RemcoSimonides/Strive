@@ -35,11 +35,6 @@ export class MilestoneStatusComponent {
       color: 'danger',
       pointer: false
     },
-    neutral: {
-      name: 'remove-circle',
-      color: 'warning',
-      pointer: false
-    },
     overdue: {
       name: 'radio-button-off',
       color: 'primary',

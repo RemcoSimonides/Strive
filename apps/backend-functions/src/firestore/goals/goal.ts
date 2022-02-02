@@ -83,10 +83,6 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       updateGoalTitleInNotifications(goalId, after)
     }
 
-    if (before.status !== 'finished' && after.status === 'finished') {
-      handleUnfinishedMilestones(goalId)
-    }
-
     if (before.publicity !== after.publicity) {
       const audience = getAudience(after.publicity)
       db.doc(`Discussions/${goalId}`).update({ audience })
@@ -188,16 +184,4 @@ async function updateGoalTitleInNotifications(goalId: string, after: Goal) {
   const snaps = await db.collectionGroup(`Notifications`).where('source.goal.id', '==', goalId).get()
   logger.log(`Goal title edited. Going to update ${snaps.size} notifications`)
   snaps.forEach(snap => snap.ref.update({ 'source.goal.title': after.title }))
-}
-
-async function handleUnfinishedMilestones(goalId: string) {
-  const milestonesSnap = await db
-    .collection(`Goals/${goalId}/Milestones`)
-    .where('status', '==', 'pending')
-    .get()
-    
-  const promises = milestonesSnap.docs.map(doc => doc.ref.update({
-    status: 'neutral'
-  }))
-  return Promise.all(promises)
 }
