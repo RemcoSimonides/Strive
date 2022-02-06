@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 // Services
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
-import { createUserLink } from '@strive/user/user/+state/user.firestore';
-import { UserService } from '@strive/user/user/+state/user.service';
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Rxjs
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -20,8 +18,7 @@ export class PostService extends FireCollection<Post> {
   private syncingPosts$ = this._syncingPosts.asObservable()
 
   constructor(
-    public db: Firestore,
-    private user: UserService
+    public db: Firestore
   ) {
     super(db)
   }
@@ -32,15 +29,10 @@ export class PostService extends FireCollection<Post> {
       : undefined
   }
 
-  protected async toFirestore(post: Post): Promise<Post> {
-    post.author = createUserLink(this.user.user)
-    return post
-  }
-
   protected onCreate(entity: Post) {
     if (!entity.isEvidence) {
       const posts = this._syncingPosts.value
-      posts[entity.id] = entity.goal.id
+      posts[entity.id] = entity.goalId
       this._syncingPosts.next(posts)
     }
   }

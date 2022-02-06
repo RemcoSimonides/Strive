@@ -37,7 +37,7 @@
 
       <!-- Post -->
       <ng-container *ngIf="!!notification.source.postId">
-        <post-main [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
+        <post-main [author]="notification.source.user" [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
       </ng-container>
 
       <!-- Supports -->

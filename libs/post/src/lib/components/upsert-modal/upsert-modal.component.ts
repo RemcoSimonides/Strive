@@ -1,11 +1,11 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 //Ionic
 import { NavParams, ModalController } from '@ionic/angular'
-import { PostForm } from '@strive/post/forms/post.form';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+// Strive
 import { PostService } from '@strive/post/+state/post.service';
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
+import { UserService } from '@strive/user/user/+state/user.service';
+import { PostForm } from '@strive/post/forms/post.form';
 import { createPost } from '@strive/post/+state/post.firestore';
 
 @Component({
@@ -15,7 +15,10 @@ import { createPost } from '@strive/post/+state/post.firestore';
 })
 export class UpsertPostModalComponent implements OnInit {
   postForm = new PostForm()
-  postId: string
+  
+  @Input() postId: string
+  @Input() goalId: string
+  @Input() milestoneId: string
   
   @HostListener('window:popstate', ['$event'])
   onPopState() {
@@ -26,7 +29,8 @@ export class UpsertPostModalComponent implements OnInit {
     private location: Location,
     private modalCtrl: ModalController,
     private navParams: NavParams, // { goal: Goal, milestone: Milestone, postId: string }
-    private postService: PostService
+    private postService: PostService,
+    private user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
     modalCtrl.getTop().then(modal => {
@@ -37,27 +41,9 @@ export class UpsertPostModalComponent implements OnInit {
   }
 
   ngOnInit() { 
-    const goal = this.navParams.get('goal') as Goal
-    const milestone = this.navParams.get('milestone') as Milestone
-    this.postId = this.navParams.get('postId') as string
-
     const isEvidence = !!this.postId;
     if (!this.postId) this.postId = this.postService.createId()
-
-    if (!goal) throw new Error('No goal to post the post at')
-
-    if (milestone) {
-      this.postForm.get('milestone').get('id').setValue(milestone.id)
-      this.postForm.get('milestone').get('content').setValue(milestone.content)
-      this.postForm.get('content').get('title').setValue(`Completed milestone '${milestone.content}'`)
-    } else {
-      const title = isEvidence ? `Finished goal '${goal.title}'` : ''
-      this.postForm.get('content').get('title').setValue(title)
-    }
-
-    this.postForm.get('goal').get('id').setValue(goal.id)
-    this.postForm.get('goal').get('title').setValue(goal.title)
-    this.postForm.get('goal').get('image').setValue(goal.image)
+    if (!this.goalId) throw new Error('No goal to post the post at')
 
     this.postForm.get('isEvidence').setValue(isEvidence)
   }
@@ -67,11 +53,15 @@ export class UpsertPostModalComponent implements OnInit {
   }
 
   async submitPost() {
+    if (!this.user.uid) return
     const post = createPost({
       id: this.postId,
+      goalId: this.goalId,
+      uid: this.user.uid,
       ...this.postForm.value
     })
-    await this.postService.add(post, { params: { goalId: post.goal.id }});
+    if (this.milestoneId) post.milestoneId = this.milestoneId
+    await this.postService.add(post, { params: { goalId: this.goalId }});
     this.dismiss()
   }
 

@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin'
+import { logger } from 'firebase-functions';
 // Functions
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../../shared/notification/notification'
 // Interfaces
@@ -9,7 +10,8 @@ import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.
 import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
 import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
-import { UserLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
+import { getDocument } from 'apps/backend-functions/src/shared/utils';
 
 const db = admin.firestore()
 
@@ -93,7 +95,8 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 }
 
 // Milestone successful
-function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
+async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
+  const user = await getDocument(`Users/${milestone.updatedBy}`).then(user => createUserLink(user))
 
   const notification = createNotification({
     id: milestoneId,
@@ -109,6 +112,7 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
         id: milestoneId,
         ...milestone
       }),
+      user,
       postId: milestoneId
     }
   })
@@ -118,7 +122,8 @@ function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string
 }
 
 // Milestone failed
-function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
+async function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
+  const user = await getDocument(`Users/${milestone.updatedBy}`).then(user => createUserLink(user))
 
   const notification = createNotification({
     id: milestoneId,

@@ -4,7 +4,8 @@ import { createPost, Post } from '@strive/post/+state/post.firestore';
 import { sendNotificationToGoalStakeholders, sendNotificationToGoal, addDiscussion } from '../../../shared/notification/notification'
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { getDocument } from '../../../shared/utils';
-import { getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalLink, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { createUserLink, User } from '@strive/user/user/+state/user.firestore';
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)
   .onCreate(async (snapshot, context) => {
@@ -19,16 +20,19 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
   })
 
 async function sendNotificationNewPost(goalId: string, postId: string, post: Post) {
+  const [goal, user] = await Promise.all([
+    getDocument<Goal>(`Goals/${post.goalId}`),
+    getDocument<User>(`Users/${post.uid}`)
+  ])
+
   const source: Source = {
-    goal: post.goal,
-    user: post.author,
+    goal: createGoalLink(goal),
+    user: createUserLink(user),
     postId
   }
 
-  const goal = await getDocument<Goal>(`Goals/${goalId}`)
   const audience = getAudience(goal.publicity)
-
-  await addDiscussion(post.content.title, source, audience, postId)
+  await addDiscussion(post.title, source, audience, postId)
 
   const notification = createNotification({
     id: postId,
@@ -39,5 +43,5 @@ async function sendNotificationNewPost(goalId: string, postId: string, post: Pos
   })
   sendNotificationToGoal(goalId, notification)
 
-  sendNotificationToGoalStakeholders(goalId, notification, post.author.uid, true, true, true)
+  sendNotificationToGoalStakeholders(goalId, notification, post.uid, true, true, true)
 }

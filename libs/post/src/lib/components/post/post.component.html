@@ -1,13 +1,13 @@
-<ng-container *ngIf="!!post">
+<ng-container *ngIf="!!post && !!author">
   <ion-card>
     <ion-item>
-      <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="'/profile/' + post.author.id">
-        <img [ref]="post.author.profileImage" asset="profile.png">
+      <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
+        <img [ref]="author.photoURL" asset="profile.png">
       </ion-avatar>
       <ion-grid>
         <ion-row>
-          <span routerDirection="root" [routerLink]="'/profile/' + post.author.id"
-            class="username clickable">{{ post.author.username }}</span>
+          <span routerDirection="root" [routerLink]="['/profile/', author.uid]"
+            class="username clickable">{{ author.username }}</span>
         </ion-row>
         <ion-row>
           <span class="date">{{ post.createdAt.toDate() | date:'medium' }}</span>
@@ -16,13 +16,13 @@
 
     </ion-item>
 
-    <ng-container *ngIf="post.content.mediaURL">
-      <img class="post-image" [ref]="post.content.mediaURL" [asset]="">
+    <ng-container *ngIf="post.mediaURL">
+      <img class="post-image" [ref]="post.mediaURL" [asset]="">
     </ng-container>
 
     <ion-card-content>
-      <h2>{{ post.content.title }}</h2>
-      <p>{{ post.content.description }}</p>
+      <h2>{{ post.title }}</h2>
+      <p>{{ post.description }}</p>
     </ion-card-content>
   </ion-card>
 </ng-container>

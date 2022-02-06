@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
+import { UserLink } from '@strive/user/user/+state/user.firestore';
 // Interface
 import { Post } from '../../+state/post.firestore'
 
@@ -13,6 +14,7 @@ export class PostComponent implements OnInit {
 
   @Input() post: Post
   @Input() postRef: string
+  @Input() author: UserLink
   
   constructor(
     private db: Firestore,
@@ -27,7 +29,7 @@ export class PostComponent implements OnInit {
           this.cdr.markForCheck()
         }
       })
-    }    
+    }
   }
 
 }

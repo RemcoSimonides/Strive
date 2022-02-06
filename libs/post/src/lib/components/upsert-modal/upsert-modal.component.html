@@ -14,7 +14,7 @@
 
 <ion-content class="ion-padding">
 
-  <form [formGroup]="postForm.get('content')">
+  <form [formGroup]="postForm">
 
     <ion-item>
       <ion-label color="primary" stacked>Title</ion-label>
@@ -26,8 +26,8 @@
     </ion-item>
 
     <media-image-selector 
-      [form]="postForm.get('content').get('mediaURL')"
-      [storagePath]="'goals/' + postForm.get('goal').get('id').value + '/posts/' + postId">
+      [form]="postForm.get('mediaURL')"
+      [storagePath]="'goals/' + goalId + '/posts/' + postId">
     </media-image-selector>
   </form>
 

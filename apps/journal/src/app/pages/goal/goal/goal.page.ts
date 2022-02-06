@@ -176,8 +176,8 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        goal,
-        postId: goal.id
+        goalId: this.goalId,
+        postId: this.goalId
       }
     }).then(modal => modal.present())
   }

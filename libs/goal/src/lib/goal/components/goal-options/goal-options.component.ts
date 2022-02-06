@@ -39,7 +39,7 @@ export class GoalOptionsComponent {
               this.modalCtrl.create({
                 component: UpsertPostModalComponent,
                 componentProps: {
-                  goal: this.goal,
+                  goalId: this.goal.id,
                   postId: this.goal.id
                 }
               }).then(modal => modal.present())

@@ -119,7 +119,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        goal: this.goal,
+        goalId: this.goalId,
         postId: undefined
       }
     }).then(modal => modal.present())

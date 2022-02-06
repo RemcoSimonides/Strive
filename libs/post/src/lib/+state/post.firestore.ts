@@ -1,19 +1,14 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { createGoalLink, GoalLink } from '@strive/goal/goal/+state/goal.firestore';
-import { createMilestoneLink, MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
-import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 
 export interface Post {
   id?: string;
   isEvidence: boolean;
-  content: {
-    title: string;
-    description: string;
-    mediaURL?: string;
-  };
-  author: UserLink;
-  goal: GoalLink;
-  milestone: MilestoneLink;
+  title: string;
+  description: string;
+  mediaURL: string;
+  goalId?: string; // only for custom post
+  uid?: string; // only for custom post
+  milestoneId?: string; // link to milestone
   updatedAt?: Timestamp;
   createdAt?: Timestamp;
 }
@@ -22,14 +17,9 @@ export interface Post {
 export function createPost(params: Partial<Post> = {}): Post {
   return {
     id: params.id ? params.id : '',
-    author: createUserLink(),
-    content: {
-      title: '',
-      description: '',
-      mediaURL: '',
-    },
-    goal: createGoalLink(),
-    milestone: createMilestoneLink(),
+    title: '',
+    description: '',
+    mediaURL: '',
     isEvidence: false,
     ...params
   }

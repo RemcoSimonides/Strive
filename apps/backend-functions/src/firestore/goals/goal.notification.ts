@@ -20,7 +20,7 @@ import { createNotification, createSupportDecisionMeta } from '@strive/notificat
 import { createCollectiveGoal, createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
-import { converter } from '../../shared/utils';
+import { converter, getDocument } from '../../shared/utils';
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
@@ -137,6 +137,7 @@ async function sendNewGoalNotificationInCollectiveGoal(goalId: string, goal: Goa
 
 // FINISHED GOAL
 async function sendFinishedGoalNotification(goalId: string, goal: Goal) {
+  const user = await getDocument(`Users/${goal.updatedBy}`).then(user => createUserLink(user))
 
   const notification = createNotification({
     discussionId: goalId,
@@ -144,7 +145,8 @@ async function sendFinishedGoalNotification(goalId: string, goal: Goal) {
     type: 'feed',
     source: {
       goal: createGoalLink({ ...goal, id: goalId }),
-      postId: goalId
+      postId: goalId,
+      user
     },
   })
   sendNotificationToGoal(goalId, notification)
@@ -167,7 +169,10 @@ async function sendFinishedGoalNotification(goalId: string, goal: Goal) {
 async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goal) {
 
   const supporters: Record<string, NotificationSupport[]> = {}
-  const receiver: UserLink | undefined = await getReceiver(goalId, db)
+  const [ receiver, updatedBy ] = await Promise.all([
+    getReceiver(goalId, db),
+    getDocument<UserLink>(`Users/${goal.updatedBy}`)
+  ])
 
   // get unfinished milestones and then its supports
   const milestonesSnap = await db.collection(`Goals/${goalId}/Milestones`)
@@ -226,7 +231,8 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
       type: 'feed',
       source: {
         goal: createGoalLink({ ...goal, id: goalId }),
-        postId: goalId
+        postId: goalId,
+        user: updatedBy
       },
       meta,
       createdAt: serverTimestamp() as Timestamp,

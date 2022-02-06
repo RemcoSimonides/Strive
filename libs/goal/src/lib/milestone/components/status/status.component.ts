@@ -105,8 +105,8 @@ export class MilestoneStatusComponent {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        milestone,
-        goal: this.goal,
+        milestoneId: milestone.id,
+        goalId: this.goal.id,
         postId: milestone.id
       }
     }).then(modal => modal.present())
