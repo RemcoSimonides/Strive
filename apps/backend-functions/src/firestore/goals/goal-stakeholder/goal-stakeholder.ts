@@ -82,7 +82,10 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
   .onDelete(async (snapshot, context) => {
 
     const stakeholderId = context.params.stakeholderId
-    changeNumberOfActiveGoals(stakeholderId, -1)
+    const goal = createGoalStakeholder(snapshot.data())
+    if (goal.status === 'active') {
+      changeNumberOfActiveGoals(stakeholderId, -1)
+    }
 
   })
 
