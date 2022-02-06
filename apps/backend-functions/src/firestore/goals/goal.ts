@@ -183,5 +183,7 @@ async function updateGoalTitleInNotifications(goalId: string, after: Goal) {
   // user notifications and goal notifications
   const snaps = await db.collectionGroup(`Notifications`).where('source.goal.id', '==', goalId).get()
   logger.log(`Goal title edited. Going to update ${snaps.size} notifications`)
-  snaps.forEach(snap => snap.ref.update({ 'source.goal.title': after.title }))
+  const batch = db.batch()
+  snaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': after.title }))
+  batch.commit()
 }

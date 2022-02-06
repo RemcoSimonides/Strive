@@ -112,5 +112,7 @@ async function updateUsernameInNotifications(uid: string, after: User) {
   // user notifications and goal notifications
   const snaps = await db.collectionGroup(`Notifications`).where('source.user.uid', '==', uid).get()
   logger.log(`Username edited. Going to update ${snaps.size} notifications`)
-  snaps.forEach(snap => snap.ref.update({ 'source.user.username': after.username }))
+  const batch = db.batch()
+  snaps.forEach(snap => batch.update(snap.ref, { 'source.user.username': after.username }))
+  batch.commit()
 }
