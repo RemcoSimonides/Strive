@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Auth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import { ModalController } from "@ionic/angular";
+import { ModalController, ToastController } from "@ionic/angular";
 import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { FcmService } from "@strive/utils/services/fcm.service";
 import { PWAService } from '@strive/utils/services/pwa.service';
@@ -23,11 +23,19 @@ export class SettingsPageComponent {
     private location: Location,
     private modalCtrl: ModalController,
     private pwa: PWAService,
-    private router: Router
+    private router: Router,
+    private toast: ToastController
   ) {}
 
-  pushNotifications() {
-    this.fcm.registerFCM()
+  async pushNotifications() {
+    const res = await this.fcm.registerFCM()
+    if (res) {
+      this.toast.create({
+        message: 'All good',
+        duration: 3000,
+        position: 'bottom',
+      }).then(toast => toast.present())
+    }
   }
 
   installPWA() {

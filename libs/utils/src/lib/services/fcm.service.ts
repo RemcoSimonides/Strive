@@ -18,10 +18,11 @@ export class FcmService {
 
   private async getPermission() {
     try {
-      const token = await getToken(this.messaging);
-      console.log('Permission granted! Save to the server!', token);
+      const token = await getToken(this.messaging)
+      console.log('Permission granted! Save to the server!', token)
 
-      this.personal.addFCMToken(token);
+      this.personal.addFCMToken(token)
+      return token
     } catch(err) {
       this.toastController.create({
         message: 'Something went wrong',
@@ -38,7 +39,7 @@ export class FcmService {
     // } else {
     //   await this.getPermission()
     // }
-    this.getPermission();
+    return this.getPermission();
   }
 
   private async registerCapacitor(): Promise<void> {
