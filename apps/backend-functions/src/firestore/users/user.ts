@@ -13,7 +13,7 @@ export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
     const uid = snapshot.id
     const user = createUser({ ...snapshot.data(), uid: snapshot.id })
 
-    addToAlgolia('user', uid, {
+    await addToAlgolia('user', uid, {
       uid,
       username: user.username,
       photoURL: user.photoURL,
@@ -25,7 +25,7 @@ export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
   .onDelete(async (snapshot, context) => {
 
     const uid = snapshot.id
-    deleteFromAlgolia('user', uid)
+    await deleteFromAlgolia('user', uid)
 
   })
 
@@ -36,18 +36,8 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
     const before = createUser({ ...snapshot.before.data(), uid: snapshot.before.id })
     const after = createUser({ ...snapshot.after.data(), uid: snapshot.after.id })
 
-    if (before.username !== after.username || before.numberOfSpectators !== after.numberOfSpectators) {
-      logger.log('updating Algolia')
-      updateAlgoliaObject('user', uid, {
-        uid,
-        username: after.username,
-        photoURL: after.photoURL,
-        numberOfSpectators: after.numberOfSpectators
-      })
-    }
 
     if (before.username !== after.username) {
-              
       if (!after.username || !after.photoURL) {
         // TODO prevent this with firestore rules
         logger.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
@@ -60,6 +50,16 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
         updateCollectiveGoalStakeholders(uid, after),
         updateUsernameInNotifications(uid, after)
       ])
+    }
+
+    if (before.username !== after.username || before.numberOfSpectators !== after.numberOfSpectators) {
+      logger.log('updating Algolia')
+      await updateAlgoliaObject('user', uid, {
+        uid,
+        username: after.username,
+        photoURL: after.photoURL,
+        numberOfSpectators: after.numberOfSpectators
+      })
     }
   })
 

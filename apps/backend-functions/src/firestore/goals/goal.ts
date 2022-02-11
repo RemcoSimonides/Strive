@@ -16,14 +16,6 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
     const goal = createGoal({ ...snapshot.data(), id: snapshot.id })
     const goalId = snapshot.id
 
-    // algolia
-    if (goal.publicity === 'public') {
-      addToAlgolia('goal', goalId, {
-        goalId,
-        ...goal
-      })
-    }
-
     // notifications
     handleNotificationsOfCreatedGoal(goalId, goal)
 
@@ -35,6 +27,11 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
         options: { goalId }
       })
     }
+
+    // algolia
+    if (goal.publicity === 'public') {
+      await addToAlgolia('goal', goalId, { goalId, ...goal })
+    }
   })
 
 export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
@@ -42,14 +39,6 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
 
     const goalId = snapshot.id
     const goal = createGoal({ ...snapshot.data(), id: snapshot.id }) 
-
-    if (goal.publicity === 'public') {
-      try {
-        deleteFromAlgolia('goal', goalId)
-      } catch (err) {
-        logger.log('deleting from Algolia error', err)
-      }
-    }
 
     deleteScheduledTask(goalId)
 
@@ -61,6 +50,10 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500)
     deleteCollection(db, `Goals/${goalId}/Notifications`, 500)
     db.doc(`Discussions/${goalId}`).delete()
+
+    if (goal.publicity === 'public') {
+      await deleteFromAlgolia('goal', goalId)
+     }
   })
 
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
@@ -89,17 +82,17 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
 
       if (after.publicity === 'public') {
         // add to algolia
-        addToAlgolia('goal', goalId, {
+        await addToAlgolia('goal', goalId, {
           goalId,
           ...after
         })
       } else {
         // delete goal from Algolia index
-        deleteFromAlgolia('goal', goalId)
+        await deleteFromAlgolia('goal', goalId)
       }
 
     } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters) {
-      updateAlgoliaObject('goal', goalId, after)
+      await updateAlgoliaObject('goal', goalId, after)
     }
   })
 
