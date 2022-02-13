@@ -59,6 +59,10 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
     if (before.status !== after.status) { // Something has changed
 
       if (after.status !== 'overdue') await handleStatusChangeNotification(before, after, goalId, milestoneId)
+
+      if (before.status !== 'overdue' && (after.status === 'failed' || after.status ==='succeeded')) {
+        deleteScheduledTask(milestoneId)
+      }
     }
 
     if (before.deadline !== after.deadline) {
