@@ -55,10 +55,10 @@ export class MilestoneStatusComponent {
   ) {}
 
   updateStatus(event: UIEvent) {
-    event.stopPropagation()
     if (!this.goal?.id) return
     if (this.milestone.status !== 'pending' && this.milestone.status !== 'overdue') return
-    if (!this.isAdmin && this.isAchiever) return
+    if (!this.isAdmin && !this.isAchiever) return
+    event.stopPropagation()
     
     this.alertCtrl.create({
       header: 'Good job!',
