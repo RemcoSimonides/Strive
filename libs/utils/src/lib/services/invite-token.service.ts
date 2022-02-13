@@ -54,18 +54,20 @@ export class InviteTokenService {
 
   /**
    * @param id can be id of goal or collective goal
+   * @param {string} path override current page url with the url you'd like
    */
-  async getShareLink(id: string, isCollectiveGoal: boolean, isSecret: boolean, isAdmin: boolean): Promise<string> {
+  async getShareLink(id: string, isCollectiveGoal: boolean, isSecret: boolean, isAdmin: boolean, path?: string): Promise<string> {
 
-    const parsedUrl = new URL(window.location.href)
+    const { href, origin } = new URL(window.location.href)
+    const url = path ? `${origin}/${path}` : href
 
     if (isSecret) {
       if (isAdmin) {
         const token = await this.createInviteLink(id, isCollectiveGoal)
-        return `${parsedUrl.href}?invite_token=${token}`
+        return `${url}?invite_token=${token}`
       } else return undefined
     } else {
-      return parsedUrl.href
+      return url
     }
 
   }

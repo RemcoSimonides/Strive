@@ -1,14 +1,12 @@
-<share-button button="telegram" theme="outline"></share-button>
-<share-button button="messenger" theme="outline"></share-button>
-<share-button button="whatsapp" theme="outline"></share-button>
-<share-button button="email" theme="outline"></share-button>
+<share-button button="telegram" theme="outline" [url]="url"></share-button>
+<share-button button="messenger" theme="outline" [url]="url"></share-button>
+<share-button button="whatsapp" theme="outline" [url]="url"></share-button>
+<share-button button="email" theme="outline" [url]="url"></share-button>
 
-<ng-container *ngIf="!isSecret || (isSecret && isAdmin)">
-  <section class="share_link" fxLayout="column" fxLayoutAlign="start center">
-    <code>{{ ref }}</code>
-    <ion-button (click)="copyUrl()" fill="clear" size="small" >
-      <span>{{ isCopied ? 'copied!' : 'copy' }}</span>
-      <ion-icon name="clipboard"></ion-icon>
-    </ion-button>
-  </section>
-</ng-container>
+<section fxLayout="column" fxLayoutAlign="start center">
+  <code>{{ url }}</code>
+  <ion-button (click)="copyUrl()" fill="clear" size="small" >
+    <span>{{ isCopied ? 'copied!' : 'copy' }}</span>
+    <ion-icon name="clipboard"></ion-icon>
+  </ion-button>
+</section>

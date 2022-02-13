@@ -1,37 +1,24 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { InviteTokenService } from '@strive/utils/services/invite-token.service';
+import { Component, Input } from '@angular/core';
 import { ShareService } from 'ngx-sharebuttons';
-import { boolean } from '@strive/utils/decorators/decorators';
 
 import { Clipboard }  from '@capacitor/clipboard';
 
 
 @Component({
-  selector: 'strive-share',
+  selector: '[url] strive-share',
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })
-export class ShareComponent implements OnInit {
+export class ShareComponent {
 
-  @Input() isAdmin: boolean
-  @Input() isSecret: boolean
+  @Input() url: string
 
-  @Input() id: string
-  @Input() @boolean isCollectiveGoal: boolean
+  isCopied = false
 
-  public ref: string
-  public isCopied = false
-
-  constructor(
-    private inviteTokenService: InviteTokenService,
-    public share: ShareService
-  ) {}
-
-  async ngOnInit() {
-    this.ref = await this.inviteTokenService.getShareLink(this.id, this.isCollectiveGoal, this.isSecret, this.isAdmin)
-  }
+  constructor(public share: ShareService) {}
 
   copyUrl() {
-    Clipboard.write({ string: this.ref })
+    Clipboard.write({ string: this.url })
+    this.isCopied = true
   }
 }

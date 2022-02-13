@@ -267,27 +267,23 @@ export class GoalComponent implements OnInit, OnDestroy {
   }
 
   async openSharePopover(ev: UIEvent, goal: Goal) {
+    const isSecret = goal.publicity !== 'public'
+    const url = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, this.isAdmin)
 
     if (this.platform.is('android') || this.platform.is('ios')) {
-
-      const isSecret = goal.publicity !== 'public'
-      const ref = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, this.isAdmin)
 
       await Share.share({
         title: goal.title,
         text: 'Check out this goal',
-        url: ref,
+        url,
         dialogTitle: 'Together we achieve!'
-      });
+      })
 
     } else {
       this.popoverCtrl.create({
         component: GoalSharePopoverComponent,
         event: ev,
-        componentProps: {
-          goal,
-          isAdmin: this.isAdmin
-        }
+        componentProps: { url }
       }).then(popover => popover.present())
     }
   }

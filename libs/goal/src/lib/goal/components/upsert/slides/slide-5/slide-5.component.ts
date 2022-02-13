@@ -7,6 +7,7 @@ import { enumExercises, exercises } from '@strive/exercises/utils';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalSharePopoverComponent } from '../../../popovers/share/share.component';
+import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
 
 @Component({
   selector: 'goal-slide-5',
@@ -44,28 +45,26 @@ export class Slide5Component {
   }
 
   async openSharePopover(ev: UIEvent) {
-    const goal = this.form.value;
+    const goal = createGoal({ ...this.form.value, id: this.goalId })
+    const path = `goal/${this.goalId}`
+
+    const isSecret = goal.publicity !== 'public'
+    const url = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, true, path)
 
     if ((this.platform.is('android') || this.platform.is('ios') && !this.platform.is('mobileweb'))) {
-
-      const isSecret = goal.publicity !== 'public'
-      const ref = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, true)
 
       await Share.share({
         title: goal.title,
         text: 'Check out this goal',
-        url: ref,
+        url,
         dialogTitle: 'Together we achieve!'
-      });
+      })
 
     } else {
       this.popoverCtrl.create({
         component: GoalSharePopoverComponent,
         event: ev,
-        componentProps: {
-          goal,
-          isAdmin: true
-        }
+        componentProps: { url }
       }).then(popover => popover.present())
     }
   }

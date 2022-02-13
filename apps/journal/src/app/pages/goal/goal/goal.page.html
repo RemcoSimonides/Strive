@@ -51,10 +51,12 @@
             <span>chat</span>
           </ion-button>
   
-          <ion-button (click)="openSharePopover($event, goal)" fill="clear">
-            <ion-icon slot="start" name="share-social-outline"></ion-icon>
-            <span>share</span>
-          </ion-button>
+          <ng-container *ngIf="goal.publicity === 'public' || isAdmin">
+            <ion-button (click)="openSharePopover($event, goal)" fill="clear">
+              <ion-icon slot="start" name="share-social-outline"></ion-icon>
+              <span>share</span>
+            </ion-button>
+          </ng-container>
           <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" *ngIf="!!user.uid">
             <span>more options</span>
           </ion-button>
