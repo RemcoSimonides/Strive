@@ -3,7 +3,7 @@
 
   <swiper [spaceBetween]="16" [width]="width">
 
-    <ng-container *ngFor="let thumb of thumbs.changes | async">
+    <ng-container *ngFor="let thumb of thumbs">
       <ng-template swiperSlide>
         <ng-container *ngTemplateOutlet="thumb"></ng-container>
       </ng-template>
