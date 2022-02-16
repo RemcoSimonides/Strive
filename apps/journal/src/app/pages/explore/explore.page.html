@@ -93,14 +93,14 @@
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
         <ng-container *ngFor="let goal of algolia.goalResults | async">
           <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
-            <small>Type: Goal</small>
+            <small *ngIf="searchForm.value.type === 'all'">Type: Goal</small>
           </strive-small-thumbnail>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'users'">
         <ng-container *ngFor="let profile of algolia.profileResults | async">
           <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%">
-            <small>Type: User</small>
+            <small *ngIf="searchForm.value.type === 'all'">Type: User</small>
           </strive-small-thumbnail>
         </ng-container>
       </ng-container>
@@ -114,7 +114,7 @@
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
         <ng-container *ngFor="let exercise of exercises$ | async">
           <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image">
-            <small>Type: Exercise</small>
+            <small *ngIf="searchForm.value.type === 'all'">Type: Exercise</small>
           </strive-small-thumbnail>
         </ng-container>
       </ng-container>
