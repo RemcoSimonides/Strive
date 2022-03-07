@@ -99,7 +99,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.template.title,
                 link: `collective-goal/${source.collectiveGoal.id}/template/${source.template.id}`
               },
-              { text: `" has been created.` }
+              { text: `" has been created` }
             ]
           }
       
@@ -117,7 +117,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'flag-outline',
             message: [
-              { text: `New goal is created! Best of luck.` }
+              { text: `New goal is created! Best of luck` }
             ]
           }
 
@@ -160,19 +160,19 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             message = [
               { text: `Added "` },
               { text: source.goal.title, link: `goal/${source.goal.id}` },
-              { text: `" to bucket list.` }
+              { text: `" to bucket list` }
             ]
           } else if (event === enumEvent.gNewActive) {
             message = [
               { text: `Started goal "` },
               { text: source.goal.title, link: `goal/${source.goal.id}` },
-              { text: `".` }
+              { text: `"` }
             ]
           } else if (event === enumEvent.gNewFinished) {
             message = [
               { text: `Started journaling about "` },
               { text: source.goal.title, link: `goal/${source.goal.id}` },
-              { text: `".` }
+              { text: `"` }
             ]
           }
 
@@ -204,16 +204,12 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('user', source),
             icon: 'flag-outline',
             message: [
-              {
-                text: source.user.username,
-                link: `profile/${source.user.uid}`
-              },
-              { text: ` has finished goal "` },
+              { text: `Finished goal "` },
               {
                 text: source.goal.title,
                 link: `goal/${source.goal.id}`
               },
-              { text: `".` }
+              { text: `"` }
             ]
           }
 
@@ -285,14 +281,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'alert-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" of goal "` },
-              {
-                text: source.goal.title,
-                link: `goal/${source.goal.id}`
-              },
-              {
-                text: `" has passed the due date.`
-              }
+              { text: `Milestone "${source.milestone.content}" passed its due date` },
             ]
           }
         case 'goal':
@@ -300,7 +289,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'alert-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" has passed the due date.` }
+              { text: `Milestone "${source.milestone.content}" passed its due date` }
             ]
           }
       }
@@ -339,7 +328,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.goal.title,
                 link: `goal/${source.goal.id}`
               },
-              { text: `" as an Achiever.` }
+              { text: `" as an Achiever` }
             ]
           }
         default:
@@ -355,7 +344,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('user', source),
             icon: 'person-add-outline',
             message: [
-              { text: `Became an admin.` }
+              { text: `Became an admin` }
             ]
           }
         
@@ -368,7 +357,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.user.username,
                 link: `profile/${source.user.uid}`
               },
-              { text: ` is now admin.` }
+              { text: ` is now admin` }
             ]
           }
       
@@ -406,7 +395,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'person-add-outline',
             message: [
-              { text: `Your request to join has been accepted.` }
+              { text: `Your request to join has been accepted` }
             ]
           }
       
@@ -423,7 +412,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'person-remove-outline',
             message: [
-              { text: `Your request to join has been rejected.` }
+              { text: `Your request to join has been rejected` }
             ]
           }
         default:
@@ -448,7 +437,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 link: `profile/${source.support.supporter.uid}`
               },
               { text },
-              { text: ` with "${source.support.description}".` }
+              { text: ` with "${source.support.description}"` }
             ]
           }
         }
@@ -470,7 +459,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.support.supporter.username,
                 link: `profile/${source.support.supporter.uid}`
               },
-              { text: ` is going to give you the support '${source.support.description}' 🙂` }
+              { text: ` decided to give you the support "${source.support.description}"` }
             ]
           }
       
@@ -492,7 +481,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 link: `profile/${source.support.supporter.uid}`
               },
               {
-                text: ` paid support "${source.support.description}".`
+                text: ` paid support "${source.support.description}"`
               }
             ]
           }
@@ -515,12 +504,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                   text: source.support.supporter.username,
                   link: `profile/${source.support.supporter.uid}`
                 },
-                { text: ` rejected paying support "${source.support.description}" for milestone "${source.support.milestone.content}" in goal "` },
-                {
-                  text: source.goal.title,
-                  link: `goal/${source.goal.id}`
-                },
-                { text: `".` }
+                { text: ` rejected paying support "${source.support.description}" for milestone "${source.support.milestone.content}"` }
               ]
             }
           } else {
@@ -532,12 +516,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                   text: source.support.supporter.username,
                   link: `profile/${source.support.supporter.uid}`
                 },
-                { text: ` rejected paying support "${source.support.description}" for goal "` },
-                {
-                  text: source.support.goal.title,
-                  link: `goal/${source.support.goal.id}`
-                },
-                { text: `".` }
+                { text: ` rejected paying support "${source.support.description}"` }
               ]
             }
           }
@@ -555,7 +534,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'checkmark-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" is succesfully completed 🎉` }
+              { text: `Milestone "${source.milestone.content}" succesfully completed` }
             ]
           }
 
@@ -571,7 +550,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'checkmark-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" has failed to complete.` }
+              { text: `Milestone "${source.milestone.content}" failed to complete` }
             ]
           }
         default:
@@ -589,7 +568,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
               ...get('goal', source),
               icon: 'remove-outline',
               message: [
-                { text: `Support "${source.support.description}" has been removed because milestone "${source.milestone.content}" has been deleted.` }
+                { text: `Support "${source.support.description}" has been removed because milestone "${source.milestone.content}" has been deleted` }
               ]
             }
           } else {
@@ -597,7 +576,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
               ...get('goal', source),
               icon: 'remove-outline',
               message: [
-                { text: `Support "${source.support.description}" has been removed because goal "${source.goal.title}" has been deleted.` }
+                { text: `Support "${source.support.description}" has been removed because goal "${source.goal.title}" has been deleted` }
               ]
             }
           }
@@ -615,14 +594,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             icon: 'create-outline',
             message: [
               {
-                text: `Roadmap of goal "`
-              },
-              {
-                text: source.goal.title,
-                link: `goal/${source.goal.id}`
-              },
-              {
-                text: `" has been changed. Go and checkout what the new plan is.`
+                text: `Roadmap has been changed. Go and checkout what the new plan is."`
               }
             ]
           }
@@ -633,7 +605,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             icon: 'create-outline',
             message: [
               {
-                text: `Roadmap has been updated.`
+                text: `Roadmap has been updated`
               }
             ]
           }
@@ -696,11 +668,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('user', source),
             icon: 'person-add-outline',
             message: [
-              {
-                text: source.user.username,
-                link: `profile/${source.user.uid}`
-              },
-              { text: ` is now following you.` }
+              { text: `Started following you` }
             ]
           }
 
