@@ -130,6 +130,6 @@
 <ng-template #path let-support>
   <ion-text>
     <p *ngIf="!support.milestone.id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title }}</a></p>
-    <p *ngIf="support.milestone.id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title | mSlice}}</a> <span class="arrow">&#8702;</span><b> {{ support.milestone.description | mSlice }} </b></p>
+    <p *ngIf="support.milestone.id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title | mSlice}}</a>&nbsp;<span class="arrow">&#8702;</span> {{ support.milestone.content | mSlice }}</p>
   </ion-text>
 </ng-template>

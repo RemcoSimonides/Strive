@@ -179,7 +179,7 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
     .where('status', '==', 'pending')
     .withConverter<Milestone>(converter(createMilestone))
     .get()
-  const milestones = milestonesSnap.docs.map(snap => snap.data());
+  const milestones = milestonesSnap.docs.map(snap => ({...snap.data(), id: snap.id }))
 
   // get supports
   const supportsQueries = milestones.map(milestone => db.collection(`Goals/${goalId}/Supports`)

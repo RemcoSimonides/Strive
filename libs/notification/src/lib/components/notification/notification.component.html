@@ -80,7 +80,7 @@
 
       <!-- Discussion -->
       <section fxLayout>
-        <ion-button (click)="openDiscussion()" fill="clear">
+        <ion-button (click)="openDiscussion()" fill="clear" size="small">
           {{ (notification.discussion$ | async)?.numberOfComments || 0 }}
           <ion-icon id="discussion-icon" name="chatbox-outline"></ion-icon>
         </ion-button>

@@ -24,19 +24,17 @@ export class PostsComponent implements OnInit, OnDestroy {
   private postsPerQuery = 20
   private query: Query<DocumentData>
   private sub: Subscription
-  private _isAdmin: boolean
 
-  private _posts = new BehaviorSubject<Notification[]>([])
+  private _notifications = new BehaviorSubject<Notification[]>([])
   private _done = new BehaviorSubject<boolean>(false)
   private _loading = new BehaviorSubject<boolean>(false)
 
-  posts$ = this._posts.asObservable()
+  notifications$ = this._notifications.asObservable()
 
   hasSyncingPosts = false
 
   @Input() goal: Goal
   @Input() set isAdmin(isAdmin: boolean) {
-    this._isAdmin = isAdmin
     if (isAdmin && this.goal) {
       this.sub = this.post.getSyncingPosts$(this.goal.id).pipe(
         tap(ids => {
@@ -95,15 +93,15 @@ export class PostsComponent implements OnInit, OnDestroy {
         const data = createNotification({ ...doc.data(), id: doc.id })
         return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
       })
-      const next = isRefresh ? [...posts, ...this._posts.value] : [...this._posts.value, ...posts]
-      this._posts.next(next)
+      const next = isRefresh ? [...posts, ...this._notifications.value] : [...this._notifications.value, ...posts]
+      this._notifications.next(next)
     }
     if (!isRefresh && (snapshot.empty || snapshot.size < this.postsPerQuery)) this._done.next(true)
     this._loading.next(false)
   }
 
   async more($event) {
-    const posts = this._posts.value
+    const posts = this._notifications.value
     const cursor = posts[posts.length - 1].createdAt ?? null
 
     await Promise.race([
@@ -118,7 +116,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   async refreshPosts($event?) {
-    const cursor = this._posts.value[0]?.createdAt ?? null
+    const cursor = this._notifications.value[0]?.createdAt ?? null
     await Promise.race([
       delay(5000),
       this.mapAndUpdate([endBefore(cursor)], true).then(() => delay(500))

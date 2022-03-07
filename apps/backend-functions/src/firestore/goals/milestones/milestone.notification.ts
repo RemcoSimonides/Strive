@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin'
-import { logger } from 'firebase-functions';
 // Functions
 import { sendNotificationToGoal, sendNotificationToGoalStakeholders } from '../../../shared/notification/notification'
 // Interfaces
@@ -9,7 +8,7 @@ import { getReceiver } from '../../../shared/support/receiver'
 import { createGoal, createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
-import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
+import { createNotificationSupport, createSupport, NotificationSupport } from '@strive/support/+state/support.firestore';
 import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 import { getDocument } from 'apps/backend-functions/src/shared/utils';
 
@@ -29,11 +28,13 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 
   if (after.status !== 'succeeded' && after.status !== 'failed') return;
 
+  const user = await getDocument(`Users/${after.updatedBy}`).then(user => createUserLink(user))
+
   // send notification to every stakeholder
   if (after.status === 'succeeded') {
-    sendNotificationMilestoneSuccessful(goalId, milestoneId, goal, after)
+    await sendNotificationMilestoneSuccessful(goalId, milestoneId, goal, after, user)
   } else if (after.status === 'failed') {
-    sendNotificationMilestoneFailed(goalId, milestoneId, goal, after)
+    await sendNotificationMilestoneFailed(goalId, milestoneId, goal, after, user)
   }
 
   // send notification to supporters of this milestone
@@ -44,7 +45,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
   // get supports
   const supportsSnap = await db.collection(`Goals/${goalId}/Supports`).where('milestone.id', '==', after.id).get()
   for (const snap of supportsSnap.docs) {
-    const support = createSupport({ ...snap.data() as Support, id: snap.id })
+    const support = createSupport({ ...snap.data(), id: snap.id })
     const uid = support.supporter.uid
 
     const supportNotification = createNotificationSupport({
@@ -83,6 +84,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
           id: milestoneId,
           ...after
         }),
+        user,
         postId: milestoneId
       },
       isRead: false,
@@ -95,9 +97,7 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
 }
 
 // Milestone successful
-async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
-  const user = await getDocument(`Users/${milestone.updatedBy}`).then(user => createUserLink(user))
-
+function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone, user: UserLink) {
   const notification = createNotification({
     id: milestoneId,
     discussionId: milestoneId,
@@ -118,13 +118,11 @@ async function sendNotificationMilestoneSuccessful(goalId: string, milestoneId: 
   })
   sendNotificationToGoal(goalId, notification)
 
-  sendNotificationToGoalStakeholders(goalId, notification, milestone.updatedBy, true, true, true)
+  return sendNotificationToGoalStakeholders(goalId, notification, milestone.updatedBy, true, true, true)
 }
 
 // Milestone failed
-async function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone) {
-  const user = await getDocument(`Users/${milestone.updatedBy}`).then(user => createUserLink(user))
-
+function sendNotificationMilestoneFailed(goalId: string, milestoneId: string, goal: Goal, milestone: Milestone, user: UserLink) {
   const notification = createNotification({
     id: milestoneId,
     discussionId: milestoneId,
@@ -139,10 +137,11 @@ async function sendNotificationMilestoneFailed(goalId: string, milestoneId: stri
         id: milestoneId,
         ...milestone
       }),
+      user,
       postId: milestoneId
     }
   })
   sendNotificationToGoal(goalId, notification)
 
-  sendNotificationToGoalStakeholders(goalId, notification, milestone.updatedBy, true, true, true)
+  return sendNotificationToGoalStakeholders(goalId, notification, milestone.updatedBy, true, true, true)
 }

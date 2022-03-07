@@ -1,27 +1,24 @@
 <ng-container *ngIf="!!post && !!author">
   <ion-card>
-    <ion-item>
+    <ion-card-header fxLayout>
       <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
         <img [ref]="author.photoURL" asset="profile.png">
       </ion-avatar>
-      <ion-grid>
-        <ion-row>
-          <span routerDirection="root" [routerLink]="['/profile/', author.uid]"
-            class="username clickable">{{ author.username }}</span>
-        </ion-row>
-        <ion-row>
-          <span class="date">{{ post.createdAt.toDate() | date:'medium' }}</span>
-        </ion-row>
-      </ion-grid>
+      <section fxLayout="column" fxLayoutAlign="center start">
+        <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
+        <small>{{ post.createdAt.toDate() | date:'longDate' }} at {{ post.createdAt.toDate() | date:'shortTime' }}</small>
+      </section>
+    </ion-card-header>
 
-    </ion-item>
+    <ion-card-content *ngIf="post.title">      
+      <h2>{{ post.title }}</h2>
+    </ion-card-content>
 
     <ng-container *ngIf="post.mediaURL">
       <img class="post-image" [ref]="post.mediaURL" [asset]="">
     </ng-container>
 
-    <ion-card-content>
-      <h2>{{ post.title }}</h2>
+    <ion-card-content *ngIf="post.description">
       <p>{{ post.description }}</p>
     </ion-card-content>
   </ion-card>

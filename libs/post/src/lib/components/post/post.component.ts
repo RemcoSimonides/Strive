@@ -19,13 +19,13 @@ export class PostComponent implements OnInit {
   constructor(
     private db: Firestore,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.postRef) {
       getDoc(doc(this.db, this.postRef)).then(snap => {
         if (snap.exists()) {
-          this.post = snap.data() as Post;
+          this.post = snap.data() as Post
           this.cdr.markForCheck()
         }
       })

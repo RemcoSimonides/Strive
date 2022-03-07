@@ -1,5 +1,20 @@
 import { enumEvent, Notification, NotificationMessageText, Source, SupportDecisionMeta } from '../+state/notification.firestore';
 
+const notificationIcons = [
+  'alert-outline',
+  'bookmark-outline',
+  'chatbox-outline',
+  'checkmark-outline',
+  'create-outline',
+  'flag-outline',
+  'heart-outline',
+  'heart-dislike-outline',
+  'person-add-outline',
+  'person-remove-outline',
+  'remove-outline'
+] as const
+type NotificationIcons = typeof notificationIcons[number];
+
 function throwError(event: enumEvent, target: string) {
   throw new Error(`No notification message for event ${event} and target ${target}`)
 }
@@ -25,13 +40,14 @@ function get(type: 'user' | 'goal' | 'collectiveGoal', source: Source): { title:
   return data[type]
 }
 
-export function getNotificationMessage({ event, source, meta, target }: Notification): { title: string, image: string, link: string, message: NotificationMessageText[] } {
+export function getNotificationMessage({ event, source, meta, target }: Notification): { title: string, image: string, link: string, icon: NotificationIcons, message: NotificationMessageText[] } {
   switch (event) {
     case enumEvent.cgGoalCreated:
       switch (target) {
         case 'stakeholder':
           return {
             ...get('collectiveGoal', source),
+            icon: 'flag-outline',
             message: [
               { text: `A new goal has been created in collective goal "` },
               { 
@@ -53,6 +69,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('collectiveGoal', source),
+            icon: 'flag-outline',
             message: [
               { text: `Goal "` },
               { 
@@ -75,6 +92,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('collectiveGoal', source),
+            icon: 'create-outline',
             message: [
               { text: `New template "` },
               {
@@ -97,6 +115,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'goal':
           return {
             ...get('goal', source),
+            icon: 'flag-outline',
             message: [
               { text: `New goal is created! Best of luck.` }
             ]
@@ -105,6 +124,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'spectator':
           return {
             ...get('user', source),
+            icon: 'flag-outline',
             message: [
               { text: `Created goal "` },
               { 
@@ -128,8 +148,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'goal':
           return {
             ...get('goal', source),
+            icon: 'flag-outline',
             message: [
-              { text: `New goal is created! Best of luck.` }
+              { text: `Goal created` }
             ]
           }
 
@@ -157,6 +178,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
 
           return {
             ...get('user', source),
+            icon: 'flag-outline',
             message
           }
         }
@@ -173,12 +195,14 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'goal':
           return {
             ...get('goal', source),
+            icon: 'flag-outline',
             message: [{ text: `Goal is finished!` }]
           }
 
         case 'spectator':
           return {
             ...get('user', source),
+            icon: 'flag-outline',
             message: [
               {
                 text: source.user.username,
@@ -198,6 +222,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           if ((meta as SupportDecisionMeta).type === 'supportDecision') {
             return {
               ...get('goal', source),
+              icon: 'flag-outline',
               message: [
                 { text: 'Goal has been completed!' }
               ]
@@ -205,15 +230,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           } else {
             return {
               ...get('goal', source),
+              icon: 'flag-outline',
               message: [
-                { text: `Congratulations! goal "` },
-                { 
-                  text: source.goal.title,
-                  link: `goal/${source.goal.id}`
-                },
-                {
-                  text: `" has been finished.`
-                }
+                { text: `Goal has been marked as finished` }
               ]
             }
           }
@@ -230,8 +249,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'checkmark-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" is successfully completed.` }
+              { text: `Milestone "${source.milestone.content}" successfully completed` }
             ]
           }
       
@@ -247,8 +267,9 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'checkmark-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" failed to complete.` }
+              { text: `Milestone "${source.milestone.content}" failed to complete` }
             ]
           }
         default:
@@ -262,6 +283,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'alert-outline',
             message: [
               { text: `Milestone "${source.milestone.content}" of goal "` },
               {
@@ -276,6 +298,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'goal':
           return {
             ...get('goal', source),
+            icon: 'alert-outline',
             message: [
               { text: `Milestone "${source.milestone.content}" has passed the due date.` }
             ]
@@ -286,20 +309,22 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
     case enumEvent.gStakeholderAchieverAdded:
 
       switch (target) {
-        case  'stakeholder':
+        case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'person-add-outline',
             message: [
               {
                 text: source.user.username,
                 link: `profile/${source.user.uid}`
               },
-              { text: ` joined as an Achiever.` }
+              { text: ` joined as an Achiever` }
             ]
           }
         case 'goal':
           return {
             ...get('user', source),
+            icon: 'person-add-outline',
             message: [
               { text: `Joined as an Achiever!`}
             ]
@@ -307,6 +332,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'spectator':
           return {
             ...get('user', source),
+            icon: 'person-add-outline',
             message: [
               { text: `Joined goal "` },
               {
@@ -327,6 +353,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'goal':
           return {
             ...get('user', source),
+            icon: 'person-add-outline',
             message: [
               { text: `Became an admin.` }
             ]
@@ -335,6 +362,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'person-add-outline',
             message: [
               {
                 text: source.user.username,
@@ -355,6 +383,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'person-add-outline',
             message: [
               {
                 text: source.user.username,
@@ -375,6 +404,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'user':
           return {
             ...get('goal', source),
+            icon: 'person-add-outline',
             message: [
               { text: `Your request to join has been accepted.` }
             ]
@@ -391,6 +421,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'user':
           return {
             ...get('goal', source),
+            icon: 'person-remove-outline',
             message: [
               { text: `Your request to join has been rejected.` }
             ]
@@ -410,6 +441,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         
           return {
             ...get('goal', source),
+            icon: 'heart-outline',
             message: [
               {
                 text: source.support.supporter.username,
@@ -432,6 +464,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'user':
           return {
             ...get('goal', source),
+            icon: 'heart-outline',
             message: [
               {
                 text: source.support.supporter.username,
@@ -452,6 +485,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'user':
           return {
             ...get('goal', source),
+            icon: 'heart-outline',
             message: [
               {
                 text: source.support.supporter.username,
@@ -475,6 +509,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           if (source.support.milestone?.id) {
             return {
               ...get('goal', source),
+              icon: 'heart-dislike-outline',
               message: [
                 {
                   text: source.support.supporter.username,
@@ -491,6 +526,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           } else {
             return {
               ...get('goal', source),
+              icon: 'heart-dislike-outline',
               message: [
                 {
                   text: source.support.supporter.username,
@@ -517,6 +553,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'checkmark-outline',
             message: [
               { text: `Milestone "${source.milestone.content}" is succesfully completed 🎉` }
             ]
@@ -532,6 +569,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'checkmark-outline',
             message: [
               { text: `Milestone "${source.milestone.content}" has failed to complete.` }
             ]
@@ -549,6 +587,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           if (source.milestone.id) {
             return {
               ...get('goal', source),
+              icon: 'remove-outline',
               message: [
                 { text: `Support "${source.support.description}" has been removed because milestone "${source.milestone.content}" has been deleted.` }
               ]
@@ -556,6 +595,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
           } else {
             return {
               ...get('goal', source),
+              icon: 'remove-outline',
               message: [
                 { text: `Support "${source.support.description}" has been removed because goal "${source.goal.title}" has been deleted.` }
               ]
@@ -572,6 +612,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'create-outline',
             message: [
               {
                 text: `Roadmap of goal "`
@@ -589,6 +630,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'goal':
           return {
             ...get('goal', source),
+            icon: 'create-outline',
             message: [
               {
                 text: `Roadmap has been updated.`
@@ -607,18 +649,16 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'stakeholder':
           return {
             ...get('goal', source),
+            icon: 'bookmark-outline',
             message: [
-              {
-                text: source.user.username,
-                link: `profile/${source.user.uid}`
-              },
-              { text: ` just created a new post.` }
+              { text: `Post created` }
             ]
           }
 
         case 'goal':
           return {
             ...get('user', source),
+            icon: 'bookmark-outline',
             message: [] // no message - just the post
           }
       
@@ -633,6 +673,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'user':
           return {
             ...get('goal', source),
+            icon: 'chatbox-outline',
             message: [
               { text: `New comment "${source.comment.text}" from ` },
               {
@@ -653,6 +694,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
         case 'user':
           return {
             ...get('user', source),
+            icon: 'person-add-outline',
             message: [
               {
                 text: source.user.username,
@@ -672,6 +714,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
       // throwError(notification, target);
       return {
         title: 'Unknown notification',
+        icon: 'alert-outline',
         image: '',
         link: '',
         message: [] 
