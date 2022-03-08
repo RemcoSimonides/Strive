@@ -7,8 +7,8 @@
     </section>
 
     <ion-list>
-      <ng-container *ngFor="let affirmation of affirmations.affirmations">
-        <ion-item>
+      <ng-container *ngFor="let affirmation of affirmations.affirmations; let last = last">
+        <ion-item [lines]="last ? 'none' : 'inset'">
           <ion-label>{{ affirmation }}</ion-label>
         </ion-item>
       </ng-container>
