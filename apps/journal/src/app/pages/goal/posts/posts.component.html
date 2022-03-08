@@ -22,11 +22,13 @@
             </span>
           </div>
         </article>
-        <article *ngIf="notification.source.postId">
-          <div></div>
-          <div>
-            <post-main [author]="notification.source.user" [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
-          </div>
+        <article class="extra">
+          <ng-container *ngIf="notification.source.postId">
+            <div></div>
+            <div>
+              <post-main [author]="notification.source.user" [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
+            </div>
+          </ng-container>
         </article>
       </ng-container>
 
