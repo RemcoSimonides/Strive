@@ -49,12 +49,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('collectiveGoal', source),
             icon: 'flag-outline',
             message: [
-              { text: `A new goal has been created in collective goal "` },
-              { 
-                text: source.collectiveGoal.title,
-                link: `collective-goal/${source.collectiveGoal.id}`
-              },
-              { text: `", can you help out?` }
+              { text: `A new goal has been created in collective goal "${source.collectiveGoal.title}", can you help out?` }
             ]  
           }
       
@@ -281,7 +276,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'alert-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" passed its due date` },
+              { text: `Milestone "${source.milestone.content}" of goal "${source.goal.title}" passed its due date` }
             ]
           }
         case 'goal':
@@ -289,7 +284,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'alert-outline',
             message: [
-              { text: `Milestone "${source.milestone.content}" passed its due date` }
+              { text: `Milestone "${source.milestone.content}" of goal "${source.goal.title}" passed its due date` }
             ]
           }
       }
@@ -353,11 +348,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'person-add-outline',
             message: [
-              {
-                text: source.user.username,
-                link: `profile/${source.user.uid}`
-              },
-              { text: ` is now admin` }
+              { text: `${source.user.username} is now admin` }
             ]
           }
       
@@ -395,7 +386,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'person-add-outline',
             message: [
-              { text: `Your request to join has been accepted` }
+              { text: `Your request to join goal "${source.goal.title}" has been accepted` }
             ]
           }
       
@@ -412,7 +403,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'person-remove-outline',
             message: [
-              { text: `Your request to join has been rejected` }
+              { text: `Your request to join "${source.goal.title}" has been rejected` }
             ]
           }
         default:
@@ -647,11 +638,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('goal', source),
             icon: 'chatbox-outline',
             message: [
-              { text: `New comment "${source.comment.text}" from ` },
-              {
-                text: source.comment.user.username,
-                link: `profile/${source.comment.user.uid}`
-              }
+              { text: `New comment "${source.comment.text}" from ${source.comment.user.username}` },
             ]
           }
       
@@ -668,7 +655,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
             ...get('user', source),
             icon: 'person-add-outline',
             message: [
-              { text: `Started following you` }
+              { text: `${source.user.username} started following you` }
             ]
           }
 

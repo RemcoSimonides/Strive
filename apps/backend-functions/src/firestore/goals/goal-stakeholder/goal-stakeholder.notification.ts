@@ -97,7 +97,7 @@ function sendNewAchieverNotificationToUserSpectators(goal: Goal, stakeholder: Go
   const notification = createNotification({
     discussionId: goal.id,
     event: enumEvent.gStakeholderAchieverAdded,
-    type: 'notification',
+    type: 'feed',
     source: {
       user: createUserLink(stakeholder),
       goal: createGoalLink(goal)

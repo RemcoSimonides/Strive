@@ -4,7 +4,7 @@ ion-content {
 
 .divider {
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.13))));
 }
 
@@ -16,4 +16,17 @@ section {
 
 h3 {
   color: var(--ion-color-primary);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+article {
+  margin-bottom: 8px;
+
+  img {
+    height: 40px;
+    width: 40px;
+  }
 }

@@ -7,7 +7,29 @@
         <ng-container *ngIf="notifications$ | async as notifications; else empty">
           <ng-container *ngIf="notifications.length; else empty">
             <ng-container *ngFor="let notification of notifications; let isLast = last">
-              <notification-main [notification]="notification" isAdmin="true" [reference]="'Users/' + user.uid + '/Notifications/' + notification.id"></notification-main>
+              
+              <ng-container *ngIf="notification | message:'user' as _message">
+                <article fxLayout fxLayoutGap="8px" class="clickable" [routerLink]="_message.link">
+                  <img
+                    [ref]="_message.image"
+                    [asset]="_message.link.includes('profile') ? 'profile.png' : 'goal.jpeg'"
+                    [ngStyle]="{'border-radius': _message.link.includes('profile') ? '50%' : '12px'}"
+                    [routerLink]="_message.link"
+                  />
+                  <div fxLayout="column" fxFlex>
+                    <span>
+                      <ng-container *ngFor="let message of _message.message">
+                        <ng-container *ngIf="message.link; else noLink">
+                          <a [routerLink]="'/' + message.link">{{ message.text }}</a>
+                        </ng-container>
+                        <ng-template #noLink>{{ message.text }}</ng-template>
+                      </ng-container>
+                    </span>
+                    <small>{{ notification.createdAt.toDate() | timeAgo }}</small>
+                  </div>
+                </article>
+              </ng-container>
+
               <span *ngIf="!isLast" class="divider"></span>
             </ng-container>
           </ng-container>  

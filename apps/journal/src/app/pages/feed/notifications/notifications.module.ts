@@ -4,9 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { NotificationModule } from '@strive/notification/components/notification/notification.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { MessagePipeModule } from '@strive/notification/pipes/message.pipe';
+import { ImageModule } from '@strive/media/directives/image.module';
+import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe';
 
 import { NotificationsComponent } from './notifications.component';
 
@@ -23,9 +25,11 @@ const routes: Routes = [
     IonicModule,
     FlexLayoutModule,
     RouterModule.forChild(routes),
-    NotificationModule,
     HeaderModule,
-    PageLoadingModule
+    PageLoadingModule,
+    MessagePipeModule,
+    ImageModule,
+    TimeAgoPipeModule
   ],
   exports: [],
   declarations: [NotificationsComponent]
