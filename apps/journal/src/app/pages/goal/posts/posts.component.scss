@@ -16,6 +16,7 @@ article::before {
 }
 
 .badge {
+  z-index: 1;
   border-radius: 50%;
   width: 16px;
   height: 16px;
