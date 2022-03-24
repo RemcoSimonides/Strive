@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, ModalController, PopoverController } from '@ionic/angular';
 // Rxjs
@@ -27,10 +27,10 @@ import { SupportOptionsComponent } from '../options/options.component';
 export class AddSupportModalComponent implements OnInit {
   origin: 'goal' | 'milestone'
 
-  private goalId: string
+  @Input() private goalId: string
   goal$: Observable<Goal>
 
-  milestone: Milestone
+  @Input() milestone: Milestone
 
   supports$: Observable<Support[]>
   mySupports$: Observable<Support[]>
@@ -60,8 +60,6 @@ export class AddSupportModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.goalId = this.navParams.get('goalId')
-    this.milestone = this.navParams.get('milestone')
     this.origin = this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
@@ -106,7 +104,7 @@ export class AddSupportModalComponent implements OnInit {
     if (this.milestone) this.support.milestone.patchValue(createMilestoneLink(this.milestone))
 
     this.supportService.add(this.support.value, { params: { goalId: this.goalId }})
-    this.support.reset()
+    this.support.description.setValue('')
 
     //Increase number of custom supports
     //IS FIREBASE FUNCTION

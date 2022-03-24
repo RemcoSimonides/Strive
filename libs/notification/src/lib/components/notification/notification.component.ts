@@ -9,11 +9,11 @@ import { NotificationService } from '@strive/notification/+state/notification.se
 import { NotificationSupport } from '@strive/support/+state/support.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { ChooseAchieverModalComponent } from '../choose-achiever/choose-achiever-modal.page';
-import { isSupportDecisionNotification } from '@strive/notification/+state/notification.model';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { smartJoin } from '@strive/utils/helpers';
+import { SupportDecisionComponent } from '@strive/support/modals/decision/decision.component';
 
 
 @Pipe({ name: 'source' })
@@ -94,35 +94,48 @@ export class NotificationComponent {
     await this.notificationService.update(notification.id, { needsDecision: false, meta: notification.meta }, { params: { uid: this.user.uid }})
   }
 
-  async chooseReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
-    if (!isSupportDecisionNotification(notification)) return
+  async giveSupport(notification: Notification<SupportDecisionMeta>) {
     if (notification.meta.status === 'finalized') return
 
-    const stakeholders = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: notification.source.goal.id })
-
-    const chooseAchieverModal = await this.modalCtrl.create({
-      component: ChooseAchieverModalComponent,
-      componentProps: { stakeholders }
-    })
-    chooseAchieverModal.onDidDismiss().then(data => {
-      if (data.data) {
-        support.receiver = data.data
-        this.cdr.markForCheck();
-      }
-    })
-    chooseAchieverModal.present()
+    if (notification.meta.supports.length === 1) {
+      await this.notificationService.finalizeDecision(notification)
+      notification.meta.status = 'finalized'
+      this.cdr.markForCheck()
+    } else {
+      this.more(notification)
+    }
   }
 
-  public async removeReceiver(notification: Notification<SupportDecisionMeta>, support: NotificationSupport) {
-    if (!isSupportDecisionNotification(notification)) return
-    if (notification.meta.status === 'finalized') return
-    support.receiver = createUserLink();
-  }
+  async rejectSupport(notification: Notification<SupportDecisionMeta>) {
+    if (this.notification.meta.status === 'finalized') return
 
-  public async finalizeDecision(notification: Notification<SupportDecisionMeta>) {
+    notification.meta.supports.forEach(support => {
+      support.receiver = createUserLink()
+    })
     await this.notificationService.finalizeDecision(notification)
-    notification.meta.status = 'finalized'
+    notification.meta.status= 'finalized'
     this.cdr.markForCheck()
+  }
+
+  async more(notification: Notification<SupportDecisionMeta>) {
+    if (notification.meta.status === 'finalized') return
+
+    const achievers = await this.goalStakeholderService.getValue(
+      [where('isAchiever', '==', true)],
+      { goalId: notification.source.goal.id }
+    )
+
+    const modal = await this.modalCtrl.create({
+      component: SupportDecisionComponent,
+      componentProps: { achievers, notification }
+    })
+    modal.onDidDismiss().then(() => this.cdr.markForCheck())
+    modal.present()
+  }
+
+  getSupports(supports: NotificationSupport[]) {
+    const descriptions = supports.map(support => support.description);
+    return smartJoin(descriptions, '", "', '" and "')
   }
 
 }

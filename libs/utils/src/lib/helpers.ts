@@ -10,3 +10,16 @@ export function setDateToEndOfDay(date: string): string {
     setTimeout(resolve, ms);
   });
 }
+
+/**
+ * Example with (['A', 'B', 'C'], ', ', ' & ')
+ * output : "A, B & C";
+ * @param str
+ * @param joinWith
+ * @param endWith
+ * @returns
+ */
+ export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+  const last = str.pop();
+  return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
+}

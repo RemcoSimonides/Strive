@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search achiever" [formControl]="filter"></ion-searchbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list mode="md">
+    <ion-item>
+      <ion-button slot="end" color="primary" fill="outline" size="default" (click)="dontGive()">Don't give</ion-button>
+    </ion-item>
+    <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'inset'">
+      <ion-thumbnail slot="start">
+        <img [ref]="achiever.photoURL" asset="profile.png">
+      </ion-thumbnail>
+      <ion-label class="ion-text-wrap">
+        <ion-text>{{ achiever.username }}</ion-text>
+      </ion-label>
+      <ion-button slot="end" color="primary" fill="outline" size="default" (click)="achieverChosen(achiever)">
+        Choose
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

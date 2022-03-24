@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="finalize()">
+        Done
+      </ion-button>
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Your supports</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ng-container *ngFor="let support of notification?.meta.supports">
+    <section fxLayout fxLayoutAlign="start center" fxLayoutGap="12px">
+      <span>Give</span>
+      <span>"{{ support.description }}"</span>
+      <span>to</span>
+      <article fxLayoutAlign="start center">
+        <ng-container *ngIf="!support.receiver.uid; else hasReceiver">
+          <span class="clickable" (click)="chooseReceiver(support)">
+            <i>No one - (Click to choose {{ achievers.length === 1 ? achievers[0].username : 'receiver'}})</i>
+          </span>
+        </ng-container>
+        <ng-template #hasReceiver>
+          <ion-chip (click)="chooseReceiver(support)">
+            <ion-avatar>
+              <img [ref]="support.receiver.photoURL" asset="profile.png" />
+            </ion-avatar>
+            <ion-label>{{ support.receiver.username }}</ion-label>
+          </ion-chip>
+        </ng-template>
+      </article>
+    </section>
+  </ng-container>
+
+  <ion-button color="primary" (click)="finalize()">Done</ion-button>
+
+</ion-content>

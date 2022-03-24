@@ -41,7 +41,6 @@ export interface NotificationSupport {
   id: string;
   description: string;
   decision: SupportDecision;
-  finished: boolean;
   receiver: UserLink;
 }
 
@@ -64,8 +63,7 @@ export function createNotificationSupport(params: Partial<NotificationSupport> =
   return {
     id: params.id ? params.id : '',
     description: '',
-    decision: params.finished ? 'give' : 'keep',
-    finished: false,
+    decision: 'give',
     receiver: createUserLink(params.receiver),
     ...params
   }
