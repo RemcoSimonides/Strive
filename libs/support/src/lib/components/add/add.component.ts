@@ -124,7 +124,7 @@ export class AddSupportModalComponent implements OnInit {
     this.popoverCtrl.create({
       component: SupportOptionsComponent,
       event,
-      componentProps: { support, goalId: this.goalId }
+      componentProps: { support }
     }).then(popover => popover.present())
   }
 

@@ -25,6 +25,9 @@
                 <ion-text>{{ support.description }}</ion-text>
                 <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
               </ion-label>
+              <ion-button fill="clear" (click)="openOptions(support, $event)">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
             </ion-item>
           </ng-container>
         </ng-container>

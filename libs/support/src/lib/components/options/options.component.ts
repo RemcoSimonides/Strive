@@ -10,7 +10,6 @@ import { SupportService } from '@strive/support/+state/support.service';
 })
 export class SupportOptionsComponent {
   @Input() support: Support
-  @Input() goalId: string
 
   constructor(
     private popoverCtrl: PopoverController,
@@ -18,7 +17,7 @@ export class SupportOptionsComponent {
   ) {}
 
   updateStatus(status: SupportStatus) {
-    this.supportService.update(this.support.id, { status }, { params: { goalId: this.goalId }})
+    this.supportService.update(this.support.id, { status }, { params: { goalId: this.support.goal.id }})
     this.popoverCtrl.dismiss()
   }
 }

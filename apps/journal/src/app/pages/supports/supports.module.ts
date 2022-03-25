@@ -10,6 +10,7 @@ import { SupportsComponent } from './supports.page';
 import { HeaderModule } from '@strive/ui/header/header.module';
 import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { SupportOptionsModule } from '@strive/support/components/options/options.module';
 
 const routes: Routes = [
   {
@@ -26,7 +27,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     HeaderModule,
     MilestonePathPipeModule,
-    PageLoadingModule
+    PageLoadingModule,
+    SupportOptionsModule
   ],
   declarations: [
     SupportsComponent,

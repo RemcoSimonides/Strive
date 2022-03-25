@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, ModalController } from '@ionic/angular';
+import { NavController, Platform, ModalController, PopoverController } from '@ionic/angular';
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/+state/support.service';
@@ -12,6 +12,7 @@ import { Support } from '@strive/support/+state/support.firestore'
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { where } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
+import { SupportOptionsComponent } from '@strive/support/components/options/options.component';
 
 @Component({
   selector: 'journal-supports',
@@ -33,6 +34,7 @@ export class SupportsComponent {
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     public platform: Platform,
+    private popoverCtrl: PopoverController,
     seo: SeoService,
     private support: SupportService
   ) {
@@ -91,6 +93,14 @@ export class SupportsComponent {
 
   supportPaid(support: Support) {
     this.support.update(support.id, { status: 'paid' }, { params: { goalId: support.goal.id }})
+  }
+
+  openOptions(support: Support, event) {
+    this.popoverCtrl.create({
+      component: SupportOptionsComponent,
+      event,
+      componentProps: { support, goalId: support.goal.id }
+    }).then(popover => popover.present())
   }
   
 }
