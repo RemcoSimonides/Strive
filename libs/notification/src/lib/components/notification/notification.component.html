@@ -65,18 +65,6 @@
         </div>
       </ng-container>
 
-      <!-- Goal Request to join action buttons -->
-      <ng-container *ngIf="notification.meta?.type === 'goalRequest'">
-        <div fxLayout>
-          <ion-button (click)="handleRequestDecision(notification, true)"
-              [disabled]="notification.meta.status !== 'open'"
-              *ngIf="notification.meta.status !== 'rejected'">Accept</ion-button>
-            <ion-button (click)="handleRequestDecision(notification, false)"
-              [disabled]="notification.meta.status !== 'open'"
-              *ngIf="notification.meta.status !== 'accepted'">Reject</ion-button>
-        </div>
-      </ng-container>
-
       <!-- Post -->
       <ng-container *ngIf="!!notification.source.postId">
         <post-main [author]="notification.source.user" [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>

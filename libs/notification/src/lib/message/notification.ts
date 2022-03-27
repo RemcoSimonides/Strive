@@ -369,7 +369,7 @@ export function getNotificationMessage({ event, source, meta, target }: Notifica
                 text: source.user.username,
                 link: `profile/${source.user.uid}`
               },
-              { text: ` requests to join, do you accept?` }
+              { text: ` requests to join` }
             ]
           }
       

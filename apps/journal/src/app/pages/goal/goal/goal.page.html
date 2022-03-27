@@ -88,6 +88,30 @@
     </article>
   </section>
 
+  <!-- Request to join -->
+  <ng-container *ngIf="openRequests$ | async as stakeholders">
+    <ng-container *ngIf="stakeholders.length">
+      <h3>Open requests to join</h3>
+      <ion-list mode="md">
+        <ion-item *ngFor="let stakeholder of stakeholders" (click)="navTo(stakeholder.uid)">
+          <ion-avatar slot="start">
+            <img [ref]="stakeholder.photoURL" asset="profile.png"/>
+          </ion-avatar>
+          <ion-label>{{ stakeholder.username }}</ion-label>
+          <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" size="default">
+            <span *ngIf="(screensize.isMobile$ | async) === false">Accept</span>
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="handleRequestDecision(stakeholder, false, $event)" size="default" fill="outline">
+            <span *ngIf="(screensize.isMobile$ | async) === false">Reject</span>
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </ng-container>
+
+
   <strive-text-editor [description]="goal.description"
     [isAdmin]="isAdmin"
     (update)="saveDescription($event)"

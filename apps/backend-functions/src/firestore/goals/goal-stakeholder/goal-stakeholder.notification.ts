@@ -12,7 +12,7 @@ import {
 // Interfaces
 import { enumEvent, Source } from '@strive/notification/+state/notification.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { createGoalRequest, createNotification } from '@strive/notification/+state/notification.model'
+import { createNotification } from '@strive/notification/+state/notification.model'
 import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { createUserLink } from '@strive/user/user/+state/user.firestore'
 
@@ -152,16 +152,11 @@ async function sendNewRequestToJoinGoalNotificationInGoal(discussionId: string, 
 
   await addDiscussion(`Request to become Achiever`, source, 'adminsAndRequestor', discussionId, goalStakeholder.uid)
 
-  // Send request to admins only
-  const meta = createGoalRequest({ uidRequestor: goalStakeholder.uid })
-
   const goalStakeholdersNotification = createNotification({
     discussionId,
     event: enumEvent.gStakeholderRequestToJoinPending,
-    needsDecision: true,
-    type: 'feed',
-    source,
-    meta
+    type: 'notification',
+    source
   })
   sendNotificationToGoalStakeholders(goal.id, goalStakeholdersNotification, goalStakeholder.uid, true)
 }

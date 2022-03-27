@@ -3,7 +3,7 @@ import { ModalController, PopoverController } from '@ionic/angular';
 import { where } from '@angular/fire/firestore';
 
 // Strive
-import { Notification, SupportDecisionMeta, GoalRequest } from '@strive/notification/+state/notification.firestore';
+import { Notification, SupportDecisionMeta } from '@strive/notification/+state/notification.firestore';
 import { NotificationOptionsPopoverComponent } from '@strive/notification/components/notification-options/notification-options.component';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { NotificationSupport } from '@strive/support/+state/support.firestore';
@@ -80,18 +80,6 @@ export class NotificationComponent {
         }
       }).then(modal => modal.present())
     }
-  }
-
-  async handleRequestDecision(notification: Notification<GoalRequest>, isAccepted: boolean) {
-    notification.meta.status = isAccepted ? 'accepted' : 'rejected'
-
-    await this.goalStakeholderService.upsert({
-      uid: notification.meta.uidRequestor,
-      isAchiever: isAccepted,
-      hasOpenRequestToJoin: false
-    }, { params: { goalId: notification.source.goal.id }})
-
-    await this.notificationService.update(notification.id, { needsDecision: false, meta: notification.meta }, { params: { uid: this.user.uid }})
   }
 
   async giveSupport(notification: Notification<SupportDecisionMeta>) {

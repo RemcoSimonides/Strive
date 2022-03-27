@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
+// Firebase
+import { where } from 'firebase/firestore';
 // Rxjs
 import { Observable, of, Subscription } from 'rxjs';
 // Capacitor
@@ -39,6 +41,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   // public collectiveGoal$: Observable<CollectiveGoal | undefined>
 
   public stakeholder$: Observable<GoalStakeholder>
+  public openRequests$: Observable<GoalStakeholder[]>
 
   public isAdmin = false
   public isAchiever = false
@@ -58,6 +61,7 @@ export class GoalComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
+    private router: Router,
     private stakeholder: GoalStakeholderService,
     public user: UserService,
     private cdr: ChangeDetectorRef,
@@ -82,6 +86,10 @@ export class GoalComponent implements OnInit, OnDestroy {
       this.isAchiever = stakeholder.isAchiever
       this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
       this.cdr.markForCheck()
+
+      if (!this.openRequests$ && this.isAdmin) {
+        this.openRequests$ = this.stakeholder.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: this.goalId })
+      }
     })
   }
 
@@ -294,5 +302,18 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   isOverdue(deadline: string) {
     return new Date(deadline) < new Date()
+  }
+
+  handleRequestDecision(stakeholder: GoalStakeholder, isAccepted: boolean, $event: UIEvent) {
+    $event.stopPropagation()
+    this.stakeholder.upsert({
+      uid: stakeholder.uid,
+      isAchiever: isAccepted,
+      hasOpenRequestToJoin: false
+    }, { params: { goalId: this.goalId }})
+  }
+
+  navTo(uid: string) {
+    this.router.navigate(['/profile/', uid])
   }
 }

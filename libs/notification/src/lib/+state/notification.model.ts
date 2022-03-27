@@ -3,15 +3,14 @@ import { createGoalLink } from '@strive/goal/goal/+state/goal.firestore';
 import { createMilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createSupport } from '@strive/support/+state/support.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
-import { GoalRequest, Notification, SupportDecisionMeta } from './notification.firestore';
+import { Notification, SupportDecisionMeta } from './notification.firestore';
 import { createComment } from '@strive/discussion/+state/comment.firestore';
 import { createTemplateLink } from '@strive/template/+state/template.firestore';
 
 /** A factory function that creates a NotificationDocument. */
 export function createNotification(params: Partial<Notification> = {}): Notification {
-  const meta = 
-  isSupportDecisionNotification(params) ? createSupportDecisionMeta(params.meta)
-    : isGoalRequestNotification(params) ? createGoalRequest(params.meta)
+  const meta = isSupportDecisionNotification(params)
+    ? createSupportDecisionMeta(params.meta)
     : {}
     
   return {
@@ -43,17 +42,6 @@ export function createSupportDecisionMeta(meta: Partial<SupportDecisionMeta>): S
     type: 'supportDecision',
     supports: [],
     status: 'pending',
-    ...meta
-  }
-}
-
-
-export const isGoalRequestNotification = (notification: Partial<Notification>): notification is Notification<GoalRequest> => notification.meta?.type === 'goalRequest'
-export function createGoalRequest(meta: Partial<GoalRequest>): GoalRequest {
-  return {
-    type: 'goalRequest',
-    status: 'open',
-    uidRequestor: '',
     ...meta
   }
 }
