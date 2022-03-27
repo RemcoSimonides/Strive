@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Platform } from '@ionic/angular';
 // Rxjs
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -6,7 +7,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, startWith } from 'rxjs/operators';
 import { exercises } from '@strive/exercises/utils';
 
@@ -28,7 +28,37 @@ export class ExploreComponent implements OnDestroy {
   exercises$ = this._exercises.asObservable()
 
   private backBtnSubscription: Subscription
-  private searchSubscription: Subscription
+  private searchSubscription = this.searchForm.valueChanges.pipe(
+    debounceTime(500),
+    startWith(this.searchForm.value)
+  ).subscribe(({ query, type }) => {
+    this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
+    
+    switch (type) {
+      case 'goals':
+        this.algolia.searchGoals(query, undefined)
+        break
+
+      case 'collectiveGoals':
+        this.algolia.searchCollectiveGoals(query, undefined)
+        break
+
+      case 'users':
+        this.algolia.searchProfiles(query, undefined)
+        break
+    
+      case 'exercises':
+      default: {
+        const hpp = query ? undefined : { goals: 8, collectiveGoals: 5, profiles: 8 } 
+        this.algolia.search(query, hpp)
+
+        const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
+        this._exercises.next(filteredExercises)
+        break
+      }
+    }
+
+  })
 
   constructor(
     public algolia: AlgoliaService,
@@ -36,38 +66,6 @@ export class ExploreComponent implements OnDestroy {
     private platform: Platform,
     private seo: SeoService,
   ) {
-    this.searchSubscription = this.searchForm.valueChanges.pipe(
-      debounceTime(500),
-      startWith(this.searchForm.value)
-    ).subscribe(({ query, type }) => {
-      this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
-      
-      switch (type) {
-        case 'goals':
-          this.algolia.searchGoals(query, undefined)
-          break
-
-        case 'collectiveGoals':
-          this.algolia.searchCollectiveGoals(query, undefined)
-          break
-
-        case 'users':
-          this.algolia.searchProfiles(query, undefined)
-          break
-      
-        case 'exercises':
-        default: {
-          const hpp = query ? undefined : { goals: 8, collectiveGoals: 5, profiles: 8 } 
-          this.algolia.search(query, hpp)
-
-          const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
-          this._exercises.next(filteredExercises)
-          break
-        }
-      }
-
-    })
-
     this.seo.generateTags({ title: `Explore - Strive Journal` })
   }
 

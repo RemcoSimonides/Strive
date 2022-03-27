@@ -6,6 +6,7 @@ export interface Post {
   title: string;
   description: string;
   mediaURL: string;
+  url: string;
   goalId?: string; // only for custom post
   uid?: string; // only for custom post
   milestoneId?: string; // link to milestone
@@ -20,6 +21,7 @@ export function createPost(params: Partial<Post> = {}): Post {
     title: '',
     description: '',
     mediaURL: '',
+    url: '',
     isEvidence: false,
     ...params
   }

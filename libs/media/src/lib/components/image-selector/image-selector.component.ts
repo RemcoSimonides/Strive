@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Storage, deleteObject, ref, uploadBytes } from '@angular/fire/storage';
-import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
 import { SafeUrl } from '@angular/platform-browser';
 import { Platform } from '@ionic/angular';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { Storage, deleteObject, ref, uploadBytes } from '@angular/fire/storage';
+import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
+import { isValidHttpUrl } from '@strive/utils/helpers';
 
 import { Camera, CameraResultType } from '@capacitor/camera';
 
@@ -32,20 +34,20 @@ type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
   styleUrls: ['./image-selector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImageSelectorComponent implements OnInit {
+export class ImageSelectorComponent implements OnInit, OnDestroy {
+  private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop')
+  private sub?: Subscription
 
-  private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
-
-  step$ = this.step.asObservable();
-  accept = ['.jpg', '.jpeg', '.png', '.webp'];
-  file: File;
-  croppedImage: string;
-  previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
+  step$ = this.step.asObservable()
+  accept = ['.jpg', '.jpeg', '.png', '.webp']
+  file: File
+  croppedImage: string
+  previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
   @Input() defaultImage: 'goal.jpeg' | 'collective-goal.jpeg' | 'profile.png'
 
-  @Input() form: FormControl;
-  @Input() storagePath: string;
+  @Input() form: FormControl
+  @Input() storagePath: string
 
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
@@ -56,6 +58,14 @@ export class ImageSelectorComponent implements OnInit {
 
   ngOnInit() {
     this.resetState();
+
+    this.sub = this.form.valueChanges.pipe(
+      filter(value => isValidHttpUrl(value))
+    ).subscribe(_ => this.resetState())
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
   }
 
   @HostListener('drop', ['$event'])
@@ -82,10 +92,15 @@ export class ImageSelectorComponent implements OnInit {
 
   private resetState() {
     if (this.form.value) {
-      const params: ImageParameters = { w: 1024 }
-      const previewUrl = getImgIxResourceUrl(this.form.value, params)
-      this.previewUrl$.next(previewUrl)
-      this.step.next('show')
+      if (isValidHttpUrl(this.form.value)) {
+        this.previewUrl$.next(this.form.value);
+        this.step.next('show')
+      } else {
+        const params: ImageParameters = { w: 1024 }
+        const previewUrl = getImgIxResourceUrl(this.form.value, params)
+        this.previewUrl$.next(previewUrl)
+        this.step.next('show')
+      }
     } else {
       this.step.next('drop')
     }

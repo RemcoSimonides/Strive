@@ -23,3 +23,12 @@ export function setDateToEndOfDay(date: string): string {
   const last = str.pop();
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
 }
+
+export function isValidHttpUrl(url: string) {
+  try {
+    const value = new URL(url);
+    return value.protocol === "http:" || value.protocol === "https:";
+  } catch (_) {
+    return false;  
+  } 
+}

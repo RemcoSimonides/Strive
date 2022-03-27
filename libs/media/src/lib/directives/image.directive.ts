@@ -1,4 +1,5 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
+import { isValidHttpUrl } from '@strive/utils/helpers';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { getAssetPath } from '../+state/media.model';
 import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers';
@@ -79,8 +80,12 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, ref]) => {
       if (ref) {
         // ref
-        this.srcset = getImgIxResourceUrl(ref, params);
-        this.src = this.srcset.split(' ')[0];
+        if (isValidHttpUrl(ref)) {
+          this.src = ref
+        } else {
+          this.srcset = getImgIxResourceUrl(ref, params)
+          this.src = this.srcset.split(' ')[0]
+        }
       } else {
         // asset
         this.srcset = getAssetPath(asset);

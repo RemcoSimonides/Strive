@@ -29,3 +29,4 @@ export { discussionDeletedHandler } from './firestore/discussions/discussion';
 // export { duplicateGoal } from './firestore/goals/goal'
 export { useTemplate } from './firestore/collective-goals/templates/template'
 // export { migrate } from './migration'
+export { scrapeMetatags } from './https/scrape';

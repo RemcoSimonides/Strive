@@ -1,20 +1,25 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-//Ionic
-import { NavParams, ModalController } from '@ionic/angular'
+import { Functions, httpsCallable } from '@angular/fire/functions';
+// Ionic
+import { ModalController } from '@ionic/angular'
+// Rxjs
+import { filter } from 'rxjs/operators';
 // Strive
 import { PostService } from '@strive/post/+state/post.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { PostForm } from '@strive/post/forms/post.form';
 import { createPost } from '@strive/post/+state/post.firestore';
+import { isValidHttpUrl } from '@strive/utils/helpers';
 
 @Component({
   selector: 'post-upsert-modal',
   templateUrl: './upsert-modal.component.html',
   styleUrls: ['./upsert-modal.component.scss'],
 })
-export class UpsertPostModalComponent implements OnInit {
+export class UpsertPostModalComponent implements OnInit, OnDestroy {
   postForm = new PostForm()
+  scrapingUrl = false
   
   @Input() postId: string
   @Input() goalId: string
@@ -25,12 +30,30 @@ export class UpsertPostModalComponent implements OnInit {
     this.modalCtrl.dismiss()
   }
 
+  private sub = this.postForm.url.valueChanges.pipe(
+    filter(url => isValidHttpUrl(url))
+  ).subscribe(async url => {
+    this.scrapingUrl = true;
+    const scrape = httpsCallable(this.functions, 'scrapeMetatags')
+    const scraped = await scrape({ url })
+    const { error, result } = scraped.data as { error: string, result: any }
+    if (error) {
+      console.error(result)
+    } else {
+      const { image, title, description } = result.meta;
+      this.postForm.title.setValue(title ?? '')
+      this.postForm.description.setValue(description ?? '')
+      this.postForm.mediaURL.setValue(image ?? '')
+    }
+    this.scrapingUrl = false;
+  })
+
   constructor(
+    private functions: Functions,
     private location: Location,
     private modalCtrl: ModalController,
-    private navParams: NavParams, // { goal: Goal, milestone: Milestone, postId: string }
     private postService: PostService,
-    private user: UserService
+    private user: UserService,
   ) {
     window.history.pushState(null, null, window.location.href)
     modalCtrl.getTop().then(modal => {
@@ -46,6 +69,10 @@ export class UpsertPostModalComponent implements OnInit {
     if (!this.goalId) throw new Error('No goal to post the post at')
 
     this.postForm.get('isEvidence').setValue(isEvidence)
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 
   dismiss() {

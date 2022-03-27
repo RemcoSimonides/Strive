@@ -51,7 +51,6 @@ export async function handleStatusChangeNotification(before: Milestone, after: M
     const supportNotification = createNotificationSupport({
       id: support.id,
       description: support.description,
-      finished: support.milestone.id === after.id,
       receiver: after.achiever.uid ? after.achiever : receiver 
     })
 

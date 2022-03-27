@@ -206,7 +206,6 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
       const supportNotification = createNotificationSupport({
         id: support.id,
         description: support.description,
-        finished: !milestone.id,
         receiver: milestone.achiever.uid ? milestone.achiever : receiver
       })
 

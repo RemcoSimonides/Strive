@@ -18,8 +18,9 @@
       <img class="post-image" [ref]="post.mediaURL" [asset]="">
     </ng-container>
 
-    <ion-card-content *ngIf="post.description">
+    <ion-card-content *ngIf="post.description || post.url">
       <p>{{ post.description }}</p>
+      <a [href]="post.url" target="_blank" rel="noreferrer noopener">{{ post.url }}</a>
     </ion-card-content>
   </ion-card>
 </ng-container>

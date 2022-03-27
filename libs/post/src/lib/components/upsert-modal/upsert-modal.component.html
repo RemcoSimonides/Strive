@@ -17,6 +17,12 @@
   <form [formGroup]="postForm">
 
     <ion-item>
+      <ion-label color="primary" stacked>Link</ion-label>
+      <ion-input formControlName="url" type="url"></ion-input>
+      <ion-spinner *ngIf="scrapingUrl" slot="end" name="bubbles" color="primary"></ion-spinner>
+    </ion-item>
+
+    <ion-item>
       <ion-label color="primary" stacked>Title</ion-label>
       <ion-input formControlName="title"></ion-input>
     </ion-item>
