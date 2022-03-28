@@ -90,8 +90,8 @@ export class PostsComponent implements OnInit, OnDestroy {
     const snapshot = await getDocs(query(this.query, ...queryConstraints))
     if (!snapshot.empty) {
       const posts = snapshot.docs.map(doc => {
-        const data = createNotification({ ...doc.data(), id: doc.id })
-        return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
+        return createNotification({ ...doc.data(), id: doc.id })
+        // return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
       })
       const next = isRefresh ? [...posts, ...this._notifications.value] : [...this._notifications.value, ...posts]
       this._notifications.next(next)

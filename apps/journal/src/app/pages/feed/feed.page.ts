@@ -152,8 +152,8 @@ export class FeedComponent implements OnDestroy {
     const snapshot = await getDocs(query(this.query, ...queryConstraints))
     if (!snapshot.empty) {
       const notifications = snapshot.docs.map(doc => {
-        const data = createNotification({ ...doc.data(), id: doc.id })
-        return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
+        return createNotification({ ...doc.data(), id: doc.id })
+        // return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
       })
       const next = isRefresh ? [...notifications, ...this._notifications.value] : [...this._notifications.value, ...notifications]
       this._notifications.next(next)

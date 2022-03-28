@@ -6,7 +6,7 @@
       <section fxLayout="column" fxLayoutAlign="start">
         <ng-container *ngIf="notifications$ | async as notifications; else empty">
           <ng-container *ngIf="notifications.length; else empty">
-            <ng-container *ngFor="let notification of notifications; let isLast = last">
+            <ng-container *ngFor="let notification of notifications; let isLast = last; let index = index">
               
               <ng-container *ngIf="notification | message:'user' as _message">
                 <article fxLayout fxLayoutGap="8px" class="clickable" [routerLink]="_message.link">
@@ -30,6 +30,14 @@
                 </article>
               </ng-container>
 
+              <ng-container *ngIf="index === lastUnreadIndex">
+                <span *ngIf="!isLast" class="divider"></span>
+                <div class="unread">
+                  <ion-icon name="chevron-up-outline"></ion-icon>
+                  <small>unread notifications</small>
+                  <ion-icon name="chevron-up-outline"></ion-icon>
+                </div>
+              </ng-container>
               <span *ngIf="!isLast" class="divider"></span>
             </ng-container>
           </ng-container>  
