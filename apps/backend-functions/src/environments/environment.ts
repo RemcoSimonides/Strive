@@ -11,3 +11,5 @@ export const algoliaApiKey = functions.config().algolia?.apikey ?? '';
 
 export const urlmetaUsername = functions.config().urlmeta.username ?? '';
 export const urlmetaApiKey = functions.config().urlmeta.apikey ?? '';
+
+export const sendgridApiKey = functions.config().sendgrid.apikey ?? '';
