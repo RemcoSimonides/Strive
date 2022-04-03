@@ -19,7 +19,7 @@ export class MotivationComponent {
   })
 
   private ref = doc(this.db, `miscellaneous/motivation`)
-  motivations = docSnapshots(this.ref).pipe(map(snap => (snap.data()) as Motivations))
+  motivations$ = docSnapshots(this.ref).pipe(map(snap => (snap.data()) as Motivations))
 
   constructor(private db: Firestore) {}
 
@@ -42,6 +42,10 @@ export class MotivationComponent {
     const motivations = await getDoc(this.ref).then(snap => snap.data() as Motivations)
     motivations.quotes.splice(index, 1)
     updateDoc(this.ref, { quotes: motivations.quotes })
+  }
+
+  getUnused(motivations: Motivation[]) {
+    return motivations.filter(motivation => !motivation.used).length
   }
 
 }
