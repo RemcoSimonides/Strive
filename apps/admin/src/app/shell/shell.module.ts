@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ShellComponent } from './shell.component';
-import { StriveAdminGuard } from '../guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -13,19 +12,16 @@ const routes: Routes = [
     children: [
       {
         path: 'users',
-        loadChildren: () => import('../pages/users/users.module').then(m => m.UsersPageModule),
-        canActivate: [StriveAdminGuard]
+        loadChildren: () => import('../pages/users/users.module').then(m => m.UsersPageModule)
       },
       {
         path: 'goals',
-        loadChildren: () => import('../pages/goals/goals.module').then(m => m.GoalsPageModule),
-        canActivate: [StriveAdminGuard]
+        loadChildren: () => import('../pages/goals/goals.module').then(m => m.GoalsPageModule)
       },
-      // {
-      //   path: 'collective-goals',
-      //   loadChildren: () => import('../pages/collective-goals/collective-goals.module').then(m => m.CollectiveGoalsPageModule),
-      //   canActivate: [StriveAdminGuard]
-      // }
+      {
+        path: 'motivation',
+        loadChildren: () => import('../pages/motivation/motivation.module').then(m => m.MotivationModule)
+      }
     ]
   }
 ]
