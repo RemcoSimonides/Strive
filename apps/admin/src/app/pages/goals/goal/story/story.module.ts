@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { StoryComponent } from './story.component';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
-import { NotificationModule } from '@strive/notification/components/notification/notification.module';
+// import { NotificationModule } from '@strive/notification/components/notification/notification.module';
 
 @NgModule({
   imports: [
@@ -14,7 +14,7 @@ import { NotificationModule } from '@strive/notification/components/notification
     IonicModule,
     RouterModule,
     PageLoadingModule,
-    NotificationModule
+    // NotificationModule
   ],
   declarations: [StoryComponent],
   exports: [StoryComponent]

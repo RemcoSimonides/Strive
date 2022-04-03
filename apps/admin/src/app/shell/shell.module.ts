@@ -21,11 +21,11 @@ const routes: Routes = [
         loadChildren: () => import('../pages/goals/goals.module').then(m => m.GoalsPageModule),
         canActivate: [StriveAdminGuard]
       },
-      {
-        path: 'collective-goals',
-        loadChildren: () => import('../pages/collective-goals/collective-goals.module').then(m => m.CollectiveGoalsPageModule),
-        canActivate: [StriveAdminGuard]
-      }
+      // {
+      //   path: 'collective-goals',
+      //   loadChildren: () => import('../pages/collective-goals/collective-goals.module').then(m => m.CollectiveGoalsPageModule),
+      //   canActivate: [StriveAdminGuard]
+      // }
     ]
   }
 ]

@@ -10,7 +10,6 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { orderBy, where } from '@angular/fire/firestore';
 import { ModalController } from '@ionic/angular';
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
 @Component({
   selector: 'strive-user',
@@ -63,9 +62,10 @@ export class UserPage {
   }
 
   createGoal(uid: string) {
-    this.modalCtrl.create({
-      component: UpsertGoalModalComponent,
-      componentProps: { uid }
-    }).then(modal => modal.present())
+    // should create new upsert goal modal for admin
+    // this.modalCtrl.create({
+    //   component: UpsertGoalModalComponent,
+    //   componentProps: { uid }
+    // }).then(modal => modal.present())
   }
 }

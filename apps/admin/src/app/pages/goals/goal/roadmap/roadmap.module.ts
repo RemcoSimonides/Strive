@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { RoadmapComponent } from './roadmap.component';
 
-import { RoadmapModule as RoadmapUIModule } from '@strive/goal/milestone/components/roadmap/roadmap.module';
+// import { RoadmapModule as RoadmapUIModule } from '@strive/goal/milestone/components/roadmap/roadmap.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 @NgModule({
@@ -14,7 +14,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
     IonicModule,
     RouterModule,
     PageLoadingModule,
-    RoadmapUIModule
+    // RoadmapUIModule
   ],
   declarations: [RoadmapComponent],
   exports: [RoadmapComponent]

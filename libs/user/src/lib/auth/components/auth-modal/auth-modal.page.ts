@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
@@ -28,7 +28,7 @@ export enum enumAuthSegment {
   templateUrl: './auth-modal.page.html',
   styleUrls: ['./auth-modal.page.scss'],
 })
-export class AuthModalModalComponent implements OnInit {
+export class AuthModalModalComponent {
   private success = false;
 
   passwordType = 'password';
