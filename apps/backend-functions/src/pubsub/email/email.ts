@@ -9,6 +9,7 @@ import { getDocument } from '../../shared/utils';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { MailDataRequired } from '@sendgrid/mail';
+import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model'; 
 
 const TEMPLATE_ID = 'd-709a6094be254533a25b421dfad30f9a';
 
@@ -27,20 +28,25 @@ export type EmailJSON = { name?: string; email: string };
 export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
 // export const scheduledEmailRunner = functions.pubsub.schedule('5 8 * * 6').onRun(async (context) => {
 
-  // get profiles
-  const profileSnaps = await db.collectionGroup('Profile').get()
+  const [ profileSnaps, motivation ] = await Promise.all([
+    db.collectionGroup('Profile').get(),
+    getMotivation()
+  ])
 
   for (const doc of profileSnaps.docs) {
     const profile = createPersonal(doc.data())
     const goals = await getGoals(profile.uid)
-    logger.log('goals: ', goals)
 
     const futureGoals = goals.filter(goal => goal.status === 'bucketlist')
     const currentGoals = goals.filter(goal => goal.status === 'active')
 
     if (!futureGoals.length && !currentGoals.length) continue
 
-    const data = { futureGoals, currentGoals }
+    const data = { 
+      futureGoals,
+      currentGoals,
+      motivation
+    }
 
     // await sendTemplateEmail('', TEMPLATE_ID, { text: mail })
     logger.log('should be sent to: ', profile.email)
@@ -90,4 +96,16 @@ async function getGoals(uid: string): Promise<Goal[]> {
     return getDocument<Goal>(`Goals/${stakeholder.goalId}`)
   })
   return Promise.all(promises)
+}
+
+async function getMotivation(): Promise<Motivation> {
+  const ref = db.doc('miscellaneous/motivation')
+  const motivationsSnap = await ref.get()
+  const motivations = motivationsSnap.data() as Motivations
+  const index = motivations.quotes.findIndex(quote => !quote.used)
+
+  motivations.quotes[index].used = true
+  ref.update({ quotes: motivations.quotes })
+
+  return motivations.quotes[index]
 }
