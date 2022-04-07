@@ -9,9 +9,21 @@ import { getDocument } from '../../shared/utils';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { MailDataRequired } from '@sendgrid/mail';
-import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model'; 
+import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model';
+import { groupIds, templateIds } from './ids';
 
-const TEMPLATE_ID = 'd-709a6094be254533a25b421dfad30f9a';
+// Substitutions used in Sendgrid templates
+const substitutions = {
+  groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
+  preferenceUnsubscribe: "<%asm_preferences_raw_url%>"
+};
+
+/**
+ * Array of unsubscribe groups we want to display when users click on the preference link.
+ * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
+ * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
+*/
+const groupsToDisplay = [groupIds.unsubscribeAll];
 
 export interface EmailTemplateRequest {
   to: string;
@@ -52,20 +64,21 @@ export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onR
     logger.log('should be sent to: ', profile.email)
     await sendMailFromTemplate({
       to: 'remcosimonides@gmail.com',
-      templateId: TEMPLATE_ID,
-      data
-    })
+      templateId: templateIds.monthlyGoalReminder,
+      data,
+    }, groupIds.monthlyGoalReminder)
   }
 })
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, groupId: number = groupIds.criticalsEmails) {
   const from: EmailJSON = { email: 'remco@strivejournal.com', name: 'Strive Journal'};
 
   const msg: MailDataRequired = {
     from,
     to,
     templateId,
-    dynamicTemplateData: { ...data, from }
+    asm: groupId ? { groupId, groupsToDisplay } : undefined,
+    dynamicTemplateData: { ...data, ...substitutions, from }
   };
 
   return send(msg);
