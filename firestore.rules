@@ -22,7 +22,6 @@ service cloud.firestore {
       allow read: if collection == "GStakeholders"
       allow read: if collection == "Spectators"
       allow read: if collection == "Supports"
-      allow read: if collection == "Profile"
     }
 
     match /{path=**}/Comments/{id} {
@@ -33,12 +32,6 @@ service cloud.firestore {
     match /Users/{uid} {
       allow read;
       allow write: if isOwner(uid);
-
-      // TODO remove these rules
-      match /Profile/{userId} {
-        allow read;
-        allow write: if isOwner(userId);
-      }
 
       match /Notifications/{notificationId} {
         allow read: if isOwner(uid)

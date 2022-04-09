@@ -135,7 +135,7 @@ export function getPushMessage({ event, source, target }: Notification): PushMes
     case enumEvent.gStakeholderRequestToJoinPending:
       return createPushMessage({
         title: source.goal.title,
-        body: `${source.user.username} requests to join`
+        body: `${source.user.username} requests to join goal`
       })
 
     case enumEvent.gStakeholderRequestToJoinAccepted:
