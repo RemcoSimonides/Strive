@@ -8,6 +8,7 @@ import { UserService } from "@strive/user/user/+state/user.service";
 import { combineLatest, Observable, of } from "rxjs";
 import { map, startWith, switchMap } from "rxjs/operators";
 import { FormControl } from "@angular/forms";
+import { delay } from "@strive/utils/helpers";
 
 @Component({
   selector: 'goal-team-modal',
@@ -76,8 +77,10 @@ export class TeamModalComponent implements OnInit {
   }
 
   navTo(uid: string) {
-    this.router.navigate(['/profile/', uid])
-    this.dismiss()
+    this.location.back()
+    delay(250).then(_ => {
+      this.router.navigate(['/profile/', uid])
+    })
   }
 
   toggleAdmin(stakeholder: GoalStakeholder, event: Event) {

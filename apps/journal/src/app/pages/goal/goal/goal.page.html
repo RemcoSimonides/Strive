@@ -57,7 +57,7 @@
               <span>share</span>
             </ion-button>
           </ng-container>
-          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" *ngIf="!!user.uid">
+          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" *ngIf="isAdmin">
             <span>more options</span>
           </ion-button>
         </div>
@@ -77,7 +77,7 @@
         <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
           <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
         </ion-button>
-        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="!!user.uid">
+        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="isAdmin">
           <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
         </ion-button>
       </div>
