@@ -18,13 +18,6 @@ section {
     padding: 48px 12px 12px 12px;
   }
 
-  ion-icon {
-    &:hover  {
-      color: var(--ion-color-dark);
-      cursor: pointer;
-    }
-  }
-
   .img-container {
     position: absolute;
     top: -40px;
@@ -57,12 +50,6 @@ h2 {
 
 .padding {
   padding-left: 16px;
-}
-
-ion-input {
-  max-width: 200px;
-  font-size: 26px;
-  font-weight: 500;
 }
 
 ion-list {

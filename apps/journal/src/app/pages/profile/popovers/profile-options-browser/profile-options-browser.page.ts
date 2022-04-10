@@ -50,6 +50,11 @@ export class ProfileOptionsBrowserComponent {
     this.popoverCtrl.dismiss()
   }
 
+  gotToEditProfile() {
+    this.router.navigateByUrl(`/edit-profile`)
+    this.popoverCtrl.dismiss()
+  }
+
   pushNotifications() {
     this.fcm.registerFCM()
     this.popoverCtrl.dismiss()

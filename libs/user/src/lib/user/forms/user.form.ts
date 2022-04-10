@@ -6,7 +6,7 @@ function createUserFormControl(params: User) {
   const user = createUser(params)
   return {
     uid: new FormControl(user.uid),
-    username: new FormControl(user.username, Validators.maxLength(16)),
+    username: new FormControl(user.username, [Validators.required, Validators.maxLength(16)]),
     photoURL: new FormControl(user.photoURL),
   }
 }

@@ -1,0 +1,39 @@
+<ion-header *ngIf="screensize.isMobile$ | async">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Edit Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ng-container *ngIf="user.user$ | async as user else login">
+  <ion-content class="ion-no-padding">
+    <ion-card>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input
+            type="text"
+            maxlength="16"
+            [formControl]="form.username"
+            (keydown.enter)="update()">
+          </ion-input>
+        </ion-item>
+  
+        <media-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + user.uid"></media-image-selector>
+      
+        <ion-button (click)="update()">Save</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</ng-container>
+
+<ng-template #login>
+  <section class="not-logged-in">
+    <p>
+        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your profile
+    </p>
+  </section>
+</ng-template>

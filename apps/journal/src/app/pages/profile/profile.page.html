@@ -36,18 +36,7 @@
       <ion-card>
         <article fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="12px">
           <div fxLayout fxLayoutAlign="center center" fxLayoutGap="12px">
-            <ng-container *ngIf="isOwner$ | async else username">
-              <ion-input type="text" 
-                maxlength="16"
-                [ngStyle]="{'max-width': profileForm.username.value ? profileForm.username.value.length + 1.5 + 'ch' : '1.5ch'}" 
-                [formControl]="profileForm.username" 
-                (keydown.enter)="updateUsername()">
-              </ion-input>
-              <ion-icon [name]="profileForm.enabled ? 'save' : 'create'" (click)="updateUsername()"></ion-icon>
-            </ng-container>
-            <ng-template #username>
-              <h4>{{ profile.username }}</h4>
-            </ng-template>
+            <h4>{{ profile.username }}</h4>
           </div>
 
           <article fxLayout fxLayoutAlign="space-evenly">
@@ -73,7 +62,7 @@
 
       </ion-card>
       <article fxLayout fxLayoutAlign="center end" class="img-container">
-        <img [ref]="profile.photoURL" (click)="editProfileImage(profile, $event)" asset="profile.png" alt="profile picture"/>
+        <img [ref]="profile.photoURL" asset="profile.png" alt="profile picture"/>
       </article>
     </section>
 

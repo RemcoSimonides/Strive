@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { IonicModule } from '@ionic/angular';
 
 import { ProfileComponent } from './profile.page';
-import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 
 // Exercises
 import { AffirmationsViewModule } from '@strive/exercises/affirmation/components/view/view.module';
@@ -67,11 +66,7 @@ const routes: Routes = [
     DearFutureSelfUpsertModule
   ],
   declarations: [
-    ProfileComponent,
-    EditProfileImagePopoverComponent
-  ],
-  entryComponents: [
-    EditProfileImagePopoverComponent
+    ProfileComponent
   ]
 })
 export class ProfilePageModule {}

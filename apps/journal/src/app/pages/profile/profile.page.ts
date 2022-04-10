@@ -11,7 +11,6 @@ import { SeoService } from '@strive/utils/services/seo.service';
 // Rxjs
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
-import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image-popover/edit-profile-image-popover.page'
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
@@ -26,7 +25,6 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { UserForm } from '@strive/user/user/forms/user.form';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
@@ -48,7 +46,6 @@ export class ProfileComponent implements OnInit {
 
   profileId: string
   profile$: Observable<User>
-  profileForm = new UserForm()
 
   achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
   supportingGoals$: Observable<Goal[]>
@@ -69,7 +66,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.profileId = this.route.snapshot.paramMap.get('id')
-    this.profileForm.disable();
 
     this.isOwner$ = this.user.user$.pipe(
       tap(user => {
@@ -95,7 +91,6 @@ export class ProfileComponent implements OnInit {
         tap(profile => {
           if (profile) {
             this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
-            this.profileForm.patchValue(profile)
           }
         })
       )
@@ -150,32 +145,6 @@ export class ProfileComponent implements OnInit {
       componentProps: { goal, stakeholder },
       event: ev
     }).then(popover => popover.present())
-  }
-
-  async editProfileImage(user: User, ev: UIEvent) {
-    if (!this._isOwner.value) return
-    const popover = await this.popoverCtrl.create({
-      component: EditProfileImagePopoverComponent,
-      componentProps: { storagePath: user.photoURL },
-      event: ev
-    })
-    popover.onDidDismiss().then((imageURL => {
-      if (imageURL && imageURL.data) {
-        this.profileForm.photoURL.setValue(imageURL.data.toString())
-      }
-    }))
-    popover.present()
-  }
-
-  updateUsername(){
-    if (this.profileForm.enabled && this.profileForm.valid) {
-      const username = this.profileForm.username.value as string
-      if (!username) return
-  
-      this.user.upsert({ username, uid: this.user.uid })
-    }
-
-    this.profileForm.disabled ? this.profileForm.enable() : this.profileForm.disable()
   }
 
   toggleSpectate(spectate) {
