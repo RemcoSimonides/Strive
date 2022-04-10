@@ -32,17 +32,17 @@
       <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
       <ion-list mode="md">
         <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
-          <ion-icon 
-            [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
-            color="primary"
-            [ngStyle]="{ cursor: control.completed.value ? 'inherit' : 'pointed'}"
-            (click)="toggleSubtask(i)">
-          </ion-icon>
+          <ion-button fill="clear" (click)="toggleSubtask(i)">
+            <ion-icon  slot="icon-only"
+              [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
+              color="primary">
+            </ion-icon>
+          </ion-button>
           <ion-input [readonly]="!isAdmin" [formControl]="control.content"></ion-input>
         </ion-item>
         <form [formGroup]="subtaskForm" *ngIf="isAdmin">
           <ion-item>
-            <ion-icon name="radio-button-off" color="primary"></ion-icon>
+            <ion-icon class="icon" name="radio-button-off" color="primary"></ion-icon>
             <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()"></ion-input>
             <ion-button (click)="addSubtask()">add</ion-button>
           </ion-item>

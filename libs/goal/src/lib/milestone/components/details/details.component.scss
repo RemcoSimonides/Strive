@@ -16,9 +16,13 @@
 ion-list {
   border-radius: 12px;
 
+  .icon {
+    margin: 0 8px;
+  }
+
   ion-icon {
     height: 16px;
-    margin-right: 12px;
+    margin-right: auto;
   }
 }
 
