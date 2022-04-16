@@ -42,8 +42,8 @@ export type EmailJSON = { name?: string; email: string };
 
 
 // // crontab.guru to determine schedule value
-// export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
-export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {
+export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
+// export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {
 
   const [ profileSnaps, motivation ] = await Promise.all([
     db.collectionGroup('Personal').get(),
@@ -119,7 +119,7 @@ async function send(msg: MailDataRequired) {
 }
 
 async function getGoals(uid: string): Promise<Goal[]> {
-  const stakeholderSnaps = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).get()
+  const stakeholderSnaps = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('isAchiever', '==', true).orderBy('createdAt', 'desc').get()
 
   const promises = stakeholderSnaps.docs.map(doc => {
     const stakeholder = createGoalStakeholder(doc.data())
