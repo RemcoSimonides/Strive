@@ -81,14 +81,18 @@ export class UpsertPostModalComponent implements OnInit, OnDestroy {
 
   async submitPost() {
     if (!this.user.uid) return
-    const post = createPost({
-      id: this.postId,
-      goalId: this.goalId,
-      uid: this.user.uid,
-      ...this.postForm.value
-    })
-    if (this.milestoneId) post.milestoneId = this.milestoneId
-    await this.postService.add(post, { params: { goalId: this.goalId }});
+
+    if (!this.postForm.isEmpty) {
+      const post = createPost({
+        id: this.postId,
+        goalId: this.goalId,
+        uid: this.user.uid,
+        ...this.postForm.value
+      })
+      if (this.milestoneId) post.milestoneId = this.milestoneId
+      await this.postService.add(post, { params: { goalId: this.goalId }});
+    }
+
     this.dismiss()
   }
 

@@ -24,4 +24,8 @@ export class PostForm extends FormEntity<PostFormControl> {
   get title() { return this.get('title') }
   get mediaURL() { return this.get('mediaURL') }
   get description() { return this.get('description') }
+
+  get isEmpty() {
+    return !this.url.value && !this.title.value && !this.mediaURL.value && !this.description.value
+  }
 }
