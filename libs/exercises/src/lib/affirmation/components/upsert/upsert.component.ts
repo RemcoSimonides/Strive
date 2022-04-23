@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -24,6 +24,7 @@ export class AffirmationUpsertComponent implements OnInit {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private user: UserService,
@@ -33,14 +34,13 @@ export class AffirmationUpsertComponent implements OnInit {
     private popoverCtrl: PopoverController
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   async ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     const affirmations = await this.service.getAffirmations(this.user.uid)
     if (affirmations) this.affirmations = affirmations
 

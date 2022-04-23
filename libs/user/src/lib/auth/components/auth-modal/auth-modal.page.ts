@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostBinding, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
@@ -72,6 +72,7 @@ export class AuthModalModalComponent {
       this.modalCtrl.dismiss(this.success)
     }
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private afAuth: Auth,
@@ -84,15 +85,14 @@ export class AuthModalModalComponent {
     public platform: Platform,
     private user: UserService
   ) {
-    this.modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
+    window.history.pushState(null, null, window.location.href)
   }
 
   ngOnInit() {
-    window.history.pushState(null, null, window.location.href);
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     const segmentChoice = this.navParams.data.authSegment
     this.authSegmentChoice = segmentChoice ? segmentChoice : enumAuthSegment.login
   }

@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 // Ionic
@@ -29,6 +29,7 @@ export class UpsertPostModalComponent implements OnInit, OnDestroy {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   private sub = this.postForm.url.valueChanges.pipe(
     filter(url => isValidHttpUrl(url))
@@ -56,14 +57,13 @@ export class UpsertPostModalComponent implements OnInit, OnDestroy {
     private user: UserService,
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
-  ngOnInit() { 
+  ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     const isEvidence = !!this.postId;
     if (!this.postId) this.postId = this.postService.createId()
     if (!this.goalId) throw new Error('No goal to post the post at')

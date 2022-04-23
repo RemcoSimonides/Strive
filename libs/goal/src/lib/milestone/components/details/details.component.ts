@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Goal } from "@strive/goal/goal/+state/goal.firestore";
 import { createSubtask, Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
@@ -33,6 +33,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private alertCtrl: AlertController,
@@ -42,14 +43,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     this.form = new MilestoneForm(this.milestone)
 
     if (this.canEdit) {

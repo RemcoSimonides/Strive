@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { AlertController, ModalController, NavParams } from "@ionic/angular";
@@ -30,6 +30,7 @@ export class TeamModalComponent implements OnInit {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
   
   constructor(
     private alertCtrl: AlertController,
@@ -41,14 +42,13 @@ export class TeamModalComponent implements OnInit {
     private location: Location
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     this.goalId = this.navParams.data.goalId as string
     if (!this.goalId) return
 

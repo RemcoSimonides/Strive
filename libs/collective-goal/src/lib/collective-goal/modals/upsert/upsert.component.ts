@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 // Ionic
@@ -15,6 +15,7 @@ import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+s
   styleUrls: ['./upsert.component.scss'],
 })
 export class UpsertCollectiveGoalComponent implements OnInit {
+  @HostBinding() modal: HTMLIonModalElement
 
   collectiveGoalId: string
   collectiveGoalForm: CollectiveGoalForm
@@ -35,14 +36,13 @@ export class UpsertCollectiveGoalComponent implements OnInit {
     private navParam: NavParams,
   ) {
     window.history.pushState(null, null, window.location.href)
-    this.modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     this.collectiveGoalId = this.navParam.data.id
     this.state = this.collectiveGoalId ? 'update' : 'create'
     if (!this.collectiveGoalId) this.collectiveGoalId = this.service.createId();

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -17,6 +17,7 @@ export class DailyGratefulnessUpsertComponent implements OnInit {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private location: Location,
@@ -25,14 +26,13 @@ export class DailyGratefulnessUpsertComponent implements OnInit {
     private user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   async ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     this.dailyGratefulness = await this.service.getDailyGratefulnessSettings(this.user.uid);
 
     if (!this.dailyGratefulness || !this.dailyGratefulness.time) {

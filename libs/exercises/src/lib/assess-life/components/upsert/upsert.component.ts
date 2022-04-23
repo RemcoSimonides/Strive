@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 
@@ -7,21 +7,24 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './upsert.component.html',
   styleUrls: ['./upsert.component.scss']
 })
-export class AssessLifeUpsertComponent {
+export class AssessLifeUpsertComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
+
 
   constructor(
     private location: Location,
     private modalCtrl: ModalController
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
+  }
+
+  ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
     })
   }
 

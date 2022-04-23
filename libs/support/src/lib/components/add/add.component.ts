@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, ModalController, PopoverController } from '@ionic/angular';
 // Rxjs
@@ -41,25 +41,24 @@ export class AddSupportModalComponent implements OnInit {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private goalService: GoalService,
     private location: Location,
     private modalCtrl: ModalController,
-    private navParams: NavParams,
     private popoverCtrl: PopoverController,
     private supportService: SupportService,
     public user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     this.origin = this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 

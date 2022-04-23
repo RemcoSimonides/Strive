@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
 //ionic
 import { LoadingController, ModalController, NavParams  } from '@ionic/angular'
@@ -21,7 +21,8 @@ import { UserService } from '@strive/user/user/+state/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class UpsertGoalModalComponent {
+export class UpsertGoalModalComponent implements OnInit {
+
   goalId: string
   goalForm: GoalForm
   mode: 'update' | 'create'
@@ -33,6 +34,7 @@ export class UpsertGoalModalComponent {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private goalService: GoalService,
@@ -57,10 +59,11 @@ export class UpsertGoalModalComponent {
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
 
     window.history.pushState(null, null, window.location.href)
-    this.modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
+  }
+
+  ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
     })
   }
 

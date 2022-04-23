@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, IonContent, ModalController, Platform} from '@ionic/angular';
 import { collection, DocumentData, Firestore, getDocs, limit, orderBy, query, Query, QueryConstraint, startAfter } from '@angular/fire/firestore';
@@ -51,6 +51,7 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     public user: UserService,
@@ -63,17 +64,16 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
     private commentService: CommentService
   ) {
     window.history.pushState(null, null, window.location.href)
-    this.modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
 
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
     this.subs.push(sub)
   }
 
   async ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     this.discussionId = this.navParams.get('discussionId')
     this.discussion$ = this.discussion.valueChanges(this.discussionId)
 

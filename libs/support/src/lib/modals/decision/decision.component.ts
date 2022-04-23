@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
@@ -14,11 +14,12 @@ import { NotificationService } from '@strive/notification/+state/notification.se
   styleUrls: ['./decision.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SupportDecisionComponent {
+export class SupportDecisionComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   @Input() achievers: GoalStakeholder[]
   @Input() notification: Notification<SupportDecisionMeta>
@@ -30,10 +31,11 @@ export class SupportDecisionComponent {
     private notificationService: NotificationService
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
+  }
+
+  ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
     })
   }
 

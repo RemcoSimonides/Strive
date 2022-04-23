@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular'
@@ -12,13 +12,14 @@ import { UserSpectateService } from '../../+state/spectator.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FollowersComponent {
+export class FollowersComponent implements OnInit {
   spectators: Spectator[] = []
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private location: Location,
@@ -28,11 +29,6 @@ export class FollowersComponent {
     private router: Router
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
 
     const uid = this.router.url.split('/').pop();
     if (uid) {
@@ -41,6 +37,12 @@ export class FollowersComponent {
         this.cdr.markForCheck()
       })
     }
+  }
+
+  ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
   }
 
   dismiss() {

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AlertController, LoadingController, ModalController, NavParams, NavController } from '@ionic/angular';
 
@@ -54,6 +54,7 @@ export class UpsertTemplateModalComponent implements OnInit {
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private alertCtrl: AlertController,
@@ -66,14 +67,13 @@ export class UpsertTemplateModalComponent implements OnInit {
     private templateService: TemplateService
   ) {
     window.history.pushState(null, null, window.location.href)
-    this.modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
-    })
   }
 
   ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
+    })
+
     const { template, collectiveGoalId } = this.navParams.data
     this.collectiveGoalId = collectiveGoalId
     this.templateForm = new TemplateForm(template)

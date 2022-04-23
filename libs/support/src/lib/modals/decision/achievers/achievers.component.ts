@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 import { Location } from '@angular/common';
 import { ModalController } from "@ionic/angular";
 import { createGoalStakeholder, GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
@@ -10,11 +10,12 @@ import { FormControl } from "@angular/forms";
   styleUrls: ['./achievers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AchieversPopoverComponent implements OnDestroy {
+export class AchieversPopoverComponent implements OnInit, OnDestroy {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss()
   }
+  @HostBinding() modal: HTMLIonModalElement
 
   _achievers: GoalStakeholder[] = []
   private _all: GoalStakeholder[] = []
@@ -36,10 +37,11 @@ export class AchieversPopoverComponent implements OnDestroy {
     private modalCtrl: ModalController
   ) {
     window.history.pushState(null, null, window.location.href)
-    modalCtrl.getTop().then(modal => {
-      modal.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
-      })
+  }
+
+  ngOnInit() {
+    this.modal.onWillDismiss().then(res => {
+      if (res.role === 'backdrop') this.location.back()
     })
   }
 
