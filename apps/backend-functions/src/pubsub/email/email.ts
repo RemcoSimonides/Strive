@@ -73,14 +73,8 @@ export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onR
       newUpdates
     }
 
-    const emails = [
-      'angeliquevdlinden@live.nl',
-      'pitaklaassen@gmail.com'
-    ]
-    const to = emails.includes(personal.email) ? personal.email : 'remcosimonides@gmail.com'
-
     await sendMailFromTemplate({
-      to,
+      to: personal.email,
       templateId: templateIds.monthlyGoalReminder,
       data,
     }, groupIds.monthlyGoalReminder)
