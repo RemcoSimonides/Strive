@@ -21,6 +21,10 @@ const routes: Routes = [
       {
         path: 'motivation',
         loadChildren: () => import('../pages/motivation/motivation.module').then(m => m.MotivationModule)
+      },
+      {
+        path: 'features',
+        loadChildren: () => import('../pages/features/features.module').then(m => m.FeaturesModule)
       }
     ]
   }

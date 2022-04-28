@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>New Features</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <form [formGroup]="form" (ngSubmit)="update()">
+      <ion-item>
+        <ion-label position="floating">Header</ion-label>
+        <ion-input formControlName="header"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Description</ion-label>
+        <ion-textarea formControlName="description" minlength="60" autoGrow></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">url</ion-label>
+        <ion-input formControlName="url"></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" [disabled]="form.invalid">add</ion-button>
+    </form>
+  </ion-card>
+
+  <ng-container *ngIf="features$ | async as features; else loading">
+    <ng-container *ngFor="let feature of features?.features; let index = index">
+      <ion-card>
+        <ion-card-title>{{ feature.header }}</ion-card-title>
+        <ion-card-content>
+          <p>{{ feature.description }}</p>
+          <a [href]="feature.url">{{ feature.url }}</a>
+          <p>{{ feature.createdAt.toDate() }}</p>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loading>
+    <strive-page-loading></strive-page-loading>
+  </ng-template>
+</ion-content>

@@ -7,13 +7,14 @@ import { sendgridApiKey } from '../../environments/environment';
 import * as SendGrid from '@sendgrid/mail'
 import { MailDataRequired } from '@sendgrid/mail';
 
-import { subWeeks, isAfter, subMonths } from 'date-fns';
+import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns';
 
 import { createPersonal, Personal } from '@strive/user/user/+state/user.firestore';
 import { getDocument } from '../../shared/utils';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Goal } from '@strive/goal/goal/+state/goal.firestore';
 import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model';
+import { Feature, Features } from '../../../../admin/src/app/pages/features/features.model';
 import { groupIds, templateIds } from './ids';
 import { createNotification } from '@strive/notification/+state/notification.model';
 
@@ -45,12 +46,13 @@ export type EmailJSON = { name?: string; email: string };
 // export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
 export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {
 
-  const [ profileSnaps, motivation ] = await Promise.all([
+  const [ profileSnaps, motivation, newFeatures ] = await Promise.all([
     db.collectionGroup('Personal').get(),
-    getMotivation()
+    getMotivation(),
+    getNewFeatures()
   ])
 
-  for (const doc of profileSnaps.docs) {
+  for (const doc of [profileSnaps.docs[0]]) {
     const personal = createPersonal(doc.data())
     if (newerThanWeek(personal)) continue
 
@@ -70,7 +72,8 @@ export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun
       currentGoals,
       motivation,
       unreadNotifications,
-      newUpdates
+      newUpdates,
+      newFeatures
     }
 
     await sendMailFromTemplate({
@@ -132,6 +135,17 @@ async function getMotivation(): Promise<Motivation> {
   ref.update({ quotes: motivations.quotes })
 
   return motivations.quotes[index]
+}
+
+async function getNewFeatures(): Promise<Feature[]> {
+  const featuresSnap = await db.doc('miscellaneous/feature').get()
+
+  const end = new Date()
+  const start = subMonths(end, 1)
+  return (featuresSnap.data() as Features).features.filter(feature => {
+    const createdAt = (feature.createdAt as Timestamp).toDate()
+    return isWithinInterval(createdAt, { start, end })
+  })
 }
 
 async function getNotifications(uid: string) {
