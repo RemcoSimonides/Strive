@@ -20,6 +20,10 @@ header {
     max-width: 600px;
     margin: auto;
 
+    ion-searchbar {
+      --background: var(--ion-card-background, --ion-item-background, --ion-background-color, #fff); 
+    }
+
     ion-card {
       width: fit-content;
 
