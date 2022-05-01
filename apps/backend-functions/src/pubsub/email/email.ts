@@ -52,7 +52,7 @@ export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun
     getNewFeatures()
   ])
 
-  for (const doc of [profileSnaps.docs[0]]) {
+  for (const doc of profileSnaps.docs) {
     const personal = createPersonal(doc.data())
     if (newerThanWeek(personal)) continue
 
