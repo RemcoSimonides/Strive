@@ -12,7 +12,7 @@ export const environment = {
   },
   algolia: {
     appId: "OGEMTU2VFW",
-    apiKey: "db3455ecf457168f65d91c4238522f04",
+    apiKey: "1494086dd3c811817ac84f7293ccd733",
     indexNameGoals: 'prod_Goals',
     indexNameUsers: 'prod_Users'
   },
