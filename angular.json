@@ -195,30 +195,6 @@
         }
       }
     },
-    "collective-goal": {
-      "projectType": "library",
-      "root": "libs/collective-goal",
-      "sourceRoot": "libs/collective-goal/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/collective-goal/**/*.ts",
-              "libs/collective-goal/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/collective-goal/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "discussion": {
       "projectType": "library",
       "root": "libs/discussion",
@@ -517,30 +493,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/support/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "template": {
-      "projectType": "library",
-      "root": "libs/template",
-      "sourceRoot": "libs/template/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/template/**/*.ts",
-              "libs/template/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/template/jest.config.js",
             "passWithNoTests": true
           }
         }

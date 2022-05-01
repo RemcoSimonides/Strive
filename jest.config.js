@@ -5,7 +5,6 @@ module.exports = {
     '<rootDir>/libs/interfaces',
     '<rootDir>/libs/ui',
     '<rootDir>/libs/user',
-    '<rootDir>/libs/collective-goal',
     '<rootDir>/libs/utils',
     '<rootDir>/libs/goal',
     '<rootDir>/libs/post',
@@ -14,7 +13,6 @@ module.exports = {
     '<rootDir>/libs/notification',
     '<rootDir>/libs/media',
     '<rootDir>/libs/exercises',
-    '<rootDir>/libs/template',
     '<rootDir>/apps/admin',
   ],
 };

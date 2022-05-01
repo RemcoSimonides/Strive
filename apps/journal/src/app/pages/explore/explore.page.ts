@@ -39,17 +39,13 @@ export class ExploreComponent implements OnDestroy {
         this.algolia.searchGoals(query, undefined)
         break
 
-      case 'collectiveGoals':
-        this.algolia.searchCollectiveGoals(query, undefined)
-        break
-
       case 'users':
         this.algolia.searchProfiles(query, undefined)
         break
     
       case 'exercises':
       default: {
-        const hpp = query ? undefined : { goals: 8, collectiveGoals: 5, profiles: 8 } 
+        const hpp = query ? undefined : { goals: 8, profiles: 8 } 
         this.algolia.search(query, hpp)
 
         const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))

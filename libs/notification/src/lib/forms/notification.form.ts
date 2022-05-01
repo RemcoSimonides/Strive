@@ -18,7 +18,6 @@
 //       milestoneId: new FormControl(notification.source.milestoneId),
 //       postId: new FormControl(notification.source.postId),
 //       supportId: new FormControl(notification.source.supportId),
-//       collectiveGoalId: new FormControl(notification.source.collectiveGoalId),
 //       templateId: new FormControl(notification.source.templateId),
 //       userId: new FormControl(notification.source.userId)
 //     }),
@@ -59,8 +58,6 @@
 //   return {
 //     requestStatus: new FormControl(goalRequest.requestStatus),
 //     uidRequestor: new FormControl(goalRequest.uidRequestor),
-//     // TODO find out why no collectiveGoalId and goalId on GoalRequest - Is it needed?
-//     collectiveGoalId: new FormControl(goalRequest.collectiveGoalId),
 //     goalId: new FormControl(goalRequest.goalId)
 //   }
 // }

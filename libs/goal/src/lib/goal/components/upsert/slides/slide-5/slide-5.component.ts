@@ -49,7 +49,7 @@ export class Slide5Component {
     const path = `goal/${this.goalId}`
 
     const isSecret = goal.publicity !== 'public'
-    const url = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, true, path)
+    const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, true, path)
 
     if ((this.platform.is('android') || this.platform.is('ios') && !this.platform.is('mobileweb'))) {
 

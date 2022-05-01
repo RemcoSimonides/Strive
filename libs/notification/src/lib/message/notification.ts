@@ -19,7 +19,7 @@ function throwError(event: enumEvent, target: string) {
   throw new Error(`No notification message for event ${event} and target ${target}`)
 }
 
-function get(type: 'user' | 'goal' | 'collectiveGoal', source: Source): { title: string, image: string, link: string } {
+function get(type: 'user' | 'goal', source: Source): { title: string, image: string, link: string } {
   const data = {
     user: {
       title: source.user?.username,
@@ -30,11 +30,6 @@ function get(type: 'user' | 'goal' | 'collectiveGoal', source: Source): { title:
       title: source.goal?.title,
       image: source.goal?.image,
       link: `/goal/${source.goal?.id}`
-    },
-    collectiveGoal: {
-      title: source.collectiveGoal?.title,
-      image: source.collectiveGoal?.image,
-      link: `/collective-goal/${source.collectiveGoal?.id}`
     }
   }
   return data[type]
@@ -42,68 +37,6 @@ function get(type: 'user' | 'goal' | 'collectiveGoal', source: Source): { title:
 
 export function getNotificationMessage({ event, source, meta, target }: Notification): { title: string, image: string, link: string, icon: NotificationIcons, message: NotificationMessageText[] } {
   switch (event) {
-    case enumEvent.cgGoalCreated:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('collectiveGoal', source),
-            icon: 'flag-outline',
-            message: [
-              { text: `A new goal has been created in collective goal "${source.collectiveGoal.title}", can you help out?` }
-            ]  
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.cgGoalFinised:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('collectiveGoal', source),
-            icon: 'flag-outline',
-            message: [
-              { text: `Goal "` },
-              { 
-                text: source.goal.title,
-                link: `goal/${source.goal.id}`
-              },
-              {
-                text: `" is finished!`
-              }
-            ]
-          }
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.cgTemplateAdded:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('collectiveGoal', source),
-            icon: 'create-outline',
-            message: [
-              { text: `New template "` },
-              {
-                text: source.template.title,
-                link: `collective-goal/${source.collectiveGoal.id}/template/${source.template.id}`
-              },
-              { text: `" has been created` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
     case enumEvent.gNew: // deprecated 4/12/2012
 
       switch (target) {

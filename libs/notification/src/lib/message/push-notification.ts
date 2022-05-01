@@ -25,34 +25,6 @@ function throwError(event: enumEvent, target: string) {
 
 export function getPushMessage({ event, source, target }: Notification): PushMessage {
   switch (event) {
-    case enumEvent.cgGoalCreated:
-      return createPushMessage({ 
-        title: source.collectiveGoal.title,
-        body: `New goal '${source.goal.title}' created`,
-        url: `/goal/${source.goal.id}`
-      })
-  
-    case enumEvent.cgGoalFinised:
-      return createPushMessage({ 
-        title: source.collectiveGoal.title,
-        body: `'${source.goal.title}' finished`,
-        url: `/goal/${source.goal.id}`
-      })
-
-    case enumEvent.cgTemplateAdded:
-      return createPushMessage({
-        title: source.collectiveGoal.title,
-        body: `New template '${source.template.title}' created`,
-        url: `/collective-goal/${source.collectiveGoal.id}/template/${source.template.id}`
-      })
-
-    case enumEvent.gNew: // deprecated
-      return createPushMessage({
-        title: source.user.username,
-        body: `Started goal '${source.goal.title}'`,
-        url: `/goal/${source.goal.id}`
-      })
-
     case enumEvent.gNewBucketlist:
     case enumEvent.gNewActive:
     case enumEvent.gNewFinished: {

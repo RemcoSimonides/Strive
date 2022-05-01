@@ -3,7 +3,6 @@ import { logger } from 'firebase-functions';
 
 import { createUser, User } from '@strive/user/user/+state/user.firestore';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
@@ -47,7 +46,6 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
       await Promise.all([
         updateGoalStakeholders(uid, after), 
         updateSpectators(uid, after),
-        updateCollectiveGoalStakeholders(uid, after),
         updateUsernameInNotifications(uid, after)
       ])
     }
@@ -62,17 +60,6 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
       })
     }
   })
-
-async function updateCollectiveGoalStakeholders(uid: string, after: User) {
-  const data: Partial<CollectiveGoalStakeholder> = {
-    username: after.username,
-    photoURL: after.photoURL
-  }
-
-  const stakeholdersSnap = await db.collectionGroup(`CGStakeholders`).where('uid', '==', uid).get()
-  const promises = stakeholdersSnap.docs.map(doc => doc.ref.update(data))
-  return Promise.all(promises)
-}
 
 async function updateGoalStakeholders(uid: string, after: User) {
   const data: Partial<GoalStakeholder> = {

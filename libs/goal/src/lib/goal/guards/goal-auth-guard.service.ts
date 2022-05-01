@@ -9,7 +9,6 @@ import { UserService } from '@strive/user/user/+state/user.service';
 //Interfaces
 import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { CollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -62,39 +61,10 @@ export class GoalAuthGuardService implements CanActivate {
       case 'public':
         return true
         
-      case 'collectiveGoalOnly': {
-        if (!this.user.uid) return false
-
-        let accessToCollectiveGoal: boolean
-        if (goal.collectiveGoalId) {
-          accessToCollectiveGoal = await this.checkAccessToCollectiveGoal(goal.collectiveGoalId, this.user.uid)
-        }
-        const accessToGoal =  await this.checkAccessToGoal(stakeholder)
-        return accessToCollectiveGoal || accessToGoal ? true : false
-      }
       case 'private':
         if (!this.user.uid) return false
         return await this.checkAccessToGoal(stakeholder)
       }
-  }
-
-  private async checkAccessToCollectiveGoal(collectiveGoalId: string, uid: string): Promise<boolean> {
-
-    return getDoc(doc(this.db, `CollectiveGoals/${collectiveGoalId}/CGStakeholders/${uid}`))
-      .then((snap: DocumentSnapshot<CollectiveGoalStakeholder>) => {
-        if (snap.exists()) {
-
-          const collectiveGoalStakeholder = snap.data()
-          // Check if user has any roles active
-          if (collectiveGoalStakeholder.isAdmin, collectiveGoalStakeholder.isAchiever, collectiveGoalStakeholder.isSpectator) {
-            return true
-          } else {
-            return false
-          }
-        } else {
-          return false
-        }
-      })
   }
 
   private async checkAccessToGoal(stakeholder: GoalStakeholder): Promise<boolean> {

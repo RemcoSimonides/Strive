@@ -18,9 +18,8 @@ import { SupportDecisionComponent } from '@strive/support/modals/decision/decisi
 
 @Pipe({ name: 'source' })
 export class SourcePipe implements PipeTransform {
-  transform(link: string): 'user' | 'goal' | 'collectiveGoal' {
+  transform(link: string): 'user' | 'goal' {
     if (link.includes('profile')) return 'user'
-    if (link.includes('collective-goal')) return 'collectiveGoal'
     return 'goal'
   }
 }

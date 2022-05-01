@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { AlertController, LoadingController, NavParams } from '@ionic/angular';
-import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { createGoal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
@@ -18,7 +17,6 @@ export class SlideUpdateComponent {
 
   constructor(
     private alertCtrl: AlertController,
-    private collectiveGoal: CollectiveGoalService,
     private goal: GoalService,
     private loadingCtrl: LoadingController,
     private location: Location,
@@ -60,13 +58,6 @@ export class SlideUpdateComponent {
 
   private async determinePublicity(): Promise<GoalPublicityType> {
     if (this.form.isSecret.value) return 'private'
-
-    const collectiveGoalId = this.navParams.data.collectiveGoalId as string
-    if (collectiveGoalId) {
-      this.form.collectiveGoalId.setValue(collectiveGoalId)
-      const collectiveGoal = await this.collectiveGoal.getValue(collectiveGoalId)
-      if (collectiveGoal?.isSecret) return 'collectiveGoalOnly';
-    }
 
     return 'public'
   }

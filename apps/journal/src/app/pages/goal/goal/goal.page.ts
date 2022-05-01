@@ -38,7 +38,6 @@ export class GoalComponent implements OnInit, OnDestroy {
   private goalId: string
   
   public goal$: Observable<Goal>
-  // public collectiveGoal$: Observable<CollectiveGoal | undefined>
 
   public stakeholder$: Observable<GoalStakeholder>
   public openRequests$: Observable<GoalStakeholder[]>
@@ -54,7 +53,6 @@ export class GoalComponent implements OnInit, OnDestroy {
   constructor(
     private alertCtrl: AlertController,
     private goalService: GoalService,
-    // private collectiveGoalService: CollectiveGoalService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -72,10 +70,6 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.goalId = this.route.snapshot.paramMap.get('id')
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
-    // this.collectiveGoal$ = this.goal$.pipe(
-    //   switchMap(goal => goal.collectiveGoalId ? this.collectiveGoalService.valueChanges(goal.collectiveGoalId) : of(undefined))
-    // )
-    
     this.stakeholder$ = this.user.user$.pipe(
       switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
       map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
@@ -276,7 +270,7 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   async openSharePopover(ev: UIEvent, goal: Goal) {
     const isSecret = goal.publicity !== 'public'
-    const url = await this.inviteTokenService.getShareLink(this.goalId, false, isSecret, this.isAdmin)
+    const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, this.isAdmin)
 
     if (this.platform.is('android') || this.platform.is('ios')) {
 

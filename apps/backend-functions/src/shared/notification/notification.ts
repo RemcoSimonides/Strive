@@ -4,7 +4,6 @@ import { logger } from 'firebase-functions';
 import { Timestamp } from '@firebase/firestore-types';
 import { AudienceType, createDiscussion } from '@strive/discussion/+state/discussion.firestore';
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore'
 import { Source, Notification } from '@strive/notification/+state/notification.firestore';
 
 const db = admin.firestore()
@@ -47,40 +46,6 @@ export function sendNotificationToUsers(notification: Partial<Notification>, rec
     }
   })
   return Promise.all(promises)
-}
-
-/**
- * 
- * @param collectiveGoalId 
- * @param notification 
- * @param except UID of user who doesnt receive the notification (e.g. the user who triggered the notification)
- * @param isAdmin 
- * @param isAchiever 
- * @returns 
- */
-export async function sendNotificationToCollectiveGoalStakeholders(collectiveGoalId: string, notification: Partial<Notification>, except: string, isAdmin: boolean, isAchiever: boolean) {
-
-  logger.log('executing Send Notification to Collective Goal Stakeholder(s)')
-  notification.target = 'stakeholder'
-  const receivers = await getCollectiveGoalStakeholders(collectiveGoalId, except, isAdmin, isAchiever)
-  return sendNotificationToUsers(notification, receivers)
-
-}
-
-async function getCollectiveGoalStakeholders(collectiveGoalId: string, except: string, isAdmin: boolean, isAchiever: boolean): Promise<string[]> {
-
-  const stakeholderColSnap = await db.collection(`CollectiveGoals/${collectiveGoalId}/CGStakeholders`).get()
-  const receivers: string[] = []
-
-  for (const snap of stakeholderColSnap.docs) {
-    if (snap.id === except) continue
-    const stakeholder = createCollectiveGoalStakeholder(snap.data())
-    if (stakeholder.isAdmin === isAdmin || stakeholder.isAchiever === isAchiever) {
-      receivers.push(snap.id)
-    }
-  }
-
-  return receivers
 }
 
 /**

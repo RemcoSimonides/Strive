@@ -7,15 +7,6 @@
         <img [ref]="goal.image" asset="goal.jpeg" [width]="500" [height]="500"/>
         <div *ngIf="goal.status === 'finished'">finished</div>
       </picture>
-      <!-- <ng-container *ngIf="collectiveGoal$ | async as collectiveGoal">
-        <ion-card fxLayout class="collective-goal">
-          <article fxLayout="column" fxFlex fxLayoutAlign="center center">
-            this goal is part of collective goal
-            <a [routerLink]="'../../collective-goal/' + ( collectiveGoal.id )"><b>{{ collectiveGoal.title }}</b></a>
-          </article>
-          <img class="collective-goal-image" [ref]="collectiveGoal.image" asset="collective-goal.jpeg">
-        </ion-card>
-      </ng-container> -->
     </article>
 
     <article fxLayout="column" fxLayoutGap="16px" fxFlex fxFlexOrder.lt-sm="1">
@@ -157,7 +148,7 @@
           </ion-select>
         </ng-container>
         <ng-template #privacyNoAdmin>
-          <span>&nbsp;<b>{{ goal.publicity === 'public' ? 'Everyone can access' : goal.publicity === 'collectiveGoal' ? 'People with access to collective goal or an invite' : 'Invites only' }}</b></span>
+          <span>&nbsp;<b>{{ goal.publicity === 'public' ? 'Everyone can access' : 'Invites only' }}</b></span>
         </ng-template>
       </div>
   

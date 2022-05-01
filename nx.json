@@ -56,9 +56,6 @@
     "backend-functions": {
       "tags": []
     },
-    "collective-goal": {
-      "tags": []
-    },
     "discussion": {
       "tags": []
     },
@@ -81,9 +78,6 @@
       "tags": []
     },
     "support": {
-      "tags": []
-    },
-    "template": {
       "tags": []
     },
     "ui": {

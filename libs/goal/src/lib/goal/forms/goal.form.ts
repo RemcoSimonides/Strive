@@ -37,8 +37,7 @@ function createGoalFormControl(params?: Partial<Goal>) {
     publicity: new FormControl(goal.publicity),
     isSecret: new FormControl(goal.publicity === 'private'),
     title: new FormControl(goal.title, Validators.required),
-    totalNumberOfCustomSupports: new FormControl(goal.totalNumberOfCustomSupports),
-    collectiveGoalId: new FormControl(goal.collectiveGoalId)
+    totalNumberOfCustomSupports: new FormControl(goal.totalNumberOfCustomSupports)
   }
 }
 
@@ -53,6 +52,5 @@ export class GoalForm extends FormEntity<GoalFormControl> {
   get description() { return this.get('description') }
   get isSecret() { return this.get('isSecret') }
   get publicity() { return this.get('publicity') }
-  get collectiveGoalId() { return this.get('collectiveGoalId') }
   get image() { return this.get('image') }
 }

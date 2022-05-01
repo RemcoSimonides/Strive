@@ -24,7 +24,7 @@ export class WelcomeModalComponent {
     private modalCtrl: ModalController,
     private router: Router
   ) {
-    const arr = ['/goal/', '/collective-goal/', 'profile'] // this includes template page
+    const arr = ['/goal/', 'profile'] // this includes template page
     this.showStep2 = !arr.some(value => this.router.url.includes(value))
   }
 

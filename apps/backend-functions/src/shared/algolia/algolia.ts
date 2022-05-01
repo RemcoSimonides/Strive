@@ -11,9 +11,6 @@ const initAlgoliaIndex = (index: AlgoliaIndex) => {
     case 'goal':
       idx = client.initIndex(environment.algolia.indexNameGoals)
       break
-    case 'collectiveGoal':
-      idx = client.initIndex(environment.algolia.indexNameCollectiveGoals)
-      break
     case 'user':
       idx = client.initIndex(environment.algolia.indexNameUsers)
       break
@@ -64,6 +61,5 @@ export type AlgoliaIndex = keyof typeof algoliaIndex;
 /** A simple map to access the index name */
 export const algoliaIndex = {
   goal: environment.algolia.indexNameGoals,
-  collectiveGoal: environment.algolia.indexNameCollectiveGoals,
   user: environment.algolia.indexNameUsers
 }

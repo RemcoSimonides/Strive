@@ -118,7 +118,6 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
 //     publicity: goal.publicity,
 //     deadline: goal.deadline,
 //     roadmapTemplate: goal.roadmapTemplate,
-//     collectiveGoalId: goal.collectiveGoalId,
 //     createdAt: timestamp as Timestamp,
 //     updatedAt: timestamp as Timestamp,
 //     updatedBy: uid

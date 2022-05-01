@@ -11,10 +11,6 @@ export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler } from
 export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user';
 export { notificationCreatedHandler, notificationChangeHandler, notificationDeletedHandler } from './firestore/users/notifications/notification';
 
-export { collectiveGoalCreatedHandler, collectiveGoalChangeHandler, collectiveGoalDeletedHandler } from './firestore/collective-goals/collective-goal';
-export { templateCreatedHandler } from './firestore/collective-goals/templates/template';
-export { collectiveGoalInviteTokenCreatedHandler } from './firestore/collective-goals/InviteTokens/invite-token';
-
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal';
 export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeholderDeletedHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder';
 export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandler } from './firestore/goals/milestones/milestone';
@@ -27,6 +23,5 @@ export { discussionDeletedHandler } from './firestore/discussions/discussion';
 
 // http
 // export { duplicateGoal } from './firestore/goals/goal'
-export { useTemplate } from './firestore/collective-goals/templates/template'
 // export { migrate } from './migration'
 export { scrapeMetatags } from './https/scrape';

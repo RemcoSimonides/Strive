@@ -55,7 +55,6 @@ interface IWorkers {
 // Business logic for named tasks. Function name should match worker field on task document. 
 const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
-  deleteInviteLinkCollectiveGoal: (options) => deleteInviteLinkCollectiveGoal(options),
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
   userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options)
@@ -63,10 +62,6 @@ const workers: IWorkers = {
 
 function deleteInviteLinkGoal(options) {
   return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
-}
-
-function deleteInviteLinkCollectiveGoal(options) {
-  return db.doc(`CollectiveGoals/${options.collectiveGoalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
 async function milestoneDeadlineHandler(options) {

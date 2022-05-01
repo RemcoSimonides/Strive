@@ -1,39 +1,11 @@
 import { Timestamp } from '@firebase/firestore-types';
 import { NotificationSupport, Support } from '@strive/support/+state/support.firestore'
-import { Discussion } from '@strive/discussion/+state/discussion.firestore';
 import { GoalLink } from '@strive/goal/goal/+state/goal.firestore';
 import { MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { UserLink } from '@strive/user/user/+state/user.firestore';
-import { CollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
-import { TemplateLink } from '@strive/template/+state/template.firestore';
 import { Comment } from '@strive/discussion/+state/comment.firestore';
 
 export enum enumEvent {
-  // 100000 -> 199999 = collective goal events
-  cgCreated = 100001,
-  cgUpdated = 100002,
-  cgDeleted = 100003,
-  cgFinished = 100004,
-  cgTitleUpdated = 100101,
-  cgImageUpdated = 100102,
-  cgShortDescriptionUpdated = 100103,
-  cgDescriptionUpdated = 100104,
-  cgDeadlineAdded = 100105,
-  cgDeadlinePassed = 100105,
-  cgDeadlineRemoved = 100107,
-  // cgGoalAdded = 101001, // maybe in future when you can add an existing goal to a collective goal
-  cgGoalCreated = 101002,
-  cgGoalFinised = 101003,
-  cgGoalRemoved = 101004,
-  cgStakeholderAchieverAdded = 102001,
-  cgStakeholderAchieverRemoved = 102002,
-  cgStakeholderAdminAdded = 102003,
-  cgStakeholderAdminRemoved = 102004,
-  cgStakeholderSpectatorAdded = 102005,
-  cgStakeholderSpectatorRemoved = 102006,
-  cgTemplateAdded = 103001,
-  cgTemplateUpdated = 103002,
-  cgTemplateRoadmapUpdated = 103002,
   // 200000 -> 299999 = goal events
   gNew = 200001, //deprecated
   gNewBucketlist = 200010,
@@ -98,8 +70,6 @@ export interface Source {
   user?: UserLink,
   goal?: GoalLink;
   milestone?: MilestoneLink,
-  collectiveGoal?: CollectiveGoalLink,
-  template?: TemplateLink;
   postId?: string;
   support?: Support;
   comment?: Comment;

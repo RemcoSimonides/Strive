@@ -1,11 +1,9 @@
-import { createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { createGoalLink } from '@strive/goal/goal/+state/goal.firestore';
 import { createMilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createSupport } from '@strive/support/+state/support.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { Notification, SupportDecisionMeta } from './notification.firestore';
 import { createComment } from '@strive/discussion/+state/comment.firestore';
-import { createTemplateLink } from '@strive/template/+state/template.firestore';
 
 /** A factory function that creates a NotificationDocument. */
 export function createNotification(params: Partial<Notification> = {}): Notification {
@@ -24,8 +22,6 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
       milestone: createMilestoneLink(),
       postId: '',
       support: createSupport(),
-      collectiveGoal: createCollectiveGoalLink(),
-      template: createTemplateLink(),
       comment: createComment()
     },
     isRead: false,

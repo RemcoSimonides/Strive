@@ -4,7 +4,6 @@
       "collectionGroup": "Goals",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "collectiveGoalId", "order": "ASCENDING" },
         { "fieldPath": "publicity", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
@@ -64,14 +63,6 @@
       ]
     },
     {
-      "collectionGroup": "CGStakeholders",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
       "collectionGroup": "Supports",
       "queryScope": "COLLECTION",
       "fields": [
@@ -105,28 +96,6 @@
     }
   ],
   "fieldOverrides": [
-    {
-      "collectionGroup": "CGStakeholders",
-      "fieldPath": "uid",
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "order": "DESCENDING",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "arrayConfig": "CONTAINS",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION_GROUP"
-        }
-      ]
-    },
     {
       "collectionGroup": "GStakeholders",
       "fieldPath": "uid",

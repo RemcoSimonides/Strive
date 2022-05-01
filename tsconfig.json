@@ -17,7 +17,6 @@
     "baseUrl": ".",
     "paths": {
       "@env": ["environments/environment.ts"],
-      "@strive/collective-goal/*": ["libs/collective-goal/src/lib/*"],
       "@strive/discussion/*": ["libs/discussion/src/lib/*"],
       "@strive/exercises/*": ["libs/exercises/src/lib/*"],
       "@strive/goal/*": ["libs/goal/src/lib/*"],
@@ -26,7 +25,6 @@
       "@strive/notification/*": ["libs/notification/src/lib/*"],
       "@strive/post/*": ["libs/post/src/lib/*"],
       "@strive/support/*": ["libs/support/src/lib/*"],
-      "@strive/template/*": ["libs/template/src/lib/*"],
       "@strive/ui/*": ["libs/ui/src/lib/*"],
       "@strive/user/*": ["libs/user/src/lib/*"],
       "@strive/utils/*": ["libs/utils/src/lib/*"]

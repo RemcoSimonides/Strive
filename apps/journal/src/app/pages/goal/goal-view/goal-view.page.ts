@@ -73,7 +73,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
       let access = this.goal.publicity === 'public'
       if (!access && stakeholder) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
-      if (!access && stakeholder) access = await this.inviteTokenService.checkInviteToken('goal', this.goalId)
+      if (!access && stakeholder) access = await this.inviteTokenService.checkInviteToken(this.goalId)
       access ? this.initGoal() : this.initNoAccess();
     })
   }

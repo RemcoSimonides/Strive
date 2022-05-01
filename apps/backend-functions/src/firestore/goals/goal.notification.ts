@@ -5,7 +5,6 @@ import { logger } from 'firebase-functions'
 import { 
   sendNotificationToGoal,
   sendNotificationToGoalStakeholders,
-  sendNotificationToCollectiveGoalStakeholders,
   sendNotificationToUserSpectators,
   addDiscussion
 } from '../../shared/notification/notification'
@@ -17,7 +16,6 @@ import { createGoalLink, getAudience, Goal, GoalStatus } from '@strive/goal/goal
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createNotificationSupport, createSupport, NotificationSupport, Support } from '@strive/support/+state/support.firestore';
 import { createNotification, createSupportDecisionMeta } from '@strive/notification/+state/notification.model';
-import { createCollectiveGoal, createCollectiveGoalLink } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
 import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { converter, getDocument } from '../../shared/utils';
@@ -34,11 +32,6 @@ export async function handleNotificationsOfCreatedGoal(goalId: string, goal: Goa
   const audience = getAudience(goal.publicity)
   await addDiscussion(`General discussion`, source, audience, goalId)
 
-  // New Goal
-  if (goal.collectiveGoalId && (goal.publicity === 'public' || goal.publicity === 'collectiveGoalOnly')) {
-    sendNewGoalNotificationInCollectiveGoal(goalId, goal)
-  }
-
   sendNewGoalNotification(goalId, goal)
 }
 
@@ -52,19 +45,6 @@ export async function handleNotificationsOfChangedGoal(goalId: string, before: G
     sendFinishedGoalNotification(goalId, after)
     // Send finished goal notification to Supporters
     sendFinishedGoalNotificationToSupporter(goalId, after)
-
-    if (after.collectiveGoalId) {
-      if (after.publicity === 'public' || after.publicity === 'collectiveGoalOnly') {
-        sendNotificationFinishedGoalInCollectiveGoal(goalId, after)
-      }
-    }
-  }
-
-  // new (public) goal in collective goal
-  if (before.publicity === 'private' && (after.publicity === 'public' || after.publicity === 'collectiveGoalOnly')) {
-    if (after.collectiveGoalId) {
-      sendNewGoalNotificationInCollectiveGoal(goalId, after)
-    }
   }
 
   // Roadmap changed
@@ -109,30 +89,6 @@ async function sendNewGoalNotification(goalId: string, goal: Goal) {
       sendNotificationToUserSpectators(snap.id, notification)
     }
   }
-}
-
-async function sendNewGoalNotificationInCollectiveGoal(goalId: string, goal: Goal) {
-
-  if (!goal.collectiveGoalId) return
-  logger.log(`Sending New Goal Notification to Collective Goal (${goal.collectiveGoalId}) stakeholders`)
-
-  const collectiveGoalSnap = await db.doc(`CollectiveGoals/${goal.collectiveGoalId}`).get()
-  const collectiveGoal = createCollectiveGoal({ ...collectiveGoalSnap.data(), id: collectiveGoalSnap.id });
-
-  const notification = createNotification({
-    discussionId: goalId,
-    event: enumEvent.cgGoalCreated,
-    type: 'notification',
-    source: {
-      goal: createGoalLink({ ...goal, id: goalId }),
-      collectiveGoal: createCollectiveGoalLink({
-        ...collectiveGoal,
-        id: goal.collectiveGoalId
-      })
-    }
-  })
-
-  return sendNotificationToCollectiveGoalStakeholders(goal.collectiveGoalId, notification, goal.updatedBy, true, true)
 }
 
 // FINISHED GOAL
@@ -239,27 +195,6 @@ async function sendFinishedGoalNotificationToSupporter(goalId: string, goal: Goa
     })
     db.doc(`Users/${uid}/Notifications/${goalId}`).set(notification)
   }
-}
-
-async function sendNotificationFinishedGoalInCollectiveGoal(goalId: string, after: Goal) {
-
-  if (!after.collectiveGoalId) return
-
-  const collectiveGoalSnap = await db.doc(`CollectiveGoals/${after.collectiveGoalId}`).get()
-  const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data());
-
-  const notification = createNotification({
-    discussionId: goalId,
-    event: enumEvent.cgGoalFinised,
-    type: 'notification',
-    source: {
-      collectiveGoal: createCollectiveGoalLink({ ...collectiveGoal, id: after.collectiveGoalId }),
-      goal: createGoalLink({ ...after, id: goalId }),
-      postId: goalId
-    }
-  })
-
-  return sendNotificationToCollectiveGoalStakeholders(after.collectiveGoalId, notification, after.updatedBy, true, true)
 }
 
 // ROADMAP CHANGED

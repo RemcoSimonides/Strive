@@ -2,16 +2,14 @@ import { Timestamp } from '@firebase/firestore-types';
 import { MilestoneTemplate } from '@strive/goal/milestone/+state/milestone.firestore'
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
 
-export type GoalPublicityType = 'public' | 'collectiveGoalOnly' | 'private'
+export type GoalPublicityType = 'public' | 'private'
 export type GoalStatus = 'bucketlist' | 'active' | 'finished'
 
 /** For discussion */
 export function getAudience(publicity: GoalPublicityType): AudienceType {
   return publicity === 'public'
     ? 'public'
-    : publicity === 'collectiveGoalOnly'
-      ? 'collectiveGoal'
-      : 'team'
+    : 'team'
 }
 
 export interface Goal {
@@ -19,7 +17,6 @@ export interface Goal {
   title: string;
   description: string;
   image: string;
-  collectiveGoalId: string;
   roadmapTemplate: MilestoneTemplate[];
   status: GoalStatus;
   publicity: GoalPublicityType;
@@ -53,7 +50,6 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     publicity: 'public',
     title: '',
     totalNumberOfCustomSupports: 0,
-    collectiveGoalId: '',
     ...params,
   }
 }

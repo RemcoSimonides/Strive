@@ -85,21 +85,4 @@ export class GoalsComponent {
       event: ev
     }).then(popover => popover.present())
   }
-  
-  // createCollectiveGoal() {
-  //   this.modalCtrl.create({
-  //     component: UpsertCollectiveGoalComponent
-  //   }).then(modal => modal.present())
-  // }
 }
-
-// function filterDuplicateGoals(observables: Observable<Goal[]>[]) {
-//   return combineLatest<Goal[][]>(observables).pipe(
-//     map(arr => arr.reduce((acc, cur) => acc.concat(cur))),
-//     map(goals => goals.filter((thing, index, self) => 
-//       index === self.findIndex((t) => (
-//         t.id === thing.id
-//       ))
-//     ))
-//   )
-// }

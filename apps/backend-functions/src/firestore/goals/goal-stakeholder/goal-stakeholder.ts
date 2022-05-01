@@ -1,12 +1,9 @@
-import { db, admin, functions, increment } from '../../../internals/firebase';
+import { db, functions, increment } from '../../../internals/firebase';
 
 // interfaces
-import { createGoal, Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoal } from '@strive/goal/goal/+state/goal.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { createCollectiveGoalStakeholder } from '@strive/collective-goal/stakeholder/+state/stakeholder.firestore';
 import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakeholderChanged } from './goal-stakeholder.notification'
-import { createUser } from '@strive/user/user/+state/user.firestore';
-import { createCollectiveGoal } from '@strive/collective-goal/collective-goal/+state/collective-goal.firestore';
 
 
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
@@ -20,7 +17,6 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
     const goal = createGoal({ ...goalSnap.data(), id: goalId })
 
     if (stakeholder.isAchiever) {
-      upsertCollectiveGoalStakeholder(goal, stakeholderId, true)
       changeNumberOfAchievers(goalId, stakeholder.isAchiever)
     }
 
@@ -53,7 +49,6 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     // isAchiever changed
     if (before.isAchiever !== after.isAchiever) {
       changeNumberOfAchievers(goalId, after.isAchiever)
-      updateAchieverOnCollectiveGoal(goalId, stakeholderId, after.isAchiever)
     }
 
     //Increase or decrease number of Supporters
@@ -96,13 +91,6 @@ function changeNumberOfAchievers(goalId: string, isAchiever: boolean) {
   })
 }
 
-function changeNumberOfAchieversOfCollectiveGoal(collectiveGoalId: string, isAchiever: boolean) {
-  const collectiveGoalRef = db.doc(`CollectiveGoals/${collectiveGoalId}`)
-  return collectiveGoalRef.update({
-    numberOfAchievers: increment(isAchiever ? 1 : -1)
-  })
-}
-
 function changeNumberOfSupporters(goalId: string, isSupporter: boolean) {
   const goalRef = db.doc(`Goals/${goalId}`)
   return goalRef.update({
@@ -115,54 +103,4 @@ function changeNumberOfActiveGoals(uid: string, delta: -1 | 1) {
   return userRef.update({
     numberOfActiveGoals: increment(delta)
   })
-}
-
-async function updateAchieverOnCollectiveGoal(goalId: string, stakeholderId: string, isAchiever: boolean) {
-  const goalDocSnap = await db.doc(`Goals/${goalId}`).get()
-  const goal = createGoal({ ...goalDocSnap.data(), id: goalId })
-
-  if (goal.collectiveGoalId) {
-    upsertCollectiveGoalStakeholder(goal, stakeholderId, isAchiever)
-    changeNumberOfAchieversOfCollectiveGoal(goal.collectiveGoalId, isAchiever)
-  }
-}
-
-async function upsertCollectiveGoalStakeholder(goal: Goal, stakeholderId: string, isAchiever: boolean) {
-
-  // check if goal has collective goal
-  if (!goal.collectiveGoalId) return; // No collective goal to update
-  const collectiveGoalId = goal.collectiveGoalId
-
-  // add user as collective goal stakeholder
-  const collectiveGoalStakeholderRef = db.doc(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${stakeholderId}`)
-  const collectiveGoalStakeholderSnap = await collectiveGoalStakeholderRef.get()
-    
-  if (collectiveGoalStakeholderSnap.exists) {
-    // set as achiever
-    await collectiveGoalStakeholderRef.update({ isAchiever })
-    // note: collectiveGoalStakeholder is not deleted even if stakeholder does not have any rights anymore.
-  } else {
-
-    const [userSnap, collectiveGoalSnap] = await Promise.all([
-      db.doc(`Users/${stakeholderId}`).get(),
-      db.doc(`CollectiveGoals/${collectiveGoalId}`).get()
-    ])
-    const user = createUser({ ...userSnap.data(), uid: userSnap.id })
-    const collectiveGoal = createCollectiveGoal(collectiveGoalSnap.data())
-
-    // create new stakeholder
-    const collectiveGoalStakeholder = createCollectiveGoalStakeholder({
-      uid: stakeholderId,
-      username: user.username,
-      photoURL: user.photoURL,
-      isAchiever,
-      isAdmin: false,
-      isSpectator: false,
-      collectiveGoalId: collectiveGoalId,
-      collectiveGoalIsSecret: collectiveGoal.isSecret,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
-    })
-    await db.doc(`CollectiveGoals/${collectiveGoalId}/CGStakeholders/${stakeholderId}`).create(collectiveGoalStakeholder)
-  }
 }

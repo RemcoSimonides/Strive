@@ -12,7 +12,6 @@ export class ShellComponent {
   public appPages = [
     { title: 'Users', url: '/a/users', icon: 'people' },
     { title: 'Goals', url: '/a/goals', icon: 'flag' },
-    // { title: 'Collective Goals', url: '/a/collective-goals', icon: 'golf' },
     { title: 'Motivation', url: '/a/motivation', icon: 'flame' },
     { title: 'New Features', url: '/a/features', icon: 'boat' }
   ];

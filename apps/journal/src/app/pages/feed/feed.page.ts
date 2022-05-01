@@ -13,13 +13,11 @@ import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAf
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
-import { CollectiveGoalService } from '@strive/collective-goal/collective-goal/+state/collective-goal.service';
 import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 import { DocumentData } from 'rxfire/firestore/interfaces';
-import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { orderBy, QueryConstraint } from 'firebase/firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { delay } from '@strive/utils/helpers';
@@ -46,14 +44,11 @@ export class FeedComponent implements OnDestroy {
   unreadNotifications$: Observable<boolean>
 
   goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
-  collectiveGoals$ = this.collectiveGoal.valueChanges(['NG03OJqJNB0ZmiYyVdkK', 'Heax8uzGOWcnooaDePkJ', 'rFGdiK8iIWwMPXGZ6OWM', 'XGtfe77pCKh1QneOipI7'])
 
   private backBtnSubscription: Subscription
   private userSubscription: Subscription
 
   constructor(
-    private collectiveGoal: CollectiveGoalService,
-    private discussion: DiscussionService,
     private db: Firestore,
     private goal: GoalService,
     public user: UserService,
