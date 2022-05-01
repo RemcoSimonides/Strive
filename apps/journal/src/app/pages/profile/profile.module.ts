@@ -21,6 +21,7 @@ import { FollowersModule } from '@strive/user/spectator/components/followers/fol
 
 // Strive
 import { ThumbnailGridModule } from '@strive/ui/thumbnail/layout/grid/thumbnail-grid.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
 import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
@@ -57,6 +58,7 @@ const routes: Routes = [
     GoalOptionsModule,
     UpsertGoalModalModule,
     FontAwesomeModule,
+    SmallThumbnailModule,
 
     // Exercises
     AffirmationsViewModule,

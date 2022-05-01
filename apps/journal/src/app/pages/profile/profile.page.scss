@@ -4,6 +4,10 @@ section {
   padding: 0px 16px;
 }
 
+footer {
+  height: 40px;
+}
+
 .header {
   position: relative;
   margin-top: 64px;
@@ -105,26 +109,10 @@ ion-list {
   }
 }
 
-// Exercises
-.exercise-card {
-  border-radius: 12px;
-  position: relative;
-  text-align: center;
-  width: 260px;
-  
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.card-title {
-  position: absolute;
-  background: rgba(0, 0, 0, .4);
-  bottom: 10%;
-  font-size: 2.0em;
-  width: 100%;
-  font-weight: bold;
-  color: #fff;
+.grid {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 h5 {
@@ -149,9 +137,6 @@ h5:after {
   left: 0.5em;
   margin-right: -50%;
 }
-
-
-
 
 
 .gradient-border {

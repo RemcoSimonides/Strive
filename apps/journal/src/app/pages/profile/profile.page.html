@@ -145,17 +145,17 @@
 
         <!-- Exercises -->
         <h2>Exercises</h2>
-        <ion-grid>
-          <ion-row>
-            <ng-container *ngFor="let exercise of exercises">
-              <ion-card class="exercise-card ion-no-padding" (click)="openExercise(exercise.enum)" >
-                <img [asset]="exercise.image"/>
-                <div class="card-title">{{ exercise.title }}</div>
-              </ion-card>
-            </ng-container>
-          </ion-row>        
-        </ion-grid>
+
+        <article class="grid">
+          <ng-container *ngFor="let exercise of exercises">
+            <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openExercise(exercise.enum)">
+            </strive-small-thumbnail>
+          </ng-container>
+        </article>
+
       </section>
     </ng-container>
   </ng-container>
+
+  <footer></footer>
 </ion-content>
