@@ -20,7 +20,7 @@ export class Slide5Component {
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
 
-  exercises = exercises.filter(exercise => [enumExercises.affirmations].includes(exercise.enum) )
+  exercises = exercises.filter(exercise => [enumExercises.affirmations, enumExercises.daily_gratefulness].includes(exercise.enum) )
 
   constructor(
     private inviteTokenService: InviteTokenService,

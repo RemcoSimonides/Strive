@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormArray, FormControl } from "@angular/forms";
-import { PopoverController } from "@ionic/angular";
+import { ModalController, PopoverController } from "@ionic/angular";
 import { AffirmationSuggestion, enumAffirmationCategory, suggestions } from "@strive/exercises/affirmation/+state/affirmation.model";
 import { AffirmationService } from "@strive/exercises/affirmation/+state/affirmation.service";
 import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
 import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
+import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { of, switchMap, tap } from "rxjs";
@@ -32,7 +33,7 @@ export class AffirmationsComponent implements OnDestroy {
   }
 
   private sub = this.user.user$.pipe(
-    switchMap(user => user ? this.service.getAffirmations(user.uid) : of()),
+    switchMap(user => user ? this.service.getAffirmations(user.uid) : of(undefined)),
     tap(doc => {
       if (doc) {
         this.times = doc.times;
@@ -50,11 +51,12 @@ export class AffirmationsComponent implements OnDestroy {
   ).subscribe()
 
   constructor(
+    private cdr: ChangeDetectorRef,
+    private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private service: AffirmationService,
     public user: UserService,
-    private popoverCtrl: PopoverController,
-    private cdr: ChangeDetectorRef
   ) {
     this.shuffle(this.suggestions)
     this.suggestionsCopy = Object.assign([], this.suggestions)
@@ -137,5 +139,14 @@ export class AffirmationsComponent implements OnDestroy {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
+  }
+
+  openAuthModal() {
+    this.modalCtrl.create({
+      component: AuthModalModalComponent,
+      componentProps: {
+        authSegment: enumAuthSegment.login
+      }
+    }).then(modal => modal.present())
   }
 }

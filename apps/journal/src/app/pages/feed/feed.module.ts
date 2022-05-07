@@ -15,11 +15,6 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
 
-// Exercises
-import { DailyGratefulnessUpsertModule } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.module';
-import { AssessLifeUpsertModule } from '@strive/exercises/assess-life/components/upsert/upsert.module';
-import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/components/upsert/upsert.module';
-
 // Pipes
 import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 
@@ -41,12 +36,7 @@ const routes: Routes = [
     NotificationModule,
     PageLoadingModule,
     ImageModule,
-    SmallThumbnailModule,
-
-    // Exercises
-    DailyGratefulnessUpsertModule,
-    AssessLifeUpsertModule,
-    DearFutureSelfUpsertModule
+    SmallThumbnailModule
   ],
   declarations: [
     FeedComponent,

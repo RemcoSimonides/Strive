@@ -12,7 +12,8 @@
   <ion-list mode="md">
     <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none">Install App</ion-item>
     <ion-list-header>Exercises</ion-list-header>
-    <ion-item button routerLink="/affirmations" lines="none">Affirmations</ion-item>
+    <ion-item button routerLink="/affirmations">Affirmations</ion-item>
+    <ion-item butotn routerLink="/daily-gratefulness" lines="none">Daily Gratefulness</ion-item>
 
 
     <ion-list-header>Notification</ion-list-header>

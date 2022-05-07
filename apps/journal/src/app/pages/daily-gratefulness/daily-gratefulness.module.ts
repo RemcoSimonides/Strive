@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
 
-import { AffirmationsComponent } from './affirmations.component';
+import { DailyGratefulnessComponent } from './daily-gratefulness.component';
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: AffirmationsComponent
+    component: DailyGratefulnessComponent
   }
 ];
 
@@ -19,10 +20,11 @@ const routes: Routes = [
   imports: [
     CommonModule,
     IonicModule,
-    RouterModule.forChild(routes),
     ReactiveFormsModule,
-    PageLoadingModule
+    RouterModule.forChild(routes),
+    PageLoadingModule,
+    AuthModalModule
   ],
-  declarations: [AffirmationsComponent]
+  declarations: [DailyGratefulnessComponent]
 })
-export class AffirmationsModule {}
+export class DailyGratefulnessModule {}

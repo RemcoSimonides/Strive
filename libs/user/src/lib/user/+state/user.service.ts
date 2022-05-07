@@ -53,7 +53,7 @@ export class UserService extends FireCollection<User> {
   async getUID(): Promise<string> {
     if (this.uid === undefined) {
       return await new Promise((resolve) => {
-        user(this.auth).pipe(take(1)).subscribe(user => resolve(user.uid))
+        user(this.auth).pipe(take(1)).subscribe(user =>resolve(user?.uid ?? ''))
       })
     } else {
       return this.uid

@@ -13,9 +13,6 @@ import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAf
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
-import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
-import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
-import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
 import { DocumentData } from 'rxfire/firestore/interfaces';
 import { orderBy, QueryConstraint } from 'firebase/firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
@@ -118,22 +115,8 @@ export class FeedComponent implements OnDestroy {
     })
     modal.onDidDismiss().then(({ data: loggedIn }) => {
       if (loggedIn && exercise) {
-        let component
-        switch (exercise) {
-          case enumExercises.affirmations:
-            this.navCtrl.navigateForward('/affirmations')
-            break
-          case enumExercises.dear_future_self:
-            component = DearFutureSelfUpsertComponent
-            break
-          case enumExercises.daily_gratefulness:
-            component = DailyGratefulnessUpsertComponent
-            break
-          case enumExercises.assess_life:
-            component = AssessLifeUpsertComponent
-            break
-        }
-        if (component) this.modalCtrl.create({ component }).then(modal => modal.present())
+        const { link } = exercises.find(e => e.enum === exercise)
+        this.navCtrl.navigateForward(link)
       }
     })
     modal.present()

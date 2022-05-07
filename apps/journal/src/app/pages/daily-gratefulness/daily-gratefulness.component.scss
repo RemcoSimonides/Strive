@@ -1,0 +1,23 @@
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+main {
+  max-width: 700px;
+  margin: auto;
+}
+
+section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+h4 {
+  color: var(--ion-color-primary);
+}
+
+ion-datetime {
+  border-radius: 12px;
+}

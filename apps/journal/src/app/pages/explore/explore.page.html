@@ -67,7 +67,7 @@
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
               <ng-container *ngFor="let exercise of rows">
-                <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="'/' + exercise.enum"></strive-small-thumbnail>
+                <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link"></strive-small-thumbnail>
               </ng-container>
             </article>
           </ng-template>
@@ -93,7 +93,7 @@
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
         <ng-container *ngFor="let exercise of exercises$ | async">
-          <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="'/' + exercise.enum">
+          <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
             <small *ngIf="searchForm.value.type === 'all'">Type: Exercise</small>
           </strive-small-thumbnail>
         </ng-container>

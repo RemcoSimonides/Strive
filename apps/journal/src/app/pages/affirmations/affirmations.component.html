@@ -18,55 +18,56 @@
     </p>
 
     <ng-container *ngIf="!isLoading else loading">
-      <h3>Time of affirmation</h3>
-      <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
-      <ng-container *ngFor="let time of times; let i = index">
-        <ion-item (click)="openDatetime(i)">
-          <ion-label>Set time {{ i + 1 }}</ion-label>
-          <ion-text>{{ time ? (time | date:'HH:mm') : '--:--'}}</ion-text>
-          <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"></ion-icon> 
+      <ng-container *ngIf="user.uid else login">
+
+        <h3>Time of affirmation</h3>
+        <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
+        <ng-container *ngFor="let time of times; let i = index">
+          <ion-item (click)="openDatetime(i)">
+            <ion-label>Set time {{ i + 1 }}</ion-label>
+            <ion-text>{{ time ? (time | date:'HH:mm') : '--:--'}}</ion-text>
+            <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"></ion-icon> 
+          </ion-item>
+        </ng-container>
+
+        <h3>Affirmations</h3>
+        <ion-item *ngFor="let control of form.controls; let i = index">
+          <ion-input class="ion-text-wrap" type="text" placeholder="Enter affirmation" (ionInput)="onInput($event, control.value)" [formControl]="control"></ion-input>
+          <ion-icon class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"></ion-icon>
         </ion-item>
+
+        <section class="suggestions">
+          <header>
+            <h4>Suggestions</h4>
+            <ion-select [value]="enumAffirmationCategory.all" interface="popover" (ionChange)="filterSuggestions($event.detail.value)">
+              <ion-select-option [value]="enumAffirmationCategory.all">All</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.health">Health</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.personal_development">Personal Development</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.motivation">Motivation</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.positive_mindset">Positive Mindset</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.money">Money</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.love">Love</ion-select-option>
+            </ion-select>  
+          </header>
+      
+          <ion-item *ngFor="let suggestion of suggestions">
+            <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
+            <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"></ion-icon>
+          </ion-item>
+        </section>
       </ng-container>
-
-      <h3>Affirmations</h3>
-      <ion-item *ngFor="let control of form.controls; let i = index">
-        <ion-input class="ion-text-wrap" type="text" placeholder="Enter affirmation" (ionInput)="onInput($event, control.value)" [formControl]="control"></ion-input>
-        <ion-icon class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"></ion-icon>
-      </ion-item>
-
-      <section class="suggestions">
-        <header>
-          <h4>Suggestions</h4>
-          <ion-select [value]="enumAffirmationCategory.all" interface="popover" (ionChange)="filterSuggestions($event.detail.value)">
-            <ion-select-option [value]="enumAffirmationCategory.all">All</ion-select-option>
-            <ion-select-option [value]="enumAffirmationCategory.health">Health</ion-select-option>
-            <ion-select-option [value]="enumAffirmationCategory.personal_development">Personal Development</ion-select-option>
-            <ion-select-option [value]="enumAffirmationCategory.motivation">Motivation</ion-select-option>
-            <ion-select-option [value]="enumAffirmationCategory.positive_mindset">Positive Mindset</ion-select-option>
-            <ion-select-option [value]="enumAffirmationCategory.money">Money</ion-select-option>
-            <ion-select-option [value]="enumAffirmationCategory.love">Love</ion-select-option>
-          </ion-select>  
-        </header>
-    
-        <ion-item *ngFor="let suggestion of suggestions">
-          <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
-          <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"></ion-icon>
-        </ion-item>
-      </section>
     </ng-container>
 
     <ng-template #loading>
-      <ng-container *ngIf="!!user.uid else login">
-        <strive-page-loading></strive-page-loading>
-      </ng-container>
+      <strive-page-loading></strive-page-loading>
+    </ng-template>
 
-      <ng-template #login>
-        <section class="not-logged-in">
-          <p>
-              <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your profile
-          </p>
-        </section>
-      </ng-template>
+    <ng-template #login>
+      <section class="not-logged-in">
+        <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
+        </p>
+      </section>
     </ng-template>
   </main>
 </ion-content>

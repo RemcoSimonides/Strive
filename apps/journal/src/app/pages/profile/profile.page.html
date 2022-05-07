@@ -145,7 +145,7 @@
 
         <article class="grid">
           <ng-container *ngFor="let exercise of exercises">
-            <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="'/' + exercise.enum">
+            <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
             </strive-small-thumbnail>
           </ng-container>
         </article>

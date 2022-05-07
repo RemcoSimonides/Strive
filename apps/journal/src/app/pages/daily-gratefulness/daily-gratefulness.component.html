@@ -1,0 +1,44 @@
+<ion-header *ngIf="screensize.isMobile$ | async">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Daily Gratefulness</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <main>
+    <h2 *ngIf="(screensize.isMobile$ | async) === false">Daily Gratefulness</h2>
+    <p>Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative. Receive a daily push notification to remind you to think of three things you are grateful for that day.</p>
+
+    <ng-container *ngIf="!isLoading else loading">
+      <ng-container *ngIf="user.uid else login">
+        
+        <section>
+          <ion-toggle [formControl]="form.get('on')"></ion-toggle>
+          <span><b>{{ dailyGratefulness.on ? 'ON' : 'OFF'}}</b></span>
+        </section>
+  
+        <ng-container *ngIf="dailyGratefulness.on">
+          <small>What time would you like to receive the reminder?</small>
+          <ion-datetime presentation="time" [formControl]="form.get('time')"></ion-datetime>
+        </ng-container>
+
+      </ng-container>
+    </ng-container>
+
+    <ng-template #loading>
+      <strive-page-loading></strive-page-loading>
+    </ng-template>
+
+    <ng-template #login>
+      <div class="not-logged-in">
+        <p>
+          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratefulness
+        </p>
+      </div>
+    </ng-template>
+
+  </main>
+</ion-content>
