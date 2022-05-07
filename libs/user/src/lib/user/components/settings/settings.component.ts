@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Auth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 import { ModalController, ToastController } from "@ionic/angular";
+import { exercises } from "@strive/exercises/utils";
 import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { FcmService } from "@strive/utils/services/fcm.service";
 import { PWAService } from '@strive/utils/services/pwa.service';
@@ -16,6 +17,8 @@ import { PWAService } from '@strive/utils/services/pwa.service';
 export class SettingsPageComponent {
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
+
+  exercises = exercises
 
   constructor(
     private auth: Auth,

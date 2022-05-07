@@ -1,0 +1,24 @@
+<ion-header *ngIf="screensize.isMobile$ | async">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Dear Future Self</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <main>
+    <h1>This exercise is coming soon</h1>
+    <h2 *ngIf="(screensize.isMobile$ | async) === false">Dear Future Self</h2>
+    <p>
+      Write a message to yourself and receive it (far) in the future.
+      We can inspire you, or freely write a message yourself
+    </p>
+    <p>
+      Describe a day in the life of yourself in 10 years.
+      Be very detailed. What time do you wake up? What do you have for breakfast?
+      Do you have to make breakfast for your children? If yes, how many?
+    </p>  
+  </main>
+</ion-content>

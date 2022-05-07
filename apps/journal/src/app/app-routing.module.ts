@@ -16,7 +16,9 @@ const routes: Routes = [
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) },
   { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule) },
   { path: 'affirmations', loadChildren: () => import('./pages/affirmations/affirmations.module').then(m => m.AffirmationsModule) },
-  { path: 'daily-gratefulness', loadChildren: () => import('./pages/daily-gratefulness/daily-gratefulness.module').then(m => m.DailyGratefulnessModule)}
+  { path: 'daily-gratefulness', loadChildren: () => import('./pages/daily-gratefulness/daily-gratefulness.module').then(m => m.DailyGratefulnessModule)},
+  { path: 'assess-life', loadChildren: () => import('./pages/assess-life/assess-life.module').then(m => m.AssessLifeModule)},
+  { path: 'dear-future-self', loadChildren: () => import('./pages/dear-future-self/dear-future-self.module').then(m => m.DearFutureSelfModule)}
 ];
 
 @NgModule({

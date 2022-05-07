@@ -8,11 +8,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { ProfileComponent } from './profile.page';
 
-// Exercises
-import { DailyGratefulnessUpsertModule } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.module';
-import { AssessLifeUpsertModule } from '@strive/exercises/assess-life/components/upsert/upsert.module';
-import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/components/upsert/upsert.module';
-
 // Followers / Followings
 import { FollowingModule } from '@strive/user/spectator/components/following/following.module';
 import { FollowersModule } from '@strive/user/spectator/components/followers/followers.module';
@@ -56,12 +51,7 @@ const routes: Routes = [
     GoalOptionsModule,
     UpsertGoalModalModule,
     FontAwesomeModule,
-    SmallThumbnailModule,
-
-    // Exercises
-    DailyGratefulnessUpsertModule,
-    AssessLifeUpsertModule,
-    DearFutureSelfUpsertModule
+    SmallThumbnailModule
   ],
   declarations: [
     ProfileComponent

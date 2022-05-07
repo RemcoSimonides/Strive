@@ -12,8 +12,9 @@
   <ion-list mode="md">
     <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none">Install App</ion-item>
     <ion-list-header>Exercises</ion-list-header>
-    <ion-item button routerLink="/affirmations">Affirmations</ion-item>
-    <ion-item butotn routerLink="/daily-gratefulness" lines="none">Daily Gratefulness</ion-item>
+    <ng-container *ngFor="let exercise of exercises; let last = last">
+      <ion-item button [routerLink]="exercise.link" [lines]="last ? 'none' : 'inset'">{{ exercise.title }}</ion-item>
+    </ng-container>
 
 
     <ion-list-header>Notification</ion-list-header>
