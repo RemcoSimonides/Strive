@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { FormArray, FormControl } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ModalController, PopoverController } from "@ionic/angular";
+import { Affirmations } from "@strive/exercises/affirmation/+state/affirmation.firestore";
 import { AffirmationSuggestion, enumAffirmationCategory, suggestions } from "@strive/exercises/affirmation/+state/affirmation.model";
 import { AffirmationService } from "@strive/exercises/affirmation/+state/affirmation.service";
 import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
@@ -8,7 +9,11 @@ import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
 import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
-import { of, switchMap, tap } from "rxjs";
+import { debounceTime, of, skip, Subscription, switchMap, tap } from "rxjs";
+
+function timeFormControls() {
+  return [new FormControl(''), new FormControl(''), new FormControl('')]
+}
 
 @Component({
   selector: 'journal-affirmations',
@@ -17,38 +22,23 @@ import { of, switchMap, tap } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AffirmationsComponent implements OnDestroy {
-
-  shortDescription = true
   isLoading = true
 
   enumAffirmationCategory = enumAffirmationCategory
   suggestions = suggestions
   private suggestionsCopy: AffirmationSuggestion[]
 
-  times = ['', '', ''];
-  form = new FormArray([])
+  form = new FormGroup({
+    affirmations: new FormArray([]),
+    times: new FormArray(timeFormControls())
+  })
 
-  get affirmations(): string[] {
-    return this.form.value
-  }
+  get affirmationsForm() { return this.form.get('affirmations') as FormArray }
+  get affirmations(): string[] { return this.affirmationsForm.value }
+  get timesForm() { return this.form.get('times') as FormArray }
+  get times(): string[] { return this.timesForm.value }
 
-  private sub = this.user.user$.pipe(
-    switchMap(user => user ? this.service.getAffirmations(user.uid) : of(undefined)),
-    tap(doc => {
-      if (doc) {
-        this.times = doc.times;
-        const affirmations = doc.affirmations.map(affirmation => new FormControl(affirmation))
-        this.form = new FormArray(affirmations)
-      } else {
-        this.times = ['', '', '']
-        this.form = new FormArray([])
-      }
-      
-      this.isLoading = false
-      this.form.push(new FormControl(''))
-      this.cdr.markForCheck()
-    })
-  ).subscribe()
+  private subs: Subscription[] = []
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -60,20 +50,54 @@ export class AffirmationsComponent implements OnDestroy {
   ) {
     this.shuffle(this.suggestions)
     this.suggestionsCopy = Object.assign([], this.suggestions)
+
+    const sub = this.user.user$.pipe(
+      switchMap(user => user ? this.service.getAffirmations(user.uid) : of(undefined)),
+      tap(doc => {
+        this.timesForm.reset(timeFormControls())
+        this.affirmationsForm.reset([])
+
+        if (doc) {
+          this.timesForm.setValue(doc.times)
+  
+          for (const affirmation of doc.affirmations) {
+            this.affirmationsForm.push(new FormControl(affirmation))
+          }
+        }
+        
+        this.isLoading = false
+        this.affirmationsForm.push(new FormControl(''))
+        this.cdr.markForCheck()
+      })
+    ).subscribe()
+
+    const affirmationFormSub = this.affirmationsForm.valueChanges.pipe(skip(1)).subscribe((affirmations: string[]) => {
+      const empty = affirmations.filter(a => a === '')
+      if (empty.length > 1) {
+        const index = affirmations.lastIndexOf('')
+        this.affirmationsForm.removeAt(index)
+      }
+  
+      if (empty.length === 0) {
+        this.affirmationsForm.push(new FormControl(''))
+      }
+    })
+
+    // autosave
+    const formSub = this.form.valueChanges.pipe(
+      debounceTime(500)
+    ).subscribe((value: Affirmations) => {
+      if (!this.user.uid) return
+      const { times } = value
+      const affirmations = value.affirmations.filter(affirmation => affirmation !== '')
+      this.service.saveAffirmations(this.user.uid, { affirmations, times })
+    })
+
+    this.subs.push(sub, formSub, affirmationFormSub)
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe()
-  }
-
-  save() {
-    if (!this.user.uid) return
-
-    const affirmations = this.affirmations.filter(affirmation => affirmation !== '')
-    this.service.saveAffirmations(this.user.uid, {
-      affirmations,
-      times: this.times
-    })
+    this.subs.forEach(sub => sub.unsubscribe())
   }
 
   openExplanation() {
@@ -83,10 +107,6 @@ export class AffirmationsComponent implements OnDestroy {
     }).then(popover => popover.present())
   }
 
-  toggleReadMore() {
-    this.shortDescription = !this.shortDescription
-  }
-
   async openDatetime(index: number) {
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
@@ -94,7 +114,9 @@ export class AffirmationsComponent implements OnDestroy {
     })
     popover.onDidDismiss().then(({ data, role }) => {
       if (role === 'dismiss') {
-        this.times[index] = data ? data : new Date().toISOString()
+        const control = this.timesForm.get(`${index}`)
+        const value = data ? data : new Date().toISOString()
+        control.setValue(value)
         this.cdr.markForCheck()
       }
     })
@@ -102,21 +124,14 @@ export class AffirmationsComponent implements OnDestroy {
   }
 
   removeSetTime(index: number) {
-    this.times[index] = ''
-    this.times.sort((a, b) => b === '' ? -1 : 1)
-  }
-
-  onInput($event, affirmation: string) {
-    if (affirmation === '' && $event.detail.data !== null) {
-      this.form.push(new FormControl(''))
-    }
+    const control = this.timesForm.get(`${index}`)
+    control.setValue('')
+    const times = this.times.sort((a, b) => b === '' ? -1 : 1)
+    this.timesForm.setValue(times)
   }
 
   removeAffirmation(index: number) {
-    this.form.removeAt(index)
-    if (this.form.length === 0 || this.affirmations[this.affirmations.length - 1] !== '') {
-      this.form.push(new FormControl(''))
-    }
+    this.affirmationsForm.removeAt(index)
   }
 
   filterSuggestions(filter: enumAffirmationCategory) {    
@@ -127,7 +142,7 @@ export class AffirmationsComponent implements OnDestroy {
 
   addSuggestion(suggestion: AffirmationSuggestion) {
     // add suggestion
-    this.form.insert(this.form.length - 1, new FormControl(suggestion.affirmation))
+    this.affirmationsForm.insert(this.affirmationsForm.length - 1, new FormControl(suggestion.affirmation))
 
     // remove suggestion from suggestions
     this.suggestions = this.suggestions.filter(s => s.affirmation !== suggestion.affirmation)
@@ -148,5 +163,9 @@ export class AffirmationsComponent implements OnDestroy {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
+  }
+
+  affirmationsButNoTime(): boolean {
+    return this.times.every(time => time === '') && this.affirmationsForm.length > 1
   }
 }

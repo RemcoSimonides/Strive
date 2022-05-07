@@ -8,8 +8,7 @@ main {
   margin: auto;
 }
 
-.read-more {
-  cursor: pointer;
+h1 {
   color: var(--ion-color-primary);
 }
 
@@ -20,6 +19,11 @@ ion-list {
   ion-item {
     --highlight-background: var(--ion-color-primary); 
   }
+}
+
+.warning {
+  color: var(--ion-color-danger);
+  text-align: center;
 }
 
 .suggestions {
