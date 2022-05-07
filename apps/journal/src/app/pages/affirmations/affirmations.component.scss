@@ -13,8 +13,13 @@ main {
   color: var(--ion-color-primary);
 }
 
-ion-item {
-  --highlight-background: var(--ion-color-primary); 
+ion-list {
+  border-radius: 12px;
+  overflow: hidden;
+
+  ion-item {
+    --highlight-background: var(--ion-color-primary); 
+  }
 }
 
 .suggestions {
