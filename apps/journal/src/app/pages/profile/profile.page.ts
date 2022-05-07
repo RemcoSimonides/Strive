@@ -22,7 +22,6 @@ import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+
 // Other
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
-import { exercises } from '@strive/exercises/utils';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
 @Component({
@@ -33,7 +32,6 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 export class ProfileComponent implements OnInit {
   private backBtnSubscription: Subscription
 
-  exercises = exercises
 
   private _isOwner = new BehaviorSubject<boolean>(false)
   isOwner$: Observable<boolean>

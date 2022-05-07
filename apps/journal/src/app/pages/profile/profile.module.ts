@@ -13,15 +13,11 @@ import { FollowingModule } from '@strive/user/spectator/components/following/fol
 import { FollowersModule } from '@strive/user/spectator/components/followers/followers.module';
 
 // Strive
-import { ThumbnailGridModule } from '@strive/ui/thumbnail/layout/grid/thumbnail-grid.module';
-import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
-import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 import { ImageModule } from '@strive/media/directives/image.module';
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
 
 import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
@@ -40,8 +36,6 @@ const routes: Routes = [
     FlexLayoutModule,
     IonicModule,
     RouterModule.forChild(routes),
-    ThumbnailGridModule,
-    RowsPipeModule,
     PageLoadingModule,
     ImageModule,
     ImageSelectorModule,
@@ -50,8 +44,7 @@ const routes: Routes = [
     StatusPipeModule,
     GoalOptionsModule,
     UpsertGoalModalModule,
-    FontAwesomeModule,
-    SmallThumbnailModule
+    FontAwesomeModule
   ],
   declarations: [
     ProfileComponent

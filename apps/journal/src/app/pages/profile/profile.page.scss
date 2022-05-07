@@ -109,36 +109,6 @@ ion-list {
   }
 }
 
-.grid {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-h5 {
-  overflow: hidden;
-  text-align: center;
-}
-h5:before,
-h5:after {
-  background-color: #333;
-  content: "";
-  display: inline-block;
-  height: 1px;
-  position: relative;
-  vertical-align: middle;
-  width: 50%;
-}
-h5:before {
-  right: 0.5em;
-  margin-left: -50%;
-}
-h5:after {
-  left: 0.5em;
-  margin-right: -50%;
-}
-
-
 .gradient-border {
   --borderWidth: 3px;
   background: #1D1F20;

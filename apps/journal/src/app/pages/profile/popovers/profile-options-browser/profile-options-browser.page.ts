@@ -40,18 +40,13 @@ export class ProfileOptionsBrowserComponent {
     )
   }
 
+  goTo(url: string) {
+    this.router.navigateByUrl(url)
+    this.popoverCtrl.dismiss()
+  }
+
   goToProfile() {
     this.router.navigateByUrl(`/profile/${this.user.uid}`)
-    this.popoverCtrl.dismiss()
-  }
-
-  goToNotifications() {
-    this.router.navigateByUrl(`/notifications`)
-    this.popoverCtrl.dismiss()
-  }
-
-  gotToEditProfile() {
-    this.router.navigateByUrl(`/edit-profile`)
     this.popoverCtrl.dismiss()
   }
 

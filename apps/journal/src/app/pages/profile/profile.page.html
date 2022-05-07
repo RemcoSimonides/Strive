@@ -135,24 +135,6 @@
         </ng-template>
       </ng-container>
     </section>
-
-    <ng-container *ngIf="isOwner$ | async as isOwner">
-      <section fxLayout="column">
-        <h5>Only you see the content below</h5>
-
-        <!-- Exercises -->
-        <h2>Exercises</h2>
-
-        <article class="grid">
-          <ng-container *ngFor="let exercise of exercises">
-            <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
-            </strive-small-thumbnail>
-          </ng-container>
-        </article>
-
-      </section>
-    </ng-container>
   </ng-container>
-
   <footer></footer>
 </ion-content>
