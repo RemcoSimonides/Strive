@@ -43,8 +43,8 @@ export type EmailJSON = { name?: string; email: string };
 
 
 // // crontab.guru to determine schedule value
-// export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async (context) => {
-export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun(async (context) => {
+// export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async () => {
+export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun(async () => {
 
   const [ profileSnaps, motivation, newFeatures ] = await Promise.all([
     db.collectionGroup('Personal').get(),

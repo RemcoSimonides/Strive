@@ -8,7 +8,7 @@ import { getDocument } from '../shared/utils';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
-export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub.schedule('* * * * *').onRun(async (context) => {
+export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub.schedule('* * * * *').onRun(async () => {
 
   // Consistent timestamp
   const now = admin.firestore.Timestamp.now();

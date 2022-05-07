@@ -11,7 +11,6 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
 
     const stakeholder = createGoalStakeholder(snapshot.data())
     const goalId = context.params.goalId
-    const stakeholderId = snapshot.id
 
     const goalSnap = await db.doc(`Goals/${goalId}`).get()
     const goal = createGoal({ ...goalSnap.data(), id: goalId })

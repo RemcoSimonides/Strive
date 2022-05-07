@@ -54,8 +54,7 @@ export class AffirmationsComponent implements OnDestroy {
     const sub = this.user.user$.pipe(
       switchMap(user => user ? this.service.getAffirmations(user.uid) : of(undefined)),
       tap(doc => {
-        this.timesForm.reset(timeFormControls())
-        this.affirmationsForm.reset([])
+        this.affirmationsForm.clear()
 
         if (doc) {
           this.timesForm.setValue(doc.times)

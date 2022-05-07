@@ -3,7 +3,7 @@ import { admin, functions } from '../../../internals/firebase';
 import { logger } from 'firebase-functions';
 
 export const personalChangeHandler = functions.firestore.document(`Users/{userId}/Personal/{uid}`)
-  .onUpdate(async (snapshot, context) => {
+  .onUpdate(async (snapshot) => {
 
     const before = createPersonal({ ...snapshot.before.data(), uid: snapshot.before.id })
     const after = createPersonal({ ...snapshot.after.data(), uid: snapshot.after.id })

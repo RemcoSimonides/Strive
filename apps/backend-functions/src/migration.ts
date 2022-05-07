@@ -1,6 +1,4 @@
-import { db, functions } from "./internals/firebase";
-import { createNotification } from "@strive/notification/+state/notification.model";
-import { createSupport } from "@strive/support/+state/support.firestore";
+import { functions } from "./internals/firebase";
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 

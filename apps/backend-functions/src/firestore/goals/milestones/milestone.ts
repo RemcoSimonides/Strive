@@ -1,13 +1,12 @@
 import { db, functions } from '../../../internals/firebase';
 
 //Interfaces
-import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { createMilestone } from '@strive/goal/milestone/+state/milestone.firestore';
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface';
 import { handleStatusChangeNotification } from './milestone.notification';
-import { increaseSeqnoByOne } from '@strive/notification/+state/notification.model';
 
 export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
   .onCreate(async (snapshot, context) => {

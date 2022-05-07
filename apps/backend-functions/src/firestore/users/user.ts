@@ -7,7 +7,7 @@ import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 
 export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
-  .onCreate(async (snapshot, context) => {
+  .onCreate(async (snapshot) => {
 
     const uid = snapshot.id
     const user = createUser({ ...snapshot.data(), uid: snapshot.id })
@@ -21,7 +21,7 @@ export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
   })
 
 export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
-  .onDelete(async (snapshot, context) => {
+  .onDelete(async (snapshot) => {
 
     const uid = snapshot.id
     await deleteFromAlgolia('user', uid)

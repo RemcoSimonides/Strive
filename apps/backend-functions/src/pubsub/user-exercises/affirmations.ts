@@ -1,5 +1,5 @@
 import { admin } from '../../internals/firebase';
-import * as moment from 'moment'
+import { set, isPast, addDays, closestTo } from 'date-fns'
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
 import { Personal } from '@strive/user/user/+state/user.firestore';
 import { ScheduledTaskUserExerciseAffirmations, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
@@ -26,42 +26,27 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
   }
 }
 
-export async function scheduleNextAffirmation(uid: string, affirmations: Affirmations) {
+export async function scheduleNextAffirmation(userId: string, affirmations: Affirmations) {
 
-  const nextAffirmationDateTime = getNextAffirmationDate(affirmations)
+  const performAt = getNextAffirmationDate(affirmations)
   const task: ScheduledTaskUserExerciseAffirmations = {
     worker: enumWorkerType.userExerciseAffirmation,
-    performAt: nextAffirmationDateTime,
-    options: { userId: uid },
+    performAt,
+    options: { userId },
     status: 'scheduled'
   }
-  return upsertScheduledTask(`${uid}affirmations`, task)
+  return upsertScheduledTask(`${userId}affirmations`, task)
 }
 
 export function getNextAffirmationDate(affirmations: Affirmations): string {
+  const now = new Date()
+  
+  const times = affirmations.times.filter(time => time !== '')
+  const dates = times
+    // set date to today
+    .map(time => set(new Date(time), { year: now.getFullYear(), month: now.getMonth(), date: now.getDate() }))
+    // set date to future
+    .map(date => isPast(date) ? addDays(date, 1) : date)
 
-  const currentDate = new Date()
-  const dates: Date[] = []
-
-  for (const time of  affirmations.times) {
-
-    const d = new Date(time)
-    const x = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), d.getHours(), d.getMinutes())
-
-    if (x.getTime() < currentDate.getTime()) {
-      dates.push(moment(x).add(1, 'day').toDate())
-    } else {
-      dates.push(x)
-    }
-  }
-
-  let nextDate: Date = new Date(dates[0])
-  for (let i = 1; i < dates.length; i++ ) {
-      
-    const d = new Date(dates[i])
-    if (d.getTime() < nextDate.getTime()) nextDate = new Date(dates[i])
-
-  }
-
-  return nextDate.toISOString()
+  return closestTo(now, dates).toISOString()
 }
