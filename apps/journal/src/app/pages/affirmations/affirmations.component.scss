@@ -1,0 +1,30 @@
+main {
+  max-width: 700px;
+  margin: auto;
+}
+
+.read-more {
+  cursor: pointer;
+  color: var(--ion-color-primary);
+}
+
+ion-item {
+  --highlight-background: var(--ion-color-primary); 
+}
+
+.suggestions {
+  margin-top: 26px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+  
+    ion-select {
+      margin-top: 8px;
+    }
+
+    ion-icon:hover {
+      color: var(--ion-color-primary)
+    }
+  }
+}

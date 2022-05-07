@@ -13,7 +13,6 @@ import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAf
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
-import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
 import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
@@ -122,7 +121,7 @@ export class FeedComponent implements OnDestroy {
         let component
         switch (exercise) {
           case enumExercises.affirmations:
-            component = AffirmationUpsertComponent
+            this.navCtrl.navigateForward('/affirmations')
             break
           case enumExercises.dear_future_self:
             component = DearFutureSelfUpsertComponent
@@ -134,7 +133,7 @@ export class FeedComponent implements OnDestroy {
             component = AssessLifeUpsertComponent
             break
         }
-        this.modalCtrl.create({ component }).then(modal => modal.present())
+        if (component) this.modalCtrl.create({ component }).then(modal => modal.present())
       }
     })
     modal.present()

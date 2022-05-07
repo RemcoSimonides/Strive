@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { ImageModule } from "@strive/media/directives/image.module";
 import { BannerComponent } from "./banner.component";
-import { AffirmationUpsertModule } from '@strive/exercises/affirmation/components/upsert/upsert.module';
 
 @NgModule({
   imports: [
@@ -14,8 +13,7 @@ import { AffirmationUpsertModule } from '@strive/exercises/affirmation/component
     RouterModule,
     FlexLayoutModule,
     IonicModule,
-    ImageModule,
-    AffirmationUpsertModule
+    ImageModule
   ],
   declarations: [BannerComponent],
   exports: [BannerComponent]

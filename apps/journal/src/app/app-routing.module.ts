@@ -14,7 +14,8 @@ const routes: Routes = [
   { path: 'settings', loadChildren: () => import('@strive/user/user/components/settings/settings.module').then(m => m.SettingsPageModule)},
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageModule) },
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) },
-  { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule) }
+  { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule) },
+  { path: 'affirmations', loadChildren: () => import('./pages/affirmations/affirmations.module').then(m => m.AffirmationsModule) }
 ];
 
 @NgModule({

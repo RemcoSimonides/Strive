@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ModalController, Platform, PopoverController } from '@ionic/angular';
+import { Platform, PopoverController } from '@ionic/angular';
 import { Share } from '@capacitor/share';
 // Strive
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { enumExercises, exercises } from '@strive/exercises/utils';
-import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalSharePopoverComponent } from '../../../popovers/share/share.component';
 import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
@@ -25,24 +24,9 @@ export class Slide5Component {
 
   constructor(
     private inviteTokenService: InviteTokenService,
-    private modalCtrl: ModalController,
     private platform: Platform,
     private popoverCtrl: PopoverController
   ) {}
-
-  openExercise(enumExercise: enumExercises) {
-    let component
-    switch (enumExercise) {
-      case enumExercises.affirmations:
-        component = AffirmationUpsertComponent
-        break;
-    
-      default:
-        console.error('This exercise cant be opened')
-        break;
-    }
-    this.modalCtrl.create({ component }).then(modal => modal.present())
-  }
 
   async openSharePopover(ev: UIEvent) {
     const goal = createGoal({ ...this.form.value, id: this.goalId })

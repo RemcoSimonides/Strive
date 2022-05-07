@@ -11,10 +11,6 @@ import { SeoService } from '@strive/utils/services/seo.service';
 // Rxjs
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 // Modals / Popover
-import { AffirmationUpsertComponent } from '@strive/exercises/affirmation/components/upsert/upsert.component';
-import { DailyGratefulnessUpsertComponent } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.component';
-import { AssessLifeUpsertComponent } from '@strive/exercises/assess-life/components/upsert/upsert.component';
-import { DearFutureSelfUpsertComponent } from '@strive/exercises/dear-future-self/components/upsert/upsert.component';
 import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
@@ -26,7 +22,7 @@ import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+
 // Other
 import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
-import { enumExercises, exercises } from '@strive/exercises/utils';
+import { exercises } from '@strive/exercises/utils';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 
 @Component({
@@ -153,29 +149,6 @@ export class ProfileComponent implements OnInit {
     } else {
       this.openAuthModal()
     }
-  }
-
-  openExercise(enumExercise: enumExercises) {
-    let component
-    switch (enumExercise) {
-      case enumExercises.affirmations:
-        component = AffirmationUpsertComponent
-        break
-      
-      case enumExercises.dear_future_self:
-        component = DearFutureSelfUpsertComponent
-        break
-
-      case enumExercises.daily_gratefulness:
-        component = DailyGratefulnessUpsertComponent
-        break
-
-      case enumExercises.assess_life:
-        component = AssessLifeUpsertComponent
-        break
-    }
-
-    this.modalCtrl.create({ component }).then(modal => modal.present())
   }
 
   openFollowers() {

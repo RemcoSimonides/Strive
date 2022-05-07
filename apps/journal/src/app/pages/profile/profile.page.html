@@ -140,15 +140,12 @@
       <section fxLayout="column">
         <h5>Only you see the content below</h5>
 
-        <!-- Affirmations -->
-        <exercise-affirmations-view [uid]="profileId" [isOwner]="isOwner"></exercise-affirmations-view>
-
         <!-- Exercises -->
         <h2>Exercises</h2>
 
         <article class="grid">
           <ng-container *ngFor="let exercise of exercises">
-            <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openExercise(exercise.enum)">
+            <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="'/' + exercise.enum">
             </strive-small-thumbnail>
           </ng-container>
         </article>

@@ -16,7 +16,6 @@ import { ImageModule } from '@strive/media/directives/image.module';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
 
 // Exercises
-import { AffirmationUpsertModule } from '@strive/exercises/affirmation/components/upsert/upsert.module';
 import { DailyGratefulnessUpsertModule } from '@strive/exercises/daily-gratefulness/components/upsert/upsert.module';
 import { AssessLifeUpsertModule } from '@strive/exercises/assess-life/components/upsert/upsert.module';
 import { DearFutureSelfUpsertModule } from '@strive/exercises/dear-future-self/components/upsert/upsert.module';
@@ -45,7 +44,6 @@ const routes: Routes = [
     SmallThumbnailModule,
 
     // Exercises
-    AffirmationUpsertModule,
     DailyGratefulnessUpsertModule,
     AssessLifeUpsertModule,
     DearFutureSelfUpsertModule
