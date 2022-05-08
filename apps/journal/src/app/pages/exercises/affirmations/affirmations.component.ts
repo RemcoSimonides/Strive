@@ -9,7 +9,7 @@ import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
 import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
-import { debounceTime, of, skip, Subscription, switchMap, tap } from "rxjs";
+import { debounceTime, of, Subscription, switchMap, tap } from "rxjs";
 
 function timeFormControls() {
   return [new FormControl(''), new FormControl(''), new FormControl('')]
@@ -54,23 +54,23 @@ export class AffirmationsComponent implements OnDestroy {
     const sub = this.user.user$.pipe(
       switchMap(user => user ? this.service.getAffirmations(user.uid) : of(undefined)),
       tap(doc => {
-        this.affirmationsForm.clear()
+        this.affirmationsForm.clear({ emitEvent: false })
 
         if (doc) {
-          this.timesForm.setValue(doc.times)
+          this.timesForm.setValue(doc.times, { emitEvent: false })
   
           for (const affirmation of doc.affirmations) {
-            this.affirmationsForm.push(new FormControl(affirmation))
+            this.affirmationsForm.push(new FormControl(affirmation), { emitEvent: false })
           }
         }
         
+        this.affirmationsForm.push(new FormControl(''), { emitEvent: false })
         this.isLoading = false
-        this.affirmationsForm.push(new FormControl(''))
         this.cdr.markForCheck()
       })
     ).subscribe()
 
-    const affirmationFormSub = this.affirmationsForm.valueChanges.pipe(skip(1)).subscribe((affirmations: string[]) => {
+    const affirmationFormSub = this.affirmationsForm.valueChanges.subscribe((affirmations: string[]) => {
       const empty = affirmations.filter(a => a === '')
       if (empty.length > 1) {
         const index = affirmations.lastIndexOf('')
@@ -88,7 +88,7 @@ export class AffirmationsComponent implements OnDestroy {
     ).subscribe((value: Affirmations) => {
       if (!this.user.uid) return
       const { times } = value
-      const affirmations = value.affirmations.filter(affirmation => affirmation !== '')
+      const affirmations = value.affirmations.filter(a => a !== '')
       this.service.saveAffirmations(this.user.uid, { affirmations, times })
     })
 
