@@ -29,9 +29,17 @@ export class DailyGratefulnessComponent implements OnDestroy {
 
   private sub = this.user.user$.pipe(
     switchMap(user => user ? this.service.getDailyGratefulnessSettings(user.uid) : of(undefined)),
-    tap(settings => {
-      const value = !settings?.time ? { on: false, time: '21:00' } : settings
-      this.form.patchValue(value)
+    tap(dailyGratefulness => {
+
+      const setting = { on: false, time: '21:00' } // default
+      if (dailyGratefulness) {
+        const hours = dailyGratefulness.time.getHours()
+        const minutes = dailyGratefulness.time.getMinutes()
+        setting.time = `${hours}:${minutes}`
+        setting.on = dailyGratefulness.on
+      }
+
+      this.form.patchValue(setting)
       this.isLoading = false
       this.cdr.markForCheck()
     })

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
 // Rxjs
 import { Observable } from 'rxjs';
 // Services
@@ -15,6 +15,13 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
 
   constructor(db: Firestore) {
     super(db)
+  }
+
+  protected fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness {
+    if (!snapshot.exists) return
+    const setting = { ...snapshot.data(), id: snapshot.id }
+    setting.time = (setting.time as any).toDate()
+    return setting
   }
 
   getDailyGratefulnessSettings$(uid: string): Observable<DailyGratefulness> {
