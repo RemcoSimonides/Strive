@@ -1,5 +1,5 @@
 import { functions } from '../../../internals/firebase';
-import * as moment from 'moment'
+import { addDays, isPast } from 'date-fns';
 import { DailyGratefulness } from '@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
@@ -9,8 +9,7 @@ export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Use
 
     const uid = context.params.uid
     const dailyGratefulnessSettings = snapshot.data() as DailyGratefulness
-    if (!dailyGratefulnessSettings) return
-    if (!dailyGratefulnessSettings.on) return
+    if (!dailyGratefulnessSettings?.on) return
 
     scheduleScheduledTask(uid, dailyGratefulnessSettings)
   })
@@ -35,22 +34,14 @@ export const dailyGratefulnessChangedHandler = functions.firestore.document(`Use
     }
   })
 
-async function scheduleScheduledTask(uid: string, dailyGratefulnessSettings: DailyGratefulness) {
+async function scheduleScheduledTask(userId: string, setting: DailyGratefulness) {
 
-    const hours = new Date().getHours()
-    const [ setHours, setMinutes ] = dailyGratefulnessSettings.time.split(':').map(time => +time)
-    const scheduledDate = moment(new Date().setHours(setHours, setMinutes))
-
-    if (hours > setHours) {
-      // time passed so set date to tomorrow
-      scheduledDate.add(1, 'day')
-    }
 
     const task: Partial<ScheduledTaskUserExerciseDailyGratefulness> = {
       worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
-      performAt: scheduledDate.toISOString(),
-      options: { userId: uid }
+      performAt: setting.time,
+      options: { userId }
     }
 
-    return upsertScheduledTask(`${uid}dailygratefulness`, task)
+    return upsertScheduledTask(`${userId}dailygratefulness`, task)
 }

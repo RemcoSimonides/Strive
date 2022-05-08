@@ -4,7 +4,9 @@ import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.f
 import { sendNotificationMilestoneDeadlinePassed } from './notifications/milestone.notification';
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
+import { logger } from 'firebase-functions';
 import { getDocument } from '../shared/utils';
+import { enumWorkerType } from '../shared/scheduled-task/scheduled-task.interface';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -17,13 +19,13 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
   const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', 'scheduled');
 
   const tasks = await query.get();
-
+  
   // Jobs to execute concurrently. 
   const jobs: Promise<any>[] = [];
 
   const reschedulingTasks = [
-    'userExerciseAffirmation',
-    'userExerciseDailyGratefulness'
+    enumWorkerType.userExerciseAffirmation,
+    enumWorkerType.userExerciseDailyGratefulnessReminder
   ]
 
   // Loop over documents and push job.
@@ -33,6 +35,7 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
     const job = workers[worker](options)      
       // Update doc with status on success or error
       .then(async () => {
+
         if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'complete' })
       })
@@ -91,5 +94,6 @@ async function userExerciseDailyGratefulnessReminderHandler(options) {
   sendDailyGratefulnessPushNotification(options.userId)
 
   // reschedule task for tomorrow
+  logger.log('scheduling for tomorrow userExerciseDailyGratefulnessReminderHandler')
   scheduleNextDailyGratefulnessReminder(options.userId)
 }

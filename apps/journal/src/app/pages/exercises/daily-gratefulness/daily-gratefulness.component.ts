@@ -6,7 +6,8 @@ import { DailyGratefulnessService } from "@strive/exercises/daily-gratefulness/+
 import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
-import { of, switchMap, tap } from "rxjs";
+import { debounceTime, of, switchMap, tap } from "rxjs";
+import { addDays, isPast, set } from 'date-fns'
 
 @Component({
   selector: 'strive-daily-gratefulness',
@@ -36,10 +37,19 @@ export class DailyGratefulnessComponent implements OnDestroy {
     })
   ).subscribe()
 
-  private formSub = this.form.valueChanges.subscribe(dailyGratefulness => {
-    if (this.user?.uid) {
-      this.service.save(this.user.uid, dailyGratefulness)
-    }
+  private formSub = this.form.valueChanges.pipe(
+    debounceTime(1000)
+  ).subscribe((setting: { on: boolean, time: string }) => {
+    if (!this.user?.uid) return
+
+    const [ hours, minutes ] = setting.time.split(':').map(time => +time)
+    const time = set(new Date(), { hours, minutes })
+    const performAt = isPast(time) ? addDays(time, 1) : time
+
+    this.service.save(this.user.uid, {
+      on: setting.on,
+      time: performAt
+    })
   })
 
   constructor(

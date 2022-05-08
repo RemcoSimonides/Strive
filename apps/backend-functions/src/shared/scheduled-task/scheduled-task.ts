@@ -22,7 +22,7 @@ function createScheduledTask(id: string, scheduledTask: Partial<ScheduledTask>) 
   });
 }
 
-function updateScheduledTask(id: string, _performAt: string | FirebaseFirestore.FieldValue) {
+function updateScheduledTask(id: string, _performAt: string | FirebaseFirestore.FieldValue | Date) {
   const performAt = typeof _performAt === 'string' ? admin.firestore.Timestamp.fromDate(new Date(_performAt)) : _performAt
   return db.doc(`ScheduledTasks/${id}`).update({ performAt });
 }

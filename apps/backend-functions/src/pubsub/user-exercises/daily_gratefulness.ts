@@ -1,9 +1,9 @@
 import * as admin from 'firebase-admin'
-import * as moment from 'moment'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { Personal } from '@strive/user/user/+state/user.firestore'
 import { getDocument } from '../../shared/utils'
+import { addDays } from 'date-fns'
 
 // Sentences to ask in push notification
 // Close your eyes and take a moment to reflect on all the good things that happened today or yesterday
@@ -52,11 +52,11 @@ export async function sendDailyGratefulnessPushNotification(uid: string) {
 
 export function scheduleNextDailyGratefulnessReminder(uid: string) {
 
-  const nextReminder = moment(new Date()).add(1, 'day').toISOString()
+  const performAt = addDays(new Date(), 1)
 
   const task: ScheduledTaskUserExerciseDailyGratefulness = {
     worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
-    performAt: nextReminder,
+    performAt,
     options: { userId: uid },
     status: 'scheduled'
   }

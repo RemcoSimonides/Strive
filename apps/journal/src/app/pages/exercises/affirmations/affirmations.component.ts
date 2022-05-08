@@ -84,7 +84,7 @@ export class AffirmationsComponent implements OnDestroy {
 
     // autosave
     const formSub = this.form.valueChanges.pipe(
-      debounceTime(500)
+      debounceTime(1000)
     ).subscribe((value: Affirmations) => {
       if (!this.user.uid) return
       const { times } = value

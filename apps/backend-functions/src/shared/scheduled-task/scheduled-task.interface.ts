@@ -1,6 +1,6 @@
 interface ScheduledTaskBase {
   worker: enumWorkerType;
-  performAt: FirebaseFirestore.FieldValue | string;
+  performAt: FirebaseFirestore.FieldValue | string | Date;
   status: 'scheduled' | 'complete' | 'error';
 }
 
