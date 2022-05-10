@@ -8,6 +8,7 @@ import { DailyGratefulnessComponent } from './daily-gratefulness.component';
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
+import { ActivatePushNotificaitonsModule } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.module';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
-    AuthModalModule
+    AuthModalModule,
+    ActivatePushNotificaitonsModule
   ],
   declarations: [DailyGratefulnessComponent]
 })

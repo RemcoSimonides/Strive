@@ -1,0 +1,8 @@
+<ion-card *ngIf="hasPushNotifications$ | async">
+  <ion-card-content>
+    <p>
+      In order to receive the affirmations, you have to activate push notifications
+    </p>
+    <ion-button color="danger" (click)="pushNotifications()">Activate Push Notifications</ion-button>
+  </ion-card-content>
+</ion-card>

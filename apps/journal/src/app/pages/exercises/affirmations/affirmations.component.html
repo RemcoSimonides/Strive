@@ -20,6 +20,8 @@
     <ng-container *ngIf="!isLoading else loading">
       <ng-container *ngIf="user.uid else login">
 
+        <exercises-activate-push-notification></exercises-activate-push-notification>
+
         <h3>Set Affirmation Time</h3>
         <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
         <ion-list mode="md">

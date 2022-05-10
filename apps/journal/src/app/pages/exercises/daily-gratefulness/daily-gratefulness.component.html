@@ -21,6 +21,8 @@
         </section>
   
         <ng-container *ngIf="dailyGratefulness.on">
+          <exercises-activate-push-notification></exercises-activate-push-notification>
+
           <small>What time would you like to receive the reminder?</small>
           <ion-datetime presentation="time" [formControl]="form.get('time')"></ion-datetime>
         </ng-container>

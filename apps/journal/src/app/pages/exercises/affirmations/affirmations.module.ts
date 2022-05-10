@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AffirmationsComponent } from './affirmations.component';
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { ActivatePushNotificaitonsModule } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.module';
 
 const routes: Routes = [
   {
@@ -21,7 +22,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    PageLoadingModule
+    PageLoadingModule,
+    ActivatePushNotificaitonsModule
   ],
   declarations: [AffirmationsComponent]
 })
