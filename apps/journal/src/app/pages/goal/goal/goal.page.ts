@@ -13,7 +13,7 @@ import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/option
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
-import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Strive Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -101,7 +101,7 @@ export class GoalComponent implements OnInit, OnDestroy {
       }).then(modal => modal.present())
     } else {
       this.modalCtrl.create({
-        component: AuthModalModalComponent,
+        component: AuthModalComponent,
         componentProps: {
           authSegment: enumAuthSegment.login
         }
@@ -232,7 +232,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   async join() {
     if (!this.user.uid) {
       const modal = await this.modalCtrl.create({
-        component: AuthModalModalComponent,
+        component: AuthModalComponent,
         componentProps: {
           authSegment: enumAuthSegment.login
         }

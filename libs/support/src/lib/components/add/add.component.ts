@@ -13,7 +13,7 @@ import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/mi
 import { getStatusLabel, Support } from '@strive/support/+state/support.firestore'
 import { createGoalLink, Goal } from '@strive/goal/goal/+state/goal.firestore'
 // Components
-import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { orderBy, where } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
@@ -84,7 +84,7 @@ export class AddSupportModalComponent implements OnInit {
 
   openLoginModal() {
     this.modalCtrl.create({
-      component: AuthModalModalComponent,
+      component: AuthModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

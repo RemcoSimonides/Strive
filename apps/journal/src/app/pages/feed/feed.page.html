@@ -107,7 +107,7 @@
       <p>Believing in yourself is your biggest power. Strengten this power by doing these exercises.</p>
       <article class="grid">
         <ng-container *ngFor="let exercise of exercises | slice:0:4">
-          <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" (click)="openAuthModal(enumAuthSegment.register, exercise.enum)">
+          <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
           </strive-small-thumbnail>
         </ng-container>
       </article>

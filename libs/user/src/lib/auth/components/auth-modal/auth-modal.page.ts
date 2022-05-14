@@ -28,7 +28,7 @@ export enum enumAuthSegment {
   templateUrl: './auth-modal.page.html',
   styleUrls: ['./auth-modal.page.scss'],
 })
-export class AuthModalModalComponent {
+export class AuthModalComponent {
   private success = false;
 
   passwordType = 'password';

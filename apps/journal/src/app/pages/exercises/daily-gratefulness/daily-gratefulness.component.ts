@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { ModalController } from "@ionic/angular";
 import { DailyGratefulness } from "@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore";
 import { DailyGratefulnessService } from "@strive/exercises/daily-gratefulness/+state/daily-gratefulness.service";
-import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
+import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { debounceTime, of, switchMap, tap } from "rxjs";
@@ -75,7 +75,7 @@ export class DailyGratefulnessComponent implements OnDestroy {
 
   openAuthModal() {
     this.modalCtrl.create({
-      component: AuthModalModalComponent,
+      component: AuthModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

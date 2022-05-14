@@ -4,7 +4,7 @@ import { Auth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 import { ModalController, ToastController } from "@ionic/angular";
 import { exercises } from "@strive/exercises/utils";
-import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
+import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { FcmService } from "@strive/utils/services/fcm.service";
 import { PWAService } from '@strive/utils/services/pwa.service';
 
@@ -51,7 +51,7 @@ export class SettingsPageComponent {
 
     // open auth modal
     this.modalCtrl.create({
-      component: AuthModalModalComponent,
+      component: AuthModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

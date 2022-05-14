@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AuthModalModalComponent } from './auth-modal.page';
+import { AuthModalComponent } from './auth-modal.page';
 
 import { TermsModule } from '@strive/ui/static-information/terms/terms.module';
 import { PrivacyPolicyModule } from '@strive/ui/static-information/privacy/privacy-policy.module';
@@ -22,6 +22,6 @@ import { WelcomeModalModule } from '../welcome/welcome.module';
     PrivacyPolicyModule,
     WelcomeModalModule
   ],
-  declarations: [AuthModalModalComponent]
+  declarations: [AuthModalComponent]
 })
 export class AuthModalModule {}

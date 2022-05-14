@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
 // Components
-import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { PWAService } from '@strive/utils/services/pwa.service';
@@ -61,7 +61,7 @@ export class ProfileOptionsBrowserComponent {
 
     // open auth modal
     this.modalCtrl.create({
-      component: AuthModalModalComponent,
+      component: AuthModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

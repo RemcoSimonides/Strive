@@ -5,13 +5,13 @@ import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
-import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAfter, where } from '@angular/fire/firestore';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
-import { enumExercises, exercises } from '@strive/exercises/utils';
+import { exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
 import { DocumentData } from 'rxfire/firestore/interfaces';
 import { orderBy, QueryConstraint } from 'firebase/firestore';
@@ -106,20 +106,11 @@ export class FeedComponent implements OnDestroy {
     this.userSubscription.unsubscribe()
   }
 
-  async openAuthModal(segment: enumAuthSegment, exercise?: enumExercises) {
-    const modal = await this.modalCtrl.create({
-      component: AuthModalModalComponent,
-      componentProps: {
-        authSegment: segment
-      }
-    })
-    modal.onDidDismiss().then(({ data: loggedIn }) => {
-      if (loggedIn && exercise) {
-        const { link } = exercises.find(e => e.enum === exercise)
-        this.navCtrl.navigateForward(link)
-      }
-    })
-    modal.present()
+  openAuthModal(authSegment: enumAuthSegment) {
+    this.modalCtrl.create({
+      component: AuthModalComponent,
+      componentProps: { authSegment }
+    }).then(modal => modal.present())
   }
 
   private async mapAndUpdate(queryConstraints: QueryConstraint[], isRefresh = false) {

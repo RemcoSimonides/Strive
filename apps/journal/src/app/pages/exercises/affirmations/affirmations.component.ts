@@ -6,7 +6,7 @@ import { AffirmationSuggestion, enumAffirmationCategory, suggestions } from "@st
 import { AffirmationService } from "@strive/exercises/affirmation/+state/affirmation.service";
 import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
 import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
-import { AuthModalModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
+import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { debounceTime, of, Subscription, switchMap, tap } from "rxjs";
@@ -157,7 +157,7 @@ export class AffirmationsComponent implements OnDestroy {
 
   openAuthModal() {
     this.modalCtrl.create({
-      component: AuthModalModalComponent,
+      component: AuthModalComponent,
       componentProps: {
         authSegment: enumAuthSegment.login
       }

@@ -11,7 +11,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
-import { AuthModalModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { smartJoin } from '@strive/utils/helpers';
 import { SupportDecisionComponent } from '@strive/support/modals/decision/decision.component';
 
@@ -73,7 +73,7 @@ export class NotificationComponent {
       }).then(modal => modal.present())
     } else {
       this.modalCtrl.create({
-        component: AuthModalModalComponent,
+        component: AuthModalComponent,
         componentProps: {
           authSegment: enumAuthSegment.login
         }
