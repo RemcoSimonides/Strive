@@ -1,0 +1,8 @@
+<h1>Page not found</h1>
+<p>Everyone gets off track of their goal sometimes. It's important to get back on quickly as you can.</p>
+<p><a routerLink="/">Go to home</a></p>
+
+
+<ng-container *ngIf="hasBack">
+  <ion-button (click)="goBack()">Go back</ion-button>
+</ng-container>
