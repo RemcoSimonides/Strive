@@ -65,7 +65,9 @@ export class ProfileComponent implements OnInit {
       tap(user => {
         if (!this.profileId && user) {
           // after logging in on your profile page
+          this.profileId = user.uid
           this.location.replaceState(`/profile/${user.uid}`)
+          this.load()
         }
       }),
       map(user => user?.uid === this.profileId),
@@ -80,25 +82,27 @@ export class ProfileComponent implements OnInit {
       map(spectator => spectator?.isSpectator ?? false)
     )
 
-    if (this.profileId) {
-      this.profile$ = this.user.valueChanges(this.profileId).pipe(
-        tap(profile => {
-          if (profile) {
-            this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
-          }
-        })
-      )
+    if (this.profileId) this.load()
+  }
 
-      this.achievingGoals$ = this.isOwner$.pipe(
-        distinctUntilChanged(),
-        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !isOwner)),
-      )
-      this.supportingGoals$ = this.isOwner$.pipe(
-        distinctUntilChanged(),
-        switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner)),
-        map(values => values.map(value => value.goal))
-      )
-    }
+  load() {
+    this.profile$ = this.user.valueChanges(this.profileId).pipe(
+      tap(profile => {
+        if (profile) {
+          this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
+        }
+      })
+    )
+
+    this.achievingGoals$ = this.isOwner$.pipe(
+      distinctUntilChanged(),
+      switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !isOwner)),
+    )
+    this.supportingGoals$ = this.isOwner$.pipe(
+      distinctUntilChanged(),
+      switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner)),
+      map(values => values.map(value => value.goal))
+    )
   }
 
   ionViewDidEnter() { 

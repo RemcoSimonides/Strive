@@ -16,7 +16,12 @@ export class TabsComponent {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd), startWith({ url: this.router.url })),
     this.user.user$.pipe(map(user => user?.uid))
   ]).pipe(
-    map(([nav, uid]) => uid ? nav['url'] === `/profile/${uid}` : nav['url'] === '/profile/')
+    map(([nav, uid]) => {
+      const url = nav['url']
+      if (url === '/profile' || url === '/profile/') return true
+      if (uid) return url === `/profile/${uid}`
+      return false
+    })
   );
 
   constructor(

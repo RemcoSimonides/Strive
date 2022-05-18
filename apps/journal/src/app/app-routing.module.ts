@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'goal/:id', loadChildren: () => import('./pages/goal/goal-view/goal-view.module').then(m => m.GoalViewPageModule) },
   { path: 'notifications', loadChildren: () => import('./pages/feed/notifications/notifications.module').then(m => m.NotificationsModule) },
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
-  { path: 'profile', redirectTo: 'profile/'},
+  { path: 'profile', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'settings', loadChildren: () => import('@strive/user/user/components/settings/settings.module').then(m => m.SettingsPageModule)},
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageModule) },
