@@ -1,9 +1,8 @@
-import { FieldValue } from '@firebase/firestore-types';
 
 export interface DailyGratefulness {
   id?: string;
   on: boolean;
   time: Date;
-  createdAt?: FieldValue;
-  updatedAt?: FieldValue;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

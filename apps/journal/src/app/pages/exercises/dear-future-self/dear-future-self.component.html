@@ -9,16 +9,72 @@
 
 <ion-content class="ion-padding">
   <main>
-    <h1>This exercise is coming soon</h1>
-    <h2 *ngIf="(screensize.isMobile$ | async) === false">Dear Future Self</h2>
+    <h1 *ngIf="(screensize.isMobile$ | async) === false">Dear Future Self</h1>
     <p>
-      Write a message to yourself and receive it (far) in the future.
-      We can inspire you, or freely write a message yourself
+      Write a message to yourself and receive it (far) in the future. You'll be amazed with how much came true.
+      <span class="read-more" (click)="openExplanation()">Learn more...</span>
     </p>
-    <p>
-      Describe a day in the life of yourself in 10 years.
-      Be very detailed. What time do you wake up? What do you have for breakfast?
-      Do you have to make breakfast for your children? If yes, how many?
-    </p>  
+
+    <ion-card class="ion-padding">
+      <section>
+        <h5>Your message</h5>
+        <ion-item>
+          <ion-textarea [formControl]="description" autoGrow></ion-textarea>
+        </ion-item>
+      </section>
+  
+      <section *ngIf="mode === 'duration'">
+        <h5>Deliver in</h5>
+        <article fxLayout="row wrap" fxLayoutGap="8px">
+          <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" (click)="duration = 2">2 Years</ion-button>
+          <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" (click)="duration = 5">5 Years</ion-button>
+          <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" (click)="duration = 10">10 Years</ion-button>
+          <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
+        </article>
+      </section>
+  
+      <section *ngIf="mode === 'date'">
+        <h5>Deliver on</h5>
+        <ion-datetime presentation="date" [formControl]="date" [min]="min" [max]="max"></ion-datetime>
+        <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
+      </section>
+
+      <ion-button expand="block" (click)="send()">Send Message</ion-button>
+    </ion-card>
+
+    <ng-container *ngIf="pendingMessages$ | async as pendingMessages">
+      <ng-container *ngIf="pendingMessages.length">
+        <ion-list class="pending-list">
+          <h5>Pending Messages</h5>
+          <ng-container *ngFor="let message of pendingMessages">
+            <ion-item>
+              <ion-icon name="mail-outline"></ion-icon>
+              <article fxLayout="column">
+                <span>Delivered in {{ message.deliveryDate | timeToGo }}</span>
+                <small>Sent {{ message.createdAt | timeAgo }}</small>
+              </article>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="deliveredMessages$ | async as deliveredMessages">
+      <ng-container *ngIf="deliveredMessages.length">
+        <ion-list>
+          <h5>Delivered Messages</h5>
+          <ng-container *ngFor="let message of deliveredMessages">
+            <ion-item>
+              <ion-icon name="mail-open-outline"></ion-icon>
+              <article fxLayout="column">
+                <span>Delivered on {{ message.deliveryDate | date }}</span>
+                <small>Sent on {{ message.createdAt | date }}</small>
+              </article>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </ng-container>
+    </ng-container>
+
   </main>
 </ion-content>

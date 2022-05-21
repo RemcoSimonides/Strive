@@ -24,7 +24,7 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
     return setting
   }
 
-  getDailyGratefulnessSettings$(uid: string): Observable<DailyGratefulness> {
+  getSettings$(uid: string): Observable<DailyGratefulness> {
     return this.valueChanges('DailyGratefulness', { uid })
   }
 

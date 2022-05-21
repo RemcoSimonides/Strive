@@ -12,6 +12,10 @@ h1 {
   color: var(--ion-color-primary);
 }
 
+.read-more {
+  cursor: pointer;
+}
+
 ion-list {
   border-radius: 12px;
   overflow: hidden;

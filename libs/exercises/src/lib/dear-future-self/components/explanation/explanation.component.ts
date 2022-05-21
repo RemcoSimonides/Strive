@@ -1,14 +1,14 @@
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener } from "@angular/core";
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController } from "@ionic/angular";
 
 @Component({
-  selector: 'exercise-affirmation-explanation',
-  templateUrl: 'explanation.component.html',
+  selector: 'exercises-dear-future-self-explanation',
+  templateUrl: './explanation.component.html',
   styleUrls: ['./explanation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AffirmationExplanationComponent {
+export class DearFutureSelfExplanationComponent {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.popoverCtrl.dismiss()

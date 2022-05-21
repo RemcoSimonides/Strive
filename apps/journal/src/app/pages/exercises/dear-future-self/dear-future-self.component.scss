@@ -7,3 +7,43 @@ main {
   max-width: 700px;
   margin: auto;
 }
+
+ion-card {
+  border-radius: 12px;
+
+  section {
+    margin-bottom: 24px;
+
+    ion-item {
+      --highlight-background: var(--ion-color-primary); 
+    }
+
+    ion-datetime {
+      border-radius: 12px;
+    }
+  }
+}
+
+h5 {
+  color: var(--ion-color-primary);
+}
+
+ion-list {
+  border-radius: 12px;
+
+  h5 {
+    margin-left: 16px;
+  }
+
+  article {
+    margin-left: 12px;
+  }
+}
+
+.pending-list {
+  margin-bottom: 12px;
+}
+
+.read-more {
+  cursor: pointer;
+}
