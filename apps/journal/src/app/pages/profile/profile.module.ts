@@ -22,6 +22,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module';
+import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module';
 
 
 const routes: Routes = [
@@ -44,7 +45,8 @@ const routes: Routes = [
     StatusPipeModule,
     GoalOptionsModule,
     UpsertGoalModalModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    EditProfileImagePopoverModule
   ],
   declarations: [
     ProfileComponent

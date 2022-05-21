@@ -62,7 +62,7 @@
 
       </ion-card>
       <article fxLayout fxLayoutAlign="center end" class="img-container">
-        <img [ref]="profile.photoURL" asset="profile.png" alt="profile picture"/>
+        <img [ref]="profile.photoURL" asset="profile.png" alt="profile picture" (click)="editProfileImage(profile, $event)"/>
       </article>
     </section>
 

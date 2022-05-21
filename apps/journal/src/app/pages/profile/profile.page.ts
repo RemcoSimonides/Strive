@@ -23,6 +23,7 @@ import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
+import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component';
 
 @Component({
   selector: 'journal-profile',
@@ -126,6 +127,21 @@ export class ProfileComponent implements OnInit {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
+  }
+
+  async editProfileImage(user: User, ev: UIEvent) {
+    if (!this._isOwner.value) return
+    const popover = await this.popoverCtrl.create({
+      component: EditProfileImagePopoverComponent,
+      componentProps: { storagePath: user.photoURL },
+      event: ev
+    })
+    // popover.onDidDismiss().then((imageURL => {
+    //   if (imageURL && imageURL.data) {
+    //     this.profileForm.photoURL.setValue(imageURL.data.toString())
+    //   }
+    // }))
+    popover.present()
   }
 
   createGoal() {
