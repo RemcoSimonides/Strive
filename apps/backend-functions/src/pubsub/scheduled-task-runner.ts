@@ -7,8 +7,9 @@ import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessRem
 import { logger } from 'firebase-functions';
 import { getDocument } from '../shared/utils';
 import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface';
-import { sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self';
+import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self';
 import { DearFutureSelf } from '@strive/exercises/dear-future-self/+state/dear-future-self.firestore';
+import { Personal } from '@strive/user/user/+state/user.firestore';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -102,11 +103,10 @@ async function userExerciseDailyGratefulnessReminderHandler(options: ScheduledTa
 }
 
 async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {
-
   const dearFutureSelf = await getDocument<DearFutureSelf>(`Users/${options.userId}/Exercises/DearFutureSelf`)
   const message = dearFutureSelf.messages[options.index];
-  logger.log('message: ', message)
+  const personal = await getDocument<Personal>(`Users/${options.userId}/Personal/${options.userId}`)
 
-  // send push notification
-  sendDearFutureSelfPushNotification(options.userId, message)
+  sendDearFutureSelfPushNotification(personal, message)
+  sendDearFutureSelfEmail(personal, message.description)
 }

@@ -1,7 +1,8 @@
 
 // Sendgrid Emails
 export const templateIds = {
-  monthlyGoalReminder: 'd-709a6094be254533a25b421dfad30f9a'
+  monthlyGoalReminder: 'd-709a6094be254533a25b421dfad30f9a',
+  dearFutureSelfMessage: 'd-dee467720bd04293bb396da7cb090e84'
 }
 
 /**
@@ -10,13 +11,12 @@ export const templateIds = {
  * Presently, there is only the Reset Password email, the Verification Email and the first invitation email with credentials that are mandatory
 */
 export const groupIds = {
-  monthlyGoalReminder: 18356,
   // This is for letting user unsubscribe from every email except the critical ones as reset password.
-  unsubscribeAll: 15120,
+  unsubscribeAll: 18356,  
   // forceUnsubscribeAll : if we ever need a group to unsubscribe from all email even critical, we will use this namming
   // Critical emails that we don't want users to unsusbcribe
   criticalsEmails: 15136,
   // Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
   // Note, only "text" emails (as opposition to "html") will remove the unsubscribe link
-  noUnsubscribeLink: 0
+  // noUnsubscribeLink: 0
 }
