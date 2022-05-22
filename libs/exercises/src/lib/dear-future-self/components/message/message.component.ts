@@ -1,19 +1,22 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input } from '@angular/core';
 import { Location } from '@angular/common';
-import { PopoverController } from "@ionic/angular";
+import { PopoverController } from '@ionic/angular';
+import { Message } from '../../+state/dear-future-self.firestore';
 
 @Component({
-  selector: 'exercises-dear-future-self-explanation',
-  templateUrl: './explanation.component.html',
-  styleUrls: ['./explanation.component.scss'],
+  selector: 'exercises-dear-future-self-message',
+  templateUrl: './message.component.html',
+  styleUrls: ['./message.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DearFutureSelfExplanationComponent {
+export class MessagePopoverComponent {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.popoverCtrl.dismiss()
   }
   @HostBinding() popover: HTMLIonPopoverElement
+
+  @Input() message: Message
 
   constructor(
     private location: Location,

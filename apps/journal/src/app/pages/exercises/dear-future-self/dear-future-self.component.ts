@@ -5,8 +5,10 @@ import { Message } from "@strive/exercises/dear-future-self/+state/dear-future-s
 import { DearFutureSelfService } from "@strive/exercises/dear-future-self/+state/dear-future-self.service";
 
 import { DearFutureSelfExplanationComponent } from "@strive/exercises/dear-future-self/components/explanation/explanation.component";
+import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component';
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
+
 import { addDays, addYears, endOfYear, format, isFuture, isPast } from "date-fns";
 import { map, Observable, of, shareReplay, switchMap } from "rxjs";
 
@@ -65,8 +67,11 @@ export class DearFutureSelfComponent {
       deliveryDate = new Date(this.date.value)
     }
 
+    // saving line breaks
+    const description = this.description.value.replace(/\n\r?/g, '<br />');
+
     const message: Message = {
-      description: this.description.value,
+      description,
       deliveryDate,
       createdAt: new Date()
     }
@@ -76,6 +81,14 @@ export class DearFutureSelfComponent {
     this.description.reset(initial)
     this.date.reset()
     this.duration = undefined
+  }
+
+  openMessage(message: Message) {
+    this.popoverCtrl.create({
+      component: MessagePopoverComponent,
+      componentProps: { message },
+      cssClass: 'explanation_popover_class'
+    }).then(popover => popover.present())
   }
 
   openExplanation() {
