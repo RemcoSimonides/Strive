@@ -6,7 +6,9 @@ import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
 import { logger } from 'firebase-functions';
 import { getDocument } from '../shared/utils';
-import { enumWorkerType } from '../shared/scheduled-task/scheduled-task.interface';
+import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface';
+import { sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self';
+import { DearFutureSelf } from '@strive/exercises/dear-future-self/+state/dear-future-self.firestore';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -60,14 +62,15 @@ const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
-  userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options)
+  userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options),
+  userExerciseDearFutureSelfMessage: (options) => userExerciseDearFutureSelfMessageHandler(options)
 }
 
-function deleteInviteLinkGoal(options) {
+function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['options']) {
   return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
-async function milestoneDeadlineHandler(options) {
+async function milestoneDeadlineHandler(options: ScheduledTaskMilestoneDeadline['options']) {
 
   // send notification to achievers
   await sendNotificationMilestoneDeadlinePassed(options.goalId, options.milestoneId)
@@ -78,7 +81,7 @@ async function milestoneDeadlineHandler(options) {
   })
 }
 
-async function userExerciseAffirmationsHandler(options) {
+async function userExerciseAffirmationsHandler(options: ScheduledTaskUserExerciseAffirmations['options']) {
   // get affirmation
   const affirmations = await getDocument<Affirmations>(`Users/${options.userId}/Exercises/Affirmations`)
 
@@ -89,11 +92,21 @@ async function userExerciseAffirmationsHandler(options) {
   scheduleNextAffirmation(options.userId, affirmations)
 }
 
-async function userExerciseDailyGratefulnessReminderHandler(options) {
+async function userExerciseDailyGratefulnessReminderHandler(options: ScheduledTaskUserExerciseDailyGratefulness['options']) {
   // send push notification
   sendDailyGratefulnessPushNotification(options.userId)
 
   // reschedule task for tomorrow
   logger.log('scheduling for tomorrow userExerciseDailyGratefulnessReminderHandler')
   scheduleNextDailyGratefulnessReminder(options.userId)
+}
+
+async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {
+
+  const dearFutureSelf = await getDocument<DearFutureSelf>(`Users/${options.userId}/Exercises/DearFutureSelf`)
+  const message = dearFutureSelf.messages[options.index];
+  logger.log('message: ', message)
+
+  // send push notification
+  sendDearFutureSelfPushNotification(options.userId, message)
 }

@@ -34,7 +34,7 @@ export class DearFutureSelfComponent {
 
   private messages$: Observable<Message[]> = this.user.user$.pipe(
     switchMap(user => user
-      ? this.dearFutureSelfService.getSettings$(user.uid).pipe(map(settings => settings.messages))
+      ? this.dearFutureSelfService.getSettings$(user.uid).pipe(map(settings => settings?.messages ?? []))
       : of([])
     ),
     shareReplay({ bufferSize: 1, refCount: true })

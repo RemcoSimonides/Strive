@@ -18,7 +18,7 @@ export class DearFutureSelfService extends FireCollection<DearFutureSelf> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf {
-    if (!snapshot.exists) return
+    if (!snapshot.exists()) return
     const setting = { ...snapshot.data(), id: snapshot.id }
     setting.messages = setting.messages.map(message => {
       message.createdAt = (message.createdAt as Timestamp).toDate()

@@ -8,6 +8,7 @@ export { scheduledEmailRunner } from './pubsub/email/email';
 export { userSpectatorChangeHandler, userSpectatorCreatedHandler } from './firestore/users/user-spectators/user-spectator';
 export { affirmationsCreatedHandler, affirmationsChangeHandler } from './firestore/users/exercises/affirmation';
 export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler } from './firestore/users/exercises/daily_gratefulness';
+export { dearFutureSelfCreatedHandler, dearFutureSelfChangedHandler } from './firestore/users/exercises/dear_future_self';
 export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user';
 export { notificationCreatedHandler, notificationChangeHandler, notificationDeletedHandler } from './firestore/users/notifications/notification';
 

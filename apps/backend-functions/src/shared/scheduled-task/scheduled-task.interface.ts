@@ -16,6 +16,7 @@ export enum enumWorkerType {
   goalDeadline = 'goalDeadline',
   userExerciseAffirmation = 'userExerciseAffirmation',
   userExerciseDailyGratefulnessReminder = 'userExerciseDailyGratefulnessReminder',
+  userExerciseDearFutureSelfMessage = 'userExerciseDearFutureSelfMessage'
 }
 
 export interface ScheduledTaskGoalInviteLinkDeadline extends ScheduledTaskBase {
@@ -47,5 +48,12 @@ export interface ScheduledTaskUserExerciseAffirmations extends ScheduledTaskBase
 export interface ScheduledTaskUserExerciseDailyGratefulness extends ScheduledTaskBase {
   options: {
     userId: string;
+  };
+}
+
+export interface ScheduledTaskUserExerciseDearFutureSelfMessage extends ScheduledTaskBase {
+  options: {
+    userId: string;
+    index: number;
   };
 }

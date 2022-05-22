@@ -18,7 +18,7 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness {
-    if (!snapshot.exists) return
+    if (!snapshot.exists()) return
     const setting = { ...snapshot.data(), id: snapshot.id }
     setting.time = (setting.time as any).toDate()
     return setting
