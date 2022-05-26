@@ -1,7 +1,7 @@
 import { db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
-import { createUser, User } from '@strive/user/user/+state/user.firestore';
+import { createUser, User, createUserLink } from '@strive/user/user/+state/user.firestore';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
@@ -36,21 +36,28 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
     const after = createUser({ ...snapshot.after.data(), uid: snapshot.after.id })
 
 
-    if (before.username !== after.username) {
+    if (before.username !== after.username || before.photoURL !== after.photoURL) {
       if (!after.username || !after.photoURL) {
         // TODO prevent this with firestore rules
-        logger.log('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?')
+        logger.error('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?: ', before, after)
         return
       }
 
       await Promise.all([
         updateGoalStakeholders(uid, after), 
         updateSpectators(uid, after),
-        updateUsernameInNotifications(uid, after)
+        updateNotifications(uid, after),
+        updateSupports(uid, after)
+
+        // update every comment? No, rework data model for this
+
+        // update notificaition support? Rework data model
+        
+        // Milestone achiever? No, rework data model for this
       ])
     }
 
-    if (before.username !== after.username || before.numberOfSpectators !== after.numberOfSpectators) {
+    if (before.username !== after.username || before.photoURL !== after.photoURL || before.numberOfSpectators !== after.numberOfSpectators) {
       logger.log('updating Algolia')
       await updateAlgoliaObject('user', uid, {
         uid,
@@ -95,11 +102,33 @@ async function updateSpectators(uid: string, after: User) {
   return Promise.all(promises)
 }
 
-async function updateUsernameInNotifications(uid: string, after: User) {
+async function updateNotifications(uid: string, after: User) {
   // user notifications and goal notifications
   const snaps = await db.collectionGroup(`Notifications`).where('source.user.uid', '==', uid).get()
-  logger.log(`Username edited. Going to update ${snaps.size} notifications`)
+  logger.log(`User edited. Going to update ${snaps.size} notifications`)
   const batch = db.batch()
-  snaps.forEach(snap => batch.update(snap.ref, { 'source.user.username': after.username }))
+  snaps.forEach(snap => batch.update(snap.ref, {
+    'source.user.username': after.username,
+    'source.user.photoURL': after.photoURL
+  }))
   batch.commit()
+}
+
+async function updateSupports(uid: string, after: User) {
+  const [ receiver, supporter ] = await Promise.all([
+    db.collectionGroup(`Supports`).where('receiver.uid', '==', uid).get(),
+    db.collectionGroup(`Supports`).where('supporter.uid', '==', uid).get()
+  ])
+
+  const user = createUserLink(after)
+
+  // !!! batch can update up to 500 documents. Should update per 500 docs
+  const receiverBatch = db.batch()
+  receiver.forEach(snap => receiverBatch.update(snap.ref, { receiver: user }))
+
+  const supporterBatch = db.batch()
+  supporter.forEach(snap => supporterBatch.update(snap.ref, { supporter: user }));
+
+  receiverBatch.commit()
+  supporterBatch.commit()
 }
