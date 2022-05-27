@@ -3,7 +3,7 @@
     <ion-tab-bar slot="bottom">
 
       <ion-tab-button tab="feed">
-        <ion-icon name="home-sharp"></ion-icon>
+        <ion-icon name="home-sharp" [color]="(feedActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
       </ion-tab-button>
 
       <ion-tab-button tab="explore">
@@ -19,7 +19,7 @@
       </ion-tab-button>
 
       <ion-tab-button [tab]="'profile/' + user.uid">
-        <ion-icon name="person" [color]="(active$ | async) ? 'primary' : 'inherit'"></ion-icon>
+        <ion-icon name="person" [color]="(profileActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
       </ion-tab-button>
   
     </ion-tab-bar>

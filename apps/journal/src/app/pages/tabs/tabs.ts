@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
 @Component({
@@ -12,8 +12,13 @@ import { combineLatest } from 'rxjs';
 })
 export class TabsComponent {
 
-  active$ = combineLatest([
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd), startWith({ url: this.router.url })),
+  private route$ = this.router.events.pipe(
+    filter((event) => event instanceof NavigationEnd), startWith({ url: this.router.url }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
+  profileActive$ = combineLatest([
+    this.route$,
     this.user.user$.pipe(map(user => user?.uid))
   ]).pipe(
     map(([nav, uid]) => {
@@ -23,6 +28,13 @@ export class TabsComponent {
       return false
     })
   );
+
+  feedActive$ = this.route$.pipe(
+    map(nav => {
+      const url = nav['url']
+      return url === '/feed' || url === '/'
+    })
+  )
 
   constructor(
     public user: UserService,
