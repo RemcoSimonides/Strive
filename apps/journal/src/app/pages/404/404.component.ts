@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
   selector: 'strive-page-not-found',
@@ -7,6 +6,4 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
   styleUrls: ['./404.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotfoundComponent {
-  constructor(public screensize: ScreensizeService) {}
-}
+export class NotfoundComponent {}

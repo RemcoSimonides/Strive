@@ -1,7 +1,9 @@
 <ion-header *ngIf="screensize.isMobile$ | async">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ !!profileId ? (profile$ | async)?.username : 'Profile'  }}</ion-title>
     <ng-container *ngIf="isOwner$ | async">

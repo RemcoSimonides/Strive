@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { PopoverController, Platform, NavController, ModalController } from '@ionic/angular';
+import { PopoverController, Platform, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -9,7 +9,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Rxjs
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 // Modals / Popover
 import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
@@ -31,9 +31,6 @@ import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfileComponent implements OnInit {
-  private backBtnSubscription: Subscription
-
-
   private _isOwner = new BehaviorSubject<boolean>(false)
   isOwner$: Observable<boolean>
 
@@ -49,7 +46,6 @@ export class ProfileComponent implements OnInit {
     public user: UserService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
     public platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
@@ -86,6 +82,10 @@ export class ProfileComponent implements OnInit {
     if (this.profileId) this.load()
   }
 
+  back() {
+    this.location.back()
+  }
+
   load() {
     this.profile$ = this.user.valueChanges(this.profileId).pipe(
       tap(profile => {
@@ -105,20 +105,6 @@ export class ProfileComponent implements OnInit {
       map(values => values.map(value => value.goal))
     )
   }
-
-  ionViewDidEnter() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
-        this.navCtrl.back()
-      });
-    }
-  }
-    
-  ionViewWillLeave() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe();
-    }
-  } 
 
   openAuthModal() {
     this.modalCtrl.create({

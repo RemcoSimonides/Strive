@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { DearFutureSelfComponent } from './dear-future-self.component';
 import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component';
 import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component';
+import { HeaderModule } from '@strive/ui/header/header.module';
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
@@ -32,7 +33,8 @@ const routes: Routes = [
     TimeToGoPipeModule,
     TimeAgoPipeModule,
     PageLoadingModule,
-    AuthModalModule
+    AuthModalModule,
+    HeaderModule
   ],
   declarations: [
     DearFutureSelfComponent,

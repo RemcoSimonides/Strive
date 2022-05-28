@@ -1,15 +1,8 @@
-<ion-header *ngIf="screensize.isMobile$ | async">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Affirmations</ion-title>
-  </ion-toolbar>
-</ion-header>
+<strive-header title="Exercises" defaultBack="/profile"></strive-header>
 
 <ion-content class="ion-padding">
   <main>
-    <h2 *ngIf="(screensize.isMobile$ | async) === false">Exercises</h2>
+    <h1 *ngIf="(screensize.isMobile$ | async) === false">Exercises</h1>
 
     <section class="grid">
       <ng-container *ngFor="let exercise of exercises">

@@ -17,6 +17,7 @@ import { DocumentData } from 'rxfire/firestore/interfaces';
 import { orderBy, QueryConstraint } from 'firebase/firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { delay } from '@strive/utils/helpers';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'journal-feed',
@@ -47,6 +48,7 @@ export class FeedComponent implements OnDestroy {
   constructor(
     private db: Firestore,
     private goal: GoalService,
+    private location: Location,
     public user: UserService,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
@@ -100,6 +102,10 @@ export class FeedComponent implements OnDestroy {
     if (this.platform.is('android') || this.platform.is('ios')) {
       this.backBtnSubscription.unsubscribe()
     }
+  }
+
+  back() {
+    this.location.back()
   }
 
   ngOnDestroy() {

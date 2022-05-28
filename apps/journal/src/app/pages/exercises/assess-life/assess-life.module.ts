@@ -7,6 +7,7 @@ import { AssessLifeComponent } from './assess-life.component';
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
+import { HeaderModule } from '@strive/ui/header/header.module';
 
 const routes: Routes = [
   {
@@ -21,7 +22,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
-    AuthModalModule
+    AuthModalModule,
+    HeaderModule
   ],
   declarations: [AssessLifeComponent]
 })
