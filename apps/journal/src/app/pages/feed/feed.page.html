@@ -1,11 +1,6 @@
 <ng-container *ngIf="screensize.isMobile$ | async">
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-button (click)="back()">
-          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-        </ion-button>
-      </ion-buttons>
       <ion-title>Home</ion-title>
       <ion-buttons slot="end">
         <ng-container *ngIf="user.uid else notLoggedInHeader">

@@ -1,6 +1,6 @@
 <ng-container *ngIf="screensize.isMobile$ | async">
   <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar [color]="color">
       <ion-buttons slot="start">
         <ion-button (click)="back()">
           <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
