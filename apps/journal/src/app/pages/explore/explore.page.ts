@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Platform } from '@ionic/angular';
 // Rxjs
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 // Services
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { debounceTime, startWith } from 'rxjs/operators';
 import { exercises } from '@strive/exercises/utils';
 
 @Component({
@@ -27,7 +26,6 @@ export class ExploreComponent implements OnDestroy {
   private _exercises = new BehaviorSubject(exercises)
   exercises$ = this._exercises.asObservable()
 
-  private backBtnSubscription: Subscription
   private searchSubscription = this.searchForm.valueChanges.pipe(
     debounceTime(500),
     startWith(this.searchForm.value)
@@ -59,26 +57,13 @@ export class ExploreComponent implements OnDestroy {
   constructor(
     public algolia: AlgoliaService,
     public screensize: ScreensizeService,
-    private platform: Platform,
-    private seo: SeoService,
+    private seo: SeoService
   ) {
     this.seo.generateTags({ title: `Explore - Strive Journal` })
   }
 
   ngOnDestroy() {
     this.searchSubscription.unsubscribe()
-  }
-
-  ionViewDidEnter() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => { navigator['app'].exitApp(); });
-    }
-  }
-    
-  ionViewWillLeave() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe();
-    }
   }
 
   setType(type: string) {

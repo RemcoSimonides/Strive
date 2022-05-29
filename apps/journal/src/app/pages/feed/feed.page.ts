@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { ModalController, NavController, Platform } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 // Strive
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -42,7 +42,6 @@ export class FeedComponent implements OnDestroy {
 
   goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
 
-  private backBtnSubscription: Subscription
   private userSubscription: Subscription
 
   constructor(
@@ -51,9 +50,7 @@ export class FeedComponent implements OnDestroy {
     private location: Location,
     public user: UserService,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
     private notification: NotificationService,
-    private platform: Platform,
     private seo: SeoService,
     private cdr: ChangeDetectorRef,
     public pwa: PWAService,
@@ -90,18 +87,6 @@ export class FeedComponent implements OnDestroy {
         : of(false)
       )
     )
-  }
-
-  ionViewDidEnter() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => this.navCtrl.navigateRoot('explore'))
-    }
-  }
-
-  ionViewWillLeave() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe()
-    }
   }
 
   back() {

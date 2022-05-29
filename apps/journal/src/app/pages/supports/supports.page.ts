@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, ModalController, PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/+state/support.service';
@@ -32,8 +32,6 @@ export class SupportsComponent {
   constructor(
     public user: UserService,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
-    public platform: Platform,
     private popoverCtrl: PopoverController,
     seo: SeoService,
     private support: SupportService
@@ -66,20 +64,6 @@ export class SupportsComponent {
     this.supportsGotten$ = supportsGet$.pipe(
       map(supports => supports.filter(support => support.status === 'paid'))
     )
-  }
-
-  ionViewDidEnter() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
-        this.navCtrl.navigateRoot('explore')
-      });
-    }
-  }
-    
-  ionViewWillLeave() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe();
-    }
   }
 
   openAuthModal() {

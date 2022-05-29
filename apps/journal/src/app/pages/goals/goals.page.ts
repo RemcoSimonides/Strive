@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, ModalController, PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 
 // Rxjs
-import { Observable, of, Subscription } from 'rxjs'
+import { Observable, of } from 'rxjs'
 import { switchMap } from 'rxjs/operators';
 
 // Services
@@ -28,14 +28,10 @@ export class GoalsComponent {
 
   achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
 
-  private backBtnSubscription: Subscription
-
   constructor(
     public user: UserService,
     private goal: GoalService,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
-    public platform: Platform,
     private popoverCtrl: PopoverController,
     private seo: SeoService
   ) {
@@ -44,20 +40,6 @@ export class GoalsComponent {
     )
 
     this.seo.generateTags({ title: `Bucket List - Strive Journal` })
-  }
-
-  ionViewDidEnter() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => { 
-        this.navCtrl.navigateRoot('explore')
-      });
-    }
-  }
-    
-  ionViewWillLeave() { 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription.unsubscribe();
-    }
   }
 
   openAuthModal() {

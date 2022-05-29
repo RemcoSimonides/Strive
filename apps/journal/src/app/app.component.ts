@@ -42,7 +42,7 @@ export class AppComponent implements OnDestroy {
     // private menuCtrl: MenuController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    public platform: Platform,
+    private platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
     private splashScreen: SplashScreen,

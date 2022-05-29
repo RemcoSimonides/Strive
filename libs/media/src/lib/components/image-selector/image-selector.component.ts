@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SafeUrl } from '@angular/platform-browser';
-import { Platform } from '@ionic/angular';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
@@ -51,10 +50,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
-  constructor(
-    private afStorage: Storage,
-    public platform: Platform
-  ) { }
+  constructor(private afStorage: Storage) { }
 
   ngOnInit() {
     this.resetState();

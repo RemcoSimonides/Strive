@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { PopoverController, Platform, ModalController } from '@ionic/angular';
+import { PopoverController, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
 import { UserService } from '@strive/user/user/+state/user.service';
@@ -46,7 +46,6 @@ export class ProfileComponent implements OnInit {
     public user: UserService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
-    public platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
     private location: Location,

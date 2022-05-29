@@ -1,4 +1,4 @@
-<strive-header title="Bucket List" *ngIf="platform.is('android') || platform.is('ios')"></strive-header>
+<strive-header title="Bucket List"></strive-header>
 
 <ng-container *ngIf="user.uid !== undefined else loading">
   <ng-container *ngIf="!!user.uid else notLoggedIn">

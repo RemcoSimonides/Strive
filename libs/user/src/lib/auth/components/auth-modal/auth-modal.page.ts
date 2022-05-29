@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
 // Ionic
-import { NavParams, LoadingController, Platform, AlertController, ModalController } from '@ionic/angular';
+import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular';
 // Services
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
@@ -82,7 +82,6 @@ export class AuthModalComponent {
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private personal: PersonalService,
-    public platform: Platform,
     private user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
