@@ -82,12 +82,6 @@
             <img asset="logo.png" class="logo">
           </a>
           <section fxLayout>
-            <ion-button fill="clear" routerLink="/" routerDirection="root" routerLinkActive="active-link">
-              Home
-            </ion-button>
-            <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
-              Explore
-            </ion-button>
 
             <ng-container *ngIf="user.user$ | async as user; else notLoggedInMain">
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
@@ -96,12 +90,24 @@
               <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
                 Supports
               </ion-button>
+              <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
+                Explore
+              </ion-button>
+              <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
+                Feed
+              </ion-button>
               <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openUserPopover($event)">
                 <img [ref]="user.photoURL" asset="profile.png"/>
               </ion-avatar>
             </ng-container>
 
             <ng-template #notLoggedInMain>
+              <ion-button fill="clear" routerLink="/" routerDirection="root" routerLinkActive="active-link">
+                Home
+              </ion-button>
+              <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
+                Explore
+              </ion-button>
               <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)">
                 Log In
               </ion-button>

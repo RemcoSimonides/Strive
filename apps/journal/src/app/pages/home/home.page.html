@@ -1,0 +1,40 @@
+<ion-content class="ion-no-padding">
+  <header fxLayout="column" fxLayoutAlign="center center">
+    <h1>Focus on your Long-term Goals</h1>
+    <h2>Journal &#8226; Achieve together &#8226; Support others &#8226; Bucketlist &#8226; Mind Exercises</h2>
+    <ng-container *ngIf="pwa.showInstallPromotion$ | async else signUp">
+      <ion-button (click)="pwa.showInstallPromotion()">install app</ion-button>
+    </ng-container>
+    <ng-template #signUp>
+      <ion-button (click)="openAuthModal(enumAuthSegment.register)">sign up</ion-button>
+    </ng-template>
+  </header>
+
+  <section>
+    <h3>Goals</h3>
+    <p>What do you want to achieve? Describe, visualize it and make a detailed plan. Ask friends and family to support you. And eventually look back on your life and see what you've achieved.</p>
+    <article class="grid">
+      <ng-container *ngFor="let goal of goals$ | async">
+        <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="['/goal/', goal.id]">
+          <small>{{ goal.numberOfAchievers }} achievers - {{ goal.numberOfSupporters}} supporters</small>
+        </strive-small-thumbnail>
+      </ng-container>
+    </article>
+  </section>
+
+  <section>
+    <h3>Exercises</h3>
+    <p>Believing in yourself is your biggest power. Strengten this power by doing these exercises.</p>
+    <article class="grid">
+      <ng-container *ngFor="let exercise of exercises | slice:0:4">
+        <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
+        </strive-small-thumbnail>
+      </ng-container>
+    </article>
+  </section>
+
+  <footer>
+    <a routerLink="/terms">Terms of Use</a><br/>
+    <a routerLink="/privacy-policy">Privacy Policy</a>
+  </footer>
+</ion-content>

@@ -2,20 +2,20 @@
   <ion-tabs>
     <ion-tab-bar slot="bottom">
 
-      <ion-tab-button tab="feed">
-        <ion-icon name="home-sharp" [color]="(feedActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+      <ion-tab-button tab="goals">
+        <ion-icon name="flag" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="supports">
+        <fa-icon [icon]="['fas', 'hand-holding-heart']"></fa-icon>
       </ion-tab-button>
 
       <ion-tab-button tab="explore">
         <ion-icon name="earth-sharp"></ion-icon>
       </ion-tab-button>
 
-      <ion-tab-button tab="goals">
-        <ion-icon name="flag"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="supports">
-        <fa-icon [icon]="['fas', 'hand-holding-heart']"></fa-icon>
+      <ion-tab-button tab="feed">
+        <ion-icon name="analytics-sharp"></ion-icon>
       </ion-tab-button>
 
       <ion-tab-button [tab]="'profile/' + user.uid">

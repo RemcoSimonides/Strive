@@ -14,9 +14,7 @@ import { NotificationModule } from '@strive/notification/components/notification
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
-
-// Pipes
-import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
+import { HeaderRootModule } from '@strive/ui/header-root/header-root.module';
 
 const routes: Routes = [
   {
@@ -32,11 +30,11 @@ const routes: Routes = [
     IonicModule,
     FlexLayoutModule,
     RouterModule.forChild(routes),
-    MilestonePathPipeModule,
     NotificationModule,
     PageLoadingModule,
     ImageModule,
-    SmallThumbnailModule
+    SmallThumbnailModule,
+    HeaderRootModule
   ],
   declarations: [
     FeedComponent,

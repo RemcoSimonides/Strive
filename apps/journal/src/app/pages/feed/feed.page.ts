@@ -1,23 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { DocumentData } from 'rxfire/firestore/interfaces';
+import { orderBy, QueryConstraint } from 'firebase/firestore';
 // Strive
+import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAfter, where } from '@angular/fire/firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { Notification } from '@strive/notification/+state/notification.firestore';
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { collection, endBefore, Firestore, getDocs, limit, query, Query, startAfter, where } from '@angular/fire/firestore';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
-import { exercises } from '@strive/exercises/utils';
-import { PWAService } from '@strive/utils/services/pwa.service';
-import { DocumentData } from 'rxfire/firestore/interfaces';
-import { orderBy, QueryConstraint } from 'firebase/firestore';
 import { createNotification } from '@strive/notification/+state/notification.model';
 import { delay } from '@strive/utils/helpers';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'journal-feed',
@@ -35,30 +30,22 @@ export class FeedComponent implements OnDestroy {
   notifications$ = this._notifications.asObservable()
 
   enumAuthSegment = enumAuthSegment
-  exercises = exercises
   
   decisions$: Observable<Notification[]>
-  unreadNotifications$: Observable<boolean>
 
-  goals$ = this.goal.valueChanges(['kWqyr9RQeroZ1QjsSmfU', 'pGvDUf2aWP7gt5EnIEjt', 'UU9oRpCmKIljnTy4JFlL', 'NJQ4AwTN7y0o7Dx0NoNB'])
-
-  private userSubscription: Subscription
+  private sub: Subscription
 
   constructor(
     private db: Firestore,
-    private goal: GoalService,
-    private location: Location,
     public user: UserService,
     private modalCtrl: ModalController,
     private notification: NotificationService,
     private seo: SeoService,
-    private cdr: ChangeDetectorRef,
-    public pwa: PWAService,
-    public screensize: ScreensizeService
+    private cdr: ChangeDetectorRef
   ) {
-    this.seo.generateTags({ title: `Strive Journal` })
+    this.seo.generateTags({ title: `Feed - Strive Journal` })
 
-    this.userSubscription = this.user.user$.subscribe(user => {
+    this.sub = this.user.user$.subscribe(user => {
       if (user) {
         const ref = collection(this.db, `Users/${user.uid}/Notifications`)
         const constraints = [
@@ -80,21 +67,10 @@ export class FeedComponent implements OnDestroy {
         ? this.notification.valueChanges([where('needsDecision', '==', true)], { uid: user.uid })
         : of([])),
     )
-
-    this.unreadNotifications$ = this.user.user$.pipe(
-      switchMap(user => user
-        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: user.uid }).pipe(map(notifications => !!notifications.length))
-        : of(false)
-      )
-    )
-  }
-
-  back() {
-    this.location.back()
   }
 
   ngOnDestroy() {
-    this.userSubscription.unsubscribe()
+    this.sub.unsubscribe()
   }
 
   openAuthModal(authSegment: enumAuthSegment) {

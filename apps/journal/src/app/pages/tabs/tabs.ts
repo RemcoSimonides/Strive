@@ -29,10 +29,10 @@ export class TabsComponent {
     })
   );
 
-  feedActive$ = this.route$.pipe(
+  homeActive$ = this.route$.pipe(
     map(nav => {
       const url = nav['url']
-      return url === '/feed' || url === '/'
+      return url === '/goals' || url === '/'
     })
   )
 

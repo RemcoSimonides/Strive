@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PopoverController, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 // Rxjs
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, of } from 'rxjs';
+import { distinctUntilChanged, map, pluck, shareReplay, startWith, switchMap } from 'rxjs/operators';
 // Modals / Popover
 import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
@@ -21,7 +20,6 @@ import { Goal } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 // Other
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { distinctUntilChanged, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component';
 
@@ -30,17 +28,63 @@ import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfileComponent implements OnInit {
-  private _isOwner = new BehaviorSubject<boolean>(false)
-  isOwner$: Observable<boolean>
+export class ProfileComponent {
+  private profileId$: Observable<string | undefined> = combineLatest([
+    this.route.params.pipe(pluck('id')),
+    this.user.user$
+  ]).pipe(
+    map(([profileId, user]) => profileId ? profileId : user?.uid),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
 
-  isSpectator$: Observable<boolean>
+  profile$ = this.profileId$.pipe(
+    switchMap(profileId => profileId ? this.user.valueChanges(profileId) : of(undefined)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
 
-  profileId: string
-  profile$: Observable<User>
+  isOwner$ = combineLatest([
+    this.user.user$,
+    this.profileId$
+  ]).pipe(
+    map(([user, profileId]) => user?.uid === profileId),
+    startWith(false),
+    distinctUntilChanged(),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
 
-  achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
-  supportingGoals$: Observable<Goal[]>
+  isSpectator$ = combineLatest([
+    this.user.user$,
+    this.profileId$
+  ]).pipe(
+    switchMap(([user, profileId]) => user ? this.userSpectateService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
+    map(spectator => spectator?.isSpectator ?? false)
+  )
+
+  achievingGoals$ = combineLatest([
+    this.isOwner$,
+    this.profileId$
+  ]).pipe(
+    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, enumGoalStakeholder.achiever, !isOwner)),
+  )
+
+  supportingGoals$ = combineLatest([
+    this.isOwner$,
+    this.profileId$
+  ]).pipe(
+    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, enumGoalStakeholder.supporter, !isOwner)),
+    map(values => values.map(value => value.goal))
+  )
+
+  title$ = combineLatest([
+    this.profile$,
+    this.isOwner$
+  ]).pipe(
+    map(([profile, isOwner]) => {
+      const title = isOwner || !profile ? 'Your Profile' : profile.username
+      this.seo.generateTags({ title: `${title} - Strive Journal` })
+      return title
+    })
+  )
 
   constructor(
     public user: UserService,
@@ -48,62 +92,9 @@ export class ProfileComponent implements OnInit {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
-    private location: Location,
     private seo: SeoService,
-    private userSpectateService: UserSpectateService,
-    public screensize: ScreensizeService
-  ) { }
-
-  ngOnInit() {
-    this.profileId = this.route.snapshot.paramMap.get('id')
-
-    this.isOwner$ = this.user.user$.pipe(
-      tap(user => {
-        if (!this.profileId && user) {
-          // after logging in on your profile page
-          this.profileId = user.uid
-          this.location.replaceState(`/profile/${user.uid}`)
-          this.load()
-        }
-      }),
-      map(user => user?.uid === this.profileId),
-      startWith(false),
-      distinctUntilChanged(),
-      shareReplay({ bufferSize: 1, refCount: true }),
-      tap(isOwner => this._isOwner.next(isOwner))
-    )
-
-    this.isSpectator$ = this.user.user$.pipe(
-      switchMap(user => user ? this.userSpectateService.valueChanges(user.uid, { uid: this.profileId }) : of(createSpectator())),
-      map(spectator => spectator?.isSpectator ?? false)
-    )
-
-    if (this.profileId) this.load()
-  }
-
-  back() {
-    this.location.back()
-  }
-
-  load() {
-    this.profile$ = this.user.valueChanges(this.profileId).pipe(
-      tap(profile => {
-        if (profile) {
-          this.seo.generateTags({ title: `${profile.username} - Strive Journal` })
-        }
-      })
-    )
-
-    this.achievingGoals$ = this.isOwner$.pipe(
-      distinctUntilChanged(),
-      switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.achiever, !isOwner)),
-    )
-    this.supportingGoals$ = this.isOwner$.pipe(
-      distinctUntilChanged(),
-      switchMap(isOwner => this.goalService.getStakeholderGoals(this.profileId, enumGoalStakeholder.supporter, !isOwner)),
-      map(values => values.map(value => value.goal))
-    )
-  }
+    private userSpectateService: UserSpectateService
+  ) {}
 
   openAuthModal() {
     this.modalCtrl.create({
@@ -115,7 +106,8 @@ export class ProfileComponent implements OnInit {
   }
 
   async editProfileImage(user: User, ev: UIEvent) {
-    if (!this._isOwner.value) return
+    const isOwner = await firstValueFrom(this.isOwner$)
+    if (!isOwner) return
     const popover = await this.popoverCtrl.create({
       component: EditProfileImagePopoverComponent,
       componentProps: { storagePath: user.photoURL },
@@ -146,9 +138,10 @@ export class ProfileComponent implements OnInit {
     }).then(popover => popover.present())
   }
 
-  toggleSpectate(spectate) {
+  async toggleSpectate(spectate) {
     if (this.user.uid) {
-      this.userSpectateService.toggleSpectate(this.profileId, spectate)
+      const profileId = await firstValueFrom(this.profileId$)
+      this.userSpectateService.toggleSpectate(profileId, spectate)
     } else {
       this.openAuthModal()
     }

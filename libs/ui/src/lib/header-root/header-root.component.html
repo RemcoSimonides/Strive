@@ -1,0 +1,25 @@
+<ng-container *ngIf="screensize.isMobile$ | async">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title> {{ title }} </ion-title>
+      <ion-buttons slot="end">
+        <ng-container *ngIf="user.isLoggedIn$ | async else notLoggedIn">
+          <ion-button routerLink="/notifications">
+            <ion-icon slot="icon-only" name="notifications-outline" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
+          </ion-button>
+          <ion-button routerLink="/settings">
+            <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+          </ion-button>
+        </ng-container>
+        <ng-template #notLoggedIn>
+          <ion-button color="primary" (click)="openAuthModal(enumAuthSegment.login)">
+            Log in
+          </ion-button>
+          <ion-button color="primary" (click)="openAuthModal(enumAuthSegment.register)">
+            Sign up
+          </ion-button>
+        </ng-template>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+</ng-container>

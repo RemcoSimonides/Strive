@@ -1,8 +1,6 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-// Ionic
-import { Platform } from '@ionic/angular'
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({

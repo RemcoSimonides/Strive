@@ -1,20 +1,13 @@
-<ion-header *ngIf="screensize.isMobile$ | async">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="back()">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>{{ !!profileId ? (profile$ | async)?.username : 'Profile'  }}</ion-title>
-    <ng-container *ngIf="isOwner$ | async">
-      <ion-buttons slot="end">
-        <ion-button routerLink="/settings">
-          <ion-icon slot="icon-only" name="settings"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ng-container>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="title$ | async as title">
+
+  <ng-container *ngIf="isOwner$ | async else notOwner">
+    <strive-header-root [title]="title"></strive-header-root>
+  </ng-container>
+  <ng-template #notOwner>
+    <strive-header [title]="title"></strive-header>
+  </ng-template>
+
+</ng-container>
 
 <ion-content class="ion-no-padding">
   <ng-template #loading>

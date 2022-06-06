@@ -8,6 +8,7 @@ import { DearFutureSelfExplanationComponent } from "@strive/exercises/dear-futur
 import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component';
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
+import { SeoService } from "@strive/utils/services/seo.service";
 
 import { addDays, addYears, endOfYear, format, isFuture, isPast } from "date-fns";
 import { map, Observable, of, shareReplay, switchMap } from "rxjs";
@@ -52,8 +53,11 @@ export class DearFutureSelfComponent {
     private dearFutureSelfService: DearFutureSelfService,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
+    private seo: SeoService,
     private user: UserService
-  ) {}
+  ) {
+    this.seo.generateTags({ title: 'Dear Future Self - Strive Journal' })
+  }
 
   async send() {
     // To do show error message if date is not set. Selecting date can be quite difficult

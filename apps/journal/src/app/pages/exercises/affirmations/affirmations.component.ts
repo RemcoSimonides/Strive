@@ -9,6 +9,7 @@ import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
 import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
+import { SeoService } from "@strive/utils/services/seo.service";
 import { debounceTime, of, Subscription, switchMap, tap } from "rxjs";
 
 function timeFormControls() {
@@ -45,9 +46,11 @@ export class AffirmationsComponent implements OnDestroy {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
+    private seo: SeoService,
     private service: AffirmationService,
     public user: UserService,
   ) {
+    this.seo.generateTags({ title: 'Affirmations - Strive Journal' })
     this.shuffle(this.suggestions)
     this.suggestionsCopy = Object.assign([], this.suggestions)
 

@@ -18,7 +18,7 @@ export class UserService extends FireCollection<User> {
   user: User
   uid: string = undefined
 
-  isLoggedIn$: Observable<boolean>
+  isLoggedIn$ = user(this.auth).pipe(map(user => !!user))
 
   constructor(db: Firestore, private auth: Auth) {
     super(db)
@@ -28,8 +28,6 @@ export class UserService extends FireCollection<User> {
       tap(user => this.user = createUser(user)),
       tap(user => this.uid = user ? user.uid : '')
     )
-
-    this.isLoggedIn$ = user(this.auth).pipe(map(user => !!user))
 
     this.user$.subscribe()
   }

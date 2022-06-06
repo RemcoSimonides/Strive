@@ -1,18 +1,18 @@
-<strive-header title="Bucket List"></strive-header>
+<strive-header-root [title]="user.uid ? 'Goals' : 'Home'"></strive-header-root>
 
 <ng-container *ngIf="user.uid !== undefined else loading">
   <ng-container *ngIf="!!user.uid else notLoggedIn">
-    <ion-content class="ion-no-padding">
+    <ion-content class="ion-padding">
 
       <!-- Goals -->
-      <section fxLayout="column">
-        <article fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
-          <h2>Bucket List</h2>
+      <main fxLayout="column">
+        <header fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
+          <h2>Goals</h2>
           <ion-button fill="clear" (click)="createGoal()">
             <ion-icon name="add" slot="start"></ion-icon>
             <span>add goal</span>
           </ion-button>
-        </article>
+        </header>
 
         <ng-container *ngIf="achievingGoals$ | async as achievingGoals; else loading">
           <ng-container *ngIf="achievingGoals.length > 0 else noBucketList">
@@ -43,19 +43,27 @@
             <span class="padding">No goals yet. Create your first.</span>
           </ng-template>
         </ng-container>
-      </section>
 
+        <h2>Exercises</h2>
+        <ion-list class="md">
+          <ng-container *ngFor="let exercise of exercises; let last = last">
+            <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="exercise.link">
+              <ion-thumbnail slot="start">
+                <img [asset]="exercise.image"/>
+              </ion-thumbnail>
+              <ion-label>{{ exercise.title }}</ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+
+      </main>
     </ion-content>
   </ng-container>
 </ng-container>
 
 
 <ng-template #notLoggedIn>
-  <section class="not-logged-in">
-    <p>
-        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your goals
-    </p>
-  </section>
+  <journal-home></journal-home>
 </ng-template>
 
 <ng-template #loading>

@@ -13,7 +13,7 @@ import { TabsComponent } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/+state/notification.service';
 import { Unsubscribe } from '@firebase/util';
@@ -92,10 +92,10 @@ export class AppComponent implements OnDestroy {
 
   async openAuthModalOnStartup() {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(async (event: NavigationEnd) => {
-      const isLoggedIn = await this.user.isLoggedIn$.pipe(first()).toPromise()
+      const isLoggedIn = await firstValueFrom(this.user.isLoggedIn$)
       if (isLoggedIn) return
 
-      const doNotShowExact = ['/terms', '/privacy-policy', '/feed', '/']
+      const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
       const doNotShowPartial = ['/goal/']
       const doShowSignUpModalPages = ['/explore']
 

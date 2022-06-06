@@ -1,19 +1,25 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular'
-
-import { Spectator } from '../../+state/spectator.firestore';
 import { UserSpectateService } from '../../+state/spectator.service';
+import { UserService } from '@strive/user/user/+state/user.service';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'user-followers',
   templateUrl: 'followers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class FollowersComponent implements OnInit {
-  spectators: Spectator[] = []
+
+  spectators$ = this.user.user$.pipe(
+    map(user => {
+      const uid = this.router.url.split('/').pop()
+      return uid === 'profile' ? user.uid : uid
+    }),
+    switchMap(uid => this.service.getSpectators(uid))
+  )
 
   @HostListener('window:popstate', ['$event'])
   onPopState() {
@@ -25,18 +31,10 @@ export class FollowersComponent implements OnInit {
     private location: Location,
     private modalCtrl: ModalController,
     private service: UserSpectateService,
-    private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private user: UserService
   ) {
     window.history.pushState(null, null, window.location.href)
-
-    const uid = this.router.url.split('/').pop();
-    if (uid) {
-      this.service.getSpectators(uid).then(spectators => {
-        this.spectators = spectators
-        this.cdr.markForCheck()
-      })
-    }
   }
 
   ngOnInit() {

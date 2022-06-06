@@ -2,15 +2,8 @@
 <ion-content>
   <ion-list mode="md">
     <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none">Install App</ion-item>
-    <ion-list-header>Exercises</ion-list-header>
-    <ng-container *ngFor="let exercise of exercises; let last = last">
-      <ion-item button [routerLink]="exercise.link" [lines]="last ? 'none' : 'inset'">{{ exercise.title }}</ion-item>
-    </ng-container>
-
-
     <ion-list-header>Notification</ion-list-header>
     <ion-item button (click)="pushNotifications()" lines="none">Push Notifications Permission</ion-item>
-    <!-- <ion-item>Notifications</ion-item> -->
 
     <!-- <ion-item>Contact, bugs & suggestions</ion-item> -->
     <ion-list-header>Legal</ion-list-header>

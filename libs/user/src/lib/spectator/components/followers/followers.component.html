@@ -15,7 +15,7 @@
 <ion-content class="ion-no-padding">
 
   <ion-list>
-    <ng-container *ngFor="let spectator of spectators; let last = last">
+    <ng-container *ngFor="let spectator of spectators$ | async; let last = last">
       <ion-item button [lines]="last ? 'none' : 'inset'" (click)="navigateTo(spectator.uid)">
         <ion-avatar slot="start">
           <img asset="profile.png" [ref]="spectator.photoURL">

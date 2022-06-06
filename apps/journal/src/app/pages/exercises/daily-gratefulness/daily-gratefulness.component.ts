@@ -8,6 +8,7 @@ import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { debounceTime, of, switchMap, tap } from "rxjs";
 import { addDays, isPast, set } from 'date-fns'
+import { SeoService } from "@strive/utils/services/seo.service";
 
 @Component({
   selector: 'strive-daily-gratefulness',
@@ -64,9 +65,12 @@ export class DailyGratefulnessComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
     public screensize: ScreensizeService,
+    private seo: SeoService,
     private service: DailyGratefulnessService,
     public user: UserService
-  ) {}
+  ) {
+    this.seo.generateTags({ title: 'Daily Gratefulness - Strive Journal' })
+  }
 
   ngOnDestroy() {
     this.sub.unsubscribe()

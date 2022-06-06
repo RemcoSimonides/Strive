@@ -24,6 +24,8 @@ import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upser
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module';
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module';
 
+import { HeaderRootModule } from '@strive/ui/header-root/header-root.module';
+import { HeaderModule } from '@strive/ui/header/header.module';
 
 const routes: Routes = [
   { path: '', component: ProfileComponent },
@@ -46,7 +48,9 @@ const routes: Routes = [
     GoalOptionsModule,
     UpsertGoalModalModule,
     FontAwesomeModule,
-    EditProfileImagePopoverModule
+    EditProfileImagePopoverModule,
+    HeaderRootModule,
+    HeaderModule
   ],
   declarations: [
     ProfileComponent

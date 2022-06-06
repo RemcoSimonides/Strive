@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 
 // Rxjs
@@ -18,28 +18,33 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
+import { exercises } from '@strive/exercises/utils';
+import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
   selector: 'journal-goals',
   templateUrl: './goals.page.html',
   styleUrls: ['./goals.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalsComponent {
 
   achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
+  exercises = exercises
 
   constructor(
     public user: UserService,
     private goal: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    public screensize: ScreensizeService,
     private seo: SeoService
   ) {
     this.achievingGoals$ = this.user.user$.pipe(
       switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([]))
     )
 
-    this.seo.generateTags({ title: `Bucket List - Strive Journal` })
+    this.seo.generateTags({ title: `Goals - Strive Journal` })
   }
 
   openAuthModal() {
