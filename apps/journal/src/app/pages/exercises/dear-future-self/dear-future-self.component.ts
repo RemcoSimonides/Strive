@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { PopoverController } from "@ionic/angular";
+import { ModalController, PopoverController } from "@ionic/angular";
 import { Message } from "@strive/exercises/dear-future-self/+state/dear-future-self.firestore";
 import { DearFutureSelfService } from "@strive/exercises/dear-future-self/+state/dear-future-self.service";
 
@@ -9,6 +9,7 @@ import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/comp
 import { UserService } from "@strive/user/user/+state/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { SeoService } from "@strive/utils/services/seo.service";
+import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 
 import { addDays, addYears, endOfYear, format, isFuture, isPast } from "date-fns";
 import { map, Observable, of, shareReplay, switchMap } from "rxjs";
@@ -49,8 +50,11 @@ export class DearFutureSelfComponent {
     map(messages => messages.filter(message => isPast(message.deliveryDate as Date)))
   )
 
+  isLoggedIn$ = this.user.isLoggedIn$
+
   constructor(
     private dearFutureSelfService: DearFutureSelfService,
+    private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService,
@@ -60,6 +64,7 @@ export class DearFutureSelfComponent {
   }
 
   async send() {
+    if (!this.user.uid) return
     // To do show error message if date is not set. Selecting date can be quite difficult
     if (!this.duration && !this.date.value) return
     if (!this.description.dirty) return
@@ -100,5 +105,14 @@ export class DearFutureSelfComponent {
       component: DearFutureSelfExplanationComponent,
       cssClass: "explanation_popover_class"
     }).then(popover => popover.present())
+  }
+
+  openAuthModal() {
+    this.modalCtrl.create({
+      component: AuthModalComponent,
+      componentProps: {
+        authSegment: enumAuthSegment.login
+      }
+    }).then(modal => modal.present())
   }
 }
