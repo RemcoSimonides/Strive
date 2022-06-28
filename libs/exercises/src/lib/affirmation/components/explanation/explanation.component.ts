@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
+import { PopoverDirective } from '@strive/utils/directives/popover.directive';
 
 @Component({
   selector: 'exercise-affirmation-explanation',
@@ -8,23 +9,12 @@ import { PopoverController } from '@ionic/angular';
   styleUrls: ['./explanation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AffirmationExplanationComponent {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.popoverCtrl.dismiss()
-  }
-  @HostBinding() popover: HTMLIonPopoverElement
+export class AffirmationExplanationComponent extends PopoverDirective {
 
   constructor(
-    private location: Location,
-    private popoverCtrl: PopoverController
+    protected location: Location,
+    protected popoverCtrl: PopoverController
   ) {
-    window.history.pushState(null, null, window.location.href)
-  }
-
-  async ngOnInit() {
-    this.popover.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
+    super(location, popoverCtrl)
   }
 }

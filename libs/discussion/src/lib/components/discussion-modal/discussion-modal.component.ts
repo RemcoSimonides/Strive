@@ -1,26 +1,28 @@
-import { Component, HostBinding, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, IonContent, ModalController, Platform} from '@ionic/angular';
 import { collection, DocumentData, Firestore, getDocs, limit, orderBy, query, Query, QueryConstraint, startAfter } from '@angular/fire/firestore';
 // Rxjs
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { filter, map, skip } from 'rxjs/operators';
 // Services
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { CommentService } from '@strive/discussion/+state/comment.service';
 // Interfaces
 import { Comment, createComment } from '../../+state/comment.firestore';
 import { Discussion } from '../../+state/discussion.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
+
 import { delay } from '@strive/utils/helpers';
-import { filter, map, skip } from 'rxjs/operators';
-import { CommentService } from '@strive/discussion/+state/comment.service';
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'discussion-page',
   templateUrl: './discussion-modal.component.html',
   styleUrls: ['./discussion-modal.component.scss'],
 })
-export class DiscussionModalComponent implements OnInit, OnDestroy {
+export class DiscussionModalComponent extends ModalDirective implements OnInit, OnDestroy {
   private commentsPerQuery = 20
   private query: Query<DocumentData>
 
@@ -47,33 +49,24 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild(IonContent) contentArea: IonContent
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     public user: UserService,
     private db: Firestore,
     private discussion: DiscussionService,
-    private location: Location,
-    private modalCtrl: ModalController,
+    protected location: Location,
+    protected modalCtrl: ModalController,
     private navParams: NavParams,
     private platform: Platform,
     private commentService: CommentService
   ) {
-    window.history.pushState(null, null, window.location.href)
+    super(location, modalCtrl)
 
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
     this.subs.push(sub)
   }
 
   async ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-
     this.discussionId = this.navParams.get('discussionId')
     this.discussion$ = this.discussion.valueChanges(this.discussionId)
 
@@ -102,10 +95,6 @@ export class DiscussionModalComponent implements OnInit, OnDestroy {
 
     await this.mapAndUpdate([])
     this.contentArea?.scrollToBottom()
-  }
-
-  dismiss() {
-    this.location.back()
   }
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 // Ionic
@@ -11,25 +11,20 @@ import { UserService } from '@strive/user/user/+state/user.service';
 import { PostForm } from '@strive/post/forms/post.form';
 import { createPost } from '@strive/post/+state/post.firestore';
 import { isValidHttpUrl } from '@strive/utils/helpers';
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'post-upsert-modal',
   templateUrl: './upsert-modal.component.html',
   styleUrls: ['./upsert-modal.component.scss'],
 })
-export class UpsertPostModalComponent implements OnInit, OnDestroy {
+export class UpsertPostModalComponent extends ModalDirective implements OnInit, OnDestroy {
   postForm = new PostForm()
   scrapingUrl = false
   
   @Input() postId: string
   @Input() goalId: string
   @Input() milestoneId: string
-  
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
 
   private sub = this.postForm.url.valueChanges.pipe(
     filter(url => isValidHttpUrl(url))
@@ -51,19 +46,15 @@ export class UpsertPostModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private functions: Functions,
-    private location: Location,
-    private modalCtrl: ModalController,
+    protected location: Location,
+    protected modalCtrl: ModalController,
     private postService: PostService,
     private user: UserService,
   ) {
-    window.history.pushState(null, null, window.location.href)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-
     const isEvidence = !!this.postId;
     if (!this.postId) this.postId = this.postService.createId()
     if (!this.goalId) throw new Error('No goal to post the post at')
@@ -73,10 +64,6 @@ export class UpsertPostModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe()
-  }
-
-  dismiss() {
-    this.location.back()
   }
 
   async submitPost() {

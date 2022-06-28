@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
 import { Goal } from "@strive/goal/goal/+state/goal.firestore";
 import { createSubtask, Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
@@ -7,6 +7,7 @@ import { MilestoneService } from "@strive/goal/milestone/+state/milestone.servic
 import { MilestoneForm, SubtaskForm } from "@strive/goal/milestone/forms/milestone.form";
 import { createUserLink } from "@strive/user/user/+state/user.firestore";
 import { UserService } from "@strive/user/user/+state/user.service";
+import { ModalDirective } from "@strive/utils/directives/modal.directive";
 import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
@@ -16,7 +17,7 @@ import { debounceTime } from "rxjs/operators";
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsComponent implements OnInit, OnDestroy {
+export class DetailsComponent extends ModalDirective implements OnInit, OnDestroy {
   private subs: Subscription[] = []
 
   form: MilestoneForm
@@ -29,27 +30,17 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   get canEdit(): boolean { return this.goal?.id && this.isAdmin }
 
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
-
   constructor(
     private alertCtrl: AlertController,
-    private location: Location,
+    protected location: Location,
     private milestoneService: MilestoneService,
-    private modalCtrl: ModalController,
+    protected modalCtrl: ModalController,
     private user: UserService
   ) {
-    window.history.pushState(null, null, window.location.href)
+    super (location, modalCtrl)
   }
 
   ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-
     this.form = new MilestoneForm(this.milestone)
 
     if (this.canEdit) {
@@ -73,10 +64,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe())
-  }
-
-  dismiss() {
-    this.location.back()
   }
 
   updateDeadline(deadline: string) {

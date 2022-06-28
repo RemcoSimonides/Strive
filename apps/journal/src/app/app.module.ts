@@ -37,7 +37,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
-// Directive
 import { ImageModule } from '@strive/media/directives/image.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { PWAService } from '@strive/utils/services/pwa.service';

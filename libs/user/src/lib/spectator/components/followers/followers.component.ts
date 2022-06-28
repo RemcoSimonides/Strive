@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular'
 import { UserSpectateService } from '../../+state/spectator.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { map, switchMap } from 'rxjs';
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'user-followers',
   templateUrl: 'followers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FollowersComponent implements OnInit {
+export class FollowersComponent extends ModalDirective {
 
   spectators$ = this.user.user$.pipe(
     map(user => {
@@ -21,30 +22,14 @@ export class FollowersComponent implements OnInit {
     switchMap(uid => this.service.getSpectators(uid))
   )
 
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
-
   constructor(
-    private location: Location,
-    private modalCtrl: ModalController,
+    protected location: Location,
+    protected modalCtrl: ModalController,
     private service: UserSpectateService,
     private router: Router,
     private user: UserService
   ) {
-    window.history.pushState(null, null, window.location.href)
-  }
-
-  ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-  }
-
-  dismiss() {
-    this.location.back()
+    super(location, modalCtrl)
   }
 
   navigateTo(uid: string) {

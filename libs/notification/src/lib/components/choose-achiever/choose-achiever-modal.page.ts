@@ -1,35 +1,30 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 // Ionic
 import { NavParams, ModalController } from '@ionic/angular';
 // Interfaces
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'notification-choose-achiever-modal',
   templateUrl: './choose-achiever-modal.page.html',
   styleUrls: ['./choose-achiever-modal.page.scss'],
 })
-export class ChooseAchieverModalComponent implements OnInit {
+export class ChooseAchieverModalComponent extends ModalDirective implements OnInit {
   achievers: GoalStakeholder[]
 
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    // would be nice to prevent the navigation too
-    this.modalCtrl.dismiss()
-  }
-
   constructor(
-    private modalCtrl: ModalController,
+    protected modalCtrl: ModalController,
+    protected location: Location,
     private navParams: NavParams
-  ) { }
+  ) {
+    super(location, modalCtrl)
+  }
 
   ngOnInit() {
     this.achievers = this.navParams.get('stakeholders')
-  }
-
-  dismiss() {
-    this.modalCtrl.dismiss()
   }
 
   achieverChosen(achiever: GoalStakeholder) {

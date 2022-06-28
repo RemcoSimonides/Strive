@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
@@ -7,6 +7,7 @@ import { NotificationSupport } from '@strive/support/+state/support.firestore';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { AchieversPopoverComponent } from './achievers/achievers.component';
 import { NotificationService } from '@strive/notification/+state/notification.service';
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'support-decision',
@@ -14,33 +15,17 @@ import { NotificationService } from '@strive/notification/+state/notification.se
   styleUrls: ['./decision.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SupportDecisionComponent implements OnInit {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
-
+export class SupportDecisionComponent extends ModalDirective {
   @Input() achievers: GoalStakeholder[]
   @Input() notification: Notification<SupportDecisionMeta>
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private location: Location,
-    private modalCtrl: ModalController,
+    protected location: Location,
+    protected modalCtrl: ModalController,
     private notificationService: NotificationService
   ) {
-    window.history.pushState(null, null, window.location.href)
-  }
-
-  ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-  }
-
-  dismiss() {
-    this.location.back()
+    super(location, modalCtrl)
   }
 
   async chooseReceiver(support: NotificationSupport) {

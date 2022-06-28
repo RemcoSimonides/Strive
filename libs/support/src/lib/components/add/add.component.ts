@@ -18,13 +18,14 @@ import { orderBy, where } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { SupportOptionsComponent } from '../options/options.component';
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'support-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
 })
-export class AddSupportModalComponent implements OnInit {
+export class AddSupportModalComponent extends ModalDirective implements OnInit {
   origin: 'goal' | 'milestone'
 
   @Input() private goalId: string
@@ -37,28 +38,18 @@ export class AddSupportModalComponent implements OnInit {
 
   support = new SupportForm()
 
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
-
   constructor(
     private goalService: GoalService,
-    private location: Location,
-    private modalCtrl: ModalController,
+    protected location: Location,
+    protected modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private supportService: SupportService,
     public user: UserService
   ) {
-    window.history.pushState(null, null, window.location.href)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-
     this.origin = this.milestone ? 'milestone' : 'goal'
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
@@ -89,10 +80,6 @@ export class AddSupportModalComponent implements OnInit {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
-  }
-
-  dismiss() {
-    this.location.back()
   }
 
   addSupport(goal: Goal) {

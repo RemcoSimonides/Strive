@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Location } from '@angular/common';
 import { PopoverController } from "@ionic/angular";
+import { PopoverDirective } from "@strive/utils/directives/popover.directive";
 
 @Component({
   selector: 'exercises-dear-future-self-explanation',
@@ -8,23 +9,11 @@ import { PopoverController } from "@ionic/angular";
   styleUrls: ['./explanation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DearFutureSelfExplanationComponent {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.popoverCtrl.dismiss()
-  }
-  @HostBinding() popover: HTMLIonPopoverElement
-
+export class DearFutureSelfExplanationComponent extends PopoverDirective {
   constructor(
-    private location: Location,
-    private popoverCtrl: PopoverController
+    protected location: Location,
+    protected popoverCtrl: PopoverController
   ) {
-    window.history.pushState(null, null, window.location.href)
-  }
-
-  ngOnInit() {
-    this.popover.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
+    super(location, popoverCtrl)
   }
 }

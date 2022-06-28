@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { AlertController, ModalController, NavParams } from "@ionic/angular";
@@ -9,6 +9,7 @@ import { combineLatest, Observable, of } from "rxjs";
 import { map, startWith, switchMap } from "rxjs/operators";
 import { FormControl } from "@angular/forms";
 import { delay } from "@strive/utils/helpers";
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'goal-team-modal',
@@ -16,7 +17,7 @@ import { delay } from "@strive/utils/helpers";
   styleUrls: ['./team.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TeamModalComponent implements OnInit {
+export class TeamModalComponent extends ModalDirective implements OnInit {
   goalId: string
 
   stakeholders$: Observable<GoalStakeholder[]>
@@ -26,29 +27,19 @@ export class TeamModalComponent implements OnInit {
 
   filter = new FormControl()
   
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
-  
   constructor(
     private alertCtrl: AlertController,
-    private modalCtrl: ModalController,
+    protected modalCtrl: ModalController,
     private navParams: NavParams,
     private router: Router,
     private stakeholder: GoalStakeholderService,
     private user: UserService,
-    private location: Location
+    protected location: Location
   ) {
-    window.history.pushState(null, null, window.location.href)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-
     this.goalId = this.navParams.data.goalId as string
     if (!this.goalId) return
 
@@ -69,11 +60,7 @@ export class TeamModalComponent implements OnInit {
     )
     this.isAdmin$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAdmin))
     this.isAchiever$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAchiever))
-    this.hasOpenRequestToJoin$ = stakeholder$.pipe(map(stakeholder => stakeholder.hasOpenRequestToJoin))  
-  }
-
-  dismiss() {
-    this.location.back()
+    this.hasOpenRequestToJoin$ = stakeholder$.pipe(map(stakeholder => stakeholder.hasOpenRequestToJoin))    
   }
 
   navTo(uid: string) {

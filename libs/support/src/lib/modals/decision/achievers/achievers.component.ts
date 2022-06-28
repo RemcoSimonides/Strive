@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy } from "@angular/core";
 import { Location } from '@angular/common';
 import { ModalController } from "@ionic/angular";
 import { createGoalStakeholder, GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
 import { FormControl } from "@angular/forms";
+import { ModalDirective } from "@strive/utils/directives/modal.directive";
 
 @Component({
   selector: 'support-achievers',
@@ -10,13 +11,7 @@ import { FormControl } from "@angular/forms";
   styleUrls: ['./achievers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AchieversPopoverComponent implements OnInit, OnDestroy {
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
-
+export class AchieversPopoverComponent extends ModalDirective implements OnDestroy {
   _achievers: GoalStakeholder[] = []
   private _all: GoalStakeholder[] = []
   @Input() set achievers(achievers: GoalStakeholder[]) {
@@ -33,24 +28,14 @@ export class AchieversPopoverComponent implements OnInit, OnDestroy {
   })
 
   constructor(
-    private location: Location,
-    private modalCtrl: ModalController
+    protected location: Location,
+    protected modalCtrl: ModalController
   ) {
-    window.history.pushState(null, null, window.location.href)
-  }
-
-  ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
+    super(location, modalCtrl)
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe()
-  }
-
-  dismiss() {
-    this.location.back()
   }
 
   achieverChosen(achiever: GoalStakeholder) {

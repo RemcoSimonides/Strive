@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
 //ionic
 import { LoadingController, ModalController, NavParams  } from '@ionic/angular'
@@ -9,6 +9,9 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service'
 //Interfaces
 import { createGoal, Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore'
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
+
+// Directives
+import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 // Swiper
 import { SwiperComponent } from 'swiper/angular';
@@ -21,7 +24,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class UpsertGoalModalComponent implements OnInit {
+export class UpsertGoalModalComponent extends ModalDirective {
 
   goalId: string
   goalForm: GoalForm
@@ -30,20 +33,17 @@ export class UpsertGoalModalComponent implements OnInit {
   get goal(): Goal { return createGoal({ ...this.goalForm.value, id: this.goalId }) }
 
   @ViewChild('swiper') swiper: SwiperComponent;
-  @HostListener('window:popstate', ['$event'])
-  onPopState() {
-    this.modalCtrl.dismiss()
-  }
-  @HostBinding() modal: HTMLIonModalElement
 
   constructor(
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
-    private location: Location,
-    private modalCtrl: ModalController,
+    protected location: Location,
+    protected modalCtrl: ModalController,
     private navParams: NavParams,
     private user: UserService
   ) {
+    super(location, modalCtrl)
+
     const goal = this.navParams.data.currentGoal as Goal
     const status: GoalStatus = this.user.user?.numberOfActiveGoals < 4 ? 'active' : 'bucketlist';
     if (goal) {
@@ -57,24 +57,6 @@ export class UpsertGoalModalComponent implements OnInit {
     }
 
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
-
-    window.history.pushState(null, null, window.location.href)
-  }
-
-  ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
-      if (res.role === 'backdrop') this.location.back()
-    })
-  }
-
-  dismiss(){
-    this.location.back()
-
-    // if (this.appName === 'journal') {
-    //   await this.navCtrl.navigateForward(`/goal/${this.goalId}/edit`, { state: { mode: 'create' }});
-    // } else if (this.appName === 'admin') {
-    //   await this.navCtrl.navigateForward(`/a/goals/${this.goalId}`)
-    // }
   }
 
   stepper(direction: 'next' | 'previous') {
