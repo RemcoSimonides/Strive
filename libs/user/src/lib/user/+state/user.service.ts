@@ -7,7 +7,7 @@ import { FireCollection } from '@strive/utils/services/collection.service';
 import { createUser, User } from './user.firestore';
 // Rxjs
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends FireCollection<User> {
@@ -17,6 +17,8 @@ export class UserService extends FireCollection<User> {
   user$: Observable<User>
   user: User
   uid: string = undefined
+  private _uid = new BehaviorSubject(undefined)
+  uid$ = this._uid.asObservable()
 
   isLoggedIn$ = user(this.auth).pipe(map(user => !!user))
 
@@ -25,8 +27,11 @@ export class UserService extends FireCollection<User> {
 
     this.user$ = user(this.auth).pipe(
       switchMap(user => user ? this.valueChanges(user.uid) : of(undefined)),
-      tap(user => this.user = createUser(user)),
-      tap(user => this.uid = user ? user.uid : '')
+      tap(user => {
+        this.user = createUser(user)
+        this.uid = user ? user.uid : ''
+        this._uid.next(this.uid)
+      })
     )
 
     this.user$.subscribe()

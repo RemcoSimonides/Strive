@@ -1,6 +1,6 @@
 <strive-header-root [title]="user.uid ? 'Goals' : 'Home'"></strive-header-root>
 
-<ng-container *ngIf="user.uid !== undefined else loading">
+<ng-container *ngIf="(user.uid$ | async) !== undefined else loading">
   <ng-container *ngIf="!!user.uid else notLoggedIn">
     <ion-content class="ion-padding">
 
