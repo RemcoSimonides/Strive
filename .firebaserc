@@ -1,7 +1,7 @@
 {
   "projects": {
     "prod": "strive-journal",
-    "remco": "lets-support-23a6c"
+    "remco": "strive-journal-remco"
   },
   "targets": {
     "strive-journal": {

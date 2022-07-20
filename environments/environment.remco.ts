@@ -5,13 +5,12 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyD2kHICqwdpVYlaDrGESHS3O8Qss0mLdsk",
-    authDomain: "lets-support-23a6c.firebaseapp.com",
-    databaseURL: "https://lets-support-23a6c.firebaseio.com",
-    projectId: "lets-support-23a6c",
-    storageBucket: "lets-support-23a6c.appspot.com",
-    messagingSenderId: "156079640882",
-    appId: "1:156079640882:web:93e99452da064966",
+    apiKey: "AIzaSyAWu1vO2QZABkpvN6upV2To5wiovrMXgFs",
+    authDomain: "strive-journal-remco.firebaseapp.com",
+    projectId: "strive-journal-remco",
+    storageBucket: "strive-journal-remco.appspot.com",
+    messagingSenderId: "176497325210",
+    appId: "1:176497325210:web:31ec138fe4f59222ad1b23",
     measurementId: "G-3J20RJ6EVP"
   },
   algolia: {
