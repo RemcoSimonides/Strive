@@ -44,7 +44,7 @@ export class GoalsComponent {
       switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([]))
     )
 
-    this.seo.generateTags({ title: `Goals - Strive Journal` })
+    this.seo.generateTags({ title: `Goals  & Exercises- Strive Journal` })
   }
 
   openAuthModal() {
