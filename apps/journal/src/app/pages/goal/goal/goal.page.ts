@@ -223,10 +223,10 @@ export class GoalComponent implements OnInit, OnDestroy {
   }
 
   getJoinText() {
-    if (this.isAchiever) return 'joined'
-    if (this.isAdmin) return 'join'
-    if (this.hasOpenRequestToJoin) return 'requested...'
-    return 'request join'
+    if (this.isAchiever) return 'JOINED'
+    if (this.isAdmin) return 'JOIN'
+    if (this.hasOpenRequestToJoin) return 'REQUESTED...'
+    return 'REQUEST JOIN'
   }
 
   async join() {

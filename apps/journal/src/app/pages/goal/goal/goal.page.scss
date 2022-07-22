@@ -1,8 +1,39 @@
+@import "@angular/flex-layout/mq";
+
 h1 {
   font-size: 2.5rem;
   font-weight: 500;
   color: var(--ion-color-dark-tint);
   margin-top: 0;
+}
+
+main {
+  display: flex;
+  gap: 16px;
+
+  section {
+    flex: 1;
+  }
+
+  .main-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@include layout-bp(xs) {
+  main {
+    flex-direction: column;
+  }
+
+  .goal-image {
+    order: 2;
+  }
+
+  .main-actions {
+    order: 1;
+  }
 }
 
 .action-button {
@@ -41,6 +72,7 @@ ion-card.team {
 }
 
 picture {
+  display: block;
   position: relative;
   border-radius: 12px;
   overflow: hidden;

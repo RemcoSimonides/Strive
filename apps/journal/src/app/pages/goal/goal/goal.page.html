@@ -1,15 +1,15 @@
 <ng-container *ngIf="goal$ | async as goal">
   <h1>{{ goal.title }}</h1>
 
-  <section fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
-    <article fxLayout="column" fxFlex fxFlexOrder.lt-sm="2">
+  <main>
+    <section class="goal-image">
       <picture>
         <img [ref]="goal.image" asset="goal.jpeg" [width]="500" [height]="500"/>
         <div *ngIf="goal.status === 'finished'">finished</div>
       </picture>
-    </article>
+    </section>
 
-    <article fxLayout="column" fxLayoutGap="16px" fxFlex fxFlexOrder.lt-sm="1">
+    <section class="main-actions">
       <ion-card fxLayout fxLayoutAlign="space-evenly" class="team">
         <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
           <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.status === 'finished' || hasOpenRequestToJoin">
@@ -24,7 +24,7 @@
         <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
           <ion-button (click)="supportGoal()" color="secondary" fill="outline">
             <fa-icon slot="start" [icon]="['fas', 'hand-holding-heart']"></fa-icon>
-            <span> support</span>
+            <span> SUPPORT</span>
           </ion-button>
           <div fxLayout="column" fxLayoutAlign="start center" (click)="supportGoal()">
             <strong>Supporters</strong>
@@ -58,7 +58,7 @@
         <ng-container *ngTemplateOutlet="properties"></ng-container>
       </div>
 
-    </article>
+    </section>
 
     <ng-container *ngIf="screensize.isMobile$ | async">
       <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px" fxFlexOrder.lt-sm="3">
@@ -77,7 +77,7 @@
     <article fxHide.gt-xs fxFlexOrder="4">
       <ng-container *ngTemplateOutlet="properties"></ng-container>
     </article>
-  </section>
+  </main>
 
   <!-- Request to join -->
   <ng-container *ngIf="openRequests$ | async as stakeholders">
@@ -108,14 +108,14 @@
     (update)="saveDescription($event)"
   ></strive-text-editor>
 
-  <section fxLayout>
+  <footer fxLayout>
     <ion-button fill="clear" (click)="segmentChange.next('roadmap')">
-      see roadmap
+      SEE ROADMAP
     </ion-button>
     <ion-button fill="clear" (click)="segmentChange.next('story')">
-      see story
+      SEE STORY
     </ion-button>
-  </section>
+  </footer>
 
   <ng-template #properties>
     <article class="properties" fxLayout="column" fxLayoutGap="24px">
