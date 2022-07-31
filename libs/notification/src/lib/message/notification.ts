@@ -12,9 +12,9 @@ const notificationIcons = [
   'heart-dislike-outline',
   'person-add-outline',
   'person-remove-outline',
-  'remove-outline'
+  'close-outline'
 ] as const
-type NotificationIcons = typeof notificationIcons[number];
+export type NotificationIcons = typeof notificationIcons[number];
 
 function throwError(event: enumEvent, target: string) {
   throw new Error(`No notification message for event ${event} and target ${target}`)

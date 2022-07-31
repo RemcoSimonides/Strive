@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
+import { joinWith } from 'ngfire'
 
 // Rxjs
 import { Observable, of } from 'rxjs'
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 // Interfaces
-import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { Goal, GoalEvent } from '@strive/goal/goal/+state/goal.firestore'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 // Pages
@@ -19,6 +20,21 @@ import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { GoalEventService } from '@strive/notification/+state/goal-events.service';
+import { where } from 'firebase/firestore';
+import { enumEvent } from '@strive/notification/+state/notification.firestore';
+import { getAggregatedMessage } from '@strive/notification/message/aggregated';
+
+function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
+  const counter: Record<string | number, number> = {};
+  
+  for (const { name } of events) {
+    if (!counter[name]) counter[name] = 0;
+    counter[name]++;
+  }
+
+  return Object.entries(counter).map(([event, count]) => ({ event: +event, count }))
+}
 
 @Component({
   selector: 'journal-goals',
@@ -28,18 +44,25 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 })
 export class GoalsComponent {
 
-  achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder }[]>
+  achievingGoals$: Observable<{ goal: Goal, events: GoalEvent[], stakeholder: GoalStakeholder }[]>
 
   constructor(
     public user: UserService,
     private goal: GoalService,
+    private goalEventService: GoalEventService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {
     this.achievingGoals$ = this.user.user$.pipe(
-      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([]))
+      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([])),
+      joinWith({
+        events: value => this.goalEventService.valueChanges([where('source.goal.id', '==', value.goal.id), where('createdAt', '>', value.stakeholder.lastCheckedGoal)]).pipe(
+          map(aggregateEvents),
+          map(aggregated => aggregated.map(a => getAggregatedMessage(a)).filter(a => !!a))
+        )
+      }, { shouldAwait: true })
     )
 
     this.seo.generateTags({ title: `Goals  & Exercises- Strive Journal` })

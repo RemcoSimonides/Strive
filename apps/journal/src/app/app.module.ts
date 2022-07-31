@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouteReuseStrategy } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FIREBASE_CONFIG } from 'ngfire';
 
 // Ionic
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -85,6 +86,7 @@ import { PWAService } from '@strive/utils/services/pwa.service';
   providers: [
     StatusBar,
     SplashScreen,
+    { provide: FIREBASE_CONFIG, useValue: environment.firebase },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: 'APP_NAME', useValue: 'journal' }
   ],
