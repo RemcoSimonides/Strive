@@ -6,7 +6,7 @@ import { SupportService } from '@strive/support/+state/support.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { Observable, of, shareReplay } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 // Interfaces
 import { createSupport, Support } from '@strive/support/+state/support.firestore'
 // Components
@@ -83,14 +83,11 @@ export class SupportsComponent {
       switchMap(user => user ? this.support.groupChanges([where('source.supporter.uid', '==', user.uid)]) : of([])),
       map(supports => supports.map(support => createSupport(toDate(support)))),
       shareReplay({ bufferSize: 1, refCount: true }),
-
-      tap(toGet => console.log('to get:', toGet))
     )
     const supportsGet$: Observable<Support[]> = this.user.user$.pipe(
       switchMap(user => user ? this.support.groupChanges([where('source.receiver.uid', '==', user.uid)]) : of([])),
       map(supports => supports.map(support => createSupport(toDate(support)))),
-      shareReplay({ bufferSize: 1, refCount: true }),
-      tap(toGive => console.log('to give: ', toGive))
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
     this.supportsOpen$ = supportsGive$.pipe(
