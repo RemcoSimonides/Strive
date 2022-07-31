@@ -15,7 +15,7 @@ import { where } from '@angular/fire/firestore';
 import { SupportOptionsComponent } from '@strive/support/components/options/options.component';
 import { toDate, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
-import { AchieversPopoverComponent } from '@strive/support/modals/decision/achievers/achievers.component';
+import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
 import { GoalLink } from '@strive/goal/goal/+state/goal.firestore';
 import { MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
@@ -146,7 +146,7 @@ export class SupportsComponent {
     } else {
       const achievers = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: support.source.goal.id })
       const modal = await this.modalCtrl.create({
-        component: AchieversPopoverComponent,
+        component: AchieversModalComponent,
         componentProps: { achievers }
       })
       modal.onDidDismiss().then(res => {

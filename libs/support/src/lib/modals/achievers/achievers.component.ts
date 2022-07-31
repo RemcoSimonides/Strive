@@ -11,7 +11,7 @@ import { ModalDirective } from "@strive/utils/directives/modal.directive";
   styleUrls: ['./achievers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AchieversPopoverComponent extends ModalDirective implements OnDestroy {
+export class AchieversModalComponent extends ModalDirective implements OnDestroy {
   _achievers: GoalStakeholder[] = []
   private _all: GoalStakeholder[] = []
   @Input() set achievers(achievers: GoalStakeholder[]) {
