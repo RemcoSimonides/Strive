@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ExercisesComponent } from './exercises.component';
 
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
-import { HeaderModule } from '@strive/ui/header/header.module';
+import { HeaderRootModule } from '@strive/ui/header-root/header-root.module';
 
 const routes: Routes = [
   {
@@ -37,7 +37,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     SmallThumbnailModule,
-    HeaderModule
+    HeaderRootModule
   ],
   declarations: [ExercisesComponent]
 })

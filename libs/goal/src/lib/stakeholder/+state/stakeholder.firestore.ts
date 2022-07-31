@@ -1,4 +1,3 @@
-import { FieldValue } from '@firebase/firestore-types';
 import { GoalPublicityType, GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
 
 export interface GoalStakeholder {
@@ -13,9 +12,10 @@ export interface GoalStakeholder {
   status: GoalStatus;
   goalId: string;
   goalPublicity: GoalPublicityType;
+  lastCheckedGoal: false | Date
   updatedBy?: string;
-  updatedAt?: FieldValue;
-  createdAt?: FieldValue;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 
 export enum enumGoalStakeholder {
@@ -39,6 +39,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     status: 'bucketlist',
     goalId: '',
     goalPublicity: 'private',
+    lastCheckedGoal: false,
     ...params
   }
 }

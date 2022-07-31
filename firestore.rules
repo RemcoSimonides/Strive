@@ -103,6 +103,11 @@ service cloud.firestore {
 
     }
 
+    // ===== GOAL EVENTS ====
+    match /GoalEvents/{eventId} {
+      allow read;
+    }
+
     match /Discussions/{discussionId} {
       allow read;
 
@@ -147,7 +152,7 @@ service cloud.firestore {
     }
 
     function isSupporterOrReceiver(goalId, supportId) {
-      return (getSupport(goalId, supportId).supporter.uid == request.auth.uid || getSupport(goalId, supportId).receiver.uid == request.auth.uid)
+      return (getSupport(goalId, supportId).source.supporter.uid == request.auth.uid || getSupport(goalId, supportId).source.receiver.uid == request.auth.uid)
     }
 
     function getSupport(goalId, supportId) {

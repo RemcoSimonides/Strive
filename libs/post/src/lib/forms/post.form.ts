@@ -9,7 +9,8 @@ function createPostFormControl(params?: Post) {
     title: new FormControl(post.title),
     description: new FormControl(post.description),
     mediaURL: new FormControl(post.mediaURL),
-    url: new FormControl(post.url)
+    url: new FormControl(post.url),
+    date: new FormControl(post.date)
   }
 }
 
@@ -24,6 +25,7 @@ export class PostForm extends FormEntity<PostFormControl> {
   get title() { return this.get('title') }
   get mediaURL() { return this.get('mediaURL') }
   get description() { return this.get('description') }
+  get date() { return this.get('date') }
 
   get isEmpty() {
     return !this.url.value && !this.title.value && !this.mediaURL.value && !this.description.value

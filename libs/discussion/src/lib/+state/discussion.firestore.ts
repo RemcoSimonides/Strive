@@ -1,5 +1,4 @@
-import { Timestamp } from '@firebase/firestore-types';
-import { Source } from '@strive/notification/+state/notification.firestore'
+import { DiscussionSource } from '@strive/notification/+state/notification.firestore'
 
 export type AudienceType = 'public' | 'team' | 'adminsAndRequestor' | 'achievers' | 'spectators'
 
@@ -9,9 +8,9 @@ export interface Discussion {
   audience: AudienceType;
   numberOfComments: number;
   commentators: string[];
-  source: Source;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  source: DiscussionSource;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export function createDiscussion(params: Partial<Discussion> = {}): Discussion {

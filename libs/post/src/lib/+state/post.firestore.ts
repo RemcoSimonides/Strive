@@ -10,8 +10,9 @@ export interface Post {
   goalId?: string; // only for custom post
   uid?: string; // only for custom post
   milestoneId?: string; // link to milestone
-  updatedAt?: Timestamp;
-  createdAt?: Timestamp;
+  date: Date;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 
 /** A factory function that creates a PostDocument. */
@@ -23,6 +24,7 @@ export function createPost(params: Partial<Post> = {}): Post {
     mediaURL: '',
     url: '',
     isEvidence: false,
+    date: new Date(),
     ...params
   }
 } 

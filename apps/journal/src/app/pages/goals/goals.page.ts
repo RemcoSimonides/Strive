@@ -18,7 +18,6 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
-import { exercises } from '@strive/exercises/utils';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
@@ -29,8 +28,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 })
 export class GoalsComponent {
 
-  achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder}[]>
-  exercises = exercises
+  achievingGoals$: Observable<{ goal: Goal, stakeholder: GoalStakeholder }[]>
 
   constructor(
     public user: UserService,

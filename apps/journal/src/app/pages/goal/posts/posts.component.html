@@ -2,33 +2,33 @@
   <ion-refresher-content></ion-refresher-content>
 </ion-refresher>
 
-<ng-container *ngIf="notifications$ | async as notifications; else loading">
-  <ng-container *ngIf="!!notifications.length else noPosts">
+<ng-container *ngIf="events$ | async as events; else loading">
+  <ng-container *ngIf="!!events.length else noPosts">
     <section fxLayout="column">
       <small *ngIf="hasSyncingPosts">Creating new post...</small>
 
-      <ng-container *ngFor="let notification of notifications">
-        <article *ngIf="notification | message as message">
-          <div class="badge">
-            <ion-icon [name]="message.icon"></ion-icon>
-          </div>
-          <div class="timelineContent" fxLayout fxLayoutAlign="start start">
-            <span>
-              <ng-container *ngFor="let text of message.message">
-                <ng-container *ngIf="text.link; else noLink"><a [routerLink]="'/' + text.link">{{ text.text }}</a></ng-container>
-                <ng-template #noLink>{{ text.text }}</ng-template>
-              </ng-container>
-              {{ notification.createdAt.toDate() | timeAgo }}
-            </span>
-          </div>
-        </article>
-        <article class="extra">
-          <ng-container *ngIf="notification.source.postId">
-            <div></div>
-            <div>
-              <post-main [author]="notification.source.user" [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
+      <ng-container *ngFor="let event of events">
+        <ng-container *ngIf="event | storyMessage as message">
+          <article *ngIf="message.message.length">
+            <div class="badge">
+              <ion-icon [name]="message.icon"></ion-icon>
             </div>
-          </ng-container>
+            <div class="timelineContent" fxLayout fxLayoutAlign="start start">
+              <span>
+                <ng-container *ngFor="let text of message.message">
+                  <ng-container *ngIf="text.link; else noLink"><a [routerLink]="'/' + text.link">{{ text.text }}</a></ng-container>
+                  <ng-template #noLink>{{ text.text }}</ng-template>
+                </ng-container>
+                {{ event.createdAt | timeAgo }}
+              </span>
+            </div>
+          </article>
+        </ng-container>
+        <article *ngIf="event.source.postId" class="extra">
+          <div></div>
+          <div>
+            <post-main [author]="event.source.user" [postRef]="'Goals/' + event.source.goal.id + '/Posts/' + event.source.postId"></post-main>
+          </div>
         </article>
       </ng-container>
 

@@ -1,44 +1,37 @@
 import { db, functions, increment } from '../../../internals/firebase';
 
-import { handleNotificationsOfCreatedUserSpectator } from './user-spectator.notification';
-import { createSpectator } from '@strive/user/spectator/+state/spectator.firestore';
+import { createSpectator, Spectator } from '@strive/user/spectator/+state/spectator.firestore';
+import { toDate } from '../../../shared/utils';
+import { createNotification } from '@strive/notification/+state/notification.model';
+import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
+import { createNotificationSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 
 export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
   .onCreate(async (snapshot, context) => {
 
-    const uidToBeSpectated = context.params.uidToBeSpectated
-    const uidSpectator = context.params.uidSpectator
+    const spectator = createSpectator(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const { uidToBeSpectated, uidSpectator } = context.params
 
-    const spectator = createSpectator(snapshot.data())
+    handleSpectatorNotifications(createSpectator(), spectator)
 
     if (spectator.isSpectator) {
       changeNumberOfSpectators(uidToBeSpectated, 1)
       changeNumberOfSpectating(uidSpectator, 1)
-      handleNotificationsOfCreatedUserSpectator(spectator)
     }
-
   })
 
 export const userSpectatorChangeHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
   .onUpdate(async (snapshot, context) => {
 
-    const before = createSpectator(snapshot.before.data())
-    const after = createSpectator(snapshot.after.data())
-    const uidToBeSpectated = context.params.uidToBeSpectated
-    const uidSpectator = context.params.uidSpectator
+    const before = createSpectator(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
+    const after = createSpectator(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
+    const { uidToBeSpectated, uidSpectator } = context.params
 
     if (before.isSpectator !== after.isSpectator) {
-
-      if (after.isSpectator) {
-        changeNumberOfSpectators(uidToBeSpectated, 1)
-        changeNumberOfSpectating(uidSpectator, 1)
-      } else {
-        changeNumberOfSpectators(uidToBeSpectated, -1)
-        changeNumberOfSpectating(uidSpectator, -1)
-      }
-
+      const delta = after.isSpectator ? 1 : -1
+      changeNumberOfSpectators(uidToBeSpectated, delta)
+      changeNumberOfSpectating(uidSpectator, delta)
     }
-
 })  
 
 function changeNumberOfSpectators(uidToBeSpectated: string, change: number) {
@@ -49,4 +42,17 @@ function changeNumberOfSpectators(uidToBeSpectated: string, change: number) {
 function changeNumberOfSpectating(uidSpectator: string, change: number) {
   const ref = db.doc(`Users/${uidSpectator}`)
   return ref.update({ numberOfSpectating: increment(change) })
+}
+
+function handleSpectatorNotifications(before: Spectator, after: Spectator) {
+  const becameSpectator = !before.isSpectator && after.isSpectator
+  if (becameSpectator) {
+    const notification = createNotification({
+      event: enumEvent.userSpectatorAdded,
+      source: createNotificationSource({
+        user: after
+      })
+    })
+    sendNotificationToUsers(notification, after.profileId, 'user')
+  }
 }

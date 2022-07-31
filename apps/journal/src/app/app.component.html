@@ -93,8 +93,11 @@
               <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
                 Explore
               </ion-button>
-              <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
+              <!-- <ion-button fill="clear" routerLink="/feed" routerDirection="root" routerLinkActive="active-link">
                 Feed
+              </ion-button> -->
+              <ion-button fill="clear" routerLink="/exercise" routerDrouterDirection="root" routerLinkActive="active-link">
+                Exercises
               </ion-button>
               <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openUserPopover($event)">
                 <img [ref]="user.photoURL" asset="profile.png"/>

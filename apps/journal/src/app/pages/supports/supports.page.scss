@@ -1,9 +1,22 @@
-section {
+main {
   max-width: 700px;
   margin: auto;
 
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .list-header {
+      display: block;
+      padding: 16px 16px 8px 16px;
+    }
+  }
+
   ion-list {
     border-radius: 12px;
+
+
   }
 }
 

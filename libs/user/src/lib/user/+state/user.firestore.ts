@@ -1,12 +1,11 @@
-import { FieldValue } from '@firebase/firestore-types';
-
 export interface Personal {
     uid: string;
     email: string;
     fcmTokens: string[]; // one token per used device
+    lastCheckedNotifications: false | Date
     // walletBalance: number;
-    updatedAt?: FieldValue;
-    createdAt?: FieldValue;
+    updatedAt?: Date;
+    createdAt?: Date;
 }
 
 export function createPersonal(params: Partial<Personal> = {}): Personal {
@@ -14,6 +13,7 @@ export function createPersonal(params: Partial<Personal> = {}): Personal {
     uid: '',
     email: '',
     fcmTokens: [],
+    lastCheckedNotifications: false,
     // walletBalance: 0
     ...params
   }
@@ -26,8 +26,8 @@ export interface User {
   numberOfSpectating: number;
   numberOfSpectators: number;
   numberOfActiveGoals: number;
-  updatedAt?: FieldValue;
-  createdAt?: FieldValue;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 
 export function createUser(params: Partial<User> = {}): User {
@@ -48,7 +48,7 @@ export interface UserLink {
   photoURL: string
 }
 
-export function createUserLink(params: Partial<UserLink> = {}): UserLink {
+export function createUserLink(params: Partial<UserLink | User> = {}): UserLink {
   return {
     uid: params.uid ?? '',
     username: params.username ?? '',

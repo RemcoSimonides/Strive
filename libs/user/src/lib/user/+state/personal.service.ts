@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { arrayUnion, DocumentSnapshot, Firestore } from '@angular/fire/firestore';
+import { arrayUnion, DocumentSnapshot, Firestore, serverTimestamp } from '@angular/fire/firestore';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { UserService } from './user.service';
@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 import { Personal } from './user.firestore';
 
 @Injectable({ providedIn: 'root' })
-export class PersonalService extends FireCollection<any> {
+export class PersonalService extends FireCollection<Personal> {
   readonly path = 'Users/:uid/Personal'
   readonly idKey = 'uid'
 
@@ -21,10 +21,18 @@ export class PersonalService extends FireCollection<any> {
       : undefined
   }
 
+  updateLastCheckedNotification() {
+    if (this.user.uid) {
+      this.update(this.user.uid, {
+        lastCheckedNotifications: serverTimestamp() as any
+      }, { params: { uid: this.user.uid }})
+    }
+  }
+
   addFCMToken(token: string) {
     if (token && this.user.uid) {
       this.update(this.user.uid, {
-        fcmTokens: arrayUnion(token)
+        fcmTokens: arrayUnion(token) as any
       }, { params: { uid: this.user.uid }})
     }
   }

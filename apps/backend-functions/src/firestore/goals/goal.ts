@@ -1,23 +1,46 @@
-import { db, functions } from '../../internals/firebase';
+import { admin, db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
-import { createGoal, getAudience, Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoal, getAudience, Goal, GoalStatus, createGoalLink } from '@strive/goal/goal/+state/goal.firestore';
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { handleNotificationsOfCreatedGoal, handleNotificationsOfChangedGoal } from './goal.notification';
-import { deleteCollection } from '../../shared/utils';
+import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils';
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { addGoalEvent } from './goal.events';
+import { createGoalSource, DiscussionSource, enumEvent } from '@strive/notification/+state/notification.firestore';
+import { User } from '@strive/user/user/+state/user.firestore';
+import { getReceiver } from '../../shared/support/receiver';
+import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { createSupport, Support } from '@strive/support/+state/support.firestore';
+import { addDiscussion } from '../../shared/discussion/discussion';
+
+const { serverTimestamp } = admin.firestore.FieldValue
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onCreate(async snapshot => {
 
-    const goal = createGoal({ ...snapshot.data(), id: snapshot.id })
+    const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
     const goalId = snapshot.id
 
-    // notifications
-    handleNotificationsOfCreatedGoal(goalId, goal)
+    // TODO rework discussion
+    const discussionSource: DiscussionSource = {
+      goal: createGoalLink({ ...goal, id: goalId })
+    }
+    const audience = getAudience(goal.publicity)
+    await addDiscussion(`General discussion`, discussionSource, audience, goalId, goal.updatedBy)
+
+    // event
+    const user = await getDocument<User>(`Users/${goal.updatedBy}`)
+    const event: Record<GoalStatus, enumEvent> = {
+      bucketlist: enumEvent.gNewBucketlist,
+      active: enumEvent.gNewActive,
+      finished: enumEvent.gNewFinished
+    }
+    const source = createGoalSource({ goal, user })
+    const name = event[goal.status]
+    addGoalEvent(name, source)
 
     // deadline
     if (goal.deadline) {
@@ -37,22 +60,20 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
 export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onDelete(async snapshot => {
 
-    const goalId = snapshot.id
-    const goal = createGoal({ ...snapshot.data(), id: snapshot.id }) 
+    const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
 
-    deleteScheduledTask(goalId)
+    deleteScheduledTask(goal.id)
 
     //delete subcollections too
-    deleteCollection(db, `Goals/${goalId}/Milestones`, 500)
-    deleteCollection(db, `Goals/${goalId}/Supports`, 500)
-    deleteCollection(db, `Goals/${goalId}/Posts`, 500)
-    deleteCollection(db, `Goals/${goalId}/InviteTokens`, 500)
-    deleteCollection(db, `Goals/${goalId}/GStakeholders`, 500)
-    deleteCollection(db, `Goals/${goalId}/Notifications`, 500)
-    db.doc(`Discussions/${goalId}`).delete()
+    deleteCollection(db, `Goals/${goal.id}/Milestones`, 500)
+    deleteCollection(db, `Goals/${goal.id}/Supports`, 500)
+    deleteCollection(db, `Goals/${goal.id}/Posts`, 500)
+    deleteCollection(db, `Goals/${goal.id}/InviteTokens`, 500)
+    deleteCollection(db, `Goals/${goal.id}/GStakeholders`, 500)
+    db.doc(`Discussions/${goal.id}`).delete()
 
     if (goal.publicity === 'public') {
-      await deleteFromAlgolia('goal', goalId)
+      await deleteFromAlgolia('goal', goal.id)
      }
   })
 
@@ -60,11 +81,19 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
   .onUpdate(async (snapshot, context) => {
 
     const goalId = context.params.goalId
-    const before = createGoal({ ...snapshot.before.data(), id: goalId })
-    const after = createGoal({ ...snapshot.after.data(), id: goalId })
+    const before = createGoal(toDate({ ...snapshot.before.data(), id: goalId }))
+    const after = createGoal(toDate({ ...snapshot.after.data(), id: goalId }))
 
-    // notifications
-    handleNotificationsOfChangedGoal(goalId, before, after)
+    // events
+    const isFinished = before.status !== 'finished' && after.status === 'finished'
+    if (isFinished) {
+      logger.log('Goal is finished')
+      const user = await getDocument<User>(`Users/${after.updatedBy}`)
+      const source = createGoalSource({ goal: after, user, postId: goalId })
+      addGoalEvent(enumEvent.gFinished, source)
+
+      supportsNeedDecision(after)
+    }
 
     if (before.status !== after.status || before.publicity !== after.publicity) {
       // update value on stakeholder docs
@@ -72,8 +101,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     }
 
     if (before.title !== after.title) {
-      // update ALL notifications
-      updateGoalTitleInNotifications(goalId, after)
+      updateTitleInSources(after)
     }
 
     if (before.publicity !== after.publicity) {
@@ -117,7 +145,6 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
 //     image: goal.image,
 //     publicity: goal.publicity,
 //     deadline: goal.deadline,
-//     roadmapTemplate: goal.roadmapTemplate,
 //     createdAt: timestamp as Timestamp,
 //     updatedAt: timestamp as Timestamp,
 //     updatedBy: uid
@@ -171,11 +198,69 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
   return Promise.all(promises)
 }
 
-async function updateGoalTitleInNotifications(goalId: string, after: Goal) {
-  // user notifications and goal notifications
-  const snaps = await db.collectionGroup(`Notifications`).where('source.goal.id', '==', goalId).get()
-  logger.log(`Goal title edited. Going to update ${snaps.size} notifications`)
+async function updateTitleInSources(goal: Goal) {
+  let batch = db.batch()
+
+  // Notifications
+  const notificationSnaps = await db.collectionGroup('Notifications').where('source.goal.id', '==', goal.id).get()
+  logger.log(`Goal title edited. Going to update ${notificationSnaps.size} notifications`)
+  notificationSnaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': goal.title }))
+  batch.commit()
+
+  // Goal Events
+  batch = db.batch()
+  const goalEventSnaps = await db.collection('GoalEvents').where('source.goal.id', '==', goal.id).get()
+  logger.log(`Goal title edited. Going to update ${goalEventSnaps.size} goal events`)
+  goalEventSnaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': goal.title }))
+  batch.commit()
+
+  // Supports
+  batch = db.batch()
+  const supportSnaps = await db.collection(`Goals/${goal.id}/Supports`).get()
+  logger.log(`Goal title edited. Going to update ${supportSnaps.size} supports`)
+  supportSnaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': goal.title }))
+  batch.commit()
+}
+
+export async function supportsNeedDecision(goal: Goal) {
+  const receiver = await getReceiver(goal.id, db)
+
+  const milestonesQuery = db.collection(`Goals/${goal.id}/Milestones`)
+    .where('status', '==', 'pending')
+    .withConverter<Milestone>(converter(createMilestone))
+
+  const supportsQuery = db.collection(`Goals/${goal.id}/Supports`)
+    .where('source.goal.id', '==', goal.id)
+    .where('needsDecision', '==', false)
+    .withConverter<Support>(converter(createSupport))
+
+   const [supportsSnap, milestonesSnap] = await Promise.all([
+    supportsQuery.get(),
+    milestonesQuery.get()
+   ])
+
+   const milestones = milestonesSnap.docs.map(snap => ({...snap.data(), id: snap.id }))
+   const pendingMilestoneIds = milestones.map(milestone => milestone.id)
+
+  // TODO batch might get bigger than 500
   const batch = db.batch()
-  snaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': after.title }))
+  const timestamp = serverTimestamp() as any
+  for (const snap of supportsSnap.docs) {
+    const support = createSupport(toDate({ ...snap.data(), id: snap.id }))
+
+    const milestoneId = support.source.milestone?.id
+    if (milestoneId && !pendingMilestoneIds.includes(milestoneId)) continue // meaning the milestone of this support is not pending and thus skip
+    
+    support.needsDecision = timestamp
+
+    if (milestoneId) {
+      const milestone = milestones.find(m => m.id === support.source.milestone.id)
+      support.source.receiver = milestone.achiever?.uid ? milestone.achiever : receiver
+    } else {
+      support.source.receiver = receiver
+    }
+
+    batch.update(snap.ref, support)
+  }
   batch.commit()
 }

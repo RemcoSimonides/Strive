@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 // Ionic
-import { ModalController } from '@ionic/angular'
+import { ModalController, PopoverController } from '@ionic/angular'
 // Rxjs
 import { filter } from 'rxjs/operators';
 // Strive
@@ -12,6 +12,7 @@ import { PostForm } from '@strive/post/forms/post.form';
 import { createPost } from '@strive/post/+state/post.firestore';
 import { isValidHttpUrl } from '@strive/utils/helpers';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
 
 @Component({
   selector: 'post-upsert-modal',
@@ -48,6 +49,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
     private functions: Functions,
     protected location: Location,
     protected modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
     private postService: PostService,
     private user: UserService,
   ) {
@@ -82,5 +84,26 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
 
     this.dismiss()
   }
+
+  // async openDatePicker(event: Event) {
+  //   // const minDeadline = new Date().toISOString()
+  //   // const maxDeadline = this.maxDeadline 
+  //   //   ? this.maxDeadline
+  //   //   : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
+
+  //   const popover = await this.popoverCtrl.create({
+  //     component: DatetimeComponent,
+  //     // componentProps: { minDeadline, maxDeadline }
+  //   })
+  //   popover.onDidDismiss().then(({ data, role }) => {
+  //     if (role === 'remove') {
+  //       // this.postForm.date.setValue('')
+  //     } else if (role === 'dismiss') {
+  //       const date = new Date(data).toDateString()
+  //       // this.postForm.date.setValue(date)
+  //     }
+  //   })
+  //   popover.present()
+  // }
 
 }

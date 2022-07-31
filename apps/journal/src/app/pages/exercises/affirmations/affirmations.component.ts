@@ -115,12 +115,15 @@ export class AffirmationsComponent implements OnDestroy {
       componentProps: { presentation: 'time' }
     })
     popover.onDidDismiss().then(({ data, role }) => {
+      const control = this.timesForm.get(`${index}`)
       if (role === 'dismiss') {
-        const control = this.timesForm.get(`${index}`)
         const value = data ? data : new Date().toISOString()
         control.setValue(value)
-        this.cdr.markForCheck()
       }
+      if (role === 'remove') {
+        control.setValue('')
+      }
+      this.cdr.markForCheck()
     })
     popover.present()
   }

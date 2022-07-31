@@ -4,15 +4,11 @@ import { DocumentData, endBefore, QueryConstraint } from 'firebase/firestore';
 
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { delay } from '@strive/utils/helpers';
+import { delay, toDate } from '@strive/utils/helpers';
 
-import { DiscussionService } from '@strive/discussion/+state/discussion.service';
-
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { Notification } from '@strive/notification/+state/notification.firestore';
-import { createNotification } from '@strive/notification/+state/notification.model';
+import { createGoalEvent, Goal, GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
 import { PostService } from '@strive/post/+state/post.service';
-import { GoalNotificationService } from '@strive/notification/+state/goal-notification.service';
+import { GoalEventService } from '@strive/notification/+state/goal-events.service';
 
 @Component({
   selector: '[goal] journal-goal-posts',
@@ -21,15 +17,15 @@ import { GoalNotificationService } from '@strive/notification/+state/goal-notifi
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostsComponent implements OnInit, OnDestroy {
-  private postsPerQuery = 20
+  private postsPerQuery = 40
   private query: Query<DocumentData>
   private sub: Subscription
 
-  private _notifications = new BehaviorSubject<Notification[]>([])
+  private _events = new BehaviorSubject<GoalEvent[]>([])
   private _done = new BehaviorSubject<boolean>(false)
   private _loading = new BehaviorSubject<boolean>(false)
 
-  notifications$ = this._notifications.asObservable()
+  events$ = this._events.asObservable()
 
   hasSyncingPosts = false
 
@@ -43,11 +39,9 @@ export class PostsComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck()
           }
         }),
-        switchMap(ids => ids.length
-          ? this.goalNotification.valueChanges(ids, { goalId: this.goal.id })
-          : of([]))
-      ).subscribe(notifications => {
-        const ids = notifications.map(notification => notification.id)
+        switchMap(ids => ids.length ? this.events.valueChanges(ids) : of([]))
+      ).subscribe(events => {
+        const ids = events.map(event => event.id)
         if (ids.length) {
           this.refreshPosts()
           const remaining = this.post.updateSyncingPosts(ids, this.goal.id)
@@ -63,15 +57,14 @@ export class PostsComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private db: Firestore,
-    private discussion: DiscussionService,
-    private goalNotification: GoalNotificationService,
+    private events: GoalEventService,
     private post: PostService
   ) {}
 
   ngOnInit() {
-    const ref = collection(this.db, `Goals/${this.goal.id}/Notifications`)
+    const ref = collection(this.db, `GoalEvents`)
     const constraints = [
-      where('type', '==', 'feed'),
+      where('source.goal.id', '==', this.goal.id),
       orderBy('createdAt', 'desc'),
       limit(this.postsPerQuery)
     ]
@@ -89,20 +82,17 @@ export class PostsComponent implements OnInit, OnDestroy {
 
     const snapshot = await getDocs(query(this.query, ...queryConstraints))
     if (!snapshot.empty) {
-      const posts = snapshot.docs.map(doc => {
-        return createNotification({ ...doc.data(), id: doc.id })
-        // return { ...data, 'discussion$': this.discussion.valueChanges(data.discussionId) }
-      })
-      const next = isRefresh ? [...posts, ...this._notifications.value] : [...this._notifications.value, ...posts]
-      this._notifications.next(next)
+      const posts = snapshot.docs.map(doc => createGoalEvent(toDate({ ...doc.data(), id: doc.id })))
+      const next = isRefresh ? [...posts, ...this._events.value] : [...this._events.value, ...posts]
+      this._events.next(next)
     }
     if (!isRefresh && (snapshot.empty || snapshot.size < this.postsPerQuery)) this._done.next(true)
     this._loading.next(false)
   }
 
   async more($event) {
-    const posts = this._notifications.value
-    const cursor = posts[posts.length - 1].createdAt ?? null
+    const events = this._events.value
+    const cursor = events[events.length - 1].createdAt ?? null
 
     await Promise.race([
       delay(5000),
@@ -116,7 +106,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   async refreshPosts($event?) {
-    const cursor = this._notifications.value[0]?.createdAt ?? null
+    const cursor = this._events.value[0]?.createdAt ?? null
     await Promise.race([
       delay(5000),
       this.mapAndUpdate([endBefore(cursor)], true).then(() => delay(500))

@@ -44,18 +44,6 @@
           </ng-template>
         </ng-container>
 
-        <h2>Exercises</h2>
-        <ion-list class="md">
-          <ng-container *ngFor="let exercise of exercises; let last = last">
-            <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="exercise.link">
-              <ion-thumbnail slot="start">
-                <img [asset]="exercise.image"/>
-              </ion-thumbnail>
-              <ion-label>{{ exercise.title }}</ion-label>
-            </ion-item>
-          </ng-container>
-        </ion-list>
-
       </main>
     </ion-content>
   </ng-container>

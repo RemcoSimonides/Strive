@@ -19,8 +19,6 @@ export class AchieversPopoverComponent extends ModalDirective implements OnDestr
     this._all = [...achievers]
   }
 
-  @Input() result: Array<GoalStakeholder>
-
   filter = new FormControl()
 
   private sub = this.filter.valueChanges.pipe().subscribe(value => {
@@ -39,13 +37,11 @@ export class AchieversPopoverComponent extends ModalDirective implements OnDestr
   }
 
   achieverChosen(achiever: GoalStakeholder) {
-    this.result.push(achiever)
-    this.dismiss()
+    this.dismiss(achiever)
   }
 
   dontGive() {
-    this.result.push(createGoalStakeholder())
-    this.dismiss()
+    this.dismiss(createGoalStakeholder())
   }
 
 }

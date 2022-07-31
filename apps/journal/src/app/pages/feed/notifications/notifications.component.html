@@ -1,6 +1,6 @@
 <strive-header title="Notifications" color="primary"></strive-header>
 
-<ng-container *ngIf="user.uid !== undefined else loading">
+<ng-container *ngIf="(user.uid$ | async) !== undefined  else loading">
   <ng-container *ngIf="!!user.uid; else notLoggedIn">
     <ion-content>
       <section fxLayout="column" fxLayoutAlign="start">
@@ -25,7 +25,7 @@
                         <ng-template #noLink>{{ message.text }}</ng-template>
                       </ng-container>
                     </span>
-                    <small>{{ notification.createdAt.toDate() | timeAgo }}</small>
+                    <small>{{ notification.createdAt | timeAgo }}</small>
                   </div>
                 </article>
               </ng-container>

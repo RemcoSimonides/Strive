@@ -30,7 +30,6 @@ function createGoalFormControl(params?: Partial<Goal>) {
     image: new FormControl(goal.image),
     status: new FormControl(goal.status),
     deadline: new FormControl(goal.deadline),
-    roadmapTemplate: new FormControl(goal.roadmapTemplate),
     numberOfAchievers: new FormControl(goal.numberOfAchievers),
     numberOfCustomSupports: new FormControl(goal.numberOfCustomSupports),
     numberOfSupporters: new FormControl(goal.numberOfSupporters),

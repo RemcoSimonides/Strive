@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Angularfire
-import { Firestore, DocumentSnapshot, getDoc, WriteBatch } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot, getDoc, WriteBatch, serverTimestamp } from '@angular/fire/firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 // Interfaces
 import { User } from '@strive/user/user/+state/user.firestore'
@@ -36,6 +36,12 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
   toFirestore(stakeholder: GoalStakeholder): GoalStakeholder {
     stakeholder.updatedBy = this.user.uid
     return stakeholder
+  }
+
+  updateLastCheckedGoal(goalId: string, uid: string) {
+    this.update(uid, {
+      lastCheckedGoal: serverTimestamp() as any
+    }, { params: { goalId } })
   }
 
   async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {

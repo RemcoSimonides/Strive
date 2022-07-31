@@ -1,24 +1,38 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
-import { createSupport } from '@strive/support/+state/support.firestore'
-import { handleNotificationsOfCreatedSupport, handleNotificationsOfChangedSupport, sendSupportDeletedNotification } from './support.notification'
+import { createSupport, Support } from '@strive/support/+state/support.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalSource, createNotificationSource, enumEvent } from '@strive/notification/+state/notification.firestore';
+import { addGoalEvent } from '../goal.events';
+import { getDocument, toDate } from '../../../shared/utils';
+import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
+import { createNotification } from '@strive/notification/+state/notification.model';
+
+const { serverTimestamp } = admin.firestore.FieldValue
 
 export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onCreate(async (snapshot, context) => {
 
-    const support = createSupport(snapshot.data())
-    const supportId = snapshot.id
+    const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
     const goalId = context.params.goalId
 
-    //Set stakeholder as supporter
-    const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.supporter.uid}`)
+    // events
+    const source = createGoalSource({
+      user: support.source.supporter,
+      support,
+      ...support.source
+    })
+    addGoalEvent(enumEvent.gSupportAdded, source)
+
+    // Set stakeholder as supporter
+    const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.source.supporter.uid}`)
     const stakeholderSnap = await stakeholderRef.get()
 
     if (stakeholderSnap.exists) {
       // Update stakeholder
-      const stakeholder = createGoalStakeholder(stakeholderSnap.data())
+      const stakeholder = createGoalStakeholder(toDate(stakeholderSnap.data()))
       if (!stakeholder.isSupporter) {
         stakeholderRef.update({ isSupporter: true })
       }
@@ -26,50 +40,89 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
       const goalSnap = await db.doc(`Goals/${goalId}`).get()
       const goal = createGoal(goalSnap.data())
 
-      // create new stakeholder
+      // Create new stakeholder
       const goalStakeholder = createGoalStakeholder({
-        uid: support.supporter.uid,
-        username: support.supporter.username,
-        photoURL: support.supporter.username,
-        goalId: goalId,
+        uid: support.source.supporter.uid,
+        username: support.source.supporter.username,
+        photoURL: support.source.supporter.username,
+        goalId,
         goalPublicity: goal.publicity,
         isSupporter: true,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
+        updatedAt: serverTimestamp() as any,
+        createdAt: serverTimestamp() as any
       })
 
       stakeholderRef.set(goalStakeholder)
     }
 
     //Increase number of custom supports
-    if (support.milestone?.id) { // Support for milestone added
-      increaseCustomSupportOfMilestone(goalId, support.milestone.id)
+    if (support.source.milestone?.id) { // Support for milestone added
+      increaseCustomSupportOfMilestone(goalId, support.source.milestone.id)
       increaseCustomSupportOfGoal(goalId, false, true)
     } else { // Support for goal added
       increaseCustomSupportOfGoal(goalId, true, true)
     }
-
-    //Send notification to achievers of goal
-    await handleNotificationsOfCreatedSupport(supportId, goalId, support)
   })
 
 export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-  .onUpdate(async (snapshot, context) =>  {
+  .onUpdate(async snapshot =>  {
 
-    const before = createSupport(snapshot.before.data())
-    const after = createSupport(snapshot.after.data())
+    const before = createSupport(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
+    const after = createSupport(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
 
-    const goalId = context.params.goalId
-    const supportId = context.params.supportId
+    // events
+    const needsDecision = !before.needsDecision && after.needsDecision
+    const paid = before.status !== 'paid' && after.status === 'paid'
+    const rejected = before.status !== 'rejected' && after.status === 'rejected'
+    const waitingToBePaid = before.status !== 'waiting_to_be_paid' && after.status === 'waiting_to_be_paid'
+  
+    const { goal, milestone, supporter, receiver } = after.source
+    const source = getNotificationSource(after)
+  
+    if (needsDecision) {
+      let completedSuccessfully: boolean
+  
+      if (milestone?.id) {
+        const m = await getDocument<Milestone>(`Goals/${goal.id}/Milestones/${milestone.id}`)
+        completedSuccessfully = m.status === 'succeeded'
+      } else {
+        // goals cant fail?
+        completedSuccessfully = true
+      }
+  
+      // send notification to supporter
+      const notification = createNotification({
+        event: completedSuccessfully ? enumEvent.gSupportPendingSuccesful : enumEvent.gSupportPendingFailed,
+        source
+      })
+      return sendNotificationToUsers(notification, supporter.uid)
+    }
 
-    // Send notification
-    handleNotificationsOfChangedSupport(supportId, goalId, before, after)
+    if (!receiver?.uid) return
+    if (supporter.uid === receiver.uid) return
+
+    let event: enumEvent
+    if (paid) event = enumEvent.gSupportPaid
+    if (rejected) event = enumEvent.gSupportRejected
+    if (waitingToBePaid) event = enumEvent.gSupportWaitingToBePaid
+
+    if (event) {
+      const notification = createNotification({ event, source })
+      return sendNotificationToUsers(notification, receiver.uid, 'user')
+    }
   })
 
 export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onDelete(async snapshot => {
-    const support = createSupport(snapshot.data())
-    sendSupportDeletedNotification(support)
+    
+    const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const source = getNotificationSource(support)
+
+    const notification = createNotification({
+      event: enumEvent.gSupportDeleted,
+      source
+    })
+    sendNotificationToUsers(notification, support.source.supporter.uid)
   })
 
 function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean) {
@@ -89,4 +142,14 @@ function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSuppo
 function increaseCustomSupportOfMilestone(goalId: string, milestoneId: string) {
   const ref = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
   return ref.update({ numberOfCustomSupports: increment(1) })
+}
+
+function getNotificationSource(support: Support) {
+  const { goal, supporter, milestone } = support.source
+  return createNotificationSource({
+    goal,
+    user: supporter,
+    support,
+    milestone
+  })
 }

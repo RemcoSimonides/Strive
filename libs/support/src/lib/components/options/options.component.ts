@@ -17,7 +17,7 @@ export class SupportOptionsComponent {
   ) {}
 
   updateStatus(status: SupportStatus) {
-    this.supportService.update(this.support.id, { status }, { params: { goalId: this.support.goal.id }})
+    this.supportService.update(this.support.id, { status }, { params: { goalId: this.support.source.goal.id }})
     this.popoverCtrl.dismiss()
   }
 }

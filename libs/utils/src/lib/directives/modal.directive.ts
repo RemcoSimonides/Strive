@@ -9,8 +9,10 @@ export class ModalDirective {
   @HostBinding() modal: HTMLIonModalElement
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss(this.data)
   }
+
+  private data: any
 
   constructor(
     protected location: Location,
@@ -25,7 +27,8 @@ export class ModalDirective {
     })
   }
 
-  dismiss() {
+  dismiss(data?: any) {
+    this.data = data
     this.location.back()
   }
 }

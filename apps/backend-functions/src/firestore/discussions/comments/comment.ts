@@ -1,59 +1,37 @@
 import { logger } from 'firebase-functions';
-import { admin, db, functions } from '../../../internals/firebase';
-import { Comment, createComment } from '@strive/discussion/+state/comment.firestore';
-import { createDiscussion, Discussion } from '@strive/discussion/+state/discussion.firestore';
-import { sendNotificationToUsers } from '../../../shared/notification/notification'
-import { createNotification } from '@strive/notification/+state/notification.model';
-import { enumEvent } from '@strive/notification/+state/notification.firestore';
-
-const { increment, arrayUnion } = admin.firestore.FieldValue
+import { db, functions, increment, arrayUnion } from '../../../internals/firebase';
+import { createComment } from '@strive/discussion/+state/comment.firestore';
+import { createDiscussion } from '@strive/discussion/+state/discussion.firestore';
+import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore';
+import { toDate } from '../../../shared/utils';
+import { addGoalEvent } from '../../goals/goal.events';
 
 export const commentCreatedHandler = functions.firestore.document(`Discussions/{discussionId}/Comments/{commentId}`)
   .onCreate(async (snapshot, context) =>{
 
-    const comment = createComment(snapshot.data())
+    const comment = createComment(toDate({ ...snapshot.data(), id: snapshot.id }))
     const discussionId: string = context.params.discussionId
 
     logger.log(`comment created in discussion ${discussionId}: `, comment)
 
     const discussionRef = db.doc(`Discussions/${discussionId}`)
     const discussionSnap = await discussionRef.get()
+    const discussion = createDiscussion(toDate({ ...discussionSnap.data(), id: discussionSnap.id }))
+
     if (discussionSnap.exists) {
       await discussionRef.update({
         numberOfComments: increment(1),
         commentators: arrayUnion(comment.user.uid)
       })
 
-      // send notification to participants
-      const discussion = createDiscussion(discussionSnap.data())
-      sendNewMessageNotificationToParticipants(discussionId, discussion, comment)  
+      const source = createGoalSource({
+        goal: discussion.source.goal,
+        user: comment.user
+      })
+      addGoalEvent(enumEvent.gNewMessage, source)
+
     } else {
-      const discussion = createDiscussion({ numberOfComments: 1 })
+      const discussion = createDiscussion({ numberOfComments: 1, commentators: [comment.user.uid] })
       discussionRef.set(discussion)
     }
   })
-
-function sendNewMessageNotificationToParticipants(discussionId: string, discussion: Discussion, comment: Comment) {
-  logger.log(`Sending New Message Notification to Participants`)
-
-  if (!discussion.commentators?.length) return
-
-  // removing the user who sent the comment from participants
-  discussion.commentators = discussion.commentators.filter(commentator => commentator !== comment.user.uid)
-
-  for (const commentator of discussion.commentators) {
-    const notification = createNotification({
-      id: `${discussionId}${commentator}`,
-      discussionId,
-      event: enumEvent.discussionNewMessage,
-      type: 'notification',
-      target: 'user',
-      source: {
-        ...discussion.source,
-        comment
-      },
-    })
-    sendNotificationToUsers(notification, [commentator])
-  }
-
-}

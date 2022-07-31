@@ -7,7 +7,7 @@ import { FireCollection } from '@strive/utils/services/collection.service';
 import { createUser, User } from './user.firestore';
 // Rxjs
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends FireCollection<User> {
@@ -31,7 +31,8 @@ export class UserService extends FireCollection<User> {
         this.user = createUser(user)
         this.uid = user ? user.uid : ''
         this._uid.next(this.uid)
-      })
+      }),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
     this.user$.subscribe()

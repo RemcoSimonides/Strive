@@ -29,6 +29,11 @@ export class PostService extends FireCollection<Post> {
       : undefined
   }
 
+  protected toFirestore(post: Post): Post {
+    // post.date = post.date ? new Date(post.date) : new Date()
+    return post
+  }
+
   protected onCreate(entity: Post) {
     if (!entity.isEvidence) {
       const posts = this._syncingPosts.value

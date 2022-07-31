@@ -9,8 +9,11 @@ export class PopoverDirective {
   @HostBinding() popover: HTMLIonPopoverElement
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.popoverCtrl.dismiss()
+    this.popoverCtrl.dismiss(this.returnData, this.returnRole)
   }
+
+  private returnData: unknown
+  private returnRole: string
 
   constructor(
     protected location: Location,
@@ -25,7 +28,9 @@ export class PopoverDirective {
     })
   }
 
-  dismiss() {
+  dismiss(data?: unknown, role?: string) {
+    this.returnData = data
+    this.returnRole = role
     this.location.back()
   }
 }

@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router'
 // Ionic
 import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular'
 // Rxjs
-import { Subscription, of, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Subscription, of, Observable, shareReplay } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/+state/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
@@ -56,8 +56,12 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     this.goal = await this.goalService.getValue(this.goalId)
 
     this.isAdmin$ = this.user.user$.pipe(
+      tap(user => {
+        if (user) this.stakeholder.updateLastCheckedGoal(this.goalId, user.uid)
+      }),
       switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
-      map(stakeholder => createGoalStakeholder(stakeholder).isAdmin)
+      map(stakeholder => createGoalStakeholder(stakeholder).isAdmin),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
     const { t } = this.route.snapshot.queryParams;

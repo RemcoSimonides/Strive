@@ -17,9 +17,9 @@
       <ion-button slot="end" color="primary" fill="outline" size="default" (click)="dontGive()">Don't give</ion-button>
     </ion-item>
     <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'inset'">
-      <ion-thumbnail slot="start">
+      <ion-avatar slot="start">
         <img [ref]="achiever.photoURL" asset="profile.png">
-      </ion-thumbnail>
+      </ion-avatar>
       <ion-label class="ion-text-wrap">
         <ion-text>{{ achiever.username }}</ion-text>
       </ion-label>

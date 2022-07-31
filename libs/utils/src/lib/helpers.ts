@@ -1,3 +1,8 @@
+import { DocumentData } from "firebase/firestore";
+
+
+// DO NOT USE FUNCTIONS IN BACKEND
+
 export function setDateToEndOfDay(date: string): string {
   return new Date(date).setHours(23, 59, 59, 999).toString()
 }
@@ -9,6 +14,10 @@ export function setDateToEndOfDay(date: string): string {
   return new Promise(resolve => {
     setTimeout(resolve, ms);
   });
+}
+
+export function unique<T>(array: T[]) {
+  return Array.from(new Set(array));
 }
 
 /**
@@ -31,4 +40,23 @@ export function isValidHttpUrl(url: string) {
   } catch (_) {
     return false;  
   } 
+}
+
+export function toDate<D>(target: DocumentData): D {
+  if (!target) return;
+  if (typeof target !== 'object') return target;
+  for (const key in target) {
+    const value = target[key];
+    if (!value || typeof value !== 'object') continue;
+    if (!!value['seconds'] && value['nanoseconds'] >= 0) {
+      try {
+        target[key] = value.toDate();
+      } catch (_) {
+        console.log(`${key} is not a Firebase Timestamp`);
+      }
+      continue;
+    }
+    toDate(value);
+  }
+  return target as D;
 }

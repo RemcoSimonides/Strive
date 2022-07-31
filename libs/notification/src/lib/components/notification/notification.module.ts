@@ -6,12 +6,10 @@ import { IonicModule } from '@ionic/angular';
 
 import { NotificationComponent, SourcePipe } from './notification.component';
 
-import { NotificationOptionsPopoverModule } from '../notification-options/notification-options.module';
 import { PostComponentModule } from '@strive/post/components/post/post.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { MessagePipeModule } from '../../pipes/message.pipe';
 import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module';
-import { SupportDecisionModal } from '@strive/support/modals/decision/decision.module';
 
 @NgModule({
   imports: [
@@ -20,8 +18,6 @@ import { SupportDecisionModal } from '@strive/support/modals/decision/decision.m
     RouterModule,
     FlexLayoutModule,
 
-    SupportDecisionModal,
-    NotificationOptionsPopoverModule,
     PostComponentModule,
     ImageModule,
     MessagePipeModule,

@@ -1,7 +1,6 @@
 import { db, functions, admin } from '../internals/firebase';
 
 import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
-import { sendNotificationMilestoneDeadlinePassed } from './notifications/milestone.notification';
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
 import { logger } from 'firebase-functions';
@@ -72,10 +71,6 @@ function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['opti
 }
 
 async function milestoneDeadlineHandler(options: ScheduledTaskMilestoneDeadline['options']) {
-
-  // send notification to achievers
-  await sendNotificationMilestoneDeadlinePassed(options.goalId, options.milestoneId)
-
   // set status to overdue
   return db.doc(`Goals/${options.goalId}/Milestones/${options.milestoneId}`).update({
     status: 'overdue'

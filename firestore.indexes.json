@@ -9,6 +9,22 @@
       ]
     },
     {
+      "collectionGroup": "GoalEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "source.goal.id", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "GoalEvents",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "source.goal.id", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING"}
+      ]
+    },
+    {
       "collectionGroup": "Milestones",
       "queryScope": "COLLECTION",
       "fields": [
@@ -66,7 +82,7 @@
       "collectionGroup": "Supports",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "supporter.uid", "order": "ASCENDING" },
+        { "fieldPath": "source.supporter.uid", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
@@ -142,7 +158,7 @@
     },
     {
       "collectionGroup": "Supports",
-      "fieldPath": "supporter.uid",
+      "fieldPath": "source.supporter.uid",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -164,7 +180,7 @@
     },
     {
       "collectionGroup": "Supports",
-      "fieldPath": "receiver.uid",
+      "fieldPath": "source.receiver.uid",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -187,6 +203,28 @@
     {
       "collectionGroup": "Notifications",
       "fieldPath": "source.goal.id",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "arrayConfig": "CONTAINS",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Notifications",
+      "fieldPath": "source.milestone.id",
       "indexes": [
         {
           "order": "ASCENDING",

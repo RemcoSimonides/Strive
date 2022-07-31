@@ -13,7 +13,60 @@
 </ng-container>
 
 <ion-content class="ion-padding" *ngIf="!!user.uid">
-  <section>
+  <main>
+
+    <section *ngIf="supportsNeedDecision$ | async as goals">
+      <ng-container *ngIf="goals.length">
+        <ng-container *ngFor="let goal of goals">
+
+          <ng-container *ngIf="goal.supports.length; else milestones">
+            <ion-list mode="md">
+              <ion-text class="list-header">Goal "<a [routerLink]="['/goal', goal.id]">{{ goal.title }}</a>" has been finished.</ion-text>
+
+              <ion-item *ngFor="let support of goal.supports; let last = last" [lines]="last ? 'none' : 'inset'">
+                <ion-label class="ion-text-wrap">
+                  <ion-text>
+                    <b>{{ support.description }}</b>
+                    <ng-container *ngIf="support.source.milestone?.id">
+                      <br/>
+                      <small>{{ support.source.milestone.content }}</small>
+                    </ng-container>
+                  </ion-text>
+                </ion-label>
+                <ion-button color="primary" (click)="give(support)">
+                  Give
+                </ion-button>
+                <ion-button fill="outline" (click)="reject(support)">
+                  Reject
+                </ion-button>
+              </ion-item>
+
+            </ion-list>
+          </ng-container>
+
+          <ng-template #milestones>
+            <ng-container *ngFor="let milestone of goal.milestones">
+              <ion-list mode="md">
+                <ion-text class="list-header">Milestone "{{ milestone.content }}" of goal "<a [routerLink]="['/goal', goal.id]">{{ goal.title }}</a>" has been completed</ion-text>
+
+                <ion-item *ngFor="let support of milestone.supports; let last = last" [lines]="last ? 'none' : 'inset'">
+                  <ion-label class="ion-text-wrap">
+                    <ion-text><b>{{ support.description }}</b></ion-text>
+                  </ion-label>
+                  <ion-button color="primary" (click)="give(support)">
+                    Give
+                  </ion-button>
+                  <ion-button fill="outline" (click)="reject(support)">
+                    Reject
+                  </ion-button>
+                </ion-item>
+              </ion-list>
+            </ng-container>
+          </ng-template>
+        </ng-container>
+
+      </ng-container>
+    </section>
 
     <h2>Goals you support</h2>
     <ion-list mode="md">
@@ -45,7 +98,7 @@
             <ion-item [lines]="last ? 'none' : 'inset'">
               <ion-label>
                 <ion-text>
-                  {{ support.description }} from {{ support.supporter.username }}
+                  {{ support.description }} from <a [routerLink]="['/profile', support.source.receiver.uid]">{{ support.source.supporter.username }}</a>
                 </ion-text>
                 <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
                 </ng-template>
@@ -68,10 +121,9 @@
             <ion-item [lines]="last ? 'none' : 'inset'">
               <ion-label>
                 <ion-text>
-                  {{ support.description }} to achiever(s) from {{ support.goal.title }}
+                  {{ support.description }} to <a [routerLink]="['/profile', support.source.receiver.uid]">{{ support.source.receiver.username }}</a>
                 </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-                </ng-template>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
               </ion-label>
               <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Gave it</ion-button>
             </ion-item>
@@ -91,10 +143,9 @@
             <ion-item [lines]="last ? 'none' : 'inset'">
               <ion-label>
                 <ion-text>
-                  {{ support.description }} to achiever(s) from {{ support.goal.title }}
+                  {{ support.description }} from <a [routerLink]="['/profile', support.source.supporter.uid]">{{ support.source.supporter.username }}</a>
                 </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-                </ng-template>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
               </ion-label>
             </ion-item>
           </ng-container>
@@ -113,10 +164,9 @@
             <ion-item [lines]="last ? 'none' : 'inset'">
               <ion-label>
                 <ion-text>
-                  {{ support.description }} to achiever(s) from {{ support.goal.title }}
+                  {{ support.description }} to achiever(s) from {{ support.source.goal.title }}
                 </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-                </ng-template>
+                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
               </ion-label>
             </ion-item>
           </ng-container>
@@ -127,12 +177,12 @@
       </ng-container>
     </ion-list>
 
-  </section>
+  </main>
 </ion-content>
 
 <ng-template #path let-support>
   <ion-text>
-    <p *ngIf="!support.milestone.id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title }}</a></p>
-    <p *ngIf="support.milestone.id"><a [routerLink]="'../goal/' + (support.goal.id)">{{ support.goal.title | mSlice}}</a>&nbsp;<span class="arrow">&#8702;</span> {{ support.milestone.content | mSlice }}</p>
+    <p *ngIf="!support.source.milestone?.id"><a [routerLink]="'../goal/' + (support.source.goal.id)">{{ support.source.goal.title }}</a></p>
+    <p *ngIf="support.source.milestone?.id"><a [routerLink]="'../goal/' + (support.source.goal.id)">{{ support.source.goal.title | mSlice}}</a>&nbsp;<span class="arrow">&#8702;</span> {{ support.source.milestone.content | mSlice }}</p>
   </ion-text>
 </ng-template>

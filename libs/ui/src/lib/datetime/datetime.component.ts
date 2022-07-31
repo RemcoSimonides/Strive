@@ -15,16 +15,16 @@ export class DatetimeComponent {
 
   constructor(
     private navParams: NavParams,
-    private popover: PopoverController
+    private popoverCtrl: PopoverController
   ) {
     this.presentation = this.navParams.data?.presentation ?? 'date'
   }
   
   confirm() {
-    this.popover.dismiss(this.datetime.value, 'dismiss')
+    this.popoverCtrl.dismiss(this.datetime.value, 'dismiss')
   }
   
   remove() {
-    this.popover.dismiss(undefined, 'remove')
+    this.popoverCtrl.dismiss(undefined, 'remove')
   }
 }

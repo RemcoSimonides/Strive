@@ -1,4 +1,5 @@
-import { enumEvent, Notification, NotificationMessageText, Source, SupportDecisionMeta } from '../+state/notification.firestore';
+import { GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { enumEvent, Notification, NotificationMessageText, NotificationSource } from '../+state/notification.firestore';
 
 const notificationIcons = [
   'alert-outline',
@@ -19,7 +20,7 @@ function throwError(event: enumEvent, target: string) {
   throw new Error(`No notification message for event ${event} and target ${target}`)
 }
 
-function get(type: 'user' | 'goal', source: Source): { title: string, image: string, link: string } {
+function get(type: 'user' | 'goal', source:  NotificationSource): { title: string, image: string, link: string } {
   const data = {
     user: {
       title: source.user?.username,
@@ -35,577 +36,241 @@ function get(type: 'user' | 'goal', source: Source): { title: string, image: str
   return data[type]
 }
 
-export function getNotificationMessage({ event, source, meta, target }: Notification): { title: string, image: string, link: string, icon: NotificationIcons, message: NotificationMessageText[] } {
-  switch (event) {
-    case enumEvent.gNew: // deprecated 4/12/2012
+export interface GoalNotificationMessage {
+  icon: NotificationIcons
+  message: NotificationMessageText[]
+}
 
-      switch (target) {
-        case 'goal':
-          return {
-            ...get('goal', source),
-            icon: 'flag-outline',
-            message: [
-              { text: `New goal is created! Best of luck` }
-            ]
-          }
+export interface NotificationMessage {
+  title: string
+  image: string
+  link: string
+  message: NotificationMessageText[]
+}
 
-        case 'spectator':
-          return {
-            ...get('user', source),
-            icon: 'flag-outline',
-            message: [
-              { text: `Created goal "` },
-              { 
-                text: source.goal.title,
-                link: `goal/${source.goal.id}`
-              },
-              { text: `". Can you help out?` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
+export function getGoalNotificationMessage({ name, source }: GoalEvent): GoalNotificationMessage {
+  switch (name) {
     case enumEvent.gNewBucketlist:
     case enumEvent.gNewActive:
     case enumEvent.gNewFinished:
-      switch (target) {
-        case 'goal':
-          return {
-            ...get('goal', source),
-            icon: 'flag-outline',
-            message: [
-              { text: `Goal created` }
-            ]
-          }
-
-        case 'spectator': {
-          let message: NotificationMessageText[];
-          if (event === enumEvent.gNewBucketlist) {
-            message = [
-              { text: `Added "` },
-              { text: source.goal.title, link: `goal/${source.goal.id}` },
-              { text: `" to bucket list` }
-            ]
-          } else if (event === enumEvent.gNewActive) {
-            message = [
-              { text: `Started goal "` },
-              { text: source.goal.title, link: `goal/${source.goal.id}` },
-              { text: `"` }
-            ]
-          } else if (event === enumEvent.gNewFinished) {
-            message = [
-              { text: `Started journaling about "` },
-              { text: source.goal.title, link: `goal/${source.goal.id}` },
-              { text: `"` }
-            ]
-          }
-
-          return {
-            ...get('user', source),
-            icon: 'flag-outline',
-            message
-          }
-        }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gFinished:
-
-      switch (target) {
-        case 'goal':
-          return {
-            ...get('goal', source),
-            icon: 'flag-outline',
-            message: [{ text: `Goal is finished!` }]
-          }
-
-        case 'spectator':
-          return {
-            ...get('user', source),
-            icon: 'flag-outline',
-            message: [
-              { text: `Finished goal "` },
-              {
-                text: source.goal.title,
-                link: `goal/${source.goal.id}`
-              },
-              { text: `"` }
-            ]
-          }
-
-        case 'stakeholder':
-          // Can be support decision notification
-          if ((meta as SupportDecisionMeta).type === 'supportDecision') {
-            return {
-              ...get('goal', source),
-              icon: 'flag-outline',
-              message: [
-                { text: 'Goal has been completed!' }
-              ]
-            }
-          } else {
-            return {
-              ...get('goal', source),
-              icon: 'flag-outline',
-              message: [
-                { text: `Goal has been marked as finished` }
-              ]
-            }
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gMilestoneCompletedSuccessfully:
-      switch (target) {
-        case 'goal':
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'checkmark-outline',
-            message: [
-              { text: `Milestone "${source.milestone.content}" successfully completed` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gMilestoneCompletedUnsuccessfully:
-      switch (target) {
-        case 'goal':
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'checkmark-outline',
-            message: [
-              { text: `Milestone "${source.milestone.content}" failed to complete` }
-            ]
-          }
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gMilestoneDeadlinePassed:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'alert-outline',
-            message: [
-              { text: `Milestone "${source.milestone.content}" of goal "${source.goal.title}" passed its due date` }
-            ]
-          }
-        case 'goal':
-          return {
-            ...get('goal', source),
-            icon: 'alert-outline',
-            message: [
-              { text: `Milestone "${source.milestone.content}" of goal "${source.goal.title}" passed its due date` }
-            ]
-          }
-      }
-      break
-
-    case enumEvent.gStakeholderAchieverAdded:
-
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'person-add-outline',
-            message: [
-              {
-                text: source.user.username,
-                link: `profile/${source.user.uid}`
-              },
-              { text: ` joined as an Achiever` }
-            ]
-          }
-        case 'goal':
-          return {
-            ...get('user', source),
-            icon: 'person-add-outline',
-            message: [
-              { text: `Joined as an Achiever!`}
-            ]
-          }
-        case 'spectator':
-          return {
-            ...get('user', source),
-            icon: 'person-add-outline',
-            message: [
-              { text: `Joined goal "` },
-              {
-                text: source.goal.title,
-                link: `goal/${source.goal.id}`
-              },
-              { text: `" as an Achiever` }
-            ]
-          }
-        default:
-          throwError(event, target);
-          break
-      }
-      break
-
-    case enumEvent.gStakeholderAdminAdded:
-      switch (target) {
-        case 'goal':
-          return {
-            ...get('user', source),
-            icon: 'person-add-outline',
-            message: [
-              { text: `Became an admin` }
-            ]
-          }
-        
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'person-add-outline',
-            message: [
-              { text: `${source.user.username} is now admin` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-    
-    case enumEvent.gStakeholderRequestToJoinPending:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'person-add-outline',
-            message: [
-              {
-                text: source.user.username,
-                link: `profile/${source.user.uid}`
-              },
-              { text: ` requests to join goal` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gStakeholderRequestToJoinAccepted:
-      switch (target) {
-        case 'user':
-          return {
-            ...get('goal', source),
-            icon: 'person-add-outline',
-            message: [
-              { text: `Your request to join goal "${source.goal.title}" has been accepted` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gStakeholderRequestToJoinRejected:
-      switch (target) {
-        case 'user':
-          return {
-            ...get('goal', source),
-            icon: 'person-remove-outline',
-            message: [
-              { text: `Your request to join "${source.goal.title}" has been rejected` }
-            ]
-          }
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-    
-    case enumEvent.gSupportAdded:
-      switch (target) {
-        case 'stakeholder': {
-          const text = source.support.milestone?.id
-          ? ` is now supporting milestone "${source.support.milestone.content}"`
-          : ` is now supporting`
-        
-          return {
-            ...get('goal', source),
-            icon: 'heart-outline',
-            message: [
-              {
-                text: source.support.supporter.username,
-                link: `profile/${source.support.supporter.uid}`
-              },
-              { text },
-              { text: ` with "${source.support.description}"` }
-            ]
-          }
-        }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gSupportWaitingToBePaid:
-      switch (target) {
-        case 'user':
-          return {
-            ...get('goal', source),
-            icon: 'heart-outline',
-            message: [
-              {
-                text: source.support.supporter.username,
-                link: `profile/${source.support.supporter.uid}`
-              },
-              { text: ` decided to give you the support "${source.support.description}"` }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gSupportPaid:
-      switch (target) {
-        case 'user':
-          return {
-            ...get('goal', source),
-            icon: 'heart-outline',
-            message: [
-              {
-                text: source.support.supporter.username,
-                link: `profile/${source.support.supporter.uid}`
-              },
-              {
-                text: ` paid support "${source.support.description}"`
-              }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gSupportRejected:
-      switch (target) {
-        case 'stakeholder':
-          if (source.support.milestone?.id) {
-            return {
-              ...get('goal', source),
-              icon: 'heart-dislike-outline',
-              message: [
-                {
-                  text: source.support.supporter.username,
-                  link: `profile/${source.support.supporter.uid}`
-                },
-                { text: ` rejected paying support "${source.support.description}" for milestone "${source.support.milestone.content}"` }
-              ]
-            }
-          } else {
-            return {
-              ...get('goal', source),
-              icon: 'heart-dislike-outline',
-              message: [
-                {
-                  text: source.support.supporter.username,
-                  link: `profile/${source.support.supporter.uid}`
-                },
-                { text: ` rejected paying support "${source.support.description}"` }
-              ]
-            }
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gSupportPendingSuccesful:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'checkmark-outline',
-            message: [
-              { text: `Milestone "${source.milestone.content}" succesfully completed` }
-            ]
-          }
-
-        default:
-          throwError(event, target)
-      }
-      break
-
-    case enumEvent.gSupportPendingFailed:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'checkmark-outline',
-            message: [
-              { text: `Milestone "${source.milestone.content}" failed to complete` }
-            ]
-          }
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gSupportDeleted:
-      switch (target) {
-        case 'user':
-
-          if (source.milestone.id) {
-            return {
-              ...get('goal', source),
-              icon: 'remove-outline',
-              message: [
-                { text: `Support "${source.support.description}" has been removed because milestone "${source.milestone.content}" has been deleted` }
-              ]
-            }
-          } else {
-            return {
-              ...get('goal', source),
-              icon: 'remove-outline',
-              message: [
-                { text: `Support "${source.support.description}" has been removed because goal "${source.goal.title}" has been deleted` }
-              ]
-            }
-          }
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gRoadmapUpdated:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'create-outline',
-            message: [
-              {
-                text: `Roadmap has been changed. Go and checkout what the new plan is."`
-              }
-            ]
-          }
-
-        case 'goal':
-          return {
-            ...get('goal', source),
-            icon: 'create-outline',
-            message: [
-              {
-                text: `Roadmap has been updated`
-              }
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.gNewPost:
-      switch (target) {
-        case 'stakeholder':
-          return {
-            ...get('goal', source),
-            icon: 'bookmark-outline',
-            message: [
-              { text: `Post created` }
-            ]
-          }
-
-        case 'goal':
-          return {
-            ...get('user', source),
-            icon: 'bookmark-outline',
-            message: [] // no message - just the post
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.discussionNewMessage:
-      switch (target) {
-        case 'user':
-          return {
-            ...get('goal', source),
-            icon: 'chatbox-outline',
-            message: [
-              { text: `New comment "${source.comment.text}" from ${source.comment.user.username}` },
-            ]
-          }
-      
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    case enumEvent.userSpectatorAdded:
-      switch (target) {
-        case 'user':
-          return {
-            ...get('user', source),
-            icon: 'person-add-outline',
-            message: [
-              { text: `${source.user.username} started following you` }
-            ]
-          }
-
-        default:
-          throwError(event, target)
-          break
-      }
-      break
-
-    default:
-      // throwError(notification, target);
       return {
-        title: 'Unknown notification',
+        icon: 'flag-outline',
+        message: [{ text: `Goal created` }]
+      }
+    case enumEvent.gFinished:
+      return {
+        icon: 'flag-outline',
+        message: [{ text: `Goal is finished!` }]
+      }
+    case enumEvent.gMilestoneCompletedSuccessfully:
+      return {
+        icon: 'checkmark-outline',
+        message: [
+          { text: `Milestone "${source.milestone.content}" successfully completed` }
+        ]
+      }
+    case enumEvent.gMilestoneCompletedUnsuccessfully:
+      return {
+        icon: 'checkmark-outline',
+        message: [
+          { text: `Milestone "${source.milestone.content}" failed to complete` }
+        ]
+      }
+    case enumEvent.gMilestoneDeadlinePassed:
+      return {
         icon: 'alert-outline',
-        image: '',
-        link: '',
+        message: [
+          { text: `Milestone "${source.milestone.content}" passed its due date` }
+        ]
+      }
+    case enumEvent.gStakeholderAchieverAdded:
+      return {
+        icon: 'person-add-outline',
+        message: [
+          { text: source.user.username, link: `/profile/${source.user.uid}` },
+          { text: ` joined as an Achiever`}
+        ]
+      }
+    case enumEvent.gStakeholderAdminAdded:
+      return {
+        icon: 'person-add-outline',
+        message: [
+          { text: source.user.username, link: `/profile/${source.user.uid}` },
+          { text: ` became an Admin` }
+        ]
+      }
+    case enumEvent.gRoadmapUpdated:
+      return {
+        icon: 'create-outline',
+        message: [
+          {
+            text: `Roadmap has been updated`
+          }
+        ]
+      }
+    case enumEvent.gNewPost:
+      return {
+        icon: 'bookmark-outline',
+        message: [] // no message - just the post
+      }
+    case enumEvent.gSupportAdded: {
+      const isMilestone = source.milestone?.id
+      const suffix = isMilestone ? ` to milestone "${source.milestone.content}" ` : ''
+      return {
+        icon: 'heart-outline',
+        message: [
+          { text: source.user.username, link: `/profile/${source.user.uid}` },
+          { text: ` added support "${source.support.description}"${suffix}`}
+        ]
+      }
+    }
+    default:
+      return {
+        icon: 'alert-outline',
         message: [] 
       }
+  }
+}
+
+export function getNotificationMessage({ event, source }: Notification): NotificationMessage {
+  switch (event) {
+    case enumEvent.gNewBucketlist:
+      return {
+        ...get('user', source),
+        message: [
+          { text: `${source.user.username} added "` },
+          { text: source.goal.title, link: `goal/${source.goal.id}` },
+          { text: `" to bucket list` }
+        ]
+      }
+    case enumEvent.gNewActive:
+      return {
+        ...get('user', source),
+        message: [
+          { text: `${source.user.username} started goal "` },
+          { text: source.goal.title, link: `goal/${source.goal.id}` },
+          { text: `"` }
+        ]
+      }
+    case enumEvent.gNewFinished:
+      return {
+        ...get('user', source),
+        message: [
+          { text: `${source.user.username} journaled about "` },
+          { text: source.goal.title, link: `goal/${source.goal.id}` },
+          { text: `"` }
+        ]
+      }
+
+    case enumEvent.gFinished:
+      return {
+        ...get('user', source),
+        message: [
+          { text: `${source.user.username} finished goal "` },
+          {
+            text: source.goal.title,
+            link: `goal/${source.goal.id}`
+          },
+          { text: `"` }
+        ]
+      }
+
+    case enumEvent.gMilestoneDeadlinePassed:
+      return {
+        ...get('goal', source),
+        message: [
+          { text: `Milestone "${source.milestone.content}" of goal "${source.goal.title}" passed its due date` }
+        ]
+      }
+
+    case enumEvent.gStakeholderRequestToJoinPending:
+      return {
+        ...get('goal', source),
+        message: [
+          {
+            text: source.user.username,
+            link: `profile/${source.user.uid}`
+          },
+          { text: ` requests to join goal` }
+        ]
+      }
+
+    case enumEvent.gStakeholderRequestToJoinAccepted: 
+      return {
+        ...get('goal', source),
+        message: [
+          { text: `Your request to join goal "${source.goal.title}" has been accepted` }
+        ]
+      }
+
+    case enumEvent.gStakeholderRequestToJoinRejected:
+      return {
+        ...get('goal', source),
+        message: [
+          { text: `Your request to join "${source.goal.title}" has been rejected` }
+        ]
+      }
+
+    case enumEvent.userSpectatorAdded:
+      return {
+        ...get('user', source),
+        message: [
+          { text: `${source.user.username} started following you` }
+        ]
+      }
+    
+    case enumEvent.gSupportPendingFailed:
+    case enumEvent.gSupportPendingSuccesful: {
+      const isMilestone = source.milestone?.id
+      const prefix = isMilestone ? `Milestone "${source.milestone.content}"` : `Goal`
+      return {
+        ...get('goal', source),
+        link: '/supports',
+        message: [
+          { text: `${prefix} has been completed. Decide to give "${source.support.description}" or not` }
+        ]
+      }
+    }
+
+    case enumEvent.gSupportPaid:
+      return {
+        ...get('goal', source),
+        link: '/supports',
+        message: [
+          {
+            text: source.user.username,
+            link: `profile/${source.user.uid}`
+          },
+          {
+            text: ` paid support "${source.support.description}"`
+          }
+        ]
+      }
+    
+    case enumEvent.gSupportRejected: {
+      const isMilestone = !!source.milestone?.id
+      const suffix = isMilestone ? ` for milestone "${source.milestone.content}"` : ''
+
+      return {
+        ...get('goal', source),
+        link: '/supports',
+        message: [
+          {
+            text: source.user.username,
+            link: `profile/${source.user.uid}`
+          },
+          { text: ` rejected paying support "${source.support.description}"${suffix}`}
+        ]
+      }
+    }
+
+    case enumEvent.gSupportDeleted: {
+      const isMilestone = !!source.milestone?.id
+
+      return {
+        ...get('goal', source),
+        message: []
+      }
+    }
   }
 }

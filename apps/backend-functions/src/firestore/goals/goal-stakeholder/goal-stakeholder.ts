@@ -1,19 +1,21 @@
-import { db, functions, increment } from '../../../internals/firebase';
+import { db, functions, increment, arrayUnion } from '../../../internals/firebase';
 
 // interfaces
-import { createGoal } from '@strive/goal/goal/+state/goal.firestore'
-import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { handleNotificationsOfStakeholderCreated, handleNotificationsOfStakeholderChanged } from './goal-stakeholder.notification'
+import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { toDate } from '../../../shared/utils';
+import { getDocument } from 'apps/backend-functions/src/shared/utils';
+import { addGoalEvent } from '../goal.events';
+import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 
 
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
   .onCreate(async (snapshot, context) => {
 
-    const stakeholder = createGoalStakeholder(snapshot.data())
-    const goalId = context.params.goalId
+    const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const { goalId } = context.params
 
-    const goalSnap = await db.doc(`Goals/${goalId}`).get()
-    const goal = createGoal({ ...goalSnap.data(), id: goalId })
+    const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
     if (stakeholder.isAchiever) {
       changeNumberOfAchievers(goalId, stakeholder.isAchiever)
@@ -27,37 +29,52 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
       changeNumberOfActiveGoals(stakeholder.uid, 1)
     }
 
-    // notifications
-    handleNotificationsOfStakeholderCreated(goal, stakeholder)
+    // Adding admins and achievers to goal chat so they receive notifications
+    if (stakeholder.isAdmin || stakeholder.isAchiever) {
+      db.doc(`Discussions/${goal.id}`).update({
+        commentators: arrayUnion(stakeholder.uid)
+      })
+    }
+
+    // events
+    handleStakeholderEvents(createGoalStakeholder(), stakeholder, goal)
   })
 
 export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
   .onUpdate(async (snapshot, context) => {
 
-    const before = createGoalStakeholder(snapshot.before.data())
-    const after = createGoalStakeholder(snapshot.after.data())
-    const stakeholderId = context.params.stakeholderId
-    const goalId = context.params.goalId
+    const before = createGoalStakeholder(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
+    const after = createGoalStakeholder(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
+    const { stakeholderId, goalId } = context.params
 
-    const goalSnap = await db.doc(`Goals/${goalId}`).get()
-    const goal = createGoal({ ...goalSnap.data(), id: goalId })
+    const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
-    // notifications
-    handleNotificationsOfStakeholderChanged(goal, before, after)
+    // events
+    handleStakeholderEvents(before, after, goal)
 
     // isAchiever changed
     if (before.isAchiever !== after.isAchiever) {
       changeNumberOfAchievers(goalId, after.isAchiever)
     }
 
-    //Increase or decrease number of Supporters
+    // increase or decrease number of Supporters
     if (before.isSupporter !== after.isSupporter) {
       changeNumberOfSupporters(goalId, after.isSupporter)
     }
 
+    // increase or decreate number of active goals
     if (before.status !== after.status) {
       if (after.status === 'active') changeNumberOfActiveGoals(stakeholderId, 1)
       if (before.status === 'active') changeNumberOfActiveGoals(stakeholderId, -1)
+    }
+
+    // Adding admins and achievers to goal chat so they receive notifications
+    const becameAchiever = !before.isAchiever && after.isAchiever
+    const becameAdmin = !before.isAdmin && after.isAdmin
+    if (becameAchiever || becameAdmin) {
+      db.doc(`Discussions/${goal.id}`).update({
+        commentators: arrayUnion(after.uid)
+      })
     }
 
     if (before.status !== after.status && goal.status !== after.status) {
@@ -68,7 +85,7 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
         if (snap.size) return
       }
       
-      goalSnap.ref.update({ status: after.status });
+      db.doc(`Goals/${goalId}`).update({ status: after.status })
     }
   })
 
@@ -76,12 +93,45 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
   .onDelete(async (snapshot, context) => {
 
     const stakeholderId = context.params.stakeholderId
-    const goal = createGoalStakeholder(snapshot.data())
-    if (goal.status === 'active') {
+    const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
+    if (stakeholder.status === 'active') {
       changeNumberOfActiveGoals(stakeholderId, -1)
     }
 
   })
+
+function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder, goal: Goal) {
+
+  const becameAdmin = !before.isAdmin && after.isAdmin
+  const becameAchiever = !before.isAchiever && after.isAchiever
+  const becameSupporter = !before.isSupporter && after.isSupporter
+
+  const adminRemoved = before.isAdmin && !after.isAdmin
+  const achieverRemoved = before.isAchiever && !after.isAchiever
+  const supporterRemoved = before.isSupporter && !after.isSupporter
+
+  const requestToJoin = !before.hasOpenRequestToJoin && after.hasOpenRequestToJoin
+  const requestToJoinDecided = before.hasOpenRequestToJoin && !after.hasOpenRequestToJoin
+  const requestToJoinAccepted = requestToJoinDecided && !before.isAchiever && after.isAchiever
+  const requestToJoinRejected = requestToJoinDecided && !before.isAchiever && !after.isAchiever
+
+  const source = createGoalSource({
+    goal,
+    user: after
+  })
+
+  if (becameAdmin) addGoalEvent(enumEvent.gStakeholderAdminAdded, source)
+  if (becameAchiever) addGoalEvent(enumEvent.gStakeholderAchieverAdded, source)
+  if (becameSupporter) addGoalEvent(enumEvent.gStakeholderSupporterAdded, source)
+  
+  if (adminRemoved) addGoalEvent(enumEvent.gStakeholderAdminRemoved, source)
+  if (achieverRemoved) addGoalEvent(enumEvent.gStakeholderAchieverRemoved, source)
+  if (supporterRemoved) addGoalEvent(enumEvent.gStakeholderSupporterRemoved, source)
+
+  if (requestToJoin) addGoalEvent(enumEvent.gStakeholderRequestToJoinPending, source)
+  if (requestToJoinAccepted) addGoalEvent(enumEvent.gStakeholderRequestToJoinAccepted, source)
+  if (requestToJoinRejected) addGoalEvent(enumEvent.gStakeholderRequestToJoinRejected, source)
+}
 
 function changeNumberOfAchievers(goalId: string, isAchiever: boolean) {
   const goalRef = db.doc(`Goals/${goalId}`)

@@ -21,62 +21,13 @@
           </ng-container>
           <ng-template #noLink>{{ message.text }}</ng-template>
         </ng-container>
-
-        <ng-container *ngIf="notification.meta?.type === 'supportDecision' && notification.meta.supports.length">
-          . You support this {{ notification.source.milestone.id ? 'milestone' : 'goal' }} with "{{ getSupports(notification.meta.supports) }}".
-        </ng-container>
       </span>
-
-      <!-- Buttons to accept or decline evidence -->
-      <ng-container *ngIf="notification.meta?.type === 'supportDecision' && notification.meta.supports.length">
-        <div fxLayout="row wrap" fxLayoutGap="8px">
-          <ng-container *ngIf="notification.meta.status === 'pending'; else finalized">
-            <ion-button color="primary" (click)="giveSupport(notification)" [disabled]="notification.meta.status !== 'pending'"
-              >{{ notification.meta.supports.length === 1 ? 'Give' : 'Give all' }}
-            </ion-button>
-            <ion-button fill="outline" (click)="rejectSupport(notification)" [disabled]="notification.meta.status !== 'pending'">
-              {{ notification.meta.supports.length === 1 ? 'Reject' : 'Reject all' }}
-            </ion-button>
-            <ion-button fill="clear" (click)="more(notification)" *ngIf="notification.meta.supports.length > 1">
-              more
-            </ion-button>
-          </ng-container>
-          <ng-template #finalized>
-            <section fxLayout="column">
-              <ng-container *ngFor="let support of notification.meta.supports">
-                <article fxLayout fxLayoutAlign="start center" fxLayoutGap="4px">
-                  <span>"{{ support.description }}"</span>
-                  <ng-container *ngIf="support.receiver.uid; else noReceiver">
-                    <span>to</span>
-                    <ion-chip>
-                      <ion-avatar>
-                        <img [ref]="support.receiver.photoURL" asset="profile.png" />
-                      </ion-avatar>
-                      <ion-label>{{ support.receiver.username }}</ion-label>
-                    </ion-chip>
-                  </ng-container>
-                  <ng-template #noReceiver>
-                    <span>not given</span>
-                  </ng-template>
-                </article>
-              </ng-container>
-            </section>
-          </ng-template>
-        </div>
-      </ng-container>
 
       <!-- Post -->
       <ng-container *ngIf="!!notification.source.postId">
         <post-main [author]="notification.source.user" [postRef]="'Goals/' + notification.source.goal.id + '/Posts/' + notification.source.postId"></post-main>
       </ng-container>
 
-      <!-- Discussion -->
-      <!-- <section fxLayout>
-        <ion-button (click)="openDiscussion()" fill="clear" size="small">
-          {{ (notification.discussion$ | async)?.numberOfComments || 0 }}
-          <ion-icon id="discussion-icon" name="chatbox-outline"></ion-icon>
-        </ion-button>
-      </section> -->
     </article>
   </section>
 

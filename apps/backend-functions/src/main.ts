@@ -10,7 +10,6 @@ export { affirmationsCreatedHandler, affirmationsChangeHandler } from './firesto
 export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler } from './firestore/users/exercises/daily_gratefulness';
 export { dearFutureSelfCreatedHandler, dearFutureSelfChangedHandler } from './firestore/users/exercises/dear_future_self';
 export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user';
-export { notificationCreatedHandler, notificationChangeHandler, notificationDeletedHandler } from './firestore/users/notifications/notification';
 
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal';
 export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeholderDeletedHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder';
@@ -21,8 +20,8 @@ export { postCreatedHandler } from './firestore/goals/posts/post';
 export { commentCreatedHandler } from './firestore/discussions/comments/comment';
 
 export { discussionDeletedHandler } from './firestore/discussions/discussion';
+export { goalEventCreatedHandler } from './firestore/goal-events/goal-events';
 
 // http
-// export { duplicateGoal } from './firestore/goals/goal'
-// export { migrate } from './migration'
+export { migrate } from './migration'
 export { scrapeMetatags } from './https/scrape';

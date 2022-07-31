@@ -1,6 +1,5 @@
-import { Timestamp } from '@firebase/firestore-types';
-import { MilestoneTemplate } from '@strive/goal/milestone/+state/milestone.firestore'
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
+import { createGoalSource, enumEvent, GoalSource } from '@strive/notification/+state/notification.firestore';
 
 export type GoalPublicityType = 'public' | 'private'
 export type GoalStatus = 'bucketlist' | 'active' | 'finished'
@@ -12,12 +11,18 @@ export function getAudience(publicity: GoalPublicityType): AudienceType {
     : 'team'
 }
 
+export interface GoalEvent {
+  name: enumEvent
+  source: GoalSource
+  createdAt?: Date
+  updatedAt?: Date
+}
+
 export interface Goal {
   id?: string;
   title: string;
   description: string;
   image: string;
-  roadmapTemplate: MilestoneTemplate[];
   status: GoalStatus;
   publicity: GoalPublicityType;
   numberOfAchievers: number;
@@ -26,8 +31,8 @@ export interface Goal {
   totalNumberOfCustomSupports: number;
   deadline?: string;
   updatedBy?: string;
-  updatedAt?: Timestamp;
-  createdAt?: Timestamp;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 
 export interface GoalLink {
@@ -43,7 +48,6 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     description: '',
     image: '',
     status: 'bucketlist',
-    roadmapTemplate: [],
     numberOfAchievers: 0,
     numberOfCustomSupports: 0,
     numberOfSupporters: 0,
@@ -54,10 +58,18 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
   }
 }
 
-export function createGoalLink(params: Partial<GoalLink> = {}): GoalLink {
+export function createGoalLink(params: Partial<GoalLink | Goal> = {}): GoalLink {
   return {
     id: params.id ?? '',
     title: params.title ?? '',
     image: params.image ?? ''
+  }
+}
+
+export function createGoalEvent(params: Partial<GoalEvent> = {}): GoalEvent {
+  return {
+    name: params.name,
+    ...params,
+    source: createGoalSource(params.source),
   }
 }
