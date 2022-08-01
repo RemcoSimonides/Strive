@@ -19,7 +19,7 @@ import { GoalService } from '@strive/goal/goal/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { GoalEventService } from '@strive/notification/+state/goal-events.service';
+import { GoalEventService } from '@strive/goal/goal/goal-events.service';
 import { where } from 'firebase/firestore';
 import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { getAggregatedMessage } from '@strive/notification/message/aggregated';
