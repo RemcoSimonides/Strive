@@ -60,7 +60,7 @@ export class GoalsComponent {
       joinWith({
         events: value => this.goalEventService.valueChanges([where('source.goal.id', '==', value.goal.id), where('createdAt', '>', value.stakeholder.lastCheckedGoal)]).pipe(
           map(aggregateEvents),
-          map(aggregated => aggregated.map(a => getAggregatedMessage(a)).filter(a => !!a))
+          map(aggregated => aggregated.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
         )
       }, { shouldAwait: true })
     )

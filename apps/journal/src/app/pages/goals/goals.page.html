@@ -41,7 +41,7 @@
                   <ul *ngIf="value.events.length">
                     <li *ngFor="let event of value.events">
                       <ion-icon [name]="event.icon"></ion-icon>
-                      <span [ngClass]="{'important': event.important}">{{ event.message }}</span>
+                      <span [ngClass]="{'important': event.importance === '1'}">{{ event.message }}</span>
                     </li>
                   </ul>
                 </ion-card>
