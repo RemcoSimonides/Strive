@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
-import { DailyGratefulness } from '@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore'
+import { DailyGratefulness } from '@strive/model'
+import { toDate } from '@strive/utils/helpers'
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,7 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
 
   protected fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness {
     if (!snapshot.exists()) return
-    const setting = { ...snapshot.data(), id: snapshot.id }
-    setting.time = (setting.time as any).toDate()
-    return setting
+    return toDate<DailyGratefulness>({ ...snapshot.data(), id: snapshot.id })
   }
 
   getSettings$(uid: string): Observable<DailyGratefulness> {

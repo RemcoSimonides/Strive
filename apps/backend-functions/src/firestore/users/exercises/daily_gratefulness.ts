@@ -1,6 +1,5 @@
 import { functions } from '../../../internals/firebase';
-import { addDays, isPast } from 'date-fns';
-import { DailyGratefulness } from '@strive/exercises/daily-gratefulness/+state/daily-gratefulness.firestore'
+import { DailyGratefulness } from '@strive/model'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 

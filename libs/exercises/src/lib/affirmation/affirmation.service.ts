@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
 
 // Strive
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { Affirmations } from '@strive/model'
+import { toDate } from '@strive/utils/helpers';
 
 @Injectable({providedIn: 'root'})
 export class AffirmationService extends FireCollection<Affirmations> {
@@ -11,6 +12,12 @@ export class AffirmationService extends FireCollection<Affirmations> {
 
   constructor(db: Firestore) {
     super(db)
+  }
+
+  protected fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
+    return snapshot.exists()
+      ? toDate<Affirmations>({ ...snapshot.data(), id: snapshot.id })
+      : undefined
   }
 
   getAffirmations$(uid: string) {
