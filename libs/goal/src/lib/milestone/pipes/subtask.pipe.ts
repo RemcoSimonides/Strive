@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Subtask } from '../+state/milestone.firestore';
+import { Subtask } from '@strive/model'
 
 @Pipe({ name: 'subtasksCompleted' })
 export class SubtasksCompletedPipe implements PipeTransform {

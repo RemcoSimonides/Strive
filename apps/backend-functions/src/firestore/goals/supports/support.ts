@@ -6,7 +6,7 @@ import { createGoal } from '@strive/model';
 import { createGoalSource, createNotificationSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 import { addGoalEvent } from '../goal.events';
 import { getDocument, toDate } from '../../../shared/utils';
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { Milestone } from '@strive/model'
 import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
 import { createNotification } from '@strive/notification/+state/notification.model';
 

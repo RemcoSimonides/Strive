@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
 import { Goal } from '@strive/model'
 
-import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
-import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
+import { createMilestone, Milestone } from '@strive/model'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service';
 import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form';
 
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';

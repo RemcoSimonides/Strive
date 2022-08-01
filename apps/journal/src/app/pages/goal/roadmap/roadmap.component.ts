@@ -7,10 +7,10 @@ import { map, switchMap } from 'rxjs/operators';
 // Strive Service
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
-import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
+import { MilestoneService } from '@strive/goal/milestone/milestone.service';
 
 // Strive Other
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { Milestone } from '@strive/model'
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { Goal } from '@strive/model'
 

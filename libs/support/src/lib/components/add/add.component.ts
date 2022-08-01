@@ -9,7 +9,7 @@ import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service'
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
-import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
+import { createMilestoneLink, Milestone } from '@strive/model'
 import { createSupport, getStatusLabel, Support } from '@strive/support/+state/support.firestore'
 import { Goal } from '@strive/model'
 // Components

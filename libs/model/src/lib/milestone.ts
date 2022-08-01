@@ -1,53 +1,42 @@
-import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
-import { setDateToEndOfDay } from '@strive/utils/helpers';
+import { createUserLink, UserLink } from "@strive/user/user/+state/user.firestore";
+import { setDateToEndOfDay } from "@strive/utils/helpers";
 
-export type MilestoneStatus = 
-  'pending'
-  | 'succeeded' // milestone succesful
-  | 'failed' // milestone failed
-  | 'overdue'
-
-export interface Milestone {
-  id?: string;
-  sequenceNumber: string;
-  order: number;
-  content: string;
-  description: string;
-  numberOfCustomSupports: number;
-  numberOfMoneySupports: number;
-  status: MilestoneStatus
-  deadline: string;
-  achiever: UserLink;
-  subtasks: Subtask[];
-  updatedBy?: string;
-  updatedAt?: any; // TODO give type FieldValue / Date / Timestamp 
-  createdAt?: any;
-  finishedAt?: any;
-}
+export type MilestoneStatus = 'pending' | 'succeeded' | 'failed' | 'overdue'
 
 export interface Subtask {
-  completed: boolean;
-  content: string;
-}
-export interface MilestonesLeveled extends Milestone {
-  submilestones?: MilestoneLevelTwo[];
+  completed: boolean
+  content: string
 }
 
-interface MilestoneLevelTwo extends Milestone {
-  submilestones?: Milestone[];
+export interface Milestone {
+  id?: string
+  sequenceNumber: string
+  order: number
+  content: string
+  description: string
+  numberOfCustomSupports: number
+  numberOfMoneySupports: number
+  status: MilestoneStatus
+  deadline: string
+  achiever: UserLink
+  subtasks: Subtask[]
+  updatedBy?: string
+  updatedAt?: Date // TODO give type FieldValue / Date / Timestamp 
+  createdAt?: Date
+  finishedAt?: Date
 }
 
 export interface MilestoneLink {
-  id: string;
-  content: string;
+  id: string
+  content: string
 }
+
 export interface MilestoneTemplate {
-  id: string;
-  description: string;
-  sequenceNumber: string;
-  deadline: string;
+  id: string
+  description: string
+  sequenceNumber: string
+  deadline: string
 }
-  
 
 /** A factory function that creates a MilestoneDocument. */
 export function createMilestone(params: Partial<Milestone> = {}): Milestone {
@@ -82,7 +71,6 @@ export function createSubtask(params: Partial<Subtask> = {}): Subtask {
   }
 }
 
-/** A factory function that creates a MilestoneTemplate Object. */
 export function createMilestoneTemplate(params: Partial<MilestoneTemplate> = {}): MilestoneTemplate {
   return {
     id: params.id ? params.id : '',

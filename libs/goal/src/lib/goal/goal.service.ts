@@ -10,6 +10,7 @@ import { GoalStakeholderService } from '../stakeholder/+state/stakeholder.servic
 import { Goal, createGoal } from '@strive/model'
 import { createGoalStakeholder, enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {
@@ -25,7 +26,7 @@ export class GoalService extends FireCollection<Goal> {
 
   protected fromFirestore(snapshot: DocumentSnapshot<Goal>) {
     return snapshot.exists()
-      ? createGoal({ ...snapshot.data(), id: snapshot.id })
+      ? createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
       : undefined
   }
 

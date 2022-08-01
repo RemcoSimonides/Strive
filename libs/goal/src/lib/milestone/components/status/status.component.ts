@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { AlertController, ModalController } from '@ionic/angular';
 import { Goal } from '@strive/model'
 
-import { createMilestone, Milestone, MilestoneStatus } from '@strive/goal/milestone/+state/milestone.firestore';
-import { MilestoneService  } from '@strive/goal/milestone/+state/milestone.service';
+import { createMilestone, Milestone, MilestoneStatus } from '@strive/model'
+import { MilestoneService  } from '@strive/goal/milestone/milestone.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { serverTimestamp } from 'firebase/firestore';
 
@@ -71,7 +71,7 @@ export class MilestoneStatusComponent {
             this.milestoneService.upsert({
               id: this.milestone.id,
               status: 'succeeded',
-              finishedAt: serverTimestamp()
+              finishedAt: serverTimestamp() as any
             }, { params: { goalId: this.goal.id }})
             this.milestone.status = 'succeeded'
             this.cdr.markForCheck()
@@ -85,7 +85,7 @@ export class MilestoneStatusComponent {
             this.milestoneService.upsert({
               id: this.milestone.id,
               status: 'failed',
-              finishedAt: serverTimestamp()
+              finishedAt: serverTimestamp() as any
             }, { params: { goalId: this.goal.id }})
             this.milestone.status = 'failed'
             this.cdr.markForCheck()

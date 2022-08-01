@@ -1,6 +1,6 @@
 import { FormArray, FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createMilestone, createMilestoneLink, createMilestoneTemplate, createSubtask, Milestone, MilestoneLink, MilestoneTemplate, Subtask } from "../+state/milestone.firestore";
+import { createMilestone, createMilestoneLink, createMilestoneTemplate, createSubtask, Milestone, MilestoneLink, MilestoneTemplate, Subtask } from '@strive/model'
 import { UserLinkForm } from '@strive/user/user/forms/user.form'
 
 function createMilestoneFormControl(params: Milestone) {

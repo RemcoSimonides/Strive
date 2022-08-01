@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { orderBy } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { Goal } from '@strive/model'
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
-import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';
+import { Milestone } from '@strive/model'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service';
 
 @Component({
   selector: 'goal-slide-4',

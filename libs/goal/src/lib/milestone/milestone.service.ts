@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
+import { createMilestone, Milestone } from '@strive/model'
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
+import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireCollection<Milestone> {
@@ -16,7 +17,7 @@ export class MilestoneService extends FireCollection<Milestone> {
 
   protected fromFirestore(snapshot: DocumentSnapshot<Milestone>) {
     return snapshot.exists()
-      ? { ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }
+      ? createMilestone(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
       : undefined
   }
 

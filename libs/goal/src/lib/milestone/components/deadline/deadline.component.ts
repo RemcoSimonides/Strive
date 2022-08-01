@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
-import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
+import { Milestone } from '@strive/model'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
 
 @Component({
