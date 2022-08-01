@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { PopoverController } from '@ionic/angular';
-import { Message } from '../../+state/dear-future-self.firestore';
+import { Message } from '@strive/model';
 import { PopoverDirective } from '@strive/utils/directives/popover.directive';
 
 @Component({

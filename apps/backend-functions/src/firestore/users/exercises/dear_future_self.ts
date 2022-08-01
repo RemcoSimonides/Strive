@@ -1,5 +1,5 @@
 import { functions } from '../../../internals/firebase';
-import { DearFutureSelf } from '@strive/exercises/dear-future-self/+state/dear-future-self.firestore';
+import { DearFutureSelf } from '@strive/model'
 
 import { enumWorkerType, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'

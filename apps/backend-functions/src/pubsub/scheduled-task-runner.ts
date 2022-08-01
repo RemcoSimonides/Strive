@@ -7,7 +7,7 @@ import { logger } from 'firebase-functions';
 import { getDocument } from '../shared/utils';
 import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface';
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self';
-import { DearFutureSelf } from '@strive/exercises/dear-future-self/+state/dear-future-self.firestore';
+import { DearFutureSelf } from '@strive/model'
 import { Personal } from '@strive/user/user/+state/user.firestore';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/

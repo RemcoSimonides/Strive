@@ -1,13 +1,12 @@
 import * as admin from 'firebase-admin'
 import { Personal } from '@strive/user/user/+state/user.firestore'
-import { Message } from '@strive/exercises/dear-future-self/+state/dear-future-self.firestore'
+import { Message } from '@strive/model'
 import { format } from 'date-fns'
-import { Timestamp } from '@firebase/firestore-types'
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { groupIds, templateIds } from '../email/ids'
 
 export function sendDearFutureSelfPushNotification(personal: Personal, message: Message) {
-  const from = format((message.createdAt as Timestamp).toDate(), 'MMM yyyy')
+  const from = format(message.createdAt, 'MMM yyyy')
 
   if (personal.fcmTokens.some(token => token)) {
 

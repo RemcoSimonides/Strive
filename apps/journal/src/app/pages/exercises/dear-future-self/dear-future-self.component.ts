@@ -1,18 +1,18 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
-import { ModalController, PopoverController } from "@ionic/angular";
-import { Message } from "@strive/exercises/dear-future-self/+state/dear-future-self.firestore";
-import { DearFutureSelfService } from "@strive/exercises/dear-future-self/+state/dear-future-self.service";
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { FormControl } from '@angular/forms'
+import { ModalController, PopoverController } from '@ionic/angular'
+import { Message } from '@strive/model'
+import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
-import { DearFutureSelfExplanationComponent } from "@strive/exercises/dear-future-self/components/explanation/explanation.component";
-import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component';
-import { UserService } from "@strive/user/user/+state/user.service";
-import { ScreensizeService } from "@strive/utils/services/screensize.service";
-import { SeoService } from "@strive/utils/services/seo.service";
-import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
+import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component'
+import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
+import { UserService } from '@strive/user/user/+state/user.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
-import { addDays, addYears, endOfYear, format, isFuture, isPast } from "date-fns";
-import { map, Observable, of, shareReplay, switchMap } from "rxjs";
+import { addDays, addYears, endOfYear, format, isFuture, isPast } from 'date-fns'
+import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
 
 const initial = `Dear Future Self,
 
@@ -103,7 +103,7 @@ export class DearFutureSelfComponent {
   openExplanation() {
     this.popoverCtrl.create({
       component: DearFutureSelfExplanationComponent,
-      cssClass: "explanation_popover_class"
+      cssClass: 'explanation_popover_class'
     }).then(popover => popover.present())
   }
 

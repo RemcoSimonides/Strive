@@ -4,8 +4,9 @@ import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
-import { DearFutureSelf, Message } from './dear-future-self.firestore';
-import { arrayUnion, Timestamp } from 'firebase/firestore';
+import { DearFutureSelf, Message } from '@strive/model';
+import { arrayUnion } from 'firebase/firestore';
+import { toDate } from '@strive/utils/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,7 @@ export class DearFutureSelfService extends FireCollection<DearFutureSelf> {
 
   protected fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf {
     if (!snapshot.exists()) return
-    const setting = { ...snapshot.data(), id: snapshot.id }
-    setting.messages = setting.messages.map(message => {
-      message.createdAt = (message.createdAt as Timestamp).toDate()
-      message.deliveryDate = (message.deliveryDate as Timestamp).toDate()
-      return message
-    })
-    return setting
+    return toDate<DearFutureSelf>({ ...snapshot.data(), id: snapshot.id })
   }
 
   getSettings$(uid: string): Observable<DearFutureSelf> {
