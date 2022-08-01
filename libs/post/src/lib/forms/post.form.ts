@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createPost, Post } from "../+state/post.firestore";
+import { createPost, Post } from '@strive/model'
 
 function createPostFormControl(params?: Post) {
   const post = createPost(params);

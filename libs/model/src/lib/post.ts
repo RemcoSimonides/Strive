@@ -1,5 +1,3 @@
-import { Timestamp } from '@firebase/firestore-types';
-
 export interface Post {
   id?: string;
   isEvidence: boolean;

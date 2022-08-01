@@ -7,7 +7,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { delay, toDate } from '@strive/utils/helpers';
 
 import { createGoalEvent, Goal, GoalEvent } from '@strive/model'
-import { PostService } from '@strive/post/+state/post.service';
+import { PostService } from '@strive/post/post.service';
 import { GoalEventService } from '@strive/goal/goal/goal-event.service';
 
 @Component({

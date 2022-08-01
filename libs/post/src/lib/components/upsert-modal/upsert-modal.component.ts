@@ -6,10 +6,10 @@ import { ModalController, PopoverController } from '@ionic/angular'
 // Rxjs
 import { filter } from 'rxjs/operators';
 // Strive
-import { PostService } from '@strive/post/+state/post.service';
+import { PostService } from '@strive/post/post.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { PostForm } from '@strive/post/forms/post.form';
-import { createPost } from '@strive/post/+state/post.firestore';
+import { createPost } from '@strive/model';
 import { isValidHttpUrl } from '@strive/utils/helpers';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';

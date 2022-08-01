@@ -6,7 +6,7 @@ import { FireCollection } from '@strive/utils/services/collection.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 // Interfaces
-import { createPost, Post } from './post.firestore';
+import { createPost, Post } from '@strive/model';
 
 @Injectable({
   providedIn: 'root'
