@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { Goal } from '@strive/model';
+import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
 import { Observable } from 'rxjs';

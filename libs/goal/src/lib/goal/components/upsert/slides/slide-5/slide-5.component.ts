@@ -6,7 +6,7 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { enumExercises, exercises } from '@strive/exercises/utils';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalSharePopoverComponent } from '../../../popovers/share/share.component';
-import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoal } from '@strive/model'
 
 @Component({
   selector: 'goal-slide-5',

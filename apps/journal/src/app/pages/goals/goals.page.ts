@@ -11,12 +11,12 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 // Interfaces
-import { Goal, GoalEvent } from '@strive/goal/goal/+state/goal.firestore'
+import { Goal, GoalEvent } from '@strive/model'
 import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { GoalService } from '@strive/goal/goal/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';

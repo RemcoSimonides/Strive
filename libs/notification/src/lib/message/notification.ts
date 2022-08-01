@@ -1,4 +1,4 @@
-import { GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalEvent } from '@strive/model'
 import { enumEvent, Notification, NotificationMessageText, NotificationSource } from '../+state/notification.firestore';
 
 const notificationIcons = [

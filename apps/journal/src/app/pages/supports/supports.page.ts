@@ -17,7 +17,7 @@ import { toDate, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
-import { GoalLink } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalLink } from '@strive/model'
 import { MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 
 type GroupedByMilestone = MilestoneLink & { supports: Support[] }

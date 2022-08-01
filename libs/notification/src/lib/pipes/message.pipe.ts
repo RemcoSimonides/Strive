@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalEvent } from '@strive/model'
 import { Notification, NotificationMessageText } from '../+state/notification.firestore';
 import { getNotificationMessage, getStoryItemMessage, StoryItemMessage } from '../message/notification';
 

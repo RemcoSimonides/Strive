@@ -425,6 +425,30 @@
         }
       }
     },
+    "model": {
+      "projectType": "library",
+      "root": "libs/model",
+      "sourceRoot": "libs/model/src",
+      "prefix": "strive",
+      "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/model/**/*.ts",
+              "libs/model/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "notification": {
       "projectType": "library",
       "root": "libs/notification",

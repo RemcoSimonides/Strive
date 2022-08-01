@@ -9,7 +9,7 @@ import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/schedu
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface';
 import { toDate } from '../../../shared/utils';
 import { getDocument } from '../../..//shared/utils';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { Goal } from '@strive/model';
 import { addGoalEvent } from '../goal.events';
 import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 import { User, UserLink } from '@strive/user/user/+state/user.firestore';

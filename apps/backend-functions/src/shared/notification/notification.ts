@@ -6,7 +6,7 @@ import { Notification, createNotificationSource } from '@strive/notification/+st
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification';
 import { createPersonal } from '@strive/user/user/+state/user.firestore';
 import { toDate, unique } from '../utils';
-import { GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalEvent } from '@strive/model'
 import { createNotification } from '@strive/notification/+state/notification.model';
 
 const db = admin.firestore()

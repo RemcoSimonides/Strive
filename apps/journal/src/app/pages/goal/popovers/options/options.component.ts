@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 // Ionic
 import { PopoverController, NavParams } from '@ionic/angular'
-import { GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalStatus } from '@strive/model'
 
 export enum enumGoalOptions {
   editNotificationSettings,

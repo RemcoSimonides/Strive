@@ -1,6 +1,6 @@
 import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form';
-import { createGoalLink, GoalLink, Goal, createGoal } from "../+state/goal.firestore";
+import { createGoalLink, GoalLink, Goal, createGoal } from '@strive/model'
 
 function createGoalLinkFormControl(params?: GoalLink) {
   const goalLink = createGoalLink(params)

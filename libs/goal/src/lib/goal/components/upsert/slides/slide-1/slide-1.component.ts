@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NavParams } from '@ionic/angular';
-import { createGoal, GoalPublicityType } from '@strive/goal/goal/+state/goal.firestore';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { createGoal, GoalPublicityType } from '@strive/model'
+import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({

@@ -1,7 +1,7 @@
 import { admin, db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
-import { createGoal, getAudience, Goal, GoalStatus, createGoalLink } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoal, Goal, GoalStatus, createGoalLink, GoalPublicityType } from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
@@ -15,8 +15,15 @@ import { getReceiver } from '../../shared/support/receiver';
 import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createSupport, Support } from '@strive/support/+state/support.firestore';
 import { addDiscussion } from '../../shared/discussion/discussion';
+import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
 
 const { serverTimestamp } = admin.firestore.FieldValue
+
+function getAudience(publicity: GoalPublicityType): AudienceType {
+  return publicity === 'public'
+    ? 'public'
+    : 'team'
+}
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onCreate(async snapshot => {

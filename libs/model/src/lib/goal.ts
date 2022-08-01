@@ -1,15 +1,7 @@
-import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
 import { createGoalSource, enumEvent, GoalSource } from '@strive/notification/+state/notification.firestore';
 
 export type GoalPublicityType = 'public' | 'private'
 export type GoalStatus = 'bucketlist' | 'active' | 'finished'
-
-/** For discussion */
-export function getAudience(publicity: GoalPublicityType): AudienceType {
-  return publicity === 'public'
-    ? 'public'
-    : 'team'
-}
 
 export interface GoalEvent {
   name: enumEvent
@@ -19,26 +11,26 @@ export interface GoalEvent {
 }
 
 export interface Goal {
-  id?: string;
-  title: string;
-  description: string;
-  image: string;
-  status: GoalStatus;
-  publicity: GoalPublicityType;
-  numberOfAchievers: number;
-  numberOfSupporters: number;
-  numberOfCustomSupports: number;
-  totalNumberOfCustomSupports: number;
-  deadline?: string;
-  updatedBy?: string;
-  updatedAt?: Date;
-  createdAt?: Date;
+  id?: string
+  title: string
+  description: string
+  image: string
+  status: GoalStatus
+  publicity: GoalPublicityType
+  numberOfAchievers: number
+  numberOfSupporters: number
+  numberOfCustomSupports: number
+  totalNumberOfCustomSupports: number
+  deadline?: string
+  updatedBy?: string
+  updatedAt?: Date
+  createdAt?: Date
 }
 
 export interface GoalLink {
-  id: string;
-  title: string;
-  image: string;
+  id: string
+  title: string
+  image: string
 }
 
 /** A factory function that creates a GoalDocument. */

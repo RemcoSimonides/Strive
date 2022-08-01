@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { Subscription } from 'rxjs';
 

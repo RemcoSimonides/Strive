@@ -2,7 +2,7 @@ import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
 import { createSupport, Support } from '@strive/support/+state/support.firestore'
 import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { createGoal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoal } from '@strive/model';
 import { createGoalSource, createNotificationSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 import { addGoalEvent } from '../goal.events';
 import { getDocument, toDate } from '../../../shared/utils';

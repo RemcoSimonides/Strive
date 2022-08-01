@@ -4,10 +4,10 @@ import { Location } from '@angular/common';
 import { LoadingController, ModalController, NavParams  } from '@ionic/angular'
 
 //Services
-import { GoalService } from '@strive/goal/goal/+state/goal.service'
+import { GoalService } from '@strive/goal/goal/goal.service'
 
 //Interfaces
-import { createGoal, Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore'
+import { createGoal, Goal, GoalStatus } from '@strive/model'
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 // Directives

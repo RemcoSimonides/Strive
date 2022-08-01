@@ -5,8 +5,8 @@ import { UserForm } from '@strive/user/user/forms/user.form';
 import { User } from '@strive/user/user/+state/user.firestore';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalService } from '@strive/goal/goal/goal.service';
+import { Goal } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { orderBy, where } from '@angular/fire/firestore';
 import { ModalController } from '@ionic/angular';

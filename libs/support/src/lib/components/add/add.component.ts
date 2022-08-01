@@ -4,14 +4,14 @@ import { ModalController, PopoverController } from '@ionic/angular';
 // Rxjs
 import { Observable, of } from 'rxjs';
 // Services
-import { GoalService } from '@strive/goal/goal/+state/goal.service'
+import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/+state/support.service'
 import { UserService } from '@strive/user/user/+state/user.service'
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
 import { createMilestoneLink, Milestone } from '@strive/goal/milestone/+state/milestone.firestore'
 import { createSupport, getStatusLabel, Support } from '@strive/support/+state/support.firestore'
-import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { Goal } from '@strive/model'
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { orderBy, where } from '@angular/fire/firestore';

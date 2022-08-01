@@ -6,7 +6,7 @@ import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { delay, toDate } from '@strive/utils/helpers';
 
-import { createGoalEvent, Goal, GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalEvent, Goal, GoalEvent } from '@strive/model'
 import { PostService } from '@strive/post/+state/post.service';
 import { GoalEventService } from '@strive/notification/+state/goal-events.service';
 

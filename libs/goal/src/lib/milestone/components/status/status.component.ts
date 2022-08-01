@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { Goal } from '@strive/model'
 
 import { createMilestone, Milestone, MilestoneStatus } from '@strive/goal/milestone/+state/milestone.firestore';
 import { MilestoneService  } from '@strive/goal/milestone/+state/milestone.service';

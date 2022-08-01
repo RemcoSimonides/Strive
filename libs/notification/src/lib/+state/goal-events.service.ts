@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // Interfaces
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
-import { createGoalEvent, GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalEvent, GoalEvent } from '@strive/model'
 import { toDate } from '@strive/utils/helpers';
 
 @Injectable({

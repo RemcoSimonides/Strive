@@ -1,5 +1,5 @@
-import { NgModule, Pipe, PipeTransform } from "@angular/core";
-import { GoalStatus } from "../+state/goal.firestore";
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { GoalStatus } from '@strive/model'
 
 @Pipe({ name: 'status' })
 export class StatusPipe implements PipeTransform {

@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
-import { Goal } from "@strive/goal/goal/+state/goal.firestore";
+import { Goal } from '@strive/model'
 import { createSubtask, Milestone } from "@strive/goal/milestone/+state/milestone.firestore";
 import { MilestoneService } from "@strive/goal/milestone/+state/milestone.service";
 import { MilestoneForm, SubtaskForm } from "@strive/goal/milestone/forms/milestone.form";

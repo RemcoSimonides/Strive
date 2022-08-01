@@ -5,7 +5,7 @@ import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns';
 import { createPersonal, Personal } from '@strive/user/user/+state/user.firestore';
 import { getDocument } from '../../shared/utils';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { createGoalEvent, Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalEvent, Goal } from '@strive/model'
 import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model';
 import { Feature, Features } from '../../../../admin/src/app/pages/features/features.model';
 import { groupIds, templateIds } from './ids';

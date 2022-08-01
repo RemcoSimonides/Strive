@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { Goal } from '@strive/model'
 
 import { createMilestone, Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { MilestoneService } from '@strive/goal/milestone/+state/milestone.service';

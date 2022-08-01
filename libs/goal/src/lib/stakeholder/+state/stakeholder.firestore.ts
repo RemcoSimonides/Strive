@@ -1,4 +1,4 @@
-import { GoalPublicityType, GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalPublicityType, GoalStatus } from '@strive/model'
 
 export interface GoalStakeholder {
   uid: string;

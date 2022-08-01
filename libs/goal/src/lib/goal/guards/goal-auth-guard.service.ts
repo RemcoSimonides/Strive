@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-// Angularfire
-import { doc, Firestore, getDoc, DocumentSnapshot } from '@angular/fire/firestore';
 // Services
-import { GoalService } from '@strive/goal/goal/+state/goal.service'
+import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 //Interfaces
-import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { Goal } from '@strive/model'
 import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 
 @Injectable({
@@ -18,7 +16,6 @@ export class GoalAuthGuardService implements CanActivate {
   private _needsToBeAdmin = false
 
   constructor(
-    private db: Firestore,
     private goalService: GoalService,
     private stakeholder: GoalStakeholderService,
     private router: Router,

@@ -13,6 +13,7 @@ module.exports = {
     '<rootDir>/libs/notification',
     '<rootDir>/libs/media',
     '<rootDir>/libs/exercises',
+    '<rootDir>/libs/model',
     '<rootDir>/apps/admin',
   ],
 };

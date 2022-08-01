@@ -12,7 +12,7 @@ import { MilestoneService } from '@strive/goal/milestone/+state/milestone.servic
 // Strive Other
 import { Milestone } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { Goal } from '@strive/goal/goal/+state/goal.firestore';
+import { Goal } from '@strive/model'
 
 @Component({
   selector: '[goal] journal-goal-roadmap',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({

@@ -5,7 +5,7 @@ import { FireCollection, WriteOptions } from '@strive/utils/services/collection.
 // Interfaces
 import { User } from '@strive/user/user/+state/user.firestore'
 import { GoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { Goal } from '@strive/goal/goal/+state/goal.firestore'
+import { Goal } from '@strive/model'
 import { UserService } from '@strive/user/user/+state/user.service';
 
 export interface roleArgs {

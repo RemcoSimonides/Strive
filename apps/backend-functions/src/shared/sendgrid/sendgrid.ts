@@ -5,7 +5,7 @@ import { groupIds } from "../../pubsub/email/ids";
 
 import { logger } from 'firebase-functions';
 
-import { Goal } from "@strive/goal/goal/+state/goal.firestore";
+import { Goal } from '@strive/model'
 
 // Substitutions used in Sendgrid templates
 const substitutions = {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 // Strive
-import { GoalService } from '@strive/goal/goal/+state/goal.service';
+import { GoalService } from '@strive/goal/goal/goal.service';
 import { exercises } from '@strive/exercises/utils';
 import { PWAService } from '@strive/utils/services/pwa.service';
 

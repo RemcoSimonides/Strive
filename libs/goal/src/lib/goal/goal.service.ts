@@ -5,9 +5,9 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Services
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-import { GoalStakeholderService } from '../../stakeholder/+state/stakeholder.service';
+import { GoalStakeholderService } from '../stakeholder/+state/stakeholder.service';
 // Interfaces
-import { Goal, createGoal } from './goal.firestore'
+import { Goal, createGoal } from '@strive/model'
 import { createGoalStakeholder, enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { UserService } from '@strive/user/user/+state/user.service';
 

@@ -21,6 +21,7 @@
       "@strive/exercises/*": ["libs/exercises/src/lib/*"],
       "@strive/goal/*": ["libs/goal/src/lib/*"],
       "@strive/media/*": ["libs/media/src/lib/*"],
+      "@strive/model": ["libs/model/src/index.ts"],
       "@strive/milestone/*": ["libs/milestone/src/lib/*"],
       "@strive/notification/*": ["libs/notification/src/lib/*"],
       "@strive/post/*": ["libs/post/src/lib/*"],

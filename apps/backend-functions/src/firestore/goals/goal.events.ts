@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { enumEvent, GoalSource } from "@strive/notification/+state/notification.firestore";
-import { GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
+import { GoalEvent } from '@strive/model'
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue

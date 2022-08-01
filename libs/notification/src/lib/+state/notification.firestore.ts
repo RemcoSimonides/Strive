@@ -1,5 +1,5 @@
 import { createSupportLink, Support, SupportLink } from '@strive/support/+state/support.firestore'
-import { createGoalLink, Goal, GoalLink } from '@strive/goal/goal/+state/goal.firestore';
+import { createGoalLink, Goal, GoalLink } from '@strive/model'
 import { createMilestoneLink, Milestone, MilestoneLink } from '@strive/goal/milestone/+state/milestone.firestore';
 import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore';
 import { Comment } from '@strive/discussion/+state/comment.firestore';

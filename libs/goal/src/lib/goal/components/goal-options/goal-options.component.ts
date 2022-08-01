@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ModalController, NavParams, PopoverController } from '@ionic/angular';
-import { Goal, GoalStatus } from '@strive/goal/goal/+state/goal.firestore';
+import { Goal, GoalStatus } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
