@@ -28,17 +28,17 @@
                     <small>{{ notification.createdAt | timeAgo }}</small>
                   </div>
                 </article>
-              </ng-container>
 
-              <ng-container *ngIf="index === lastUnreadIndex">
+                <ng-container *ngIf="index === lastUnreadIndex">
+                  <span *ngIf="!isLast" class="divider"></span>
+                  <div class="unread">
+                    <ion-icon name="chevron-up-outline"></ion-icon>
+                    <small>unread notifications</small>
+                    <ion-icon name="chevron-up-outline"></ion-icon>
+                  </div>
+                </ng-container>
                 <span *ngIf="!isLast" class="divider"></span>
-                <div class="unread">
-                  <ion-icon name="chevron-up-outline"></ion-icon>
-                  <small>unread notifications</small>
-                  <ion-icon name="chevron-up-outline"></ion-icon>
-                </div>
               </ng-container>
-              <span *ngIf="!isLast" class="divider"></span>
             </ng-container>
           </ng-container>  
         </ng-container>

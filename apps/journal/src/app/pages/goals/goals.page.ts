@@ -63,7 +63,7 @@ export class GoalsComponent {
       }, { shouldAwait: true })
     )
 
-    this.seo.generateTags({ title: `Goals  & Exercises- Strive Journal` })
+    this.seo.generateTags({ title: `Goals - Strive Journal` })
   }
 
   openAuthModal() {

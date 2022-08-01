@@ -264,12 +264,10 @@ export function getNotificationMessage({ event, source }: Notification): Notific
     }
 
     case enumEvent.gSupportDeleted: {
-      const isMilestone = !!source.milestone?.id
-
-      return {
-        ...get('goal', source),
-        message: []
-      }
+      break
     }
+
+    default:
+      return undefined
   }
 }
