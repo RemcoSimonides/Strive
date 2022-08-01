@@ -36,10 +36,13 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     return stakeholder
   }
 
-  updateLastCheckedGoal(goalId: string, uid: string) {
-    this.update(uid, {
-      lastCheckedGoal: serverTimestamp() as any
-    }, { params: { goalId } })
+  async updateLastCheckedGoal(goalId: string, uid: string) {
+    const stakeholder = await this.getValue(uid, { goalId })
+    if (stakeholder) {
+      this.update(uid, {
+        lastCheckedGoal: serverTimestamp() as any
+      }, { params: { goalId } })
+    }
   }
 
   async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {
