@@ -36,7 +36,7 @@ function get(type: 'user' | 'goal', source:  NotificationSource): { title: strin
   return data[type]
 }
 
-export interface GoalNotificationMessage {
+export interface StoryItemMessage {
   icon: NotificationIcons
   message: NotificationMessageText[]
 }
@@ -48,7 +48,7 @@ export interface NotificationMessage {
   message: NotificationMessageText[]
 }
 
-export function getGoalNotificationMessage({ name, source }: GoalEvent): GoalNotificationMessage {
+export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessage {
   switch (name) {
     case enumEvent.gNewBucketlist:
     case enumEvent.gNewActive:

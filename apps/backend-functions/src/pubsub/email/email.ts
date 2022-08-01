@@ -12,7 +12,7 @@ import { groupIds, templateIds } from './ids';
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid';
 import { toDate } from '../../shared/utils';
 import { createNotification } from '@strive/notification/+state/notification.model';
-import { getGoalNotificationMessage } from '@strive/notification/message/notification';
+import { getStoryItemMessage } from '@strive/notification/message/notification';
 
 
 // // crontab.guru to determine schedule value
@@ -76,7 +76,7 @@ async function getGoalEvents(stakeholders: GoalStakeholder[]): Promise<number> {
   const eventsSnaps = await Promise.all(promises)  
   const events = eventsSnaps.map(snap => snap.docs.map(doc => createGoalEvent(toDate({ ...doc.data(), id: doc.id }))))
   const flatten = events.reduce((acc, val) => acc.concat(val), [])
-  const messages = flatten.map(event => getGoalNotificationMessage(event)).filter(message => !!message).length
+  const messages = flatten.map(event => getStoryItemMessage(event)).filter(message => !!message).length
 
   return messages
 }

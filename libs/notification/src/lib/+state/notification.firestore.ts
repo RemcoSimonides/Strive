@@ -53,11 +53,6 @@ export interface Notification extends NotificationBase {
   source: NotificationSource
 }
 
-export interface GoalNotification extends NotificationBase {
-  date: Date
-  source: GoalSource
-}
-
 export interface SupportNotification extends NotificationBase {
   source: SupportSource
 }

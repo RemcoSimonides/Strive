@@ -1,12 +1,12 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { GoalEvent } from '@strive/goal/goal/+state/goal.firestore';
 import { Notification, NotificationMessageText } from '../+state/notification.firestore';
-import { getNotificationMessage, getGoalNotificationMessage, GoalNotificationMessage } from '../message/notification';
+import { getNotificationMessage, getStoryItemMessage, StoryItemMessage } from '../message/notification';
 
 @Pipe({ name: 'storyMessage'})
-export class GoalNotificationMessagePipe implements PipeTransform {
-  transform(event: GoalEvent): GoalNotificationMessage {
-    return getGoalNotificationMessage(event)
+export class StoryItemMessagePipe implements PipeTransform {
+  transform(event: GoalEvent): StoryItemMessage {
+    return getStoryItemMessage(event)
   }
 }
 
@@ -18,7 +18,7 @@ export class MessagePipe implements PipeTransform {
 }
 
 @NgModule({
-  exports: [MessagePipe, GoalNotificationMessagePipe],
-  declarations: [MessagePipe, GoalNotificationMessagePipe]
+  exports: [MessagePipe, StoryItemMessagePipe],
+  declarations: [MessagePipe, StoryItemMessagePipe]
 })
 export class MessagePipeModule { } 
