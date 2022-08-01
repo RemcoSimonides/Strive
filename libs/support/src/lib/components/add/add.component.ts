@@ -5,13 +5,11 @@ import { ModalController, PopoverController } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service'
-import { SupportService } from '@strive/support/+state/support.service'
+import { SupportService } from '@strive/support/support.service'
 import { UserService } from '@strive/user/user/+state/user.service'
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
-import { createMilestoneLink, Milestone } from '@strive/model'
-import { createSupport, getStatusLabel, Support } from '@strive/support/+state/support.firestore'
-import { Goal } from '@strive/model'
+import { Goal, createMilestoneLink, Milestone, createSupport, Support } from '@strive/model'
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { orderBy, where } from '@angular/fire/firestore';
@@ -98,10 +96,6 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
 
     this.supportService.add(support, { params: { goalId: this.goalId }})
     this.support.description.setValue('')
-  }
-
-  getStatusLabel(support: Support) {
-    return getStatusLabel(support)
   }
 
   openOptions(support: Support, event: Event) {

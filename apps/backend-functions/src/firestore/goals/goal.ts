@@ -1,4 +1,4 @@
-import { admin, db, functions } from '../../internals/firebase';
+import { db, functions, serverTimestamp } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
 import {
@@ -9,7 +9,12 @@ import {
   GoalPublicityType,
   createGoalSource,
   DiscussionSource,
-  enumEvent
+  enumEvent,
+  createSupport,
+  Support,
+  createMilestone,
+  Milestone,
+  GoalStakeholder
 } from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
@@ -19,12 +24,8 @@ import { converter, deleteCollection, getDocument, toDate } from '../../shared/u
 import { addGoalEvent } from './goal.events';
 import { User } from '@strive/user/user/+state/user.firestore';
 import { getReceiver } from '../../shared/support/receiver';
-import { createMilestone, Milestone, GoalStakeholder } from '@strive/model'
-import { createSupport, Support } from '@strive/support/+state/support.firestore';
 import { addDiscussion } from '../../shared/discussion/discussion';
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
-
-const { serverTimestamp } = admin.firestore.FieldValue
 
 function getAudience(publicity: GoalPublicityType): AudienceType {
   return publicity === 'public'

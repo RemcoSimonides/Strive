@@ -1,8 +1,7 @@
-import { db, functions, admin } from '../../../internals/firebase';
-import { logger } from 'firebase-functions';
+import { db, functions, serverTimestamp, logger } from '../../../internals/firebase'
 
 //Interfaces
-import { Goal, createMilestone, Milestone, createGoalSource, enumEvent } from '@strive/model'
+import { Goal, createMilestone, Milestone, createGoalSource, enumEvent, createSupport } from '@strive/model'
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
@@ -11,10 +10,7 @@ import { toDate } from '../../../shared/utils';
 import { getDocument } from '../../..//shared/utils';
 import { addGoalEvent } from '../goal.events';
 import { User, UserLink } from '@strive/user/user/+state/user.firestore';
-import { createSupport } from '@strive/support/+state/support.firestore';
 import { getReceiver } from '../../../shared/support/receiver'
-
-const { serverTimestamp } = admin.firestore.FieldValue
 
 export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
   .onCreate(async (snapshot, context) => {

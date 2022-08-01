@@ -1,5 +1,5 @@
 import { enumEvent } from './notification';
-import { createSupportLink, Support, SupportLink } from '@strive/support/+state/support.firestore';
+import { createSupportLink, Support, SupportLink } from './support';
 import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore';
 import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
 

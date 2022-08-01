@@ -38,7 +38,7 @@
         <ion-item *ngFor="let support of mySupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status === 'paid' || support.status === 'rejected'">
           <ion-label class="ion-text-wrap" fxLayout="column">
             <b>{{ support.description }}</b>
-            <small>Status: {{ getStatusLabel(support) }}</small>
+            <small>Status: {{ support | supportStatus }}</small>
           </ion-label>
 
           <ng-container *ngIf="support.status === 'open' || support.status === 'waiting_to_be_paid'">

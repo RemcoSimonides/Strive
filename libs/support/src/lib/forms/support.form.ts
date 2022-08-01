@@ -1,6 +1,6 @@
-import { FormControl, Validators } from '@angular/forms';
-import { FormEntity } from '@strive/utils/form/entity.form';
-import { createSupport, Support } from '../+state/support.firestore';
+import { FormControl, Validators } from '@angular/forms'
+import { FormEntity } from '@strive/utils/form/entity.form'
+import { createSupport, Support } from '@strive/model'
 
 function createSupportFormControl(params?: Support) {
   const support = createSupport(params)

@@ -9,6 +9,7 @@ import { AddSupportModalComponent } from './add.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SupportOptionsModule } from '../options/options.module';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { SupportStatusPipeModule } from '@strive/support/pipes/status.pipe'
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { ImageModule } from '@strive/media/directives/image.module';
     FontAwesomeModule,
     ImageModule,
     FlexLayoutModule,
-    SupportOptionsModule
+    SupportOptionsModule,
+    SupportStatusPipeModule
   ],
   declarations: [
     AddSupportModalComponent

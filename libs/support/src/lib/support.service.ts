@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, Firestore } from '@angular/fire/firestore'
 // Services
-import { FireCollection } from '@strive/utils/services/collection.service';
+import { FireCollection } from '@strive/utils/services/collection.service'
 // Interfaces
-import { createSupport } from '@strive/support/+state/support.firestore';
-import { Support } from '@strive/support/+state/support.firestore';
+import { createSupport, Support } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
 export class SupportService extends FireCollection<Support> {

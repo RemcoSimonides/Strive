@@ -1,5 +1,4 @@
-import { createSupportLink, Support, SupportLink } from '@strive/support/+state/support.firestore'
-import { createGoalLink, Goal, GoalLink, createMilestoneLink, Milestone, MilestoneLink } from '@strive/model'
+import { createGoalLink, Goal, GoalLink, createMilestoneLink, Milestone, MilestoneLink, createSupportLink, Support, SupportLink } from '@strive/model'
 import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore'
 
 export enum enumEvent {

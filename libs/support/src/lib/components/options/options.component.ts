@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
-import { Support, SupportStatus } from '@strive/support/+state/support.firestore';
-import { SupportService } from '@strive/support/+state/support.service';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { PopoverController } from '@ionic/angular'
+import { Support, SupportStatus } from '@strive/model'
+import { SupportService } from '@strive/support/support.service'
 
 @Component({
   selector: 'support-options',

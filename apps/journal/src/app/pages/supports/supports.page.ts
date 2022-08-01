@@ -2,13 +2,11 @@ import { Component } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
-import { SupportService } from '@strive/support/+state/support.service';
+import { SupportService } from '@strive/support/support.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Rxjs
 import { Observable, of, shareReplay } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-// Interfaces
-import { createSupport, Support } from '@strive/support/+state/support.firestore'
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { where } from '@angular/fire/firestore';
@@ -17,8 +15,7 @@ import { toDate, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
 import { createUserLink } from '@strive/user/user/+state/user.firestore';
-import { GoalLink } from '@strive/model'
-import { MilestoneLink } from '@strive/model'
+import { GoalLink, MilestoneLink, createSupport, Support } from '@strive/model'
 
 type GroupedByMilestone = MilestoneLink & { supports: Support[] }
 type GroupedByGoal = GoalLink & { milestones: GroupedByMilestone[], supports: Support[] }

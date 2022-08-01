@@ -1,15 +1,16 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions'
+import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
 
-export type DocumentReference = admin.firestore.DocumentReference;
-export const gcs = new Storage.Storage;
+export type DocumentReference = admin.firestore.DocumentReference
+export const gcs = new Storage.Storage
+export { logger } from 'firebase-functions'
 
-admin.initializeApp();
-export const db = admin.firestore();
-export const auth = admin.auth();
+admin.initializeApp()
+export const db = admin.firestore()
+export const auth = admin.auth()
 
-export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
+export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp
 export const increment = admin.firestore.FieldValue.increment
 export const arrayUnion = admin.firestore.FieldValue.arrayUnion
 
