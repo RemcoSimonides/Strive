@@ -4,7 +4,7 @@ import { Firestore, DocumentSnapshot, where, WriteBatch } from '@angular/fire/fi
 // Services
 import { UserService } from '@strive/user/user/user.service';
 // Interfaces
-import { Spectator, createSpectator } from './spectator.firestore';
+import { Spectator, createSpectator } from '@strive/model';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 
 @Injectable({

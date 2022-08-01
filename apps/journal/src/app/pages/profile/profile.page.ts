@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PopoverController, ModalController } from '@ionic/angular';
 // Services
-import { UserSpectateService } from '@strive/user/spectator/+state/spectator.service';
+import { UserSpectateService } from '@strive/user/spectator/spectator.service';
 import { UserService } from '@strive/user/user/user.service';
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { SeoService } from '@strive/utils/services/seo.service';
@@ -14,8 +14,7 @@ import { FollowingComponent } from '@strive/user/spectator/components/following/
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 // Interfaces
-import { createSpectator } from '@strive/user/spectator/+state/spectator.firestore';
-import { Goal, GoalStakeholder, User } from '@strive/model'
+import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 // Other
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';

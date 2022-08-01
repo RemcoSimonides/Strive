@@ -1,9 +1,8 @@
 import { db, functions, increment } from '../../../internals/firebase';
 
-import { createSpectator, Spectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { toDate } from '../../../shared/utils';
 import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
-import { createNotification, createNotificationSource, enumEvent } from '@strive/model'
+import { createNotification, createNotificationSource, enumEvent, createSpectator, Spectator } from '@strive/model'
 
 export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
   .onCreate(async (snapshot, context) => {
