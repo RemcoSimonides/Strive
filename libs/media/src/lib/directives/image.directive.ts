@@ -1,8 +1,11 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
 import { isValidHttpUrl } from '@strive/utils/helpers';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { getAssetPath } from '../+state/media.model';
 import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers';
+
+function getAssetPath(asset: string) {
+  return `assets/images/${asset}`;
+}
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
