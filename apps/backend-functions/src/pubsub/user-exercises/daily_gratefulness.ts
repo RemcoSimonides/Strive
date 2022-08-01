@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
-import { Personal } from '@strive/user/user/+state/user.firestore'
+import { Personal } from '@strive/model'
 import { getDocument } from '../../shared/utils'
 import { addDays } from 'date-fns'
 

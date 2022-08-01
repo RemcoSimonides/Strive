@@ -8,7 +8,7 @@ import { FireCollection, WriteOptions } from '@strive/utils/services/collection.
 import { GoalStakeholderService } from '../stakeholder/stakeholder.service';
 // Interfaces
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })

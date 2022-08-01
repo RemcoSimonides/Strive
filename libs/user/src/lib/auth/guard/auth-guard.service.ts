@@ -4,7 +4,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable } from 'rxjs'
 import { take, map, tap } from 'rxjs/operators'
 // Services
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 
 
 @Injectable({

@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { SeoService } from '@strive/utils/services/seo.service';
 import { NotificationService } from '@strive/notification/notification.service';
 import { Notification } from '@strive/model'
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 import { orderBy } from '@angular/fire/firestore';
-import { PersonalService } from '@strive/user/user/+state/personal.service';
+import { PersonalService } from '@strive/user/user/personal.service';
 
 @Component({
   selector: 'journal-notifications',

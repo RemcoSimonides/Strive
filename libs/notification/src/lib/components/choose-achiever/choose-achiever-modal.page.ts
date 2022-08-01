@@ -3,8 +3,7 @@ import { Component, OnInit } from '@angular/core';
 // Ionic
 import { NavParams, ModalController } from '@ionic/angular';
 // Interfaces
-import { GoalStakeholder } from '@strive/model'
-import { createUserLink } from '@strive/user/user/+state/user.firestore';
+import { GoalStakeholder, createUserLink } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({

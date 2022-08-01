@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { UserForm } from '@strive/user/user/forms/user.form';
-import { User } from '@strive/user/user/+state/user.firestore';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GoalService } from '@strive/goal/goal/goal.service';
-import { Goal } from '@strive/model'
+import { Goal, User } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { orderBy, where } from '@angular/fire/firestore';
 import { ModalController } from '@ionic/angular';

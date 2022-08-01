@@ -6,7 +6,7 @@ import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-f
 
 import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component'
 import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
-import { UserService } from '@strive/user/user/+state/user.service'
+import { UserService } from '@strive/user/user/user.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'

@@ -4,7 +4,7 @@ import { arrayUnion, DocumentSnapshot, Firestore, serverTimestamp } from '@angul
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { UserService } from './user.service';
 // Interfaces
-import { Personal } from './user.firestore';
+import { Personal } from '@strive/model';
 
 @Injectable({ providedIn: 'root' })
 export class PersonalService extends FireCollection<Personal> {

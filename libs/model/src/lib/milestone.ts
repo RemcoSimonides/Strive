@@ -1,5 +1,5 @@
-import { createUserLink, UserLink } from "@strive/user/user/+state/user.firestore";
-import { setDateToEndOfDay } from "@strive/utils/helpers";
+import { createUserLink, UserLink } from '@strive/model'
+import { setDateToEndOfDay } from '@strive/utils/helpers';
 
 export type MilestoneStatus = 'pending' | 'succeeded' | 'failed' | 'overdue'
 

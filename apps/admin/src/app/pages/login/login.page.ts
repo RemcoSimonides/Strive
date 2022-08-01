@@ -3,7 +3,7 @@ import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 
 @Component({
   selector: 'strive-login',

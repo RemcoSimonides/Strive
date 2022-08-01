@@ -1,6 +1,6 @@
 import { FormControl, Validators } from '@angular/forms'
 import { FormEntity } from '@strive/utils/form/entity.form'
-import { createUserLink, createUser, User, UserLink } from "../+state/user.firestore";
+import { createUserLink, createUser, User, UserLink } from '@strive/model'
 
 function createUserFormControl(params: User) {
   const user = createUser(params)

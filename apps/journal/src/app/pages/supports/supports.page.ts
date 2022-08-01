@@ -3,7 +3,7 @@ import { ModalController, PopoverController } from '@ionic/angular';
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/support.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 // Rxjs
 import { Observable, of, shareReplay } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -14,8 +14,7 @@ import { SupportOptionsComponent } from '@strive/support/components/options/opti
 import { toDate, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
-import { createUserLink } from '@strive/user/user/+state/user.firestore';
-import { GoalLink, MilestoneLink, createSupport, Support } from '@strive/model'
+import { GoalLink, MilestoneLink, createSupport, Support, createUserLink } from '@strive/model'
 
 type GroupedByMilestone = MilestoneLink & { supports: Support[] }
 type GroupedByGoal = GoalLink & { milestones: GroupedByMilestone[], supports: Support[] }

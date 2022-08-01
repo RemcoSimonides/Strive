@@ -1,12 +1,10 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "@ionic/angular";
-import { Goal } from '@strive/model'
-import { createSubtask, Milestone } from '@strive/model'
+import { Goal, createSubtask, Milestone, createUserLink } from '@strive/model'
 import { MilestoneService } from "@strive/goal/milestone/milestone.service";
 import { MilestoneForm, SubtaskForm } from "@strive/goal/milestone/forms/milestone.form";
-import { createUserLink } from "@strive/user/user/+state/user.firestore";
-import { UserService } from "@strive/user/user/+state/user.service";
+import { UserService } from "@strive/user/user/user.service";
 import { ModalDirective } from "@strive/utils/directives/modal.directive";
 import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";

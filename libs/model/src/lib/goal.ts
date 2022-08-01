@@ -1,6 +1,6 @@
 import { enumEvent } from './notification';
 import { createSupportLink, Support, SupportLink } from './support';
-import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink, User, UserLink } from './user';
 import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
 
 export type GoalPublicityType = 'public' | 'private'

@@ -8,7 +8,7 @@ import { switchMap, map } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 
 // Model
 import { Goal, GoalEvent, GoalStakeholder, enumEvent } from '@strive/model'

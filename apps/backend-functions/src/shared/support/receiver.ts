@@ -1,5 +1,4 @@
-import { createGoalStakeholder } from '@strive/model'
-import { createUserLink, UserLink } from "@strive/user/user/+state/user.firestore";
+import { createGoalStakeholder, createUserLink, UserLink } from '@strive/model'
 
 /**
  * Return receiver if the goal has only 1 achiever

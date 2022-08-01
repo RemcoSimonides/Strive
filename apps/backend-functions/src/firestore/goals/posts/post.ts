@@ -1,7 +1,6 @@
 import { functions } from '../../../internals/firebase';
 import { getDocument, toDate } from '../../../shared/utils';
-import { Goal, createGoalSource, enumEvent, createPost } from '@strive/model';
-import { User } from '@strive/user/user/+state/user.firestore';
+import { Goal, createGoalSource, enumEvent, createPost, User } from '@strive/model';
 import { addGoalEvent } from '../goal.events';
 
 export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/Posts/{postId}`)

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavParams, PopoverController } from '@ionic/angular';
 // Strive
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 
 @Component({
   selector: 'journal-edit-profile-image-popover',

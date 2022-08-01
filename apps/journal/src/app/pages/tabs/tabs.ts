@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 // Services
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';

@@ -5,7 +5,7 @@ import { Platform, PopoverController, ModalController, NavController } from '@io
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 // Services
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { FcmService } from '@strive/utils/services/fcm.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 // Pages

@@ -4,7 +4,7 @@ import { ModalController } from "@ionic/angular";
 import { DailyGratefulness } from '@strive/model'
 import { DailyGratefulnessService } from "@strive/exercises/daily-gratefulness/daily-gratefulness.service";
 import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
-import { UserService } from "@strive/user/user/+state/user.service";
+import { UserService } from "@strive/user/user/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { debounceTime, of, switchMap, tap } from "rxjs";
 import { addDays, isPast, set } from 'date-fns'

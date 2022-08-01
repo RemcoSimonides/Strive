@@ -17,7 +17,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 // Strive Interfaces

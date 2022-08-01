@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // Angularfire
 import { Firestore, DocumentSnapshot, where, WriteBatch } from '@angular/fire/firestore';
 // Services
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 // Interfaces
 import { Spectator, createSpectator } from './spectator.firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';

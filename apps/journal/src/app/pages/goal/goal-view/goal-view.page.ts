@@ -11,7 +11,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.ser
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
 import { SeoService } from '@strive/utils/services/seo.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 // Interfaces
 import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 // Components

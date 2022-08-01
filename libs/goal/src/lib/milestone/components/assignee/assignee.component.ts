@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { UserLink } from "@strive/user/user/+state/user.firestore";
+import { UserLink } from '@strive/model'
 
 @Component({
   selector: '[achiever] goal-milestone-assignee',

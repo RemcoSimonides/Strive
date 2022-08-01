@@ -5,15 +5,15 @@ import { GoogleAuthProvider } from 'firebase/auth';
 // Ionic
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular';
 // Services
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 // Interfaces
-import { createPersonal, createUser } from '@strive/user/user/+state/user.firestore';
+import { createPersonal, createUser } from '@strive/model';
 // Strive
 import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
 import { WelcomeModalComponent } from '../welcome/welcome.modal';
-import { PersonalService } from '@strive/user/user/+state/personal.service';
+import { PersonalService } from '@strive/user/user/personal.service';
 
 export enum enumAuthSegment {
   login,

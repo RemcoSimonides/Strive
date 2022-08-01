@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { Observable } from 'rxjs';
 
 

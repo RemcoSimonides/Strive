@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/support.service'
-import { UserService } from '@strive/user/user/+state/user.service'
+import { UserService } from '@strive/user/user/user.service'
 import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
 import { Goal, createMilestoneLink, Milestone, createSupport, Support } from '@strive/model'

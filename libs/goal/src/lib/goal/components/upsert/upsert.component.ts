@@ -15,7 +15,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 // Swiper
 import { SwiperComponent } from 'swiper/angular';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 
 @Component({
   selector: 'goal-upsert',

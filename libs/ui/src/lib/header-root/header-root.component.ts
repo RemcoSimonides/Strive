@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { limit, where } from 'firebase/firestore';
 import { map, of, switchMap } from 'rxjs';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { NotificationService } from '@strive/notification/notification.service';
 

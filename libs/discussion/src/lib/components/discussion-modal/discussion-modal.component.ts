@@ -7,12 +7,12 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map, skip } from 'rxjs/operators';
 // Services
 import { DiscussionService } from '@strive/discussion/+state/discussion.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { CommentService } from '@strive/discussion/+state/comment.service';
 // Interfaces
 import { Comment, createComment } from '../../+state/comment.firestore';
 import { Discussion } from '../../+state/discussion.firestore';
-import { createUserLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';

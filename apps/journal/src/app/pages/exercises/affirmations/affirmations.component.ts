@@ -6,7 +6,7 @@ import { AffirmationService } from "@strive/exercises/affirmation/affirmation.se
 import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
 import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
 import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
-import { UserService } from "@strive/user/user/+state/user.service";
+import { UserService } from "@strive/user/user/user.service";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { SeoService } from "@strive/utils/services/seo.service";
 import { debounceTime, of, Subscription, switchMap, tap } from "rxjs";

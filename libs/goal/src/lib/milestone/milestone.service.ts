@@ -4,7 +4,7 @@ import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
 import { createMilestone, Milestone } from '@strive/model'
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })

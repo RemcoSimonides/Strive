@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core';
 import { Firestore, DocumentSnapshot, getDoc, WriteBatch, serverTimestamp } from '@angular/fire/firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 // Interfaces
-import { User } from '@strive/user/user/+state/user.firestore'
-import { Goal, GoalStakeholder, createGoalStakeholder } from '@strive/model'
-import { UserService } from '@strive/user/user/+state/user.service';
+import { Goal, GoalStakeholder, createGoalStakeholder, User } from '@strive/model'
+import { UserService } from '@strive/user/user/user.service';
 
 export interface roleArgs {
   isAdmin?: boolean;

@@ -14,7 +14,8 @@ import {
   Support,
   createMilestone,
   Milestone,
-  GoalStakeholder
+  GoalStakeholder,
+  User
 } from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
@@ -22,7 +23,6 @@ import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.inter
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils';
 import { addGoalEvent } from './goal.events';
-import { User } from '@strive/user/user/+state/user.firestore';
 import { getReceiver } from '../../shared/support/receiver';
 import { addDiscussion } from '../../shared/discussion/discussion';
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';

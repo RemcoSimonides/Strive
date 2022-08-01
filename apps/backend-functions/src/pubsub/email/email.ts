@@ -2,7 +2,7 @@ import { db, functions } from '../../internals/firebase';
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns';
 
-import { createPersonal, Personal } from '@strive/user/user/+state/user.firestore';
+import { createPersonal, Personal } from '@strive/model';
 import { getDocument } from '../../shared/utils';
 import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotification } from '@strive/model'
 import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model';

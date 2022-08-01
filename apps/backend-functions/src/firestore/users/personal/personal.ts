@@ -1,4 +1,4 @@
-import { createPersonal } from "@strive/user/user/+state/user.firestore";
+import { createPersonal} from '@strive/model'
 import { admin, functions } from '../../../internals/firebase';
 import { logger } from 'firebase-functions';
 

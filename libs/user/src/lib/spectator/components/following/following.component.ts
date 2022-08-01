@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { UserSpectateService } from '../../+state/spectator.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { map, switchMap } from 'rxjs';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 

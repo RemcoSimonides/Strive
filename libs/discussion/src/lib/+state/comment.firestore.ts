@@ -1,13 +1,12 @@
-import { Timestamp } from '@firebase/firestore-types';
-import { createUserLink, UserLink } from '@strive/user/user/+state/user.firestore';
+import { createUserLink, UserLink } from '@strive/model'
 
 export interface Comment {
     id?: string;
     text: string;
     type: 'sentByUser' | 'notification';
     user: UserLink;
-    createdAt?: Timestamp;
-    updatedAt?: Timestamp;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export function createComment(params: Partial<Comment> = {}): Comment {

@@ -4,7 +4,7 @@ import { doc, DocumentSnapshot, Firestore, getDoc } from '@angular/fire/firestor
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
-import { createUser, User } from './user.firestore';
+import { createUser, User } from '@strive/model';
 // Rxjs
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs';

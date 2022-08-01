@@ -1,6 +1,6 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { UserService } from "@strive/user/user/+state/user.service";
+import { UserService } from "@strive/user/user/user.service";
 import { UserForm } from "@strive/user/user/forms/user.form";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { take } from "rxjs/operators";

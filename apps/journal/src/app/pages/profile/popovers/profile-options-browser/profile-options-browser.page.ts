@@ -6,7 +6,7 @@ import { PopoverController, ModalController } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Services
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { FcmService } from '@strive/utils/services/fcm.service';

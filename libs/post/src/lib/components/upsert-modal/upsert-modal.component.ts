@@ -7,7 +7,7 @@ import { ModalController, PopoverController } from '@ionic/angular'
 import { filter } from 'rxjs/operators';
 // Strive
 import { PostService } from '@strive/post/post.service';
-import { UserService } from '@strive/user/user/+state/user.service';
+import { UserService } from '@strive/user/user/user.service';
 import { PostForm } from '@strive/post/forms/post.form';
 import { createPost } from '@strive/model';
 import { isValidHttpUrl } from '@strive/utils/helpers';

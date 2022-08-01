@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
-import { UserLink } from '@strive/user/user/+state/user.firestore';
-// Interface
-import { Post } from '@strive/model'
+import { Post, UserLink } from '@strive/model'
 
 @Component({
   selector: 'post-main',
