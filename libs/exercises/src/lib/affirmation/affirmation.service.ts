@@ -3,7 +3,7 @@ import { Firestore } from '@angular/fire/firestore';
 
 // Strive
 import { FireCollection } from '@strive/utils/services/collection.service';
-import { Affirmations } from './affirmation.firestore';
+import { Affirmations } from '@strive/model'
 
 @Injectable({providedIn: 'root'})
 export class AffirmationService extends FireCollection<Affirmations> {

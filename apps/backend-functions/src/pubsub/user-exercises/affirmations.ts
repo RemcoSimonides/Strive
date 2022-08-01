@@ -1,6 +1,6 @@
 import { admin } from '../../internals/firebase';
 import { set, isPast, addDays, closestTo } from 'date-fns'
-import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
+import { Affirmations } from '@strive/model'
 import { Personal } from '@strive/user/user/+state/user.firestore';
 import { ScheduledTaskUserExerciseAffirmations, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'

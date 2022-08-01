@@ -1,3 +1,11 @@
+export interface Affirmations {
+  id?: string
+  times: string[]
+  affirmations: string[]
+  createdAt?: Date
+  updatedAt?: Date
+}
+
 export interface AffirmationSuggestion {
   affirmation: string,
   category: enumAffirmationCategory
@@ -13,7 +21,7 @@ export enum enumAffirmationCategory {
   love,
 }
 
-export const suggestions: AffirmationSuggestion[] = [
+export const affirmationSuggestions: AffirmationSuggestion[] = [
   { affirmation: 'I eat well, exercise regularly and get plenty of rest to enjoy good health', category: enumAffirmationCategory.health },
   { affirmation: 'I am what I eat', category: enumAffirmationCategory.health },
   { affirmation: 'I eat healthy nutritious food that benefits my body', category: enumAffirmationCategory.health },

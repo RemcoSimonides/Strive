@@ -1,7 +1,7 @@
 import { functions } from '../../../internals/firebase';
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType, ScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
-import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
+import { Affirmations } from '@strive/model'
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
 
 export const affirmationsCreatedHandler = functions.firestore.document(`Users/{userId}/Exercises/Affirmations`)

@@ -1,6 +1,6 @@
 import { db, functions, admin } from '../internals/firebase';
 
-import { Affirmations } from '@strive/exercises/affirmation/+state/affirmation.firestore';
+import { Affirmations } from '@strive/model'
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
 import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
 import { logger } from 'firebase-functions';

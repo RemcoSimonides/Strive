@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ModalController, PopoverController } from "@ionic/angular";
-import { Affirmations } from "@strive/exercises/affirmation/+state/affirmation.firestore";
-import { AffirmationSuggestion, enumAffirmationCategory, suggestions } from "@strive/exercises/affirmation/+state/affirmation.model";
-import { AffirmationService } from "@strive/exercises/affirmation/+state/affirmation.service";
+import { Affirmations, AffirmationSuggestion, enumAffirmationCategory, affirmationSuggestions } from '@strive/model'
+import { AffirmationService } from "@strive/exercises/affirmation/affirmation.service";
 import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
 import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
 import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
@@ -26,7 +25,7 @@ export class AffirmationsComponent implements OnDestroy {
   isLoading = true
 
   enumAffirmationCategory = enumAffirmationCategory
-  suggestions = suggestions
+  suggestions = affirmationSuggestions
   private suggestionsCopy: AffirmationSuggestion[]
 
   form = new FormGroup({
