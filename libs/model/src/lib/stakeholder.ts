@@ -1,28 +1,23 @@
-import { GoalPublicityType, GoalStatus } from '@strive/model'
+import { GoalPublicityType, GoalStatus } from './goal'
+
+export type GoalStakeholderRole = 'isAdmin' | 'isAchiever' | 'isSupporter' | 'isSpectator'
 
 export interface GoalStakeholder {
-  uid: string;
-  username: string;
-  photoURL: string;
-  isAdmin: boolean;
-  isAchiever: boolean;
-  isSupporter: boolean;
-  isSpectator: boolean;
-  hasOpenRequestToJoin: boolean;
-  status: GoalStatus;
-  goalId: string;
-  goalPublicity: GoalPublicityType;
+  uid: string
+  username: string
+  photoURL: string
+  isAdmin: boolean
+  isAchiever: boolean
+  isSupporter: boolean
+  isSpectator: boolean
+  hasOpenRequestToJoin: boolean
+  status: GoalStatus
+  goalId: string
+  goalPublicity: GoalPublicityType
   lastCheckedGoal: false | Date
-  updatedBy?: string;
-  updatedAt?: Date;
-  createdAt?: Date;
-}
-
-export enum enumGoalStakeholder {
-  admin = 'isAdmin',
-  achiever = 'isAchiever',
-  supporter = 'isSupporter',
-  spectator = 'isSpectator'
+  updatedBy?: string
+  updatedAt?: Date
+  createdAt?: Date
 }
 
 /** A factory function that creates a GoalStakeholderDocument */

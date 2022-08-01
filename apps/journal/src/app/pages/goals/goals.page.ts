@@ -11,8 +11,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 // Interfaces
-import { Goal, GoalEvent } from '@strive/model'
-import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { Goal, GoalEvent, GoalStakeholder } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -56,7 +55,7 @@ export class GoalsComponent {
     private seo: SeoService
   ) {
     this.achievingGoals$ = this.user.user$.pipe(
-      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, enumGoalStakeholder.achiever, false) : of([])),
+      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, 'isAchiever', false) : of([])),
       joinWith({
         events: value => this.goalEventService.valueChanges([where('source.goal.id', '==', value.goal.id), where('createdAt', '>', value.stakeholder.lastCheckedGoal)]).pipe(
           map(aggregateEvents),

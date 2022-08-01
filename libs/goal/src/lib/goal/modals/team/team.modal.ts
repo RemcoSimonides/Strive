@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { Location } from "@angular/common";
-import { AlertController, ModalController, NavParams } from "@ionic/angular";
-import { createGoalStakeholder, GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
-import { GoalStakeholderService } from "@strive/goal/stakeholder/+state/stakeholder.service";
-import { UserService } from "@strive/user/user/+state/user.service";
-import { combineLatest, Observable, of } from "rxjs";
-import { map, startWith, switchMap } from "rxjs/operators";
-import { FormControl } from "@angular/forms";
-import { delay } from "@strive/utils/helpers";
-import { ModalDirective } from '@strive/utils/directives/modal.directive';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
+import { Location } from '@angular/common'
+import { AlertController, ModalController, NavParams } from '@ionic/angular'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { UserService } from '@strive/user/user/+state/user.service'
+import { combineLatest, Observable, of } from 'rxjs'
+import { map, startWith, switchMap } from 'rxjs/operators'
+import { FormControl } from '@angular/forms'
+import { delay } from '@strive/utils/helpers'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 @Component({
   selector: 'goal-team-modal',

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy } from "@angular/core";
-import { Location } from '@angular/common';
-import { ModalController } from "@ionic/angular";
-import { createGoalStakeholder, GoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
-import { FormControl } from "@angular/forms";
-import { ModalDirective } from "@strive/utils/directives/modal.directive";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
+import { Location } from '@angular/common'
+import { ModalController } from '@ionic/angular'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { FormControl } from '@angular/forms'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 @Component({
   selector: 'support-achievers',

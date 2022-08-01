@@ -5,14 +5,12 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Strive Service
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { MilestoneService } from '@strive/goal/milestone/milestone.service';
 
 // Strive Other
-import { Milestone } from '@strive/model'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { Goal } from '@strive/model'
+import { Goal, Milestone, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 
 @Component({
   selector: '[goal] journal-goal-roadmap',

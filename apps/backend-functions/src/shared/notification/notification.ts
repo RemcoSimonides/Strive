@@ -1,12 +1,11 @@
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 // Interfaces
-import { createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
 import { Notification, createNotificationSource } from '@strive/notification/+state/notification.firestore';
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification';
 import { createPersonal } from '@strive/user/user/+state/user.firestore';
 import { toDate, unique } from '../utils';
-import { GoalEvent } from '@strive/model'
+import { GoalEvent, createGoalStakeholder } from '@strive/model'
 import { createNotification } from '@strive/notification/+state/notification.model';
 
 const db = admin.firestore()

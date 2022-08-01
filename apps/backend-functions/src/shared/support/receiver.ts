@@ -1,4 +1,4 @@
-import { createGoalStakeholder } from "@strive/goal/stakeholder/+state/stakeholder.firestore";
+import { createGoalStakeholder } from '@strive/model'
 import { createUserLink, UserLink } from "@strive/user/user/+state/user.firestore";
 
 /**

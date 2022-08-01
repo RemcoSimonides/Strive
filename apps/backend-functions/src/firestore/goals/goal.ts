@@ -7,12 +7,11 @@ import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
 import { addGoalEvent } from './goal.events';
 import { createGoalSource, DiscussionSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 import { User } from '@strive/user/user/+state/user.firestore';
 import { getReceiver } from '../../shared/support/receiver';
-import { createMilestone, Milestone } from '@strive/model'
+import { createMilestone, Milestone, GoalStakeholder } from '@strive/model'
 import { createSupport, Support } from '@strive/support/+state/support.firestore';
 import { addDiscussion } from '../../shared/discussion/discussion';
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';

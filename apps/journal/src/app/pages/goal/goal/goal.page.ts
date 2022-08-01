@@ -16,13 +16,12 @@ import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 // Strive Interfaces
-import { Goal } from '@strive/model'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { map, switchMap } from 'rxjs/operators';
 import { TeamModalComponent } from '@strive/goal/goal/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';

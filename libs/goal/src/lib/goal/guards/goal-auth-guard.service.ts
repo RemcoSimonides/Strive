@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { UserService } from '@strive/user/user/+state/user.service';
 //Interfaces
-import { Goal } from '@strive/model'
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { Goal, GoalStakeholder } from '@strive/model'
 
 @Injectable({
   providedIn: 'root'

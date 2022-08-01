@@ -4,8 +4,7 @@ import { Firestore, DocumentSnapshot, getDoc, WriteBatch, serverTimestamp } from
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 // Interfaces
 import { User } from '@strive/user/user/+state/user.firestore'
-import { GoalStakeholder, createGoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
-import { Goal } from '@strive/model'
+import { Goal, GoalStakeholder, createGoalStakeholder } from '@strive/model'
 import { UserService } from '@strive/user/user/+state/user.service';
 
 export interface roleArgs {

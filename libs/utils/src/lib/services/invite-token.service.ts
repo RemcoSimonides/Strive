@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { doc, getDoc, setDoc, Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 // Services
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
 export interface InviteToken {

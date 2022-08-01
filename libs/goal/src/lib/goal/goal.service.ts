@@ -5,10 +5,9 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Services
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-import { GoalStakeholderService } from '../stakeholder/+state/stakeholder.service';
+import { GoalStakeholderService } from '../stakeholder/stakeholder.service';
 // Interfaces
-import { Goal, createGoal } from '@strive/model'
-import { createGoalStakeholder, enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
 import { UserService } from '@strive/user/user/+state/user.service';
 import { toDate } from '@strive/utils/helpers';
 
@@ -49,7 +48,7 @@ export class GoalService extends FireCollection<Goal> {
     return this.stakeholder.add(stakeholder, { write, params: { goalId: goal.id }})
   }
 
-  getStakeholderGoals(uid: string, role: enumGoalStakeholder, publicOnly: boolean): Observable<{ goal: Goal, stakeholder: GoalStakeholder }[]> {
+  getStakeholderGoals(uid: string, role: GoalStakeholderRole, publicOnly: boolean): Observable<{ goal: Goal, stakeholder: GoalStakeholder }[]> {
     let constraints: QueryConstraint[];
     if (publicOnly) {
       constraints = [where('goalPublicity', '==', 'public'), where('uid', '==', uid), where(role, '==', true), orderBy('createdAt', 'desc')]

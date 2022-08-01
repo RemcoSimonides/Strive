@@ -4,7 +4,7 @@ import { logger } from 'firebase-functions';
 import { createUser, User, createUserLink } from '@strive/user/user/+state/user.firestore';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { Spectator } from '@strive/user/spectator/+state/spectator.firestore';
-import { GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
+import { GoalStakeholder } from '@strive/model'
 
 export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
   .onCreate(async (snapshot) => {

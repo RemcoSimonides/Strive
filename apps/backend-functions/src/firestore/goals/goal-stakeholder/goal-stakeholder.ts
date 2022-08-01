@@ -1,8 +1,7 @@
 import { db, functions, increment, arrayUnion } from '../../../internals/firebase';
 
 // interfaces
-import { Goal } from '@strive/model'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { toDate } from '../../../shared/utils';
 import { getDocument } from 'apps/backend-functions/src/shared/utils';
 import { addGoalEvent } from '../goal.events';

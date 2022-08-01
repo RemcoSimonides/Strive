@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
+import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
 import { UserService } from '@strive/user/user/+state/user.service';
 import { Observable } from 'rxjs';

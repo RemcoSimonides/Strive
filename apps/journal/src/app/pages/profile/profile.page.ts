@@ -16,8 +16,7 @@ import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/
 // Interfaces
 import { createSpectator } from '@strive/user/spectator/+state/spectator.firestore';
 import { User } from '@strive/user/user/+state/user.firestore';
-import { Goal } from '@strive/model'
-import { enumGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { Goal, GoalStakeholder } from '@strive/model'
 // Other
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
@@ -64,14 +63,14 @@ export class ProfileComponent {
     this.isOwner$,
     this.profileId$
   ]).pipe(
-    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, enumGoalStakeholder.achiever, !isOwner)),
+    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, 'isAchiever', !isOwner)),
   )
 
   supportingGoals$ = combineLatest([
     this.isOwner$,
     this.profileId$
   ]).pipe(
-    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, enumGoalStakeholder.supporter, !isOwner)),
+    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, 'isSupporter', !isOwner)),
     map(values => values.map(value => value.goal))
   )
 

@@ -7,14 +7,13 @@ import { Subscription, of, Observable, shareReplay } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/+state/stakeholder.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 // Interfaces
-import { Goal } from '@strive/model'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/goal/stakeholder/+state/stakeholder.firestore'
+import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 // Components
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
