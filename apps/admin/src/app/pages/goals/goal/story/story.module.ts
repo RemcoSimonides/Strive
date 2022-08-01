@@ -6,15 +6,13 @@ import { IonicModule } from '@ionic/angular';
 
 import { StoryComponent } from './story.component';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
-// import { NotificationModule } from '@strive/notification/components/notification/notification.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     RouterModule,
-    PageLoadingModule,
-    // NotificationModule
+    PageLoadingModule
   ],
   declarations: [StoryComponent],
   exports: [StoryComponent]

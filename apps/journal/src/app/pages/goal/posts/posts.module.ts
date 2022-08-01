@@ -4,7 +4,6 @@ import { IonicModule } from '@ionic/angular';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { PostsComponent } from './posts.component';
-import { NotificationModule } from '@strive/notification/components/notification/notification.module';
 import { MessagePipeModule } from '@strive/notification/pipes/message.pipe';
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe';
 import { PostComponentModule } from '@strive/post/components/post/post.module';
@@ -14,7 +13,6 @@ import { PostComponentModule } from '@strive/post/components/post/post.module';
     CommonModule,
     IonicModule,
     FlexLayoutModule,
-    NotificationModule,
     MessagePipeModule,
     TimeAgoPipeModule,
     PostComponentModule

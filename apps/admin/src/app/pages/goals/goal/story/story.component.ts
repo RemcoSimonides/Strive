@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class StoryComponent implements OnInit {
 
-  feed$: Observable<Notification[]>
+  notifications$: Observable<Notification[]>
 
 	@Input() id: string
 
@@ -20,7 +20,7 @@ export class StoryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.feed$ = this.notification.valueChanges({ goalId: this.id })
+    this.notifications$ = this.notification.valueChanges({ goalId: this.id })
   }
 
 }
