@@ -10,8 +10,8 @@ import { switchMap, map } from 'rxjs/operators';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/+state/user.service';
 
-// Interfaces
-import { Goal, GoalEvent, GoalStakeholder } from '@strive/model'
+// Model
+import { Goal, GoalEvent, GoalStakeholder, enumEvent } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -21,7 +21,6 @@ import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { GoalEventService } from '@strive/goal/goal/goal-event.service';
 import { where } from 'firebase/firestore';
-import { enumEvent } from '@strive/notification/+state/notification.firestore';
 import { getAggregatedMessage } from '@strive/notification/message/aggregated';
 
 function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {

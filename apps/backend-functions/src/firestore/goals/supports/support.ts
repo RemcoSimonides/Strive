@@ -1,12 +1,10 @@
 import { db, functions, admin, increment } from '../../../internals/firebase';
 // Interaces
 import { createSupport, Support } from '@strive/support/+state/support.firestore'
-import { createGoal, createGoalStakeholder, Milestone } from '@strive/model';
-import { createGoalSource, createNotificationSource, enumEvent } from '@strive/notification/+state/notification.firestore';
+import {  createGoal, createGoalStakeholder, Milestone, createGoalSource, createNotificationSource, enumEvent, createNotification } from '@strive/model'
 import { addGoalEvent } from '../goal.events';
 import { getDocument, toDate } from '../../../shared/utils';
 import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
-import { createNotification } from '@strive/notification/+state/notification.model';
 
 const { serverTimestamp } = admin.firestore.FieldValue
 

@@ -1,6 +1,4 @@
-import { Goal, GoalEvent } from '@strive/model'
-import { createNotificationSource, enumEvent } from '@strive/notification/+state/notification.firestore';
-import { createNotification } from '@strive/notification/+state/notification.model';
+import { Goal, GoalEvent, createNotificationSource, enumEvent, createNotification } from '@strive/model'
 import { logger } from 'firebase-functions';
 import { functions } from '../../internals/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification';

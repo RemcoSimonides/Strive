@@ -10,7 +10,7 @@ import { UserService } from '@strive/user/user/+state/user.service';
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { FcmService } from '@strive/utils/services/fcm.service';
-import { NotificationService } from '@strive/notification/+state/notification.service';
+import { NotificationService } from '@strive/notification/notification.service';
 import { PWAService } from '@strive/utils/services/pwa.service';
 
 @Component({

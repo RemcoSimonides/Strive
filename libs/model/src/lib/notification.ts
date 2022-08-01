@@ -1,8 +1,6 @@
 import { createSupportLink, Support, SupportLink } from '@strive/support/+state/support.firestore'
-import { createGoalLink, Goal, GoalLink } from '@strive/model'
-import { createMilestoneLink, Milestone, MilestoneLink } from '@strive/model'
-import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore';
-import { Comment } from '@strive/discussion/+state/comment.firestore';
+import { createGoalLink, Goal, GoalLink, createMilestoneLink, Milestone, MilestoneLink } from '@strive/model'
+import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore'
 
 export enum enumEvent {
   // 200000 -> 299999 = goal events
@@ -44,7 +42,7 @@ export enum enumEvent {
 interface NotificationBase {
   id?: string
   event: enumEvent
-  source: GoalSource | SupportSource | NotificationSource
+  source: SupportSource | NotificationSource
   updatedAt?: Date
   createdAt?: Date
 }
@@ -64,15 +62,6 @@ export interface SupportSource {
   receiver?: UserLink
 }
 
-export interface GoalSource {
-  goal: GoalLink
-  user?: UserLink
-  milestone?: MilestoneLink
-  postId?: string
-  support?: SupportLink
-  comment?: Comment
-}
-
 export interface NotificationSource {
   goal?: GoalLink
   user?: UserLink
@@ -83,6 +72,14 @@ export interface NotificationSource {
 export interface DiscussionSource {
   user?: UserLink
   goal?: GoalLink
+}
+
+export function createNotification(params: Partial<Notification> = {}): Notification {
+  return {
+    event: 0,
+    ...params,
+    source: createNotificationSource(params.source),
+  }
 }
 
 export function createSupportSource(params: {
@@ -98,25 +95,6 @@ export function createSupportSource(params: {
 
   if (params?.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
   if (params?.receiver?.uid) source.receiver = createUserLink(params.receiver)
-
-  return source
-}
-
-export function createGoalSource(params: {
-  goal: GoalLink | Goal
-  milestone?: MilestoneLink | Milestone
-  user?: UserLink | User
-  postId?: string
-  support?: SupportLink | Support
-}): GoalSource {
-  const source: GoalSource = {
-    goal: createGoalLink(params.goal)
-  }
-
-  if (params.user?.uid) source.user = createUserLink(params.user)
-  if (params.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
-  if (params.postId) source.postId = params.postId
-  if (params.support) source.support = createSupportLink(params.support)
 
   return source
 }

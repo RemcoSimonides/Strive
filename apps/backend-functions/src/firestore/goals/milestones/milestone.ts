@@ -2,16 +2,14 @@ import { db, functions, admin } from '../../../internals/firebase';
 import { logger } from 'firebase-functions';
 
 //Interfaces
-import { createMilestone, Milestone } from '@strive/model'
+import { Goal, createMilestone, Milestone, createGoalSource, enumEvent } from '@strive/model'
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface';
 import { toDate } from '../../../shared/utils';
 import { getDocument } from '../../..//shared/utils';
-import { Goal } from '@strive/model';
 import { addGoalEvent } from '../goal.events';
-import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 import { User, UserLink } from '@strive/user/user/+state/user.firestore';
 import { createSupport } from '@strive/support/+state/support.firestore';
 import { getReceiver } from '../../../shared/support/receiver'

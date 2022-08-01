@@ -1,11 +1,10 @@
 import { db, functions, increment, arrayUnion } from '../../../internals/firebase';
 
 // interfaces
-import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, enumEvent } from '@strive/model'
 import { toDate } from '../../../shared/utils';
 import { getDocument } from 'apps/backend-functions/src/shared/utils';
 import { addGoalEvent } from '../goal.events';
-import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 
 
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)

@@ -1,4 +1,4 @@
-import { enumEvent, Notification } from '../+state/notification.firestore'
+import { enumEvent, Notification } from '@strive/model'
 
 export type PushNotificationTarget = 'user' | 'stakeholder' | 'spectator'
 export interface PushMessage {

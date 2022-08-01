@@ -1,14 +1,22 @@
 import { admin, db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
-import { createGoal, Goal, GoalStatus, createGoalLink, GoalPublicityType } from '@strive/model'
+import {
+  createGoal,
+  Goal,
+  GoalStatus,
+  createGoalLink,
+  GoalPublicityType,
+  createGoalSource,
+  DiscussionSource,
+  enumEvent
+} from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils';
 import { addGoalEvent } from './goal.events';
-import { createGoalSource, DiscussionSource, enumEvent } from '@strive/notification/+state/notification.firestore';
 import { User } from '@strive/user/user/+state/user.firestore';
 import { getReceiver } from '../../shared/support/receiver';
 import { createMilestone, Milestone, GoalStakeholder } from '@strive/model'

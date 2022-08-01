@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { SeoService } from '@strive/utils/services/seo.service';
-import { NotificationService } from '@strive/notification/+state/notification.service';
-import { Notification } from '@strive/notification/+state/notification.firestore';
+import { NotificationService } from '@strive/notification/notification.service';
+import { Notification } from '@strive/model'
 import { UserService } from '@strive/user/user/+state/user.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';

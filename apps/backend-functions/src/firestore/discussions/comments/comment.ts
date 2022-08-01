@@ -2,7 +2,7 @@ import { logger } from 'firebase-functions';
 import { db, functions, increment, arrayUnion } from '../../../internals/firebase';
 import { createComment } from '@strive/discussion/+state/comment.firestore';
 import { createDiscussion } from '@strive/discussion/+state/discussion.firestore';
-import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore';
+import { createGoalSource, enumEvent } from '@strive/model'
 import { toDate } from '../../../shared/utils';
 import { addGoalEvent } from '../../goals/goal.events';
 

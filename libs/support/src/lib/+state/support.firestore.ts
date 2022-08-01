@@ -1,4 +1,4 @@
-import { createSupportSource, SupportSource } from '@strive/notification/+state/notification.firestore'
+import { createSupportSource, SupportSource } from '@strive/model'
 
 export type SupportDecision = 'give' | 'keep'
 export type SupportStatus = 'open' | 'rejected' | 'canceled' | 'waiting_to_be_paid' | 'paid'

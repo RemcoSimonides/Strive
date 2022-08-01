@@ -18,7 +18,7 @@ import { orderBy, where } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { SupportOptionsComponent } from '../options/options.component';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
-import { createSupportSource } from '@strive/notification/+state/notification.firestore';
+import { createSupportSource } from '@strive/model';
 
 @Component({
   selector: 'support-add',

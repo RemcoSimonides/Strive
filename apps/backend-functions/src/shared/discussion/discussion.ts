@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { AudienceType, createDiscussion } from "@strive/discussion/+state/discussion.firestore"
-import { DiscussionSource } from "@strive/notification/+state/notification.firestore"
+import { DiscussionSource } from '@strive/model'
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue

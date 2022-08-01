@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 // Interfaces
-import { Notification } from './notification.firestore';
+import { createNotification, Notification } from '@strive/model';
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { toDate } from '@strive/utils/helpers';
-import { createNotification } from './notification.model';
 
 @Injectable({
   providedIn: 'root'

@@ -1,8 +1,7 @@
 import { functions } from '../../../internals/firebase';
-import { createGoalSource, enumEvent } from '@strive/notification/+state/notification.firestore'
 import { createPost } from '@strive/post/+state/post.firestore';
 import { getDocument, toDate } from '../../../shared/utils';
-import { Goal } from '@strive/model';
+import { Goal, createGoalSource, enumEvent } from '@strive/model';
 import { User } from '@strive/user/user/+state/user.firestore';
 import { addGoalEvent } from '../goal.events';
 

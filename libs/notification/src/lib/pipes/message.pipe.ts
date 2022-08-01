@@ -1,6 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { GoalEvent } from '@strive/model'
-import { Notification, NotificationMessageText } from '../+state/notification.firestore';
+import { GoalEvent, Notification, NotificationMessageText } from '@strive/model'
 import { getNotificationMessage, getStoryItemMessage, StoryItemMessage } from '../message/notification';
 
 @Pipe({ name: 'storyMessage'})

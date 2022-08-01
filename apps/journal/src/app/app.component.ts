@@ -15,7 +15,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { firstValueFrom, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap } from 'rxjs/operators';
-import { NotificationService } from '@strive/notification/+state/notification.service';
+import { NotificationService } from '@strive/notification/notification.service';
 import { Unsubscribe } from '@firebase/util';
 import { limit, where } from '@angular/fire/firestore';
 

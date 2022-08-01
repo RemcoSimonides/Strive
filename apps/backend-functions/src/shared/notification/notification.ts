@@ -1,12 +1,11 @@
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 // Interfaces
-import { Notification, createNotificationSource } from '@strive/notification/+state/notification.firestore';
+import { createNotification, Notification, createNotificationSource } from '@strive/model'
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification';
 import { createPersonal } from '@strive/user/user/+state/user.firestore';
 import { toDate, unique } from '../utils';
 import { GoalEvent, createGoalStakeholder } from '@strive/model'
-import { createNotification } from '@strive/notification/+state/notification.model';
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue

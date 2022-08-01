@@ -1,4 +1,7 @@
-import { createGoalSource, enumEvent, GoalSource } from '@strive/notification/+state/notification.firestore';
+import { enumEvent } from './notification';
+import { createSupportLink, Support, SupportLink } from '@strive/support/+state/support.firestore';
+import { createUserLink, User, UserLink } from '@strive/user/user/+state/user.firestore';
+import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
 
 export type GoalPublicityType = 'public' | 'private'
 export type GoalStatus = 'bucketlist' | 'active' | 'finished'
@@ -8,6 +11,15 @@ export interface GoalEvent {
   source: GoalSource
   createdAt?: Date
   updatedAt?: Date
+}
+
+export interface GoalSource {
+  goal: GoalLink
+  user?: UserLink
+  milestone?: MilestoneLink
+  postId?: string
+  support?: SupportLink
+  comment?: Comment
 }
 
 export interface Goal {
@@ -64,4 +76,23 @@ export function createGoalEvent(params: Partial<GoalEvent> = {}): GoalEvent {
     ...params,
     source: createGoalSource(params.source),
   }
+}
+
+export function createGoalSource(params: {
+  goal: GoalLink | Goal
+  milestone?: MilestoneLink | Milestone
+  user?: UserLink | User
+  postId?: string
+  support?: SupportLink | Support
+}): GoalSource {
+  const source: GoalSource = {
+    goal: createGoalLink(params.goal)
+  }
+
+  if (params.user?.uid) source.user = createUserLink(params.user)
+  if (params.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
+  if (params.postId) source.postId = params.postId
+  if (params.support) source.support = createSupportLink(params.support)
+
+  return source
 }

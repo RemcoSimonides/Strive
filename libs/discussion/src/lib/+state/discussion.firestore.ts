@@ -1,4 +1,4 @@
-import { DiscussionSource } from '@strive/notification/+state/notification.firestore'
+import { DiscussionSource } from '@strive/model'
 
 export type AudienceType = 'public' | 'team' | 'adminsAndRequestor' | 'achievers' | 'spectators'
 

@@ -1,4 +1,4 @@
-import { enumEvent } from '../+state/notification.firestore'
+import { enumEvent } from '@strive/model'
 import { NotificationIcons } from './notification'
 
 export interface AggregatedMessage {
