@@ -1,4 +1,4 @@
-import { GoalSource } from './goal'
+import { createGoalSource, GoalSource } from './goal'
 import { enumEvent } from './notification'
 
 export const storyEvents: enumEvent[] = [
@@ -23,4 +23,15 @@ export interface StoryItem {
   source: GoalSource
   createdAt: Date
   updatedAt: Date
+}
+
+export function createStoryItem(params: Partial<StoryItem> = {}): StoryItem {
+  return {
+    name: params.name,
+    date: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    ...params,
+    source: createGoalSource(params.source),
+  }
 }

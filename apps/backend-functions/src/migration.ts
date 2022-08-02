@@ -1,19 +1,27 @@
+// import { createGoalEvent, createStoryItem, storyEvents } from "@strive/model";
 import { functions } from "./internals/firebase";
+// import { toDate } from './shared/utils';
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
   try {
-    // const notificationsSnap = await db.collectionGroup('Notifications').get()
+    // const eventsSnap = await db.collection('GoalEvents').get()
 
     // const batch = db.batch()
-    // logger.log('notifications: ', notificationsSnap.size)
-    // for (const doc of notificationsSnap.docs) {
-    //   const notification = createNotification(doc.data())
-    //   const remove = [enumEvent.gFinished, enumEvent.gSupportPendingFailed, enumEvent.gSupportPendingSuccesful]
 
-    //   if (remove.includes(notification.event)) {
-    //     batch.delete(doc.ref)
-    //   }
+    // logger.log('events: ', eventsSnap.size)
+    // for (const doc of eventsSnap.docs) {
+    //   const event = createGoalEvent(toDate(doc.data()))
+      
+    //   if (!storyEvents.includes(event.name)) continue
+
+    //   const storyItem = createStoryItem({
+    //     date: event.createdAt,
+    //     ...event
+    //   })
+    //   const goalId = storyItem.source.goal.id
+    //   const ref = db.doc(`Goals/${goalId}/Story/${doc.id}`)
+    //   batch.set(ref, storyItem)
     // }
     // batch.commit()
 
