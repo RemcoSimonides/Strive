@@ -19,7 +19,7 @@ import { GoalService } from '@strive/goal/goal/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { where } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { getAggregatedMessage } from '@strive/notification/message/aggregated';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { StoryService } from '@strive/goal/story/story.service';
@@ -59,7 +59,14 @@ export class GoalsComponent {
   ) {
     const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
-      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user.uid)])),
+      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user.uid), orderBy('createdAt', 'desc')])),
+      // Sort finished goals to the end
+      map(stakeholders => stakeholders.sort((a, b) => {
+        const order = ['active', 'bucketlist', 'finished']
+        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
+        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
+        return 0
+      })),
       joinWith({
         goal: stakeholder => this.goal.valueChanges(stakeholder.goalId),
         story: stakeholder => {
