@@ -21,7 +21,7 @@
           <ng-container *ngIf="stakeholders.length > 0 else noGoals">
 
             <section>
-              <ng-container *ngFor="let stakeholder of stakeholders">
+              <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
                 <ion-card [routerLink]="['/goal/', stakeholder.goal.id]">
                   <ion-item lines="none">
                     <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">

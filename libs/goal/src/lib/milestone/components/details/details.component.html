@@ -11,7 +11,7 @@
 
   <section fxLayout="column" fxLayoutGap="8px" class="ion-padding">
     <!-- <small><b>Created at:</b> {{ milestone.createdAt.toDate() | date:'longDate' }}</small> -->
-    <small *ngIf="milestone.finishedAt"><b>Finished at:</b> {{ milestone.finishedAt.toDate() | date:'longDate' }}</small>
+    <small *ngIf="milestone.finishedAt"><b>Finished at:</b> {{ milestone.finishedAt | date:'longDate' }}</small>
     <article fxLayout>
       <small><b>Deadline: </b></small><strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
     </article>

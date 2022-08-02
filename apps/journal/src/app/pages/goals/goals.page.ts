@@ -132,4 +132,8 @@ export class GoalsComponent {
       event
     }).then(popover => popover.present())
   }
+
+  trackByFn(_: number, stakeholder: GoalStakeholder) {
+    return stakeholder.uid
+  }
 }
