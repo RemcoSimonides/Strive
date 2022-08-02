@@ -79,7 +79,7 @@ service cloud.firestore {
         allow write: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
       }
 
-      match /Notifications/{notificationId} {
+      match /Story/{itemId} {
         allow read;
       }
 

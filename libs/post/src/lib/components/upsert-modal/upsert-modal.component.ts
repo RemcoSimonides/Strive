@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-// Ionic
 import { ModalController, PopoverController } from '@ionic/angular'
-// Rxjs
+
 import { filter } from 'rxjs/operators';
-// Strive
+import { addYears } from 'date-fns'
+
 import { PostService } from '@strive/post/post.service';
 import { UserService } from '@strive/user/user/user.service';
 import { PostForm } from '@strive/post/forms/post.form';
@@ -85,25 +85,22 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
     this.dismiss()
   }
 
-  // async openDatePicker(event: Event) {
-  //   // const minDeadline = new Date().toISOString()
-  //   // const maxDeadline = this.maxDeadline 
-  //   //   ? this.maxDeadline
-  //   //   : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
+  async openDatePicker() {
+    const maxDate = addYears(new Date(), 1)
 
-  //   const popover = await this.popoverCtrl.create({
-  //     component: DatetimeComponent,
-  //     // componentProps: { minDeadline, maxDeadline }
-  //   })
-  //   popover.onDidDismiss().then(({ data, role }) => {
-  //     if (role === 'remove') {
-  //       // this.postForm.date.setValue('')
-  //     } else if (role === 'dismiss') {
-  //       const date = new Date(data).toDateString()
-  //       // this.postForm.date.setValue(date)
-  //     }
-  //   })
-  //   popover.present()
-  // }
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { maxDate, value: this.postForm.date.value }
+    })
+    popover.onDidDismiss().then(({ data, role }) => {
+      if (role === 'remove') {
+        this.postForm.date.setValue('')
+      } else if (role === 'dismiss') {
+        const date = new Date(data)
+        this.postForm.date.setValue(date)
+      }
+    })
+    popover.present()
+  }
 
 }

@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity } from '@strive/utils/form/entity.form';
 import { createPost, Post } from '@strive/model'
 
-function createPostFormControl(params?: Post) {
+function createPostFormControl(params?: Partial<Post>) {
   const post = createPost(params);
   return {
     isEvidence: new FormControl(post.isEvidence),
@@ -17,7 +17,7 @@ function createPostFormControl(params?: Post) {
 export type PostFormControl = ReturnType<typeof createPostFormControl>
 
 export class PostForm extends FormEntity<PostFormControl> {
-  constructor(post?: Post) {
+  constructor(post?: Partial<Post>) {
     super(createPostFormControl(post))
   }
 

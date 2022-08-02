@@ -50,6 +50,21 @@ export enum enumEvent {
   userSpectatorRemoved = 400002,
 }
 
+const notificationIcons = [
+  'alert-outline',
+  'bookmark-outline',
+  'chatbox-outline',
+  'checkmark-outline',
+  'create-outline',
+  'flag-outline',
+  'heart-outline',
+  'heart-dislike-outline',
+  'person-add-outline',
+  'person-remove-outline',
+  'close-outline'
+] as const
+export type NotificationIcons = typeof notificationIcons[number];
+
 interface NotificationBase {
   id?: string
   event: enumEvent

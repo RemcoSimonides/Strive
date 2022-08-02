@@ -12,12 +12,13 @@ import {
 } from '@strive/model'
 
 // Shared
-import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task';
-import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface';
-import { toDate } from '../../../shared/utils';
-import { getDocument } from '../../..//shared/utils';
-import { addGoalEvent } from '../goal.events';
+import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
+import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
+import { toDate } from '../../../shared/utils'
+import { getDocument } from '../../../shared/utils'
+import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getReceiver } from '../../../shared/support/receiver'
+import { addStoryItem } from '../../../shared/goal-story/story'
 
 export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
   .onCreate(async (snapshot, context) => {
@@ -101,16 +102,19 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
 
   if (after.status === 'overdue') {
     addGoalEvent(enumEvent.gMilestoneDeadlinePassed, source)
+    addStoryItem(enumEvent.gMilestoneDeadlinePassed, source)
   }
 
   if (after.status === 'succeeded') {
     source.postId = after.id
     addGoalEvent(enumEvent.gMilestoneCompletedSuccessfully, source)
+    addStoryItem(enumEvent.gMilestoneCompletedSuccessfully, source)
   }
 
   if (after.status === 'failed') {
     source.postId = after.id
     addGoalEvent(enumEvent.gMilestoneCompletedUnsuccessfully, source)
+    addStoryItem(enumEvent.gMilestoneCompletedSuccessfully, source)
   }
 
   const isCompleted = after.status === 'succeeded' || after.status === 'failed'

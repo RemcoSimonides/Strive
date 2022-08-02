@@ -2,7 +2,7 @@ import { db, functions } from '../../internals/firebase';
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns';
 
-import { createPersonal, Personal } from '@strive/model';
+import { createPersonal, Personal, storyEvents } from '@strive/model';
 import { getDocument } from '../../shared/utils';
 import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotification } from '@strive/model'
 import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model';
@@ -10,7 +10,6 @@ import { Feature, Features } from '../../../../admin/src/app/pages/features/feat
 import { groupIds, templateIds } from './ids';
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid';
 import { toDate } from '../../shared/utils';
-import { getStoryItemMessage } from '@strive/notification/message/notification';
 
 
 // // crontab.guru to determine schedule value
@@ -74,7 +73,7 @@ async function getGoalEvents(stakeholders: GoalStakeholder[]): Promise<number> {
   const eventsSnaps = await Promise.all(promises)  
   const events = eventsSnaps.map(snap => snap.docs.map(doc => createGoalEvent(toDate({ ...doc.data(), id: doc.id }))))
   const flatten = events.reduce((acc, val) => acc.concat(val), [])
-  const messages = flatten.map(event => getStoryItemMessage(event)).filter(message => !!message).length
+  const messages = flatten.map(event => storyEvents.includes(event.name)).length
 
   return messages
 }

@@ -23,14 +23,14 @@ export class MilestoneDeadlineComponent {
     if (this.milestone.status !== 'pending' && this.milestone.status !== 'overdue') return
     event.stopPropagation()
 
-    const minDeadline = new Date().toISOString()
-    const maxDeadline = this.maxDeadline 
+    const minDate = new Date()
+    const maxDate = this.maxDeadline 
       ? this.maxDeadline
-      : new Date(new Date().getFullYear() + 1000, 12, 31).toISOString()
+      : new Date(new Date().getFullYear() + 1000, 12, 31)
 
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
-      componentProps: { minDeadline, maxDeadline }
+      componentProps: { minDate, maxDate }
     })
     popover.onDidDismiss().then(({ data, role }) => {
       if (role === 'remove') {

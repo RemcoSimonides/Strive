@@ -10,9 +10,10 @@ import {
   createSupport,
   Support
 } from '@strive/model'
-import { addGoalEvent } from '../goal.events';
-import { getDocument, toDate } from '../../../shared/utils';
-import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
+import { addGoalEvent } from '../../../shared/goal-event/goal.events'
+import { getDocument, toDate } from '../../../shared/utils'
+import { sendNotificationToUsers } from '../../../shared/notification/notification'
+import { addStoryItem } from '../../../shared/goal-story/story'
 
 const { serverTimestamp } = admin.firestore.FieldValue
 
@@ -29,6 +30,7 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
       ...support.source
     })
     addGoalEvent(enumEvent.gSupportAdded, source)
+    addStoryItem(enumEvent.gSupportAdded, source)
 
     // Set stakeholder as supporter
     const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.source.supporter.uid}`)

@@ -24,29 +24,28 @@
 
     <ion-item>
       <ion-label color="primary" stacked>Title</ion-label>
-      <ion-input formControlName="title"></ion-input>
+      <ion-input formControlName="title" placeholder="..."></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label color="primary" stacked>Description</ion-label>
-      <ion-textarea autoGrow formControlName="description"></ion-textarea>
+      <ion-textarea autoGrow formControlName="description" placeholder="..."></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label color="primary" stacked>
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-label>
+      <ion-input (ionFocus)="openDatePicker()" placeholder="Date" [value]="postForm.date.value | date:'longDate'"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label color="primary" stacked>
         <ion-icon name="link-outline"></ion-icon>
       </ion-label>
-      <ion-input formControlName="url" type="url" placeholder="Link"></ion-input>
+      <ion-input formControlName="url" type="url" placeholder="Link (auto fetch image and title)"></ion-input>
       <ion-spinner *ngIf="scrapingUrl" slot="end" name="bubbles" color="primary"></ion-spinner>
     </ion-item>
-
-    <!-- <ion-item>
-      <ion-label color="primary" stacked>
-        <ion-icon name="calendar-outline"></ion-icon>
-      </ion-label>
-      <ion-input formControlName="date" placeholder="Select Date"></ion-input>
-      <ion-input formControlName="date" (ionFocus)="openDatePicker($event)" placeholder="Select Date"></ion-input>
-    </ion-item> -->
   </form>
 
 </ion-content>

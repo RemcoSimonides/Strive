@@ -1,7 +1,7 @@
 import { db, functions, increment } from '../../../internals/firebase';
 
 import { toDate } from '../../../shared/utils';
-import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification';
+import { sendNotificationToUsers } from '../../../shared/notification/notification'
 import { createNotification, createNotificationSource, enumEvent, createSpectator, Spectator } from '@strive/model'
 
 export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)

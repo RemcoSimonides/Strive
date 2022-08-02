@@ -1,5 +1,4 @@
-import { enumEvent } from '@strive/model'
-import { NotificationIcons } from './notification'
+import { enumEvent, NotificationIcons } from '@strive/model'
 
 export interface AggregatedMessage {
   icon: NotificationIcons

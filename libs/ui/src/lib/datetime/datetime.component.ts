@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
-import { IonDatetime, NavParams, PopoverController } from "@ionic/angular";
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { IonDatetime, PopoverController } from "@ionic/angular";
 
 @Component({
   selector: 'strive-datetime',
@@ -9,16 +9,26 @@ import { IonDatetime, NavParams, PopoverController } from "@ionic/angular";
 export class DatetimeComponent {
   @ViewChild('datePicker') datetime: IonDatetime
 
-  minDeadline = this.navParams.data?.minDeadline
-  maxDeadline = this.navParams.data?.maxDeadline
-  presentation: 'date' | 'date-time' | 'month' | 'month-year' | 'time' | 'time-date' | 'year'
-
-  constructor(
-    private navParams: NavParams,
-    private popoverCtrl: PopoverController
-  ) {
-    this.presentation = this.navParams.data?.presentation ?? 'date'
+  _value?: string
+  @Input() set value(value: string | Date) {
+    if (!value) return
+    this._value = typeof value === 'string' ? value : value.toISOString()
   }
+
+  _minDate?: string
+  @Input() set minDate(value: string | Date) {
+    if (!value) return
+    this._minDate = typeof value === 'string' ? value : value.toISOString()
+  }
+
+  _maxDate?: string
+  @Input() set maxDate(value: string | Date) {
+    if (!value) return
+    this._maxDate = typeof value === 'string' ? value : value.toISOString()
+  }
+  @Input() presentation: 'date' | 'date-time' | 'month' | 'month-year' | 'time' | 'time-date' | 'year' = 'date'
+
+  constructor(private popoverCtrl: PopoverController) {}
   
   confirm() {
     this.popoverCtrl.dismiss(this.datetime.value, 'dismiss')

@@ -1,13 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { GoalEvent, Notification, NotificationMessageText } from '@strive/model'
-import { getNotificationMessage, getStoryItemMessage, StoryItemMessage } from '../message/notification';
+import { Notification, NotificationMessageText } from '@strive/model'
+import { getNotificationMessage } from '../message/notification';
 
-@Pipe({ name: 'storyMessage'})
-export class StoryItemMessagePipe implements PipeTransform {
-  transform(event: GoalEvent): StoryItemMessage {
-    return getStoryItemMessage(event)
-  }
-}
 
 @Pipe({ name: 'message' })
 export class MessagePipe implements PipeTransform {
@@ -17,7 +11,7 @@ export class MessagePipe implements PipeTransform {
 }
 
 @NgModule({
-  exports: [MessagePipe, StoryItemMessagePipe],
-  declarations: [MessagePipe, StoryItemMessagePipe]
+  exports: [MessagePipe],
+  declarations: [MessagePipe]
 })
 export class MessagePipeModule { } 

@@ -1,7 +1,8 @@
 <ion-datetime #datePicker 
   [presentation]="presentation"
-  [max]="maxDeadline"
-  [min]="minDeadline">
+  [value]="_value"
+  [max]="_maxDate"
+  [min]="_minDate">
 </ion-datetime>
 <section fxLayout fxLayoutAlign="space-between">
   <ion-button fill="clear" (click)="remove()">Remove</ion-button>

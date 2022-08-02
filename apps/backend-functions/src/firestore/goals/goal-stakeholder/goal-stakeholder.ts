@@ -3,8 +3,9 @@ import { db, functions, increment, arrayUnion } from '../../../internals/firebas
 // interfaces
 import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, enumEvent } from '@strive/model'
 import { toDate } from '../../../shared/utils';
-import { getDocument } from 'apps/backend-functions/src/shared/utils';
-import { addGoalEvent } from '../goal.events';
+import { getDocument } from '../../../shared/utils';
+import { addGoalEvent } from '../../../shared/goal-event/goal.events'
+import { addStoryItem } from '../../../shared/goal-story/story'
 
 
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
@@ -118,8 +119,16 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
     user: after
   })
 
-  if (becameAdmin) addGoalEvent(enumEvent.gStakeholderAdminAdded, source)
-  if (becameAchiever) addGoalEvent(enumEvent.gStakeholderAchieverAdded, source)
+  if (becameAdmin) {
+    addGoalEvent(enumEvent.gStakeholderAdminAdded, source)
+    if (goal.numberOfAchievers > 1) addStoryItem(enumEvent.gStakeholderAdminAdded, source)
+  }
+
+  if (becameAchiever) {
+    addGoalEvent(enumEvent.gStakeholderAchieverAdded, source)
+    if (goal.numberOfAchievers > 1) addStoryItem(enumEvent.gStakeholderAchieverAdded, source)
+  }
+
   if (becameSupporter) addGoalEvent(enumEvent.gStakeholderSupporterAdded, source)
   
   if (adminRemoved) addGoalEvent(enumEvent.gStakeholderAdminRemoved, source)

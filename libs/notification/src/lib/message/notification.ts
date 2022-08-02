@@ -1,23 +1,4 @@
-import { GoalEvent, enumEvent, Notification, NotificationMessageText, NotificationSource } from '@strive/model'
-
-const notificationIcons = [
-  'alert-outline',
-  'bookmark-outline',
-  'chatbox-outline',
-  'checkmark-outline',
-  'create-outline',
-  'flag-outline',
-  'heart-outline',
-  'heart-dislike-outline',
-  'person-add-outline',
-  'person-remove-outline',
-  'close-outline'
-] as const
-export type NotificationIcons = typeof notificationIcons[number];
-
-function throwError(event: enumEvent, target: string) {
-  throw new Error(`No notification message for event ${event} and target ${target}`)
-}
+import { enumEvent, Notification, NotificationMessageText, NotificationSource } from '@strive/model'
 
 function get(type: 'user' | 'goal', source:  NotificationSource): { title: string, image: string, link: string } {
   const data = {
@@ -35,100 +16,11 @@ function get(type: 'user' | 'goal', source:  NotificationSource): { title: strin
   return data[type]
 }
 
-export interface StoryItemMessage {
-  icon: NotificationIcons
-  message: NotificationMessageText[]
-}
-
 export interface NotificationMessage {
   title: string
   image: string
   link: string
   message: NotificationMessageText[]
-}
-
-export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessage {
-  switch (name) {
-    case enumEvent.gNewBucketlist:
-    case enumEvent.gNewActive:
-    case enumEvent.gNewFinished:
-      return {
-        icon: 'flag-outline',
-        message: [{ text: `Goal created` }]
-      }
-    case enumEvent.gFinished:
-      return {
-        icon: 'flag-outline',
-        message: [{ text: `Goal is finished!` }]
-      }
-    case enumEvent.gMilestoneCompletedSuccessfully:
-      return {
-        icon: 'checkmark-outline',
-        message: [
-          { text: `Milestone "${source.milestone.content}" successfully completed` }
-        ]
-      }
-    case enumEvent.gMilestoneCompletedUnsuccessfully:
-      return {
-        icon: 'checkmark-outline',
-        message: [
-          { text: `Milestone "${source.milestone.content}" failed to complete` }
-        ]
-      }
-    case enumEvent.gMilestoneDeadlinePassed:
-      return {
-        icon: 'alert-outline',
-        message: [
-          { text: `Milestone "${source.milestone.content}" passed its due date` }
-        ]
-      }
-    case enumEvent.gStakeholderAchieverAdded:
-      return {
-        icon: 'person-add-outline',
-        message: [
-          { text: source.user.username, link: `/profile/${source.user.uid}` },
-          { text: ` joined as an Achiever`}
-        ]
-      }
-    case enumEvent.gStakeholderAdminAdded:
-      return {
-        icon: 'person-add-outline',
-        message: [
-          { text: source.user.username, link: `/profile/${source.user.uid}` },
-          { text: ` became an Admin` }
-        ]
-      }
-    case enumEvent.gRoadmapUpdated:
-      return {
-        icon: 'create-outline',
-        message: [
-          {
-            text: `Roadmap has been updated`
-          }
-        ]
-      }
-    case enumEvent.gNewPost:
-      return {
-        icon: 'bookmark-outline',
-        message: [] // no message - just the post
-      }
-    case enumEvent.gSupportAdded: {
-      const isMilestone = source.milestone?.id
-      const suffix = isMilestone ? ` to milestone "${source.milestone.content}" ` : ''
-      return {
-        icon: 'heart-outline',
-        message: [
-          { text: source.user.username, link: `/profile/${source.user.uid}` },
-          { text: ` added support "${source.support.description}"${suffix}`}
-        ]
-      }
-    }
-    default:
-      return {
-        icon: 'alert-outline',
-        message: [] 
-      }
-  }
 }
 
 export function getNotificationMessage({ event, source }: Notification): NotificationMessage {

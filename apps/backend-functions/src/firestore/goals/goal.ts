@@ -22,10 +22,11 @@ import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils';
-import { addGoalEvent } from './goal.events';
+import { addGoalEvent } from '../../shared/goal-event/goal.events';
 import { getReceiver } from '../../shared/support/receiver';
 import { addDiscussion } from '../../shared/discussion/discussion';
 import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
+import { addStoryItem } from '../../shared/goal-story/story';
 
 function getAudience(publicity: GoalPublicityType): AudienceType {
   return publicity === 'public'
@@ -56,6 +57,7 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
     const source = createGoalSource({ goal, user })
     const name = event[goal.status]
     addGoalEvent(name, source)
+    addStoryItem(name, source)
 
     // deadline
     if (goal.deadline) {
@@ -106,6 +108,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       const user = await getDocument<User>(`Users/${after.updatedBy}`)
       const source = createGoalSource({ goal: after, user, postId: goalId })
       addGoalEvent(enumEvent.gFinished, source)
+      addStoryItem(enumEvent.gFinished, source)
 
       supportsNeedDecision(after)
     }

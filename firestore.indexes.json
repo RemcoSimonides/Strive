@@ -25,6 +25,14 @@
       ]
     },
     {
+      "collectionGroup": "Story",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "source.goal.id", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "DESCENDING"}
+      ]
+    },
+    {
       "collectionGroup": "Milestones",
       "queryScope": "COLLECTION",
       "fields": [
