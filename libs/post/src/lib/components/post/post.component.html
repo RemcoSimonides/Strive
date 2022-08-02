@@ -6,7 +6,7 @@
       </ion-avatar>
       <section fxLayout="column" fxLayoutAlign="center start">
         <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
-        <small>{{ post.createdAt | date:'longDate' }} at {{ post.createdAt | date:'shortTime' }}</small>
+        <small>{{ post.date | date:'longDate' }}</small>
       </section>
     </ion-card-header>
 
