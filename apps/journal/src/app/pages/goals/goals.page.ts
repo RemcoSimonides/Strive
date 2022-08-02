@@ -4,7 +4,7 @@ import { joinWith } from 'ngfire'
 
 // Rxjs
 import { combineLatest, Observable } from 'rxjs'
-import { switchMap, map, filter, startWith } from 'rxjs/operators';
+import { switchMap, map, filter, startWith, tap } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
@@ -23,7 +23,7 @@ import { where } from 'firebase/firestore';
 import { getAggregatedMessage } from '@strive/notification/message/aggregated';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { StoryService } from '@strive/goal/story/story.service';
-import { OptionsPopoverComponent, RolesForm } from './options/options.component';
+import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
 
 function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
   const counter: Record<string | number, number> = {};
@@ -45,7 +45,7 @@ function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number
 export class GoalsComponent {
 
   stakeholders$: Observable<GoalStakeholder & { goal: Goal, story: StoryItem[] }[]>
-  form = new RolesForm()
+  form = new RolesForm(JSON.parse(localStorage.getItem('goals options')))
 
   constructor(
     public user: UserService,
@@ -75,7 +75,10 @@ export class GoalsComponent {
 
     this.stakeholders$ = combineLatest([
       stakeholders$,
-      this.form.valueChanges.pipe(startWith(this.form.value))
+      this.form.valueChanges.pipe(
+        startWith(this.form.value),
+        tap((value: Roles) => localStorage.setItem('goals options', JSON.stringify(value)))
+      )
     ]).pipe(
       map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
           for (const [key, bool] of Object.entries(roles)) {

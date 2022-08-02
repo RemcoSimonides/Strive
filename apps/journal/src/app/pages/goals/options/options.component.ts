@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms'
 import { GoalStakeholderRole } from '@strive/model'
 import { FormEntity } from '@strive/utils/form/entity.form'
 
-type Roles = Record<GoalStakeholderRole, boolean>
+export type Roles = Record<GoalStakeholderRole, boolean>
 
 function createRolesFormControl(params?: Roles) {
   return {
