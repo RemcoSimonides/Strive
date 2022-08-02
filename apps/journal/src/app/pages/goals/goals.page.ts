@@ -77,7 +77,8 @@ export class GoalsComponent {
             map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
           )
         }
-      }, { shouldAwait: true })
+      }, { shouldAwait: true }),
+      map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)) // <-- in case a goal is being removed
     )
 
     this.stakeholders$ = combineLatest([

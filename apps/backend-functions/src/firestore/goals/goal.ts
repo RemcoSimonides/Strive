@@ -87,6 +87,7 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     deleteCollection(db, `Goals/${goal.id}/Posts`, 500)
     deleteCollection(db, `Goals/${goal.id}/InviteTokens`, 500)
     deleteCollection(db, `Goals/${goal.id}/GStakeholders`, 500)
+    deleteCollection(db, `Goals/${goal.id}/Story`, 500)
     db.doc(`Discussions/${goal.id}`).delete()
 
     if (goal.publicity === 'public') {
