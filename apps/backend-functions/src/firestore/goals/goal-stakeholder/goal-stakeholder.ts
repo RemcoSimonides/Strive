@@ -121,12 +121,12 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
 
   if (becameAdmin) {
     addGoalEvent(enumEvent.gStakeholderAdminAdded, source)
-    if (goal.numberOfAchievers > 1) addStoryItem(enumEvent.gStakeholderAdminAdded, source)
+    if (goal.numberOfAchievers >= 1) addStoryItem(enumEvent.gStakeholderAdminAdded, source)
   }
 
   if (becameAchiever) {
     addGoalEvent(enumEvent.gStakeholderAchieverAdded, source)
-    if (goal.numberOfAchievers > 1) addStoryItem(enumEvent.gStakeholderAchieverAdded, source)
+    if (goal.numberOfAchievers >= 1) addStoryItem(enumEvent.gStakeholderAchieverAdded, source)
   }
 
   if (becameSupporter) addGoalEvent(enumEvent.gStakeholderSupporterAdded, source)

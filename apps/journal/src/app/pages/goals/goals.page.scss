@@ -21,6 +21,19 @@ main {
     gap: 16px;
   }
 
+  section.no-roles {
+    align-items: center;
+
+    ion-list {
+      border-radius: 12px;
+      width: fit-content;
+
+      h5 {
+        margin-inline: 16px;
+      }
+    }
+  }
+
   ion-card {
     border-radius: 12px;
     margin: 0;

@@ -3,15 +3,15 @@ import { ModalController, PopoverController } from '@ionic/angular';
 import { joinWith } from 'ngfire'
 
 // Rxjs
-import { Observable, of } from 'rxjs'
-import { switchMap, map } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs'
+import { switchMap, map, filter, startWith } from 'rxjs/operators';
 
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/user.service';
 
 // Model
-import { Goal, GoalEvent, GoalStakeholder, enumEvent } from '@strive/model'
+import { Goal, GoalEvent, GoalStakeholder, enumEvent, StoryItem } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -19,9 +19,11 @@ import { GoalService } from '@strive/goal/goal/goal.service';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { GoalEventService } from '@strive/goal/goal/goal-event.service';
 import { where } from 'firebase/firestore';
 import { getAggregatedMessage } from '@strive/notification/message/aggregated';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
+import { StoryService } from '@strive/goal/story/story.service';
+import { OptionsPopoverComponent, RolesForm } from './options/options.component';
 
 function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
   const counter: Record<string | number, number> = {};
@@ -42,26 +44,46 @@ function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number
 })
 export class GoalsComponent {
 
-  achievingGoals$: Observable<{ goal: Goal, events: GoalEvent[], stakeholder: GoalStakeholder }[]>
+  stakeholders$: Observable<GoalStakeholder & { goal: Goal, story: StoryItem[] }[]>
+  form = new RolesForm()
 
   constructor(
     public user: UserService,
     private goal: GoalService,
-    private goalEventService: GoalEventService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
-    private seo: SeoService
+    private seo: SeoService,
+    private stakeholder: GoalStakeholderService,
+    private story: StoryService
   ) {
-    this.achievingGoals$ = this.user.user$.pipe(
-      switchMap(user => user ? this.goal.getStakeholderGoals(user.uid, 'isAchiever', false) : of([])),
+    const stakeholders$ = this.user.user$.pipe(
+      filter(user => !!user),
+      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user.uid)])),
       joinWith({
-        events: value => this.goalEventService.valueChanges([where('source.goal.id', '==', value.goal.id), where('createdAt', '>', value.stakeholder.lastCheckedGoal)]).pipe(
-          map(aggregateEvents),
-          map(aggregated => aggregated.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
-        )
+        goal: stakeholder => this.goal.valueChanges(stakeholder.goalId),
+        story: stakeholder => {
+          const query = [where('createdAt', '>', stakeholder.lastCheckedGoal)]
+          return this.story.valueChanges(query, { goalId: stakeholder.goalId }).pipe(
+            map(story => story.filter(item => item.source.user.uid !== stakeholder.uid)),
+            map(aggregateEvents),
+            map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
+          )
+        }
       }, { shouldAwait: true })
     )
+
+    this.stakeholders$ = combineLatest([
+      stakeholders$,
+      this.form.valueChanges.pipe(startWith(this.form.value))
+    ]).pipe(
+      map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
+          for (const [key, bool] of Object.entries(roles)) {
+            if (bool && stakeholder[key]) return true
+          }
+        })
+      )
+    ) as any
 
     this.seo.generateTags({ title: `Goals - Strive Journal` })
   }
@@ -81,14 +103,22 @@ export class GoalsComponent {
     }).then(modal => modal.present())
   }
 
-  openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, ev: UIEvent) {
-    ev.stopPropagation()
-    ev.preventDefault()
+  openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, event: UIEvent) {
+    event.stopPropagation()
+    event.preventDefault()
 
     this.popoverCtrl.create({
       component: GoalOptionsComponent,
       componentProps: { goal, stakeholder },
-      event: ev
+      event
+    }).then(popover => popover.present())
+  }
+
+  openOptions(event: UIEvent) {
+    this.popoverCtrl.create({
+      component: OptionsPopoverComponent,
+      componentProps: { form: this.form },
+      event
     }).then(popover => popover.present())
   }
 }

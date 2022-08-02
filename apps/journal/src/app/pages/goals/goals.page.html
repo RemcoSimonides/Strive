@@ -7,39 +7,42 @@
       <!-- Goals -->
       <main>
         <header>
-          <h2>Goals</h2>
           <ion-button fill="clear" (click)="createGoal()">
             <ion-icon name="add" slot="start"></ion-icon>
             <span>add goal</span>
           </ion-button>
+
+          <ion-button fill="clear" (click)="openOptions($event)">
+            <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+          </ion-button>
         </header>
 
-        <ng-container *ngIf="achievingGoals$ | async as achievingGoals; else loading">
-          <ng-container *ngIf="achievingGoals.length > 0 else noGoals">
+        <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
+          <ng-container *ngIf="stakeholders.length > 0 else noGoals">
 
             <section>
-              <ng-container *ngFor="let value of achievingGoals">
-                <ion-card [routerLink]="['/goal/', value.goal.id]">
+              <ng-container *ngFor="let stakeholder of stakeholders">
+                <ion-card [routerLink]="['/goal/', stakeholder.goal.id]">
                   <ion-item lines="none">
-                    <ion-thumbnail slot="start" [ngClass]="{'gradient-border': value.stakeholder.status === 'active'}">
-                      <img [ref]="value.goal.image" asset="goal.jpeg"/>
-                      <div *ngIf="value.stakeholder.status === 'finished'">finished</div>
+                    <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
+                      <img [ref]="stakeholder.goal.image" asset="goal.jpeg"/>
+                      <div *ngIf="stakeholder.status === 'finished'">finished</div>
                     </ion-thumbnail>
                     <article>
                       <ion-text>
-                        <b>{{ value.goal.title }}</b>
+                        <b>{{ stakeholder.goal.title }}</b>
                         <small fxLayout fxLayoutGap="4px">
-                          <ion-icon name="pulse"></ion-icon><span>{{ value.stakeholder.status | status }}</span>
-                          <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                          <ion-icon name="pulse"></ion-icon><span>{{ stakeholder.status | status }}</span>
+                          <ion-icon name="flag-outline"></ion-icon><span>{{ stakeholder.goal.numberOfAchievers }} Achiever{stakeholder.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
                         </small>
                       </ion-text>
-                      <ion-button fill="clear" (click)="openGoalOptions(value.goal, value.stakeholder, $event)">
+                      <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
                         <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
                       </ion-button>
                     </article>
                   </ion-item>
-                  <ul *ngIf="value.events.length">
-                    <li *ngFor="let event of value.events">
+                  <ul *ngIf="stakeholder.story.length">
+                    <li *ngFor="let event of stakeholder.story">
                       <ion-icon [name]="event.icon"></ion-icon>
                       <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
                     </li>
@@ -50,7 +53,27 @@
 
           </ng-container>
           <ng-template #noGoals>
-            <span class="padding">No goals yet. Create your first.</span>
+            <section *ngIf="form.allFalse; else reallyNoGoals" class="no-roles">
+              <h4>Nothing to show because you deselected all roles</h4>
+              <ion-list mode="md">
+                <h5>Please select a role</h5>
+                <ion-item>
+                  <ion-checkbox [formControl]="form.isAchiever" slot="start" color="primary"></ion-checkbox>
+                  <ion-label>Achiever</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-checkbox [formControl]="form.isSupporter" slot="start" color="primary"></ion-checkbox>
+                  <ion-label>Supporter</ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-checkbox [formControl]="form.isAdmin" slot="start" color="primary"></ion-checkbox>
+                  <ion-label>Admin</ion-label>
+                </ion-item>
+              </ion-list>
+            </section>
+            <ng-template #reallyNoGoals>
+              <span class="padding">No goals yet. Create your first.</span>
+            </ng-template>
           </ng-template>
         </ng-container>
 

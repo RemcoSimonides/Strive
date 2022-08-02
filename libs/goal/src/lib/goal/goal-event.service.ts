@@ -20,5 +20,4 @@ export class GoalEventService extends FireCollection<GoalEvent> {
       ? createGoalEvent(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
       : undefined
   }
-
 }

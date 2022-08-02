@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms'
 
 import { IonicModule } from '@ionic/angular';
 
@@ -14,6 +15,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module';
+import { OptionsPopoverModule } from './options/options.module';
 import { HomePageModule } from '../home/home.module';
 
 const routes: Routes = [
@@ -35,7 +37,9 @@ const routes: Routes = [
     StatusPipeModule,
     ImageModule,
     GoalOptionsModule,
-    HomePageModule
+    HomePageModule,
+    OptionsPopoverModule,
+    ReactiveFormsModule
   ],
   declarations: [GoalsComponent]
 })
