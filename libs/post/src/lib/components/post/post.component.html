@@ -1,4 +1,4 @@
-<ng-container *ngIf="!!post && !!author">
+<ng-container *ngIf="post$ | async as post">
   <ion-card>
     <ion-card-header fxLayout>
       <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
@@ -6,7 +6,7 @@
       </ion-avatar>
       <section fxLayout="column" fxLayoutAlign="center start">
         <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
-        <small>{{ post.createdAt.toDate() | date:'longDate' }} at {{ post.createdAt.toDate() | date:'shortTime' }}</small>
+        <small>{{ post.createdAt | date:'longDate' }} at {{ post.createdAt | date:'shortTime' }}</small>
       </section>
     </ion-card-header>
 

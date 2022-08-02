@@ -26,7 +26,7 @@
         <article *ngIf="item.source.postId" class="extra">
           <div></div>
           <div>
-            <post-main [author]="item.source.user" [postRef]="'Goals/' + item.source.goal.id + '/Posts/' + item.source.postId"></post-main>
+            <post-main [storyItem]="item"></post-main>
           </div>
         </article>
       </ng-container>

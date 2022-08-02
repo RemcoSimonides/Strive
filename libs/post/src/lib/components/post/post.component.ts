@@ -1,33 +1,27 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { doc, Firestore, getDoc } from '@angular/fire/firestore';
-import { Post, UserLink } from '@strive/model'
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Post, StoryItem, UserLink } from '@strive/model'
+import { PostService } from '@strive/post/post.service';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'post-main',
+  selector: '[storyItem] post-main',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostComponent implements OnInit {
 
-  @Input() post: Post
-  @Input() postRef: string
-  @Input() author: UserLink
+  @Input() storyItem: StoryItem
+  author: UserLink
+
+  post$: Observable<Post>
   
-  constructor(
-    private db: Firestore,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private post: PostService) {}
 
   ngOnInit() {
-    if (this.postRef) {
-      getDoc(doc(this.db, this.postRef)).then(snap => {
-        if (snap.exists()) {
-          this.post = snap.data() as Post
-          this.cdr.markForCheck()
-        }
-      })
-    }
+    const { postId, user, goal } = this.storyItem.source
+    this.author = user
+    this.post$ = this.post.valueChanges(postId, { goalId: goal.id })
   }
 
 }
