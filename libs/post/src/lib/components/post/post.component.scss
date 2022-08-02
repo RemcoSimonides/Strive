@@ -50,6 +50,10 @@ p {
   color: var(--ion-color-dark);
 }
 
+a {
+  overflow-wrap: anywhere;
+}
+
 .clickable {
   cursor: pointer;
 }
