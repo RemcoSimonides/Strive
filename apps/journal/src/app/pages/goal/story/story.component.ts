@@ -8,12 +8,12 @@ import { Goal, StoryItem } from '@strive/model'
 import { StoryService } from '@strive/goal/story/story.service';
 
 @Component({
-  selector: '[goal] journal-goal-posts',
-  templateUrl: 'posts.component.html',
-  styleUrls: ['./posts.component.scss'],
+  selector: '[goal] journal-goal-story',
+  templateUrl: 'story.component.html',
+  styleUrls: ['./story.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostsComponent implements OnInit {
+export class StoryComponent implements OnInit {
   story$: Observable<StoryItem[]>
 
   @Input() goal: Goal

@@ -13,7 +13,7 @@ import { GoalPageModule } from '../goal/goal.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { PageNotFoundModule } from '@strive/ui/page-not-found/page-not-found.module';
 import { RoadmapModule } from '../roadmap/roadmap.module';
-import { PostsModule } from '../posts/posts.module';
+import { StoryModule } from '../story/story.module';
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module';
 
 const routes: Routes = [
@@ -29,7 +29,7 @@ const routes: Routes = [
     PageNotFoundModule,
     GoalPageModule,
     RoadmapModule,
-    PostsModule,
+    StoryModule,
     UpsertPostModalModule
   ],
   declarations: [
