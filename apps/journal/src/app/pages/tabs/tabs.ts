@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 // Services
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { UserService } from '@strive/user/user/user.service';
@@ -8,7 +8,8 @@ import { combineLatest } from 'rxjs';
 
 @Component({
   templateUrl: 'tabs.html',
-  styleUrls: ['./tabs.scss']
+  styleUrls: ['./tabs.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsComponent {
 

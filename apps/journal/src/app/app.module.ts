@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { RouteReuseStrategy } from '@angular/router';
+import { RouteReuseStrategy, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FIREBASE_CONFIG } from 'ngfire';
@@ -63,6 +63,7 @@ import { PWAService } from '@strive/utils/services/pwa.service';
     // AngularFirestoreModule.enablePersistence(),
     PerformanceModule,
     AppRoutingModule,
+    RouterModule,
     BrowserModule,
     CommonModule,
     FormsModule,
