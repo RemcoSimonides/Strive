@@ -3,14 +3,12 @@
   margin-top: 32px;
 }
 
-.main {
-  strive-milestone-status {
-    margin-right: 12px;
-  }
-
+ion-item.main {
   ion-input {
     font-size: 20px;
   }
+
+  --padding-start: 0;
 }
 
 ion-list {

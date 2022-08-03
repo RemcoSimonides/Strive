@@ -8,7 +8,7 @@ function createMilestoneFormControl(params: Milestone) {
   const subtaskControls = milestone.subtasks.map(subtask => new SubtaskForm(subtask))
   return {
     order: new FormControl(milestone.order, Validators.required),
-    content: new FormControl(milestone.content, Validators.required),
+    content: new FormControl(milestone.content, [Validators.required, Validators.maxLength(200)]),
     description: new FormControl(milestone.description),
     status: new FormControl(milestone.status),
     deadline: new FormControl(milestone.deadline),

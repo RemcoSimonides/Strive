@@ -1,6 +1,9 @@
-<ion-icon 
-  [name]="icon[milestone.status].name"
-  [color]="icon[milestone.status].color"
-  [ngStyle]="{ cursor: icon[milestone.status].pointer ? 'pointer' : 'inherit' }"
-  (click)="updateStatus($event)">
-</ion-icon>
+<ion-button fill="clear">
+  <ion-icon 
+    slot="icon-only"
+    [name]="icon[milestone.status].name"
+    [color]="icon[milestone.status].color"
+    [ngStyle]="{ cursor: icon[milestone.status].pointer ? 'pointer' : 'inherit' }"
+    (click)="updateStatus($event)">
+  </ion-icon>
+</ion-button>

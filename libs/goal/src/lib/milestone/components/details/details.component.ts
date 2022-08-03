@@ -7,7 +7,7 @@ import { MilestoneForm, SubtaskForm } from "@strive/goal/milestone/forms/milesto
 import { UserService } from "@strive/user/user/user.service";
 import { ModalDirective } from "@strive/utils/directives/modal.directive";
 import { Subscription } from "rxjs";
-import { debounceTime } from "rxjs/operators";
+import { debounceTime, filter } from "rxjs/operators";
 
 @Component({
   selector: 'goal-milestone-details',
@@ -43,14 +43,15 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
-        debounceTime(500),
+        debounceTime(1000),
+        filter(_ => this.form.content.valid)
       ).subscribe(content => {
         if (this.canEdit) {
           this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         }
       })
       const subtaskSub = this.form.subtasks.valueChanges.pipe(
-        debounceTime(500)
+        debounceTime(1000)
       ).subscribe(subtasks => {
         if (this.form.subtasks.valid) {
           this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})

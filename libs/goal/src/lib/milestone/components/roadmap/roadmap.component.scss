@@ -1,7 +1,3 @@
-strive-milestone-status {
-  margin-right: 12px;
-}
-
 h3 {
   color: var(--ion-color-primary);
   text-align: center;
@@ -9,13 +5,13 @@ h3 {
 
 ion-list {
   border-radius: 12px;
-}
 
-.milestone {
-  --inner-padding-bottom: 4px;
+  ion-item {
+    --padding-start: 0;
+  }
 
-  ion-icon {
-    margin-right: 4px !important;
+  ion-item.milestone {
+    --inner-padding-bottom: 4px;
   }
 }
 
