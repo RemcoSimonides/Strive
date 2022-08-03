@@ -1,17 +1,13 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
-import { limit, where } from '@angular/fire/firestore';
-import { PopoverController, ModalController } from '@ionic/angular';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-// Services
-import { UserService } from '@strive/user/user/user.service';
-// Components
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { FcmService } from '@strive/utils/services/fcm.service';
-import { NotificationService } from '@strive/notification/notification.service';
-import { PWAService } from '@strive/utils/services/pwa.service';
+import { Component } from '@angular/core'
+import { Router } from '@angular/router'
+import { Auth } from '@angular/fire/auth'
+import { PopoverController, ModalController } from '@ionic/angular'
+
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { FcmService } from '@strive/utils/services/fcm.service'
+import { NotificationService } from '@strive/notification/notification.service'
+import { PWAService } from '@strive/utils/services/pwa.service'
+import { UserService } from '@strive/user/user/user.service'
 
 @Component({
   selector: 'journal-profile-options-browser',
@@ -20,7 +16,7 @@ import { PWAService } from '@strive/utils/services/pwa.service';
 })
 export class ProfileOptionsBrowserComponent {
 
-  unreadNotifications$: Observable<boolean>
+  unreadNotifications$ = this.notification.hasUnreadNotification$
 
   constructor(
     private auth: Auth,
@@ -31,14 +27,7 @@ export class ProfileOptionsBrowserComponent {
     private user: UserService,
     private fcm: FcmService,
     private notification: NotificationService
-  ) {
-    this.unreadNotifications$ = this.user.user$.pipe(
-      switchMap(user => user
-        ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: user.uid }).pipe(map(notifications => !!notifications.length))
-        : of(false)
-      )
-    )
-  }
+  ) {}
 
   goTo(url: string) {
     this.router.navigateByUrl(url)

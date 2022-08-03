@@ -13,11 +13,11 @@ import { TabsComponent } from './pages/tabs/tabs'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
-import { firstValueFrom, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/notification.service';
 import { Unsubscribe } from '@firebase/util';
-import { limit, where } from '@angular/fire/firestore';
+import { PersonalService } from '@strive/user/user/personal.service';
 
 @Component({
   selector: 'journal-root',
@@ -29,7 +29,7 @@ export class AppComponent implements OnDestroy {
 
   enumAuthSegment = enumAuthSegment
 
-  unreadNotifications$: Observable<boolean>
+  unreadNotifications$ = this.notification.hasUnreadNotification$
 
   // private screenSizeSubscription: Subscription
   private fcmUnsubscribe: Unsubscribe
@@ -42,6 +42,7 @@ export class AppComponent implements OnDestroy {
     // private menuCtrl: MenuController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
+    private personal: PersonalService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
@@ -73,15 +74,7 @@ export class AppComponent implements OnDestroy {
       }
 
       this.openAuthModalOnStartup()
-
-      this.unreadNotifications$ = this.user.user$.pipe(
-        switchMap(user => user
-          ? this.notification.valueChanges([where('type', '==', 'notification'), where('isRead', '==', false), limit(1)], { uid: user.uid }).pipe(map(notifications => !!notifications.length))
-          : of(false)
-        )
-      )
-      
-    });
+    })
   }
 
   initializeMenu() {
