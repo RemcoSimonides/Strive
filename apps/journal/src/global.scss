@@ -89,3 +89,11 @@ ul {
   list-style-type: none;
   padding-left: 0;
 }
+
+.badge:after {
+  position: absolute;
+  content: "";
+  padding: .2em;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+}

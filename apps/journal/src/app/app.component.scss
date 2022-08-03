@@ -22,14 +22,8 @@ ion-menu {
   }
 
   .badge:after {
-    position: absolute;
     right: 0;
     top: 0;
-    content: "";
-    font-size: 30%;
-    padding: .6em;
-    border-radius: 50%;
-    background: var(--ion-color-primary);
   }
 }
 
@@ -43,11 +37,16 @@ header {
   max-width: 1600px;
   padding-right: 16px;
 
-  .badge:after {
+  .badge2 {
+    position: relative;
+  }
+
+  .badge2:after {
     position: absolute;
     content: "";
-    font-size: 30%;
-    padding: .6em;
+    padding: .2em;
+    right: 8px;
+    top: 4px;
     border-radius: 50%;
     background: var(--ion-color-primary);
   }

@@ -15,7 +15,7 @@ article::before {
   margin-left: 8px;
 }
 
-.badge {
+.emblem {
   z-index: 1;
   border-radius: 50%;
   width: 16px;
@@ -33,7 +33,7 @@ article::before {
   }
 }
 
-div:not(.badge) {
+div:not(.emblem) {
   margin-left: 8px;
 }
 

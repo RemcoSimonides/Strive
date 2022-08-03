@@ -17,7 +17,7 @@ import { firstValueFrom } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/notification.service';
 import { Unsubscribe } from '@firebase/util';
-import { PersonalService } from '@strive/user/personal/personal.service';
+import { SupportService } from '@strive/support/support.service';
 
 @Component({
   selector: 'journal-root',
@@ -30,6 +30,7 @@ export class AppComponent implements OnDestroy {
   enumAuthSegment = enumAuthSegment
 
   unreadNotifications$ = this.notification.hasUnreadNotification$
+  hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
 
   // private screenSizeSubscription: Subscription
   private fcmUnsubscribe: Unsubscribe
@@ -42,13 +43,13 @@ export class AppComponent implements OnDestroy {
     // private menuCtrl: MenuController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    private personal: PersonalService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private support: SupportService
   ) {
     this.initializeApp();
   }

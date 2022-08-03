@@ -1,3 +1,9 @@
 fa-icon {
-    font-size: 1.2rem;
+	font-size: 1.2rem;
+	position: relative;
+}
+
+.badge:after {
+	margin-left: 4px;
+	top: -4px;
 }

@@ -81,7 +81,7 @@
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
                 Goals
               </ion-button>
-              <ion-button fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
+              <ion-button [ngClass]="{'badge2': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
                 Supports
               </ion-button>
               <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">

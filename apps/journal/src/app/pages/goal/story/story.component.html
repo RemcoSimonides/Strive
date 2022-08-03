@@ -9,7 +9,7 @@
       <ng-container *ngFor="let item of story; trackBy: trackByFn">
         <ng-container *ngIf="item | storyMessage as message">
           <article *ngIf="message.message.length">
-            <div class="badge">
+            <div class="emblem">
               <ion-icon [name]="message.icon"></ion-icon>
             </div>
             <div class="timelineContent" fxLayout fxLayoutAlign="start start">

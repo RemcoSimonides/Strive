@@ -7,7 +7,7 @@
       </ion-tab-button>
 
       <ion-tab-button tab="supports">
-        <fa-icon [icon]="['fas', 'hand-holding-heart']"></fa-icon>
+        <fa-icon [icon]="['fas', 'hand-holding-heart']" [ngClass]="{'badge': hasSupportNeedingDecision$ | async}"></fa-icon>
       </ion-tab-button>
 
       <ion-tab-button tab="explore">

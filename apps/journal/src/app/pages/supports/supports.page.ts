@@ -77,12 +77,12 @@ export class SupportsComponent {
 
     const supportsGive$: Observable<Support[]> = this.user.user$.pipe(
       switchMap(user => user ? this.support.groupChanges([where('source.supporter.uid', '==', user.uid)]) : of([])),
-      map(supports => supports.map(support => createSupport(toDate(support)))),
+      map(supports => supports.map(support => createSupport(support))),
       shareReplay({ bufferSize: 1, refCount: true }),
     )
     const supportsGet$: Observable<Support[]> = this.user.user$.pipe(
       switchMap(user => user ? this.support.groupChanges([where('source.receiver.uid', '==', user.uid)]) : of([])),
-      map(supports => supports.map(support => createSupport(toDate(support)))),
+      map(supports => supports.map(support => createSupport(support))),
       shareReplay({ bufferSize: 1, refCount: true })
     )
 

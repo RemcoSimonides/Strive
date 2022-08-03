@@ -95,6 +95,14 @@
       ]
     },
     {
+      "collectionGroup": "Supports",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "source.supporter.uid", "order": "ASCENDING" },
+        { "fieldPath": "needsDecision", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "ScheduledTasks",
       "queryScope": "COLLECTION",
       "fields": [

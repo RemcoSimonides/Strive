@@ -5,6 +5,7 @@ import { UserService } from '@strive/user/user/user.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { SupportService } from '@strive/support/support.service';
 
 @Component({
   templateUrl: 'tabs.html',
@@ -37,10 +38,13 @@ export class TabsComponent {
     })
   )
 
+  hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
+
   constructor(
     public user: UserService,
     public screenSize: ScreensizeService,
     public router: Router,
+    private support: SupportService
   ) {}
 
 }
