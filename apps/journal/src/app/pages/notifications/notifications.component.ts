@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { NotificationService } from '@strive/notification/notification.service';
-import { Notification } from '@strive/model'
+import { Notification, notificationEvents } from '@strive/model'
 import { UserService } from '@strive/user/user/user.service';
-import { switchMap, tap } from 'rxjs/operators';
-import { Observable, of, Subscription } from 'rxjs';
+import { switchMap, tap, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { orderBy } from '@angular/fire/firestore';
 import { PersonalService } from '@strive/user/user/personal.service';
 
@@ -14,12 +14,9 @@ import { PersonalService } from '@strive/user/user/personal.service';
   styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
+export class NotificationsComponent implements OnInit {
 
-  lastUnreadIndex: number
   notifications$: Observable<Notification[]>
-
-  private sub: Subscription
 
   constructor(
     private notification: NotificationService,
@@ -33,27 +30,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     this.notifications$ = this.user.user$.pipe(
       tap(_ => this.personal.updateLastCheckedNotification()),
-      switchMap(user => user
-        ? this.notification.valueChanges([orderBy('createdAt', 'desc')], { uid: user.uid })
-        : of([]))
+      switchMap(user => {
+        if (!user) return of([])
+        return this.notification.valueChanges([orderBy('createdAt', 'desc')], { uid: user.uid }).pipe(
+          map(notifications => notifications.filter(n => notificationEvents.includes(n.event)))
+        )
+      })
     )
-
-    // this.sub = combineLatest([
-    //   this.user.user$.pipe(map(user => user?.uid)),
-    //   this.notifications$.pipe(
-    //     map(notifications => notifications.filter(notification => !notification.isRead)),
-    //     filter(unreadNotifications => !!unreadNotifications.length),
-    //     tap(unreadNotifications => {
-    //       this.lastUnreadIndex = unreadNotifications.length - 1
-    //     }),
-    //     map(unreadNotifications => unreadNotifications.map(notification => notification.id))
-    //   )
-    // ]).subscribe(([uid, ids]) => {
-    //   if (uid) this.notification.update(ids, { isRead: true }, { params: { uid}})
-    // })
-  }
-
-  ngOnDestroy() {
-    // this.sub.unsubscribe()
   }
 }

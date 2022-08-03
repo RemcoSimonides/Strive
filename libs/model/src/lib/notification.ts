@@ -50,6 +50,24 @@ export enum enumEvent {
   userSpectatorRemoved = 400002,
 }
 
+// Notification types that have a notification messsage
+export const notificationEvents: enumEvent[] = [
+  enumEvent.gNewBucketlist,
+  enumEvent.gNewActive,
+  enumEvent.gNewFinished,
+  enumEvent.gFinished,
+  enumEvent.gMilestoneDeadlinePassed,
+  enumEvent.gStakeholderRequestToJoinPending,
+  enumEvent.gStakeholderRequestToJoinAccepted,
+  enumEvent.gStakeholderRequestToJoinRejected,
+  enumEvent.userSpectatorAdded,
+  enumEvent.gSupportPendingFailed,
+  enumEvent.gSupportPendingSuccesful,
+  enumEvent.gSupportPaid,
+  enumEvent.gSupportRejected,
+  enumEvent.gSupportDeleted
+]
+
 const notificationIcons = [
   'alert-outline',
   'bookmark-outline',

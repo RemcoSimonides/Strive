@@ -7,8 +7,7 @@
         <ng-container *ngIf="notifications$ | async as notifications; else empty">
           <ng-container *ngIf="notifications.length; else empty">
             <ng-container *ngFor="let notification of notifications; let isLast = last; let index = index">
-              
-              <ng-container *ngIf="notification | message:'user' as _message">
+              <ng-container *ngIf="notification | message as _message">
                 <article fxLayout fxLayoutGap="8px" class="clickable" [routerLink]="_message.link">
                   <img
                     [ref]="_message.image"

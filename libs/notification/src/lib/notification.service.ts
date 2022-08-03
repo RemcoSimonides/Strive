@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core'
 import { limit, where } from 'firebase/firestore'
 import { Firestore, DocumentSnapshot } from '@angular/fire/firestore'
 
-import { of, switchMap, shareReplay, tap } from 'rxjs'
+import { of, switchMap, shareReplay, map } from 'rxjs'
 
 import { FireCollection } from '@strive/utils/services/collection.service'
-import { createNotification, Notification } from '@strive/model'
+import { createNotification, Notification, notificationEvents } from '@strive/model'
 import { toDate } from '@strive/utils/helpers'
 import { PersonalService } from '@strive/user/user/personal.service'
 
@@ -16,10 +16,15 @@ export class NotificationService extends FireCollection<Notification> {
   readonly path = `Users/:uid/Notifications`
 
   hasUnreadNotification$ = this.personal.personal$.pipe(
-    switchMap(personal => personal
-      ? this.valueChanges([where('createdAt', '>', personal.lastCheckedNotifications), limit(1)], { uid: personal.uid })
-      : of(false)
-    ),
+    switchMap(personal => {
+      if (!personal) return of(false)
+
+      const query = [where('createdAt', '>', personal.lastCheckedNotifications), limit(1)]
+      return this.valueChanges(query, { uid: personal.uid }).pipe(
+        map(notifications => notifications.filter(n => notificationEvents.includes(n.event))),
+        map(notifications => !!notifications.length)
+      )
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   )
   
