@@ -2,12 +2,14 @@ import { CommonModule } from "@angular/common";
 import { Component, NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
+import { HeaderModule } from "@strive/ui/header/header.module";
 import { SeoService } from "@strive/utils/services/seo.service";
 import { PrivacyPolicyModule } from "./privacy-policy.module";
 
 @Component({
   selector: 'strive-privacy-policy-page',
   template: `
+    <strive-header title="Privacy Policy"></strive-header>
     <ion-content>
       <strive-privacy-policy></strive-privacy-policy>
     </ion-content>
@@ -32,6 +34,7 @@ export class PrivacyPolicyPageComponent {
     CommonModule,
     IonicModule,
     PrivacyPolicyModule,
+    HeaderModule,
     RouterModule.forChild([{ path: '', component: PrivacyPolicyPageComponent }])
   ],
   declarations: [PrivacyPolicyPageComponent]
