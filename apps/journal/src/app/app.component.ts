@@ -17,7 +17,7 @@ import { firstValueFrom } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { NotificationService } from '@strive/notification/notification.service';
 import { Unsubscribe } from '@firebase/util';
-import { PersonalService } from '@strive/user/user/personal.service';
+import { PersonalService } from '@strive/user/personal/personal.service';
 
 @Component({
   selector: 'journal-root',

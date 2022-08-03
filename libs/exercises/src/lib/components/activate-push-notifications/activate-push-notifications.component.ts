@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { UserService } from '@strive/user/user/user.service';
-import { PersonalService } from '@strive/user/user/personal.service';
+import { PersonalService } from '@strive/user/personal/personal.service';
 import { map, of, switchMap } from "rxjs";
 import { Personal, User } from '@strive/model';
 import { FcmService } from "@strive/utils/services/fcm.service";

@@ -6,7 +6,7 @@ import { UserService } from '@strive/user/user/user.service';
 import { switchMap, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { orderBy } from '@angular/fire/firestore';
-import { PersonalService } from '@strive/user/user/personal.service';
+import { PersonalService } from '@strive/user/personal/personal.service';
 
 @Component({
   selector: 'journal-notifications',

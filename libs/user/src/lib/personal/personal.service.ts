@@ -3,7 +3,7 @@ import { arrayUnion, DocumentSnapshot, Firestore, serverTimestamp } from '@angul
 import { Auth, user } from '@angular/fire/auth';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
-import { UserService } from './user.service';
+import { UserService } from '../user/user.service';
 // Interfaces
 import { Personal } from '@strive/model';
 import { Observable, of, switchMap, shareReplay } from 'rxjs';

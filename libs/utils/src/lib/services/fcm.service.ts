@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Messaging, getToken, onMessage, Unsubscribe } from '@angular/fire/messaging';
 import { ToastController } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
-import { PersonalService } from '@strive/user/user/personal.service';
+import { PersonalService } from '@strive/user/personal/personal.service';
 
 
 @Injectable({

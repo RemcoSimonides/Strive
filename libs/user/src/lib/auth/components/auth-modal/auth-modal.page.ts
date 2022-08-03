@@ -13,7 +13,7 @@ import { SignupForm } from '@strive/user/auth/forms/signup.form'
 import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
 import { WelcomeModalComponent } from '../welcome/welcome.modal';
-import { PersonalService } from '@strive/user/user/personal.service';
+import { PersonalService } from '@strive/user/personal/personal.service';
 
 export enum enumAuthSegment {
   login,
