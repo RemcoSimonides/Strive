@@ -27,7 +27,7 @@ export interface StoryItem {
 
 export function createStoryItem(params: Partial<StoryItem> = {}): StoryItem {
   return {
-    name: params.name,
+    name: 0,
     date: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),

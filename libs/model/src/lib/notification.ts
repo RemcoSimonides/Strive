@@ -122,16 +122,16 @@ export function createNotification(params: Partial<Notification> = {}): Notifica
   return {
     event: 0,
     ...params,
-    source: createNotificationSource(params.source),
+      source: createNotificationSource(params.source),
   }
 }
 
 export function createSupportSource(params: {
-  goal: GoalLink | Goal
+  goal?: GoalLink | Goal
   milestone?: MilestoneLink | Milestone
-  supporter: UserLink | User
+  supporter?: UserLink | User
   receiver?: UserLink | User
-}): SupportSource {
+} = {}): SupportSource {
   const source: SupportSource = {
     goal: createGoalLink(params?.goal),
     supporter: createUserLink(params?.supporter)
@@ -162,7 +162,7 @@ export function createNotificationSource(params: {
   milestone?: MilestoneLink | Milestone
   user?: UserLink | User
   support?: SupportLink | Support
-}): NotificationSource {
+} = {}): NotificationSource {
   const source: NotificationSource = {}
 
   if (params.goal?.id) source.goal = createGoalLink(params.goal)

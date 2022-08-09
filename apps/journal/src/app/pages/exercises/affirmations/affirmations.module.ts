@@ -9,6 +9,7 @@ import { AffirmationsComponent } from './affirmations.component';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { ActivatePushNotificaitonsModule } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
+import { DatetimeModule } from '@strive/ui/datetime/datetime.module';
 
 const routes: Routes = [
   {
@@ -25,7 +26,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     PageLoadingModule,
     ActivatePushNotificaitonsModule,
-    HeaderModule
+    HeaderModule,
+    DatetimeModule
   ],
   declarations: [AffirmationsComponent]
 })

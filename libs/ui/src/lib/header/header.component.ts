@@ -11,8 +11,8 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 })
 export class HeaderComponent {
 
-  @Input() title: string
-  @Input() color: 'primary'
+  @Input() title?: string
+  @Input() color = 'primary'
   @Input() defaultBack = '/'
 
   constructor(

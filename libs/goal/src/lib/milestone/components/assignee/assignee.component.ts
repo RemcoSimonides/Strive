@@ -8,5 +8,5 @@ import { UserLink } from '@strive/model'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssigneeComponent {
-  @Input() achiever: UserLink
+  @Input() achiever!: UserLink
 }

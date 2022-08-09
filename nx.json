@@ -1,10 +1,10 @@
 {
-  "npmScope": "test",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "npmScope": "strive",
   "affected": {
-    "defaultBase": "main"
+    "defaultBase": "master"
   },
   "cli": {
-    "defaultCollection": "@nrwl/angular",
     "packageManager": "npm"
   },
   "implicitDependencies": {
@@ -16,19 +16,24 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "accessToken": "NjJhZTNmYmQtYTQxOC00NmJmLWFlNTYtYzViNGVhYzJjNWMxfHJlYWQtd3JpdGU="
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
   },
   "generators": {
     "@nrwl/angular:application": {
@@ -43,54 +48,6 @@
     },
     "@nrwl/angular:component": {
       "style": "scss"
-    }
-  },
-  "projects": {
-    "admin": {
-      "tags": []
-    },
-    "admin-e2e": {
-      "tags": [],
-      "implicitDependencies": ["admin"]
-    },
-    "backend-functions": {
-      "tags": []
-    },
-    "discussion": {
-      "tags": []
-    },
-    "exercises": {
-      "tags": []
-    },
-    "goal": {
-      "tags": []
-    },
-    "journal": {
-      "tags": []
-    },
-    "media": {
-      "tags": []
-    },
-    "model": {
-      "tags": []
-    },
-    "notification": {
-      "tags": []
-    },
-    "post": {
-      "tags": []
-    },
-    "support": {
-      "tags": []
-    },
-    "ui": {
-      "tags": []
-    },
-    "user": {
-      "tags": []
-    },
-    "utils": {
-      "tags": []
     }
   },
   "defaultProject": "journal"

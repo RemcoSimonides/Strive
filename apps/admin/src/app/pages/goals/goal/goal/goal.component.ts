@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
-import { Goal } from '@strive/model';
+import { createGoal, Goal } from '@strive/model';
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
@@ -16,10 +16,10 @@ import { tap } from 'rxjs/operators';
 })
 export class GoalComponent implements OnInit {
 
-  goal$: Observable<Goal>
+  goal$?: Observable<Goal>
   goalForm = new GoalForm()
 
-  @Input() id: string
+  @Input() id!: string
 
   constructor(
     private alertCtrl: AlertController,
@@ -31,9 +31,9 @@ export class GoalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.goal$ = this.goal.valueChanges(this.id).pipe(
-      tap(goal => this.goalForm.patchValue(goal))
-    )
+    // this.goal$ = this.goal.valueChanges(this.id).pipe(
+    //   tap(goal => this.goalForm.patchValue(goal))
+    // )
   }
 
   update() {

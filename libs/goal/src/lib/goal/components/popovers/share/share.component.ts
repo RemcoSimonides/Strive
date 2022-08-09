@@ -8,7 +8,7 @@ import { PopoverController } from '@ionic/angular';
 })
 export class GoalSharePopoverComponent {
 
-  @Input() url: string;
+  @Input() url = ''
 
   constructor(private popoverCtrl: PopoverController) {}
 

@@ -26,12 +26,12 @@ export class AlgoliaService {
     this.searchProfiles(query, typeof hitsPerPage === 'object' ? hitsPerPage?.profiles : hitsPerPage)
   }
 
-  searchGoals(query: string, hitsPerPage: number): void {
+  searchGoals(query: string, hitsPerPage: number | undefined): void {
     this.goalsIndex.search(query, {
       hitsPerPage,
       attributesToRetrieve: ['goalId', 'title', 'image', 'numberOfSupporters', 'numberOfAchievers']
-    }).then((data) => {
-      const hits = data.hits.map(hit => {
+    }).then((data: any) => {
+      const hits = data.hits.map((hit: any) => {
         return {
           id: hit.objectID,
           ...hit
@@ -42,12 +42,12 @@ export class AlgoliaService {
     })
   }
 
-  searchProfiles(query: string, hitsPerPage: number): void {
+  searchProfiles(query: string, hitsPerPage: number | undefined): void {
     this.profilesIndex.search(query, {
       hitsPerPage,
       attributesToRetrieve: ['uid', 'username', 'photoURL', 'numberOfSpectating', 'numberOfSpectators']
-    }).then((data) => {
-      const hits = data.hits.map(hit => {
+    }).then((data: any) => {
+      const hits = data.hits.map((hit: any) => {
         return {
           id: hit.objectID,
           ...hit

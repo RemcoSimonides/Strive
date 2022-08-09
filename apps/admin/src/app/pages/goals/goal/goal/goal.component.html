@@ -1,8 +1,8 @@
 <ng-container *ngIf="goal$ | async as goal">
 	<ion-card>
 		<ion-card-content>
-			<p>Created at: {{ goal.createdAt?.toDate() | date:'medium' }}</p>
-			<p>Updated at: {{ goal.updatedAt?.toDate() | date:'medium' }}</p>
+			<p>Created at: {{ goal.createdAt | date:'medium' }}</p>
+			<p>Updated at: {{ goal.updatedAt | date:'medium' }}</p>
 
 			<form [formGroup]="goalForm" (ngSubmit)="update()">
 				<ion-item>
@@ -26,10 +26,10 @@
 					></ion-datetime> -->
 				</ion-item>
 		
-				<media-image-selector
+				<!-- <media-image-selector
 					[form]="goalForm.image"
 					[storagePath]="'goals/' + goal.id"
-				></media-image-selector>
+				></media-image-selector> -->
 
 				<strive-text-editor
 					[description]="goal.description"

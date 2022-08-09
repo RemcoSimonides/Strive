@@ -32,7 +32,7 @@ export class NotificationService extends FireCollection<Notification> {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Notification>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Notification>) {
     return snapshot.exists()
       ? createNotification(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
       : undefined

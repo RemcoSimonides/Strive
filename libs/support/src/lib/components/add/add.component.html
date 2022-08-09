@@ -20,21 +20,19 @@
   <ng-container *ngIf="!!user.uid else notLoggedIn">
     <ng-container *ngIf="goal$ | async as goal">
       <ion-list>
-        <form [formGroup]="support">
-          <ion-item>
-            <ion-input formControlName="description"
-              type="text"
-              [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : 'e.g. Bottle of wine or $20'"
-              [disabled]="goal.status === 'finished'"
-              (keydown.enter)="addSupport(goal)"></ion-input>
-            <ion-button slot="end" 
-              (click)="addSupport(goal)"
-              color="secondary"
-              [disabled]="goal.status === 'finished'">
-              ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
-            </ion-button>
-          </ion-item>
-        </form>
+        <ion-item>
+          <ion-input [formControl]="form"
+            type="text"
+            [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : 'e.g. Bottle of wine or $20'"
+            [disabled]="goal.status === 'finished'"
+            (keydown.enter)="addSupport(goal)"></ion-input>
+          <ion-button slot="end" 
+            (click)="addSupport(goal)"
+            color="secondary"
+            [disabled]="goal.status === 'finished'">
+            ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+          </ion-button>
+        </ion-item>
         <ion-item *ngFor="let support of mySupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status === 'paid' || support.status === 'rejected'">
           <ion-label class="ion-text-wrap" fxLayout="column">
             <b>{{ support.description }}</b>
@@ -59,7 +57,7 @@
       <ion-list>
         <ion-item *ngFor="let support of supports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
           <ion-avatar slot="start">
-            <img [ref]="support?.source.supporter.photoURL" asset="profile.png">
+            <img [ref]="support.source.supporter.photoURL" asset="profile.png">
           </ion-avatar>
           <ion-label class="ion-text-wrap">
             <ion-text>{{ support.description }}</ion-text>

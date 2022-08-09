@@ -30,22 +30,22 @@ export class UpsertGoalModalComponent extends ModalDirective {
   goalForm: GoalForm
   mode: 'update' | 'create'
 
-  get goal(): Goal { return createGoal({ ...this.goalForm.value, id: this.goalId }) }
+  get goal(): Goal { return createGoal({ ...this.goalForm.getRawValue(), id: this.goalId }) }
 
-  @ViewChild('swiper') swiper: SwiperComponent;
+  @ViewChild('swiper') swiper?: SwiperComponent;
 
   constructor(
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
-    protected location: Location,
-    protected modalCtrl: ModalController,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
     private navParams: NavParams,
     private user: UserService
   ) {
     super(location, modalCtrl)
 
-    const goal = this.navParams.data.currentGoal as Goal
-    const status: GoalStatus = this.user.user?.numberOfActiveGoals < 4 ? 'active' : 'bucketlist';
+    const goal = this.navParams.data['currentGoal'] as Goal
+    const status: GoalStatus = this.user.user?.numberOfActiveGoals ?? 0 < 4 ? 'active' : 'bucketlist';
     if (goal) {
       this.mode = 'update'
       this.goalForm = new GoalForm({ ...goal })
@@ -61,13 +61,13 @@ export class UpsertGoalModalComponent extends ModalDirective {
 
   stepper(direction: 'next' | 'previous') {
     if (direction === 'next') {
-      if (this.swiper.swiperRef.isEnd) {
+      if (this.swiper?.swiperRef.isEnd) {
         this.dismiss()
       } else {
-        this.swiper.swiperRef.slideNext(100);
+        this.swiper?.swiperRef.slideNext(100);
       }
     } else if (direction === 'previous') {
-      this.swiper.swiperRef.slidePrev(100);
+      this.swiper?.swiperRef.slidePrev(100);
     }
   }
 }

@@ -1,14 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 
-import * as QuillNamespace from 'quill';
-import ImageResize from 'quill-image-resize-module';
-import { ImageDrop } from 'quill-image-drop-module';
-
-const Quill: any = QuillNamespace;
-Quill.register('modules/imageResize', ImageResize);
-Quill.register('modules/imageDrop', ImageDrop);
-
-
 @Component({
   selector: 'strive-text-editor',
   templateUrl: './text-editor.component.html',
@@ -16,7 +7,7 @@ Quill.register('modules/imageDrop', ImageDrop);
 })
 export class TextEditorComponent {
 
-  @Input() description: string
+  @Input() description?: string
   @Input() isAdmin = true
   @Input() editMode = false
 
@@ -36,9 +27,7 @@ export class TextEditorComponent {
         [{ 'indent': '-1'}, { 'indent': '+1' }],
         ['link', 'image', 'video'],
       ]
-    },
-    imageResize: true,
-    imageDrop: true,
+    }
   }
 
   public async saveDescription() {

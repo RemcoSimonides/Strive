@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { FeaturesComponent } from './features.component';
 
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+
 const routes: Routes = [
   {
     path: '',
@@ -20,7 +22,8 @@ const routes: Routes = [
     IonicModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    PageLoadingModule
   ],
   declarations: [FeaturesComponent],
   exports: [FeaturesComponent]

@@ -1,6 +1,6 @@
 <ion-app>
 
-  <!-- Side menu -->
+	<!-- Side menu -->
   <!-- <section class="sidemenu">
     <ion-menu side="end" contentId="main">
       <ion-content>
@@ -62,7 +62,7 @@
     </ion-menu>
   </section> -->
 
-  <!-- Mobile -->
+	<!-- Mobile -->
   <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
     <ion-nav [root]="rootPage"></ion-nav>
   </ng-container>

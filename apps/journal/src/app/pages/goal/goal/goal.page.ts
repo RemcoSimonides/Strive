@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 // Firebase
@@ -32,14 +32,14 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
   styleUrls: ['./goal.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalComponent implements OnInit, OnDestroy {
+export class GoalComponent implements OnDestroy {
 
-  private goalId: string
+  private goalId!: string
   
-  public goal$: Observable<Goal>
+  public goal$: Observable<Goal | undefined>
 
   public stakeholder$: Observable<GoalStakeholder>
-  public openRequests$: Observable<GoalStakeholder[]>
+  public openRequests$?: Observable<GoalStakeholder[]>
 
   public isAdmin = false
   public isAchiever = false
@@ -63,10 +63,8 @@ export class GoalComponent implements OnInit, OnDestroy {
     public user: UserService,
     private cdr: ChangeDetectorRef,
     public screensize: ScreensizeService
-  ) { }
-
-  ngOnInit() { 
-    this.goalId = this.route.snapshot.paramMap.get('id')
+  ) {
+    this.goalId = this.route.snapshot.paramMap.get('id') as string
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
     this.stakeholder$ = this.user.user$.pipe(
@@ -132,7 +130,7 @@ export class GoalComponent implements OnInit, OnDestroy {
     })
   }
 
-  updateStatus($event, goal: Goal) {
+  updateStatus($event: any, goal: Goal) {
     if (!this.isAchiever) return;
 
     const status = $event.detail.value;
@@ -146,6 +144,7 @@ export class GoalComponent implements OnInit, OnDestroy {
             text: 'Yes',
             handler: () => {
               goal.status = status
+              if (!this.user.uid) return
               this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
               this.startPostCreation(goal)
             }
@@ -161,12 +160,13 @@ export class GoalComponent implements OnInit, OnDestroy {
       }).then(alert => alert.present())
     } else {
       goal.status = status
+      if (!this.user.uid) return
       this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
     }
 
   }
 
-  updatePrivacy($event, goal: Goal) {
+  updatePrivacy($event: any, goal: Goal) {
     if (!this.isAdmin) return;
     const publicity = $event.detail.value
     if (publicity === goal.publicity) return

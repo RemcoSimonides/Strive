@@ -1,9 +1,2267 @@
 {
-  "version": 1,
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "npmScope": "strive",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
+  "implicitDependencies": {
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    ".eslintrc.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "accessToken": "NjJhZTNmYmQtYTQxOC00NmJmLWFlNTYtYzViNGVhYzJjNWMxfHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "journal",
   "projects": {
-    "admin": {
+    "backend-functions": {
+      "root": "apps/backend-functions",
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
+      "sourceRoot": "apps/backend-functions/src",
       "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:webpack",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/backend-functions",
+            "main": "apps/backend-functions/src/main.ts",
+            "tsConfig": "apps/backend-functions/tsconfig.app.json",
+            "assets": [
+              "apps/backend-functions/src/package.json"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/backend-functions/src/environments/environment.ts",
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          },
+          "dependsOn": [
+            "^build"
+          ]
+        },
+        "serve": {
+          "builder": "@nrwl/node:node",
+          "options": {
+            "buildTarget": "backend-functions:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "backend-functions:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "options": {
+            "lintFilePatterns": [
+              "apps/backend-functions/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/backend-functions"
+          ],
+          "options": {
+            "jestConfig": "apps/backend-functions/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "apps/backend-functions/.eslintrc.json",
+          "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+        },
+        {
+          "file": "apps/backend-functions/jest.config.ts",
+          "hash": "add74e3425dd8653980a30217cd51c26713de933"
+        },
+        {
+          "file": "apps/backend-functions/project.json",
+          "hash": "91cad17a529de157b687164bfec1ab67b226bfd4"
+        },
+        {
+          "file": "apps/backend-functions/src/environments/environment.prod.ts",
+          "hash": "c9669790be176ac85a5d8c11278875c2f52dc507"
+        },
+        {
+          "file": "apps/backend-functions/src/environments/environment.ts",
+          "hash": "2966fe387e1b76a22b76440862733e2bdadbe743"
+        },
+        {
+          "file": "apps/backend-functions/src/environments/serviceAccount.ts",
+          "hash": "8154f344c08a0e3df56664672a0900d77cfe62eb"
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/discussions/comments/comment.ts",
+          "hash": "6948a2c1fadfbace46f32d5b7baa9cf21175354e",
+          "deps": [
+            "discussion",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/discussions/discussion.ts",
+          "hash": "df7bd242cd48547d8530ccaaefba5d3cfb3ba28c"
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goal-events/goal-events.ts",
+          "hash": "73dcdaf92ba3d879c7b1a85d3ddab3fc9fbdb774",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goals/goal-stakeholder/goal-stakeholder.ts",
+          "hash": "3e1c150acdedd1814672521ea4ce997e34fd4586",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goals/goal.ts",
+          "hash": "1c4420ef4036e71c9b0f83dd8d8f89612680cb9b",
+          "deps": [
+            "model",
+            "discussion"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goals/invite-tokens/invite-token.ts",
+          "hash": "e329095c80112919851d2ecb84e4ae8f5a2a2f9e"
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goals/milestones/milestone.ts",
+          "hash": "66464088877140f41d2b57f769ce9fb71f533263",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goals/posts/post.ts",
+          "hash": "c94c6ab3875ba1bd0a03d6dd1ae902601c6c787d",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/goals/supports/support.ts",
+          "hash": "26669dfb883af3fb8e81bc28c3f7c4537e42e2a7",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/users/exercises/affirmation.ts",
+          "hash": "dc1d4c3f147113b96c8337d67f6a4a38c9a78e17",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/users/exercises/daily_gratefulness.ts",
+          "hash": "c6f7c08c13435085540418f534ceb7af677b48e9",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/users/exercises/dear_future_self.ts",
+          "hash": "0551d1db5f12d9ac0f28676583c905ee9aad6f77",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/users/personal/personal.ts",
+          "hash": "446df63a1ef10c698af842e7c659f8d66d177e85",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/users/user-spectators/user-spectator.ts",
+          "hash": "ec9eed2fe4433fd60c75fa18d50ce992189c68d6",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/firestore/users/user.ts",
+          "hash": "cf23cd04f71c28f85c78b72964a8ef30550b06b2",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/https/scrape.ts",
+          "hash": "939dbdf0fa4d5ce2cc7e82b88352f32d941e90c3"
+        },
+        {
+          "file": "apps/backend-functions/src/internals/firebase.ts",
+          "hash": "2fac5d986a8aa08ebd407e0223ea2c05bd3896bf"
+        },
+        {
+          "file": "apps/backend-functions/src/main.ts",
+          "hash": "6b0fb2a6f434363a628b6e4d40a57429a7cfdcdb"
+        },
+        {
+          "file": "apps/backend-functions/src/migration.ts",
+          "hash": "551debb4d7afac4b3cb3e8ca008490f26b145710"
+        },
+        {
+          "file": "apps/backend-functions/src/package.json",
+          "hash": "b97e0ca000f6808accec18074b82f8a9ce213384"
+        },
+        {
+          "file": "apps/backend-functions/src/pubsub/email/email.ts",
+          "hash": "c3db717521a6138e946d5c064f80c92d2870dabe",
+          "deps": [
+            "npm:date-fns",
+            "model",
+            "admin"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/pubsub/email/ids.ts",
+          "hash": "6d19a3e5d53b233e20f24ac0bd23db14612b1c7f"
+        },
+        {
+          "file": "apps/backend-functions/src/pubsub/scheduled-task-runner.ts",
+          "hash": "b94cab6d7610628b6ebe290f29eab469846e6c9c",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/pubsub/user-exercises/affirmations.ts",
+          "hash": "0cad9ecac31e523865e09b2c18304314cb654a05",
+          "deps": [
+            "npm:date-fns",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/pubsub/user-exercises/daily_gratefulness.ts",
+          "hash": "df639649405958bd75caabcebe1fe47ca3c62289",
+          "deps": [
+            "model",
+            "npm:date-fns"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/pubsub/user-exercises/dear_future_self.ts",
+          "hash": "a0f6617a4cff332091274cda005c0b38e2a3b8b8",
+          "deps": [
+            "model",
+            "npm:date-fns"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/admin.function.ts",
+          "hash": "9a7687f99bb7567566d816b78304f71109bbfb81"
+        },
+        {
+          "file": "apps/backend-functions/src/shared/algolia/algolia.ts",
+          "hash": "dbbf4956a7125f8505b3735ac4d0ae839d46a8a0",
+          "deps": [
+            "npm:algoliasearch"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/discussion/discussion.ts",
+          "hash": "0ead5222636637de506ccc88407576f49f62f0a3",
+          "deps": [
+            "discussion",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/fcm/fcm.ts",
+          "hash": "15d35b144282db859dbd9b8c5295ba2fcb9170a6"
+        },
+        {
+          "file": "apps/backend-functions/src/shared/goal-event/goal.events.ts",
+          "hash": "50b522dc3e0b18656a63975e0fbcaea8d2870d65",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/goal-story/story.ts",
+          "hash": "0d9172220b6140d365d2bf84618c0204d921ad9c",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/notification/notification.ts",
+          "hash": "d5a66b4d9f39393f4bb574e0f1d470f9370665ec",
+          "deps": [
+            "model",
+            "notification"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface.ts",
+          "hash": "e2d378c53c5071935647730bfd0aa94a9312218c"
+        },
+        {
+          "file": "apps/backend-functions/src/shared/scheduled-task/scheduled-task.ts",
+          "hash": "9c2bf8a3817cedd57876e2fb4b89de083ecdb960"
+        },
+        {
+          "file": "apps/backend-functions/src/shared/sendgrid/sendgrid.ts",
+          "hash": "d5cf3c8867c8128a7fac2f9d1a44ad90fbbf30db",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/support/receiver.ts",
+          "hash": "acdb03393a49ef420bab0d00cfc6a4aafdaeb6b6",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "apps/backend-functions/src/shared/utils.ts",
+          "hash": "7933b8b8582ea9a96dd9a9350c955fbd3f688858"
+        },
+        {
+          "file": "apps/backend-functions/tsconfig.app.json",
+          "hash": "0d16dce91bdec2e1a1bd0322ff544fd160e5573f"
+        },
+        {
+          "file": "apps/backend-functions/tsconfig.json",
+          "hash": "63dbe35fb282d5f9ac4a724607173e6316269e29"
+        },
+        {
+          "file": "apps/backend-functions/tsconfig.spec.json",
+          "hash": "546f12877f7f05dd2e7b8782c7d6eae8189c34c0"
+        }
+      ]
+    },
+    "notification": {
+      "root": "libs/notification",
+      "projectType": "library",
+      "sourceRoot": "libs/notification/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/notification"
+          ],
+          "options": {
+            "jestConfig": "libs/notification/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/notification/**/*.ts",
+              "libs/notification/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/notification/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/notification/jest.config.ts",
+          "hash": "ee97a1954173b2c8d2449234436a321d1d144381"
+        },
+        {
+          "file": "libs/notification/project.json",
+          "hash": "c41af1aba47845dd7c376540afd6a4bff6b6465e"
+        },
+        {
+          "file": "libs/notification/README.md",
+          "hash": "2752d636afce410ba6309fab41f8ff869acf6d56"
+        },
+        {
+          "file": "libs/notification/src/index.ts",
+          "hash": "32484d935efcf666edb14cb55e554c0f16d34cb4"
+        },
+        {
+          "file": "libs/notification/src/lib/message/aggregated.ts",
+          "hash": "1cc39096e77990f80af68b946a7854991c2f01f7",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "libs/notification/src/lib/message/notification.ts",
+          "hash": "f48a6bb6a41fe719d238900cb95376b47d2386fd",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "libs/notification/src/lib/message/push-notification.ts",
+          "hash": "11e4e84826f1f6272239c1850835dad44eb480ff",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "libs/notification/src/lib/notification.service.ts",
+          "hash": "b758862c49fe1a17dbca72e32ea9b89938fbb045",
+          "deps": [
+            "npm:@angular/core",
+            "npm:firebase",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "utils",
+            "model",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/notification/src/lib/pipes/message.pipe.ts",
+          "hash": "265e532585e26a3c9d4fbe2ff3a8b28c18bd22e8",
+          "deps": [
+            "npm:@angular/core",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/notification/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/notification/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/notification/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/notification/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "journal-e2e": {
+      "root": "apps/journal-e2e",
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
+      "sourceRoot": "apps/journal-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/journal-e2e/cypress.config.ts",
+            "devServerTarget": "journal:serve:development",
+            "testingType": "e2e"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "journal:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "options": {
+            "lintFilePatterns": [
+              "apps/journal-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": [
+        "journal"
+      ],
+      "files": [
+        {
+          "file": "apps/journal-e2e/.eslintrc.json",
+          "hash": "4c5989b23b5aa8cc7aba2a07d1ae7daee19c1555"
+        },
+        {
+          "file": "apps/journal-e2e/cypress.config.ts",
+          "hash": "22f7c84eb637d4f23447fcb59dee130dd25b2de0",
+          "deps": [
+            "npm:cypress",
+            "npm:@nrwl/cypress"
+          ]
+        },
+        {
+          "file": "apps/journal-e2e/project.json",
+          "hash": "83253bce781f93bd29fd6a80daed185d9aa13232"
+        },
+        {
+          "file": "apps/journal-e2e/src/e2e/app.cy.ts",
+          "hash": "85fb4fc55ac7ebff3e10803567c1697e177ce856"
+        },
+        {
+          "file": "apps/journal-e2e/src/fixtures/example.json",
+          "hash": "294cbed6ce9e0b948b787452e8676aee486cb3be"
+        },
+        {
+          "file": "apps/journal-e2e/src/support/app.po.ts",
+          "hash": "32934246969c2ecb827ac05677785933a707a54d"
+        },
+        {
+          "file": "apps/journal-e2e/src/support/commands.ts",
+          "hash": "310f1fa0e043ffebbbcf575c5a4d17f13a6b14d6"
+        },
+        {
+          "file": "apps/journal-e2e/src/support/e2e.ts",
+          "hash": "3d469a6b6cf31eb66117d73e278bcf74f398f1db"
+        },
+        {
+          "file": "apps/journal-e2e/tsconfig.json",
+          "hash": "9e27f75c6fadf5f6175f48ca953d551089aef787"
+        }
+      ]
+    },
+    "discussion": {
+      "root": "libs/discussion",
+      "projectType": "library",
+      "sourceRoot": "libs/discussion/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/discussion"
+          ],
+          "options": {
+            "jestConfig": "libs/discussion/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/discussion/**/*.ts",
+              "libs/discussion/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/discussion/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/discussion/jest.config.ts",
+          "hash": "94347b752e1452148b0cd2c252cb8b7d02dae6ae"
+        },
+        {
+          "file": "libs/discussion/project.json",
+          "hash": "b5d5cc434657c71225775ad8b96a40323b1a0498"
+        },
+        {
+          "file": "libs/discussion/README.md",
+          "hash": "8cb9514c03a7939fb98bc273a04fec36f59e0a27"
+        },
+        {
+          "file": "libs/discussion/src/lib/+state/comment.firestore.ts",
+          "hash": "6cf1c9c3f221d59b65d180b2a7693537e5eca1ca",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/+state/comment.service.ts",
+          "hash": "1dcbde6d86548d36fe218e255fb5ce04134ee85c",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "npm:@angular/fire"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/+state/discussion.firestore.ts",
+          "hash": "3ba0145a12f409a661cc78f10d928d961075568b",
+          "deps": [
+            "model"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/+state/discussion.service.ts",
+          "hash": "1005ec7bb3ae4d389851c9f6d29d51eda32e100f",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "npm:@angular/fire"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/components/comment/comment.component.html",
+          "hash": "dfabf728c810295266250a3ad003d9289513de61"
+        },
+        {
+          "file": "libs/discussion/src/lib/components/comment/comment.component.scss",
+          "hash": "ecefb4b2fab00d3a83c6261d0ecec1b8c24b2f23"
+        },
+        {
+          "file": "libs/discussion/src/lib/components/comment/comment.component.ts",
+          "hash": "f87e692f22f06840e3da4130d0613cee846c91df",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/components/comment/comment.module.ts",
+          "hash": "3427df5a46cb194a7facc3b21f3c862b04c3307b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "media",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/components/discussion-modal/discussion-modal.component.html",
+          "hash": "e94b67ae1c61358571b3e23e79fa4425991e0397"
+        },
+        {
+          "file": "libs/discussion/src/lib/components/discussion-modal/discussion-modal.component.scss",
+          "hash": "20bab21f41fc1f2723431878a242af0f974fd78d"
+        },
+        {
+          "file": "libs/discussion/src/lib/components/discussion-modal/discussion-modal.component.ts",
+          "hash": "f01eda3119565c8120625bda2f5172de190ada66",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "user",
+            "model",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/lib/components/discussion-modal/discussion-modal.module.ts",
+          "hash": "0157bf7f3eff2496ce7e2821788990a2e27658a9",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/discussion/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/discussion/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/discussion/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/discussion/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "admin-e2e": {
+      "root": "apps/admin-e2e",
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
+      "sourceRoot": "apps/admin-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/admin-e2e/cypress.config.ts",
+            "devServerTarget": "admin:serve:development",
+            "testingType": "e2e"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "admin:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "options": {
+            "lintFilePatterns": [
+              "apps/admin-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": [
+        "admin"
+      ],
+      "files": [
+        {
+          "file": "apps/admin-e2e/.eslintrc.json",
+          "hash": "696cb8b12127425419f6d2809c5f15a5963d86de"
+        },
+        {
+          "file": "apps/admin-e2e/cypress.config.ts",
+          "hash": "22f7c84eb637d4f23447fcb59dee130dd25b2de0",
+          "deps": [
+            "npm:cypress",
+            "npm:@nrwl/cypress"
+          ]
+        },
+        {
+          "file": "apps/admin-e2e/project.json",
+          "hash": "1d961c983ed596a52fbcc3e916cc5e2531948ed6"
+        },
+        {
+          "file": "apps/admin-e2e/src/e2e/app.cy.ts",
+          "hash": "a7c1a6c1c94e4e8864e960621fab423280614fc6"
+        },
+        {
+          "file": "apps/admin-e2e/src/fixtures/example.json",
+          "hash": "294cbed6ce9e0b948b787452e8676aee486cb3be"
+        },
+        {
+          "file": "apps/admin-e2e/src/support/app.po.ts",
+          "hash": "32934246969c2ecb827ac05677785933a707a54d"
+        },
+        {
+          "file": "apps/admin-e2e/src/support/commands.ts",
+          "hash": "310f1fa0e043ffebbbcf575c5a4d17f13a6b14d6"
+        },
+        {
+          "file": "apps/admin-e2e/src/support/e2e.ts",
+          "hash": "3d469a6b6cf31eb66117d73e278bcf74f398f1db"
+        },
+        {
+          "file": "apps/admin-e2e/tsconfig.json",
+          "hash": "9e27f75c6fadf5f6175f48ca953d551089aef787"
+        }
+      ]
+    },
+    "exercises": {
+      "root": "libs/exercises",
+      "projectType": "library",
+      "sourceRoot": "libs/exercises/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/exercises"
+          ],
+          "options": {
+            "jestConfig": "libs/exercises/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/exercises/**/*.ts",
+              "libs/exercises/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/exercises/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/exercises/jest.config.ts",
+          "hash": "b3e159553117ff54704d78947c2e92524d63f881"
+        },
+        {
+          "file": "libs/exercises/project.json",
+          "hash": "de82038a7f7c1323e00f1cf1105e93b221dfb9d0"
+        },
+        {
+          "file": "libs/exercises/README.md",
+          "hash": "fd434b7dffc68fccff9fb51b3cb53c7359a521c5"
+        },
+        {
+          "file": "libs/exercises/src/lib/affirmation/affirmation.service.ts",
+          "hash": "f5abff1b928a2728d03948691009889ef6a6a5ac",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/affirmation/components/explanation/explanation.component.html",
+          "hash": "d92a043a604596002275c5e77169e05a1933450d"
+        },
+        {
+          "file": "libs/exercises/src/lib/affirmation/components/explanation/explanation.component.scss",
+          "hash": "3bcc414ea351f532cb05df3235c6a64d361f770d"
+        },
+        {
+          "file": "libs/exercises/src/lib/affirmation/components/explanation/explanation.component.ts",
+          "hash": "5a137a379b37fee3c17f47e42146c99dec9ed77e",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/components/activate-push-notifications/activate-push-notifications.component.html",
+          "hash": "862d5bcee490f5fd73f7f3dd4f7a0baad09e0cec"
+        },
+        {
+          "file": "libs/exercises/src/lib/components/activate-push-notifications/activate-push-notifications.component.scss",
+          "hash": "c3c7cb5ac3ac1100bd6f549febbae7c6a109e5b0"
+        },
+        {
+          "file": "libs/exercises/src/lib/components/activate-push-notifications/activate-push-notifications.component.ts",
+          "hash": "cf398c896ab2955aea13b965ed37deb66de294b1",
+          "deps": [
+            "npm:@angular/core",
+            "user",
+            "npm:rxjs",
+            "model",
+            "utils",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/components/activate-push-notifications/activate-push-notifications.module.ts",
+          "hash": "814bf58222b21957c089f664dcf5f826964fa125",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/daily-gratefulness/daily-gratefulness.service.ts",
+          "hash": "59c0408539f0fe366e6eb72c3cf15aba04741ea1",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "utils",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/components/explanation/explanation.component.html",
+          "hash": "567bddfa9d68a8d372baa411fc3beb74bec68ebc"
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/components/explanation/explanation.component.scss",
+          "hash": "d4f7a0e051032040f1a9248b18023000a008d7b9"
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/components/explanation/explanation.component.ts",
+          "hash": "75a24df933b09132e2a7e38add0b269a8590cb73",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/components/message/message.component.html",
+          "hash": "4906da31ce015d5ec2592289f818bf143e6cb057"
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/components/message/message.component.scss",
+          "hash": "d4f7a0e051032040f1a9248b18023000a008d7b9"
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/components/message/message.component.ts",
+          "hash": "4e6b5d2a2d3f574ccf17f9b93a1e856af82b5173",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "model",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/dear-future-self/dear-future-self.service.ts",
+          "hash": "ee3e10bfb68793ff009753a0dff14edd79af7517",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "utils",
+            "model",
+            "npm:firebase"
+          ]
+        },
+        {
+          "file": "libs/exercises/src/lib/utils.ts",
+          "hash": "cf09c0e1ecd0d12b448f30a3498269e87a1b46d9"
+        },
+        {
+          "file": "libs/exercises/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/exercises/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/exercises/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/exercises/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "journal": {
+      "root": "apps/journal",
+      "projectType": "application",
+      "sourceRoot": "apps/journal/src",
+      "prefix": "strive",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/journal",
+            "index": "apps/journal/src/index.html",
+            "main": "apps/journal/src/main.ts",
+            "polyfills": "apps/journal/src/polyfills.ts",
+            "tsConfig": "apps/journal/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              },
+              "apps/journal/src/assets",
+              "apps/journal/src/manifest.webmanifest",
+              "apps/journal/src/firebase-messaging-sw.js",
+              "apps/journal/src/sw-master.js",
+              {
+                "glob": "**/*",
+                "input": "./assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "apps/journal/src/global.scss",
+              "apps/journal/src/theme/variables.scss"
+            ],
+            "scripts": [],
+            "ngswConfigPath": "apps/journal/ngsw-config.json"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "environments/environment.ts",
+                  "with": "environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production",
+          "dependsOn": [
+            "^build"
+          ]
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "journal:build:production"
+            },
+            "development": {
+              "browserTarget": "journal:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "journal:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/journal/**/*.ts",
+              "apps/journal/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/journal"
+          ],
+          "options": {
+            "jestConfig": "apps/journal/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "apps/journal/.browserslistrc",
+          "hash": "4f9ac26980c156a3d525267010d5f78144b43519"
+        },
+        {
+          "file": "apps/journal/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "apps/journal/jest.config.ts",
+          "hash": "2a27fef4b4d7b20e21dbfa229394934559de2bd1"
+        },
+        {
+          "file": "apps/journal/ngsw-config.json",
+          "hash": "ea7898845703ef8041dd4889581ff4b83583a360"
+        },
+        {
+          "file": "apps/journal/project.json",
+          "hash": "a0dda41a2fd24e202142096bf432cb7b17855618"
+        },
+        {
+          "file": "apps/journal/src/app/app-routing.module.ts",
+          "hash": "e2ec4cb924f0383842d79502e1f4d1319855cf76",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/app.component.html",
+          "hash": "7d5f763d362ec1819ab6bd6b24909e14dc383f9e"
+        },
+        {
+          "file": "apps/journal/src/app/app.component.scss",
+          "hash": "c1772fafdb3498af4159f4d0871eb992063455cb"
+        },
+        {
+          "file": "apps/journal/src/app/app.component.spec.ts",
+          "hash": "905a4bfb5b77b45512f5ad2a6a2d4593ef9922da",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/app.component.ts",
+          "hash": "bac503151960ceb52b02006bb5af13ec5c64d739",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "user",
+            "utils",
+            "support",
+            "npm:rxjs",
+            "notification"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/app.module.ts",
+          "hash": "21ac540cb6ae3f7b36289a64fac9bc61731801b6",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser",
+            "npm:@angular/flex-layout",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:@angular/fire",
+            "user",
+            "media",
+            "npm:@fortawesome/angular-fontawesome",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/404/404.component.html",
+          "hash": "5adc3a060cf8f65a26a6ad2296c332c820d854ac"
+        },
+        {
+          "file": "apps/journal/src/app/pages/404/404.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/journal/src/app/pages/404/404.component.ts",
+          "hash": "b6e6b443de4d5ef1156cf96143c410fe93f94e6b",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/404/404.module.ts",
+          "hash": "7c67ed65a6138409a715ff5856cbfdd40055dd5c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/affirmations/affirmations.component.html",
+          "hash": "04830a4ab7d37b942b4561699b58f104700e0ac5"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/affirmations/affirmations.component.scss",
+          "hash": "cd42f438c90e3f9fb87b71a298966d6e51714841"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/affirmations/affirmations.component.ts",
+          "hash": "3a61f9d0459dafa5c4a9a4bfd25f661efa4f4d77",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "model",
+            "exercises",
+            "ui",
+            "user",
+            "utils",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/affirmations/affirmations.module.ts",
+          "hash": "59ff593934eaa860d905c8f32498cdd8866e4a9f",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "ui",
+            "exercises"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/assess-life/assess-life.component.html",
+          "hash": "57d855123407a25569c61329e7818a47f30462a4"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/assess-life/assess-life.component.scss",
+          "hash": "97dec98e037e8dd5aa883be04108b82ea546dabe"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/assess-life/assess-life.component.ts",
+          "hash": "af29434744c6ae0e1f84c8c08b60c0bd39565a67",
+          "deps": [
+            "npm:@angular/core",
+            "utils"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/assess-life/assess-life.module.ts",
+          "hash": "580a20e80a3a77f477602bb5dd771b2e708fe32b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:@angular/router",
+            "ui",
+            "user"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/daily-gratefulness/daily-gratefulness.component.html",
+          "hash": "480645c4ee6e31e6a18bb26f698a08975923b0b8"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/daily-gratefulness/daily-gratefulness.component.scss",
+          "hash": "e49ff3976801edb7b7455c4d4ab76f57a01ecb2e"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/daily-gratefulness/daily-gratefulness.component.ts",
+          "hash": "98f839147e18591371c6ec547449e44d14226400",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "exercises",
+            "user",
+            "utils",
+            "npm:rxjs",
+            "npm:date-fns"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/daily-gratefulness/daily-gratefulness.module.ts",
+          "hash": "b6f01b47db80e2c9da1970cc545cd65b5c012e41",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "ui",
+            "user",
+            "exercises"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/dear-future-self/dear-future-self.component.html",
+          "hash": "73a318eda88e68e546edc16702da235eeb78cc10"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/dear-future-self/dear-future-self.component.scss",
+          "hash": "7cabc26f5a0d7350a739ff8f316501beabfd7f51"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/dear-future-self/dear-future-self.component.ts",
+          "hash": "c297b2f802428e9bcb511d8369acaaa890f53662",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "model",
+            "exercises",
+            "user",
+            "utils",
+            "npm:date-fns",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/dear-future-self/dear-future-self.module.ts",
+          "hash": "4a73db131829f30097e67a0f6b9529dd11d3b3bd",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/flex-layout",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "exercises",
+            "ui",
+            "user",
+            "utils"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/exercises.component.html",
+          "hash": "e21804af9a3d39ab186622b4b75cbbf193d86c76"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/exercises.component.scss",
+          "hash": "b1eeace7aaadf68e06e65c02413589c7cfc65bf2"
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/exercises.component.ts",
+          "hash": "aca901b1aa6d26ecfec204e321ca4078e9e25840",
+          "deps": [
+            "npm:@angular/core",
+            "exercises",
+            "utils"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/exercises/exercises.module.ts",
+          "hash": "0b35d4c278f10f2856a6a947f471ad229a3e33f6",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:@angular/router",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/explore/explore.module.ts",
+          "hash": "626a062df0b3a5848780e9916001370174f35310",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "ui",
+            "media"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/explore/explore.page.html",
+          "hash": "15c15dc0c5a30b5448c3619dec599fb4c64adda2"
+        },
+        {
+          "file": "apps/journal/src/app/pages/explore/explore.page.scss",
+          "hash": "dc59e9f9265444b1d1ed6c762e157f26d2775b9e"
+        },
+        {
+          "file": "apps/journal/src/app/pages/explore/explore.page.ts",
+          "hash": "c6bd1e3ad13564200d9f06cabe628224ccc573f0",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:rxjs",
+            "utils",
+            "exercises"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal-view/goal-view.module.ts",
+          "hash": "f2e811872f5f5d56054c7a059fc9236946f2133f",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui",
+            "post"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal-view/goal-view.page.html",
+          "hash": "2f8a5d3464291074029a107b83457b3248f0e927"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal-view/goal-view.page.scss",
+          "hash": "364e15e18e9d9f689bf4fc55a2429e5559fd3ba0"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal-view/goal-view.page.ts",
+          "hash": "b310bb1e895c6f4df57abe566716a3158ad84283",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:rxjs",
+            "goal",
+            "utils",
+            "user",
+            "model",
+            "post"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal/goal.module.ts",
+          "hash": "b3cd018989b296afe29f4d989f151c60807235df",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:@angular/flex-layout",
+            "npm:@fortawesome/angular-fontawesome",
+            "discussion",
+            "goal",
+            "ui",
+            "media",
+            "support"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal/goal.page.html",
+          "hash": "a6061d16dd377466fb6805be4d4db243e8ed4554"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal/goal.page.scss",
+          "hash": "3189219d39b7ebdca8e74408530b1d826e6ab9ad"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/goal/goal.page.ts",
+          "hash": "e96ca7a5c072e98c252b91f584163aa4adb4d545",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:firebase",
+            "npm:rxjs",
+            "npm:@capacitor/share",
+            "discussion",
+            "support",
+            "goal",
+            "user",
+            "post",
+            "utils",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/popovers/options/options.component.html",
+          "hash": "a0c1a1b004cc6e69dfcfdfb60e6ea2d911c68f13"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/popovers/options/options.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/popovers/options/options.component.ts",
+          "hash": "1b63e920270258cc1b072c862808f914cc37e614",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/popovers/options/options.module.ts",
+          "hash": "f7eff6717ce6ff27838398325b57a97822e3f1d2",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/roadmap/roadmap.component.html",
+          "hash": "f7b9b3b6471d14c4fee7620fc0d9f30b8df724e7"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/roadmap/roadmap.component.scss",
+          "hash": "9194e0b4fc5b39906c7049dec66a768b819b5a0f"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/roadmap/roadmap.component.ts",
+          "hash": "f89c49e910c5a76664a705b632604dfeb6c9b8a6",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "goal",
+            "user",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/roadmap/roadmap.module.ts",
+          "hash": "e970a5b01578fe4447ac90d64e7f69bd0498cbd1",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@fortawesome/angular-fontawesome",
+            "post",
+            "media",
+            "goal"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/story/story.component.html",
+          "hash": "060ff6b3b17db2fd7d6d9252e6892063b9439089"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/story/story.component.scss",
+          "hash": "0be49f6882ab53ab8f1fc89993f4a60affb3f853"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/story/story.component.ts",
+          "hash": "1b7549d3480c332316886e601b4eacf9bfdb86dc",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "utils",
+            "model",
+            "goal"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goal/story/story.module.ts",
+          "hash": "e29598b8a30343cd5fa20f54a67a60328f288b97",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:@angular/flex-layout",
+            "goal",
+            "utils",
+            "post"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/goals.module.ts",
+          "hash": "cbdb4e39925af317561362e7089e03e40781fc2b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/flex-layout",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "ui",
+            "goal",
+            "media"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/goals.page.html",
+          "hash": "6b629114b43b3bb158efa10bd772523e8bfa68b5"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/goals.page.scss",
+          "hash": "9e3f8e9ecc318e59046ebf9072867c3bfb214fbc"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/goals.page.ts",
+          "hash": "609487b1edd7444095697af82ac3e7ff46ed6e3b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "npm:ngfire",
+            "npm:rxjs",
+            "utils",
+            "user",
+            "model",
+            "goal",
+            "npm:firebase",
+            "notification"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/options/options.component.html",
+          "hash": "01df398764480329dee8a6c11c4b3d7a8de6cd4d"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/options/options.component.scss",
+          "hash": "ba81f7d32262438a6ce431be98db189857d12314"
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/options/options.component.ts",
+          "hash": "883d69b6ce6d2c2097440e4eee11d00098b9b12c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/goals/options/options.module.ts",
+          "hash": "faec381694a5f3c11615d1d3832fd13e96af95fc",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/home/home.module.ts",
+          "hash": "24b6eebb8cd00b72ab12f406a5fc04a5dae9d2a8",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/home/home.page.html",
+          "hash": "a4d63915b52d599030b0ee7d247ceba016f77ba4"
+        },
+        {
+          "file": "apps/journal/src/app/pages/home/home.page.scss",
+          "hash": "e345f51a34021e69e5108516f7b30835480d1010"
+        },
+        {
+          "file": "apps/journal/src/app/pages/home/home.page.ts",
+          "hash": "c2b8464c578dc8c1a6de48a9363ce6ff70963d37",
+          "deps": [
+            "npm:@angular/core",
+            "goal",
+            "exercises",
+            "utils",
+            "user",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/notifications/notifications.component.html",
+          "hash": "a64b3b5272251c0b067edd7f04383a8e4f1314ce"
+        },
+        {
+          "file": "apps/journal/src/app/pages/notifications/notifications.component.scss",
+          "hash": "e64633b08aaa648f73f403daf7b4df74284316e1"
+        },
+        {
+          "file": "apps/journal/src/app/pages/notifications/notifications.component.ts",
+          "hash": "07958dd698aaff0b127bc133d3882ce2d3260dd6",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "notification",
+            "model",
+            "user",
+            "npm:rxjs",
+            "npm:@angular/fire"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/notifications/notifications.module.ts",
+          "hash": "e8990b04a8a8ba0bc7c974fbc708d368fea08098",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:@angular/flex-layout",
+            "ui",
+            "notification",
+            "media",
+            "utils"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/edit-profile/edit-profile.component.html",
+          "hash": "dda813258f5bddb279a035b301f73027e85c9517"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/edit-profile/edit-profile.component.scss",
+          "hash": "f267e7a28d1b0b07de06a00d7e30d529990b61d7"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/edit-profile/edit-profile.component.ts",
+          "hash": "329057aa46260a6c4668e70e4c015666c9bd4d0a",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "user",
+            "utils",
+            "npm:rxjs",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/edit-profile/edit-profile.module.ts",
+          "hash": "b0f886bf9d4387aa82bcbe5f84495695b8c01fa0",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "media",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/edit-profile-image/edit-profile-image.component.html",
+          "hash": "44408193955e36e35008f61b2eab451969a73ecd"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/edit-profile-image/edit-profile-image.component.scss",
+          "hash": "cb1064488c2524cbf7ec673d2b06d833b532662f"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/edit-profile-image/edit-profile-image.component.ts",
+          "hash": "36bfc270d33d4f84e0093830efa7be8b0b3705fa",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "user"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/edit-profile-image/edit-profile-image.module.ts",
+          "hash": "b318335f6b298a983fb8cd1a217b226e1932c041",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "media"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/profile-options-browser/profile-options-browser.module.ts",
+          "hash": "b718cddd0794ccb3a4fa52b1692bd4d1e9d0d719",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/profile-options-browser/profile-options-browser.page.html",
+          "hash": "8eb271a0901bac6da4e0f6c9d1b26f14ac84ae2e"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/profile-options-browser/profile-options-browser.page.scss",
+          "hash": "58c8cb27c4f99966e3985079ba6af20c803dfc9e"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/popovers/profile-options-browser/profile-options-browser.page.ts",
+          "hash": "f53a60068cbff0855edf97fd7fcf352a9b26b1da",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/fire",
+            "npm:@ionic/angular",
+            "user",
+            "utils",
+            "notification"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/profile.module.ts",
+          "hash": "f7af2f383fa58cca545492274b39032256a6b370",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "user",
+            "ui",
+            "media",
+            "npm:@fortawesome/angular-fontawesome",
+            "goal"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/profile.page.html",
+          "hash": "60c31a2d423ce25e2ea8ac6ebc2ca7bf8180a901"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/profile.page.scss",
+          "hash": "1e7e3441c603d0db8f9b195fea800bdedffdfe39"
+        },
+        {
+          "file": "apps/journal/src/app/pages/profile/profile.page.ts",
+          "hash": "fa5d4ad55f29c1afffc2b90c0bb10309e14878e4",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "user",
+            "goal",
+            "utils",
+            "npm:rxjs",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/settings/settings.component.html",
+          "hash": "99bdb3a613708768a3d20d2dcdf93f364d81abbf"
+        },
+        {
+          "file": "apps/journal/src/app/pages/settings/settings.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/journal/src/app/pages/settings/settings.component.ts",
+          "hash": "c0b4119c9b9b925d6b3fb0343c42dc69158d03e2",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "user",
+            "utils"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/settings/settings.module.ts",
+          "hash": "905c63d88c5d97fc478e3f4555fbb007f4e5eb88",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "user",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/supports/supports.module.ts",
+          "hash": "46bad308d0d452419efc973d8e792394c1e852d4",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui",
+            "goal",
+            "support"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/supports/supports.page.html",
+          "hash": "86ea9870d3b186e84bf758a78af01919fa504701"
+        },
+        {
+          "file": "apps/journal/src/app/pages/supports/supports.page.scss",
+          "hash": "e2088fba194f9252cd7d9bde9f6e78f51ebe68bf"
+        },
+        {
+          "file": "apps/journal/src/app/pages/supports/supports.page.ts",
+          "hash": "bf6ad254ca0d97f44f1e9f1dfb4de565b5a7db18",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "utils",
+            "support",
+            "user",
+            "npm:rxjs",
+            "npm:@angular/fire",
+            "goal",
+            "model"
+          ]
+        },
+        {
+          "file": "apps/journal/src/app/pages/tabs/tabs.component.html",
+          "hash": "2e02f247364677f6b4609194265dcfc38523ebda"
+        },
+        {
+          "file": "apps/journal/src/app/pages/tabs/tabs.component.scss",
+          "hash": "0c492a2453a454d5a3bbc449a43813bcd8ab8ed2"
+        },
+        {
+          "file": "apps/journal/src/app/pages/tabs/tabs.component.ts",
+          "hash": "b079ee10ba9c1675b2e568c9861c5b74d1838fbb",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "user",
+            "npm:@angular/router",
+            "npm:rxjs",
+            "support"
+          ]
+        },
+        {
+          "file": "apps/journal/src/assets/icon/favicon.png",
+          "hash": "049f1b8c803d64052f2c336ea34df04bee1ce584"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-128x128.png",
+          "hash": "81771d536e7e46de73a3a8b54ec6f4995d74e0df"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-144x144.png",
+          "hash": "ba88856332e089aa5b23b9da3c850c7b87592596"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-152x152.png",
+          "hash": "9b8ea21a09c59b70e761d646d05dbffce8f15636"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-192x192.png",
+          "hash": "144c95a16c17f6899aede86e8ab29d6bf6f73257"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-384x384.png",
+          "hash": "e9d67751dd06f6586db9c89e586bca1301179a85"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-512x512.png",
+          "hash": "86785b868d97930ff54c26ddd3eac481016ff55b"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-72x72.png",
+          "hash": "58234f818a6b2594a41d638c708d7c04f565caee"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/icon-96x96.png",
+          "hash": "59374e65d1a2fb08847d3906b3d188178212bdeb"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-128x128.png",
+          "hash": "4c67eaa2adfd8dd114f49f555ec4c4e76c57ee36"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-192x192.png",
+          "hash": "c98a5d1152ef11ec5280c2222ee1c9f9a2126cd9"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-384x384.png",
+          "hash": "091ed20b326fd70e42d7e48a5e50344fb4f83428"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-48x48.png",
+          "hash": "f4e4bc967c39eb2f65f2c9445e86f562eb3a3675"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-512x512.png",
+          "hash": "dead319460ed5f44ef0654faad22e48e582ada79"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-72x72.png",
+          "hash": "e8335459dbfa92cedc1806ac1a462fd89cc13281"
+        },
+        {
+          "file": "apps/journal/src/assets/icons/maskable_icon-96x96.png",
+          "hash": "3cb7bb395d3dbd16f46cfe815e31cd858980a87b"
+        },
+        {
+          "file": "apps/journal/src/firebase-messaging-sw.js",
+          "hash": "174917afb14fcb8832d484a248ab37d1f2586f82"
+        },
+        {
+          "file": "apps/journal/src/global.scss",
+          "hash": "a6015fceec1629745e35600b86d31a7a0ee67d6b"
+        },
+        {
+          "file": "apps/journal/src/index.html",
+          "hash": "def910c0b69917250eb86a8dbe438f29b6d5588d"
+        },
+        {
+          "file": "apps/journal/src/main.ts",
+          "hash": "cd8ea30e6e58f3a256cb29fc67a4f3b21247e04f",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser-dynamic",
+            "npm:@ionic/pwa-elements"
+          ]
+        },
+        {
+          "file": "apps/journal/src/manifest.webmanifest",
+          "hash": "79b21ac60c2baba408cbe25bd80f37e58f946fd6"
+        },
+        {
+          "file": "apps/journal/src/polyfills.ts",
+          "hash": "7280689a6232b74dab8c4826bb6c9eda3401a71f",
+          "deps": [
+            "npm:@angular/localize",
+            "npm:zone.js"
+          ]
+        },
+        {
+          "file": "apps/journal/src/sw-master.js",
+          "hash": "8295ccb11b20394f496ef99cec7c4844607b9a12"
+        },
+        {
+          "file": "apps/journal/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "apps/journal/src/theme/variables.scss",
+          "hash": "7963a7a365f58ebfe36572484545c3941bd4222a"
+        },
+        {
+          "file": "apps/journal/tsconfig.app.json",
+          "hash": "323b7c4110bfbc0a66c408db64b6013ffb0cd165"
+        },
+        {
+          "file": "apps/journal/tsconfig.editor.json",
+          "hash": "20c4afdbf437457984afcb236d4b5e588aec858a"
+        },
+        {
+          "file": "apps/journal/tsconfig.json",
+          "hash": "2329fc5a6133d166e1bd2e02a04e436c107c39bb"
+        },
+        {
+          "file": "apps/journal/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "support": {
+      "root": "libs/support",
+      "projectType": "library",
+      "sourceRoot": "libs/support/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/support"
+          ],
+          "options": {
+            "jestConfig": "libs/support/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/support/**/*.ts",
+              "libs/support/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/support/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/support/jest.config.ts",
+          "hash": "bf6d81eddba65df11244a664acc45bef8745cfa6"
+        },
+        {
+          "file": "libs/support/project.json",
+          "hash": "eb0baa99802eec815b398e4434dc30bdd54dce02"
+        },
+        {
+          "file": "libs/support/README.md",
+          "hash": "116fbc4ab35fd1d8defccc5dc478c21a92dd3b88"
+        },
+        {
+          "file": "libs/support/src/lib/components/add/add.component.html",
+          "hash": "39983d14c83178272ee4eac8a68b4161ff3d7c94"
+        },
+        {
+          "file": "libs/support/src/lib/components/add/add.component.scss",
+          "hash": "943b99dd5fd4a5fad494c94e0e6bfbd297131123"
+        },
+        {
+          "file": "libs/support/src/lib/components/add/add.component.ts",
+          "hash": "4494c412862b33d4605e001cb727e454545a082b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:rxjs",
+            "goal",
+            "user",
+            "model",
+            "npm:@angular/fire",
+            "utils",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/components/add/add.module.ts",
+          "hash": "9f536f6c39a9c53a1d3c5c4e8571fadcc1bb4de8",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "npm:@angular/flex-layout",
+            "npm:@fortawesome/angular-fontawesome",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/components/options/options.component.html",
+          "hash": "ad5c5a05b89fb8a02e4dfa6cd5f2fdeef0cc29e3"
+        },
+        {
+          "file": "libs/support/src/lib/components/options/options.component.ts",
+          "hash": "5bed80924e4f073146a7a93fcfe43f8e13345ffa",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/components/options/options.module.ts",
+          "hash": "2baa46b2af109fac333a0b70c3acd9164a50c5ec",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/modals/achievers/achievers.component.html",
+          "hash": "bd1b48d22fe9ab04b77ec83217669d5e41591001"
+        },
+        {
+          "file": "libs/support/src/lib/modals/achievers/achievers.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "libs/support/src/lib/modals/achievers/achievers.component.ts",
+          "hash": "b48d47f02ca9ad7ebdc3416eb974414d1185099b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "model",
+            "npm:@angular/forms",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/modals/achievers/achievers.module.ts",
+          "hash": "e65c0fd8bd512b83ba9449b4959baddcf8a2b236",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/pipes/status.pipe.ts",
+          "hash": "6d518d029da19a2471043d270defc0fda41d0573",
+          "deps": [
+            "npm:@angular/core",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/support/src/lib/support.service.ts",
+          "hash": "0c1591fdf74627c13300dd35e4d3414a69c20b78",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model",
+            "user",
+            "npm:rxjs",
+            "npm:firebase"
+          ]
+        },
+        {
+          "file": "libs/support/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/support/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/support/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/support/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "admin": {
       "root": "apps/admin",
+      "projectType": "application",
       "sourceRoot": "apps/admin/src",
       "prefix": "strive",
       "architect": {
@@ -20,13 +2278,13 @@
             "tsConfig": "apps/admin/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "apps/admin/src/favicon.ico",
-              "apps/admin/src/assets",
               {
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
               },
+              "apps/admin/src/favicon.ico",
+              "apps/admin/src/assets",
               {
                 "glob": "**/*",
                 "input": "./assets",
@@ -34,20 +2292,18 @@
               }
             ],
             "styles": [
-              "apps/admin/src/theme/variables.scss",
-              "apps/admin/src/global.scss"
+              "apps/admin/src/global.scss",
+              "apps/admin/src/theme/variables.scss"
             ],
-            "scripts": [
-              "node_modules/quill/dist/quill.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -72,7 +2328,10 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "production",
+          "dependsOn": [
+            "^build"
+          ]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -96,8 +2355,8 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "apps/admin/src/**/*.ts",
-              "apps/admin/src/**/*.html"
+              "apps/admin/**/*.ts",
+              "apps/admin/**/*.html"
             ]
           }
         },
@@ -107,494 +2366,2293 @@
             "coverage/apps/admin"
           ],
           "options": {
-            "jestConfig": "apps/admin/jest.config.js",
+            "jestConfig": "apps/admin/jest.config.ts",
             "passWithNoTests": true
           }
         }
-      }
-    },
-    "admin-e2e": {
-      "root": "apps/admin-e2e",
-      "sourceRoot": "apps/admin-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/admin-e2e/cypress.json",
-            "devServerTarget": "admin:serve:development",
-            "tsConfig": "apps/admin-e2e/tsconfig.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "admin:serve:production"
-            }
-          }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "apps/admin/.browserslistrc",
+          "hash": "4f9ac26980c156a3d525267010d5f78144b43519"
         },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/admin-e2e/**/*.{js,ts}"
-            ]
-          }
+        {
+          "file": "apps/admin/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "apps/admin/jest.config.ts",
+          "hash": "c3525faedcbb6208c1b95629d603c7e7f2b412bf"
+        },
+        {
+          "file": "apps/admin/project.json",
+          "hash": "a81b16280044453f78ae0d07b451e41de0480468"
+        },
+        {
+          "file": "apps/admin/src/app/app-routing.module.ts",
+          "hash": "f90bac60a36c567631376deb0dbd157890790917",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "user"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/app.component.html",
+          "hash": "13b96776ee19c8a2cd37e44acecffa7c78235dff"
+        },
+        {
+          "file": "apps/admin/src/app/app.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/app.component.spec.ts",
+          "hash": "72e35bbc6e7227ef2841ec390aec990eb190a804",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/app.component.ts",
+          "hash": "b3a85ac8b8b1720a803f7bab9f47be301073d3ae",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/app.module.ts",
+          "hash": "33dd49c4e601913e672b5e9ddf110f81bae39108",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser",
+            "npm:@ionic/angular",
+            "npm:@angular/fire"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/guards/admin.guard.ts",
+          "hash": "513d7021ed78f6c346c544fc26f77c661b962713",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/fire",
+            "user",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/features/features.component.html",
+          "hash": "3902b34450872aa3f4c969b8d5100adecacccb93"
+        },
+        {
+          "file": "apps/admin/src/app/pages/features/features.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/features/features.component.ts",
+          "hash": "c8cd68166caea69b2cfbea4aa226e395373202cc",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@angular/forms",
+            "npm:firebase",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/features/features.model.ts",
+          "hash": "c7fe6e81e4c532eabded51fb67871b0b2c8d9934"
+        },
+        {
+          "file": "apps/admin/src/app/pages/features/features.module.ts",
+          "hash": "4728140f82a2fb0a703682ddce66b7fa6e0765dc",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/flex-layout",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/goal/goal.component.html",
+          "hash": "1809185232f6baa502d3704e4dcf7ad90c5f2096"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/goal/goal.component.ts",
+          "hash": "1eea73cee46ed1d094b011262b10a22ec859c60b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "model",
+            "goal",
+            "ui",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/goal/goal.module.ts",
+          "hash": "11a3215cfb87262289d7242a24e056fc3dd026ad",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "ui",
+            "media"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/roadmap/roadmap.component.html",
+          "hash": "df867d8df74e8101f5eb5281a2dc518f3d756604"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/roadmap/roadmap.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/roadmap/roadmap.component.ts",
+          "hash": "5d640aca1559d917361658f28fccba3a43fdcf26",
+          "deps": [
+            "npm:@angular/core",
+            "npm:firebase",
+            "npm:rxjs",
+            "model",
+            "goal"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/roadmap/roadmap.module.ts",
+          "hash": "cb11595ae9f5b4adfe83650230fdd015bf7c7af1",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/story/story.component.html",
+          "hash": "cd16b9f9351a8969e3ac1b71fb53f71dc33f13c8"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/story/story.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/story/story.component.ts",
+          "hash": "7a61719921048c94a78a4a5cc1ea49743b772680",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/story/story.module.ts",
+          "hash": "13856980aa8a805133ec0743747ca8cb79704cf5",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/team/team.component.html",
+          "hash": "64536a3106363f6f4f7e9dfeae58e882a56a43df"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/team/team.component.ts",
+          "hash": "a8a475cf7a4f09217060930e71da027117f6f804",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model",
+            "goal",
+            "ui",
+            "user",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/team/team.module.ts",
+          "hash": "eef4b9b28c20252f14ce648ac82e8ee63d183476",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:@fortawesome/angular-fontawesome",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/view.module.ts",
+          "hash": "c62fa6c434162c66c225a18d641017764b7693f0",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/view.page.html",
+          "hash": "e768cd7a7680b8fcb301641156ba1ec70f4df435"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/view.page.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goal/view.page.ts",
+          "hash": "5b86d33c09ff281092597cc12adbdba84a9c9a21",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goals.module.ts",
+          "hash": "425b35b6320d184725c0bca80384ae0d5ee204ba",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goals.page.html",
+          "hash": "84948b1d75d98f93d5ec492d6649468a5b3bf684"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goals.page.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/goals/goals.page.ts",
+          "hash": "cf8c027020737b0298ba32699fdbd68e38c519bb",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@ionic/angular",
+            "goal",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/login/login.module.ts",
+          "hash": "d487753cc677e0447660eeb38ed68c45708b9632",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/login/login.page.html",
+          "hash": "fd6edf315f44b3f788b118d8b09aa6fe32705e07"
+        },
+        {
+          "file": "apps/admin/src/app/pages/login/login.page.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/login/login.page.ts",
+          "hash": "e9465f83bf5c6426d3fc2976b6b27d1462044c83",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "user"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/motivation/motivation.component.html",
+          "hash": "ad08a705c6ac79bf5bd2152e009f38c0d76441ef"
+        },
+        {
+          "file": "apps/admin/src/app/pages/motivation/motivation.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/motivation/motivation.component.ts",
+          "hash": "22321f8c9317668cebedb88f9b4982c947dbb71e",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@angular/forms",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/motivation/motivation.model.ts",
+          "hash": "f3a4ca0eed5d0d21626f5eb1f36ee0f6a9407124"
+        },
+        {
+          "file": "apps/admin/src/app/pages/motivation/motivation.module.ts",
+          "hash": "9fa775976e0aa00598c1ae73158199f09ae93ea1",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/user/user.module.ts",
+          "hash": "3e628c201f24e99d9c1fb0b4604ed76286e9c5ab",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui",
+            "media"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/user/user.page.html",
+          "hash": "083353ce0d42755b30a2c511df9026fc8b054314"
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/user/user.page.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/user/user.page.ts",
+          "hash": "12dd430c76c93178086f0616f1c3b69a3887210d",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "user",
+            "npm:rxjs",
+            "goal",
+            "model",
+            "npm:@angular/fire",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/users.module.ts",
+          "hash": "b33d7751ab2e91ccb1908a28a82fc6f433bc608c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/users.page.html",
+          "hash": "780d2d81ccf79e8bb21995f7ae32cc5ff0d483ad"
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/users.page.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/app/pages/users/users.page.ts",
+          "hash": "a2e6a30aaef481c32022a7d3d2c1045d4ec11471",
+          "deps": [
+            "npm:@angular/core",
+            "user"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/shell/shell.component.html",
+          "hash": "8faf2a562035ee738376d225854858ccd1e88f2c"
+        },
+        {
+          "file": "apps/admin/src/app/shell/shell.component.ts",
+          "hash": "68c0e84f7edf4f5eef8b76a313a0b6a863d41990",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/admin/src/app/shell/shell.module.ts",
+          "hash": "5497b5471749b3d8a105e7118216b4edb4246a25",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "apps/admin/src/assets/.gitkeep",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "apps/admin/src/environments/environment.prod.ts",
+          "hash": "c9669790be176ac85a5d8c11278875c2f52dc507"
+        },
+        {
+          "file": "apps/admin/src/environments/environment.ts",
+          "hash": "66998ae9a7c27359bc473c6d2aa0029dd1f4b700"
+        },
+        {
+          "file": "apps/admin/src/favicon.ico",
+          "hash": "317ebcb2336e0833a22dddf0ab287849f26fda57"
+        },
+        {
+          "file": "apps/admin/src/global.scss",
+          "hash": "f4c6d930ad64a24ece66bdd54d4258383eaf19c8"
+        },
+        {
+          "file": "apps/admin/src/index.html",
+          "hash": "3c5a1bfd0a9fe2fbc5c3ceef8cf898a6625203f7"
+        },
+        {
+          "file": "apps/admin/src/main.ts",
+          "hash": "d9a2e7e4a582e265db779363bd8b2492c43c141b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser-dynamic"
+          ]
+        },
+        {
+          "file": "apps/admin/src/polyfills.ts",
+          "hash": "e4555ed11fa2f217b8e4c744d564da4f7388b4c4",
+          "deps": [
+            "npm:zone.js"
+          ]
+        },
+        {
+          "file": "apps/admin/src/styles.scss",
+          "hash": "90d4ee0072ce3fc41812f8af910219f9eea3c3de"
+        },
+        {
+          "file": "apps/admin/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "apps/admin/src/theme/variables.scss",
+          "hash": "db16ae8a0dc52ef00b34b99788b36ec867904472"
+        },
+        {
+          "file": "apps/admin/tsconfig.app.json",
+          "hash": "323b7c4110bfbc0a66c408db64b6013ffb0cd165"
+        },
+        {
+          "file": "apps/admin/tsconfig.editor.json",
+          "hash": "20c4afdbf437457984afcb236d4b5e588aec858a"
+        },
+        {
+          "file": "apps/admin/tsconfig.json",
+          "hash": "c756d84676bd8d116ad9dc12a173b10c44b4955f"
+        },
+        {
+          "file": "apps/admin/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
         }
-      }
-    },
-    "backend-functions": {
-      "root": "apps/backend-functions",
-      "sourceRoot": "apps/backend-functions/src",
-      "projectType": "application",
-      "prefix": "backend-functions",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/backend-functions",
-            "main": "apps/backend-functions/src/main.ts",
-            "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": [
-              "apps/backend-functions/src/package.json"
-            ],
-            "buildLibsFromSource": true
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "backend-functions:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/backend-functions/**/*.ts"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/backend-functions/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "discussion": {
-      "projectType": "library",
-      "root": "libs/discussion",
-      "sourceRoot": "libs/discussion/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/discussion/**/*.ts",
-              "libs/discussion/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/discussion/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "exercises": {
-      "projectType": "library",
-      "root": "libs/exercises",
-      "sourceRoot": "libs/exercises/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/exercises/**/*.ts",
-              "libs/exercises/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/exercises/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "goal": {
-      "projectType": "library",
-      "root": "libs/goal",
-      "sourceRoot": "libs/goal/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/goal/**/*.ts",
-              "libs/goal/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/goal/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "journal": {
-      "projectType": "application",
-      "root": "apps/journal",
-      "sourceRoot": "apps/journal/src",
-      "prefix": "journal",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/journal",
-            "index": "apps/journal/src/index.html",
-            "main": "apps/journal/src/main.ts",
-            "polyfills": "apps/journal/src/polyfills.ts",
-            "tsConfig": "apps/journal/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              {
-                "glob": "**/*.svg",
-                "input": "node_modules/ionicons/dist/ionicons/svg",
-                "output": "./svg"
-              },
-              "apps/journal/src/assets",
-              "apps/journal/src/manifest.webmanifest",
-              "apps/journal/src/firebase-messaging-sw.js",
-              "apps/journal/src/sw-master.js",
-              {
-                "glob": "**/*",
-                "input": "./assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": [
-              {
-                "input": "apps/journal/src/theme/variables.scss"
-              },
-              {
-                "input": "apps/journal/src/global.scss"
-              }
-            ],
-            "scripts": [
-              "node_modules/quill/dist/quill.min.js"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "environments/environment.ts",
-                  "with": "environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ],
-              "serviceWorker": true,
-              "ngswConfigPath": "apps/journal/ngsw-config.json"
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "journal:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "journal:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "journal:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/journal/**/*.ts",
-              "apps/journal/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/journal/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "ionic-cordova-build": {
-          "builder": "@ionic/angular-toolkit:cordova-build",
-          "options": {
-            "browserTarget": "journal:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "journal:build:production"
-            }
-          }
-        },
-        "ionic-cordova-serve": {
-          "builder": "@ionic/angular-toolkit:cordova-serve",
-          "options": {
-            "cordovaBuildTarget": "journal:ionic-cordova-build",
-            "devServerTarget": "journal:serve"
-          },
-          "configurations": {
-            "production": {
-              "cordovaBuildTarget": "journal:ionic-cordova-build:production",
-              "devServerTarget": "journal:serve:production"
-            }
-          }
-        }
-      }
+      ]
     },
     "media": {
-      "projectType": "library",
       "root": "libs/media",
+      "projectType": "library",
       "sourceRoot": "libs/media/src",
       "prefix": "strive",
       "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/media"
+          ],
+          "options": {
+            "jestConfig": "libs/media/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
               "libs/media/**/*.ts",
               "libs/media/**/*.html"
             ]
           }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/media/jest.config.js",
-            "passWithNoTests": true
-          }
         }
-      }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/media/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/media/jest.config.ts",
+          "hash": "7b0e9d7f3a615f62a0fddd43d6b3c23c9e2bd38e"
+        },
+        {
+          "file": "libs/media/project.json",
+          "hash": "0422514407f32ecf1cbbc208b34d4ec43bdfe9b6"
+        },
+        {
+          "file": "libs/media/README.md",
+          "hash": "4f3370a645254780c1567ac65d33ba20013db28c"
+        },
+        {
+          "file": "libs/media/src/lib/components/image-selector/image-selector.component.html",
+          "hash": "70956ed6835630d089bb7e215696687a407f02e7"
+        },
+        {
+          "file": "libs/media/src/lib/components/image-selector/image-selector.component.scss",
+          "hash": "a2c61af337b05b70c0ae666bc566cf16050758f3"
+        },
+        {
+          "file": "libs/media/src/lib/components/image-selector/image-selector.component.ts",
+          "hash": "d297ae274bbfec552667bf15808d15b359b9db5f",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@angular/platform-browser",
+            "npm:rxjs",
+            "npm:ngx-image-cropper",
+            "npm:@angular/fire",
+            "utils",
+            "npm:@capacitor/camera"
+          ]
+        },
+        {
+          "file": "libs/media/src/lib/components/image-selector/image-selector.module.ts",
+          "hash": "1525921cb10432898051cfdec1203e5f50e810a3",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/media/src/lib/directives/image.directive.ts",
+          "hash": "888cd3a919e2573b9b671b4b8b8d6867a2443826",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/media/src/lib/directives/image.module.ts",
+          "hash": "e83a738462de4dcb655281480debd0e253d585dc",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/media/src/lib/directives/imgix-helpers.ts",
+          "hash": "7b277e95ff8b0874aebf3e3545d7d36b35353bd2"
+        },
+        {
+          "file": "libs/media/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/media/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/media/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/media/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
     },
     "model": {
-      "projectType": "library",
       "root": "libs/model",
+      "projectType": "library",
       "sourceRoot": "libs/model/src",
       "prefix": "strive",
       "architect": {
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
               "libs/model/**/*.ts",
               "libs/model/**/*.html"
             ]
           }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/model/jest.config.js",
-            "passWithNoTests": true
-          }
         }
-      }
-    },
-    "notification": {
-      "projectType": "library",
-      "root": "libs/notification",
-      "sourceRoot": "libs/notification/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/notification/**/*.ts",
-              "libs/notification/**/*.html"
-            ]
-          }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/model/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/notification/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "post": {
-      "projectType": "library",
-      "root": "libs/post",
-      "sourceRoot": "libs/post/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/post/**/*.ts",
-              "libs/post/**/*.html"
-            ]
-          }
+        {
+          "file": "libs/model/project.json",
+          "hash": "2fe413af7a73793769433c6fa3435f7046f05ce6"
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/post/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "support": {
-      "projectType": "library",
-      "root": "libs/support",
-      "sourceRoot": "libs/support/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/support/**/*.ts",
-              "libs/support/**/*.html"
-            ]
-          }
+        {
+          "file": "libs/model/README.md",
+          "hash": "d5666a708187344e200a38b916eb334bb04594a8"
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/support/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "ui": {
-      "projectType": "library",
-      "root": "libs/ui",
-      "sourceRoot": "libs/ui/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/ui/**/*.ts",
-              "libs/ui/**/*.html"
-            ]
-          }
+        {
+          "file": "libs/model/src/index.ts",
+          "hash": "ebd8b8e325bac98e58007586f3f8bf131cba1850"
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ui/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "user": {
-      "projectType": "library",
-      "root": "libs/user",
-      "sourceRoot": "libs/user/src",
-      "prefix": "strive",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/user/**/*.ts",
-              "libs/user/**/*.html"
-            ]
-          }
+        {
+          "file": "libs/model/src/lib/affirmation.ts",
+          "hash": "646cb24022f96a86d814f41066d1e3c219c46e42"
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/user/jest.config.js",
-            "passWithNoTests": true
-          }
+        {
+          "file": "libs/model/src/lib/daily-gratefulness.ts",
+          "hash": "bc87cc5150f851b1f435b66493218416fa731701"
+        },
+        {
+          "file": "libs/model/src/lib/dear-future-self.ts",
+          "hash": "762b10814ad9512290a9b461337aed606a832b89"
+        },
+        {
+          "file": "libs/model/src/lib/goal.ts",
+          "hash": "3a354eeb06b62b7205210324fd73aa463a926d00"
+        },
+        {
+          "file": "libs/model/src/lib/milestone.ts",
+          "hash": "08aa4a6ec4c47b259cc731e3f212cee89dde0ed0",
+          "deps": [
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/model/src/lib/notification.ts",
+          "hash": "58c2b6b8fff4043d695e0bc535569756d5ef618a"
+        },
+        {
+          "file": "libs/model/src/lib/personal.ts",
+          "hash": "89ffde80f3cd07fa6d8ba694dd5398fdba8bf06c"
+        },
+        {
+          "file": "libs/model/src/lib/post.ts",
+          "hash": "6dbe6c7f158551b02f9949f76bff4687145cb700"
+        },
+        {
+          "file": "libs/model/src/lib/spectator.ts",
+          "hash": "73ea3e09afcf11763937b7f430934c3cb278fcc0"
+        },
+        {
+          "file": "libs/model/src/lib/stakeholder.ts",
+          "hash": "5169cf185bd7dcf5c245dd448fbe5f0d2b3e6c82"
+        },
+        {
+          "file": "libs/model/src/lib/story.ts",
+          "hash": "52b1a462ccfb28afa57f54af26aaa4e040293d59"
+        },
+        {
+          "file": "libs/model/src/lib/support.ts",
+          "hash": "a0fbfcecb13b021b1e920853f9743ab940ddd084"
+        },
+        {
+          "file": "libs/model/src/lib/user.ts",
+          "hash": "61b62dc5206aba796acdafdeaf643d78edc1d70d"
+        },
+        {
+          "file": "libs/model/tsconfig.json",
+          "hash": "0e81e5fcdfa22bc679f4716a2fab8973eac48dd1"
+        },
+        {
+          "file": "libs/model/tsconfig.lib.json",
+          "hash": "6a936b36ac7c3c99648a49be3c7027a66ee90dd9"
         }
-      }
+      ]
     },
     "utils": {
-      "projectType": "library",
       "root": "libs/utils",
+      "projectType": "library",
       "sourceRoot": "libs/utils/src",
       "prefix": "strive",
       "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/utils"
+          ],
+          "options": {
+            "jestConfig": "libs/utils/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
               "libs/utils/**/*.ts",
               "libs/utils/**/*.html"
             ]
           }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/utils/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
         },
+        {
+          "file": "libs/utils/jest.config.ts",
+          "hash": "c6908ccd514de286fab307768856b7f920457571"
+        },
+        {
+          "file": "libs/utils/project.json",
+          "hash": "48207a30e9cb8d3d0c95bbfe8358d3e82b7fd7b8"
+        },
+        {
+          "file": "libs/utils/README.md",
+          "hash": "7c44079c5f0948e3a5052aa9c2ed76ca121b7d4e"
+        },
+        {
+          "file": "libs/utils/src/lib/directives/modal.directive.ts",
+          "hash": "fdb1416cb8c1a0eac5c542f7e453f748ff762961",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/directives/popover.directive.ts",
+          "hash": "b6cacd3dbabf57b82fafb942ca077f568e3e568f",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/helpers.ts",
+          "hash": "4546f631909d3938acb51a4bc4e7169cf48bde4f",
+          "deps": [
+            "npm:firebase"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/pipes/time-ago.pipe.ts",
+          "hash": "a8075bca265ba6199c95c11f48daa5e96f011dfb",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/pipes/time-to-go.pipe.ts",
+          "hash": "7c46e34feb446c5c7273addf43937d807d5fbfbd",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/algolia.service.ts",
+          "hash": "2f0cd46d715a189a009480bc5997302614ff8970",
+          "deps": [
+            "npm:@angular/core",
+            "npm:algoliasearch",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/collection.service.ts",
+          "hash": "7f0227804847f17a805529791705097b2ec2210e",
+          "deps": [
+            "npm:@angular/fire",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/fcm.service.ts",
+          "hash": "631f21ccd2c4e801ec0877728a1e10c8c73e2d0a",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:@ionic/angular",
+            "npm:@capacitor/push-notifications",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/invite-token.service.ts",
+          "hash": "fc5e745036e4e52ee25214eca0c24e04951a7b1b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/fire",
+            "goal",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/pwa.service.ts",
+          "hash": "9941f5e2c60c5b211635a8072682bc3667bea3a2",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/screensize.service.ts",
+          "hash": "87dd7f58b320b35e73b9fa8dd8295096d640c553",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/services/seo.service.ts",
+          "hash": "13dc4bbaa0d294350f95ef32054221f59500a3b8",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "libs/utils/src/lib/share.delay.ts",
+          "hash": "db9745d2e8bec615892e3c8c81b836490c0b172a",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/utils/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/utils/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/utils/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/utils/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "goal": {
+      "root": "libs/goal",
+      "projectType": "library",
+      "sourceRoot": "libs/goal/src",
+      "prefix": "strive",
+      "architect": {
         "test": {
           "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/goal"
+          ],
           "options": {
-            "jestConfig": "libs/utils/jest.config.js",
+            "jestConfig": "libs/goal/jest.config.ts",
             "passWithNoTests": true
           }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/goal/**/*.ts",
+              "libs/goal/**/*.html"
+            ]
+          }
         }
-      }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/goal/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/goal/jest.config.ts",
+          "hash": "7e17ac7c0f37b7f75d40ea48baec49943692527b"
+        },
+        {
+          "file": "libs/goal/project.json",
+          "hash": "c1711c637b9bb1ab9dc2eca0ca66de1e30197d44"
+        },
+        {
+          "file": "libs/goal/README.md",
+          "hash": "99f3bc8b91f911a3a4a050da62b05bff57ec9476"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/goal-options/goal-options.component.html",
+          "hash": "103f9fe0e66e332aa6aef0cbf8c46aed97bf3075"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/goal-options/goal-options.component.ts",
+          "hash": "d46ebe04fe0710c6b8b0c4cc2eaa3d4768a55ba1",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "model",
+            "user",
+            "post"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/goal-options/goal-options.module.ts",
+          "hash": "60ad803ef4cb15411ea9cc88144da5e5b29235f2",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "post"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/popovers/share/share.component.html",
+          "hash": "7ba8e3795489974f726c11798fa5dd1b1a89a27e"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/popovers/share/share.component.scss",
+          "hash": "858fc6ae6b716c8df3b893adbab15d4e8851e9cb"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/popovers/share/share.component.ts",
+          "hash": "8681dc2efc86ffb75f7742490d11138c84013294",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/popovers/share/share.module.ts",
+          "hash": "415c6a2a744f318aa2405be199d1900150ed7b3a",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-1/slide-1.component.html",
+          "hash": "9ff25f86b27aa8b3fc2dc6ee1a07b9f09be0ded3"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-1/slide-1.component.scss",
+          "hash": "0c20ad6598e4297a23156cdb1a46b2e3364271a2"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-1/slide-1.component.ts",
+          "hash": "22e4de06e703c01da85fb1ed1525418c01d53823",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-2/slide-2.component.html",
+          "hash": "9e439998be7de9915f4031a65a88e16d10f19012"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-2/slide-2.component.scss",
+          "hash": "03a2ab1cb1c5d14417d6b65b4203fe2f8ee8ba19"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-2/slide-2.component.ts",
+          "hash": "f5636fb0c6965b49753d9c663e150d7e3c669663",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-3/slide-3.component.html",
+          "hash": "789cd6b0c8a4ecbd48284c0385ef68e3d6223938"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-3/slide-3.component.scss",
+          "hash": "c186d3edb049fdb25c708d77e8023dbc07d36e69"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-3/slide-3.component.ts",
+          "hash": "876d3ff8c3c4d80dbbfb02b4562359b9f666cee8",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-4/slide-4.component.html",
+          "hash": "d0e06e836533eae726ce6da6f83e8832775e4bf0"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-4/slide-4.component.scss",
+          "hash": "cd9b3d933c2bb5f1ac599c889716c5ccaf7e2eb6"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-4/slide-4.component.ts",
+          "hash": "c8a134ed6c5b5df7ba814d819fd7ed73f0eb77c1",
+          "deps": [
+            "npm:@angular/core",
+            "npm:firebase",
+            "npm:rxjs",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-5/slide-5.component.html",
+          "hash": "1e44e9afa0734752a2e67f709cf84b7d737a4436"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-5/slide-5.component.scss",
+          "hash": "b7eef56e037db51cb50646241731af742fba6575"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-5/slide-5.component.ts",
+          "hash": "8403ef45656b10b668cd536c59856c034eb4738e",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "npm:@capacitor/share",
+            "exercises",
+            "utils",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-update/slide-update.component.html",
+          "hash": "34af5b1490ede47a19ce49e8a61692c16d2a8755"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-update/slide-update.component.scss",
+          "hash": "c186d3edb049fdb25c708d77e8023dbc07d36e69"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/slides/slide-update/slide-update.component.ts",
+          "hash": "ac130cf192a5eaedc291eb7dd9ab9a72177b2cfc",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/upsert.component.html",
+          "hash": "21c40b17fc36fb0400c5c286fff9370944923f86"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/upsert.component.scss",
+          "hash": "0b3ab0fcfa02b4929bf01584be60131d496d1ead"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/upsert.component.ts",
+          "hash": "f0ae03a1327cc9399b848702c4a42dd39b831e99",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "model",
+            "utils",
+            "npm:swiper",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/components/upsert/upsert.module.ts",
+          "hash": "9b27db76ba9204e98e39e403ba0f8c4a9a31ad2d",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "npm:swiper",
+            "media",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/forms/goal.form.ts",
+          "hash": "113eff0520de1fd2df9f84ccff579b9a427ab04c",
+          "deps": [
+            "npm:@angular/forms",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/goal.service.ts",
+          "hash": "e2c5a6f9d179972f13a8dbca2344c15cd3e1008d",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "npm:rxjs",
+            "utils",
+            "model",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/guards/goal-auth-guard.service.ts",
+          "hash": "12b3f6d9e956ae858d74d6b5ceb6729eb15470ce",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "user",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/modals/team/team.modal.html",
+          "hash": "ce811cf0a3e9cf1108617f3c2f11f0c57d090f75"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/modals/team/team.modal.scss",
+          "hash": "52cd0980d04c4819cb813229d9789d17d39bf42b"
+        },
+        {
+          "file": "libs/goal/src/lib/goal/modals/team/team.modal.ts",
+          "hash": "dea1999f66d75c5084c8c6a0da4c2416933edb03",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "model",
+            "user",
+            "npm:rxjs",
+            "npm:@angular/forms",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/modals/team/team.module.ts",
+          "hash": "f4d265e7c86b751eab758135169c80f4b5fbe11a",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "media",
+            "npm:@fortawesome/angular-fontawesome"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/goal/pipes/status.pipe.ts",
+          "hash": "3d1f932148f1aca4986d8db340830a85280c147e",
+          "deps": [
+            "npm:@angular/core",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/assignee/assignee.component.html",
+          "hash": "73e59d42ff4e136010a2630acd91063710abafae"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/assignee/assignee.component.scss",
+          "hash": "c365a7ea07a71a88bcbe1dae748bd3965ed2f1ef"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/assignee/assignee.component.ts",
+          "hash": "70de9fb65ad146b3020fd2c898b5e9abb85da374",
+          "deps": [
+            "npm:@angular/core",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/assignee/assignee.module.ts",
+          "hash": "3de5bf13af4d70296e535b0e8bfb91d08559b09c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/flex-layout",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/deadline/deadline.component.html",
+          "hash": "774018aa51bbda8aa53b02bfa63b9c64206b8639"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/deadline/deadline.component.scss",
+          "hash": "29e3dfdb1797d5f7c78bc2a3693c76ed5c159f0a"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/deadline/deadline.component.ts",
+          "hash": "45014f57e1d4ad09373755d8518a73b33c259aa8",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/deadline/deadline.module.ts",
+          "hash": "f1a30ab4112c9e36b827858194e093ebd875936a",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "npm:@angular/flex-layout",
+            "npm:@fortawesome/angular-fontawesome",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/details/details.component.html",
+          "hash": "cafded2ea04448b497956a7fdbe3e090c4ef776f"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/details/details.component.scss",
+          "hash": "9b643d5286f68ca074ea8e6b5d9219b2aab9984d"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/details/details.component.ts",
+          "hash": "e221d99d845a0c17a9259f5634c496115e780673",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model",
+            "user",
+            "utils",
+            "npm:rxjs",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/details/details.module.ts",
+          "hash": "e7f7e91dfa93512c43f812e654fba0e199d8035c",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@angular/forms",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/roadmap/roadmap.component.html",
+          "hash": "a5334ece45aa89d3f611e0fcd8f413fd2abf5121"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/roadmap/roadmap.component.scss",
+          "hash": "a755b37135f3608044fa1d8d3e592a722c2f757a"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/roadmap/roadmap.component.ts",
+          "hash": "1cd8c26286f0173d9227f84fd27c247f7296fd53",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model",
+            "support"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/roadmap/roadmap.module.ts",
+          "hash": "d472f2dd72ade68f0df421ebc46f076fb520f7d0",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "npm:@fortawesome/angular-fontawesome",
+            "support",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/status/status.component.html",
+          "hash": "034d2c36a58107101a9d815c6b064c9d1e67ad1e"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/status/status.component.scss",
+          "hash": "ccf01ae9856b529695b208ecb4c056bf4c94ab76"
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/status/status.component.ts",
+          "hash": "19ee56e57cf00273fb90a54dec5042559a9a4320",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "model",
+            "post",
+            "npm:firebase"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/components/status/status.module.ts",
+          "hash": "7f3c7180dbe1a3e5e7fea56c63db9c4183cf511a",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "post"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/forms/milestone.form.ts",
+          "hash": "2bb6f84042d0df1f098d3f4aac812c0809f795f8",
+          "deps": [
+            "npm:@angular/forms",
+            "model",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/milestone.service.ts",
+          "hash": "c285497527b7a9535ba2b1bc0349acf08eb07e33",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "model",
+            "npm:@angular/fire",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/pipes/path.pipe.ts",
+          "hash": "6043f3737aead0c9c87471e99c1a2b5707224b5b",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/milestone/pipes/subtask.pipe.ts",
+          "hash": "2bbda88f745e68549348f7b7e4729c70ace35e62",
+          "deps": [
+            "npm:@angular/core",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/stakeholder/stakeholder.service.ts",
+          "hash": "712fce288966ce035276a0ac0b5cd838171cd82c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model",
+            "user"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/story/pipes/story-message.ts",
+          "hash": "86a7f1f8fba18e64e6947fbf8b48964b9fcc2c2c",
+          "deps": [
+            "npm:@angular/core",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/lib/story/story.service.ts",
+          "hash": "bd9ad611b8c2da4feb8b124c58b7ff53ecb0f657",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/goal/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/goal/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/goal/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/goal/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "post": {
+      "root": "libs/post",
+      "projectType": "library",
+      "sourceRoot": "libs/post/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/post"
+          ],
+          "options": {
+            "jestConfig": "libs/post/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/post/**/*.ts",
+              "libs/post/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/post/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/post/jest.config.ts",
+          "hash": "d2f80002753cc166c2b3da44e3c4d5eef400fada"
+        },
+        {
+          "file": "libs/post/project.json",
+          "hash": "9387999bb8d070f11ccb0a885452b8bebfe024c9"
+        },
+        {
+          "file": "libs/post/README.md",
+          "hash": "51bc618c9a8740c859fcd843fea2d61f734fd4a8"
+        },
+        {
+          "file": "libs/post/src/lib/components/post/post.component.html",
+          "hash": "8bc8fb58d53496ffaa06eaa9f5c8fc8a49b0117b"
+        },
+        {
+          "file": "libs/post/src/lib/components/post/post.component.scss",
+          "hash": "edb089536c3400c5b012d115a3292e7477d23a7c"
+        },
+        {
+          "file": "libs/post/src/lib/components/post/post.component.ts",
+          "hash": "4d6eb08d75c35327175ba8ab58e08ceb598ccddd",
+          "deps": [
+            "npm:@angular/core",
+            "model",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/post/src/lib/components/post/post.module.ts",
+          "hash": "60d39fa9977804db0d842c1387d085d6c4044c9c",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:@angular/flex-layout",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/post/src/lib/components/upsert-modal/upsert-modal.component.html",
+          "hash": "13d32dc9b8238759875245e567e8ac53e7066362"
+        },
+        {
+          "file": "libs/post/src/lib/components/upsert-modal/upsert-modal.component.scss",
+          "hash": "2ac47c3a15e657915469be754f1c4c0c311d1eca"
+        },
+        {
+          "file": "libs/post/src/lib/components/upsert-modal/upsert-modal.component.ts",
+          "hash": "ad20fc874f2cc99d720e6a8bf9a2ba4a49cb7c09",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/fire",
+            "npm:@ionic/angular",
+            "npm:rxjs",
+            "npm:date-fns",
+            "user",
+            "model",
+            "utils",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/post/src/lib/components/upsert-modal/upsert-modal.module.ts",
+          "hash": "bd9e43d9f5fde84c5e63093086deeb1ab189a2ad",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "media",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/post/src/lib/forms/post.form.ts",
+          "hash": "ce759450e86d15252ecd3249756dadff9a070c2f",
+          "deps": [
+            "npm:@angular/forms",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/post/src/lib/post.service.ts",
+          "hash": "0b202eae555d14f8a01e8862d3e7a790eb8c1080",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/post/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/post/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/post/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/post/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "user": {
+      "root": "libs/user",
+      "projectType": "library",
+      "sourceRoot": "libs/user/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/user"
+          ],
+          "options": {
+            "jestConfig": "libs/user/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/user/**/*.ts",
+              "libs/user/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/user/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/user/jest.config.ts",
+          "hash": "984ed1c12df150f26442e867cecd3347e4d0498c"
+        },
+        {
+          "file": "libs/user/project.json",
+          "hash": "5ae6a796b8d2e953a5926e069fa028fb5b8a497a"
+        },
+        {
+          "file": "libs/user/README.md",
+          "hash": "17504529dbe6f966697e245b6a53ddcb597b1bda"
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/auth-modal/auth-modal.module.ts",
+          "hash": "ae4e052ab68398fd2b558b22950365cf732f6d39",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "ui"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/auth-modal/auth-modal.page.html",
+          "hash": "b1c009bb6d151a1c16807713048f9715ab148da3"
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/auth-modal/auth-modal.page.scss",
+          "hash": "6e171736f58a0644ef7d614e428383a499076fe6"
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/auth-modal/auth-modal.page.ts",
+          "hash": "dfeb355a8e7078b8d297df6d07850a2accb4e17a",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/fire",
+            "npm:firebase",
+            "npm:@ionic/angular",
+            "model",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/welcome/welcome.modal.html",
+          "hash": "8979232fab523776dc181c59142afc6bcdb59e02"
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/welcome/welcome.modal.scss",
+          "hash": "ef97f1bd336cae422672900863889ef576bd7893"
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/welcome/welcome.modal.ts",
+          "hash": "4856b422ba308d096308dd2375a1f948f0548847",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:swiper",
+            "utils",
+            "goal"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/auth/components/welcome/welcome.module.ts",
+          "hash": "adfc051cbccf58b9a62c7fff81ecfc5c40665529",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "npm:swiper",
+            "media",
+            "goal"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/auth/guard/auth-guard.service.ts",
+          "hash": "3664e00bb9d4476f77a8a995ce8c804a686b2403",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/personal/personal.service.ts",
+          "hash": "eaa972f0d5de5b719d212890b2897deef1ea2c7b",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/spectator/components/followers/followers.component.html",
+          "hash": "7a4dabfbc0a88d7271a845a7ad599b7785c3bfa2"
+        },
+        {
+          "file": "libs/user/src/lib/spectator/components/followers/followers.component.ts",
+          "hash": "bdfbad04b66ee1dc62cf063dbceb1d069d6a357d",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "npm:rxjs",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/spectator/components/followers/followers.module.ts",
+          "hash": "3c3686c4fffc07bcb6898c94456e8c2d80d11a78",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/spectator/components/following/following.component.html",
+          "hash": "bfffbeb05b8905c8fc2d1907cd90264e3d1774b5"
+        },
+        {
+          "file": "libs/user/src/lib/spectator/components/following/following.component.ts",
+          "hash": "42e6d3f8079e5f307603591f1918712503812b21",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "npm:rxjs",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/spectator/components/following/following.module.ts",
+          "hash": "67ebfc4e52c680de5ae6e65948c09e8937814e82",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@ionic/angular",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/spectator/spectator.service.ts",
+          "hash": "1b2ee21956357167f307da0f6e85b1e5f346d4bf",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "model",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/user/forms/user.form.ts",
+          "hash": "7493be3f705dd2e0f909a30a82c0b5671187e5d4",
+          "deps": [
+            "npm:@angular/forms",
+            "model"
+          ]
+        },
+        {
+          "file": "libs/user/src/lib/user/user.service.ts",
+          "hash": "9a37b90c98a2e46c2fa81ec034397c028a8df700",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/fire",
+            "utils",
+            "model",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/user/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/user/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/user/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/user/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
+    },
+    "ui": {
+      "root": "libs/ui",
+      "projectType": "library",
+      "sourceRoot": "libs/ui/src",
+      "prefix": "strive",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/ui"
+          ],
+          "options": {
+            "jestConfig": "libs/ui/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ui/**/*.ts",
+              "libs/ui/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "files": [
+        {
+          "file": "libs/ui/.eslintrc.json",
+          "hash": "3ea8e70b80a6714d85670edfe88c835b434b4b45"
+        },
+        {
+          "file": "libs/ui/jest.config.ts",
+          "hash": "1eeee597160de7d401367d931c0fa9c96658f15b"
+        },
+        {
+          "file": "libs/ui/project.json",
+          "hash": "74a481e4e0300a18e62e12f893f84487aab40ced"
+        },
+        {
+          "file": "libs/ui/README.md",
+          "hash": "139ffca13523fd0d00b6ec9d94c51ac003f2985a"
+        },
+        {
+          "file": "libs/ui/src/lib/404/404.component.html",
+          "hash": "efb74cdc0703dc21d58efb7d790a7e9ddbf10f3a"
+        },
+        {
+          "file": "libs/ui/src/lib/404/404.component.scss",
+          "hash": "60d5c55a9e54439c798d6161a7cdea5cb09aaee8"
+        },
+        {
+          "file": "libs/ui/src/lib/404/404.component.ts",
+          "hash": "d609d8d57e2ca4b67b42ae572b5280d99c05380c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/404/404.module.ts",
+          "hash": "bd4ff6bb1a2f3882f18276519f35e2daeca3ddb8",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/datetime/datetime.component.html",
+          "hash": "a1e1a85ab16235f18e97b3ffdf4f37b67182556d"
+        },
+        {
+          "file": "libs/ui/src/lib/datetime/datetime.component.ts",
+          "hash": "afffa97b04f9bcd2dc762da4fba7fac45572590a",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/datetime/datetime.module.ts",
+          "hash": "c3b91f0424096076be006734f3f52ca3db3240d0",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/header-root/header-root.component.html",
+          "hash": "f40bcf2736c6000574e632729a6f19cdb2539a02"
+        },
+        {
+          "file": "libs/ui/src/lib/header-root/header-root.component.scss",
+          "hash": "4a166e4e99d04b1e1589757900006a2c834f0080"
+        },
+        {
+          "file": "libs/ui/src/lib/header-root/header-root.component.ts",
+          "hash": "32ce2dcbd1eaab4487ff1c3f6807df39b41d0a0e",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "utils",
+            "user",
+            "notification"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/header-root/header-root.module.ts",
+          "hash": "9c4a9eadefd082af91219db0ed9c935bae9c8f65",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/header/header.component.html",
+          "hash": "146d611c9726af73aa3adbd138e5914061869dd5"
+        },
+        {
+          "file": "libs/ui/src/lib/header/header.component.scss",
+          "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "file": "libs/ui/src/lib/header/header.component.ts",
+          "hash": "7dfb435f1884ec1c1095a29a15dc34af8d93123d",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/header/header.module.ts",
+          "hash": "7377a2fa33df4bc96c7e08a6f37e095aa2b25b9a",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/page-loading/page-loading.component.html",
+          "hash": "c338935d1d84926f423e636afb2d163c316ba4bc"
+        },
+        {
+          "file": "libs/ui/src/lib/page-loading/page-loading.component.scss",
+          "hash": "5b5a34ca5deec088cc5d574a2d1000a04bcaa27a"
+        },
+        {
+          "file": "libs/ui/src/lib/page-loading/page-loading.component.ts",
+          "hash": "7487aa7e4a48aeef971fc2a51e30b9fbe4ca5ff3",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/page-loading/page-loading.module.ts",
+          "hash": "abf005c0c4a1dc892b65164342960472072ca4d5",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/page-not-found/page-not-found.component.html",
+          "hash": "32408ea2c0b31705b660d574da4ae1d16aed723a"
+        },
+        {
+          "file": "libs/ui/src/lib/page-not-found/page-not-found.component.scss",
+          "hash": "5b5a34ca5deec088cc5d574a2d1000a04bcaa27a"
+        },
+        {
+          "file": "libs/ui/src/lib/page-not-found/page-not-found.component.ts",
+          "hash": "02ca6c4e43877695d95bca854b7b4dd5ae00cd70",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/page-not-found/page-not-found.module.ts",
+          "hash": "51e7b118df2f6f6109eaea922d08dd722fc1db50",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/select-user/select-user.modal.html",
+          "hash": "631a9fb2d9ea8e992eed77f4f2be2cef87c5b044"
+        },
+        {
+          "file": "libs/ui/src/lib/select-user/select-user.modal.ts",
+          "hash": "4bb96830a841926cfe0ea3668cec58f8c442711c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ionic/angular",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/select-user/select-user.module.ts",
+          "hash": "36471f18ae47fde4d9f3dd0cea894d3067d64054",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@ionic/angular"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/share/share.component.html",
+          "hash": "3bab78bb2e4f5664a9d4990b34fcb173d1815203"
+        },
+        {
+          "file": "libs/ui/src/lib/share/share.component.scss",
+          "hash": "63722ac0635f84a1d72da99177ca196eb15086ef"
+        },
+        {
+          "file": "libs/ui/src/lib/share/share.component.ts",
+          "hash": "b9e07c94a12d52d65549b1a87ebe57ef336ecda1",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@capacitor/clipboard"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/share/share.module.ts",
+          "hash": "10c35340f9ba691cd5a77b6f964f85ddc0e7928c",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "npm:@fortawesome/angular-fontawesome",
+            "npm:ngx-sharebuttons"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/privacy/privacy-policy.component.html",
+          "hash": "c0f06bfe3591df8cb9de8fd87dac03067212e2db"
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/privacy/privacy-policy.component.ts",
+          "hash": "8a1a2dc62a9005463b51be8f624f42c431948fc4",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/privacy/privacy-policy.module.ts",
+          "hash": "1c5d90e01acc29c2b54fe753ac688d370f0539d8",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/privacy/privacy-policy.page.ts",
+          "hash": "f566da3aec015fec32bee12cd7372e1be346853f",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/terms/terms.component.html",
+          "hash": "fbc27d76402c629d9fcf0604ddf99d29c1914e47"
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/terms/terms.component.ts",
+          "hash": "c187d7741a673d3d531f181b9aa0d74616a1d29c",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/terms/terms.module.ts",
+          "hash": "40dfc52e3e2092f851663722dff0b3afe5bba30c",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/static-information/terms/terms.page.ts",
+          "hash": "8c568d6a3fbc16036e2bc672df6e7472d8b27e1d",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@ionic/angular",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/text-editor/text-editor.component.html",
+          "hash": "5d8e51a314303beae2a40dcbabf1d73dea00bbbf"
+        },
+        {
+          "file": "libs/ui/src/lib/text-editor/text-editor.component.scss",
+          "hash": "0810321677b2079f3dd5c6ca0f91c5e7a5dfd116"
+        },
+        {
+          "file": "libs/ui/src/lib/text-editor/text-editor.component.ts",
+          "hash": "6288e295e4655fca4777ebb3c5f7ea4be4d4b8bb",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/text-editor/text-editor.module.ts",
+          "hash": "c754a097247eecf1d2166282e6ebf8f3a3579ad5",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@ionic/angular",
+            "npm:ngx-quill"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/large/large-thumbnail.component.html",
+          "hash": "2fcffce08fc3fe7810497eac42519d09d68884e8"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/large/large-thumbnail.component.scss",
+          "hash": "6dad7a885090e224d329c19a15767bbe753c1020"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/large/large-thumbnail.component.ts",
+          "hash": "cabaec214413aa9e84c487c995d9b28bc1cbd554",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/large/large-thumbnail.module.ts",
+          "hash": "fe1e383c7c93bb52a3b502b7b0e3b3fe87aeb4cb",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/flex-layout",
+            "npm:@angular/router",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/small/small-thumbnail.component.html",
+          "hash": "d0113c73f8444e3bc4b7d9ea516bc2dead7b219d"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/small/small-thumbnail.component.scss",
+          "hash": "d66dee8e030103204f801daae7985718979a7165"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/small/small-thumbnail.component.ts",
+          "hash": "58b3a9dc819935557dd82d39be967948d71cb1be",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/components/small/small-thumbnail.module.ts",
+          "hash": "9270258d386035e8ac56b1cf36eb705d919acb14",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/flex-layout",
+            "media"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/grid/thumbnail-grid.component.html",
+          "hash": "9004902ba921c165d89c07820080aa37734c6983"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/grid/thumbnail-grid.component.scss",
+          "hash": "fdbac1f744039d15d1dc810f27a7a5163387e689"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/grid/thumbnail-grid.component.ts",
+          "hash": "5f23da4559ee3143c607ba5f16c04368cc48dbbe",
+          "deps": [
+            "npm:@angular/core",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/grid/thumbnail-grid.module.ts",
+          "hash": "a173d28a2f9ca3eb03c1248d4f7e09ed5e889d5f",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/flex-layout",
+            "npm:swiper"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/list/thumbnail-list.component.html",
+          "hash": "a6f3747551e96a4b259bab1b14d0fea319740e5b"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/list/thumbnail-list.component.scss",
+          "hash": "f77ed5a80c0590fb0f7281174ebe69a8e5a7187b"
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/list/thumbnail-list.component.ts",
+          "hash": "12a68776d203ea3dccf61cdf101ac9bdd4d0b816",
+          "deps": [
+            "npm:@angular/core",
+            "utils",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/layout/list/thumbnail-list.module.ts",
+          "hash": "57583c30b53d87379a6a77149b7efab790bff200",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/flex-layout",
+            "npm:@ionic/angular",
+            "npm:swiper"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/thumbnail/pipes/rows.pipe.ts",
+          "hash": "bd8fed45c52dade7cb5ec7fe2b1687acff2977ec",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/test-setup.ts",
+          "hash": "1100b3e8a6ed08f4b5c27a96471846d57023c320",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/ui/tsconfig.json",
+          "hash": "1c995b83bf3715a370457c4296b1a11f40572cff"
+        },
+        {
+          "file": "libs/ui/tsconfig.lib.json",
+          "hash": "898e5e6227d4dfbec7f11b58509f9c19787223ec"
+        },
+        {
+          "file": "libs/ui/tsconfig.spec.json",
+          "hash": "c5db02778f96a2a200d787c0a7b376fe0d6c36f7"
+        }
+      ]
     }
   },
-  "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
-  }
+  "version": 1
 }

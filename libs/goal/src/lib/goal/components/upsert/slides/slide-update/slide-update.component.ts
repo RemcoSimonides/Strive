@@ -6,14 +6,14 @@ import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
 @Component({
-  selector: 'goal-slide-update',
+  selector: '[form][goalId] goal-slide-update',
   templateUrl: './slide-update.component.html',
   styleUrls: ['./slide-update.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SlideUpdateComponent {
-  @Input() form: GoalForm
-  @Input() goalId: string
+  @Input() form!: GoalForm
+  @Input() goalId!: string
 
   constructor(
     private alertCtrl: AlertController,
@@ -39,14 +39,14 @@ export class SlideUpdateComponent {
         this.form.publicity.setValue(publicity)
 
         const goal = createGoal({ ...this.form.value, id: this.goalId })
-        delete goal['isSecret'] // remove isSecret value from Form
+        delete (goal as any)['isSecret'] // remove isSecret value from Form
 
-        await this.goal.upsert(goal, { params: { uid: this.navParams.data?.uid }})
+        await this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
 
         this.location.back()
         loading.dismiss()
 
-      } catch (error) {
+      } catch (error: any) {
         loading.dismiss()
         this.alertCtrl.create({
           message: error.message,

@@ -7,7 +7,7 @@ import { IonDatetime, PopoverController } from "@ionic/angular";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeComponent {
-  @ViewChild('datePicker') datetime: IonDatetime
+  @ViewChild('datePicker') datetime?: IonDatetime
 
   _value?: string
   @Input() set value(value: string | Date) {
@@ -31,7 +31,7 @@ export class DatetimeComponent {
   constructor(private popoverCtrl: PopoverController) {}
   
   confirm() {
-    this.popoverCtrl.dismiss(this.datetime.value, 'dismiss')
+    this.popoverCtrl.dismiss(this.datetime?.value, 'dismiss')
   }
   
   remove() {

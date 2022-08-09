@@ -15,7 +15,7 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WelcomeModalComponent {
-  @ViewChild('swiper') swiper: SwiperComponent;
+  @ViewChild('swiper') swiper?: SwiperComponent;
 
   showStep2 = false;
 
@@ -34,10 +34,10 @@ export class WelcomeModalComponent {
   }
 
   next() {
-    if (this.swiper.swiperRef.isEnd) {
+    if (this.swiper?.swiperRef.isEnd) {
       this.dismiss()
     } else {
-      this.swiper.swiperRef.slideNext(100)
+      this.swiper?.swiperRef.slideNext(100)
     }
   }
 

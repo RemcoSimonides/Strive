@@ -13,9 +13,9 @@ import { MilestoneService } from '@strive/goal/milestone/milestone.service';
 })
 export class RoadmapComponent implements OnInit {
 
-  milestones$: Observable<Milestone[]>
+  milestones$?: Observable<Milestone[]>
 
-	@Input() id: string
+	@Input() id!: string
 
   constructor(
     private milestone: MilestoneService

@@ -29,6 +29,7 @@ export class FcmService {
         duration: 5000,
         position: 'bottom',
       }).then(toast => toast.present())
+      return ''
     }
 
   }
@@ -69,7 +70,8 @@ export class FcmService {
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotificationSchema) => {
-        this.makeToast(notification)
+        const message = notification?.title || notification?.body || ''
+        this.makeToast(message)
         console.log('Push received: ' + JSON.stringify(notification));
       }
     );
@@ -85,7 +87,8 @@ export class FcmService {
 
   showMessages(): Unsubscribe {
     return onMessage(this.messaging, msg => {
-      const { body } = msg.notification;
+      if (!msg.notification?.body) return
+      const { body } = msg.notification
       this.makeToast(body)
     })
   }
@@ -106,7 +109,7 @@ export class FcmService {
   //     .subscribe();
   // }
 
-  async makeToast(message) {
+  async makeToast(message: string) {
     const toast = await this.toastController.create({
       message,
       duration: 5000,

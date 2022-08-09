@@ -34,21 +34,21 @@ type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageSelectorComponent implements OnInit, OnDestroy {
-  private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop')
+  step = new BehaviorSubject<CropStep>('drop')
   private sub?: Subscription
 
   step$ = this.step.asObservable()
   accept = ['.jpg', '.jpeg', '.png', '.webp']
-  file: File
-  croppedImage: string
+  file?: File
+  croppedImage?: string
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
-  @Input() defaultImage: 'goal.jpeg' | 'profile.png'
+  @Input() defaultImage?: 'goal.jpeg' | 'profile.png'
 
-  @Input() form: FormControl
-  @Input() storagePath: string
+  @Input() form!: FormControl
+  @Input() storagePath!: string
 
-  @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
+  @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>;
 
   constructor(private afStorage: Storage) { }
 
@@ -66,8 +66,8 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
-    $event.preventDefault();
-    if ($event.dataTransfer.files.length) {
+    $event?.preventDefault();
+    if ($event?.dataTransfer?.files.length) {
       this.filesSelected($event.dataTransfer.files);
     } else {
       this.resetState();
@@ -103,6 +103,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   imageCropped(event: ImageCroppedEvent) {
+    if (!event.base64) return
     this.croppedImage = event.base64;
   }
 
@@ -119,20 +120,27 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
         this.filesSelected(file)
       }
     } catch (err) {
-      this.fileUploader.nativeElement.click()
+      this.fileUploader?.nativeElement.click()
     }
+  }
+
+  inputChange(event: any) {
+    const files = event.target.files
+    this.filesSelected(files)
   }
 
   filesSelected(file: FileList | File) {
     this.file = Array.isArray(file) ? file[0] : file;
 
-    if (this.file.type.split('/')[0] !== 'image') {
+    if (this.file?.type.split('/')[0] !== 'image') {
       console.error('unsupported file type')
       return
     }
 
     this.step.next('crop');
-    this.fileUploader.nativeElement.value = null;
+    if (this.fileUploader) {
+      this.fileUploader.nativeElement.value = '';
+    }
   }
 
   remove() {
@@ -153,7 +161,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
       }
 
       const blob = b64toBlob(this.croppedImage)
-      const path = `${this.storagePath}/${this.file.name}`
+      const path = `${this.storagePath}/${this.file?.name}`
       uploadBytes(ref(this.afStorage, path), blob)
       this.form.setValue(path)
       this.form.markAsDirty()
@@ -167,7 +175,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
 function dataUrlToFile(dataUrl: string, fileName: string) {
   const arr = dataUrl.split(',');
-  const mime = arr[0].match(/:(.*?);/)[1];
+  const mime = arr[0].match(/:(.*?);/)?.[1];
   const bstr = atob(arr[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);

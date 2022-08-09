@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray } from "@angular/forms";
 import { ModalController, PopoverController } from "@ionic/angular";
-import { Affirmations, AffirmationSuggestion, enumAffirmationCategory, affirmationSuggestions } from '@strive/model'
+import { AffirmationSuggestion, enumAffirmationCategory, affirmationSuggestions } from '@strive/model'
 import { AffirmationService } from "@strive/exercises/affirmation/affirmation.service";
 import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
 import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
@@ -30,7 +30,7 @@ export class AffirmationsComponent implements OnDestroy {
 
   form = new FormGroup({
     affirmations: new FormArray([]),
-    times: new FormArray(timeFormControls())
+    times: new UntypedFormArray(timeFormControls())
   })
 
   get affirmationsForm() { return this.form.get('affirmations') as FormArray }
@@ -87,8 +87,10 @@ export class AffirmationsComponent implements OnDestroy {
     // autosave
     const formSub = this.form.valueChanges.pipe(
       debounceTime(1000)
-    ).subscribe((value: Affirmations) => {
+    ).subscribe(value => {
       if (!this.user.uid) return
+      if (!value?.affirmations) return
+      if (!value?.times) return
       const { times } = value
       const affirmations = value.affirmations.filter(a => a !== '')
       this.service.saveAffirmations(this.user.uid, { affirmations, times })
@@ -114,7 +116,7 @@ export class AffirmationsComponent implements OnDestroy {
       componentProps: { presentation: 'time' }
     })
     popover.onDidDismiss().then(({ data, role }) => {
-      const control = this.timesForm.get(`${index}`)
+      const control = this.timesForm.get(`${index}`)!
       if (role === 'dismiss') {
         const value = data ? data : new Date().toISOString()
         control.setValue(value)
@@ -128,7 +130,7 @@ export class AffirmationsComponent implements OnDestroy {
   }
 
   removeSetTime(index: number) {
-    const control = this.timesForm.get(`${index}`)
+    const control = this.timesForm.get(`${index}`)!
     control.setValue('')
     const times = this.times.sort((a, b) => b === '' ? -1 : 1)
     this.timesForm.setValue(times)

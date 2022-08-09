@@ -18,7 +18,7 @@
       <tr *ngFor="let user of users" [routerLink]="['/a/users/', user.uid]">
         <td>{{ user.uid }}</td>
         <td>{{ user.username }}</td>
-        <td>{{ user.createdAt.toDate() | date:'fullDate' }}</td>
+        <td>{{ user.createdAt | date:'fullDate' }}</td>
       </tr>
     </table>
   </ng-container>

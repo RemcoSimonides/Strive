@@ -11,8 +11,8 @@ import { PopoverDirective } from "@strive/utils/directives/popover.directive";
 })
 export class DearFutureSelfExplanationComponent extends PopoverDirective {
   constructor(
-    protected location: Location,
-    protected popoverCtrl: PopoverController
+    protected override location: Location,
+    protected override popoverCtrl: PopoverController
   ) {
     super(location, popoverCtrl)
   }

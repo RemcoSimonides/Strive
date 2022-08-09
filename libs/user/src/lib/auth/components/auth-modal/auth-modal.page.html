@@ -15,7 +15,7 @@
 
       <section fxLayout="column" fxLayoutAlign="start center">
         <article>
-          <ion-button fill="outline" (click)="loginWithGoogle('google')">
+          <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
             Continue with Google
           </ion-button>
@@ -51,7 +51,7 @@
 
       <section fxLayout="column" fxLayoutAlign="start center">
         <article>
-          <ion-button fill="outline" (click)="loginWithGoogle('google')">
+          <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
             Continue with Google
           </ion-button>
@@ -65,7 +65,7 @@
           </ion-item>
 
           <ng-container *ngFor="let validation of validation_messages.username">
-            <ng-container *ngIf="signupForm.get('username').hasError(validation.type) && (signupForm.get('username').dirty || signupForm.get('username').touched)">
+            <ng-container *ngIf="signupForm.get('username')?.hasError(validation.type) && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
               <div class="error-message">
                 {{ validation.message }}
               </div>
@@ -78,7 +78,7 @@
           </ion-item>
 
           <ng-container *ngFor="let validation of validation_messages.email">
-            <ng-container *ngIf="signupForm.get('email').hasError(validation.type) && (signupForm.get('email').dirty || signupForm.get('email').touched)">
+            <ng-container *ngIf="signupForm.get('email')?.hasError(validation.type) && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
               <div class="error-message">
                 {{ validation.message }}
               </div>
@@ -93,7 +93,7 @@
           </ion-item>
 
           <ng-container *ngFor="let validation of validation_messages.password">
-            <ng-container *ngIf="signupForm.get('password').hasError(validation.type) && (signupForm.get('password').dirty || signupForm.get('password').touched)">
+            <ng-container *ngIf="signupForm.get('password')?.hasError(validation.type) && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
               <div class="error-message">
                 {{ validation.message }}
               </div>

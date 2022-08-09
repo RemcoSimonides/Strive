@@ -65,14 +65,14 @@ export class DearFutureSelfComponent {
 
   async send() {
     if (!this.user.uid) return
-    // To do show error message if date is not set. Selecting date can be quite difficult
-    if (!this.duration && !this.date.value) return
-    if (!this.description.dirty) return
+    if (!this.description.dirty || !this.description.value) return
 
     let deliveryDate: Date;
     if (this.mode === 'duration') {
+      if (!this.duration) return
       deliveryDate = addYears(new Date(), this.duration)
     } else {
+      if (!this.date.value) return
       deliveryDate = new Date(this.date.value)
     }
 

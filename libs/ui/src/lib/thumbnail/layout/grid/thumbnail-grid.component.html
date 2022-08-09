@@ -1,6 +1,6 @@
 <!-- Mobile -->
 <ng-container *ngIf="(screensize.isDesktop$ | async) === false else browser">
-  <swiper [spaceBetween]="16" width="250">
+  <swiper [spaceBetween]="16" [width]="250">
 
     <ng-container *ngFor="let row of thumbs | rows:2">
       <ng-template swiperSlide>

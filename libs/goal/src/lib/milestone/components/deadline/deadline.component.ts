@@ -10,8 +10,8 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MilestoneDeadlineComponent {
-  @Input() milestone: Milestone
-  @Input() maxDeadline: string
+  @Input() milestone!: Milestone
+  @Input() maxDeadline?: string
   @Input() isAdmin = false
 
   @Output() deadlineChange = new EventEmitter<string>()

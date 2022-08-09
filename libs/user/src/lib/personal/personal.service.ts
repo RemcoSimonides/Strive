@@ -11,9 +11,9 @@ import { Observable, of, switchMap, shareReplay } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class PersonalService extends FireCollection<Personal> {
   readonly path = 'Users/:uid/Personal'
-  readonly idKey = 'uid'
+  override readonly idKey = 'uid'
 
-  personal$: Observable<Personal> = user(this.auth).pipe(
+  personal$: Observable<Personal | undefined> = user(this.auth).pipe(
     switchMap(user => user ? this.valueChanges(user.uid, { uid: user.uid }) : of(undefined)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
@@ -22,7 +22,7 @@ export class PersonalService extends FireCollection<Personal> {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Personal>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Personal>) {
     return snapshot.exists()
       ? { ...snapshot.data(), uid: snapshot.id }
       : undefined

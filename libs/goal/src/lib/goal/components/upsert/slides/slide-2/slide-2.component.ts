@@ -5,14 +5,14 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'goal-slide-2',
+  selector: '[form][goalId] goal-slide-2',
   templateUrl: './slide-2.component.html',
   styleUrls: ['./slide-2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Slide2Component implements OnDestroy {
-  @Input() form: GoalForm
-  @Input() goalId: string
+  @Input() form!: GoalForm
+  @Input() goalId!: string
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
 
@@ -53,7 +53,8 @@ export class Slide2Component implements OnDestroy {
 
   private sub: Subscription = this.descriptionForm.valueChanges.subscribe(value => {
     let description = ''
-    for (const key in value) {
+    for (const k in value) {
+      const key = k as keyof typeof value
       if (value[key]) {
         description += `<h2>${this.fields[key].title}</h2><p>${value[key]}</p>`
       }
@@ -76,5 +77,5 @@ export class Slide2Component implements OnDestroy {
     this.stepper.emit(direction)
   }
 
-  keepOriginalOrder = (a, b) => a.key
+  keepOriginalOrder = (a: any, b: any) => a.key
 }

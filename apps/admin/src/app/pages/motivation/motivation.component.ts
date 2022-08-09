@@ -14,8 +14,8 @@ import { Motivation, Motivations } from './motivation.model';
 export class MotivationComponent {
 
   form = new FormGroup({
-    quote: new FormControl(undefined, Validators.required),
-    from: new FormControl(undefined, Validators.required)
+    quote: new FormControl('', { nonNullable: true, validators: [Validators.required]}),
+    from: new FormControl('', { nonNullable: true, validators: [Validators.required]})
   })
 
   private ref = doc(this.db, `miscellaneous/motivation`)
@@ -27,7 +27,7 @@ export class MotivationComponent {
     if (this.form.invalid) return
 
     const motivation: Motivation = {
-      ...this.form.value,
+      ...this.form.getRawValue(),
       used: false
     }
     this.form.reset()

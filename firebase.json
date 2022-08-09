@@ -8,8 +8,8 @@
   },
   "functions": {
     "predeploy": [
-      "npm run lint backend-functions",
-      "ng build backend-functions"
+      "npx nx run backend-functions:lint",
+      "npx nx run backend-functions:build"
     ],
     "source": "dist/apps/backend-functions"
   },
@@ -17,7 +17,7 @@
     {
       "target": "journal",
       "public": "dist/apps/journal/",
-      "ingore": [
+      "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
@@ -46,6 +46,9 @@
     }
   ],
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "functions": {
       "port": 5001
     },
@@ -57,6 +60,12 @@
     },
     "pubsub": {
       "port": 8085
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
     }
   }
 }

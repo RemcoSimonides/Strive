@@ -15,13 +15,13 @@ export class MilestoneService extends FireCollection<Milestone> {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Milestone>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Milestone>) {
     return snapshot.exists()
       ? createMilestone(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
       : undefined
   }
 
-  protected toFirestore(milestone: Milestone): Milestone {
+  protected override toFirestore(milestone: Milestone): Milestone {
     if (milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
     milestone.updatedBy = this.user.uid
     return milestone

@@ -30,6 +30,7 @@ export class ExploreComponent implements OnDestroy {
     debounceTime(500),
     startWith(this.searchForm.value)
   ).subscribe(({ query, type }) => {
+    if (query === undefined || query === null) return
     this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
     
     switch (type) {
@@ -67,6 +68,6 @@ export class ExploreComponent implements OnDestroy {
   }
 
   setType(type: string) {
-    this.searchForm.get('type').setValue(type)
+    this.searchForm.get('type')!.setValue(type)
   }
 }

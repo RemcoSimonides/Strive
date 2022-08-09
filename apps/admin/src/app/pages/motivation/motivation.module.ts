@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { MotivationComponent } from './motivation.component';
 
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+
 const routes: Routes = [
   {
     path: '',
@@ -22,6 +24,7 @@ const routes: Routes = [
     IonicModule,
     FlexLayoutModule,
     RouterModule.forChild(routes),
+    PageLoadingModule
   ],
   declarations: [MotivationComponent],
   exports: [MotivationComponent]

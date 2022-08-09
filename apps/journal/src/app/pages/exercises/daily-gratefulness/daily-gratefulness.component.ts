@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ModalController } from "@ionic/angular";
-import { DailyGratefulness } from '@strive/model'
 import { DailyGratefulnessService } from "@strive/exercises/daily-gratefulness/daily-gratefulness.service";
 import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
 import { UserService } from "@strive/user/user/user.service";
@@ -9,6 +8,11 @@ import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { debounceTime, of, switchMap, tap } from "rxjs";
 import { addDays, isPast, set } from 'date-fns'
 import { SeoService } from "@strive/utils/services/seo.service";
+
+interface DailyGratefulnessSetting {
+  on: boolean
+  time: string
+}
 
 @Component({
   selector: 'strive-daily-gratefulness',
@@ -20,12 +24,12 @@ export class DailyGratefulnessComponent implements OnDestroy {
   isLoading = true
 
   form = new FormGroup({
-    on: new FormControl(false),
-    time: new FormControl('21:00')
+    on: new FormControl(false, { nonNullable: true }),
+    time: new FormControl('21:00', { nonNullable: true })
   })
 
-  get dailyGratefulness(): DailyGratefulness {
-    return this.form.value
+  get dailyGratefulness(): DailyGratefulnessSetting {
+    return this.form.value as DailyGratefulnessSetting
   }
 
   private sub = this.user.user$.pipe(
@@ -48,8 +52,10 @@ export class DailyGratefulnessComponent implements OnDestroy {
 
   private formSub = this.form.valueChanges.pipe(
     debounceTime(1000)
-  ).subscribe((setting: { on: boolean, time: string }) => {
+  ).subscribe(setting => {
     if (!this.user?.uid) return
+    if (!setting?.time) return
+    if (!setting?.on) return
 
     const [ hours, minutes ] = setting.time.split(':').map(time => +time)
     const time = set(new Date(), { hours, minutes })

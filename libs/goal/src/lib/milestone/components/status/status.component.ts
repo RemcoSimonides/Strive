@@ -43,9 +43,9 @@ export class MilestoneStatusComponent {
   }
 
   @Input() milestone: Milestone = createMilestone()
-  @Input() goal: Goal
-  @Input() isAdmin: boolean
-  @Input() isAchiever: boolean
+  @Input() goal?: Goal
+  @Input() isAdmin?: boolean
+  @Input() isAchiever?: boolean
 
   constructor(
     private alertCtrl: AlertController,
@@ -72,7 +72,7 @@ export class MilestoneStatusComponent {
               id: this.milestone.id,
               status: 'succeeded',
               finishedAt: serverTimestamp() as any
-            }, { params: { goalId: this.goal.id }})
+            }, { params: { goalId: this.goal!.id }})
             this.milestone.status = 'succeeded'
             this.cdr.markForCheck()
             this.startPostCreation(this.milestone)
@@ -86,7 +86,7 @@ export class MilestoneStatusComponent {
               id: this.milestone.id,
               status: 'failed',
               finishedAt: serverTimestamp() as any
-            }, { params: { goalId: this.goal.id }})
+            }, { params: { goalId: this.goal!.id }})
             this.milestone.status = 'failed'
             this.cdr.markForCheck()
             this.startPostCreation(this.milestone)
@@ -102,6 +102,7 @@ export class MilestoneStatusComponent {
   }
 
   private startPostCreation(milestone: Milestone) {
+    if (!this.goal?.id) return
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {

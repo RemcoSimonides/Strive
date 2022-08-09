@@ -7,7 +7,6 @@ import { MilestoneService } from '@strive/goal/milestone/milestone.service';
 import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form';
 
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
-import { boolean } from '@strive/utils/decorators/decorators';
 import { DetailsComponent } from '../details/details.component';
 
 @Component({
@@ -18,12 +17,12 @@ import { DetailsComponent } from '../details/details.component';
 })
 export class RoadmapComponent {
 
-  @Input() goal: Goal
-  @Input() milestones: Milestone[]
-  @Input() isAdmin: boolean
-  @Input() isAchiever: boolean
+  @Input() goal!: Goal
+  @Input() milestones!: Milestone[]
+  @Input() isAdmin!: boolean
+  @Input() isAchiever?: boolean
 
-  @Input() @boolean createMode = false
+  @Input() createMode = false
 
   @Output() changeStatus = new EventEmitter<Milestone>()
 
@@ -57,8 +56,8 @@ export class RoadmapComponent {
 
   add() {
     if (this.milestoneForm.value) {
-      this.milestoneForm.get('order').setValue(this.milestones.length)
-      const milestone = createMilestone(this.milestoneForm.value)
+      this.milestoneForm.order.setValue(this.milestones.length)
+      const milestone = createMilestone(this.milestoneForm.getRawValue())
       this.milestone.add(milestone, { params: { goalId: this.goal.id }})
       this.milestoneForm.reset(createMilestone())
     }

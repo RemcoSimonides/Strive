@@ -26,8 +26,8 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
   })
 
   constructor(
-    protected location: Location,
-    protected modalCtrl: ModalController
+    protected override location: Location,
+    protected override modalCtrl: ModalController
   ) {
     super(location, modalCtrl)
   }

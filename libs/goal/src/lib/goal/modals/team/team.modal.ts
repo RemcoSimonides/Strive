@@ -18,29 +18,29 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamModalComponent extends ModalDirective implements OnInit {
-  goalId: string
+  goalId?: string
 
-  stakeholders$: Observable<GoalStakeholder[]>
-  isAdmin$: Observable<boolean>
-  isAchiever$: Observable<boolean>
-  hasOpenRequestToJoin$: Observable<boolean>
+  stakeholders$?: Observable<GoalStakeholder[]>
+  isAdmin$?: Observable<boolean>
+  isAchiever$?: Observable<boolean>
+  hasOpenRequestToJoin$?: Observable<boolean>
 
-  filter = new FormControl()
+  filter = new FormControl<keyof GoalStakeholder | null>(null)
   
   constructor(
     private alertCtrl: AlertController,
-    protected modalCtrl: ModalController,
+    protected override modalCtrl: ModalController,
     private navParams: NavParams,
     private router: Router,
     private stakeholder: GoalStakeholderService,
     private user: UserService,
-    protected location: Location
+    protected override location: Location
   ) {
     super(location, modalCtrl)
   }
 
   ngOnInit() {
-    this.goalId = this.navParams.data.goalId as string
+    this.goalId = this.navParams.data['goalId']
     if (!this.goalId) return
 
     this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.goalId })
@@ -55,7 +55,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
     ))
 
     const stakeholder$ = this.user.user$.pipe(
-      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of()),
+      switchMap(user => user && this.goalId ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of()),
       map(stakeholder =>  createGoalStakeholder(stakeholder))
     )
     this.isAdmin$ = stakeholder$.pipe(map(stakeholder => stakeholder.isAdmin))
@@ -78,6 +78,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
         {
           text: 'Yes',
           handler: () => {
+            if (!this.goalId) return
             this.stakeholder.upsert({
               uid: stakeholder.uid,
               isAdmin: !stakeholder.isAdmin
@@ -94,6 +95,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
 
   toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
     event.stopPropagation()
+    if (!this.goalId) return
     return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isAchiever: !stakeholder.isAchiever
@@ -102,6 +104,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
 
   toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
     event.stopPropagation()
+    if (!this.goalId) return
     return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isSupporter: !stakeholder.isSupporter

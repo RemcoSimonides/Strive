@@ -1,30 +1,23 @@
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-// Ionic
-import { Platform, PopoverController, ModalController, NavController } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-// Services
-import { UserService } from '@strive/user/user/user.service';
-import { FcmService } from '@strive/utils/services/fcm.service';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-// Pages
-import { TabsComponent } from './pages/tabs/tabs'
-import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
+import { Platform, ModalController, PopoverController } from '@ionic/angular';
+
+import { TabsComponent } from './pages/tabs/tabs.component';
+
+import { UserService } from '@strive/user/user/user.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { SupportService } from '@strive/support/support.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { AlgoliaService  } from '@strive/utils/services/algolia.service';
-import { firstValueFrom } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { filter, first, firstValueFrom } from 'rxjs';
 import { NotificationService } from '@strive/notification/notification.service';
-import { Unsubscribe } from '@firebase/util';
-import { SupportService } from '@strive/support/support.service';
+import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
 
 @Component({
-  selector: 'journal-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  selector: 'strive-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent {
   rootPage: typeof TabsComponent = TabsComponent;
 
   enumAuthSegment = enumAuthSegment
@@ -32,60 +25,36 @@ export class AppComponent implements OnDestroy {
   unreadNotifications$ = this.notification.hasUnreadNotification$
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
 
-  // private screenSizeSubscription: Subscription
-  private fcmUnsubscribe: Unsubscribe
-
   constructor(
-    public screensize: ScreensizeService,
-    public user: UserService,
-    private fcm: FcmService,
-    private algolia: AlgoliaService,
-    // private menuCtrl: MenuController,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
+    private notification: NotificationService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private notification: NotificationService,
-    private support: SupportService
+    public screensize: ScreensizeService,
+    private support: SupportService,
+    public user: UserService
   ) {
-    this.initializeApp();
-  }
-
-  ngOnDestroy() {
-    // this.screenSizeSubscription.unsubscribe()
-    this.fcmUnsubscribe()
-  }
-
-  initializeApp() {
     this.platform.ready().then(() => {
-      this.initializeMenu();
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
       this.screensize.onResize(this.platform.width());
+      // this.initializeMenu();
+      // this.statusBar.styleDefault();
+      // this.splashScreen.hide();
 
-      if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
-        this.fcm.addListenersCapacitor()
-      }
+      // if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
+      //   this.fcm.addListenersCapacitor()
+      // }
 
-      if (this.platform.is('mobileweb')) {
-        this.fcmUnsubscribe = this.fcm.showMessages()
-      }
+      // if (this.platform.is('mobileweb')) {
+      //   this.fcmUnsubscribe = this.fcm.showMessages()
+      // }
 
       this.openAuthModalOnStartup()
     })
   }
 
-  initializeMenu() {
-    // this.screenSizeSubscription = this.screensize.isTablet$.subscribe(isTablet => {
-    //   this.menuCtrl.enable(isTablet)
-    // })
-  }
-
   async openAuthModalOnStartup() {
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(async (event: NavigationEnd) => {
+    this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       const isLoggedIn = await firstValueFrom(this.user.isLoggedIn$)
       if (isLoggedIn) return
 
@@ -103,33 +72,7 @@ export class AppComponent implements OnDestroy {
     })
   }
 
-  async search(event): Promise<void> {
-    const query = event.target.value
-
-    // only search when page is explore page
-    if (this.router.url === '/explore') {
-      if (query !== undefined) {
-        this.algolia.search(query)
-      }
-    }
-
-  }
-
-  goToSearchResults(event) {
-    const query = event.target.value
-
-    // check if current website is explore page already
-    if (this.router.url !== '/explore') {
-
-      this.navCtrl.navigateRoot('/explore')
-      if (query !== undefined) {
-        this.algolia.search(query)
-      }
-    }
-
-  }
-
-  async openUserPopover(ev: UIEvent): Promise<void> {
+  openUserPopover(ev: UIEvent) {
     this.popoverCtrl.create({
       component: ProfileOptionsBrowserComponent,
       event: ev,
@@ -147,7 +90,7 @@ export class AppComponent implements OnDestroy {
   }
 
   @HostListener('window:resize', ['$event'])
-  private onResize(event) {
+  private onResize(event: any) {
     this.screensize.onResize(event.target.innerWidth);
   }
 }

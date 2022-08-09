@@ -70,13 +70,3 @@ export function createSubtask(params: Partial<Subtask> = {}): Subtask {
     ...params
   }
 }
-
-export function createMilestoneTemplate(params: Partial<MilestoneTemplate> = {}): MilestoneTemplate {
-  return {
-    id: params.id ? params.id : '',
-    deadline: '',
-    description: '',
-    sequenceNumber: '1',
-    ...params
-  }
-}

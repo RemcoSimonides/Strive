@@ -15,7 +15,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
 
 @Component({
-  selector: 'post-upsert-modal',
+  selector: '[goalId] post-upsert-modal',
   templateUrl: './upsert-modal.component.html',
   styleUrls: ['./upsert-modal.component.scss'],
 })
@@ -23,12 +23,12 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
   postForm = new PostForm()
   scrapingUrl = false
   
-  @Input() postId: string
-  @Input() goalId: string
-  @Input() milestoneId: string
+  @Input() postId?: string
+  @Input() goalId!: string
+  @Input() milestoneId?: string
 
   private sub = this.postForm.url.valueChanges.pipe(
-    filter(url => isValidHttpUrl(url))
+    filter(url => url ? isValidHttpUrl(url) : false)
   ).subscribe(async url => {
     this.scrapingUrl = true;
     const scrape = httpsCallable(this.functions, 'scrapeMetatags')
@@ -47,8 +47,8 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
 
   constructor(
     private functions: Functions,
-    protected location: Location,
-    protected modalCtrl: ModalController,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private postService: PostService,
     private user: UserService,
@@ -61,7 +61,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
     if (!this.postId) this.postId = this.postService.createId()
     if (!this.goalId) throw new Error('No goal to post the post at')
 
-    this.postForm.get('isEvidence').setValue(isEvidence)
+    this.postForm.isEvidence.setValue(isEvidence)
   }
 
   ngOnDestroy() {
@@ -72,11 +72,17 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
     if (!this.user.uid) return
 
     if (!this.postForm.isEmpty) {
+      const { date, description, isEvidence, mediaURL, title, url } = this.postForm.value
       const post = createPost({
         id: this.postId,
         goalId: this.goalId,
         uid: this.user.uid,
-        ...this.postForm.value
+        date: date!,
+        description: description!,
+        isEvidence: isEvidence!,
+        mediaURL: mediaURL!,
+        title: title!,
+        url: url!
       })
       if (this.milestoneId) post.milestoneId = this.milestoneId
       await this.postService.add(post, { params: { goalId: this.goalId }});
@@ -94,7 +100,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
     })
     popover.onDidDismiss().then(({ data, role }) => {
       if (role === 'remove') {
-        this.postForm.date.setValue('')
+        this.postForm.date.setValue(new Date())
       } else if (role === 'dismiss') {
         const date = new Date(data)
         this.postForm.date.setValue(date)

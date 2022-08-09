@@ -18,16 +18,16 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness {
+  protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness | undefined {
     if (!snapshot.exists()) return
     return toDate<DailyGratefulness>({ ...snapshot.data(), id: snapshot.id })
   }
 
-  getSettings$(uid: string): Observable<DailyGratefulness> {
+  getSettings$(uid: string): Observable<DailyGratefulness | undefined> {
     return this.valueChanges('DailyGratefulness', { uid })
   }
 
-  getDailyGratefulnessSettings(uid: string): Promise<DailyGratefulness> {
+  getDailyGratefulnessSettings(uid: string): Promise<DailyGratefulness | undefined> {
     return this.getValue('DailyGratefulness', { uid })
   }
 

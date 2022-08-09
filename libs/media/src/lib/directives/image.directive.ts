@@ -11,7 +11,7 @@ function getAssetPath(asset: string) {
   selector: 'img[ref][asset], img[asset]'
 })
 export class ImageDirective implements OnInit, OnDestroy {
-  private sub: Subscription;
+  private sub?: Subscription;
 
   private parameters = new BehaviorSubject<ImageParameters>({
     auto: 'compress,format',
@@ -19,11 +19,11 @@ export class ImageDirective implements OnInit, OnDestroy {
   });
 
   private asset$ = new BehaviorSubject('');
-  private ref$ = new BehaviorSubject<string>(undefined);
+  private ref$ = new BehaviorSubject<string | undefined>(undefined);
 
-  @HostBinding('srcset') srcset: string;
-  @HostBinding('src') src: string;
-  @HostBinding('alt') alt: string;
+  @HostBinding('srcset') srcset?: string;
+  @HostBinding('src') src?: string;
+  @HostBinding('alt') alt?: string;
   @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
 
   // -----------------------------------
@@ -31,7 +31,7 @@ export class ImageDirective implements OnInit, OnDestroy {
   // -----------------------------------
 
   /** the image to display */
-  @Input() set ref(file: string) {
+  @Input() set ref(file: string | undefined) {
     this.ref$.next(file);
   }
 
@@ -99,6 +99,6 @@ export class ImageDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 }

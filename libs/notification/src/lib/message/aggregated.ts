@@ -67,6 +67,15 @@ export function getAggregatedMessage({ event, count }: { event: enumEvent, count
       }
     }
     default:
-      return undefined
+      return {
+        message: '',
+        icon: 'alert-outline',
+        importance: 999
+      }
+  }
+  return {
+    message: '',
+    icon: 'alert-outline',
+    importance: 999
   }
 }

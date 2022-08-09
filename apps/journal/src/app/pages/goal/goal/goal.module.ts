@@ -14,6 +14,7 @@ import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upser
 import { TeamModalModule } from '@strive/goal/goal/modals/team/team.module';
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { AddSupportModalModule } from '@strive/support/components/add/add.module';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { ImageModule } from '@strive/media/directives/image.module';
     GoalSharePopoverModule,
     UpsertGoalModalModule,
     TeamModalModule,
+    AddSupportModalModule,
     TextEditorModule,
     ImageModule
   ],

@@ -1,5 +1,3 @@
-// src/index.ts
-
 // pubsub
 export { scheduledTasksRunner } from './pubsub/scheduled-task-runner';
 export { scheduledEmailRunner } from './pubsub/email/email';

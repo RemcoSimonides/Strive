@@ -13,7 +13,7 @@ import { NotificationService } from '@strive/notification/notification.service'
 })
 export class HeaderRootComponent {
 
-  @Input() title: string
+  @Input() title!: string
 
   enumAuthSegment = enumAuthSegment
   unreadNotifications$ = this.notification.hasUnreadNotification$

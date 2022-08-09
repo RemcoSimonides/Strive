@@ -1,32 +1,32 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ModalController, NavParams, PopoverController } from '@ionic/angular';
+import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { Goal, GoalStatus, GoalStakeholder } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { UserService } from '@strive/user/user/user.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
 @Component({
-  selector: 'journal-goal-options',
+  selector: '[goal][stakeholder] journal-goal-options',
   templateUrl: './goal-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalOptionsComponent {
 
-  goal: Goal = this.navParams.data.goal;
-  stakeholder: GoalStakeholder = this.navParams.data.stakeholder;
+  @Input() goal!: Goal
+  @Input() stakeholder!: GoalStakeholder
 
   constructor(
     private alertCtrl: AlertController,
     private goalStakeholderService: GoalStakeholderService,
     private modalCtrl: ModalController,
-    private navParams: NavParams,
     private popoverCtrl: PopoverController,
     private router: Router,
     private user: UserService
   ) {}
 
   setStatus(status: GoalStatus) {
+    if (!this.user.uid || !this.goal?.id) throw new Error('uid or goal not provided')
     if (status === 'finished') {
       this.alertCtrl.create({
         header: `Are you sure its finished?`,
@@ -34,6 +34,7 @@ export class GoalOptionsComponent {
           {
             text: 'Yes',
             handler: async () => {
+              if (!this.user.uid || !this.goal?.id) throw new Error('uid or goal not provided')
               await this.goalStakeholderService.update({ uid: this.user.uid, status: 'finished' }, { params: { goalId: this.goal.id }})
               this.modalCtrl.create({
                 component: UpsertPostModalComponent,
@@ -51,13 +52,13 @@ export class GoalOptionsComponent {
         ]
       }).then(alert => alert.present())
     } else {
-      this.goalStakeholderService.update({ uid: this.user.uid, status }, { params: { goalId: this.goal.id }})
+      this.goalStakeholderService.update({ uid: this.user.uid, status }, { params: { goalId: this.goal?.id }})
     }
     this.popoverCtrl.dismiss()
   }
 
   goTo() {
-    this.router.navigate(['/goal/', this.goal.id])
+    this.router.navigate(['/goal/', this.goal?.id])
     this.popoverCtrl.dismiss()
   }
 }

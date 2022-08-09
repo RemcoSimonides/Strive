@@ -11,10 +11,10 @@ import { Observable } from 'rxjs';
 })
 export class PostComponent implements OnInit {
 
-  @Input() storyItem: StoryItem
-  author: UserLink
+  @Input() storyItem!: StoryItem
+  author?: UserLink
 
-  post$: Observable<Post>
+  post$?: Observable<Post | undefined>
   
   constructor(private post: PostService) {}
 

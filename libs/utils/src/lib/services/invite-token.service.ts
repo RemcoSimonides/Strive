@@ -29,9 +29,10 @@ export class InviteTokenService {
     const ref = `Goals/${id}/InviteTokens/${invite_token}`
 
     const snap = await getDoc(doc(this.db, ref)) as DocumentSnapshot<InviteToken>
-    const { token } = snap.data()
+    const data = snap.data()
+    if (!data) return false
 
-    if (token) {
+    if (data.token) {
       const uid = this.user.uid
       if (uid) {
         await this.goalStakeholderService.upsert({ uid, isSpectator: true }, { params: { goalId: id }})
@@ -52,7 +53,7 @@ export class InviteTokenService {
       if (isAdmin) {
         const token = await this.createInviteLink(goalId)
         return `${url}?invite_token=${token}`
-      } else return undefined
+      } else return ''
     } else {
       return url
     }

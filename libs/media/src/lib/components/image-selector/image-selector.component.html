@@ -1,10 +1,9 @@
-<input #fileUploader multiple hidden [accept]="accept" type="file" (change)="filesSelected($event.target.files)" />
+<input #fileUploader multiple hidden [accept]="accept" type="file" (change)="inputChange($event)" />
 <section [ngSwitch]="step$ | async">
 
   <!-- Drop -->
   <article *ngSwitchCase="'drop'" class="drop-zone">
     <ng-content select="[title]"></ng-content>
-    <p>{{ cropDimensions }}</p>
     <p>Drag 'n drop an Image</p>
     <p>or <a (click)="selectImage()">choose a file</a></p>
     <div fxLayout="column" fxLayoutAlign="start center" *ngIf="defaultImage">
@@ -21,8 +20,7 @@
 
   <!-- Crop -->
   <article *ngSwitchCase="'crop'">
-    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false"
-      [resizeToWidth]="setWidth || parentWidth" (imageCropped)="imageCropped($event)"></image-cropper>
+    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)"></image-cropper>
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
       <ion-fab-button color="primary" (click)="cropIt()">
         <ion-icon name="checkmark-outline"></ion-icon>

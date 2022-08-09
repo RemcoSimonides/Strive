@@ -8,9 +8,10 @@ import { UserService } from "@strive/user/user/user.service";
 import { ModalDirective } from "@strive/utils/directives/modal.directive";
 import { Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
+import { FormArray } from "@angular/forms";
 
 @Component({
-  selector: 'goal-milestone-details',
+  selector: '[goal][milestone][isAdmin][isAchiever] goal-milestone-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,21 +19,21 @@ import { debounceTime, filter } from "rxjs/operators";
 export class DetailsComponent extends ModalDirective implements OnInit, OnDestroy {
   private subs: Subscription[] = []
 
-  form: MilestoneForm
+  form?: MilestoneForm
   subtaskForm = new SubtaskForm()
 
-  @Input() goal: Goal
-  @Input() milestone: Milestone
-  @Input() isAdmin: boolean
-  @Input() isAchiever: boolean
+  @Input() goal!: Goal
+  @Input() milestone!: Milestone
+  @Input() isAdmin!: boolean
+  @Input() isAchiever!: boolean
 
-  get canEdit(): boolean { return this.goal?.id && this.isAdmin }
+  get canEdit(): boolean { return !!this.goal?.id && this.isAdmin }
 
   constructor(
     private alertCtrl: AlertController,
-    protected location: Location,
+    protected override location: Location,
     private milestoneService: MilestoneService,
-    protected modalCtrl: ModalController,
+    protected override modalCtrl: ModalController,
     private user: UserService
   ) {
     super (location, modalCtrl)
@@ -44,8 +45,9 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
         debounceTime(1000),
-        filter(_ => this.form.content.valid)
+        filter(_ => this.form!.content.valid)
       ).subscribe(content => {
+        if (!content) return
         if (this.canEdit) {
           this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         }
@@ -53,7 +55,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       const subtaskSub = this.form.subtasks.valueChanges.pipe(
         debounceTime(1000)
       ).subscribe(subtasks => {
-        if (this.form.subtasks.valid) {
+        if (this.form!.subtasks.valid) {
           this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         }
       })
@@ -93,6 +95,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     })
     alert.onDidDismiss().then((res) => {
       if (res.role == 'delete') {
+        if (!this.milestone?.id) return
         this.milestoneService.remove(this.milestone.id, { params: { goalId: this.goal.id }})
         this.modalCtrl.dismiss()
       }
@@ -112,14 +115,17 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   addSubtask() {
     if (!this.isAdmin || !this.isAchiever) return
     if (this.subtaskForm.valid) {
-      const control = new SubtaskForm(this.subtaskForm.value)
-      this.form.subtasks.push(control)
+      const task = createSubtask(this.subtaskForm.value)
+      const control = new SubtaskForm(task)
+      const subtasksForm = this.form?.subtasks as FormArray
+      subtasksForm.push(control)
       this.subtaskForm.reset(createSubtask())
     }
   }
 
   toggleSubtask(index: number) {
-    const control = this.form.subtasks.at(index).get('completed')
-    control.setValue(!control.value)
+    const subtasksForm = this.form?.subtasks as FormArray
+    const control = subtasksForm.at(index).get('completed')
+    control?.setValue(control.value)
   }
 }

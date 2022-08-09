@@ -109,10 +109,10 @@ function isNotNull<D>(doc: D | null): doc is D {
   return doc !== null;
 }
 function isQueryConstraint(object: QueryConstraint | unknown): object is QueryConstraint {
-  return !!object['type'];
+  return !!(object as QueryConstraint).type;
 }
 function isQueryConstraintArray(array: Array<QueryConstraint | unknown>): array is QueryConstraint[] {
-  return array.length && isQueryConstraint(array[0])
+  return !!array.length && isQueryConstraint(array[0])
 }
 
 
@@ -208,13 +208,15 @@ export abstract class FireCollection<E extends DocumentData> {
       assertPath(path);
       return query(this.typedCollection<E>(this.db, path), ...constraints);
     } else {
-      return query(this.typedCollection<E>(this.db, this.path), ...queryConstraints);
+      const constraints = queryConstraints ? queryConstraints : [];
+      return query(this.typedCollection<E>(this.db, this.path), ...constraints);
     }
   }
 
   /** The angular fire collection group (based on the last collectionId in the path) */
   getCollectionGroup<E>(queryConstraints: QueryConstraint[] = []): Query<E> {
     const collectionId = this.path.split('/').pop();
+    if (!collectionId) throw new Error(`collection id is missing in path: ${this.path}`)
     return query(this.typedCollectionGroup<E>(this.db, collectionId), ...queryConstraints);
   }
 
@@ -244,7 +246,7 @@ export abstract class FireCollection<E extends DocumentData> {
       return collection(this.db, subpath);
     } else {
       assertPath(path);
-      return collection(this.db, path, idOrParams);
+      return collection(this.db, path);
     }
   }
 
@@ -268,7 +270,7 @@ export abstract class FireCollection<E extends DocumentData> {
       const snapshot = await getDoc(this.typedDocument<E>(this.db, getDocPath(path, idOrQuery)));
       return this.fromFirestore(snapshot);
     }
-    let docs: QueryDocumentSnapshot<E>[];
+    let docs: QueryDocumentSnapshot<E>[] | DocumentSnapshot<E> [];
     if (Array.isArray(idOrQuery)) {
       if (isQueryConstraintArray(idOrQuery)) {
         assertPath(path);
@@ -285,7 +287,7 @@ export abstract class FireCollection<E extends DocumentData> {
       docs = snapshot.docs;
     } else {
       assertPath(path);
-      const snapshot = await getDocs(collection(this.db, path, idOrQuery));
+      const snapshot = await getDocs(collection(this.db, path));
       docs = snapshot.docs as QueryDocumentSnapshot<E>[];
     }
     return docs
@@ -496,7 +498,7 @@ export abstract class FireCollection<E extends DocumentData> {
 
     let ids: string[] = [];
     let stateFunction: UpdateCallback<E> | undefined;
-    let getData: (docId: string) => Partial<E>;
+    let getData: (docId: string) => Partial<E> | undefined;
 
     const isEntity = (value: DocumentData | string): value is Partial<E> => {
       return typeof value === 'object' && value[this.idKey];
@@ -555,6 +557,9 @@ export abstract class FireCollection<E extends DocumentData> {
         const docData = Object.freeze(getData(docId));
         if (!docId) {
           throw new Error(`Document should have an unique id to be updated, but none was found in ${docData}`);
+        }
+        if (!docData) {
+          throw new Error(`No data was provided to update the document`)
         }
         const ref = this.typedDocument<E>(this.db, getDocPath(path, docId));
         (write as WriteBatch).update(ref, await this.toFirestore({ ...docData, updatedAt: this.timestamp }))

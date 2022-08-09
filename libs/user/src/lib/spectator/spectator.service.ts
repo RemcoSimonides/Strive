@@ -12,26 +12,30 @@ import { FireCollection, WriteOptions } from '@strive/utils/services/collection.
 })
 export class UserSpectateService extends FireCollection<Spectator> {
   readonly path = `Users/:uid/Spectators`
-  readonly idKey = 'uid'
+  override readonly idKey = 'uid'
 
   constructor(db: Firestore, private user: UserService) {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Spectator>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Spectator>) {
     return snapshot.exists()
       ? createSpectator({ ...snapshot.data(), uid: snapshot.id })
       : undefined
   }
 
-  async onCreate(spectator: Spectator, { write, params }: WriteOptions) {
+  override async onCreate(spectator: Spectator, { write, params }: WriteOptions) {
     const uid = spectator.uid
+    if (!params?.['uid']) throw new Error('uid not provided')
     const [current, toBeSpectated] = await Promise.all([
       this.user.getValue(uid),
-      this.user.getValue(params.uid)
+      this.user.getValue(params['uid'])
     ])
 
-    const ref = this.getRef(uid, { uid: params.uid });
+    if (!current) throw new Error(`Couldn't find current user data`)
+    if (!toBeSpectated) throw new Error(`Couldn't find data of user to be spectated`)
+
+    const ref = this.getRef(uid, { uid: params['uid'] });
     const data = createSpectator({
       uid,
       username: current.username,
@@ -45,6 +49,7 @@ export class UserSpectateService extends FireCollection<Spectator> {
   }
 
   getCurrentSpectator(uidToBeSpectated: string) {
+    if (!this.user.uid) throw new Error('')
     return this.getSpectator(this.user.uid, uidToBeSpectated)
   }
 

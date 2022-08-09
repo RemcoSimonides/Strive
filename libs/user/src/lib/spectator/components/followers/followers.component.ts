@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular'
 import { UserSpectateService } from '../../spectator.service';
 import { UserService } from '@strive/user/user/user.service';
-import { map, switchMap } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
@@ -17,14 +17,14 @@ export class FollowersComponent extends ModalDirective {
   spectators$ = this.user.user$.pipe(
     map(user => {
       const uid = this.router.url.split('/').pop()
-      return uid === 'profile' ? user.uid : uid
+      return uid === 'profile' ? user?.uid : uid
     }),
-    switchMap(uid => this.service.getSpectators(uid))
+    switchMap(uid => uid ? this.service.getSpectators(uid) : of([]))
   )
 
   constructor(
-    protected location: Location,
-    protected modalCtrl: ModalController,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
     private service: UserSpectateService,
     private router: Router,
     private user: UserService

@@ -11,7 +11,7 @@ import { ScreensizeService } from "@strive/utils/services/screensize.service";
 export class ThumbnailGridComponent {
   @Input() width = 160
 
-  @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
+  @ContentChildren('thumb') thumbs?: QueryList<TemplateRef<any>>
 
   constructor(public screensize: ScreensizeService) {}
 }

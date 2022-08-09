@@ -12,11 +12,11 @@ import { toDate } from '@strive/utils/helpers';
 export class PostService extends FireCollection<Post> {
   readonly path = 'Goals/:goalId/Posts'
 
-  constructor(public db: Firestore) {
+  constructor(public override db: Firestore) {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Post>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Post>) {
     return snapshot.exists()
       ? createPost(toDate({ ...snapshot.data(), id: snapshot.id }))
       : undefined

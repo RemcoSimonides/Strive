@@ -3,6 +3,7 @@ import { Router, CanActivate } from '@angular/router';
 import { Auth, user } from '@angular/fire/auth';
 import { UserService } from '@strive/user/user/user.service';
 import { map, switchMap } from 'rxjs/operators'
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class StriveAdminGuard implements CanActivate {
@@ -15,6 +16,7 @@ export class StriveAdminGuard implements CanActivate {
   canActivate() {
     return user(this.auth).pipe(
       switchMap(user => {
+        if (!user) return of(false)
         return this.user.isStriveAdmin(user.uid)
       }),
       map(isAdmin =>  isAdmin ? true : this.router.parseUrl('/'))

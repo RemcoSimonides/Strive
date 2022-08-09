@@ -5,8 +5,8 @@ export interface Comment {
     text: string;
     type: 'sentByUser' | 'notification';
     user: UserLink;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export function createComment(params: Partial<Comment> = {}): Comment {
@@ -14,6 +14,8 @@ export function createComment(params: Partial<Comment> = {}): Comment {
     text: '',
     type: 'notification',
     user: createUserLink(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     ...params
   }
 }

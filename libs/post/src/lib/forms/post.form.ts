@@ -1,5 +1,4 @@
-import { FormControl } from '@angular/forms';
-import { FormEntity } from '@strive/utils/form/entity.form';
+import { FormControl, FormGroup } from '@angular/forms';
 import { createPost, Post } from '@strive/model'
 
 function createPostFormControl(params?: Partial<Post>) {
@@ -16,16 +15,17 @@ function createPostFormControl(params?: Partial<Post>) {
 
 export type PostFormControl = ReturnType<typeof createPostFormControl>
 
-export class PostForm extends FormEntity<PostFormControl> {
+export class PostForm extends FormGroup<PostFormControl> {
   constructor(post?: Partial<Post>) {
     super(createPostFormControl(post))
   }
 
-  get url() { return this.get('url') }
-  get title() { return this.get('title') }
-  get mediaURL() { return this.get('mediaURL') }
-  get description() { return this.get('description') }
-  get date() { return this.get('date') }
+  get url() { return this.get('url')! }
+  get title() { return this.get('title')! }
+  get mediaURL() { return this.get('mediaURL')! }
+  get description() { return this.get('description')! }
+  get date() { return this.get('date')! }
+  get isEvidence() { return this.get('isEvidence')! }
 
   get isEmpty() {
     return !this.url.value && !this.title.value && !this.mediaURL.value && !this.description.value

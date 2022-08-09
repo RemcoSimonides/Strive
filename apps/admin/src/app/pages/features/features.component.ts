@@ -14,9 +14,9 @@ import { Features, Feature } from './features.model';
 export class FeaturesComponent {
 
   form = new FormGroup({
-    header: new FormControl(undefined, Validators.required),
-    description: new FormControl(undefined, Validators.required),
-    url: new FormControl('https://strivejournal.com/')
+    header: new FormControl('', { nonNullable: true, validators: [Validators.required]}),
+    description: new FormControl('', { nonNullable: true, validators: [Validators.required]} ),
+    url: new FormControl('https://strivejournal.com/', { nonNullable: true })
   })
 
   private ref = doc(this.db, 'miscellaneous/feature')
@@ -28,7 +28,7 @@ export class FeaturesComponent {
     if (this.form.invalid) return
 
     const feature: Feature = {
-      ...this.form.value,
+      ...this.form.getRawValue(),
       createdAt: new Date()
     }
 

@@ -26,11 +26,11 @@ export class SupportService extends FireCollection<Support> {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  constructor(protected db: Firestore, private user: UserService) {
+  constructor(protected override db: Firestore, private user: UserService) {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Support>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Support>) {
     return (snapshot.exists())
       ? createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
       : undefined

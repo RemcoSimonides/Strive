@@ -11,7 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { where } from '@angular/fire/firestore';
 import { SupportOptionsComponent } from '@strive/support/components/options/options.component';
-import { toDate, unique } from '@strive/utils/helpers';
+import { unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
 import { GoalLink, MilestoneLink, createSupport, Support, createUserLink } from '@strive/model'
@@ -38,7 +38,7 @@ function groupByObjective(supports: Support[]): GroupedByGoal[] {
     for (const milestoneId of milestoneIds) {
       const supportsOfMilestone = supportsOfGoal.filter(support => support.source.milestone?.id === milestoneId)
       const groupByMilestone: GroupedByMilestone = {
-        ...supportsOfMilestone[0].source.milestone,
+        ...supportsOfMilestone[0].source.milestone!,
         supports: supportsOfMilestone
       }
       group.milestones.push(groupByMilestone)
@@ -122,10 +122,11 @@ export class SupportsComponent {
   }
 
   supportPaid(support: Support) {
+    if (!support.id) return
     this.support.update(support.id, { status: 'paid' }, { params: { goalId: support.source.goal.id }})
   }
 
-  openOptions(support: Support, event) {
+  openOptions(support: Support, event: any) {
     this.popoverCtrl.create({
       component: SupportOptionsComponent,
       event,
@@ -134,6 +135,7 @@ export class SupportsComponent {
   }
 
   async give(support: Support) {
+    if (!support.id) return
     if (support.source.receiver?.uid) {
       this.support.update(support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: support.source.goal.id }})
     } else {
@@ -146,7 +148,7 @@ export class SupportsComponent {
         const { data } = res
         if (data) {
           support.source.receiver = createUserLink(data)
-          this.support.update(support.id, {
+          this.support.update(support.id!, {
             ...support,
             status: 'waiting_to_be_paid',
             needsDecision: false
@@ -158,6 +160,7 @@ export class SupportsComponent {
   }
 
   reject(support: Support) {
+    if (!support.id) return
     this.support.update(support.id, { status: 'rejected', needsDecision: false }, { params: { goalId: support.source.goal.id }})
   }
   

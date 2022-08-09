@@ -4,6 +4,7 @@ import { UserService } from "@strive/user/user/user.service";
 import { UserForm } from "@strive/user/user/forms/user.form";
 import { ScreensizeService } from "@strive/utils/services/screensize.service";
 import { take } from "rxjs/operators";
+import { createUser } from "@strive/model";
 
 @Component({
   selector: 'journal-edit-profile',
@@ -21,7 +22,7 @@ export class EditProfileComponent {
     public user: UserService
   ) {
     this.user.user$.pipe(take(1)).subscribe(user => {
-      this.form.patchValue(user)
+      this.form.patchValue(createUser(user))
     })
   }
 
@@ -29,8 +30,8 @@ export class EditProfileComponent {
     if (this.form.valid) {
       this.user.update({ 
         uid: this.user.uid,
-        photoURL: this.form.photoURL.value,
-        username: this.form.username.value
+        photoURL: this.form.photoURL.value!,
+        username: this.form.username.value!
       })
       this.location.back()
     }

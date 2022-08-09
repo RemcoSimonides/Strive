@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { FormControl } from '@angular/forms'
+import { FormControl, FormGroup } from '@angular/forms'
 import { GoalStakeholderRole } from '@strive/model'
-import { FormEntity } from '@strive/utils/form/entity.form'
 
 export type Roles = Record<GoalStakeholderRole, boolean>
 
 function createRolesFormControl(params?: Roles) {
   return {
-    isAchiever: new FormControl(params?.isAchiever ?? true),
-    isSupporter: new FormControl(params?.isSupporter ?? true),
-    isAdmin: new FormControl(params?.isAdmin ?? true)
+    isAchiever: new FormControl<boolean>(params?.isAchiever ?? true, { nonNullable: true }),
+    isSupporter: new FormControl<boolean>(params?.isSupporter ?? true, { nonNullable: true }),
+    isAdmin: new FormControl<boolean>(params?.isAdmin ?? true, { nonNullable: true }),
+    isSpectator: new FormControl<boolean>(params?.isSpectator ?? true, { nonNullable: true })
   }
 }
 type RolesFormControl = ReturnType<typeof createRolesFormControl>
 
-export class RolesForm extends FormEntity<RolesFormControl> {
+export class RolesForm extends FormGroup<RolesFormControl> {
+
   constructor(roles?: Roles) {
     super(createRolesFormControl(roles))
   }
@@ -22,6 +23,7 @@ export class RolesForm extends FormEntity<RolesFormControl> {
   get isAchiever() { return this.get('isAchiever') }
   get isSupporter() { return this.get('isSupporter') }
   get isAdmin() { return this.get('isAdmin') }
+  get isSpectator() { return this.get('isSpectator') }
 
   get allFalse() {
     return Object.values(this.value).some(bool => !bool)
@@ -29,11 +31,11 @@ export class RolesForm extends FormEntity<RolesFormControl> {
 }
 
 @Component({
-  selector: 'journal-options-popover',
+  selector: '[form] journal-options-popover',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OptionsPopoverComponent {
-  @Input() form: RolesForm
+  @Input() form!: RolesForm
 }

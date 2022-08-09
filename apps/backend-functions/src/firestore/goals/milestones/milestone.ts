@@ -135,7 +135,7 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
 
     support.source.receiver = receiver
 
-    batch.update(snap.ref, support)
+    batch.update(snap.ref, support as any) // TODO remove any when updating pacakges https://github.com/firebase/firebase-js-sdk/issues/5853
   }
   batch.commit()
 }

@@ -10,7 +10,7 @@ import { UserService } from '@strive/user/user/user.service';
   styleUrls: ['./edit-profile-image.component.scss'],
 })
 export class EditProfileImagePopoverComponent implements OnInit {
-  form: FormControl
+  form?: FormControl
 
   constructor(
     private navParams: NavParams,
@@ -19,11 +19,11 @@ export class EditProfileImagePopoverComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.form = new FormControl(this.navParams.data.storagePath)
+    this.form = new FormControl(this.navParams.data['storagePath'])
   }
 
   public update() {
-    if (!this.form.value) {
+    if (!this.form?.value) {
       throw new Error('Nothing to update')
     }
     this.user.update({ uid: this.user.uid, photoURL: this.form.value })

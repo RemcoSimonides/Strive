@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { UpsertPostModalComponent } from './upsert-modal.component';
 
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module';
+import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    ImageSelectorModule
+    ImageSelectorModule,
+    DatetimeModule
   ],
   declarations: [UpsertPostModalComponent]
 })

@@ -53,7 +53,7 @@ export class ProfileComponent {
     this.user.user$,
     this.profileId$
   ]).pipe(
-    switchMap(([user, profileId]) => user ? this.userSpectateService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
+    switchMap(([user, profileId]) => user?.uid && profileId ? this.userSpectateService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
     map(spectator => spectator?.isSpectator ?? false)
   )
 
@@ -61,14 +61,14 @@ export class ProfileComponent {
     this.isOwner$,
     this.profileId$
   ]).pipe(
-    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, 'isAchiever', !isOwner)),
+    switchMap(([isOwner, profileId]) => profileId ? this.goalService.getStakeholderGoals(profileId, 'isAchiever', !isOwner) : of([]))
   )
 
   supportingGoals$ = combineLatest([
     this.isOwner$,
     this.profileId$
   ]).pipe(
-    switchMap(([isOwner, profileId]) => this.goalService.getStakeholderGoals(profileId, 'isSupporter', !isOwner)),
+    switchMap(([isOwner, profileId]) => profileId ? this.goalService.getStakeholderGoals(profileId, 'isSupporter', !isOwner) : of([])),
     map(values => values.map(value => value.goal))
   )
 
@@ -135,10 +135,10 @@ export class ProfileComponent {
     }).then(popover => popover.present())
   }
 
-  async toggleSpectate(spectate) {
+  async toggleSpectate(spectate: boolean) {
     if (this.user.uid) {
       const profileId = await firstValueFrom(this.profileId$)
-      this.userSpectateService.toggleSpectate(profileId, spectate)
+      if (profileId) this.userSpectateService.toggleSpectate(profileId, spectate)
     } else {
       this.openAuthModal()
     }

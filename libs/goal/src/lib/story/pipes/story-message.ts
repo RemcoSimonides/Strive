@@ -24,28 +24,28 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
       return {
         icon: 'checkmark-outline',
         message: [
-          { text: `Milestone "${source.milestone.content}" successfully completed` }
+          { text: `Milestone "${source.milestone!.content}" successfully completed` }
         ]
       }
     case enumEvent.gMilestoneCompletedUnsuccessfully:
       return {
         icon: 'checkmark-outline',
         message: [
-          { text: `Milestone "${source.milestone.content}" failed to complete` }
+          { text: `Milestone "${source.milestone!.content}" failed to complete` }
         ]
       }
     case enumEvent.gMilestoneDeadlinePassed:
       return {
         icon: 'alert-outline',
         message: [
-          { text: `Milestone "${source.milestone.content}" passed its due date` }
+          { text: `Milestone "${source.milestone!.content}" passed its due date` }
         ]
       }
     case enumEvent.gStakeholderAchieverAdded:
       return {
         icon: 'person-add-outline',
         message: [
-          { text: source.user.username, link: `/profile/${source.user.uid}` },
+          { text: source.user!.username, link: `/profile/${source.user!.uid}` },
           { text: ` joined as an Achiever`}
         ]
       }
@@ -53,7 +53,7 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
       return {
         icon: 'person-add-outline',
         message: [
-          { text: source.user.username, link: `/profile/${source.user.uid}` },
+          { text: source.user!.username, link: `/profile/${source.user!.uid}` },
           { text: ` became an Admin` }
         ]
       }
@@ -73,12 +73,12 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
       }
     case enumEvent.gSupportAdded: {
       const isMilestone = source.milestone?.id
-      const suffix = isMilestone ? ` to milestone "${source.milestone.content}" ` : ''
+      const suffix = isMilestone ? ` to milestone "${source.milestone!.content}" ` : ''
       return {
         icon: 'heart-outline',
         message: [
-          { text: source.user.username, link: `/profile/${source.user.uid}` },
-          { text: ` added support "${source.support.description}"${suffix}`}
+          { text: source.user!.username, link: `/profile/${source.user!.uid}` },
+          { text: ` added support "${source.support!.description}"${suffix}`}
         ]
       }
     }

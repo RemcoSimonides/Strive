@@ -24,7 +24,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
 })
 export class DiscussionModalComponent extends ModalDirective implements OnInit, OnDestroy {
   private commentsPerQuery = 20
-  private query: Query<DocumentData>
+  private query?: Query<DocumentData>
 
   private _comments = new BehaviorSubject<Comment[]>([])
   private _done = new BehaviorSubject<boolean>(false)
@@ -36,9 +36,9 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
 
   private subs: Subscription[] = []
 
-  discussionId: string
-  _comment: string
-  discussion$: Observable<Discussion>
+  discussionId?: string
+  _comment?: string
+  discussion$?: Observable<Discussion | undefined>
 
   visibility = {
     public: 'Messages visible to everyone',
@@ -48,14 +48,14 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     spectators: 'Visible to spectators only'
   }
 
-  @ViewChild(IonContent) contentArea: IonContent
+  @ViewChild(IonContent) contentArea?: IonContent
 
   constructor(
     public user: UserService,
     private db: Firestore,
     private discussion: DiscussionService,
-    protected location: Location,
-    protected modalCtrl: ModalController,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
     private navParams: NavParams,
     private platform: Platform,
     private commentService: CommentService
@@ -105,6 +105,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     if (this._done.value || this._loading.value) return
     this._loading.next(true)
 
+    if (!this.query) return
     const snapshot = await getDocs(query(this.query, ...queryConstraints))
     if (!snapshot.empty) {
       const comments = snapshot.docs.map(doc => createComment({ ...doc.data(), id: doc.id }))
@@ -115,7 +116,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     this._loading.next(false)
   }
 
-  async more($event) {
+  async more($event: any) {
     const comments = this._comments.value
     const cursor = comments[0]?.createdAt ?? null
 
@@ -128,7 +129,8 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
   }
 
   async addReply() {
-    if (!this._comment.trim()) return
+    if (!this._comment?.trim()) return
+    if (!this.discussionId) return
 
     const comment = createComment({
       text: this._comment.trim(),
@@ -140,7 +142,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
 
   }
 
-  async logScrolling($event) {
+  async logScrolling($event: any) {
     // https://stackoverflow.com/questions/56886454/how-to-detect-scroll-reached-end-in-ion-content-component-of-ionic-4
 
     if ($event.target.localName != "ion-content") {

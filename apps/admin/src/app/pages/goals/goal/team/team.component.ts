@@ -14,9 +14,9 @@ import { Observable } from 'rxjs';
 })
 export class TeamComponent implements OnInit {
 
-	stakeholders$: Observable<GoalStakeholder[]>
+	stakeholders$?: Observable<GoalStakeholder[]>
 
-	@Input() id: string
+	@Input() id!: string
 
   constructor(
     private modalCtrl: ModalController,
@@ -33,8 +33,8 @@ export class TeamComponent implements OnInit {
     modal.onDidDismiss().then(async res => {
       const uid = res.data as string
       if (uid) {
-        const { username, photoURL } = await this.user.getValue(uid, { uid })
-        const stakeholder = createGoalStakeholder({ username, photoURL, uid });
+        const user = await this.user.getValue(uid, { uid })
+        const stakeholder = createGoalStakeholder({ username: user?.username, photoURL: user?.photoURL, uid });
         this.stakeholder.upsert(stakeholder, { params: { goalId: this.id }});
       }
     })

@@ -8,16 +8,17 @@ import { createUser, User } from '@strive/model';
 // Rxjs
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs';
+import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends FireCollection<User> {
   readonly path = 'Users'
-  readonly idKey = 'uid'
+  override readonly idKey = 'uid'
 
-  user$: Observable<User>
-  user: User
-  uid: string = undefined
-  private _uid = new BehaviorSubject(undefined)
+  user$: Observable<User | undefined>
+  user?: User
+  uid: string | undefined = undefined
+  private _uid = new BehaviorSubject<string | undefined>(undefined)
   uid$ = this._uid.asObservable()
 
   isLoggedIn$ = user(this.auth).pipe(map(user => !!user))
@@ -38,13 +39,13 @@ export class UserService extends FireCollection<User> {
     this.user$.subscribe()
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<User>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<User>) {
     return snapshot.exists()
-      ? { ...snapshot.data(), uid: snapshot.id }
+      ? createUser(toDate({ ...snapshot.data(), uid: snapshot.id }))
       : undefined
   }
 
-  async onUpdate(profile: User) {
+  override async onUpdate(profile: User) {
     const _user = await user(this.auth).pipe(take(1)).toPromise()
     if (_user && (profile.username || profile.photoURL)) {
       updateProfile(_user, {

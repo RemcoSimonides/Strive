@@ -16,7 +16,8 @@ export class SelectUserModalComponent {
     this.search('')
   }
 
-  search(query: string) {
+  search(event: any) {
+    const query = event.target.value
     this.algolia.searchProfiles(query, 1000)
   }
 

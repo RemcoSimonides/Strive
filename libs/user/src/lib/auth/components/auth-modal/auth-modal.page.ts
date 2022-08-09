@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener } from '@angular/core';
+import { Component, HostBinding, HostListener, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
@@ -9,11 +9,9 @@ import { UserService } from '@strive/user/user/user.service';
 // Interfaces
 import { createPersonal, createUser } from '@strive/model';
 // Strive
-import { SignupForm } from '@strive/user/auth/forms/signup.form'
-import { SigninForm } from '@strive/user/auth/forms/signin.form';
-import { ResetPasswordForm } from '@strive/user/auth/forms/reset-password.form';
 import { WelcomeModalComponent } from '../welcome/welcome.modal';
 import { PersonalService } from '@strive/user/personal/personal.service';
+import { AbstractControlOptions, FormControl, FormGroup, Validators } from '@angular/forms';
 
 export enum enumAuthSegment {
   login,
@@ -34,12 +32,36 @@ export class AuthModalComponent {
   passwordType = 'password';
   passwordIcon = 'eye-off-outline';
 
-  loginForm = new SigninForm()
-  signupForm = new SignupForm()
-  resetPasswordForm = new ResetPasswordForm()
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required])
+  })
+ 
+  signupForm = new FormGroup({
+    email: new FormControl<string>('', [
+      Validators.required,
+      Validators.email,
+      Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
+    ]),
+    password: new FormControl<string>('', [
+      Validators.required,
+      // Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9 !@#\$%\^&\*]+$'),
+      Validators.minLength(8),
+    ]),
+    username: new FormControl<string>('', [
+      Validators.required,
+      Validators.maxLength(16),
+      Validators.minLength(2),
+      Validators.pattern('^[0-9a-zA-Z ]+$')
+    ])
+  })
+
+  resetPasswordForm = new FormGroup({
+    email: new FormControl<string>('', [Validators.required, Validators.email])
+  })
 
   enumAuthSegment = enumAuthSegment
-  authSegmentChoice = enumAuthSegment.login
+  @Input() authSegmentChoice = enumAuthSegment.login
 
   validation_messages = {
     'username': [
@@ -63,16 +85,16 @@ export class AuthModalComponent {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
-      window.history.pushState(null, null, window.location.href);
+      window.history.pushState(null, '', window.location.href);
       this.authSegmentChoice = enumAuthSegment.login
     } else if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
-      window.history.pushState(null, null, window.location.href);
+      window.history.pushState(null, '', window.location.href);
       this.authSegmentChoice = enumAuthSegment.register
     } else {
       this.modalCtrl.dismiss(this.success)
     }
   }
-  @HostBinding() modal: HTMLIonModalElement
+  @HostBinding() modal?: HTMLIonModalElement
 
   constructor(
     private afAuth: Auth,
@@ -84,15 +106,15 @@ export class AuthModalComponent {
     private personal: PersonalService,
     private user: UserService
   ) {
-    window.history.pushState(null, null, window.location.href)
+    window.history.pushState(null, '', window.location.href)
   }
 
   ngOnInit() {
-    this.modal.onWillDismiss().then(res => {
+    this.modal?.onWillDismiss().then(res => {
       if (res.role === 'backdrop') this.location.back()
     })
 
-    const segmentChoice = this.navParams.data.authSegment
+    const segmentChoice = this.navParams.data['authSegment']
     this.authSegmentChoice = segmentChoice ? segmentChoice : enumAuthSegment.login
   }
 
@@ -103,8 +125,8 @@ export class AuthModalComponent {
 
       const user = await this.user.getValue(uid)
       if (!user) {
-        const user = createUser({ username: displayName, uid })
-        const personal = createPersonal({ uid, email })
+        const user = createUser({ username: displayName ?? '', uid })
+        const personal = createPersonal({ uid, email: email ?? '' })
         await Promise.all([
           this.user.upsert(user),
           this.personal.add(personal, { params: { uid }}),
@@ -120,7 +142,7 @@ export class AuthModalComponent {
         if (top) this.dismiss(true)
       }
   
-    } catch (error) {
+    } catch (error: any) {
       switch (error.code) {
         case 'auth/popup-closed-by-user':
         case 'auth/popup-blocked':
@@ -165,6 +187,9 @@ export class AuthModalComponent {
       await loading.present()
 
       const { email, password } = this.loginForm.value
+      if (!email || !password) {
+        throw new Error('Email or Password not provided')
+      }
 
       try {
 
@@ -172,7 +197,7 @@ export class AuthModalComponent {
         loading.dismiss()
         this.dismiss(true)
 
-      } catch (error) {
+      } catch (error: any) {
 
         let message: string;
         switch (error.code) {
@@ -205,9 +230,13 @@ export class AuthModalComponent {
     loading.present()
 
     try {
-      const { user } = await createUserWithEmailAndPassword(this.afAuth, this.signupForm.value.email, this.signupForm.value.password)
-      const profile = createUser({ uid: user.uid, username: this.signupForm.value.username })
-      const personal = createPersonal({ uid: user.uid, email: user.email })
+      const { email, password, username } = this.signupForm.value
+      if (!email || !password || !username) {
+        throw new Error('username, email or password not provided')
+      }
+      const { user } = await createUserWithEmailAndPassword(this.afAuth, email, password)
+      const profile = createUser({ uid: user.uid, username })
+      const personal = createPersonal({ uid: user.uid, email })
 
       await Promise.all([
         this.user.add(profile),
@@ -218,7 +247,7 @@ export class AuthModalComponent {
       this.dismiss(true)
       this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
 
-    } catch(error) {
+    } catch(error: any) {
       this.alertCtrl.create({
         message: error.message,
         buttons: [{ text: 'Ok', role: 'cancel' }]
@@ -237,6 +266,7 @@ export class AuthModalComponent {
       await loading.present()
 
       const { email } = this.resetPasswordForm.value
+      if (!email) throw new Error('email not provided')
 
       try {
 
@@ -250,7 +280,7 @@ export class AuthModalComponent {
           ]
         }).then(alert => alert.present())
 
-      } catch (error) {
+      } catch (error: any) {
         await loading.dismiss()
         this.alertCtrl.create({
           message: error.message,

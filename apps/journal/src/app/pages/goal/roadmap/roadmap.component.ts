@@ -20,10 +20,10 @@ import { Goal, Milestone, createGoalStakeholder, GoalStakeholder } from '@strive
 })
 export class RoadmapComponent implements OnInit {
 
-  stakeholder$: Observable<GoalStakeholder>
-  milestones$: Observable<Milestone[]>
+  stakeholder$?: Observable<GoalStakeholder>
+  milestones$?: Observable<Milestone[]>
 
-  @Input() goal: Goal
+  @Input() goal!: Goal
 
   constructor(
     private milestone: MilestoneService,

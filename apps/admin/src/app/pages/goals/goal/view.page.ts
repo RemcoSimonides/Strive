@@ -11,11 +11,11 @@ import { map } from 'rxjs/operators';
 export class GoalViewPage {
   segmentChoice: 'goal' | 'roadmap' | 'team' | 'story' = 'goal'
 
-  id$ = this.route.params.pipe(map(params => params.id))
+  id$ = this.route.params.pipe(map(params => params['id']))
 
   constructor(private route: ActivatedRoute) {}
 
-  segmentChanged(ev: CustomEvent) {
+  segmentChanged(ev: any) {
     this.segmentChoice = ev.detail.value
   }
 }

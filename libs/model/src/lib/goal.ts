@@ -23,7 +23,7 @@ export interface GoalSource {
 }
 
 export interface Goal {
-  id?: string
+  id: string
   title: string
   description: string
   image: string
@@ -70,21 +70,20 @@ export function createGoalLink(params: Partial<GoalLink | Goal> = {}): GoalLink 
   }
 }
 
-export function createGoalEvent(params: Partial<GoalEvent> = {}): GoalEvent {
+export function createGoalEvent(params: GoalEvent): GoalEvent {
   return {
-    name: params.name,
     ...params,
     source: createGoalSource(params.source),
   }
 }
 
 export function createGoalSource(params: {
-  goal: GoalLink | Goal
+  goal?: GoalLink | Goal
   milestone?: MilestoneLink | Milestone
   user?: UserLink | User
   postId?: string
   support?: SupportLink | Support
-}): GoalSource {
+} = {}): GoalSource {
   const source: GoalSource = {
     goal: createGoalLink(params.goal)
   }

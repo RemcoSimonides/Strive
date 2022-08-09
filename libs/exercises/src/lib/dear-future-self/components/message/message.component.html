@@ -1,4 +1,4 @@
 <ion-content class="ion-padding">
-  <p [innerHTML]="message.description"></p>
-  <p><small>This message was sent on {{ message.createdAt | date }} and delivered on {{ message.deliveryDate | date }}.</small></p>
+  <p [innerHTML]="message?.description"></p>
+  <p><small>This message was sent on {{ message?.createdAt | date }} and delivered on {{ message?.deliveryDate | date }}.</small></p>
 </ion-content>

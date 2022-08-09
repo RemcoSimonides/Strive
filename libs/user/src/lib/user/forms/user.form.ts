@@ -1,8 +1,7 @@
-import { FormControl, Validators } from '@angular/forms'
-import { FormEntity } from '@strive/utils/form/entity.form'
+import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { createUserLink, createUser, User, UserLink } from '@strive/model'
 
-function createUserFormControl(params: User) {
+function createUserFormControl(params: Partial<User> = {}) {
   const user = createUser(params)
   return {
     uid: new FormControl(user.uid),
@@ -13,33 +12,33 @@ function createUserFormControl(params: User) {
 
 export type UserFormControl = ReturnType<typeof createUserFormControl>
 
-export class UserForm extends FormEntity<UserFormControl> {
+export class UserForm extends FormGroup<UserFormControl> {
   constructor(user?: User) {
     super(createUserFormControl(user))
   }
 
-  get uid() { return this.get('uid') }
-  get username() { return this.get('username') }
-  get photoURL() { return this.get('photoURL') }
+  get uid() { return this.get('uid')! }
+  get username() { return this.get('username')! }
+  get photoURL() { return this.get('photoURL')! }
 }
 
 function createUserLinkFormControl(params: UserLink) {
   const userLink = createUserLink(params)
   return {
-    uid: new FormControl(userLink.uid),
-    username: new FormControl(userLink.username),
-    photoURL: new FormControl(userLink.photoURL)
+    uid: new FormControl(userLink.uid, { nonNullable: true }),
+    username: new FormControl(userLink.username, { nonNullable: true }),
+    photoURL: new FormControl(userLink.photoURL, { nonNullable: true })
   }
 }
 
 export type UserLinkFormControl = ReturnType<typeof createUserLinkFormControl>
 
-export class UserLinkForm extends FormEntity<UserLinkFormControl> {
+export class UserLinkForm extends FormGroup<UserLinkFormControl> {
   constructor(userLink: UserLink) {
     super(createUserLinkFormControl(userLink))
   }
 
-  get uid() { return this.get('uid') }
-  get username() { return this.get('username') }
-  get photoURL() { return this.get('photoURL') }
+  get uid() { return this.get('uid')! }
+  get username() { return this.get('username')! }
+  get photoURL() { return this.get('photoURL')! }
 }

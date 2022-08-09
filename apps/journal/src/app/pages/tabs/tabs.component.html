@@ -1,0 +1,27 @@
+<ng-container *ngIf="screenSize.isMobile$ | async">
+	<ion-tabs>
+		<ion-tab-bar slot="bottom">
+
+			<ion-tab-button tab="goals">
+				<ion-icon name="flag" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+			</ion-tab-button>
+
+			<ion-tab-button tab="supports">
+				<fa-icon [icon]="['fas', 'hand-holding-heart']" [ngClass]="{'badge': hasSupportNeedingDecision$ | async}"></fa-icon>
+			</ion-tab-button>
+
+			<ion-tab-button tab="explore">
+				<ion-icon name="earth-sharp"></ion-icon>
+			</ion-tab-button>
+
+			<ion-tab-button tab="exercise" [routerLink]="['/exercise']">
+				<ion-icon name="shapes-outline"></ion-icon>
+			</ion-tab-button>
+
+			<ion-tab-button [tab]="'profile/' + user.uid">
+				<ion-icon name="person" [color]="(profileActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+			</ion-tab-button>
+	
+		</ion-tab-bar>
+	</ion-tabs>
+</ng-container>

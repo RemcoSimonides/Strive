@@ -16,27 +16,27 @@ export class GoalService extends FireCollection<Goal> {
   readonly path = `Goals`
 
   constructor(
-    public db: Firestore,
+    public override db: Firestore,
     private stakeholder: GoalStakeholderService,
     private user: UserService
   ) { 
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Goal>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Goal>) {
     return snapshot.exists()
       ? createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
       : undefined
   }
 
-  protected toFirestore(goal: Goal): Goal {
+  protected override toFirestore(goal: Goal): Goal {
     if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
     goal.updatedBy = this.user.uid
     return goal
   }
 
-  onCreate(goal: Goal, { write, params }: WriteOptions) {
-    const uid = params?.uid || this.user.uid;
+  override onCreate(goal: Goal, { write, params }: WriteOptions) {
+    const uid = params?.['uid'] ?? this.user.uid;
     const stakeholder = createGoalStakeholder({
       uid,
       status: goal.status,
@@ -66,7 +66,7 @@ export class GoalService extends FireCollection<Goal> {
           map(([stakeholders, goals]) => {
             return stakeholders.map(stakeholder => ({
               stakeholder,
-              goal: goals.find(goal => goal.id === stakeholder.goalId)
+              goal: goals.find(goal => goal.id === stakeholder.goalId)!
             })).filter(result => !!result.goal)
           })
         )

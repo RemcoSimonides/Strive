@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, DocumentSnapshot, getDoc, WriteBatch, serverTimestamp } from '@angular/fire/firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 // Interfaces
-import { Goal, GoalStakeholder, createGoalStakeholder, User } from '@strive/model'
+import { Goal, GoalStakeholder, createGoalStakeholder, User, createUser, createGoal } from '@strive/model'
 import { UserService } from '@strive/user/user/user.service';
 
 export interface roleArgs {
@@ -19,19 +19,19 @@ export interface roleArgs {
 })
 export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
   readonly path = 'Goals/:goalId/GStakeholders'
-  readonly idKey = 'uid'
+  override readonly idKey = 'uid'
 
   constructor(db: Firestore, private user: UserService) {
     super(db)
   }
 
-  fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {
+  override fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {
     return snapshot.exists()
       ? { ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }
       : undefined
   }
 
-  toFirestore(stakeholder: GoalStakeholder): GoalStakeholder {
+  override toFirestore(stakeholder: GoalStakeholder): GoalStakeholder {
     stakeholder.updatedBy = this.user.uid
     return stakeholder
   }
@@ -45,13 +45,13 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     }
   }
 
-  async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {
-    const goalId = params?.goalId ? params.goalId : stakeholder.goalId
+  override async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {
+    const goalId = params?.['goalId'] ?? stakeholder.goalId
     const uid = stakeholder.uid
 
     const [user, goal] = await Promise.all([
-      getDoc(this.typedDocument<User>(this.db, `Users/${uid}`)).then(snap => snap.data()),
-      getDoc(this.typedDocument<Goal>(this.db, `Goals/${goalId}`)).then(snap => snap.data())
+      getDoc(this.typedDocument<User>(this.db, `Users/${uid}`)).then(snap => createUser(snap.data())),
+      getDoc(this.typedDocument<Goal>(this.db, `Goals/${goalId}`)).then(snap => createGoal(snap.data()))
     ])
 
     if (goal) {

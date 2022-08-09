@@ -6,23 +6,23 @@ import { PopoverController } from "@ionic/angular";
   selector: 'strive-popover'
 })
 export class PopoverDirective {
-  @HostBinding() popover: HTMLIonPopoverElement
+  @HostBinding() popover?: HTMLIonPopoverElement
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.popoverCtrl.dismiss(this.returnData, this.returnRole)
   }
 
   private returnData: unknown
-  private returnRole: string
+  private returnRole?: string
 
   constructor(
     protected location: Location,
     protected popoverCtrl: PopoverController
   ) {
-    window.history.pushState(null, null, window.location.href)
+    window.history.pushState(null, '', window.location.href)
 
     this.popoverCtrl.getTop().then(() => {
-      this.popover.onWillDismiss().then(res => {
+      this.popover?.onWillDismiss().then(res => {
         if (res.role === 'backdrop') this.location.back()
       })
     })

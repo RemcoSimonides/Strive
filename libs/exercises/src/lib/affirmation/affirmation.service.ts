@@ -14,7 +14,7 @@ export class AffirmationService extends FireCollection<Affirmations> {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
     return snapshot.exists()
       ? toDate<Affirmations>({ ...snapshot.data(), id: snapshot.id })
       : undefined

@@ -9,14 +9,14 @@ import { GoalSharePopoverComponent } from '../../../popovers/share/share.compone
 import { createGoal } from '@strive/model'
 
 @Component({
-  selector: 'goal-slide-5',
+  selector: '[form][goalId] goal-slide-5',
   templateUrl: './slide-5.component.html',
   styleUrls: ['./slide-5.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Slide5Component {
-  @Input() form: GoalForm
-  @Input() goalId: string
+  @Input() form!: GoalForm
+  @Input() goalId!: string
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
 

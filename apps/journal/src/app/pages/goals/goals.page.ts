@@ -11,7 +11,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/user.service';
 
 // Model
-import { Goal, GoalEvent, GoalStakeholder, enumEvent, StoryItem } from '@strive/model'
+import { Goal, GoalEvent, GoalStakeholder, enumEvent, StoryItem, User, GoalStakeholderRole } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -20,7 +20,7 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { orderBy, where } from 'firebase/firestore';
-import { getAggregatedMessage } from '@strive/notification/message/aggregated';
+import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { StoryService } from '@strive/goal/story/story.service';
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
@@ -36,6 +36,8 @@ function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number
   return Object.entries(counter).map(([event, count]) => ({ event: +event, count }))
 }
 
+type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, story: AggregatedMessage[] }
+
 @Component({
   selector: 'journal-goals',
   templateUrl: './goals.page.html',
@@ -44,8 +46,8 @@ function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number
 })
 export class GoalsComponent {
 
-  stakeholders$: Observable<GoalStakeholder & { goal: Goal, story: StoryItem[] }[]>
-  form = new RolesForm(JSON.parse(localStorage.getItem('goals options')))
+  stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
+  form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{}'))
 
   constructor(
     public user: UserService,
@@ -59,7 +61,7 @@ export class GoalsComponent {
   ) {
     const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
-      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user.uid), orderBy('createdAt', 'desc')])),
+      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
       // Sort finished goals to the end
       map(stakeholders => stakeholders.sort((a, b) => {
         const order = ['active', 'bucketlist', 'finished']
@@ -68,11 +70,11 @@ export class GoalsComponent {
         return 0
       })),
       joinWith({
-        goal: stakeholder => this.goal.valueChanges(stakeholder.goalId),
-        story: stakeholder => {
+        goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
+        story: (stakeholder: GoalStakeholder) => {
           const query = [where('createdAt', '>', stakeholder.lastCheckedGoal)]
           return this.story.valueChanges(query, { goalId: stakeholder.goalId }).pipe(
-            map(story => story.filter(item => item.source.user.uid !== stakeholder.uid)),
+            map(story => story.filter(item => item.source.user?.uid !== stakeholder.uid)),
             map(aggregateEvents),
             map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
           )
@@ -84,14 +86,15 @@ export class GoalsComponent {
     this.stakeholders$ = combineLatest([
       stakeholders$,
       this.form.valueChanges.pipe(
-        startWith(this.form.value),
+        startWith(this.form.value as any),
         tap((value: Roles) => localStorage.setItem('goals options', JSON.stringify(value)))
       )
     ]).pipe(
       map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
-          for (const [key, bool] of Object.entries(roles)) {
+          for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
             if (bool && stakeholder[key]) return true
           }
+          return false
         })
       )
     ) as any

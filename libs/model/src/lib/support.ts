@@ -21,18 +21,18 @@ export interface Support {
 
 export function createSupport(params: Partial<Support> = {}): Support {
   return {
-    id: params.id ? params.id : '',
+    id: '',
     description: '',
     status: 'open',
     needsDecision: false,
-    source: createSupportSource(params?.source),
+    source: createSupportSource(params.source),
     ...params
   }
 }
 
 export function createSupportLink(params: Partial<Support | SupportLink> = {}): SupportLink {
   return {
-    id: params.id,
-    description: params.description
+    id: params.id ?? '',
+    description: params.description ?? ''
   }
 }

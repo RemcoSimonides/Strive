@@ -3,21 +3,21 @@
 
     <ion-card>
       <ion-card-content>
-        <p>Created at: {{ user.createdAt?.toDate() | date:'medium' }}</p>
-        <p>Updated at: {{ user.updatedAt?.toDate() | date:'medium' }}</p>
+        <p>Created at: {{ user.createdAt | date:'medium' }}</p>
+        <p>Updated at: {{ user.updatedAt | date:'medium' }}</p>
         <p>Spectators: {{ user.numberOfSpectators }}</p>
         <p>Spectating: {{ user.numberOfSpectating }}</p>
 
         <form [formGroup]="userForm" (ngSubmit)="update()">
           <ion-item>
             <ion-label position="floating"></ion-label>
-            <ion-input formControlName="username" disabled></ion-input>
+            <ion-input formControlName="username" [disabled]="true"></ion-input>
           </ion-item>
         
-          <media-image-selector
+          <!-- <media-image-selector
             [form]="userForm.photoURL"
             [storagePath]="'profiles/' + user.uid"
-          ></media-image-selector>
+          ></media-image-selector> -->
         
           <div fxLayout="row" fxLayoutAlign="center">
             <ion-button class="submit_button" type="submit" [disabled]="!userForm.valid">Update</ion-button>

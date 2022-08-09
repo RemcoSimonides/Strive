@@ -7,7 +7,6 @@ import { Observable, of } from 'rxjs';
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/support.service'
 import { UserService } from '@strive/user/user/user.service'
-import { SupportForm } from '@strive/support/forms/support.form'
 // Interfaces
 import { Goal, createMilestoneLink, Milestone, createSupport, Support } from '@strive/model'
 // Components
@@ -17,30 +16,31 @@ import { map, switchMap } from 'rxjs/operators';
 import { SupportOptionsComponent } from '../options/options.component';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 import { createSupportSource } from '@strive/model';
+import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'support-add',
+  selector: '[goalId] support-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddSupportModalComponent extends ModalDirective implements OnInit {
-  origin: 'goal' | 'milestone'
+  origin?: 'goal' | 'milestone'
 
-  @Input() goalId: string
-  goal$: Observable<Goal>
+  @Input() goalId!: string
+  goal$?: Observable<Goal | undefined>
 
-  @Input() milestone: Milestone
+  @Input() milestone?: Milestone
 
-  supports$: Observable<Support[]>
-  mySupports$: Observable<Support[]>
+  supports$?: Observable<Support[]>
+  mySupports$?: Observable<Support[]>
 
-  support = new SupportForm()
+  form = new FormControl('', { nonNullable: true })
 
   constructor(
     private goalService: GoalService,
-    protected location: Location,
-    protected modalCtrl: ModalController,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private supportService: SupportService,
     public user: UserService
@@ -54,7 +54,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
 
     const params = { goalId: this.goalId }
     const supports$ = this.origin === 'milestone'
-      ? this.supportService.valueChanges([where('source.milestone.id', '==', this.milestone.id)], params)
+      ? this.supportService.valueChanges([where('source.milestone.id', '==', this.milestone!.id)], params)
       : this.supportService.valueChanges([orderBy('createdAt', 'desc')], params)
     
     this.supports$ = supports$.pipe(
@@ -65,7 +65,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       switchMap(user => {
         if (user) {
           return this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('source.milestone.id', '==', this.milestone.id), where('source.supporter.uid', '==', user.uid)], params)
+          ? this.supportService.valueChanges([where('source.milestone.id', '==', this.milestone!.id), where('source.supporter.uid', '==', user.uid)], params)
           : this.supportService.valueChanges([where('source.supporter.uid', '==', user.uid), orderBy('createdAt', 'desc')], params)
         } else return of([])
       })
@@ -82,7 +82,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
   }
 
   addSupport(goal: Goal) {
-    if (this.support.invalid) return
+    if (this.form.invalid) return
 
     const source = createSupportSource({
       goal,
@@ -90,12 +90,12 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     })
     if (this.milestone) source.milestone = createMilestoneLink(this.milestone)
     const support = createSupport({
-      description: this.support.description.value,
+      description: this.form.value,
       source
     })
 
     this.supportService.add(support, { params: { goalId: this.goalId }})
-    this.support.description.setValue('')
+    this.form.setValue('')
   }
 
   openOptions(support: Support, event: Event) {

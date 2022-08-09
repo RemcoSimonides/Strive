@@ -5,7 +5,7 @@ import { UserForm } from '@strive/user/user/forms/user.form';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GoalService } from '@strive/goal/goal/goal.service';
-import { Goal, User } from '@strive/model'
+import { createUser, Goal, User } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { orderBy, where } from '@angular/fire/firestore';
 import { ModalController } from '@ionic/angular';
@@ -18,8 +18,8 @@ import { ModalController } from '@ionic/angular';
 })
 export class UserPage {
 
-  user$: Observable<User>
-  goals$: Observable<Goal[]>
+  user$?: Observable<User | undefined>
+  goals$?: Observable<Goal[]>
 
   userForm = new UserForm()
 
@@ -31,10 +31,10 @@ export class UserPage {
     private stakeholder: GoalStakeholderService,
   ) {
     this.route.params.subscribe(params => {
-      const uid = params.uid as string
+      const uid = params['uid'] as string
 
       this.user$ = this.user.valueChanges(uid, { uid }).pipe(
-        tap(user => this.userForm.patchValue(user))
+        tap(user => this.userForm.patchValue(createUser(user)))
       )
 
       this.goals$ = this.stakeholder.groupChanges([

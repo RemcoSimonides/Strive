@@ -23,7 +23,7 @@ export class GoalAuthGuardService implements CanActivate {
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-    const goalId = next.params.id as string
+    const goalId = next.params['id'] as string
 
     const uid = await this.user.getUID()
     if (!uid) {
@@ -35,6 +35,7 @@ export class GoalAuthGuardService implements CanActivate {
 
     // get goal
     const goal = await this.goalService.getValue(goalId);
+    if (!goal) return false
 
     // get stakeholder
     const stakeholder = await this.stakeholder.getValue(uid, { goalId });

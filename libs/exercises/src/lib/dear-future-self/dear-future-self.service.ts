@@ -18,16 +18,16 @@ export class DearFutureSelfService extends FireCollection<DearFutureSelf> {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf {
+  protected override fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf | undefined {
     if (!snapshot.exists()) return
     return toDate<DearFutureSelf>({ ...snapshot.data(), id: snapshot.id })
   }
 
-  getSettings$(uid: string): Observable<DearFutureSelf> {
+  getSettings$(uid: string): Observable<DearFutureSelf | undefined> {
     return this.valueChanges('DearFutureSelf', { uid })
   }
 
-  getSettings(uid: string): Promise<DearFutureSelf> {
+  getSettings(uid: string): Promise<DearFutureSelf | undefined> {
     return this.getValue('DearFutureSelf', { uid })
   }
 

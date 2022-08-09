@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
-import { SigninForm } from '@strive/user/auth/forms/signin.form';
 import { UserService } from '@strive/user/user/user.service';
 
 @Component({
@@ -16,7 +16,10 @@ export class LoginPage {
   passwordType = 'password';
   passwordIcon = 'eye-off-outline';
 
-  loginForm = new SigninForm()
+  loginForm = new FormGroup({
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required]}),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required]})
+  })
 
   constructor(
     private alertCtrl: AlertController,
@@ -38,6 +41,7 @@ export class LoginPage {
       await loading.present()
 
       const { email, password } = this.loginForm.value
+      if (!email || !password) return
 
       try {
 
@@ -57,7 +61,7 @@ export class LoginPage {
         loading.dismiss()
         // this.router.navigate(['/a/users'])
 
-      } catch (error) {
+      } catch (error: any) {
 
         loading.dismiss()
         this.alertCtrl.create({

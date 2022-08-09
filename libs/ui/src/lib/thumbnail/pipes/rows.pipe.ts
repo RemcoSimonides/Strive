@@ -2,10 +2,11 @@ import { NgModule, Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({ name: 'rows' })
 export class RowsPipe implements PipeTransform {
-  transform(array: any[], rows: number) {
+  transform(array: any | null, rows: number) {
+    if (array === null) return []
     const result = []
-    let inter = []
-    array.forEach((value, index) => {
+    let inter: any[] = []
+    array.forEach((value: any, index: number) => {
       inter.push(value)
       if (index % rows === 1) {
         result.push(inter)

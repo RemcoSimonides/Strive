@@ -42,7 +42,7 @@ export function isValidHttpUrl(url: string) {
   } 
 }
 
-export function toDate<D>(target: DocumentData): D {
+export function toDate<D>(target: DocumentData): D | undefined {
   if (!target) return;
   if (typeof target !== 'object') return target;
   for (const key in target) {

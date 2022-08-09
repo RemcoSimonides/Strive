@@ -16,7 +16,7 @@ import { PersonalService } from '@strive/user/personal/personal.service';
 })
 export class NotificationsComponent implements OnInit {
 
-  notifications$: Observable<Notification[]>
+  notifications$?: Observable<Notification[]>
 
   constructor(
     private notification: NotificationService,

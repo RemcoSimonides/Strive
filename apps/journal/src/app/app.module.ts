@@ -1,15 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { RouteReuseStrategy, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FIREBASE_CONFIG } from 'ngfire';
+import { BrowserModule } from '@angular/platform-browser';
+import { FlexLayoutModule } from '@angular/flex-layout'
+import { RouterModule } from '@angular/router';
 
 // Ionic
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { IonicModule } from '@ionic/angular';
 
 // Angularfire / firebase
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -18,7 +13,6 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideFunctions, getFunctions } from '@angular/fire/functions';
 import { provideMessaging, getMessaging } from '@angular/fire/messaging';
-import { PerformanceModule } from '@angular/fire/performance';
 
 // Environments
 import { environment } from 'environments/environment';
@@ -28,29 +22,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-import { TabsComponent } from './pages/tabs/tabs';
-import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
+import { TabsComponent } from './pages/tabs/tabs.component';
+import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module';
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
+
+import { ImageModule } from '@strive/media/directives/image.module'
 
 // FontAwesome
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-
-import { ImageModule } from '@strive/media/directives/image.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { PWAService } from '@strive/utils/services/pwa.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TabsComponent,
-    ProfileOptionsBrowserComponent,
-  ],
-  entryComponents: [
-    TabsComponent,
-    ProfileOptionsBrowserComponent,
+    TabsComponent
   ],
   imports: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
@@ -61,41 +46,24 @@ import { PWAService } from '@strive/utils/services/pwa.service';
     provideMessaging(() => getMessaging()),
     //enable offline persistance
     // AngularFirestoreModule.enablePersistence(),
-    PerformanceModule,
     AppRoutingModule,
     RouterModule,
     BrowserModule,
-    CommonModule,
-    FormsModule,
     FlexLayoutModule,
     IonicModule.forRoot(),
-    ReactiveFormsModule,
-
-    // Libraries
-    FontAwesomeModule,
-
     // Strive
-    AuthModalModule,
     ImageModule,
-    ServiceWorkerModule.register('sw-master.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
+    AuthModalModule,
+    ProfileOptionsBrowserPageModule,
+    FontAwesomeModule
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    { provide: FIREBASE_CONFIG, useValue: environment.firebase },
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: 'APP_NAME', useValue: 'journal' }
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(library: FaIconLibrary, pwa: PWAService) {
-    library.addIconPacks(fas, far, fab)
-    pwa.addEventListeners()
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas)
   }
 }

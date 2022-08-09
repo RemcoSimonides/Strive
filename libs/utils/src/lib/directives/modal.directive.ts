@@ -6,7 +6,7 @@ import { ModalController } from "@ionic/angular";
   selector: 'strive-modal'
 })
 export class ModalDirective {
-  @HostBinding() modal: HTMLIonModalElement
+  @HostBinding() modal?: HTMLIonModalElement
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss(this.data)
@@ -18,10 +18,10 @@ export class ModalDirective {
     protected location: Location,
     protected modalCtrl: ModalController
   ) {
-    window.history.pushState(null, null, window.location.href)
+    window.history.pushState(null, '', window.location.href)
 
-    this.modalCtrl.getTop().then(() => {
-      this.modal.onWillDismiss().then(res => {
+  this.modalCtrl.getTop().then(() => {
+      this.modal?.onWillDismiss().then(res => {
         if (res.role === 'backdrop') this.location.back()
       })
     })

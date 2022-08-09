@@ -5,9 +5,9 @@ import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy, NgModule} fro
 	pure: false
 })
 export class TimeToGoPipe implements PipeTransform, OnDestroy {
-	private timer: number;
+	private timer?: number | null;
 	constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) {}
-	transform(value:string) {
+	transform(value:Date) {
 		this.removeTimer();
 		let d = new Date(value);
 		let now = new Date();

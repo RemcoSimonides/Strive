@@ -14,9 +14,9 @@ import { StoryService } from '@strive/goal/story/story.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StoryComponent implements OnInit {
-  story$: Observable<StoryItem[]>
+  story$?: Observable<StoryItem[]>
 
-  @Input() goal: Goal
+  @Input() goal!: Goal
 
   constructor(private story: StoryService) {}
 
@@ -25,7 +25,7 @@ export class StoryComponent implements OnInit {
     this.story$ = this.story.valueChanges(query, { goalId: this.goal.id })
   }
 
-  async refreshPosts($event?) {
+  async refreshPosts($event: any) {
     await delay(500)
     $event?.target.complete()
   }

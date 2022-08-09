@@ -20,9 +20,9 @@ export interface IThumbnail {
 export class ThumbnailListComponent implements AfterContentInit, OnDestroy {
   @Input() width = 160
 
-  @ContentChildren('thumb') thumbs: QueryList<TemplateRef<any>>
+  @ContentChildren('thumb') thumbs?: QueryList<TemplateRef<any>>
 
-  private sub: Subscription
+  private sub?: Subscription
 
   constructor(
     public screensize: ScreensizeService,
@@ -30,7 +30,7 @@ export class ThumbnailListComponent implements AfterContentInit, OnDestroy {
   ) {}
 
   ngAfterContentInit() {
-    this.thumbs.changes.subscribe(() => this.cdr.markForCheck())
+    this.sub = this.thumbs?.changes.subscribe(() => this.cdr.markForCheck())
   }
 
   ngOnDestroy() {

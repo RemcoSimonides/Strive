@@ -14,7 +14,7 @@ export class StoryService extends FireCollection<StoryItem> {
     super(db)
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<StoryItem>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<StoryItem>) {
     return snapshot.exists()
       ? toDate<StoryItem>({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path })
       : undefined

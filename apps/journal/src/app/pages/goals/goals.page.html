@@ -57,18 +57,20 @@
               <h4>Nothing to show because you deselected all roles</h4>
               <ion-list mode="md">
                 <h5>Please select a role</h5>
-                <ion-item>
-                  <ion-checkbox [formControl]="form.isAchiever" slot="start" color="primary"></ion-checkbox>
-                  <ion-label>Achiever</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-checkbox [formControl]="form.isSupporter" slot="start" color="primary"></ion-checkbox>
-                  <ion-label>Supporter</ion-label>
-                </ion-item>
-                <ion-item lines="none">
-                  <ion-checkbox [formControl]="form.isAdmin" slot="start" color="primary"></ion-checkbox>
-                  <ion-label>Admin</ion-label>
-                </ion-item>
+                <form [formGroup]="form">
+                  <ion-item>
+                    <ion-checkbox formControlName="isAchiever" slot="start" color="primary"></ion-checkbox>
+                    <ion-label>Achiever</ion-label>
+                  </ion-item>
+                  <ion-item>
+                    <ion-checkbox formControlName="isSupporter" slot="start" color="primary"></ion-checkbox>
+                    <ion-label>Supporter</ion-label>
+                  </ion-item>
+                  <ion-item lines="none">
+                    <ion-checkbox formControlName="isAdmin" slot="start" color="primary"></ion-checkbox>
+                    <ion-label>Admin</ion-label>
+                  </ion-item>
+                </form>
               </ion-list>
             </section>
             <ng-template #reallyNoGoals>
