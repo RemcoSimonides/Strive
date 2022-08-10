@@ -44,7 +44,7 @@ Sentry.init(
     tracesSampleRate: 1.0,
     integrations: [
       new BrowserTracing({
-        tracingOrigins: ['localhost'],
+        tracingOrigins: ['localhost', 'strivejournal.com'],
       }),
     ]
   },
