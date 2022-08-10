@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Platform, ModalController, PopoverController } from '@ionic/angular';
 
@@ -11,13 +11,15 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 import { filter, first, firstValueFrom } from 'rxjs';
 import { NotificationService } from '@strive/notification/notification.service';
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
+import { Unsubscribe } from 'firebase/firestore';
+import { FcmService } from '@strive/utils/services/fcm.service';
 
 @Component({
   selector: 'strive-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   rootPage: typeof TabsComponent = TabsComponent;
 
   enumAuthSegment = enumAuthSegment
@@ -25,7 +27,10 @@ export class AppComponent {
   unreadNotifications$ = this.notification.hasUnreadNotification$
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
 
+  private fcmUnsubscribe?: Unsubscribe
+
   constructor(
+    private fcm: FcmService,
     private modalCtrl: ModalController,
     private notification: NotificationService,
     private platform: Platform,
@@ -41,16 +46,20 @@ export class AppComponent {
       // this.statusBar.styleDefault();
       // this.splashScreen.hide();
 
-      // if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
-      //   this.fcm.addListenersCapacitor()
-      // }
+      if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
+        this.fcm.addListenersCapacitor()
+      }
 
-      // if (this.platform.is('mobileweb')) {
-      //   this.fcmUnsubscribe = this.fcm.showMessages()
-      // }
+      if (this.platform.is('mobileweb')) {
+        this.fcmUnsubscribe = this.fcm.showMessages()
+      }
 
       this.openAuthModalOnStartup()
     })
+  }
+
+  ngOnDestroy() {
+    if (this.fcmUnsubscribe) this.fcmUnsubscribe()
   }
 
   async openAuthModalOnStartup() {
