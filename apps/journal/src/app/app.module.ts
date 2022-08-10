@@ -6,13 +6,11 @@ import { RouterModule } from '@angular/router';
 // Ionic
 import { IonicModule } from '@ionic/angular';
 
-// Angularfire / firebase
-import { provideFirebaseApp, initializeApp, firebaseApp$ } from '@angular/fire/app';
+// firebase
+import { initializeApp, getApp } from 'firebase/app';
+import { initializeFirestore } from 'firebase/firestore';
+import { browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { provideStorage, getStorage } from '@angular/fire/storage';
-import { provideFunctions, getFunctions } from '@angular/fire/functions';
-import { provideMessaging, getMessaging } from '@angular/fire/messaging';
 
 // Environments
 import { environment } from 'environments/environment';
@@ -35,8 +33,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import * as Sentry from '@sentry/capacitor';
 import * as SentryAngular from '@sentry/angular';
 import { BrowserTracing } from '@sentry/tracing';
-import { initializeAuth } from 'firebase/auth';
-import { getApp } from 'firebase/app';
 
 Sentry.init(
   {
@@ -59,12 +55,7 @@ Sentry.init(
     TabsComponent
   ],
   imports: [
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage()),
-    provideFunctions(() => getFunctions()),
-    provideMessaging(() => getMessaging()),
     //enable offline persistance
     // AngularFirestoreModule.enablePersistence(),
     AppRoutingModule,
@@ -86,6 +77,9 @@ Sentry.init(
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
+    initializeApp(environment.firebase)
+    initializeFirestore(getApp(), {})
+
     library.addIconPacks(fas)
   }
 }

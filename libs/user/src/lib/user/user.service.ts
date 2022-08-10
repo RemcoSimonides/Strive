@@ -10,7 +10,6 @@ import { createUser, User } from '@strive/model';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs';
 import { toDate } from '@strive/utils/helpers';
-import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends FireCollection<User> {
@@ -25,8 +24,8 @@ export class UserService extends FireCollection<User> {
 
   isLoggedIn$ = user(getAuth()).pipe(map(user => !!user))
 
-  constructor(db: Firestore) {
-    super(db)
+  constructor() {
+    super(getFirestore())
 
     this.user$ = user(getAuth()).pipe(
       switchMap(user => user ? this.valueChanges(user.uid) : of(undefined)),

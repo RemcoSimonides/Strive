@@ -12,16 +12,15 @@ import {
   FieldValue,
   serverTimestamp,
   doc,
-  docSnapshots,
   collection,
   collectionGroup,
   query,
   getDoc,
   getDocs,
-  collectionSnapshots,
   Query,
   QueryConstraint,
-} from '@angular/fire/firestore';
+} from 'firebase/firestore';
+import { collection as collectionSnapshots, doc as docSnapshots } from 'rxfire/firestore'
 import { Observable, of, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
