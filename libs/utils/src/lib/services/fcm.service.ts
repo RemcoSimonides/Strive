@@ -3,8 +3,7 @@ import { Messaging, getToken, onMessage, Unsubscribe } from '@angular/fire/messa
 import { ToastController } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
 import { PersonalService } from '@strive/user/personal/personal.service';
-
-
+import * as Sentry from '@sentry/capacitor';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +13,7 @@ export class FcmService {
     private messaging: Messaging,
     private toastController: ToastController,
     private personal: PersonalService
-  ) { }
+  ) {}
 
   private async getPermission() {
     try {
@@ -29,6 +28,7 @@ export class FcmService {
         duration: 5000,
         position: 'bottom',
       }).then(toast => toast.present())
+      Sentry.captureException(`Couldn't register FCM token`)
       return ''
     }
 
