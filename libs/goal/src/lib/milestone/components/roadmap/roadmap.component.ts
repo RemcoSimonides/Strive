@@ -55,7 +55,7 @@ export class RoadmapComponent {
   }
 
   add() {
-    if (this.milestoneForm.value) {
+    if (this.milestoneForm.content.value) {
       this.milestoneForm.order.setValue(this.milestones.length)
       const milestone = createMilestone(this.milestoneForm.getRawValue())
       this.milestone.add(milestone, { params: { goalId: this.goal.id }})
