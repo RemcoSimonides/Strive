@@ -22,8 +22,8 @@
 
             <section>
               <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
-                <ion-card [routerLink]="['/goal/', stakeholder.goal.id]">
-                  <ion-item lines="none">
+                <ion-card>
+                  <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
                     <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
                       <img [ref]="stakeholder.goal.image" asset="goal.jpeg"/>
                       <div *ngIf="stakeholder.status === 'finished'">finished</div>
@@ -41,7 +41,7 @@
                       </ion-button>
                     </article>
                   </ion-item>
-                  <ul *ngIf="stakeholder.story.length">
+                  <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]" [queryParams]="{t:'story'}">
                     <li *ngFor="let event of stakeholder.story">
                       <ion-icon [name]="event.icon"></ion-icon>
                       <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
