@@ -1,19 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 // Ionic
-import { IonInfiniteScroll, ModalController, NavController, Platform } from '@ionic/angular'
+import { ModalController, NavController, Platform } from '@ionic/angular'
 // Rxjs
-import { Subscription, of, Observable, shareReplay } from 'rxjs';
+import { Subscription, of, Observable, combineLatest, firstValueFrom } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
-import { GoalAuthGuardService } from '@strive/goal/goal/guards/goal-auth-guard.service'
 import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/user.service';
 // Interfaces
-import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { Goal, createGoalStakeholder } from '@strive/model'
 // Components
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 
@@ -23,13 +22,10 @@ import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/u
   styleUrls: ['./goal-view.page.scss'],
 })
 export class GoalViewComponent implements OnInit, OnDestroy {
-  @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
   pageIsLoading = true
   canAccess = false
 
-  goalId: string
-  goal?: Goal
-
+  goal$?: Observable<Goal | undefined>
   isAdmin$?: Observable<boolean>
 
   segmentChoice: 'goal' | 'roadmap' | 'story' = 'goal'
@@ -40,7 +36,6 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   constructor(
     public user: UserService,
     private goalService: GoalService,
-    private goalAuthGuardService: GoalAuthGuardService,
     public stakeholder: GoalStakeholderService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
@@ -48,51 +43,63 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private route: ActivatedRoute,
     private seo: SeoService
-  ) {
-    this.goalId = this.route.snapshot.paramMap.get('id') as string
-  }
+  ) {}
 
   async ngOnInit() {
-    this.goal = await this.goalService.getValue(this.goalId)
-
-    this.isAdmin$ = this.user.user$.pipe(
-      tap(user => {
-        if (user) this.stakeholder.updateLastCheckedGoal(this.goalId, user.uid)
-      }),
-      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
-      map(stakeholder => createGoalStakeholder(stakeholder).isAdmin),
-      shareReplay({ bufferSize: 1, refCount: true })
+    const goalId$: Observable<string> = this.route.params.pipe(
+      map(params => params['id'])
     )
+
+    this.goal$ = goalId$.pipe(
+      switchMap(goalId => this.goalService.valueChanges(goalId))
+    )
+
+    const stakeholder$ = combineLatest([
+      goalId$,
+      this.user.user$
+    ]).pipe(
+      tap(([ goalId, user ]) => {
+        if (user) this.stakeholder.updateLastCheckedGoal(goalId, user.uid)
+      }),
+      switchMap(([ goalId, user ]) => user ? this.stakeholder.valueChanges(user.uid, { goalId }) : of(createGoalStakeholder()))
+    )
+
+    this.isAdmin$ = stakeholder$.pipe(
+      map(stakeholder => !!stakeholder?.isAdmin)
+    )
+
+    this.accessSubscription = combineLatest([
+      this.goal$,
+      stakeholder$
+    ]).pipe(
+      map(async ([ goal, stakeholder ]) => {
+        if (!goal) return { access: false, goal }
+        if (goal.publicity === 'public') return { access: true, goal }
+        const { isAdmin, isAchiever, isSupporter, isSpectator } = createGoalStakeholder(stakeholder)
+        if (isAdmin || isAchiever || isSupporter || isSpectator) return { access: true, goal }
+        const access = await this.inviteTokenService.checkInviteToken(goal.id)
+        return { access, goal }
+      })
+    ).subscribe(async promise => {
+      const { goal, access } = await promise
+      access && goal ? this.initGoal(goal) : this.initNoAccess()
+    })
 
     const { t } = this.route.snapshot.queryParams;
     this.segmentChoice = ['goal', 'roadmap', 'story'].includes(t) ? t : 'goal'
-
-    if (!this.goal) {
-      this.initNoAccess()
-      return
-    }
-
-    this.accessSubscription = this.user.user$.pipe(
-      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
-    ).subscribe(async (stakeholder: GoalStakeholder | undefined) => {
-      let access = this.goal?.publicity === 'public'
-      if (!access && stakeholder && this.goal) access = await this.goalAuthGuardService.checkAccess(this.goal, stakeholder)
-      if (!access && stakeholder) access = await this.inviteTokenService.checkInviteToken(this.goalId)
-      access ? this.initGoal() : this.initNoAccess();
-    })
   }
 
   ngOnDestroy() {
     this.accessSubscription?.unsubscribe()
   }
 
-  private initGoal() {
+  private initGoal(goal: Goal) {
     this.canAccess = true
     this.pageIsLoading = false
-    if (!this.goal) return
+  
     this.seo.generateTags({
-      title: `${this.goal.title} - Strive Journal`,
-      image: this.goal.image
+      title: `${goal.title} - Strive Journal`,
+      image: goal.image
     })
   }
 
@@ -120,11 +127,13 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     this.segmentChoice = ev.detail.value
   }
 
-  createCustomPost() {
+  async createCustomPost() {
+    if (!this.goal$) return
+    const goal = await firstValueFrom(this.goal$)
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        goalId: this.goalId,
+        goalId: goal?.id,
         postId: undefined
       }
     }).then(modal => modal.present())

@@ -28,12 +28,12 @@
 
   <!-- Roadmap -->
   <section *ngSwitchCase="'roadmap'">
-    <journal-goal-roadmap [goal]="goal"></journal-goal-roadmap>
+    <journal-goal-roadmap [goal]="goal$ | async"></journal-goal-roadmap>
   </section>
 
   <!-- Posts -->
   <section *ngSwitchCase="'story'">
-    <journal-goal-story [goal]="goal"></journal-goal-story>
+    <journal-goal-story [goal]="goal$ | async"></journal-goal-story>
   </section>
 
 </ion-content>
