@@ -1,0 +1,20 @@
+h4 {
+  color: var(--ion-color-primary);
+}
+
+ion-select {
+  width: fit-content;
+}
+
+ion-list {
+  border-radius: 12px;
+}
+
+small {
+  color: var(--ion-color-dark-shade);
+
+  fa-icon {
+    font-size: 1em;
+    margin-right: 4px;
+  }
+}

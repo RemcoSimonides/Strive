@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { orderBy } from '@angular/fire/firestore';
 // Rxjs
 import { Observable, of } from 'rxjs';
@@ -18,26 +18,25 @@ import { Goal, Milestone, createGoalStakeholder, GoalStakeholder } from '@strive
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RoadmapComponent implements OnInit {
+export class RoadmapComponent {
 
   stakeholder$?: Observable<GoalStakeholder>
   milestones$?: Observable<Milestone[]>
 
-  @Input() goal!: Goal
+  @Input() set goal(goal: Goal) {
+    if (!goal) return
+    this.stakeholder$ = this.user.user$.pipe(
+      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: goal.id }) : of(undefined)),
+      map(stakeholder => createGoalStakeholder(stakeholder))
+    )
+
+    const query = [orderBy('order', 'asc')]
+    this.milestones$ = this.milestone.valueChanges(query, { goalId: goal.id })
+  }
 
   constructor(
     private milestone: MilestoneService,
     private stakeholderService: GoalStakeholderService,
     private user: UserService
   ) { }
-
-  ngOnInit() {
-    this.stakeholder$ = this.user.user$.pipe(
-      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: this.goal.id }) : of(undefined)),
-      map(stakeholder => createGoalStakeholder(stakeholder))
-    )
-
-    const query = [orderBy('order', 'asc')]
-    this.milestones$ = this.milestone.valueChanges(query, { goalId: this.goal.id })
-  }
 }

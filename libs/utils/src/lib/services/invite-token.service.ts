@@ -30,13 +30,11 @@ export class InviteTokenService {
 
     const snap = await getDoc(doc(this.db, ref)) as DocumentSnapshot<InviteToken>
     const data = snap.data()
-    if (!data) return false
+    if (!data?.token) return false
 
-    if (data.token) {
-      const uid = this.user.uid
-      if (uid) {
-        await this.goalStakeholderService.upsert({ uid, isSpectator: true }, { params: { goalId: id }})
-      }
+    const uid = this.user.uid
+    if (uid) {
+      await this.goalStakeholderService.upsert({ uid, isSpectator: true }, { params: { goalId: id }})
     }
 
     return true

@@ -23,7 +23,7 @@ import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
 import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { map, switchMap } from 'rxjs/operators';
-import { TeamModalComponent } from '@strive/goal/goal/modals/team/team.modal';
+import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({

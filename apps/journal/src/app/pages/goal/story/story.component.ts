@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { orderBy } from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
@@ -13,17 +13,17 @@ import { StoryService } from '@strive/goal/story/story.service';
   styleUrls: ['./story.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StoryComponent implements OnInit {
+export class StoryComponent {
   story$?: Observable<StoryItem[]>
 
-  @Input() goal!: Goal
+  @Input() set goal(goal: Goal) {
+    if (!goal) return
+    const query = [orderBy('date', 'desc')]
+    this.story$ = this.story.valueChanges(query, { goalId: goal.id })
+  }
 
   constructor(private story: StoryService) {}
 
-  ngOnInit() {
-    const query = [orderBy('date', 'desc')]
-    this.story$ = this.story.valueChanges(query, { goalId: this.goal.id })
-  }
 
   async refreshPosts($event: any) {
     await delay(500)
