@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 // Rxjs
 import { BehaviorSubject } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 // Services
 import { AlgoliaService  } from '@strive/utils/services/algolia.service';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { exercises } from '@strive/exercises/utils';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'journal-explore',
@@ -55,8 +56,20 @@ export class ExploreComponent implements OnDestroy {
 
   })
 
+  private paramsSub = this.route.queryParams.pipe(
+    map(params => params['t'])
+  ).subscribe(t => {
+    const typeControl = this.searchForm.get('type')! 
+    if (!t) typeControl.setValue('all') 
+    const types = ['goals', 'users', 'exercises']
+    if (!types.includes(t)) return
+    typeControl.setValue(t)
+  })
+
   constructor(
     public algolia: AlgoliaService,
+    private route: ActivatedRoute,
+    private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {
@@ -65,9 +78,14 @@ export class ExploreComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.searchSubscription.unsubscribe()
+    this.paramsSub.unsubscribe()
   }
 
   setType(type: string) {
+    this.router.navigate(['.'], {
+      queryParams: { t: type },
+      relativeTo: this.route
+    });
     this.searchForm.get('type')!.setValue(type)
   }
 }
