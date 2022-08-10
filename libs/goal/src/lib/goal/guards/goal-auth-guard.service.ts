@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -12,8 +12,6 @@ import { Goal, GoalStakeholder } from '@strive/model'
 })
 export class GoalAuthGuardService implements CanActivate {
 
-  private _needsToBeAdmin = false
-
   constructor(
     private goalService: GoalService,
     private stakeholder: GoalStakeholderService,
@@ -21,8 +19,7 @@ export class GoalAuthGuardService implements CanActivate {
     private user: UserService
   ) { }
 
-  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-
+  async canActivate(next: ActivatedRouteSnapshot): Promise<boolean> {
     const goalId = next.params['id'] as string
 
     const uid = await this.user.getUID()
@@ -30,8 +27,6 @@ export class GoalAuthGuardService implements CanActivate {
       this.router.navigate(['/explore'])
       return false
     }
-
-    this._needsToBeAdmin = next.url.some(segment => segment.path === 'edit')
 
     // get goal
     const goal = await this.goalService.getValue(goalId);
@@ -65,9 +60,6 @@ export class GoalAuthGuardService implements CanActivate {
   }
 
   private async checkAccessToGoal(stakeholder: GoalStakeholder): Promise<boolean> {
-
-    if (this._needsToBeAdmin) return stakeholder.isAdmin
-
     if (stakeholder.isAchiever || stakeholder.isAdmin || stakeholder.isSupporter || stakeholder.isSpectator) {
       return true
     } else return false
