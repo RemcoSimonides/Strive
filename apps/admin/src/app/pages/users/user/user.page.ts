@@ -7,7 +7,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { createUser, Goal, User } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { orderBy, where } from '@angular/fire/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
 
 @Component({

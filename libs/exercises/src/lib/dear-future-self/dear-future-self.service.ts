@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
+import { arrayUnion, DocumentSnapshot, getFirestore } from 'firebase/firestore';
 // Rxjs
 import { Observable } from 'rxjs';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { DearFutureSelf, Message } from '@strive/model';
-import { arrayUnion } from 'firebase/firestore';
 import { toDate } from '@strive/utils/helpers';
 
 @Injectable({
@@ -14,8 +13,8 @@ import { toDate } from '@strive/utils/helpers';
 export class DearFutureSelfService extends FireCollection<DearFutureSelf> {
   readonly path = 'Users/:uid/Exercises'
 
-  constructor(db: Firestore) {
-    super(db)
+  constructor() {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf | undefined {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
+import { where } from 'firebase/firestore';
 // Services
 import { SeoService } from '@strive/utils/services/seo.service';
 import { SupportService } from '@strive/support/support.service';
@@ -9,7 +10,6 @@ import { Observable, of, shareReplay } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { where } from '@angular/fire/firestore';
 import { SupportOptionsComponent } from '@strive/support/components/options/options.component';
 import { unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';

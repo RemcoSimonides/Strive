@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, Firestore } from '@angular/fire/firestore'
+import { DocumentSnapshot, getFirestore, limit, where } from 'firebase/firestore'
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service'
 // Interfaces
 import { createSupport, Support } from '@strive/model'
 import { UserService } from '@strive/user/user/user.service'
 import { of, switchMap, map, shareReplay } from 'rxjs'
-import { limit, where } from 'firebase/firestore'
 import { toDate } from '@strive/utils/helpers'
 
 @Injectable({ providedIn: 'root' })
@@ -26,8 +25,8 @@ export class SupportService extends FireCollection<Support> {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  constructor(protected override db: Firestore, private user: UserService) {
-    super(db)
+  constructor(private user: UserService) {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Support>) {

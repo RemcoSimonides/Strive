@@ -5,7 +5,7 @@ import { Notification, notificationEvents } from '@strive/model'
 import { UserService } from '@strive/user/user/user.service';
 import { switchMap, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { orderBy } from '@angular/fire/firestore';
+import { orderBy } from '@firebase/firestore';
 import { PersonalService } from '@strive/user/personal/personal.service';
 
 @Component({

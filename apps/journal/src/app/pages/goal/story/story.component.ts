@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { orderBy } from '@angular/fire/firestore';
+import { orderBy } from 'firebase/firestore';
 
 import { Observable } from 'rxjs';
 import { delay } from '@strive/utils/helpers';

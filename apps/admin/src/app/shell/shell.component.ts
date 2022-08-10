@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { getAuth } from 'firebase/auth';
 
 @Component({
   selector: 'strive-shell',
@@ -16,13 +16,10 @@ export class ShellComponent {
     { title: 'New Features', url: '/a/features', icon: 'boat' }
   ];
 
-  constructor(
-    private auth: Auth,
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   logout() {
-    this.auth.signOut();
+    getAuth().signOut();
     this.router.navigate(['/']);
   }
 }

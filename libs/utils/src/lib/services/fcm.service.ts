@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Messaging, getToken, onMessage, Unsubscribe } from '@angular/fire/messaging';
+import { getToken, getMessaging, onMessage, Unsubscribe } from 'firebase/messaging';
 import { ToastController } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
 import { PersonalService } from '@strive/user/personal/personal.service';
 import * as Sentry from '@sentry/capacitor';
+
 @Injectable({
   providedIn: 'root'
 })
 export class FcmService {
 
   constructor(
-    private messaging: Messaging,
     private toastController: ToastController,
     private personal: PersonalService
   ) {}
 
   private async getPermission() {
     try {
-      const token = await getToken(this.messaging)
+      const token = await getToken(getMessaging())
       console.log('Permission granted! Save to the server!', token)
 
       this.personal.addFCMToken(token)
@@ -86,7 +86,7 @@ export class FcmService {
   }
 
   showMessages(): Unsubscribe {
-    return onMessage(this.messaging, msg => {
+    return onMessage(getMessaging(), msg => {
       if (!msg.notification?.body) return
       const { body } = msg.notification
       this.makeToast(body)

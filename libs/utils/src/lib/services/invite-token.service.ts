@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { doc, getDoc, setDoc, Firestore, DocumentSnapshot } from '@angular/fire/firestore';
-// Services
+import { doc, DocumentSnapshot, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { UserService } from '@strive/user/user/user.service';
 
@@ -16,11 +16,10 @@ export interface InviteToken {
 export class InviteTokenService {
 
   constructor(
-    private db: Firestore,
     private goalStakeholderService: GoalStakeholderService,
     private route: ActivatedRoute,
     private user: UserService
-    ) { }
+  ) { }
 
   public async checkInviteToken(id: string): Promise<boolean> {
     const { invite_token } = this.route.snapshot.queryParams
@@ -28,7 +27,7 @@ export class InviteTokenService {
 
     const ref = `Goals/${id}/InviteTokens/${invite_token}`
 
-    const snap = await getDoc(doc(this.db, ref)) as DocumentSnapshot<InviteToken>
+    const snap = await getDoc(doc(getFirestore(), ref)) as DocumentSnapshot<InviteToken>
     const data = snap.data()
     if (!data?.token) return false
 
@@ -69,7 +68,7 @@ export class InviteTokenService {
     const data: InviteToken = { token, deadline }
 
     const ref = `Goals/${id}/InviteTokens/${token}`
-    await setDoc(doc(this.db, ref), data) 
+    await setDoc(doc(getFirestore(), ref), data) 
 
     return token
   }

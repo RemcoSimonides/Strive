@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { orderBy } from '@angular/fire/firestore';
+import { orderBy } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';

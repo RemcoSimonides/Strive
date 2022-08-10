@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { Auth } from '@angular/fire/auth'
 import { PopoverController, ModalController } from '@ionic/angular'
+import { getAuth } from 'firebase/auth'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { FcmService } from '@strive/utils/services/fcm.service'
@@ -19,7 +19,6 @@ export class ProfileOptionsBrowserComponent {
   unreadNotifications$ = this.notification.hasUnreadNotification$
 
   constructor(
-    private auth: Auth,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public pwa: PWAService,
@@ -45,7 +44,7 @@ export class ProfileOptionsBrowserComponent {
   }
 
   async signOut() {
-    await this.auth.signOut()
+    await getAuth().signOut()
     this.popoverCtrl.dismiss()
 
     // open auth modal

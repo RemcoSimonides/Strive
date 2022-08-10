@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, Firestore } from '@angular/fire/firestore'
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
 
 import { FireCollection } from '@strive/utils/services/collection.service'
 
@@ -10,8 +10,8 @@ import { toDate } from '@strive/utils/helpers'
 export class StoryService extends FireCollection<StoryItem> {
   readonly path = 'Goals/:goalId/Story'
 
-  constructor(db: Firestore) {
-    super(db)
+  constructor() {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<StoryItem>) {

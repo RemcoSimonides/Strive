@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Discussion} from './discussion.firestore'
 import { FireCollection } from '@strive/utils/services/collection.service';
-import { Firestore } from '@angular/fire/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { CommentService } from './comment.service';
 
 @Injectable({
@@ -10,10 +10,7 @@ import { CommentService } from './comment.service';
 export class DiscussionService extends FireCollection<Discussion> {
   readonly path = `Discussions`
 
-  constructor(
-    db: Firestore,
-    public comment: CommentService
-  ) {
-    super(db)
+  constructor(public comment: CommentService) {
+    super(getFirestore())
   }
 }

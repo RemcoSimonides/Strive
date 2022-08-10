@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-// Angularfire
-import { Firestore, DocumentSnapshot, where, WriteBatch } from '@angular/fire/firestore';
+import { DocumentSnapshot, getFirestore, where, WriteBatch } from 'firebase/firestore';
 // Services
 import { UserService } from '@strive/user/user/user.service';
 // Interfaces
@@ -14,8 +13,8 @@ export class UserSpectateService extends FireCollection<Spectator> {
   readonly path = `Users/:uid/Spectators`
   override readonly idKey = 'uid'
 
-  constructor(db: Firestore, private user: UserService) {
-    super(db)
+  constructor(private user: UserService) {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Spectator>) {

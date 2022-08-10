@@ -4,7 +4,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { Storage, deleteObject, ref, uploadBytes } from '@angular/fire/storage';
+import { deleteObject, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
 import { isValidHttpUrl } from '@strive/utils/helpers';
 
@@ -49,8 +49,6 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   @Input() storagePath!: string
 
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>;
-
-  constructor(private afStorage: Storage) { }
 
   ngOnInit() {
     this.resetState();
@@ -145,7 +143,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   remove() {
     try {
-      deleteObject(ref(this.afStorage, this.form.value))
+      deleteObject(ref(getStorage(), this.form.value))
     } catch (err) { console.error(err) }
     this.form.setValue('');
     this.step.next('drop')
@@ -162,7 +160,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
       const blob = b64toBlob(this.croppedImage)
       const path = `${this.storagePath}/${this.file?.name}`
-      uploadBytes(ref(this.afStorage, path), blob)
+      uploadBytes(ref(getStorage(), path), blob)
       this.form.setValue(path)
       this.form.markAsDirty()
       this.step.next('show')

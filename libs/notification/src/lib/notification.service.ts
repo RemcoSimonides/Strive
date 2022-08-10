@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
-import { limit, where } from 'firebase/firestore'
-import { Firestore, DocumentSnapshot } from '@angular/fire/firestore'
+import { DocumentSnapshot, getFirestore, limit, where } from 'firebase/firestore'
 
 import { of, switchMap, shareReplay, map } from 'rxjs'
 
@@ -28,8 +27,8 @@ export class NotificationService extends FireCollection<Notification> {
     shareReplay({ bufferSize: 1, refCount: true })
   )
   
-  constructor(db: Firestore, private personal: PersonalService) { 
-    super(db)
+  constructor(private personal: PersonalService) { 
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Notification>) {

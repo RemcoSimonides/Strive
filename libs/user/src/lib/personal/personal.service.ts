@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { arrayUnion, DocumentSnapshot, Firestore, serverTimestamp } from '@angular/fire/firestore';
-import { Auth, user } from '@angular/fire/auth';
+import { arrayUnion, DocumentSnapshot, getFirestore, serverTimestamp } from 'firebase/firestore';
+import { user } from 'rxfire/auth';
+import { getAuth } from 'firebase/auth';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 import { UserService } from '../user/user.service';
@@ -13,13 +14,13 @@ export class PersonalService extends FireCollection<Personal> {
   readonly path = 'Users/:uid/Personal'
   override readonly idKey = 'uid'
 
-  personal$: Observable<Personal | undefined> = user(this.auth).pipe(
+  personal$: Observable<Personal | undefined> = user(getAuth()).pipe(
     switchMap(user => user ? this.valueChanges(user.uid, { uid: user.uid }) : of(undefined)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  constructor(db: Firestore, private auth: Auth, private userService: UserService) {
-    super(db)
+  constructor(private userService: UserService) {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Personal>) {

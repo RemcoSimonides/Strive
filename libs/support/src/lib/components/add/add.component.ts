@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController, PopoverController } from '@ionic/angular';
+import { orderBy, where } from 'firebase/firestore';
 // Rxjs
 import { Observable, of } from 'rxjs';
 // Services
@@ -11,7 +12,6 @@ import { UserService } from '@strive/user/user/user.service'
 import { Goal, createMilestoneLink, Milestone, createSupport, Support } from '@strive/model'
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { orderBy, where } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { SupportOptionsComponent } from '../options/options.component';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';

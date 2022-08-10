@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Functions, httpsCallable } from 'firebase/functions';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { createGoal, Goal } from '@strive/model';
@@ -7,7 +7,6 @@ import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: '[id] strive-goal',
@@ -23,7 +22,6 @@ export class GoalComponent implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private functions: Functions,
     private goal: GoalService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,

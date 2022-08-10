@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavParams, IonContent, ModalController, Platform} from '@ionic/angular';
-import { collection, DocumentData, Firestore, getDocs, limit, orderBy, query, Query, QueryConstraint, startAfter } from '@angular/fire/firestore';
+import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, query, Query, QueryConstraint, startAfter } from 'firebase/firestore';
 // Rxjs
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map, skip } from 'rxjs/operators';
@@ -52,7 +52,6 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
 
   constructor(
     public user: UserService,
-    private db: Firestore,
     private discussion: DiscussionService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
@@ -70,7 +69,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     this.discussionId = this.navParams.get('discussionId')
     this.discussion$ = this.discussion.valueChanges(this.discussionId)
 
-    const ref = collection(this.db, `Discussions/${this.discussionId}/Comments`)
+    const ref = collection(getFirestore(), `Discussions/${this.discussionId}/Comments`)
     const constraints = [
       orderBy('createdAt', 'desc'),
       limit(this.commentsPerQuery)

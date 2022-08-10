@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { UserService } from '@strive/user/user/user.service';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 @Component({
   selector: 'strive-login',
@@ -23,7 +23,6 @@ export class LoginPage {
 
   constructor(
     private alertCtrl: AlertController,
-    private auth: Auth,
     private loadingCtrl: LoadingController,
     private router: Router,
     private user: UserService
@@ -45,13 +44,13 @@ export class LoginPage {
 
       try {
 
-        const { user } = await signInWithEmailAndPassword(this.auth, email, password)
+        const { user } = await signInWithEmailAndPassword(getAuth(), email, password)
         const isAdmin = await this.user.isStriveAdmin(user.uid)
 
         if (isAdmin) {
           this.router.navigate(['/a/users'])
         } else {
-          this.auth.signOut()
+          getAuth().signOut()
           this.alertCtrl.create({
             message: 'Not a Strive Admin',
             buttons: [{ text: 'Ok' }]

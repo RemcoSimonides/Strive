@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Auth, updateProfile, user } from '@angular/fire/auth';
-import { doc, DocumentSnapshot, Firestore, getDoc } from '@angular/fire/firestore';
+import { DocumentSnapshot, getDoc, getFirestore, doc } from 'firebase/firestore';
+import { getAuth, updateProfile } from 'firebase/auth';
+import { user } from 'rxfire/auth';
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
@@ -9,6 +10,7 @@ import { createUser, User } from '@strive/model';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs';
 import { toDate } from '@strive/utils/helpers';
+import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends FireCollection<User> {
@@ -21,12 +23,12 @@ export class UserService extends FireCollection<User> {
   private _uid = new BehaviorSubject<string | undefined>(undefined)
   uid$ = this._uid.asObservable()
 
-  isLoggedIn$ = user(this.auth).pipe(map(user => !!user))
+  isLoggedIn$ = user(getAuth()).pipe(map(user => !!user))
 
-  constructor(db: Firestore, private auth: Auth) {
+  constructor(db: Firestore) {
     super(db)
 
-    this.user$ = user(this.auth).pipe(
+    this.user$ = user(getAuth()).pipe(
       switchMap(user => user ? this.valueChanges(user.uid) : of(undefined)),
       tap(user => {
         this.user = createUser(user)
@@ -46,7 +48,7 @@ export class UserService extends FireCollection<User> {
   }
 
   override async onUpdate(profile: User) {
-    const _user = await user(this.auth).pipe(take(1)).toPromise()
+    const _user = await user(getAuth()).pipe(take(1)).toPromise()
     if (_user && (profile.username || profile.photoURL)) {
       updateProfile(_user, {
         displayName: profile.username ?? _user.displayName,
@@ -58,7 +60,7 @@ export class UserService extends FireCollection<User> {
   async getUID(): Promise<string> {
     if (this.uid === undefined) {
       return await new Promise((resolve) => {
-        user(this.auth).pipe(take(1)).subscribe(user =>resolve(user?.uid ?? ''))
+        user(getAuth()).pipe(take(1)).subscribe(user =>resolve(user?.uid ?? ''))
       })
     } else {
       return this.uid
@@ -66,7 +68,8 @@ export class UserService extends FireCollection<User> {
   }
 
   async isStriveAdmin(uid: string) {
-    const snap = await getDoc(doc(this.db, `striveAdmin/${uid}`))
+    const ref = doc(getFirestore(), `striveAdmin/${uid}`)
+    const snap = await getDoc(ref)
     return snap.exists()
   }
 }

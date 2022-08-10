@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 // Angularfire / firebase
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirebaseApp, initializeApp, firebaseApp$ } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
@@ -35,6 +35,8 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import * as Sentry from '@sentry/capacitor';
 import * as SentryAngular from '@sentry/angular';
 import { BrowserTracing } from '@sentry/tracing';
+import { initializeAuth } from 'firebase/auth';
+import { getApp } from 'firebase/app';
 
 Sentry.init(
   {

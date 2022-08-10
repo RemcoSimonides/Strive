@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore';
+import { toDate } from 'ngfire'
 // Services
 import { FireCollection } from '@strive/utils/services/collection.service';
 // Interfaces
 import { createMilestone, Milestone } from '@strive/model'
-import { Firestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { UserService } from '@strive/user/user/user.service';
-import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireCollection<Milestone> {
   readonly path = 'Goals/:goalId/Milestones';
 
-  constructor(db: Firestore, private user: UserService) {
-    super(db)
+  constructor(private user: UserService) {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Milestone>) {

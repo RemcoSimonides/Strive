@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { docSnapshots, Firestore } from "@angular/fire/firestore";
+import { docData } from 'rxfire/firestore';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { map } from "rxjs";
+import { doc, getDoc, updateDoc, getFirestore } from "firebase/firestore";
 import { Features, Feature } from './features.model';
 
 @Component({
@@ -19,10 +18,10 @@ export class FeaturesComponent {
     url: new FormControl('https://strivejournal.com/', { nonNullable: true })
   })
 
-  private ref = doc(this.db, 'miscellaneous/feature')
-  features$ = docSnapshots(this.ref).pipe(map(snap => (snap.data() as Features)))
+  private ref = doc(getFirestore(), 'miscellaneous/feature')
+  features$ = docData(this.ref)
 
-  constructor(private db: Firestore) {}
+  constructor() {}
 
   async update() {
     if (this.form.invalid) return

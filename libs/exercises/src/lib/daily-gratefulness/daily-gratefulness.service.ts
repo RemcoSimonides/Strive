@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentSnapshot, Firestore } from '@angular/fire/firestore';
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore';
 // Rxjs
 import { Observable } from 'rxjs';
 // Services
@@ -14,8 +14,8 @@ import { toDate } from '@strive/utils/helpers'
 export class DailyGratefulnessService extends FireCollection<DailyGratefulness> {
   readonly path = 'Users/:uid/Exercises'
 
-  constructor(db: Firestore) {
-    super(db)
+  constructor() {
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness | undefined {

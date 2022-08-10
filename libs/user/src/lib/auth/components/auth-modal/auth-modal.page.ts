@@ -1,7 +1,6 @@
 import { Component, HostBinding, HostListener, Input } from '@angular/core';
 import { Location } from '@angular/common';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup } from '@angular/fire/auth';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup, getAuth } from 'firebase/auth';
 // Ionic
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular';
 // Services
@@ -11,7 +10,7 @@ import { createPersonal, createUser } from '@strive/model';
 // Strive
 import { WelcomeModalComponent } from '../welcome/welcome.modal';
 import { PersonalService } from '@strive/user/personal/personal.service';
-import { AbstractControlOptions, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export enum enumAuthSegment {
   login,
@@ -97,7 +96,6 @@ export class AuthModalComponent {
   @HostBinding() modal?: HTMLIonModalElement
 
   constructor(
-    private afAuth: Auth,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private location: Location,
@@ -120,7 +118,7 @@ export class AuthModalComponent {
 
   async loginWithGoogle() {
     try {
-      const credentials = await signInWithPopup(this.afAuth, new GoogleAuthProvider())
+      const credentials = await signInWithPopup(getAuth(), new GoogleAuthProvider())
       const { displayName, uid, email } = credentials.user;
 
       const user = await this.user.getValue(uid)
@@ -193,7 +191,7 @@ export class AuthModalComponent {
 
       try {
 
-        await signInWithEmailAndPassword(this.afAuth, email, password)
+        await signInWithEmailAndPassword(getAuth(), email, password)
         loading.dismiss()
         this.dismiss(true)
 
@@ -234,7 +232,7 @@ export class AuthModalComponent {
       if (!email || !password || !username) {
         throw new Error('username, email or password not provided')
       }
-      const { user } = await createUserWithEmailAndPassword(this.afAuth, email, password)
+      const { user } = await createUserWithEmailAndPassword(getAuth(), email, password)
       const profile = createUser({ uid: user.uid, username })
       const personal = createPersonal({ uid: user.uid, email })
 
@@ -270,7 +268,7 @@ export class AuthModalComponent {
 
       try {
 
-        await sendPasswordResetEmail(this.afAuth, email)
+        await sendPasswordResetEmail(getAuth(), email)
         loading.dismiss()
         this.alertCtrl.create({
           message: 'Check your inbox for a password reset link',

@@ -24,7 +24,6 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, of, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { shareWithDelay } from '../share.delay';
 
 ////////////
 // TYEPES //

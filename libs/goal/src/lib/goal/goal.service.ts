@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, DocumentSnapshot, QueryConstraint, where, orderBy } from '@angular/fire/firestore';
+import { DocumentSnapshot, getFirestore, orderBy, QueryConstraint, where } from 'firebase/firestore';
 // Rxjs
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -16,11 +16,10 @@ export class GoalService extends FireCollection<Goal> {
   readonly path = `Goals`
 
   constructor(
-    public override db: Firestore,
     private stakeholder: GoalStakeholderService,
     private user: UserService
   ) { 
-    super(db)
+    super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Goal>) {

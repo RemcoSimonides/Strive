@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-// Angularfire
-import { Firestore, DocumentSnapshot, getDoc, WriteBatch, serverTimestamp } from '@angular/fire/firestore';
+import { DocumentSnapshot, getDoc, getFirestore, serverTimestamp, WriteBatch } from 'firebase/firestore';
 import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
 // Interfaces
 import { Goal, GoalStakeholder, createGoalStakeholder, User, createUser, createGoal } from '@strive/model'
@@ -21,8 +20,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
   readonly path = 'Goals/:goalId/GStakeholders'
   override readonly idKey = 'uid'
 
-  constructor(db: Firestore, private user: UserService) {
-    super(db)
+  constructor(private user: UserService) {
+    super(getFirestore())
   }
 
   override fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {

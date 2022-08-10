@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { ModalController, PopoverController } from '@ionic/angular'
 
 import { filter } from 'rxjs/operators';
@@ -31,7 +31,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
     filter(url => url ? isValidHttpUrl(url) : false)
   ).subscribe(async url => {
     this.scrapingUrl = true;
-    const scrape = httpsCallable(this.functions, 'scrapeMetatags')
+    const scrape = httpsCallable(getFunctions(), 'scrapeMetatags')
     const scraped = await scrape({ url })
     const { error, result } = scraped.data as { error: string, result: any }
     if (error) {
@@ -46,7 +46,6 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
   })
 
   constructor(
-    private functions: Functions,
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,

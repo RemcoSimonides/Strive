@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { docSnapshots, Firestore, doc, updateDoc, getDoc } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore';
+import { docData } from 'rxfire/firestore';
 
 import { Motivation, Motivations } from './motivation.model';
 
@@ -18,10 +18,10 @@ export class MotivationComponent {
     from: new FormControl('', { nonNullable: true, validators: [Validators.required]})
   })
 
-  private ref = doc(this.db, `miscellaneous/motivation`)
-  motivations$ = docSnapshots(this.ref).pipe(map(snap => (snap.data()) as Motivations))
+  private ref = doc(getFirestore(), `miscellaneous/motivation`)
+  motivations$ = docData(this.ref)
 
-  constructor(private db: Firestore) {}
+  constructor() {}
 
   async update() {
     if (this.form.invalid) return

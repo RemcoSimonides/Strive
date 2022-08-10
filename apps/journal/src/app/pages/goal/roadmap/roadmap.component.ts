@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { orderBy } from '@angular/fire/firestore';
+import { orderBy } from 'firebase/firestore';
+
 // Rxjs
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
