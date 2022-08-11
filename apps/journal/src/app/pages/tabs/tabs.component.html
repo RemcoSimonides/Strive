@@ -3,7 +3,7 @@
 		<ion-tab-bar slot="bottom">
 
 			<ion-tab-button tab="goals">
-				<ion-icon name="flag" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+				<ion-icon name="flag-sharp" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
 			</ion-tab-button>
 
 			<ion-tab-button tab="supports">
@@ -15,7 +15,7 @@
 			</ion-tab-button>
 
 			<ion-tab-button tab="exercise" [routerLink]="['/exercise']">
-				<ion-icon name="shapes-outline"></ion-icon>
+				<ion-icon name="barbell-sharp"></ion-icon>
 			</ion-tab-button>
 
 			<ion-tab-button [tab]="'profile/' + user.uid">
