@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
 import { toDate } from 'ngfire'
-// Services
-import { FireCollection } from '@strive/utils/services/collection.service';
-// Interfaces
+
+import { FireCollection } from '@strive/utils/services/collection.service'
+import { UserService } from '@strive/user/user/user.service'
+
 import { createMilestone, Milestone } from '@strive/model'
-import { UserService } from '@strive/user/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireCollection<Milestone> {

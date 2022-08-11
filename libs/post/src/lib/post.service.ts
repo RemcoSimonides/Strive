@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
 
-import { FireCollection } from '@strive/utils/services/collection.service';
+import { FireCollection } from '@strive/utils/services/collection.service'
+import { toDate } from 'ngfire'
 
-import { createPost, Post } from '@strive/model';
-import { toDate } from '@strive/utils/helpers';
+import { createPost, Post } from '@strive/model'
 
 @Injectable({
   providedIn: 'root'

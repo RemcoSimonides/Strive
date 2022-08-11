@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore';
-// Rxjs
-import { Observable } from 'rxjs';
-// Services
-import { FireCollection } from '@strive/utils/services/collection.service';
-// Interfaces
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
+import { toDate } from 'ngfire'
 import { DailyGratefulness } from '@strive/model'
-import { toDate } from '@strive/utils/helpers'
+
+import { Observable } from 'rxjs'
+
+import { FireCollection } from '@strive/utils/services/collection.service'
+
 
 @Injectable({
   providedIn: 'root'

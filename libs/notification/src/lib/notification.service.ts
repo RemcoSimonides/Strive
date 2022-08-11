@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core'
 import { DocumentSnapshot, getFirestore, limit, where } from 'firebase/firestore'
+import { toDate } from 'ngfire'
 
 import { of, switchMap, shareReplay, map } from 'rxjs'
 
 import { FireCollection } from '@strive/utils/services/collection.service'
 import { createNotification, Notification, notificationEvents } from '@strive/model'
-import { toDate } from '@strive/utils/helpers'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
 @Injectable({

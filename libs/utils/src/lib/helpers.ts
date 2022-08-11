@@ -41,22 +41,3 @@ export function isValidHttpUrl(url: string) {
     return false;  
   } 
 }
-
-export function toDate<D>(target: DocumentData): D | undefined {
-  if (!target) return;
-  if (typeof target !== 'object') return target;
-  for (const key in target) {
-    const value = target[key];
-    if (!value || typeof value !== 'object') continue;
-    if (!!value['seconds'] && value['nanoseconds'] >= 0) {
-      try {
-        target[key] = value.toDate();
-      } catch (_) {
-        console.log(`${key} is not a Firebase Timestamp`);
-      }
-      continue;
-    }
-    toDate(value);
-  }
-  return target as D;
-}

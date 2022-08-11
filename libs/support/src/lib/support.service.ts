@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core'
 import { DocumentSnapshot, getFirestore, limit, where } from 'firebase/firestore'
-// Services
-import { FireCollection } from '@strive/utils/services/collection.service'
-// Interfaces
-import { createSupport, Support } from '@strive/model'
-import { UserService } from '@strive/user/user/user.service'
+import { toDate } from 'ngfire'
+
 import { of, switchMap, map, shareReplay } from 'rxjs'
-import { toDate } from '@strive/utils/helpers'
+
+import { FireCollection } from '@strive/utils/services/collection.service'
+import { UserService } from '@strive/user/user/user.service'
+
+import { createSupport, Support } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
 export class SupportService extends FireCollection<Support> {

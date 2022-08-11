@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { arrayUnion, DocumentSnapshot, getFirestore } from 'firebase/firestore';
-// Rxjs
-import { Observable } from 'rxjs';
-// Services
-import { FireCollection } from '@strive/utils/services/collection.service';
-import { DearFutureSelf, Message } from '@strive/model';
-import { toDate } from '@strive/utils/helpers';
+import { Injectable } from '@angular/core'
+import { arrayUnion, DocumentSnapshot, getFirestore } from 'firebase/firestore'
+import { toDate } from 'ngfire';
+
+import { Observable } from 'rxjs'
+
+import { FireCollection } from '@strive/utils/services/collection.service'
+import { DearFutureSelf, Message } from '@strive/model'
 
 @Injectable({
   providedIn: 'root'

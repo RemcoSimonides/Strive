@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
+import { toDate } from 'ngfire'
+import { FireCollection } from '@strive/utils/services/collection.service'
 
-// Strive
-import { FireCollection } from '@strive/utils/services/collection.service';
 import { Affirmations } from '@strive/model'
-import { toDate } from '@strive/utils/helpers';
 
 @Injectable({providedIn: 'root'})
 export class AffirmationService extends FireCollection<Affirmations> {

@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getFirestore, orderBy, QueryConstraint, where } from 'firebase/firestore';
-// Rxjs
-import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-// Services
-import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-import { GoalStakeholderService } from '../stakeholder/stakeholder.service';
-// Interfaces
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getFirestore, orderBy, QueryConstraint, where } from 'firebase/firestore'
+import { toDate } from 'ngfire'
+
+import { combineLatest, Observable, of } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators'
+
+import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service'
+import { GoalStakeholderService } from '../stakeholder/stakeholder.service'
+import { UserService } from '@strive/user/user/user.service'
+
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
-import { UserService } from '@strive/user/user/user.service';
-import { toDate } from '@strive/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {

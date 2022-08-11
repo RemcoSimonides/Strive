@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { DocumentSnapshot, getDoc, getFirestore, doc } from 'firebase/firestore';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { user } from 'rxfire/auth';
-// Services
-import { FireCollection } from '@strive/utils/services/collection.service';
-// Interfaces
+import { toDate } from 'ngfire'
+
+import { FireCollection } from '@strive/utils/services/collection.service'
+
 import { createUser, User } from '@strive/model';
-// Rxjs
-import { map, switchMap, take, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs';
-import { toDate } from '@strive/utils/helpers';
+
+import { map, switchMap, take, tap } from 'rxjs/operators'
+import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends FireCollection<User> {
