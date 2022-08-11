@@ -1,12 +1,16 @@
 :host {
   display: block;
+  height: 100%;
+}
+
+ion-content {
   text-align: center;
-}
 
-h1 {
-  color: var(--ion-color-primary);
-}
-
-ion-button {
-  margin: auto;
+  h1 {
+    color: var(--ion-color-primary);
+  }
+  
+  ion-button {
+    margin: auto;
+  }
 }

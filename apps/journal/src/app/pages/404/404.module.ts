@@ -23,6 +23,7 @@ const routes: Routes = [
     HeaderModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [NotfoundComponent]
+  declarations: [NotfoundComponent],
+  exports: [NotfoundComponent]
 })
 export class NotfoundModule {}

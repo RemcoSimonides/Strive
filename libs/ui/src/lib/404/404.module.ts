@@ -5,11 +5,14 @@ import { IonicModule } from "@ionic/angular";
 
 import { PagenotfoundComponent } from './404.component';
 
+import { HeaderModule } from '../header/header.module'
+
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    IonicModule
+    IonicModule,
+    HeaderModule
   ],
   declarations: [PagenotfoundComponent],
   exports: [PagenotfoundComponent]
