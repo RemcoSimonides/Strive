@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, PopoverController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
 import { GoalStakeholder } from '@strive/model';
 import { delay } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '../../stakeholder.service';
@@ -17,7 +17,6 @@ export class RolesPopoverComponment {
 	@Input() stakeholder!: GoalStakeholder
 
 	constructor(
-		private alertCtrl: AlertController,
     private location: Location,
 		private popoverCtrl: PopoverController,
     private router: Router,
@@ -26,25 +25,11 @@ export class RolesPopoverComponment {
 
 	toggleAdmin() {
     this.popoverCtrl.dismiss()
-    this.alertCtrl.create({
-      subHeader: `Are you sure you want to make ${this.stakeholder.username} an admin?`,
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-            if (!this.goalId) return
-            this.stakeholderService.upsert({
-              uid: this.stakeholder.uid,
-              isAdmin: !this.stakeholder.isAdmin
-            }, { params: { goalId: this.goalId }})
-          }
-        },
-        {
-          text: 'No',
-          role: 'cancel'
-        }
-      ]
-    }).then(alert => alert.present())
+    if (!this.goalId) return
+    this.stakeholderService.upsert({
+      uid: this.stakeholder.uid,
+      isAdmin: !this.stakeholder.isAdmin
+    }, { params: { goalId: this.goalId }})
   }
 
   navTo() {

@@ -1,6 +1,6 @@
 <ion-list mode="md">
-	<ion-item *ngIf="!stakeholder.isAdmin" (click)="toggleAdmin()" button>
-		<ion-label>Make Admin</ion-label>
+	<ion-item (click)="toggleAdmin()" button>
+		<ion-label>{{ stakeholder.isAdmin ? 'Revoke Admin' : 'Make Admin' }}</ion-label>
 	</ion-item>
 	<ion-item (click)="navTo()" button>
 		View Profile
