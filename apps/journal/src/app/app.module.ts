@@ -9,7 +9,6 @@ import { IonicModule } from '@ionic/angular';
 // firebase
 import { initializeApp, getApp } from 'firebase/app';
 import { initializeFirestore } from 'firebase/firestore';
-import { browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 
 // Environments
@@ -29,6 +28,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import * as Sentry from '@sentry/capacitor';
 import * as SentryAngular from '@sentry/angular';
 import { BrowserTracing } from '@sentry/tracing';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 Sentry.init(
   {
@@ -62,7 +62,13 @@ Sentry.init(
     // Strive
     ImageModule,
     AuthModalModule,
-    ProfileOptionsBrowserPageModule
+    ProfileOptionsBrowserPageModule,
+    ServiceWorkerModule.register('sw-master.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },

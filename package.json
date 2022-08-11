@@ -21,6 +21,7 @@
     "@angular/localize": "^14.1.1",
     "@angular/platform-browser": "~14.1.0",
     "@angular/platform-browser-dynamic": "~14.1.0",
+    "@angular/pwa": "^14.1.2",
     "@angular/router": "~14.1.0",
     "@angular/service-worker": "^14.1.0",
     "@capacitor/camera": "^4.0.1",
