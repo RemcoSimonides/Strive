@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { UserService } from '@strive/user/user/user.service'
-import { combineLatest, Observable } from 'rxjs'
+import { combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { map, shareReplay, startWith } from 'rxjs/operators'
 import { FormControl } from '@angular/forms'
 import { delay } from '@strive/utils/helpers'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RolesPopoverComponment } from '../../popovers/roles/roles.component'
+import { GoalService } from '@strive/goal/goal/goal.service'
 
 @Component({
   selector: '[goalId] goal-team-modal',
@@ -28,6 +29,8 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
   filter = new FormControl<keyof GoalStakeholder | null>(null)
   
   constructor(
+    private alertCtrl: AlertController,
+    private goalService: GoalService,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private router: Router,
@@ -87,5 +90,64 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
       componentProps: { stakeholder, goalId: this.goalId },
       event
     }).then(popover => popover.present())
+  }
+
+  async leave() {
+    if (!this.others$ || !this.you$) return
+    
+    const [ others, you ] = await Promise.all([
+      firstValueFrom(this.others$),
+      firstValueFrom(this.you$)
+    ])
+    const otherAdmin = others.some(other => other.isAdmin)
+
+    if (!you.isAdmin || otherAdmin) {
+      return this.alertCtrl.create({
+        subHeader: `Are you sure you want to leave this goal?`,
+        buttons: [
+          {
+            text: 'Yes',
+            handler: async () => {
+              this.stakeholder.remove(you.uid, { params: { goalId: this.goalId } })
+              this.dismiss()
+            }
+          },
+          {
+            text: 'No',
+            role: 'cancel'
+          }
+        ]
+      }).then(alert => alert.present())
+    }
+
+    if (!others.length) {
+      return this.alertCtrl.create({
+        subHeader: `You're the only person in this goal which means leaving deletes the goal Are you sure you want to delete this goal?`,
+        message: `This action is irreversible`,
+        buttons: [
+          {
+            text: 'Yes',
+            handler: async () => {
+              await this.goalService.remove(this.goalId)
+              this.router.navigate(['/goals'])
+            }
+          },
+          {
+            text: 'No',
+            role: 'cancel'
+          }
+        ]
+      }).then(alert => alert.present())
+    }
+
+    return this.alertCtrl.create({
+      subHeader: `You're the only admin of this goal. Please make another person admin.`,
+      buttons: [
+        {
+          text: 'Ok',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
   }
 }

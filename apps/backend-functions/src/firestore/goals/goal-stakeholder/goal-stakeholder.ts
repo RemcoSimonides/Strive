@@ -17,11 +17,11 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
     const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
     if (stakeholder.isAchiever) {
-      changeNumberOfAchievers(goalId, stakeholder.isAchiever)
+      changeNumberOfAchievers(goalId, 1)
     }
 
     if (stakeholder.isSupporter) {
-      changeNumberOfSupporters(goalId, stakeholder.isSupporter)
+      changeNumberOfSupporters(goalId, 1)
     }
 
     if (stakeholder.status === 'active') {
@@ -53,12 +53,12 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
 
     // isAchiever changed
     if (before.isAchiever !== after.isAchiever) {
-      changeNumberOfAchievers(goalId, after.isAchiever)
+      changeNumberOfAchievers(goalId, after.isAchiever ? 1 : -1)
     }
 
     // increase or decrease number of Supporters
     if (before.isSupporter !== after.isSupporter) {
-      changeNumberOfSupporters(goalId, after.isSupporter)
+      changeNumberOfSupporters(goalId, after.isSupporter ? 1 : -1)
     }
 
     // increase or decreate number of active goals
@@ -91,8 +91,17 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
 export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
   .onDelete(async (snapshot, context) => {
 
-    const stakeholderId = context.params.stakeholderId
+    const { goalId, stakeholderId } = context.params
     const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
+
+    if (stakeholder.isAchiever) {
+      changeNumberOfAchievers(goalId, -1)
+    }
+
+    if (stakeholder.isSupporter) {
+      changeNumberOfSupporters(goalId, -1)
+    }
+
     if (stakeholder.status === 'active') {
       changeNumberOfActiveGoals(stakeholderId, -1)
     }
@@ -140,17 +149,17 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   if (requestToJoinRejected) addGoalEvent(enumEvent.gStakeholderRequestToJoinRejected, source)
 }
 
-function changeNumberOfAchievers(goalId: string, isAchiever: boolean) {
+function changeNumberOfAchievers(goalId: string, delta: -1 | 1) {
   const goalRef = db.doc(`Goals/${goalId}`)
   return goalRef.update({
-    numberOfAchievers: increment(isAchiever ? 1 : -1)
+    numberOfAchievers: increment(delta)
   })
 }
 
-function changeNumberOfSupporters(goalId: string, isSupporter: boolean) {
+function changeNumberOfSupporters(goalId: string, delta: -1 | 1) {
   const goalRef = db.doc(`Goals/${goalId}`)
   return goalRef.update({
-    numberOfSupporters: increment(isSupporter ? 1 : -1)
+    numberOfSupporters: increment(delta)
   })
 }
 

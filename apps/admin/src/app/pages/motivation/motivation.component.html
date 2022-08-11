@@ -26,8 +26,8 @@
   </ion-card>
 
   <ng-container *ngIf="motivations$ | async as motivations; else loading">
-    total: {{ motivations?.quotes?.length }} - unused: {{ getUnused(motivations.quotes) }}
-    <ng-container *ngFor="let motivation of motivations?.quotes; let index = index">
+    total: {{ motivations?.['quotes']?.length }} - unused: {{ getUnused(motivations['quotes']) }}
+    <ng-container *ngFor="let motivation of motivations?.['quotes']; let index = index">
       <ion-card>
         <ion-card-content [ngStyle]="{'color': motivation.used ? 'inherit' : 'white'}" fxLayout fxLayoutAlign="space-between">
           <span><i>"{{ motivation.quote }}"</i> - <b>{{ motivation.from }}</b></span>

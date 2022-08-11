@@ -31,7 +31,7 @@
   </ion-card>
 
   <ng-container *ngIf="features$ | async as features; else loading">
-    <ng-container *ngFor="let feature of features?.features; let index = index">
+    <ng-container *ngFor="let feature of features?.['features']; let index = index">
       <ion-card>
         <ion-card-title>{{ feature.header }}</ion-card-title>
         <ion-card-content>
