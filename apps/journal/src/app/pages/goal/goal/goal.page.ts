@@ -272,14 +272,13 @@ export class GoalComponent implements OnDestroy {
     const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, this.isAdmin)
 
     const canShare = await Share.canShare()
-    if (false) {
+    if (canShare.value) {
       Share.share({
         title: goal.title,
         text: 'Check out this goal',
         url,
         dialogTitle: 'Together we achieve!'
       })
-
     } else {
       this.popoverCtrl.create({
         component: GoalSharePopoverComponent,
