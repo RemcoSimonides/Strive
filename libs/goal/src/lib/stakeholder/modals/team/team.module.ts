@@ -7,8 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { TeamModalComponent } from "./team.modal";
 
-import { ImageModule } from '@strive/media/directives/image.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { ImageModule } from '@strive/media/directives/image.module'
 import { RolesPopoverModule } from '../../popovers/roles/roles.module'
 
 
@@ -19,7 +18,6 @@ import { RolesPopoverModule } from '../../popovers/roles/roles.module'
     IonicModule,
     ImageModule,
     FlexLayoutModule,
-    FontAwesomeModule,
     ReactiveFormsModule,
     RolesPopoverModule
   ],

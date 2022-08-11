@@ -4,14 +4,10 @@
   flex-wrap: wrap;
 }
 
-fa-icon {
-  color: var(--ion-color-light);
-}
-
 section {
   overflow-wrap: anywhere;
-  background-color: var(--ion-color-dark-tint);
-  color: var(--ion-color-light);
+  background-color: var(--ion-color-light-tint);
+  color: var(--ion-color-dark);
   padding: 3px 6px;
   margin-top: 3px;
   border-radius: 4px;

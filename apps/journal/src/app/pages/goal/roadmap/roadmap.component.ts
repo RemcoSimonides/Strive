@@ -24,8 +24,10 @@ export class RoadmapComponent {
   stakeholder$?: Observable<GoalStakeholder>
   milestones$?: Observable<Milestone[]>
 
+  _goal?: Goal
   @Input() set goal(goal: Goal) {
     if (!goal) return
+    this._goal = goal
     this.stakeholder$ = this.user.user$.pipe(
       switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: goal.id }) : of(undefined)),
       map(stakeholder => createGoalStakeholder(stakeholder))

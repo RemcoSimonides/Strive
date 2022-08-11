@@ -35,7 +35,8 @@ export class Slide5Component {
     const isSecret = goal.publicity !== 'public'
     const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, true, path)
 
-    if ((this.platform.is('android') || this.platform.is('ios') && !this.platform.is('mobileweb'))) {
+    const canShare = await Share.canShare()
+    if (canShare.value) {
 
       await Share.share({
         title: goal.title,

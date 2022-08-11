@@ -22,13 +22,13 @@
             <b>{{ you.username }}</b>
             <small fxLayout fxLayoutGap="8px">
               <span *ngIf="you.isAdmin">
-                <fa-icon [icon]="['fas', 'user-tie']" slot="end"></fa-icon>Admin
+                <ion-icon src="assets/icons/user-tie-solid.svg" slot="end"></ion-icon>Admin
               </span>
               <span *ngIf="you.isAchiever">
-                <fa-icon [icon]="['fas', 'flag']" slot="end"></fa-icon>Achiever
+                <ion-icon name="flag" slot="end"></ion-icon>Achiever
               </span>
               <span *ngIf="you.isSupporter">
-                <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>Supporter
+                <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
               </span>
             </small>
           </ion-label>
@@ -60,13 +60,13 @@
                 <b>{{ stakeholder.username }}</b>
                 <small fxLayout fxLayoutGap="8px">
                   <span *ngIf="stakeholder.isAdmin">
-                    <fa-icon [icon]="['fas', 'user-tie']" slot="end"></fa-icon>Admin
+                    <ion-icon src="assets/icons/user-tie-solid.svg" slot="end"></ion-icon>Admin
                   </span>
                   <span *ngIf="stakeholder.isAchiever">
-                    <fa-icon [icon]="['fas', 'flag']" slot="end"></fa-icon>Achiever
+                    <ion-icon name="flag" slot="end"></ion-icon>Achiever
                   </span>
                   <span *ngIf="stakeholder.isSupporter">
-                    <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>Supporter
+                    <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
                   </span>
                 </small>
               </ion-label>

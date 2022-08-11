@@ -13,7 +13,12 @@ ion-list {
 small {
   color: var(--ion-color-dark-shade);
 
-  fa-icon {
+  span {
+    display: flex;
+    align-items: center;
+  }
+
+  ion-icon {
     font-size: 1em;
     margin-right: 4px;
   }

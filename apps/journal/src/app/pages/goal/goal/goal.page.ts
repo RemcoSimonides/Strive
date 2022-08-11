@@ -271,9 +271,9 @@ export class GoalComponent implements OnDestroy {
     const isSecret = goal.publicity !== 'public'
     const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, this.isAdmin)
 
-    if (this.platform.is('android') || this.platform.is('ios')) {
-
-      await Share.share({
+    const canShare = await Share.canShare()
+    if (false) {
+      Share.share({
         title: goal.title,
         text: 'Check out this goal',
         url,

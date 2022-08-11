@@ -3,18 +3,21 @@
 	<ion-list mode="md">
 		<ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="['/a/users/', stakeholder.uid]">
 			{{ stakeholder.username }}
-			<fa-icon [icon]="['fas', 'user-tie']" slot="end"
-			 [ngStyle]="{'opacity': stakeholder.isAdmin ? '1' : '0.3' }"
-			 (click)="toggleAdmin(stakeholder, $event)"
-			></fa-icon>
-			<fa-icon [icon]="['fas', 'flag']" slot="end"
+			<ion-icon src="assets/icons/user-tie-solid.svg"
+				slot="end"
+				[ngStyle]="{'opacity': stakeholder.isAdmin ? '1' : '0.3' }"
+				(click)="toggleAdmin(stakeholder, $event)">
+			</ion-icon>
+			<ion-icon name="flag"
+				slot="end"
 				[ngStyle]="{'opacity': stakeholder.isAchiever ? '1' : '0.3' }"
-				(click)="toggleAchiever(stakeholder, $event)"
-			></fa-icon>
-			<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"
+				(click)="toggleAchiever(stakeholder, $event)">
+			</ion-icon>
+			<ion-icon src="assets/icons/hand-holding-heart-solid.svg"
+				slot="end"
 				[ngStyle]="{'opacity': stakeholder.isSupporter ? '1' : '0.3' }"
-				(click)="toggleSupporter(stakeholder, $event)"
-			></fa-icon>
+				(click)="toggleSupporter(stakeholder, $event)">
+			</ion-icon>
 		</ion-item>
 	</ion-list>
 </ng-container>

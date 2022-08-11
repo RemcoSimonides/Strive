@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { RoadmapComponent } from './roadmap.component';
 
@@ -20,7 +19,6 @@ import { SubtaskPipeModule } from '../../pipes/subtask.pipe';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    FontAwesomeModule,
     ReactiveFormsModule,
     IonicModule,
     

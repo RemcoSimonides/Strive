@@ -23,7 +23,7 @@
           </section>
           <ng-container *ngIf="!createMode">
             <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.numberOfCustomSupports }}
-              <fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+              <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
             </ion-button>
           </ng-container>
           <ion-reorder slot="end"></ion-reorder>

@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AddSupportModalComponent } from './add.component';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SupportOptionsModule } from '../options/options.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { SupportStatusPipeModule } from '@strive/support/pipes/status.pipe'
@@ -16,7 +15,6 @@ import { SupportStatusPipeModule } from '@strive/support/pipes/status.pipe'
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    FontAwesomeModule,
     ImageModule,
     FlexLayoutModule,
     SupportOptionsModule,

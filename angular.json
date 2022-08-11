@@ -1194,9 +1194,7 @@
             "npm:@ionic/angular",
             "npm:@angular/fire",
             "user",
-            "media",
-            "npm:@fortawesome/angular-fontawesome",
-            "npm:@fortawesome/free-solid-svg-icons"
+            "media"
           ]
         },
         {
@@ -1469,7 +1467,6 @@
             "npm:@angular/router",
             "npm:@ionic/angular",
             "npm:@angular/flex-layout",
-            "npm:@fortawesome/angular-fontawesome",
             "discussion",
             "goal",
             "ui",
@@ -1557,7 +1554,6 @@
             "npm:@angular/common",
             "npm:@angular/core",
             "npm:@angular/flex-layout",
-            "npm:@fortawesome/angular-fontawesome",
             "post",
             "media",
             "goal"
@@ -1837,7 +1833,6 @@
             "user",
             "ui",
             "media",
-            "npm:@fortawesome/angular-fontawesome",
             "goal"
           ]
         },
@@ -2160,7 +2155,6 @@
             "npm:@angular/forms",
             "npm:@ionic/angular",
             "npm:@angular/flex-layout",
-            "npm:@fortawesome/angular-fontawesome",
             "media"
           ]
         },
@@ -2587,7 +2581,6 @@
             "npm:@angular/common",
             "npm:@angular/router",
             "npm:@ionic/angular",
-            "npm:@fortawesome/angular-fontawesome",
             "ui"
           ]
         },
@@ -3562,8 +3555,7 @@
             "npm:@angular/router",
             "npm:@angular/forms",
             "npm:@ionic/angular",
-            "media",
-            "npm:@fortawesome/angular-fontawesome"
+            "media"
           ]
         },
         {
@@ -3626,7 +3618,6 @@
             "npm:@angular/core",
             "npm:@ionic/angular",
             "npm:@angular/flex-layout",
-            "npm:@fortawesome/angular-fontawesome",
             "ui"
           ]
         },
@@ -3690,7 +3681,6 @@
             "npm:@angular/flex-layout",
             "npm:@angular/forms",
             "npm:@ionic/angular",
-            "npm:@fortawesome/angular-fontawesome",
             "support",
             "media"
           ]
@@ -4428,9 +4418,7 @@
             "npm:@angular/common",
             "npm:@angular/core",
             "npm:@angular/flex-layout",
-            "npm:@ionic/angular",
-            "npm:@fortawesome/angular-fontawesome",
-            "npm:ngx-sharebuttons"
+            "npm:@ionic/angular"
           ]
         },
         {

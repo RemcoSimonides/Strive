@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { GoalComponent } from './goal.page';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module'
 import { GoalOptionsModule } from '../popovers/options/options.module'
 import { GoalSharePopoverModule } from '@strive/goal/goal/components/popovers/share/share.module';
@@ -20,7 +19,6 @@ import { AddSupportModalModule } from '@strive/support/components/add/add.module
   imports: [
     CommonModule,
     IonicModule,
-    FontAwesomeModule,
     RouterModule,
     FlexLayoutModule,
     

@@ -26,10 +26,6 @@ import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-mo
 
 import { ImageModule } from '@strive/media/directives/image.module'
 
-// FontAwesome
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-
 import * as Sentry from '@sentry/capacitor';
 import * as SentryAngular from '@sentry/angular';
 import { BrowserTracing } from '@sentry/tracing';
@@ -66,8 +62,7 @@ Sentry.init(
     // Strive
     ImageModule,
     AuthModalModule,
-    ProfileOptionsBrowserPageModule,
-    FontAwesomeModule
+    ProfileOptionsBrowserPageModule
   ],
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },
@@ -76,10 +71,8 @@ Sentry.init(
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(library: FaIconLibrary) {
+  constructor() {
     initializeApp(environment.firebase)
     initializeFirestore(getApp(), {})
-
-    library.addIconPacks(fas)
   }
 }

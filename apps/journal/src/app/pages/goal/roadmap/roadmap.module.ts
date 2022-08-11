@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { RoadmapComponent } from './roadmap.component';
 
@@ -13,7 +12,6 @@ import { RoadmapModule as RoadmapUIModule } from '@strive/goal/milestone/compone
   imports: [
     CommonModule,
     FlexLayoutModule,
-    FontAwesomeModule,
     RoadmapUIModule,
     UpsertPostModalModule,
     ImageModule

@@ -30,7 +30,7 @@
             (click)="addSupport(goal)"
             color="secondary"
             [disabled]="goal.status === 'finished'">
-            ADD<fa-icon [icon]="['fas', 'hand-holding-heart']" slot="end"></fa-icon>
+            ADD<ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
           </ion-button>
         </ion-item>
         <ion-item *ngFor="let support of mySupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status === 'paid' || support.status === 'rejected'">
