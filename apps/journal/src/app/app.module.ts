@@ -2,6 +2,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 // Ionic
 import { IonicModule } from '@ionic/angular';
@@ -24,11 +25,11 @@ import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profil
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
 
 import { ImageModule } from '@strive/media/directives/image.module'
+import { PWAService } from '@strive/utils/services/pwa.service';
 
 import * as Sentry from '@sentry/capacitor';
 import * as SentryAngular from '@sentry/angular';
 import { BrowserTracing } from '@sentry/tracing';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 Sentry.init(
   {
@@ -77,8 +78,9 @@ Sentry.init(
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor() {
+  constructor(pwa: PWAService) {
     initializeApp(environment.firebase)
     initializeFirestore(getApp(), {})
+    pwa.addEventListeners()
   }
 }
