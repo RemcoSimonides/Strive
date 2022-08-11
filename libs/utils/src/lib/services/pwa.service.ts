@@ -1,13 +1,65 @@
-import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Injectable, ApplicationRef, OnDestroy } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
+import { ToastController } from '@ionic/angular';
+import { ReplaySubject, first, interval, concat, Subscription } from 'rxjs';
+import * as Sentry from '@sentry/capacitor'
 
 @Injectable({ providedIn: 'root' })
-export class PWAService {
+export class PWAService implements OnDestroy {
 
   // https://web.dev/customize-install/
   private deferredPrompt: any;
 
   showInstallPromotion$ = new ReplaySubject<boolean>(1)
+
+  private subs: Subscription[] = []
+
+  constructor(
+    appRef: ApplicationRef,
+    sw: SwUpdate,
+    toastCtrl: ToastController
+  ) {
+    const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true))
+    const everyHour$ = interval(1 * 60 * 60 * 1000)
+    const everyHoursOnceAppIsStable$ = concat(appIsStable$, everyHour$)
+
+    this.subs.push(everyHoursOnceAppIsStable$.subscribe(() => sw.checkForUpdate()))
+
+    const sub = sw.versionUpdates.subscribe(event => {
+
+      switch (event.type) {
+        case 'VERSION_DETECTED':
+          Sentry.captureMessage(`PWA Version Detected: ${event.version.hash}`)
+          break
+        case 'VERSION_INSTALLATION_FAILED':
+          Sentry.captureException(`PWA Installation Failed: ${event.version.hash}`)
+          break
+        case 'VERSION_READY': {
+          Sentry.captureMessage(`PWA Version Ready! Current ${event.currentVersion.hash}, New ${event.latestVersion.hash}`)
+
+          if (event.type === 'VERSION_READY') {
+            toastCtrl.create({
+              header: 'New version available',
+              icon: 'alert-outline',
+              buttons: [
+                {
+                  text: 'UPDATE',
+                  handler: () => {
+                    sw.activateUpdate().then(() => document.location.reload())
+                  }
+                }
+              ]
+            }).then(toast => toast.present())
+          }
+        }
+      }
+    })
+    this.subs.push(sub)
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe())
+  }
 
   addEventListeners() {
     window.addEventListener('beforeinstallprompt', (e) => {
