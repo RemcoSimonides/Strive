@@ -1,7 +1,7 @@
 import { db, functions, increment, arrayUnion } from '../../../internals/firebase';
 
 // interfaces
-import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, enumEvent } from '@strive/model'
+import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, enumEvent, createMilestone, createUserLink, createSupport } from '@strive/model'
 import { toDate } from '../../../shared/utils';
 import { getDocument } from '../../../shared/utils';
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
@@ -96,10 +96,28 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
 
     if (stakeholder.isAchiever) {
       changeNumberOfAchievers(goalId, -1)
+
+      const snaps = await db.collection(`Goals/${goalId}/Milestones`).where('achiever.uid', '==', stakeholder.uid).get()
+      const batch = db.batch()
+      for (const doc of snaps.docs) {
+        const milestone = createMilestone(doc.data())
+        milestone.achiever = createUserLink()
+        batch.update(doc.ref, { ...milestone })
+      }
+      batch.commit()
     }
 
     if (stakeholder.isSupporter) {
       changeNumberOfSupporters(goalId, -1)
+
+      const snaps = await db.collection(`Goals/${goalId}/Supports`).where('source.supporter.uid', '==', stakeholder.uid).get()
+      const batch = db.batch()
+      for (const doc of snaps.docs) {
+        const support = createSupport(doc.data())
+        support.status = 'canceled'
+        batch.update(doc.ref, { ...support })
+      }
+      batch.commit()
     }
 
     if (stakeholder.status === 'active') {
