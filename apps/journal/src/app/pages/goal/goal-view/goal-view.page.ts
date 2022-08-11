@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 // Ionic
 import { ModalController, NavController, Platform } from '@ionic/angular'
@@ -20,6 +20,7 @@ import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/u
   selector: 'journal-goal-view',
   templateUrl: './goal-view.page.html',
   styleUrls: ['./goal-view.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalViewComponent implements OnInit, OnDestroy {
   pageIsLoading = true
@@ -34,6 +35,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   accessSubscription?: Subscription
 
   constructor(
+    private cdr: ChangeDetectorRef,
     public user: UserService,
     private goalService: GoalService,
     public stakeholder: GoalStakeholderService,
@@ -96,6 +98,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   private initGoal(goal: Goal) {
     this.canAccess = true
     this.pageIsLoading = false
+    this.cdr.markForCheck()
   
     this.seo.generateTags({
       title: `${goal.title} - Strive Journal`,
@@ -106,6 +109,8 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   private initNoAccess() {
     this.pageIsLoading = false
     this.canAccess = false
+    this.cdr.markForCheck()
+
     this.seo.generateTags({ title: `Page not found - Strive Journal` })
   }
 
