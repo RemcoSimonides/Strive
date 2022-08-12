@@ -155,19 +155,6 @@ export function getNotificationMessage({ event, source }: Notification): Notific
       }
     }
 
-    case enumEvent.gSupportDeleted: {
-      const suffix = source.milestone?.id ? `milestone '${source.milestone.content}' has been deleted` : `goal '${source.goal!.title}' has been deleted`
-      return {
-        ...get('goal', source),
-        link: '/supports',
-        message: [
-          {
-            text: `Support "${source.support!.description}" has been removed because ${suffix}`
-          }
-        ]
-      }
-    }
-
     default:
       return {
         image: '',

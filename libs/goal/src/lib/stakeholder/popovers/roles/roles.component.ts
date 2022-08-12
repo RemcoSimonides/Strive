@@ -47,7 +47,7 @@ export class RolesPopoverComponment {
     const { isSupporter } = this.stakeholder
     return this.alertCtrl.create({
       subHeader: `Are you sure you want to remove ${this.stakeholder.username} from this goal?`,
-      message: isSupporter ? `${this.stakeholder.username}'s supports will be canceled` : '',
+      message: isSupporter ? `${this.stakeholder.username}'s supports will be removed` : '',
       buttons: [
         {
           text: 'Yes',

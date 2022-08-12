@@ -119,19 +119,6 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     }
   })
 
-export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-  .onDelete(async snapshot => {
-    
-    const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
-    const source = getNotificationSource(support)
-
-    const notification = createNotification({
-      event: enumEvent.gSupportDeleted,
-      source
-    })
-    sendNotificationToUsers(notification, support.source.supporter.uid)
-  })
-
 function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean) {
   const ref = db.doc(`Goals/${goalId}`)
 

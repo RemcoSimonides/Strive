@@ -113,9 +113,7 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
       const snaps = await db.collection(`Goals/${goalId}/Supports`).where('source.supporter.uid', '==', stakeholder.uid).get()
       const batch = db.batch()
       for (const doc of snaps.docs) {
-        const support = createSupport(doc.data())
-        support.status = 'canceled'
-        batch.update(doc.ref, { ...support })
+        batch.delete(doc.ref)
       }
       batch.commit()
     }

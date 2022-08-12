@@ -64,8 +64,7 @@ export const notificationEvents: enumEvent[] = [
   enumEvent.gSupportPendingFailed,
   enumEvent.gSupportPendingSuccesful,
   enumEvent.gSupportPaid,
-  enumEvent.gSupportRejected,
-  enumEvent.gSupportDeleted
+  enumEvent.gSupportRejected
 ]
 
 const notificationIcons = [

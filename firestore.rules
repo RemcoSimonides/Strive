@@ -93,7 +93,7 @@ service cloud.firestore {
         allow read;
         allow create: if isSignedIn()
         allow update: if isSupporterOrReceiver(goalId, supportId)
-        // delete not possible yet
+        allow delete: if isSupporter(goalId, supportId)
       }
 
       match /InviteTokens/{tokenId} {
@@ -149,6 +149,10 @@ service cloud.firestore {
 
     function getGoalStakeholder(goalId) {
       return get(/databases/$(database)/documents/Goals/$(goalId)/GStakeholders/$(request.auth.uid)).data
+    }
+
+    function isSupporter(goalId, supportId) {
+      return getSupport(goalId, supportId).source.supporter.uid == request.auth.uid
     }
 
     function isSupporterOrReceiver(goalId, supportId) {

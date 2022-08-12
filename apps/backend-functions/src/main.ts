@@ -12,7 +12,7 @@ export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './fir
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal';
 export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeholderDeletedHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder';
 export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandler } from './firestore/goals/milestones/milestone';
-export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } from './firestore/goals/supports/support';
+export { supportCreatedHandler, supportChangeHandler } from './firestore/goals/supports/support';
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token';
 export { postCreatedHandler } from './firestore/goals/posts/post';
 export { commentCreatedHandler } from './firestore/discussions/comments/comment';

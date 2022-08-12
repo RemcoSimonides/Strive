@@ -210,16 +210,6 @@ function getUserPushMessage({ event, source }: Notification): PushMessage | unde
     //     title: source.goal.title,
     //     body: `By you supported milestone '${source.milestone.content}' unsuccesful`
     //   })
-    
-  //   case enumEvent.gSupportDeleted: {
-  //     const text2 = source.milestone.id
-  //     ? `milestone '${source.milestone.content}' has been deleted`
-  //     : `goal '${source.goal.title}' has been deleted`
-
-  //     return createPushMessage({
-  //       title: source.goal.title,
-  //       body: `Support '${source.support.description}' has been removed because ${text2}`
-  //     })
   //   }
 
     case enumEvent.userSpectatorAdded:

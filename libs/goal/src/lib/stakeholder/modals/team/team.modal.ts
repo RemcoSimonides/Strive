@@ -111,7 +111,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
     if (!you.isAdmin || otherAdmin) {
       return this.alertCtrl.create({
         subHeader: `Are you sure you want to leave this goal?`,
-        message: you.isSupporter ? 'Your supports will be canceled' : '',
+        message: you.isSupporter ? 'Your supports will be removed' : '',
         buttons: [
           {
             text: 'Yes',

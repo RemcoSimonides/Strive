@@ -1,7 +1,7 @@
 import { createSupportSource, SupportSource } from '@strive/model'
 
 export type SupportDecision = 'give' | 'keep'
-export type SupportStatus = 'open' | 'rejected' | 'canceled' | 'waiting_to_be_paid' | 'paid'
+export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
 
 export interface SupportLink {
   id: string

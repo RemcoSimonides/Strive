@@ -6,7 +6,6 @@ function getStatusLabel(support: Support) {
   const label: Record<SupportStatus, string> = {
     open: '',
     rejected: 'Rejected',
-    canceled: 'Canceled',
     waiting_to_be_paid: 'Waiting to be paid',
     paid: 'Given'
   }
