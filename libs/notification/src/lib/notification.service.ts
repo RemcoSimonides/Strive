@@ -18,7 +18,8 @@ export class NotificationService extends FireCollection<Notification> {
     switchMap(personal => {
       if (!personal) return of(false)
 
-      const query = [where('createdAt', '>', personal.lastCheckedNotifications), limit(1)]
+      const query = [limit(1)]
+      if (personal.lastCheckedNotifications) query.push(where('createdAt', '>', personal.lastCheckedNotifications))
       return this.valueChanges(query, { uid: personal.uid }).pipe(
         map(notifications => notifications.filter(n => notificationEvents.includes(n.event))),
         map(notifications => !!notifications.length)

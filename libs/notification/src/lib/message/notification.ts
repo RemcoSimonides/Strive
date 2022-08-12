@@ -37,6 +37,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
     case enumEvent.gNewActive:
       return {
         ...get('user', source),
+        link: `/goal/${source.goal?.id}`,
         message: [
           { text: `${source.user!.username} started goal "` },
           { text: source.goal!.title, link: `goal/${source.goal!.id}` },
