@@ -25,6 +25,7 @@ import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { map, switchMap } from 'rxjs/operators';
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
 
 @Component({
   selector: 'journal-goal',
@@ -307,5 +308,17 @@ export class GoalComponent implements OnDestroy {
 
   navTo(uid: string) {
     this.router.navigate(['/profile/', uid])
+  }
+
+  openZoom(goal: Goal) {
+    this.modalCtrl.create({
+      component: ImageZoomModalComponent,
+      componentProps: {
+        ref: goal.image,
+        src: 'goal.jpeg'
+      },
+      enterAnimation: getEnterAnimation,
+      leaveAnimation: getLeaveAnimation
+    }).then(modal => modal.present())
   }
 }

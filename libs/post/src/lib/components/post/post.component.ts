@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Post, StoryItem, UserLink } from '@strive/model'
 import { PostService } from '@strive/post/post.service';
+import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,7 +18,10 @@ export class PostComponent implements OnInit {
 
   post$?: Observable<Post | undefined>
   
-  constructor(private post: PostService) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private post: PostService
+  ) {}
 
   ngOnInit() {
     const { postId, user, goal } = this.storyItem.source
@@ -24,4 +29,12 @@ export class PostComponent implements OnInit {
     this.post$ = this.post.valueChanges(postId, { goalId: goal.id })
   }
 
+  openZoom(ref: string) {
+    this.modalCtrl.create({
+      component: ImageZoomModalComponent,
+      componentProps: { ref },
+      enterAnimation: getEnterAnimation,
+      leaveAnimation: getLeaveAnimation
+    }).then(modal => modal.present())
+  }
 }

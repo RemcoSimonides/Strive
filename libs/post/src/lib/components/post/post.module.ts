@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { PostComponent } from './post.component';
 import { ImageModule } from '@strive/media/directives/image.module';
+import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { ImageModule } from '@strive/media/directives/image.module';
     RouterModule,
     IonicModule,
     ImageModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ImageZoomModalModule
   ],
   exports: [PostComponent],
   declarations: [PostComponent],

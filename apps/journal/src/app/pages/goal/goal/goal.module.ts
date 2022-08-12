@@ -14,6 +14,7 @@ import { TeamModalModule } from '@strive/goal/stakeholder/modals/team/team.modul
 import { TextEditorModule } from '@strive/ui/text-editor/text-editor.module';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { AddSupportModalModule } from '@strive/support/components/add/add.module';
+import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { AddSupportModalModule } from '@strive/support/components/add/add.module
     TeamModalModule,
     AddSupportModalModule,
     TextEditorModule,
-    ImageModule
+    ImageModule,
+    ImageZoomModalModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

@@ -22,6 +22,7 @@ import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module';
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module';
+import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module';
 
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module';
 import { HeaderModule } from '@strive/ui/header/header.module';
@@ -47,6 +48,7 @@ const routes: Routes = [
     GoalOptionsModule,
     UpsertGoalModalModule,
     EditProfileImagePopoverModule,
+    ImageZoomModalModule,
     HeaderRootModule,
     HeaderModule
   ],

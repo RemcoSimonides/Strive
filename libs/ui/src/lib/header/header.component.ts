@@ -24,7 +24,7 @@ export class HeaderComponent {
   back() {
     const state = this.location.getState() as { navigationId: number };
 
-    if (state.navigationId === 1) {
+    if (state?.navigationId === 1) {
       this.router.navigateByUrl(this.defaultBack)
     } else {
       this.location.back()

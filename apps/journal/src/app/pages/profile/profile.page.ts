@@ -13,12 +13,13 @@ import { distinctUntilChanged, map, pluck, shareReplay, startWith, switchMap } f
 import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
 import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
+import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component';
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
 // Interfaces
 import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 // Other
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component';
 
 @Component({
   selector: 'journal-profile',
@@ -102,20 +103,33 @@ export class ProfileComponent {
     }).then(modal => modal.present())
   }
 
-  async editProfileImage(user: User, ev: UIEvent) {
+  async editProfileImage(profile: User, ev: UIEvent) {
     const isOwner = await firstValueFrom(this.isOwner$)
-    if (!isOwner) return
-    const popover = await this.popoverCtrl.create({
-      component: EditProfileImagePopoverComponent,
-      componentProps: { storagePath: user.photoURL },
-      event: ev
-    })
-    // popover.onDidDismiss().then((imageURL => {
-    //   if (imageURL && imageURL.data) {
-    //     this.profileForm.photoURL.setValue(imageURL.data.toString())
-    //   }
-    // }))
-    popover.present()
+    if (!isOwner) {
+
+      this.modalCtrl.create({
+        component: ImageZoomModalComponent,
+        componentProps: {
+          ref: profile.photoURL,
+          asset: 'profile.png'
+        },
+        enterAnimation: getEnterAnimation,
+        leaveAnimation: getLeaveAnimation
+      }).then(modal => modal.present())
+
+    } else {
+      const popover = await this.popoverCtrl.create({
+        component: EditProfileImagePopoverComponent,
+        componentProps: { storagePath: profile.photoURL },
+        event: ev
+      })
+      // popover.onDidDismiss().then((imageURL => {
+      //   if (imageURL && imageURL.data) {
+      //     this.profileForm.photoURL.setValue(imageURL.data.toString())
+      //   }
+      // }))
+      popover.present()
+    }
   }
 
   createGoal() {
