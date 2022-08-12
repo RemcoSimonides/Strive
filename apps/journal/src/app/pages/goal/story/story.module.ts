@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 import { FlexLayoutModule } from '@angular/flex-layout'
 
@@ -13,6 +14,7 @@ import { PostComponentModule } from '@strive/post/components/post/post.module'
   imports: [
     CommonModule,
     IonicModule,
+    RouterModule,
     FlexLayoutModule,
     StoryItemMessagePipeModule,
     TimeAgoPipeModule,
