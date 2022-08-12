@@ -6,18 +6,20 @@
           <strive-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
           <section fxLayout="column">
             {{ milestone.content }}
-            <article fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-              <strive-milestone-deadline
-                [milestone]="milestone"
-                [isAdmin]="isAdmin"
-                fxFlex
-                (deadlineChange)="updateDeadline(milestone, $event)">
-              </strive-milestone-deadline>
+            <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px">
+              <ng-container *ngIf="milestone.deadline">
+                <strive-milestone-deadline
+                  [milestone]="milestone"
+                  [isAdmin]="isAdmin">
+                </strive-milestone-deadline>
+              </ng-container>
               <ng-container *ngIf="milestone.achiever.uid">
                 <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
               </ng-container>
               <ng-container *ngIf="milestone.subtasks?.length">
-                <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                <div class="subtasks">
+                  <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                </div>
               </ng-container>
             </article>
           </section>

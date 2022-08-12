@@ -72,14 +72,9 @@ export class RoadmapComponent {
         isAchiever: this.isAchiever,
         milestone
       },
-      initialBreakpoint: 0.3,
-      breakpoints: [0, 0.4, 1]
+      initialBreakpoint: 0.75,
+      breakpoints: [0, 0.75, 1]
     }).then(modal => modal.present())
-  }
-
-  updateDeadline(milestone: Milestone, deadline: string) {
-    milestone.deadline = deadline
-    this.milestone.upsert({ deadline, id: milestone.id }, { params: { goalId: this.goal.id }})
   }
 
   openSupportModal(event: Event, milestone: Milestone) {

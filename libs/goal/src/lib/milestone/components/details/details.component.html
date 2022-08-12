@@ -2,7 +2,7 @@
   <form [formGroup]="form">
     <ion-item class="main">
       <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-      <ion-input [readonly]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-input>
+      <ion-textarea autoGrow [readonly]="!isAdmin" formControlName="content" placeholder="Type milestone"></ion-textarea>
       <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>
@@ -10,10 +10,9 @@
   </form>
 
   <section fxLayout="column" fxLayoutGap="8px" class="ion-padding">
-    <!-- <small><b>Created at:</b> {{ milestone.createdAt.toDate() | date:'longDate' }}</small> -->
-    <small *ngIf="milestone.finishedAt"><b>Finished at:</b> {{ milestone.finishedAt | date:'longDate' }}</small>
     <article fxLayout>
-      <small><b>Deadline: </b></small><strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
+      <b>Deadline:</b>
+      <strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
     </article>
     
     <ng-container *ngIf="goal.numberOfAchievers > 1">
@@ -49,6 +48,11 @@
         </form>
       </ion-list>
     </ng-container>
+
+    <!-- <small><b>Created at:</b> {{ milestone.createdAt | date:'longDate' }}</small>
+    <small *ngIf="milestone.finishedAt">
+      <b>Finished at:</b> {{ milestone.finishedAt | date:'longDate' }}
+    </small> -->
 
   </section>
 </ion-content>

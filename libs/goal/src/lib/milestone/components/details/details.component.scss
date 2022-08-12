@@ -4,11 +4,18 @@
 }
 
 ion-item.main {
-  ion-input {
-    font-size: 20px;
+  ion-textarea {
+    --padding-top: 0;
   }
 
-  --padding-start: 0;
+  ion-button {
+    margin-inline-start: 16px;
+    margin-top: 8px;
+  }
+}
+
+strive-milestone-deadline {
+  margin-left: 4px;
 }
 
 ion-list {
@@ -30,4 +37,8 @@ ion-list {
 
 ion-item {
   --highlight-background: var(--ion-color-primary); 
+}
+
+h5 {
+  color: var(--ion-color-primary);
 }

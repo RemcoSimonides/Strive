@@ -12,6 +12,27 @@ ion-list {
 
   ion-item.milestone {
     --inner-padding-bottom: 4px;
+
+    ion-button {
+      margin-inline-start: 16px;
+    }
+
+    article {
+      white-space: nowrap;
+
+      goal-milestone-assignee, strive-milestone-deadline {
+        font-size: small;
+      }
+
+      .subtasks {
+        display: flex;
+        align-items: center;
+
+        ion-icon {
+          margin-right: 6px;
+        }
+      }
+    }
   }
 }
 
