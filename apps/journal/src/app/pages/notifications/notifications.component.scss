@@ -23,7 +23,13 @@ h3 {
 }
 
 article {
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
   img {
     height: 40px;

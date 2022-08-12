@@ -15,7 +15,7 @@
                     [ngStyle]="{'border-radius': _message.link.includes('profile') ? '50%' : '12px'}"
                     [routerLink]="_message.link"
                   />
-                  <div fxLayout="column" fxFlex>
+                  <div>
                     <span>
                       <ng-container *ngFor="let message of _message.message">
                         <ng-container *ngIf="message.link; else noLink">
