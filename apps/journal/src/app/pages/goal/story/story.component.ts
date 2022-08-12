@@ -4,11 +4,11 @@ import { orderBy } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { delay } from '@strive/utils/helpers';
 
-import { Goal, StoryItem } from '@strive/model'
+import { StoryItem } from '@strive/model'
 import { StoryService } from '@strive/goal/story/story.service';
 
 @Component({
-  selector: '[goal] journal-goal-story',
+  selector: '[goalId] journal-goal-story',
   templateUrl: 'story.component.html',
   styleUrls: ['./story.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -16,10 +16,10 @@ import { StoryService } from '@strive/goal/story/story.service';
 export class StoryComponent {
   story$?: Observable<StoryItem[]>
 
-  @Input() set goal(goal: Goal) {
-    if (!goal) return
+  @Input() set goalId(goalId: string) {
+    if (!goalId) return
     const query = [orderBy('date', 'desc')]
-    this.story$ = this.story.valueChanges(query, { goalId: goal.id })
+    this.story$ = this.story.valueChanges(query, { goalId })
   }
 
   constructor(private story: StoryService) {}

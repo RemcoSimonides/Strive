@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router'
 import { ModalController, NavController, Platform } from '@ionic/angular'
 // Rxjs
 import { Subscription, of, Observable, combineLatest, firstValueFrom } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 // Services
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
@@ -26,6 +26,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   pageIsLoading = true
   canAccess = false
 
+  goalId$?: Observable<string>
   goal$?: Observable<Goal | undefined>
   isAdmin$?: Observable<boolean>
 
@@ -48,16 +49,18 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    const goalId$: Observable<string> = this.route.params.pipe(
-      map(params => params['id'])
+    this.goalId$ = this.route.params.pipe(
+      map(params => params['id']),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    this.goal$ = goalId$.pipe(
-      switchMap(goalId => this.goalService.valueChanges(goalId))
+    this.goal$ = this.goalId$.pipe(
+      switchMap(goalId => this.goalService.valueChanges(goalId)),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
     const stakeholder$ = combineLatest([
-      goalId$,
+      this.goalId$,
       this.user.user$
     ]).pipe(
       tap(([ goalId, user ]) => {

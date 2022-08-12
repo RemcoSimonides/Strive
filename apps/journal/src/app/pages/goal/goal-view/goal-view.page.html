@@ -33,7 +33,7 @@
 
   <!-- Posts -->
   <section *ngSwitchCase="'story'">
-    <journal-goal-story [goal]="goal$ | async"></journal-goal-story>
+    <journal-goal-story [goalId]="goalId$ | async"></journal-goal-story>
   </section>
 
 </ion-content>

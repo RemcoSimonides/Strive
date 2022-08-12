@@ -7,6 +7,16 @@
           <section fxLayout="column">
             {{ milestone.content }}
             <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px">
+              <ng-container *ngIf="isAdmin">
+                <div class="supports">
+                  <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.numberOfCustomSupports }}</small>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="milestone.subtasks?.length">
+                <div class="subtasks">
+                  <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                </div>
+              </ng-container>
               <ng-container *ngIf="milestone.deadline">
                 <strive-milestone-deadline
                   [milestone]="milestone"
@@ -16,14 +26,9 @@
               <ng-container *ngIf="milestone.achiever.uid">
                 <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
               </ng-container>
-              <ng-container *ngIf="milestone.subtasks?.length">
-                <div class="subtasks">
-                  <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
-                </div>
-              </ng-container>
             </article>
           </section>
-          <ng-container *ngIf="!createMode">
+          <ng-container *ngIf="!isAdmin">
             <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.numberOfCustomSupports }}
               <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
             </ion-button>

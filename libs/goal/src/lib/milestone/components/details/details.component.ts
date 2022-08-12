@@ -1,14 +1,18 @@
-import { Location } from "@angular/common";
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { AlertController, ModalController } from "@ionic/angular";
+import { Location } from '@angular/common'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core'
+import { AlertController, ModalController } from '@ionic/angular'
+import { FormArray } from '@angular/forms'
+
+import { Subscription } from 'rxjs'
+import { debounceTime, filter } from 'rxjs/operators'
+
 import { Goal, createSubtask, Milestone, createUserLink } from '@strive/model'
-import { MilestoneService } from "@strive/goal/milestone/milestone.service";
-import { MilestoneForm, SubtaskForm } from "@strive/goal/milestone/forms/milestone.form";
-import { UserService } from "@strive/user/user/user.service";
-import { ModalDirective } from "@strive/utils/directives/modal.directive";
-import { Subscription } from "rxjs";
-import { debounceTime, filter } from "rxjs/operators";
-import { FormArray } from "@angular/forms";
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
+import { UserService } from '@strive/user/user/user.service'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+import { delay } from '@strive/utils/helpers'
 
 @Component({
   selector: '[goal][milestone][isAdmin][isAchiever] goal-milestone-details',
@@ -97,7 +101,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       if (res.role == 'delete') {
         if (!this.milestone?.id) return
         this.milestoneService.remove(this.milestone.id, { params: { goalId: this.goal.id }})
-        this.modalCtrl.dismiss()
+        this.dismiss()
       }
     })
     alert.present()
@@ -127,5 +131,18 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     const subtasksForm = this.form?.subtasks as FormArray
     const control = subtasksForm.at(index).get('completed')
     control?.setValue(control.value)
+  }
+
+  openSupportModal() {
+    this.dismiss()
+    delay(250).then(_ => {
+      this.modalCtrl.create({
+        component: AddSupportModalComponent,
+        componentProps: {
+          goalId: this.goal.id,
+          milestone: this.milestone
+        }
+      }).then(modal => modal.present())
+    })
   }
 }

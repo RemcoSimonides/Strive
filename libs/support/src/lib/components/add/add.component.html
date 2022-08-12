@@ -23,13 +23,13 @@
         <ion-item>
           <ion-input [formControl]="form"
             type="text"
-            [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : 'e.g. Bottle of wine or $20'"
-            [disabled]="goal.status === 'finished'"
+            [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or $20'"
+            [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')"
             (keydown.enter)="addSupport(goal)"></ion-input>
           <ion-button slot="end" 
             (click)="addSupport(goal)"
             color="secondary"
-            [disabled]="goal.status === 'finished'">
+            [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')">
             ADD<ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
           </ion-button>
         </ion-item>

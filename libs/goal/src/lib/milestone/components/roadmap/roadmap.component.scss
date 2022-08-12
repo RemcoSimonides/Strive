@@ -20,6 +20,11 @@ ion-list {
     article {
       white-space: nowrap;
 
+      .supports small {
+        display: flex;
+        gap: 4px;
+      }
+
       goal-milestone-assignee, strive-milestone-deadline {
         font-size: small;
       }

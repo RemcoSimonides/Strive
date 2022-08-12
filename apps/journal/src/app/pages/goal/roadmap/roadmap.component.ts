@@ -25,16 +25,22 @@ export class RoadmapComponent {
   milestones$?: Observable<Milestone[]>
 
   _goal?: Goal
+  private _previousGoalId = ''
   @Input() set goal(goal: Goal) {
     if (!goal) return
     this._goal = goal
-    this.stakeholder$ = this.user.user$.pipe(
-      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: goal.id }) : of(undefined)),
-      map(stakeholder => createGoalStakeholder(stakeholder))
-    )
 
-    const query = [orderBy('order', 'asc')]
-    this.milestones$ = this.milestone.valueChanges(query, { goalId: goal.id })
+    const goalIdChanged = goal.id !== this._previousGoalId
+    if (goalIdChanged) {
+      this._previousGoalId = goal.id
+      this.stakeholder$ = this.user.user$.pipe(
+        switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: goal.id }) : of(undefined)),
+        map(stakeholder => createGoalStakeholder(stakeholder))
+      )
+  
+      const query = [orderBy('order', 'asc')]
+      this.milestones$ = this.milestone.valueChanges(query, { goalId: goal.id })
+    }
   }
 
   constructor(
