@@ -84,7 +84,7 @@ export async function sendGoalEventNotification(
 
     if (send.toSpectator.pushNotification) {
       const message = getPushMessage(notification, 'spectator')
-      sendPushNotificationToUsers(message, spectators)
+      if (message) sendPushNotificationToUsers(message, spectators)
     }
   }
 }
@@ -109,8 +109,10 @@ export async function sendPushNotificationToUsers(message: PushMessage, receiver
       logger.log('sending notification to devices', personal.fcmTokens)
 
       admin.messaging().sendToDevice(personal.fcmTokens, {
-        notification: { ...message },
-        data: { url: message.url }
+        notification: {
+          ...message,
+          clickAction: message.url
+        }
       }).catch((err => {
         logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
       }))
