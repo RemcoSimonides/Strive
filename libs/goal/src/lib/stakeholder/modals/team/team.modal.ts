@@ -13,6 +13,11 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RolesPopoverComponment } from '../../popovers/roles/roles.component'
 import { GoalService } from '@strive/goal/goal/goal.service'
 
+function isOnlySpectator(stakeholder: GoalStakeholder) {
+  const { isSpectator, isAchiever, isAdmin, isSupporter } = stakeholder
+  return isSpectator && !(isAchiever || isAdmin || isSupporter)
+}
+
 @Component({
   selector: '[goalId] goal-team-modal',
   templateUrl: './team.modal.html',
@@ -44,7 +49,9 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     const stakeholders$ = combineLatest([
       this.user.user$,
-      this.stakeholder.valueChanges({ goalId: this.goalId })
+      this.stakeholder.valueChanges({ goalId: this.goalId }).pipe(
+        map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s)))
+      )
     ]).pipe(
       shareReplay({ bufferSize: 1, refCount: true })
     )

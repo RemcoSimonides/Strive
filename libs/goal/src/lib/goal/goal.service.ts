@@ -42,7 +42,8 @@ export class GoalService extends FireCollection<Goal> {
       goalId: goal.id,
       goalPublicity: goal.publicity,
       isAdmin: true,
-      isAchiever: true
+      isAchiever: true,
+      isSpectator: true
     });
     return this.stakeholder.add(stakeholder, { write, params: { goalId: goal.id }})
   }

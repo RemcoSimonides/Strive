@@ -225,7 +225,7 @@ export class GoalComponent implements OnDestroy {
   getJoinText() {
     if (this.isAchiever) return 'JOINED'
     if (this.isAdmin) return 'JOIN'
-    if (this.hasOpenRequestToJoin) return 'REQUESTED...'
+    if (this.hasOpenRequestToJoin) return 'CANCEL REQUEST'
     return 'REQUEST JOIN'
   }
 
@@ -256,6 +256,14 @@ export class GoalComponent implements OnDestroy {
           hasOpenRequestToJoin: true
         }, { params: { goalId: this.goalId }})
       }
+    }
+
+    if (this.hasOpenRequestToJoin) {
+      return this.stakeholder.upsert({
+        uid: this.user.uid,
+        isSpectator: true,
+        hasOpenRequestToJoin: false
+      }, { params: { goalId: this.goalId }})
     }
     
     this.openTeamModal()

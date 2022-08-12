@@ -54,6 +54,7 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
         goalId,
         goalPublicity: goal.publicity,
         isSupporter: true,
+        isSpectator: true,
         updatedAt: serverTimestamp() as any,
         createdAt: serverTimestamp() as any
       })

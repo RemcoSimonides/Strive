@@ -12,7 +12,7 @@
     <section class="main-actions">
       <ion-card fxLayout fxLayoutAlign="space-evenly" class="team">
         <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
-          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.status === 'finished' || hasOpenRequestToJoin">
+          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.status === 'finished'">
             <ion-icon slot="start" name="flag"></ion-icon>
             <span> {{ getJoinText() }}</span>
           </ion-button>
