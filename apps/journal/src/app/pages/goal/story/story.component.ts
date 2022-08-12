@@ -24,8 +24,7 @@ export class StoryComponent {
 
   constructor(private story: StoryService) {}
 
-
-  async refreshPosts($event: any) {
+  async refresh($event: any) {
     await delay(500)
     $event?.target.complete()
   }

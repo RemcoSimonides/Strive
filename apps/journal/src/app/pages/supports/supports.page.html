@@ -13,6 +13,10 @@
 </ng-container>
 
 <ion-content class="ion-padding" *ngIf="!!user.uid">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <main>
 
     <section *ngIf="supportsNeedDecision$ | async as goals">

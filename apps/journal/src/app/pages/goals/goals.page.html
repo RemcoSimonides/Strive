@@ -4,6 +4,10 @@
   <ng-container *ngIf="!!user.uid else notLoggedIn">
     <ion-content class="ion-padding">
 
+      <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
       <!-- Goals -->
       <main>
         <header>

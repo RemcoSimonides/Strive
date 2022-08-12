@@ -25,6 +25,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.ser
 import { StoryService } from '@strive/goal/story/story.service';
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
 import { Router } from '@angular/router';
+import { delay } from '@strive/utils/helpers';
 
 function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
   const counter: Record<string | number, number> = {};
@@ -146,5 +147,10 @@ export class GoalsComponent {
 
   trackByFn(_: number, stakeholder: GoalStakeholder) {
     return stakeholder.uid
+  }
+
+  async refresh($event: any) {
+    await delay(500)
+    $event?.target.complete()
   }
 }

@@ -11,7 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { SupportOptionsComponent } from '@strive/support/components/options/options.component';
-import { unique } from '@strive/utils/helpers';
+import { delay, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
 import { GoalLink, MilestoneLink, createSupport, Support, createUserLink } from '@strive/model'
@@ -164,4 +164,8 @@ export class SupportsComponent {
     this.support.update(support.id, { status: 'rejected', needsDecision: false }, { params: { goalId: support.source.goal.id }})
   }
   
+  async refresh($event: any) {
+    await delay(500)
+    $event?.target.complete()
+  }
 }
