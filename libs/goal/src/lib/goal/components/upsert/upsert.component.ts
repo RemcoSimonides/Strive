@@ -30,6 +30,8 @@ export class UpsertGoalModalComponent extends ModalDirective {
   goalForm: GoalForm
   mode: 'update' | 'create'
 
+  created = false // used for navigating to goal (only if goal is created)
+
   get goal(): Goal { return createGoal({ ...this.goalForm.getRawValue(), id: this.goalId }) }
 
   @ViewChild('swiper') swiper?: SwiperComponent;
@@ -60,14 +62,19 @@ export class UpsertGoalModalComponent extends ModalDirective {
   }
 
   stepper(direction: 'next' | 'previous') {
+
     if (direction === 'next') {
       if (this.swiper?.swiperRef.isEnd) {
-        this.dismiss()
+        this.close()
       } else {
         this.swiper?.swiperRef.slideNext(100);
       }
     } else if (direction === 'previous') {
       this.swiper?.swiperRef.slidePrev(100);
     }
+  }
+
+  close() {
+    this.dismiss({ navToGoal: this.created ? this.goalId : false })
   }
 }

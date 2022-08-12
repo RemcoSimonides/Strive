@@ -24,6 +24,7 @@ import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/me
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { StoryService } from '@strive/goal/story/story.service';
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
+import { Router } from '@angular/router';
 
 function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
   const counter: Record<string | number, number> = {};
@@ -54,6 +55,7 @@ export class GoalsComponent {
     private goal: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
@@ -114,7 +116,13 @@ export class GoalsComponent {
   createGoal() {
     this.modalCtrl.create({
       component: UpsertGoalModalComponent
-    }).then(modal => modal.present())
+    }).then(modal => {
+      modal.onDidDismiss().then((data) => {
+        const navToGoal = data.data?.['navToGoal']
+        if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+      })
+      modal.present()
+    })
   }
 
   openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, event: UIEvent) {

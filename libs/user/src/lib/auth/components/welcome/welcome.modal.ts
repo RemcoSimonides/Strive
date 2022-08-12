@@ -50,6 +50,12 @@ export class WelcomeModalComponent {
     this.modalCtrl.dismiss()
     this.modalCtrl.create({
       component: UpsertGoalModalComponent
-    }).then(modal => modal.present())
+    }).then(modal => {
+      modal.onDidDismiss().then((data) => {
+        const navToGoal = data.data?.['navToGoal']
+        if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+      })
+      modal.present()     
+    })
   }
 }

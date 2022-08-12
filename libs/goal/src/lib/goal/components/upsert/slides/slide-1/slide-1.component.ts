@@ -15,6 +15,7 @@ export class Slide1Component {
   @Input() goalId!: string
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
+  @Output() created = new EventEmitter<boolean>()
 
   constructor(
     private goal: GoalService,
@@ -31,6 +32,7 @@ export class Slide1Component {
       delete (goal as any)['isSecret'] // remove isSecret value from Form
     
       this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
+      this.created.emit(true)
       this.form.markAsPristine()
     }
   }

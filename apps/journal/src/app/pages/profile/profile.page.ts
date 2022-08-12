@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, ModalController } from '@ionic/angular';
 // Services
 import { UserSpectateService } from '@strive/user/spectator/spectator.service';
@@ -91,6 +91,7 @@ export class ProfileComponent {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
+    private router: Router,
     private seo: SeoService,
     private userSpectateService: UserSpectateService
   ) {}
@@ -136,7 +137,13 @@ export class ProfileComponent {
   createGoal() {
     this.modalCtrl.create({
       component: UpsertGoalModalComponent
-    }).then(modal => modal.present())
+    }).then(modal => {
+      modal.onDidDismiss().then((data) => {
+        const navToGoal = data.data?.['navToGoal']
+        if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+      })
+      modal.present()
+    })
   }
 
   openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, ev: UIEvent) {
