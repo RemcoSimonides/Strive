@@ -32,6 +32,7 @@ export class ProfileComponent {
     this.user.user$
   ]).pipe(
     map(([profileId, user]) => profileId ? profileId : user?.uid),
+    distinctUntilChanged(),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
