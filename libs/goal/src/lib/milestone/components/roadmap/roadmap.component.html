@@ -38,7 +38,7 @@
       </ion-reorder-group>
       
       <form [formGroup]="milestoneForm" *ngIf="isAdmin">
-        <ion-item lines="inset" [ngClass]="{'no-padding': !createMode}">
+        <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
           <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
           <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()"></ion-input>
           <ion-button (click)="add()">add</ion-button>

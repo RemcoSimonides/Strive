@@ -31,11 +31,6 @@
 					[storagePath]="'goals/' + goal.id"
 				></media-image-selector> -->
 
-				<strive-text-editor
-					[description]="goal.description"
-					[isAdmin]="true" 
-				></strive-text-editor>
-		
 				<div fxLayout="row" fxLayoutAlign="space-between">
 					<ion-button class="submit_button" type="submit" [disabled]="!goalForm.valid">Update</ion-button>
 					<ion-button (click)="finish()" color="secondary">Finish</ion-button>

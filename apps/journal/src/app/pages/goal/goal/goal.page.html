@@ -102,11 +102,7 @@
     </ng-container>
   </ng-container>
 
-
-  <strive-text-editor [description]="goal.description"
-    [isAdmin]="isAdmin"
-    (update)="saveDescription($event)"
-  ></strive-text-editor>
+  <section [innerHTML]="goal.description"></section>
 
   <footer fxLayout>
     <ion-button fill="clear" (click)="segmentChange.next('roadmap')">

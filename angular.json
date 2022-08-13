@@ -4484,8 +4484,7 @@
             "npm:@angular/common",
             "npm:@angular/core",
             "npm:@angular/forms",
-            "npm:@ionic/angular",
-            "npm:ngx-quill"
+            "npm:@ionic/angular"
           ]
         },
         {
