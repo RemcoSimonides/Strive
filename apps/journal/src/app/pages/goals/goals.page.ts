@@ -11,7 +11,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/user.service';
 
 // Model
-import { Goal, GoalEvent, GoalStakeholder, enumEvent, StoryItem, User, GoalStakeholderRole } from '@strive/model'
+import { Goal, GoalEvent, GoalStakeholder, enumEvent, GoalStakeholderRole } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -22,7 +22,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { orderBy, where } from 'firebase/firestore';
 import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { StoryService } from '@strive/goal/story/story.service';
+import { GoalEventService } from '@strive/goal/goal/goal-event.service';
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
 import { Router } from '@angular/router';
 import { delay } from '@strive/utils/helpers';
@@ -60,7 +60,7 @@ export class GoalsComponent {
     public screensize: ScreensizeService,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
-    private story: StoryService
+    private goalEvent: GoalEventService
   ) {
     const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
@@ -75,9 +75,9 @@ export class GoalsComponent {
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
         story: (stakeholder: GoalStakeholder) => {
-          const query = [where('createdAt', '>', stakeholder.lastCheckedGoal)]
-          return this.story.valueChanges(query, { goalId: stakeholder.goalId }).pipe(
-            map(story => story.filter(item => item.source.user?.uid !== stakeholder.uid)),
+          const query = [where('source.goal.id', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
+          return this.goalEvent.valueChanges(query).pipe(
+            map(events => events.filter(event => event.source.user?.uid !== stakeholder.uid)),
             map(aggregateEvents),
             map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
           )
