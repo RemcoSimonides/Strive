@@ -5,6 +5,7 @@ import { Goal, GoalStatus, GoalStakeholder } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { UserService } from '@strive/user/user/user.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { GoalService } from '../../goal.service';
 
 @Component({
   selector: '[goal][stakeholder] journal-goal-options',
@@ -18,6 +19,7 @@ export class GoalOptionsComponent {
 
   constructor(
     private alertCtrl: AlertController,
+    private goalService: GoalService,
     private goalStakeholderService: GoalStakeholderService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
@@ -60,5 +62,25 @@ export class GoalOptionsComponent {
   goTo() {
     this.router.navigate(['/goal/', this.goal?.id])
     this.popoverCtrl.dismiss()
+  }
+
+  deleteGoal() {
+    this.popoverCtrl.dismiss()
+    this.alertCtrl.create({
+      subHeader: `Are you sure you want to delete this goal?`,
+      message: `This action is irreversible`,
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.goalService.remove(this.goal?.id)
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
   }
 }

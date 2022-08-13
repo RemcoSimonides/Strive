@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
+import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 // Firebase
 import { where } from 'firebase/firestore';
 // Rxjs
@@ -26,6 +26,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
+import { SeoService } from '@strive/utils/services/seo.service';
 
 @Component({
   selector: 'journal-goal',
@@ -55,15 +56,14 @@ export class GoalComponent implements OnDestroy {
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
-    private platform: Platform,
     private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
     private router: Router,
     private stakeholder: GoalStakeholderService,
     public user: UserService,
     private cdr: ChangeDetectorRef,
-    public screensize: ScreensizeService
+    public screensize: ScreensizeService,
+    private seo: SeoService
   ) {
     this.goalId = this.route.snapshot.paramMap.get('id') as string
     this.goal$ = this.goalService.valueChanges(this.goalId)
@@ -202,7 +202,8 @@ export class GoalComponent implements OnDestroy {
           text: 'Yes',
           handler: async () => {
             await this.goalService.remove(this.goalId)
-            await this.navCtrl.navigateRoot(`/goals`)
+            this.router.navigate(['/goals'])
+            this.seo.generateTags({ title: `Goals - Strive Journal` })
           }
         },
         {
