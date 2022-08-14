@@ -7,6 +7,7 @@ import { enumExercises, exercises } from '@strive/exercises/utils';
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 import { GoalSharePopoverComponent } from '../../../popovers/share/share.component';
 import { createGoal } from '@strive/model'
+import { captureException } from '@sentry/capacitor';
 
 @Component({
   selector: '[form][goalId] goal-slide-5',
@@ -43,6 +44,8 @@ export class Slide5Component {
         text: 'Check out this goal',
         url,
         dialogTitle: 'Together we achieve!'
+      }).catch(err => {
+        captureException(err)
       })
 
     } else {

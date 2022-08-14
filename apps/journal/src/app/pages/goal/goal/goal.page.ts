@@ -27,6 +27,7 @@ import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.mo
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
 import { SeoService } from '@strive/utils/services/seo.service';
+import { captureException } from '@sentry/capacitor'
 
 @Component({
   selector: 'journal-goal',
@@ -288,6 +289,8 @@ export class GoalComponent implements OnDestroy {
         text: 'Check out this goal',
         url,
         dialogTitle: 'Together we achieve!'
+      }).catch(err => {
+        captureException(err)
       })
     } else {
       this.popoverCtrl.create({
