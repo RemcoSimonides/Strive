@@ -9,6 +9,8 @@ import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-hel
 import { isValidHttpUrl } from '@strive/utils/helpers';
 
 import { Camera, CameraResultType } from '@capacitor/camera';
+import { captureException, captureMessage } from '@sentry/capacitor'
+import { ToastController } from '@ionic/angular';
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -49,6 +51,8 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   @Input() storagePath!: string
 
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>;
+
+  constructor(private toast: ToastController) {}
 
   ngOnInit() {
     this.resetState();
@@ -116,6 +120,10 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
       if (image.dataUrl) {
         const file = dataUrlToFile(image.dataUrl, Date.now().toString())
         this.filesSelected(file)
+      } else {
+        this.toast.create({ message: 'Unsupported file type', duration: 3000 })
+        captureMessage('Unsupported file type chosen')
+        captureException(image)
       }
     } catch (err) {
       this.fileUploader?.nativeElement.click()
@@ -130,8 +138,8 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   filesSelected(file: FileList | File) {
     this.file = Array.isArray(file) ? file[0] : file;
 
-    if (this.file?.type.split('/')[0] !== 'image') {
-      console.error('unsupported file type')
+    if (this.file?.type?.split('/')[0] !== 'image') {
+      this.toast.create({ message: 'Unsupported file type', duration: 3000 })
       return
     }
 

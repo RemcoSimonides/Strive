@@ -28,7 +28,7 @@ export class FcmService {
         duration: 5000,
         position: 'bottom',
       }).then(toast => toast.present())
-      Sentry.captureException(`Couldn't register FCM token`)
+      Sentry.captureException(err)
       return ''
     }
 
