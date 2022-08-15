@@ -13,6 +13,7 @@ import { HeaderRootModule } from '@strive/ui/header-root/header-root.module';
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { StatusPipeModule } from '@strive/goal/goal/pipes/status.pipe';
+import { CurrentFocusPipeModule } from '@strive/goal/goal/pipes/current-focus.pipe';
 import { ImageModule } from '@strive/media/directives/image.module';
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module';
 import { OptionsPopoverModule } from './options/options.module';
@@ -39,7 +40,8 @@ const routes: Routes = [
     GoalOptionsModule,
     HomePageModule,
     OptionsPopoverModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CurrentFocusPipeModule
   ],
   declarations: [GoalsComponent]
 })

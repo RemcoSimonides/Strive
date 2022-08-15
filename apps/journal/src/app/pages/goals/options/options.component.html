@@ -2,15 +2,15 @@
   <h5>Show goals where I am</h5>
   <form [formGroup]="form">
     <ion-item>
-      <ion-checkbox formControlName="isAchiever" slot="start" color="primary"></ion-checkbox>
+      <ion-checkbox formControlName="isAchiever" slot="start" color="primary" [disabled]="form.oneTrue && form.isAchiever?.value === true"></ion-checkbox>
       <ion-label>Achiever</ion-label>
     </ion-item>
     <ion-item>
-      <ion-checkbox formControlName="isSupporter" slot="start" color="primary"></ion-checkbox>
+      <ion-checkbox formControlName="isSupporter" slot="start" color="primary" [disabled]="form.oneTrue && form.isSupporter?.value === true"></ion-checkbox>
       <ion-label>Supporter</ion-label>
     </ion-item>
     <ion-item lines="none">
-      <ion-checkbox formControlName="isAdmin" slot="start" color="primary"></ion-checkbox>
+      <ion-checkbox formControlName="isAdmin" slot="start" color="primary" [disabled]="form.oneTrue && form.isAdmin?.value === true"></ion-checkbox>
       <ion-label>Admin</ion-label>
     </ion-item>
   </form>

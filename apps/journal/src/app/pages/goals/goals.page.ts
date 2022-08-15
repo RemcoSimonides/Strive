@@ -26,6 +26,7 @@ import { GoalEventService } from '@strive/goal/goal/goal-event.service';
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
 import { Router } from '@angular/router';
 import { delay } from '@strive/utils/helpers';
+import { isCurrentFocus } from '@strive/goal/goal/pipes/current-focus.pipe';
 
 function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
   const counter: Record<string | number, number> = {};
@@ -80,7 +81,7 @@ export class GoalsComponent {
           return this.goalEvent.valueChanges(query).pipe(
             map(events => events.filter(event => event.source.user?.uid !== stakeholder.uid)),
             map(aggregateEvents),
-            map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a.importance - b.importance))
+            map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a!.importance - b!.importance))
           )
         }
       }, { shouldAwait: true }),
@@ -95,12 +96,13 @@ export class GoalsComponent {
       )
     ]).pipe(
       map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
-          for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
-            if (bool && stakeholder[key]) return true
-          }
-          return false
-        })
-      )
+        if (isCurrentFocus(stakeholder)) return true // exception for goals with current focus
+        for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
+          if (key === 'isSpectator') continue
+          if (bool && stakeholder[key]) return true
+        }
+        return false
+      }))
     ) as any
 
     this.seo.generateTags({ title: `Goals - Strive Journal` })

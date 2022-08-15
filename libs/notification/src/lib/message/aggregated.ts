@@ -6,7 +6,7 @@ export interface AggregatedMessage {
   importance: number
 }
 
-export function getAggregatedMessage({ event, count }: { event: enumEvent, count: number }): AggregatedMessage {
+export function getAggregatedMessage({ event, count }: { event: enumEvent, count: number }): AggregatedMessage | undefined {
   switch (event) {
     case enumEvent.gNewBucketlist:
     case enumEvent.gNewActive:
@@ -67,15 +67,7 @@ export function getAggregatedMessage({ event, count }: { event: enumEvent, count
       }
     }
     default:
-      return {
-        message: '',
-        icon: 'alert-outline',
-        importance: 999
-      }
+      return undefined
   }
-  return {
-    message: '',
-    icon: 'alert-outline',
-    importance: 999
-  }
+  return undefined
 }
