@@ -17,6 +17,7 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 export class WelcomeModalComponent {
   @ViewChild('swiper') swiper?: SwiperComponent;
 
+  showStep1$ = this.fcm.fcmIsSupported;
   showStep2 = false;
 
   constructor(

@@ -11,6 +11,7 @@ h1 {
 
 p {
   color: var(--ion-color-light-contrast);
+  text-align: center;
 }
 
 swiper {
@@ -19,6 +20,7 @@ swiper {
 
   section {
     height: 100%;
+    padding: 32px;
   }
 
   ion-button {

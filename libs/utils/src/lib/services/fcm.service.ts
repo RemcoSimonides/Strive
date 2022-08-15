@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getToken, getMessaging, onMessage, Unsubscribe } from 'firebase/messaging';
+import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging';
 import { ToastController } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
 import { PersonalService } from '@strive/user/personal/personal.service';
@@ -10,12 +10,14 @@ import * as Sentry from '@sentry/capacitor';
 })
 export class FcmService {
 
+  fcmIsSupported = isSupported()
+
   constructor(
     private toastController: ToastController,
     private personal: PersonalService
   ) {}
 
-  private async getPermission() {
+  private async getPermission(): Promise<string> {
     try {
       const token = await getToken(getMessaging())
       console.log('Permission granted! Save to the server!', token)
@@ -31,16 +33,24 @@ export class FcmService {
       Sentry.captureException(err)
       return ''
     }
-
   }
 
-  async registerFCM() {
+  async registerFCM(): Promise<string | undefined> {
     // if ((this._platform.is('android') || this._platform.is('ios')) && !this._platform.is('mobileweb')) {
     //   await this.registerCapacitor()
-    // } else {
-    //   await this.getPermission()
     // }
-    return this.getPermission();
+
+    const fcm = await isSupported()
+    if (fcm) {
+      return this.getPermission()
+    } else {
+      this.toastController.create({
+        message: 'Sorry, this browser does not support push notifications',
+        duration: 5000,
+        position: 'bottom'
+      })
+      return
+    }
   }
 
   private async registerCapacitor(): Promise<void> {

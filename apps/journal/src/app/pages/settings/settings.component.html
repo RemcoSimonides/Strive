@@ -1,9 +1,10 @@
 <strive-header title="Settings" color="primary" defaultHref="/profile"></strive-header>
 <ion-content>
   <ion-list mode="md">
-    <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none">Install App</ion-item>
+    <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>Install App</ion-item>
     <ion-list-header>Notification</ion-list-header>
-    <ion-item button (click)="pushNotifications()" lines="none">Push Notifications Permission</ion-item>
+    <ion-item *ngIf="fcmIsSupported | async" button (click)="pushNotifications()" lines="none">Give Push Notifications Permission</ion-item>
+    <ion-item *ngIf="(fcmIsSupported | async) === false" disabled>Push Notifications not supported</ion-item>
 
     <!-- <ion-item>Contact, bugs & suggestions</ion-item> -->
     <ion-list-header>Legal</ion-list-header>

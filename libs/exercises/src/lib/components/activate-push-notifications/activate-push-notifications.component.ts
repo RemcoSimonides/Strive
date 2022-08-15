@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { UserService } from '@strive/user/user/user.service';
 import { PersonalService } from '@strive/user/personal/personal.service';
-import { map, of, switchMap } from "rxjs";
-import { createPersonal } from '@strive/model';
+import { map } from "rxjs";
 import { FcmService } from "@strive/utils/services/fcm.service";
 import { ToastController } from "@ionic/angular";
 
@@ -14,16 +12,16 @@ import { ToastController } from "@ionic/angular";
 })
 export class ActivatePushNotificationsComponent {
 
-  hasPushNotifications$ = this.user.user$.pipe(
-    switchMap(user => user ? this.personal.valueChanges(user.uid, { uid: user.uid }) : of(createPersonal())),
+  noFcmToken$ = this.personal.personal$.pipe(
     map(personal => !personal?.fcmTokens?.length)
   )
+
+  fcmNotSupported$ = this.fcm.fcmIsSupported.then(isSupported => !isSupported)
 
   constructor(
     private fcm: FcmService,
     private personal: PersonalService,
     private toast: ToastController,
-    private user: UserService,
   ) {}
 
   async pushNotifications() {

@@ -1,8 +1,17 @@
-<ion-card *ngIf="hasPushNotifications$ | async">
-  <ion-card-content>
-    <p>
-      In order to receive the affirmations, you have to activate push notifications
-    </p>
-    <ion-button color="danger" (click)="pushNotifications()">Activate Push Notifications</ion-button>
-  </ion-card-content>
-</ion-card>
+<ng-container *ngIf="(fcmNotSupported$ | async) || (noFcmToken$ | async)">
+  <ion-card>
+    <ion-card-header>
+      <h3>This exercise is only useful with Push Notifications enabled</h3>
+    </ion-card-header>
+    <ion-card-content>
+      <ng-container *ngIf="fcmNotSupported$ | async else noTokens">
+        <p>Sad to tell, but your browser does not support Push Notifications.</p>
+        <br/>
+        <p>If you're on macOS/iOS/Safari, try again later because Apple is working on this.</p>
+      </ng-container>
+      <ng-template #noTokens>
+        <ion-button color="danger" (click)="pushNotifications()">Activate Push Notifications</ion-button>
+      </ng-template>
+    </ion-card-content>
+  </ion-card>
+</ng-container>

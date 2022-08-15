@@ -16,6 +16,7 @@ import { getAuth } from "firebase/auth";
 export class SettingsPageComponent {
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
+  fcmIsSupported = this.fcm.fcmIsSupported
 
   constructor(
     private fcm: FcmService,
