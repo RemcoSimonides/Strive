@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { createGoalStakeholder, GoalStakeholder, isOnlySpectator } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { UserService } from '@strive/user/user/user.service'
 import { combineLatest, firstValueFrom, Observable } from 'rxjs'
@@ -12,11 +12,6 @@ import { delay } from '@strive/utils/helpers'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RolesPopoverComponment } from '../../popovers/roles/roles.component'
 import { GoalService } from '@strive/goal/goal/goal.service'
-
-function isOnlySpectator(stakeholder: GoalStakeholder) {
-  const { isSpectator, isAchiever, isAdmin, isSupporter } = stakeholder
-  return isSpectator && !(isAchiever || isAdmin || isSupporter)
-}
 
 @Component({
   selector: '[goalId] goal-team-modal',

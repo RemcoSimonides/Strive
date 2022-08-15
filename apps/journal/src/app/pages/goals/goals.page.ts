@@ -11,7 +11,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/user.service';
 
 // Model
-import { Goal, GoalEvent, GoalStakeholder, enumEvent, GoalStakeholderRole } from '@strive/model'
+import { Goal, GoalEvent, GoalStakeholder, enumEvent, GoalStakeholderRole, isOnlySpectator } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -65,6 +65,7 @@ export class GoalsComponent {
     const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
+      map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
       // Sort finished goals to the end
       map(stakeholders => stakeholders.sort((a, b) => {
         const order = ['active', 'bucketlist', 'finished']

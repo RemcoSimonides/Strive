@@ -35,10 +35,9 @@
                     <article>
                       <ion-text>
                         <b>{{ stakeholder.goal.title }}</b>
-                        <small fxLayout fxLayoutGap="4px">
-                          <ion-icon name="pulse"></ion-icon><span>{{ stakeholder.status | status }}</span>
-                          <ion-icon name="flag-outline"></ion-icon><span>{{ stakeholder.goal.numberOfAchievers }} Achiever{stakeholder.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
-                        </small>
+                        <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.status | status }}</small>
+                        <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.status | status }} & Supporting</small>
+                        <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
                       </ion-text>
                       <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
                         <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
