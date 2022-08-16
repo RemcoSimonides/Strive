@@ -11,12 +11,12 @@
       <!-- Goals -->
       <main>
         <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
-          <ng-container *ngIf="stakeholders.length > 0 else noGoals">
+          <ng-container *ngIf="hasGoals$ | async else noGoals">
 
-            <ng-container *ngIf="(stakeholders | currentFocus) as focus">
-              <ng-container *ngIf="focus.length; else noFocus">
+            <ng-container *ngIf="(stakeholders | currentFocus) as inFocus">
+              <ng-container *ngIf="inFocus.length; else noFocus">
                 <header>
-                  <h4 *ngIf="focus.length < stakeholders.length">Current Focus</h4>
+                  <h4 *ngIf="hasGoalsOutsideFocus$ | async">Current Focus</h4>
                   <ion-button fill="clear" (click)="createGoal()">
                     <ion-icon name="add" slot="start"></ion-icon>
                     <span>add goal</span>
@@ -24,7 +24,7 @@
                 </header>
 
                 <section>
-                  <ng-container *ngFor="let stakeholder of focus; trackBy: trackByFn">
+                  <ng-container *ngFor="let stakeholder of inFocus; trackBy: trackByFn">
                     <ng-container *ngTemplateOutlet="goal; context: { $implicit: stakeholder }" ></ng-container>
                   </ng-container>
                 </section>
@@ -43,9 +43,9 @@
               </ng-template>
             </ng-container>
 
-            <ng-container *ngIf="(stakeholders | currentFocus:true) as other">
-              <ng-container *ngIf="other.length">
-                <header *ngIf="other.length < stakeholders.length" class="other-goals">
+            <ng-container *ngIf="(stakeholders | currentFocus:true) as outsideFocus">
+              <ng-container *ngIf="hasGoalsOutsideFocus$ | async">
+                <header *ngIf="hasGoalsInFocus$ | async" class="other-goals">
                   <h4>All Goals</h4>
                   <ion-button fill="clear" (click)="openOptions($event)">
                     <ion-icon slot="icon-only" name="options-outline"></ion-icon>
@@ -53,7 +53,7 @@
                 </header> 
 
                 <section>
-                  <ng-container *ngFor="let stakeholder of other; trackBy: trackByFn">
+                  <ng-container *ngFor="let stakeholder of outsideFocus; trackBy: trackByFn">
                     <ng-container *ngTemplateOutlet="goal; context: { $implicit: stakeholder }" ></ng-container>
                   </ng-container>
                 </section>

@@ -3,7 +3,7 @@ import { ModalController, PopoverController } from '@ionic/angular';
 import { joinWith } from 'ngfire'
 
 // Rxjs
-import { combineLatest, Observable } from 'rxjs'
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { switchMap, map, filter, startWith, tap } from 'rxjs/operators';
 
 // Services
@@ -51,6 +51,9 @@ export class GoalsComponent {
 
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
   form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{}'))
+  hasGoals$ = new BehaviorSubject(false)
+  hasGoalsOutsideFocus$ = new BehaviorSubject(false)
+  hasGoalsInFocus$ = new BehaviorSubject(false)
 
   constructor(
     public user: UserService,
@@ -67,8 +70,8 @@ export class GoalsComponent {
       filter(user => !!user),
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
       map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
-      // Sort finished goals to the end
       map(stakeholders => stakeholders.sort((a, b) => {
+        // Sort finished goals to the end
         const order = ['active', 'bucketlist', 'finished']
         if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
         if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
@@ -81,11 +84,21 @@ export class GoalsComponent {
           return this.goalEvent.valueChanges(query).pipe(
             map(events => events.filter(event => event.source.user?.uid !== stakeholder.uid)),
             map(aggregateEvents),
-            map(val => val.map(a => getAggregatedMessage(a)).filter(a => !!a).sort((a, b) => a!.importance - b!.importance))
+            map(val => val
+              .map(getAggregatedMessage)
+              .filter(a => !!a)
+              .sort((a, b) => a!.importance - b!.importance)
+            )
           )
         }
       }, { shouldAwait: true }),
-      map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)) // <-- in case a goal is being removed
+      map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
+      tap(stakeholders => {
+        this.hasGoals$.next(!!stakeholders.length)
+        const inFocus = stakeholders.filter(isCurrentFocus)
+        this.hasGoalsInFocus$.next(!!inFocus.length)
+        this.hasGoalsOutsideFocus$.next(stakeholders.length > inFocus.length)
+      })
     )
 
     this.stakeholders$ = combineLatest([
