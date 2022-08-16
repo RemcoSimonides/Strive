@@ -11,7 +11,7 @@
                 <article fxLayout fxLayoutGap="8px" class="clickable" [routerLink]="_message.link">
                   <img
                     [ref]="_message.image"
-                    [asset]="_message.link.includes('profile') ? 'profile.png' : 'goal.jpeg'"
+                    [asset]="_message.link.includes('profile') ? 'profile.png' : 'goal.png'"
                     [ngStyle]="{'border-radius': _message.link.includes('profile') ? '50%' : '12px'}"
                   />
                   <div>

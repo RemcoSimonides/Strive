@@ -15,7 +15,7 @@
     <p>What do you want to achieve? Describe, visualize it and make a detailed plan. Ask friends and family to support you. And eventually look back on your life and see what you've achieved.</p>
     <article class="grid">
       <ng-container *ngFor="let goal of goals$ | async">
-        <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="['/goal/', goal.id]">
+        <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="['/goal/', goal.id]">
           <small>{{ goal.numberOfAchievers }} achievers - {{ goal.numberOfSupporters}} supporters</small>
         </strive-small-thumbnail>
       </ng-container>

@@ -82,7 +82,7 @@
   <ion-card>
     <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
       <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
-        <img [ref]="stakeholder.goal.image" asset="goal.jpeg"/>
+        <img [ref]="stakeholder.goal.image" asset="goal.png"/>
         <div *ngIf="stakeholder.status === 'finished'">finished</div>
       </ion-thumbnail>
       <article>

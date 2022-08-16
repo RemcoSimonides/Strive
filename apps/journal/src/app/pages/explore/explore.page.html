@@ -29,7 +29,7 @@
           <ng-template #thumb>
             <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
               <ng-container *ngFor="let goal of rows; let i = index">
-                <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
+                <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
                   <small>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</small>
                 </strive-small-thumbnail>
               </ng-container>
@@ -77,7 +77,7 @@
     <section *ngSwitchCase="'search'" class="search">
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
         <ng-container *ngFor="let goal of algolia.goalResults | async">
-          <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.jpeg" [routerLink]="'/goal/' + goal.id">
+          <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
             <small *ngIf="searchForm.value.type === 'all'">Type: Goal</small>
           </strive-small-thumbnail>
         </ng-container>

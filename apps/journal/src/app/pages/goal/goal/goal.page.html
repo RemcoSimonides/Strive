@@ -4,7 +4,7 @@
   <main>
     <section class="goal-image">
       <picture (click)="openZoom(goal)">
-        <img [ref]="goal.image" asset="goal.jpeg" [width]="500" [height]="500"/>
+        <img [ref]="goal.image" asset="goal.png" [width]="500" [height]="500"/>
         <div *ngIf="goal.status === 'finished'">finished</div>
       </picture>
     </section>

@@ -327,7 +327,7 @@ export class GoalComponent implements OnDestroy {
       component: ImageZoomModalComponent,
       componentProps: {
         ref: goal.image,
-        asset: 'goal.jpeg'
+        asset: 'goal.png'
       },
       enterAnimation: getEnterAnimation,
       leaveAnimation: getLeaveAnimation

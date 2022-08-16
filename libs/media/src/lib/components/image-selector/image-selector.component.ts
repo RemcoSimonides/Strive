@@ -45,7 +45,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   croppedImage?: string
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
-  @Input() defaultImage?: 'goal.jpeg' | 'profile.png'
+  @Input() defaultImage?: 'goal.png' | 'profile.png'
 
   @Input() form!: FormControl
   @Input() storagePath!: string
