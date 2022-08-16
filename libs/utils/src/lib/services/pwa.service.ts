@@ -29,14 +29,10 @@ export class PWAService implements OnDestroy {
 
       switch (event.type) {
         case 'VERSION_DETECTED':
-          Sentry.captureMessage(`PWA Version Detected: ${event.version.hash}`)
           break
         case 'VERSION_INSTALLATION_FAILED':
-          Sentry.captureMessage(`PWA Installation Failed: ${event.version.hash}`)
           break
         case 'VERSION_READY': {
-          Sentry.captureMessage(`PWA Version Ready! Current ${event.currentVersion.hash}, New ${event.latestVersion.hash}`)
-
           if (event.type === 'VERSION_READY') {
             toastCtrl.create({
               header: 'New version available',
