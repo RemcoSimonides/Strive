@@ -7,7 +7,7 @@ import { groupIds, templateIds } from '../email/ids'
 export function sendDearFutureSelfPushNotification(personal: Personal, message: Message) {
   const from = format(message.createdAt, 'MMM yyyy')
 
-  if (personal.fcmTokens.some(token => token)) {
+  if (personal?.fcmTokens.some(token => token)) {
 
     return admin.messaging().sendToDevice(personal.fcmTokens, {
       notification: {

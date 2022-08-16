@@ -12,7 +12,7 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
     const randomAffirmation = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)];
     const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
 
-    if (personal.fcmTokens.some(token => token)) {
+    if (personal?.fcmTokens.some(token => token)) {
       return admin.messaging().sendToDevice(personal.fcmTokens, {
         notification: {
           title: `Repeat out loud 5 times`,

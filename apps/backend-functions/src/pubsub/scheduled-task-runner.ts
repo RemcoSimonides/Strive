@@ -1,4 +1,4 @@
-import { db, functions, admin } from '../internals/firebase';
+import { db, functions, admin, wrapCloudEventFunction } from '../internals/firebase';
 
 import { Affirmations } from '@strive/model'
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
@@ -11,7 +11,7 @@ import { DearFutureSelf, Personal } from '@strive/model'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
-export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub.schedule('* * * * *').onRun(async () => {
+export const scheduledTasksRunner = wrapCloudEventFunction(functions.runWith( { memory: '2GB' }).pubsub.schedule('* * * * *').onRun(async () => {
 
   // Consistent timestamp
   const now = admin.firestore.Timestamp.now();
@@ -30,13 +30,16 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
   ]
 
   // Loop over documents and push job.
-  tasks.forEach(snapshot => {
+  for (const snapshot of tasks.docs) {
     const { worker, options } = snapshot.data();
 
+    if (!workers[worker]) {
+      console.error('WORKER NOT FOUND FOR: ', worker)
+      continue
+    }
     const job = workers[worker](options)      
       // Update doc with status on success or error
       .then(async () => {
-
         if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'complete' })
       })
@@ -45,11 +48,12 @@ export const scheduledTasksRunner = functions.runWith( { memory: '2GB' }).pubsub
         await snapshot.ref.update({ status: 'error' })
       });
       jobs.push(job);
-  });
+  }
+
 
   // Execute all jobs concurrently
   return await Promise.all(jobs);
-})
+}))
 
 // Optional interface, all worker functions should return Promise.
 interface IWorkers {

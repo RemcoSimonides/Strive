@@ -37,7 +37,7 @@ import { addDays } from 'date-fns'
 export async function sendDailyGratefulnessPushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
-  if (personal.fcmTokens.some(token => token)) {
+  if (personal?.fcmTokens.some(token => token)) {
 
     return admin.messaging().sendToDevice(personal.fcmTokens, {
       notification: {

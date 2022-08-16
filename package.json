@@ -34,6 +34,7 @@
     "@sendgrid/mail": "^7.7.0",
     "@sentry/angular": "^7.8.1",
     "@sentry/capacitor": "^0.9.0",
+    "@sentry/serverless": "^7.10.0",
     "algoliasearch": "^4.14.2",
     "date-fns": "^2.29.1",
     "firebase": "^9.9.2",
