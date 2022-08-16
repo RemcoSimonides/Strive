@@ -33,6 +33,11 @@ a {
   text-decoration: none;
 }
 
+.wide-popover {
+  --width: 80vw;
+  --max-width: 400px;
+}
+
 .not-logged-in {
   display: flex;
   justify-content: center;

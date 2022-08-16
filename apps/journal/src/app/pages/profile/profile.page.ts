@@ -123,7 +123,9 @@ export class ProfileComponent {
       const popover = await this.popoverCtrl.create({
         component: EditProfileImagePopoverComponent,
         componentProps: { storagePath: profile.photoURL },
-        event: ev
+        event: ev,
+        alignment: 'center',
+        cssClass: 'wide-popover'
       })
       // popover.onDidDismiss().then((imageURL => {
       //   if (imageURL && imageURL.data) {
