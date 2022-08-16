@@ -4,7 +4,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { deleteObject, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, getStorage, ref, uploadBytes, StorageError } from 'firebase/storage';
 import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
 import { isValidHttpUrl } from '@strive/utils/helpers';
 
@@ -150,9 +150,13 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   remove() {
-    try {
-      deleteObject(ref(getStorage(), this.form.value))
-    } catch (err) { console.error(err) }
+    deleteObject(ref(getStorage(), this.form.value))
+    .catch((error: StorageError) => {
+      if (error.code === 'storage/object-not-found') {
+        // suppress
+      }
+      captureException(error)
+    })
     this.form.setValue('');
     this.step.next('drop')
   }

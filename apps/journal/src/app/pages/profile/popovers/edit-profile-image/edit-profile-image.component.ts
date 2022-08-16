@@ -25,7 +25,7 @@ export class EditProfileImagePopoverComponent implements OnInit {
     this.form = new FormControl(this.navParams.data['storagePath'])
   }
 
-  public update() {
+  update() {
     if (this.imageSelector?.step.value === 'crop') {
       this.imageSelector.cropIt()
     }
