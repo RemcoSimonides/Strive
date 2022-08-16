@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { ModalController, PopoverController } from '@ionic/angular'
@@ -13,6 +13,7 @@ import { createPost } from '@strive/model';
 import { isValidHttpUrl } from '@strive/utils/helpers';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component';
 
 @Component({
   selector: '[goalId] post-upsert-modal',
@@ -20,6 +21,8 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
   styleUrls: ['./upsert-modal.component.scss'],
 })
 export class UpsertPostModalComponent extends ModalDirective implements OnInit, OnDestroy {
+  @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
+  
   postForm = new PostForm()
   scrapingUrl = false
   
@@ -69,6 +72,10 @@ export class UpsertPostModalComponent extends ModalDirective implements OnInit, 
 
   async submitPost() {
     if (!this.user.uid) return
+
+    if (this.imageSelector?.step.value === 'crop') {
+      this.imageSelector.cropIt()
+    }
 
     if (!this.postForm.isEmpty) {
       const { date, description, isEvidence, mediaURL, title, url } = this.postForm.value

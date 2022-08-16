@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { AlertController, LoadingController, NavParams } from '@ionic/angular';
 import { createGoal, GoalPublicityType } from '@strive/model'
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component';
 
 @Component({
   selector: '[form][goalId] goal-slide-update',
@@ -12,6 +13,8 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SlideUpdateComponent {
+  @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
+  
   @Input() form!: GoalForm
   @Input() goalId!: string
 
@@ -35,6 +38,10 @@ export class SlideUpdateComponent {
       loading.present()
 
       try {
+        if (this.imageSelector?.step.value === 'crop') {
+          this.imageSelector.cropIt()
+        }
+
         const publicity = await this.determinePublicity()
         this.form.publicity.setValue(publicity)
 
