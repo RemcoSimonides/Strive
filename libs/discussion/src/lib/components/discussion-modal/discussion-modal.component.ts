@@ -32,7 +32,10 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
   private _comments = new BehaviorSubject<Comment[]>([])
   private _done = new BehaviorSubject<boolean>(false)
   private _loading = new BehaviorSubject<boolean>(false)
-  comments$ = this._comments.asObservable()
+  comments$ = this._comments.asObservable().pipe(
+    // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages) 
+    map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i))
+  )
   done$ = this._done.asObservable()
 
   scrolledToBottom = true

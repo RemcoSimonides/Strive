@@ -80,7 +80,7 @@ export class GoalComponent implements OnDestroy {
 
     this.unreadMessage$ = this.stakeholder$.pipe(
       switchMap(stakeholder => {
-        if (!stakeholder.uid) return []
+        if (!stakeholder.uid) return of([])
         const query = [limit(1)]
         if (stakeholder.lastCheckedChat) query.push(where('createdAt', '>', stakeholder.lastCheckedChat))
         return this.commentService.valueChanges(query, { goalId: this.goalId })
