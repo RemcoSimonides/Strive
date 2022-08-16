@@ -10,6 +10,7 @@ import { filter, map, skip } from 'rxjs/operators';
 // Services
 import { UserService } from '@strive/user/user/user.service';
 import { CommentService } from '@strive/discussion/comment.service';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 // Interfaces
 import { Goal, Comment, createComment, createCommentSource } from '@strive/model'
 
@@ -53,6 +54,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private platform: Platform,
+    private stakeholder: GoalStakeholderService,
     public user: UserService
   ) {
     super(location, modalCtrl)
@@ -62,6 +64,9 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
   }
 
   async ngOnInit() {
+    if (!this.user.uid) return
+    this.stakeholder.updateLastCheckedChat(this.goal.id, this.user.uid)
+
     const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
     const constraints = [
       orderBy('createdAt', 'desc'),

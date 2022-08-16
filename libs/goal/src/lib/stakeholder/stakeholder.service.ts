@@ -44,6 +44,15 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     }
   }
 
+  async updateLastCheckedChat(goalId: string, uid: string) {
+    const stakeholder = await this.getValue(uid, { goalId })
+    if (stakeholder) {
+      this.update(uid, {
+        lastCheckedChat: serverTimestamp() as any
+      }, { params: { goalId }})
+    }
+  }
+
   override async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {
     const goalId = params?.['goalId'] ?? stakeholder.goalId
     const uid = stakeholder.uid

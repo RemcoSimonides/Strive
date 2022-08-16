@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, On
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 // Firebase
-import { where } from 'firebase/firestore';
+import { limit, where } from 'firebase/firestore';
 // Rxjs
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription, tap } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 // Capacitor
 import { Share } from '@capacitor/share';
 // Strive Components
@@ -22,12 +23,12 @@ import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/u
 import { InviteTokenService } from '@strive/utils/services/invite-token.service';
 // Strive Interfaces
 import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
-import { map, switchMap } from 'rxjs/operators';
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
 import { SeoService } from '@strive/utils/services/seo.service';
 import { captureException } from '@sentry/capacitor'
+import { CommentService } from '@strive/discussion/comment.service';
 
 @Component({
   selector: 'journal-goal',
@@ -43,6 +44,7 @@ export class GoalComponent implements OnDestroy {
 
   public stakeholder$: Observable<GoalStakeholder>
   public openRequests$?: Observable<GoalStakeholder[]>
+  public unreadMessage$: Observable<boolean>
 
   public isAdmin = false
   public isAchiever = false
@@ -54,6 +56,7 @@ export class GoalComponent implements OnDestroy {
 
   constructor(
     private alertCtrl: AlertController,
+    private commentService: CommentService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
@@ -71,7 +74,18 @@ export class GoalComponent implements OnDestroy {
 
     this.stakeholder$ = this.user.user$.pipe(
       switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
-      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder())
+      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder()),
+      shareReplay({ bufferSize: 1, refCount: true })
+    )
+
+    this.unreadMessage$ = this.stakeholder$.pipe(
+      switchMap(stakeholder => {
+        if (!stakeholder.uid) return []
+        const query = [limit(1)]
+        if (stakeholder.lastCheckedChat) query.push(where('createdAt', '>', stakeholder.lastCheckedChat))
+        return this.commentService.valueChanges(query, { goalId: this.goalId })
+      }),
+      map(comments => !!comments.length)
     )
 
     this.sub = this.stakeholder$.subscribe(stakeholder => {
@@ -95,7 +109,13 @@ export class GoalComponent implements OnDestroy {
       this.modalCtrl.create({
         component: DiscussionModalComponent,
         componentProps: { goal }
-      }).then(modal => modal.present())
+      }).then(modal => {
+        modal.onDidDismiss().then(_ => {
+          if (!this.user.uid) return
+          this.stakeholder.updateLastCheckedChat(goal.id, this.user.uid)
+        })
+        modal.present()
+      })
     } else {
       this.modalCtrl.create({
         component: AuthModalComponent,

@@ -15,6 +15,7 @@ export interface GoalStakeholder {
   goalId: string
   goalPublicity: GoalPublicityType
   lastCheckedGoal: false | Date
+  lastCheckedChat: false | Date
   updatedBy?: string
   updatedAt?: Date
   createdAt?: Date
@@ -35,6 +36,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     goalId: '',
     goalPublicity: 'private',
     lastCheckedGoal: false,
+    lastCheckedChat: false,
     ...params
   }
 }

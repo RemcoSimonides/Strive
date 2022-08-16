@@ -36,6 +36,15 @@ main {
   }
 }
 
+.chat-button {
+  position: relative;
+
+  &::after {
+    right: 0;
+    top: 0;
+  }
+}
+
 .action-button {
   height: 2em;
   width: 2em;

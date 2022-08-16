@@ -37,7 +37,7 @@
 
       <ng-container *ngIf="(screensize.isMobile$ | async) === false">
         <div fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="16px">
-          <ion-button (click)="openDiscussion(goal)" fill="clear">
+          <ion-button (click)="openDiscussion(goal)" fill="clear" class="chat-button" [ngClass]="{'badge': unreadMessage$ | async}">
             <ion-icon slot="start" name="chatbox-outline"></ion-icon>
             <span>chat</span>
           </ion-button>
@@ -62,7 +62,7 @@
 
     <ng-container *ngIf="screensize.isMobile$ | async">
       <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px" fxFlexOrder.lt-sm="3">
-        <ion-button (click)="openDiscussion(goal)" class="ion-no-padding action-button" fill="clear">
+        <ion-button (click)="openDiscussion(goal)" class="ion-no-padding action-button chat-button" fill="clear" [ngClass]="{'badge': unreadMessage$ | async}">
           <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
         </ion-button>
         <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
