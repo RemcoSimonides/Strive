@@ -1,14 +1,11 @@
-import { db, functions, serverTimestamp } from '../../internals/firebase';
-import { logger } from 'firebase-functions';
+import { db, functions, serverTimestamp } from '../../internals/firebase'
+import { logger } from 'firebase-functions'
 
 import {
   createGoal,
   Goal,
   GoalStatus,
-  createGoalLink,
-  GoalPublicityType,
   createGoalSource,
-  DiscussionSource,
   enumEvent,
   createSupport,
   Support,
@@ -18,34 +15,20 @@ import {
   User
 } from '@strive/model'
 // Shared
-import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task';
-import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface';
-import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils';
+import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
+import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
+import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
+import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils'
 import { addGoalEvent } from '../../shared/goal-event/goal.events';
-import { getReceiver } from '../../shared/support/receiver';
-import { addDiscussion } from '../../shared/discussion/discussion';
-import { AudienceType } from '@strive/discussion/+state/discussion.firestore';
-import { addStoryItem } from '../../shared/goal-story/story';
+import { getReceiver } from '../../shared/support/receiver'
+import { addStoryItem } from '../../shared/goal-story/story'
 
-function getAudience(publicity: GoalPublicityType): AudienceType {
-  return publicity === 'public'
-    ? 'public'
-    : 'team'
-}
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onCreate(async snapshot => {
 
     const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
     const goalId = snapshot.id
-
-    // TODO rework discussion
-    const discussionSource: DiscussionSource = {
-      goal: createGoalLink({ ...goal, id: goalId })
-    }
-    const audience = getAudience(goal.publicity)
-    await addDiscussion(`General discussion`, discussionSource, audience, goalId, goal.updatedBy)
 
     // event
     const user = await getDocument<User>(`Users/${goal.updatedBy}`)
@@ -88,6 +71,8 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     deleteCollection(db, `Goals/${goal.id}/InviteTokens`, 500)
     deleteCollection(db, `Goals/${goal.id}/GStakeholders`, 500)
     deleteCollection(db, `Goals/${goal.id}/Story`, 500)
+    deleteCollection(db, `Goals/${goal.id}/Comments`, 500)
+
     db.doc(`Discussions/${goal.id}`).delete()
 
     if (goal.publicity === 'public') {
@@ -124,9 +109,6 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     }
 
     if (before.publicity !== after.publicity) {
-      const audience = getAudience(after.publicity)
-      db.doc(`Discussions/${goalId}`).update({ audience })
-
       if (after.publicity === 'public') {
         // add to algolia
         await addToAlgolia('goal', goalId, {

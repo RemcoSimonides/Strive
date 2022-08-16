@@ -1,21 +1,20 @@
-import { createUserLink, UserLink } from '@strive/model'
+import { CommentSource, createCommentSource } from './notification';
 
 export interface Comment {
-    id?: string;
+    id: string;
     text: string;
-    type: 'sentByUser' | 'notification';
-    user: UserLink;
+    source: CommentSource;
     createdAt: Date;
     updatedAt: Date;
 }
 
 export function createComment(params: Partial<Comment> = {}): Comment {
   return {
+    id: '',
     text: '',
-    type: 'notification',
-    user: createUserLink(),
     createdAt: new Date(),
     updatedAt: new Date(),
-    ...params
+    ...params,
+    source: createCommentSource(params?.source),
   }
 }

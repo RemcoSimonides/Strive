@@ -28,13 +28,6 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
       changeNumberOfActiveGoals(stakeholder.uid, 1)
     }
 
-    // Adding admins and achievers to goal chat so they receive notifications
-    if (stakeholder.isAdmin || stakeholder.isAchiever) {
-      db.doc(`Discussions/${goal.id}`).update({
-        commentators: arrayUnion(stakeholder.uid)
-      })
-    }
-
     // events
     handleStakeholderEvents(createGoalStakeholder(), stakeholder, goal)
   })
@@ -65,15 +58,6 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     if (before.status !== after.status) {
       if (after.status === 'active') changeNumberOfActiveGoals(stakeholderId, 1)
       if (before.status === 'active') changeNumberOfActiveGoals(stakeholderId, -1)
-    }
-
-    // Adding admins and achievers to goal chat so they receive notifications
-    const becameAchiever = !before.isAchiever && after.isAchiever
-    const becameAdmin = !before.isAdmin && after.isAdmin
-    if (becameAchiever || becameAdmin) {
-      db.doc(`Discussions/${goal.id}`).update({
-        commentators: arrayUnion(after.uid)
-      })
     }
 
     if (before.status !== after.status && goal.status !== after.status) {

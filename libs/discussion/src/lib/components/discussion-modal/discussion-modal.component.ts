@@ -1,18 +1,17 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavParams, IonContent, ModalController, Platform} from '@ionic/angular';
-import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, query, Query, QueryConstraint, startAfter } from 'firebase/firestore';
+import { FormControl, Validators } from '@angular/forms';
+import { IonContent, ModalController, Platform} from '@ionic/angular';
+import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter } from 'firebase/firestore';
+import { toDate } from 'ngfire';
 // Rxjs
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, map, skip } from 'rxjs/operators';
 // Services
-import { DiscussionService } from '@strive/discussion/+state/discussion.service';
 import { UserService } from '@strive/user/user/user.service';
-import { CommentService } from '@strive/discussion/+state/comment.service';
+import { CommentService } from '@strive/discussion/comment.service';
 // Interfaces
-import { Comment, createComment } from '../../+state/comment.firestore';
-import { Discussion } from '../../+state/discussion.firestore';
-import { createUserLink } from '@strive/model'
+import { Goal, Comment, createComment, createCommentSource } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
@@ -23,6 +22,9 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
   styleUrls: ['./discussion-modal.component.scss'],
 })
 export class DiscussionModalComponent extends ModalDirective implements OnInit, OnDestroy {
+  @ViewChild(IonContent) contentArea?: IonContent
+  @Input() goal!: Goal
+
   private commentsPerQuery = 20
   private query?: Query<DocumentData>
 
@@ -34,11 +36,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
 
   scrolledToBottom = true
 
-  private subs: Subscription[] = []
-
-  discussionId?: string
-  _comment?: string
-  discussion$?: Observable<Discussion | undefined>
+  form = new FormControl('', { validators: [Validators.required], nonNullable: true })
 
   visibility = {
     public: 'Messages visible to everyone',
@@ -48,16 +46,14 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     spectators: 'Visible to spectators only'
   }
 
-  @ViewChild(IonContent) contentArea?: IonContent
+  private subs: Subscription[] = []
 
   constructor(
-    public user: UserService,
-    private discussion: DiscussionService,
+    private commentService: CommentService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    private navParams: NavParams,
     private platform: Platform,
-    private commentService: CommentService
+    public user: UserService
   ) {
     super(location, modalCtrl)
 
@@ -66,34 +62,26 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
   }
 
   async ngOnInit() {
-    this.discussionId = this.navParams.get('discussionId')
-    this.discussion$ = this.discussion.valueChanges(this.discussionId)
-
-    const ref = collection(getFirestore(), `Discussions/${this.discussionId}/Comments`)
+    const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
     const constraints = [
       orderBy('createdAt', 'desc'),
       limit(this.commentsPerQuery)
     ]
     this.query = query(ref, ...constraints)
 
-    const sub = this.commentService.valueChanges(
-      [orderBy('createdAt', 'desc'), limit(1)],
-      { discussionId: this.discussionId }
-    ).pipe(
+    const sub = this.commentService.valueChanges([orderBy('createdAt', 'desc'), limit(1)], { goalId: this.goal.id }).pipe(
       skip(1),
       map(comments => comments[0]),
       filter(comment => !!comment.createdAt)
     ).subscribe(comment => {
       const next = [...this._comments.value, comment]
       this._comments.next(next)
-      if (this.scrolledToBottom) {
-        this.contentArea?.scrollToBottom()
-      }
+      if (this.scrolledToBottom) this.contentArea?.scrollToBottom()
     })
     this.subs.push(sub)
 
     await this.mapAndUpdate([])
-    this.contentArea?.scrollToBottom()
+    delay(0).then(_ => this.contentArea?.scrollToBottom())
   }
 
   ngOnDestroy() {
@@ -107,7 +95,7 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     if (!this.query) return
     const snapshot = await getDocs(query(this.query, ...queryConstraints))
     if (!snapshot.empty) {
-      const comments = snapshot.docs.map(doc => createComment({ ...doc.data(), id: doc.id }))
+      const comments = snapshot.docs.map(doc => createComment(toDate({ ...doc.data(), id: doc.id })))
       const next = [...comments.reverse(), ...this._comments.value]
       this._comments.next(next)
     }
@@ -127,18 +115,21 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     $event.target.complete()
   }
 
-  async addReply() {
-    if (!this._comment?.trim()) return
-    if (!this.discussionId) return
+  addReply(event?: Event) {
+    if (event) event.preventDefault()
+    const text = this.form.value.trim()
+    if (!this.form.valid || !text) return
 
     const comment = createComment({
-      text: this._comment.trim(),
-      type: 'sentByUser',
-      user: createUserLink(this.user.user)
+      text,
+      source: createCommentSource({
+        user: this.user.user,
+        goal: this.goal
+      })
     })
-    this._comment = ''
-    this.discussion.comment.add(comment, { params: { discussionId: this.discussionId }})
 
+    this.form.reset('')
+    this.commentService.add(comment, { params: { goalId: this.goal.id }})
   }
 
   async logScrolling($event: any) {

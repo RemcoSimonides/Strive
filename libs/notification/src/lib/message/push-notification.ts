@@ -87,6 +87,13 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
         body: `${source.user?.username} created a new post`,
         url: `/goal/${source.goal?.id}`
       })
+
+    case enumEvent.gNewMessage:
+      return createPushMessage({
+        title: source.goal?.title,
+        body: `${source.user?.username} sent a message in chat`,
+        url: `/goal/${source.goal?.id}`
+      })
     
     case enumEvent.gSupportAdded: {
       const text = source.milestone?.id

@@ -66,6 +66,13 @@ export function getAggregatedMessage({ event, count }: { event: enumEvent, count
         importance: 8
       }
     }
+    case enumEvent.gNewMessage: {
+      return {
+        message: `${count} new ${count === 1 ? 'message' : 'messages'}`,
+        icon: 'chatbox-outline',
+        importance: 9
+      }
+    }
     default:
       return undefined
   }

@@ -43,8 +43,6 @@ export enum enumEvent {
   gSupportDeleted = 203060,
   gNewPost = 205001,
   gNewMessage = 206001,
-  // 300000 -> 399999 = discussion events
-  // discussionNewMessage = 300000,
   // 400000 -> 499999 = user events
   userSpectatorAdded = 400001,
   userSpectatorRemoved = 400002,
@@ -112,9 +110,9 @@ export interface NotificationSource {
   support?: SupportLink
 }
 
-export interface DiscussionSource {
-  user?: UserLink
-  goal?: GoalLink
+export interface CommentSource {
+  user: UserLink
+  goal: GoalLink
 }
 
 export function createNotification(params: Partial<Notification> = {}): Notification {
@@ -142,19 +140,17 @@ export function createSupportSource(params: {
   return source
 }
 
-export function createDiscussionSource(params: {
-  goal: GoalLink | Goal,
-  user: UserLink | User
-}): DiscussionSource {
-  const source: DiscussionSource = {}
-
-  if (params.goal?.id) source.goal = createGoalLink(params.goal)
-  if (params.user?.uid) source.user = createUserLink(params.user)
+export function createCommentSource(params: {
+  goal?: GoalLink | Goal,
+  user?: UserLink | User
+} = {}): CommentSource {
+  const source: CommentSource = {
+    goal: createGoalLink(params?.goal),
+    user: createUserLink(params?.user)
+  }
 
   return source
 }
-
-// COMMENT SOURCE TOO?
 
 export function createNotificationSource(params: {
   goal?: GoalLink | Goal

@@ -612,14 +612,7 @@
           "hash": "8cb9514c03a7939fb98bc273a04fec36f59e0a27"
         },
         {
-          "file": "libs/discussion/src/lib/+state/comment.firestore.ts",
-          "hash": "6cf1c9c3f221d59b65d180b2a7693537e5eca1ca",
-          "deps": [
-            "model"
-          ]
-        },
-        {
-          "file": "libs/discussion/src/lib/+state/comment.service.ts",
+          "file": "libs/discussion/src/lib/comment.service.ts",
           "hash": "1dcbde6d86548d36fe218e255fb5ce04134ee85c",
           "deps": [
             "npm:@angular/core",

@@ -90,13 +90,11 @@ export class GoalComponent implements OnDestroy {
     this.sub.unsubscribe()
   }
 
-  openDiscussion() {
+  openDiscussion(goal: Goal) {
     if (this.user.uid) {
       this.modalCtrl.create({
         component: DiscussionModalComponent,
-        componentProps: {
-          discussionId: this.goalId
-        }
+        componentProps: { goal }
       }).then(modal => modal.present())
     } else {
       this.modalCtrl.create({

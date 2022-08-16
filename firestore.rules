@@ -101,20 +101,15 @@ service cloud.firestore {
         allow create: if userIsGoalAdmin(goalId)
       }
 
+      match /Comments/{commentId} {
+        allow read;
+        allow create;
+      }
     }
 
     // ===== GOAL EVENTS ====
     match /GoalEvents/{eventId} {
       allow read;
-    }
-
-    match /Discussions/{discussionId} {
-      allow read;
-
-      match /Comments/{commentId} {
-        allow read;
-        allow create;
-      }
     }
 
 

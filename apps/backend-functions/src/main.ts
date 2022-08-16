@@ -15,9 +15,8 @@ export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandle
 export { supportCreatedHandler, supportChangeHandler } from './firestore/goals/supports/support';
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token';
 export { postCreatedHandler } from './firestore/goals/posts/post';
-export { commentCreatedHandler } from './firestore/discussions/comments/comment';
+export { commentCreatedHandler } from './firestore/goals/comments/comment';
 
-export { discussionDeletedHandler } from './firestore/discussions/discussion';
 export { goalEventCreatedHandler } from './firestore/goal-events/goal-events';
 
 // http

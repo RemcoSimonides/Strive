@@ -117,10 +117,19 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendNotificationToUsers(notification, userId, 'user')
       }
 
-      // case enumEvent.gNewMessage: {
-      //   // TODO send push notification to all chat participants (except for sender)
-      //   break
-      // }
+      case enumEvent.gNewMessage: {
+        const options: SendOptions = {
+          send: {
+            pushNotification: true
+          },
+          roles: {
+            isAdmin: true,
+            isSupporter: true,
+            isAchiever: true
+          }
+        }
+        return sendGoalEventNotification(event, options, true)
+      }
 
       case enumEvent.gSupportAdded: {
         const options: SendOptions = {
