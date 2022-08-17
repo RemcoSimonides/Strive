@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore';
 import { docData } from 'rxfire/firestore';
 
-import { Motivation, Motivations } from './motivation.model';
+import { Motivation, Motivations } from '@strive/model';
 
 @Component({
   selector: 'strive-motivation',

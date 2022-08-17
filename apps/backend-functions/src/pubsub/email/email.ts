@@ -1,15 +1,13 @@
-import { db, functions } from '../../internals/firebase';
+import { db, functions } from '../../internals/firebase'
 
-import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns';
+import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
-import { createPersonal, Personal, storyEvents } from '@strive/model';
-import { getDocument } from '../../shared/utils';
-import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotification } from '@strive/model'
-import { Motivation, Motivations } from '../../../../admin/src/app/pages/motivation/motivation.model';
-import { Feature, Features } from '../../../../admin/src/app/pages/features/features.model';
-import { groupIds, templateIds } from './ids';
-import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid';
-import { toDate } from '../../shared/utils';
+import { createPersonal, Personal, storyEvents } from '@strive/model'
+import { getDocument } from '../../shared/utils'
+import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotification, Feature, Features, Motivation, Motivations } from '@strive/model'
+import { groupIds, templateIds } from './ids'
+import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
+import { toDate } from '../../shared/utils'
 
 
 // // crontab.guru to determine schedule value

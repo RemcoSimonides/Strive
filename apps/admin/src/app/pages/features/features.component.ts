@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { docData } from 'rxfire/firestore';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { doc, getDoc, updateDoc, getFirestore } from "firebase/firestore";
-import { Features, Feature } from './features.model';
+import { Features, Feature } from '@strive/model';
 
 @Component({
   selector: 'admin-features',
