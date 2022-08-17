@@ -18,7 +18,7 @@
               <article *ngIf="dearFutureSelf$ | async as setting">
                 <ng-container *ngIf="setting?.messages?.length">
                   <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
-                  <small *ngIf="setting | nextLetter as next">Next letter: {{ next.deliveryDate | timeToGo }} </small>
+                  <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
                 </ng-container>
               </article>
             </ng-container>
