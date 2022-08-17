@@ -1,12 +1,14 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule, Routes } from '@angular/router'
+import { IonicModule } from '@ionic/angular'
 
-import { ExercisesComponent } from './exercises.component';
+import { ExercisesComponent } from './exercises.component'
 
-import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
-import { HeaderRootModule } from '@strive/ui/header-root/header-root.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
+import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
+import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
+import { TimeToGoPipeModule } from '@strive/utils/pipes/time-to-go.pipe';
 
 const routes: Routes = [
   {
@@ -37,7 +39,9 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     SmallThumbnailModule,
-    HeaderRootModule
+    HeaderRootModule,
+    DearFutureSelfPipeModule,
+    TimeToGoPipeModule
   ],
   declarations: [ExercisesComponent]
 })

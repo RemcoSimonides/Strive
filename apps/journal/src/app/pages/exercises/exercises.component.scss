@@ -11,4 +11,10 @@ section {
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+  article {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+  }
 }

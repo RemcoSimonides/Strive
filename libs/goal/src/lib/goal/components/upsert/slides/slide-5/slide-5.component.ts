@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Platform, PopoverController } from '@ionic/angular';
-import { Share } from '@capacitor/share';
+import { Platform, PopoverController } from '@ionic/angular'
+import { Share } from '@capacitor/share'
 // Strive
-import { GoalForm } from '@strive/goal/goal/forms/goal.form';
-import { enumExercises, exercises } from '@strive/exercises/utils';
-import { InviteTokenService } from '@strive/utils/services/invite-token.service';
-import { GoalSharePopoverComponent } from '../../../popovers/share/share.component';
-import { createGoal } from '@strive/model'
-import { captureException } from '@sentry/capacitor';
+import { GoalForm } from '@strive/goal/goal/forms/goal.form'
+import { InviteTokenService } from '@strive/utils/services/invite-token.service'
+import { GoalSharePopoverComponent } from '../../../popovers/share/share.component'
+import { createGoal, exercises } from '@strive/model'
+import { captureException } from '@sentry/capacitor'
 
 @Component({
   selector: '[form][goalId] goal-slide-5',
@@ -21,7 +20,7 @@ export class Slide5Component {
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
 
-  exercises = exercises.filter(exercise => [enumExercises.affirmations, enumExercises.daily_gratefulness].includes(exercise.enum) )
+  exercises = exercises.filter(exercise => ['affirmations', 'daily_gratefulness', 'dear_future_self'].includes(exercise.id) )
 
   constructor(
     private inviteTokenService: InviteTokenService,

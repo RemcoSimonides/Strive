@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 // Strive
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { exercises } from '@strive/exercises/utils';
-import { PWAService } from '@strive/utils/services/pwa.service';
-import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
-import { ModalController } from "@ionic/angular";
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { exercises } from '@strive/model'
+import { PWAService } from '@strive/utils/services/pwa.service'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { ModalController } from '@ionic/angular'
 
 @Component({
   selector: 'journal-home',

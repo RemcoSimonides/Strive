@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
+import { FormControl, FormGroup } from '@angular/forms'
 // Rxjs
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime, map, startWith } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs'
+import { debounceTime, map, startWith } from 'rxjs/operators'
 // Services
-import { AlgoliaService  } from '@strive/utils/services/algolia.service';
-import { SeoService } from '@strive/utils/services/seo.service';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { exercises } from '@strive/exercises/utils';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AlgoliaService  } from '@strive/utils/services/algolia.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { exercises } from '@strive/model'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
   selector: 'journal-explore',
