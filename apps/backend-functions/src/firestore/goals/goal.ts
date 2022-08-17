@@ -12,7 +12,8 @@ import {
   createMilestone,
   Milestone,
   GoalStakeholder,
-  User
+  User,
+  createAggregation
 } from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
@@ -22,6 +23,7 @@ import { converter, deleteCollection, getDocument, toDate } from '../../shared/u
 import { addGoalEvent } from '../../shared/goal-event/goal.events';
 import { getReceiver } from '../../shared/support/receiver'
 import { addStoryItem } from '../../shared/goal-story/story'
+import { updateAggregation } from '../../shared/aggregation/aggregation'
 
 
 export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
@@ -42,6 +44,9 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
     addGoalEvent(name, source)
     addStoryItem(name, source)
 
+    // aggregation
+    handleAggregation(undefined, goal)
+
     // deadline
     if (goal.deadline) {
       upsertScheduledTask(goalId, {
@@ -61,6 +66,8 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
   .onDelete(async snapshot => {
 
     const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
+
+    handleAggregation(goal, undefined)
 
     deleteScheduledTask(goal.id)
 
@@ -85,9 +92,16 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     const before = createGoal(toDate({ ...snapshot.before.data(), id: goalId }))
     const after = createGoal(toDate({ ...snapshot.after.data(), id: goalId }))
 
+    const publicityChanged = before.publicity !== after.publicity
+    const becamePublic = before.publicity !== 'public' && after.publicity === 'public'
+
+    const statusChanged = before.status !== after.status
+    const becameFinished = before.status !== 'finished' && after.status === 'finished'
+
+    handleAggregation(before, after)
+
     // events
-    const isFinished = before.status !== 'finished' && after.status === 'finished'
-    if (isFinished) {
+    if (becameFinished) {
       logger.log('Goal is finished')
       const user = await getDocument<User>(`Users/${after.updatedBy}`)
       const source = createGoalSource({ goal: after, user, postId: goalId })
@@ -97,7 +111,9 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       supportsNeedDecision(after)
     }
 
-    if (before.status !== after.status || before.publicity !== after.publicity) {
+
+    // Update goal stakeholders
+    if (statusChanged || publicityChanged) {
       // update value on stakeholder docs
       updateGoalStakeholders(goalId, after)
     }
@@ -106,15 +122,15 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       updateTitleInSources(after)
     }
 
-    if (before.publicity !== after.publicity) {
-      if (after.publicity === 'public') {
-        // add to algolia
-        await addToAlgolia('goal', goalId, {
+
+    // algolia
+    if (publicityChanged) {
+      if (becamePublic) {
+        addToAlgolia('goal', goalId, {
           goalId,
           ...after
         })
       } else {
-        // delete goal from Algolia index
         await deleteFromAlgolia('goal', goalId)
       }
 
@@ -123,67 +139,36 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     }
   })
 
-// export const duplicateGoal = functions.https.onCall(async (data: { goalId: string, uid: string }, context: CallableContext): Promise<ErrorResultResponse> => {
+function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
+  const aggregation = createAggregation()
 
-//   if (!context.auth) {
-//     logger.error(`UNAUTHORIZED - User needs to be authorized`)
-//     return {
-//       error: `UNAUTHORIZED`,
-//       result: `User needs to be authorized`
-//     }
-//   }
+  if (!before && !!after) aggregation.goalsCreated++
+  if (!!before && !after) aggregation.goalsDeleted++
 
-//   const uid = data.uid ? data.uid : context.auth.uid;
-//   const timestamp = serverTimestamp()
+  const becamePublic = before?.publicity !== 'public' && after?.publicity === 'public'
+  const wasPublic = before?.publicity === 'public' && after?.publicity !== 'public'
 
-//   // Duplicate goal
-//   const goal = await getDocument<Goal>(`Goals/${data.goalId}`)
-//   const newGoal = createGoal({
-//     title: goal.title,
-//     description: goal.description,
-//     image: goal.image,
-//     publicity: goal.publicity,
-//     deadline: goal.deadline,
-//     createdAt: timestamp as Timestamp,
-//     updatedAt: timestamp as Timestamp,
-//     updatedBy: uid
-//   })
-//   const { id } = await db.collection(`Goals`).add(newGoal)
-//   db.doc(`Goals/${id}`).update({ id });
+  const becamePrivate = before?.publicity !== 'private' && after?.publicity === 'private'
+  const wasPrivate = before?.publicity === 'public' && after?.publicity !== 'private'
 
-//   // Create stakeholder
-//   const user = await getDocument<User>(`Users/${uid}`)
-//   const stakeholder = createGoalStakeholder({
-//     uid: uid,
-//     username: user.username,
-//     photoURL: user.photoURL,
-//     isAchiever: true,
-//     isAdmin: true,
-//     goalId: id,
-//     goalPublicity: goal.publicity,
-//     createdAt: timestamp,
-//     updatedAt: timestamp,
-//     updatedBy: uid
-//   })
-//   await db.doc(`Goals/${id}/GStakeholders/${uid}`).set(stakeholder)
+  const becameFinished = before?.status !== 'finished' && after?.status === 'finished'
+  const wasFinished = before?.status === 'finished' && after?.status !== 'finished'
 
-//   // Creating milestones
-//   const promises: any[] = []
-//   for (const milestone of goal.roadmapTemplate) {
-//     const newMilestone = createMilestone({
-//       description: milestone.description,
-//       sequenceNumber: milestone.sequenceNumber,
-//       deadline: milestone.deadline
-//     })
-//     const promise = db.collection(`Goals/${id}/Milestones`).add(newMilestone)
-//     promises.push(promise);
-//   }
-//   await Promise.all(promises);
-//   return {
-//     error: '',
-//     result: id
-//   }
-// })
+  const becameActive = before?.status !== 'active' && after?.status === 'active'
+  const wasActive = before?.status === 'active' && after?.status !== 'active'
+
+  const becameBucketlist = before?.status !== 'bucketlist' && after?.status === 'bucketlist'
+  const wasBucketlist = before?.status === 'bucketlist' && after?.status !== 'bucketlist'
+
+  aggregation.goalsPublic = becamePublic ? 1 : wasPublic ? -1 : 0
+  aggregation.goalsPrivate = becamePrivate ? 1 : wasPrivate ? -1 : 0
+
+  aggregation.goalsActive = becameActive ? 1 : wasActive ? -1 : 0
+  aggregation.goalsFinished = becameFinished ? 1 : wasFinished ? -1 : 0
+  aggregation.goalsBucketlist = becameBucketlist ? 1 : wasBucketlist ? -1 : 0
+
+  updateAggregation(aggregation)
+}
 
 async function updateGoalStakeholders(goalId: string, after: Goal) {
   const data: Partial<GoalStakeholder> = {

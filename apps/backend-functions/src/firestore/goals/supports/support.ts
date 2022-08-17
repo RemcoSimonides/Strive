@@ -8,12 +8,14 @@ import {
   enumEvent,
   createNotification,
   createSupport,
-  Support
+  Support,
+  createAggregation
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getDocument, toDate } from '../../../shared/utils'
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
 import { addStoryItem } from '../../../shared/goal-story/story'
+import { updateAggregation } from '../../../shared/aggregation/aggregation';
 
 const { serverTimestamp } = admin.firestore.FieldValue
 
@@ -31,6 +33,9 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
     })
     addGoalEvent(enumEvent.gSupportAdded, source)
     addStoryItem(enumEvent.gSupportAdded, source)
+
+    // aggregation
+    handleAggregation(undefined, support)
 
     // Set stakeholder as supporter
     const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.source.supporter.uid}`)
@@ -77,6 +82,9 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     const before = createSupport(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
     const after = createSupport(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
 
+    // aggregation
+    handleAggregation(before, after)
+
     // events
     const needsDecision = !before.needsDecision && after.needsDecision
     const paid = before.status !== 'paid' && after.status === 'paid'
@@ -118,6 +126,25 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
       return sendNotificationToUsers(notification, receiver.uid, 'user')
     }
   })
+
+export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
+  .onDelete(async (snapshot) => {
+
+    const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
+
+    // aggregation
+    handleAggregation(support, undefined)
+  })
+
+
+function handleAggregation(before: undefined | Support, after: undefined | Support) {
+  const aggregation = createAggregation()
+
+  if (!before && !!after) aggregation.goalsCustomSupports++
+  if (!!before && !after) aggregation.goalsCustomSupports--
+
+  updateAggregation(aggregation)
+}
 
 function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean) {
   const ref = db.doc(`Goals/${goalId}`)

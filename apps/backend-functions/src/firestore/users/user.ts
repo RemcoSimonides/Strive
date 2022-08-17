@@ -3,12 +3,16 @@ import { logger } from 'firebase-functions';
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
 import { GoalStakeholder, createUser, User, createUserLink, Spectator } from '@strive/model';
+import { updateAggregation } from '../../shared/aggregation/aggregation';
 
 export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
   .onCreate(async (snapshot) => {
 
     const uid = snapshot.id
     const user = createUser({ ...snapshot.data(), uid: snapshot.id })
+
+    // aggregation
+    updateAggregation({ usersCreated: 1 })
 
     await addToAlgolia('user', uid, {
       uid,
@@ -24,6 +28,8 @@ export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
     const uid = snapshot.id
     await deleteFromAlgolia('user', uid)
 
+    // aggregation
+    updateAggregation({ usersDeleted: 1 })
   })
 
 export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
