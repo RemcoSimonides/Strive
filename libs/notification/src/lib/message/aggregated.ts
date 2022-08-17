@@ -46,7 +46,7 @@ export function getAggregatedMessage({ event, count }: { event: EventType, count
     
     case 'goalMilestoneCreated': 
       return {
-        message: `${count} ${count === 1 ? 'milestone' : 'milestones'} created`,
+        message: `${count} ${count === 1 ? 'milestone' : 'milestones'} added`,
         icon: 'create-outline',
         importance: 6,
       }
