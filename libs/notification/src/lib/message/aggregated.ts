@@ -43,17 +43,25 @@ export function getAggregatedMessage({ event, count }: { event: EventType, count
         icon: 'close-outline',
         importance: 5
       }
+    
+    case 'goalMilestoneCreated': 
+      return {
+        message: `${count} ${count === 1 ? 'milestone' : 'milestones'} created`,
+        icon: 'create-outline',
+        importance: 6,
+      }
+
     case 'goalMilestoneDeadlinePassed':
       return {
         message: `${count} ${count === 1 ? 'milestone' : 'milestones'} passed their deadline`,
         icon: 'alert-outline',
-        importance: 6
+        importance: 7
       }
     case 'goalStakeholderBecameAchiever':
       return {
         message: `${count} ${count === 1 ? 'achiever' : 'achievers'} joined`,
         icon: 'person-add-outline',
-        importance: 7
+        importance: 8
       }
     case 'goalStakeholderBecameAdmin':
       break
@@ -61,14 +69,14 @@ export function getAggregatedMessage({ event, count }: { event: EventType, count
       return {
         message: `${count} ${count === 1 ? 'support' : 'supports'} added`,
         icon: 'heart-outline',
-        importance: 8
+        importance: 9
       }
     }
     case 'goalChatMessageCreated': {
       return {
         message: `${count} new ${count === 1 ? 'message' : 'messages'}`,
         icon: 'chatbox-outline',
-        importance: 9
+        importance: 10
       }
     }
     default:

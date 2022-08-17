@@ -54,6 +54,15 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
+    case 'goalDeleted':
+      return {
+        ...get('goal', source),
+        link: `/supports`,
+        message: [
+          { text: `${source.goal!.title} has been deleted and therefore your supports are cancelled` }
+        ]
+      }
+
     case 'goalStatusFinished':
       return {
         ...get('user', source),

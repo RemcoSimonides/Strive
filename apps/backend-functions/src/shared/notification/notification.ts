@@ -48,7 +48,7 @@ export async function sendGoalEventNotification(
   excludeTriggerer: boolean
 ) {
   const goalId = event.source.goal.id
-  const except =  excludeTriggerer ? event.source.user.uid : ''
+  const except =  excludeTriggerer ? event.source.user?.uid : ''
   
   const notification = createNotification({
     event: event.name,

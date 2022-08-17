@@ -25,6 +25,16 @@ export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goal
     const milestone = createMilestone(toDate({ ...snapshot.data(), id: snapshot.id }))
     const { goalId, milestoneId } = context.params
 
+    // events
+    const [goal, user] = await Promise.all([
+      getDocument<Goal>(`Goals/${goalId}`),
+      getDocument<User>(`Users/${milestone.updatedBy}`)
+    ])
+  
+    const source = createGoalSource({ goal, milestone, user })
+    addGoalEvent('goalMilestoneCreated', source)
+
+    // sheduled task
     if (milestone.deadline) {
       upsertScheduledTask(milestoneId, {
         worker: enumWorkerType.milestoneDeadline,
@@ -39,6 +49,7 @@ export const milestoneDeletedHandler = functions.firestore.document(`Goals/{goal
 
     const { goalId, milestoneId } = context.params
 
+    // scheduled task
     await deleteScheduledTask(milestoneId)
 
     // delete supports
@@ -48,10 +59,7 @@ export const milestoneDeletedHandler = functions.firestore.document(`Goals/{goal
       .get()
 
     const promises = supportssColSnap.docs.map(snap => db.doc(`Goals/${goalId}/Supports/${snap.id}`).delete())
-    await Promise.all(promises);
-
-    // send notification (not here but at support function)
-
+    await Promise.all(promises)
   })
 
 export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)

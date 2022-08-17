@@ -67,7 +67,12 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
 
     const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
 
+    // aggregation
     handleAggregation(goal, undefined)
+
+    // event
+    const source = createGoalSource({ goal })
+    addGoalEvent('goalDeleted', source)
 
     deleteScheduledTask(goal.id)
 

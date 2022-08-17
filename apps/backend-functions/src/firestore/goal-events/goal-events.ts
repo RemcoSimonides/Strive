@@ -41,6 +41,18 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         break
       }
 
+      case 'goalDeleted': {
+        const options: SendOptions = {
+          send: {
+            notification: true
+          },
+          roles: {
+            isSupporter: true
+          }
+        }
+        return sendGoalEventNotification(event, options, true)
+      }
+
       case 'goalStatusFinished': {
         const options: SendOptions = {
           send: {
@@ -72,6 +84,9 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         }
         return sendGoalEventNotification(event, options, true)
       }
+
+      case 'goalMilestoneCreated': 
+        break
 
       case 'goalMilestoneDeadlinePassed': {
         const options: SendOptions = {
