@@ -5,7 +5,7 @@ import {
   Milestone,
   createGoalSource,
   createNotificationSource,
-  enumEvent,
+  EventType,
   createNotification,
   createSupport,
   Support,
@@ -31,8 +31,8 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
       support,
       ...support.source
     })
-    addGoalEvent(enumEvent.gSupportAdded, source)
-    addStoryItem(enumEvent.gSupportAdded, source)
+    addGoalEvent('goalSupportCreated', source)
+    addStoryItem('goalSupportCreated', source)
 
     // aggregation
     handleAggregation(undefined, support)
@@ -107,7 +107,7 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
   
       // send notification to supporter
       const notification = createNotification({
-        event: completedSuccessfully ? enumEvent.gSupportPendingSuccesful : enumEvent.gSupportPendingFailed,
+        event: completedSuccessfully ? 'goalSupportStatusPendingSuccessful' : 'goalSupportStatusPendingUnsuccessful',
         source
       })
       return sendNotificationToUsers(notification, supporter.uid)
@@ -116,10 +116,10 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     if (!receiver?.uid) return
     if (supporter.uid === receiver.uid) return
 
-    let event: enumEvent
-    if (paid) event = enumEvent.gSupportPaid
-    if (rejected) event = enumEvent.gSupportRejected
-    if (waitingToBePaid) event = enumEvent.gSupportWaitingToBePaid
+    let event: EventType
+    if (paid) event = 'goalSupportStatusPaid'
+    if (rejected) event = 'goalSupportStatusRejected'
+    if (waitingToBePaid) event = 'goalSupportStatusWaitingToBePaid'
 
     if (event) {
       const notification = createNotification({ event, source })

@@ -1,4 +1,4 @@
-import { Goal, GoalEvent, createNotificationSource, enumEvent, createNotification } from '@strive/model'
+import { Goal, GoalEvent, createNotificationSource, createNotification } from '@strive/model'
 import { logger } from 'firebase-functions';
 import { functions } from '../../internals/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification';
@@ -18,9 +18,9 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
     logger.log('event incoming: ', event)
 
     switch (event.name) {
-      case enumEvent.gNewBucketlist:
-      case enumEvent.gNewActive:
-      case enumEvent.gNewFinished: {
+      case 'goalCreatedStatusBucketlist':
+      case 'goalCreatedStatusActive':
+      case 'goalCreatedStatusFinished': {
         const goal = await getDocument<Goal>(`Goals/${goalId}`)
         if (goal.publicity === 'public') {
 
@@ -41,7 +41,7 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         break
       }
 
-      case enumEvent.gFinished: {
+      case 'goalStatusFinished': {
         const options: SendOptions = {
           send: {
             notification: true,
@@ -59,9 +59,7 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendGoalEventNotification(event, options, true)
       }
 
-      // case enumEvent.gRoadmapUpdated:
-
-      case enumEvent.gNewPost: {
+      case 'goalStoryPostCreated': {
         const options: SendOptions = {
           send: {
             pushNotification: true
@@ -75,7 +73,7 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendGoalEventNotification(event, options, true)
       }
 
-      case enumEvent.gMilestoneDeadlinePassed: {
+      case 'goalMilestoneDeadlinePassed': {
         const options: SendOptions = {
           send: {
             notification: true,
@@ -88,19 +86,19 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendGoalEventNotification(event, options, false)
       }
 
-      case enumEvent.gMilestoneCompletedSuccessfully:
-      case enumEvent.gMilestoneCompletedUnsuccessfully: {
+      case 'goalMilestoneCompletedSuccessfully':
+      case 'goalMilestoneCompletedUnsuccessfully': {
         break
       }
 
-      case enumEvent.gStakeholderAdminAdded:
+      case 'goalStakeholderBecameAdmin':
         break
-      case enumEvent.gStakeholderAchieverAdded:
+      case 'goalStakeholderBecameAchiever':
         // TODO optional send push notification to spectators of new stakeholder
         // TOD send (push) notification to achievers of goal (except the person who accepted the request and the new stakeholder)
         break
 
-      case enumEvent.gStakeholderRequestToJoinPending: {
+      case 'goalStakeholderRequestedToJoin': {
         const options: SendOptions = {
           send: {
             pushNotification: true
@@ -112,12 +110,12 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendGoalEventNotification(event, options, true)
       }
 
-      case enumEvent.gStakeholderRequestToJoinAccepted:
-      case enumEvent.gStakeholderRequestToJoinRejected: {
+      case 'goalStakeholderRequestToJoinAccepted':
+      case 'goalStakeholderRequestToJoinRejected': {
         return sendNotificationToUsers(notification, userId, 'user')
       }
 
-      case enumEvent.gNewMessage: {
+      case 'goalChatMessageCreated': {
         const options: SendOptions = {
           send: {
             pushNotification: true
@@ -131,7 +129,7 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendGoalEventNotification(event, options, true)
       }
 
-      case enumEvent.gSupportAdded: {
+      case 'goalSupportCreated': {
         const options: SendOptions = {
           send: {
             pushNotification: true

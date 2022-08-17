@@ -6,14 +6,14 @@ import {
   Goal,
   GoalStatus,
   createGoalSource,
-  enumEvent,
   createSupport,
   Support,
   createMilestone,
   Milestone,
   GoalStakeholder,
   User,
-  createAggregation
+  createAggregation,
+  EventType
 } from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
@@ -34,10 +34,10 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
 
     // event
     const user = await getDocument<User>(`Users/${goal.updatedBy}`)
-    const event: Record<GoalStatus, enumEvent> = {
-      bucketlist: enumEvent.gNewBucketlist,
-      active: enumEvent.gNewActive,
-      finished: enumEvent.gNewFinished
+    const event: Record<GoalStatus, EventType> = {
+      bucketlist: 'goalCreatedStatusBucketlist',
+      active: 'goalCreatedStatusActive',
+      finished: 'goalCreatedStatusFinished'
     }
     const source = createGoalSource({ goal, user })
     const name = event[goal.status]
@@ -105,8 +105,8 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       logger.log('Goal is finished')
       const user = await getDocument<User>(`Users/${after.updatedBy}`)
       const source = createGoalSource({ goal: after, user, postId: goalId })
-      addGoalEvent(enumEvent.gFinished, source)
-      addStoryItem(enumEvent.gFinished, source)
+      addGoalEvent('goalStatusFinished', source)
+      addStoryItem('goalStatusFinished', source)
 
       supportsNeedDecision(after)
     }

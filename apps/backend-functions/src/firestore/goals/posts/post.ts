@@ -1,6 +1,6 @@
 import { functions } from '../../../internals/firebase';
 import { getDocument, toDate } from '../../../shared/utils';
-import { Goal, createGoalSource, enumEvent, createPost, User } from '@strive/model';
+import { Goal, createGoalSource, createPost, User } from '@strive/model';
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
 
@@ -18,7 +18,7 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
       ])
 
       const source = createGoalSource({ goal, user, postId })
-      addGoalEvent(enumEvent.gNewPost, source, postId)
-      addStoryItem(enumEvent.gNewPost, source, postId, post.date)
+      addGoalEvent('goalStoryPostCreated', source, postId)
+      addStoryItem('goalStoryPostCreated', source, postId, post.date)
     }
   })

@@ -11,7 +11,7 @@ import { SeoService } from '@strive/utils/services/seo.service';
 import { UserService } from '@strive/user/user/user.service';
 
 // Model
-import { Goal, GoalEvent, GoalStakeholder, enumEvent, GoalStakeholderRole, isOnlySpectator } from '@strive/model'
+import { EventType, Goal, GoalEvent, GoalStakeholder, GoalStakeholderRole, isOnlySpectator } from '@strive/model'
 
 // Pages
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -28,15 +28,15 @@ import { Router } from '@angular/router';
 import { delay } from '@strive/utils/helpers';
 import { isCurrentFocus } from '@strive/goal/goal/pipes/current-focus.pipe';
 
-function aggregateEvents(events: GoalEvent[]): { event: enumEvent, count: number }[] {
-  const counter: Record<string | number, number> = {};
+function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number }[] {
+  const counter: Partial<Record<EventType, number>> = {};
   
   for (const { name } of events) {
     if (!counter[name]) counter[name] = 0;
-    counter[name]++;
+    counter[name]!++;
   }
 
-  return Object.entries(counter).map(([event, count]) => ({ event: +event, count }))
+  return Object.entries(counter).map(([event, count]): any => ({ event, count }))
 }
 
 type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, story: AggregatedMessage[] }

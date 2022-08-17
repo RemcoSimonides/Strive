@@ -1,4 +1,4 @@
-import { enumEvent, Notification } from '@strive/model'
+import { EventType, Notification } from '@strive/model'
 
 export type PushNotificationTarget = 'user' | 'stakeholder' | 'spectator'
 export interface PushMessage {
@@ -19,7 +19,7 @@ function createPushMessage(message: Partial<PushMessage> = {}): PushMessage {
   }
 }
 
-function throwError(event: enumEvent, target: string) {
+function throwError(event: EventType, target: string) {
   console.error(`No push notification message for event ${event} and target ${target}`)
 }
 
@@ -32,28 +32,28 @@ export function getPushMessage(notification: Notification, target: PushNotificat
 
 function getStakeholderPushMessage({ event, source }: Notification): PushMessage | void {
   switch (event) {
-    case enumEvent.gFinished:
+    case 'goalStatusFinished':
       return createPushMessage({
         title: source.goal?.title,
         body: `Congratulations! goal is finished`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gMilestoneDeadlinePassed:
+    case 'goalMilestoneDeadlinePassed':
       return createPushMessage({
         title: source.goal?.title,
         body: `Milestone '${source.milestone?.content}' passed due date`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gMilestoneCompletedSuccessfully:
+    case 'goalMilestoneCompletedSuccessfully':
       return createPushMessage({
         title: source.goal?.title,
         body: `Milestone '${source.milestone?.content}' succeeded`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gMilestoneCompletedUnsuccessfully:
+    case 'goalMilestoneCompletedUnsuccessfully':
       return createPushMessage({
         title: source.goal?.title,
         body: `Milestone '${source.milestone?.content}' failed`,
@@ -61,41 +61,41 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
       })
 
 
-    case enumEvent.gStakeholderAchieverAdded:
+    case 'goalStakeholderBecameAchiever':
       return createPushMessage({
         title: source.goal?.title,
         body: `${source.user?.username} joined as Achiever`,
         url: `/profile/${source.user?.uid}`
       })
 
-    case enumEvent.gStakeholderAdminAdded:
+    case 'goalStakeholderBecameAdmin':
       return createPushMessage({
         title: source.goal?.title,
         body: `${source.user?.username} is now admin`,
         url: `goal/${source.goal?.id}`
       })
 
-    case enumEvent.gStakeholderRequestToJoinPending:
+    case 'goalStakeholderRequestedToJoin':
       return createPushMessage({
         title: source.goal?.title,
         body: `${source.user?.username} requests to join goal`
       })
    
-    case enumEvent.gNewPost:
+    case 'goalStoryPostCreated':
       return createPushMessage({
         title: source.goal?.title,
         body: `${source.user?.username} created a new post`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gNewMessage:
+    case 'goalChatMessageCreated':
       return createPushMessage({
         title: source.goal?.title,
         body: `${source.user?.username} sent a message in chat`,
         url: `/goal/${source.goal?.id}`
       })
     
-    case enumEvent.gSupportAdded: {
+    case 'goalSupportCreated': {
       const text = source.milestone?.id
         ? `supports milestone ${source.milestone.content}`
         : `supports`
@@ -107,11 +107,11 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
       })
     }
 
-    case enumEvent.gNewActive:
-    case enumEvent.gNewBucketlist:
-    case enumEvent.gNewFinished:
-    case enumEvent.gStakeholderRequestToJoinAccepted:
-    case enumEvent.gStakeholderRequestToJoinRejected:
+    case 'goalCreatedStatusActive':
+    case 'goalCreatedStatusBucketlist':
+    case 'goalCreatedStatusFinished':
+    case 'goalStakeholderRequestToJoinAccepted':
+    case 'goalStakeholderRequestToJoinRejected':
 
     default:
       return throwError(event, 'stakeholder')
@@ -121,35 +121,35 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
 
 function getSpectatorPushMessage({ event, source }: Notification): PushMessage | void {
   switch (event) {
-    case enumEvent.gNewBucketlist:
+    case 'goalCreatedStatusBucketlist':
       return createPushMessage({
         title: source.user?.username,
         body: `Added goal to Bucket list '${source.goal?.title}'`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gNewActive:
+    case 'goalCreatedStatusActive':
       return createPushMessage({
         title: source.user?.username,
         body: `Started goal '${source.goal?.title}'`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gNewFinished:
+    case 'goalCreatedStatusFinished':
       return createPushMessage({
         title: source.user?.username,
         body: `Journaling about '${source.goal?.title}'`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gFinished:     
+    case 'goalStatusFinished':     
       return createPushMessage({
         title: source.user?.username,
         body: `Finished goal '${source.goal?.title}'`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case enumEvent.gStakeholderAchieverAdded:
+    case 'goalStakeholderBecameAchiever':
       return createPushMessage({
         title: source.goal?.title,
         body: `${source.user?.username} joined as Achiever`,
@@ -157,14 +157,14 @@ function getSpectatorPushMessage({ event, source }: Notification): PushMessage |
       })
 
     
-    case enumEvent.gMilestoneDeadlinePassed:
-    case enumEvent.gMilestoneCompletedSuccessfully:
-    case enumEvent.gMilestoneCompletedUnsuccessfully:
-    case enumEvent.gStakeholderAdminAdded:
-    case enumEvent.gStakeholderRequestToJoinPending:
-    case enumEvent.gStakeholderRequestToJoinAccepted:
-    case enumEvent.gStakeholderRequestToJoinRejected:
-    case enumEvent.gNewPost:
+    case 'goalMilestoneDeadlinePassed':
+    case 'goalMilestoneCompletedSuccessfully':
+    case 'goalMilestoneCompletedUnsuccessfully':
+    case 'goalStakeholderBecameAdmin':
+    case 'goalStakeholderRequestToJoinRejected':
+    case 'goalStakeholderRequestToJoinAccepted':
+    case 'goalStakeholderRequestToJoinRejected':
+    case 'goalStoryPostCreated':
 
     default:
       throwError(event, 'spectator')
@@ -174,52 +174,27 @@ function getSpectatorPushMessage({ event, source }: Notification): PushMessage |
 function getUserPushMessage({ event, source }: Notification): PushMessage | undefined {
   switch (event) {
 
-    case enumEvent.gStakeholderRequestToJoinAccepted:
+    case 'goalStakeholderRequestToJoinAccepted':
       return createPushMessage({
         title: source.goal?.title,
         body: `Request to join accepted`,
         url: `goal/${source.goal?.id}`
       })
 
-    case enumEvent.gStakeholderRequestToJoinRejected:
+    case 'goalStakeholderRequestToJoinRejected':
       return createPushMessage({
         title: source.goal?.title,
         body: `Request to join rejected`,
         url: `goal/${source.goal?.id}`
       })
   
-    case enumEvent.gSupportWaitingToBePaid:
+    case 'goalSupportStatusWaitingToBePaid':
       return createPushMessage({
         title: source.user?.username,
         body: `Now owes you '${source.support?.description}'`
       })
 
-    // case enumEvent.gSupportPaid:
-    //   return createPushMessage({
-    //     title: source.user.username,
-    //     body: `Paid support ${source.support.description}`
-    //   })
-
-    // case enumEvent.gSupportRejected:
-    //   return createPushMessage({
-    //     title: source.user.username,
-    //     body: `Rejects paying support '${source.support.description}'`
-    //   })
-
-    // case enumEvent.gSupportPendingSuccesful:
-    //   return createPushMessage({
-    //     title: source.goal.title,
-    //     body: `By you supported milestone '${source.milestone.content} succeeded'`
-    //   })
-
-    // case enumEvent.gSupportPendingFailed:
-    //   return createPushMessage({
-    //     title: source.goal.title,
-    //     body: `By you supported milestone '${source.milestone.content}' unsuccesful`
-    //   })
-  //   }
-
-    case enumEvent.userSpectatorAdded:
+    case 'userSpectatorCreated':
       return createPushMessage({
         title: 'New follower',
         body: `${source.user?.username} is following you`,

@@ -13,56 +13,60 @@ import {
   UserLink
 } from '@strive/model'
 
-export enum enumEvent {
-  // 200000 -> 299999 = goal events
-  gNew = 200001, //deprecated
-  gNewBucketlist = 200010,
-  gNewActive = 200011,
-  gNewFinished = 200012,
-  gFinished = 200002,
-  gUpdated = 200003,
-  gRoadmapUpdated = 204001,
-  gMilestoneCompletedSuccessfully = 201001,
-  gMilestoneCompletedUnsuccessfully = 201002,
-  gMilestoneDeadlinePassed = 201010,
-  gStakeholderAchieverAdded = 202001,
-  gStakeholderAchieverRemoved = 202002,
-  gStakeholderAdminAdded = 202003,
-  gStakeholderAdminRemoved = 202004,
-  gStakeholderSupporterAdded = 202005,
-  gStakeholderSupporterRemoved = 202006,
-  gStakeholderRequestToJoinPending = 202101,
-  gStakeholderRequestToJoinAccepted = 202102,
-  gStakeholderRequestToJoinRejected = 202103,
-  gSupportAdded = 203010,
-  gSupportWaitingToBePaid = 203020,
-  gSupportPaid = 203030,
-  gSupportRejected = 203040,
-  gSupportPendingSuccesful = 203050, // succeeded achieving objective
-  gSupportPendingFailed = 203051, // failed achieving objective
-  gSupportDeleted = 203060,
-  gNewPost = 205001,
-  gNewMessage = 206001,
-  // 400000 -> 499999 = user events
-  userSpectatorAdded = 400001,
-  userSpectatorRemoved = 400002,
-}
+const eventTypes = [
+  '',
+  'goalCreatedStatusBucketlist',
+  'goalCreatedStatusActive',
+  'goalCreatedStatusFinished',
+  'goalDeleted',
+  'goalPublicityPublic',
+  'goalPublicityPrivate',
+  'goalStatusFinished',
+  'goalMilestoneCreated',
+  'goalMilestoneCompletedSuccessfully',
+  'goalMilestoneCompletedUnsuccessfully',
+  'goalMilestoneDeadlinePassed',
+  'goalMilestoneDeleted',
+  'goalStakeholderCreated',
+  'goalStakeholderBecameAchiever',
+  'goalStakeholderBecameAdmin',
+  'goalStakeholderBecameSupporter',
+  'goalStakeholderRequestedToJoin',
+  'goalStakeholderRequestToJoinAccepted',
+  'goalStakeholderRequestToJoinRejected',
+  'goalSupportCreated',
+  'goalSupportDeleted',
+  'goalSupportStatusWaitingToBePaid',
+  'goalSupportStatusPaid',
+  'goalSupportStatusRejected',
+  'goalSupportStatusPendingSuccessful',
+  'goalSupportStatusPendingUnsuccessful',
+  'goalChatMessageCreated',
+  'goalStoryPostCreated',
+  'userCreated',
+  'userDeleted',
+  'userSpectatorCreated',
+  'userSpectatorDeleted'
+] as const
+
+export type EventType = typeof eventTypes[number]
+
 
 // Notification types that have a notification messsage
-export const notificationEvents: enumEvent[] = [
-  enumEvent.gNewBucketlist,
-  enumEvent.gNewActive,
-  enumEvent.gNewFinished,
-  enumEvent.gFinished,
-  enumEvent.gMilestoneDeadlinePassed,
-  enumEvent.gStakeholderRequestToJoinPending,
-  enumEvent.gStakeholderRequestToJoinAccepted,
-  enumEvent.gStakeholderRequestToJoinRejected,
-  enumEvent.userSpectatorAdded,
-  enumEvent.gSupportPendingFailed,
-  enumEvent.gSupportPendingSuccesful,
-  enumEvent.gSupportPaid,
-  enumEvent.gSupportRejected
+export const notificationEvents: EventType[] = [
+  'goalCreatedStatusBucketlist',
+  'goalCreatedStatusActive',
+  'goalCreatedStatusFinished',
+  'goalStatusFinished',
+  'goalMilestoneDeadlinePassed',
+  'goalStakeholderRequestedToJoin',
+  'goalStakeholderRequestToJoinAccepted',
+  'goalStakeholderRequestToJoinRejected',
+  'goalSupportStatusPendingSuccessful',
+  'goalSupportStatusPendingUnsuccessful',
+  'goalSupportStatusPaid',
+  'goalSupportStatusRejected',
+  'userSpectatorCreated',
 ]
 
 const notificationIcons = [
@@ -82,7 +86,7 @@ export type NotificationIcons = typeof notificationIcons[number];
 
 interface NotificationBase {
   id?: string
-  event: enumEvent
+  event: EventType
   source: SupportSource | NotificationSource
   updatedAt?: Date
   createdAt?: Date
@@ -117,7 +121,7 @@ export interface CommentSource {
 
 export function createNotification(params: Partial<Notification> = {}): Notification {
   return {
-    event: 0,
+    event: '',
     ...params,
       source: createNotificationSource(params.source),
   }

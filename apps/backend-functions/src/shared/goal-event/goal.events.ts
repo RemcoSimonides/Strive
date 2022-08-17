@@ -1,7 +1,7 @@
 import { serverTimestamp, db } from '../../internals/firebase'
-import { GoalEvent, enumEvent, GoalSource } from '@strive/model'
+import { GoalEvent, GoalSource, EventType } from '@strive/model'
 
-export function addGoalEvent(name: enumEvent, source: GoalSource, id?: string) {
+export function addGoalEvent(name: EventType, source: GoalSource, id?: string) {
   const event: GoalEvent = {
     name,
     source,

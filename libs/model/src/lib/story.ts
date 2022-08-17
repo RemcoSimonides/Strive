@@ -1,24 +1,23 @@
 import { createGoalSource, GoalSource } from './goal'
-import { enumEvent } from './notification'
+import { EventType } from './notification'
 
-export const storyEvents: enumEvent[] = [
-  enumEvent.gNewBucketlist,
-  enumEvent.gNewActive,
-  enumEvent.gNewFinished,
-  enumEvent.gFinished,
-  enumEvent.gMilestoneCompletedSuccessfully,
-  enumEvent.gMilestoneCompletedUnsuccessfully,
-  enumEvent.gMilestoneDeadlinePassed,
-  enumEvent.gStakeholderAchieverAdded,
-  enumEvent.gStakeholderAdminAdded,
-  enumEvent.gRoadmapUpdated,
-  enumEvent.gNewPost,
-  enumEvent.gSupportAdded
+export const storyEvents: EventType[] = [
+  'goalCreatedStatusBucketlist',
+  'goalCreatedStatusActive',
+  'goalCreatedStatusFinished',
+  'goalStatusFinished',
+  'goalMilestoneCompletedSuccessfully',
+  'goalMilestoneCompletedUnsuccessfully',
+  'goalMilestoneDeadlinePassed',
+  'goalStakeholderBecameAchiever',
+  'goalStakeholderBecameAdmin',
+  'goalStoryPostCreated',
+  'goalSupportCreated'
 ]
 
 export interface StoryItem {
   id?: string
-  name: enumEvent
+  name: EventType
   date: Date
   source: GoalSource
   createdAt: Date
@@ -27,7 +26,7 @@ export interface StoryItem {
 
 export function createStoryItem(params: Partial<StoryItem> = {}): StoryItem {
   return {
-    name: 0,
+    name: '',
     date: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),

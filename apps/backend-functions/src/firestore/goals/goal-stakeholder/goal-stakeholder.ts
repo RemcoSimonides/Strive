@@ -1,7 +1,7 @@
 import { db, functions, increment } from '../../../internals/firebase';
 
 // interfaces
-import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, enumEvent, createMilestone, createUserLink, createAggregation } from '@strive/model'
+import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createMilestone, createUserLink, createAggregation } from '@strive/model'
 import { toDate } from '../../../shared/utils';
 import { getDocument } from '../../../shared/utils';
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
@@ -124,10 +124,6 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   const becameAchiever = !before.isAchiever && after.isAchiever
   const becameSupporter = !before.isSupporter && after.isSupporter
 
-  const adminRemoved = before.isAdmin && !after.isAdmin
-  const achieverRemoved = before.isAchiever && !after.isAchiever
-  const supporterRemoved = before.isSupporter && !after.isSupporter
-
   const requestToJoin = !before.hasOpenRequestToJoin && after.hasOpenRequestToJoin
   const requestToJoinDecided = before.hasOpenRequestToJoin && !after.hasOpenRequestToJoin
   const requestToJoinAccepted = requestToJoinDecided && !before.isAchiever && after.isAchiever
@@ -139,24 +135,20 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   })
 
   if (becameAdmin) {
-    addGoalEvent(enumEvent.gStakeholderAdminAdded, source)
-    if (goal.numberOfAchievers >= 1) addStoryItem(enumEvent.gStakeholderAdminAdded, source)
+    addGoalEvent('goalStakeholderBecameAdmin', source)
+    if (goal.numberOfAchievers >= 1) addStoryItem('goalStakeholderBecameAdmin', source)
   }
 
   if (becameAchiever) {
-    addGoalEvent(enumEvent.gStakeholderAchieverAdded, source)
-    if (goal.numberOfAchievers >= 1) addStoryItem(enumEvent.gStakeholderAchieverAdded, source)
+    addGoalEvent('goalStakeholderBecameAchiever', source)
+    if (goal.numberOfAchievers >= 1) addStoryItem('goalStakeholderBecameAchiever', source)
   }
 
-  if (becameSupporter) addGoalEvent(enumEvent.gStakeholderSupporterAdded, source)
-  
-  if (adminRemoved) addGoalEvent(enumEvent.gStakeholderAdminRemoved, source)
-  if (achieverRemoved) addGoalEvent(enumEvent.gStakeholderAchieverRemoved, source)
-  if (supporterRemoved) addGoalEvent(enumEvent.gStakeholderSupporterRemoved, source)
+  if (becameSupporter) addGoalEvent('goalStakeholderBecameSupporter', source)
 
-  if (requestToJoin) addGoalEvent(enumEvent.gStakeholderRequestToJoinPending, source)
-  if (requestToJoinAccepted) addGoalEvent(enumEvent.gStakeholderRequestToJoinAccepted, source)
-  if (requestToJoinRejected) addGoalEvent(enumEvent.gStakeholderRequestToJoinRejected, source)
+  if (requestToJoin) addGoalEvent('goalStakeholderRequestedToJoin', source)
+  if (requestToJoinAccepted) addGoalEvent('goalStakeholderRequestToJoinAccepted', source)
+  if (requestToJoinRejected) addGoalEvent('goalStakeholderRequestToJoinRejected', source)
 }
 
 function handleAggregation(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined) {

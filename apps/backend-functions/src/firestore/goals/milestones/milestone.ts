@@ -5,7 +5,6 @@ import {
   createMilestone,
   Milestone,
   createGoalSource,
-  enumEvent,
   createSupport,
   User,
   UserLink
@@ -101,20 +100,20 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
   })
 
   if (after.status === 'overdue') {
-    addGoalEvent(enumEvent.gMilestoneDeadlinePassed, source)
-    addStoryItem(enumEvent.gMilestoneDeadlinePassed, source)
+    addGoalEvent('goalMilestoneDeadlinePassed', source)
+    addStoryItem('goalMilestoneDeadlinePassed', source)
   }
 
   if (after.status === 'succeeded') {
     source.postId = after.id
-    addGoalEvent(enumEvent.gMilestoneCompletedSuccessfully, source)
-    addStoryItem(enumEvent.gMilestoneCompletedSuccessfully, source)
+    addGoalEvent('goalMilestoneCompletedSuccessfully', source)
+    addStoryItem('goalMilestoneCompletedSuccessfully', source)
   }
 
   if (after.status === 'failed') {
     source.postId = after.id
-    addGoalEvent(enumEvent.gMilestoneCompletedUnsuccessfully, source)
-    addStoryItem(enumEvent.gMilestoneCompletedSuccessfully, source)
+    addGoalEvent('goalMilestoneCompletedUnsuccessfully', source)
+    addStoryItem('goalMilestoneCompletedUnsuccessfully', source)
   }
 
   const isCompleted = after.status === 'succeeded' || after.status === 'failed'

@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { enumEvent, GoalEvent, NotificationIcons, NotificationMessageText } from '@strive/model';
+import { GoalEvent, NotificationIcons, NotificationMessageText } from '@strive/model';
 
 export interface StoryItemMessage {
   icon: NotificationIcons
@@ -8,40 +8,40 @@ export interface StoryItemMessage {
 
 export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessage {
   switch (name) {
-    case enumEvent.gNewBucketlist:
-    case enumEvent.gNewActive:
-    case enumEvent.gNewFinished:
+    case 'goalCreatedStatusBucketlist':
+    case 'goalCreatedStatusActive':
+    case 'goalCreatedStatusFinished':
       return {
         icon: 'flag-outline',
         message: [{ text: `Goal created` }]
       }
-    case enumEvent.gFinished:
+    case 'goalStatusFinished':
       return {
         icon: 'flag-outline',
         message: [{ text: `Goal is finished!` }]
       }
-    case enumEvent.gMilestoneCompletedSuccessfully:
+    case 'goalMilestoneCompletedSuccessfully':
       return {
         icon: 'checkmark-outline',
         message: [
           { text: `Milestone "${source.milestone!.content}" successfully completed` }
         ]
       }
-    case enumEvent.gMilestoneCompletedUnsuccessfully:
+    case 'goalMilestoneCompletedUnsuccessfully':
       return {
         icon: 'checkmark-outline',
         message: [
           { text: `Milestone "${source.milestone!.content}" failed to complete` }
         ]
       }
-    case enumEvent.gMilestoneDeadlinePassed:
+    case 'goalMilestoneDeadlinePassed':
       return {
         icon: 'alert-outline',
         message: [
           { text: `Milestone "${source.milestone!.content}" passed its due date` }
         ]
       }
-    case enumEvent.gStakeholderAchieverAdded:
+    case 'goalStakeholderBecameAchiever':
       return {
         icon: 'person-add-outline',
         message: [
@@ -49,7 +49,7 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
           { text: ` joined as an Achiever`}
         ]
       }
-    case enumEvent.gStakeholderAdminAdded:
+    case 'goalStakeholderBecameAdmin':
       return {
         icon: 'person-add-outline',
         message: [
@@ -57,21 +57,12 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
           { text: ` became an Admin` }
         ]
       }
-    case enumEvent.gRoadmapUpdated:
-      return {
-        icon: 'create-outline',
-        message: [
-          {
-            text: `Roadmap has been updated`
-          }
-        ]
-      }
-    case enumEvent.gNewPost:
+    case 'goalStoryPostCreated':
       return {
         icon: 'bookmark-outline',
         message: [] // no message - just the post
       }
-    case enumEvent.gSupportAdded: {
+    case 'goalSupportCreated': {
       const isMilestone = source.milestone?.id
       const suffix = isMilestone ? ` to milestone "${source.milestone!.content}" ` : ''
       return {

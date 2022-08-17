@@ -1,5 +1,5 @@
 import { logger } from 'firebase-functions';
-import { createComment, createGoalSource, enumEvent } from '@strive/model'
+import { createComment, createGoalSource } from '@strive/model'
 import { functions } from '../../../internals/firebase';
 import { toDate } from '../../../shared/utils';
 import { addGoalEvent } from 'apps/backend-functions/src/shared/goal-event/goal.events';
@@ -16,5 +16,5 @@ export const commentCreatedHandler = functions.firestore.document(`Goals/{goalId
       goal: comment.source.goal,
       user: comment.source.user
     })
-    addGoalEvent(enumEvent.gNewMessage, source)
+    addGoalEvent('goalChatMessageCreated', source)
   })

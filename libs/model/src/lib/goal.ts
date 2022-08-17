@@ -1,4 +1,4 @@
-import { enumEvent } from './notification';
+import { EventType } from './notification';
 import { createSupportLink, Support, SupportLink } from './support';
 import { createUserLink, User, UserLink } from './user';
 import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
@@ -7,7 +7,7 @@ export type GoalPublicityType = 'public' | 'private'
 export type GoalStatus = 'bucketlist' | 'active' | 'finished'
 
 export interface GoalEvent {
-  name: enumEvent
+  name: EventType
   source: GoalSource
   createdAt?: Date
   updatedAt?: Date

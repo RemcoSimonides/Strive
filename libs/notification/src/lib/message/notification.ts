@@ -1,4 +1,4 @@
-import { enumEvent, Notification, NotificationMessageText, NotificationSource } from '@strive/model'
+import { Notification, NotificationMessageText, NotificationSource } from '@strive/model'
 
 function get(type: 'user' | 'goal', source:  NotificationSource): { title: string, image: string, link: string } {
   const data = {
@@ -25,7 +25,7 @@ export interface NotificationMessage {
 
 export function getNotificationMessage({ event, source }: Notification): NotificationMessage {
   switch (event) {
-    case enumEvent.gNewBucketlist:
+    case 'goalCreatedStatusBucketlist':
       return {
         ...get('user', source),
         message: [
@@ -34,7 +34,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
           { text: `" to bucket list` }
         ]
       }
-    case enumEvent.gNewActive:
+    case 'goalCreatedStatusActive':
       return {
         ...get('user', source),
         link: `/goal/${source.goal?.id}`,
@@ -44,7 +44,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
           { text: `"` }
         ]
       }
-    case enumEvent.gNewFinished:
+    case 'goalCreatedStatusFinished':
       return {
         ...get('user', source),
         message: [
@@ -54,7 +54,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case enumEvent.gFinished:
+    case 'goalStatusFinished':
       return {
         ...get('user', source),
         message: [
@@ -67,7 +67,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case enumEvent.gMilestoneDeadlinePassed:
+    case 'goalMilestoneDeadlinePassed':
       return {
         ...get('goal', source),
         message: [
@@ -75,7 +75,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case enumEvent.gStakeholderRequestToJoinPending:
+    case 'goalStakeholderRequestedToJoin':
       return {
         ...get('goal', source),
         message: [
@@ -87,7 +87,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case enumEvent.gStakeholderRequestToJoinAccepted: 
+    case 'goalStakeholderRequestToJoinAccepted': 
       return {
         ...get('goal', source),
         message: [
@@ -95,7 +95,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case enumEvent.gStakeholderRequestToJoinRejected:
+    case 'goalStakeholderRequestToJoinRejected':
       return {
         ...get('goal', source),
         message: [
@@ -103,7 +103,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case enumEvent.userSpectatorAdded:
+    case 'userSpectatorCreated':
       return {
         ...get('user', source),
         message: [
@@ -111,8 +111,8 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
     
-    case enumEvent.gSupportPendingFailed:
-    case enumEvent.gSupportPendingSuccesful: {
+    case 'goalSupportStatusPendingUnsuccessful':
+    case 'goalSupportStatusPendingSuccessful': {
       const isMilestone = source.milestone?.id
       const prefix = isMilestone ? `Milestone "${source.milestone!.content}"` : `Goal`
       return {
@@ -124,7 +124,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
       }
     }
 
-    case enumEvent.gSupportPaid:
+    case 'goalSupportStatusPaid':
       return {
         ...get('goal', source),
         link: '/supports',
@@ -139,7 +139,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
     
-    case enumEvent.gSupportRejected: {
+    case 'goalSupportStatusRejected': {
       const isMilestone = !!source.milestone?.id
       const suffix = isMilestone ? ` for milestone "${source.milestone!.content}"` : ''
 
