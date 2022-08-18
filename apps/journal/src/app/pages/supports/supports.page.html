@@ -18,9 +18,8 @@
   </ion-refresher>
 
   <main>
-
-    <section *ngIf="supportsNeedDecision$ | async as goals" class="needs-decision">
-      <ng-container *ngIf="goals.length">
+    <ng-container *ngIf="supportsNeedDecision$ | async as goals">
+      <section *ngIf="goals.length" class="needs-decision">
         <ng-container *ngFor="let goal of goals">
 
           <ng-container *ngIf="goal.supports.length; else milestones">
@@ -66,133 +65,91 @@
           </ng-template>
         </ng-container>
 
-      </ng-container>
-    </section>
+      </section>
+    </ng-container>
 
-    <h2>Goals you support</h2>
-    <ion-list mode="md">
-      <ng-container *ngIf="supportsOpen$ | async as supports">
-        <ng-container *ngIf="supports.length else notSupportingGoals">
-          <ng-container *ngFor="let support of supports; let last = last">
-            <ion-item [lines]="last ? 'none' : 'inset'">
-              <ion-label class="ion-text-wrap">
-                <ion-text>{{ support.description }}</ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
-              </ion-label>
-              <ion-button fill="clear" (click)="openOptions(support, $event)">
-                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-              </ion-button>
-            </ion-item>
+    <ng-container *ngIf="fromYouSupports$ | async as fromYouSupports; else loading">
+    <ng-container *ngIf="toYouSupports$ | async as toYouSupports; else loading">
+
+      <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
+        <ion-segment-button value="fromYou">
+          FROM YOU <ng-container *ngIf="fromYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>
+        </ion-segment-button>
+        <ion-segment-button value="forYou">
+          FOR YOU <ng-container *ngIf="toYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ng-container [ngSwitch]="segmentChoice">
+        <section *ngSwitchCase="'fromYou'" class="segment">
+
+          <ng-container *ngIf="fromYouSupports.length else noFromYou">
+            <ion-list mode="md">
+              <ion-item *ngFor="let support of fromYouSupports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
+                <ion-thumbnail slot="start">
+                  <img [ref]="support.source.goal.image" asset="goal.png"/>
+                </ion-thumbnail>
+                <ion-label class="ion-text-wrap">
+                  <article>
+                    <span><b>{{ support.description }}</b> {{ support.status !== 'open' ? '(Given)' : '' }}</span>
+                    <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
+                    <small>Recipient: {{ support.source.receiver.username }}</small>
+                  </article>
+                </ion-label>
+                <ion-button fill="clear" (click)="openOptions(support, $event)">
+                  <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-list>
           </ng-container>
-        </ng-container>
-        <ng-template #notSupportingGoals>
-          <ion-item>Not supporting any goals yet</ion-item>
-        </ng-template>
+
+        </section>
+        <section *ngSwitchCase="'forYou'" class="segment">
+
+          <ng-container *ngIf="toYouSupports.length else noToYou">
+            <ion-list mode="md">
+              <ion-item *ngFor="let support of toYouSupports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
+                <ion-thumbnail slot="start">
+                  <img [ref]="support.source.goal.image" asset="goal.png"/>
+                </ion-thumbnail>
+                <ion-label class="ion-text-wrap">
+                  <article>
+                    <span><b>{{ support.description }}</b> {{ support.status !== 'open' ? '(Received)' : '' }}</span>
+                    <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
+                    <small>Supporter: {{ support.source.supporter.username }}</small>
+                  </article>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ng-container>
+
+        </section>
       </ng-container>
-    </ion-list>
+
+    </ng-container>
+    </ng-container>
       
-    <h2>Support to get</h2>
-    <ion-list mode="md">
-      <ng-container *ngIf="supportsToGet$ | async as supports">
-        <ng-container *ngIf="supports.length else noSupportsToGet">
-          <ng-container *ngFor="let support of supports; let last = last">
-            <ion-item [lines]="last ? 'none' : 'inset'">
-              <ion-label>
-                <ion-text>
-                  {{ support.description }} from <a [routerLink]="['/profile', support.source.receiver.uid]">{{ support.source.supporter.username }}</a>
-                </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }">
-                </ng-template>
-              </ion-label>
-              <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Got it</ion-button>
-            </ion-item>
-          </ng-container>
-        </ng-container>
-        <ng-template #noSupportsToGet>
-          <ion-item lines="none">-</ion-item>
-        </ng-template>
-      </ng-container>
-    </ion-list>
-
-    <h2>Supports to give</h2>
-    <ion-list mode="md">
-      <ng-container *ngIf="supportsToGive$ | async as supports">
-        <ng-container *ngIf="supports.length else noSupportsToGive">
-          <ng-container *ngFor="let support of supports; let last = last">
-            <ion-item [lines]="last ? 'none' : 'inset'">
-              <ion-label>
-                <ion-text>
-                  {{ support.description }} to <a [routerLink]="['/profile', support.source.receiver.uid]">{{ support.source.receiver.username }}</a>
-                </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
-              </ion-label>
-              <ion-button fill="outline" slot="end" (click)="supportPaid(support)">Gave it</ion-button>
-            </ion-item>
-          </ng-container>
-        </ng-container>
-        <ng-template #noSupportsToGive>
-          <ion-item lines="none">-</ion-item>
-        </ng-template>
-      </ng-container>
-    </ion-list>
-
-    <h2>Supports gotten</h2>
-    <ion-list mode="md">
-      <ng-container *ngIf="supportsGotten$ | async as supports">
-        <ng-container *ngIf="supports.length else noSupportsGotten">
-          <ng-container *ngFor="let support of supports; let last = last">
-            <ion-item [lines]="last ? 'none' : 'inset'">
-              <ion-label>
-                <ion-text>
-                  {{ support.description }} from <a [routerLink]="['/profile', support.source.supporter.uid]">{{ support.source.supporter.username }}</a>
-                </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
-              </ion-label>
-            </ion-item>
-          </ng-container>
-        </ng-container>
-        <ng-template #noSupportsGotten>
-          <ion-item lines="none">-</ion-item>
-        </ng-template>
-      </ng-container>
-    </ion-list>
-
-    <h2>Supports given</h2>
-    <ion-list mode="md">
-      <ng-container *ngIf="supportsGiven$ | async as supports">
-        <ng-container *ngIf="supports.length else noSupportsGiven">
-          <ng-container *ngFor="let support of supports; let last = last">
-            <ion-item [lines]="last ? 'none' : 'inset'">
-              <ion-label>
-                <ion-text>
-                  {{ support.description }} to achiever(s) from {{ support.source.goal.title }}
-                </ion-text>
-                <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
-              </ion-label>
-            </ion-item>
-          </ng-container>
-        </ng-container>
-        <ng-template #noSupportsGiven>
-          <ion-item lines="none">-</ion-item>
-        </ng-template>
-      </ng-container>
-    </ion-list>
-
   </main>
 </ion-content>
 
+<ng-template #noFromYou>
+  <p>You're not supporting any goals yet. Give incentive to yourself or someone else by rewarding one of their objectives.</p>
+</ng-template>
+
+<ng-template #noToYou>
+  <p>No one is supporting you yet. Share your goals to find out someone might be able to help.</p>
+</ng-template>
+
 <ng-template #path let-support>
-  <ion-text>
-    <p *ngIf="!support.source.milestone?.id"><a [routerLink]="'../goal/' + (support.source.goal.id)">{{ support.source.goal.title }}</a></p>
-    <p *ngIf="support.source.milestone?.id"><a [routerLink]="'../goal/' + (support.source.goal.id)">{{ support.source.goal.title | mSlice}}</a>&nbsp;<span class="arrow">&#8702;</span> {{ support.source.milestone.content | mSlice }}</p>
-  </ion-text>
+  <small *ngIf="!support.source.milestone?.id">Goal: <a [routerLink]="'../goal/' + (support.source.goal.id)">{{ support.source.goal.title }}</a></small>
+  <small *ngIf="support.source.milestone?.id">Goal: <a [routerLink]="'../goal/' + (support.source.goal.id)">{{ support.source.goal.title | mSlice}}</a>&nbsp;<span>&#8702;</span> {{ support.source.milestone.content | mSlice }}</small>
 </ng-template>
 
 <ng-template #supportTemplate let-support>
   <ion-label class="ion-text-wrap">
     <article>
       <span>Support: <b>{{ support.description }}</b></span>
-      <small>Recipient: {{ support | recipient }}</small>
+      <small>Recipient: {{ support.source.receiver.username }}</small>
       <small *ngIf="support.source.milestone?.id">Milestone: {{ support.source.milestone.content }}</small>
     </article>
   </ion-label>
@@ -202,4 +159,8 @@
   <ion-button fill="outline" (click)="reject(support)">
     Reject
   </ion-button>
+</ng-template>
+
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
 </ng-template>

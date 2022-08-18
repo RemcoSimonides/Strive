@@ -23,6 +23,27 @@ export class SupportOptionsComponent {
     this.popoverCtrl.dismiss()
   }
 
+  give() {
+    this.alertCtrl.create({
+      subHeader: `The ${this.support.source.milestone?.id ? 'milestone' : 'goal'} is not completed yet`,
+      message: `Are you sure you want to give this support?`,
+      buttons: [
+        {
+          text: 'Yes',
+          handler: async () => {
+            if (!this.support.id) return
+            this.supportService.update(this.support.id, { status: 'waiting_to_be_paid' }, { params: { goalId: this.support.source.goal.id }})
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
+    this.popoverCtrl.dismiss()
+  }
+
   remove() {
     this.alertCtrl.create({
       subHeader: `Are you sure you want to remove this support?`,
@@ -42,6 +63,5 @@ export class SupportOptionsComponent {
         }
       ]
     }).then(alert => alert.present())
-
   }
 }

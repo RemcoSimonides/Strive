@@ -27,8 +27,15 @@ export class SupportStatusPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'filterStatus' })
+export class FilterStatusPipe implements PipeTransform {
+  transform(supports: Support[], status: SupportStatus) {
+    return supports.filter(supports => supports.status === status)
+  }
+}
+
 @NgModule({
-  exports: [SupportStatusPipe],
-  declarations: [SupportStatusPipe]
+  exports: [SupportStatusPipe, FilterStatusPipe],
+  declarations: [SupportStatusPipe, FilterStatusPipe]
 })
 export class SupportStatusPipeModule { } 

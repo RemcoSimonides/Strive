@@ -14,7 +14,8 @@ import { SupportOptionsComponent } from '@strive/support/components/options/opti
 import { delay, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
-import { GoalLink, MilestoneLink, createSupport, Support } from '@strive/model'
+import { GoalLink, MilestoneLink, Support, SupportStatus } from '@strive/model'
+import { compareDesc } from 'date-fns';
 
 type GroupedByMilestone = MilestoneLink & { supports: Support[] }
 type GroupedByGoal = GoalLink & { milestones: GroupedByMilestone[], supports: Support[] }
@@ -57,13 +58,11 @@ function groupByObjective(supports: Support[]): GroupedByGoal[] {
 })
 export class SupportsComponent {
 
-  supportsOpen$: Observable<Support[]>
-  supportsToGive$: Observable<Support[]>
-  supportsGiven$: Observable<Support[]>
   supportsNeedDecision$: Observable<GroupedByGoal[]>
+  fromYouSupports$: Observable<Support[]>
+  toYouSupports$: Observable<Support[]>
 
-  supportsToGet$: Observable<Support[]>
-  supportsGotten$: Observable<Support[]>
+  segmentChoice: 'forYou' | 'fromYou' = 'fromYou'
 
   constructor(
     public user: UserService,
@@ -77,39 +76,40 @@ export class SupportsComponent {
 
     const supportsGive$: Observable<Support[]> = this.user.user$.pipe(
       switchMap(user => user ? this.support.groupChanges([where('source.supporter.uid', '==', user.uid)]) : of([])),
-      map(supports => supports.map(support => createSupport(support))),
       shareReplay({ bufferSize: 1, refCount: true }),
     )
-    const supportsGet$: Observable<Support[]> = this.user.user$.pipe(
+    
+    this.fromYouSupports$ = supportsGive$.pipe(
+      map(supports => supports.filter(support => support.status !== 'rejected' )), // dont show rejected supporteds
+      map(supports => supports.sort((a, b) => compareDesc(a.createdAt!, b.createdAt!))),
+      map(supports => supports.sort((a: any, b: any) => {
+        const order: SupportStatus[] = ['open', 'waiting_to_be_paid', 'paid', 'rejected']
+        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
+        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
+        return 0
+      }))
+    )
+
+    this.toYouSupports$ = this.user.user$.pipe(
       switchMap(user => user ? this.support.groupChanges([where('source.receiver.uid', '==', user.uid)]) : of([])),
-      map(supports => supports.map(support => createSupport(support))),
-      shareReplay({ bufferSize: 1, refCount: true })
-    )
-
-    this.supportsOpen$ = supportsGive$.pipe(
-      map(supports => supports.filter(support => support.status === 'open'))
-    )
-
-    this.supportsToGive$ = supportsGive$.pipe(
-      map(supports => supports.filter(support => support.status === 'waiting_to_be_paid'))
-    )
-
-    this.supportsGiven$ = supportsGive$.pipe(
-      map(supports => supports.filter(support => support.status === 'paid'))
+      map(supports => supports.filter(support => support.status !== 'rejected' )), // dont show rejected supporteds
+      map(supports => supports.sort((a, b) => compareDesc(a.createdAt!, b.createdAt!))),
+      map(supports => supports.sort((a: any, b: any) => {
+        const order: SupportStatus[] = ['open', 'waiting_to_be_paid', 'paid', 'rejected']
+        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
+        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
+        return 0
+      }))
     )
 
     this.supportsNeedDecision$ = supportsGive$.pipe(
       map(supports => supports.filter(support => support.needsDecision)),
       map(groupByObjective)
     )
+  }
 
-    this.supportsToGet$ = supportsGet$.pipe(
-      map(supports => supports.filter(support => support.status === 'waiting_to_be_paid'))
-    )
-
-    this.supportsGotten$ = supportsGet$.pipe(
-      map(supports => supports.filter(support => support.status === 'paid'))
-    )
+  segmentChanged(ev: CustomEvent) {
+    this.segmentChoice = ev.detail.value
   }
 
   openAuthModal() {

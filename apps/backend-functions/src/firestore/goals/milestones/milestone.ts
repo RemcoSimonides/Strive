@@ -16,7 +16,6 @@ import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.in
 import { toDate } from '../../../shared/utils'
 import { getDocument } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
-import { determineReceiver, getReceiver } from '../../../shared/support/receiver'
 import { addStoryItem } from '../../../shared/goal-story/story'
 
 export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
@@ -132,16 +131,12 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
 
 async function supportsNeedDecision(goalId: string, milestone: Milestone) {
   const supportsSnap = await db.collection(`Goals/${goalId}/Supports`).where('source.milestone.id', '==', milestone.id).get()
-  const soloAchiever = await getReceiver(goalId, db)
   
   // TODO batch might get bigger than 500
   const batch = db.batch()
   for (const snap of supportsSnap.docs) {
     const support = createSupport(toDate({ ...snap.data(), id: snap.id }))
     support.needsDecision = serverTimestamp() as any
-
-    const receiver = determineReceiver(support, soloAchiever, milestone)
-    if (receiver) support.source.receiver = receiver
 
     batch.update(snap.ref, support as any) // TODO remove any when updating pacakges https://github.com/firebase/firebase-js-sdk/issues/5853
   }

@@ -9,7 +9,7 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/support.service'
 import { UserService } from '@strive/user/user/user.service'
 // Interfaces
-import { Goal, Milestone, createSupport, Support, createUserLink } from '@strive/model'
+import { Goal, Milestone, createSupport, Support, createUserLink, UserLink } from '@strive/model'
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { map, switchMap } from 'rxjs/operators';
@@ -95,26 +95,38 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
         supporter: this.user.user
       })
     })
-    this.form.setValue('')
 
     if (this.milestone?.achiever?.uid) {
       support.source.receiver = this.milestone.achiever
+      this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     }
 
     const achievers = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId: this.goalId })
     if (achievers.length === 1) {
       support.source.receiver = createUserLink(achievers[0])
+      this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     } else {
+      const recipients: UserLink[] = []
       const modal = await this.modalCtrl.create({
         component: AchieversModalComponent,
-        componentProps: { support, achievers }
+        componentProps: { recipients, achievers }
       })
       modal.onDidDismiss().then(_ => {
-        this.supportService.add(support, { params: { goalId: this.goalId }})
+        for (const recipient of recipients) {
+          const result = createSupport({
+            ...support,
+            source: createSupportSource({
+              ...support.source,
+              receiver: recipient
+            })
+          })
+          this.supportService.add(result, { params: { goalId: this.goalId }})
+        }
       })
       modal.present()
+      this.form.setValue('')
     }
     return
   }

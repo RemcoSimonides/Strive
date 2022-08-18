@@ -13,7 +13,8 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { SupportOptionsModule } from '@strive/support/components/options/options.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { AchieversModalModule } from '@strive/support/modals/achievers/achievers.module'
-import { RecipientPipeModule } from '@strive/support/pipes/recipient.pipe'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { SupportStatusPipeModule } from '@strive/support/pipes/status.pipe'
 
 const routes: Routes = [
   {
@@ -34,7 +35,8 @@ const routes: Routes = [
     SupportOptionsModule,
     HeaderRootModule,
     AchieversModalModule,
-    RecipientPipeModule
+    ImageModule,
+    SupportStatusPipeModule
   ],
   declarations: [
     SupportsComponent,

@@ -10,8 +10,6 @@ import {
   createSupport,
   Support,
   createAggregation,
-  receiverIsUser,
-  receiverIsGoal,
   createGoalEvent
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
@@ -116,32 +114,17 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
       return sendNotificationToUsers(notification, supporter.uid)
     }
 
-    if (!receiver) return
 
     let event: EventType
     if (paid) event = 'goalSupportStatusPaid'
     if (rejected) event = 'goalSupportStatusRejected'
     if (waitingToBePaid) event = 'goalSupportStatusWaitingToBePaid'
 
-    if (event && receiverIsUser(receiver)) {
-      if (supporter.uid === receiver.uid) return
+    if (!receiver) return
+    if (supporter.uid === receiver.uid) return
+    if (event) {
       const notification = createNotification({ event, source })
       return sendNotificationToUsers(notification, receiver.uid, 'user')
-    } else if (event && receiverIsGoal(receiver)) {
-      const options: SendOptions = {
-        send: {
-          notification: true,
-          pushNotification: true
-        },
-        roles: {
-          isSupporter: true
-        }
-      }
-      const goalEvent = createGoalEvent({
-        name: event,
-        source: createGoalSource({ ...source })
-      })
-      return sendGoalEventNotification(goalEvent, options, true)
     }
   })
 

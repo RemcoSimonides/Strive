@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
-import { createGoalLink, createUserLink, GoalStakeholder, Support } from '@strive/model'
+import { createUserLink, GoalStakeholder, UserLink } from '@strive/model'
 import { FormControl } from '@angular/forms'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
+
+type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean }
 
 @Component({
   selector: '[support] support-achievers',
@@ -12,14 +14,15 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AchieversModalComponent extends ModalDirective implements OnDestroy {
-  _achievers: GoalStakeholder[] = []
-  private _all: GoalStakeholder[] = []
+
+  _achievers: GoalStakeholderWithChecked[] = []
+  private _all: GoalStakeholderWithChecked[] = []
   @Input() set achievers(achievers: GoalStakeholder[]) {
-    this._achievers = [...achievers]
-    this._all = [...achievers]
+    this._achievers = achievers.map(achiever => ({ ...achiever, checked: false }))
+    this._all = achievers.map(achiever => ({ ...achiever, checked: false }))
   }
 
-  @Input() support!: Support
+  @Input() recipients!: UserLink[]
   showEveryoneOption = true
 
   filter = new FormControl()
@@ -42,14 +45,19 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
     this.sub.unsubscribe()
   }
 
-  achieverChosen(achiever: GoalStakeholder) {
-    this.support.source.receiver = createUserLink(achiever)
+  submit() {
+    const selected = this._all.filter(achiever => achiever.checked)
+    for (const recipient of selected) {
+      this.recipients.push(createUserLink(recipient))
+    }
     this.dismiss()
   }
 
-  toGoal() {
-    this.support.source.receiver = createGoalLink(this.support.source.goal)
-    this.dismiss()
+  selected(event: CustomEvent, achiever: GoalStakeholderWithChecked) {
+    const { checked } = event.detail
+    
+    const stakeholder = this._all.find(a => a.uid === achiever.uid)
+    stakeholder!.checked = checked
   }
 
 }
