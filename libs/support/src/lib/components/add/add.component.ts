@@ -9,14 +9,16 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/support.service'
 import { UserService } from '@strive/user/user/user.service'
 // Interfaces
-import { Goal, createMilestoneLink, Milestone, createSupport, Support } from '@strive/model'
+import { Goal, Milestone, createSupport, Support, createUserLink } from '@strive/model'
 // Components
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { map, switchMap } from 'rxjs/operators';
 import { SupportOptionsComponent } from '../options/options.component';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 import { createSupportSource } from '@strive/model';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 
 @Component({
   selector: '[goalId] support-add',
@@ -35,13 +37,14 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
   supports$?: Observable<Support[]>
   mySupports$?: Observable<Support[]>
 
-  form = new FormControl('', { nonNullable: true })
+  form = new FormControl('', { validators: [Validators.required], nonNullable: true })
 
   constructor(
     private goalService: GoalService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private stakeholderService: GoalStakeholderService,
     private supportService: SupportService,
     public user: UserService
   ) {
@@ -81,21 +84,39 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     }).then(modal => modal.present())
   }
 
-  addSupport(goal: Goal) {
+  async addSupport(goal: Goal) {
     if (this.form.invalid) return
 
-    const source = createSupportSource({
-      goal,
-      supporter: this.user.user
-    })
-    if (this.milestone) source.milestone = createMilestoneLink(this.milestone)
     const support = createSupport({
       description: this.form.value,
-      source
+      source: createSupportSource({
+        goal,
+        milestone: this.milestone,
+        supporter: this.user.user
+      })
     })
-
-    this.supportService.add(support, { params: { goalId: this.goalId }})
     this.form.setValue('')
+
+    if (this.milestone?.achiever?.uid) {
+      support.source.receiver = this.milestone.achiever
+      return this.supportService.add(support, { params: { goalId: this.goalId }})
+    }
+
+    const achievers = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId: this.goalId })
+    if (achievers.length === 1) {
+      support.source.receiver = createUserLink(achievers[0])
+      return this.supportService.add(support, { params: { goalId: this.goalId }})
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: AchieversModalComponent,
+        componentProps: { support, achievers }
+      })
+      modal.onDidDismiss().then(_ => {
+        this.supportService.add(support, { params: { goalId: this.goalId }})
+      })
+      modal.present()
+    }
+    return
   }
 
   openOptions(support: Support, event: Event) {

@@ -21,7 +21,7 @@ import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.inter
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
 import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils'
 import { addGoalEvent } from '../../shared/goal-event/goal.events';
-import { getReceiver } from '../../shared/support/receiver'
+import { getReceiver, determineReceiver } from '../../shared/support/receiver'
 import { addStoryItem } from '../../shared/goal-story/story'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
 
@@ -212,7 +212,7 @@ async function updateTitleInSources(goal: Goal) {
 }
 
 export async function supportsNeedDecision(goal: Goal) {
-  const receiver = await getReceiver(goal.id, db)
+  const soloAchiever = await getReceiver(goal.id, db)
 
   const milestonesQuery = db.collection(`Goals/${goal.id}/Milestones`)
     .where('status', '==', 'pending')
@@ -244,9 +244,11 @@ export async function supportsNeedDecision(goal: Goal) {
 
     if (milestoneId) {
       const milestone = milestones.find(m => m.id === support.source.milestone.id)
-      support.source.receiver = milestone.achiever?.uid ? milestone.achiever : receiver
+      const receiver = determineReceiver(support, soloAchiever, milestone)
+      if (receiver) support.source.receiver = receiver
     } else {
-      support.source.receiver = receiver
+      const receiver = determineReceiver(support, soloAchiever)
+      if (receiver) support.source.receiver = receiver
     }
 
     batch.update(snap.ref, support)

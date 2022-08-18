@@ -14,7 +14,7 @@ import { SupportOptionsComponent } from '@strive/support/components/options/opti
 import { delay, unique } from '@strive/utils/helpers';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
-import { GoalLink, MilestoneLink, createSupport, Support, createUserLink } from '@strive/model'
+import { GoalLink, MilestoneLink, createSupport, Support } from '@strive/model'
 
 type GroupedByMilestone = MilestoneLink & { supports: Support[] }
 type GroupedByGoal = GoalLink & { milestones: GroupedByMilestone[], supports: Support[] }
@@ -136,18 +136,18 @@ export class SupportsComponent {
 
   async give(support: Support) {
     if (!support.id) return
-    if (support.source.receiver?.uid) {
+
+    const { receiver } = support.source
+    if (receiver) {
       this.support.update(support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: support.source.goal.id }})
     } else {
       const achievers = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: support.source.goal.id })
       const modal = await this.modalCtrl.create({
         component: AchieversModalComponent,
-        componentProps: { achievers }
+        componentProps: { support, achievers }
       })
-      modal.onDidDismiss().then(res => {
-        const { data } = res
-        if (data) {
-          support.source.receiver = createUserLink(data)
+      modal.onDidDismiss().then(_ => {
+        if (support.source.receiver) {
           this.support.update(support.id!, {
             ...support,
             status: 'waiting_to_be_paid',
@@ -160,7 +160,7 @@ export class SupportsComponent {
   }
 
   reject(support: Support) {
-    if (!support.id) return
+    if (!support.id) throw new Error('Trying to reject support but support.id is unknown')
     this.support.update(support.id, { status: 'rejected', needsDecision: false }, { params: { goalId: support.source.goal.id }})
   }
   

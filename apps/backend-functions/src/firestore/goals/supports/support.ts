@@ -9,11 +9,14 @@ import {
   createNotification,
   createSupport,
   Support,
-  createAggregation
+  createAggregation,
+  receiverIsUser,
+  receiverIsGoal,
+  createGoalEvent
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getDocument, toDate } from '../../../shared/utils'
-import { sendNotificationToUsers } from '../../../shared/notification/notification'
+import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../../shared/notification/notification'
 import { addStoryItem } from '../../../shared/goal-story/story'
 import { updateAggregation } from '../../../shared/aggregation/aggregation';
 
@@ -69,10 +72,10 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
 
     //Increase number of custom supports
     if (support.source.milestone?.id) { // Support for milestone added
-      increaseCustomSupportOfMilestone(goalId, support.source.milestone.id)
-      increaseCustomSupportOfGoal(goalId, false, true)
+      incrementCustomSupportOfMilestone(goalId, support.source.milestone.id, 1)
+      incrementCustomSupportOfGoal(goalId, false, true, 1)
     } else { // Support for goal added
-      increaseCustomSupportOfGoal(goalId, true, true)
+      incrementCustomSupportOfGoal(goalId, true, true, 1)
     }
   })
 
@@ -113,24 +116,48 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
       return sendNotificationToUsers(notification, supporter.uid)
     }
 
-    if (!receiver?.uid) return
-    if (supporter.uid === receiver.uid) return
+    if (!receiver) return
 
     let event: EventType
     if (paid) event = 'goalSupportStatusPaid'
     if (rejected) event = 'goalSupportStatusRejected'
     if (waitingToBePaid) event = 'goalSupportStatusWaitingToBePaid'
 
-    if (event) {
+    if (event && receiverIsUser(receiver)) {
+      if (supporter.uid === receiver.uid) return
       const notification = createNotification({ event, source })
       return sendNotificationToUsers(notification, receiver.uid, 'user')
+    } else if (event && receiverIsGoal(receiver)) {
+      const options: SendOptions = {
+        send: {
+          notification: true,
+          pushNotification: true
+        },
+        roles: {
+          isSupporter: true
+        }
+      }
+      const goalEvent = createGoalEvent({
+        name: event,
+        source: createGoalSource({ ...source })
+      })
+      return sendGoalEventNotification(goalEvent, options, true)
     }
   })
 
 export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
-  .onDelete(async (snapshot) => {
+  .onDelete(async (snapshot, context) => {
 
     const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const { goalId } = context.params
+
+    //Decrease number of custom supports
+    if (support.source.milestone?.id) { // Support for milestone added
+      incrementCustomSupportOfMilestone(goalId, support.source.milestone.id, -1)
+      incrementCustomSupportOfGoal(goalId, false, true, -1)
+    } else { // Support for goal added
+      incrementCustomSupportOfGoal(goalId, true, true, -1)
+    }
 
     // aggregation
     handleAggregation(support, undefined)
@@ -146,23 +173,23 @@ function handleAggregation(before: undefined | Support, after: undefined | Suppo
   updateAggregation(aggregation)
 }
 
-function increaseCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean) {
+function incrementCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean, delta: -1 | 1) {
   const ref = db.doc(`Goals/${goalId}`)
 
   if (increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
     return ref.update({
-      numberOfCustomSupports: increment(1),
-      totalNumberOfCustomSupports: increment(1)
+      numberOfCustomSupports: increment(delta),
+      totalNumberOfCustomSupports: increment(delta)
     })
 
   } else if (!increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-    return ref.update({ totalNumberOfCustomSupports: increment(1) })
+    return ref.update({ totalNumberOfCustomSupports: increment(delta) })
   }
 }
 
-function increaseCustomSupportOfMilestone(goalId: string, milestoneId: string) {
+function incrementCustomSupportOfMilestone(goalId: string, milestoneId: string, delta: -1 | 1) {
   const ref = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
-  return ref.update({ numberOfCustomSupports: increment(1) })
+  return ref.update({ numberOfCustomSupports: increment(delta) })
 }
 
 function getNotificationSource(support: Support) {

@@ -26,7 +26,7 @@
             <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
             <span> SUPPORT</span>
           </ion-button>
-          <div fxLayout="column" fxLayoutAlign="start center" (click)="supportGoal()">
+          <div fxLayout="column" fxLayoutAlign="start center" (click)="openTeamModal()">
             <strong>Supporters</strong>
             <span class="number">{{ goal.numberOfSupporters || '0' }}</span>
           </div>

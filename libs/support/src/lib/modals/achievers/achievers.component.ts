@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { createGoalLink, createUserLink, GoalStakeholder, Support } from '@strive/model'
 import { FormControl } from '@angular/forms'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 @Component({
-  selector: 'support-achievers',
+  selector: '[support] support-achievers',
   templateUrl: './achievers.component.html',
   styleUrls: ['./achievers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,10 +19,16 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
     this._all = [...achievers]
   }
 
+  @Input() support!: Support
+  showEveryoneOption = true
+
   filter = new FormControl()
 
   private sub = this.filter.valueChanges.pipe().subscribe(value => {
-    this._achievers = this._all.filter(achiever => achiever.username.toLowerCase().includes(value.toLowerCase()))
+    const filter = value.toLowerCase().trim()
+    this._achievers = this._all.filter(achiever => achiever.username.toLowerCase().includes(filter))
+
+    this.showEveryoneOption = !filter || 'everyone'.includes(filter) || 'goal'.includes(filter)
   })
 
   constructor(
@@ -37,11 +43,13 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
   }
 
   achieverChosen(achiever: GoalStakeholder) {
-    this.dismiss(achiever)
+    this.support.source.receiver = createUserLink(achiever)
+    this.dismiss()
   }
 
-  dontGive() {
-    this.dismiss(createGoalStakeholder())
+  toGoal() {
+    this.support.source.receiver = createGoalLink(this.support.source.goal)
+    this.dismiss()
   }
 
 }

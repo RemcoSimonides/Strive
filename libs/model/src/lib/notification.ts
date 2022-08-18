@@ -84,27 +84,12 @@ const notificationIcons = [
 ] as const
 export type NotificationIcons = typeof notificationIcons[number];
 
-interface NotificationBase {
+export interface Notification {
   id?: string
   event: EventType
-  source: SupportSource | NotificationSource
+  source: NotificationSource
   updatedAt?: Date
   createdAt?: Date
-}
-
-export interface Notification extends NotificationBase {
-  source: NotificationSource
-}
-
-export interface SupportNotification extends NotificationBase {
-  source: SupportSource
-}
-
-export interface SupportSource {
-  goal: GoalLink
-  milestone?: MilestoneLink
-  supporter: UserLink
-  receiver?: UserLink
 }
 
 export interface NotificationSource {
@@ -114,46 +99,12 @@ export interface NotificationSource {
   support?: SupportLink
 }
 
-export interface CommentSource {
-  user: UserLink
-  goal: GoalLink
-}
-
 export function createNotification(params: Partial<Notification> = {}): Notification {
   return {
     event: '',
     ...params,
       source: createNotificationSource(params.source),
   }
-}
-
-export function createSupportSource(params: {
-  goal?: GoalLink | Goal
-  milestone?: MilestoneLink | Milestone
-  supporter?: UserLink | User
-  receiver?: UserLink | User
-} = {}): SupportSource {
-  const source: SupportSource = {
-    goal: createGoalLink(params?.goal),
-    supporter: createUserLink(params?.supporter)
-  }
-
-  if (params?.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
-  if (params?.receiver?.uid) source.receiver = createUserLink(params.receiver)
-
-  return source
-}
-
-export function createCommentSource(params: {
-  goal?: GoalLink | Goal,
-  user?: UserLink | User
-} = {}): CommentSource {
-  const source: CommentSource = {
-    goal: createGoalLink(params?.goal),
-    user: createUserLink(params?.user)
-  }
-
-  return source
 }
 
 export function createNotificationSource(params: {
