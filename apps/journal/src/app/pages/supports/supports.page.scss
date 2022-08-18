@@ -6,17 +6,10 @@ main {
     display: flex;
     flex-direction: column;
     gap: 16px;
-
-    .list-header {
-      display: block;
-      padding: 16px 16px 8px 16px;
-    }
   }
 
   ion-list {
     border-radius: 12px;
-
-
   }
 }
 
@@ -29,6 +22,17 @@ h2 {
   font-size: 20px;
 }
 
-a {
-  color: var(--ion-color-dark);
+.needs-decision {
+  h5 {
+    padding-inline: 16px;
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+
+    small {
+      white-space: nowrap;
+    }
+  }
 }

@@ -7,9 +7,7 @@ import {
   GoalStatus,
   createGoalSource,
   createSupport,
-  Support,
   createMilestone,
-  Milestone,
   GoalStakeholder,
   User,
   createAggregation,
@@ -19,7 +17,7 @@ import {
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
-import { converter, deleteCollection, getDocument, toDate } from '../../shared/utils'
+import { deleteCollection, getDocument, toDate } from '../../shared/utils'
 import { addGoalEvent } from '../../shared/goal-event/goal.events';
 import { getReceiver, determineReceiver } from '../../shared/support/receiver'
 import { addStoryItem } from '../../shared/goal-story/story'
@@ -172,6 +170,7 @@ function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   aggregation.goalsFinished = becameFinished ? 1 : wasFinished ? -1 : 0
   aggregation.goalsBucketlist = becameBucketlist ? 1 : wasBucketlist ? -1 : 0
 
+  logger.log('aggregation: ', aggregation)
   updateAggregation(aggregation)
 }
 
@@ -216,19 +215,17 @@ export async function supportsNeedDecision(goal: Goal) {
 
   const milestonesQuery = db.collection(`Goals/${goal.id}/Milestones`)
     .where('status', '==', 'pending')
-    .withConverter<Milestone>(converter(createMilestone))
 
   const supportsQuery = db.collection(`Goals/${goal.id}/Supports`)
     .where('source.goal.id', '==', goal.id)
     .where('needsDecision', '==', false)
-    .withConverter<Support>(converter(createSupport))
 
    const [supportsSnap, milestonesSnap] = await Promise.all([
     supportsQuery.get(),
     milestonesQuery.get()
    ])
 
-   const milestones = milestonesSnap.docs.map(snap => ({...snap.data(), id: snap.id }))
+   const milestones = milestonesSnap.docs.map(snap => createMilestone(toDate({...snap.data(), id: snap.id })))
    const pendingMilestoneIds = milestones.map(milestone => milestone.id)
 
   // TODO batch might get bigger than 500
@@ -251,7 +248,7 @@ export async function supportsNeedDecision(goal: Goal) {
       if (receiver) support.source.receiver = receiver
     }
 
-    batch.update(snap.ref, support)
+    batch.update(snap.ref, { ...support })
   }
   batch.commit()
 }

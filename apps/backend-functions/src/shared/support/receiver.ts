@@ -20,7 +20,7 @@ export function determineReceiver(support: Support, soloAchiever: UserLink, mile
 
   if (receiver && receiverIsUser(receiver)) return receiver
 
-  if (milestone.achiever?.uid) return milestone.achiever
+  if (milestone?.achiever?.uid) return milestone.achiever
 
   if (soloAchiever) return soloAchiever
 

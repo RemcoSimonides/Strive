@@ -1,5 +1,5 @@
 import { Aggregation, AggregationKey, createAggregation } from '@strive/model';
-import { db, increment } from '../../internals/firebase'
+import { db, increment, logger } from '../../internals/firebase'
 
 export function updateAggregation(aggregation: Partial<Aggregation>) {
     const agg = createAggregation(aggregation)
@@ -12,5 +12,6 @@ export function updateAggregation(aggregation: Partial<Aggregation>) {
         result[key] = increment(delta)
     }
 
+    logger.log('result: ', result)
     db.doc(`miscellaneous/aggregation`).update(result)
 }

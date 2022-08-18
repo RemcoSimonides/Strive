@@ -30,7 +30,7 @@ function groupByObjective(supports: Support[]): GroupedByGoal[] {
 
     const group: GroupedByGoal = {
       ...supportsOfGoal[0].source.goal,
-      supports: supportsWithoutMilestone.length ? supportsOfGoal : supportsWithoutMilestone,
+      supports: supportsWithoutMilestone,
       milestones: []
     }
 
