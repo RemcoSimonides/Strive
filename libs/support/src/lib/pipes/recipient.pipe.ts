@@ -7,7 +7,7 @@ export class DisplayRecipientPipe implements PipeTransform {
 
   transform(support: Support) {
     const recipient = support.source.receiver
-    if (!recipient) return 'Give to choose recipient'
+    if (!recipient) return 'Give to choose'
     if (receiverIsGoal(recipient)) return recipient.title
     return recipient.username
   }
