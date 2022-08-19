@@ -12,7 +12,6 @@ import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { SupportOptionsModule } from '@strive/support/components/options/options.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
-import { AchieversModalModule } from '@strive/support/modals/achievers/achievers.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { SupportStatusPipeModule } from '@strive/support/pipes/status.pipe'
 
@@ -34,7 +33,6 @@ const routes: Routes = [
     PageLoadingModule,
     SupportOptionsModule,
     HeaderRootModule,
-    AchieversModalModule,
     ImageModule,
     SupportStatusPipeModule
   ],

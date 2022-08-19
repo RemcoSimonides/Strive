@@ -1,21 +1,19 @@
-import { Component } from '@angular/core';
-import { ModalController, PopoverController } from '@ionic/angular';
-import { where } from 'firebase/firestore';
-// Services
-import { SeoService } from '@strive/utils/services/seo.service';
-import { SupportService } from '@strive/support/support.service';
-import { UserService } from '@strive/user/user/user.service';
-// Rxjs
-import { Observable, of, shareReplay } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-// Components
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { SupportOptionsComponent } from '@strive/support/components/options/options.component';
-import { delay, unique } from '@strive/utils/helpers';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
+import { Component } from '@angular/core'
+import { ModalController, PopoverController } from '@ionic/angular'
+import { where } from 'firebase/firestore'
+
+import { Observable, of, shareReplay } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators'
+import { compareDesc } from 'date-fns'
+
+import { SeoService } from '@strive/utils/services/seo.service'
+import { SupportService } from '@strive/support/support.service'
+import { UserService } from '@strive/user/user/user.service'
+
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { SupportOptionsComponent } from '@strive/support/components/options/options.component'
+import { delay, unique } from '@strive/utils/helpers'
 import { GoalLink, MilestoneLink, Support, SupportStatus } from '@strive/model'
-import { compareDesc } from 'date-fns';
 
 type GroupedByMilestone = MilestoneLink & { supports: Support[] }
 type GroupedByGoal = GoalLink & { milestones: GroupedByMilestone[], supports: Support[] }
@@ -69,8 +67,7 @@ export class SupportsComponent {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     seo: SeoService,
-    private support: SupportService,
-    private goalStakeholderService: GoalStakeholderService
+    private support: SupportService
   ) {
     seo.generateTags({ title: `Supports - Strive Journal` })
 
@@ -134,29 +131,9 @@ export class SupportsComponent {
     }).then(popover => popover.present())
   }
 
-  async give(support: Support) {
+  give(support: Support) {
     if (!support.id) return
-
-    const { recipient } = support.source
-    if (recipient) {
-      this.support.update(support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: support.source.goal.id }})
-    } else {
-      const achievers = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: support.source.goal.id })
-      const modal = await this.modalCtrl.create({
-        component: AchieversModalComponent,
-        componentProps: { support, achievers }
-      })
-      modal.onDidDismiss().then(_ => {
-        if (support.source.recipient) {
-          this.support.update(support.id!, {
-            ...support,
-            status: 'waiting_to_be_paid',
-            needsDecision: false
-          }, { params: { goalId: support.source.goal.id }})
-        }
-      })
-      modal.present()
-    }
+    this.support.update(support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: support.source.goal.id }})
   }
 
   reject(support: Support) {

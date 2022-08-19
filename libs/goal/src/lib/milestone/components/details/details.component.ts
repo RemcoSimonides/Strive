@@ -6,13 +6,14 @@ import { FormArray } from '@angular/forms'
 import { Subscription } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
 
-import { Goal, createSubtask, Milestone, createUserLink } from '@strive/model'
+import { Goal, createSubtask, Milestone, createUserLink, Support } from '@strive/model'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
 import { UserService } from '@strive/user/user/user.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { delay } from '@strive/utils/helpers'
+import { SupportService } from '@strive/support/support.service'
 
 @Component({
   selector: '[goal][milestone][isAdmin][isAchiever] goal-milestone-details',
@@ -27,7 +28,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   subtaskForm = new SubtaskForm()
 
   @Input() goal!: Goal
-  @Input() milestone!: Milestone
+  @Input() milestone!: Milestone & { supports?: Support[] }
   @Input() isAdmin!: boolean
   @Input() isAchiever!: boolean
 
@@ -80,8 +81,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   async deleteMilestone() {
     if (!this.canEdit) return
 
-    const header =  this.milestone.numberOfCustomSupports || this.milestone.numberOfMoneySupports 
-      ? `Milestone has active supports` : ''
+    const header =  this.milestone.supports?.length ? `Milestone has active supports` : ''
 
     const alert = await this.alertCtrl.create({
       header,

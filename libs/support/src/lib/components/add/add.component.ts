@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { orderBy, where } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
 // Rxjs
 import { Observable, of } from 'rxjs';
 // Services
@@ -19,6 +19,7 @@ import { createSupportSource } from '@strive/model';
 import { FormControl, Validators } from '@angular/forms';
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
+import { compareAsc } from 'date-fns'
 
 @Component({
   selector: '[goalId] support-add',
@@ -34,8 +35,8 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
 
   @Input() milestone?: Milestone
 
-  supports$?: Observable<Support[]>
-  mySupports$?: Observable<Support[]>
+  forYouSupports$?: Observable<Support[]>
+  fromYouSupports$?: Observable<Support[]>
 
   form = new FormControl('', { validators: [Validators.required], nonNullable: true })
 
@@ -56,22 +57,26 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
     const params = { goalId: this.goalId }
-    const supports$ = this.origin === 'milestone'
-      ? this.supportService.valueChanges([where('source.milestone.id', '==', this.milestone!.id)], params)
-      : this.supportService.valueChanges([orderBy('createdAt', 'desc')], params)
-    
-    this.supports$ = supports$.pipe(
+    this.forYouSupports$ = this.user.user$.pipe(
+      switchMap(user => {
+        if (!user) return of([])
+        return this.origin === 'milestone'
+          ? this.supportService.valueChanges([where('source.recipient.uid', '==', user.uid), where('source.milestone.id', '==', this.milestone!.id)], params)
+          : this.supportService.valueChanges([where('source.recipient.uid', '==', user.uid)], params)
+      }),
+      map(supports => supports.sort((a, b) => compareAsc(a.createdAt!, b.createdAt!))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
     )
 
-    this.mySupports$ = this.user.user$.pipe(
+    this.fromYouSupports$ = this.user.user$.pipe(
       switchMap(user => {
-        if (user) {
-          return this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('source.milestone.id', '==', this.milestone!.id), where('source.supporter.uid', '==', user.uid)], params)
-          : this.supportService.valueChanges([where('source.supporter.uid', '==', user.uid), orderBy('createdAt', 'desc')], params)
-        } else return of([])
-      })
+        if (!user) return of([])
+        return this.origin === 'milestone'
+          ? this.supportService.valueChanges([where('source.supporter.uid', '==', user.uid), where('source.milestone.id', '==', this.milestone!.id), ], params)
+          : this.supportService.valueChanges([where('source.supporter.uid', '==', user.uid)], params)
+      }),
+      map(supports => supports.sort((a, b) => compareAsc(a.createdAt!, b.createdAt!))),
+      map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
     )
   }
 

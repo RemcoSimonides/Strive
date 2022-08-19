@@ -73,7 +73,7 @@
 
       <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
         <ion-segment-button value="fromYou">
-          FROM YOU <ng-container *ngIf="fromYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>
+          FOR OTHERS <ng-container *ngIf="fromYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>
         </ion-segment-button>
         <ion-segment-button value="forYou">
           FOR YOU <ng-container *ngIf="toYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>

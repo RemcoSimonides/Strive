@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
-import { Goal } from '@strive/model'
+import { Goal, Support } from '@strive/model'
 
 import { createMilestone, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service';
@@ -8,6 +8,8 @@ import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form';
 
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 import { DetailsComponent } from '../details/details.component';
+
+type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
 @Component({
   selector: '[goal][milestones][isAdmin] goal-strive-roadmap',
@@ -18,7 +20,7 @@ import { DetailsComponent } from '../details/details.component';
 export class RoadmapComponent {
 
   @Input() goal!: Goal
-  @Input() milestones!: Milestone[]
+  @Input() milestones!: MilestoneWithSupport[]
   @Input() isAdmin!: boolean
   @Input() isAchiever?: boolean
 

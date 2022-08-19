@@ -28,7 +28,7 @@
     </ng-container>
 
     <div fxLayout="row wrap" fxLayoutAlign="space-between">
-      <span><b>Supports: </b>{{ milestone.numberOfCustomSupports }}</span>
+      <span><b>Supports: </b>{{ milestone.supports?.length }}</span>
 
       <ion-button (click)="openSupportModal()" color="secondary" fill="outline">
         <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>

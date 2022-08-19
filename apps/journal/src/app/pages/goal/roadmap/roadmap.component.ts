@@ -1,16 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { orderBy } from 'firebase/firestore';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { orderBy, where } from 'firebase/firestore'
+import { joinWith } from 'ngfire'
 
-// Rxjs
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators'
 
-// Strive Service
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { UserService } from '@strive/user/user/user.service';
-import { MilestoneService } from '@strive/goal/milestone/milestone.service';
-
-// Strive Other
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { UserService } from '@strive/user/user/user.service'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { SupportService } from '@strive/support/support.service'
 import { Goal, Milestone, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 
 @Component({
@@ -38,14 +36,39 @@ export class RoadmapComponent {
         map(stakeholder => createGoalStakeholder(stakeholder))
       )
   
-      const query = [orderBy('order', 'asc')]
-      this.milestones$ = this.milestone.valueChanges(query, { goalId: goal.id })
+      this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: goal.id }).pipe(
+        joinWith({
+          supports: milestone => this.user.user$.pipe(
+            switchMap(user => {
+              if (!user) return of([])
+              const recipientQuery = [
+                where('source.milestone.id', '==', milestone.id),
+                where('source.recipient.uid', '==', user.uid)
+              ]
+              const supporterQuery = [
+                where('source.milestone.id', '==', milestone.id),
+                where('source.supporter.uid', '==', user.uid)
+              ]
+              return combineLatest([
+                this.supportService.valueChanges(recipientQuery, { goalId: goal.id }),
+                this.supportService.valueChanges(supporterQuery, { goalId: goal.id }),
+              ]).pipe(
+                map(([ recipientSupports, supporterSupports ]) => {
+                  const supports = [ ...recipientSupports, ...supporterSupports]
+                  return supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)
+                })
+              )
+            })
+          )
+        }, { shouldAwait: false })
+      )
     }
   }
 
   constructor(
     private milestone: MilestoneService,
     private stakeholderService: GoalStakeholderService,
+    private supportService: SupportService,
     private user: UserService
   ) { }
 }

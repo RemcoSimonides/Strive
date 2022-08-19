@@ -26,7 +26,7 @@ export class SupportOptionsComponent {
   give() {
     this.alertCtrl.create({
       subHeader: `The ${this.support.source.milestone?.id ? 'milestone' : 'goal'} is not completed yet`,
-      message: `Are you sure you want to give this support?`,
+      message: `Are you sure you want to give this support already?`,
       buttons: [
         {
           text: 'Yes',

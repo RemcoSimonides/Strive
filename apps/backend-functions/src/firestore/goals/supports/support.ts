@@ -68,13 +68,6 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
       stakeholderRef.set(goalStakeholder)
     }
 
-    //Increase number of custom supports
-    if (support.source.milestone?.id) { // Support for milestone added
-      incrementCustomSupportOfMilestone(goalId, support.source.milestone.id, 1)
-      incrementCustomSupportOfGoal(goalId, false, true, 1)
-    } else { // Support for goal added
-      incrementCustomSupportOfGoal(goalId, true, true, 1)
-    }
   })
 
 export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
@@ -134,13 +127,6 @@ export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId
     const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
     const { goalId } = context.params
 
-    //Decrease number of custom supports
-    if (support.source.milestone?.id) { // Support for milestone added
-      incrementCustomSupportOfMilestone(goalId, support.source.milestone.id, -1)
-      incrementCustomSupportOfGoal(goalId, false, true, -1)
-    } else { // Support for goal added
-      incrementCustomSupportOfGoal(goalId, true, true, -1)
-    }
 
     // aggregation
     handleAggregation(support, undefined)
@@ -154,25 +140,6 @@ function handleAggregation(before: undefined | Support, after: undefined | Suppo
   if (!!before && !after) aggregation.goalsCustomSupports--
 
   updateAggregation(aggregation)
-}
-
-function incrementCustomSupportOfGoal(goalId: string, increaseNumberOfCustomSupports: boolean, increaseTotalNumberOfCustomSupports: boolean, delta: -1 | 1) {
-  const ref = db.doc(`Goals/${goalId}`)
-
-  if (increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-    return ref.update({
-      numberOfCustomSupports: increment(delta),
-      totalNumberOfCustomSupports: increment(delta)
-    })
-
-  } else if (!increaseNumberOfCustomSupports && increaseTotalNumberOfCustomSupports) {
-    return ref.update({ totalNumberOfCustomSupports: increment(delta) })
-  }
-}
-
-function incrementCustomSupportOfMilestone(goalId: string, milestoneId: string, delta: -1 | 1) {
-  const ref = db.doc(`Goals/${goalId}/Milestones/${milestoneId}`)
-  return ref.update({ numberOfCustomSupports: increment(delta) })
 }
 
 function getNotificationSource(support: Support) {

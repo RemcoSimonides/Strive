@@ -29,13 +29,9 @@ function createGoalFormControl(params?: Partial<Goal>) {
     image: new FormControl(goal.image, { nonNullable: true }),
     status: new FormControl(goal.status, { nonNullable: true }),
     deadline: new FormControl(goal.deadline, { nonNullable: true }),
-    numberOfAchievers: new FormControl(goal.numberOfAchievers, { nonNullable: true }),
-    numberOfCustomSupports: new FormControl(goal.numberOfCustomSupports, { nonNullable: true }),
-    numberOfSupporters: new FormControl(goal.numberOfSupporters, { nonNullable: true }),
     publicity: new FormControl(goal.publicity, { nonNullable: true }),
     isSecret: new FormControl(goal.publicity === 'private', { nonNullable: true }),
     title: new FormControl(goal.title, { nonNullable: true, validators: [Validators.required]}),
-    totalNumberOfCustomSupports: new FormControl(goal.totalNumberOfCustomSupports, { nonNullable: true })
   }
 }
 

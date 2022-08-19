@@ -9,7 +9,7 @@
             <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px">
               <ng-container *ngIf="isAdmin && !createMode">
                 <div class="supports">
-                  <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.numberOfCustomSupports }}</small>
+                  <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.supports?.length ?? 0 }}</small>
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.subtasks?.length">
@@ -29,7 +29,7 @@
             </article>
           </section>
           <ng-container *ngIf="!isAdmin">
-            <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.numberOfCustomSupports }}
+            <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
               <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
             </ion-button>
           </ng-container>

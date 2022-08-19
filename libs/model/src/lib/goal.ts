@@ -31,8 +31,6 @@ export interface Goal {
   publicity: GoalPublicityType
   numberOfAchievers: number
   numberOfSupporters: number
-  numberOfCustomSupports: number
-  totalNumberOfCustomSupports: number
   deadline?: string
   updatedBy?: string
   updatedAt?: Date
@@ -53,11 +51,9 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     image: '',
     status: 'bucketlist',
     numberOfAchievers: 0,
-    numberOfCustomSupports: 0,
     numberOfSupporters: 0,
     publicity: 'public',
     title: '',
-    totalNumberOfCustomSupports: 0,
     ...params,
   }
 }

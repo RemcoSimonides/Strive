@@ -14,8 +14,6 @@ export interface Milestone {
   order: number
   content: string
   description: string
-  numberOfCustomSupports: number
-  numberOfMoneySupports: number
   status: MilestoneStatus
   deadline: string
   achiever: UserLink
@@ -41,18 +39,15 @@ export interface MilestoneTemplate {
 /** A factory function that creates a MilestoneDocument. */
 export function createMilestone(params: Partial<Milestone> = {}): Milestone {
   return {
-    id: params.id ? params.id : '',
-    order: 0,
-    content: '',
-    sequenceNumber: '',
-    description: '',
+    id: params.id ?? '',
+    order: params.order ?? 0,
+    content: params.content ?? '',
+    sequenceNumber: params.sequenceNumber ?? '',
+    description: params.description ?? '',
     deadline: params.deadline ? setDateToEndOfDay(params.deadline) : '',
-    numberOfCustomSupports: 0,
-    numberOfMoneySupports: 0,
-    status: 'pending',
+    status: params.status ?? 'pending',
     achiever: createUserLink(params.achiever),
-    subtasks: [],
-    ...params
+    subtasks: params.subtasks ?? []
   }
 }
 

@@ -17,6 +17,11 @@ h2 {
 
 ion-list {
   border-radius: 12px;
+
+  article {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .fat-text-button {

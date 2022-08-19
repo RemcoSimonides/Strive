@@ -15,7 +15,7 @@
   
 <ion-content class="ion-padding">
 
-  <h2>Your Supports</h2>
+  <h2>Supports for others</h2>
 
   <ng-container *ngIf="!!user.uid else notLoggedIn">
     <ng-container *ngIf="goal$ | async as goal">
@@ -23,7 +23,7 @@
         <ion-item>
           <ion-input [formControl]="form"
             type="text"
-            [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or $20'"
+            [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or €20'"
             [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')"
             (keydown.enter)="addSupport(goal)"></ion-input>
           <ion-button slot="end" 
@@ -33,10 +33,15 @@
             ADD<ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-item *ngFor="let support of mySupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status === 'paid' || support.status === 'rejected'">
-          <ion-label class="ion-text-wrap" fxLayout="column">
-            <b>{{ support.description }}</b>
-            <small>Status: {{ support | supportStatus }}</small>
+        <ion-item *ngFor="let support of fromYouSupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
+          <ion-label class="ion-text-wrap">
+            <article>
+              <b>{{ support.description }} {{ support.status !== 'open' ? '(Given)' : ''}}</b>
+              <small>Recipient: {{ support.source.recipient.username }}</small>
+              <ng-container *ngIf="origin === 'goal'">
+                <small *ngIf="support.source.milestone?.content">Milestone: {{ support.source.milestone?.content }}</small>
+              </ng-container>
+            </article>
           </ion-label>
 
           <ng-container *ngIf="support.status === 'open' || support.status === 'waiting_to_be_paid'">
@@ -51,8 +56,8 @@
     </ng-container>
   </ng-container>
 
-  <h2>All Supports</h2>
-  <ng-container *ngIf="supports$ | async as supports">
+  <h2>Supports for you</h2>
+  <ng-container *ngIf="forYouSupports$ | async as supports">
     <ng-container *ngIf="supports.length else empty">
       <ion-list>
         <ion-item *ngFor="let support of supports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
@@ -60,7 +65,13 @@
             <img [ref]="support.source.supporter.photoURL" asset="profile.png">
           </ion-avatar>
           <ion-label class="ion-text-wrap">
-            <ion-text>{{ support.description }}</ion-text>
+            <article>
+              <b>{{ support.description }} {{ support.status !== 'open' ? '(Received)' : ''}}</b>
+              <small>Supporter: {{ support.source.supporter.username }}</small>
+              <ng-container *ngIf="origin === 'goal'">
+                <small *ngIf="support.source.milestone?.content">Milestone: {{ support.source.milestone?.content }}</small>
+              </ng-container>
+            </article>
           </ion-label>
         </ion-item>
       </ion-list>
