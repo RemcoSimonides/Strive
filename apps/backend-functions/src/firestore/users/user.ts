@@ -119,20 +119,20 @@ async function updateNotifications(uid: string, after: User) {
 }
 
 async function updateSupports(uid: string, after: User) {
-  const [ receiver, supporter ] = await Promise.all([
-    db.collectionGroup(`Supports`).where('receiver.uid', '==', uid).get(),
+  const [ recipient, supporter ] = await Promise.all([
+    db.collectionGroup(`Supports`).where('recipient.uid', '==', uid).get(),
     db.collectionGroup(`Supports`).where('supporter.uid', '==', uid).get()
   ])
 
   const user = createUserLink(after)
 
   // !!! batch can update up to 500 documents. Should update per 500 docs
-  const receiverBatch = db.batch()
-  receiver.forEach(snap => receiverBatch.update(snap.ref, { receiver: user }))
+  const recipientBatch = db.batch()
+  recipient.forEach(snap => recipientBatch.update(snap.ref, { recipient: user }))
 
   const supporterBatch = db.batch()
   supporter.forEach(snap => supporterBatch.update(snap.ref, { supporter: user }));
 
-  receiverBatch.commit()
+  recipientBatch.commit()
   supporterBatch.commit()
 }

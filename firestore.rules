@@ -92,7 +92,7 @@ service cloud.firestore {
       match /Supports/{supportId} {
         allow read;
         allow create: if isSignedIn()
-        allow update: if isSupporterOrReceiver(goalId, supportId)
+        allow update: if isSupporterOrRecipient(goalId, supportId)
         allow delete: if isSupporter(goalId, supportId)
       }
 
@@ -150,8 +150,8 @@ service cloud.firestore {
       return getSupport(goalId, supportId).source.supporter.uid == request.auth.uid
     }
 
-    function isSupporterOrReceiver(goalId, supportId) {
-      return (getSupport(goalId, supportId).source.supporter.uid == request.auth.uid || getSupport(goalId, supportId).source.receiver.uid == request.auth.uid)
+    function isSupporterOrRecipient(goalId, supportId) {
+      return (getSupport(goalId, supportId).source.supporter.uid == request.auth.uid || getSupport(goalId, supportId).source.recipient.uid == request.auth.uid)
     }
 
     function getSupport(goalId, supportId) {

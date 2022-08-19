@@ -92,7 +92,7 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     const rejected = before.status !== 'rejected' && after.status === 'rejected'
     const waitingToBePaid = before.status !== 'waiting_to_be_paid' && after.status === 'waiting_to_be_paid'
   
-    const { goal, milestone, supporter, receiver } = after.source
+    const { goal, milestone, supporter, recipient } = after.source
     const source = getNotificationSource(after)
   
     if (needsDecision) {
@@ -120,11 +120,11 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     if (rejected) event = 'goalSupportStatusRejected'
     if (waitingToBePaid) event = 'goalSupportStatusWaitingToBePaid'
 
-    if (!receiver) return
-    if (supporter.uid === receiver.uid) return
+    if (!recipient) return
+    if (supporter.uid === recipient.uid) return
     if (event) {
       const notification = createNotification({ event, source })
-      return sendNotificationToUsers(notification, receiver.uid, 'user')
+      return sendNotificationToUsers(notification, recipient.uid, 'user')
     }
   })
 

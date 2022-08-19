@@ -25,20 +25,20 @@ export interface SendOptions {
 }
 
 export async function sendNotificationToUsers(notification: Notification, to: string | string[], pushNotification?: PushNotificationTarget) {
-  const receivers = Array.isArray(to) ? to : [to]
+  const recipients = Array.isArray(to) ? to : [to]
   
   notification.updatedAt = serverTimestamp() as any
   notification.createdAt = serverTimestamp() as any
 
   logger.log('Sending notification: ', notification)
-  logger.log('To: ', receivers)
+  logger.log('To: ', recipients)
 
-  const promises = receivers.map(receiver => db.collection(`Users/${receiver}/Notifications`).add(notification))
+  const promises = recipients.map(recipient => db.collection(`Users/${recipient}/Notifications`).add(notification))
   await Promise.all(promises)
 
   if (pushNotification) {
     const message = getPushMessage(notification, pushNotification)
-    if (message) sendPushNotificationToUsers(message, receivers)
+    if (message) sendPushNotificationToUsers(message, recipients)
   }
 }
 
@@ -60,14 +60,14 @@ export async function sendGoalEventNotification(
   const stakeholdersExceptTriggerer = stakeholders.filter(uid => uid !== except)
   
   if (send.notification) {
-    const receivers = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
-    sendNotificationToUsers(notification, receivers)
+    const recipients = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
+    sendNotificationToUsers(notification, recipients)
   }
 
   if (send.pushNotification) {
     const message = getPushMessage(notification, 'stakeholder')
-    const receivers = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
-    if (message) sendPushNotificationToUsers(message, receivers)
+    const recipients = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
+    if (message) sendPushNotificationToUsers(message, recipients)
   }
 
   if (send.toSpectator) {
@@ -89,10 +89,10 @@ export async function sendGoalEventNotification(
   }
 }
 
-export async function sendPushNotificationToUsers(message: PushMessage, receiver: string | string[]) {
-  const receivers = Array.isArray(receiver) ? receiver : [receiver]
-  if (!receivers.length) return
-  const refs = receivers.map(uid => db.doc(`Users/${uid}/Personal/${uid}`))
+export async function sendPushNotificationToUsers(message: PushMessage, recipient: string | string[]) {
+  const recipients = Array.isArray(recipient) ? recipient : [recipient]
+  if (!recipients.length) return
+  const refs = recipients.map(uid => db.doc(`Users/${uid}/Personal/${uid}`))
   const snaps = await db.getAll(...refs)
 
   for (const snap of snaps) {
@@ -130,14 +130,14 @@ async function getGoalStakeholders(
 ): Promise<string[]> {
 
   const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get() 
-  const receivers: string[] = []
+  const recipients: string[] = []
 
   for (const snap of stakeholderColSnap.docs) {
     const stakeholder = createGoalStakeholder(snap.data())
     if (roles.isAdmin === stakeholder.isAdmin || roles.isAchiever === stakeholder.isAchiever || roles.isSupporter === stakeholder.isSupporter) {
-      receivers.push(snap.id)
+      recipients.push(snap.id)
     }
   }
 
-  return receivers
+  return recipients
 }

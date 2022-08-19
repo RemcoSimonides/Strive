@@ -354,13 +354,6 @@
           ]
         },
         {
-          "file": "apps/backend-functions/src/shared/support/receiver.ts",
-          "hash": "acdb03393a49ef420bab0d00cfc6a4aafdaeb6b6",
-          "deps": [
-            "model"
-          ]
-        },
-        {
           "file": "apps/backend-functions/src/shared/utils.ts",
           "hash": "7933b8b8582ea9a96dd9a9350c955fbd3f688858"
         },

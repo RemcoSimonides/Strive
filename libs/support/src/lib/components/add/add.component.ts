@@ -97,14 +97,14 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     })
 
     if (this.milestone?.achiever?.uid) {
-      support.source.receiver = this.milestone.achiever
+      support.source.recipient = this.milestone.achiever
       this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     }
 
     const achievers = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId: this.goalId })
     if (achievers.length === 1) {
-      support.source.receiver = createUserLink(achievers[0])
+      support.source.recipient = createUserLink(achievers[0])
       this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     } else {
@@ -119,7 +119,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
             ...support,
             source: createSupportSource({
               ...support.source,
-              receiver: recipient
+              recipient
             })
           })
           this.supportService.add(result, { params: { goalId: this.goalId }})

@@ -91,7 +91,7 @@ export class SupportsComponent {
     )
 
     this.toYouSupports$ = this.user.user$.pipe(
-      switchMap(user => user ? this.support.groupChanges([where('source.receiver.uid', '==', user.uid)]) : of([])),
+      switchMap(user => user ? this.support.groupChanges([where('source.recipient.uid', '==', user.uid)]) : of([])),
       map(supports => supports.filter(support => support.status !== 'rejected' )), // dont show rejected supporteds
       map(supports => supports.sort((a, b) => compareDesc(a.createdAt!, b.createdAt!))),
       map(supports => supports.sort((a: any, b: any) => {
@@ -137,8 +137,8 @@ export class SupportsComponent {
   async give(support: Support) {
     if (!support.id) return
 
-    const { receiver } = support.source
-    if (receiver) {
+    const { recipient } = support.source
+    if (recipient) {
       this.support.update(support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: support.source.goal.id }})
     } else {
       const achievers = await this.goalStakeholderService.getValue([where('isAchiever', '==', true)], { goalId: support.source.goal.id })
@@ -147,7 +147,7 @@ export class SupportsComponent {
         componentProps: { support, achievers }
       })
       modal.onDidDismiss().then(_ => {
-        if (support.source.receiver) {
+        if (support.source.recipient) {
           this.support.update(support.id!, {
             ...support,
             status: 'waiting_to_be_paid',

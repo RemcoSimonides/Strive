@@ -23,7 +23,7 @@ export interface SupportSource {
   goal: GoalLink
   milestone?: MilestoneLink
   supporter: UserLink
-  receiver: UserLink
+  recipient: UserLink
 }
 
 
@@ -49,12 +49,12 @@ export function createSupportSource(params: {
   goal?: GoalLink | Goal
   milestone?: MilestoneLink | Milestone
   supporter?: UserLink | User
-  receiver?: UserLink | User
+  recipient?: UserLink | User
 } = {}): SupportSource {
   const source: SupportSource = {
     goal: createGoalLink(params?.goal),
     supporter: createUserLink(params?.supporter),
-    receiver: createUserLink(params?.receiver)
+    recipient: createUserLink(params?.recipient)
   }
 
   if (params?.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
