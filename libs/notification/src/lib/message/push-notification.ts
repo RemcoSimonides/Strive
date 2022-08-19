@@ -107,14 +107,6 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
       })
     }
 
-    case 'goalSupportStatusWaitingToBePaid': {
-      return createPushMessage({
-        title: source.user?.username,
-        body: `Now owes you '${source.support?.description}'`,
-        url: `/goal/${source.goal?.id}`
-      })
-    }
-
     case 'goalCreatedStatusActive':
     case 'goalCreatedStatusBucketlist':
     case 'goalCreatedStatusFinished':

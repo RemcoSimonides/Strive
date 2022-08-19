@@ -120,8 +120,8 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       updateGoalStakeholders(goalId, after)
     }
 
-    if (before.title !== after.title) {
-      updateTitleInSources(after)
+    if (before.title !== after.title || before.image !== after.image) {
+      updateSources(after)
     }
 
 
@@ -169,7 +169,6 @@ function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   aggregation.goalsFinished = becameFinished ? 1 : wasFinished ? -1 : 0
   aggregation.goalsBucketlist = becameBucketlist ? 1 : wasBucketlist ? -1 : 0
 
-  logger.log('aggregation: ', aggregation)
   updateAggregation(aggregation)
 }
 
@@ -185,27 +184,32 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
   return Promise.all(promises)
 }
 
-async function updateTitleInSources(goal: Goal) {
+async function updateSources(goal: Goal) {
   let batch = db.batch()
+
+  const source = {
+    'source.goal.title': goal.title,
+    'source.goal.image': goal.image
+  }
 
   // Notifications
   const notificationSnaps = await db.collectionGroup('Notifications').where('source.goal.id', '==', goal.id).get()
   logger.log(`Goal title edited. Going to update ${notificationSnaps.size} notifications`)
-  notificationSnaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': goal.title }))
+  notificationSnaps.forEach(snap => batch.update(snap.ref, source))
   batch.commit()
 
   // Goal Events
   batch = db.batch()
   const goalEventSnaps = await db.collection('GoalEvents').where('source.goal.id', '==', goal.id).get()
   logger.log(`Goal title edited. Going to update ${goalEventSnaps.size} goal events`)
-  goalEventSnaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': goal.title }))
+  goalEventSnaps.forEach(snap => batch.update(snap.ref, source))
   batch.commit()
 
   // Supports
   batch = db.batch()
   const supportSnaps = await db.collection(`Goals/${goal.id}/Supports`).get()
   logger.log(`Goal title edited. Going to update ${supportSnaps.size} supports`)
-  supportSnaps.forEach(snap => batch.update(snap.ref, { 'source.goal.title': goal.title }))
+  supportSnaps.forEach(snap => batch.update(snap.ref, source))
   batch.commit()
 }
 
