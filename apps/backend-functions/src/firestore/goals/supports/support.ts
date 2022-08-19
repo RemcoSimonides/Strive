@@ -1,4 +1,4 @@
-import { db, functions, admin, increment } from '../../../internals/firebase';
+import { db, functions, admin } from '../../../internals/firebase'
 import {
   createGoal,
   createGoalStakeholder,
@@ -9,14 +9,12 @@ import {
   createNotification,
   createSupport,
   Support,
-  createAggregation,
-  createGoalEvent
+  createAggregation
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getDocument, toDate } from '../../../shared/utils'
-import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../../shared/notification/notification'
-import { addStoryItem } from '../../../shared/goal-story/story'
-import { updateAggregation } from '../../../shared/aggregation/aggregation';
+import { sendNotificationToUsers } from '../../../shared/notification/notification'
+import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
 const { serverTimestamp } = admin.firestore.FieldValue
 
@@ -33,7 +31,6 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
       ...support.source
     })
     addGoalEvent('goalSupportCreated', source)
-    addStoryItem('goalSupportCreated', source)
 
     // aggregation
     handleAggregation(undefined, support)

@@ -94,18 +94,6 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
         body: `${source.user?.username} sent a message in chat`,
         url: `/goal/${source.goal?.id}`
       })
-    
-    case 'goalSupportCreated': {
-      const text = source.milestone?.id
-        ? `supports milestone ${source.milestone.content}`
-        : `supports`
-
-      return createPushMessage({
-        title: source.goal?.title,
-        body: `${source.user?.username} ${text} with ${source.support?.description}`,
-        url: `/goal/${source.goal?.id}`
-      })
-    }
 
     case 'goalCreatedStatusActive':
     case 'goalCreatedStatusBucketlist':
@@ -187,6 +175,18 @@ function getUserPushMessage({ event, source }: Notification): PushMessage | unde
         body: `Request to join rejected`,
         url: `goal/${source.goal?.id}`
       })
+
+    case 'goalSupportCreated': {
+      const text = source.milestone?.id
+        ? `supports milestone ${source.milestone.content}`
+        : `supports`
+
+      return createPushMessage({
+        title: source.goal?.title,
+        body: `${source.user?.username} ${text} with ${source.support?.description}`,
+        url: `/goal/${source.goal?.id}`
+      })
+    }
   
     case 'goalSupportStatusWaitingToBePaid':
       return createPushMessage({

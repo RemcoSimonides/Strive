@@ -1,4 +1,4 @@
-import { Goal, GoalEvent, createNotificationSource, createNotification } from '@strive/model'
+import { Goal, GoalEvent, createNotificationSource, createNotification, Support } from '@strive/model'
 import { logger } from 'firebase-functions';
 import { functions } from '../../internals/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification';
@@ -145,16 +145,10 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
       }
 
       case 'goalSupportCreated': {
-        const options: SendOptions = {
-          send: {
-            pushNotification: true
-          },
-          roles: {
-            isAdmin: true,
-            isAchiever: true
-          }
-        }
-        return sendGoalEventNotification(event, options, true)
+        const support = await getDocument<Support>(`Goals/${goalId}/Supports/${event.source.support.id}`)
+        const { recipient } = support.source
+
+        return sendNotificationToUsers(notification, recipient.uid, 'user')
       }
 
       default:

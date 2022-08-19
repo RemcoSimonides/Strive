@@ -62,6 +62,7 @@ export const notificationEvents: EventType[] = [
   'goalStakeholderRequestedToJoin',
   'goalStakeholderRequestToJoinAccepted',
   'goalStakeholderRequestToJoinRejected',
+  'goalSupportCreated',
   'goalSupportStatusPendingSuccessful',
   'goalSupportStatusPendingUnsuccessful',
   'goalSupportStatusPaid',

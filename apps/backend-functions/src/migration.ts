@@ -1,44 +1,25 @@
-import { createSupport } from '@strive/model';
+import { createStoryItem } from '@strive/model';
 import { db, functions, logger } from './internals/firebase';
+import { toDate } from './shared/utils';
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
   try {
 
-    const supportsSnap = await db.collectionGroup('Supports').get()
-
-    logger.log('supportsSnap size: ', supportsSnap.size)
-
-    for (const doc of supportsSnap.docs) {
-
-      const data = doc.data()
-      const support = createSupport(data)
-
-      logger.log('support: ', support)
-    }
-
-    // const [goalEventsSnap, goals, users] = await Promise.all([
-    //   db.collection(`GoalEvents`).get(),
-    //   getCollection<Goal>('Goals'),
-    //   getCollection<User>('Users')
-    // ])
-
-    // logger.log('size: ', goalEventsSnap.size)
+    // const goalsSnap = await db.collection('Goals').get()
 
     // const batch = db.batch()
-    // for (const doc of goalEventsSnap.docs) {
-    //   const event = createGoalEvent(toDate(doc.data()))
-    //   const value = map[event.name]
+    // for (const { id } of goalsSnap.docs) {
 
-    //   if (!value) {
-    //     batch.delete(doc.ref)
-    //     continue
+    //   const storySnap = await db.collection(`Goals/${id}/Story`).get()
+
+    //   for (const doc of storySnap.docs) {
+    //     const storyItem = createStoryItem(toDate({ ...doc.data(), id: doc.id }))
+    //     if (storyItem.name === 'goalSupportCreated') {
+    //       batch.delete(doc.ref)
+    //     }
     //   }
-      
-    //   event.name = value
-    //   batch.update(doc.ref, { ...event })
     // }
-
     // batch.commit()
 
     res.status(200).send('all good')

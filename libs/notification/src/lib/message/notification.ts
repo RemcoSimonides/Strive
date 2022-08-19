@@ -119,6 +119,26 @@ export function getNotificationMessage({ event, source }: Notification): Notific
           { text: `${source.user!.username} started following you` }
         ]
       }
+
+    case 'goalSupportCreated': {
+      const suffix = `with "${source.support!.description}"`
+      const message: NotificationMessageText[] = []
+      if (source.milestone?.id) {
+        message.push({ text: `${source.user!.username} supports milestone "${source.milestone.content}" of goal "` })
+        message.push({ text: source.goal!.title, link: `/goal/${source.goal!.id}` })
+        message.push({ text: `" ${suffix}`})
+      } else {
+        message.push({ text: `${source.user!.username} supports goal "` })
+        message.push({ text: source.goal!.title, link: `/goal/${source.goal!.id}` })
+        message.push({ text: `" ${suffix}`})
+      }
+
+      return {
+        ...get('user', source),
+        link: '/supports',
+        message
+      }
+    }
     
     case 'goalSupportStatusPendingUnsuccessful':
     case 'goalSupportStatusPendingSuccessful': {

@@ -11,8 +11,7 @@ export const storyEvents: EventType[] = [
   'goalMilestoneDeadlinePassed',
   'goalStakeholderBecameAchiever',
   'goalStakeholderBecameAdmin',
-  'goalStoryPostCreated',
-  'goalSupportCreated'
+  'goalStoryPostCreated'
 ]
 
 export interface StoryItem {

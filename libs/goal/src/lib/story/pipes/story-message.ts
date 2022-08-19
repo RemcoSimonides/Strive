@@ -62,17 +62,6 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
         icon: 'bookmark-outline',
         message: [] // no message - just the post
       }
-    case 'goalSupportCreated': {
-      const isMilestone = source.milestone?.id
-      const suffix = isMilestone ? ` to milestone "${source.milestone!.content}" ` : ''
-      return {
-        icon: 'heart-outline',
-        message: [
-          { text: source.user!.username, link: `/profile/${source.user!.uid}` },
-          { text: ` added support "${source.support!.description}"${suffix}`}
-        ]
-      }
-    }
     default:
       return {
         icon: 'alert-outline',
