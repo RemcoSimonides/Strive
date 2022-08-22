@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content class="ion-padding">
   <ng-container *ngIf="user$ | async as user">
 
     <ion-card>
@@ -26,17 +26,71 @@
       </ion-card-content>
     </ion-card>
 
+    <h3>Exercises</h3>
+    <ion-list>
+      <ng-container *ngFor="let exercise of exercises">
+        <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
+          <ng-container [ngSwitch]="exercise.id">
+            <ng-container *ngSwitchCase="'affirmations'">
+              <article *ngIf="affirmations$ | async as setting">
+                <small *ngIf="setting.affirmations?.length">{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
+              </article>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'dear_future_self'">
+              <article *ngIf="dearFutureSelf$ | async as setting">
+                <ng-container *ngIf="setting?.messages?.length">
+                  <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
+                  <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
+                </ng-container>
+              </article>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'daily_gratefulness'">
+              <article *ngIf="dailyGratefulness$ | async as setting">
+                <small *ngIf="setting.on">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
+              </article>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'assess_life'">
+              <article>
+                <small>Coming Soon</small>
+              </article>
+            </ng-container>
+          </ng-container>
+        </strive-small-thumbnail>
+      </ng-container>
+    </ion-list>
+
     <h3>Goals</h3>
     <ion-button (click)="createGoal(user.uid)">Create Goal</ion-button>
-    <ng-container *ngIf="goals$ | async as goals">
-      <strive-thumbnail-grid>
-        <ng-container *ngFor="let goal of goals">
-          <ng-template #thumb>
-            <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
-            </strive-small-thumbnail>
-          </ng-template>
-        </ng-container>
-      </strive-thumbnail-grid>
+    <ng-container *ngIf="stakeholders$ | async as stakeholders">
+
+      <ion-card *ngFor="let stakeholder of stakeholders">
+        <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
+          <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
+            <img [ref]="stakeholder.goal.image" asset="goal.png"/>
+            <div *ngIf="stakeholder.status === 'finished'">finished</div>
+          </ion-thumbnail>
+          <article>
+            <ion-text>
+              <b>{{ stakeholder.goal.title }}</b>
+              <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.status | status }}</small>
+              <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.status | status }} & Supporting</small>
+              <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
+            </ion-text>
+            <!-- <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
+              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+            </ion-button> -->
+          </article>
+        </ion-item>
+        <!-- <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]" [queryParams]="{t:'story'}">
+          <li *ngFor="let event of stakeholder.story">
+            <ion-icon [name]="event.icon"></ion-icon>
+            <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
+          </li>
+        </ul> -->
+      </ion-card>
     </ng-container>
 
   </ng-container>

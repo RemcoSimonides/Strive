@@ -1,0 +1,32 @@
+ion-card {
+	border-radius: 12px;
+	margin: 0;
+	cursor: pointer;
+
+	ion-item {
+		--padding-start: 8px;
+		--inner-padding-end: 0;
+
+		article {
+			display: grid;
+			grid-template-columns: auto 50px;
+			align-items: center;
+			width: 100%;
+	
+			ion-text {
+				display: flex;
+				flex-direction: column;
+
+				b, small {
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+	
+				small {
+					display: flex;
+					align-items: center;
+				}
+			}
+		}
+	}
+}

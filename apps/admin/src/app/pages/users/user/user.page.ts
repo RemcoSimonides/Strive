@@ -1,14 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { UserService } from '@strive/user/user/user.service';
-import { UserForm } from '@strive/user/user/forms/user.form';
-import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { createUser, Goal, User } from '@strive/model'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { orderBy, where } from 'firebase/firestore';
-import { ModalController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router'
+
+import { orderBy, where } from 'firebase/firestore'
+
+import { Observable, of } from 'rxjs'
+import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'
+
+import { UserService } from '@strive/user/user/user.service'
+import { UserForm } from '@strive/user/user/forms/user.form'
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { Affirmations, createUser, DailyGratefulness, DearFutureSelf, exercises, Goal, GoalStakeholder, isOnlySpectator, User } from '@strive/model'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
+import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
+import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
+import { joinWith } from 'ngfire';
+
+type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
 
 @Component({
   selector: 'strive-user',
@@ -17,14 +25,22 @@ import { ModalController } from '@ionic/angular';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPage {
+  exercises = exercises
 
   user$?: Observable<User | undefined>
-  goals$?: Observable<Goal[]>
+
+  affirmations$?: Observable<Affirmations | undefined>
+  dailyGratefulness$?: Observable<DailyGratefulness | undefined>
+  dearFutureSelf$?: Observable<DearFutureSelf | undefined>
+
+  stakeholders$?: Observable<StakeholderWithGoal[]>
 
   userForm = new UserForm()
 
   constructor(
-    private modalCtrl: ModalController,
+    private affirmationService: AffirmationService,
+    private dailyGratefulnessService: DailyGratefulnessService,
+    private dearFutureSelfService: DearFutureSelfService,
     private user: UserService,
     private route: ActivatedRoute,
     private goal: GoalService,
@@ -34,19 +50,38 @@ export class UserPage {
       const uid = params['uid'] as string
 
       this.user$ = this.user.valueChanges(uid, { uid }).pipe(
-        tap(user => this.userForm.patchValue(createUser(user)))
+        tap(user => this.userForm.patchValue(createUser(user))),
+        shareReplay({ bufferSize: 1, refCount: true })
       )
 
-      this.goals$ = this.stakeholder.groupChanges([
-        where('uid', '==', uid),
-        orderBy('createdAt', 'desc')
-      ]).pipe(
-        switchMap(stakeholders => {
-          const goalIds = stakeholders.map(stakeholder => stakeholder.goalId)
-          return this.goal.valueChanges(goalIds)
-        }),
-        map(goals => goals.sort((a, b) => a.status === b.status ? 0 : a.status ? 1 : -1))
+      this.affirmations$ = this.user$.pipe(
+        switchMap(user => user?.uid ? this.affirmationService.getAffirmations$(user.uid) : of(undefined))
       )
+  
+      this.dailyGratefulness$ = this.user$.pipe(
+        switchMap(user => user?.uid ? this.dailyGratefulnessService.getSettings$(user.uid) : of(undefined))
+      )
+  
+      this.dearFutureSelf$ = this.user$.pipe(
+        switchMap(user => user?.uid ? this.dearFutureSelfService.getSettings$(user.uid) : of(undefined))
+      )
+
+      this.stakeholders$ = this.user$.pipe(
+        filter(user => !!user),
+        switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
+        map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
+        map(stakeholders => stakeholders.sort((a, b) => {
+          // Sort finished goals to the end
+          const order = ['active', 'bucketlist', 'finished']
+          if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
+          if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
+          return 0
+        })),
+        joinWith({
+          goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId)
+        }, { shouldAwait: true }),
+        map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
+      ) as any
     })
   }
 
