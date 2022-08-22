@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController, LoadingController } from '@ionic/angular';
-import { UserService } from '@strive/user/user/user.service';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { AlertController, LoadingController } from '@ionic/angular'
+import { UserService } from '@strive/user/user/user.service'
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 
 @Component({
   selector: 'strive-login',
@@ -71,8 +71,43 @@ export class LoginPage {
     }
   }
 
+  async loginWithGoogle() {
+    try {
+      const credentials = await signInWithPopup(getAuth(), new GoogleAuthProvider())
+      const { uid } = credentials.user
+
+      const user = await this.user.getValue(uid)
+      if (!user) {
+        getAuth().signOut()
+        this.alertCtrl.create({
+          message: 'Not an existing user',
+          buttons: [{ text: 'Ok' }]
+        }).then(alert => alert.present())
+        return
+      }
+      
+      const isAdmin = await this.user.isStriveAdmin(user.uid)
+      if (!isAdmin) {
+        getAuth().signOut()
+        this.alertCtrl.create({
+          message: 'Not a Strive Admin',
+          buttons: [{ text: 'Ok' }]
+        }).then(alert => alert.present())
+        return
+      }
+
+      this.router.navigate(['/a/users'])
+  
+    } catch (error: any) {
+      this.alertCtrl.create({
+        message: error.message,
+        buttons: [{ text: 'Ok', role: 'cancel' }]
+      }).then(alert => alert.present())
+    }
+  }
+
   hideShowPassword() {
-    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
-    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text'
+    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline'
   }
 }

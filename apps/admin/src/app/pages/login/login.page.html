@@ -23,6 +23,11 @@
         <ion-button class="submit_button" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
       </div>
     </form>
+
+    <ion-button fill="outline" (click)="loginWithGoogle()">
+      <ion-icon name="logo-google" slot="start"></ion-icon>
+      Continue with Google
+    </ion-button>
   </section>
 
 </ion-content>

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore';
-import { docData } from 'rxfire/firestore';
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore'
+import { docData } from 'rxfire/firestore'
 
-import { Motivation, Motivations } from '@strive/model';
+import { Motivation, Motivations } from '@strive/model'
 
 @Component({
   selector: 'strive-motivation',
@@ -20,8 +20,6 @@ export class MotivationComponent {
 
   private ref = doc(getFirestore(), `miscellaneous/motivation`)
   motivations$ = docData(this.ref)
-
-  constructor() {}
 
   async update() {
     if (this.form.invalid) return
