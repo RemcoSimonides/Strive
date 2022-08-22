@@ -6,7 +6,7 @@ import { StriveAdminGuard } from './guards/admin.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'a',
     pathMatch: 'full'
   },
   {

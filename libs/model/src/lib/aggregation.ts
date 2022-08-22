@@ -1,5 +1,6 @@
 export function createAggregation(aggregation: Partial<Aggregation> = {}): Aggregation {
 	return {
+		id: '',
 		goalsCreated: 0,
 		goalsFinished: 0,
 		goalsActive: 0,
@@ -18,6 +19,7 @@ export function createAggregation(aggregation: Partial<Aggregation> = {}): Aggre
 }
 
 export interface Aggregation {
+	id: string,
 	goalsCreated: number
 	goalsFinished: number
 	goalsActive: number

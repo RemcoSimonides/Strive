@@ -10,6 +10,7 @@ import { getAuth } from 'firebase/auth';
 export class ShellComponent {
 
   public appPages = [
+    { title: 'Dashboard', url: '/a/', icon: 'home' },
     { title: 'Users', url: '/a/users', icon: 'people' },
     { title: 'Goals', url: '/a/goals', icon: 'flag' },
     { title: 'Motivation', url: '/a/motivation', icon: 'flame' },
