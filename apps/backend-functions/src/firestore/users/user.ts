@@ -120,8 +120,8 @@ async function updateNotifications(uid: string, after: User) {
 
 async function updateSupports(uid: string, after: User) {
   const [ recipient, supporter ] = await Promise.all([
-    db.collectionGroup(`Supports`).where('recipient.uid', '==', uid).get(),
-    db.collectionGroup(`Supports`).where('supporter.uid', '==', uid).get()
+    db.collectionGroup(`Supports`).where('source.recipient.uid', '==', uid).get(),
+    db.collectionGroup(`Supports`).where('source.supporter.uid', '==', uid).get()
   ])
 
   const user = createUserLink(after)
