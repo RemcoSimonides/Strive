@@ -1,7 +1,45 @@
-Disabled
+<ng-container *ngIf="goal$ | async as goal; else loading">
+<ng-container *ngIf="milestones$ | async as milestones; else loading">
+  <ng-container *ngIf="milestones.length else empty">
+    <ion-list mode="md">
+      <ion-reorder-group (ionItemReorder)="doReorder($event, milestones)">
 
-<!-- <goal-strive-roadmap
-  [milestones]="milestones$ | async"
-  [goalId]="id"
-  [isAdmin]="true"
-></goal-strive-roadmap> -->
+        <ion-item *ngFor="let milestone of milestones" button>
+          <section>
+            {{ milestone.content }}
+            <article>
+              <ng-container *ngIf="milestone.subtasks?.length">
+                <div class="subtasks">
+                  <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="milestone.deadline">
+                <strive-milestone-deadline
+                  [milestone]="milestone"
+                  [isAdmin]="true">
+                </strive-milestone-deadline>
+              </ng-container>
+              <ng-container *ngIf="milestone.achiever.uid">
+                <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
+              </ng-container>
+            </article>
+          </section>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+
+      </ion-reorder-group>
+    </ion-list>
+  </ng-container>
+</ng-container>
+</ng-container>
+
+<ng-template #empty>
+  <section>
+    <img asset='define_roadmap.png'/>
+    <h3>Roadmap is not defined</h3>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
+</ng-template>

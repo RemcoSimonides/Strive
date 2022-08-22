@@ -3,18 +3,24 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-import { RoadmapComponent } from './roadmap.component';
+import { AdminRoadmapComponent } from './roadmap.component';
 
-// import { RoadmapModule as RoadmapUIModule } from '@strive/goal/milestone/components/roadmap/roadmap.module';
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { MilestoneDeadlineModule } from '@strive/goal/milestone/components/deadline/deadline.module'
+import { SubtaskPipeModule } from '@strive/goal/milestone/pipes/subtask.pipe'
+import { AssigneeModule } from '@strive/goal/milestone/components/assignee/assignee.module'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     RouterModule,
-    // RoadmapUIModule
+    PageLoadingModule,
+    MilestoneDeadlineModule,
+    SubtaskPipeModule,
+    AssigneeModule,
   ],
-  declarations: [RoadmapComponent],
-  exports: [RoadmapComponent]
+  declarations: [AdminRoadmapComponent],
+  exports: [AdminRoadmapComponent]
 })
-export class RoadmapModule {}
+export class AdminRoadmapModule {}

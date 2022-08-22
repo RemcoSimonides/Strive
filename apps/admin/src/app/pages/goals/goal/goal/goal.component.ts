@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Functions, httpsCallable } from 'firebase/functions';
-import { Router } from '@angular/router';
-import { AlertController, LoadingController, ModalController } from '@ionic/angular';
-import { createGoal, Goal } from '@strive/model';
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalForm } from '@strive/goal/goal/forms/goal.form';
-import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
+import { AlertController, LoadingController, ModalController } from '@ionic/angular'
+import { Goal } from '@strive/model'
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalForm } from '@strive/goal/goal/forms/goal.form'
+import { Observable } from 'rxjs'
 
 @Component({
   selector: '[id] strive-goal',
@@ -15,7 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class GoalComponent implements OnInit {
 
-  goal$?: Observable<Goal>
+  goal$?: Observable<Goal | undefined>
   goalForm = new GoalForm()
 
   @Input() id!: string
@@ -23,15 +21,11 @@ export class GoalComponent implements OnInit {
   constructor(
     private alertCtrl: AlertController,
     private goal: GoalService,
-    private loadingCtrl: LoadingController,
-    private modalCtrl: ModalController,
     private router: Router
   ) {}
 
   ngOnInit() {
-    // this.goal$ = this.goal.valueChanges(this.id).pipe(
-    //   tap(goal => this.goalForm.patchValue(goal))
-    // )
+    this.goal$ = this.goal.valueChanges(this.id)
   }
 
   update() {
