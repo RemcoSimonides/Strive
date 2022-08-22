@@ -146,7 +146,8 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
 
       case 'goalSupportCreated': {
         const support = await getDocument<Support>(`Goals/${goalId}/Supports/${event.source.support.id}`)
-        const { recipient } = support.source
+        const { recipient, supporter } = support.source
+        if (recipient.uid === supporter.uid) return
 
         return sendNotificationToUsers(notification, recipient.uid, 'user')
       }
