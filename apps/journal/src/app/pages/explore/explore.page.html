@@ -84,7 +84,7 @@
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'users'">
         <ng-container *ngFor="let profile of algolia.profileResults | async">
-          <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.uid" borderRadius="50%">
+          <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.objectID" borderRadius="50%">
             <small *ngIf="searchForm.value.type === 'all'">Type: User</small>
           </strive-small-thumbnail>
         </ng-container>
