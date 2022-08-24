@@ -1,7 +1,14 @@
 <ng-container *ngIf="screensize.isMobile$ | async">
   <ion-header>
     <ion-toolbar>
-      <ion-title> {{ title }} </ion-title>
+      <ng-container *ngIf="title; else noTitle">
+        <ion-title> {{ title }} </ion-title>
+      </ng-container>
+      <ng-template #noTitle>
+        <a routerLink="/">
+          <img asset="logo.png" class="logo">
+        </a>
+      </ng-template>
       <ion-buttons slot="end">
         <ng-container *ngIf="user.isLoggedIn$ | async else notLoggedIn">
           <ion-button routerLink="/notifications">

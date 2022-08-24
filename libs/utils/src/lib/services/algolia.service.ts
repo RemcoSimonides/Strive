@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-// Algolia
-import * as algoliasearch from 'algoliasearch';
-// Environments
+import { Injectable } from '@angular/core'
+import { AlgoliaGoal, AlgoliaUser, createAlgoliaGoal, createAlgoliaUser } from '@strive/model'
+
+import * as algoliasearch from 'algoliasearch'
+
 import { environment } from 'environments/environment'
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,11 @@ export class AlgoliaService {
   private goalsIndex = this.client.initIndex(environment.algolia.indexNameGoals)
   private profilesIndex = this.client.initIndex(environment.algolia.indexNameUsers)
 
-  private _goalResults = new BehaviorSubject([])
-  private _profileResults = new BehaviorSubject([])
+  private _goalResults = new BehaviorSubject<AlgoliaGoal[]>([])
+  private _profileResults = new BehaviorSubject<AlgoliaUser[]>([])
 
-  goalResults: Observable<any> = this._goalResults.asObservable()
-  profileResults: Observable<any> = this._profileResults.asObservable()
+  goalResults: Observable<AlgoliaGoal[]> = this._goalResults.asObservable()
+  profileResults: Observable<AlgoliaUser[]> = this._profileResults.asObservable()
   
 
   search(query: string, hitsPerPage?: number | { goals?: number, profiles?: number}) {
@@ -27,33 +28,20 @@ export class AlgoliaService {
   }
 
   searchGoals(query: string, hitsPerPage: number | undefined): void {
-    this.goalsIndex.search(query, {
+    this.goalsIndex.search<AlgoliaGoal>(query, {
       hitsPerPage,
-      attributesToRetrieve: ['goalId', 'title', 'image', 'numberOfSupporters', 'numberOfAchievers']
-    }).then((data: any) => {
-      const hits = data.hits.map((hit: any) => {
-        return {
-          id: hit.objectID,
-          ...hit
-        }
-      })
-      this._goalResults.next(hits)
-    
+    }).then(data => {
+      const goals = data.hits.map(hit => createAlgoliaGoal(hit))
+      this._goalResults.next(goals)
     })
   }
 
   searchProfiles(query: string, hitsPerPage: number | undefined): void {
-    this.profilesIndex.search(query, {
+    this.profilesIndex.search<AlgoliaUser>(query, {
       hitsPerPage,
-      attributesToRetrieve: ['uid', 'username', 'photoURL', 'numberOfSpectating', 'numberOfSpectators']
-    }).then((data: any) => {
-      const hits = data.hits.map((hit: any) => {
-        return {
-          id: hit.objectID,
-          ...hit
-        }
-      })
-      this._profileResults.next(hits)
+    }).then(data => {
+      const users = data.hits.map(hit => createAlgoliaUser(hit))
+      this._profileResults.next(users)
     })
   }
   

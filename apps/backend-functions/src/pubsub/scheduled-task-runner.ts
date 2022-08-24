@@ -8,6 +8,7 @@ import { getDocument } from '../shared/utils';
 import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface';
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self';
 import { DearFutureSelf, Personal } from '@strive/model'
+import { updateAggregation } from '../shared/aggregation/aggregation';
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -107,4 +108,6 @@ async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUs
 
   sendDearFutureSelfPushNotification(personal, message)
   sendDearFutureSelfEmail(personal, message.description)
+
+  updateAggregation({ usersFutureLetterReceived: 1 })
 }

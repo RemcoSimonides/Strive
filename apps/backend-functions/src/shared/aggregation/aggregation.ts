@@ -7,7 +7,7 @@ export function updateAggregation(aggregation: Partial<Aggregation>) {
 
     for (const [k, d] of Object.entries(agg)) {
         const key = k as AggregationKey
-        const delta = d as -1 | 0 | 1
+        const delta = d as number
         if (d === 0) continue
         result[key] = increment(delta)
     }

@@ -3,6 +3,7 @@ import { DearFutureSelf } from '@strive/model'
 
 import { enumWorkerType, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
+import { updateAggregation } from '../../../shared/aggregation/aggregation';
 
 export const dearFutureSelfCreatedHandler = functions.firestore.document(`Users/{uid}/Exercises/DearFutureSelf`)
   .onCreate(async (snapshot, context) => {
@@ -10,6 +11,8 @@ export const dearFutureSelfCreatedHandler = functions.firestore.document(`Users/
     const uid = context.params.uid
     const setting = snapshot.data() as DearFutureSelf
     if (!setting.messages?.length) return
+
+    updateAggregation({ usersFutureLetterSent: 1 })
 
     scheduleScheduledTask(uid, setting, 0)
   })
@@ -21,6 +24,7 @@ export const dearFutureSelfChangedHandler = functions.firestore.document(`Users/
     const before = snapshot.before.data() as DearFutureSelf
     const after = snapshot.after.data() as DearFutureSelf
 
+    updateAggregation({ usersFutureLetterSent: after.messages.length - before.messages.length })
     if (before.messages.length >= after.messages.length) return
 
     const index = after.messages.length - 1

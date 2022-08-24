@@ -1,6 +1,5 @@
 export function createAggregation(aggregation: Partial<Aggregation> = {}): Aggregation {
 	return {
-		id: '',
 		goalsCreated: 0,
 		goalsFinished: 0,
 		goalsActive: 0,
@@ -14,12 +13,15 @@ export function createAggregation(aggregation: Partial<Aggregation> = {}): Aggre
 		goalsCustomSupports: 0,
 		usersCreated: 0,
 		usersDeleted: 0,
+		usersFutureLetterSent: 0,
+		usersFutureLetterReceived: 0,
+		usersAffirmationsSet: 0,
+		usersGratefulnessOn: 0,
 		...aggregation
 	}
 }
 
 export interface Aggregation {
-	id: string,
 	goalsCreated: number
 	goalsFinished: number
 	goalsActive: number
@@ -33,6 +35,10 @@ export interface Aggregation {
 	goalsCustomSupports: number
 	usersCreated: number
 	usersDeleted: number
+	usersFutureLetterSent: number
+	usersFutureLetterReceived: number
+	usersAffirmationsSet: number
+	usersGratefulnessOn: number
 }
 
 export type AggregationKey = keyof Aggregation

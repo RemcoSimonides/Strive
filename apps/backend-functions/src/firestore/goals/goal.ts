@@ -11,7 +11,8 @@ import {
   GoalStakeholder,
   User,
   createAggregation,
-  EventType
+  EventType,
+  createAlgoliaGoal
 } from '@strive/model'
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
@@ -55,7 +56,7 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
 
     // algolia
     if (goal.publicity === 'public') {
-      await addToAlgolia('goal', goalId, { goalId, ...goal })
+      await addToAlgolia('goal', goalId, createAlgoliaGoal(goal))
     }
   })
 
@@ -128,16 +129,13 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     // algolia
     if (publicityChanged) {
       if (becamePublic) {
-        addToAlgolia('goal', goalId, {
-          goalId,
-          ...after
-        })
+        addToAlgolia('goal', goalId, createAlgoliaGoal(after))
       } else {
         await deleteFromAlgolia('goal', goalId)
       }
 
     } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters) {
-      await updateAlgoliaObject('goal', goalId, after)
+      await updateAlgoliaObject('goal', goalId, createAlgoliaGoal(after))
     }
   })
 

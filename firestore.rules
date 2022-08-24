@@ -23,9 +23,8 @@ service cloud.firestore {
       allow read: if collection == "Supports"
     }
 
-    match /{path=**}/Comments/{id} {
+    match /miscellaneous/aggregation {
       allow read;
-      allow write: if isSignedIn()
     }
 
     match /Users/{uid} {
@@ -103,7 +102,7 @@ service cloud.firestore {
 
       match /Comments/{commentId} {
         allow read;
-        allow create;
+        allow write: if isSignedIn();
       }
     }
 

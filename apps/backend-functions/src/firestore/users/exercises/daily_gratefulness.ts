@@ -2,6 +2,7 @@ import { functions } from '../../../internals/firebase';
 import { DailyGratefulness } from '@strive/model'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
+import { updateAggregation } from '../../../shared/aggregation/aggregation';
 
 export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
   .onCreate(async (snapshot, context) => {
@@ -9,6 +10,9 @@ export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Use
     const uid = context.params.uid
     const dailyGratefulnessSettings = snapshot.data() as DailyGratefulness
     if (!dailyGratefulnessSettings?.on) return
+
+    // aggregation
+    updateAggregation({ usersGratefulnessOn: 1 })
 
     scheduleScheduledTask(uid, dailyGratefulnessSettings)
   })
@@ -21,6 +25,8 @@ export const dailyGratefulnessChangedHandler = functions.firestore.document(`Use
     const after = snapshot.after.data() as DailyGratefulness
 
     if (before.on !== after.on) {
+      updateAggregation({ usersGratefulnessOn: after.on ? 1 : -1 })
+
       if (after.on) {
         //  create task
         scheduleScheduledTask(uid, after)

@@ -3,6 +3,7 @@ import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/schedu
 import { enumWorkerType, ScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { Affirmations } from '@strive/model'
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
+import { updateAggregation } from '../../../shared/aggregation/aggregation';
 
 export const affirmationsCreatedHandler = functions.firestore.document(`Users/{userId}/Exercises/Affirmations`)
   .onCreate(async (snapshot, context) => {
@@ -22,6 +23,8 @@ export const affirmationsCreatedHandler = functions.firestore.document(`Users/{u
       status: 'scheduled'
     }
     upsertScheduledTask(`${uid}affirmations`, task)
+
+    updateAggregation({ usersAffirmationsSet: affirmations.affirmations.length }) 
   })
 
 export const affirmationsChangeHandler = functions.firestore.document(`Users/{userId}/Exercises/Affirmations`)
@@ -44,4 +47,7 @@ export const affirmationsChangeHandler = functions.firestore.document(`Users/{us
     if (JSON.stringify(before.times) !== JSON.stringify(after.times)) {
       scheduleNextAffirmation(uid, after)
     }
+
+    const delta = after.affirmations.length - before.affirmations.length
+    updateAggregation({ usersAffirmationsSet: delta })
   })

@@ -43,6 +43,15 @@ export interface GoalLink {
   image: string
 }
 
+export interface AlgoliaGoal {
+  objectID?: string
+  id: string
+  title: string
+  image: string
+  numberOfAchievers: number
+  numberOfSupporters: number
+}
+
 /** A factory function that creates a GoalDocument. */
 export function createGoal(params: Partial<Goal> = {}): Goal {
   return {
@@ -63,6 +72,17 @@ export function createGoalLink(params: Partial<GoalLink | Goal> = {}): GoalLink 
     id: params.id ?? '',
     title: params.title ?? '',
     image: params.image ?? ''
+  }
+}
+
+export function createAlgoliaGoal(params: AlgoliaGoal | Goal): AlgoliaGoal {
+  return {
+    objectID: params.id,
+    id: params.id,
+    title: params.title,
+    image: params.image,
+    numberOfAchievers: params.numberOfAchievers,
+    numberOfSupporters: params.numberOfSupporters
   }
 }
 

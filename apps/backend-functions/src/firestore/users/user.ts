@@ -2,7 +2,7 @@ import { db, functions } from '../../internals/firebase';
 import { logger } from 'firebase-functions';
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { GoalStakeholder, createUser, User, createUserLink, Spectator } from '@strive/model';
+import { GoalStakeholder, createUser, User, createUserLink, Spectator, createAlgoliaUser } from '@strive/model';
 import { updateAggregation } from '../../shared/aggregation/aggregation';
 
 export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
@@ -14,12 +14,7 @@ export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
     // aggregation
     updateAggregation({ usersCreated: 1 })
 
-    await addToAlgolia('user', uid, {
-      uid,
-      username: user.username,
-      photoURL: user.photoURL,
-      numberOfSpectators: user.numberOfSpectators
-    })
+    await addToAlgolia('user', uid, createAlgoliaUser(user))
   })
 
 export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
@@ -63,12 +58,7 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
 
     if (before.username !== after.username || before.photoURL !== after.photoURL || before.numberOfSpectators !== after.numberOfSpectators) {
       logger.log('updating Algolia')
-      await updateAlgoliaObject('user', uid, {
-        uid,
-        username: after.username,
-        photoURL: after.photoURL,
-        numberOfSpectators: after.numberOfSpectators
-      })
+      await updateAlgoliaObject('user', uid, createAlgoliaUser(after))
     }
   })
 
