@@ -1,3 +1,7 @@
+<ng-container *ngIf="(isLoggedIn$ | async) === false">
+  <strive-header-root></strive-header-root>
+</ng-container>
+
 <ion-content class="ion-no-padding">
 
   <div class="max-width" [ngSwitch]="segmentChoice">

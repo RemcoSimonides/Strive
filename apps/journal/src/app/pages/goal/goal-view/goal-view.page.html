@@ -1,3 +1,7 @@
+<ng-container *ngIf="(isLoggedIn$ | async) === false">
+  <strive-header-root></strive-header-root>
+</ng-container>
+
 <ng-container *ngIf="pageIsLoading">
   <strive-page-loading></strive-page-loading>
 </ng-container>

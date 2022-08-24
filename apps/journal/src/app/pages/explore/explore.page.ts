@@ -9,6 +9,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { exercises } from '@strive/model'
 import { ActivatedRoute, Router } from '@angular/router'
+import { UserService } from '@strive/user/user/user.service'
 
 @Component({
   selector: 'journal-explore',
@@ -18,6 +19,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 })
 export class ExploreComponent implements OnDestroy {
   segmentChoice: 'overview' | 'search' = 'overview'
+
+  isLoggedIn$ = this.user.isLoggedIn$
 
   searchForm = new FormGroup({
     query: new FormControl(''),
@@ -71,7 +74,8 @@ export class ExploreComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     public screensize: ScreensizeService,
-    private seo: SeoService
+    private seo: SeoService,
+    private user: UserService
   ) {
     this.seo.generateTags({ title: `Explore - Strive Journal` })
   }

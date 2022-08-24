@@ -7,14 +7,14 @@ import { NotificationService } from '@strive/notification/notification.service'
 import { MenuComponent } from '../menu/menu.component'
 
 @Component({
-  selector: '[title] strive-header-root',
+  selector: 'strive-header-root',
   templateUrl: './header-root.component.html',
   styleUrls: ['./header-root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderRootComponent {
 
-  @Input() title!: string
+  @Input() title?: string
 
   enumAuthSegment = enumAuthSegment
   unreadNotifications$ = this.notification.hasUnreadNotification$

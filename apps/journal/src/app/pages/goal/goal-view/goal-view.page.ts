@@ -30,6 +30,8 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   goal$?: Observable<Goal | undefined>
   isAdmin$?: Observable<boolean>
 
+  isLoggedIn$ = this.user.isLoggedIn$
+
   segmentChoice: 'goal' | 'roadmap' | 'story' = 'goal'
 
   backBtnSubscription?: Subscription
@@ -37,7 +39,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    public user: UserService,
+    private user: UserService,
     private goalService: GoalService,
     public stakeholder: GoalStakeholderService,
     private inviteTokenService: InviteTokenService,

@@ -1,19 +1,20 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { ReactiveFormsModule } from '@angular/forms'
+import { Routes, RouterModule } from '@angular/router'
+import { FlexLayoutModule } from '@angular/flex-layout'
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular'
 
-import { ExploreComponent } from './explore.page';
+import { ExploreComponent } from './explore.page'
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail/layout/list/thumbnail-list.module'
-import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module';
-import { LargeThumbnailModule } from '@strive/ui/thumbnail/components/large/large-thumbnail.module';
-import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe';
-import { ImageModule } from '@strive/media/directives/image.module';
+import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
+import { LargeThumbnailModule } from '@strive/ui/thumbnail/components/large/large-thumbnail.module'
+import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
     LargeThumbnailModule,
     RowsPipeModule,
     ImageModule,
+    HeaderRootModule
   ],
   declarations: [
     ExploreComponent
