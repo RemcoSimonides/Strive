@@ -1,8 +1,7 @@
-import { Injectable, ApplicationRef, OnDestroy } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
-import { ToastController } from '@ionic/angular';
-import { ReplaySubject, first, interval, concat, Subscription } from 'rxjs';
-import * as Sentry from '@sentry/capacitor'
+import { Injectable, ApplicationRef, OnDestroy } from '@angular/core'
+import { SwUpdate } from '@angular/service-worker'
+import { ToastController } from '@ionic/angular'
+import { ReplaySubject, first, interval, concat, Subscription } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class PWAService implements OnDestroy {

@@ -4,6 +4,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { UserService } from '@strive/user/user/user.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { NotificationService } from '@strive/notification/notification.service'
+import { MenuComponent } from '../menu/menu.component'
 
 @Component({
   selector: '[title] strive-header-root',
@@ -29,6 +30,12 @@ export class HeaderRootComponent {
     this.modalCtrl.create({
       component: AuthModalComponent,
       componentProps: { authSegment }
+    }).then(modal => modal.present())
+  }
+
+  openMenu() {
+    this.modalCtrl.create({
+      component: MenuComponent
     }).then(modal => modal.present())
   }
 }

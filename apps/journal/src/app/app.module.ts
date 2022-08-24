@@ -20,7 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Pages
-import { TabsComponent } from './pages/tabs/tabs.component';
+import { TabsModule } from './pages/tabs/tabs.module';
 import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module';
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
 
@@ -48,8 +48,7 @@ Sentry.init(
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TabsComponent
+    AppComponent
   ],
   imports: [
     provideAuth(() => getAuth()),
@@ -63,6 +62,7 @@ Sentry.init(
     // Strive
     ImageModule,
     AuthModalModule,
+    TabsModule,
     ProfileOptionsBrowserPageModule,
     ServiceWorkerModule.register('sw-master.js', {
       enabled: environment.production,

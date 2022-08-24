@@ -3,11 +3,11 @@
 		<ion-tab-bar slot="bottom">
 
 			<ion-tab-button tab="goals">
-				<ion-icon name="flag-sharp" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
-				<ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">Goals</ion-label>
+				<ion-icon [name]="user.uid ? 'flag-sharp' : 'home'" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+				<ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">{{ user.uid ? 'Goals' : 'Home' }}</ion-label>
 			</ion-tab-button>
 
-			<ion-tab-button tab="supports">
+			<ion-tab-button *ngIf="user.uid" tab="supports">
 				<ion-icon [src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"></ion-icon>
 				<ion-label>Supports</ion-label>
 			</ion-tab-button>
@@ -22,8 +22,10 @@
 				<ion-label>Exercises</ion-label>
 			</ion-tab-button>
 
-			<ion-tab-button [tab]="'profile/' + user.uid">
-				<ion-icon name="person" [color]="(profileActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+			<ion-tab-button *ngIf="user.user$ | async as you" [tab]="'profile/' + user.uid">
+				<ion-avatar>
+					<img [ref]="you.photoURL" asset="profile.png">
+				</ion-avatar>
 				<ion-label [color]="(profileActive$ | async) ? 'primary' : 'inherit'">You</ion-label>
 			</ion-tab-button>
 	

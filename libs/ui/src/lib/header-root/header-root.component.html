@@ -19,11 +19,14 @@
           </ion-button>
         </ng-container>
         <ng-template #notLoggedIn>
-          <ion-button color="primary" (click)="openAuthModal(enumAuthSegment.login)">
-            Log in
+          <ion-button routerLink="/explore">
+            <ion-icon slot="icon-only" name="search-outline"></ion-icon>
           </ion-button>
-          <ion-button color="primary" (click)="openAuthModal(enumAuthSegment.register)">
-            Sign up
+          <ion-button class="button-round" fill="solid" (click)="openAuthModal(enumAuthSegment.register)">
+            <b>Sign up</b>
+          </ion-button>
+          <ion-button (click)="openMenu()">
+            <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
           </ion-button>
         </ng-template>
       </ion-buttons>

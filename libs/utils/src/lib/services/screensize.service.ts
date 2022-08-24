@@ -21,7 +21,7 @@ export class ScreensizeService {
   public isMobile$ = this.isMobile.asObservable().pipe(distinctUntilChanged())
 
   onResize(size: number) {
-    if (size > 760) {
+    if (size > 768) { // 768 is equal to where modals are not full screen anymore
       this.size.next('desktop')
       this.isDesktop.next(true);
       this.isTablet.next(false);
