@@ -109,15 +109,10 @@ section.blogs {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
 
-    ion-card {
-      border-radius: 12px;
-      margin: 0;
-    
-      ion-card-content {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
+    ion-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
   }
 

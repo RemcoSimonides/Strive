@@ -57,13 +57,23 @@ a {
   max-width: 304px !important;
 }
 
-ion-list-header {
-  font-weight: bold;
-  font-size: 22px;
-  color: var(--ion-color-primary);
+ion-card {
+  border-radius: 12px;
+  margin: 0;
+}
+
+ion-list {
+  border-radius: 12px;
+
+  ion-list-header {
+    font-weight: bold;
+    font-size: 22px;
+    color: var(--ion-color-primary);
+  }
 }
 
 img {
+  display: block;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;

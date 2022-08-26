@@ -22,16 +22,18 @@
         </article>
 
         <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
-          <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input formControlName="email" type="email"></ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="floating">Password</ion-label>
-            <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()"></ion-input>
-            <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
-          </ion-item>
+          <ion-list mode="md">
+            <ion-item>
+              <ion-label position="floating">Email</ion-label>
+              <ion-input formControlName="email" type="email"></ion-input>
+            </ion-item>
+  
+            <ion-item lines="none">
+              <ion-label position="floating">Password</ion-label>
+              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()"></ion-input>
+              <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
+            </ion-item>
+          </ion-list>
 
           <div fxLayout="row" fxLayoutAlign="center">
             <ion-button class="submit_button" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
@@ -59,46 +61,48 @@
 
         <form [formGroup]="signupForm" (ngSubmit)="signUpUser()">
 
-          <ion-item>
-            <ion-label position="floating">Username</ion-label>
-            <ion-input formControlName="username" type="text"></ion-input>
-          </ion-item>
-
-          <ng-container *ngFor="let validation of validation_messages.username">
-            <ng-container *ngIf="signupForm.get('username')?.hasError(validation.type) && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
-              <div class="error-message">
-                {{ validation.message }}
-              </div>
+          <ion-list mode="md">
+            <ion-item>
+              <ion-label position="floating">Username</ion-label>
+              <ion-input formControlName="username" type="text"></ion-input>
+            </ion-item>
+  
+            <ng-container *ngFor="let validation of validation_messages.username">
+              <ng-container *ngIf="signupForm.get('username')?.hasError(validation.type) && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
+                <div class="error-message">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
             </ng-container>
-          </ng-container>
-
-          <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input formControlName="email" type="email"></ion-input>
-          </ion-item>
-
-          <ng-container *ngFor="let validation of validation_messages.email">
-            <ng-container *ngIf="signupForm.get('email')?.hasError(validation.type) && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
-              <div class="error-message">
-                {{ validation.message }}
-              </div>
+  
+            <ion-item>
+              <ion-label position="floating">Email</ion-label>
+              <ion-input formControlName="email" type="email"></ion-input>
+            </ion-item>
+  
+            <ng-container *ngFor="let validation of validation_messages.email">
+              <ng-container *ngIf="signupForm.get('email')?.hasError(validation.type) && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
+                <div class="error-message">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
             </ng-container>
-          </ng-container>
-
-          <ion-item>
-            <ion-label position="floating">Password</ion-label>
-            <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()">
-            </ion-input>
-            <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()"></ion-icon>
-          </ion-item>
-
-          <ng-container *ngFor="let validation of validation_messages.password">
-            <ng-container *ngIf="signupForm.get('password')?.hasError(validation.type) && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
-              <div class="error-message">
-                {{ validation.message }}
-              </div>
-            </ng-container>
-          </ng-container>
+  
+            <ion-item lines="none">
+              <ion-label position="floating">Password</ion-label>
+              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()">
+              </ion-input>
+              <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()"></ion-icon>
+            </ion-item>
+  
+            <ng-container *ngFor="let validation of validation_messages.password">
+              <ng-container *ngIf="signupForm.get('password')?.hasError(validation.type) && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
+                <div class="error-message">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </ng-container>  
+          </ion-list>
 
           <div fxLayout fxLayoutAlign="center">
             <ion-button class="submit_button" type="submit" [disabled]="!signupForm.valid">Register</ion-button>
@@ -126,11 +130,13 @@
       <section fxLayout="column" fxLayoutAlign="start center">
 
         <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
-          <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input formControlName="email" type="email" (keydown.enter)="onEnter()">
-            </ion-input>
-          </ion-item>
+          <ion-list mode="md">
+            <ion-item lines="none">
+              <ion-label position="floating">Email</ion-label>
+              <ion-input formControlName="email" type="email" (keydown.enter)="onEnter()">
+              </ion-input>
+            </ion-item>
+          </ion-list>
 
           <div fxLayout fxLayoutAlign="center">
             <ion-button class="submit_button" type="submit" [disabled]="!resetPasswordForm.valid">Reset Password
