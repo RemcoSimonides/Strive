@@ -46,7 +46,6 @@ export class GoalComponent {
     this._goal = goal
 
     this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: goal.id }).pipe(
-      map(milestones => milestones.reverse()),
       joinWith({
         supports: milestone => this.user.user$.pipe(
           switchMap(user => {
