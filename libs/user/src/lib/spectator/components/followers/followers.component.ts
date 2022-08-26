@@ -10,6 +10,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
 @Component({
   selector: 'user-followers',
   templateUrl: 'followers.component.html',
+  styleUrls: ['./followers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FollowersComponent extends ModalDirective {

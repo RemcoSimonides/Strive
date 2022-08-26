@@ -4,12 +4,13 @@ import { Location } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { UserSpectateService } from '../../spectator.service';
 import { UserService } from '@strive/user/user/user.service';
-import { map, switchMap, filter, of } from 'rxjs';
+import { map, switchMap, of } from 'rxjs';
 import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
   selector: 'user-following',
   templateUrl: 'following.component.html',
+  styleUrls: ['./following.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FollowingComponent extends ModalDirective {

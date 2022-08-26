@@ -5,6 +5,7 @@ import { AlgoliaService } from '@strive/utils/services/algolia.service';
 @Component({
   selector: 'strive-select-user',
   templateUrl: './select-user.modal.html',
+  styleUrls: ['./select-user.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectUserModalComponent {
