@@ -1,4 +1,4 @@
-<h1>Welcome to Strive Journal!</h1>
+<h1>Welcome to Strive Journal</h1>
 <swiper #swiper>
   <ng-container *ngIf="showStep1$ | async">
     <ng-template swiperSlide>
@@ -9,7 +9,7 @@
             You can turn them off any time.
           </p>
         </article>
-        <img asset="notifications.png"/>
+        <img asset="theo-notifications.png"/>
         <article fxLayout="column" fxLayoutAlign="start center">
           <ion-button (click)="pushNotifications()">activate notifications</ion-button>
           <ion-button (click)="next()" fill="clear">skip</ion-button>
@@ -19,14 +19,19 @@
   </ng-container>
   <ng-container *ngIf="showStep2">
     <ng-template swiperSlide>
-      <section class="goal" fxLayout="column" fxLayoutAlign="space-between center">
-        <ion-button class="explore" (click)="dismiss('/explore')">explore around</ion-button>
-        <img asset="astronauts.png"/>
-        <article fxLayout="column" fxLayoutAlign="start center">
+
+      <section class="goal">
+        <article fxLayout="row wrap-reverse" fxLayoutAlign="center center" fxLayoutGap="16px">
+          <img asset="theo-superman-square.svg">
           <ion-button class="create-goal" (click)="createGoal()">create first goal</ion-button>
-          <ion-button (click)="dismiss()" fill="clear">skip</ion-button>
+        </article>
+
+        <article fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="16px">
+          <ion-button class="explore" (click)="dismiss('/explore')">explore around</ion-button>
+          <img asset="theo-direction-square.svg">
         </article>
       </section>
+
     </ng-template>
   </ng-container>
   <ng-container *ngIf="(showStep1$ | async) === false && !showStep2">

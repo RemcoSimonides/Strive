@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-// Strive
-import { GoalService } from '@strive/goal/goal/goal.service'
+import { ModalController } from '@ionic/angular'
+
 import { exercises } from '@strive/model'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { ModalController } from '@ionic/angular'
+import { AggregationService } from '@strive/utils/services/aggregation.service'
 
 @Component({
   selector: 'journal-home',
@@ -14,12 +14,13 @@ import { ModalController } from '@ionic/angular'
 })
 export class HomeComponent {
 
-  goals$ = this.goal.valueChanges(['CWIYC1SOxfZYdriIIRZZ', 'pGvDUf2aWP7gt5EnIEjt', '6wxXjXMNcPYDhUKqQPDJ', 'XWi3By2rY2E05M4Snjtx'])
   exercises = exercises
   enumAuthSegment = enumAuthSegment
 
+  aggregation$ = this.aggregationService.getAggregation$()
+
   constructor (
-    private goal: GoalService,
+    private aggregationService: AggregationService,
     private modalCtrl: ModalController,
     public pwa: PWAService
   ) {}
@@ -28,7 +29,8 @@ export class HomeComponent {
     this.modalCtrl.create({
       component: AuthModalComponent,
       componentProps: {
-        authSegment: enumAuthSegment.register
+        authSegment: enumAuthSegment.register,
+        
       }
     }).then(modal => modal.present())
   }

@@ -13,4 +13,10 @@
   max-height: 32px;
   margin: 12px;
   cursor: pointer;
+  display: block;
+}
+
+ion-buttons {
+  display: flex;
+  gap: 8px;
 }
