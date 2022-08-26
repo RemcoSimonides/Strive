@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout'
 
 import { StoryComponent } from './story.component'
 
+import { StoryModule as StoryMainModule } from '@strive/goal/story/components/story/story.module'
 import { StoryItemMessagePipeModule } from '@strive/goal/story/pipes/story-message'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
 import { PostComponentModule } from '@strive/post/components/post/post.module'
@@ -18,7 +19,8 @@ import { PostComponentModule } from '@strive/post/components/post/post.module'
     FlexLayoutModule,
     StoryItemMessagePipeModule,
     TimeAgoPipeModule,
-    PostComponentModule
+    PostComponentModule,
+    StoryMainModule
   ],
   exports: [StoryComponent],
   declarations: [StoryComponent]

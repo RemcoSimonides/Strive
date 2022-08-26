@@ -8,6 +8,7 @@ import { StoryComponent } from './story.component'
 import { StoryItemMessagePipeModule } from '@strive/goal/story/pipes/story-message'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
 import { PostComponentModule } from '@strive/post/components/post/post.module'
+import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { PostComponentModule } from '@strive/post/components/post/post.module'
         RouterModule,
         StoryItemMessagePipeModule,
         TimeAgoPipeModule,
-        PostComponentModule
+        PostComponentModule,
+        UpsertPostModalModule
     ],
     declarations: [
         StoryComponent

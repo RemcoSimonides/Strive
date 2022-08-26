@@ -1,6 +1,16 @@
 <ul>
-	<ng-container *ngFor="let item of story; trackBy: trackByFn">
-        
+	<article class="add-button" *ngIf="isAdmin">
+		<div></div>
+		<div>
+			<ion-button class="timelineContent" fill="clear" (click)="createCustomPost()">
+				<ion-icon name="pencil-outline" slot="start"></ion-icon>
+				<span>Add to story...</span>
+			</ion-button>
+		</div>
+	</article>
+
+	<ng-container *ngFor="let item of story; trackBy: trackByFn; let last = last">
+
 		<li *ngIf="item | storyMessage as message">
 
 			<article *ngIf="message.message.length">

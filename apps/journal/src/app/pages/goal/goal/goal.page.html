@@ -104,7 +104,7 @@
   </goal-strive-roadmap>
 
   <h3>Story</h3>
-  <goal-story [story]="story"></goal-story>
+  <goal-story [story]="story" [isAdmin]="stakeholder.isAdmin" [goalId]="goal.id"></goal-story>
 
   <footer fxLayout *ngIf="story.length === maxStoryItems">
     <ion-button fill="clear" (click)="segmentChange.next('story')">

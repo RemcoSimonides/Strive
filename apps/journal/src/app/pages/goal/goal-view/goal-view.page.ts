@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 
-import { Subscription, of, Observable, combineLatest, firstValueFrom } from 'rxjs'
+import { Subscription, of, Observable, combineLatest } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 
 import { GoalService } from '@strive/goal/goal/goal.service'
@@ -38,7 +38,7 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
   styleUrls: ['./goal-view.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalViewComponent implements OnInit, OnDestroy {
+export class GoalViewComponent implements OnDestroy {
   pageIsLoading = true
   canAccess = false
 
@@ -64,9 +64,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     private stakeholder: GoalStakeholderService,
     private storyService: StoryService,
     private user: UserService,
-  ) {}
-
-  async ngOnInit() {
+  ) {
     const goalId$ = this.route.params.pipe(
       map(params => params['id'] as string),
       shareReplay({ bufferSize: 1, refCount: true })
@@ -157,13 +155,11 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     this.segmentChoice = ev.detail.value
   }
 
-  async createCustomPost() {
-    if (!this.goal$) return
-    const goal = await firstValueFrom(this.goal$)
+  createCustomPost(goal: Goal) {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        goalId: goal?.id,
+        goalId: goal.id,
         postId: undefined
       }
     }).then(modal => modal.present())
