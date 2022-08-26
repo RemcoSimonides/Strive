@@ -1,0 +1,50 @@
+article {
+    position: relative;
+    display: grid;
+    grid-template-columns: 16px auto;
+  }
+  
+  article::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    background-color: var(--ion-color-primary);
+    top: 0;
+    bottom: 0;
+    left: -1px;
+    margin-left: 8px;
+  }
+  
+  .emblem {
+    z-index: 1;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    background-color: var(--ion-color-primary);
+    margin-top: 6px;
+  
+    display: flex;
+    align-items: center;
+    justify-items: center;
+  
+    ion-icon {
+      color: var(--ion-color-primary-contrast);
+      height: 12px;
+    }
+  }
+  
+  div:not(.emblem) {
+    margin-left: 8px;
+  }
+  
+  .timelineContent {
+    margin: 4px 0;
+  }
+  
+  .extra {
+    padding-bottom: 4px;
+  }
+  
+  post-main {
+    margin: 8px 0;
+  }

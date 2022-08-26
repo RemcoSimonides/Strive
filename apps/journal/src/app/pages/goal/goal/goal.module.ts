@@ -14,6 +14,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap.module'
+import { StoryModule } from '@strive/goal/story/components/story/story.module'
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap
     AddSupportModalModule,
     ImageModule,
     ImageZoomModalModule,
-    RoadmapModule
+    RoadmapModule,
+    StoryModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

@@ -2,11 +2,6 @@
   display: block;
 }
 
-h3 {
-  color: var(--ion-color-primary);
-  text-align: center;
-}
-
 ion-list {
   border-radius: 12px;
 
@@ -45,13 +40,13 @@ ion-list {
   }
 }
 
-.empty {
-  img {
-    max-width: 300px;
-    max-height: 300px;
-    padding: 32px;
-    margin-bottom: 16px;
-  }
+img {
+  width: clamp(100px, 20vw, 150px);
+  padding: 16px;
+}
+
+.skeleton {
+  width: 100%;
 }
 
 ion-reorder {

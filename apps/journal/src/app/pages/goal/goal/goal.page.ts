@@ -24,7 +24,7 @@ import { UserService } from '@strive/user/user/user.service'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
-import { Goal, GoalStakeholder, Milestone } from '@strive/model'
+import { Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
@@ -83,12 +83,16 @@ export class GoalComponent {
     }
   }
 
+  maxStoryItems = 10
+  private _story: StoryItem[] = []
+  get story() { return this._story }
+  @Input() set story(story: StoryItem[]) {
+    if (!story) return
+    this._story = story.splice(0, this.maxStoryItems)
+  }
+
   milestones$?: Observable<Milestone[]>
   openRequests$?: Observable<GoalStakeholder[]>
-
-  // public isAdmin = false
-  // public isAchiever = false
-  // public hasOpenRequestToJoin = false
 
   @Output() segmentChange = new EventEmitter<'goal' | 'roadmap' | 'story'>()
 
@@ -102,7 +106,7 @@ export class GoalComponent {
     private router: Router,
     private stakeholderService: GoalStakeholderService,
     private supportService: SupportService,
-    public user: UserService,
+    private user: UserService,
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {}

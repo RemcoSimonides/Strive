@@ -30,11 +30,18 @@
   <ng-container [ngSwitch]="segmentChoice">
   
     <ion-content *ngSwitchCase="'goal'" class="ion-padding">
-      <journal-goal (segmentChange)="segmentChoice = $event" [goal]="goal" [stakeholder]="stakeholder"></journal-goal>
+      <journal-goal
+        [goal]="goal"
+        [stakeholder]="stakeholder"
+        [story]="story$ | async"
+        (segmentChange)="segmentChoice = $event"
+      ></journal-goal>
     </ion-content>
   
     <ion-content *ngSwitchCase="'story'" class="ion-padding">
-      <journal-goal-story [goal]="goal"></journal-goal-story>
+      <ng-container *ngIf="story$ | async as story; else loading">
+        <journal-goal-story [story]="story"></journal-goal-story>
+      </ng-container>
     </ion-content>
     
     <strive-chat *ngSwitchCase="'chat'" [goal]="goal$ | async"></strive-chat>
@@ -42,7 +49,7 @@
   </ng-container>
   
   <ng-container *ngIf="stakeholder.isAdmin">
-    <ion-fab *ngIf="segmentChoice === 'story'" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab *ngIf="segmentChoice === 'story' || segmentChoice === 'goal'" vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
     </ion-fab>
   </ng-container>

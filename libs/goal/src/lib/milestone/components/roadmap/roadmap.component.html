@@ -50,14 +50,23 @@
 </ng-container>
 
 <ng-template #empty>
-  <section fxLayout="column" fxLayoutAlign="center center" class="empty">
-    <img asset='theo-crossroad-square.svg'/>
-    <h3>Roadmap is not defined</h3>
-  </section>
+  <img asset='theo-crossroad-square.svg'/>
 </ng-template>
 
 <ng-template #loading>
-  <section fxLayout fxLayoutAlign="center center">
-    <ion-spinner name="lines" color="primary"></ion-spinner>
-  </section>
+  <ion-list>
+    <ion-item *ngFor="let i of [].constructor(5)">
+      <ion-button fill="clear">
+        <ion-icon slot="icon-only" name="radio-button-off"color="primary"></ion-icon>
+      </ion-button>
+
+      <section fxLayout="column" class="skeleton">
+        <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+        <article fxLayout>
+          <ion-skeleton-text [animated]="true" style="width: 20%;"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+        </article>
+      </section>
+    </ion-item>
+  </ion-list>
 </ng-template>

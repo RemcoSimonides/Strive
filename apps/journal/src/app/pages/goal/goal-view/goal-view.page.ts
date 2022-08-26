@@ -10,10 +10,11 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.ser
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { UserService } from '@strive/user/user/user.service'
-import { Goal, createGoalStakeholder, GoalStakeholder, Comment } from '@strive/model'
+import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
-import { where } from 'firebase/firestore'
+import { orderBy, where } from 'firebase/firestore'
 import { CommentService } from '@strive/goal/chat/comment.service'
+import { StoryService } from '@strive/goal/story/story.service'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -46,6 +47,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   goal$?: Observable<Goal | undefined>
   stakeholder$?: Observable<GoalStakeholder>
   unreadMessages$?: Observable<number>
+  story$?: Observable<StoryItem[]>
 
   isLoggedIn$ = this.user.isLoggedIn$
 
@@ -60,6 +62,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
+    private storyService: StoryService,
     private user: UserService,
   ) {}
 
@@ -100,6 +103,10 @@ export class GoalViewComponent implements OnInit, OnDestroy {
         )
       }),
       map(messages => messages.length)
+    )
+
+    this.story$ = goalId$.pipe(
+      switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([]))
     )
 
     this.accessSubscription = combineLatest([

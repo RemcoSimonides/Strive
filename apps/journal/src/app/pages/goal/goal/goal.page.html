@@ -95,6 +95,7 @@
     </ng-container>
   </ng-container>
 
+  <h3>Roadmap</h3>
   <goal-strive-roadmap
     [goal]="goal"
     [milestones]="milestones$ | async"
@@ -102,9 +103,13 @@
     [isAchiever]="stakeholder.isAchiever">
   </goal-strive-roadmap>
 
-  <footer fxLayout>
+  <h3>Story</h3>
+  <goal-story [story]="story"></goal-story>
+
+  <footer fxLayout *ngIf="story.length === maxStoryItems">
     <ion-button fill="clear" (click)="segmentChange.next('story')">
-      SEE FULL STORY
+      <span>SEE FULL STORY</span>
+      <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
     </ion-button>
   </footer>
 

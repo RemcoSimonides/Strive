@@ -1,0 +1,35 @@
+<ul>
+	<ng-container *ngFor="let item of story; trackBy: trackByFn">
+        
+		<li *ngIf="item | storyMessage as message">
+
+			<article *ngIf="message.message.length">
+				<div class="emblem">
+					<ion-icon [name]="message.icon"></ion-icon>
+				</div>
+
+				<div class="timelineContent" fxLayout fxLayoutAlign="start start">
+					<span>
+						<ng-container *ngFor="let text of message.message">
+							<ng-container *ngIf="text.link; else noLink">
+								<a [routerLink]="'/' + text.link">{{ text.text }}</a>
+							</ng-container>
+							<ng-template #noLink>
+								{{ text.text }}
+							</ng-template>
+						</ng-container>
+						{{ item.createdAt | timeAgo }}
+					</span>
+				</div>
+			</article>
+		</li>
+
+		<article *ngIf="item.source.postId" class="extra">
+			<div></div>
+			<div>
+				<post-main [storyItem]="item"></post-main>
+			</div>
+		</article>
+
+	</ng-container>
+</ul>
