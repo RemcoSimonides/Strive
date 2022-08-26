@@ -233,7 +233,20 @@ export class GoalComponent implements OnDestroy {
     }).then(alert => alert.present())
   }
   
-  supportGoal() {
+  async supportGoal() {
+    if (!this.user.uid) {
+      const modal = await this.modalCtrl.create({
+        component: AuthModalComponent,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      })
+      modal.onDidDismiss().then(({ data: loggedIn }) => {
+        if (loggedIn) this.supportGoal()
+      })
+      return modal.present()
+    }
+
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {

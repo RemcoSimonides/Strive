@@ -17,43 +17,41 @@
 
   <h2>Supports for others</h2>
 
-  <ng-container *ngIf="!!user.uid else notLoggedIn">
-    <ng-container *ngIf="goal$ | async as goal">
-      <ion-list>
-        <ion-item>
-          <ion-input [formControl]="form"
-            type="text"
-            [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or €20'"
-            [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')"
-            (keydown.enter)="addSupport(goal)"></ion-input>
-          <ion-button slot="end" 
-            (click)="addSupport(goal)"
-            color="secondary"
-            [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')">
-            ADD<ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
+  <ng-container *ngIf="goal$ | async as goal">
+    <ion-list>
+      <ion-item>
+        <ion-input [formControl]="form"
+          type="text"
+          [placeholder]="goal.status === 'finished' ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or €20'"
+          [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')"
+          (keydown.enter)="addSupport(goal)"></ion-input>
+        <ion-button slot="end" 
+          (click)="addSupport(goal)"
+          color="secondary"
+          [disabled]="goal.status === 'finished' || (!!milestone && milestone.status !== 'pending')">
+          ADD<ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item *ngFor="let support of fromYouSupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
+        <ion-label class="ion-text-wrap">
+          <article>
+            <b>{{ support.description }} {{ support.status !== 'open' ? '(Given)' : ''}}</b>
+            <small>Recipient: {{ support.source.recipient.username }}</small>
+            <ng-container *ngIf="origin === 'goal'">
+              <small *ngIf="support.source.milestone?.content">Milestone: {{ support.source.milestone?.content }}</small>
+            </ng-container>
+          </article>
+        </ion-label>
+
+        <ng-container *ngIf="support.status === 'open' || support.status === 'waiting_to_be_paid'">
+          <ion-button fill="clear" (click)="openOptions(support, $event)">
+            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
           </ion-button>
-        </ion-item>
-        <ion-item *ngFor="let support of fromYouSupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
-          <ion-label class="ion-text-wrap">
-            <article>
-              <b>{{ support.description }} {{ support.status !== 'open' ? '(Given)' : ''}}</b>
-              <small>Recipient: {{ support.source.recipient.username }}</small>
-              <ng-container *ngIf="origin === 'goal'">
-                <small *ngIf="support.source.milestone?.content">Milestone: {{ support.source.milestone?.content }}</small>
-              </ng-container>
-            </article>
-          </ion-label>
+        </ng-container>
 
-          <ng-container *ngIf="support.status === 'open' || support.status === 'waiting_to_be_paid'">
-            <ion-button fill="clear" (click)="openOptions(support, $event)">
-              <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-            </ion-button>
-          </ng-container>
+      </ion-item>
+    </ion-list>
 
-        </ion-item>
-      </ion-list>
-
-    </ng-container>
   </ng-container>
 
   <h2>Supports for you</h2>
@@ -80,9 +78,5 @@
       No supports yet
     </ng-template>
   </ng-container>
-
-  <ng-template #notLoggedIn>
-    Please <span class="fat-text-button" (click)="openLoginModal()">log in</span> to view your supports and to support this goal
-  </ng-template>
 
 </ion-content>
