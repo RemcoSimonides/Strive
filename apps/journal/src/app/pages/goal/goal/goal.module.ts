@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
+import { IonicModule } from '@ionic/angular'
+import { FlexLayoutModule } from '@angular/flex-layout'
 
-import { GoalComponent } from './goal.page';
+import { GoalComponent } from './goal.page'
 
-import { DiscussionModalModule } from '@strive/discussion/components/discussion-modal/discussion-modal.module'
 import { GoalOptionsModule } from '../popovers/options/options.module'
-import { GoalSharePopoverModule } from '@strive/goal/goal/components/popovers/share/share.module';
-import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
-import { TeamModalModule } from '@strive/goal/stakeholder/modals/team/team.module';
-import { ImageModule } from '@strive/media/directives/image.module';
-import { AddSupportModalModule } from '@strive/support/components/add/add.module';
+import { GoalSharePopoverModule } from '@strive/goal/goal/components/popovers/share/share.module'
+import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module'
+import { TeamModalModule } from '@strive/goal/stakeholder/modals/team/team.module'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
+import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap.module'
 
 @NgModule({
   imports: [
@@ -23,14 +23,14 @@ import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
     FlexLayoutModule,
     
     // Strive
-    DiscussionModalModule,
     GoalOptionsModule,
     GoalSharePopoverModule,
     UpsertGoalModalModule,
     TeamModalModule,
     AddSupportModalModule,
     ImageModule,
-    ImageZoomModalModule
+    ImageZoomModalModule,
+    RoadmapModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

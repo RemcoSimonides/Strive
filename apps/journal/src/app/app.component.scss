@@ -7,6 +7,11 @@ header {
   max-width: 1600px;
   padding-right: 16px;
 
+  .badge:after {
+    right: 10px;
+    top: 10px;
+  }
+
   .badge2 {
     position: relative;
   }

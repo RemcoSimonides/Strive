@@ -1,34 +1,36 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, ModalController, PopoverController } from '@ionic/angular';
-// Firebase
-import { limit, where } from 'firebase/firestore';
-// Rxjs
-import { Observable, of, Subscription, tap } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
-// Capacitor
-import { Share } from '@capacitor/share';
-// Strive Components
-import { DiscussionModalComponent } from '@strive/discussion/components/discussion-modal/discussion-modal.component';
-import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component';
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-// Strive Services
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { UserService } from '@strive/user/user/user.service';
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
-import { InviteTokenService } from '@strive/utils/services/invite-token.service';
-// Strive Interfaces
-import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
-import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
-import { SeoService } from '@strive/utils/services/seo.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { Router } from '@angular/router'
+import { AlertController, ModalController, PopoverController } from '@ionic/angular'
+// Sentry
 import { captureException } from '@sentry/capacitor'
-import { CommentService } from '@strive/discussion/comment.service';
+// Firebase
+import { orderBy, where } from 'firebase/firestore'
+import { joinWith } from 'ngfire'
+// Rxjs
+import { combineLatest, Observable, of } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators'
+// Capacitor
+import { Share } from '@capacitor/share'
+// Strive Components
+import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component'
+import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
+import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+// Strive Services
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { UserService } from '@strive/user/user/user.service'
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { InviteTokenService } from '@strive/utils/services/invite-token.service'
+// Strive Interfaces
+import { Goal, GoalStakeholder, Milestone } from '@strive/model'
+import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
+import { SeoService } from '@strive/utils/services/seo.service'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { SupportService } from '@strive/support/support.service'
 
 @Component({
   selector: 'journal-goal',
@@ -36,102 +38,82 @@ import { CommentService } from '@strive/discussion/comment.service';
   styleUrls: ['./goal.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalComponent implements OnDestroy {
+export class GoalComponent {
 
-  private goalId!: string
-  
-  public goal$: Observable<Goal | undefined>
+  private _goal!: Goal
+  get goal() { return this._goal }
+  @Input() set goal(goal: Goal) {
+    this._goal = goal
 
-  public stakeholder$: Observable<GoalStakeholder>
-  public openRequests$?: Observable<GoalStakeholder[]>
-  public unreadMessage$: Observable<boolean>
+    this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: goal.id }).pipe(
+      map(milestones => milestones.reverse()),
+      joinWith({
+        supports: milestone => this.user.user$.pipe(
+          switchMap(user => {
+            if (!user) return of([])
+            const recipientQuery = [
+              where('source.milestone.id', '==', milestone.id),
+              where('source.recipient.uid', '==', user.uid)
+            ]
+            const supporterQuery = [
+              where('source.milestone.id', '==', milestone.id),
+              where('source.supporter.uid', '==', user.uid)
+            ]
+            return combineLatest([
+              this.supportService.valueChanges(recipientQuery, { goalId: this.goal.id }),
+              this.supportService.valueChanges(supporterQuery, { goalId: this.goal.id }),
+            ]).pipe(
+              map(([ recipientSupports, supporterSupports ]) => {
+                const supports = [ ...recipientSupports, ...supporterSupports]
+                return supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)
+              })
+            )
+          })
+        )
+      }, { shouldAwait: false })
+    )
+  }
 
-  public isAdmin = false
-  public isAchiever = false
-  public hasOpenRequestToJoin = false
+  private _stakeholder!: GoalStakeholder
+  get stakeholder() { return this._stakeholder }
+  @Input() set stakeholder(stakeholder: GoalStakeholder) {
+    this._stakeholder = stakeholder
+    
+    if (stakeholder.isAdmin) {
+      this.openRequests$ = this.stakeholderService.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId })
+    }
+  }
 
-  private sub: Subscription
+  milestones$?: Observable<Milestone[]>
+  openRequests$?: Observable<GoalStakeholder[]>
+
+  // public isAdmin = false
+  // public isAchiever = false
+  // public hasOpenRequestToJoin = false
 
   @Output() segmentChange = new EventEmitter<'goal' | 'roadmap' | 'story'>()
 
   constructor(
     private alertCtrl: AlertController,
-    private commentService: CommentService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
+    private milestone: MilestoneService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
-    private route: ActivatedRoute,
     private router: Router,
-    private stakeholder: GoalStakeholderService,
+    private stakeholderService: GoalStakeholderService,
+    private supportService: SupportService,
     public user: UserService,
-    private cdr: ChangeDetectorRef,
     public screensize: ScreensizeService,
     private seo: SeoService
-  ) {
-    this.goalId = this.route.snapshot.paramMap.get('id') as string
-    this.goal$ = this.goalService.valueChanges(this.goalId)
-
-    this.stakeholder$ = this.user.user$.pipe(
-      switchMap(user => user ? this.stakeholder.valueChanges(user.uid, { goalId: this.goalId }) : of(undefined)),
-      map(stakeholder => stakeholder ? stakeholder : createGoalStakeholder()),
-      shareReplay({ bufferSize: 1, refCount: true })
-    )
-
-    this.unreadMessage$ = this.stakeholder$.pipe(
-      switchMap(stakeholder => {
-        if (!stakeholder.uid) return of([])
-        const query = [limit(1)]
-        if (stakeholder.lastCheckedChat) query.push(where('createdAt', '>', stakeholder.lastCheckedChat))
-        return this.commentService.valueChanges(query, { goalId: this.goalId })
-      }),
-      map(comments => !!comments.length)
-    )
-
-    this.sub = this.stakeholder$.subscribe(stakeholder => {
-      this.isAdmin = stakeholder.isAdmin
-      this.isAchiever = stakeholder.isAchiever
-      this.hasOpenRequestToJoin = stakeholder.hasOpenRequestToJoin
-      this.cdr.markForCheck()
-
-      if (!this.openRequests$ && this.isAdmin) {
-        this.openRequests$ = this.stakeholder.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: this.goalId })
-      }
-    })
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe()
-  }
-
-  openDiscussion(goal: Goal) {
-    if (this.user.uid) {
-      this.modalCtrl.create({
-        component: DiscussionModalComponent,
-        componentProps: { goal }
-      }).then(modal => {
-        modal.onDidDismiss().then(_ => {
-          if (!this.user.uid) return
-          this.stakeholder.updateLastCheckedChat(goal.id, this.user.uid)
-        })
-        modal.present()
-      })
-    } else {
-      this.modalCtrl.create({
-        component: AuthModalComponent,
-        componentProps: {
-          authSegment: enumAuthSegment.login
-        }
-      }).then(modal => modal.present())
-    }
-  }
+  ) {}
 
   async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
     const popover = await this.popoverCtrl.create({
       component: GoalOptionsPopoverComponent,
       event: ev,
       componentProps: {
-        isAdmin: this.isAdmin,
+        isAdmin: this.stakeholder.isAdmin,
         status: goal.status
       }
     })
@@ -151,7 +133,7 @@ export class GoalComponent implements OnDestroy {
   }
 
   updateStatus($event: any, goal: Goal) {
-    if (!this.isAchiever) return;
+    if (!this.stakeholder.isAchiever) return;
 
     const status = $event.detail.value;
     if (status === goal.status) return
@@ -165,8 +147,8 @@ export class GoalComponent implements OnDestroy {
             handler: () => {
               goal.status = status
               if (!this.user.uid) return
-              this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
-              this.startPostCreation(goal)
+              this.stakeholderService.update(this.user.uid, { status }, { params: { goalId: this.goal.id }})
+              this.startPostCreation()
             }
           },
           {
@@ -181,24 +163,24 @@ export class GoalComponent implements OnDestroy {
     } else {
       goal.status = status
       if (!this.user.uid) return
-      this.stakeholder.update(this.user.uid, { status }, { params: { goalId: this.goalId }})
+      this.stakeholderService.update(this.user.uid, { status }, { params: { goalId: this.goal.id }})
     }
 
   }
 
   updatePrivacy($event: any, goal: Goal) {
-    if (!this.isAdmin) return;
+    if (!this.stakeholder.isAdmin) return;
     const publicity = $event.detail.value
     if (publicity === goal.publicity) return
-    this.goalService.update({ id: this.goalId, publicity })
+    this.goalService.update({ id: this.goal.id, publicity })
   }
 
-  private startPostCreation(goal: Goal) {
+  private startPostCreation() {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        goalId: this.goalId,
-        postId: this.goalId
+        goalId: this.goal.id,
+        postId: this.goal.id
       }
     }).then(modal => modal.present())
   }
@@ -220,7 +202,7 @@ export class GoalComponent implements OnDestroy {
         {
           text: 'Yes',
           handler: async () => {
-            await this.goalService.remove(this.goalId)
+            await this.goalService.remove(this.goal.id)
             this.router.navigate(['/goals'])
             this.seo.generateTags({ title: `Goals - Strive Journal` })
           }
@@ -250,15 +232,15 @@ export class GoalComponent implements OnDestroy {
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
-        goalId: this.goalId
+        goalId: this.goal.id
       }
     }).then(modal => modal.present())
   }
 
   getJoinText() {
-    if (this.isAchiever) return 'JOINED'
-    if (this.isAdmin) return 'JOIN'
-    if (this.hasOpenRequestToJoin) return 'CANCEL REQUEST'
+    if (this.stakeholder.isAchiever) return 'JOINED'
+    if (this.stakeholder.isAdmin) return 'JOIN'
+    if (this.stakeholder.hasOpenRequestToJoin) return 'CANCEL REQUEST'
     return 'REQUEST JOIN'
   }
 
@@ -276,27 +258,29 @@ export class GoalComponent implements OnDestroy {
       return modal.present()
     }
 
-    if (!this.isAchiever && !this.hasOpenRequestToJoin) {
-      if (this.isAdmin) {
-        return this.stakeholder.upsert({
+    const { isAchiever, isAdmin, hasOpenRequestToJoin} = this.stakeholder
+
+    if (!isAchiever && !hasOpenRequestToJoin) {
+      if (isAdmin) {
+        return this.stakeholderService.upsert({
           uid: this.user.uid,
           isAchiever: true
-        }, { params: { goalId: this.goalId }})
+        }, { params: { goalId: this.goal.id }})
       } else {
-        return this.stakeholder.upsert({
+        return this.stakeholderService.upsert({
           uid: this.user.uid,
           isSpectator: true,
           hasOpenRequestToJoin: true
-        }, { params: { goalId: this.goalId }})
+        }, { params: { goalId: this.goal.id }})
       }
     }
 
-    if (this.hasOpenRequestToJoin) {
-      return this.stakeholder.upsert({
+    if (hasOpenRequestToJoin) {
+      return this.stakeholderService.upsert({
         uid: this.user.uid,
         isSpectator: true,
         hasOpenRequestToJoin: false
-      }, { params: { goalId: this.goalId }})
+      }, { params: { goalId: this.goal.id }})
     }
     
     this.openTeamModal()
@@ -305,13 +289,13 @@ export class GoalComponent implements OnDestroy {
   openTeamModal() {
     this.modalCtrl.create({
       component: TeamModalComponent,
-      componentProps: { goalId: this.goalId }
+      componentProps: { goalId: this.goal.id }
     }).then(modal => modal.present())
   }
 
   async openSharePopover(ev: UIEvent, goal: Goal) {
     const isSecret = goal.publicity !== 'public'
-    const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, this.isAdmin)
+    const url = await this.inviteTokenService.getShareLink(this.goal.id, isSecret, this.stakeholder.isAdmin)
 
     const canShare = await Share.canShare()
     if (canShare.value) {
@@ -333,7 +317,7 @@ export class GoalComponent implements OnDestroy {
   }
 
   saveDescription(description: string) {
-    return this.goalService.updateDescription(this.goalId, description)
+    return this.goalService.updateDescription(this.goal.id, description)
   }
 
   isOverdue(deadline: string) {
@@ -342,11 +326,11 @@ export class GoalComponent implements OnDestroy {
 
   handleRequestDecision(stakeholder: GoalStakeholder, isAccepted: boolean, $event: UIEvent) {
     $event.stopPropagation()
-    this.stakeholder.upsert({
+    this.stakeholderService.upsert({
       uid: stakeholder.uid,
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false
-    }, { params: { goalId: this.goalId }})
+    }, { params: { goalId: this.goal.id }})
   }
 
   navTo(uid: string) {

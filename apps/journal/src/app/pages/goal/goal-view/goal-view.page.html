@@ -2,48 +2,52 @@
   <strive-header-root></strive-header-root>
 </ng-container>
 
-<ng-container *ngIf="pageIsLoading">
+<ng-template #loading>
   <strive-page-loading></strive-page-loading>
-</ng-container>
+</ng-template>
 
-<ng-container *ngIf="!canAccess && !pageIsLoading">
+<ng-template #noAccess>
   <strive-404></strive-404>
-</ng-container>
+</ng-template>
 
-<ng-container *ngIf="canAccess && !pageIsLoading">
-  <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" class="ion-align-self-center" mode="md">
+<ng-container *ngIf="!pageIsLoading else loading">
+<ng-container *ngIf="canAccess; else noAccess">
+<ng-container *ngIf="goal$ | async as goal">
+<ng-container *ngIf="stakeholder$ | async as stakeholder">
+  
+  <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
     <ion-segment-button value="goal">
       Goal
-    </ion-segment-button>
-    <ion-segment-button value="roadmap">
-      Roadmap
     </ion-segment-button>
     <ion-segment-button value="story">
       Story
     </ion-segment-button>
+    <ion-segment-button value="chat" *ngIf="stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter">
+      Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
+    </ion-segment-button>
   </ion-segment>
+  
+  <ng-container [ngSwitch]="segmentChoice">
+  
+    <ion-content *ngSwitchCase="'goal'" class="ion-padding">
+      <journal-goal (segmentChange)="segmentChoice = $event" [goal]="goal" [stakeholder]="stakeholder"></journal-goal>
+    </ion-content>
+  
+    <ion-content *ngSwitchCase="'story'" class="ion-padding">
+      <journal-goal-story [goal]="goal"></journal-goal-story>
+    </ion-content>
+    
+    <strive-chat *ngSwitchCase="'chat'" [goal]="goal$ | async"></strive-chat>
+  
+  </ng-container>
+  
+  <ng-container *ngIf="stakeholder.isAdmin">
+    <ion-fab *ngIf="segmentChoice === 'story'" vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
+    </ion-fab>
+  </ng-container>
+
 </ng-container>
-
-<ion-content class="ion-padding" [ngSwitch]="segmentChoice" *ngIf="canAccess && !pageIsLoading">
-
-  <section *ngSwitchCase="'goal'">
-    <journal-goal (segmentChange)="segmentChoice = $event"></journal-goal>
-  </section>
-
-  <!-- Roadmap -->
-  <section *ngSwitchCase="'roadmap'">
-    <journal-goal-roadmap [goal]="goal$ | async"></journal-goal-roadmap>
-  </section>
-
-  <!-- Posts -->
-  <section *ngSwitchCase="'story'">
-    <journal-goal-story [goalId]="goalId$ | async"></journal-goal-story>
-  </section>
-
-</ion-content>
-
-<ng-container *ngIf="isAdmin$ | async">
-  <ion-fab *ngIf="segmentChoice === 'story'" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="createCustomPost()"><ion-icon name="add"></ion-icon></ion-fab-button>
-  </ion-fab>
+</ng-container>
+</ng-container>
 </ng-container>

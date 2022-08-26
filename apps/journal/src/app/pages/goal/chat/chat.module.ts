@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DiscussionModalComponent } from './discussion-modal.component';
+import { ChatComponent } from './chat.component'
 
 import { ImageModule } from '@strive/media/directives/image.module';
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe';
@@ -22,7 +22,10 @@ import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe';
     TimeAgoPipeModule
   ],
   declarations: [
-    DiscussionModalComponent
+    ChatComponent
   ],
+  exports: [
+    ChatComponent
+  ]
 })
-export class DiscussionModalModule {}
+export class ChatModule {}

@@ -36,15 +36,6 @@ main {
   }
 }
 
-.chat-button {
-  position: relative;
-
-  &::after {
-    right: 0;
-    top: 0;
-  }
-}
-
 .action-button {
   height: 2em;
   width: 2em;
@@ -99,4 +90,8 @@ picture {
 ion-select {
   font-weight: bold;
   padding: 0 4px;
+}
+
+goal-strive-roadmap {
+  margin-block: 32px;
 }

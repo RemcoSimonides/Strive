@@ -1,7 +1,6 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { IonContent, ModalController, Platform} from '@ionic/angular';
+import { IonContent, Platform} from '@ionic/angular';
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter } from 'firebase/firestore';
 import { toDate } from 'ngfire';
 // Rxjs
@@ -9,20 +8,20 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, map, skip } from 'rxjs/operators';
 // Services
 import { UserService } from '@strive/user/user/user.service';
-import { CommentService } from '@strive/discussion/comment.service';
+import { CommentService } from '@strive/goal/chat/comment.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 // Interfaces
 import { Goal, Comment, createComment, createCommentSource } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers';
-import { ModalDirective } from '@strive/utils/directives/modal.directive';
 
 @Component({
-  selector: 'discussion-page',
-  templateUrl: './discussion-modal.component.html',
-  styleUrls: ['./discussion-modal.component.scss'],
+  selector: 'strive-chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DiscussionModalComponent extends ModalDirective implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea?: IonContent
   @Input() goal!: Goal
 
@@ -42,26 +41,14 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
 
   form = new FormControl('', { validators: [Validators.required], nonNullable: true })
 
-  visibility = {
-    public: 'Messages visible to everyone',
-    team: 'Messages only visible to team',
-    adminsAndRequestor: 'Visible to Requestor and Admins only',
-    achievers: 'Visisble to Achievers only',
-    spectators: 'Visible to spectators only'
-  }
-
   private subs: Subscription[] = []
 
   constructor(
     private commentService: CommentService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
     private platform: Platform,
     private stakeholder: GoalStakeholderService,
     public user: UserService
   ) {
-    super(location, modalCtrl)
-
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
     this.subs.push(sub)
   }
@@ -137,7 +124,9 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     })
 
     this.form.reset('')
+    if (!this.user.uid) return
     this.commentService.add(comment, { params: { goalId: this.goal.id }})
+    this.stakeholder.updateLastCheckedChat(this.goal.id, this.user.uid)
   }
 
   async logScrolling($event: any) {
@@ -156,6 +145,6 @@ export class DiscussionModalComponent extends ModalDirective implements OnInit, 
     const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
     const currentScrollDepth = $event.detail.scrollTop;
 
-    this.scrolledToBottom = scrollHeight === currentScrollDepth
+    this.scrolledToBottom = scrollHeight < currentScrollDepth + 10
   }
 }

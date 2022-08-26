@@ -11,11 +11,11 @@ import { GoalPageModule } from '../goal/goal.module'
 
 // Components
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
-import { RoadmapModule } from '../roadmap/roadmap.module'
 import { StoryModule } from '../story/story.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 import { PagenotfoundModule } from '@strive/ui/404/404.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
+import { ChatModule } from '../chat/chat.module'
 
 const routes: Routes = [
   { path: '', component: GoalViewComponent }
@@ -28,11 +28,11 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingModule,
     GoalPageModule,
-    RoadmapModule,
     StoryModule,
     UpsertPostModalModule,
     PagenotfoundModule,
-    HeaderRootModule
+    HeaderRootModule,
+    ChatModule
   ],
   declarations: [
     GoalViewComponent,

@@ -16,7 +16,6 @@
     "baseUrl": ".",
     "paths": {
       "@env": ["environments/environment.ts"],
-      "@strive/discussion/*": ["libs/discussion/src/lib/*"],
       "@strive/exercises/*": ["libs/exercises/src/lib/*"],
       "@strive/goal/*": ["libs/goal/src/lib/*"],
       "@strive/media/*": ["libs/media/src/lib/*"],

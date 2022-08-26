@@ -1,4 +1,4 @@
-<ng-container *ngIf="goal$ | async as goal">
+<ng-container *ngIf="goal && stakeholder">
   <h1>{{ goal.title }}</h1>
 
   <main>
@@ -37,18 +37,14 @@
 
       <ng-container *ngIf="(screensize.isMobile$ | async) === false">
         <div fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="16px">
-          <ion-button (click)="openDiscussion(goal)" fill="clear" class="chat-button" [ngClass]="{'badge': unreadMessage$ | async}">
-            <ion-icon slot="start" name="chatbox-outline"></ion-icon>
-            <span>chat</span>
-          </ion-button>
   
-          <ng-container *ngIf="goal.publicity === 'public' || isAdmin">
+          <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
             <ion-button (click)="openSharePopover($event, goal)" fill="clear">
               <ion-icon slot="start" name="share-social-outline"></ion-icon>
               <span>share</span>
             </ion-button>
           </ng-container>
-          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" *ngIf="isAdmin">
+          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" *ngIf="stakeholder.isAdmin">
             <span>more options</span>
           </ion-button>
         </div>
@@ -62,13 +58,10 @@
 
     <ng-container *ngIf="screensize.isMobile$ | async">
       <div fxLayout="row wrap" fxLayoutAlign="end" fxLayoutGap="4px" fxFlexOrder.lt-sm="3">
-        <ion-button (click)="openDiscussion(goal)" class="ion-no-padding action-button chat-button" fill="clear" [ngClass]="{'badge': unreadMessage$ | async}">
-          <ion-icon slot="icon-only" name="chatbox-outline"></ion-icon>
-        </ion-button>
         <ion-button (click)="openSharePopover($event, goal)" fill="clear" size="small" class="ion-no-padding action-button">
           <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
         </ion-button>
-        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="isAdmin">
+        <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear" class="ion-no-padding action-button" *ngIf="stakeholder.isAdmin">
           <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
         </ion-button>
       </div>
@@ -102,14 +95,16 @@
     </ng-container>
   </ng-container>
 
-  <section [innerHTML]="goal.description"></section>
+  <goal-strive-roadmap
+    [goal]="goal"
+    [milestones]="milestones$ | async"
+    [isAdmin]="stakeholder.isAdmin"
+    [isAchiever]="stakeholder.isAchiever">
+  </goal-strive-roadmap>
 
   <footer fxLayout>
-    <ion-button fill="clear" (click)="segmentChange.next('roadmap')">
-      SEE ROADMAP
-    </ion-button>
     <ion-button fill="clear" (click)="segmentChange.next('story')">
-      SEE STORY
+      SEE FULL STORY
     </ion-button>
   </footer>
 
@@ -119,14 +114,12 @@
       <div fxLayout fxLayoutAlign="start center">
         <ion-icon name="pulse"></ion-icon>
         <span>Status: </span>
-        <ng-container *ngIf="stakeholder$ | async as stakeholder; else statusNoAchiever">
-          <ng-container *ngIf="stakeholder.isAchiever; else statusNoAchiever">
-            <ion-select placeholder="Select Status" interface="popover" [value]="stakeholder.status" (ionChange)="updateStatus($event, goal)">
-              <ion-select-option value="bucketlist">In Future</ion-select-option>
-              <ion-select-option value="active">Current Focus</ion-select-option>
-              <ion-select-option value="finished">Finished</ion-select-option>
-            </ion-select>
-          </ng-container>
+        <ng-container *ngIf="stakeholder.isAchiever; else statusNoAchiever">
+          <ion-select placeholder="Select Status" interface="popover" [value]="stakeholder.status" (ionChange)="updateStatus($event, goal)">
+            <ion-select-option value="bucketlist">In Future</ion-select-option>
+            <ion-select-option value="active">Current Focus</ion-select-option>
+            <ion-select-option value="finished">Finished</ion-select-option>
+          </ion-select>
         </ng-container>
         <ng-template #statusNoAchiever>
           <b>&nbsp;{{ goal.status | titlecase }}</b>
@@ -137,7 +130,7 @@
       <div fxLayout fxLayoutAlign="start center">
         <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>
         <span>Access: </span>
-        <ng-container *ngIf="isAdmin; else privacyNoAdmin">
+        <ng-container *ngIf="stakeholder.isAdmin; else privacyNoAdmin">
           <ion-select placeholder="Select Privacy" interface="popover" [value]="goal.publicity" (ionChange)="updatePrivacy($event, goal)">
             <ion-select-option value="public">Everyone can access</ion-select-option>
             <ion-select-option value="private">Invites only</ion-select-option>

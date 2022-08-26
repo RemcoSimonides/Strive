@@ -1,20 +1,35 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-// Ionic
-import { ModalController, NavController, Platform } from '@ionic/angular'
-// Rxjs
-import { Subscription, of, Observable, combineLatest, firstValueFrom } from 'rxjs';
-import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
-// Services
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { InviteTokenService } from '@strive/utils/services/invite-token.service';
-import { SeoService } from '@strive/utils/services/seo.service';
-import { UserService } from '@strive/user/user/user.service';
-// Interfaces
-import { Goal, createGoalStakeholder } from '@strive/model'
-// Components
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
+import { ModalController } from '@ionic/angular'
+
+import { Subscription, of, Observable, combineLatest, firstValueFrom } from 'rxjs'
+import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
+
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { InviteTokenService } from '@strive/utils/services/invite-token.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+import { UserService } from '@strive/user/user/user.service'
+import { Goal, createGoalStakeholder, GoalStakeholder, Comment } from '@strive/model'
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { where } from 'firebase/firestore'
+import { CommentService } from '@strive/goal/chat/comment.service'
+
+function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
+  if (!before || !after) return true
+
+  const fields: (keyof GoalStakeholder)[] = [
+    'isAchiever',
+    'isAdmin',
+    'isSupporter',
+    'username',
+    'photoURL',
+    'status',
+    'lastCheckedChat'
+  ]
+
+  return fields.some(field => before[field] !== after[field])
+}
 
 @Component({
   selector: 'journal-goal-view',
@@ -26,63 +41,75 @@ export class GoalViewComponent implements OnInit, OnDestroy {
   pageIsLoading = true
   canAccess = false
 
-  goalId$?: Observable<string>
+  segmentChoice: 'goal' | 'story' | 'chat' = 'goal'
+
   goal$?: Observable<Goal | undefined>
-  isAdmin$?: Observable<boolean>
+  stakeholder$?: Observable<GoalStakeholder>
+  unreadMessages$?: Observable<number>
 
   isLoggedIn$ = this.user.isLoggedIn$
 
-  segmentChoice: 'goal' | 'roadmap' | 'story' = 'goal'
-
-  backBtnSubscription?: Subscription
-  accessSubscription?: Subscription
+  private accessSubscription?: Subscription
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private user: UserService,
+    private commentService: CommentService,
     private goalService: GoalService,
-    public stakeholder: GoalStakeholderService,
     private inviteTokenService: InviteTokenService,
     private modalCtrl: ModalController,
-    private navCtrl: NavController,
-    private platform: Platform,
     private route: ActivatedRoute,
-    private seo: SeoService
+    private seo: SeoService,
+    private stakeholder: GoalStakeholderService,
+    private user: UserService,
   ) {}
 
   async ngOnInit() {
-    this.goalId$ = this.route.params.pipe(
-      map(params => params['id']),
+    const goalId$ = this.route.params.pipe(
+      map(params => params['id'] as string),
       shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    this.goal$ = this.goalId$.pipe(
+    this.goal$ = goalId$.pipe(
       switchMap(goalId => this.goalService.valueChanges(goalId)),
       shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    const stakeholder$ = combineLatest([
-      this.goalId$,
+    this.stakeholder$ = combineLatest([
+      goalId$,
       this.user.user$
     ]).pipe(
       tap(([ goalId, user ]) => {
         if (user) this.stakeholder.updateLastCheckedGoal(goalId, user.uid)
       }),
-      switchMap(([ goalId, user ]) => user ? this.stakeholder.valueChanges(user.uid, { goalId }) : of(createGoalStakeholder()))
+      switchMap(([ goalId, user ]) => user ? this.stakeholder.valueChanges(user.uid, { goalId }) : of(undefined)),
+      distinctUntilChanged((a, b) => !stakeholderChanged(a, b)),
+      map(stakeholder => createGoalStakeholder(stakeholder)),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    this.isAdmin$ = stakeholder$.pipe(
-      map(stakeholder => !!stakeholder?.isAdmin)
+    this.unreadMessages$ = combineLatest([
+      goalId$,
+      this.stakeholder$
+    ]).pipe(    
+      switchMap(([ goalId, stakeholder ]) => {
+        if (!stakeholder.uid) return of([])
+        const query = []
+        if (stakeholder.lastCheckedChat) query.push(where('createdAt', '>', stakeholder.lastCheckedChat))
+        return this.commentService.valueChanges(query, { goalId }).pipe(
+          map(messages => messages.filter(message => message.source.user.uid !== stakeholder.uid)),
+        )
+      }),
+      map(messages => messages.length)
     )
 
     this.accessSubscription = combineLatest([
       this.goal$,
-      stakeholder$
+      this.stakeholder$
     ]).pipe(
       map(async ([ goal, stakeholder ]) => {
         if (!goal) return { access: false, goal }
         if (goal.publicity === 'public') return { access: true, goal }
-        const { isAdmin, isAchiever, isSupporter, isSpectator } = createGoalStakeholder(stakeholder)
+        const { isAdmin, isAchiever, isSupporter, isSpectator } = stakeholder
         if (isAdmin || isAchiever || isSupporter || isSpectator) return { access: true, goal }
         const access = await this.inviteTokenService.checkInviteToken(goal.id)
         return { access, goal }
@@ -93,7 +120,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     })
 
     const { t } = this.route.snapshot.queryParams;
-    this.segmentChoice = ['goal', 'roadmap', 'story'].includes(t) ? t : 'goal'
+    this.segmentChoice = ['goal', 'story', 'chat'].includes(t) ? t : 'goal'
   }
 
   ngOnDestroy() {
@@ -119,21 +146,7 @@ export class GoalViewComponent implements OnInit, OnDestroy {
     this.seo.generateTags({ title: `Page not found - Strive Journal` })
   }
 
-  ionViewDidEnter() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription = this.platform.backButton.subscribe(() => {
-        this.navCtrl.back();
-      });
-    }
-  }
-
-  ionViewWillLeave() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.backBtnSubscription?.unsubscribe();
-    }
-  }
-
-  public segmentChanged(ev: CustomEvent) {
+  segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
   }
 
