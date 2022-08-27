@@ -46,6 +46,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   ngOnInit() {
     this.form = new MilestoneForm(this.milestone)
+    this.form.valueChanges.subscribe(console.log)
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
@@ -130,7 +131,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   toggleSubtask(index: number) {
     const subtasksForm = this.form?.subtasks as FormArray
     const control = subtasksForm.at(index).get('completed')
-    control?.setValue(control.value)
+    control?.setValue(!control.value)
   }
 
   openSupportModal() {
