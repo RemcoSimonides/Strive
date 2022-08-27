@@ -1,18 +1,20 @@
+$max-width: 800px;
+
 :host {
     display: block;
     height: 100%;
-    max-width: 800px;
     width: 100%;
-    margin: auto;
 }
 
 ion-content {
     height: calc(100% - 84px);
 
     ul {
-        display: flex;
-        flex-direction: column;
-        padding: 0 16px;
+      max-width: $max-width;
+      margin:auto;
+      display: flex;
+      flex-direction: column;
+      padding: 0 16px;
       
         ion-infinite-scroll {
           margin-bottom: auto;
@@ -39,19 +41,24 @@ ion-content {
         }
     }
 }
-  
-ion-item {
+
+ion-footer {
+  max-width: $max-width;
+  margin: auto;
+
+  ion-item {
     margin: 8px;
     border-radius: 12px;
     --border-style: none;
     --highlight-background: var(--ion-color-primary);
 
     ion-icon {
-        align-self: center;
-        &:hover {
+      align-self: center;
+      &:hover {
         color: var(--ion-color-primary);
         cursor: pointer;
-        }
+      }
     }
+  }
 }
   
