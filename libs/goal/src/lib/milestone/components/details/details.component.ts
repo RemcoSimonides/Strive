@@ -13,7 +13,6 @@ import { UserService } from '@strive/user/user/user.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { delay } from '@strive/utils/helpers'
-import { SupportService } from '@strive/support/support.service'
 
 @Component({
   selector: '[goal][milestone][isAdmin][isAchiever] goal-milestone-details',

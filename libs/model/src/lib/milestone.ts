@@ -19,7 +19,7 @@ export interface Milestone {
   achiever: UserLink
   subtasks: Subtask[]
   updatedBy?: string
-  updatedAt?: Date // TODO give type FieldValue / Date / Timestamp 
+  updatedAt?: Date 
   createdAt?: Date
   finishedAt?: Date
 }
@@ -38,7 +38,7 @@ export interface MilestoneTemplate {
 
 /** A factory function that creates a MilestoneDocument. */
 export function createMilestone(params: Partial<Milestone> = {}): Milestone {
-  return {
+  const milestone: Milestone = {
     id: params.id ?? '',
     order: params.order ?? 0,
     content: params.content ?? '',
@@ -47,8 +47,15 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     deadline: params.deadline ? setDateToEndOfDay(params.deadline) : '',
     status: params.status ?? 'pending',
     achiever: createUserLink(params.achiever),
-    subtasks: params.subtasks ?? []
+    subtasks: params.subtasks ?? [],
   }
+
+  if (params.updatedBy) milestone.updatedBy = params.updatedBy
+  if (params.updatedAt) milestone.updatedAt = params.updatedAt
+  if (params.createdAt) milestone.createdAt = params.createdAt
+  if (params.finishedAt) milestone.finishedAt = params.finishedAt
+
+  return milestone
 }
 
 export function createMilestoneLink(params: Partial<MilestoneLink | Milestone> = {}): MilestoneLink {
