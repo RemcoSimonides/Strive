@@ -95,29 +95,15 @@ export class FcmService {
 
   }
 
-  showMessages(): Unsubscribe {
+  async showMessages(): Promise<Unsubscribe | undefined> {
+    if (!await isSupported()) return
+
     return onMessage(getMessaging(), msg => {
       if (!msg.notification?.body) return
       const { body } = msg.notification
       this.makeToast(body)
     })
   }
-
-  // sub(topic) {
-  //   this.fun
-  //     .httpsCallable('subscribeToTopic')({ topic, token: this.token })
-  //     .pipe(tap(_ => this.makeToast(`subscribed to ${topic}`)))
-  //     .subscribe();
-
-  //   console.log('token', this.token)
-  // }
-
-  // unsub(topic) {
-  //   this.fun
-  //     .httpsCallable('unsubscribeFromTopic')({ topic, token: this.token })
-  //     .pipe(tap(_ => this.makeToast(`unsubscribed from ${topic}`)))
-  //     .subscribe();
-  // }
 
   async makeToast(message: string) {
     const toast = await this.toastController.create({

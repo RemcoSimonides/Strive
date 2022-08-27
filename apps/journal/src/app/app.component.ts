@@ -27,7 +27,7 @@ export class AppComponent implements OnDestroy {
   unreadNotifications$ = this.notification.hasUnreadNotification$
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
 
-  private fcmUnsubscribe?: Unsubscribe
+  private fcmUnsubscribe?: Unsubscribe | undefined
 
   constructor(
     private fcm: FcmService,
@@ -51,7 +51,9 @@ export class AppComponent implements OnDestroy {
       }
 
       if (this.platform.is('mobileweb')) {
-        this.fcmUnsubscribe = this.fcm.showMessages()
+        this.fcm.showMessages().then(res => {
+          this.fcmUnsubscribe = res
+        })
       }
 
       this.openAuthModalOnStartup()
