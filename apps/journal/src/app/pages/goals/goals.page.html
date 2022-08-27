@@ -97,7 +97,7 @@
         </ion-button>
       </article>
     </ion-item>
-    <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]" [queryParams]="{t:'story'}">
+    <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]">
       <li *ngFor="let event of stakeholder.story">
         <ion-icon [name]="event.icon"></ion-icon>
         <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
