@@ -22,10 +22,13 @@ header {
 
     ion-searchbar {
       --background: var(--ion-color-light);
+      --border-radius: 12px;
     }
 
     ion-card {
       width: fit-content;
+      margin: 8px;
+      border-radius: 12px;
 
       ion-select {
         width: 200px;
