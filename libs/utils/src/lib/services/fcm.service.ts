@@ -4,6 +4,8 @@ import { ToastController } from '@ionic/angular';
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
 import { PersonalService } from '@strive/user/personal/personal.service';
 import * as Sentry from '@sentry/capacitor';
+import { UserService } from '@strive/user/user/user.service';
+import { BehaviorSubject, lastValueFrom, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,19 +14,31 @@ export class FcmService {
 
   fcmIsSupported = isSupported()
 
+  fcmActive$ = new BehaviorSubject(false)
+
+  private get localStorageName() { return `pushNotifications${this.user.uid}` }
+
   constructor(
+    private personal: PersonalService,
     private toastController: ToastController,
-    private personal: PersonalService
-  ) {}
+    private user: UserService 
+  ) {
+    lastValueFrom(this.user.uid$.pipe(take(2))).then(uid => {
+      const name = `pushNotifications${uid}`
+      const storage = localStorage.getItem(name) ?? false
+      this.fcmActive$.next(!!storage)
+    })
+  }
 
   private async getPermission(): Promise<string> {
     try {
       const token = await getToken(getMessaging())
-      console.log('Permission granted! Save to the server!', token)
-
       this.personal.addFCMToken(token)
+      localStorage.setItem(this.localStorageName, token)
+      this.fcmActive$.next(true)
       return token
     } catch(err) {
+      this.fcmActive$.next(false)
       this.toastController.create({
         message: 'Something went wrong',
         duration: 5000,
@@ -32,6 +46,21 @@ export class FcmService {
       }).then(toast => toast.present())
       Sentry.captureException(err)
       return ''
+    }
+  }
+
+  async unregisterFCM() {
+    try {
+      const token = await getToken(getMessaging())
+      this.personal.removeFCMToken(token)
+      localStorage.removeItem(this.localStorageName)
+      this.fcmActive$.next(false)
+    } catch(err) {
+      this.toastController.create({
+        message: 'Something went wrong',
+        duration: 5000,
+        position: 'bottom',
+      }).then(toast => toast.present())
     }
   }
 

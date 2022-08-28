@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { arrayUnion, DocumentSnapshot, getFirestore, serverTimestamp } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, DocumentSnapshot, getFirestore, serverTimestamp } from 'firebase/firestore';
 import { user } from 'rxfire/auth';
 import { getAuth } from 'firebase/auth';
 // Services
@@ -41,6 +41,14 @@ export class PersonalService extends FireCollection<Personal> {
     if (token && this.userService.uid) {
       this.update(this.userService.uid, {
         fcmTokens: arrayUnion(token) as any
+      }, { params: { uid: this.userService.uid }})
+    }
+  }
+
+  removeFCMToken(token: string) {
+    if (token && this.userService.uid) {
+      this.update(this.userService.uid, {
+        fcmTokens: arrayRemove(token) as any
       }, { params: { uid: this.userService.uid }})
     }
   }
