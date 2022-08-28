@@ -28,6 +28,8 @@ image-cropper {
 }
 
 .croppedImage {
+  margin: auto;
+  margin-bottom: 16px;
   max-height: 200px;
   max-width: 200px;
 }
