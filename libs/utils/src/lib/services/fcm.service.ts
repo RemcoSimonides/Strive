@@ -40,7 +40,7 @@ export class FcmService {
     } catch(err) {
       this.fcmActive$.next(false)
       this.toastController.create({
-        message: 'Something went wrong',
+        message: 'Something went wrong. Try again',
         duration: 5000,
         position: 'bottom',
       }).then(toast => toast.present())
