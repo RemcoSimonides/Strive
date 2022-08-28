@@ -1,5 +1,5 @@
 <ng-container *ngIf="screenSize.isMobile$ | async">
-	<ion-tabs>
+	<ion-tabs mode="md">
 		<ion-tab-bar slot="bottom" *ngIf="user.user$ | async as you">
 
 			<ion-tab-button tab="goals">

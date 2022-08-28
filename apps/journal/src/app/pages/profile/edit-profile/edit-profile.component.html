@@ -1,13 +1,5 @@
-<ion-header *ngIf="screensize.isMobile$ | async">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-button (click)="back()">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Edit Profile</ion-title>
-  </ion-toolbar>
-</ion-header>
+<strive-header title="Edit Profile"></strive-header>
+
 <ng-container *ngIf="user.user$ | async as user else login">
   <ion-content class="ion-no-padding">
     <ion-card>

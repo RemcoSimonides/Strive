@@ -79,7 +79,7 @@
 </ng-container>
 
 <ng-template #goal let-stakeholder>
-  <ion-card>
+  <ion-card mode="md">
     <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
       <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
         <img [ref]="stakeholder.goal.image" asset="goal.png"/>
