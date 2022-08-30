@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 // Sentry
-import { captureException } from '@sentry/capacitor'
+import { captureException, captureMessage } from '@sentry/capacitor'
 // Firebase
 import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -302,14 +302,18 @@ export class GoalComponent {
 
     const canShare = await Share.canShare()
     if (canShare.value) {
-      Share.share({
-        title: goal.title,
-        text: 'Check out this goal',
-        url,
-        dialogTitle: 'Together we achieve!'
-      }).catch(err => {
-        captureException(err)
-      })
+      try {
+        Share.share({
+          title: goal.title,
+          text: 'Check out this goal',
+          url,
+          dialogTitle: 'Together we achieve!'
+        }).catch(err => {
+          captureException(err)
+        })
+      } catch(err: any) {
+        captureMessage(err['message'])
+      }
     } else {
       this.popoverCtrl.create({
         component: GoalSharePopoverComponent,

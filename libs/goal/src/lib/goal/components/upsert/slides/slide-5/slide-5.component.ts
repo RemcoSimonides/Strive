@@ -6,7 +6,7 @@ import { GoalForm } from '@strive/goal/goal/forms/goal.form'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { GoalSharePopoverComponent } from '../../../popovers/share/share.component'
 import { createGoal, exercises } from '@strive/model'
-import { captureException } from '@sentry/capacitor'
+import { captureException, captureMessage } from '@sentry/capacitor'
 
 @Component({
   selector: '[form][goalId] goal-slide-5',
@@ -38,14 +38,18 @@ export class Slide5Component {
     const canShare = await Share.canShare()
     if (canShare.value) {
 
-      await Share.share({
-        title: goal.title,
-        text: 'Check out this goal',
-        url,
-        dialogTitle: 'Together we achieve!'
-      }).catch(err => {
-        captureException(err)
-      })
+      try {
+        await Share.share({
+          title: goal.title,
+          text: 'Check out this goal',
+          url,
+          dialogTitle: 'Together we achieve!'
+        }).catch(err => {
+          captureException(err)
+        })
+      } catch(err: any) {
+        captureMessage(err['message'])
+      }
 
     } else {
       this.popoverCtrl.create({
