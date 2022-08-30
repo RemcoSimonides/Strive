@@ -48,7 +48,7 @@ export class LoginPage {
         const isAdmin = await this.user.isStriveAdmin(user.uid)
 
         if (isAdmin) {
-          this.router.navigate(['/a/users'])
+          this.router.navigate(['/a'])
         } else {
           getAuth().signOut()
           this.alertCtrl.create({
@@ -96,7 +96,7 @@ export class LoginPage {
         return
       }
 
-      this.router.navigate(['/a/users'])
+      this.router.navigate(['/a'])
   
     } catch (error: any) {
       this.alertCtrl.create({

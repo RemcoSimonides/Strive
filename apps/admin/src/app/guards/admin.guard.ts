@@ -19,7 +19,7 @@ export class StriveAdminGuard implements CanActivate {
         if (!user) return of(false)
         return this.user.isStriveAdmin(user.uid)
       }),
-      map(isAdmin =>  isAdmin ? true : this.router.parseUrl('/'))
+      map(isAdmin =>  isAdmin ? true : this.router.parseUrl('/login'))
     )
   }
 }
