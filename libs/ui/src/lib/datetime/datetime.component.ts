@@ -4,6 +4,7 @@ import { IonDatetime, PopoverController } from "@ionic/angular";
 @Component({
   selector: 'strive-datetime',
   templateUrl: './datetime.component.html',
+  styleUrls: ['./datetime.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeComponent {

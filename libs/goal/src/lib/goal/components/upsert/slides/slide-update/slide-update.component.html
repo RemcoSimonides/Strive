@@ -23,24 +23,17 @@
     </ion-select>
   </ion-item>
 
-  <!-- TODO move it to editable on goal page or on edit goal only -->
-  <!-- <ion-item>
-    <ion-label position="stacked">End date &#40;optional&#41;</ion-label>
-    <ion-datetime
-      placeholder="-- -- --"
-      displayFormat="DDDD DD MMMM YYYY"
-      pickerFormat="DDDD MMMM YYYY" 
-      formControlName="deadline"
-      (click)="openingDatetime($event)"
-    ></ion-datetime>
-  </ion-item> -->
-
   <ion-item>
     <media-image-selector
       [form]="form.image"
       [storagePath]="'goals/' + goalId"
       defaultImage="goal.png"
     ></media-image-selector>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label position="stacked">Description</ion-label>
+    <ion-textarea formControlName="description" maxlength="160" autoGrow></ion-textarea>
   </ion-item>
 </form>
 

@@ -1,0 +1,31 @@
+:host {
+	display: block;
+}
+
+ion-item {
+	border-radius: 12px;
+	--highlight-background: var(--ion-color-primary);
+
+	ion-button {
+		margin-top: auto;
+		margin-bottom: 16px;
+	}
+}
+
+section {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	article {
+		color: var(--ion-color-medium);
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		-ms-user-select: text;
+		user-select: text;		  
+	}
+
+	ion-button {
+		width: fit-content;
+	}
+}
