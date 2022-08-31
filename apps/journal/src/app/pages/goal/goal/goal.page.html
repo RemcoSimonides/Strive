@@ -95,7 +95,7 @@
     </ng-container>
   </ng-container>
 
-  <goal-description [goal]="goal" [isAdmin]="stakeholder.isAdmin"></goal-description>
+  <strive-description [value]="goal.description" [canEdit]="stakeholder.isAdmin" (onUpdate)="updateDescription($event)"></strive-description>
 
   <h3>Roadmap</h3>
   <goal-strive-roadmap

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { GoalDescriptionComponent } from './description.component'
+import { DescriptionComponent } from './description.component'
 
 @NgModule({
 	imports: [
@@ -11,10 +11,10 @@ import { GoalDescriptionComponent } from './description.component'
 		ReactiveFormsModule
 	],
 	declarations: [
-		GoalDescriptionComponent
+		DescriptionComponent
 	],
 	exports: [
-		GoalDescriptionComponent
+		DescriptionComponent
 	]
 })
-export class GoalDescriptionModule {}
+export class DescriptionModule {}

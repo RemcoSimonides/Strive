@@ -171,6 +171,10 @@ export class GoalComponent {
 
   }
 
+  updateDescription(description: string) {
+    this.goalService.update(this.goal.id, { description })
+  }
+
   updatePrivacy($event: any, goal: Goal) {
     if (!this.stakeholder.isAdmin) return;
     const publicity = $event.detail.value

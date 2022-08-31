@@ -8,7 +8,7 @@ import { GoalComponent } from './goal.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
-import { GoalDescriptionModule } from '@strive/goal/goal/components/description/description.module'
+import { DescriptionModule } from '@strive/ui/description/description.module'
 
 @NgModule({
   imports: [
@@ -19,7 +19,7 @@ import { GoalDescriptionModule } from '@strive/goal/goal/components/description/
     PageLoadingModule,
     ImageSelectorModule,
     SelectUserModule,
-    GoalDescriptionModule
+    DescriptionModule
   ],
   declarations: [GoalComponent],
   exports: [GoalComponent]

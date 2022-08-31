@@ -37,6 +37,12 @@ export class GoalComponent implements OnInit {
     this.goal.update({ ...this.goalForm.value, id: this.id })
   }
 
+  updateDescription(description: string) {
+    this.goal.update(this.id, {
+      description
+    })
+  }
+
   delete() {
     this.alertCtrl.create({
       subHeader: `Are you sure you want to delete this goal?`,

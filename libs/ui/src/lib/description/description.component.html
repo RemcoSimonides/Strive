@@ -1,16 +1,16 @@
-<ng-container *ngIf="goal.description; else noDescription">
+<ng-container *ngIf="value; else noValue">
 	<ng-container *ngIf="!editMode else edit">
 		<section>
-			<article>{{ goal.description }}</article>
-			<ion-button fill="clear" (click)="editMode = true" size="small" *ngIf="isAdmin">
+			<article>{{ value }}</article>
+			<ion-button fill="clear" (click)="editMode = true" size="small" *ngIf="canEdit">
 				<ion-icon name="pencil-outline" slot="start"></ion-icon>
 				<span>Edit description</span>
 			</ion-button>
 		</section>
 	</ng-container>
 </ng-container>
-<ng-template #noDescription>
-	<ng-container *ngIf="isAdmin">
+<ng-template #noValue>
+	<ng-container *ngIf="canEdit">
 		<ng-container *ngIf="!editMode else edit">
 			<ion-button fill="clear" (click)="editMode = true" size="small">
 				<ion-icon name="pencil-outline" slot="start"></ion-icon>
@@ -22,7 +22,7 @@
 
 <ng-template #edit>
 	<ion-item>
-		<ion-textarea [formControl]="description" maxlength="400" autoGrow></ion-textarea>
+		<ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow></ion-textarea>
 		<ion-button slot="end" (click)="update()">
 			<ion-icon name="save-outline" slot="start"></ion-icon>
 			<span>SAVE</span>
