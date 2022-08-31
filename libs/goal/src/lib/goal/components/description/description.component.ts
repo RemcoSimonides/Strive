@@ -20,7 +20,7 @@ export class GoalDescriptionComponent {
 	@Input() isAdmin = false
 
 	editMode = false
-	description = new FormControl('', { validators: [Validators.required, Validators.maxLength(160)], nonNullable: true })
+	description = new FormControl('', { validators: [Validators.maxLength(400)], nonNullable: true })
 
 	constructor(private goalService: GoalService) {}
 
