@@ -5,6 +5,7 @@
 
 ion-item.main {
   --inner-padding-top: 8px;
+  
   ion-textarea {
     --padding-top: 0;
   }
@@ -20,6 +21,10 @@ strive-milestone-deadline {
 }
 
 ion-list {
+  ion-item {
+    --padding-start: 0;
+  }
+
   .icon {
     margin: 0 8px;
   }

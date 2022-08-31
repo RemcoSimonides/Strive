@@ -65,15 +65,19 @@
     <ng-container *ngIf="isAdmin || milestone.subtasks?.length">
       <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
       <ion-list mode="md">
-        <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
-          <ion-button fill="clear" (click)="toggleSubtask(i)">
-            <ion-icon  slot="icon-only"
-              [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
-              color="primary">
-            </ion-icon>
-          </ion-button>
-          <ion-input [readonly]="!isAdmin" [formControl]="control.content"></ion-input>
-        </ion-item>
+        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!isAdmin">
+          <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
+            <ion-button fill="clear" (click)="toggleSubtask(i)">
+              <ion-icon  slot="icon-only"
+                [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
+                color="primary">
+              </ion-icon>
+            </ion-button>
+            <ion-input [readonly]="!isAdmin" [formControl]="control.content"></ion-input>
+            <ion-reorder slot="end"></ion-reorder>
+          </ion-item>
+        </ion-reorder-group>
+        
         <form [formGroup]="subtaskForm" *ngIf="isAdmin">
           <ion-item>
             <ion-icon class="icon" name="radio-button-off" color="primary"></ion-icon>

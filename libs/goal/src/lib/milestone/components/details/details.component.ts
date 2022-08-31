@@ -158,4 +158,18 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       }).then(modal => modal.present())
     })
   }
+
+  doReorder(ev: any) {
+    if (!this.form) return
+    const { from, to } = ev.detail
+
+    const subtasks = this.form.subtasks.value
+    const element = subtasks[from]
+    subtasks.splice(from, 1)
+    subtasks.splice(to, 0, element)
+
+    this.form.subtasks.setValue(subtasks)
+
+    ev.detail.complete()
+  }
 }
