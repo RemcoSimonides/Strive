@@ -54,12 +54,13 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
       }
 
       case 'goalStatusFinished': {
+        const goal = await getDocument<Goal>(`Goals/${goalId}`)
         const options: SendOptions = {
           send: {
             notification: true,
             pushNotification: true,
             toSpectator: {
-              pushNotification: true
+              pushNotification: goal.publicity === 'public'
             }
           },
           roles: {
