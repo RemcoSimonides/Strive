@@ -8,7 +8,7 @@ function createMilestoneFormControl(params: Partial<Milestone> = {}) {
   return {
     order: new FormControl(milestone.order, { nonNullable: true, validators: [Validators.required]}),
     content: new FormControl(milestone.content, { nonNullable: true, validators: [Validators.required, Validators.maxLength(200)]}),
-    description: new FormControl(milestone.description, { nonNullable: true }),
+    description: new FormControl(milestone.description, { nonNullable: true, validators: [Validators.maxLength(200)] }),
     status: new FormControl(milestone.status, { nonNullable: true }),
     deadline: new FormControl(milestone.deadline, { nonNullable: true }),
     achiever: new UserLinkForm(milestone.achiever),

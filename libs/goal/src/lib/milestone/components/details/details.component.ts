@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { AlertController, ModalController } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
 
@@ -35,6 +35,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   constructor(
     private alertCtrl: AlertController,
+    private cdr: ChangeDetectorRef,
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
@@ -45,7 +46,6 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   ngOnInit() {
     this.form = new MilestoneForm(this.milestone)
-    this.form.valueChanges.subscribe(console.log)
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
@@ -57,6 +57,19 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
           this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         }
       })
+
+      const descriptionSub = this.form.description.valueChanges.pipe(
+        debounceTime(1000),
+        filter(_ => this.form!.content.valid)
+      ).subscribe(description => {
+        if (!this.canEdit || !this.form) return
+        this.milestoneService.update({ description, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+        this.milestone.description = description
+        this.form.description.markAsTouched()
+        this.form.description.markAsPristine()
+        this.cdr.markForCheck()
+      })
+
       const subtaskSub = this.form.subtasks.valueChanges.pipe(
         debounceTime(1000)
       ).subscribe(subtasks => {
@@ -64,7 +77,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
           this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         }
       })
-      this.subs.push(sub, subtaskSub)
+      this.subs.push(sub, descriptionSub, subtaskSub)
     }
   }
 

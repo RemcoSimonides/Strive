@@ -10,13 +10,19 @@ ion-list {
   }
 
   ion-item.milestone {
-    --inner-padding-bottom: 4px;
+    --inner-padding-bottom: 8px;
+    --inner-padding-top: 8px;
 
     ion-button {
       margin-inline-start: 16px;
     }
 
+    .description {
+      color: var(--ion-color-medium);
+    }
+
     article {
+      color: var(--ion-color-medium);
       white-space: nowrap;
 
       .supports small {

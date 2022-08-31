@@ -4,6 +4,7 @@
 }
 
 ion-item.main {
+  --inner-padding-top: 8px;
   ion-textarea {
     --padding-top: 0;
   }
@@ -36,6 +37,19 @@ ion-list {
 ion-item {
   --highlight-background: var(--ion-color-primary); 
 }
+
+.description {
+  ion-item {
+    border-radius: 12px;
+  }
+
+  header {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+  }
+}
+
 
 h5 {
   color: var(--ion-color-primary);

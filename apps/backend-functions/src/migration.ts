@@ -1,31 +1,27 @@
-import { createUser } from '@strive/model';
+import { createMilestone, createUser } from '@strive/model';
 import { db, functions, logger } from './internals/firebase';
 import { toDate } from './shared/utils';
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
   try {
-    // const usersSnap = await db.collection('Users').get()
-    // const index = getAlgoliaIndex('user')
+    // const goalsSnap = await db.collection('Goals').get()
+    // const batch = db.batch()
 
-    // const users = []
+    // for (const { id } of goalsSnap.docs) {
 
-    // for (const doc of usersSnap.docs) {
-    //   const user = createUser(toDate({ ...doc.data(), id: doc.id }))
-      
-    //   users.push({
-    //     objectID: doc.id,
-    //     username: user.username,
-    //     photoURL: user.photoURL,
-    //     numberOfSpectators: user.numberOfSpectators
-    //   })
+    //   const milestonesSnap = await db.collection(`Goals/${id}/Milestones`).get()
+    //   for (const doc of milestonesSnap.docs) {
+
+    //     const milestone = createMilestone(doc.data())
+
+    //     if (milestone.description) {
+    //       batch.update(doc.ref, { description: '' })
+    //     }
+
+    //   }
     // }
-
-    // const batchRequest = users.map(user => ({ action: 'updateObject', body: user }))
-
-
-    // logger.log('batch request: ', batchRequest)
-    // index.batch(batchRequest as any)
+    // await batch.commit()
 
     res.status(200).send('all good')
   } catch (err) {

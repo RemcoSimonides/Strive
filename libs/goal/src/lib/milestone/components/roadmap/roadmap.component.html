@@ -5,9 +5,10 @@
       <ion-reorder-group [disabled]="!isAdmin" (ionItemReorder)="doReorder($event)">
         <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}">
           <strive-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-          <section fxLayout="column">
-            {{ milestone.content }}
-            <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px">
+          <section fxLayout="column" fxLayoutGap="4px">
+            <span>{{ milestone.content }}</span>
+            <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
+            <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="(isAdmin && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achiever.uid">
               <ng-container *ngIf="isAdmin && !createMode">
                 <div class="supports">
                   <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.supports?.length ?? 0 }}</small>

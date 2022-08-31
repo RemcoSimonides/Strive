@@ -36,6 +36,32 @@
       </ion-button>
     </div>
 
+    <article class="description">
+      <ng-container *ngIf="!isAdmin else editable">
+        <ng-container *ngIf="milestone.description">
+          <h5>Description</h5>
+          <article>{{ milestone.description }}</article>
+        </ng-container>
+      </ng-container>
+      <ng-template #editable>
+        <header>
+          <h5>Description</h5>
+          <ion-button slot="end" fill="clear" disabled *ngIf="form.description.touched">
+            <ng-container *ngIf="form.description.dirty; else saved">
+              <span>SAVING...</span>
+            </ng-container>
+            <ng-template #saved>
+              <span>SAVED</span>
+              <ion-icon name="checkmark-outline" slot="end"></ion-icon>
+            </ng-template>
+          </ion-button>
+        </header>
+        <ion-item>
+          <ion-textarea [formControl]="form.description" [maxlength]="200" autoGrow></ion-textarea>
+        </ion-item>
+      </ng-template>
+    </article>
+
     <ng-container *ngIf="isAdmin || milestone.subtasks?.length">
       <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
       <ion-list mode="md">
