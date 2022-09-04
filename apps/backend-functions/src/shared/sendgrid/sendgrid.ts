@@ -24,8 +24,8 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    futureGoals?: Goal[];
-    currentGoals?: Goal[];
+    bucketlistGoals?: Goal[];
+    inProgressGoals?: Goal[];
     description?: string;
   };
 }

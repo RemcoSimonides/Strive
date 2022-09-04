@@ -68,15 +68,15 @@
 
       <ion-card *ngFor="let stakeholder of stakeholders">
         <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
-          <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
+          <ion-thumbnail slot="start">
             <img [ref]="stakeholder.goal.image" asset="goal.png"/>
-            <div *ngIf="stakeholder.status === 'finished'">finished</div>
+            <div *ngIf="stakeholder.goal.isFinished">finished</div>
           </ion-thumbnail>
           <article>
             <ion-text>
               <b>{{ stakeholder.goal.title }}</b>
-              <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.status | status }}</small>
-              <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.status | status }} & Supporting</small>
+              <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }}</small>
+              <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }} & Supporting</small>
               <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
             </ion-text>
             <!-- <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">

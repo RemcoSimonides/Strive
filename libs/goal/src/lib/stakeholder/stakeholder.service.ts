@@ -63,8 +63,6 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     ])
 
     if (goal.id) {
-      // TODO if max number of active goals, then put in buckeltist if goal is active and user already has max active goals;
-      stakeholder.status = goal.status
       stakeholder.goalPublicity = goal.publicity
     }
 

@@ -1,11 +1,8 @@
-import { Component, Input } from '@angular/core';
-// Ionic
+import { Component, Input } from '@angular/core'
 import { PopoverController } from '@ionic/angular'
-import { GoalStatus } from '@strive/model'
 
 export enum enumGoalOptions {
   editNotificationSettings,
-  // duplicateGoal,
   finishGoal,
   editGoal,
   deleteGoal
@@ -21,7 +18,6 @@ export class GoalOptionsPopoverComponent {
   public enumGoalOptions = enumGoalOptions
 
   @Input() isAdmin = false
-  @Input() status?: GoalStatus
 
   constructor(private popoverCtrl: PopoverController) { }
 

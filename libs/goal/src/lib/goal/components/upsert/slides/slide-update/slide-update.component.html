@@ -7,15 +7,6 @@
   </ion-item>
 
   <ion-item>
-    <ion-label position="stacked">Status</ion-label>
-    <ion-select placeholder="Select Status" interface="popover" formControlName="status">
-      <ion-select-option value="bucketlist">In Future</ion-select-option>
-      <ion-select-option value="active">Current Focus</ion-select-option>
-      <ion-select-option value="finished">Finished</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
     <ion-label position="stacked">Access</ion-label>
     <ion-select interface="popover" formControlName="isSecret"> 
       <ion-select-option [value]="false">Everyone can access</ion-select-option>
@@ -34,6 +25,14 @@
   <ion-item>
     <ion-label position="stacked">Description</ion-label>
     <ion-textarea formControlName="description" maxlength="160" autoGrow></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Is the goal finished?</ion-label>
+    <ion-select interface="popover" formControlName="isFinished"> 
+      <ion-select-option [value]="true">Yes</ion-select-option>
+      <ion-select-option [value]="false">No</ion-select-option>
+    </ion-select>
   </ion-item>
 </form>
 

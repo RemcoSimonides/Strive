@@ -8,11 +8,10 @@ export interface AggregatedMessage {
 
 export function getAggregatedMessage({ event, count }: { event: EventType, count: number }): AggregatedMessage | undefined {
   switch (event) {
-    case 'goalCreatedStatusBucketlist':
-    case 'goalCreatedStatusActive':
-    case 'goalCreatedStatusFinished':
+    case 'goalCreated':
+    case 'goalCreatedFinished':
       break
-    case 'goalStatusFinished':
+    case 'goalIsFinished':
       return {
         message: `Goal is finished!`,
         icon: 'flag-outline',

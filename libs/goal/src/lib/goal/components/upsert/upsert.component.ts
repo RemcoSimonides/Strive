@@ -1,21 +1,20 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Location } from '@angular/common';
-//ionic
-import { LoadingController, ModalController, NavParams  } from '@ionic/angular'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
+import { Location } from '@angular/common'
+import { LoadingController, ModalController } from '@ionic/angular'
 
 //Services
 import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 
 //Interfaces
-import { createGoal, Goal, GoalStatus } from '@strive/model'
-import { GoalForm } from '@strive/goal/goal/forms/goal.form';
+import { createGoal, Goal } from '@strive/model'
+import { GoalForm } from '@strive/goal/goal/forms/goal.form'
 
 // Directives
-import { ModalDirective } from '@strive/utils/directives/modal.directive';
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 // Swiper
-import { SwiperComponent } from 'swiper/angular';
-import { UserService } from '@strive/user/user/user.service';
+import { SwiperComponent } from 'swiper/angular'
 
 @Component({
   selector: 'goal-upsert',
@@ -24,15 +23,22 @@ import { UserService } from '@strive/user/user/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class UpsertGoalModalComponent extends ModalDirective {
+export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
-  goalId: string
-  goalForm: GoalForm
-  mode: 'update' | 'create'
+  goalId?: string
+  goalForm?: GoalForm
+  mode?: 'update' | 'create'
 
   created = false // used for navigating to goal (only if goal is created)
 
-  get goal(): Goal { return createGoal({ ...this.goalForm.getRawValue(), id: this.goalId }) }
+  private _goal?: Goal
+  get goal(): Goal {
+    return createGoal({ ...this.goalForm?.getGoalValue(), id: this.goalId })
+  }
+  @Input() set goal(goal: Goal) {
+    this._goal = goal
+    this.goalId = goal.id
+  }
 
   @ViewChild('swiper') swiper?: SwiperComponent;
 
@@ -41,24 +47,21 @@ export class UpsertGoalModalComponent extends ModalDirective {
     private loadingCtrl: LoadingController,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    private navParams: NavParams,
-    private user: UserService
   ) {
     super(location, modalCtrl)
 
-    const goal = this.navParams.data['currentGoal'] as Goal
-    const status: GoalStatus = this.user.user?.numberOfActiveGoals ?? 0 < 4 ? 'active' : 'bucketlist';
-    if (goal) {
+    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
+  }
+
+  ngOnInit() {
+    if (this.goalId) {
       this.mode = 'update'
-      this.goalForm = new GoalForm({ ...goal })
-      this.goalId = goal.id
+      this.goalForm = new GoalForm(this._goal)
     } else {
       this.mode = 'create'
-      this.goalForm = new GoalForm({ status })
       this.goalId = this.goalService.createId()
+      this.goalForm = new GoalForm()
     }
-
-    this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }
 
   stepper(direction: 'next' | 'previous') {
@@ -67,10 +70,10 @@ export class UpsertGoalModalComponent extends ModalDirective {
       if (this.swiper?.swiperRef.isEnd) {
         this.close()
       } else {
-        this.swiper?.swiperRef.slideNext(100);
+        this.swiper?.swiperRef.slideNext(100)
       }
     } else if (direction === 'previous') {
-      this.swiper?.swiperRef.slidePrev(100);
+      this.swiper?.swiperRef.slidePrev(100)
     }
   }
 

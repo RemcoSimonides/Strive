@@ -41,6 +41,7 @@ main {
         ion-text {
           display: flex;
           flex-direction: column;
+          gap: 4px;
 
           b, small {
             overflow: hidden;

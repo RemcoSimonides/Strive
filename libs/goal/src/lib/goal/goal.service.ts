@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore, orderBy, QueryConstraint, where } from 'firebase/firestore'
+import { DocumentSnapshot, getFirestore, orderBy, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
 import { toDate } from 'ngfire'
 
 import { combineLatest, Observable, of } from 'rxjs'
@@ -10,6 +10,7 @@ import { GoalStakeholderService } from '../stakeholder/stakeholder.service'
 import { UserService } from '@strive/user/user/user.service'
 
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
+import { getProgress } from './pipes/progress.pipe'
 
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {
@@ -30,15 +31,15 @@ export class GoalService extends FireCollection<Goal> {
 
   protected override toFirestore(goal: Goal): Goal {
     if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
+    if (goal.isFinished === true) goal.isFinished = serverTimestamp() as any
     goal.updatedBy = this.user.uid
     return goal
   }
 
   override onCreate(goal: Goal, { write, params }: WriteOptions) {
-    const uid = params?.['uid'] ?? this.user.uid;
+    const uid = params?.['uid'] ?? this.user.uid
     const stakeholder = createGoalStakeholder({
       uid,
-      status: goal.status,
       goalId: goal.id,
       goalPublicity: goal.publicity,
       isAdmin: true,
@@ -72,12 +73,19 @@ export class GoalService extends FireCollection<Goal> {
         )
       }),
       // Sort finished goals to the end
-      map(result => result.sort((a, b) => {
-        const order = ['active', 'bucketlist', 'finished']
-        if (order.indexOf(a.stakeholder.status) > order.indexOf(b.stakeholder.status)) return 1
-        if (order.indexOf(a.stakeholder.status) < order.indexOf(b.stakeholder.status)) return -1
+      map(result => result.sort((first, second)  => {
+        // Sort finished goals to the end and in progress goals to top
+        const a = getProgress(first.goal!)
+        const b = getProgress(second.goal!)
+
+        if (a === b) return 0
+        if (b === 1) return -1
+        if (a === 1) return 1
+
+        if (a > b) return -1
+        if (a < b) return 1
         return 0
-      })),
+      }))
     )
   }
 

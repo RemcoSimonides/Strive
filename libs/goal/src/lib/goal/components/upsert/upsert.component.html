@@ -16,21 +16,21 @@
   <ng-container *ngIf="mode === 'create' else update">
     <swiper #swiper [allowTouchMove]="false">
       <ng-template swiperSlide>
-        <goal-slide-1 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)" (created)="created = $event"></goal-slide-1>
+        <goal-slide-1 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)" (created)="created = $event"></goal-slide-1>
       </ng-template>
       <ng-template swiperSlide>
-        <goal-slide-3 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></goal-slide-3>
+        <goal-slide-3 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)"></goal-slide-3>
       </ng-template>
       <ng-template swiperSlide>
         <goal-slide-4 [goal]="goal" (stepper)="stepper($event)"></goal-slide-4>
       </ng-template>
       <ng-template swiperSlide>
-        <goal-slide-5 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></goal-slide-5>
+        <goal-slide-5 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)"></goal-slide-5>
       </ng-template>
     </swiper>
   </ng-container>
 </ion-content>
 
 <ng-template #update swiperSlide>
-  <goal-slide-update [form]="goalForm" [goalId]="goalId"></goal-slide-update>
+  <goal-slide-update [form]="goalForm" [goalId]="goal.id"></goal-slide-update>
 </ng-template>

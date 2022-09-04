@@ -2,10 +2,9 @@ import { createGoalSource, GoalSource } from './goal'
 import { EventType } from './notification'
 
 export const storyEvents: EventType[] = [
-  'goalCreatedStatusBucketlist',
-  'goalCreatedStatusActive',
-  'goalCreatedStatusFinished',
-  'goalStatusFinished',
+  'goalCreated',
+  'goalCreatedFinished',
+  'goalIsFinished',
   'goalMilestoneCompletedSuccessfully',
   'goalMilestoneCompletedUnsuccessfully',
   'goalMilestoneDeadlinePassed',

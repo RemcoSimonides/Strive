@@ -12,19 +12,18 @@
   </ion-item>
 
   <ion-item>
-    <ion-label position="stacked" color="primary">When do you start?</ion-label>
-    <ion-select placeholder="Select Status" interface="popover" formControlName="status">
-      <ion-select-option value="bucketlist">In future (bucket list)</ion-select-option>
-      <ion-select-option value="active">Now, or already started</ion-select-option>
-      <ion-select-option value="finished">Already finished (journaling)</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
     <ion-label position="stacked" color="primary">Who is able to see your goal</ion-label>
     <ion-select interface="popover" formControlName="isSecret"> 
       <ion-select-option [value]="false">Everyone</ion-select-option>
       <ion-select-option [value]="true">Only you</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked" color="primary">Is goal finished already?</ion-label>
+    <ion-select interface="popover" formControlName="isFinished"> 
+      <ion-select-option [value]="true">Yes</ion-select-option>
+      <ion-select-option [value]="false">No</ion-select-option>
     </ion-select>
   </ion-item>
 

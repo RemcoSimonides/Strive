@@ -63,7 +63,7 @@
 
     <section fxLayout="column">
       <article fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
-        <h2>Achieving Goals</h2>
+        <h2>Goals</h2>
         <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="createGoal()">
           <ion-icon name="add" slot="start"></ion-icon>
           <span>add goal</span>
@@ -74,17 +74,17 @@
           <ion-list mode="md">
             <ng-container *ngFor="let value of achievingGoals; let last = last">
               <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', value.goal.id]">
-                <ion-thumbnail slot="start" [ngClass]="{'gradient-border': value.stakeholder.status === 'active'}">
+                <ion-thumbnail slot="start">
                   <img [ref]="value.goal.image" asset="goal.png"/>
-                  <div *ngIf="value.stakeholder.status === 'finished'">finished</div>
+                  <div *ngIf="value.goal.isFinished">finished</div>
                 </ion-thumbnail>
                 <article>
-                  <ion-label fxLayout="column">
+                  <ion-label fxLayout="column" fxLayoutGap="4px">
                     <b>{{ value.goal.title }}</b>
-                    <small fxLayout fxLayoutGap="4px">
-                      <ion-icon name="pulse"></ion-icon><span>{{ value.stakeholder.status | status }}</span>
+                    <small>
                       <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
                     </small>
+                    <ion-progress-bar color="primary" [value]="value.goal | progress"></ion-progress-bar>
                   </ion-label>
                   <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="openGoalOptions(value.goal, value.stakeholder, $event)">
                     <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
@@ -110,7 +110,7 @@
               <ion-item [lines]="last ? 'none' : 'inset'" button [routerLink]="['/goal/', goal.id]">
                 <ion-thumbnail slot="start">
                   <img [ref]="goal.image" asset="goal.png"/>
-                  <div *ngIf="goal.status === 'finished'">finished</div>
+                  <div *ngIf="goal.isFinished">finished</div>
                 </ion-thumbnail>
                 <article>
                   <ion-label fxLayout="column">

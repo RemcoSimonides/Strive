@@ -1,4 +1,4 @@
-import { GoalPublicityType, GoalStatus } from './goal'
+import { GoalPublicityType } from './goal'
 
 export type GoalStakeholderRole = 'isAdmin' | 'isAchiever' | 'isSupporter' | 'isSpectator'
 
@@ -11,7 +11,6 @@ export interface GoalStakeholder {
   isSupporter: boolean
   isSpectator: boolean
   hasOpenRequestToJoin: boolean
-  status: GoalStatus
   goalId: string
   goalPublicity: GoalPublicityType
   lastCheckedGoal: false | Date
@@ -32,7 +31,6 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     isSpectator: false,
     isSupporter: false,
     hasOpenRequestToJoin: false,
-    status: 'bucketlist',
     goalId: '',
     goalPublicity: 'private',
     lastCheckedGoal: false,

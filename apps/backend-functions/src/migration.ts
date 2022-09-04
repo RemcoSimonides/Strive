@@ -1,27 +1,51 @@
-import { createMilestone, createUser } from '@strive/model';
+import { createGoalEvent, createMilestone, createStoryItem, EventType, Goal } from '@strive/model';
 import { db, functions, logger } from './internals/firebase';
 import { toDate } from './shared/utils';
+
+function renameEvent(event: string): EventType | undefined {
+  if (event === 'goalStatusFinished') return 'goalIsFinished'
+  if (event === 'goalCreatedStatusBucketList' || event === 'goalCreatedStatusActive') return 'goalCreated'
+  if (event === 'goalCreatedStatusFinished') return 'goalCreatedFinished'
+}
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
   try {
-    // const goalsSnap = await db.collection('Goals').get()
-    // const batch = db.batch()
 
-    // for (const { id } of goalsSnap.docs) {
+    // get all goal events
+    const goalEventsSnap = await db.collection('GoalEvents').get()
+    const batch = db.batch()
 
-    //   const milestonesSnap = await db.collection(`Goals/${id}/Milestones`).get()
-    //   for (const doc of milestonesSnap.docs) {
+    for (const doc of goalEventsSnap.docs) {
+      const event = createGoalEvent(toDate(doc.data()))
 
-    //     const milestone = createMilestone(doc.data())
+      const name = renameEvent(event.name)
+      if (name) {
+        batch.update(doc.ref, { name })
+      }
+    }
+    await batch.commit()
 
-    //     if (milestone.description) {
-    //       batch.update(doc.ref, { description: '' })
-    //     }
+    // get all story events
+    const goalsSnap = await db.collection('Goals').get()
+    const storyBatch = db.batch()
 
-    //   }
-    // }
-    // await batch.commit()
+    for (const { id, ref } of goalsSnap.docs) {
+      const storySnap = await db.collection(`Goals/${id}/Story`).get()
+
+      for (const doc of storySnap.docs) {
+        const storyItem = createStoryItem(doc.data())
+
+        const name = renameEvent(storyItem.name)
+        if (name) {
+          logger.log('story item: ', storyItem)
+          logger.log('ref: ', doc.ref.path)
+          storyBatch.update(doc.ref, { name })
+        }
+      }
+    }
+
+    await storyBatch.commit()
 
     res.status(200).send('all good')
   } catch (err) {

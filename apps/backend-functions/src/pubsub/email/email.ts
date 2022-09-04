@@ -1,8 +1,8 @@
-import { db, functions } from '../../internals/firebase'
+import { db, functions, logger } from '../../internals/firebase'
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
-import { createPersonal, Personal, storyEvents } from '@strive/model'
+import { createPersonal, inBucketlist, inProgress, isFinished, Personal, storyEvents } from '@strive/model'
 import { getDocument } from '../../shared/utils'
 import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotification, Feature, Features, Motivation, Motivations } from '@strive/model'
 import { groupIds, templateIds } from './ids'
@@ -32,16 +32,16 @@ export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun
       getNotifications(personal)
     ])
 
-    const futureGoals = goals.filter(goal => goal.status === 'bucketlist')
-    const currentGoals = goals.filter(goal => goal.status === 'active')
-    if (!futureGoals.length && !currentGoals.length) continue
+    const inProgressGoals = goals.filter(goal => inProgress(goal))
+    const bucketlistGoals = goals.filter(goal => inBucketlist(goal))  
+    if (!inProgressGoals.length && !bucketlistGoals.length) continue
 
     const unreadNotifications = notifications.length
     const newUpdates = events
 
     const data = {
-      futureGoals,
-      currentGoals,
+      inProgressGoals,
+      bucketlistGoals,
       motivation,
       unreadNotifications,
       newUpdates,

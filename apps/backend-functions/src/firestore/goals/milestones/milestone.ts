@@ -1,4 +1,4 @@
-import { db, functions, serverTimestamp, logger } from '../../../internals/firebase'
+import { db, functions, serverTimestamp, logger, increment } from '../../../internals/firebase'
 
 import {
   Goal,
@@ -33,7 +33,13 @@ export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goal
     const source = createGoalSource({ goal, milestone, user })
     addGoalEvent('goalMilestoneCreated', source)
 
-    // sheduled task
+    // progress
+    const completed = milestone.status === 'failed' || milestone.status === 'succeeded'
+    const data: Partial<Goal> = { tasksTotal: increment(1) as any }
+    if (completed) goal.tasksCompleted = increment(1) as any
+    db.doc(`Goals/${goalId}`).update(data)
+
+    // scheduled task
     if (milestone.deadline) {
       upsertScheduledTask(milestoneId, {
         worker: enumWorkerType.milestoneDeadline,
@@ -71,9 +77,17 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
     // events
     await handleMilestoneEvents(before, after, goalId)
 
+    const completed = (before.status === 'pending' || before.status === 'overdue') && (after.status === 'failed' || after.status === 'succeeded')
+    if (completed) {
+      db.doc(`Goals/${goalId}`).update({
+        tasksCompleted: increment(1)
+      })
+    }
+
     // update source
     if (before.content !== after.content) {
       // DANGEROUS! because content is updated every 500ms automatically when changing. Better to have enum.gRoadmapUpdated event and schedule to update it max 1x per hour
+      // OR use milestoneId only in sources
       await updateContentInSources(goalId, after)
     }
 

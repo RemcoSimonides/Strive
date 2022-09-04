@@ -32,7 +32,7 @@ export function getPushMessage(notification: Notification, target: PushNotificat
 
 function getStakeholderPushMessage({ event, source }: Notification): PushMessage | void {
   switch (event) {
-    case 'goalStatusFinished':
+    case 'goalIsFinished':
       return createPushMessage({
         title: source.goal?.title,
         body: `Congratulations! goal is finished`,
@@ -95,9 +95,8 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
         url: `/goal/${source.goal?.id}`
       })
 
-    case 'goalCreatedStatusActive':
-    case 'goalCreatedStatusBucketlist':
-    case 'goalCreatedStatusFinished':
+    case 'goalCreated':
+    case 'goalCreatedFinished':
     case 'goalStakeholderRequestToJoinAccepted':
     case 'goalStakeholderRequestToJoinRejected':
 
@@ -109,28 +108,21 @@ function getStakeholderPushMessage({ event, source }: Notification): PushMessage
 
 function getSpectatorPushMessage({ event, source }: Notification): PushMessage | void {
   switch (event) {
-    case 'goalCreatedStatusBucketlist':
-      return createPushMessage({
-        title: source.user?.username,
-        body: `Added goal to Bucket list '${source.goal?.title}'`,
-        url: `/goal/${source.goal?.id}`
-      })
-
-    case 'goalCreatedStatusActive':
+    case 'goalCreated':
       return createPushMessage({
         title: source.user?.username,
         body: `Started goal '${source.goal?.title}'`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case 'goalCreatedStatusFinished':
+    case 'goalCreatedFinished':
       return createPushMessage({
         title: source.user?.username,
         body: `Journaling about '${source.goal?.title}'`,
         url: `/goal/${source.goal?.id}`
       })
 
-    case 'goalStatusFinished':     
+    case 'goalIsFinished':     
       return createPushMessage({
         title: source.user?.username,
         body: `Finished goal '${source.goal?.title}'`,

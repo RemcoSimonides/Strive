@@ -13,8 +13,8 @@
         <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
           <ng-container *ngIf="hasGoals$ | async else noGoals">
 
-            <ng-container *ngIf="(stakeholders | currentFocus) as inFocus">
-              <ng-container *ngIf="inFocus.length; else noFocus">
+            <!-- <ng-container *ngIf="(stakeholders | currentFocus) as inFocus"> -->
+              <!-- <ng-container *ngIf="inFocus.length; else noFocus">
                 <header>
                   <h4 *ngIf="hasGoalsOutsideFocus$ | async">Current Focus</h4>
                   <ion-button fill="clear" (click)="createGoal()">
@@ -29,7 +29,7 @@
                   </ng-container>
                 </section>
               </ng-container>
-              <ng-template #noFocus>
+              <ng-template #noFocus> -->
                 <header>
                   <ion-button fill="clear" (click)="createGoal()">
                     <ion-icon name="add" slot="start"></ion-icon>
@@ -40,25 +40,25 @@
                     <ion-icon slot="icon-only" name="options-outline"></ion-icon>
                   </ion-button>
                 </header>
-              </ng-template>
-            </ng-container>
+              <!-- </ng-template> -->
+            <!-- </ng-container> -->
 
-            <ng-container *ngIf="(stakeholders | currentFocus:true) as outsideFocus">
-              <ng-container *ngIf="hasGoalsOutsideFocus$ | async">
-                <header *ngIf="hasGoalsInFocus$ | async" class="other-goals">
+            <!-- <ng-container *ngIf="(stakeholders | currentFocus:true) as outsideFocus"> -->
+              <!-- <ng-container *ngIf="hasGoalsOutsideFocus$ | async"> -->
+                <!-- <header *ngIf="hasGoalsInFocus$ | async" class="other-goals">
                   <h4>All Goals</h4>
                   <ion-button fill="clear" (click)="openOptions($event)">
                     <ion-icon slot="icon-only" name="options-outline"></ion-icon>
                   </ion-button>
-                </header> 
+                </header>  -->
 
                 <section>
-                  <ng-container *ngFor="let stakeholder of outsideFocus; trackBy: trackByFn">
+                  <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
                     <ng-container *ngTemplateOutlet="goal; context: { $implicit: stakeholder }" ></ng-container>
                   </ng-container>
                 </section>
-              </ng-container>
-            </ng-container>
+              <!-- </ng-container> -->
+            <!-- </ng-container> -->
 
           </ng-container>
 
@@ -81,16 +81,17 @@
 <ng-template #goal let-stakeholder>
   <ion-card mode="md">
     <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
-      <ion-thumbnail slot="start" [ngClass]="{'gradient-border': stakeholder.status === 'active'}">
+      <ion-thumbnail slot="start">
         <img [ref]="stakeholder.goal.image" asset="goal.png"/>
-        <div *ngIf="stakeholder.status === 'finished'">finished</div>
+        <div *ngIf="stakeholder.goal.isFinished">finished</div>
       </ion-thumbnail>
       <article>
         <ion-text>
           <b>{{ stakeholder.goal.title }}</b>
-          <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.status | status }}</small>
-          <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.status | status }} & Supporting</small>
+          <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }}</small>
+          <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }} & Supporting</small>
           <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
+          <ion-progress-bar color="primary" [value]="stakeholder.goal | progress"></ion-progress-bar>
         </ion-text>
         <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
           <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>

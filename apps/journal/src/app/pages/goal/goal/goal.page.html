@@ -5,14 +5,14 @@
     <section class="goal-image">
       <picture (click)="openZoom(goal)">
         <img [ref]="goal.image" asset="goal.png" [width]="500" [height]="500"/>
-        <div *ngIf="goal.status === 'finished'">finished</div>
+        <div *ngIf="goal.isFinished">finished</div>
       </picture>
     </section>
 
     <section class="main-actions">
       <ion-card fxLayout fxLayoutAlign="space-evenly" class="team">
         <article fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="center center">
-          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.status === 'finished'">
+          <ion-button (click)="join()" color="primary" fill="outline" [disabled]="goal.isFinished">
             <ion-icon slot="start" name="flag"></ion-icon>
             <span> {{ getJoinText() }}</span>
           </ion-button>
@@ -117,21 +117,6 @@
 
   <ng-template #properties>
     <article class="properties" fxLayout="column" fxLayoutGap="24px">
-      <!-- Status -->
-      <div fxLayout fxLayoutAlign="start center">
-        <ion-icon name="pulse"></ion-icon>
-        <span>Status: </span>
-        <ng-container *ngIf="stakeholder.isAchiever; else statusNoAchiever">
-          <ion-select placeholder="Select Status" interface="popover" [value]="stakeholder.status" (ionChange)="updateStatus($event, goal)">
-            <ion-select-option value="bucketlist">In Future</ion-select-option>
-            <ion-select-option value="active">Current Focus</ion-select-option>
-            <ion-select-option value="finished">Finished</ion-select-option>
-          </ion-select>
-        </ng-container>
-        <ng-template #statusNoAchiever>
-          <b>&nbsp;{{ goal.status | titlecase }}</b>
-        </ng-template>
-      </div>
   
       <!-- Privacy -->
       <div fxLayout fxLayoutAlign="start center">
@@ -147,7 +132,7 @@
           <span>&nbsp;<b>{{ goal.publicity === 'public' ? 'Everyone can access' : 'Invites only' }}</b></span>
         </ng-template>
       </div>
-  
+
       <!-- Deadline -->
       <ng-container *ngIf="!!goal.deadline">
         <div fxLayout fxLayoutAlign="start center" [ngStyle]="{ 'color': isOverdue(goal.deadline) ? 'var(--ion-color-danger-tint)' : 'inherit'}">

@@ -4,7 +4,6 @@ import { createUserLink, User, UserLink } from './user';
 import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
 
 export type GoalPublicityType = 'public' | 'private'
-export type GoalStatus = 'bucketlist' | 'active' | 'finished'
 
 export interface GoalEvent {
   name: EventType
@@ -27,10 +26,12 @@ export interface Goal {
   title: string
   description: string
   image: string
-  status: GoalStatus
+  isFinished: Date | boolean
   publicity: GoalPublicityType
   numberOfAchievers: number
   numberOfSupporters: number
+  tasksCompleted: number
+  tasksTotal: number
   deadline?: string
   updatedBy?: string
   updatedAt?: Date
@@ -52,15 +53,30 @@ export interface AlgoliaGoal {
   numberOfSupporters: number
 }
 
+export function isFinished(goal: Goal) {
+  if (goal.isFinished) return true
+  return goal.tasksCompleted === goal.tasksTotal
+}
+
+export function inProgress(goal: Goal) {
+  return goal.tasksCompleted > 0 && !isFinished(goal)
+}
+
+export function inBucketlist(goal: Goal) {
+  return goal.tasksCompleted === 0 && !isFinished(goal)
+}
+
 /** A factory function that creates a GoalDocument. */
 export function createGoal(params: Partial<Goal> = {}): Goal {
   return {
     id: params.id ? params.id : '',
     description: '',
     image: '',
-    status: 'bucketlist',
+    isFinished: false,
     numberOfAchievers: 0,
     numberOfSupporters: 0,
+    tasksCompleted: 0,
+    tasksTotal: 1,
     publicity: 'public',
     title: '',
     ...params,

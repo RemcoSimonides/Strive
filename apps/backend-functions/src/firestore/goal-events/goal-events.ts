@@ -18,9 +18,8 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
     logger.log('event incoming: ', event)
 
     switch (event.name) {
-      case 'goalCreatedStatusBucketlist':
-      case 'goalCreatedStatusActive':
-      case 'goalCreatedStatusFinished': {
+      case 'goalCreated':
+      case 'goalCreatedFinished': {
         const goal = await getDocument<Goal>(`Goals/${goalId}`)
         if (goal.publicity === 'public') {
 
@@ -53,7 +52,7 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
         return sendGoalEventNotification(event, options, true)
       }
 
-      case 'goalStatusFinished': {
+      case 'goalIsFinished': {
         const goal = await getDocument<Goal>(`Goals/${goalId}`)
         const options: SendOptions = {
           send: {

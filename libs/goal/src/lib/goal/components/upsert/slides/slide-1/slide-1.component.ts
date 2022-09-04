@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NavParams } from '@ionic/angular';
-import { createGoal, GoalPublicityType } from '@strive/model'
+import { createGoal } from '@strive/model'
 import { GoalService } from '@strive/goal/goal/goal.service';
 import { GoalForm } from '@strive/goal/goal/forms/goal.form';
 
@@ -24,12 +24,9 @@ export class Slide1Component {
 
   async next() {
     this.stepper.next('next')
-    const publicity = await this.determinePublicity()
-    this.form.publicity.setValue(publicity)
 
     if (this.form.dirty) {
-      const goal = createGoal({ ...this.form.value, id: this.goalId })
-      delete (goal as any)['isSecret'] // remove isSecret value from Form
+      const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
     
       this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
       this.created.emit(true)
@@ -37,9 +34,4 @@ export class Slide1Component {
     }
   }
 
-  private async determinePublicity(): Promise<GoalPublicityType> {
-    if (this.form.isSecret.value) return 'private'
-
-    return 'public'
-  }
 }

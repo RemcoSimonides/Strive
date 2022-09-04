@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 // Sentry
 import { captureException, captureMessage } from '@sentry/capacitor'
@@ -24,7 +24,7 @@ import { UserService } from '@strive/user/user/user.service'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
-import { Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
+import { createGoal, Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
@@ -40,37 +40,10 @@ import { SupportService } from '@strive/support/support.service'
 })
 export class GoalComponent {
 
-  private _goal!: Goal
-  get goal() { return this._goal }
+  private _goal?: Goal
+  get goal() { return this._goal ?? createGoal() }
   @Input() set goal(goal: Goal) {
     this._goal = goal
-
-    this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: goal.id }).pipe(
-      joinWith({
-        supports: milestone => this.user.user$.pipe(
-          switchMap(user => {
-            if (!user) return of([])
-            const recipientQuery = [
-              where('source.milestone.id', '==', milestone.id),
-              where('source.recipient.uid', '==', user.uid)
-            ]
-            const supporterQuery = [
-              where('source.milestone.id', '==', milestone.id),
-              where('source.supporter.uid', '==', user.uid)
-            ]
-            return combineLatest([
-              this.supportService.valueChanges(recipientQuery, { goalId: this.goal.id }),
-              this.supportService.valueChanges(supporterQuery, { goalId: this.goal.id }),
-            ]).pipe(
-              map(([ recipientSupports, supporterSupports ]) => {
-                const supports = [ ...recipientSupports, ...supporterSupports]
-                return supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)
-              })
-            )
-          })
-        )
-      }, { shouldAwait: false })
-    )
   }
 
   private _stakeholder!: GoalStakeholder
@@ -103,21 +76,51 @@ export class GoalComponent {
     private milestone: MilestoneService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private route: ActivatedRoute,
     private router: Router,
     private stakeholderService: GoalStakeholderService,
     private supportService: SupportService,
     private user: UserService,
     public screensize: ScreensizeService,
     private seo: SeoService
-  ) {}
+  ) {
+    this.milestones$ = this.route.params.pipe(
+      map(params => params['id'] as string),
+      switchMap(goalId => this.milestone.valueChanges([orderBy('order', 'asc')], { goalId }).pipe(
+        joinWith({
+          supports: milestone => this.user.user$.pipe(
+            switchMap(user => {
+              if (!user) return of([])
+              const recipientQuery = [
+                where('source.milestone.id', '==', milestone.id),
+                where('source.recipient.uid', '==', user.uid)
+              ]
+              const supporterQuery = [
+                where('source.milestone.id', '==', milestone.id),
+                where('source.supporter.uid', '==', user.uid)
+              ]
+              return combineLatest([
+                this.supportService.valueChanges(recipientQuery, { goalId }),
+                this.supportService.valueChanges(supporterQuery, { goalId }),
+              ]).pipe(
+                map(([ recipientSupports, supporterSupports ]) => {
+                  const supports = [ ...recipientSupports, ...supporterSupports]
+                  return supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)
+                })
+              )
+            })
+          )}, { shouldAwait: false })  
+        )
+      )
+    )
+  }
 
   async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
     const popover = await this.popoverCtrl.create({
       component: GoalOptionsPopoverComponent,
       event: ev,
       componentProps: {
-        isAdmin: this.stakeholder.isAdmin,
-        status: goal.status
+        isAdmin: this.stakeholder.isAdmin
       }
     })
     await popover.present()
@@ -133,42 +136,6 @@ export class GoalComponent {
           this.deleteGoal()
       }
     })
-  }
-
-  updateStatus($event: any, goal: Goal) {
-    if (!this.stakeholder.isAchiever) return;
-
-    const status = $event.detail.value;
-    if (status === goal.status) return
-    if (status === 'finished') {
-      this.alertCtrl.create({
-        header: `Awesomeness! One step closer to whatever you want to achieve in life :)`,
-        subHeader: `To prevent mistakes, I have to ask whether you are sure the goal is finished. Is it?`,
-        buttons: [
-          {
-            text: 'Yes',
-            handler: () => {
-              goal.status = status
-              if (!this.user.uid) return
-              this.stakeholderService.update(this.user.uid, { status }, { params: { goalId: this.goal.id }})
-              this.startPostCreation()
-            }
-          },
-          {
-            text: 'No',
-            role: 'cancel',
-            handler: () => {
-              $event.target.value = goal.status;
-            }
-          }
-        ]
-      }).then(alert => alert.present())
-    } else {
-      goal.status = status
-      if (!this.user.uid) return
-      this.stakeholderService.update(this.user.uid, { status }, { params: { goalId: this.goal.id }})
-    }
-
   }
 
   updateDescription(description: string) {
@@ -195,9 +162,7 @@ export class GoalComponent {
   private editGoal(goal: Goal) {
     this.modalCtrl.create({
       component: UpsertGoalModalComponent,
-      componentProps: {
-        currentGoal: goal
-      }
+      componentProps: { goal }
     }).then(modal => modal.present())
   }
 

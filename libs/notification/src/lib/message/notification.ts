@@ -25,26 +25,17 @@ export interface NotificationMessage {
 
 export function getNotificationMessage({ event, source }: Notification): NotificationMessage {
   switch (event) {
-    case 'goalCreatedStatusBucketlist':
-      return {
-        ...get('user', source),
-        message: [
-          { text: `${source.user!.username} added "` },
-          { text: source.goal!.title, link: `goal/${source.goal!.id}` },
-          { text: `" to bucket list` }
-        ]
-      }
-    case 'goalCreatedStatusActive':
+    case 'goalCreated':
       return {
         ...get('user', source),
         link: `/goal/${source.goal?.id}`,
         message: [
-          { text: `${source.user!.username} started goal "` },
+          { text: `${source.user!.username} created goal "` },
           { text: source.goal!.title, link: `goal/${source.goal!.id}` },
           { text: `"` }
         ]
       }
-    case 'goalCreatedStatusFinished':
+    case 'goalCreatedFinished':
       return {
         ...get('user', source),
         message: [
@@ -63,7 +54,7 @@ export function getNotificationMessage({ event, source }: Notification): Notific
         ]
       }
 
-    case 'goalStatusFinished':
+    case 'goalIsFinished':
       return {
         ...get('user', source),
         message: [

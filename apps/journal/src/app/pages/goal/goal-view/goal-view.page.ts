@@ -25,7 +25,6 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     'isSupporter',
     'username',
     'photoURL',
-    'status',
     'lastCheckedChat'
   ]
 

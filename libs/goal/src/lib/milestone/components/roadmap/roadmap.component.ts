@@ -59,7 +59,10 @@ export class RoadmapComponent {
   add() {
     if (this.milestoneForm.content.value) {
       this.milestoneForm.order.setValue(this.milestones.length)
-      const milestone = createMilestone(this.milestoneForm.getRawValue())
+      const milestone = createMilestone({
+        ...this.milestoneForm.getRawValue(),
+        status: this.goal.isFinished && this.createMode ? 'succeeded' : 'pending'
+      })
       this.milestone.add(milestone, { params: { goalId: this.goal.id }})
       this.milestoneForm.reset(createMilestone())
     }

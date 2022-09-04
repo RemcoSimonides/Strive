@@ -8,14 +8,13 @@ export interface StoryItemMessage {
 
 export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessage {
   switch (name) {
-    case 'goalCreatedStatusBucketlist':
-    case 'goalCreatedStatusActive':
-    case 'goalCreatedStatusFinished':
+    case 'goalCreated':
+    case 'goalCreatedFinished':
       return {
         icon: 'flag-outline',
         message: [{ text: `Goal created` }]
       }
-    case 'goalStatusFinished':
+    case 'goalIsFinished':
       return {
         icon: 'flag-outline',
         message: [{ text: `Goal is finished!` }]

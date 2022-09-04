@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 
 import { orderBy, where } from 'firebase/firestore'
+import { joinWith } from 'ngfire'
 
 import { Observable, of } from 'rxjs'
 import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'
@@ -14,7 +15,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.ser
 import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
 import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
-import { joinWith } from 'ngfire';
+import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 
 type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
 
@@ -70,17 +71,23 @@ export class UserPage {
         filter(user => !!user),
         switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
         map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
-        map(stakeholders => stakeholders.sort((a, b) => {
-          // Sort finished goals to the end
-          const order = ['active', 'bucketlist', 'finished']
-          if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
-          if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
-          return 0
-        })),
         joinWith({
           goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId)
         }, { shouldAwait: true }),
         map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
+        map(stakeholders => stakeholders.sort((first, second) => {
+          // Sort finished goals to the end and in progress goals to top
+          const a = getProgress(first.goal!)
+          const b = getProgress(second.goal!)
+
+          if (a === b) return 0
+          if (b === 1) return -1
+          if (a === 1) return 1
+  
+          if (a > b) return -1
+          if (a < b) return 1
+          return 0
+        })),
       ) as any
     })
   }

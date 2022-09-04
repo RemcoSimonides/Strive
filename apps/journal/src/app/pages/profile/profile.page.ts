@@ -20,6 +20,7 @@ import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 // Other
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
+import { getProgress } from '@strive/goal/goal/pipes/progress.pipe';
 
 @Component({
   selector: 'journal-profile',

@@ -1,32 +1,28 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ModalController, PopoverController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ModalController, PopoverController } from '@ionic/angular'
+import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
+import { orderBy, where } from 'firebase/firestore'
 
-// Rxjs
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
-import { switchMap, map, filter, startWith, tap } from 'rxjs/operators';
+import { switchMap, map, filter, startWith, tap } from 'rxjs/operators'
 
-// Services
-import { SeoService } from '@strive/utils/services/seo.service';
-import { UserService } from '@strive/user/user/user.service';
+import { SeoService } from '@strive/utils/services/seo.service'
+import { UserService } from '@strive/user/user/user.service'
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalEventService } from '@strive/goal/goal/goal-event.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
-// Model
 import { EventType, Goal, GoalEvent, GoalStakeholder, GoalStakeholderRole, isOnlySpectator } from '@strive/model'
 
-// Pages
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { orderBy, where } from 'firebase/firestore';
-import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { GoalEventService } from '@strive/goal/goal/goal-event.service';
-import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component';
-import { Router } from '@angular/router';
-import { delay } from '@strive/utils/helpers';
-import { isCurrentFocus } from '@strive/goal/goal/pipes/current-focus.pipe';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
+import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component'
+import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated'
+import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component'
+import { delay } from '@strive/utils/helpers'
+import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 
 function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number }[] {
   const counter: Partial<Record<EventType, number>> = {};
@@ -70,13 +66,6 @@ export class GoalsComponent {
       filter(user => !!user),
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
       map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
-      map(stakeholders => stakeholders.sort((a, b) => {
-        // Sort finished goals to the end
-        const order = ['active', 'bucketlist', 'finished']
-        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
-        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
-        return 0
-      })),
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
         story: (stakeholder: GoalStakeholder) => {
@@ -93,11 +82,27 @@ export class GoalsComponent {
         }
       }, { shouldAwait: true }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
+      map(stakeholders => stakeholders.sort((first, second) => {
+        // Sort finished goals to the end and in progress goals to top
+        const a = getProgress(first.goal!)
+        const b = getProgress(second.goal!)
+
+        if (a === b) return 0
+        if (b === 1) return -1
+        if (a === 1) return 1
+
+        if (a > b) return -1
+        if (a < b) return 1
+        return 0
+      })),
       tap(stakeholders => {
         this.hasGoals$.next(!!stakeholders.length)
-        const inFocus = stakeholders.filter(isCurrentFocus)
-        this.hasGoalsInFocus$.next(!!inFocus.length)
-        this.hasGoalsOutsideFocus$.next(stakeholders.length > inFocus.length)
+        // TODO GOAL FOCUS
+        // const inFocus = stakeholders.filter(isCurrentFocus)
+        // this.hasGoalsInFocus$.next(!!inFocus.length)
+        // this.hasGoalsOutsideFocus$.next(stakeholders.length > inFocus.length)
+        this.hasGoalsInFocus$.next(false)
+        this.hasGoalsOutsideFocus$.next(true)
       })
     )
 
@@ -109,7 +114,7 @@ export class GoalsComponent {
       )
     ]).pipe(
       map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
-        if (isCurrentFocus(stakeholder)) return true // exception for goals with current focus
+        // if (isCurrentFocus(stakeholder)) return true // exception for goals with current focus
         for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
           if (key === 'isSpectator') continue
           if (bool && stakeholder[key]) return true

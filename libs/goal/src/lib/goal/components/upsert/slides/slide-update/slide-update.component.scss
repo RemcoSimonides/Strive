@@ -3,6 +3,10 @@ small {
   margin-bottom: 16px;
 }
 
+ion-item {
+  --highlight-background: var(--ion-color-primary);
+}
+
 media-image-selector {
   width: 100%;
 }

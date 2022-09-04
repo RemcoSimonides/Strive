@@ -15,13 +15,12 @@ import {
 
 const eventTypes = [
   '',
-  'goalCreatedStatusBucketlist',
-  'goalCreatedStatusActive',
-  'goalCreatedStatusFinished',
+  'goalCreated',
+  'goalCreatedFinished',
   'goalDeleted',
   'goalPublicityPublic',
   'goalPublicityPrivate',
-  'goalStatusFinished',
+  'goalIsFinished',
   'goalMilestoneCreated',
   'goalMilestoneCompletedSuccessfully',
   'goalMilestoneCompletedUnsuccessfully',
@@ -54,10 +53,9 @@ export type EventType = typeof eventTypes[number]
 
 // Notification types that have a notification messsage
 export const notificationEvents: EventType[] = [
-  'goalCreatedStatusBucketlist',
-  'goalCreatedStatusActive',
-  'goalCreatedStatusFinished',
-  'goalStatusFinished',
+  'goalCreated',
+  'goalCreatedFinished',
+  'goalIsFinished',
   'goalMilestoneDeadlinePassed',
   'goalStakeholderRequestedToJoin',
   'goalStakeholderRequestToJoinAccepted',

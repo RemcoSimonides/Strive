@@ -25,10 +25,6 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
       changeNumberOfSupporters(goalId, 1)
     }
 
-    if (stakeholder.status === 'active') {
-      changeNumberOfActiveGoals(stakeholder.uid, 1)
-    }
-
     // events
     handleStakeholderEvents(createGoalStakeholder(), stakeholder, goal)
 
@@ -59,23 +55,6 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     // increase or decrease number of Supporters
     if (before.isSupporter !== after.isSupporter) {
       changeNumberOfSupporters(goalId, after.isSupporter ? 1 : -1)
-    }
-
-    // increase or decreate number of active goals
-    if (before.status !== after.status) {
-      if (after.status === 'active') changeNumberOfActiveGoals(stakeholderId, 1)
-      if (before.status === 'active') changeNumberOfActiveGoals(stakeholderId, -1)
-    }
-
-    if (before.status !== after.status && goal.status !== after.status) {
-
-      if (after.status === 'bucketlist') {
-        const snap = await db.collection(`Goals/${after.goalId}/GStakeholders`).where('status', '==', 'active').get()
-        // keep goal status active if any stakeholder has status active
-        if (snap.size) return
-      }
-      
-      db.doc(`Goals/${goalId}`).update({ status: after.status })
     }
   })
 
@@ -110,10 +89,6 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
         batch.delete(doc.ref)
       }
       batch.commit()
-    }
-
-    if (stakeholder.status === 'active') {
-      changeNumberOfActiveGoals(stakeholderId, -1)
     }
 
   })
@@ -180,12 +155,5 @@ function changeNumberOfSupporters(goalId: string, delta: -1 | 1) {
   const goalRef = db.doc(`Goals/${goalId}`)
   return goalRef.update({
     numberOfSupporters: increment(delta)
-  })
-}
-
-function changeNumberOfActiveGoals(uid: string, delta: -1 | 1) {
-  const userRef = db.doc(`Users/${uid}`)
-  return userRef.update({
-    numberOfActiveGoals: increment(delta)
   })
 }

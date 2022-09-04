@@ -1,20 +1,17 @@
-import { db, functions, serverTimestamp } from '../../internals/firebase'
+import { db, functions, increment, serverTimestamp } from '../../internals/firebase'
 import { logger } from 'firebase-functions'
 
 import {
   createGoal,
   Goal,
-  GoalStatus,
   createGoalSource,
   createSupport,
   createMilestone,
   GoalStakeholder,
   User,
   createAggregation,
-  EventType,
   createAlgoliaGoal
 } from '@strive/model'
-// Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
@@ -32,16 +29,11 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
 
     // event
     const user = await getDocument<User>(`Users/${goal.updatedBy}`)
-    const event: Record<GoalStatus, EventType> = {
-      bucketlist: 'goalCreatedStatusBucketlist',
-      active: 'goalCreatedStatusActive',
-      finished: 'goalCreatedStatusFinished'
-    }
     const source = createGoalSource({ goal, user })
-    const name = event[goal.status]
-    addGoalEvent(name, source)
-    addStoryItem(name, source)
-
+    const event = goal.isFinished ? 'goalCreatedFinished' : 'goalCreated'
+    addGoalEvent(event, source)
+    addStoryItem(event, source)
+    
     // aggregation
     handleAggregation(undefined, goal)
 
@@ -85,7 +77,7 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
 
     if (goal.publicity === 'public') {
       await deleteFromAlgolia('goal', goal.id)
-     }
+    }
   })
 
 export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
@@ -98,8 +90,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     const publicityChanged = before.publicity !== after.publicity
     const becamePublic = before.publicity !== 'public' && after.publicity === 'public'
 
-    const statusChanged = before.status !== after.status
-    const becameFinished = before.status !== 'finished' && after.status === 'finished'
+    const becameFinished = !before.isFinished && !!after.isFinished
 
     handleAggregation(before, after)
 
@@ -108,16 +99,18 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       logger.log('Goal is finished')
       const user = await getDocument<User>(`Users/${after.updatedBy}`)
       const source = createGoalSource({ goal: after, user, postId: goalId })
-      addGoalEvent('goalStatusFinished', source)
-      addStoryItem('goalStatusFinished', source)
+      addGoalEvent('goalIsFinished', source)
+      addStoryItem('goalIsFinished', source)
 
       supportsNeedDecision(after)
+      
+      snapshot.after.ref.update({
+        tasksCompleted: increment(1)
+      })
     }
 
-
     // Update goal stakeholders
-    if (statusChanged || publicityChanged) {
-      // update value on stakeholder docs
+    if (publicityChanged) {
       updateGoalStakeholders(goalId, after)
     }
 
@@ -125,7 +118,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       updateSources(after)
     }
 
-
+    
     // algolia
     if (publicityChanged) {
       if (becamePublic) {
@@ -151,21 +144,13 @@ function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   const becamePrivate = before?.publicity !== 'private' && after?.publicity === 'private'
   const wasPrivate = before?.publicity === 'public' && after?.publicity !== 'private'
 
-  const becameFinished = before?.status !== 'finished' && after?.status === 'finished'
-  const wasFinished = before?.status === 'finished' && after?.status !== 'finished'
-
-  const becameActive = before?.status !== 'active' && after?.status === 'active'
-  const wasActive = before?.status === 'active' && after?.status !== 'active'
-
-  const becameBucketlist = before?.status !== 'bucketlist' && after?.status === 'bucketlist'
-  const wasBucketlist = before?.status === 'bucketlist' && after?.status !== 'bucketlist'
+  const becameFinished = !before.isFinished && !!after.isFinished
+  const wasFinished = !!before.isFinished && !after.isFinished
 
   aggregation.goalsPublic = becamePublic ? 1 : wasPublic ? -1 : 0
   aggregation.goalsPrivate = becamePrivate ? 1 : wasPrivate ? -1 : 0
 
-  aggregation.goalsActive = becameActive ? 1 : wasActive ? -1 : 0
   aggregation.goalsFinished = becameFinished ? 1 : wasFinished ? -1 : 0
-  aggregation.goalsBucketlist = becameBucketlist ? 1 : wasBucketlist ? -1 : 0
 
   updateAggregation(aggregation)
 }
@@ -175,7 +160,6 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
     goalId,
     goalPublicity: after.publicity
   }
-  if (after.status === 'finished') data.status = 'finished'
   
   const stakeholderSnaps = await db.collection(`Goals/${goalId}/GStakeholders`).get()
   const promises = stakeholderSnaps.docs.map(doc => doc.ref.update(data))
