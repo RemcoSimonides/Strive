@@ -20,7 +20,7 @@
 
 <ion-footer>
 	<ion-item>
-		<ion-textarea type="text" placeholder="Reply..." [formControl]="form" (keydown.enter)="addReply($event)" autoGrow></ion-textarea>
+		<ion-textarea type="text" placeholder="Reply..." [formControl]="form" (keydown.enter)="addReply($event)" autoGrow autocapitalize="sentences"></ion-textarea>
 		<ion-icon name="send" (click)="addReply()"></ion-icon>
 	</ion-item>
 </ion-footer>

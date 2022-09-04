@@ -42,7 +42,7 @@
       <form [formGroup]="milestoneForm" *ngIf="isAdmin">
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
           <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
-          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()"></ion-input>
+          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
           <ion-button (click)="add()">add</ion-button>
         </ion-item>
       </form>

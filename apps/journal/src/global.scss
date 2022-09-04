@@ -38,6 +38,10 @@ a {
   --max-width: 400px;
 }
 
+ion-modal.high-modal {
+  --height: 100%;
+}
+
 .not-logged-in {
   display: flex;
   justify-content: center;

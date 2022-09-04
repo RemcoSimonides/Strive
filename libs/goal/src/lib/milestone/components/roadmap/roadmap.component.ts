@@ -77,8 +77,7 @@ export class RoadmapComponent {
         isAchiever: this.isAchiever,
         milestone
       },
-      initialBreakpoint: 0.75,
-      breakpoints: [0, 0.75, 1]
+      cssClass: 'high-modal'
     }).then(modal => modal.present())
   }
 

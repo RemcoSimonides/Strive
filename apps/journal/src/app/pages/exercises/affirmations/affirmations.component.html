@@ -30,7 +30,7 @@
         <h3>Affirmations</h3>
         <ion-list mode="md">
           <ion-item *ngFor="let control of affirmationsForm.controls; let i = index; let last = last" [lines]="last ? 'none' : 'inset'">
-            <ion-input class="ion-text-wrap" type="text" placeholder="Enter affirmation" [formControl]="control"></ion-input>
+            <ion-input class="ion-text-wrap" autocapitalize="sentences" type="text" placeholder="Enter affirmation" [formControl]="control"></ion-input>
             <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"></ion-icon>
           </ion-item>
         </ion-list>

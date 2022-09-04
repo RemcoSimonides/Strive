@@ -3,6 +3,7 @@
     <ion-label position="stacked">Title</ion-label>
     <ion-input formControlName="title" 
               type="text"
+              autocapitalize="sentences"
               autofocus></ion-input>
   </ion-item>
 
@@ -24,7 +25,7 @@
   
   <ion-item>
     <ion-label position="stacked">Description</ion-label>
-    <ion-textarea formControlName="description" maxlength="160" autoGrow></ion-textarea>
+    <ion-textarea formControlName="description" maxlength="160" autoGrow autocapitalize="sentences"></ion-textarea>
   </ion-item>
 
   <ion-item>

@@ -24,6 +24,7 @@
           type="text"
           [placeholder]="goal.isFinished ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or €20'"
           [disabled]="!!goal.isFinished || (!!milestone && milestone.status !== 'pending')"
+          autocapitalize="sentences"
           (keydown.enter)="addSupport(goal)"></ion-input>
         <ion-button slot="end" 
           (click)="addSupport(goal)"

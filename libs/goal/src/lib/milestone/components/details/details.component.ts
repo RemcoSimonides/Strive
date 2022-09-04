@@ -49,32 +49,36 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
-        debounceTime(1000),
+        debounceTime(2000),
         filter(_ => this.form!.content.valid)
       ).subscribe(content => {
-        if (!content) return
+        if (!content || !this.form || !this.canEdit) return
         if (this.canEdit) {
           this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+          this.form?.content.markAsPristine()
+          this.cdr.markForCheck()
         }
       })
 
       const descriptionSub = this.form.description.valueChanges.pipe(
-        debounceTime(1000),
+        debounceTime(2000),
         filter(_ => this.form!.content.valid)
       ).subscribe(description => {
         if (!this.canEdit || !this.form) return
         this.milestoneService.update({ description, id: this.milestone.id }, { params: { goalId: this.goal.id }})
         this.milestone.description = description
-        this.form.description.markAsTouched()
         this.form.description.markAsPristine()
         this.cdr.markForCheck()
       })
 
       const subtaskSub = this.form.subtasks.valueChanges.pipe(
-        debounceTime(1000)
+        debounceTime(2000)
       ).subscribe(subtasks => {
+        if (!this.canEdit || !this.form) return
         if (this.form!.subtasks.valid) {
           this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+          this.form?.subtasks.markAsPristine()
+          this.cdr.markForCheck()
         }
       })
       this.subs.push(sub, descriptionSub, subtaskSub)
@@ -121,6 +125,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   }
 
   toggleAssignMe() {
+    if (!this.canEdit) return
     const achiever = this.milestone.achiever.uid ? createUserLink() : createUserLink(this.user.user)
     this.milestone.achiever = achiever
     this.milestoneService.upsert({
@@ -136,6 +141,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       const control = new SubtaskForm(task)
       const subtasksForm = this.form?.subtasks as FormArray
       subtasksForm.push(control)
+      this.form?.subtasks.markAsDirty()
       this.subtaskForm.reset(createSubtask())
     }
   }

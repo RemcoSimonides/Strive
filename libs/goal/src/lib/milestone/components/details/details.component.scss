@@ -1,17 +1,27 @@
 :host {
   display: block;
-  margin-top: 32px;
+}
+
+ion-header header {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  justify-content: center;
+  top: 8px;
 }
 
 ion-item.main {
   --inner-padding-top: 8px;
+  --inner-padding-end: 8px;
+  --padding-start: 0;
+  border-radius: 12px;
   
   ion-textarea {
     --padding-top: 0;
   }
 
   ion-button {
-    margin-inline-start: 16px;
+    margin-inline-start: 8px;
     margin-top: 8px;
   }
 }

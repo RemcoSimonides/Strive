@@ -64,7 +64,7 @@
           <ion-list mode="md">
             <ion-item>
               <ion-label position="floating">Username</ion-label>
-              <ion-input formControlName="username" type="text"></ion-input>
+              <ion-input formControlName="username" type="text" autocapitalize="sentences"></ion-input>
             </ion-item>
   
             <ng-container *ngFor="let validation of validation_messages.username">
