@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
 import { GCPFunction } from '@sentry/serverless'
+import { environment } from '@env'
 
 GCPFunction.init({
 	dsn: 'https://ffce7e74e39a4cff942d02419858ce55@o1354459.ingest.sentry.io/6656082',
@@ -14,6 +15,7 @@ export { captureMessage, captureException } from '@sentry/serverless'
 
 export type DocumentReference = admin.firestore.DocumentReference
 export const gcs = new Storage.Storage
+export const gcsBucket = gcs.bucket(environment.firebase.storageBucket)
 export { logger } from 'firebase-functions'
 
 admin.initializeApp()

@@ -1,4 +1,4 @@
-import { db, functions, increment, serverTimestamp } from '../../internals/firebase'
+import { db, functions, gcsBucket, increment, serverTimestamp } from '../../internals/firebase'
 import { logger } from 'firebase-functions'
 
 import {
@@ -65,6 +65,10 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     addGoalEvent('goalDeleted', source)
 
     deleteScheduledTask(goal.id)
+
+    if (goal.image) {
+      gcsBucket.file(goal.image).delete({ ignoreNotFound: true })
+    }
 
     //delete subcollections too
     deleteCollection(db, `Goals/${goal.id}/Milestones`, 500)

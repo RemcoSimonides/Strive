@@ -14,7 +14,7 @@ export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeh
 export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandler } from './firestore/goals/milestones/milestone';
 export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } from './firestore/goals/supports/support';
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token';
-export { postCreatedHandler } from './firestore/goals/posts/post';
+export { postCreatedHandler, postDeletedHandler, postChangeHandler } from './firestore/goals/posts/post';
 export { commentCreatedHandler } from './firestore/goals/comments/comment';
 
 export { goalEventCreatedHandler } from './firestore/goal-events/goal-events';

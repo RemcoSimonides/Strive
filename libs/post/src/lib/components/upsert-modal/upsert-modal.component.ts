@@ -74,7 +74,6 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     private user: UserService,
   ) {
     super(location, modalCtrl)
-    this.postForm.valueChanges.subscribe(console.log)
   }
 
   ngOnDestroy() {
@@ -116,10 +115,13 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     popover.onDidDismiss().then(({ data, role }) => {
       if (role === 'remove') {
         this.postForm.date.setValue(new Date())
+        this.postForm.date.markAsDirty()
       } else if (role === 'dismiss') {
         const date = new Date(data)
         this.postForm.date.setValue(date)
+        this.postForm.date.markAsDirty()
       }
+      this.cdr.markForCheck()
     })
     popover.present()
   }
