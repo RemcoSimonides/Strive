@@ -15,77 +15,79 @@ main {
     gap: 8px
   }
 
-  section {
+  .cards {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
 
-  section.other-goals {
-    margin-top: 16px;
-  }
+  // section.other-goals {
+  //   margin-top: 16px;
+  // }
 
   ion-card {
-    cursor: pointer;
 
-    ion-item {
-      --padding-start: 8px;
-      --inner-padding-end: 0;
+    section {
+      display: grid;
+      padding: 8px;
+      grid-template-columns: 60px auto 50px;
+      gap: 8px;
 
       article {
         display: grid;
-        grid-template-columns: auto 50px;
-        align-items: center;
-        width: 100%;
-    
-        ion-text {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
+        gap: 4px;
 
-          b, small {
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-    
-          small {
-            display: flex;
-            align-items: center;
-          }
+        b {
+          color: var(--ion-color-dark);
+          font-size: medium;
         }
-      }
-    }  
-    
-    ul {
-      margin: 0 16px 16px 80px;
-
-      li {
-        display: flex;
-        align-items: center;
-
-        ion-icon {
-          margin-right: 8px;
-          color: var(--ion-color-primary);
-        }
-
-        span {
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-
-        .important {
-          color: var(--ion-color-primary);
-        }
-      }
-    }
-  }
   
+        small {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      ion-button {
+        display: block;
+        margin: auto;
+      }
+
+      ul {
+        grid-column: 1 / 4;
+        margin-top: 0;
+        margin-bottom: 0;
+        min-width: 0;
+  
+        li {
+          display: flex;
+          align-items: center;
+  
+          ion-icon {
+            margin-right: 8px;
+            color: var(--ion-color-primary);
+          }
+  
+          span {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+  
+          .important {
+            color: var(--ion-color-primary);
+          }
+        }
+      }
+    }    
+  }
 }
 
 ion-thumbnail {
   position: relative;
   border-radius: 12px;
+  height: 56px;
+  width: 56px;
 
   img {
     border-radius: 12px;

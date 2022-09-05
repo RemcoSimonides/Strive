@@ -52,7 +52,7 @@
                   </ion-button>
                 </header>  -->
 
-                <section>
+                <section class="cards">
                   <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
                     <ng-container *ngTemplateOutlet="goal; context: { $implicit: stakeholder }" ></ng-container>
                   </ng-container>
@@ -79,31 +79,31 @@
 </ng-container>
 
 <ng-template #goal let-stakeholder>
-  <ion-card mode="md">
-    <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
-      <ion-thumbnail slot="start">
+  <ion-card mode="md" [routerLink]="['/goal/', stakeholder.goal.id]">
+    
+    <section>
+      <ion-thumbnail>
         <img [ref]="stakeholder.goal.image" asset="goal.png"/>
         <div *ngIf="stakeholder.goal.isFinished">finished</div>
       </ion-thumbnail>
       <article>
-        <ion-text>
-          <b>{{ stakeholder.goal.title }}</b>
-          <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }}</small>
-          <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }} & Supporting</small>
-          <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
-          <ion-progress-bar color="primary" [value]="stakeholder.goal | progress"></ion-progress-bar>
-        </ion-text>
-        <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
-          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-        </ion-button>
+        <b>{{ stakeholder.goal.title }}</b>
+        <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }}</small>
+        <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }} & Supporting</small>
+        <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
+        <ion-progress-bar color="primary" [value]="stakeholder.goal | progress"></ion-progress-bar>
       </article>
-    </ion-item>
-    <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]">
-      <li *ngFor="let event of stakeholder.story">
-        <ion-icon [name]="event.icon"></ion-icon>
-        <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
-      </li>
-    </ul>
+      <ion-button fill="clear" size="small" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+      <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]">
+        <li *ngFor="let event of stakeholder.story">
+          <ion-icon [name]="event.icon"></ion-icon>
+          <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
+        </li>
+      </ul>
+    </section>
+
   </ion-card>
 </ng-template>
 

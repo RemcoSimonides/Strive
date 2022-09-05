@@ -26,7 +26,6 @@ export interface SupportSource {
   recipient: UserLink
 }
 
-
 export function createSupport(params: Partial<Support> = {}): Support {
   return {
     id: '',
