@@ -19,20 +19,38 @@
         <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
         <ion-list mode="md">
           <ng-container *ngFor="let time of times; let i = index; let last = last">
-            <ion-item (click)="openDatetime(i)" [lines]="last ? 'none' : 'inset'">
+            <ion-item (click)="openDatetime(i)">
               <ion-label>Set time {{ i + 1 }}</ion-label>
               <ion-text>{{ time ? (time | date:'HH:mm') : '--:--'}}</ion-text>
               <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"></ion-icon> 
             </ion-item>
           </ng-container>
+          <ion-button disabled color="primary" fill="clear">
+            <ng-container *ngIf="timesForm.dirty; else saved">
+              <span>SAVING...</span>
+            </ng-container>
+            <ng-template #saved>
+              <span>SAVED</span>
+              <ion-icon slot="end" name="checkmark-outline"></ion-icon>
+            </ng-template>
+          </ion-button>
         </ion-list>
 
         <h3>Affirmations</h3>
         <ion-list mode="md">
-          <ion-item *ngFor="let control of affirmationsForm.controls; let i = index; let last = last" [lines]="last ? 'none' : 'inset'">
+          <ion-item *ngFor="let control of affirmationsForm.controls; let i = index; let last = last">
             <ion-input class="ion-text-wrap" autocapitalize="sentences" type="text" placeholder="Enter affirmation" [formControl]="control"></ion-input>
             <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"></ion-icon>
           </ion-item>
+          <ion-button disabled color="primary" fill="clear">
+            <ng-container *ngIf="affirmationsForm.dirty; else saved">
+              <span>SAVING...</span>
+            </ng-container>
+            <ng-template #saved>
+              <span>SAVED</span>
+              <ion-icon slot="end" name="checkmark-outline"></ion-icon>
+            </ng-template>
+          </ion-button>
         </ion-list>
 
         <p class="warning" *ngIf="affirmationsButNoTime()"><small>Please don't forget to set a time so you receive your affirmations</small></p>

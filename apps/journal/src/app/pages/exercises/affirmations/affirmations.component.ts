@@ -86,7 +86,7 @@ export class AffirmationsComponent implements OnDestroy {
 
     // autosave
     const formSub = this.form.valueChanges.pipe(
-      debounceTime(1000)
+      debounceTime(2000)
     ).subscribe(value => {
       if (!this.user.uid) return
       if (!value?.affirmations) return
@@ -94,6 +94,8 @@ export class AffirmationsComponent implements OnDestroy {
       const { times } = value
       const affirmations = value.affirmations.filter(a => a !== '')
       this.service.saveAffirmations(this.user.uid, { affirmations, times })
+      this.form.markAsPristine()
+      this.cdr.markForCheck()
     })
 
     this.subs.push(sub, formSub, affirmationFormSub)
@@ -124,6 +126,7 @@ export class AffirmationsComponent implements OnDestroy {
       if (role === 'remove') {
         control.setValue('')
       }
+      this.timesForm.markAsDirty()
       this.cdr.markForCheck()
     })
     popover.present()
@@ -134,10 +137,14 @@ export class AffirmationsComponent implements OnDestroy {
     control.setValue('')
     const times = this.times.sort((a, b) => b === '' ? -1 : 1)
     this.timesForm.setValue(times)
+    this.timesForm.markAsDirty()
+    this.cdr.markForCheck()
   }
 
   removeAffirmation(index: number) {
     this.affirmationsForm.removeAt(index)
+    this.affirmationsForm.markAsDirty()
+    this.cdr.markForCheck()
   }
 
   filterSuggestions(filter: enumAffirmationCategory) {    
@@ -149,6 +156,8 @@ export class AffirmationsComponent implements OnDestroy {
   addSuggestion(suggestion: AffirmationSuggestion) {
     // add suggestion
     this.affirmationsForm.insert(this.affirmationsForm.length - 1, new FormControl(suggestion.affirmation))
+    this.affirmationsForm.markAsDirty()
+    this.cdr.markForCheck()
 
     // remove suggestion from suggestions
     this.suggestions = this.suggestions.filter(s => s.affirmation !== suggestion.affirmation)

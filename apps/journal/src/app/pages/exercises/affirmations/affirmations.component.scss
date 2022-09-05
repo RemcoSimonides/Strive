@@ -17,6 +17,10 @@ ion-list {
   ion-item {
     --highlight-background: var(--ion-color-primary); 
   }
+
+  ion-button {
+    display: block;
+  }
 }
 
 .warning {
