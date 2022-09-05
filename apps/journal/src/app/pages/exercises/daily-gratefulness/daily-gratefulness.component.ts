@@ -51,11 +51,11 @@ export class DailyGratefulnessComponent implements OnDestroy {
   ).subscribe()
 
   private formSub = this.form.valueChanges.pipe(
-    debounceTime(1000)
+    debounceTime(2000)
   ).subscribe(setting => {
     if (!this.user?.uid) return
     if (!setting?.time) return
-    if (!setting?.on) return
+    if (!setting?.on === undefined) return
 
     const [ hours, minutes ] = setting.time.split(':').map(time => +time)
     const time = set(new Date(), { hours, minutes })
@@ -65,6 +65,8 @@ export class DailyGratefulnessComponent implements OnDestroy {
       on: setting.on,
       time: performAt
     })
+    this.form.markAsPristine()
+    this.cdr.markForCheck()
   })
 
   constructor(

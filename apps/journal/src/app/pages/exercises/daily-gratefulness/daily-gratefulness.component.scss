@@ -3,12 +3,26 @@ main {
   margin: auto;
 }
 
-section {
+section.toggle {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  margin-block: 16px;
+
+  article {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 }
 
-ion-datetime {
-  border-radius: 12px;
+section.time {
+  width: 350px;
+  max-width: 100%;
+  margin: auto;
+
+  ion-datetime {
+    margin-top: 8px;
+    border-radius: 12px;
+
+  }
 }
