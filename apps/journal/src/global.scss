@@ -82,11 +82,14 @@ ion-list {
 
 img {
   display: block;
-  margin: auto;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
+}
+
+image-cropper img {
+  margin: auto;
 }
 
 [contenteditable] {

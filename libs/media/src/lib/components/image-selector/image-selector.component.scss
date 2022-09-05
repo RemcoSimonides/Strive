@@ -1,20 +1,26 @@
 section {
   width: 100%;
   padding: 24px;
+
   article {
     text-align: center;
-    border: solid 1px var(--foreground-divider);
     border-radius: 12px;
 
     image-cropper {
       padding: 0;
       margin: 5px;
+
+      --cropper-outline-color: rgba(18, 18, 18, .4);
+      --cropper-overlay-color: var(--ion-background-color);
     }
   }
+
   article.drop-zone {
     border: 2px dashed var(--ion-color-primary);
+
     div {
       margin-bottom: 1em;
+
       img {
         width: 100px;
       }
