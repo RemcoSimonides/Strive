@@ -65,11 +65,7 @@ export function getAggregatedMessage({ event, count }: { event: EventType, count
     case 'goalStakeholderBecameAdmin':
       break
     case 'goalSupportCreated': {
-      return {
-        message: `${count} ${count === 1 ? 'support' : 'supports'} added`,
-        icon: 'heart-outline',
-        importance: 9
-      }
+      break
     }
     case 'goalChatMessageCreated': {
       return {

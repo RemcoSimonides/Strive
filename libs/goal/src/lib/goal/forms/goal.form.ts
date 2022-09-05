@@ -5,7 +5,7 @@ function createGoalLinkFormControl(params?: GoalLink) {
   const goalLink = createGoalLink(params)
   return {
     id: new FormControl(goalLink.id),
-    title: new FormControl(goalLink.title),
+    title: new FormControl(goalLink.title, [Validators.maxLength(60)]),
     image: new FormControl(goalLink.image)
   }
 }
