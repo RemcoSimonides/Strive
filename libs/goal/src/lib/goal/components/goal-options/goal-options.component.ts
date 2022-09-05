@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { serverTimestamp } from 'firebase/firestore'
-import { Goal, GoalStakeholder } from '@strive/model'
+import { createPost, Goal, GoalStakeholder } from '@strive/model'
 import { UserService } from '@strive/user/user/user.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { GoalService } from '../../goal.service';
@@ -42,8 +42,10 @@ export class GoalOptionsComponent {
             this.modalCtrl.create({
               component: UpsertPostModalComponent,
               componentProps: {
-                goalId: this.goal.id,
-                postId: this.goal.id
+                post: createPost({
+                  id: this.goal.id,
+                  goalId: this.goal.id
+                })
               }
             }).then(modal => modal.present())
           }

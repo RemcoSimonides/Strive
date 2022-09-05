@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ModalController } from "@ionic/angular";
-import { Goal, StoryItem } from "@strive/model";
+import { createPost, StoryItem } from "@strive/model";
 import { UpsertPostModalComponent } from "@strive/post/components/upsert-modal/upsert-modal.component";
 
 @Component({
@@ -13,7 +13,7 @@ export class StoryComponent {
 
 	@Input() story: StoryItem[] = []
 	@Input() isAdmin: boolean = false
-	@Input() goalId?: Goal
+	@Input() goalId?: string
 
 	constructor(private modalCtrl: ModalController) {}
 
@@ -22,8 +22,9 @@ export class StoryComponent {
 		this.modalCtrl.create({
 		  component: UpsertPostModalComponent,
 		  componentProps: {
-			goalId: this.goalId,
-			postId: undefined
+			post: createPost({
+				goalId: this.goalId
+			})
 		  }
 		}).then(modal => modal.present())
 	}

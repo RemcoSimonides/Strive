@@ -21,7 +21,6 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { UserService } from '@strive/user/user/user.service'
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 // Strive Interfaces
 import { createGoal, Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
@@ -147,16 +146,6 @@ export class GoalComponent {
     const publicity = $event.detail.value
     if (publicity === goal.publicity) return
     this.goalService.update({ id: this.goal.id, publicity })
-  }
-
-  private startPostCreation() {
-    this.modalCtrl.create({
-      component: UpsertPostModalComponent,
-      componentProps: {
-        goalId: this.goal.id,
-        postId: this.goal.id
-      }
-    }).then(modal => modal.present())
   }
 
   private editGoal(goal: Goal) {

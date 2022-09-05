@@ -2,7 +2,7 @@
 	<article class="add-button" *ngIf="isAdmin">
 		<div></div>
 		<div>
-			<ion-button class="timelineContent" fill="clear" (click)="createCustomPost()">
+			<ion-button fill="clear" (click)="createCustomPost()">
 				<ion-icon name="pencil-outline" slot="start"></ion-icon>
 				<span>Add to story...</span>
 			</ion-button>
@@ -37,7 +37,7 @@
 		<article *ngIf="item.source.postId" class="extra">
 			<div></div>
 			<div>
-				<post-main [storyItem]="item"></post-main>
+				<post-main [storyItem]="item" [isAdmin]="isAdmin"></post-main>
 			</div>
 		</article>
 

@@ -1,12 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
+import { RouterModule } from '@angular/router'
+import { IonicModule } from '@ionic/angular'
+import { FlexLayoutModule } from '@angular/flex-layout'
 
-import { PostComponent } from './post.component';
-import { ImageModule } from '@strive/media/directives/image.module';
+import { PostComponent } from './post.component'
+import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
+import { PostOptionsModule } from '@strive/post/popovers/options/options.module'
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
     IonicModule,
     ImageModule,
     FlexLayoutModule,
-    ImageZoomModalModule
+    ImageZoomModalModule,
+    PostOptionsModule
   ],
   exports: [PostComponent],
   declarations: [PostComponent],

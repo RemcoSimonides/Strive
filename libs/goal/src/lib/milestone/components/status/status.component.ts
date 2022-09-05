@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { Goal } from '@strive/model'
+import { createPost, Goal } from '@strive/model'
 
 import { createMilestone, Milestone, MilestoneStatus } from '@strive/model'
 import { MilestoneService  } from '@strive/goal/milestone/milestone.service';
@@ -106,9 +106,11 @@ export class MilestoneStatusComponent {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        milestoneId: milestone.id,
-        goalId: this.goal.id,
-        postId: milestone.id
+        post: createPost({
+          id: milestone.id,
+          goalId: this.goal.id,
+          milestoneId: milestone.id
+        })
       }
     }).then(modal => modal.present())
   }

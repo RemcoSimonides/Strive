@@ -17,15 +17,15 @@ ion-card {
       width: 32px;
       margin-right: 16px;
     }
+
+    ion-button {
+      margin-left: auto;
+    }
   }
 
   ion-card-content {
     padding: 8px;
   }
-}
-
-ion-grid {
-  padding-left: 10px;
 }
 
 .post-image {
@@ -40,11 +40,11 @@ ion-grid {
 }
 
 h2 {
-  color: var(--ion-color-dark);
+  color: var(--ion-text-color);
 }
 
 p {
-  color: var(--ion-color-dark);
+  color: var(--ion-text-color);
 }
 
 a {

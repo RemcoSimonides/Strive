@@ -7,19 +7,21 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>Create Post</ion-title>
+    <ion-title>{{ mode === 'create' ? 'Create' : 'Update' }} Post</ion-title>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p><small>Create a memory for a lifetime. Someday you'll look back at your goals and see this post.</small></p>
+  <ng-container *ngIf="mode === 'create'">
+    <p><small>Create a memory for a lifetime. Someday you'll look back at your goals and see this post.</small></p>
+  </ng-container>
 
   <form [formGroup]="postForm">
 
     <media-image-selector 
       [form]="postForm.get('mediaURL')"
-      [storagePath]="'goals/' + goalId + '/posts/' + postId">
+      [storagePath]="'goals/' + post.goalId + '/posts/' + post.id">
     </media-image-selector>
 
     <ion-item>
@@ -53,7 +55,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-button (click)="submitPost()" fill="solid" color="primary">Submit to Story</ion-button>
+      <ion-button [disabled]="postForm.pristine || postForm.isEmpty" (click)="submitPost()" fill="clear" color="primary">{{ mode === 'create' ? 'Submit to Story' : 'Save changes' }}</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

@@ -8,6 +8,9 @@
         <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
         <small>{{ post.date | date:'longDate' }}</small>
       </section>
+      <ion-button fill="clear" size="small" *ngIf="isAdmin" (click)="openPostOptions(post, $event)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
     </ion-card-header>
 
     <ion-card-content *ngIf="post.title">      

@@ -4,7 +4,6 @@ import { createPost, Post } from '@strive/model'
 function createPostFormControl(params?: Partial<Post>) {
   const post = createPost(params);
   return {
-    isEvidence: new FormControl(post.isEvidence),
     title: new FormControl(post.title),
     description: new FormControl(post.description),
     mediaURL: new FormControl(post.mediaURL),
@@ -25,7 +24,6 @@ export class PostForm extends FormGroup<PostFormControl> {
   get mediaURL() { return this.get('mediaURL')! }
   get description() { return this.get('description')! }
   get date() { return this.get('date')! }
-  get isEvidence() { return this.get('isEvidence')! }
 
   get isEmpty() {
     return !this.url.value && !this.title.value && !this.mediaURL.value && !this.description.value

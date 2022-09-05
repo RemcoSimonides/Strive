@@ -1,16 +1,15 @@
 export interface Post {
-  id?: string;
-  isEvidence: boolean;
-  title: string;
-  description: string;
-  mediaURL: string;
-  url: string;
-  goalId?: string; // only for custom post
-  uid?: string; // only for custom post
-  milestoneId?: string; // link to milestone
-  date: Date;
-  updatedAt?: Date;
-  createdAt?: Date;
+  id?: string
+  title: string
+  description: string
+  mediaURL: string
+  url: string
+  goalId: string
+  uid: string
+  milestoneId?: string // link to milestone
+  date: Date
+  updatedAt?: Date
+  createdAt?: Date
 }
 
 /** A factory function that creates a PostDocument. */
@@ -21,7 +20,8 @@ export function createPost(params: Partial<Post> = {}): Post {
     description: '',
     mediaURL: '',
     url: '',
-    isEvidence: false,
+    goalId: '',
+    uid: '',
     date: new Date(),
     ...params
   }

@@ -11,14 +11,12 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
     const { postId } = context.params
 
     // event
-    if (!post.isEvidence) {
-      const [goal, user] = await Promise.all([
-        getDocument<Goal>(`Goals/${post.goalId}`),
-        getDocument<User>(`Users/${post.uid}`)
-      ])
+    const [goal, user] = await Promise.all([
+      getDocument<Goal>(`Goals/${post.goalId}`),
+      getDocument<User>(`Users/${post.uid}`)
+    ])
 
-      const source = createGoalSource({ goal, user, postId })
-      addGoalEvent('goalStoryPostCreated', source, postId)
-      addStoryItem('goalStoryPostCreated', source, postId, post.date)
-    }
-  })
+    const source = createGoalSource({ goal, user, postId })
+    addGoalEvent('goalStoryPostCreated', source, postId)
+    addStoryItem('goalStoryPostCreated', source, postId, post.date)
+})

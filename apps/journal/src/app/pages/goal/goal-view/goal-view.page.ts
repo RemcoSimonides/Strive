@@ -10,7 +10,7 @@ import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.ser
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { UserService } from '@strive/user/user/user.service'
-import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem } from '@strive/model'
+import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem, createPost } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 import { orderBy, where } from 'firebase/firestore'
 import { CommentService } from '@strive/goal/chat/comment.service'
@@ -158,8 +158,7 @@ export class GoalViewComponent implements OnDestroy {
     this.modalCtrl.create({
       component: UpsertPostModalComponent,
       componentProps: {
-        goalId: goal.id,
-        postId: undefined
+        post: createPost({ goalId: goal.id })
       }
     }).then(modal => modal.present())
   }

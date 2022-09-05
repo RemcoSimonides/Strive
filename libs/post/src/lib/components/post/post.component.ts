@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { Post, StoryItem, UserLink } from '@strive/model'
+import { PostOptionsComponent } from '@strive/post/popovers/options/options.component';
 import { PostService } from '@strive/post/post.service';
 import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component';
 import { Observable } from 'rxjs';
@@ -14,12 +15,14 @@ import { Observable } from 'rxjs';
 export class PostComponent implements OnInit {
 
   @Input() storyItem!: StoryItem
+  @Input() isAdmin = false
   author?: UserLink
 
   post$?: Observable<Post | undefined>
   
   constructor(
     private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
     private post: PostService
   ) {}
 
@@ -36,5 +39,13 @@ export class PostComponent implements OnInit {
       enterAnimation: getEnterAnimation,
       leaveAnimation: getLeaveAnimation
     }).then(modal => modal.present())
+  }
+
+  openPostOptions(post: Post, event: UIEvent) {
+    this.popoverCtrl.create({
+      component: PostOptionsComponent,
+      componentProps: { post },
+      event
+    }).then(popover => popover.present())
   }
 }
