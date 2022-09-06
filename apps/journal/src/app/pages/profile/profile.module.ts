@@ -11,6 +11,7 @@ import { ProfileComponent } from './profile.page'
 // Followers / Followings
 import { FollowingModule } from '@strive/user/spectator/components/following/following.module'
 import { FollowersModule } from '@strive/user/spectator/components/followers/followers.module'
+import { SupportingModule } from '@strive/goal/goal/components/modals/supporting/supporting.module'
 
 // Strive
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
@@ -25,6 +26,7 @@ import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
+import { GoalThumbnailModule } from '@strive/goal/goal/components/thumbnail/thumbnail.module'
 import { ProgressPipeModule } from '@strive/goal/goal/pipes/progress.pipe'
 
 const routes: Routes = [
@@ -50,7 +52,9 @@ const routes: Routes = [
     ImageZoomModalModule,
     HeaderRootModule,
     HeaderModule,
-    ProgressPipeModule
+    ProgressPipeModule,
+    SupportingModule,
+    GoalThumbnailModule
   ],
   declarations: [
     ProfileComponent

@@ -1,0 +1,22 @@
+<ion-card mode="md" [routerLink]="['/goal/', goal.id]">
+    <section>
+        <ion-thumbnail>
+            <img [ref]="goal.image" asset="goal.png"/>
+            <div *ngIf="goal.isFinished">finished</div>
+        </ion-thumbnail>
+        <article>
+            <b>{{ goal.title }}</b>
+            <ng-content></ng-content>
+            <ion-progress-bar color="primary" [value]="goal | progress"></ion-progress-bar>
+        </article>
+        <ion-button *ngIf="_stakeholder.isAdmin || _stakeholder.isAchiever" fill="clear" size="small" (click)="openGoalOptions($event)">
+            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+        </ion-button>
+        <ul *ngIf="messages.length">
+            <li *ngFor="let event of messages">
+                <ion-icon [name]="event.icon"></ion-icon>
+                <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
+            </li>
+        </ul>
+    </section>
+</ion-card>

@@ -1,33 +1,49 @@
-section {
+main {
   max-width: 700px;
   margin: auto;
   padding: 0px 16px;
 }
 
-footer {
-  height: 40px;
-}
-
-.header {
-  position: relative;
-  margin-top: 64px;
+header {
+  margin-top: 16px;
 
   ion-card {
     width: 100%;
-    padding: 48px 12px 12px 12px;
-  }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
-  .img-container {
-    position: absolute;
-    top: -40px;
+    article.profile {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
 
-    img {
-      border-radius: 50%;
-      object-fit: cover;
-      width: 100px;
-      height: 100px;
-      box-shadow: 0px 6px 12px -6px var(--ion-color-medium);
-      cursor: pointer;
+      h5 {
+        color: var(--ion-text-color);
+      }
+
+      ion-avatar {
+        min-width: clamp(64px, 20vw, 128px);
+        min-height: clamp(64px, 20vw, 128px);
+      }
+    }
+
+    section {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+
+      article {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        color: var(--ion-text-color);
+
+        .number {
+          font-size: large;
+          font-weight: bold;
+        }
+      }
     }
   }
 
@@ -43,63 +59,29 @@ footer {
   color: var(--ion-color-primary);
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 h2 {
   color: var(--ion-color-primary);
 }
 
-.padding {
-  padding-left: 16px;
+section.goals {
+  display: flex;
+  flex-direction: column;
 }
 
-ion-list {
-  overflow: hidden;
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
 
-  ion-item {
-    --padding-start: 8px;
-    --inner-padding-end: 0;
-  }
-
-  ion-thumbnail {
-    position: relative;
-    border-radius: 12px;
-    
-    img {
-      border-radius: 12px;
-      object-fit: cover;
-    }
-    
-    div {
-      border-radius: 12px;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: var(--ion-color-primary-contrast);;
-      background: rgba(247, 148, 29, .6);
-      font-size: 14px;
-    }
-  }
-
-  article {
-    display: grid;
-    grid-template-columns: auto 50px;
-    width: 100%;
-
-    ion-label {
-      b, small {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      small {
-        display: flex;
-        align-items: center;
-      }
-    }
+  small {
+    display: flex;
+    gap: 4px;
+    align-items: flex-start;
   }
 }
 

@@ -17,6 +17,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module'
 import { OptionsPopoverModule } from './options/options.module'
 import { HomePageModule } from '../home/home.module'
+import { GoalThumbnailModule } from '@strive/goal/goal/components/thumbnail/thumbnail.module'
 
 const routes: Routes = [
   {
@@ -39,7 +40,8 @@ const routes: Routes = [
     HomePageModule,
     OptionsPopoverModule,
     ReactiveFormsModule,
-    ProgressPipeModule
+    ProgressPipeModule,
+    GoalThumbnailModule
   ],
   declarations: [GoalsComponent]
 })

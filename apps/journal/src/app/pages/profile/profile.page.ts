@@ -1,26 +1,26 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PopoverController, ModalController } from '@ionic/angular';
-// Services
-import { UserSpectateService } from '@strive/user/spectator/spectator.service';
-import { UserService } from '@strive/user/user/user.service';
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { SeoService } from '@strive/utils/services/seo.service';
-// Rxjs
-import { combineLatest, firstValueFrom, Observable, of } from 'rxjs';
-import { distinctUntilChanged, map, pluck, shareReplay, startWith, switchMap } from 'rxjs/operators';
-// Modals / Popover
-import { FollowingComponent } from '@strive/user/spectator/components/following/following.component';
-import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component';
-import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component';
-import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component';
-import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component';
-// Interfaces
+import { Component } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { PopoverController, ModalController } from '@ionic/angular'
+
+import { combineLatest, firstValueFrom, Observable, of } from 'rxjs'
+import { distinctUntilChanged, map, pluck, shareReplay, startWith, switchMap } from 'rxjs/operators'
+
+import { UserSpectateService } from '@strive/user/spectator/spectator.service'
+import { UserService } from '@strive/user/user/user.service'
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+
+import { FollowingComponent } from '@strive/user/spectator/components/following/following.component'
+import { FollowersComponent } from '@strive/user/spectator/components/followers/followers.component'
+import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component'
+import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component'
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
+
 import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
-// Other
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
-import { getProgress } from '@strive/goal/goal/pipes/progress.pipe';
+
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
+import { SupportingComponent } from '@strive/goal/goal/components/modals/supporting/supporting.component'
 
 @Component({
   selector: 'journal-profile',
@@ -64,7 +64,10 @@ export class ProfileComponent {
     this.isOwner$,
     this.profileId$
   ]).pipe(
-    switchMap(([isOwner, profileId]) => profileId ? this.goalService.getStakeholderGoals(profileId, 'isAchiever', !isOwner) : of([]))
+    switchMap(([isOwner, profileId]) => {
+      if (!profileId) return of([])
+      return this.goalService.getStakeholderGoals(profileId, 'isAchiever', !isOwner)
+    })
   )
 
   supportingGoals$ = combineLatest([
@@ -175,6 +178,15 @@ export class ProfileComponent {
 
   openFollowing() {
     this.modalCtrl.create({ component: FollowingComponent }).then(modal => modal.present())
+  }
+
+  async openSupporting() {
+    const goals = await firstValueFrom(this.supportingGoals$)
+    if (goals.length === 0) return
+    this.modalCtrl.create({
+      component: SupportingComponent,
+      componentProps: { goals }
+    }).then(modal => modal.present())
   }
 }
 

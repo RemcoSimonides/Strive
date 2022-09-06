@@ -19,23 +19,11 @@ import { EventType, Goal, GoalEvent, GoalStakeholder, GoalStakeholderRole, isOnl
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component'
-import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated'
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component'
 import { delay } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 
-function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number }[] {
-  const counter: Partial<Record<EventType, number>> = {};
-  
-  for (const { name } of events) {
-    if (!counter[name]) counter[name] = 0;
-    counter[name]!++;
-  }
-
-  return Object.entries(counter).map(([event, count]): any => ({ event, count }))
-}
-
-type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, story: AggregatedMessage[] }
+type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
 
 @Component({
   selector: 'journal-goals',
@@ -72,12 +60,6 @@ export class GoalsComponent {
           const query = [where('source.goal.id', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
           return this.goalEvent.valueChanges(query).pipe(
             map(events => events.filter(event => event.source.user?.uid !== stakeholder.uid)),
-            map(aggregateEvents),
-            map(val => val
-              .map(getAggregatedMessage)
-              .filter(a => !!a)
-              .sort((a, b) => a!.importance - b!.importance)
-            )
           )
         }
       }, { shouldAwait: true }),
