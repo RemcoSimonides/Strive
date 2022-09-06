@@ -64,7 +64,7 @@ export class GoalsComponent {
   ) {
     const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
-      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
+      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
       map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
