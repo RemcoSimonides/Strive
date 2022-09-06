@@ -39,6 +39,17 @@ export const dailyGratefulnessChangedHandler = functions.firestore.document(`Use
     }
   })
 
+export const dailyGratefulnessDeleteHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
+  .onDelete(async (snapshot, context) => {
+
+    const { uid } = context.params
+
+    deleteScheduledTask(`${uid}dailygratefulness`)
+
+    updateAggregation({ usersGratefulnessOn: -1 })
+
+  })
+
 async function scheduleScheduledTask(userId: string, setting: DailyGratefulness) {
 
 

@@ -3,10 +3,10 @@ export { scheduledTasksRunner } from './pubsub/scheduled-task-runner';
 export { scheduledEmailRunner } from './pubsub/email/email';
 
 // firestorage
-export { userSpectatorChangeHandler, userSpectatorCreatedHandler } from './firestore/users/user-spectators/user-spectator';
-export { affirmationsCreatedHandler, affirmationsChangeHandler } from './firestore/users/exercises/affirmation';
-export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler } from './firestore/users/exercises/daily_gratefulness';
-export { dearFutureSelfCreatedHandler, dearFutureSelfChangedHandler } from './firestore/users/exercises/dear_future_self';
+export { userSpectatorChangeHandler, userSpectatorCreatedHandler, userSpectatorDeleteHandler } from './firestore/users/user-spectators/user-spectator';
+export { affirmationsCreatedHandler, affirmationsChangeHandler, affirmationsDeleteHandler } from './firestore/users/exercises/affirmation';
+export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler, dailyGratefulnessDeleteHandler } from './firestore/users/exercises/daily_gratefulness';
+export { dearFutureSelfCreatedHandler, dearFutureSelfChangedHandler, dearFutureSelfDeleteHandler } from './firestore/users/exercises/dear_future_self';
 export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user';
 
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal';

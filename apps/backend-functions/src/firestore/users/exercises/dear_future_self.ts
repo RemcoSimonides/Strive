@@ -2,7 +2,7 @@ import { functions } from '../../../internals/firebase';
 import { DearFutureSelf } from '@strive/model'
 
 import { enumWorkerType, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../../../shared/scheduled-task/scheduled-task.interface'
-import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
+import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { updateAggregation } from '../../../shared/aggregation/aggregation';
 
 export const dearFutureSelfCreatedHandler = functions.firestore.document(`Users/{uid}/Exercises/DearFutureSelf`)
@@ -29,6 +29,19 @@ export const dearFutureSelfChangedHandler = functions.firestore.document(`Users/
 
     const index = after.messages.length - 1
     scheduleScheduledTask(uid, after, index)
+  })
+
+export const dearFutureSelfDeleteHandler = functions.firestore.document(`Users/{uid}/Exercises/DearFutureSelf`)
+  .onDelete(async (snapshot, context) => {
+
+    const setting = snapshot.data() as DearFutureSelf
+    const { uid } = context.params
+
+    setting.messages.forEach((message, index) => {
+      deleteScheduledTask(`${uid}dearfutureself${index}`)
+    })
+
+    updateAggregation({ usersFutureLetterSent: 0 - setting.messages.length })
   })
 
 async function scheduleScheduledTask(userId: string, setting: DearFutureSelf, index: number) {

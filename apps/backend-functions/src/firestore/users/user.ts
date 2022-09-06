@@ -1,9 +1,10 @@
-import { db, functions } from '../../internals/firebase';
-import { logger } from 'firebase-functions';
+import { db, functions, gcsBucket, auth } from '../../internals/firebase'
+import { logger } from 'firebase-functions'
 
-import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia';
-import { GoalStakeholder, createUser, User, createUserLink, Spectator, createAlgoliaUser } from '@strive/model';
-import { updateAggregation } from '../../shared/aggregation/aggregation';
+import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
+import { GoalStakeholder, createUser, User, createUserLink, Spectator, createAlgoliaUser } from '@strive/model'
+import { updateAggregation } from '../../shared/aggregation/aggregation'
+import { deleteCollection, toDate } from '../../shared/utils'
 
 export const userCreatedHandler = functions.firestore.document(`Users/{uid}`)
   .onCreate(async (snapshot) => {
@@ -21,10 +22,36 @@ export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
   .onDelete(async (snapshot) => {
 
     const uid = snapshot.id
+    const user = createUser(toDate({ ...snapshot.data(), id: snapshot.id }))
     await deleteFromAlgolia('user', uid)
 
     // aggregation
     updateAggregation({ usersDeleted: 1 })
+
+    const stakeholderBatch = db.batch()
+    const stakeholdersSnap = await db.collectionGroup(`GStakeholders`).where('uid', '==', uid).get()
+    stakeholdersSnap.forEach(snap => stakeholderBatch.delete(snap.ref))
+    stakeholderBatch.commit()
+
+    const spectatingBatch = db.batch()
+    const spectatingsSnap = await db.collectionGroup(`Spectators`).where('uid', '==', uid).get()
+    spectatingsSnap.forEach(snap => spectatingBatch.delete(snap.ref))
+    spectatingBatch.commit()
+
+    // also delete subcollections
+    deleteCollection(db, `Users/${uid}/Personal`, 500)
+    deleteCollection(db, `Users/${uid}/Notifications`, 500)
+    deleteCollection(db, `Users/${uid}/Spectators`, 500)
+    deleteCollection(db, `Users/${uid}/Exercises`, 500)
+
+    if (user.photoURL) {
+      gcsBucket.file(user.photoURL).delete({ ignoreNotFound: true })
+    }
+
+    auth.deleteUser(uid)
+
+    // Should we update UserLink data in GoalEvents, Comments?
+
   })
 
 export const userChangeHandler = functions.firestore.document(`Users/{uid}`)

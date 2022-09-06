@@ -30,7 +30,20 @@ export const userSpectatorChangeHandler = functions.firestore.document(`Users/{u
       changeNumberOfSpectators(uidToBeSpectated, delta)
       changeNumberOfSpectating(uidSpectator, delta)
     }
-})  
+})
+
+export const userSpectatorDeleteHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
+  .onDelete(async (snapshot, context) => {
+
+  const { uidToBeSpectated, uidSpectator} = context.params
+
+  const userSnap = await db.doc(`Users/${uidToBeSpectated}`).get()
+  if (userSnap.exists) {
+    changeNumberOfSpectators(uidToBeSpectated, -1)
+  }
+  changeNumberOfSpectating(uidSpectator, -1)
+
+})
 
 function changeNumberOfSpectators(uidToBeSpectated: string, change: number) {
   const ref = db.doc(`Users/${uidToBeSpectated}`)

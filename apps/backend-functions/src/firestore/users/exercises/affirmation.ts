@@ -51,3 +51,14 @@ export const affirmationsChangeHandler = functions.firestore.document(`Users/{us
     const delta = after.affirmations.length - before.affirmations.length
     updateAggregation({ usersAffirmationsSet: delta })
   })
+
+export const affirmationsDeleteHandler = functions.firestore.document(`Users/{uid}/Exercises/Affirmations`)
+  .onDelete(async (snapshot, context) => {
+
+    const { uid } = context.params
+    const setting = snapshot.data() as Affirmations
+
+    deleteScheduledTask(`${uid}affirmations`)
+
+    updateAggregation({ usersAffirmationsSet: 0 - setting.affirmations.length })
+  })
