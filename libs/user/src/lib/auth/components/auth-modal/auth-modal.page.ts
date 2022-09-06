@@ -246,8 +246,19 @@ export class AuthModalComponent {
       this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
 
     } catch(error: any) {
+
+      let message: string;
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          message = 'An account with this email already exists'
+          break
+        default:
+          message = error.message
+          break
+      }
+
       this.alertCtrl.create({
-        message: error.message,
+        message,
         buttons: [{ text: 'Ok', role: 'cancel' }]
       }).then(alert => alert.present())
     }
