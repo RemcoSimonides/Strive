@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentSnapshot, getDoc, getFirestore, doc } from 'firebase/firestore';
 import { getAuth, updateProfile } from 'firebase/auth';
+import { setUser } from '@sentry/angular'
 import { user } from 'rxfire/auth';
 import { toDate } from 'ngfire'
 
@@ -33,6 +34,7 @@ export class UserService extends FireCollection<User> {
         this.user = createUser(user)
         this.uid = user ? user.uid : ''
         this._uid.next(this.uid)
+        user ? setUser({ id: user.uid, username: user.username }) : setUser(null)
       }),
       shareReplay({ bufferSize: 1, refCount: true })
     )
