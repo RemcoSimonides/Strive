@@ -38,6 +38,12 @@ export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
     spectatingsSnap.forEach(snap => spectatingBatch.delete(snap.ref))
     spectatingBatch.commit()
 
+    // TODO remove supports
+    const supportBatch = db.batch()
+    const supportsSnap = await db.collectionGroup('Supports').where('source.supporter.uid', '==', uid).get()
+    supportsSnap.forEach(snap => supportBatch.delete(snap.ref))
+    supportBatch.commit()
+
     // also delete subcollections
     deleteCollection(db, `Users/${uid}/Personal`, 500)
     deleteCollection(db, `Users/${uid}/Notifications`, 500)

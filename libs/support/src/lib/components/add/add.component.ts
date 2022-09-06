@@ -38,7 +38,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
   forYouSupports$?: Observable<Support[]>
   fromYouSupports$?: Observable<Support[]>
 
-  form = new FormControl('', { validators: [Validators.required], nonNullable: true })
+  form = new FormControl('', { validators: [Validators.required, Validators.maxLength(60)], nonNullable: true })
 
   constructor(
     private goalService: GoalService,
