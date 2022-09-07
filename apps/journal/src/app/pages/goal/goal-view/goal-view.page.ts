@@ -23,6 +23,8 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     'isAchiever',
     'isAdmin',
     'isSupporter',
+    'isSpectator',
+    'hasOpenRequestToJoin',
     'username',
     'photoURL',
     'lastCheckedChat'

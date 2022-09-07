@@ -16,6 +16,7 @@ import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap.module'
 import { StoryModule } from '@strive/goal/story/components/story/story.module'
 import { DescriptionModule } from '@strive/ui/description/description.module'
+import { JoinButtonPipeModule } from '@strive/goal/goal/pipes/join-button'
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { DescriptionModule } from '@strive/ui/description/description.module'
     ImageZoomModalModule,
     RoadmapModule,
     StoryModule,
-    DescriptionModule
+    DescriptionModule,
+    JoinButtonPipeModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

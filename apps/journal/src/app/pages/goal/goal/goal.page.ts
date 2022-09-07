@@ -198,13 +198,6 @@ export class GoalComponent {
     }).then(modal => modal.present())
   }
 
-  getJoinText() {
-    if (this.stakeholder.isAchiever) return 'JOINED'
-    if (this.stakeholder.isAdmin) return 'JOIN'
-    if (this.stakeholder.hasOpenRequestToJoin) return 'CANCEL REQUEST'
-    return 'REQUEST JOIN'
-  }
-
   async join() {
     if (!this.user.uid) {
       const modal = await this.modalCtrl.create({
@@ -246,6 +239,29 @@ export class GoalComponent {
     
     this.openTeamModal()
   }
+
+  async spectate() {
+    if (!this.user.uid) {
+      const modal = await this.modalCtrl.create({
+        component: AuthModalComponent,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      })
+      modal.onDidDismiss().then(({ data: loggedIn }) => {
+        if (loggedIn) this.spectate()
+      })
+      return modal.present()
+    }
+
+    const { isSpectator } = this.stakeholder
+
+    return this.stakeholderService.upsert({
+      uid: this.user.uid,
+      isSpectator: !isSpectator
+    }, { params: { goalId: this.goal.id }})
+  }
+
 
   openTeamModal() {
     this.modalCtrl.create({

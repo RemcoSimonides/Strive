@@ -1,74 +1,99 @@
 @import "@angular/flex-layout/mq";
 
-h1 {
-  font-size: 2.5rem;
-  font-weight: 500;
-  color: var(--ion-color-dark-tint);
-  margin-top: 0;
+.fake-disable {
+  opacity: 0.5;
 }
 
-h3 {
-  margin-top: 64px;
-  color: var(--ion-color-primary);
+picture.mobile {
+  height: 60vw;
 }
 
 main {
+  padding: 16px;
   display: flex;
+  flex-direction: column;
   gap: 16px;
 
-  section {
-    flex: 1;
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: 500;
+    color: var(--ion-text-color);
   }
 
-  .main-actions {
+  h3 {
+    margin-top: 32px;
+    color: var(--ion-color-primary);
+    margin: 0;
+  }
+  
+  div.main {
+    display: flex;
+    gap: 16px;
+
+    picture {
+      flex: 1;
+      border-radius: 12px;
+    }
+
+    div.info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      gap: 16px;
+      flex: 2;
+
+      ul.properties {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 0;
+      
+        li {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          color: var(--ion-color-medium);
+          font-size: clamp(12px, 2.5vw, 1rem);
+        }
+      }
+    }
+  }
+
+
+  section {
     display: flex;
     flex-direction: column;
-    gap: 16px;
   }
-}
+  
+  section.actions {
+    gap: 2px;
 
-@include layout-bp(xs) {
-  main {
-    flex-direction: column;
-  }
-
-  .goal-image {
-    order: 2;
-  }
-
-  .main-actions {
-    order: 1;
-  }
-}
-
-.action-button {
-  height: 2em;
-  width: 2em;
-  margin: 4px;
-}
-
-ion-card.team {
-  padding: 24px 8px;
-
-  span.number {
-    color: var(--ion-color-medium);
-    font-size: 26px;
-  }
-}
-
-.properties {
-  color: var(--ion-color-medium);
-
-  ion-icon {
-    font-size: 20px;
-    margin-right: 8px;
+    article {
+      display: flex;
+      gap: 8px;
+  
+      ion-button {
+        --background: var(--ion-card-background);
+  
+        &.button-block {
+          flex: 1;
+        }
+  
+        &.primary {
+          --color: var(--ion-color-primary);
+        }
+  
+        &.secondary {
+          --color: var(--ion-color-secondary);
+        }
+      }
+    }
   }
 }
 
 picture {
   display: block;
   position: relative;
-  border-radius: 12px;
   overflow: hidden;
 
   img {
@@ -97,6 +122,6 @@ ion-select {
   padding: 0 4px;
 }
 
-strive-description, goal-strive-roadmap, goal-story  {
+strive-description, goal-strive-roadmap  {
   margin-block: 32px; 
 }
