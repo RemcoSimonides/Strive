@@ -15,9 +15,9 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ProgressPipeModule } from '@strive/goal/goal/pipes/progress.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module'
-import { OptionsPopoverModule } from './options/options.module'
 import { HomePageModule } from '../home/home.module'
 import { GoalThumbnailModule } from '@strive/goal/goal/components/thumbnail/thumbnail.module'
+import { GoalsModalModule } from '@strive/goal/goal/components/modals/goals/goals-modal.module'
 
 const routes: Routes = [
   {
@@ -38,10 +38,10 @@ const routes: Routes = [
     ImageModule,
     GoalOptionsModule,
     HomePageModule,
-    OptionsPopoverModule,
     ReactiveFormsModule,
     ProgressPipeModule,
-    GoalThumbnailModule
+    GoalThumbnailModule,
+    GoalsModalModule
   ],
   declarations: [GoalsComponent]
 })

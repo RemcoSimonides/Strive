@@ -13,6 +13,10 @@
       <ion-checkbox formControlName="isAdmin" slot="start" color="primary" [disabled]="form.oneTrue && form.isAdmin?.value === true"></ion-checkbox>
       <ion-label>Admin</ion-label>
     </ion-item>
+    <ion-item lines="none">
+      <ion-checkbox formControlName="isSpectator" slot="start" color="primary" [disabled]="form.oneTrue && form.isSpectator?.value === true"></ion-checkbox>
+      <ion-label>Follower</ion-label>
+    </ion-item>
   </form>
   
 </ion-list>

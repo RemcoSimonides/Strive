@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
-import { switchMap, map, filter, startWith, tap } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
+import { switchMap, map, filter } from 'rxjs/operators'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { UserService } from '@strive/user/user/user.service'
@@ -14,17 +14,14 @@ import { GoalEventService } from '@strive/goal/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
-import { Goal, GoalEvent, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
+import { GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
-import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/goal-options.component'
-import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component'
 import { delay } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 import { isBefore, min } from 'date-fns'
-
-type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
+import { GoalsModalComponent } from '@strive/goal/goal/components/modals/goals/goals-modal.component'
 
 function fitableItems(width: number) {
   const maxWidth = 700
@@ -47,24 +44,23 @@ function fitableItems(width: number) {
 })
 export class GoalsComponent {
 
-  achieving$: Observable<StakeholderWithGoalAndEvents[]>
+  all$: Observable<StakeholderWithGoalAndEvents[]>
   seeAll = new BehaviorSubject(false)
 
+  achieving$: Observable<StakeholderWithGoalAndEvents[]>
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
-  form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{"isAchiever":true,"isSupporter":false,"isAdmin":false}'))
 
   constructor(
     public user: UserService,
     private goal: GoalService,
     private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
     private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private goalEvent: GoalEventService
   ) {
-    const stakeholders$ = this.user.user$.pipe(
+    this.all$ = this.user.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
       joinWith({
@@ -77,12 +73,12 @@ export class GoalsComponent {
         }
       }, { shouldAwait: true }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
-    )
+    ) as any
 
     const fitableItems$ = this.screensize.width$.pipe(map(fitableItems))
 
     this.achieving$ = combineLatest([
-      stakeholders$.pipe(
+      this.all$.pipe(
         map(stakeholders => stakeholders.filter(stakeholder => !stakeholder.isAchiever)),
         map(stakeholders => stakeholders.sort((a, b) => {
           if (!a.events || !b.events) return 0
@@ -107,33 +103,20 @@ export class GoalsComponent {
       })
     ) as any
     
-    this.stakeholders$ = combineLatest([
-      stakeholders$.pipe(
-        map(stakeholders => stakeholders.sort((first, second) => {
-          // Sort finished goals to the end and in progress goals to top
-          const a = getProgress(first.goal!)
-          const b = getProgress(second.goal!)
+    this.stakeholders$ = this.all$.pipe(
+      map(stakeholders => stakeholders.filter(stakeholder => stakeholder.isAchiever)),
+      map(stakeholders => stakeholders.sort((first, second) => {
+        // Sort finished goals to the end and in progress goals to top
+        const a = getProgress(first.goal!)
+        const b = getProgress(second.goal!)
 
-          if (a === b) return 0
-          if (b === 1) return -1
-          if (a === 1) return 1
+        if (a === b) return 0
+        if (b === 1) return -1
+        if (a === 1) return 1
 
-          if (a > b) return -1
-          if (a < b) return 1
-          return 0
-        }))
-      ),
-      this.form.valueChanges.pipe(
-        startWith(this.form.value as any),
-        tap((value: Roles) => localStorage.setItem('goals options', JSON.stringify(value)))
-      )
-    ]).pipe(
-      map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
-        for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
-          if (key === 'isSpectator') continue
-          if (bool && stakeholder[key]) return true
-        }
-        return false
+        if (a > b) return -1
+        if (a < b) return 1
+        return 0
       }))
     ) as any
 
@@ -149,6 +132,14 @@ export class GoalsComponent {
     }).then(modal => modal.present())
   }
 
+  async openAllModal(stakeholder: StakeholderWithGoalAndEvents) {
+    const stakeholders = stakeholder ? [stakeholder] : await firstValueFrom(this.all$)
+    this.modalCtrl.create({
+      component: GoalsModalComponent,
+      componentProps: { stakeholders }
+    }).then(modal => modal.present())
+  }
+
   createGoal() {
     this.modalCtrl.create({
       component: UpsertGoalModalComponent
@@ -159,25 +150,6 @@ export class GoalsComponent {
       })
       modal.present()
     })
-  }
-
-  openGoalOptions(goal: Goal, stakeholder: GoalStakeholder, event: UIEvent) {
-    event.stopPropagation()
-    event.preventDefault()
-
-    this.popoverCtrl.create({
-      component: GoalOptionsComponent,
-      componentProps: { goal, stakeholder },
-      event
-    }).then(popover => popover.present())
-  }
-
-  openOptions(event: UIEvent) {
-    this.popoverCtrl.create({
-      component: OptionsPopoverComponent,
-      componentProps: { form: this.form },
-      event
-    }).then(popover => popover.present())
   }
 
   trackByFn(_: number, stakeholder: GoalStakeholder) {

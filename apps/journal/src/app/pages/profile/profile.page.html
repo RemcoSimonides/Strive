@@ -81,7 +81,7 @@
           <ng-container *ngIf="achievingGoals.length > 0 else noBucketList">
             <ul>
               <li *ngFor="let value of achievingGoals">
-                <goal-thumbnail [goal]="value.goal" [stakeholder]="(isOwner$ | async) ? value.stakeholder : undefined">
+                <goal-thumbnail [goal]="value.goal" [stakeholder]="(isOwner$ | async) ? value.stakeholder : undefined" [routerLink]="['/goal/', value.goal.id]">
                   <div>
                     <small *ngIf="value.goal.publicity === 'private'">
                       <ion-icon name="lock-closed-outline"></ion-icon>

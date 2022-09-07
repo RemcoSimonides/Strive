@@ -2,6 +2,9 @@ import { EventType } from './notification';
 import { createSupportLink, Support, SupportLink } from './support';
 import { createUserLink, User, UserLink } from './user';
 import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
+import { GoalStakeholder } from './stakeholder';
+
+export type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
 
 export type GoalPublicityType = 'public' | 'private'
 

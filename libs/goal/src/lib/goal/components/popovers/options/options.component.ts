@@ -9,6 +9,7 @@ function createRolesFormControl(params?: Roles) {
     isAchiever: new FormControl<boolean>(params?.isAchiever ?? true, { nonNullable: true }),
     isSupporter: new FormControl<boolean>(params?.isSupporter ?? true, { nonNullable: true }),
     isAdmin: new FormControl<boolean>(params?.isAdmin ?? true, { nonNullable: true }),
+    isSpectator: new FormControl<boolean>(params?.isSpectator ?? true, { nonNullable: true })
   }
 }
 type RolesFormControl = ReturnType<typeof createRolesFormControl>
@@ -22,6 +23,7 @@ export class RolesForm extends FormGroup<RolesFormControl> {
   get isAchiever() { return this.get('isAchiever') }
   get isSupporter() { return this.get('isSupporter') }
   get isAdmin() { return this.get('isAdmin') }
+  get isSpectator() { return this.get('isSpectator') }
 
   get oneTrue() {
     return Object.values(this.value).filter(value => value).length === 1

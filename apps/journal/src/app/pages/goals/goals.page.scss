@@ -8,12 +8,7 @@ main {
   max-width: 700px;
   margin: auto;
 
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px
-  }
+
 
   .thumbs {
     $size: 60px;
@@ -26,6 +21,7 @@ main {
       flex-direction: column;
       gap: 8px;
       position: relative;
+      cursor: pointer;
     
       ion-thumbnail {
         height: $size;
@@ -58,6 +54,10 @@ main {
         right: 0;
       }
     }
+  }
+
+  .cards-header {
+    width: fit-content;
   }
 
   .cards {

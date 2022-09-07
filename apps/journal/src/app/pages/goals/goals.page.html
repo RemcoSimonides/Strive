@@ -12,7 +12,7 @@
         <ng-container *ngIf="achieving$ | async as stakeholders">
           <section *ngIf="stakeholders.length" class="thumbs">
             <ng-container *ngFor="let stakeholder of stakeholders">
-              <article [routerLink]="['/goal/', stakeholder.goal.id]">
+              <article (click)="openAllModal(stakeholder)">
                 <ion-thumbnail>
                   <img [ref]="stakeholder.goal.image" asset="goal.png"/>
                 </ion-thumbnail>
@@ -20,7 +20,7 @@
                 <ion-badge color="primary">{{ stakeholder.events.length }}</ion-badge>
               </article>
             </ng-container>
-            <article *ngIf="seeAll | async">
+            <article *ngIf="seeAll | async" (click)="openAllModal()">
               <ion-button fill="clear">
                 <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
               </ion-button>
@@ -32,20 +32,14 @@
         <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
           <ng-container *ngIf="stakeholders.length else noGoals">
 
-            <header>
-              <ion-button fill="clear" (click)="createGoal()">
-                <ion-icon name="add" slot="start"></ion-icon>
-                <span>add goal</span>
-              </ion-button>
-    
-              <ion-button fill="clear" (click)="openOptions($event)">
-                <ion-icon slot="icon-only" name="options-outline"></ion-icon>
-              </ion-button>
-            </header>
+            <ion-button fill="clear" (click)="createGoal()" class="cards-header">
+              <ion-icon name="add" slot="start"></ion-icon>
+              <span>add goal</span>
+            </ion-button>
 
             <section class="cards">
               <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
-                <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events">
+                <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <small *ngIf="stakeholder.goal.publicity === 'private'">
                     <ion-icon name="lock-closed-outline"></ion-icon>
                     <span>Private</span>
