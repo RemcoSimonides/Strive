@@ -2,7 +2,7 @@ export interface Personal {
   uid: string
   email: string
   fcmTokens: string[]
-  lastCheckedNotifications: false | Date
+  lastCheckedNotifications: Date
   updatedAt?: Date
   createdAt?: Date
 }
@@ -12,7 +12,7 @@ export function createPersonal(params: Partial<Personal> = {}): Personal {
     uid: '',
     email: '',
     fcmTokens: [],
-    lastCheckedNotifications: false,
+    lastCheckedNotifications: new Date(),
     ...params
   }
 }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 
-import { combineLatest, Observable } from 'rxjs'
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { switchMap, map, filter, startWith, tap } from 'rxjs/operators'
 
 import { SeoService } from '@strive/utils/services/seo.service'
@@ -22,8 +22,22 @@ import { GoalOptionsComponent } from '@strive/goal/goal/components/goal-options/
 import { OptionsPopoverComponent, Roles, RolesForm } from './options/options.component'
 import { delay } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
+import { isBefore, min } from 'date-fns'
 
 type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
+
+function fitableItems(width: number) {
+  const maxWidth = 700
+  const gap = 16
+  const padding = 16
+  const itemWidth = 60 + gap
+  const gutter = padding * 2
+
+  const space = maxWidth < width ? maxWidth : width
+  const available = space - gutter + gap
+
+  return Math.floor(available / itemWidth)
+}
 
 @Component({
   selector: 'journal-goals',
@@ -32,6 +46,9 @@ type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: Goal
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalsComponent {
+
+  achieving$: Observable<StakeholderWithGoalAndEvents[]>
+  seeAll = new BehaviorSubject(false)
 
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
   form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{"isAchiever":true,"isSupporter":false,"isAdmin":false}'))
@@ -52,7 +69,7 @@ export class GoalsComponent {
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
-        story: (stakeholder: GoalStakeholder) => {
+        events: (stakeholder: GoalStakeholder) => {
           const query = [where('source.goal.id', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
           return this.goalEvent.valueChanges(query).pipe(
             map(events => events.filter(event => event.source.user?.uid !== stakeholder.uid)),
@@ -62,6 +79,34 @@ export class GoalsComponent {
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
     )
 
+    const fitableItems$ = this.screensize.width$.pipe(map(fitableItems))
+
+    this.achieving$ = combineLatest([
+      stakeholders$.pipe(
+        map(stakeholders => stakeholders.filter(stakeholder => !stakeholder.isAchiever)),
+        map(stakeholders => stakeholders.sort((a, b) => {
+          if (!a.events || !b.events) return 0
+          if (a.events.length > 0 && b.events.length === 0) return -1
+          if (a.events.length === 0 && b.events.length > 0) return 1
+
+          const earliestA = min(a.events.map((event: any) => event.createdAt!))
+          const earliestB = min(b.events.map((event: any) => event.createdAt!))
+          return isBefore(earliestA, earliestB) ? -1 : 1
+        }))
+      ),
+      fitableItems$
+    ]).pipe(
+      map(([ stakeholders, items ]) => {
+        if (stakeholders.length > items) {
+          this.seeAll.next(true)
+          return stakeholders.splice(0, items - 1)
+        } else {
+          this.seeAll.next(false)
+          return stakeholders.splice(0, items)
+        }
+      })
+    ) as any
+    
     this.stakeholders$ = combineLatest([
       stakeholders$.pipe(
         map(stakeholders => stakeholders.sort((first, second) => {

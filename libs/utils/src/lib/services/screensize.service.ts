@@ -11,6 +11,9 @@ export class ScreensizeService {
   private size = new BehaviorSubject<'desktop' | 'tablet' | 'mobile'>('mobile')
   public size$ = this.size.asObservable().pipe(distinctUntilChanged())
 
+  private width = new BehaviorSubject<number>(0)
+  public width$ = this.width.asObservable().pipe(distinctUntilChanged())
+
   private isDesktop = new BehaviorSubject<boolean>(false)
   public isDesktop$ = this.isDesktop.asObservable().pipe(distinctUntilChanged())
 
@@ -21,6 +24,7 @@ export class ScreensizeService {
   public isMobile$ = this.isMobile.asObservable().pipe(distinctUntilChanged())
 
   onResize(size: number) {
+    this.width.next(size);
     if (size > 768) { // 768 is equal to where modals are not full screen anymore
       this.size.next('desktop')
       this.isDesktop.next(true);

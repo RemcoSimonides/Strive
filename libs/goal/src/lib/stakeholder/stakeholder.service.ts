@@ -72,6 +72,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
       username: user.username,
       photoURL: user.photoURL,
       uid,
+      lastCheckedGoal: serverTimestamp() as any,
+      lastCheckedChat: serverTimestamp() as any,
       goalId
     });
     (write as WriteBatch).update(ref, { ...data })

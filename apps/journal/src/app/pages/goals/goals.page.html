@@ -9,6 +9,26 @@
       </ion-refresher>
 
       <main>
+        <ng-container *ngIf="achieving$ | async as stakeholders">
+          <section *ngIf="stakeholders.length" class="thumbs">
+            <ng-container *ngFor="let stakeholder of stakeholders">
+              <article [routerLink]="['/goal/', stakeholder.goal.id]">
+                <ion-thumbnail>
+                  <img [ref]="stakeholder.goal.image" asset="goal.png"/>
+                </ion-thumbnail>
+                <small>{{ stakeholder.goal.title }}</small>
+                <ion-badge color="primary">{{ stakeholder.events.length }}</ion-badge>
+              </article>
+            </ng-container>
+            <article *ngIf="seeAll | async">
+              <ion-button fill="clear">
+                <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+              </ion-button>
+              <small>See all</small>
+            </article>
+          </section>
+        </ng-container>
+
         <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
           <ng-container *ngIf="stakeholders.length else noGoals">
 

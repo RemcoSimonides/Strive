@@ -64,6 +64,10 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     if (before.isSpectator !== after.isSpectator) {
       changeNumberOfSpectators(goalId, after.isSpectator ? 1 : -1)
     }
+
+    if (!after.isAdmin && !after.isAchiever && !after.isSupporter && !after.isSpectator && !after.hasOpenRequestToJoin) {
+      snapshot.after.ref.delete()
+    }
   })
 
 export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)

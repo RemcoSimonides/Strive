@@ -13,8 +13,8 @@ export interface GoalStakeholder {
   hasOpenRequestToJoin: boolean
   goalId: string
   goalPublicity: GoalPublicityType
-  lastCheckedGoal: false | Date
-  lastCheckedChat: false | Date
+  lastCheckedGoal: Date
+  lastCheckedChat: Date
   updatedBy?: string
   updatedAt?: Date
   createdAt?: Date
@@ -33,8 +33,8 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     hasOpenRequestToJoin: false,
     goalId: '',
     goalPublicity: 'private',
-    lastCheckedGoal: false,
-    lastCheckedChat: false,
+    lastCheckedGoal: new Date(),
+    lastCheckedChat: new Date(),
     ...params
   }
 }
