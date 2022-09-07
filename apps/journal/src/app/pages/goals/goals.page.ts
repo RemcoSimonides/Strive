@@ -132,7 +132,12 @@ export class GoalsComponent {
     }).then(modal => modal.present())
   }
 
-  async openAllModal(stakeholder: StakeholderWithGoalAndEvents) {
+  async openAllModal(stakeholder?: StakeholderWithGoalAndEvents) {
+    if (stakeholder?.events.length === 0) {
+      this.router.navigate(['/goal/', stakeholder.goal.id])
+      return
+    } 
+
     const stakeholders = stakeholder ? [stakeholder] : await firstValueFrom(this.all$)
     this.modalCtrl.create({
       component: GoalsModalComponent,

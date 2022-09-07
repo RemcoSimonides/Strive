@@ -17,7 +17,7 @@
                   <img [ref]="stakeholder.goal.image" asset="goal.png"/>
                 </ion-thumbnail>
                 <small>{{ stakeholder.goal.title }}</small>
-                <ion-badge color="primary">{{ stakeholder.events.length }}</ion-badge>
+                <ion-badge color="primary" *ngIf="stakeholder.events.length">{{ stakeholder.events.length }}</ion-badge>
               </article>
             </ng-container>
             <article *ngIf="seeAll | async" (click)="openAllModal()">
