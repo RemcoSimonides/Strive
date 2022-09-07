@@ -10,7 +10,7 @@ import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 import { UserService } from '@strive/user/user/user.service'
 import { UserForm } from '@strive/user/user/forms/user.form'
 import { GoalService } from '@strive/goal/goal/goal.service'
-import { Affirmations, createUser, DailyGratefulness, DearFutureSelf, exercises, Goal, GoalStakeholder, isOnlySpectator, User } from '@strive/model'
+import { Affirmations, createUser, DailyGratefulness, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
 import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
@@ -70,7 +70,6 @@ export class UserPage {
       this.stakeholders$ = this.user$.pipe(
         filter(user => !!user),
         switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
-        map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
         joinWith({
           goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId)
         }, { shouldAwait: true }),

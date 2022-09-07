@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
-import { createGoalStakeholder, GoalStakeholder, isOnlySpectator } from '@strive/model'
+import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { UserService } from '@strive/user/user/user.service'
 import { combineLatest, firstValueFrom, Observable } from 'rxjs'
@@ -44,9 +44,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     const stakeholders$ = combineLatest([
       this.user.user$,
-      this.stakeholder.valueChanges({ goalId: this.goalId }).pipe(
-        map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s)))
-      )
+      this.stakeholder.valueChanges({ goalId: this.goalId })
     ]).pipe(
       shareReplay({ bufferSize: 1, refCount: true })
     )

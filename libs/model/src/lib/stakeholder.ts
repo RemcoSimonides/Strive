@@ -38,8 +38,3 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     ...params
   }
 }
-
-export function isOnlySpectator(stakeholder: GoalStakeholder) {
-  const { isSpectator, isAchiever, isAdmin, isSupporter } = stakeholder
-  return isSpectator && !(isAchiever || isAdmin || isSupporter)
-}

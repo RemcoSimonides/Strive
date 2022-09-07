@@ -30,6 +30,9 @@
               <span *ngIf="you.isSupporter">
                 <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>Supporter
               </span>
+              <span *ngIf="you.isSpectator">
+                <ion-icon name="star" slot="end"></ion-icon>Follower
+              </span>
             </small>
           </ion-label>
         </article>
@@ -45,6 +48,7 @@
           <ion-select-option [value]="null">All roles</ion-select-option>
           <ion-select-option value="isAchiever">Achievers</ion-select-option>
           <ion-select-option value="isSupporter">Supporters</ion-select-option>
+          <ion-select-option value="isSpectator">Followers</ion-select-option>
           <ion-select-option value="isAdmin">Admins</ion-select-option>
         </ion-select>
 
@@ -65,6 +69,9 @@
                   </span>
                   <span *ngIf="stakeholder.isSupporter">
                     <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>Supporter
+                  </span>
+                  <span *ngIf="stakeholder.isSpectator">
+                    <ion-icon name="star" slot="end"></ion-icon>Follower
                   </span>
                 </small>
               </ion-label>

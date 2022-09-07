@@ -4,7 +4,7 @@ import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
+import { combineLatest, Observable } from 'rxjs'
 import { switchMap, map, filter, startWith, tap } from 'rxjs/operators'
 
 import { SeoService } from '@strive/utils/services/seo.service'
@@ -14,7 +14,7 @@ import { GoalEventService } from '@strive/goal/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
-import { EventType, Goal, GoalEvent, GoalStakeholder, GoalStakeholderRole, isOnlySpectator } from '@strive/model'
+import { Goal, GoalEvent, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
@@ -34,10 +34,7 @@ type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: Goal
 export class GoalsComponent {
 
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
-  form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{}'))
-  hasGoals$ = new BehaviorSubject(false)
-  hasGoalsOutsideFocus$ = new BehaviorSubject(false)
-  hasGoalsInFocus$ = new BehaviorSubject(false)
+  form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{"isAchiever":true,"isSupporter":false,"isAdmin":false}'))
 
   constructor(
     public user: UserService,
@@ -53,7 +50,6 @@ export class GoalsComponent {
     const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
-      map(stakeholders => stakeholders.filter(s => !isOnlySpectator(s))),
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
         story: (stakeholder: GoalStakeholder) => {
@@ -64,39 +60,30 @@ export class GoalsComponent {
         }
       }, { shouldAwait: true }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
-      map(stakeholders => stakeholders.sort((first, second) => {
-        // Sort finished goals to the end and in progress goals to top
-        const a = getProgress(first.goal!)
-        const b = getProgress(second.goal!)
-
-        if (a === b) return 0
-        if (b === 1) return -1
-        if (a === 1) return 1
-
-        if (a > b) return -1
-        if (a < b) return 1
-        return 0
-      })),
-      tap(stakeholders => {
-        this.hasGoals$.next(!!stakeholders.length)
-        // TODO GOAL FOCUS
-        // const inFocus = stakeholders.filter(isCurrentFocus)
-        // this.hasGoalsInFocus$.next(!!inFocus.length)
-        // this.hasGoalsOutsideFocus$.next(stakeholders.length > inFocus.length)
-        this.hasGoalsInFocus$.next(false)
-        this.hasGoalsOutsideFocus$.next(true)
-      })
     )
 
     this.stakeholders$ = combineLatest([
-      stakeholders$,
+      stakeholders$.pipe(
+        map(stakeholders => stakeholders.sort((first, second) => {
+          // Sort finished goals to the end and in progress goals to top
+          const a = getProgress(first.goal!)
+          const b = getProgress(second.goal!)
+
+          if (a === b) return 0
+          if (b === 1) return -1
+          if (a === 1) return 1
+
+          if (a > b) return -1
+          if (a < b) return 1
+          return 0
+        }))
+      ),
       this.form.valueChanges.pipe(
         startWith(this.form.value as any),
         tap((value: Roles) => localStorage.setItem('goals options', JSON.stringify(value)))
       )
     ]).pipe(
       map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
-        // if (isCurrentFocus(stakeholder)) return true // exception for goals with current focus
         for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
           if (key === 'isSpectator') continue
           if (bool && stakeholder[key]) return true

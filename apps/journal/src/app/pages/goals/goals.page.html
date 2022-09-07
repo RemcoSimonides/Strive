@@ -8,62 +8,31 @@
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
 
-      <!-- Goals -->
       <main>
         <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
-          <ng-container *ngIf="hasGoals$ | async else noGoals">
+          <ng-container *ngIf="stakeholders.length else noGoals">
 
-            <!-- <ng-container *ngIf="(stakeholders | currentFocus) as inFocus"> -->
-              <!-- <ng-container *ngIf="inFocus.length; else noFocus">
-                <header>
-                  <h4 *ngIf="hasGoalsOutsideFocus$ | async">Current Focus</h4>
-                  <ion-button fill="clear" (click)="createGoal()">
-                    <ion-icon name="add" slot="start"></ion-icon>
-                    <span>add goal</span>
-                  </ion-button>      
-                </header>
+            <header>
+              <ion-button fill="clear" (click)="createGoal()">
+                <ion-icon name="add" slot="start"></ion-icon>
+                <span>add goal</span>
+              </ion-button>
+    
+              <ion-button fill="clear" (click)="openOptions($event)">
+                <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+              </ion-button>
+            </header>
 
-                <section>
-                  <ng-container *ngFor="let stakeholder of inFocus; trackBy: trackByFn">
-                    <ng-container *ngTemplateOutlet="goal; context: { $implicit: stakeholder }" ></ng-container>
-                  </ng-container>
-                </section>
+            <section class="cards">
+              <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
+                <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events">
+                  <small *ngIf="stakeholder.goal.publicity === 'private'">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <span>Private</span>
+                  </small>
+                </goal-thumbnail>
               </ng-container>
-              <ng-template #noFocus> -->
-                <header>
-                  <ion-button fill="clear" (click)="createGoal()">
-                    <ion-icon name="add" slot="start"></ion-icon>
-                    <span>add goal</span>
-                  </ion-button>
-        
-                  <ion-button fill="clear" (click)="openOptions($event)">
-                    <ion-icon slot="icon-only" name="options-outline"></ion-icon>
-                  </ion-button>
-                </header>
-              <!-- </ng-template> -->
-            <!-- </ng-container> -->
-
-            <!-- <ng-container *ngIf="(stakeholders | currentFocus:true) as outsideFocus"> -->
-              <!-- <ng-container *ngIf="hasGoalsOutsideFocus$ | async"> -->
-                <!-- <header *ngIf="hasGoalsInFocus$ | async" class="other-goals">
-                  <h4>All Goals</h4>
-                  <ion-button fill="clear" (click)="openOptions($event)">
-                    <ion-icon slot="icon-only" name="options-outline"></ion-icon>
-                  </ion-button>
-                </header>  -->
-
-                <section class="cards">
-                  <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
-                    <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events">
-                      <small *ngIf="stakeholder.goal.publicity === 'private'">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <span>Private</span>
-                      </small>
-                    </goal-thumbnail>
-                  </ng-container>
-                </section>
-              <!-- </ng-container> -->
-            <!-- </ng-container> -->
+            </section>
 
           </ng-container>
 
