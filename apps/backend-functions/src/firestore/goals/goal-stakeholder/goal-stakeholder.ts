@@ -118,7 +118,7 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   const requestToJoin = !before.hasOpenRequestToJoin && after.hasOpenRequestToJoin
   const requestToJoinDecided = before.hasOpenRequestToJoin && !after.hasOpenRequestToJoin
   const requestToJoinAccepted = requestToJoinDecided && !before.isAchiever && after.isAchiever
-  const requestToJoinRejected = requestToJoinDecided && !before.isAchiever && !after.isAchiever
+  const requestToJoinRejected = requestToJoinDecided && !before.isAchiever && !after.isAchiever && after.updatedBy !== after.uid
 
   const source = createGoalSource({
     goal,
