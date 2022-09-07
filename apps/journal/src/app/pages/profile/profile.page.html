@@ -29,41 +29,44 @@
       <header>
         <ion-card class="ion-padding">
           <article class="profile">
+            <ion-avatar>
+              <img [ref]="profile.photoURL" asset="profile.png" alt="profile picture" (click)="editProfileImage(profile, $event)"/>
+            </ion-avatar>
             <div>
               <h5>{{ profile.username }}</h5>
               <span>Joined {{ profile.createdAt | date:'longDate' }}</span>
             </div>
-            <ion-avatar>
-              <img [ref]="profile.photoURL" asset="profile.png" alt="profile picture" (click)="editProfileImage(profile, $event)"/>
-            </ion-avatar>
           </article>
-
-          <section>
-            <article (click)="openFollowers()" class="clickable">
+          <ul>
+            <li (click)="openFollowers()" class="clickable">
               <span class="number">{{ profile.numberOfSpectators }}</span>
               <span>Followers</span>
-            </article>
-            <article (click)="openFollowing()" class="clickable">
+            </li>
+            <li (click)="openFollowing()" class="clickable">
               <span class="number">{{ profile.numberOfSpectating }}</span>
               <span>Following</span>
-            </article>
-            <article (click)="openSupporting()" class="clickable">
+            </li>
+            <li (click)="openSupporting()" class="clickable">
               <span class="number">{{ (supportingGoals$ | async)?.length ?? 0 }}</span>
               <span>Goals supported</span>
-            </article>
-              
-          </section>
-
-          <ng-container *ngIf="(isOwner$ | async) === false">
-            <ng-container *ngIf="isSpectator$ | async else notSpectator">
-              <ion-button (click)="toggleSpectate(false)" fill="outline" size="small">Unfollow</ion-button>
-            </ng-container>
-            <ng-template #notSpectator>
-              <ion-button (click)="toggleSpectate(true)" fill="outline" size="small">Follow</ion-button>
-            </ng-template>
-          </ng-container>
-
+            </li>
+          </ul>
         </ion-card>
+
+        <ng-container *ngIf="(isOwner$ | async) === false">
+          <ng-container *ngIf="isSpectator$ | async else notSpectator">
+            <ion-button (click)="toggleSpectate(false)" size="block" class="fake-disable">
+              <ion-icon name="star" slot="start"></ion-icon>
+              <span>FOLLOWING</span>
+            </ion-button>
+          </ng-container>
+          <ng-template #notSpectator>
+            <ion-button (click)="toggleSpectate(true)" size="block">
+              <ion-icon name="star-outline" slot="start"></ion-icon>
+              <span>FOLLOW</span>
+            </ion-button>
+          </ng-template>
+        </ng-container>
       </header>
 
       <section class="goals">
