@@ -54,7 +54,12 @@
 
                 <section class="cards">
                   <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
-                    <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events"></goal-thumbnail>
+                    <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events">
+                      <small *ngIf="stakeholder.goal.publicity === 'private'">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <span>Private</span>
+                      </small>
+                    </goal-thumbnail>
                   </ng-container>
                 </section>
               <!-- </ng-container> -->

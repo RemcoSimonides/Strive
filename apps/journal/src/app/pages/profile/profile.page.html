@@ -79,9 +79,16 @@
             <ul>
               <li *ngFor="let value of achievingGoals">
                 <goal-thumbnail [goal]="value.goal" [stakeholder]="(isOwner$ | async) ? value.stakeholder : undefined">
-                  <small>
-                    <ion-icon name="flag-outline"></ion-icon><span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
-                  </small>
+                  <div>
+                    <small *ngIf="value.goal.publicity === 'private'">
+                      <ion-icon name="lock-closed-outline"></ion-icon>
+                      <span>Private</span>
+                    </small>
+                    <small>
+                      <ion-icon name="flag-outline"></ion-icon>
+                      <span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                    </small>
+                  </div>
                 </goal-thumbnail>
               </li>
             </ul>

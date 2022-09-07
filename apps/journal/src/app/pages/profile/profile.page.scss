@@ -2,6 +2,7 @@ main {
   max-width: 700px;
   margin: auto;
   padding: 0px 16px;
+  margin-bottom: 16px;
 }
 
 header {
@@ -78,10 +79,15 @@ ul {
   gap: 16px;
   margin: 0;
 
-  small {
+  div {
     display: flex;
-    gap: 4px;
-    align-items: flex-start;
+    gap: 8px;
+
+    small {
+      display: flex;
+      gap: 4px;
+      align-items: flex-start;
+    }
   }
 }
 

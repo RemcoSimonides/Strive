@@ -19,6 +19,12 @@ main {
     display: flex;
     flex-direction: column;
     gap: 16px;
+
+    small {
+      display: flex;
+      gap: 4px;
+      align-items: flex-start;
+    }
   }
 
 }
