@@ -30,6 +30,7 @@ export interface Goal {
   publicity: GoalPublicityType
   numberOfAchievers: number
   numberOfSupporters: number
+  numberOfSpectators: number
   tasksCompleted: number
   tasksTotal: number
   deadline?: string
@@ -75,6 +76,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     isFinished: false,
     numberOfAchievers: 0,
     numberOfSupporters: 0,
+    numberOfSpectators: 0,
     tasksCompleted: 0,
     tasksTotal: 1,
     publicity: 'public',

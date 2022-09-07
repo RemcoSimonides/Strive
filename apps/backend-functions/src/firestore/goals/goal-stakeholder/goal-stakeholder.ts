@@ -25,6 +25,10 @@ export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals
       changeNumberOfSupporters(goalId, 1)
     }
 
+    if (stakeholder.isSpectator) {
+      changeNumberOfSpectators(goalId, 1)
+    }
+
     // events
     handleStakeholderEvents(createGoalStakeholder(), stakeholder, goal)
 
@@ -55,6 +59,10 @@ export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/
     // increase or decrease number of Supporters
     if (before.isSupporter !== after.isSupporter) {
       changeNumberOfSupporters(goalId, after.isSupporter ? 1 : -1)
+    }
+
+    if (before.isSpectator !== after.isSpectator) {
+      changeNumberOfSpectators(goalId, after.isSpectator ? 1 : -1)
     }
   })
 
@@ -89,6 +97,10 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
         batch.delete(doc.ref)
       }
       batch.commit()
+    }
+
+    if (stakeholder.isSpectator) {
+      changeNumberOfSpectators(goalId, -1)
     }
 
   })
@@ -155,5 +167,12 @@ function changeNumberOfSupporters(goalId: string, delta: -1 | 1) {
   const goalRef = db.doc(`Goals/${goalId}`)
   return goalRef.update({
     numberOfSupporters: increment(delta)
+  })
+}
+
+function changeNumberOfSpectators(goalId: string, delta: -1 | 1) {
+  const goalRef = db.doc(`Goals/${goalId}`)
+  return goalRef.update({
+    numberOfSpectators: increment(delta)
   })
 }
