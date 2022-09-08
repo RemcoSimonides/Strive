@@ -1,40 +1,28 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { ModalController, PopoverController } from '@ionic/angular'
 import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
-import { switchMap, map, filter } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
+import { switchMap, map, filter, startWith, tap } from 'rxjs/operators'
+
+import { isBefore, min } from 'date-fns'
+import { delay } from '@strive/utils/helpers'
+import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { UserService } from '@strive/user/user/user.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
-import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
-import { GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
+import { GoalStakeholder, GoalStakeholderRole, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
-import { delay } from '@strive/utils/helpers'
-import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
-import { isBefore, min } from 'date-fns'
-import { GoalsModalComponent } from '@strive/goal/goal/components/modals/goals/goals-modal.component'
-
-function fitableItems(width: number) {
-  const maxWidth = 700
-  const gap = 16
-  const padding = 16
-  const itemWidth = 60 + gap
-  const gutter = padding * 2
-
-  const space = maxWidth < width ? maxWidth : width
-  const available = space - gutter + gap
-
-  return Math.floor(available / itemWidth)
-}
+import { GoalUpdatesModalComponent } from '@strive/goal/goal/components/modals/goals/goal-updates.component'
+import { OptionsPopoverComponent, Roles, RolesForm } from '@strive/goal/goal/components/popovers/options/options.component'
 
 @Component({
   selector: 'journal-goals',
@@ -50,17 +38,19 @@ export class GoalsComponent {
   achieving$: Observable<StakeholderWithGoalAndEvents[]>
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
 
+  form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{}'))
+
   constructor(
     public user: UserService,
     private goal: GoalService,
     private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
     private router: Router,
-    public screensize: ScreensizeService,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private goalEvent: GoalEventService
   ) {
-    this.all$ = this.user.user$.pipe(
+    const stakeholders$ = this.user.user$.pipe(
       filter(user => !!user),
       switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
       joinWith({
@@ -73,34 +63,34 @@ export class GoalsComponent {
         }
       }, { shouldAwait: true }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
-    ) as any
+    ) as Observable<StakeholderWithGoalAndEvents[]>
 
-    const fitableItems$ = this.screensize.width$.pipe(map(fitableItems))
-
-    this.achieving$ = combineLatest([
-      this.all$.pipe(
-        map(stakeholders => stakeholders.filter(stakeholder => !stakeholder.isAchiever)),
-        map(stakeholders => stakeholders.sort((a, b) => {
-          if (!a.events || !b.events) return 0
-          if (a.events.length > 0 && b.events.length === 0) return -1
-          if (a.events.length === 0 && b.events.length > 0) return 1
-
-          const earliestA = min(a.events.map((event: any) => event.createdAt!))
-          const earliestB = min(b.events.map((event: any) => event.createdAt!))
-          return isBefore(earliestA, earliestB) ? -1 : 1
-        }))
-      ),
-      fitableItems$
+    this.all$ = combineLatest([
+      stakeholders$,
+      this.form.valueChanges.pipe(
+        startWith(this.form.value as any),
+        tap((value: Roles) => localStorage.setItem('goals options', JSON.stringify(value)))
+      )
     ]).pipe(
-      map(([ stakeholders, items ]) => {
-        if (stakeholders.length > items) {
-          this.seeAll.next(true)
-          return stakeholders.splice(0, items - 1)
-        } else {
-          this.seeAll.next(false)
-          return stakeholders.splice(0, items)
+      map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
+        for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
+          if (bool && stakeholder[key]) return true
         }
-      })
+        return false
+      }))
+    )
+
+    this.achieving$ = this.all$.pipe(
+      map(stakeholders => stakeholders.filter(stakeholder => !stakeholder.isAchiever)),
+      map(stakeholders => stakeholders.sort((a, b) => {
+        if (!a.events || !b.events) return 0
+        if (a.events.length > 0 && b.events.length === 0) return -1
+        if (a.events.length === 0 && b.events.length > 0) return 1
+
+        const earliestA = min(a.events.map((event: any) => event.createdAt!))
+        const earliestB = min(b.events.map((event: any) => event.createdAt!))
+        return isBefore(earliestA, earliestB) ? -1 : 1
+      }))
     ) as any
     
     this.stakeholders$ = this.all$.pipe(
@@ -132,17 +122,24 @@ export class GoalsComponent {
     }).then(modal => modal.present())
   }
 
-  async openAllModal(stakeholder?: StakeholderWithGoalAndEvents) {
+  openFollowedGoal(stakeholder: StakeholderWithGoalAndEvents) {
     if (stakeholder?.events.length === 0) {
       this.router.navigate(['/goal/', stakeholder.goal.id])
       return
     } 
 
-    const stakeholders = stakeholder ? [stakeholder] : await firstValueFrom(this.all$)
     this.modalCtrl.create({
-      component: GoalsModalComponent,
-      componentProps: { stakeholders }
+      component: GoalUpdatesModalComponent,
+      componentProps: { stakeholder }
     }).then(modal => modal.present())
+  }
+
+  openOptions(event: UIEvent) {
+    this.popoverCtrl.create({
+      component: OptionsPopoverComponent,
+      componentProps: { form: this.form },
+      event
+    }).then(popover => popover.present())
   }
 
   createGoal() {

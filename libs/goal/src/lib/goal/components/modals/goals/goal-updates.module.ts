@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 
-import { GoalsModalComponent } from './goals-modal.component'
+import { GoalUpdatesModalComponent } from './goal-updates.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { GoalThumbnailModule } from '../../thumbnail/thumbnail.module'
@@ -16,6 +16,6 @@ import { OptionsPopoverModule } from '../../popovers/options/options.module'
     GoalThumbnailModule,
     OptionsPopoverModule
   ],
-  declarations: [GoalsModalComponent],
+  declarations: [GoalUpdatesModalComponent],
 })
-export class GoalsModalModule { }
+export class GoalUpdatesModalModule { }

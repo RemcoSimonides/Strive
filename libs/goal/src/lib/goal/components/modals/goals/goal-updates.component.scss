@@ -1,0 +1,11 @@
+article {
+	display: flex;
+	gap: 8px;
+	overflow: hidden;
+
+	small {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+}
