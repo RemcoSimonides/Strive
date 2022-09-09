@@ -13,7 +13,7 @@ export class SeoService {
     private router: Router
   ) { }
 
-  generateTags({ title = '', description = '', image = '' }) {
+  generateTags({ title = '', description = 'Stay focused on your goals and help others achieve theirs', image = 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ffull_logo-1200x630.png?alt=media&token=88184b80-d54f-423a-8378-aa0e826b330e' }) {
 
     this.title.setTitle(title)
     this.meta.addTags([
