@@ -26,7 +26,8 @@ export class FcmService {
     lastValueFrom(this.user.uid$.pipe(take(2))).then(uid => {
       const name = `pushNotifications${uid}`
       const storage = localStorage.getItem(name) ?? false
-      this.fcmActive$.next(!!storage)
+      const result = storage === 'false' || storage === false ? false : true
+      this.fcmActive$.next(result)
     })
   }
 
