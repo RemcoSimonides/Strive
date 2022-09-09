@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { PopoverController, ModalController } from '@ionic/angular'
 
 import { combineLatest, firstValueFrom, Observable, of } from 'rxjs'
-import { distinctUntilChanged, map, pluck, shareReplay, startWith, switchMap } from 'rxjs/operators'
+import { distinctUntilChanged, map, pluck, shareReplay, switchMap } from 'rxjs/operators'
 
 import { UserSpectateService } from '@strive/user/spectator/spectator.service'
 import { UserService } from '@strive/user/user/user.service'
@@ -47,7 +47,6 @@ export class ProfileComponent {
     this.profileId$
   ]).pipe(
     map(([user, profileId]) => user?.uid === profileId),
-    startWith(false),
     distinctUntilChanged(),
     shareReplay({ bufferSize: 1, refCount: true })
   )
