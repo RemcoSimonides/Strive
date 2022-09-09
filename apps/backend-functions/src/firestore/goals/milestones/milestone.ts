@@ -126,13 +126,11 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
   }
 
   if (after.status === 'succeeded') {
-    source.postId = after.id
     addGoalEvent('goalMilestoneCompletedSuccessfully', source)
     addStoryItem('goalMilestoneCompletedSuccessfully', source)
   }
 
   if (after.status === 'failed') {
-    source.postId = after.id
     addGoalEvent('goalMilestoneCompletedUnsuccessfully', source)
     addStoryItem('goalMilestoneCompletedUnsuccessfully', source)
   }

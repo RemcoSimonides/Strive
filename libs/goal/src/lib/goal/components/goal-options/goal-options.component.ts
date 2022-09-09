@@ -43,7 +43,6 @@ export class GoalOptionsComponent {
               component: UpsertPostModalComponent,
               componentProps: {
                 post: createPost({
-                  id: this.goal.id,
                   goalId: this.goal.id
                 })
               }

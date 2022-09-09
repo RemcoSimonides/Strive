@@ -34,7 +34,7 @@
 			</article>
 		</li>
 
-		<article *ngIf="item.source.postId" class="extra">
+		<article *ngIf="item.name === 'goalStoryPostCreated'" class="extra">
 			<div></div>
 			<div>
 				<post-main [storyItem]="item" [isAdmin]="isAdmin"></post-main>

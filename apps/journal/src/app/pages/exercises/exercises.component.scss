@@ -16,5 +16,9 @@ section {
     margin-top: 4px;
     display: flex;
     flex-direction: column;
+
+    small {
+      color: var(--ion-color-medium);
+    }
   }
 }

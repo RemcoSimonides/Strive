@@ -1,42 +1,72 @@
-import { createGoalStakeholder } from '@strive/model';
+import { createGoal, createGoalSource, createGoalStakeholder, createMilestone, createPost, createStoryItem, StoryItem, User } from '@strive/model';
+import { subSeconds } from 'date-fns';
 import { db, functions, logger } from './internals/firebase';
-import { toDate } from './shared/utils';
+import { getDocument, toDate } from './shared/utils';
 
 export const migrate = functions.https.onRequest(async (req, res) => {
 
   try {
 
-    // const goalsSnap = await db.collection('Goals').get()
-    // const goalBatch = db.batch()
-    // const stakeholderBatch = db.batch()
-    // for (const { id, ref } of goalsSnap.docs) {
+    // const goalsSnap = await db.collection('Goals').get()   
+    // for (const goalDoc of goalsSnap.docs) {
+    //   const goal = createGoal(toDate({ ...goalDoc.data(), id: goalDoc.id }))
 
-    //   const stakeholdersSnap = await db.collection(`Goals/${id}/GStakeholders`).get()
-    //   let counter = 0
+    //   const postsSnap = await db.collection(`Goals/${goalDoc.id}/Posts`).get()
+    //   const posts = postsSnap.docs.map(postDoc => createPost(toDate({ ...postDoc.data(), id: postDoc.id })))
+    //   if (!posts.length) continue
 
+    //   const milestonesSnap = await db.collection(`Goals/${goalDoc.id}/Milestones`).get()
+    //   for (const milestoneDoc of milestonesSnap.docs) {
+    //     const milestone = createMilestone(toDate({ ...milestoneDoc.data(), id: milestoneDoc.id }))
 
-    //   for (const doc of stakeholdersSnap.docs) {
+    //     if (milestone.status === 'failed' || milestone.status === 'succeeded') {
 
-    //     const stakeholder = createGoalStakeholder(toDate({ ...doc.data(), id: doc.id }))
+    //       const post = posts.find(p => p.id === milestone.id)
+    //       if (!post) continue
 
-    //     if ((stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter) && !stakeholder.isSpectator) {
-    //       stakeholderBatch.update(doc.ref, {
-    //         isSpectator: true
+    //       const user = await getDocument<User>(`Users/${post.uid}`)
+          
+    //       // create story item
+    //       const date = subSeconds(post.createdAt, 10)
+    //       const item = createStoryItem({
+    //         createdAt: date,
+    //         updatedAt: date,
+    //         date,
+    //         name: 'goalStoryPostCreated',
+    //         source: createGoalSource({
+    //           goal,
+    //           milestone,
+    //           postId: post.id,
+    //           user
+    //         })
     //       })
-    //     }
-
-    //     if (stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter || stakeholder.isSpectator) {
-    //       counter++
+    //       db.collection(`Goals/${goal.id}/Story`).add(item)
     //     }
     //   }
 
-    //   goalBatch.update(ref, {
-    //     numberOfSpectators: counter
-    //   })
+    //   if (goal.isFinished) {
+    //     const post = posts.find(p => p.id === goal.id)
+    //     if (post) {
+    //       const user = await getDocument<User>(`Users/${post.uid}`)
+          
+    //       // create story item
+    //       const date = subSeconds(post.createdAt, 10)
+    //       const item = createStoryItem({
+    //         createdAt: date,
+    //         updatedAt: date,
+    //         date,
+    //         name: 'goalStoryPostCreated',
+    //         source: createGoalSource({
+    //           goal,
+    //           postId: post.id,
+    //           user
+    //         })
+    //       })
+    //       db.collection(`Goals/${goal.id}/Story`).add(item)
+    //     }
+    //   }
     // }
 
-    // goalBatch.commit()
-    // stakeholderBatch.commit()
 
     res.status(200).send('all good')
   } catch (err) {

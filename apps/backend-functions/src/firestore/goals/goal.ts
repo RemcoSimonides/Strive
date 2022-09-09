@@ -102,7 +102,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     if (becameFinished) {
       logger.log('Goal is finished')
       const user = await getDocument<User>(`Users/${after.updatedBy}`)
-      const source = createGoalSource({ goal: after, user, postId: goalId })
+      const source = createGoalSource({ goal: after, user })
       addGoalEvent('goalIsFinished', source)
       addStoryItem('goalIsFinished', source)
 

@@ -35,7 +35,6 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   get post() { return this._post }
   @Input() set post(post: Post) {
     if (!post.goalId) throw new Error('Upsert post modal needs goalId')
-    if (!post.id) post.id = this.postService.createId()
     this._post = post
 
     this.mode = !!post.createdAt ? 'update' : 'create'
