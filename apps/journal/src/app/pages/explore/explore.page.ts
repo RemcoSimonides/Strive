@@ -77,7 +77,10 @@ export class ExploreComponent implements OnDestroy {
     private seo: SeoService,
     private user: UserService
   ) {
-    this.seo.generateTags({ title: `Explore - Strive Journal` })
+    this.seo.generateTags({
+      title: `Explore - Strive Journal`,
+      description: 'Get inspired by searching goal of other users, and discover exercises to increase your chance of succeeding'
+    })
   }
 
   ngOnDestroy() {

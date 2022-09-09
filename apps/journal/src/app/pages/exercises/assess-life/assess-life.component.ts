@@ -13,6 +13,9 @@ export class AssessLifeComponent {
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {
-    this.seo.generateTags({ title: 'Assess Life - Strive Journal' })
+    this.seo.generateTags({
+      title: 'Assess Life - Strive Journal',
+      description: 'Coming soon!'
+    })
   }
 }

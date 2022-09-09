@@ -140,6 +140,7 @@ export class GoalViewComponent implements OnDestroy {
   
     this.seo.generateTags({
       title: `${goal.title} - Strive Journal`,
+      description: goal.description,
       image: goal.image
     })
   }

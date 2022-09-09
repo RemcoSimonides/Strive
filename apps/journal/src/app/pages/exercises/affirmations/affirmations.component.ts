@@ -49,7 +49,10 @@ export class AffirmationsComponent implements OnDestroy {
     private service: AffirmationService,
     public user: UserService,
   ) {
-    this.seo.generateTags({ title: 'Affirmations - Strive Journal' })
+    this.seo.generateTags({
+      title: 'Affirmations - Strive Journal',
+      description: 'Exercise to help you prioritize positive thoughts over negative thoughts'
+    })
     this.shuffle(this.suggestions)
     this.suggestionsCopy = Object.assign([], this.suggestions)
 

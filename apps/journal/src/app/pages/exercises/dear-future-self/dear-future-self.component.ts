@@ -60,7 +60,10 @@ export class DearFutureSelfComponent {
     private seo: SeoService,
     private user: UserService
   ) {
-    this.seo.generateTags({ title: 'Dear Future Self - Strive Journal' })
+    this.seo.generateTags({
+      title: 'Dear Future Self - Strive Journal',
+      description: 'Surprise your future self with a letter from the past'
+    })
   }
 
   async send() {

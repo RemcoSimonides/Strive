@@ -77,7 +77,10 @@ export class DailyGratefulnessComponent implements OnDestroy {
     private service: DailyGratefulnessService,
     public user: UserService
   ) {
-    this.seo.generateTags({ title: 'Daily Gratefulness - Strive Journal' })
+    this.seo.generateTags({
+      title: 'Daily Gratefulness - Strive Journal',
+      description: 'Focus on the positive and take a minute to be grateful'
+    })
   }
 
   ngOnDestroy() {
