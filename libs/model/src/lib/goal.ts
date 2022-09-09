@@ -1,19 +1,11 @@
-import { EventType } from './notification';
-import { createSupportLink, Support, SupportLink } from './support';
-import { createUserLink, User, UserLink } from './user';
-import { createMilestoneLink, Milestone, MilestoneLink } from './milestone';
-import { GoalStakeholder } from './stakeholder';
+import { createSupportLink, Support, SupportLink } from './support'
+import { createUserLink, User, UserLink } from './user'
+import { createMilestoneLink, Milestone, MilestoneLink } from './milestone'
+import { GoalStakeholder } from './stakeholder'
+import { GoalEvent } from './goal-event'
 
 export type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
-
 export type GoalPublicityType = 'public' | 'private'
-
-export interface GoalEvent {
-  name: EventType
-  source: GoalSource
-  createdAt?: Date
-  updatedAt?: Date
-}
 
 export interface GoalSource {
   goal: GoalLink
@@ -104,13 +96,6 @@ export function createAlgoliaGoal(params: AlgoliaGoal | Goal): AlgoliaGoal {
     image: params.image,
     numberOfAchievers: params.numberOfAchievers,
     numberOfSupporters: params.numberOfSupporters
-  }
-}
-
-export function createGoalEvent(params: GoalEvent): GoalEvent {
-  return {
-    ...params,
-    source: createGoalSource(params.source),
   }
 }
 

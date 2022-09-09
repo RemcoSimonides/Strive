@@ -17,7 +17,7 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 
-import { GoalStakeholder, GoalStakeholderRole, StakeholderWithGoalAndEvents } from '@strive/model'
+import { filterGoalEvents, GoalStakeholder, GoalStakeholderRole, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
@@ -58,7 +58,7 @@ export class GoalsComponent {
         events: (stakeholder: GoalStakeholder) => {
           const query = [where('source.goal.id', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
           return this.goalEvent.valueChanges(query).pipe(
-            map(events => events.filter(event => event.source.user?.uid !== stakeholder.uid)),
+            map(events => filterGoalEvents(events, stakeholder)),
           )
         }
       }, { shouldAwait: true }),
@@ -91,7 +91,7 @@ export class GoalsComponent {
         const earliestB = min(b.events.map((event: any) => event.createdAt!))
         return isBefore(earliestA, earliestB) ? -1 : 1
       }))
-    ) as any
+    )
     
     this.stakeholders$ = this.all$.pipe(
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.isAchiever)),
@@ -108,7 +108,7 @@ export class GoalsComponent {
         if (a < b) return 1
         return 0
       }))
-    ) as any
+    )
 
     this.seo.generateTags({ title: `Goals - Strive Journal` })
   }

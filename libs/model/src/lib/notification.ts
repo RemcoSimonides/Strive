@@ -13,6 +13,14 @@ import {
   UserLink
 } from '@strive/model'
 
+
+/**
+ * Adding new event type? Also add them where it has to show up
+ * Aggregated Message from Goal Events (./goal-events.ts && libs/notification/src/lib/message/aggregated.ts)
+ * Story (./story.ts && libs\goal\src\lib\story\pipes\story-message.ts)
+ * Notifications (👇 && libs\notification\src\lib\message\notification.ts)
+ * Push Notification (libs\notification\src\lib\message\push-notification.ts)
+ */
 const eventTypes = [
   '',
   'goalCreated',
