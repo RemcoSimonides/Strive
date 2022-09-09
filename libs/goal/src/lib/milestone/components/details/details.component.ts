@@ -3,16 +3,18 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { AlertController, ModalController } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
 
-import { Subscription } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
 
-import { Goal, createSubtask, Milestone, createUserLink, Support } from '@strive/model'
+import { Goal, createSubtask, Milestone, createUserLink, Support, StoryItem } from '@strive/model'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
 import { UserService } from '@strive/user/user/user.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { delay } from '@strive/utils/helpers'
+import { StoryService } from '@strive/goal/story/story.service'
+import { orderBy, where } from 'firebase/firestore'
 
 @Component({
   selector: '[goal][milestone][isAdmin][isAchiever] goal-milestone-details',
@@ -25,6 +27,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   form?: MilestoneForm
   subtaskForm = new SubtaskForm()
+
+  story$?: Observable<StoryItem[]>
 
   @Input() goal!: Goal
   @Input() milestone!: Milestone & { supports?: Support[] }
@@ -39,6 +43,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
+    private storyService: StoryService,
     private user: UserService
   ) {
     super (location, modalCtrl)
@@ -46,6 +51,12 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   ngOnInit() {
     this.form = new MilestoneForm(this.milestone)
+
+    const query = [
+      where('source.milestone.id', '==', this.milestone.id),
+      orderBy('date', 'desc')
+    ]
+    this.story$ = this.storyService.valueChanges(query, { goalId: this.goal.id })
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(

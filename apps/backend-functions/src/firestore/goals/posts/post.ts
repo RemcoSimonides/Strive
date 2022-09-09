@@ -1,6 +1,6 @@
 import { db, functions, gcsBucket } from '../../../internals/firebase';
 import { getDocument, toDate } from '../../../shared/utils';
-import { Goal, createGoalSource, createPost, User } from '@strive/model';
+import { Goal, createGoalSource, createPost, User, Milestone } from '@strive/model';
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
 import { isEqual } from 'date-fns';
@@ -11,13 +11,19 @@ export const postCreatedHandler = functions.firestore.document(`Goals/{goalId}/P
     const post = createPost(toDate({ ...snapshot.data(), id: snapshot.id }))
     const { postId } = context.params
 
-    // event
-    const [goal, user] = await Promise.all([
+    const promises: Promise<any>[] = [
       getDocument<Goal>(`Goals/${post.goalId}`),
       getDocument<User>(`Users/${post.uid}`)
-    ])
+    ]
 
-    const source = createGoalSource({ goal, user, postId })
+    if (post.milestoneId) {
+      const promise = getDocument<Milestone>(`Goals/${post.goalId}/Milestones/${post.milestoneId}`)
+      promises.push(promise)
+    }
+
+    const [goal, user, milestone] = await Promise.all(promises)
+
+    const source = createGoalSource({ goal, user, milestone, postId })
     addGoalEvent('goalStoryPostCreated', source, postId)
     addStoryItem('goalStoryPostCreated', source, postId, post.date)
 })

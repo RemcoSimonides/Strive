@@ -55,13 +55,7 @@ export class GoalComponent {
     }
   }
 
-  maxStoryItems = 10
-  private _story: StoryItem[] = []
-  get story() { return this._story }
-  @Input() set story(story: StoryItem[]) {
-    if (!story) return
-    this._story = story.splice(0, this.maxStoryItems)
-  }
+  @Input() story: StoryItem[] = []
 
   milestones$?: Observable<Milestone[]>
   openRequests$?: Observable<GoalStakeholder[]>

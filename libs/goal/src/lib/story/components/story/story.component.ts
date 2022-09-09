@@ -13,19 +13,20 @@ export class StoryComponent {
 
 	@Input() story: StoryItem[] = []
 	@Input() isAdmin: boolean = false
-	@Input() goalId?: string
+	@Input() goalId!: string
+	@Input() milestoneId?: string
 
 	constructor(private modalCtrl: ModalController) {}
 
 	createCustomPost() {
 		if (!this.goalId) return
+
+		const post = createPost({ goalId: this.goalId })
+		if (this.milestoneId) post.milestoneId = this.milestoneId
+
 		this.modalCtrl.create({
 		  component: UpsertPostModalComponent,
-		  componentProps: {
-			post: createPost({
-				goalId: this.goalId
-			})
-		  }
+		  componentProps: { post }
 		}).then(modal => modal.present())
 	}
 

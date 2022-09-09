@@ -154,13 +154,6 @@
       <h3>Story</h3>
       <goal-story [story]="story" [isAdmin]="stakeholder.isAdmin" [goalId]="goal.id"></goal-story>
     </section>
-  
-    <footer fxLayout *ngIf="story.length === maxStoryItems">
-      <ion-button fill="clear" (click)="segmentChange.next('story')">
-        <span>SEE FULL STORY</span>
-        <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-      </ion-button>
-    </footer>
 
   </main>
 

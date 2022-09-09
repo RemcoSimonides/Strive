@@ -2,6 +2,13 @@
   display: block;
 }
 
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
 ion-header header {
   display: flex;
   position: absolute;

@@ -100,6 +100,13 @@
       </ion-list>
     </ng-container>
 
+    <ng-container *ngIf="story$ | async as story">
+      <ng-container *ngIf="isAdmin || story.length">
+        <h5>Story</h5>
+        <goal-story [story]="story" [isAdmin]="isAdmin" [goalId]="goal.id" [milestoneId]="milestone.id"></goal-story>
+      </ng-container>
+    </ng-container>
+
     <!-- <small><b>Created at:</b> {{ milestone.createdAt | date:'longDate' }}</small>
     <small *ngIf="milestone.finishedAt">
       <b>Finished at:</b> {{ milestone.finishedAt | date:'longDate' }}
