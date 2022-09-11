@@ -22,7 +22,7 @@
     <ion-segment-button value="story">
       Story
     </ion-segment-button>
-    <ion-segment-button value="chat" *ngIf="stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter">
+    <ion-segment-button value="chat">
       Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
     </ion-segment-button>
   </ion-segment>
@@ -44,7 +44,7 @@
       </ng-container>
     </ion-content>
     
-    <strive-chat *ngSwitchCase="'chat'" [goal]="goal$ | async"></strive-chat>
+    <strive-chat *ngSwitchCase="'chat'" [goal]="goal$ | async" [stakeholder]="stakeholder"></strive-chat>
   
   </ng-container>
   

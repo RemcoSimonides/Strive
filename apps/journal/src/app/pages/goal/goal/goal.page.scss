@@ -1,9 +1,5 @@
 @import "@angular/flex-layout/mq";
 
-.fake-disable {
-  opacity: 0.5;
-}
-
 picture.mobile {
   height: 60vw;
 }
@@ -72,20 +68,8 @@ main {
       display: flex;
       gap: 8px;
   
-      ion-button {
-        --background: var(--ion-card-background);
-  
-        &.button-block {
-          flex: 1;
-        }
-  
-        &.primary {
-          --color: var(--ion-color-primary);
-        }
-  
-        &.secondary {
-          --color: var(--ion-color-secondary);
-        }
+      ion-button.button-block {  
+        flex: 1;
       }
     }
   }

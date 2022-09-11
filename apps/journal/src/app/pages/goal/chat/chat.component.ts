@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { IonContent, Platform} from '@ionic/angular';
-import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter } from 'firebase/firestore';
+import { IonContent, ModalController, Platform} from '@ionic/angular';
+import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore';
 import { toDate } from 'ngfire';
 // Rxjs
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -11,12 +11,14 @@ import { UserService } from '@strive/user/user/user.service';
 import { CommentService } from '@strive/goal/chat/comment.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 // Interfaces
-import { Goal, Comment, createComment, createCommentSource } from '@strive/model'
+import { Goal, Comment, createComment, createCommentSource, GoalStakeholder } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers';
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
+import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
 
 @Component({
-  selector: 'strive-chat',
+  selector: '[goal][stakeholder] strive-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +26,7 @@ import { delay } from '@strive/utils/helpers';
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea?: IonContent
   @Input() goal!: Goal
+  @Input() stakeholder!: GoalStakeholder
 
   private commentsPerQuery = 20
   private query?: Query<DocumentData>
@@ -45,8 +48,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private commentService: CommentService,
+    private modalCtrl: ModalController,
     private platform: Platform,
-    private stakeholder: GoalStakeholderService,
+    private stakeholderService: GoalStakeholderService,
     public user: UserService
   ) {
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
@@ -55,10 +59,12 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     if (!this.user.uid) return
-    this.stakeholder.updateLastCheckedChat(this.goal.id, this.user.uid)
+    if(!this.stakeholder) return
+    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.user.uid)
 
     const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
     const constraints = [
+      where('createdAt', '>', this.stakeholder.createdAt),
       orderBy('createdAt', 'desc'),
       limit(this.commentsPerQuery)
     ]
@@ -126,7 +132,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.form.reset('')
     if (!this.user.uid) return
     this.commentService.add(comment, { params: { goalId: this.goal.id }})
-    this.stakeholder.updateLastCheckedChat(this.goal.id, this.user.uid)
+    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.user.uid)
   }
 
   async logScrolling($event: any) {
@@ -146,5 +152,67 @@ export class ChatComponent implements OnInit, OnDestroy {
     const currentScrollDepth = $event.detail.scrollTop;
 
     this.scrolledToBottom = scrollHeight < currentScrollDepth + 10
+  }
+
+  async join() {
+    if (!this.user.uid) {
+      const modal = await this.modalCtrl.create({
+        component: AuthModalComponent,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      })
+      modal.onDidDismiss().then(({ data: loggedIn }) => {
+        if (loggedIn) this.join()
+      })
+      return modal.present()
+    }
+
+    const { isAchiever, isAdmin, hasOpenRequestToJoin} = this.stakeholder
+
+    if (!isAchiever && !hasOpenRequestToJoin) {
+      if (isAdmin) {
+        return this.stakeholderService.upsert({
+          uid: this.user.uid,
+          isAchiever: true
+        }, { params: { goalId: this.goal.id }})
+      } else {
+        return this.stakeholderService.upsert({
+          uid: this.user.uid,
+          isSpectator: true,
+          hasOpenRequestToJoin: true
+        }, { params: { goalId: this.goal.id }})
+      }
+    }
+
+    if (hasOpenRequestToJoin) {
+      return this.stakeholderService.upsert({
+        uid: this.user.uid,
+        isSpectator: true,
+        hasOpenRequestToJoin: false
+      }, { params: { goalId: this.goal.id }})
+    }
+  }
+
+  async support() {
+    if (!this.user.uid) {
+      const modal = await this.modalCtrl.create({
+        component: AuthModalComponent,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      })
+      modal.onDidDismiss().then(({ data: loggedIn }) => {
+        if (loggedIn) this.support()
+      })
+      return modal.present()
+    }
+
+    this.modalCtrl.create({
+      component: AddSupportModalComponent,
+      componentProps: {
+        goalId: this.goal.id
+      }
+    }).then(modal => modal.present())
   }
 }

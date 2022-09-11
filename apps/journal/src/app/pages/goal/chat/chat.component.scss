@@ -62,3 +62,14 @@ ion-footer {
   }
 }
   
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  p {
+    color: var(--ion-text-color);
+  }
+}

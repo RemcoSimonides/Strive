@@ -122,3 +122,21 @@ ul {
   border-radius: 50%;
   background: var(--ion-color-primary);
 }
+
+ion-button {
+  &.fake-disable {
+    opacity: 0.5;
+  }
+
+  &.button-solid {
+    --background: var(--ion-card-background);
+  }
+
+  &.primary {
+    --color: var(--ion-color-primary);
+  }
+
+  &.secondary {
+    --color: var(--ion-color-secondary);
+  }
+}
