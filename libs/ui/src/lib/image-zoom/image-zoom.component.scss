@@ -2,4 +2,14 @@ swiper {
     height: 100%;
     display: flex;
     align-items: center;
+
+    section {
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        img {
+            min-width: 100%;
+        }
+    }
 }
