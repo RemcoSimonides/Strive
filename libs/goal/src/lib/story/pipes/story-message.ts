@@ -12,7 +12,10 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
     case 'goalCreatedFinished':
       return {
         icon: 'flag-outline',
-        message: [{ text: `Goal created` }]
+        message: [
+          { text: `Goal created by ` },
+          { text: source.user!.username, link: `/profile/${source.user!.uid}` }
+        ]
       }
     case 'goalIsFinished':
       return {
