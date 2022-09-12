@@ -28,7 +28,7 @@ export class Slide1Component {
 
     if (this.form.dirty) {
       const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
-    
+
       this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
       this.created.emit(true)
       this.form.markAsPristine()

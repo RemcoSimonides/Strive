@@ -122,6 +122,15 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       updateSources(after)
     }
 
+    if (becameFinished) {
+      const batch = db.batch()
+      const stakeholders = await db.collection(`Goals/${goalId}/GStakeholders`).where('focus.on', '==', true).get()
+      for (const { ref } of stakeholders.docs) {
+        batch.update(ref, { 'focus.on': false })
+      }
+      batch.commit()
+    }
+
     
     // algolia
     if (publicityChanged) {

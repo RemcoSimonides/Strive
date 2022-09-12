@@ -44,7 +44,7 @@
 
   </ion-list>
 
-  <ion-card class="focus">
+  <ion-card class="focus" *ngIf="form.isFinished.value === false">
     <ion-item lines="none">
       <ion-toggle (ionChange)="toggle($event)"></ion-toggle>
       <ion-label>
