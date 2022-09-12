@@ -4,6 +4,7 @@ import { FireCollection, WriteOptions } from '@strive/utils/services/collection.
 // Interfaces
 import { Goal, GoalStakeholder, createGoalStakeholder, User, createUser, createGoal } from '@strive/model'
 import { UserService } from '@strive/user/user/user.service';
+import { toDate } from 'ngfire';
 
 export interface roleArgs {
   isAdmin?: boolean;
@@ -26,7 +27,7 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
 
   override fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {
     return snapshot.exists()
-      ? { ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }
+      ? createGoalStakeholder(toDate({ ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }))
       : undefined
   }
 

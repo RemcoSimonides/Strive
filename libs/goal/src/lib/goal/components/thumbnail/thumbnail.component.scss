@@ -59,6 +59,7 @@ ion-thumbnail {
     border-radius: 12px;
     height: 56px;
     width: 56px;
+		isolation: isolate;
   
     img {
       border-radius: 12px;
@@ -86,8 +87,9 @@ ion-thumbnail {
 	background: #1D1F20;
 	position: relative;
 	border-radius: 12px;
-  }
-  .gradient-border:after {
+}
+
+.gradient-border:after {
 	content: '';
 	position: absolute;
 	top: calc(-1 * var(--borderWidth));
@@ -95,35 +97,35 @@ ion-thumbnail {
 	height: calc(100% + var(--borderWidth) * 2);
 	width: calc(100% + var(--borderWidth) * 2);
 	background: repeating-linear-gradient(
-	  60deg, 
-	  var(--ion-color-light),
-	  var(--ion-color-primary),
-	  var(--ion-color-light),
-	  var(--ion-color-light),
-	  var(--ion-color-primary),
-	  var(--ion-color-light),
-	  var(--ion-color-light),
-	  var(--ion-color-primary),
-	  var(--ion-color-light),
-	  var(--ion-color-light),
-	  var(--ion-color-primary),
-	  var(--ion-color-light)
+		60deg, 
+		var(--ion-color-light),
+		var(--ion-color-primary),
+		var(--ion-color-light),
+		var(--ion-color-light),
+		var(--ion-color-primary),
+		var(--ion-color-light),
+		var(--ion-color-light),
+		var(--ion-color-primary),
+		var(--ion-color-light),
+		var(--ion-color-light),
+		var(--ion-color-primary),
+		var(--ion-color-light)
 	);
 	border-radius: calc(4 * var(--borderWidth));
 	z-index: -1;
 	animation: animatedgradient 24s linear infinite;
 	background-size: 300% 300%;
-  }
+}
   
   
-  @keyframes animatedgradient {
-	  0% {
-		  background-position: 0% 50%;
-	  }
-	  50% {
-		  background-position: 100% 50%;
-	  }
-	  100% {
-		  background-position: 0% 50%;
-	  }
-  }
+@keyframes animatedgradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}

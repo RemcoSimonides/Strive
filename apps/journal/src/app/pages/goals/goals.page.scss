@@ -21,11 +21,15 @@ main {
     flex-direction: column;
     gap: 16px;
 
-    small {
+    div {
       display: flex;
-      gap: 4px;
-      align-items: center;
+      gap: 8px;
+
+      small {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
     }
   }
-
 }

@@ -83,6 +83,7 @@
               <li *ngFor="let value of achievingGoals">
                 <goal-thumbnail [goal]="value.goal" [stakeholder]="(isOwner$ | async) ? value.stakeholder : undefined" [routerLink]="['/goal/', value.goal.id]">
                   <div>
+                    <small *ngIf="value.stakeholder.focus.on">⚡Current Focus</small>
                     <small *ngIf="value.goal.publicity === 'private'">
                       <ion-icon name="lock-closed-outline"></ion-icon>
                       <span>Private</span>

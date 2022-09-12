@@ -33,10 +33,13 @@
             <section class="cards">
               <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
                 <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
-                  <small *ngIf="stakeholder.goal.publicity === 'private'">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                    <span>Private</span>
-                  </small>
+                  <div>
+                    <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
+                    <small *ngIf="stakeholder.goal.publicity === 'private'">
+                      <ion-icon name="lock-closed-outline"></ion-icon>
+                      <span>Private</span>
+                    </small>
+                  </div>
                 </goal-thumbnail>
               </ng-container>
             </section>
