@@ -23,7 +23,7 @@
 <ng-template #edit>
 	<ion-item>
 		<ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow autocapitalize="sentences"></ion-textarea>
-		<ion-button slot="end" (click)="update()">
+		<ion-button color="primary" slot="end" (click)="update()">
 			<ion-icon name="save-outline" slot="start"></ion-icon>
 			<span>SAVE</span>
 		</ion-button>

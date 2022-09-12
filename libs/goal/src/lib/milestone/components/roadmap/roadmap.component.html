@@ -31,7 +31,7 @@
             </article>
           </section>
           <ng-container *ngIf="!isAdmin">
-            <ion-button slot="end" size="small" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
+            <ion-button slot="end" size="small" color="secondary" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
               <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
             </ion-button>
           </ng-container>
@@ -43,7 +43,7 @@
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
           <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
           <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
-          <ion-button (click)="add()">add</ion-button>
+          <ion-button color="primary" (click)="add()">add</ion-button>
         </ion-item>
       </form>
     </ion-list>

@@ -29,7 +29,7 @@ export class Slide5Component {
   ) {}
 
   async openSharePopover(ev: UIEvent) {
-    const goal = createGoal({ ...this.form.value, id: this.goalId })
+    const goal = createGoal({ ...this.form.getGoalValue, id: this.goalId })
     const path = `goal/${this.goalId}`
 
     const isSecret = goal.publicity !== 'public'

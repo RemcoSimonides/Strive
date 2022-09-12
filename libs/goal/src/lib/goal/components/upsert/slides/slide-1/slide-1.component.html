@@ -1,32 +1,32 @@
 <form [formGroup]="form">
   <small>Without a clear target, you'll never hit your mark. That's why it's crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you've lost one kilo? Five? Forty?</small>
-  <ion-item lines="none">
-    <ion-label color="primary">What do you want to achieve?*</ion-label>
-  </ion-item>
-  <ion-item class="what">
-    <ion-input formControlName="title"
-              type="text"
-              placeholder="I want to ..."
-              maxlength="60"
-              autocapitalize="sentences"
-              [autofocus]="true"></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="stacked" color="primary">Who is able to see your goal</ion-label>
-    <ion-select interface="popover" formControlName="isSecret"> 
-      <ion-select-option [value]="false">Everyone</ion-select-option>
-      <ion-select-option [value]="true">Only you</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="stacked" color="primary">Is goal finished already?</ion-label>
-    <ion-select interface="popover" formControlName="isFinished"> 
-      <ion-select-option [value]="true">Yes</ion-select-option>
-      <ion-select-option [value]="false">No</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <ion-item lines="none">
+      <ion-label color="primary">What do you want to achieve?*</ion-label>
+    </ion-item>
+    <ion-item class="what">
+      <ion-input formControlName="title"
+                type="text"
+                placeholder="I want to ..."
+                maxlength="60"
+                autocapitalize="sentences"
+                [autofocus]="true"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="stacked" color="primary">Who is able to see your goal</ion-label>
+      <ion-select interface="popover" formControlName="isSecret"> 
+        <ion-select-option [value]="false">Everyone</ion-select-option>
+        <ion-select-option [value]="true">Only you</ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="stacked" color="primary">Is goal finished already?</ion-label>
+      <ion-select interface="popover" formControlName="isFinished"> 
+        <ion-select-option [value]="true">Yes</ion-select-option>
+        <ion-select-option [value]="false">No</ion-select-option>
+      </ion-select>
+    </ion-item>
 
   <!-- TODO move it to editable on goal page or on edit goal only -->
   <!-- <ion-item>
@@ -42,5 +42,5 @@
 </form>
 
 <footer fxLayout fxLayoutAlign="end">
-  <ion-button (click)="next()" [disabled]="form.invalid">Next</ion-button>
+  <ion-button color="primary" (click)="next()" [disabled]="form.invalid">Next</ion-button>
 </footer>
