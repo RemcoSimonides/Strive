@@ -14,12 +14,12 @@
         </ion-button>
   
         <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
-          <ion-button (click)="openSharePopover($event, goal)" fill="clear" class="primary">
+          <ion-button (click)="openSharePopover($event, goal)" class="primary">
             <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
           </ion-button>
         </ng-container>
         <ng-container *ngIf="stakeholder.isAdmin">
-          <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="clear">
+          <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="primary">
             <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
           </ion-button>
         </ng-container>
