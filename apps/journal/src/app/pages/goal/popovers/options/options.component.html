@@ -1,5 +1,9 @@
 <ion-list mode="md">
-  <ng-container *ngIf="isAdmin">
+  <ion-item (click)="close(enumGoalOptions.openTeamModal)" button>Show Team</ion-item>
+  <ng-container *ngIf="stakeholder.isAchiever">
+    <ion-item (click)="close(enumGoalOptions.openFocusModal)" button>{{ stakeholder.focus.on ? 'Focus Setting' : 'Activate Focus Boost ⚡' }}</ion-item>
+  </ng-container>
+  <ng-container *ngIf="stakeholder.isAdmin">
     <ion-item (click)="close(enumGoalOptions.editGoal)" button>Edit Goal</ion-item>
     <ion-item lines="none" (click)="close(enumGoalOptions.deleteGoal)" button>Delete Goal</ion-item>
   </ng-container>

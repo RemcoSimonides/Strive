@@ -4,7 +4,6 @@ import { LoadingController, ModalController } from '@ionic/angular'
 
 //Services
 import { GoalService } from '@strive/goal/goal/goal.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 
 //Interfaces
 import { createGoal, Goal } from '@strive/model'
@@ -26,10 +25,11 @@ import { SwiperComponent } from 'swiper/angular'
 export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
   goalId?: string
-  goalForm?: GoalForm
+  goalForm!: GoalForm
   mode?: 'update' | 'create'
 
   created = false // used for navigating to goal (only if goal is created)
+  focus = false
 
   private _goal?: Goal
   get goal(): Goal {

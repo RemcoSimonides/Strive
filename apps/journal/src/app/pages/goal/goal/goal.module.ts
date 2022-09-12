@@ -17,6 +17,7 @@ import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap
 import { StoryModule } from '@strive/goal/story/components/story/story.module'
 import { DescriptionModule } from '@strive/ui/description/description.module'
 import { JoinButtonPipeModule } from '@strive/goal/goal/pipes/join-button'
+import { FocusModalModule } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.module'
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { JoinButtonPipeModule } from '@strive/goal/goal/pipes/join-button'
     RoadmapModule,
     StoryModule,
     DescriptionModule,
-    JoinButtonPipeModule
+    JoinButtonPipeModule,
+    FocusModalModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

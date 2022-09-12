@@ -30,6 +30,7 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { SeoService } from '@strive/utils/services/seo.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { SupportService } from '@strive/support/support.service'
+import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
 
 @Component({
   selector: 'journal-goal',
@@ -108,17 +109,23 @@ export class GoalComponent {
     )
   }
 
-  async presentGoalOptionsPopover(ev: UIEvent, goal: Goal) {
+  async presentGoalOptionsPopover(event: UIEvent, goal: Goal) {
     const popover = await this.popoverCtrl.create({
       component: GoalOptionsPopoverComponent,
-      event: ev,
+      event,
       componentProps: {
-        isAdmin: this.stakeholder.isAdmin
+        stakeholder: this.stakeholder
       }
     })
     await popover.present()
     await popover.onDidDismiss().then((data) => {
       switch (data.data) {
+        case enumGoalOptions.openTeamModal:
+          this.openTeamModal()
+          break
+        case enumGoalOptions.openFocusModal:
+          this.openFocusModal()
+          break
         case enumGoalOptions.editNotificationSettings:
           console.warn('not supported yet')
           break
@@ -261,6 +268,15 @@ export class GoalComponent {
     this.modalCtrl.create({
       component: TeamModalComponent,
       componentProps: { goalId: this.goal.id }
+    }).then(modal => modal.present())
+  }
+
+  openFocusModal() {
+    this.modalCtrl.create({
+      component: FocusModalComponent,
+      componentProps: {
+        stakeholder: this.stakeholder
+      }
     }).then(modal => modal.present())
   }
 

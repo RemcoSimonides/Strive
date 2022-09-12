@@ -1,0 +1,50 @@
+<strive-header title="Focus Boost"></strive-header>
+
+<ion-content class="ion-padding">
+
+	<ion-button disabled color="primary" fill="clear">
+		<ng-container *ngIf="form.dirty; else saved">
+			<span>SAVING...</span>
+		</ng-container>
+		<ng-template #saved>
+			<span>SAVED</span>
+			<ion-icon slot="end" name="checkmark-outline"></ion-icon>
+		</ng-template>
+	</ion-button>
+
+	<ion-list mode="md">
+
+		<form [formGroup]="form">
+	
+			<ion-item [lines]="form.on.value ? 'inset' : 'none'">
+				<ion-toggle formControlName="on"></ion-toggle>
+				<ion-label>Enable Focus Boost</ion-label>
+			</ion-item>
+	
+			<ng-container *ngIf="form.on.value">
+				<small>Connect your purpose with this goal. <span class="primary">Why do you want to achieve this goal?</span></small>
+				<ion-item lines="none">
+					<ion-textarea formControlName="why"
+												type="text"
+												maxlength="256"
+												placeholder="..."
+												autocapitalize="sentences"
+												autoGrow></ion-textarea>
+				</ion-item>
+	
+				<small>Being reminded of what or who inspired you to start this goal will motivate you to keep striving during hard moments.
+					<span class="primary">What or who inspired you? (optional)</span>
+				</small>
+				<ion-item lines="none">
+					<ion-textarea formControlName="inspiration"
+												type="text"
+												maxlength="256"
+												placeholder="..."
+												autocapitalize="sentences"
+												autoGrow></ion-textarea>
+				</ion-item>
+			</ng-container>
+		</form>
+	
+	</ion-list>
+</ion-content>

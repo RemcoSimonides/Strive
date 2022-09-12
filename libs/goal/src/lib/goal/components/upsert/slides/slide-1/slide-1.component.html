@@ -1,5 +1,7 @@
 <form [formGroup]="form">
   <small>Without a clear target, you'll never hit your mark. That's why it's crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you've lost one kilo? Five? Forty?</small>
+  
+  <ion-list>
     <ion-item lines="none">
       <ion-label color="primary">What do you want to achieve?*</ion-label>
     </ion-item>
@@ -39,6 +41,27 @@
       (click)="openingDatetime($event)"
     ></ion-datetime>
   </ion-item> -->
+
+  </ion-list>
+
+  <ion-card class="focus">
+    <ion-item lines="none">
+      <ion-toggle (ionChange)="toggle($event)"></ion-toggle>
+      <ion-label>
+        <section>
+          Activate Focus Boost
+          <small>
+            <ul>
+              <li>Monthly and Weekly email with exercises</li>
+              <li>Goal highlighted in Strive Journal</li>
+              <li>Weekly push notification</li>
+            </ul>
+          </small>
+        </section>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
 </form>
 
 <footer fxLayout fxLayoutAlign="end">

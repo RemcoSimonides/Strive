@@ -16,6 +16,7 @@ export class Slide1Component {
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
   @Output() created = new EventEmitter<boolean>()
+  @Output() focus = new EventEmitter<boolean>()
 
   constructor(
     private goal: GoalService,
@@ -32,6 +33,10 @@ export class Slide1Component {
       this.created.emit(true)
       this.form.markAsPristine()
     }
+  }
+
+  toggle(event: any) {
+    this.focus.emit(event.detail.checked)
   }
 
 }
