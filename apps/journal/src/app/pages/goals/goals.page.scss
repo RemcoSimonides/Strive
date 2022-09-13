@@ -23,12 +23,14 @@ main {
 
     div {
       display: flex;
+      overflow: hidden;
       gap: 8px;
 
       small {
         display: flex;
         gap: 4px;
         align-items: center;
+        white-space: nowrap;
       }
     }
   }

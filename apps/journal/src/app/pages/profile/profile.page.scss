@@ -105,11 +105,13 @@ section.goals {
     div {
       display: flex;
       gap: 8px;
+      overflow: hidden;
   
       small {
         display: flex;
         gap: 4px;
         align-items: center;
+        white-space: nowrap;
       }
     }
   }
