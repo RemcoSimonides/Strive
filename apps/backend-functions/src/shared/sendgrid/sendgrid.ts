@@ -5,8 +5,6 @@ import { groupIds } from "../../pubsub/email/ids";
 
 import { logger } from 'firebase-functions';
 
-import { Goal } from '@strive/model'
-
 // Substitutions used in Sendgrid templates
 const substitutions = {
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
@@ -21,13 +19,9 @@ const substitutions = {
 const groupsToDisplay = [groupIds.unsubscribeAll];
 
 export interface EmailTemplateRequest {
-  to: string;
-  templateId: string;
-  data: {
-    bucketlistGoals?: Goal[];
-    inProgressGoals?: Goal[];
-    description?: string;
-  };
+  to: string
+  templateId: string
+  data: any
 }
 export type EmailJSON = { name?: string; email: string };
 

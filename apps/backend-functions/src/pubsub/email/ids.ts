@@ -2,6 +2,7 @@
 // Sendgrid Emails
 export const templateIds = {
   monthlyGoalReminder: 'd-709a6094be254533a25b421dfad30f9a',
+  monthlyGoalFocus: 'd-52d39fea905344bd98d579b9b648106a',
   dearFutureSelfMessage: 'd-dee467720bd04293bb396da7cb090e84'
 }
 

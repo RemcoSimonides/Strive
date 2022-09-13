@@ -33,7 +33,7 @@
           <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
         </section>
   
-        <ion-button expand="block" (click)="send()">Send Message</ion-button>
+        <ion-button expand="block" color="primary" (click)="send()">Send Message</ion-button>
       </ion-card>
   
       <ng-container *ngIf="pendingMessages$ | async as pendingMessages">

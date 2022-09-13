@@ -259,6 +259,16 @@
       ]
     },
     {
+      "collectionGroup": "GStakeholders",
+      "fieldPath": "focus.on",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
       "collectionGroup": "Notifications",
       "fieldPath": "source.goal.id",
       "indexes": [
