@@ -45,3 +45,15 @@ export function isValidHttpUrl(url: string) {
     return false;  
   } 
 }
+
+/** This is black magic from stack-overflow to detect if the browser is Safari or not.
+ * Here we can not rely on `navigator.userAgent` because other Browser like Chromium put "Safari"
+ * in there userAgent.
+ * More details about the code below here : https://stackoverflow.com/questions/7944460/detect-safari-browser
+*/
+export function isSafari() {
+  return navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+  navigator.userAgent &&
+  navigator.userAgent.indexOf('CriOS') == -1 &&
+  navigator.userAgent.indexOf('FxiOS') == -1
+}

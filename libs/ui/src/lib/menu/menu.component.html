@@ -1,42 +1,47 @@
-
 <ion-header mode="md">
-    <ion-toolbar>
-        <ion-buttons slot="end">
-            <ion-button (click)="dismiss()">
-                <ion-icon name="close" slot="icon-only"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
+	<ion-toolbar>
+		<ion-buttons slot="end">
+			<ion-button (click)="dismiss()">
+				<ion-icon name="close" slot="icon-only"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-list mode="md">
-        <ion-item button (click)="openAuthModal(enumAuthSegment.login)">
-            <ion-label><b>Log in</b></ion-label>
-        </ion-item>
-        <ion-item button lines="none"  (click)="openAuthModal(enumAuthSegment.register)">
-            <ion-label><b>Sign up</b></ion-label>
-        </ion-item>
+	<ion-list mode="md">
+		<ion-item button (click)="openAuthModal(enumAuthSegment.login)">
+			<ion-label><b>Log in</b></ion-label>
+		</ion-item>
+		<ion-item button lines="none"  (click)="openAuthModal(enumAuthSegment.register)">
+			<ion-label><b>Sign up</b></ion-label>
+		</ion-item>
 
-        <ion-item lines="none"></ion-item>
+		<ion-item lines="none"></ion-item>
 
-        <ion-item button (click)="goTo('/')">
-            <ion-label>Home</ion-label>
-        </ion-item>
+		<ion-item button (click)="goTo('/')">
+			<ion-label>Home</ion-label>
+		</ion-item>
 
-        <ion-item button (click)="goTo('explore')">
-            <ion-label>Explore</ion-label>
-        </ion-item>
+		<ion-item button (click)="goTo('explore')">
+			<ion-label>Explore</ion-label>
+		</ion-item>
 
-        <ion-item button *ngIf="isInstallable$ | async" (click)="install()">
-            <ion-label>Install app</ion-label>
-        </ion-item>
+		<ion-item button *ngIf="isInstallable$ | async; else safari" (click)="install()">
+			<ion-label>Install app</ion-label>
+		</ion-item>
 
-        <ion-item button (click)="goTo('privacy-policy')">
-            <ion-label>Privacy</ion-label>
-        </ion-item>
+		<ion-item button (click)="goTo('privacy-policy')">
+			<ion-label>Privacy</ion-label>
+		</ion-item>
 
-        <ion-item button lines="none" (click)="goTo('terms')">
-            <ion-label>Terms</ion-label>
-        </ion-item>
-    </ion-list>
+		<ion-item button lines="none" (click)="goTo('terms')">
+			<ion-label>Terms</ion-label>
+		</ion-item>
+	</ion-list>
 </ion-content>
+
+<ng-template #safari>
+	<ng-container *ngIf="isSafari">
+		<ion-item button (click)="goTo('/download')">Add to Home Screen</ion-item>
+	</ng-container>
+</ng-template>

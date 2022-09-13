@@ -4,7 +4,7 @@ import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { delay } from '@strive/utils/helpers'
+import { delay, isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
 
 @Component({
@@ -17,6 +17,7 @@ export class MenuComponent extends ModalDirective {
     enumAuthSegment = enumAuthSegment
 
     isInstallable$ = this.pwa.showInstallPromotion$
+    isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
 
     constructor(
         protected override location: Location,

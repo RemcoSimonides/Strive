@@ -1,10 +1,16 @@
 <ion-list lines="none" mode="md">
   <!-- <ion-item button (click)="pushNotifications()">Give push notification permission</ion-item> -->
   <ion-item button (click)="goToProfile()">Profile</ion-item>
-  <ion-item button *ngIf="pwa.showInstallPromotion$ | async" (click)="pwa.showInstallPromotion()">Install app</ion-item>
+  <ion-item button *ngIf="pwa.showInstallPromotion$ | async; else safari" (click)="pwa.showInstallPromotion()">Install app</ion-item>
   <ion-item button (click)="goTo('/notifications')">
     <span [ngClass]="{'badge': unreadNotifications$ | async}">Notifications</span>
   </ion-item>
   <ion-item button (click)="goTo('/edit-profile')">Edit Profile</ion-item>
   <ion-item button (click)="signOut()">Log out</ion-item>
 </ion-list>
+
+<ng-template #safari>
+  <ng-container *ngIf="isSafari">
+    <ion-item button (click)="goTo('/download')">Add to Home Screen</ion-item>
+  </ng-container>
+</ng-template>

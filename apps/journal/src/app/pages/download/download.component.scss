@@ -1,0 +1,37 @@
+main {
+  background-color: var(--ion-color-secondary-shade);
+  padding-block: 46px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  text-align: center;
+
+  img.theo {
+    height: 100px;
+    width: 100px;
+  }
+  
+
+  h1, article {
+    color: var(--ion-color-primary-contrast);
+  }
+}
+
+section {
+  max-width: 700px;
+  margin: auto;
+  padding: 16px;
+}
+
+
+img.gif {
+  width: 200px;
+}
+
+section {
+  color: var(--ion-color-medium);
+}

@@ -8,6 +8,7 @@ import { FcmService } from '@strive/utils/services/fcm.service'
 import { NotificationService } from '@strive/notification/notification.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { UserService } from '@strive/user/user/user.service'
+import { isSafari } from '@strive/utils/helpers'
 
 @Component({
   selector: 'journal-profile-options-browser',
@@ -17,6 +18,7 @@ import { UserService } from '@strive/user/user/user.service'
 export class ProfileOptionsBrowserComponent {
 
   unreadNotifications$ = this.notification.hasUnreadNotification$
+  isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
 
   constructor(
     private modalCtrl: ModalController,

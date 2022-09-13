@@ -1,7 +1,7 @@
 <strive-header title="Settings" color="primary" defaultHref="/profile"></strive-header>
 <ion-content>
   <ion-list mode="md">
-    <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>Install App</ion-item>
+    <ion-item *ngIf="showInstallPromotion$ | async; else safari" (click)="installPWA()" lines="none" button>Install App</ion-item>
     <ion-list-header>Notification</ion-list-header>
     <ion-item *ngIf="fcmIsSupported | async" button (click)="registerFCM()" lines="none">
       <span>Push Notifications</span>
@@ -20,3 +20,9 @@
   </ion-list>
   <span class="version">Version 1</span>
 </ion-content>
+
+<ng-template #safari>
+  <ng-container *ngIf="isSafari">
+    <ion-item button (click)="goTo('/download')">Add to Home Screen</ion-item>
+  </ng-container>
+</ng-template>

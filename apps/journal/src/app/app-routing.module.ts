@@ -14,7 +14,8 @@ const routes: Routes = [
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageModule) },
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) },
   { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule) },
-  { path: 'exercise', loadChildren: () => import('./pages/exercises/exercises.module').then(m => m.ExercisesModule)},
+  { path: 'exercise', loadChildren: () => import('./pages/exercises/exercises.module').then(m => m.ExercisesModule) },
+  { path: 'download', loadChildren: () => import('./pages/download/download.module').then(m => m.DownloadModule) },
   { path: '**', pathMatch: 'full', loadChildren: () => import('./pages/404/404.module').then(m => m.NotfoundModule) },
 ];
 

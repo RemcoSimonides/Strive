@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { isSafari } from '@strive/utils/helpers'
 import { FcmService } from '@strive/utils/services/fcm.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { getAuth } from 'firebase/auth'
@@ -17,6 +18,7 @@ export class SettingsPageComponent {
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
   fcmIsSupported = this.fcm.fcmIsSupported
+  isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
 
   fcmActive = false
 
