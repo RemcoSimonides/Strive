@@ -21,17 +21,19 @@ const groupsToDisplay = [groupIds.unsubscribeAll];
 export interface EmailTemplateRequest {
   to: string
   templateId: string
-  data: any
+  data: any,
+  attachments?: MailDataRequired['attachments']
 }
 export type EmailJSON = { name?: string; email: string };
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, groupId: number = groupIds.criticalsEmails) {
+export function sendMailFromTemplate({ to, templateId, data, attachments  }: EmailTemplateRequest, groupId: number = groupIds.criticalsEmails) {
   const from: EmailJSON = { email: 'remco@strivejournal.com', name: 'Strive Journal'};
 
   const msg: MailDataRequired = {
     from,
     to,
     templateId,
+    attachments,
     asm: groupId ? { groupId, groupsToDisplay } : undefined,
     dynamicTemplateData: { ...data, ...substitutions, from }
   };

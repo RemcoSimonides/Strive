@@ -1,4 +1,4 @@
-import { db, functions, logger } from '../../internals/firebase'
+import { db, functions, gcsBucket, logger } from '../../internals/firebase'
 
 import { GoalLink, Personal } from '@strive/model'
 import { getDocument, unique } from '../../shared/utils'
@@ -22,17 +22,19 @@ function getFocusData(goal: Goal, stakeholder: GoalStakeholder): { goal: GoalLin
 
 // // crontab.guru to determine schedule value
 // export const scheduledFocusEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async () => {
-export const scheduledFocusEmailRunner = functions.pubsub.schedule('first friday of month 08:00').onRun(async () => {
+export const scheduledFocusEmailRunner = functions.pubsub.schedule('0 18 * * 5').onRun(async () => {
 
   const stakeholdersSnap = await db.collectionGroup('GStakeholders').where('focus.on', '==', true).get()
   const stakeholders = stakeholdersSnap.docs.map(doc => createGoalStakeholder(toDate({ ...doc.data(), uid: doc.id })))
-  logger.log('stakeholders: ', stakeholders)
+
+  const [ file ] = await gcsBucket.file('miscellaneous/Weekly Exercise.pdf').get()
+  const [ pdf ] = await file.download()
+  const base64 = pdf.toString('base64')
+
 
   const goalIds = unique(stakeholders.map(stakeholder => stakeholder.goalId))
   const promises = goalIds.map(id => getDocument<Goal>(`Goals/${id}`))
   const goals =  await Promise.all(promises)
-  
-  logger.log('goals: ', goals)
 
   const personalPromises = stakeholders.map(({ uid }) => getDocument<Personal>(`Users/${uid}/Personal/${uid}`))
   const personals = await Promise.all(personalPromises)
@@ -42,12 +44,19 @@ export const scheduledFocusEmailRunner = functions.pubsub.schedule('first friday
     const personal = personals.find(personal => personal.uid === stakeholder.uid)
 
     const data = getFocusData(goal, stakeholder)
-    logger.log('data: ', data)
 
     await sendMailFromTemplate({
       to: personal.email,
       templateId: templateIds.monthlyGoalFocus,
-      data
+      data,
+      attachments: [
+        {
+          content: base64,
+          filename: 'weekly exercise.pdf',
+          type: 'application/pdf',
+          disposition: 'attachment'
+        }
+      ]
     }, groupIds.unsubscribeAll)
   }
 })
