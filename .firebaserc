@@ -1,7 +1,8 @@
 {
   "projects": {
     "prod": "strive-journal",
-    "remco": "strive-journal-remco"
+    "remco": "strive-journal-remco",
+    "default": "strive-journal"
   },
   "targets": {
     "strive-journal": {
