@@ -23,7 +23,20 @@ export class HomeComponent {
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
     public pwa: PWAService
-  ) {}
+  ) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show')
+        }
+      })
+    })
+
+    setTimeout(() => {
+      const elements = document.querySelectorAll('.fade')
+      elements.forEach(el => observer.observe(el))
+    }, 800)
+  }
 
   openAuthModal() {
     this.modalCtrl.create({

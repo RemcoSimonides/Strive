@@ -1,5 +1,5 @@
 <ion-content class="ion-no-padding">
-  <section>
+  <section class="fade">
     <h1>Stay focused on your goals and help others achieve theirs</h1>
   </section>
 
@@ -7,8 +7,8 @@
 
     <ul>
       <li>
-        <img asset="theo-superman-square.svg">
-        <article>
+        <img asset="theo-superman-square.svg" class="fade left">
+        <article class="fade right">
           <h3>Set Goals</h3>
           <p>Write down your goal, make a plan, ask others to join and start achieving (alone or together). Make a story about your journey to look back at what you've achieved with pride.</p>
           <ion-button fill="clear" (click)="openAuthModal()">
@@ -18,11 +18,11 @@
         </article>
       </li>
 
-      <hr/>
+      <hr class="fade right" />
 
       <li routerLink="/explore">
-        <img asset="theo-thumb-square.svg">
-        <article>
+        <img asset="theo-thumb-square.svg" class="fade left">
+        <article class="fade right">
           <h3>Support</h3>
           <p>Put extra incentive on the line for others or yourself. You'll receive a notification once the goal or milestone is completed and then you can decide if you want to give the incentive or not.</p>
           <ion-button fill="clear">
@@ -32,11 +32,11 @@
         </article>
       </li>
 
-      <hr/>
+      <hr class="fade right" />
 
       <li routerLink="/exercise/dear-future-self" class="dear-future-self">
-        <img asset="theo-contract-square.svg">
-        <article>
+        <img asset="theo-contract-square.svg" class="fade left">
+        <article class="fade right">
           <h3>Dear Future Self</h3>
           <p>Write a letter to your future self. What does your live look like in 5 years? You'll be surprised how much of it will come true.</p>
           <ion-button fill="clear">
@@ -46,11 +46,11 @@
         </article>
       </li>
 
-      <hr/>
+      <hr class="fade right"/>
 
       <li routerLink="/exercise/affirmations">
-        <img asset="theo-magnet-square.svg">
-        <article>
+        <img asset="theo-magnet-square.svg" class="fade left">
+        <article class="fade right">
           <h3>Affirmations</h3>
           <p>Write a letter to your future self. What does your live look like in 5 years? You'll be surprised how much of it will come true.</p>
           <ion-button fill="clear">
@@ -60,11 +60,11 @@
         </article>
       </li>
 
-      <hr/>
+      <hr class="fade right"/>
 
       <li routerLink="/exercise/daily-gratefulness">
-        <img asset="theo-meditate-square.svg">
-        <article>
+        <img asset="theo-meditate-square.svg" class="fade left">
+        <article class="fade right">
           <h3>Daily Gratefulness</h3>
           <p>Write a letter to your future self. What does your live look like in 5 years? You'll be surprised how much of it will come true.</p>
           <ion-button fill="clear">
@@ -76,35 +76,35 @@
     </ul>
   </section>
 
-  <hr/>
+  <hr class="fade right"/>
 
   <section class="statistics">
     
-    <h3>You're not alone</h3>
+    <h3 class="fade"f>You're not alone</h3>
     <ul *ngIf="aggregation$ | async as a">
       <li>
-        <span class="number">{{ a.goalsCreated }}</span>
-        <span class="label">Goals created</span>
+        <span class="number fade left">{{ a.goalsCreated }}</span>
+        <span class="label fade right">Goals created</span>
       </li>
   
       <li>
-        <span class="number">{{ a.goalsCustomSupports }}</span>
-        <span class="label">Supports for goals</span>
+        <span class="number fade left">{{ a.goalsCustomSupports }}</span>
+        <span class="label fade right">Supports for goals</span>
       </li>
   
       <li>
-        <span class="number">{{ a.usersFutureLetterSent }}</span>
-        <span class="label">Letters sent to Future Self</span>
+        <span class="number fade left">{{ a.usersFutureLetterSent }}</span>
+        <span class="label fade right">Letters sent to Future Self</span>
       </li>
   
       <li>
-        <span class="number">{{ a.usersAffirmationsSet }}</span>
-        <span class="label">Affirmations set</span>
+        <span class="number fade left">{{ a.usersAffirmationsSet }}</span>
+        <span class="label fade right">Affirmations set</span>
       </li>
   
       <li>
-        <span class="number">{{ a.usersGratefulnessOn }}</span>
-        <span class="label">Daily gratefulness reminders set</span>
+        <span class="number fade left">{{ a.usersGratefulnessOn }}</span>
+        <span class="label fade right">Daily gratefulness reminders set</span>
       </li>
     </ul>
 
@@ -113,10 +113,10 @@
   <hr/>
 
   <section class="blogs">
-    <h3>Guides</h3>
+    <h3 class="fade">Guides</h3>
 
     <article>
-      <ion-card href="http://remcosimonides.com/2022/08/25/the-ultimate-guide-to-achieving-your-goals/" target="_blank">
+      <ion-card href="http://remcosimonides.com/2022/08/25/the-ultimate-guide-to-achieving-your-goals/" target="_blank" class="fade left">
         <img asset="goal-setting.png"/>
         <ion-card-header>
           <ion-card-title>The Ultime Guide to Achieving Goals</ion-card-title>
@@ -133,7 +133,7 @@
         </ion-card-content>
       </ion-card>
 
-      <ion-card href="http://remcosimonides.com/2022/08/26/writing-to-your-future-self/" target="_blank">
+      <ion-card href="http://remcosimonides.com/2022/08/26/writing-to-your-future-self/" target="_blank" class="fade right">
         <img asset="future-self-letter.png"/>
         <ion-card-header>
           <ion-card-title>Writing to your Future Self</ion-card-title>
@@ -151,7 +151,7 @@
       </ion-card>
     </article>
 
-    <ion-button fill="clear" class="more" href="http://remcosimonides.com/category/achieving-goals/" target="_blank">
+    <ion-button fill="clear" class="more fade" href="http://remcosimonides.com/category/achieving-goals/" target="_blank">
       <span>MORE GUIDES</span>
       <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
     </ion-button>
