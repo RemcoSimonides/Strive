@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core'
 import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
 import { toDate } from 'ngfire'
+import { firstValueFrom, Observable } from 'rxjs'
+
+import { AES, enc } from 'crypto-js'
+
 import { DailyGratefulness, DailyGratefulnessItem } from '@strive/model'
 
-import { Observable } from 'rxjs'
-
 import { FireCollection } from '@strive/utils/services/collection.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
+import { createRandomString } from '@strive/utils/helpers'
 
 
 @Injectable({
@@ -42,13 +46,45 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
 export class DailyGratefulnessItemService extends FireCollection<DailyGratefulnessItem> {
   readonly path = 'Users/:uid/Exercises/DailyGratefulness/Items'
 
-  constructor() {
+  constructor(private personalService: PersonalService) {
     super(getFirestore())
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulnessItem>): DailyGratefulnessItem | undefined {
     if (!snapshot.exists()) return
     return toDate<DailyGratefulnessItem>({ ...snapshot.data(), id: snapshot.id })
+  }
+
+  async decrypt(cards: DailyGratefulnessItem[]) {
+    const personal = await firstValueFrom(this.personalService.personal$)
+    if (!personal) return []
+
+    for (const card of cards) {
+      card.items = card.items.map(item => {
+        return AES.decrypt(item, personal.key).toString(enc.Utf8)
+      })
+    }
+ 
+    return cards
+  }
+
+  async save(data: DailyGratefulnessItem) {
+    const personal = await firstValueFrom(this.personalService.personal$)
+    if (!personal) return
+
+    let key = personal.key
+    
+    if (!key) {
+      key = createRandomString(32)
+      this.personalService.update({
+        uid: personal.uid,
+        key
+      }, { params: { uid: personal.uid }})
+    }
+
+    data.items = data.items.map(item => AES.encrypt(item, key).toString())
+
+    this.upsert(data, { params: { uid: personal.uid }})
   }
 
 }

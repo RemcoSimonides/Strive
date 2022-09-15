@@ -9,6 +9,8 @@ import { UserService } from '@strive/user/user/user.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { DailyGratefulnessItemService } from '../../daily-gratefulness.service'
 
+import { DailyGratefulnessItem } from '@strive/model'
+
 import SwiperCore, { EffectCards, Navigation } from 'swiper'
 SwiperCore.use([EffectCards, Navigation])
 
@@ -34,6 +36,7 @@ export class CardsComponent implements OnDestroy {
   cards$ = this.user.user$.pipe(
     switchMap(user => user ? this.itemService.valueChanges([limit(500)] ,{ uid: user.uid }) : of([]))
   ).pipe(
+    switchMap(cards => this.itemService.decrypt(cards)),
     map(cards => {
       for (const card of cards) {
         if (card.id === this.today) {
@@ -63,10 +66,12 @@ export class CardsComponent implements OnDestroy {
     if (item3 && item3 !== this.startValue) items.push(item3)
 
     if (items.length) {
-      this.itemService.upsert({
+      const card: DailyGratefulnessItem = {
         id: this.today,
         items
-      }, { params: { uid: this.user.uid }})
+      }
+
+      this.itemService.save(card)
     }
 
     this.form.markAsPristine()

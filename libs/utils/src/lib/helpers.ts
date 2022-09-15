@@ -57,3 +57,12 @@ export function isSafari() {
   navigator.userAgent.indexOf('CriOS') == -1 &&
   navigator.userAgent.indexOf('FxiOS') == -1
 }
+
+export function createRandomString(size: number) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let token = ''
+  for (let i = 0; i < size; i++) {
+    token += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return token
+}
