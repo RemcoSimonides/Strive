@@ -59,7 +59,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     if (!this.user.uid) return
-    if(!this.stakeholder) return
+    if (!this.stakeholder) return
+    const { isAdmin, isAchiever, isSupporter } = this.stakeholder
+    if (!isAdmin && !isAchiever && !isSupporter) return
+
     this.stakeholderService.updateLastCheckedChat(this.goal.id, this.user.uid)
 
     const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
