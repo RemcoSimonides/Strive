@@ -39,6 +39,5 @@ testem.log
 Thumbs.db
 
 .angular
-environments/environment.ts
 firebase-debug.log
 .firebase
