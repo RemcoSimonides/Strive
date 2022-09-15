@@ -1,0 +1,12 @@
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  justify-content: space-evenly;
+
+  img {
+    width: 100px;
+    margin-inline: auto;
+  }
+}

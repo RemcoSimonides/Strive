@@ -5,3 +5,10 @@ export interface DailyGratefulness {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface DailyGratefulnessItem {
+  id: string,
+  items: string[]
+  createdAt: Date,
+  updatedAt: Date,
+}

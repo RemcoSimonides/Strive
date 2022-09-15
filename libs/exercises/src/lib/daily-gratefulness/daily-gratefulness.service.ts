@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
 import { toDate } from 'ngfire'
-import { DailyGratefulness } from '@strive/model'
+import { DailyGratefulness, DailyGratefulnessItem } from '@strive/model'
 
 import { Observable } from 'rxjs'
 
@@ -34,4 +34,21 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
   save(uid: string, dailyGratefulnessSettings: Partial<DailyGratefulness>) {
     return this.upsert({ ...dailyGratefulnessSettings, id: 'DailyGratefulness' }, { params: { uid }})
   }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DailyGratefulnessItemService extends FireCollection<DailyGratefulnessItem> {
+  readonly path = 'Users/:uid/Exercises/DailyGratefulness/Items'
+
+  constructor() {
+    super(getFirestore())
+  }
+
+  protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulnessItem>): DailyGratefulnessItem | undefined {
+    if (!snapshot.exists()) return
+    return toDate<DailyGratefulnessItem>({ ...snapshot.data(), id: snapshot.id })
+  }
+
 }

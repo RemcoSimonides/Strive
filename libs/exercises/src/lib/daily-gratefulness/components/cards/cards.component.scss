@@ -1,0 +1,82 @@
+@import "~swiper/css";
+@import "~swiper/css/effect-cards";
+@import "~swiper/css/navigation";
+
+exercise-daily-gratefulness-cards {
+  display: block;
+
+  .swiper {
+    min-width: 240px;
+    width: 75%;
+    height: 400px;
+  }
+  
+  .swiper-slide {
+    border-radius: 12px;
+    background-color: var(--ion-card-background);
+    padding: 16px;
+
+    form {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      span.question {
+        color: var(--ion-color-secondary);
+      }
+
+      ion-item {
+        --highlight-background: var(--ion-color-secondary);
+        --background: transparent;
+        --padding-start: 0;
+      }
+
+      ion-button {
+        width: fit-content;
+        margin-left: auto;
+      }
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      list-style-type: disc;
+      margin-left: 16px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      span {
+        margin-left: auto;
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+
+  .swiper-button-next {
+    right: -40px;
+  }
+
+  .swiper-button-prev {
+    left: -40px;
+  }
+
+  .swiper-button-next, .swiper-button-prev {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background: var(--ion-card-background);
+    top: calc(50% - 16px);
+    opacity: .8;
+    font-weight: bold;
+  }
+  
+  .swiper-button-disabled {
+    display: none;
+  }
+}

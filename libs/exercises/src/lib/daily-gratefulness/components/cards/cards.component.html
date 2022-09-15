@@ -1,0 +1,44 @@
+<swiper [effect]="'cards'" [grabCursor]="true" [navigation]="isDesktop$ | async">
+
+  <ng-template swiperSlide>
+    <form [formGroup]="form">
+      <section>
+        <span class="question">What are three things you are grateful for today?</span>
+        <ion-item>
+          <ion-textarea rows="3" formControlName="item1" autoGrow></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-textarea rows="3" formControlName="item2" autoGrow></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-textarea rows="3" formControlName="item3" autoGrow></ion-textarea>
+        </ion-item>
+      </section>
+  
+      <ion-button disabled color="priomary" fill="clear">
+        <ng-container *ngIf="form.dirty; else saved">
+          <span>SAVING...</span>
+        </ng-container>
+        <ng-template #saved>
+          <span>SAVED</span>
+          <ion-icon slot="end" name="checkmark-outline"></ion-icon>
+        </ng-template>
+      </ion-button>
+    </form>
+  </ng-template>
+
+  <ng-container *ngFor="let card of cards$ | async">
+    <ng-template swiperSlide>
+      <section class="card">
+        <span>{{ card.createdAt | date:'longDate' }}</span>
+
+        <ul>
+          <li *ngFor="let item of card.items">
+            {{ item }}
+          </li>
+        </ul>
+      </section>
+    </ng-template>
+  </ng-container>
+
+</swiper>

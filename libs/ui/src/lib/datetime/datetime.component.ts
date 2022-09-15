@@ -28,6 +28,7 @@ export class DatetimeComponent {
     this._maxDate = typeof value === 'string' ? value : value.toISOString()
   }
   @Input() presentation: 'date' | 'date-time' | 'month' | 'month-year' | 'time' | 'time-date' | 'year' = 'date'
+  @Input() label?: string
 
   constructor(private popoverCtrl: PopoverController) {}
   

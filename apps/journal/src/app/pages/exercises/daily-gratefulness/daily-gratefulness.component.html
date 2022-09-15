@@ -9,13 +9,13 @@
       <ng-container *ngIf="user.uid else login">
 
         <exercises-activate-push-notification></exercises-activate-push-notification>
-        
+
         <section class="toggle">
           <article>
-            <ion-toggle [formControl]="form.get('on')"></ion-toggle>
-            <span><b>{{ dailyGratefulness.on ? 'ON' : 'OFF'}}</b></span>
+            <ion-toggle [formControl]="form.get('on')" (ionChange)="toggle($event)"></ion-toggle>
+            <span (click)="openDatetime()"><b>{{ dailyGratefulness.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</b></span>
           </article>
-          <ion-button disabled color="primary" fill="clear">
+          <!-- <ion-button disabled color="primary" fill="clear">
             <ng-container *ngIf="form.dirty; else saved">
               <span>SAVING...</span>
             </ng-container>
@@ -23,15 +23,17 @@
               <span>SAVED</span>
               <ion-icon slot="end" name="checkmark-outline"></ion-icon>
             </ng-template>
-          </ion-button>
+          </ion-button> -->
         </section>
-  
-        <ng-container *ngIf="dailyGratefulness.on">
+
+        <!-- <ng-container *ngIf="dailyGratefulness.on">
           <section class="time">
             <small>What time would you like to receive the reminder?</small>
             <ion-datetime presentation="time" [formControl]="form.get('time')"></ion-datetime>
           </section>
-        </ng-container>
+        </ng-container> -->
+
+        <exercise-daily-gratefulness-cards></exercise-daily-gratefulness-cards>
 
       </ng-container>
     </ng-container>
