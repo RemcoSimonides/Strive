@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getDoc, getFirestore, doc } from 'firebase/firestore';
-import { getAuth, updateProfile } from 'firebase/auth';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getDoc, getFirestore, doc } from 'firebase/firestore'
+import { getAuth, updateProfile } from 'firebase/auth'
 import { setUser } from '@sentry/angular'
-import { user } from 'rxfire/auth';
+import { user } from 'rxfire/auth'
 import { toDate } from 'ngfire'
 
 import { FireCollection } from '@strive/utils/services/collection.service'
