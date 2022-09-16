@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
-import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging';
-import { ToastController } from '@ionic/angular';
-import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications';
-import { PersonalService } from '@strive/user/personal/personal.service';
-import * as Sentry from '@sentry/capacitor';
-import { UserService } from '@strive/user/user/user.service';
-import { BehaviorSubject, lastValueFrom, take } from 'rxjs';
+import { Injectable } from '@angular/core'
+import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
+import { ToastController, ToastOptions } from '@ionic/angular'
+import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
+import { PersonalService } from '@strive/user/personal/personal.service'
+import * as Sentry from '@sentry/capacitor'
+import { UserService } from '@strive/user/user/user.service'
+import { BehaviorSubject, lastValueFrom, take } from 'rxjs'
+import { Router } from '@angular/router'
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,9 @@ export class FcmService {
 
   constructor(
     private personal: PersonalService,
+    private router: Router,
     private toastController: ToastController,
-    private user: UserService 
+    private user: UserService
   ) {
     lastValueFrom(this.user.uid$.pipe(take(2))).then(uid => {
       const name = `pushNotifications${uid}`
@@ -131,20 +133,27 @@ export class FcmService {
     return onMessage(getMessaging(), msg => {
       if (!msg.notification?.body) return
       const { body } = msg.notification
-      this.makeToast(body)
+      this.makeToast(body, msg.fcmOptions?.link)
     })
   }
 
-  async makeToast(message: string) {
-    const toast = await this.toastController.create({
+  async makeToast(message: string, link?: string) {
+    const options: ToastOptions = {
       message,
       duration: 5000,
-      position: 'top',
-      buttons: [{
-        text: 'dismiss',
-        role: 'close'
+      position: 'top'
+    }
+
+    if (link) {
+      options.buttons = [{
+        icon: 'arrow-forward',
+        handler: () => {
+          this.router.navigateByUrl(`/${link}`)
+        },
       }]
-    });
+    }
+
+    const toast = await this.toastController.create(options)
     toast.present();
   }
 }
