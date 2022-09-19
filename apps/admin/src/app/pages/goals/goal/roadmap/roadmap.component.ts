@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { orderBy } from 'firebase/firestore'
-import { Observable } from 'rxjs'
+import { Observable, of } from 'rxjs'
 import { Goal, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
+import { joinWith } from 'ngfire'
+import { UserService } from '@strive/user/user/user.service'
 
 @Component({
   selector: '[id] strive-roadmap',
@@ -20,12 +22,17 @@ export class AdminRoadmapComponent implements OnInit {
 
   constructor(
     private goal: GoalService,
-    private milestone: MilestoneService
+    private milestone: MilestoneService,
+    private user: UserService
   ) {}
 
 	ngOnInit() {
     this.goal$ = this.goal.valueChanges(this.id)
-    this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: this.id })
+    this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: this.id }).pipe(
+      joinWith({
+        achiever: ({ achieverId }) => achieverId ? this.user.valueChanges(achieverId) : of(undefined)
+      })
+    )
 	}
 
   doReorder(ev: any, milestones: Milestone[]) {

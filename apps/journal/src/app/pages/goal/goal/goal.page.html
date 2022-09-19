@@ -123,7 +123,7 @@
               <img [ref]="stakeholder.photoURL" asset="profile.png"/>
             </ion-avatar>
             <ion-label>{{ stakeholder.username }}</ion-label>
-            <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" size="default">
+            <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">
               <span *ngIf="(screensize.isMobile$ | async) === false">Accept</span>
               <ion-icon name="checkmark-outline"></ion-icon>
             </ion-button>

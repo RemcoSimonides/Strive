@@ -39,10 +39,10 @@
     </article>
     
     <ng-container *ngIf="goal.numberOfAchievers > 1">
-      <div fxLayout fxLayoutGap="8px" *ngIf="canEdit || milestone.achiever.uid">
+      <div fxLayout fxLayoutGap="8px" *ngIf="canEdit || milestone.achiever?.uid">
         <b>Assignee:</b>
-        <ng-container *ngIf="milestone.achiever.uid else empty">
-          <goal-milestone-assignee [achiever]="milestone.achiever" (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}"></goal-milestone-assignee>
+        <ng-container *ngIf="milestone.achiever?.uid else empty">
+          <goal-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}"></goal-milestone-assignee>
         </ng-container>
         <ng-template #empty>
           <i (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}">No one - Assign me</i>

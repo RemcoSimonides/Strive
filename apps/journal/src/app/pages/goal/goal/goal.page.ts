@@ -82,6 +82,7 @@ export class GoalComponent {
       map(params => params['id'] as string),
       switchMap(goalId => this.milestone.valueChanges([orderBy('order', 'asc')], { goalId }).pipe(
         joinWith({
+          achiever: ({ achieverId }) => achieverId ? this.user.valueChanges(achieverId) : undefined,
           supports: milestone => this.user.user$.pipe(
             switchMap(user => {
               if (!user) return of([])

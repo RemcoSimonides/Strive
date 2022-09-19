@@ -81,8 +81,6 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
         updateNotifications(uid, after),
         updateSupports(uid, after)
 
-        // update every comment? No, rework data model for this
-
         // update notificaition support? Rework data model
         
         // Milestone achiever? No, rework data model for this

@@ -19,8 +19,8 @@
                   [isAdmin]="true">
                 </strive-milestone-deadline>
               </ng-container>
-              <ng-container *ngIf="milestone.achiever.uid">
-                <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
+              <ng-container *ngIf="milestone.achiever?.uid">
+                <goal-milestone-assignee [achiever]="milestone.achiever!"></goal-milestone-assignee>
               </ng-container>
             </article>
           </section>

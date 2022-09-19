@@ -1,4 +1,4 @@
-import { createUserLink, UserLink } from '@strive/model'
+import { createUserLink, User, UserLink } from '@strive/model'
 import { setDateToEndOfDay } from '@strive/utils/helpers';
 
 export type MilestoneStatus = 'pending' | 'succeeded' | 'failed' | 'overdue'
@@ -16,7 +16,8 @@ export interface Milestone {
   description: string
   status: MilestoneStatus
   deadline: string
-  achiever: UserLink
+  achieverId: string
+  achiever?: User // joined data
   subtasks: Subtask[]
   updatedBy?: string
   updatedAt?: Date 
@@ -46,7 +47,7 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     description: params.description ?? '',
     deadline: params.deadline ? setDateToEndOfDay(params.deadline) : '',
     status: params.status ?? 'pending',
-    achiever: createUserLink(params.achiever),
+    achieverId: params.achieverId ?? '',
     subtasks: params.subtasks ?? [],
   }
 

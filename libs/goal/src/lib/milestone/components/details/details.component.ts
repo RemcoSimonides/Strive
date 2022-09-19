@@ -6,7 +6,7 @@ import { FormArray } from '@angular/forms'
 import { Observable, Subscription } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
 
-import { Goal, createSubtask, Milestone, createUserLink, Support, StoryItem } from '@strive/model'
+import { Goal, createSubtask, Milestone, createUserLink, Support, StoryItem, createUser } from '@strive/model'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
 import { UserService } from '@strive/user/user/user.service'
@@ -137,11 +137,15 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   toggleAssignMe() {
     if (!this.canEdit) return
-    const achiever = this.milestone.achiever.uid ? createUserLink() : createUserLink(this.user.user)
-    this.milestone.achiever = achiever
+    if (!this.user.uid) return
+
+    const achieverId = this.milestone.achieverId ? '' : this.user.uid
+    this.milestone.achieverId = achieverId
+    this.milestone.achiever = achieverId ? this.user.user : createUser()
+
     this.milestoneService.upsert({
       id: this.milestone.id,
-      achiever
+      achieverId
     }, { params: { goalId: this.goal.id }})
   }
 

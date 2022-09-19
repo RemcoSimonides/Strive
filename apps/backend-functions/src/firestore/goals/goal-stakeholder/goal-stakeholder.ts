@@ -82,12 +82,10 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
     if (stakeholder.isAchiever) {
       changeNumberOfAchievers(goalId, -1)
 
-      const snaps = await db.collection(`Goals/${goalId}/Milestones`).where('achiever.uid', '==', stakeholder.uid).get()
+      const snaps = await db.collection(`Goals/${goalId}/Milestones`).where('achieverId', '==', stakeholder.uid).get()
       const batch = db.batch()
       for (const doc of snaps.docs) {
-        const milestone = createMilestone(doc.data())
-        milestone.achiever = createUserLink()
-        batch.update(doc.ref, { ...milestone })
+        batch.update(doc.ref, { achieverId: '' })
       }
       batch.commit()
     }

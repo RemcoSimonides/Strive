@@ -8,7 +8,7 @@
           <section fxLayout="column" fxLayoutGap="4px">
             <span>{{ milestone.content }}</span>
             <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
-            <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="(isAdmin && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achiever.uid">
+            <article fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px" *ngIf="(isAdmin && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId">
               <ng-container *ngIf="isAdmin && !createMode">
                 <div class="supports">
                   <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.supports?.length ?? 0 }}</small>
@@ -25,8 +25,8 @@
                   [isAdmin]="isAdmin">
                 </strive-milestone-deadline>
               </ng-container>
-              <ng-container *ngIf="milestone.achiever.uid">
-                <goal-milestone-assignee [achiever]="milestone.achiever"></goal-milestone-assignee>
+              <ng-container *ngIf="milestone.achiever?.uid">
+                <goal-milestone-assignee [achiever]="milestone.achiever!"></goal-milestone-assignee>
               </ng-container>
             </article>
           </section>

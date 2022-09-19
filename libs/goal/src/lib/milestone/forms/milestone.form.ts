@@ -1,6 +1,5 @@
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms'
 import { createMilestone, createMilestoneLink, createSubtask, Milestone, MilestoneLink, Subtask } from '@strive/model'
-import { UserLinkForm } from '@strive/user/user/forms/user.form'
 
 function createMilestoneFormControl(params: Partial<Milestone> = {}) {
   const milestone = createMilestone(params)
@@ -11,7 +10,6 @@ function createMilestoneFormControl(params: Partial<Milestone> = {}) {
     description: new FormControl(milestone.description, { nonNullable: true, validators: [Validators.maxLength(200)] }),
     status: new FormControl(milestone.status, { nonNullable: true }),
     deadline: new FormControl(milestone.deadline, { nonNullable: true }),
-    achiever: new UserLinkForm(milestone.achiever),
     subtasks: new FormArray(subtaskControls ?? [])
   }
 }
@@ -27,7 +25,6 @@ export class MilestoneForm extends FormGroup<MilestoneFormControl> {
   get content() { return this.get('content')! }
   get description() { return this.get('description')! }
   get deadline() { return this.get('deadline')! }
-  get achiever() { return this.get('achiever')! }
   get subtasks() { return this.get('subtasks')! }
 }
 

@@ -101,8 +101,9 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       })
     })
 
-    if (this.milestone?.achiever?.uid) {
-      support.source.recipient = this.milestone.achiever
+    if (this.milestone?.achieverId) {
+      const user = await this.user.getValue(this.milestone.achieverId)
+      support.source.recipient = createUserLink(user)
       this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     }
