@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild
 import { FormControl, Validators } from '@angular/forms';
 import { IonContent, ModalController, Platform} from '@ionic/angular';
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore';
-import { toDate } from 'ngfire';
+import { joinWith, toDate } from 'ngfire';
 // Rxjs
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, map, skip } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { UserService } from '@strive/user/user/user.service';
 import { CommentService } from '@strive/goal/chat/comment.service';
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
 // Interfaces
-import { Goal, Comment, createComment, createCommentSource, GoalStakeholder } from '@strive/model'
+import { Goal, Comment, createComment, GoalStakeholder } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers';
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
@@ -36,7 +36,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   private _loading = new BehaviorSubject<boolean>(false)
   comments$ = this._comments.asObservable().pipe(
     // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages) 
-    map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i))
+    map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i)),
+    joinWith({
+      user: comment => this.user.valueChanges(comment.userId)
+    })
   )
   done$ = this._done.asObservable()
 
@@ -85,7 +88,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subs.push(sub)
 
     await this.mapAndUpdate([])
-    delay(0).then(_ => this.contentArea?.scrollToBottom())
+    delay(250).then(_ => this.contentArea?.scrollToBottom())
   }
 
   ngOnDestroy() {
@@ -123,17 +126,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (event) event.preventDefault()
     const text = this.form.value.trim()
     if (!this.form.valid || !text) return
+    if (!this.user.uid) return
 
     const comment = createComment({
       text,
-      source: createCommentSource({
-        user: this.user.user,
-        goal: this.goal
-      })
+      userId: this.user.uid
     })
 
     this.form.reset('')
-    if (!this.user.uid) return
     this.commentService.add(comment, { params: { goalId: this.goal.id }})
     this.stakeholderService.updateLastCheckedChat(this.goal.id, this.user.uid)
   }

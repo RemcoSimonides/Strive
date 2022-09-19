@@ -1,7 +1,7 @@
 import { logger } from 'firebase-functions';
-import { createComment, createGoalSource } from '@strive/model'
+import { createComment, createGoalSource, Goal, User } from '@strive/model'
 import { functions } from '../../../internals/firebase';
-import { toDate } from '../../../shared/utils';
+import { getDocument, toDate } from '../../../shared/utils';
 import { addGoalEvent } from 'apps/backend-functions/src/shared/goal-event/goal.events';
 
 export const commentCreatedHandler = functions.firestore.document(`Goals/{goalId}/Comments/{commentId}`)
@@ -12,9 +12,11 @@ export const commentCreatedHandler = functions.firestore.document(`Goals/{goalId
 
     logger.log(`comment created in goal ${goalId}: `, comment)
 
-    const source = createGoalSource({
-      goal: comment.source.goal,
-      user: comment.source.user
-    })
+    const [goal, user] = await Promise.all([
+      getDocument<Goal>(`Goals/${goalId}`),
+      getDocument<User>(`Users/${comment.userId}`)
+    ])
+
+    const source = createGoalSource({ goal, user })
     addGoalEvent('goalChatMessageCreated', source)
   })
