@@ -78,12 +78,7 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
       await Promise.all([
         updateGoalStakeholders(uid, after), 
         updateSpectators(uid, after),
-        updateNotifications(uid, after),
         updateSupports(uid, after)
-
-        // update notificaition support? Rework data model
-        
-        // Milestone achiever? No, rework data model for this
       ])
     }
 
@@ -125,18 +120,6 @@ async function updateSpectators(uid: string, after: User) {
   }
 
   return Promise.all(promises)
-}
-
-async function updateNotifications(uid: string, after: User) {
-  // user notifications and goal notifications
-  const snaps = await db.collectionGroup(`Notifications`).where('source.user.uid', '==', uid).get()
-  logger.log(`User edited. Going to update ${snaps.size} notifications`)
-  const batch = db.batch()
-  snaps.forEach(snap => batch.update(snap.ref, {
-    'source.user.username': after.username,
-    'source.user.photoURL': after.photoURL
-  }))
-  batch.commit()
 }
 
 async function updateSupports(uid: string, after: User) {

@@ -2,7 +2,7 @@ import { db, functions, increment } from '../../../internals/firebase';
 
 import { toDate } from '../../../shared/utils';
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
-import { createNotification, createNotificationSource, createSpectator, Spectator } from '@strive/model'
+import { createNotificationBase, createSpectator, Spectator } from '@strive/model'
 
 export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
   .onCreate(async (snapshot, context) => {
@@ -58,11 +58,9 @@ function changeNumberOfSpectating(uidSpectator: string, change: number) {
 function handleSpectatorNotifications(before: Spectator, after: Spectator) {
   const becameSpectator = !before.isSpectator && after.isSpectator
   if (becameSpectator) {
-    const notification = createNotification({
+    const notification = createNotificationBase({
       event: 'userSpectatorCreated',
-      source: createNotificationSource({
-        user: after
-      })
+      userId: after.uid
     })
     sendNotificationToUsers(notification, after.profileId, 'user')
   }

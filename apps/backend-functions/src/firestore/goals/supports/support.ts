@@ -4,9 +4,8 @@ import {
   createGoalStakeholder,
   Milestone,
   createGoalSource,
-  createNotificationSource,
   EventType,
-  createNotification,
+  createNotificationBase,
   createSupport,
   Support,
   createAggregation
@@ -83,7 +82,6 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     const waitingToBePaid = before.status !== 'waiting_to_be_paid' && after.status === 'waiting_to_be_paid'
   
     const { goal, milestone, supporter, recipient } = after.source
-    const source = getNotificationSource(after)
   
     if (needsDecision) {
       let completedSuccessfully: boolean
@@ -97,9 +95,12 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
       }
   
       // send notification to supporter
-      const notification = createNotification({
+      const notification = createNotificationBase({
         event: completedSuccessfully ? 'goalSupportStatusPendingSuccessful' : 'goalSupportStatusPendingUnsuccessful',
-        source
+        goalId: after.source.goal.id,
+        milestoneId: after.source.milestone?.id,
+        supportId: after.id,
+        userId: after.source.supporter.uid
       })
       return sendNotificationToUsers(notification, supporter.uid)
     }
@@ -113,7 +114,13 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     if (!recipient) return
     if (supporter.uid === recipient.uid) return
     if (event) {
-      const notification = createNotification({ event, source })
+      const notification = createNotificationBase({
+        event,
+        goalId: after.source.goal.id,
+        milestoneId: after.source.milestone?.id,
+        supportId: after.id,
+        userId: after.source.supporter.uid
+      })
       return sendNotificationToUsers(notification, recipient.uid, 'user')
     }
   })
@@ -122,8 +129,6 @@ export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId
   .onDelete(async (snapshot, context) => {
 
     const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
-    const { goalId } = context.params
-
 
     // aggregation
     handleAggregation(support, undefined)
@@ -137,14 +142,4 @@ function handleAggregation(before: undefined | Support, after: undefined | Suppo
   if (!!before && !after) aggregation.goalsCustomSupports--
 
   updateAggregation(aggregation)
-}
-
-function getNotificationSource(support: Support) {
-  const { goal, supporter, milestone } = support.source
-  return createNotificationSource({
-    goal,
-    user: supporter,
-    support,
-    milestone
-  })
 }

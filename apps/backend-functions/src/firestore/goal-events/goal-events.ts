@@ -1,4 +1,4 @@
-import { Goal, GoalEvent, createNotificationSource, createNotification, Support } from '@strive/model'
+import { Goal, GoalEvent, createNotificationBase, Support } from '@strive/model'
 import { logger } from 'firebase-functions';
 import { functions } from '../../internals/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification';
@@ -8,9 +8,12 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
   .onCreate(async snapshot => {
 
     const event = toDate<GoalEvent>({ ...snapshot.data(), id: snapshot.id })
-    const notification = createNotification({
+    const notification = createNotificationBase({
       event: event.name,
-      source: createNotificationSource(event.source)
+      goalId: event.source.goal.id,
+      milestoneId: event.source.milestone?.id,
+      supportId: event.source.support?.id,
+      userId: event.source.user?.uid
     })
     const goalId = event.source.goal.id
     const userId = event.source.user.uid

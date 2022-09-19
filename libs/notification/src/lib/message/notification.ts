@@ -1,21 +1,27 @@
-import { Notification, NotificationMessageText, NotificationSource } from '@strive/model'
+import { Goal, Notification, NotificationMessageText, User } from '@strive/model'
+import { captureException } from '@sentry/angular'
 
-function get(type: 'user' | 'goal', source:  NotificationSource): { title: string, image: string, link: string } {
-  const data = {
-    user: {
-      title: source.user?.username ?? '',
-      image: source.user?.photoURL ?? '',
-      link: `/profile/${source.user?.uid}`
-    },
-    goal: {
-      title: source.goal?.title ?? '',
-      image: source.goal?.image ?? '',
-      link: `/goal/${source.goal?.id}`
-    }
+function getUser(user: User): { title: string, image: string, link: string } {
+  return {
+    title: user.username ?? '',
+    image: user.photoURL ?? '',
+    link: `/profile/${user.uid}`
   }
-  return data[type]
 }
 
+function getGoal(goal: Goal): { title: string, image: string, link: string } {
+  return {
+    title: goal?.title ?? '',
+    image: goal?.image ?? '',
+    link: `/goal/${goal?.id}`
+  }
+}
+
+const empty = { image: '', link: '', message: [], title: '' }
+function throwError(notification: Notification) {
+  captureException(`Notification doesn't contain needed information`, notification)
+  return empty
+}
 export interface NotificationMessage {
   title: string
   image: string
@@ -23,109 +29,132 @@ export interface NotificationMessage {
   message: NotificationMessageText[]
 }
 
-export function getNotificationMessage({ event, source }: Notification): NotificationMessage {
+export function getNotificationMessage(notification: Notification): NotificationMessage {
+  const { event, goal, user, milestone, support } = notification
+
+  console.log('notification: ', notification)
   switch (event) {
     case 'goalCreated':
+      if (!user || !goal) return throwError(notification)
+
       return {
-        ...get('user', source),
-        link: `/goal/${source.goal?.id}`,
+        ...getUser(user),
+        link: `/goal/${goal.id}`,
         message: [
-          { text: `${source.user!.username} created goal "` },
-          { text: source.goal!.title, link: `goal/${source.goal!.id}` },
+          { text: `${user.username} created goal "` },
+          { text: goal.title, link: `goal/${goal.id}` },
           { text: `"` }
         ]
       }
     case 'goalCreatedFinished':
+      if (!user || !goal) return throwError(notification)
+
       return {
-        ...get('user', source),
+        ...getUser(user),
         message: [
-          { text: `${source.user!.username} journaled about "` },
-          { text: source.goal!.title, link: `goal/${source.goal!.id}` },
+          { text: `${user.username} journaled about "` },
+          { text: goal.title, link: `goal/${goal.id}` },
           { text: `"` }
         ]
       }
 
     case 'goalDeleted':
+      if (!goal) return throwError(notification)
+
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         link: `/supports`,
         message: [
-          { text: `${source.goal!.title} has been deleted and therefore your supports are cancelled` }
+          { text: `${goal.title} has been deleted and therefore your supports are cancelled` }
         ]
       }
 
     case 'goalIsFinished':
+      if (!user || !goal) return throwError(notification)
+
       return {
-        ...get('user', source),
+        ...getGoal(goal),
         message: [
-          { text: `${source.user!.username} finished goal "` },
+          { text: `${user.username} finished goal "` },
           {
-            text: source.goal!.title,
-            link: `goal/${source.goal!.id}`
+            text: goal.title,
+            link: `goal/${goal.id}`
           },
           { text: `"` }
         ]
       }
 
     case 'goalMilestoneDeadlinePassed':
+      if (!milestone || !goal) return throwError(notification)
+
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         message: [
-          { text: `Milestone "${source.milestone!.content}" of goal "${source.goal!.title}" passed its due date` }
+          { text: `Milestone "${milestone.content}" of goal "${goal.title}" passed its due date` }
         ]
       }
 
     case 'goalStakeholderRequestedToJoin':
+      if (!user || !goal) return throwError(notification)
+
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         message: [
           {
-            text: source.user!.username,
-            link: `profile/${source.user!.uid}`
+            text: user.username,
+            link: `profile/${user.uid}`
           },
           { text: ` requests to join goal` }
         ]
       }
 
-    case 'goalStakeholderRequestToJoinAccepted': 
+    case 'goalStakeholderRequestToJoinAccepted':
+      if (!goal) return throwError(notification)
+
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         message: [
-          { text: `Your request to join goal "${source.goal!.title}" has been accepted` }
+          { text: `Your request to join goal "${goal.title}" has been accepted` }
         ]
       }
 
     case 'goalStakeholderRequestToJoinRejected':
+      if (!goal) return throwError(notification)
+
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         message: [
-          { text: `Your request to join "${source.goal!.title}" has been rejected` }
+          { text: `Your request to join "${goal.title}" has been rejected` }
         ]
       }
 
     case 'userSpectatorCreated':
+      if (!user) return throwError(notification)
+
       return {
-        ...get('user', source),
+        ...getUser(user),
         message: [
-          { text: `${source.user!.username} started following you` }
+          { text: `${user.username} started following you` }
         ]
       }
 
     case 'goalSupportCreated': {
-      const suffix = `with "${source.support!.description}"`
+      if (!user || !goal || !support) return throwError(notification)
+
+      const suffix = `with "${support.description}"`
       const message: NotificationMessageText[] = []
-      if (source.milestone?.id) {
-        message.push({ text: `${source.user!.username} supports milestone "${source.milestone.content}" of goal "` })
-        message.push({ text: source.goal!.title, link: `/goal/${source.goal!.id}` })
+      if (milestone?.id) {
+        message.push({ text: `${user.username} supports milestone "${milestone.content}" of goal "` })
+        message.push({ text: goal.title, link: `/goal/${goal.id}` })
         message.push({ text: `" ${suffix}`})
       } else {
-        message.push({ text: `${source.user!.username} supports goal "` })
-        message.push({ text: source.goal!.title, link: `/goal/${source.goal!.id}` })
+        message.push({ text: `${user.username} supports goal "` })
+        message.push({ text: goal.title, link: `/goal/${goal.id}` })
         message.push({ text: `" ${suffix}`})
       }
 
       return {
-        ...get('user', source),
+        ...getUser(user),
         link: '/supports',
         message
       }
@@ -133,55 +162,56 @@ export function getNotificationMessage({ event, source }: Notification): Notific
     
     case 'goalSupportStatusPendingUnsuccessful':
     case 'goalSupportStatusPendingSuccessful': {
-      const isMilestone = source.milestone?.id
-      const prefix = isMilestone ? `Milestone "${source.milestone!.content}"` : `Goal`
+      if (!goal || !support) return throwError(notification)
+
+      const isMilestone = milestone?.id
+      const prefix = isMilestone ? `Milestone "${milestone.content}"` : `Goal`
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         link: '/supports',
         message: [
-          { text: `${prefix} has been completed. Decide to give "${source.support!.description}" or not` }
+          { text: `${prefix} has been completed. Decide to give "${support.description}" or not` }
         ]
       }
     }
 
     case 'goalSupportStatusPaid':
+      if (!goal || !support || !user) return throwError(notification)
+      
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         link: '/supports',
         message: [
           {
-            text: source.user!.username,
-            link: `profile/${source.user!.uid}`
+            text: user.username,
+            link: `profile/${user.uid}`
           },
           {
-            text: ` paid support "${source.support!.description}"`
+            text: ` paid support "${support.description}"`
           }
         ]
       }
     
     case 'goalSupportStatusRejected': {
-      const isMilestone = !!source.milestone?.id
-      const suffix = isMilestone ? ` for milestone "${source.milestone!.content}"` : ''
+      if (!goal || !user || !support) return throwError(notification)
+
+      const isMilestone = !!milestone?.id
+      const suffix = isMilestone ? ` for milestone "${milestone.content}"` : ''
 
       return {
-        ...get('goal', source),
+        ...getGoal(goal),
         link: '/supports',
         message: [
           {
-            text: source.user!.username,
-            link: `profile/${source.user!.uid}`
+            text: user.username,
+            link: `profile/${user.uid}`
           },
-          { text: ` rejected paying support "${source.support!.description}"${suffix}`}
+          { text: ` rejected paying support "${support.description}"${suffix}`}
         ]
       }
     }
 
     default:
-      return {
-        image: '',
-        link: '',
-        message: [],
-        title: ''
-      }
+      return empty
   }
 }

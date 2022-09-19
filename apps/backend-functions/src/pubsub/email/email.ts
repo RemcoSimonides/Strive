@@ -4,7 +4,7 @@ import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
 import { createPersonal, inBucketlist, inProgress, Personal, storyEvents } from '@strive/model'
 import { getDocument } from '../../shared/utils'
-import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotification, Feature, Features, Motivation, Motivations } from '@strive/model'
+import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotificationBase, Feature, Features, Motivation, Motivations } from '@strive/model'
 import { groupIds, templateIds } from './ids'
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { toDate } from '../../shared/utils'
@@ -114,7 +114,7 @@ async function getNotifications(personal: Personal) {
     snap = await db.collection(`Users/${personal.uid}/Notifications`).get()
   }
 
-  return snap.docs.map(doc => createNotification(toDate({ ...doc.data(), id: doc.id })))
+  return snap.docs.map(doc => createNotificationBase(toDate({ ...doc.data(), id: doc.id })))
 }
 
 function newerThanWeek(personal: Personal): boolean {

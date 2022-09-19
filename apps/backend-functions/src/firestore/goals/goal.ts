@@ -187,12 +187,6 @@ async function updateSources(goal: Goal) {
     'source.goal.image': goal.image
   }
 
-  // Notifications
-  const notificationSnaps = await db.collectionGroup('Notifications').where('source.goal.id', '==', goal.id).get()
-  logger.log(`Goal title edited. Going to update ${notificationSnaps.size} notifications`)
-  notificationSnaps.forEach(snap => batch.update(snap.ref, source))
-  batch.commit()
-
   // Goal Events
   batch = db.batch()
   const goalEventSnaps = await db.collection('GoalEvents').where('source.goal.id', '==', goal.id).get()

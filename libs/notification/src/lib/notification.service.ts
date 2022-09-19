@@ -5,13 +5,13 @@ import { toDate } from 'ngfire'
 import { of, switchMap, shareReplay, map } from 'rxjs'
 
 import { FireCollection } from '@strive/utils/services/collection.service'
-import { createNotification, Notification, notificationEvents } from '@strive/model'
+import { createNotificationBase, NotificationBase, notificationEvents } from '@strive/model'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService extends FireCollection<Notification> {
+export class NotificationService extends FireCollection<NotificationBase> {
   readonly path = `Users/:uid/Notifications`
 
   hasUnreadNotification$ = this.personal.personal$.pipe(
@@ -32,9 +32,9 @@ export class NotificationService extends FireCollection<Notification> {
     super(getFirestore())
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Notification>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<NotificationBase>) {
     return snapshot.exists()
-      ? createNotification(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
+      ? createNotificationBase(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
       : undefined
   }
 }

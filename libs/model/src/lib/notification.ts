@@ -1,17 +1,4 @@
-import {
-  createGoalLink,
-  Goal,
-  GoalLink,
-  createMilestoneLink,
-  Milestone,
-  MilestoneLink,
-  createSupportLink,
-  Support,
-  SupportLink,
-  createUserLink,
-  User,
-  UserLink
-} from '@strive/model'
+import { Goal, Milestone, Support, User } from '@strive/model'
 
 
 /**
@@ -91,43 +78,38 @@ const notificationIcons = [
 ] as const
 export type NotificationIcons = typeof notificationIcons[number];
 
-export interface Notification {
+export interface NotificationBase {
   id?: string
   event: EventType
-  source: NotificationSource
+  userId?: string
+  goalId?: string
+  milestoneId?: string
+  supportId?: string
   updatedAt?: Date
   createdAt?: Date
 }
 
-export interface NotificationSource {
-  goal?: GoalLink
-  user?: UserLink
-  milestone?: MilestoneLink
-  support?: SupportLink
+export interface Notification extends NotificationBase {
+  user?: User,
+  goal?: Goal,
+  milestone?: Milestone,
+  support?: Support
 }
 
-export function createNotification(params: Partial<Notification> = {}): Notification {
-  return {
-    event: '',
-    ...params,
-      source: createNotificationSource(params.source),
+export function createNotificationBase(params: Partial<NotificationBase> = {}): NotificationBase {
+  const notification: NotificationBase = {
+    event: params.event ?? '',
+    createdAt: params.createdAt ?? new Date(),
+    updatedAt: params.updatedAt ?? new Date()
   }
-}
 
-export function createNotificationSource(params: {
-  goal?: GoalLink | Goal
-  milestone?: MilestoneLink | Milestone
-  user?: UserLink | User
-  support?: SupportLink | Support
-} = {}): NotificationSource {
-  const source: NotificationSource = {}
+  if (params.id) notification.id = params.id
+  if (params.goalId) notification.goalId = params.goalId
+  if (params.milestoneId) notification.milestoneId = params.milestoneId
+  if (params.supportId) notification.supportId = params.supportId
+  if (params.userId) notification.userId = params.userId
 
-  if (params.goal?.id) source.goal = createGoalLink(params.goal)
-  if (params.user?.uid) source.user = createUserLink(params.user)
-  if (params.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
-  if (params.support?.id) source.support = createSupportLink(params.support)
-
-  return source
+  return notification
 }
 
 export interface NotificationMessageText {

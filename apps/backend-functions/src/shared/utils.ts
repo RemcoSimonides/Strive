@@ -45,7 +45,7 @@ export function getDocumentSnap(path: string, tx?: FirebaseFirestore.Transaction
 }
 
 export function getDocument<T>(path: string, tx?: FirebaseFirestore.Transaction): Promise<T> {
-  return getDocumentSnap(path, tx).then(doc => toDate<T>({ ...doc.data(), id: doc.id }));
+  return getDocumentSnap(path, tx).then(doc => doc.exists ? toDate<T>({ ...doc.data(), id: doc.id }) : undefined);
 }
 
 export async function queryDocument<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T> {
@@ -64,7 +64,7 @@ export function getCollectionRef(path: string): Promise<FirebaseFirestore.QueryS
 }
 
 export function getCollection<T>(path: string): Promise<T[]> {
-  return getCollectionRef(path).then(collection => collection.docs.map(doc => toDate<T>({ ...doc.data(), id: doc.id })));
+  return getCollectionRef(path).then(collection => collection.docs.map(doc => doc.exists ? toDate<T>({ ...doc.data(), id: doc.id }) : undefined));
 }
 
 export function deleteCollection(db, collectionPath, batchSize) {

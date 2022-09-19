@@ -1,9 +1,9 @@
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 // Interfaces
-import { createNotification, Notification, createNotificationSource, GoalEvent, createGoalStakeholder, createPersonal } from '@strive/model'
+import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification } from '@strive/model'
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification';
-import { toDate, unique } from '../utils';
+import { getDocument, toDate, unique } from '../utils';
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue
@@ -24,19 +24,31 @@ export interface SendOptions {
   }
 }
 
-export async function sendNotificationToUsers(notification: Notification, to: string | string[], pushNotification?: PushNotificationTarget) {
+export async function sendNotificationToUsers(notificationBase: NotificationBase, to: string | string[], pushNotification?: PushNotificationTarget) {
   const recipients = Array.isArray(to) ? to : [to]
   
-  notification.updatedAt = serverTimestamp() as any
-  notification.createdAt = serverTimestamp() as any
+  notificationBase.updatedAt = serverTimestamp() as any
+  notificationBase.createdAt = serverTimestamp() as any
 
-  logger.log('Sending notification: ', notification)
+  logger.log('Sending notification: ', notificationBase)
   logger.log('To: ', recipients)
 
-  const promises = recipients.map(recipient => db.collection(`Users/${recipient}/Notifications`).add(notification))
+  const promises = recipients.map(recipient => db.collection(`Users/${recipient}/Notifications`).add(notificationBase))
   await Promise.all(promises)
 
   if (pushNotification) {
+    const { goalId, milestoneId, supportId, userId } = notificationBase
+    const goal = goalId ? await getDocument<Goal>(`Goals/${goalId}`) : undefined
+    const milestone = milestoneId ? await getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`) : undefined
+    const support = supportId ? await getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`) : undefined
+    const user = userId ? await getDocument<User>(`Users/${userId}`) : undefined
+  
+    const notification: Notification = notificationBase
+    if (goal) notification.goal = goal
+    if (milestone) notification.milestone = milestone
+    if (support) notification.support = support
+    if (user) notification.user = user
+
     const message = getPushMessage(notification, pushNotification)
     if (message) sendPushNotificationToUsers(message, recipients)
   }
@@ -50,9 +62,12 @@ export async function sendGoalEventNotification(
   const goalId = event.source.goal.id
   const except =  excludeTriggerer ? event.source.user?.uid : ''
   
-  const notification = createNotification({
+  const notification = createNotificationBase({
     event: event.name,
-    source: createNotificationSource(event.source)
+    goalId,
+    milestoneId: event.source.milestone?.id,
+    supportId: event.source.support?.id,
+    userId: event.source.user?.uid
   })
 
   const { send, roles } = options

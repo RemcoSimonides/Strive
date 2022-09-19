@@ -158,12 +158,6 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
 async function updateContentInSources(goalId: string, milestone: Milestone) {
   let batch = db.batch()
 
-  // Notifications
-  const notificationSnaps = await db.collectionGroup('Notifications').where('source.milestone.id', '==', milestone.id).get()
-  logger.log(`Milestone content edited. Going to update ${notificationSnaps.size} notifications`)
-  notificationSnaps.forEach(snap => batch.update(snap.ref, { 'source.milestone.content': milestone.content }))
-  batch.commit()
-
   // Goal Events
   batch = db.batch()
   const goalEventSnaps = await db.collection('GoalEvents').where('source.milestone.id', '==', milestone.id).get()
