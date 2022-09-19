@@ -75,8 +75,8 @@ export async function sendGoalEventNotification(
     const snaps = await Promise.all(promises)
     const ids: string[][] = snaps.map(snap => snap.docs.map(doc => doc.id))
     const flatten = ids.reduce((acc, val) => acc.concat(val), [])
-    const spectators = unique<string>(flatten)
-    logger.log('spectators: ', spectators)
+    const distinct = unique<string>(flatten)
+    const spectators = distinct.filter(id => !stakeholders.some(uid => uid === id))
 
     if (send.toSpectator.notification) {
       sendNotificationToUsers(notification, spectators)
