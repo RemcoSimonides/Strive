@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { ModalController, PopoverController } from '@ionic/angular';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
+import { ModalController, PopoverController } from '@ionic/angular'
+
 import { Post, StoryItem, UserLink } from '@strive/model'
-import { PostOptionsComponent } from '@strive/post/popovers/options/options.component';
-import { PostService } from '@strive/post/post.service';
-import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component';
-import { Observable } from 'rxjs';
+
+import { PostOptionsComponent } from '@strive/post/popovers/options/options.component'
+import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component'
 
 @Component({
   selector: '[storyItem] post-main',
@@ -12,25 +12,24 @@ import { Observable } from 'rxjs';
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostComponent implements OnInit {
+export class PostComponent {
 
-  @Input() storyItem!: StoryItem
+  @Input() set storyItem(storyItem: StoryItem) {
+    if (!storyItem) return
+    const { user, post } = storyItem
+
+    this.author = user
+    this.post = post
+  }
   @Input() isAdmin = false
+  
   author?: UserLink
-
-  post$?: Observable<Post | undefined>
+  post?: Post
   
   constructor(
     private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private post: PostService
+    private popoverCtrl: PopoverController
   ) {}
-
-  ngOnInit() {
-    const { postId, user, goal } = this.storyItem.source
-    this.author = user
-    this.post$ = this.post.valueChanges(postId, { goalId: goal.id })
-  }
 
   openZoom(ref: string) {
     this.modalCtrl.create({

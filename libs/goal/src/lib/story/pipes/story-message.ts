@@ -1,20 +1,33 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { GoalEvent, NotificationIcons, NotificationMessageText } from '@strive/model';
+import { captureException } from '@sentry/capacitor';
+import { NotificationIcons, NotificationMessageText, StoryItem } from '@strive/model';
 
 export interface StoryItemMessage {
   icon: NotificationIcons
   message: NotificationMessageText[]
 }
 
-export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessage {
+const empty: StoryItemMessage = {
+  icon: 'alert-outline',
+  message: [] 
+}
+function throwError(item: StoryItem) {
+  captureException(`Story Item doesn't have required information for message`)
+  return empty
+}
+
+export function getStoryItemMessage(item: StoryItem): StoryItemMessage {
+  const { name, user, milestone } = item
   switch (name) {
     case 'goalCreated':
     case 'goalCreatedFinished':
+      if (!user) return throwError(item)
+
       return {
         icon: 'flag-outline',
         message: [
           { text: `Goal created by ` },
-          { text: source.user!.username, link: `/profile/${source.user!.uid}` }
+          { text: user.username, link: `/profile/${user.uid}` }
         ]
       }
     case 'goalIsFinished':
@@ -23,39 +36,49 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
         message: [{ text: `Goal is finished!` }]
       }
     case 'goalMilestoneCompletedSuccessfully':
+      if (!milestone) return throwError(item)
+
       return {
         icon: 'checkmark-outline',
         message: [
-          { text: `Milestone "${source.milestone!.content}" successfully completed` }
+          { text: `Milestone "${milestone.content}" successfully completed` }
         ]
       }
     case 'goalMilestoneCompletedUnsuccessfully':
+      if (!milestone) return throwError(item)
+
       return {
         icon: 'checkmark-outline',
         message: [
-          { text: `Milestone "${source.milestone!.content}" failed to complete` }
+          { text: `Milestone "${milestone.content}" failed to complete` }
         ]
       }
     case 'goalMilestoneDeadlinePassed':
+      if (!milestone) return throwError(item)
+
       return {
         icon: 'alert-outline',
         message: [
-          { text: `Milestone "${source.milestone!.content}" passed its due date` }
+          { text: `Milestone "${milestone.content}" passed its due date` }
         ]
       }
     case 'goalStakeholderBecameAchiever':
+      if (!user) return throwError(item)
+
       return {
         icon: 'person-add-outline',
         message: [
-          { text: source.user!.username, link: `/profile/${source.user!.uid}` },
+          { text: user.username, link: `/profile/${user.uid}` },
           { text: ` joined as an Achiever`}
         ]
       }
     case 'goalStakeholderBecameAdmin':
+      if (!user) return throwError(item)
+
       return {
         icon: 'person-add-outline',
         message: [
-          { text: source.user!.username, link: `/profile/${source.user!.uid}` },
+          { text: user.username, link: `/profile/${user.uid}` },
           { text: ` became an Admin` }
         ]
       }
@@ -74,8 +97,8 @@ export function getStoryItemMessage({ name, source }: GoalEvent): StoryItemMessa
 
 @Pipe({ name: 'storyMessage'})
 export class StoryItemMessagePipe implements PipeTransform {
-  transform(event: GoalEvent): StoryItemMessage {
-    return getStoryItemMessage(event)
+  transform(item: StoryItem): StoryItemMessage {
+    return getStoryItemMessage(item)
   }
 }
 

@@ -1,29 +1,27 @@
-<ng-container *ngIf="post$ | async as post">
-  <ion-card>
-    <ion-card-header fxLayout>
-      <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
-        <img [ref]="author.photoURL" asset="profile.png">
-      </ion-avatar>
-      <section fxLayout="column" fxLayoutAlign="center start">
-        <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
-        <small>{{ post.date | date:'longDate' }}</small>
-      </section>
-      <ion-button fill="clear" size="small" *ngIf="isAdmin" (click)="openPostOptions(post, $event)">
-        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
-      </ion-button>
-    </ion-card-header>
+<ion-card *ngIf="post && author">
+  <ion-card-header fxLayout>
+    <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
+      <img [ref]="author.photoURL" asset="profile.png">
+    </ion-avatar>
+    <section fxLayout="column" fxLayoutAlign="center start">
+      <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
+      <small>{{ post.date | date:'longDate' }}</small>
+    </section>
+    <ion-button fill="clear" size="small" *ngIf="isAdmin" (click)="openPostOptions(post, $event)">
+      <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+    </ion-button>
+  </ion-card-header>
 
-    <ion-card-content *ngIf="post.title">      
-      <h2>{{ post.title }}</h2>
-    </ion-card-content>
+  <ion-card-content *ngIf="post.title">
+    <h2>{{ post.title }}</h2>
+  </ion-card-content>
 
-    <ng-container *ngIf="post.mediaURL">
-      <img class="post-image" [ref]="post.mediaURL" [asset]="" (click)="openZoom(post.mediaURL)">
-    </ng-container>
+  <ng-container *ngIf="post.mediaURL">
+    <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)">
+  </ng-container>
 
-    <ion-card-content *ngIf="post.description || post.url">
-      <p>{{ post.description }}</p>
-      <a [href]="post.url" target="_blank" rel="noreferrer noopener">{{ post.url }}</a>
-    </ion-card-content>
-  </ion-card>
-</ng-container>
+  <ion-card-content *ngIf="post.description || post.url">
+    <p>{{ post.description }}</p>
+    <a [href]="post.url" target="_blank" rel="noreferrer noopener">{{ post.url }}</a>
+  </ion-card-content>
+</ion-card>

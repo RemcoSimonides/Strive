@@ -1,5 +1,7 @@
-import { createGoalSource, GoalSource } from './goal'
+import { Milestone } from './milestone'
 import { EventType } from './notification'
+import { Post } from './post'
+import { User } from './user'
 
 export const storyEvents: EventType[] = [
   'goalCreated',
@@ -13,22 +15,37 @@ export const storyEvents: EventType[] = [
   'goalStoryPostCreated'
 ]
 
-export interface StoryItem {
+export interface StoryItemBase {
   id?: string
   name: EventType
   date: Date
-  source: GoalSource
+  goalId: string
+  userId?: string
+  milestoneId?: string
+  postId?: string
   createdAt: Date
   updatedAt: Date
 }
 
-export function createStoryItem(params: Partial<StoryItem> = {}): StoryItem {
-  return {
-    name: '',
-    date: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    ...params,
-    source: createGoalSource(params.source),
+export interface StoryItem extends StoryItemBase {
+  user?: User
+  milestone?: Milestone
+  post?: Post
+}
+
+
+export function createStoryItemBase(params: Partial<StoryItemBase> = {}): StoryItemBase {
+  const item: StoryItemBase = {
+    name: params.name ?? '',
+    date: params.date ?? new Date(),
+    goalId: params.goalId ?? '',
+    createdAt: params.createdAt ?? new Date(),
+    updatedAt: params.updatedAt ?? new Date()
   }
+
+  if (params.userId) item.userId = params.userId
+  if (params.milestoneId) item.milestoneId = params.milestoneId
+  if (params.postId) item.postId = params.postId
+
+  return item
 }

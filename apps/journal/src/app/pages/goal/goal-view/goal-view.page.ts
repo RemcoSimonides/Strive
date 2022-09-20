@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { ActivatedRoute } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 
+import { joinWith } from 'ngfire'
 import { Subscription, of, Observable, combineLatest } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 
@@ -15,6 +16,8 @@ import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/u
 import { orderBy, where } from 'firebase/firestore'
 import { CommentService } from '@strive/goal/chat/comment.service'
 import { StoryService } from '@strive/goal/story/story.service'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { PostService } from '@strive/post/post.service'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -59,7 +62,9 @@ export class GoalViewComponent implements OnDestroy {
     private commentService: CommentService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
+    private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
+    private postService: PostService,
     private route: ActivatedRoute,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
@@ -105,7 +110,12 @@ export class GoalViewComponent implements OnDestroy {
     )
 
     this.story$ = goalId$.pipe(
-      switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([]))
+      switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([])),
+      joinWith({
+        user: ({ userId }) => userId ? this.user.valueChanges(userId) : of(undefined),
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
+        post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
+      })
     )
 
     this.accessSubscription = combineLatest([
