@@ -1,12 +1,12 @@
-import { db, functions, increment } from '../../../internals/firebase';
+import { db, functions, increment } from '../../../internals/firebase'
 
 // interfaces
-import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createMilestone, createUserLink, createAggregation } from '@strive/model'
-import { toDate } from '../../../shared/utils';
-import { getDocument } from '../../../shared/utils';
+import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createAggregation } from '@strive/model'
+import { toDate } from '../../../shared/utils'
+import { getDocument } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
-import { updateAggregation } from '../../../shared/aggregation/aggregation';
+import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
 
 export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
@@ -119,8 +119,8 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   const requestToJoinRejected = requestToJoinDecided && !before.isAchiever && !after.isAchiever && after.updatedBy !== after.uid
 
   const source = createGoalSource({
-    goal,
-    user: after
+    goalId: after.goalId,
+    userId: after.uid
   })
 
   if (becameAdmin) {

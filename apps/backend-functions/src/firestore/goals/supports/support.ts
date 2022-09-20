@@ -25,9 +25,10 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
 
     // events
     const source = createGoalSource({
-      user: support.source.supporter,
-      support,
-      ...support.source
+      goalId,
+      userId: support.source.supporter.uid,
+      milestoneId: support.source.milestone?.id,
+      supportId: support.id
     })
     addGoalEvent('goalSupportCreated', source)
 

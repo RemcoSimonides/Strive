@@ -56,9 +56,9 @@ export class GoalsComponent {
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
         events: (stakeholder: GoalStakeholder) => {
-          const query = [where('source.goal.id', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
+          const query = [where('goalId', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
           return this.goalEvent.valueChanges(query).pipe(
-            map(events => filterGoalEvents(events, stakeholder)),
+            map(events => filterGoalEvents(events, stakeholder))
           )
         }
       }, { shouldAwait: true }),

@@ -28,8 +28,7 @@ export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
     const goalId = snapshot.id
 
     // event
-    const user = await getDocument<User>(`Users/${goal.updatedBy}`)
-    const source = createGoalSource({ goal, user })
+    const source = createGoalSource({ goalId, userId: goal.updatedBy })
     const event = goal.isFinished ? 'goalCreatedFinished' : 'goalCreated'
     addGoalEvent(event, source)
     addStoryItem(event, source)
@@ -61,7 +60,7 @@ export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
     handleAggregation(goal, undefined)
 
     // event
-    const source = createGoalSource({ goal })
+    const source = createGoalSource({ goalId: goal.id })
     addGoalEvent('goalDeleted', source)
 
     deleteScheduledTask(goal.id)
@@ -101,8 +100,7 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
     // events
     if (becameFinished) {
       logger.log('Goal is finished')
-      const user = await getDocument<User>(`Users/${after.updatedBy}`)
-      const source = createGoalSource({ goal: after, user })
+      const source = createGoalSource({ goalId, userId: after.updatedBy })
       addGoalEvent('goalIsFinished', source)
       addStoryItem('goalIsFinished', source)
 
@@ -186,13 +184,6 @@ async function updateSources(goal: Goal) {
     'source.goal.title': goal.title,
     'source.goal.image': goal.image
   }
-
-  // Goal Events
-  batch = db.batch()
-  const goalEventSnaps = await db.collection('GoalEvents').where('source.goal.id', '==', goal.id).get()
-  logger.log(`Goal title edited. Going to update ${goalEventSnaps.size} goal events`)
-  goalEventSnaps.forEach(snap => batch.update(snap.ref, source))
-  batch.commit()
 
   // Supports
   batch = db.batch()

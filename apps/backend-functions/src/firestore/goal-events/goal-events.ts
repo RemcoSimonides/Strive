@@ -8,15 +8,8 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
   .onCreate(async snapshot => {
 
     const event = toDate<GoalEvent>({ ...snapshot.data(), id: snapshot.id })
-    const notification = createNotificationBase({
-      event: event.name,
-      goalId: event.source.goal.id,
-      milestoneId: event.source.milestone?.id,
-      supportId: event.source.support?.id,
-      userId: event.source.user?.uid
-    })
-    const goalId = event.source.goal.id
-    const userId = event.source.user.uid
+    const notification = createNotificationBase({ ...event, event: event.name })
+    const { goalId, userId, supportId } = event
 
     logger.log('event incoming: ', event)
 
@@ -148,7 +141,7 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
       }
 
       case 'goalSupportCreated': {
-        const support = await getDocument<Support>(`Goals/${goalId}/Supports/${event.source.support.id}`)
+        const support = await getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`)
         const { recipient, supporter } = support.source
         if (recipient.uid === supporter.uid) return
 

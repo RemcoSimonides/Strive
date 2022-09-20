@@ -1,13 +1,17 @@
 import { serverTimestamp, db } from '../../internals/firebase'
-import { GoalEvent, GoalSource, EventType } from '@strive/model'
+import { GoalSource, EventType, createGoalEvent } from '@strive/model'
 
 export function addGoalEvent(name: EventType, source: GoalSource, id?: string) {
-  const event: GoalEvent = {
+  const event = createGoalEvent({
     name,
-    source,
+    goalId: source.goalId,
+    userId: source.userId,
+    milestoneId: source.milestoneId,
+    supportId: source.supportId,
+    postId: source.postId,
     createdAt: serverTimestamp() as any,
     updatedAt: serverTimestamp() as any
-  }
+  })
 
   if (id) {
     db.doc(`GoalEvents/${id}`).set(event)

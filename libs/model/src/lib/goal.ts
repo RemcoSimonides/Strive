@@ -1,6 +1,3 @@
-import { createSupportLink, Support, SupportLink } from './support'
-import { createUserLink, User, UserLink } from './user'
-import { createMilestoneLink, Milestone, MilestoneLink } from './milestone'
 import { GoalStakeholder } from './stakeholder'
 import { GoalEvent } from './goal-event'
 
@@ -8,12 +5,12 @@ export type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, event
 export type GoalPublicityType = 'public' | 'private'
 
 export interface GoalSource {
-  goal: GoalLink
-  user?: UserLink
-  milestone?: MilestoneLink
+  goalId: string
+  userId?: string
+  milestoneId?: string
   postId?: string
-  support?: SupportLink
-  comment?: Comment
+  supportId?: string
+  commentId?: string
 }
 
 export interface Goal {
@@ -100,20 +97,22 @@ export function createAlgoliaGoal(params: AlgoliaGoal | Goal): AlgoliaGoal {
 }
 
 export function createGoalSource(params: {
-  goal?: GoalLink | Goal
-  milestone?: MilestoneLink | Milestone
-  user?: UserLink | User
+  goalId?: string
+  milestoneId?: string
+  userId?: string
   postId?: string
-  support?: SupportLink | Support
+  supportId?: string
+  commentId?: string
 } = {}): GoalSource {
   const source: GoalSource = {
-    goal: createGoalLink(params.goal)
+    goalId: params.goalId ?? ''
   }
 
-  if (params.user?.uid) source.user = createUserLink(params.user)
-  if (params.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
+  if (params.userId) source.userId = params.userId
+  if (params.milestoneId) source.milestoneId = params.milestoneId
   if (params.postId) source.postId = params.postId
-  if (params.support) source.support = createSupportLink(params.support)
+  if (params.supportId) source.supportId = params.supportId
+  if (params.commentId) source.commentId = params.commentId
 
   return source
 }

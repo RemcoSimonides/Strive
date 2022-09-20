@@ -5,7 +5,7 @@
       "queryScope": "COLLECTION_GROUP",
       "fields": [
         {
-          "fieldPath": "source.goal.id",
+          "fieldPath": "goalId",
           "order": "ASCENDING"
         },
         {
@@ -19,7 +19,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "source.goal.id",
+          "fieldPath": "goalId",
           "order": "ASCENDING"
         },
         {
@@ -270,7 +270,7 @@
     },
     {
       "collectionGroup": "Notifications",
-      "fieldPath": "source.goal.id",
+      "fieldPath": "goalId",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -292,7 +292,7 @@
     },
     {
       "collectionGroup": "Notifications",
-      "fieldPath": "source.milestone.id",
+      "fieldPath": "milestoneId",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -314,7 +314,7 @@
     },
     {
       "collectionGroup": "Notifications",
-      "fieldPath": "source.user.uid",
+      "fieldPath": "userId",
       "indexes": [
         {
           "order": "ASCENDING",

@@ -5,16 +5,13 @@ import {
   createMilestone,
   Milestone,
   createGoalSource,
-  createSupport,
-  User,
-  UserLink
+  createSupport
 } from '@strive/model'
 
 // Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { toDate } from '../../../shared/utils'
-import { getDocument } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
 
@@ -25,18 +22,13 @@ export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goal
     const { goalId, milestoneId } = context.params
 
     // events
-    const [goal, user] = await Promise.all([
-      getDocument<Goal>(`Goals/${goalId}`),
-      getDocument<User>(`Users/${milestone.updatedBy}`)
-    ])
-  
-    const source = createGoalSource({ goal, milestone, user })
+    const source = createGoalSource({ goalId, userId: milestone.updatedBy })
     addGoalEvent('goalMilestoneCreated', source)
 
     // progress
     const completed = milestone.status === 'failed' || milestone.status === 'succeeded'
     const data: Partial<Goal> = { tasksTotal: increment(1) as any }
-    if (completed) goal.tasksCompleted = increment(1) as any
+    if (completed) data.tasksCompleted = increment(1) as any
     db.doc(`Goals/${goalId}`).update(data)
 
     // scheduled task
@@ -106,18 +98,12 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
   })
 
 async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId: string) {
-
   if (before.status === after.status) return
-  
-  const [goal, user] = await Promise.all([
-    getDocument<Goal>(`Goals/${goalId}`),
-    getDocument<User>(`Users/${after.updatedBy}`)
-  ])
 
   const source = createGoalSource({
-    goal,
-    milestone: after,
-    user
+    goalId,
+    milestoneId: after.id,
+    userId: after.updatedBy
   })
 
   if (after.status === 'overdue') {
@@ -157,13 +143,6 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
 
 async function updateContentInSources(goalId: string, milestone: Milestone) {
   let batch = db.batch()
-
-  // Goal Events
-  batch = db.batch()
-  const goalEventSnaps = await db.collection('GoalEvents').where('source.milestone.id', '==', milestone.id).get()
-  logger.log(`Milestone content edited. Going to update ${goalEventSnaps.size} goal events`)
-  goalEventSnaps.forEach(snap => batch.update(snap.ref, { 'source.milesstone.content': milestone.content }))
-  batch.commit()
 
   // Supports
   batch = db.batch()

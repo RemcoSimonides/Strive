@@ -55,9 +55,6 @@ export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
     }
 
     auth.deleteUser(uid)
-
-    // Should we update UserLink data in GoalEvents, Comments?
-
   })
 
 export const userChangeHandler = functions.firestore.document(`Users/{uid}`)

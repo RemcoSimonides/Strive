@@ -59,23 +59,16 @@ export async function sendGoalEventNotification(
   options: SendOptions,
   excludeTriggerer: boolean
 ) {
-  const goalId = event.source.goal.id
-  const except =  excludeTriggerer ? event.source.user?.uid : ''
+  const { goalId, userId, milestoneId, supportId } = event
+  const except =  excludeTriggerer ? userId : ''
   
-  const notification: Notification = createNotificationBase({
-    event: event.name,
-    goalId,
-    milestoneId: event.source.milestone?.id,
-    supportId: event.source.support?.id,
-    userId: event.source.user?.uid
-  })
+  const notification: Notification = createNotificationBase(event)
 
   const { send, roles } = options
   const stakeholders = await getGoalStakeholders(goalId, roles)
   const stakeholdersExceptTriggerer = stakeholders.filter(uid => uid !== except)
 
   if (send.pushNotification || send.toSpectator?.pushNotification) {
-    const { goalId, milestoneId, supportId, userId } = notification    
     const goalPromise = getDocument<Goal>(`Goals/${goalId}`).then(goal => notification.goal = goal)
     const milestonePromise = milestoneId ? getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`).then(milestone => notification.milestone = milestone) : undefined
     const supportPromise = supportId ? getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`).then(support => notification.support = support) : undefined
