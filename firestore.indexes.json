@@ -197,7 +197,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "source.milestone.id",
+          "fieldPath": "milestoneId",
           "order": "ASCENDING"
         },
         {
