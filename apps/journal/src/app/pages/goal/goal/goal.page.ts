@@ -87,12 +87,12 @@ export class GoalComponent {
             switchMap(user => {
               if (!user) return of([])
               const recipientQuery = [
-                where('source.milestone.id', '==', milestone.id),
-                where('source.recipient.uid', '==', user.uid)
+                where('milestoneId', '==', milestone.id),
+                where('recipientId', '==', user.uid)
               ]
               const supporterQuery = [
-                where('source.milestone.id', '==', milestone.id),
-                where('source.supporter.uid', '==', user.uid)
+                where('milestoneId', '==', milestone.id),
+                where('supporterId', '==', user.uid)
               ]
               return combineLatest([
                 this.supportService.valueChanges(recipientQuery, { goalId }),

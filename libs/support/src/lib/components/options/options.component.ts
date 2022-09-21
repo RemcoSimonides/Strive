@@ -19,20 +19,20 @@ export class SupportOptionsComponent {
 
   updateStatus(status: SupportStatus) {
     if (!this.support.id) return
-    this.supportService.update(this.support.id, { status }, { params: { goalId: this.support.source.goal.id }})
+    this.supportService.update(this.support.id, { status }, { params: { goalId: this.support.goalId }})
     this.popoverCtrl.dismiss()
   }
 
   give() {
     this.alertCtrl.create({
-      subHeader: `The ${this.support.source.milestone?.id ? 'milestone' : 'goal'} is not completed yet`,
+      subHeader: `The ${this.support.milestoneId ? 'milestone' : 'goal'} is not completed yet`,
       message: `Are you sure you want to give this support already?`,
       buttons: [
         {
           text: 'Yes',
           handler: async () => {
             if (!this.support.id) return
-            this.supportService.update(this.support.id, { status: 'waiting_to_be_paid' }, { params: { goalId: this.support.source.goal.id }})
+            this.supportService.update(this.support.id, { status: 'waiting_to_be_paid' }, { params: { goalId: this.support.goalId }})
           }
         },
         {
@@ -53,7 +53,7 @@ export class SupportOptionsComponent {
           text: 'Yes',
           handler: async () => {
             if (!this.support.id) return
-            this.supportService.remove(this.support.id, { params: { goalId: this.support.source.goal.id }})
+            this.supportService.remove(this.support.id, { params: { goalId: this.support.goalId }})
             this.popoverCtrl.dismiss()
           }
         },

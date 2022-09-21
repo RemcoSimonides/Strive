@@ -5,17 +5,16 @@ import {
   createGoal,
   Goal,
   createGoalSource,
-  createSupport,
+  createSupportBase,
   createMilestone,
   GoalStakeholder,
-  User,
   createAggregation,
   createAlgoliaGoal
 } from '@strive/model'
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
-import { deleteCollection, getDocument, toDate } from '../../shared/utils'
+import { deleteCollection, toDate } from '../../shared/utils'
 import { addGoalEvent } from '../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../shared/goal-story/story'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
@@ -116,10 +115,6 @@ export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
       updateGoalStakeholders(goalId, after)
     }
 
-    if (before.title !== after.title || before.image !== after.image) {
-      updateSources(after)
-    }
-
     if (becameFinished) {
       const batch = db.batch()
       const stakeholders = await db.collection(`Goals/${goalId}/GStakeholders`).where('focus.on', '==', true).get()
@@ -177,22 +172,6 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
   return Promise.all(promises)
 }
 
-async function updateSources(goal: Goal) {
-  let batch = db.batch()
-
-  const source = {
-    'source.goal.title': goal.title,
-    'source.goal.image': goal.image
-  }
-
-  // Supports
-  batch = db.batch()
-  const supportSnaps = await db.collection(`Goals/${goal.id}/Supports`).get()
-  logger.log(`Goal title edited. Going to update ${supportSnaps.size} supports`)
-  supportSnaps.forEach(snap => batch.update(snap.ref, source))
-  batch.commit()
-}
-
 export async function supportsNeedDecision(goal: Goal) {
   const milestonesQuery = db.collection(`Goals/${goal.id}/Milestones`)
     .where('status', '==', 'pending')
@@ -213,9 +192,9 @@ export async function supportsNeedDecision(goal: Goal) {
   const batch = db.batch()
   const timestamp = serverTimestamp() as any
   for (const snap of supportsSnap.docs) {
-    const support = createSupport(toDate({ ...snap.data(), id: snap.id }))
+    const support = createSupportBase(toDate({ ...snap.data(), id: snap.id }))
 
-    const milestoneId = support.source.milestone?.id
+    const { milestoneId } = support
     if (milestoneId && !pendingMilestoneIds.includes(milestoneId)) continue // meaning the milestone of this support is not pending and thus skip
     
     support.needsDecision = timestamp

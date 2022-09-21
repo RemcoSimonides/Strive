@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
+import { FormControl } from '@angular/forms'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
-import { createUserLink, GoalStakeholder, UserLink } from '@strive/model'
-import { FormControl } from '@angular/forms'
+import { GoalStakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean }
@@ -22,7 +22,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
     this._all = achievers.map(achiever => ({ ...achiever, checked: false }))
   }
 
-  @Input() recipients!: UserLink[]
+  @Input() recipients!: string[]
   showEveryoneOption = true
 
   filter = new FormControl()
@@ -48,7 +48,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
   submit() {
     const selected = this._all.filter(achiever => achiever.checked)
     for (const recipient of selected) {
-      this.recipients.push(createUserLink(recipient))
+      this.recipients.push(recipient.uid)
     }
     this.dismiss()
   }

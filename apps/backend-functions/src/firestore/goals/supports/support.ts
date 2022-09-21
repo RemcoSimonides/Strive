@@ -6,9 +6,10 @@ import {
   createGoalSource,
   EventType,
   createNotificationBase,
-  createSupport,
-  Support,
-  createAggregation
+  createSupportBase,
+  SupportBase,
+  createAggregation,
+  User
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getDocument, toDate } from '../../../shared/utils'
@@ -20,14 +21,14 @@ const { serverTimestamp } = admin.firestore.FieldValue
 export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onCreate(async (snapshot, context) => {
 
-    const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const support = createSupportBase(toDate({ ...snapshot.data(), id: snapshot.id }))
     const goalId = context.params.goalId
 
     // events
     const source = createGoalSource({
       goalId,
-      userId: support.source.supporter.uid,
-      milestoneId: support.source.milestone?.id,
+      userId: support.supporterId,
+      milestoneId: support.milestoneId,
       supportId: support.id
     })
     addGoalEvent('goalSupportCreated', source)
@@ -36,7 +37,7 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
     handleAggregation(undefined, support)
 
     // Set stakeholder as supporter
-    const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.source.supporter.uid}`)
+    const stakeholderRef = db.doc(`Goals/${goalId}/GStakeholders/${support.supporterId}`)
     const stakeholderSnap = await stakeholderRef.get()
 
     if (stakeholderSnap.exists) {
@@ -48,12 +49,13 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
     } else {
       const goalSnap = await db.doc(`Goals/${goalId}`).get()
       const goal = createGoal(goalSnap.data())
+      const user = await getDocument<User>(`Users/${support.supporterId}`)
 
       // Create new stakeholder
       const goalStakeholder = createGoalStakeholder({
-        uid: support.source.supporter.uid,
-        username: support.source.supporter.username,
-        photoURL: support.source.supporter.username,
+        uid: support.supporterId,
+        username: user.username,
+        photoURL: user.photoURL,
         goalId,
         goalPublicity: goal.publicity,
         isSupporter: true,
@@ -70,8 +72,8 @@ export const supportCreatedHandler = functions.firestore.document(`Goals/{goalId
 export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onUpdate(async snapshot =>  {
 
-    const before = createSupport(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
-    const after = createSupport(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
+    const before = createSupportBase(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
+    const after = createSupportBase(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
 
     // aggregation
     handleAggregation(before, after)
@@ -82,13 +84,13 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     const rejected = before.status !== 'rejected' && after.status === 'rejected'
     const waitingToBePaid = before.status !== 'waiting_to_be_paid' && after.status === 'waiting_to_be_paid'
   
-    const { goal, milestone, supporter, recipient } = after.source
+    const { goalId, milestoneId, supporterId, recipientId } = after
   
     if (needsDecision) {
       let completedSuccessfully: boolean
   
-      if (milestone?.id) {
-        const m = await getDocument<Milestone>(`Goals/${goal.id}/Milestones/${milestone.id}`)
+      if (milestoneId) {
+        const m = await getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`)
         completedSuccessfully = m.status === 'succeeded'
       } else {
         // goals cant fail?
@@ -98,12 +100,12 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
       // send notification to supporter
       const notification = createNotificationBase({
         event: completedSuccessfully ? 'goalSupportStatusPendingSuccessful' : 'goalSupportStatusPendingUnsuccessful',
-        goalId: after.source.goal.id,
-        milestoneId: after.source.milestone?.id,
+        goalId,
+        milestoneId,
         supportId: after.id,
-        userId: after.source.supporter.uid
+        userId: supporterId
       })
-      return sendNotificationToUsers(notification, supporter.uid)
+      return sendNotificationToUsers(notification, supporterId)
     }
 
 
@@ -112,31 +114,31 @@ export const supportChangeHandler = functions.firestore.document(`Goals/{goalId}
     if (rejected) event = 'goalSupportStatusRejected'
     if (waitingToBePaid) event = 'goalSupportStatusWaitingToBePaid'
 
-    if (!recipient) return
-    if (supporter.uid === recipient.uid) return
+    if (!recipientId) return
+    if (supporterId === recipientId) return
     if (event) {
       const notification = createNotificationBase({
         event,
-        goalId: after.source.goal.id,
-        milestoneId: after.source.milestone?.id,
+        goalId,
+        milestoneId,
         supportId: after.id,
-        userId: after.source.supporter.uid
+        userId: supporterId
       })
-      return sendNotificationToUsers(notification, recipient.uid, 'user')
+      return sendNotificationToUsers(notification, recipientId, 'user')
     }
   })
 
 export const supportDeletedHandler = functions.firestore.document(`Goals/{goalId}/Supports/{supportId}`)
   .onDelete(async (snapshot, context) => {
 
-    const support = createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const support = createSupportBase(toDate({ ...snapshot.data(), id: snapshot.id }))
 
     // aggregation
     handleAggregation(support, undefined)
   })
 
 
-function handleAggregation(before: undefined | Support, after: undefined | Support) {
+function handleAggregation(before: undefined | SupportBase, after: undefined | SupportBase) {
   const aggregation = createAggregation()
 
   if (!before && !!after) aggregation.goalsCustomSupports++

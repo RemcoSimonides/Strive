@@ -7,17 +7,17 @@ import { of, switchMap, map, shareReplay } from 'rxjs'
 import { FireCollection } from '@strive/utils/services/collection.service'
 import { UserService } from '@strive/user/user/user.service'
 
-import { createSupport, Support } from '@strive/model'
+import { createSupportBase, SupportBase } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
-export class SupportService extends FireCollection<Support> {
+export class SupportService extends FireCollection<SupportBase> {
   readonly path = 'Goals/:goalId/Supports'
 
   hasSupportNeedingDecision$ = this.user.user$.pipe(
     switchMap(user => {
       if (!user) return of(false)
       const query = [
-        where('source.supporter.uid', '==', user.uid),
+        where('supporterId', '==', user.uid),
         where('needsDecision', '!=', false),
         limit(1)
       ]
@@ -30,9 +30,9 @@ export class SupportService extends FireCollection<Support> {
     super(getFirestore())
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Support>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<SupportBase>) {
     return (snapshot.exists())
-      ? createSupport(toDate({ ...snapshot.data(), id: snapshot.id }))
+      ? createSupportBase(toDate({ ...snapshot.data(), id: snapshot.id }))
       : undefined
   }
 }

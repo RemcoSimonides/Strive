@@ -38,9 +38,8 @@ export const userDeletedHandler = functions.firestore.document(`Users/{uid}`)
     spectatingsSnap.forEach(snap => spectatingBatch.delete(snap.ref))
     spectatingBatch.commit()
 
-    // TODO remove supports
     const supportBatch = db.batch()
-    const supportsSnap = await db.collectionGroup('Supports').where('source.supporter.uid', '==', uid).get()
+    const supportsSnap = await db.collectionGroup('Supports').where('supporterId', '==', uid).get()
     supportsSnap.forEach(snap => supportBatch.delete(snap.ref))
     supportBatch.commit()
 
@@ -74,8 +73,7 @@ export const userChangeHandler = functions.firestore.document(`Users/{uid}`)
 
       await Promise.all([
         updateGoalStakeholders(uid, after), 
-        updateSpectators(uid, after),
-        updateSupports(uid, after)
+        updateSpectators(uid, after)
       ])
     }
 
@@ -117,23 +115,4 @@ async function updateSpectators(uid: string, after: User) {
   }
 
   return Promise.all(promises)
-}
-
-async function updateSupports(uid: string, after: User) {
-  const [ recipient, supporter ] = await Promise.all([
-    db.collectionGroup(`Supports`).where('source.recipient.uid', '==', uid).get(),
-    db.collectionGroup(`Supports`).where('source.supporter.uid', '==', uid).get()
-  ])
-
-  const user = createUserLink(after)
-
-  // !!! batch can update up to 500 documents. Should update per 500 docs
-  const recipientBatch = db.batch()
-  recipient.forEach(snap => recipientBatch.update(snap.ref, { recipient: user }))
-
-  const supporterBatch = db.batch()
-  supporter.forEach(snap => supporterBatch.update(snap.ref, { supporter: user }));
-
-  recipientBatch.commit()
-  supporterBatch.commit()
 }

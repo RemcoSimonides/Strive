@@ -211,7 +211,7 @@
       "queryScope": "COLLECTION_GROUP",
       "fields": [
         {
-          "fieldPath": "source.supporter.uid",
+          "fieldPath": "supporterId",
           "order": "ASCENDING"
         },
         {
@@ -225,7 +225,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "source.supporter.uid",
+          "fieldPath": "supporterId",
           "order": "ASCENDING"
         },
         {
@@ -358,7 +358,7 @@
     },
     {
       "collectionGroup": "Supports",
-      "fieldPath": "source.recipient.uid",
+      "fieldPath": "recipientId",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -380,7 +380,7 @@
     },
     {
       "collectionGroup": "Supports",
-      "fieldPath": "source.supporter.uid",
+      "fieldPath": "supporterId",
       "indexes": [
         {
           "order": "ASCENDING",

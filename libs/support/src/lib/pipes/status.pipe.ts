@@ -11,7 +11,7 @@ function getStatusLabel(support: Support) {
   }
 
   if (support.status === 'open') {
-    return support.source.milestone?.id
+    return support.milestoneId
       ? 'Waiting for milestone to be completed'
       : 'Waiting for goal to be completed'
   } else {

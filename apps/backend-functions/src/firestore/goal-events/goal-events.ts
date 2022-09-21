@@ -1,4 +1,4 @@
-import { Goal, GoalEvent, createNotificationBase, Support } from '@strive/model'
+import { Goal, GoalEvent, createNotificationBase, SupportBase } from '@strive/model'
 import { logger } from 'firebase-functions';
 import { functions } from '../../internals/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification';
@@ -141,11 +141,11 @@ export const goalEventCreatedHandler = functions.firestore.document(`GoalEvents/
       }
 
       case 'goalSupportCreated': {
-        const support = await getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`)
-        const { recipient, supporter } = support.source
-        if (recipient.uid === supporter.uid) return
+        const support = await getDocument<SupportBase>(`Goals/${goalId}/Supports/${supportId}`)
+        const { recipientId, supporterId } = support
+        if (recipientId === supporterId) return
 
-        return sendNotificationToUsers(notification, recipient.uid, 'user')
+        return sendNotificationToUsers(notification, recipientId, 'user')
       }
 
       default:

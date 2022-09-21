@@ -38,9 +38,9 @@
         <ion-label class="ion-text-wrap">
           <article>
             <b>{{ support.description }} {{ support.status !== 'open' ? '(Given)' : ''}}</b>
-            <small>Recipient: {{ support.source.recipient.username }}</small>
+            <small>Recipient: {{ support.recipient?.username }}</small>
             <ng-container *ngIf="origin === 'goal'">
-              <small *ngIf="support.source.milestone?.content">Milestone: {{ support.source.milestone?.content }}</small>
+              <small *ngIf="support.milestone?.content">Milestone: {{ support.milestone?.content }}</small>
             </ng-container>
           </article>
         </ion-label>
@@ -62,14 +62,14 @@
       <ion-list>
         <ion-item *ngFor="let support of supports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
           <ion-avatar slot="start">
-            <img [ref]="support.source.supporter.photoURL" asset="profile.png">
+            <img [ref]="support.supporter?.photoURL" asset="profile.png">
           </ion-avatar>
           <ion-label class="ion-text-wrap">
             <article>
               <b>{{ support.description }} {{ support.status !== 'open' ? '(Received)' : ''}}</b>
-              <small>Supporter: {{ support.source.supporter.username }}</small>
+              <small>Supporter: {{ support.supporter?.username }}</small>
               <ng-container *ngIf="origin === 'goal'">
-                <small *ngIf="support.source.milestone?.content">Milestone: {{ support.source.milestone?.content }}</small>
+                <small *ngIf="support.milestone?.content">Milestone: {{ support.milestone?.content }}</small>
               </ng-container>
             </article>
           </ion-label>

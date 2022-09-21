@@ -152,11 +152,11 @@ service cloud.firestore {
     }
 
     function isSupporter(goalId, supportId) {
-      return getSupport(goalId, supportId).source.supporter.uid == request.auth.uid
+      return getSupport(goalId, supportId).supporterId == request.auth.uid
     }
 
     function isSupporterOrRecipient(goalId, supportId) {
-      return (getSupport(goalId, supportId).source.supporter.uid == request.auth.uid || getSupport(goalId, supportId).source.recipient.uid == request.auth.uid)
+      return (getSupport(goalId, supportId).supporterId == request.auth.uid || getSupport(goalId, supportId).recipientId == request.auth.uid)
     }
 
     function getSupport(goalId, supportId) {

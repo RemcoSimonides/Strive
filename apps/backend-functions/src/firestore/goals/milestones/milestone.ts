@@ -5,7 +5,7 @@ import {
   createMilestone,
   Milestone,
   createGoalSource,
-  createSupport
+  SupportBase
 } from '@strive/model'
 
 // Shared
@@ -132,11 +132,12 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
   
   // TODO batch might get bigger than 500
   const batch = db.batch()
-  for (const snap of supportsSnap.docs) {
-    const support = createSupport(toDate({ ...snap.data(), id: snap.id }))
-    support.needsDecision = serverTimestamp() as any
+  for (const doc of supportsSnap.docs) {
+    const support: Partial<SupportBase> = {
+      needsDecision: serverTimestamp() as any
+    }
 
-    batch.update(snap.ref, support as any) // TODO remove any when updating pacakges https://github.com/firebase/firebase-js-sdk/issues/5853
+    batch.update(doc.ref, support)
   }
   batch.commit()
 }

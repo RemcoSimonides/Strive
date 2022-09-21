@@ -1,25 +1,27 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { ModalController, PopoverController } from '@ionic/angular';
-import { where } from 'firebase/firestore';
-// Rxjs
-import { Observable, of } from 'rxjs';
-// Services
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { FormControl, Validators } from '@angular/forms'
+import { Location } from '@angular/common'
+import { ModalController, PopoverController } from '@ionic/angular'
+import { where } from 'firebase/firestore'
+import { joinWith } from 'ngfire'
+
+import { compareAsc } from 'date-fns'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
+
+import { Observable, of } from 'rxjs'
+import { map, switchMap } from 'rxjs/operators'
+
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/support.service'
 import { UserService } from '@strive/user/user/user.service'
-// Interfaces
-import { Goal, Milestone, createSupport, Support, createUserLink, UserLink } from '@strive/model'
-// Components
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { map, switchMap } from 'rxjs/operators';
-import { SupportOptionsComponent } from '../options/options.component';
-import { ModalDirective } from '@strive/utils/directives/modal.directive';
-import { createSupportSource } from '@strive/model';
-import { FormControl, Validators } from '@angular/forms';
-import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { compareAsc } from 'date-fns'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+
+import { Goal, Milestone, createSupportBase, Support } from '@strive/model'
+
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { SupportOptionsComponent } from '../options/options.component'
+import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
 
 @Component({
   selector: '[goalId] support-add',
@@ -43,6 +45,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
   constructor(
     private goalService: GoalService,
     protected override location: Location,
+    private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private stakeholderService: GoalStakeholderService,
@@ -61,9 +64,13 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       switchMap(user => {
         if (!user) return of([])
         return this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('source.recipient.uid', '==', user.uid), where('source.milestone.id', '==', this.milestone!.id)], params)
-          : this.supportService.valueChanges([where('source.recipient.uid', '==', user.uid)], params)
+          ? this.supportService.valueChanges([where('recipientId', '==', user.uid), where('milestoneId', '==', this.milestone!.id)], params)
+          : this.supportService.valueChanges([where('recipientId', '==', user.uid)], params)
       }),
+      joinWith({
+        supporter: ({ supporterId }) => this.user.valueChanges(supporterId),
+        milestone: ({ milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId) : of(undefined)
+      }, { shouldAwait: true }),
       map(supports => supports.sort((a, b) => compareAsc(a.createdAt!, b.createdAt!))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
     )
@@ -72,9 +79,13 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       switchMap(user => {
         if (!user) return of([])
         return this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('source.supporter.uid', '==', user.uid), where('source.milestone.id', '==', this.milestone!.id), ], params)
-          : this.supportService.valueChanges([where('source.supporter.uid', '==', user.uid)], params)
+          ? this.supportService.valueChanges([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone!.id), ], params)
+          : this.supportService.valueChanges([where('supporterId', '==', user.uid)], params)
       }),
+      joinWith({
+        recipient: ({ recipientId }) => this.user.valueChanges(recipientId),
+        milestone: ({ milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId) : of(undefined)
+      }, { shouldAwait: true }),
       map(supports => supports.sort((a, b) => compareAsc(a.createdAt!, b.createdAt!))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
     )
@@ -91,43 +102,35 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
 
   async addSupport(goal: Goal) {
     if (this.form.invalid) return
+    if (!this.user.uid) return
 
-    const support = createSupport({
+    const support = createSupportBase({
       description: this.form.value,
-      source: createSupportSource({
-        goal,
-        milestone: this.milestone,
-        supporter: this.user.user
-      })
+      goalId: goal.id,
+      milestoneId: this.milestone?.id,
+      supporterId: this.user.uid
     })
 
     if (this.milestone?.achieverId) {
-      const user = await this.user.getValue(this.milestone.achieverId)
-      support.source.recipient = createUserLink(user)
+      support.recipientId = this.milestone.achieverId
       this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     }
 
     const achievers = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId: this.goalId })
     if (achievers.length === 1) {
-      support.source.recipient = createUserLink(achievers[0])
+      support.recipientId = achievers[0].uid
       this.form.setValue('')
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     } else {
-      const recipients: UserLink[] = []
+      const recipients: string[] = []
       const modal = await this.modalCtrl.create({
         component: AchieversModalComponent,
         componentProps: { recipients, achievers }
       })
       modal.onDidDismiss().then(_ => {
-        for (const recipient of recipients) {
-          const result = createSupport({
-            ...support,
-            source: createSupportSource({
-              ...support.source,
-              recipient
-            })
-          })
+        for (const recipientId of recipients) {
+          const result = createSupportBase({ ...support, recipientId })
           this.supportService.add(result, { params: { goalId: this.goalId }})
         }
       })

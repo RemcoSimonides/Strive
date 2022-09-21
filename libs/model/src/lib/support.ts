@@ -1,62 +1,42 @@
-import { createGoalLink, createMilestoneLink, createUserLink, Goal, GoalLink, Milestone, MilestoneLink, User, UserLink } from '@strive/model'
+import { Goal, Milestone, User } from '@strive/model'
 
 export type SupportDecision = 'give' | 'keep'
 export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
 
-export interface SupportLink {
-  id: string
-  description: string
-}
-
-export interface Support {
+export interface SupportBase {
   id?: string
-  amount?: number
   description: string
   status: SupportStatus
   needsDecision: Date | false
-  source: SupportSource
+  goalId: string
+  milestoneId?: string
+  supporterId: string
+  recipientId: string
   updatedAt?: Date
   createdAt?: Date
 }
 
-export interface SupportSource {
-  goal: GoalLink
-  milestone?: MilestoneLink
-  supporter: UserLink
-  recipient: UserLink
+export interface Support extends SupportBase {
+  recipient?: User
+  supporter?: User
+  goal?: Goal
+  milestone?: Milestone
 }
 
-export function createSupport(params: Partial<Support> = {}): Support {
-  return {
-    id: '',
-    description: '',
-    status: 'open',
-    needsDecision: false,
-    source: createSupportSource(params.source),
-    ...params
-  }
-}
-
-export function createSupportLink(params: Partial<Support | SupportLink> = {}): SupportLink {
-  return {
+export function createSupportBase(params: Partial<SupportBase> = {}): SupportBase {
+  const support: SupportBase = {
     id: params.id ?? '',
-    description: params.description ?? ''
+    description: params.description ?? '',
+    status: params.status ?? 'open',
+    needsDecision: params.needsDecision ?? false,
+    goalId: params.goalId ?? '',
+    supporterId: params.supporterId ?? '',
+    recipientId: params.recipientId ?? '',
+    updatedAt: params.updatedAt ?? new Date(),
+    createdAt: params.createdAt ?? new Date()
   }
-}
+  
+  if (params.milestoneId) support.milestoneId = params.milestoneId
 
-export function createSupportSource(params: {
-  goal?: GoalLink | Goal
-  milestone?: MilestoneLink | Milestone
-  supporter?: UserLink | User
-  recipient?: UserLink | User
-} = {}): SupportSource {
-  const source: SupportSource = {
-    goal: createGoalLink(params?.goal),
-    supporter: createUserLink(params?.supporter),
-    recipient: createUserLink(params?.recipient)
-  }
-
-  if (params?.milestone?.id) source.milestone = createMilestoneLink(params.milestone)
-
-  return source
+  return support
 }

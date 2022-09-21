@@ -93,7 +93,7 @@ export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals
     if (stakeholder.isSupporter) {
       changeNumberOfSupporters(goalId, -1)
 
-      const snaps = await db.collection(`Goals/${goalId}/Supports`).where('source.supporter.uid', '==', stakeholder.uid).get()
+      const snaps = await db.collection(`Goals/${goalId}/Supports`).where('supporterId', '==', stakeholder.uid).get()
       const batch = db.batch()
       for (const doc of snaps.docs) {
         batch.delete(doc.ref)
