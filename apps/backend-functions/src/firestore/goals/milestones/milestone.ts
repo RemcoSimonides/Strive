@@ -76,13 +76,6 @@ export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalI
       })
     }
 
-    // update source
-    if (before.content !== after.content) {
-      // DANGEROUS! because content is updated every 500ms automatically when changing. Better to have enum.gRoadmapUpdated event and schedule to update it max 1x per hour
-      // OR use milestoneId only in sources
-      await updateContentInSources(goalId, after)
-    }
-
     // scheduled tasks
     if (before.status === 'pending' && (after.status === 'succeeded' || after.status === 'failed')) { 
       deleteScheduledTask(milestoneId)
@@ -139,16 +132,5 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
 
     batch.update(doc.ref, support)
   }
-  batch.commit()
-}
-
-async function updateContentInSources(goalId: string, milestone: Milestone) {
-  let batch = db.batch()
-
-  // Supports
-  batch = db.batch()
-  const supportSnaps = await db.collection(`Goals/${goalId}/Supports`).where('source.milestone.id', '==', milestone.id).get()
-  logger.log(`Milestone content edited. Going to update ${supportSnaps.size} supports`)
-  supportSnaps.forEach(snap => batch.update(snap.ref, { 'source.milestone.content': milestone.content }))
   batch.commit()
 }

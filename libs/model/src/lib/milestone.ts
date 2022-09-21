@@ -1,4 +1,4 @@
-import { createUserLink, User, UserLink } from '@strive/model'
+import { User } from '@strive/model'
 import { setDateToEndOfDay } from '@strive/utils/helpers';
 
 export type MilestoneStatus = 'pending' | 'succeeded' | 'failed' | 'overdue'
@@ -23,11 +23,6 @@ export interface Milestone {
   updatedAt?: Date 
   createdAt?: Date
   finishedAt?: Date
-}
-
-export interface MilestoneLink {
-  id: string
-  content: string
 }
 
 export interface MilestoneTemplate {
@@ -57,13 +52,6 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
   if (params.finishedAt) milestone.finishedAt = params.finishedAt
 
   return milestone
-}
-
-export function createMilestoneLink(params: Partial<MilestoneLink | Milestone> = {}): MilestoneLink {
-  return {
-    id: params.id ?? '',
-    content: params.content ?? '',
-  }
 }
 
 export function createSubtask(params: Partial<Subtask> = {}): Subtask {

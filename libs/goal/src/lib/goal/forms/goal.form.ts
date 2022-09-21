@@ -1,26 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { createGoalLink, GoalLink, Goal, createGoal, GoalPublicityType } from '@strive/model'
-
-function createGoalLinkFormControl(params?: GoalLink) {
-  const goalLink = createGoalLink(params)
-  return {
-    id: new FormControl(goalLink.id),
-    title: new FormControl(goalLink.title, [Validators.maxLength(60)]),
-    image: new FormControl(goalLink.image)
-  }
-}
-
-export type GoalLinkFormControl = ReturnType<typeof createGoalLinkFormControl>
-
-export class GoalLinkForm extends FormGroup<GoalLinkFormControl> {
-  constructor(goalLink?: GoalLink) {
-    super(createGoalLinkFormControl(goalLink))
-  }
-
-  get id() { return this.get('id')! }
-  get title() { return this.get('title')! }
-  get image() { return this.get('image')! }
-}
+import { Goal, createGoal, GoalPublicityType } from '@strive/model'
 
 function createGoalFormControl(params?: Partial<Goal>) {
   const goal = createGoal(params)

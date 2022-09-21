@@ -1,6 +1,6 @@
-import { db, functions, gcsBucket, logger } from '../../internals/firebase'
+import { db, functions, gcsBucket } from '../../internals/firebase'
 
-import { GoalLink, Personal } from '@strive/model'
+import { Personal } from '@strive/model'
 import { getDocument, unique } from '../../shared/utils'
 import { Goal, createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { groupIds, templateIds } from './ids'
@@ -10,7 +10,7 @@ import { getImgIxResourceUrl } from '../../shared/image/image'
 import { isAfter, subDays } from 'date-fns'
 
 
-function getFocusData(goal: Goal, stakeholder: GoalStakeholder): { goal: GoalLink, stakeholder: GoalStakeholder } {
+function getFocusData(goal: Goal, stakeholder: GoalStakeholder): { goal: Partial<Goal>, stakeholder: GoalStakeholder } {
   return {
     goal: {
       id: goal.id,

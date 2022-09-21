@@ -31,12 +31,6 @@ export interface Goal {
   createdAt?: Date
 }
 
-export interface GoalLink {
-  id: string
-  title: string
-  image: string
-}
-
 export interface AlgoliaGoal {
   objectID?: string
   id: string
@@ -74,14 +68,6 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     publicity: 'public',
     title: '',
     ...params,
-  }
-}
-
-export function createGoalLink(params: Partial<GoalLink | Goal> = {}): GoalLink {
-  return {
-    id: params.id ?? '',
-    title: params.title ?? '',
-    image: params.image ?? ''
   }
 }
 

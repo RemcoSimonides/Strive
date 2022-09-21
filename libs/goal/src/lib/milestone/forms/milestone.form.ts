@@ -1,5 +1,5 @@
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms'
-import { createMilestone, createMilestoneLink, createSubtask, Milestone, MilestoneLink, Subtask } from '@strive/model'
+import { createMilestone, createSubtask, Milestone, Subtask } from '@strive/model'
 
 function createMilestoneFormControl(params: Partial<Milestone> = {}) {
   const milestone = createMilestone(params)
@@ -26,25 +26,6 @@ export class MilestoneForm extends FormGroup<MilestoneFormControl> {
   get description() { return this.get('description')! }
   get deadline() { return this.get('deadline')! }
   get subtasks() { return this.get('subtasks')! }
-}
-
-function createMilestoneLinkFormControl(params?: MilestoneLink) {
-  const milestoneLink = createMilestoneLink(params)
-  return {
-    id: new FormControl(milestoneLink.id),
-    content: new FormControl(milestoneLink.content)
-  }
-}
-
-export type MilestoneLinkFormControl = ReturnType<typeof createMilestoneLinkFormControl>
-
-export class MilestoneLinkForm extends FormGroup<MilestoneLinkFormControl> {
-  constructor(milestoneLink?: MilestoneLink) {
-    super(createMilestoneLinkFormControl(milestoneLink))
-  }
-
-  get id() { return this.get('id')! }
-  get content() { return this.get('content')! }
 }
 
 function createSubtaskFormControl(params?: Subtask) {
