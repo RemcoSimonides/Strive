@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { PersonalService } from '@strive/user/personal/personal.service';
-import { map } from "rxjs";
-import { FcmService } from "@strive/utils/services/fcm.service";
-import { ToastController } from "@ionic/angular";
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ToastController } from '@ionic/angular'
+import { map } from 'rxjs'
+import { PersonalService } from '@strive/user/personal/personal.service'
 
 @Component({
   selector: 'exercises-activate-push-notification',
@@ -16,16 +15,15 @@ export class ActivatePushNotificationsComponent {
     map(personal => !personal?.fcmTokens?.length)
   )
 
-  fcmNotSupported$ = this.fcm.fcmIsSupported.then(isSupported => !isSupported)
+  fcmNotSupported$ = this.personal.fcmIsSupported.then(isSupported => !isSupported)
 
   constructor(
-    private fcm: FcmService,
     private personal: PersonalService,
     private toast: ToastController,
   ) {}
 
   async pushNotifications() {
-    const res = await this.fcm.registerFCM()
+    const res = await this.personal.registerFCM()
     if (res) {
       this.toast.create({
         message: 'Push notifications actived',

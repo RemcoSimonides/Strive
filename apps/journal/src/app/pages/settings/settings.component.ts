@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { PersonalService } from '@strive/user/personal/personal.service'
 import { isSafari } from '@strive/utils/helpers'
-import { FcmService } from '@strive/utils/services/fcm.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { getAuth } from 'firebase/auth'
 
@@ -17,30 +17,30 @@ import { getAuth } from 'firebase/auth'
 export class SettingsPageComponent {
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
-  fcmIsSupported = this.fcm.fcmIsSupported
+  fcmIsSupported = this.personalService.fcmIsSupported
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
 
   fcmActive = false
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private fcm: FcmService,
+    private personalService: PersonalService,
     private location: Location,
     private modalCtrl: ModalController,
     private pwa: PWAService,
     private router: Router
   ) {
-    this.fcm.fcmActive$.subscribe(value => {
+    this.personalService.fcmActive$.subscribe(value => {
       this.fcmActive = value
       this.cdr.markForCheck()
     })
   }
 
   registerFCM() {
-    if (this.fcm.fcmActive$.value) {
-      this.fcm.unregisterFCM()
+    if (this.personalService.fcmActive$.value) {
+      this.personalService.unregisterFCM()
     } else {
-      this.fcm.registerFCM()
+      this.personalService.registerFCM()
     }
   }
 

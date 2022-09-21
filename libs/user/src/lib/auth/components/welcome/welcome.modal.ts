@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Router } from "@angular/router";
-import { ModalController } from "@ionic/angular";
-import { SwiperComponent } from "swiper/angular";
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core'
+import { Router } from '@angular/router'
+import { ModalController } from '@ionic/angular'
+import { SwiperComponent } from 'swiper/angular'
 
-import { FcmService } from "@strive/utils/services/fcm.service";
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component';
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
+import { PersonalService } from '@strive/user/personal/personal.service'
 
 
 @Component({
@@ -17,12 +17,12 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 export class WelcomeModalComponent {
   @ViewChild('swiper') swiper?: SwiperComponent;
 
-  showStep1$ = this.fcm.fcmIsSupported;
+  showStep1$ = this.personalService.fcmIsSupported;
   showStep2 = false;
 
   constructor(
-    private fcm: FcmService,
     private modalCtrl: ModalController,
+    private personalService: PersonalService,
     private router: Router
   ) {
     const pages = ['/goal/', '/profile', '/exercise']
@@ -43,7 +43,7 @@ export class WelcomeModalComponent {
   }
 
   pushNotifications() {
-    this.fcm.registerFCM()
+    this.personalService.registerFCM()
     this.next()
   }
 

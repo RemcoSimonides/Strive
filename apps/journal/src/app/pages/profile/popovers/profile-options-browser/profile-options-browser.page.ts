@@ -4,11 +4,11 @@ import { PopoverController, ModalController } from '@ionic/angular'
 import { getAuth } from 'firebase/auth'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { FcmService } from '@strive/utils/services/fcm.service'
 import { NotificationService } from '@strive/notification/notification.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { UserService } from '@strive/user/user/user.service'
 import { isSafari } from '@strive/utils/helpers'
+import { PersonalService } from '@strive/user/personal/personal.service'
 
 @Component({
   selector: 'journal-profile-options-browser',
@@ -22,11 +22,11 @@ export class ProfileOptionsBrowserComponent {
 
   constructor(
     private modalCtrl: ModalController,
+    private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     public pwa: PWAService,
     private router: Router,
     private user: UserService,
-    private fcm: FcmService,
     private notification: NotificationService
   ) {}
 
@@ -41,7 +41,7 @@ export class ProfileOptionsBrowserComponent {
   }
 
   pushNotifications() {
-    this.fcm.registerFCM()
+    this.personalService.registerFCM()
     this.popoverCtrl.dismiss()
   }
 

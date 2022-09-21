@@ -7,7 +7,7 @@ import { toDate } from 'ngfire'
 
 import { FireCollection } from '@strive/utils/services/collection.service'
 
-import { createUser, User } from '@strive/model';
+import { createUser, User } from '@strive/model'
 
 import { map, switchMap, take, tap } from 'rxjs/operators'
 import { BehaviorSubject, Observable, of, shareReplay } from 'rxjs'

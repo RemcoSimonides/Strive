@@ -1,18 +1,20 @@
-import { Component, HostListener, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { Platform, ModalController, PopoverController } from '@ionic/angular';
+import { Component, HostListener, OnDestroy } from '@angular/core'
+import { Router, NavigationEnd } from '@angular/router'
+import { Platform, ModalController, PopoverController } from '@ionic/angular'
+import { Unsubscribe } from 'firebase/firestore'
 
-import { TabsComponent } from './pages/tabs/tabs.component';
+import { filter, first, firstValueFrom } from 'rxjs'
+
+import { TabsComponent } from './pages/tabs/tabs.component'
 
 import { UserService } from '@strive/user/user/user.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { filter, first, firstValueFrom } from 'rxjs';
-import { NotificationService } from '@strive/notification/notification.service';
-import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page';
-import { Unsubscribe } from 'firebase/firestore';
-import { FcmService } from '@strive/utils/services/fcm.service';
+import { NotificationService } from '@strive/notification/notification.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
+
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 
 @Component({
   selector: 'strive-root',
@@ -30,9 +32,9 @@ export class AppComponent implements OnDestroy {
   private fcmUnsubscribe?: Unsubscribe | undefined
 
   constructor(
-    private fcm: FcmService,
     private modalCtrl: ModalController,
     private notification: NotificationService,
+    private personalService: PersonalService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
@@ -47,11 +49,11 @@ export class AppComponent implements OnDestroy {
       // this.splashScreen.hide();
 
       if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
-        this.fcm.addListenersCapacitor()
+        this.personalService.addListenersCapacitor()
       }
 
       if (this.platform.is('mobileweb')) {
-        this.fcm.showMessages().then(res => {
+        this.personalService.showMessages().then(res => {
           this.fcmUnsubscribe = res
         })
       }
