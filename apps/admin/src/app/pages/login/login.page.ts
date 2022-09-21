@@ -11,7 +11,7 @@ import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopu
   styleUrls: ['./login.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginPage {
+export class LoginComponent {
 
   passwordType = 'password';
   passwordIcon = 'eye-off-outline';
