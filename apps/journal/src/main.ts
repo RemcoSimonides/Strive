@@ -10,9 +10,17 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic()
+function bootstrap() {
+  platformBrowserDynamic()
   .bootstrapModule(AppModule)
+  // Call the element loader after the platform has been bootstrapped
+  .then(() => defineCustomElements(window))
   .catch((err) => console.error(err));
+};
 
-// Call the element loader after the platform has been bootstrapped
-defineCustomElements(window);
+
+ if (document.readyState === 'complete') {
+   bootstrap();
+ } else {
+   document.addEventListener('DOMContentLoaded', bootstrap);
+ }

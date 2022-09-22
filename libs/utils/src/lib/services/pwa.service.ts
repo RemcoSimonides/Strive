@@ -1,4 +1,5 @@
-import { Injectable, ApplicationRef, OnDestroy } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, ApplicationRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { ToastController } from '@ionic/angular'
 import { ReplaySubject, first, interval, concat, Subscription } from 'rxjs'
@@ -16,7 +17,8 @@ export class PWAService implements OnDestroy {
   constructor(
     appRef: ApplicationRef,
     sw: SwUpdate,
-    toastCtrl: ToastController
+    toastCtrl: ToastController,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true))
     const everyHour$ = interval(1 * 60 * 60 * 1000)
@@ -57,20 +59,22 @@ export class PWAService implements OnDestroy {
   }
 
   addEventListeners() {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault()
-      // Stash the event so it can be triggered later.
-      this.deferredPrompt = e
-      // Update UI notify the user they can install the PWA
-      this.showInstallPromotion$.next(true)
-    })
-
-    window.addEventListener('appinstalled', () => {
-      this.showInstallPromotion$.next(false)
-      // Clear the deferredPrompt so it can be garbage collected
-      this.deferredPrompt = null
-    })
+    if (isPlatformBrowser(this.platformId)) {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault()
+        // Stash the event so it can be triggered later.
+        this.deferredPrompt = e
+        // Update UI notify the user they can install the PWA
+        this.showInstallPromotion$.next(true)
+      })
+  
+      window.addEventListener('appinstalled', () => {
+        this.showInstallPromotion$.next(false)
+        // Clear the deferredPrompt so it can be garbage collected
+        this.deferredPrompt = null
+      })
+    }
   }
 
   async showInstallPromotion() {

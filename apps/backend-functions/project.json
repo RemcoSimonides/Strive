@@ -5,12 +5,16 @@
   "targets": {
     "build": {
       "executor": "@nrwl/node:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/backend-functions",
         "main": "apps/backend-functions/src/main.ts",
         "tsConfig": "apps/backend-functions/tsconfig.app.json",
-        "assets": ["apps/backend-functions/src/package.json"]
+        "assets": [
+          "apps/backend-functions/src/package.json"
+        ]
       },
       "configurations": {
         "production": {
@@ -39,21 +43,27 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/backend-functions/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/backend-functions/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/backend-functions"],
+      "outputs": [
+        "coverage/apps/backend-functions"
+      ],
       "options": {
         "jestConfig": "apps/backend-functions/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "deploy-functions": {
-      "builder": "@nrwl/workspace:run-commands",
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "firebase deploy --only functions"
       }

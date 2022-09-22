@@ -5,9 +5,11 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
-        "outputPath": "dist/apps/journal",
+        "outputPath": "dist/apps/journal/browser",
         "index": "apps/journal/src/index.html",
         "main": "apps/journal/src/main.ts",
         "polyfills": "apps/journal/src/polyfills.ts",
@@ -29,7 +31,10 @@
             "output": "./assets"
           }
         ],
-        "styles": ["apps/journal/src/global.scss", "apps/journal/src/theme/variables.scss"],
+        "styles": [
+          "apps/journal/src/global.scss",
+          "apps/journal/src/theme/variables.scss"
+        ],
         "scripts": [],
         "ngswConfigPath": "apps/journal/ngsw-config.json"
       },
@@ -87,16 +92,61 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/journal/**/*.ts", "apps/journal/**/*.html"]
+        "lintFilePatterns": [
+          "apps/journal/**/*.ts",
+          "apps/journal/**/*.html"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/journal"],
+      "outputs": [
+        "coverage/apps/journal"
+      ],
       "options": {
         "jestConfig": "apps/journal/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "server": {
+      "executor": "@angular-devkit/build-angular:server",
+      "options": {
+        "outputPath": "dist/apps/journal/server",
+        "main": "apps/journal/src/ssr.server.ts",
+        "tsConfig": "apps/journal/tsconfig.server.json",
+        "inlineStyleLanguage": "scss"
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media",
+          "fileReplacements": [
+            {
+              "replace": "environments/environment.ts",
+              "with": "environments/environment.prod.ts"
+            }
+          ]
+        },
+        "development": {
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "journal:build:development",
+          "serverTarget": "journal:server:development"
+        },
+        "production": {
+          "browserTarget": "journal:build:production",
+          "serverTarget": "journal:server:production"
+        }
+      },
+      "defaultConfiguration": "development"
     }
   },
   "tags": []

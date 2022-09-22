@@ -50,7 +50,7 @@ Sentry.init(
     // AngularFirestoreModule.enablePersistence(),
     AppRoutingModule,
     RouterModule,
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'journal' }),
     FlexLayoutModule,
     IonicModule.forRoot(),
     // Strive
