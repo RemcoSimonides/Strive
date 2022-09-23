@@ -1,7 +1,7 @@
 {
   "projectType": "application",
   "sourceRoot": "apps/journal/src",
-  "prefix": "strive",
+  "prefix": "journal",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
