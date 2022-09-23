@@ -6,9 +6,9 @@ import { getAuth } from 'firebase/auth'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { NotificationService } from '@strive/notification/notification.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
-import { UserService } from '@strive/user/user/user.service'
 import { isSafari } from '@strive/utils/helpers'
 import { PersonalService } from '@strive/user/personal/personal.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 @Component({
   selector: 'journal-profile-options-browser',
@@ -21,12 +21,12 @@ export class ProfileOptionsBrowserComponent {
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
 
   constructor(
+    private auth: AuthService,
     private modalCtrl: ModalController,
     private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     public pwa: PWAService,
     private router: Router,
-    private user: UserService,
     private notification: NotificationService
   ) {}
 
@@ -36,7 +36,7 @@ export class ProfileOptionsBrowserComponent {
   }
 
   goToProfile() {
-    this.router.navigateByUrl(`/profile/${this.user.uid}`)
+    this.router.navigateByUrl(`/profile/${this.auth.uid}`)
     this.popoverCtrl.dismiss()
   }
 

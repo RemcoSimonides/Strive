@@ -11,8 +11,8 @@ import { isBefore, min } from 'date-fns'
 import { delay } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 
+import { AuthService } from '@strive/user/auth/auth.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { UserService } from '@strive/user/user/user.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -39,9 +39,10 @@ export class GoalsComponent {
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
 
   form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{}'))
+  uid$ = this.auth.uid$
 
   constructor(
-    public user: UserService,
+    private auth: AuthService,
     private goal: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
@@ -50,9 +51,9 @@ export class GoalsComponent {
     private stakeholder: GoalStakeholderService,
     private goalEvent: GoalEventService
   ) {
-    const stakeholders$ = this.user.user$.pipe(
-      filter(user => !!user),
-      switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
+    const stakeholders$ = this.auth.user$.pipe(
+      filter(profile => !!profile),
+      switchMap(profile => this.stakeholder.valueChanges([where('uid', '==', profile?.uid), orderBy('createdAt', 'desc')])),
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
         events: (stakeholder: GoalStakeholder) => {
@@ -87,8 +88,8 @@ export class GoalsComponent {
         if (a.events.length > 0 && b.events.length === 0) return -1
         if (a.events.length === 0 && b.events.length > 0) return 1
 
-        const earliestA = min(a.events.map((event: any) => event.createdAt!))
-        const earliestB = min(b.events.map((event: any) => event.createdAt!))
+        const earliestA = min(a.events.map(event => event.createdAt))
+        const earliestB = min(b.events.map(event => event.createdAt))
         return isBefore(earliestA, earliestB) ? -1 : 1
       }))
     )
@@ -97,8 +98,8 @@ export class GoalsComponent {
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.isAchiever)),
       map(stakeholders => stakeholders.sort((first, second) => {
         // Sort finished goals to the end and in progress goals to top
-        const a = getProgress(first.goal!)
-        const b = getProgress(second.goal!)
+        const a = getProgress(first.goal)
+        const b = getProgress(second.goal)
 
         if (a === b) return 0
         if (b === 1) return -1

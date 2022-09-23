@@ -30,12 +30,12 @@
 <ng-template #noAccess>
 	<section>
 		<p>In order to chat, you need to</p>
-		<ion-button (click)="join()" fill="clear" class="primary" [disabled]="goal.isFinished" [ngClass]="{'fake-disable': stakeholder | joinButtonStatus }">
+		<ion-button (click)="join()" class="primary" [disabled]="goal.isFinished">
 			<ion-icon slot="start" name="flag"></ion-icon>
 			<span>{{ stakeholder | joinButtonText }}</span>
 		</ion-button>
 		<p>or</p>
-		<ion-button (click)="support()" fill="clear" class="secondary">
+		<ion-button (click)="support()" class="secondary">
 			<ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
 			<span>Support</span>
 		</ion-button>

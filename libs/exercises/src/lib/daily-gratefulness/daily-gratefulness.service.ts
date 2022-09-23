@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
-import { toDate } from 'ngfire'
+import { DocumentSnapshot } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 import { firstValueFrom, Observable } from 'rxjs'
 
 import { AES, enc } from 'crypto-js'
 
 import { DailyGratefulness, DailyGratefulnessItem } from '@strive/model'
 
-import { FireCollection } from '@strive/utils/services/collection.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 import { createRandomString } from '@strive/utils/helpers'
 
@@ -15,12 +14,8 @@ import { createRandomString } from '@strive/utils/helpers'
 @Injectable({
   providedIn: 'root'
 })
-export class DailyGratefulnessService extends FireCollection<DailyGratefulness> {
+export class DailyGratefulnessService extends FireSubCollection<DailyGratefulness> {
   readonly path = 'Users/:uid/Exercises'
-
-  constructor() {
-    super(getFirestore())
-  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness | undefined {
     if (!snapshot.exists()) return
@@ -43,11 +38,11 @@ export class DailyGratefulnessService extends FireCollection<DailyGratefulness> 
 @Injectable({
   providedIn: 'root'
 })
-export class DailyGratefulnessItemService extends FireCollection<DailyGratefulnessItem> {
+export class DailyGratefulnessItemService extends FireSubCollection<DailyGratefulnessItem> {
   readonly path = 'Users/:uid/Exercises/DailyGratefulness/Items'
 
   constructor(private personalService: PersonalService) {
-    super(getFirestore())
+    super()
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulnessItem>): DailyGratefulnessItem | undefined {

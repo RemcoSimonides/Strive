@@ -1,11 +1,12 @@
-import { Location } from "@angular/common";
-import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
-import { UserService } from "@strive/user/user/user.service";
-import { UserForm } from "@strive/user/user/forms/user.form";
-import { ScreensizeService } from "@strive/utils/services/screensize.service";
-import { take } from "rxjs/operators";
-import { createUser } from "@strive/model";
-import { ImageSelectorComponent } from "@strive/media/components/image-selector/image-selector.component";
+import { Location } from '@angular/common'
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core'
+import { UserForm } from '@strive/user/user/forms/user.form'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { take } from 'rxjs/operators'
+import { createUser } from '@strive/model'
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
+import { AuthService } from '@strive/user/auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
   selector: 'journal-edit-profile',
@@ -16,15 +17,19 @@ import { ImageSelectorComponent } from "@strive/media/components/image-selector/
 export class EditProfileComponent {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
-  form = new UserForm(this.user.user)
+  form = new UserForm(this.auth.profile)
+
+  isLoggedIn$ = this.auth.isLoggedIn$
+  uid = this.auth.uid
 
   constructor(
+    private auth: AuthService,
     private location: Location,
-    public screensize: ScreensizeService,
-    public user: UserService
+    private profileService: ProfileService,
+    public screensize: ScreensizeService
   ) {
-    this.user.user$.pipe(take(1)).subscribe(user => {
-      this.form.patchValue(createUser(user))
+    this.auth.profile$.pipe(take(1)).subscribe(profile => {
+      this.form.patchValue(createUser(profile))
     })
   }
 
@@ -34,10 +39,10 @@ export class EditProfileComponent {
     }
 
     if (this.form.valid) {
-      this.user.update({ 
-        uid: this.user.uid,
-        photoURL: this.form.photoURL.value!,
-        username: this.form.username.value!
+      this.profileService.update({ 
+        uid: this.auth.uid,
+        photoURL: this.form.photoURL.value,
+        username: this.form.username.value
       })
       this.location.back()
     }

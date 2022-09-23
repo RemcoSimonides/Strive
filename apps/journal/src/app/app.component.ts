@@ -8,7 +8,6 @@ import { filter, first, firstValueFrom } from 'rxjs'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
 
-import { UserService } from '@strive/user/user/user.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
@@ -17,9 +16,10 @@ import { PersonalService } from '@strive/user/personal/personal.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { SeoService } from '@strive/utils/services/seo.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 @Component({
-  selector: 'strive-root',
+  selector: 'journal-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -33,7 +33,10 @@ export class AppComponent implements OnDestroy {
 
   private fcmUnsubscribe?: Unsubscribe | undefined
 
+  profile$ = this.auth.profile$
+
   constructor(
+    private auth: AuthService,
     private modalCtrl: ModalController,
     private notification: NotificationService,
     private personalService: PersonalService,
@@ -43,7 +46,6 @@ export class AppComponent implements OnDestroy {
     public screensize: ScreensizeService,
     private seo: SeoService,
     private support: SupportService,
-    public user: UserService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.platform.ready().then(() => {
@@ -76,7 +78,7 @@ export class AppComponent implements OnDestroy {
     if (isPlatformServer(this.platformId)) return
 
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
-      const isLoggedIn = await firstValueFrom(this.user.isLoggedIn$)
+      const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
       if (isLoggedIn) return
 
       const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']

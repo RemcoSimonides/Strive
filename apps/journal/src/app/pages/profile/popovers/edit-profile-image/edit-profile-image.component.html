@@ -1,6 +1,4 @@
-<ng-container *ngIf="user.user$ | async as user">
-  <media-image-selector [form]="form" [storagePath]="'profiles/' + user.uid"></media-image-selector>
-  <section fxLayout fxLayoutAlign="center">
-    <ion-button color="primary" (click)="update()">Save</ion-button>
-  </section>
-</ng-container>
+<media-image-selector [form]="form" [storagePath]="'profiles/' + uid"></media-image-selector>
+<section fxLayout fxLayoutAlign="center">
+  <ion-button color="primary" (click)="update()">Save</ion-button>
+</section>

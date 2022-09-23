@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-// Rxjs
+import { Inject, Injectable } from '@angular/core'
+import { CanActivate, Router } from '@angular/router'
+
 import { Observable } from 'rxjs'
 import { take, map, tap } from 'rxjs/operators'
-// Services
-import { UserService } from '@strive/user/user/user.service';
+
+import { AuthService } from '../auth.service'
 
 
 @Injectable({
@@ -13,13 +13,13 @@ import { UserService } from '@strive/user/user/user.service';
 export class AuthGuardService implements CanActivate {
 
   constructor(
+    private auth: AuthService,
     private router: Router,
-    private user: UserService,
     @Inject('APP_NAME') private appName: 'journal' | 'admin'
   ) { }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.user.user$.pipe(
+  canActivate(): Observable<boolean> {
+    return this.auth.user$.pipe(
       take(1),
       map(user => !!user),
       tap(loggedIn => {

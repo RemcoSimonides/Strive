@@ -3,10 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { PopoverController, ModalController } from '@ionic/angular'
 
 import { combineLatest, firstValueFrom, Observable, of } from 'rxjs'
-import { distinctUntilChanged, map, pluck, shareReplay, switchMap } from 'rxjs/operators'
+import { distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators'
 
 import { UserSpectateService } from '@strive/user/spectator/spectator.service'
-import { UserService } from '@strive/user/user/user.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 
@@ -21,6 +20,8 @@ import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { SupportingComponent } from '@strive/goal/goal/components/modals/supporting/supporting.component'
+import { AuthService } from '@strive/user/auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
   selector: 'journal-profile',
@@ -29,8 +30,8 @@ import { SupportingComponent } from '@strive/goal/goal/components/modals/support
 })
 export class ProfileComponent {
   private profileId$: Observable<string | undefined> = combineLatest([
-    this.route.params.pipe(pluck('id')),
-    this.user.user$
+    this.route.params.pipe(map(params => params['id'])),
+    this.auth.profile$
   ]).pipe(
     map(([profileId, user]) => profileId ? profileId : user?.uid),
     distinctUntilChanged(),
@@ -38,12 +39,12 @@ export class ProfileComponent {
   )
 
   profile$ = this.profileId$.pipe(
-    switchMap(profileId => profileId ? this.user.valueChanges(profileId) : of(undefined)),
+    switchMap(profileId => profileId ? this.profileService.valueChanges(profileId) : of(undefined)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
   isOwner$ = combineLatest([
-    this.user.user$,
+    this.auth.user$,
     this.profileId$
   ]).pipe(
     map(([user, profileId]) => user?.uid === profileId),
@@ -52,7 +53,7 @@ export class ProfileComponent {
   )
 
   isSpectator$ = combineLatest([
-    this.user.user$,
+    this.auth.user$,
     this.profileId$
   ]).pipe(
     switchMap(([user, profileId]) => user?.uid && profileId ? this.userSpectateService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
@@ -89,10 +90,11 @@ export class ProfileComponent {
   )
 
   constructor(
-    public user: UserService,
+    private auth: AuthService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
@@ -163,7 +165,7 @@ export class ProfileComponent {
   }
 
   async toggleSpectate(spectate: boolean) {
-    if (this.user.uid) {
+    if (this.auth.uid) {
       const profileId = await firstValueFrom(this.profileId$)
       if (profileId) this.userSpectateService.toggleSpectate(profileId, spectate)
     } else {

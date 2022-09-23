@@ -6,9 +6,10 @@ import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-f
 
 import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component'
 import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
-import { UserService } from '@strive/user/user/user.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
+import { AuthService } from '@strive/user/auth/auth.service'
+
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
 import { addDays, addYears, endOfYear, format, isFuture, isPast } from 'date-fns'
@@ -20,7 +21,7 @@ const initial = `Dear Future Self,
 `
 
 @Component({
-  selector: 'strive-dear-future-self',
+  selector: 'journal-dear-future-self',
   templateUrl: './dear-future-self.component.html',
   styleUrls: ['./dear-future-self.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,9 +35,9 @@ export class DearFutureSelfComponent {
   min = format(addDays(new Date(), 1), 'yyyy-MM-dd')
   max = format(endOfYear(addYears(new Date(), 100)), 'yyyy-MM-dd')
 
-  private messages$: Observable<Message[]> = this.user.user$.pipe(
-    switchMap(user => user
-      ? this.dearFutureSelfService.getSettings$(user.uid).pipe(map(settings => settings?.messages ?? []))
+  private messages$: Observable<Message[]> = this.auth.profile$.pipe(
+    switchMap(profile => profile
+      ? this.dearFutureSelfService.getSettings$(profile.uid).pipe(map(settings => settings?.messages ?? []))
       : of([])
     ),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -50,15 +51,15 @@ export class DearFutureSelfComponent {
     map(messages => messages.filter(message => isPast(message.deliveryDate as Date)))
   )
 
-  isLoggedIn$ = this.user.isLoggedIn$
+  isLoggedIn$ = this.auth.isLoggedIn$
 
   constructor(
+    private auth: AuthService,
     private dearFutureSelfService: DearFutureSelfService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
-    private seo: SeoService,
-    private user: UserService
+    private seo: SeoService
   ) {
     this.seo.generateTags({
       title: 'Dear Future Self - Strive Journal',
@@ -67,7 +68,7 @@ export class DearFutureSelfComponent {
   }
 
   async send() {
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
     if (!this.description.dirty || !this.description.value) return
 
     let deliveryDate: Date;
@@ -88,7 +89,7 @@ export class DearFutureSelfComponent {
       createdAt: new Date()
     }
 
-    await this.dearFutureSelfService.addMessage(this.user.uid, message)
+    await this.dearFutureSelfService.addMessage(this.auth.uid, message)
 
     this.description.reset(initial)
     this.date.reset()

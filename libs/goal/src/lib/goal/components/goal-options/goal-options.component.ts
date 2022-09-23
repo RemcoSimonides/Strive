@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController, ModalController, PopoverController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { Router } from '@angular/router'
+import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 import { serverTimestamp } from 'firebase/firestore'
 import { createPost, Goal, GoalStakeholder } from '@strive/model'
-import { UserService } from '@strive/user/user/user.service';
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
-import { GoalService } from '../../goal.service';
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { GoalService } from '../../goal.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 @Component({
-  selector: '[goal][stakeholder] journal-goal-options',
+  selector: '[goal][stakeholder] goal-options',
   templateUrl: './goal-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -19,22 +19,22 @@ export class GoalOptionsComponent {
 
   constructor(
     private alertCtrl: AlertController,
+    private auth: AuthService,
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
-    private router: Router,
-    private user: UserService
+    private router: Router
   ) {}
 
   markFinished() {
-    if (!this.user.uid || !this.goal?.id) throw new Error('uid or goal not provided')
+    if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')
     this.alertCtrl.create({
       header: `Are you sure its finished?`,
       buttons: [
         {
           text: 'Yes',
           handler: async () => {
-            if (!this.user.uid || !this.goal?.id) throw new Error('uid or goal not provided')
+            if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')
             this.goalService.update({
               id: this.goal.id,
               isFinished: serverTimestamp() as any

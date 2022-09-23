@@ -10,7 +10,7 @@
         </a>
       </ng-template>
       <ion-buttons slot="end">
-        <ng-container *ngIf="user.isLoggedIn$ | async else notLoggedIn">
+        <ng-container *ngIf="isLoggedIn$ | async else notLoggedIn">
           <ng-content></ng-content>
           <ion-button routerLink="/notifications">
             <ion-icon slot="icon-only" name="notifications-outline" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>

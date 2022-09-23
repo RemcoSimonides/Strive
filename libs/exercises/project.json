@@ -1,7 +1,7 @@
 {
   "projectType": "library",
   "sourceRoot": "libs/exercises/src",
-  "prefix": "strive",
+  "prefix": "exercise",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",

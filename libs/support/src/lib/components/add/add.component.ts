@@ -11,17 +11,17 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Observable, of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
+import { AuthService } from '@strive/user/auth/auth.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { SupportService } from '@strive/support/support.service'
-import { UserService } from '@strive/user/user/user.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 
 import { Goal, Milestone, createSupportBase, Support } from '@strive/model'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { SupportOptionsComponent } from '../options/options.component'
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
   selector: '[goalId] support-add',
@@ -43,14 +43,15 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
   form = new FormControl('', { validators: [Validators.required, Validators.maxLength(60)], nonNullable: true })
 
   constructor(
+    private auth: AuthService,
     private goalService: GoalService,
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService,
-    private supportService: SupportService,
-    public user: UserService
+    private supportService: SupportService
   ) {
     super(location, modalCtrl)
   }
@@ -60,55 +61,46 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     this.goal$ = this.goalService.valueChanges(this.goalId)
 
     const params = { goalId: this.goalId }
-    this.forYouSupports$ = this.user.user$.pipe(
+    this.forYouSupports$ = this.auth.user$.pipe(
       switchMap(user => {
         if (!user) return of([])
         return this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('recipientId', '==', user.uid), where('milestoneId', '==', this.milestone!.id)], params)
+          ? this.supportService.valueChanges([where('recipientId', '==', user.uid), where('milestoneId', '==', this.milestone?.id)], params)
           : this.supportService.valueChanges([where('recipientId', '==', user.uid)], params)
       }),
       joinWith({
-        supporter: ({ supporterId }) => this.user.valueChanges(supporterId),
+        supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId),
         milestone: ({ milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId) : of(undefined)
       }, { shouldAwait: true }),
-      map(supports => supports.sort((a, b) => compareAsc(a.createdAt!, b.createdAt!))),
+      map(supports => supports.sort((a, b) => compareAsc(a.createdAt, b.createdAt))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
     )
 
-    this.fromYouSupports$ = this.user.user$.pipe(
+    this.fromYouSupports$ = this.auth.user$.pipe(
       switchMap(user => {
         if (!user) return of([])
         return this.origin === 'milestone'
-          ? this.supportService.valueChanges([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone!.id), ], params)
+          ? this.supportService.valueChanges([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone?.id), ], params)
           : this.supportService.valueChanges([where('supporterId', '==', user.uid)], params)
       }),
       joinWith({
-        recipient: ({ recipientId }) => this.user.valueChanges(recipientId),
+        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         milestone: ({ milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId) : of(undefined)
       }, { shouldAwait: true }),
-      map(supports => supports.sort((a, b) => compareAsc(a.createdAt!, b.createdAt!))),
+      map(supports => supports.sort((a, b) => compareAsc(a.createdAt, b.createdAt))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
     )
-  }
-
-  openLoginModal() {
-    this.modalCtrl.create({
-      component: AuthModalComponent,
-      componentProps: {
-        authSegment: enumAuthSegment.login
-      }
-    }).then(modal => modal.present())
   }
 
   async addSupport(goal: Goal) {
     if (this.form.invalid) return
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
 
     const support = createSupportBase({
       description: this.form.value,
       goalId: goal.id,
       milestoneId: this.milestone?.id,
-      supporterId: this.user.uid
+      supporterId: this.auth.uid
     })
 
     if (this.milestone?.achieverId) {

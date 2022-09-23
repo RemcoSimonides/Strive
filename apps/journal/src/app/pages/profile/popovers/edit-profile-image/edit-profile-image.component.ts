@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { NavParams, PopoverController } from '@ionic/angular';
-import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component';
-// Strive
-import { UserService } from '@strive/user/user/user.service';
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { FormControl } from '@angular/forms'
+import { NavParams, PopoverController } from '@ionic/angular'
+
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
+import { AuthService } from '@strive/user/auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
   selector: 'journal-edit-profile-image-popover',
@@ -15,10 +16,13 @@ export class EditProfileImagePopoverComponent implements OnInit {
 
   form?: FormControl
 
+  uid = this.auth.uid
+
   constructor(
+    private auth: AuthService,
     private navParams: NavParams,
     private popoverCtrl: PopoverController,
-    public user: UserService
+    private profileService: ProfileService
   ) { }
 
   ngOnInit() {
@@ -34,7 +38,7 @@ export class EditProfileImagePopoverComponent implements OnInit {
       throw new Error('Nothing to update')
     }
 
-    this.user.update({ uid: this.user.uid, photoURL: this.form.value })
+    this.profileService.update({ uid: this.auth.uid, photoURL: this.form.value })
     this.popoverCtrl.dismiss(this.form.value)
   }
 }

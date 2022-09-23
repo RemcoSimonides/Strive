@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-// Services
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { UserService } from '@strive/user/user/user.service';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, shareReplay, startWith } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { SupportService } from '@strive/support/support.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { NavigationEnd, Router } from '@angular/router'
+
+import { combineLatest } from 'rxjs'
+import { filter, map, shareReplay, startWith } from 'rxjs/operators'
+
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { AuthService } from '@strive/user/auth/auth.service'
+import { SupportService } from '@strive/support/support.service'
 
 @Component({
   templateUrl: 'tabs.component.html',
@@ -21,7 +22,7 @@ export class TabsComponent {
 
   profileActive$ = combineLatest([
     this.route$,
-    this.user.user$.pipe(map(user => user?.uid))
+    this.auth.profile$.pipe(map(profile => profile?.uid))
   ]).pipe(
     map(([nav, uid]) => {
       const url = nav.url
@@ -39,9 +40,10 @@ export class TabsComponent {
   )
 
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
+  profile$ = this.auth.profile$
 
   constructor(
-    public user: UserService,
+    private auth: AuthService,
     public screenSize: ScreensizeService,
     public router: Router,
     private support: SupportService

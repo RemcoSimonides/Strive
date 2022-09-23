@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore, orderBy, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
-import { toDate } from 'ngfire'
+import { DocumentSnapshot, orderBy, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
+import { toDate, FireCollection, WriteOptions } from 'ngfire'
 
 import { combineLatest, Observable, of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
-import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service'
 import { GoalStakeholderService } from '../stakeholder/stakeholder.service'
-import { UserService } from '@strive/user/user/user.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole } from '@strive/model'
 import { getProgress } from './pipes/progress.pipe'
@@ -17,10 +16,10 @@ export class GoalService extends FireCollection<Goal> {
   readonly path = `Goals`
 
   constructor(
-    private stakeholder: GoalStakeholderService,
-    private user: UserService
+    private auth: AuthService,
+    private stakeholder: GoalStakeholderService
   ) { 
-    super(getFirestore())
+    super()
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Goal>) {
@@ -32,12 +31,12 @@ export class GoalService extends FireCollection<Goal> {
   protected override toFirestore(goal: Goal): Goal {
     if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
     if (goal.isFinished === true) goal.isFinished = serverTimestamp() as any
-    goal.updatedBy = this.user.uid
+    goal.updatedBy = this.auth.uid
     return goal
   }
 
   override onCreate(goal: Goal, { write, params }: WriteOptions) {
-    const uid = params?.['uid'] ?? this.user.uid
+    const uid = params?.['uid'] ?? this.auth.uid
     const stakeholder = createGoalStakeholder({
       uid,
       goalId: goal.id,
@@ -57,7 +56,7 @@ export class GoalService extends FireCollection<Goal> {
       constraints = [where('uid', '==', uid), where(role, '==', true), orderBy('createdAt', 'desc')]
     }
 
-    return this.stakeholder.groupChanges(constraints).pipe(
+    return this.stakeholder.valueChanges(constraints).pipe(
       switchMap(stakeholders => {
         const goalIds = stakeholders.map(stakeholder => stakeholder.goalId)
         return combineLatest([
@@ -67,7 +66,7 @@ export class GoalService extends FireCollection<Goal> {
           map(([stakeholders, goals]) => {
             return stakeholders.map(stakeholder => ({
               stakeholder,
-              goal: goals.find(goal => goal.id === stakeholder.goalId)!
+              goal: goals.find(goal => goal.id === stakeholder.goalId) as Goal
             })).filter(result => !!result.goal)
           })
         )
@@ -75,8 +74,8 @@ export class GoalService extends FireCollection<Goal> {
       // Sort finished goals to the end
       map(result => result.sort((first, second)  => {
         // Sort finished goals to the end and in progress goals to top
-        const a = getProgress(first.goal!)
-        const b = getProgress(second.goal!)
+        const a = getProgress(first.goal)
+        const b = getProgress(second.goal)
 
         if (a === b) return 0
         if (b === 1) return -1
@@ -92,10 +91,6 @@ export class GoalService extends FireCollection<Goal> {
   public updateDescription(goalId: string, description: string) {
     return this.update(goalId, { description })
   }
-
-  // public duplicateGoal(goal: Goal): Promise<string> {
-  //   return this.add(createGoal(goal))
-  // }
 
   private setDeadlineToEndOfDay(deadline: string): string {
     const date = new Date(deadline)

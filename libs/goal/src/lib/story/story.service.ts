@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
-import { toDate } from 'ngfire'
-
-import { FireCollection } from '@strive/utils/services/collection.service'
+import { DocumentSnapshot } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 
 import { StoryItem } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
-export class StoryService extends FireCollection<StoryItem> {
+export class StoryService extends FireSubCollection<StoryItem> {
   readonly path = 'Goals/:goalId/Story'
-
-  constructor() {
-    super(getFirestore())
-  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<StoryItem>) {
     return snapshot.exists()

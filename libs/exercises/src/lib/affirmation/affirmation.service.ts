@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
-import { toDate } from 'ngfire'
-import { FireCollection } from '@strive/utils/services/collection.service'
+import { DocumentSnapshot } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 
 import { Affirmations } from '@strive/model'
 
 @Injectable({providedIn: 'root'})
-export class AffirmationService extends FireCollection<Affirmations> {
+export class AffirmationService extends FireSubCollection<Affirmations> {
   readonly path = 'Users/:uid/Exercises'
-
-  constructor() {
-    super(getFirestore())
-  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
     return snapshot.exists()

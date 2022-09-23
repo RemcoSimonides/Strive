@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Location } from '@angular/common'
+import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
-import { UserSpectateService } from '../../spectator.service';
-import { UserService } from '@strive/user/user/user.service';
-import { map, of, switchMap } from 'rxjs';
-import { ModalDirective } from '@strive/utils/directives/modal.directive';
+
+import { map, of, switchMap } from 'rxjs'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
+
+import { UserSpectateService } from '../../spectator.service'
+import { AuthService } from '../../../auth/auth.service'
 
 @Component({
   selector: 'user-followers',
@@ -15,7 +17,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
 })
 export class FollowersComponent extends ModalDirective {
 
-  spectators$ = this.user.user$.pipe(
+  spectators$ = this.auth.user$.pipe(
     map(user => {
       const uid = this.router.url.split('/').pop()
       return uid === 'profile' ? user?.uid : uid
@@ -24,11 +26,11 @@ export class FollowersComponent extends ModalDirective {
   )
 
   constructor(
+    private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private service: UserSpectateService,
-    private router: Router,
-    private user: UserService
+    private router: Router
   ) {
     super(location, modalCtrl)
   }

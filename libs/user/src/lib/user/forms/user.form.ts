@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms'
 import { createUserLink, createUser, User, UserLink } from '@strive/model'
 
 function createUserFormControl(params: Partial<User> = {}) {
@@ -17,9 +17,9 @@ export class UserForm extends FormGroup<UserFormControl> {
     super(createUserFormControl(user))
   }
 
-  get uid() { return this.get('uid')! }
-  get username() { return this.get('username')! }
-  get photoURL() { return this.get('photoURL')! }
+  get uid() { return this.get('uid') as AbstractControl<string> }
+  get username() { return this.get('username') as AbstractControl<string> }
+  get photoURL() { return this.get('photoURL') as AbstractControl<string> }
 }
 
 function createUserLinkFormControl(params: UserLink) {
@@ -38,7 +38,7 @@ export class UserLinkForm extends FormGroup<UserLinkFormControl> {
     super(createUserLinkFormControl(userLink))
   }
 
-  get uid() { return this.get('uid')! }
-  get username() { return this.get('username')! }
-  get photoURL() { return this.get('photoURL')! }
+  get uid() { return this.get('uid') as AbstractControl<string> }
+  get username() { return this.get('username') as AbstractControl<string> }
+  get photoURL() { return this.get('photoURL') as AbstractControl<string> }
 }

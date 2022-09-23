@@ -1,20 +1,24 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getFirestore, where, WriteBatch } from 'firebase/firestore';
-// Services
-import { UserService } from '@strive/user/user/user.service';
-// Interfaces
-import { Spectator, createSpectator } from '@strive/model';
-import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, where, WriteBatch } from 'firebase/firestore'
+import { FireSubCollection, WriteOptions } from 'ngfire'
+
+import { Spectator, createSpectator } from '@strive/model'
+
+import { ProfileService } from '../user/profile.service'
+import { AuthService } from '../auth/auth.service'
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserSpectateService extends FireCollection<Spectator> {
+export class UserSpectateService extends FireSubCollection<Spectator> {
   readonly path = `Users/:uid/Spectators`
   override readonly idKey = 'uid'
 
-  constructor(private user: UserService) {
-    super(getFirestore())
+  constructor(
+    private auth: AuthService,
+    private profile: ProfileService
+  ) {
+    super()
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Spectator>) {
@@ -27,8 +31,8 @@ export class UserSpectateService extends FireCollection<Spectator> {
     const uid = spectator.uid
     if (!params?.['uid']) throw new Error('uid not provided')
     const [current, toBeSpectated] = await Promise.all([
-      this.user.getValue(uid),
-      this.user.getValue(params['uid'])
+      this.profile.getValue(uid),
+      this.profile.getValue(params['uid'])
     ])
 
     if (!current) throw new Error(`Couldn't find current user data`)
@@ -48,27 +52,27 @@ export class UserSpectateService extends FireCollection<Spectator> {
   }
 
   getCurrentSpectator(uidToBeSpectated: string) {
-    if (!this.user.uid) throw new Error('')
-    return this.getSpectator(this.user.uid, uidToBeSpectated)
+    if (!this.auth.uid) throw new Error('')
+    return this.getSpectator(this.auth.uid, uidToBeSpectated)
   }
 
   getSpectator(uidSpectator: string, uidToBeSpectated: string) {
-    return this.getValue(uidSpectator, { uid: uidToBeSpectated })
+    return this.load(uidSpectator, { uid: uidToBeSpectated })
   }
 
   getSpectators(uid: string) {
-    return this.getValue([where('isSpectator', '==', true)], { uid })
+    return this.load([where('isSpectator', '==', true)], { uid })
   }
 
   getSpectating(uid: string) {
-    return this.getGroup([where('uid', '==', uid)])
+    return this.load([where('uid', '==', uid)])
   }
 
   /**
    * @param uid the uid of the user that is going to be spectated
    */
   toggleSpectate(uid: string, spectate: boolean) {
-    this.upsert({ uid: this.user.uid, isSpectator: spectate }, { params: { uid }})
+    this.upsert({ uid: this.auth.uid, isSpectator: spectate }, { params: { uid }})
   }
 
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { FocusForm } from '@strive/goal/stakeholder/forms/focus.form'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
-import { UserService } from '@strive/user/user/user.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 @Component({
   selector: '[goalId] goal-slide-2',
@@ -38,15 +38,15 @@ export class Slide2Component {
   }
 
   constructor(
+    private auth: AuthService,
     private stakeholder: GoalStakeholderService,
-    private user: UserService
   ) {}
 
   step(direction: 'next' | 'previous') {
     if (this.form.dirty) {
 
       this.stakeholder.upsert({
-        uid: this.user.uid,
+        uid: this.auth.uid,
         focus: this.form.getFocus()
       }, { params: { goalId: this.goalId }})
 

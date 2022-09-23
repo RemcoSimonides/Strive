@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators'
 import { addYears } from 'date-fns'
 
 import { PostService } from '@strive/post/post.service'
-import { UserService } from '@strive/user/user/user.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 import { PostForm } from '@strive/post/forms/post.form'
 import { createPost, Post } from '@strive/model'
 import { isValidHttpUrl } from '@strive/utils/helpers'
@@ -37,7 +37,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     if (!post.goalId) throw new Error('Upsert post modal needs goalId')
     this._post = post
 
-    this.mode = !!post.createdAt ? 'update' : 'create'
+    this.mode = post.createdAt ? 'update' : 'create'
     this.postForm.patchValue(post)
   }
 
@@ -65,12 +65,12 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   })
 
   constructor(
+    private auth: AuthService,
     private cdr: ChangeDetectorRef,
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
-    private postService: PostService,
-    private user: UserService,
+    private postService: PostService
   ) {
     super(location, modalCtrl)
   }
@@ -80,7 +80,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   }
 
   async submitPost() {
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
 
     if (this.imageSelector?.step.value === 'crop') {
       this.imageSelector.cropIt()
@@ -90,12 +90,12 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       const { date, description, mediaURL, title, url } = this.postForm.value
       const post = createPost({
         ...this.post,
-        date: date!,
-        description: description!,
-        mediaURL: mediaURL!,
-        title: title!,
-        url: url!,
-        uid: this.user.uid
+        date,
+        description,
+        mediaURL,
+        title,
+        url,
+        uid: this.auth.uid
       })
 
       await this.postService.upsert(post, { params: { goalId: post.goalId }});

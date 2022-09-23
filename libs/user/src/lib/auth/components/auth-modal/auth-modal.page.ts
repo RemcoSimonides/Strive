@@ -1,16 +1,16 @@
-import { Component, HostBinding, HostListener, Input } from '@angular/core';
-import { Location } from '@angular/common';
-import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup, getAuth } from 'firebase/auth';
-// Ionic
-import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular';
-// Services
-import { UserService } from '@strive/user/user/user.service';
-// Interfaces
-import { createPersonal, createUser } from '@strive/model';
-// Strive
-import { WelcomeModalComponent } from '../welcome/welcome.modal';
-import { PersonalService } from '@strive/user/personal/personal.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core'
+import { Location } from '@angular/common'
+import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup, getAuth } from 'firebase/auth'
+
+import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
+
+import { ProfileService } from '@strive/user/user/profile.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
+
+import { createPersonal, createUser } from '@strive/model'
+
+import { WelcomeModalComponent } from '../welcome/welcome.modal'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 export enum enumAuthSegment {
   login,
@@ -25,11 +25,13 @@ export enum enumAuthSegment {
   templateUrl: './auth-modal.page.html',
   styleUrls: ['./auth-modal.page.scss'],
 })
-export class AuthModalComponent {
-  private success = false;
+export class AuthModalComponent implements OnInit {
+  @HostBinding() modal?: HTMLIonModalElement
 
-  passwordType = 'password';
-  passwordIcon = 'eye-off-outline';
+  private success = false
+
+  passwordType = 'password'
+  passwordIcon = 'eye-off-outline'
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -93,7 +95,6 @@ export class AuthModalComponent {
       this.modalCtrl.dismiss(this.success)
     }
   }
-  @HostBinding() modal?: HTMLIonModalElement
 
   constructor(
     private alertCtrl: AlertController,
@@ -102,7 +103,7 @@ export class AuthModalComponent {
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private personal: PersonalService,
-    private user: UserService
+    private profile: ProfileService
   ) {
     window.history.pushState(null, '', window.location.href)
   }
@@ -121,12 +122,12 @@ export class AuthModalComponent {
       const credentials = await signInWithPopup(getAuth(), new GoogleAuthProvider())
       const { displayName, uid, email } = credentials.user;
 
-      const user = await this.user.getValue(uid)
-      if (!user) {
+      const profile = await this.profile.getValue(uid)
+      if (!profile) {
         const user = createUser({ username: displayName ?? '', uid })
         const personal = createPersonal({ uid, email: email ?? '' })
         await Promise.all([
-          this.user.upsert(user),
+          this.profile.upsert(user),
           this.personal.add(personal, { params: { uid }}),
         ])
         const top = await this.modalCtrl.getTop()
@@ -237,7 +238,7 @@ export class AuthModalComponent {
       const personal = createPersonal({ uid: user.uid, email })
 
       await Promise.all([
-        this.user.add(profile),
+        this.profile.add(profile),
         this.personal.add(personal, { params: { uid: user.uid }})
       ])
 

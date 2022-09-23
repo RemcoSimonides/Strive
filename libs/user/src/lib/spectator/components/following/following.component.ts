@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { ModalController } from '@ionic/angular';
-import { UserSpectateService } from '../../spectator.service';
-import { UserService } from '@strive/user/user/user.service';
-import { map, switchMap, of } from 'rxjs';
-import { ModalDirective } from '@strive/utils/directives/modal.directive';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Router } from '@angular/router'
+import { Location } from '@angular/common'
+import { ModalController } from '@ionic/angular'
+
+import { map, switchMap, of } from 'rxjs'
+
+import { UserSpectateService } from '../../spectator.service'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { AuthService } from '../../../auth/auth.service'
 
 @Component({
   selector: 'user-following',
@@ -14,7 +16,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FollowingComponent extends ModalDirective {
-  spectating$ = this.user.user$.pipe(
+  spectating$ = this.auth.user$.pipe(
     map(user => {
       const uid = this.router.url.split('/').pop();
       return uid === 'profile' ? user?.uid : uid
@@ -23,11 +25,11 @@ export class FollowingComponent extends ModalDirective {
   )
 
   constructor(
+    private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private service: UserSpectateService,
-    private router: Router,
-    private user: UserService
+    private router: Router
   ) {
     super(location, modalCtrl)
   }

@@ -1,24 +1,26 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { IonContent, ModalController, Platform} from '@ionic/angular';
-import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore';
-import { joinWith, toDate } from 'ngfire';
-// Rxjs
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter, map, skip } from 'rxjs/operators';
-// Services
-import { UserService } from '@strive/user/user/user.service';
-import { CommentService } from '@strive/goal/chat/comment.service';
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-// Interfaces
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { FormControl, Validators } from '@angular/forms'
+import { IonContent, ModalController, Platform} from '@ionic/angular'
+import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
+import { joinWith, toDate } from 'ngfire'
+
+import { BehaviorSubject, Subscription } from 'rxjs'
+import { filter, map, skip } from 'rxjs/operators'
+
+import { CommentService } from '@strive/goal/chat/comment.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { ProfileService } from '@strive/user/user/profile.service'
+import { AuthService } from '@strive/user/auth/auth.service'
+
 import { Goal, Comment, createComment, GoalStakeholder } from '@strive/model'
 
-import { delay } from '@strive/utils/helpers';
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page';
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
+import { delay } from '@strive/utils/helpers'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+
 
 @Component({
-  selector: '[goal][stakeholder] strive-chat',
+  selector: '[goal][stakeholder] journal-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,7 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages) 
     map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i)),
     joinWith({
-      user: comment => this.user.valueChanges(comment.userId)
+      user: comment => this.profileService.valueChanges(comment.userId)
     })
   )
   done$ = this._done.asObservable()
@@ -50,23 +52,24 @@ export class ChatComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = []
 
   constructor(
+    private auth: AuthService,
     private commentService: CommentService,
     private modalCtrl: ModalController,
     private platform: Platform,
-    private stakeholderService: GoalStakeholderService,
-    public user: UserService
+    private profileService: ProfileService,
+    private stakeholderService: GoalStakeholderService
   ) {
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
     this.subs.push(sub)
   }
 
   async ngOnInit() {
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
     if (!this.stakeholder) return
     const { isAdmin, isAchiever, isSupporter } = this.stakeholder
     if (!isAdmin && !isAchiever && !isSupporter) return
 
-    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.user.uid)
+    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid)
 
     const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
     const constraints = [
@@ -126,16 +129,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (event) event.preventDefault()
     const text = this.form.value.trim()
     if (!this.form.valid || !text) return
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
 
     const comment = createComment({
       text,
-      userId: this.user.uid
+      userId: this.auth.uid
     })
 
     this.form.reset('')
     this.commentService.add(comment, { params: { goalId: this.goal.id }})
-    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.user.uid)
+    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid)
   }
 
   async logScrolling($event: any) {
@@ -158,7 +161,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   async join() {
-    if (!this.user.uid) {
+    if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -176,12 +179,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!isAchiever && !hasOpenRequestToJoin) {
       if (isAdmin) {
         return this.stakeholderService.upsert({
-          uid: this.user.uid,
+          uid: this.auth.uid,
           isAchiever: true
         }, { params: { goalId: this.goal.id }})
       } else {
         return this.stakeholderService.upsert({
-          uid: this.user.uid,
+          uid: this.auth.uid,
           isSpectator: true,
           hasOpenRequestToJoin: true
         }, { params: { goalId: this.goal.id }})
@@ -190,7 +193,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     if (hasOpenRequestToJoin) {
       return this.stakeholderService.upsert({
-        uid: this.user.uid,
+        uid: this.auth.uid,
         isSpectator: true,
         hasOpenRequestToJoin: false
       }, { params: { goalId: this.goal.id }})
@@ -198,7 +201,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   async support() {
-    if (!this.user.uid) {
+    if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {

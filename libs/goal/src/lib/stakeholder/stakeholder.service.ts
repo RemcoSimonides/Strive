@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { DocumentSnapshot, getDoc, getFirestore, serverTimestamp, WriteBatch } from 'firebase/firestore';
-import { FireCollection, WriteOptions } from '@strive/utils/services/collection.service';
-// Interfaces
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, getDoc, serverTimestamp, doc, WriteBatch } from 'firebase/firestore'
+import { toDate, WriteOptions, FireSubCollection } from 'ngfire'
+
+import { AuthService } from '@strive/user/auth/auth.service'
+
 import { Goal, GoalStakeholder, createGoalStakeholder, User, createUser, createGoal } from '@strive/model'
-import { UserService } from '@strive/user/user/user.service';
-import { toDate } from 'ngfire';
 
 export interface roleArgs {
   isAdmin?: boolean;
@@ -17,12 +17,12 @@ export interface roleArgs {
 @Injectable({
   providedIn: 'root'
 })
-export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
+export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
   readonly path = 'Goals/:goalId/GStakeholders'
   override readonly idKey = 'uid'
 
-  constructor(private user: UserService) {
-    super(getFirestore())
+  constructor(private auth: AuthService) {
+    super()
   }
 
   override fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {
@@ -32,12 +32,12 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
   }
 
   override toFirestore(stakeholder: GoalStakeholder): GoalStakeholder {
-    stakeholder.updatedBy = this.user.uid
+    stakeholder.updatedBy = this.auth.uid
     return stakeholder
   }
 
   async updateLastCheckedGoal(goalId: string, uid: string) {
-    const stakeholder = await this.getValue(uid, { goalId })
+    const stakeholder = await this.load(uid, { goalId })
     if (stakeholder) {
       this.update(uid, {
         lastCheckedGoal: serverTimestamp() as any
@@ -59,8 +59,8 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
     const uid = stakeholder.uid
 
     const [user, goal] = await Promise.all([
-      getDoc(this.typedDocument<User>(this.db, `Users/${uid}`)).then(snap => createUser(snap.data())),
-      getDoc(this.typedDocument<Goal>(this.db, `Goals/${goalId}`)).then(snap => createGoal(snap.data()))
+      getDoc(doc(this.db, `Users/${uid}`)).then(snap => createUser(snap.data())),
+      getDoc(doc(this.db, `Goals/${goalId}`)).then(snap => createGoal(snap.data()))
     ])
 
     if (goal.id) {
@@ -69,7 +69,7 @@ export class GoalStakeholderService extends FireCollection<GoalStakeholder> {
 
     const ref = this.getRef(uid, { goalId })
     const data = createGoalStakeholder({
-      ...stakeholder,  
+      ...stakeholder,
       username: user.username,
       photoURL: user.photoURL,
       uid,

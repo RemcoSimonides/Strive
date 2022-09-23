@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular'
 import { SwiperComponent } from 'swiper/angular'
 
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '../../../personal/personal.service'
 
 
 @Component({

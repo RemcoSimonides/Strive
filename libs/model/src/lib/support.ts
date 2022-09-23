@@ -12,8 +12,8 @@ export interface SupportBase {
   milestoneId?: string
   supporterId: string
   recipientId: string
-  updatedAt?: Date
-  createdAt?: Date
+  updatedAt: Date
+  createdAt: Date
 }
 
 export interface Support extends SupportBase {

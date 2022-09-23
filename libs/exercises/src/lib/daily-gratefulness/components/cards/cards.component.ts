@@ -5,7 +5,7 @@ import { limit } from 'firebase/firestore'
 import { debounceTime, map, of, switchMap } from 'rxjs'
 import { formatISO } from 'date-fns'
 
-import { UserService } from '@strive/user/user/user.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { DailyGratefulnessItemService } from '../../daily-gratefulness.service'
 
@@ -33,8 +33,8 @@ export class CardsComponent implements OnDestroy {
     item3: new FormControl(this.startValue, { nonNullable: true })
   })
 
-  cards$ = this.user.user$.pipe(
-    switchMap(user => user ? this.itemService.valueChanges([limit(500)] ,{ uid: user.uid }) : of([]))
+  cards$ = this.auth.profile$.pipe(
+    switchMap(profile => profile ? this.itemService.valueChanges([limit(500)] ,{ uid: profile.uid }) : of([]))
   ).pipe(
     switchMap(cards => this.itemService.decrypt(cards)),
     map(cards => {
@@ -56,7 +56,7 @@ export class CardsComponent implements OnDestroy {
   private sub = this.form.valueChanges.pipe(
     debounceTime(2000)
   ).subscribe(value => {
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
 
     const { item1, item2, item3 } = value
 
@@ -79,10 +79,10 @@ export class CardsComponent implements OnDestroy {
   })
 
   constructor(
+    private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private itemService: DailyGratefulnessItemService,
-    private screensize: ScreensizeService,
-    private user: UserService
+    private screensize: ScreensizeService
   ) {}
 
   ngOnDestroy() {

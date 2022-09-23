@@ -1,13 +1,14 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { IonicModule } from '@ionic/angular';
+import { CommonModule } from "@angular/common"
+import { NgModule } from "@angular/core"
+import { FlexLayoutModule } from '@angular/flex-layout'
+import { IonicModule } from '@ionic/angular'
 
-import { WelcomeModalComponent } from './welcome.modal';
+import { SwiperModule } from 'swiper/angular'
 
-import { SwiperModule } from 'swiper/angular';
-import { ImageModule } from '@strive/media/directives/image.module';
-import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module';
+import { WelcomeModalComponent } from './welcome.modal'
+
+import { ImageModule } from '@strive/media/directives/image.module'
+import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module'
 
 
 @NgModule({

@@ -1,15 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray } from "@angular/forms";
-import { ModalController, PopoverController } from "@ionic/angular";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
+import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray } from '@angular/forms'
+import { ModalController, PopoverController } from '@ionic/angular'
+
+import { debounceTime, of, Subscription, switchMap, tap } from 'rxjs'
+
 import { AffirmationSuggestion, enumAffirmationCategory, affirmationSuggestions } from '@strive/model'
-import { AffirmationService } from "@strive/exercises/affirmation/affirmation.service";
-import { AffirmationExplanationComponent } from "@strive/exercises/affirmation/components/explanation/explanation.component";
-import { DatetimeComponent } from "@strive/ui/datetime/datetime.component";
-import { AuthModalComponent, enumAuthSegment } from "@strive/user/auth/components/auth-modal/auth-modal.page";
-import { UserService } from "@strive/user/user/user.service";
-import { ScreensizeService } from "@strive/utils/services/screensize.service";
-import { SeoService } from "@strive/utils/services/seo.service";
-import { debounceTime, of, Subscription, switchMap, tap } from "rxjs";
+
+import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+
+import { AffirmationExplanationComponent } from '@strive/exercises/affirmation/components/explanation/explanation.component';
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 function timeFormControls() {
   return [new FormControl(''), new FormControl(''), new FormControl('')]
@@ -41,13 +45,13 @@ export class AffirmationsComponent implements OnDestroy {
   private subs: Subscription[] = []
 
   constructor(
+    private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService,
-    private service: AffirmationService,
-    public user: UserService,
+    private service: AffirmationService
   ) {
     this.seo.generateTags({
       title: 'Affirmations - Strive Journal',
@@ -56,8 +60,8 @@ export class AffirmationsComponent implements OnDestroy {
     this.shuffle(this.suggestions)
     this.suggestionsCopy = Object.assign([], this.suggestions)
 
-    const sub = this.user.user$.pipe(
-      switchMap(user => user ? this.service.getAffirmations(user.uid) : of(undefined)),
+    const sub = this.auth.profile$.pipe(
+      switchMap(profile => profile ? this.service.getAffirmations(profile.uid) : of(undefined)),
       tap(doc => {
         this.affirmationsForm.clear({ emitEvent: false })
 
@@ -91,12 +95,12 @@ export class AffirmationsComponent implements OnDestroy {
     const formSub = this.form.valueChanges.pipe(
       debounceTime(2000)
     ).subscribe(value => {
-      if (!this.user.uid) return
+      if (!this.auth.uid) return
       if (!value?.affirmations) return
       if (!value?.times) return
       const { times } = value
       const affirmations = value.affirmations.filter(a => a !== '')
-      this.service.saveAffirmations(this.user.uid, { affirmations, times })
+      this.service.saveAffirmations(this.auth.uid, { affirmations, times })
       this.form.markAsPristine()
       this.cdr.markForCheck()
     })
@@ -121,7 +125,7 @@ export class AffirmationsComponent implements OnDestroy {
       componentProps: { presentation: 'time' }
     })
     popover.onDidDismiss().then(({ data, role }) => {
-      const control = this.timesForm.get(`${index}`)!
+      const control = this.timesForm.get(`${index}`) as AbstractControl
       if (role === 'dismiss') {
         const value = data ? data : new Date().toISOString()
         control.setValue(value)
@@ -136,7 +140,7 @@ export class AffirmationsComponent implements OnDestroy {
   }
 
   removeSetTime(index: number) {
-    const control = this.timesForm.get(`${index}`)!
+    const control = this.timesForm.get(`${index}`) as AbstractControl
     control.setValue('')
     const times = this.times.sort((a, b) => b === '' ? -1 : 1)
     this.timesForm.setValue(times)

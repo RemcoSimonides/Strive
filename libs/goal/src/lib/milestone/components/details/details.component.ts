@@ -14,9 +14,10 @@ import { delay } from '@strive/utils/helpers'
 
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
-import { UserService } from '@strive/user/user/user.service'
 import { StoryService } from '@strive/goal/story/story.service'
 import { PostService } from '@strive/post/post.service'
+import { ProfileService } from '@strive/user/user/profile.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
@@ -30,7 +31,7 @@ import { AddSupportModalComponent } from '@strive/support/components/add/add.com
 export class DetailsComponent extends ModalDirective implements OnInit, OnDestroy {
   private subs: Subscription[] = []
 
-  form?: MilestoneForm
+  form!: MilestoneForm
   subtaskForm = new SubtaskForm()
 
   story$?: Observable<StoryItem[]>
@@ -44,13 +45,14 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   constructor(
     private alertCtrl: AlertController,
+    private auth: AuthService,
     private cdr: ChangeDetectorRef,
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
     private postService: PostService,
-    private storyService: StoryService,
-    private user: UserService
+    private profileService: ProfileService,
+    private storyService: StoryService
   ) {
     super (location, modalCtrl)
   }
@@ -64,7 +66,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     ]
     this.story$ = this.storyService.valueChanges(query, { goalId: this.goal.id }).pipe(
       joinWith({
-        user: ({ userId }) => userId ? this.user.valueChanges(userId) : of(undefined),
+        user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
       })
@@ -73,7 +75,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
         debounceTime(2000),
-        filter(_ => this.form!.content.valid)
+        filter(_ => this.form.content.valid)
       ).subscribe(content => {
         if (!content || !this.form || !this.canEdit) return
         if (this.canEdit) {
@@ -85,7 +87,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
       const descriptionSub = this.form.description.valueChanges.pipe(
         debounceTime(2000),
-        filter(_ => this.form!.content.valid)
+        filter(_ => this.form.content.valid)
       ).subscribe(description => {
         if (!this.canEdit || !this.form) return
         this.milestoneService.update({ description, id: this.milestone.id }, { params: { goalId: this.goal.id }})
@@ -98,7 +100,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         debounceTime(2000)
       ).subscribe(subtasks => {
         if (!this.canEdit || !this.form) return
-        if (this.form!.subtasks.valid) {
+        if (this.form.subtasks.valid) {
           this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})
           this.form?.subtasks.markAsPristine()
           this.cdr.markForCheck()
@@ -149,11 +151,11 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   toggleAssignMe() {
     if (!this.canEdit) return
-    if (!this.user.uid) return
+    if (!this.auth.uid) return
 
-    const achieverId = this.milestone.achieverId ? '' : this.user.uid
+    const achieverId = this.milestone.achieverId ? '' : this.auth.uid
     this.milestone.achieverId = achieverId
-    this.milestone.achiever = achieverId ? this.user.user : createUser()
+    this.milestone.achiever = achieverId ? this.auth.profile : createUser()
 
     this.milestoneService.upsert({
       id: this.milestone.id,

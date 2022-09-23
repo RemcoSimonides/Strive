@@ -1,17 +1,21 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { FormControl } from '@angular/forms'
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
-import { UserService } from '@strive/user/user/user.service'
+
 import { combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { map, shareReplay, startWith } from 'rxjs/operators'
-import { FormControl } from '@angular/forms'
+
+import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
+
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { AuthService } from '@strive/user/auth/auth.service'
+
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RolesPopoverComponment } from '../../popovers/roles/roles.component'
-import { GoalService } from '@strive/goal/goal/goal.service'
 
 @Component({
   selector: '[goalId] goal-team-modal',
@@ -29,13 +33,13 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
   filter = new FormControl<keyof GoalStakeholder | null>(null)
   
   constructor(
+    private auth: AuthService,
     private alertCtrl: AlertController,
     private goalService: GoalService,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private router: Router,
     private stakeholder: GoalStakeholderService,
-    private user: UserService,
     protected override location: Location
   ) {
     super(location, modalCtrl)
@@ -43,7 +47,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
 
   ngOnInit() {
     const stakeholders$ = combineLatest([
-      this.user.user$,
+      this.auth.user$,
       this.stakeholder.valueChanges({ goalId: this.goalId })
     ]).pipe(
       shareReplay({ bufferSize: 1, refCount: true })

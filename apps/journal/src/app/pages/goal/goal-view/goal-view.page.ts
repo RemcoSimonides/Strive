@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { ActivatedRoute } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 
+import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 import { Subscription, of, Observable, combineLatest } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
@@ -10,14 +11,15 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { UserService } from '@strive/user/user/user.service'
-import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem, createPost } from '@strive/model'
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
-import { orderBy, where } from 'firebase/firestore'
+import { ProfileService } from '@strive/user/user/profile.service'
 import { CommentService } from '@strive/goal/chat/comment.service'
 import { StoryService } from '@strive/goal/story/story.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { PostService } from '@strive/post/post.service'
+import { AuthService } from '@strive/user/auth/auth.service'
+
+import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem, createPost } from '@strive/model'
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -53,11 +55,12 @@ export class GoalViewComponent implements OnDestroy {
   unreadMessages$?: Observable<number>
   story$?: Observable<StoryItem[]>
 
-  isLoggedIn$ = this.user.isLoggedIn$
+  isLoggedIn$ = this.auth.isLoggedIn$
 
   private accessSubscription?: Subscription
 
   constructor(
+    private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private commentService: CommentService,
     private goalService: GoalService,
@@ -65,11 +68,11 @@ export class GoalViewComponent implements OnDestroy {
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
     private postService: PostService,
+    private profileService: ProfileService,
     private route: ActivatedRoute,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
-    private storyService: StoryService,
-    private user: UserService,
+    private storyService: StoryService
   ) {
     const goalId$ = this.route.params.pipe(
       map(params => params['id'] as string),
@@ -83,10 +86,10 @@ export class GoalViewComponent implements OnDestroy {
 
     this.stakeholder$ = combineLatest([
       goalId$,
-      this.user.user$
+      this.auth.profile$
     ]).pipe(
-      tap(([ goalId, user ]) => {
-        if (user) this.stakeholder.updateLastCheckedGoal(goalId, user.uid)
+      tap(([ goalId, profile ]) => {
+        if (profile) this.stakeholder.updateLastCheckedGoal(goalId, profile.uid)
       }),
       switchMap(([ goalId, user ]) => user ? this.stakeholder.valueChanges(user.uid, { goalId }) : of(undefined)),
       distinctUntilChanged((a, b) => !stakeholderChanged(a, b)),
@@ -112,7 +115,7 @@ export class GoalViewComponent implements OnDestroy {
     this.story$ = goalId$.pipe(
       switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([])),
       joinWith({
-        user: ({ userId }) => userId ? this.user.valueChanges(userId) : of(undefined),
+        user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
       })

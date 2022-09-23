@@ -20,16 +20,18 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
-import { UserService } from '@strive/user/user/user.service'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
-// Strive Interfaces
-import { createGoal, Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
-import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
-import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
+import { ProfileService } from '@strive/user/user/profile.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { SupportService } from '@strive/support/support.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+
+// Strive Interfaces
+import { createGoal, Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
+import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
 
 @Component({
@@ -65,16 +67,17 @@ export class GoalComponent {
 
   constructor(
     private alertCtrl: AlertController,
+    private auth: AuthService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private milestone: MilestoneService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
     private stakeholderService: GoalStakeholderService,
     private supportService: SupportService,
-    private user: UserService,
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {
@@ -82,8 +85,8 @@ export class GoalComponent {
       map(params => params['id'] as string),
       switchMap(goalId => this.milestone.valueChanges([orderBy('order', 'asc')], { goalId }).pipe(
         joinWith({
-          achiever: ({ achieverId }) => achieverId ? this.user.valueChanges(achieverId) : undefined,
-          supports: milestone => this.user.user$.pipe(
+          achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
+          supports: milestone => this.auth.profile$.pipe(
             switchMap(user => {
               if (!user) return of([])
               const recipientQuery = [
@@ -179,7 +182,7 @@ export class GoalComponent {
   }
   
   async supportGoal() {
-    if (!this.user.uid) {
+    if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -201,7 +204,7 @@ export class GoalComponent {
   }
 
   async join() {
-    if (!this.user.uid) {
+    if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -219,12 +222,12 @@ export class GoalComponent {
     if (!isAchiever && !hasOpenRequestToJoin) {
       if (isAdmin) {
         return this.stakeholderService.upsert({
-          uid: this.user.uid,
+          uid: this.auth.uid,
           isAchiever: true
         }, { params: { goalId: this.goal.id }})
       } else {
         return this.stakeholderService.upsert({
-          uid: this.user.uid,
+          uid: this.auth.uid,
           isSpectator: true,
           hasOpenRequestToJoin: true
         }, { params: { goalId: this.goal.id }})
@@ -233,7 +236,7 @@ export class GoalComponent {
 
     if (hasOpenRequestToJoin) {
       return this.stakeholderService.upsert({
-        uid: this.user.uid,
+        uid: this.auth.uid,
         isSpectator: true,
         hasOpenRequestToJoin: false
       }, { params: { goalId: this.goal.id }})
@@ -243,7 +246,7 @@ export class GoalComponent {
   }
 
   async spectate() {
-    if (!this.user.uid) {
+    if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -259,7 +262,7 @@ export class GoalComponent {
     const { isSpectator } = this.stakeholder
 
     return this.stakeholderService.upsert({
-      uid: this.user.uid,
+      uid: this.auth.uid,
       isSpectator: !isSpectator
     }, { params: { goalId: this.goal.id }})
   }

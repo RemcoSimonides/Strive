@@ -1,11 +1,11 @@
-<strive-header-root [title]="user.uid ? 'Goals' : ''">
+<strive-header-root [title]="(uid$ | async) ? 'Goals' : ''">
   <ion-button (click)="openOptions($event)">
 		<ion-icon slot="icon-only" name="options-outline"></ion-icon>
 	</ion-button>
 </strive-header-root>
 
-<ng-container *ngIf="(user.uid$ | async) !== undefined else loading">
-  <ng-container *ngIf="!!user.uid else notLoggedIn">
+<ng-container *ngIf="(uid$ | async) !== undefined else loading">
+  <ng-container *ngIf="uid$ | async else notLoggedIn">
     <ion-content class="ion-padding">
 
       <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">

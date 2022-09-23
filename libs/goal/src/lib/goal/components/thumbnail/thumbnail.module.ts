@@ -10,15 +10,15 @@ import { GoalOptionsModule } from '../goal-options/goal-options.module'
 import { ProgressPipeModule } from '../../pipes/progress.pipe'
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        IonicModule,
-        ImageModule,
-        GoalOptionsModule,
-        ProgressPipeModule
-    ],
-    declarations: [GoalThumbnailComponent],
-    exports: [GoalThumbnailComponent]
+	imports: [
+		CommonModule,
+		RouterModule,
+		IonicModule,
+		ImageModule,
+		GoalOptionsModule,
+		ProgressPipeModule
+	],
+	declarations: [GoalThumbnailComponent],
+	exports: [GoalThumbnailComponent]
 })
 export class GoalThumbnailModule {}

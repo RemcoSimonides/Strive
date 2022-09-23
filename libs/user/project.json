@@ -1,7 +1,7 @@
 {
   "projectType": "library",
   "sourceRoot": "libs/user/src",
-  "prefix": "strive",
+  "prefix": "user",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",

@@ -1,7 +1,7 @@
 {
   "projectType": "library",
   "sourceRoot": "libs/goal/src",
-  "prefix": "strive",
+  "prefix": "goal",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",

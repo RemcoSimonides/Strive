@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
-import { FireCollection } from '@strive/utils/services/collection.service';
-import { DocumentSnapshot, getFirestore, QueryDocumentSnapshot } from 'firebase/firestore';
-import { Comment, createComment } from '@strive/model';
-import { toDate } from 'ngfire';
+import { Injectable } from '@angular/core'
+import { DocumentSnapshot, QueryDocumentSnapshot } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
+
+import { Comment, createComment } from '@strive/model'
 
 @Injectable({
   providedIn: 'root'
 })
-export class CommentService extends FireCollection<Comment> {
+export class CommentService extends FireSubCollection<Comment> {
   readonly path = `Goals/:goalId/Comments`
-
-  constructor() {
-    super(getFirestore())
-  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Comment> | QueryDocumentSnapshot<Comment>): Comment | undefined {
     return snapshot.exists()

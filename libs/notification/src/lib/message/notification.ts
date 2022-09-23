@@ -32,7 +32,6 @@ export interface NotificationMessage {
 export function getNotificationMessage(notification: Notification): NotificationMessage {
   const { event, goal, user, milestone, support } = notification
 
-  console.log('notification: ', notification)
   switch (event) {
     case 'goalCreated':
       if (!user || !goal) return throwError(notification)

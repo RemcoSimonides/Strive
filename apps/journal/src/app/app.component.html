@@ -15,7 +15,7 @@
           </a>
           <section fxLayout>
 
-            <ng-container *ngIf="user.user$ | async as user; else notLoggedInMain">
+            <ng-container *ngIf="profile$ | async as user; else notLoggedInMain">
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
                 Goals
               </ion-button>

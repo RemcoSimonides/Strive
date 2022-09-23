@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular'
 
-import { arrayRemove, arrayUnion, DocumentSnapshot, getFirestore, serverTimestamp } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
+import { FireSubCollection } from 'ngfire'
 import { getAuth } from 'firebase/auth'
 
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
@@ -14,12 +15,11 @@ import * as Sentry from '@sentry/capacitor'
 
 import { Personal } from '@strive/model'
 
-import { FireCollection } from '@strive/utils/services/collection.service'
-import { UserService } from '../user/user.service'
+import { AuthService } from '../auth/auth.service'
 
 
 @Injectable({ providedIn: 'root' })
-export class PersonalService extends FireCollection<Personal> {
+export class PersonalService extends FireSubCollection<Personal> {
   readonly path = 'Users/:uid/Personal'
   override readonly idKey = 'uid'
 
@@ -30,14 +30,14 @@ export class PersonalService extends FireCollection<Personal> {
 
   fcmIsSupported = isSupported()
   fcmActive$ = new BehaviorSubject(false)
-  private get localStorageName() { return `pushNotifications${this.userService.uid}` }
+  private get localStorageName() { return `pushNotifications${this.auth.uid}` }
 
   constructor(
+    private auth: AuthService,
     private router: Router,
-    private toastController: ToastController,
-    private userService: UserService
+    private toastController: ToastController
   ) {
-    super(getFirestore())
+    super()
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Personal>) {
@@ -47,10 +47,10 @@ export class PersonalService extends FireCollection<Personal> {
   }
 
   updateLastCheckedNotification() {
-    if (this.userService.uid) {
-      this.update(this.userService.uid, {
+    if (this.auth.uid) {
+      this.update(this.auth.uid, {
         lastCheckedNotifications: serverTimestamp() as any
-      }, { params: { uid: this.userService.uid }})
+      }, { params: { uid: this.auth.uid }})
     }
   }
 
@@ -107,18 +107,18 @@ export class PersonalService extends FireCollection<Personal> {
   }
 
   addFCMToken(token: string) {
-    if (token && this.userService.uid) {
-      this.update(this.userService.uid, {
+    if (token && this.auth.uid) {
+      this.update(this.auth.uid, {
         fcmTokens: arrayUnion(token) as any
-      }, { params: { uid: this.userService.uid }})
+      }, { params: { uid: this.auth.uid }})
     }
   }
 
   removeFCMToken(token: string) {
-    if (token && this.userService.uid) {
-      this.update(this.userService.uid, {
+    if (token && this.auth.uid) {
+      this.update(this.auth.uid, {
         fcmTokens: arrayRemove(token) as any
-      }, { params: { uid: this.userService.uid }})
+      }, { params: { uid: this.auth.uid }})
     }
   }
 

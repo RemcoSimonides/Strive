@@ -1,7 +1,7 @@
 <strive-header title="Notifications" color="primary"></strive-header>
 
-<ng-container *ngIf="(user.uid$ | async) !== undefined  else loading">
-  <ng-container *ngIf="!!user.uid; else notLoggedIn">
+<ng-container *ngIf="(uid$ | async) !== undefined else loading">
+  <ng-container *ngIf="uid$ | async else notLoggedIn">
     <ion-content>
       <section fxLayout="column" fxLayoutAlign="start">
         <ng-container *ngIf="notifications$ | async as notifications; else loading">
@@ -52,7 +52,7 @@
 <ng-template #notLoggedIn>
   <div class="not-logged-in">
     <p>
-      <span class="fat-text-button" (click)="openLoginModal()">Log in</span>to view your notifications
+      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your notifications
     </p>
   </div>
 </ng-template>

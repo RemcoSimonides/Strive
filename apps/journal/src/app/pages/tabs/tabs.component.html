@@ -1,6 +1,6 @@
 <ng-container *ngIf="screenSize.isMobile$ | async">
 	<ion-tabs mode="md">
-		<ion-tab-bar slot="bottom" *ngIf="user.user$ | async as you">
+		<ion-tab-bar slot="bottom" *ngIf="profile$ | async as you">
 
 			<ion-tab-button tab="goals">
 				<ion-icon name="flag-sharp" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
@@ -22,7 +22,7 @@
 				<ion-label>Exercises</ion-label>
 			</ion-tab-button>
 
-			<ion-tab-button [tab]="'profile/' + user.uid">
+			<ion-tab-button [tab]="'profile/' + you.uid">
 				<ion-avatar>
 					<img [ref]="you.photoURL" asset="profile.png">
 				</ion-avatar>

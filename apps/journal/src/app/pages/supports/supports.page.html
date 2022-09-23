@@ -1,18 +1,18 @@
 <strive-header-root title="Supports"></strive-header-root>
 
-<ng-container *ngIf="user.uid === undefined">
+<ng-container *ngIf="(uid$ | async) === undefined">
   <strive-page-loading></strive-page-loading>
 </ng-container>
 
-<ng-container *ngIf="user.uid === ''">
+<ng-container *ngIf="(uid$ | async) === ''">
   <div class="not-logged-in">
     <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
     </p>
-  </div>  
+  </div> 
 </ng-container>
 
-<ion-content class="ion-padding" *ngIf="!!user.uid">
+<ion-content class="ion-padding" *ngIf="uid$ | async">
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>

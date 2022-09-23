@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore, limit, where } from 'firebase/firestore'
-import { toDate } from 'ngfire'
+import { DocumentSnapshot, limit, where } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 
 import { of, switchMap, shareReplay, map } from 'rxjs'
 
-import { FireCollection } from '@strive/utils/services/collection.service'
 import { createNotificationBase, NotificationBase, notificationEvents } from '@strive/model'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService extends FireCollection<NotificationBase> {
+export class NotificationService extends FireSubCollection<NotificationBase> {
   readonly path = `Users/:uid/Notifications`
 
   hasUnreadNotification$ = this.personal.personal$.pipe(
@@ -29,7 +28,7 @@ export class NotificationService extends FireCollection<NotificationBase> {
   )
   
   constructor(private personal: PersonalService) { 
-    super(getFirestore())
+    super()
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<NotificationBase>) {

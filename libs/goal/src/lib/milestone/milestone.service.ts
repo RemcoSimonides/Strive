@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getFirestore } from 'firebase/firestore'
-import { toDate } from 'ngfire'
+import { DocumentSnapshot } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 
-import { FireCollection } from '@strive/utils/services/collection.service'
-import { UserService } from '@strive/user/user/user.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 import { createMilestone, Milestone } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
-export class MilestoneService extends FireCollection<Milestone> {
+export class MilestoneService extends FireSubCollection<Milestone> {
   readonly path = 'Goals/:goalId/Milestones';
 
-  constructor(private user: UserService) {
-    super(getFirestore())
+  constructor(private auth: AuthService) {
+    super()
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Milestone>) {
@@ -23,10 +22,8 @@ export class MilestoneService extends FireCollection<Milestone> {
 
   protected override toFirestore(milestone: Milestone): Milestone {
     if (milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
-    milestone.updatedBy = this.user.uid
+    milestone.updatedBy = this.auth.uid
     return milestone
-    // Firebase backend function handles completing submilestones (WITHOUT NOTIFICATION)
-    // Firebase backend function milestoneChangeHandler handles sending notification to supporters of milestone
   }
 
   private setDeadlineToEndOfDay(deadline: string): string {

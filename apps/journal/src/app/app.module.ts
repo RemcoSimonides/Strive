@@ -1,34 +1,32 @@
-import { ErrorHandler, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
 import { FlexLayoutModule } from '@angular/flex-layout'
-import { RouterModule } from '@angular/router';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { RouterModule } from '@angular/router'
+import { ServiceWorkerModule } from '@angular/service-worker'
 
 // Ionic
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular'
 
-// firebase
-import { initializeApp, getApp } from 'firebase/app';
-import { initializeFirestore } from 'firebase/firestore';
-import { provideAuth, getAuth } from '@angular/fire/auth';
+//  Firebase
+import { FIREBASE_CONFIG } from 'ngfire'
 
 // Environments
-import { environment } from 'environments/environment';
+import { environment } from 'environments/environment'
 
 // App
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module'
+import { AppComponent } from './app.component'
 
 // Pages
-import { TabsModule } from './pages/tabs/tabs.module';
-import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module';
-import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module';
+import { TabsModule } from './pages/tabs/tabs.module'
+import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module'
+import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { PWAService } from '@strive/utils/services/pwa.service';
+import { PWAService } from '@strive/utils/services/pwa.service'
 
-import * as Sentry from '@sentry/capacitor';
-import * as SentryAngular from '@sentry/angular';
+import * as Sentry from '@sentry/capacitor'
+import * as SentryAngular from '@sentry/angular'
 
 Sentry.init(
   {
@@ -45,7 +43,6 @@ Sentry.init(
     AppComponent
   ],
   imports: [
-    provideAuth(() => getAuth()),
     //enable offline persistance
     // AngularFirestoreModule.enablePersistence(),
     AppRoutingModule,
@@ -67,14 +64,13 @@ Sentry.init(
   ],
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },
+    { provide: FIREBASE_CONFIG, useValue: environment.firebase },
     { provide: ErrorHandler, useValue: SentryAngular.createErrorHandler() },
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(pwa: PWAService) {
-    initializeApp(environment.firebase)
-    initializeFirestore(getApp(), {})
     pwa.addEventListeners()
   }
 }

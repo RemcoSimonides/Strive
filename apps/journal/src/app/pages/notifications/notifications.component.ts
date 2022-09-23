@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ModalController } from '@ionic/angular'
 
 import { orderBy } from '@firebase/firestore'
+import { joinWith } from 'ngfire'
 
 import { switchMap, tap, map } from 'rxjs/operators'
 import { Observable, of } from 'rxjs'
@@ -9,12 +11,13 @@ import { Notification, notificationEvents } from '@strive/model'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { NotificationService } from '@strive/notification/notification.service'
-import { UserService } from '@strive/user/user/user.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { SupportService } from '@strive/support/support.service'
-import { joinWith } from 'ngfire'
+import { AuthService } from '@strive/user/auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
 @Component({
   selector: 'journal-notifications',
@@ -25,25 +28,28 @@ import { joinWith } from 'ngfire'
 export class NotificationsComponent implements OnInit {
 
   notifications$?: Observable<Notification[]>
+  uid$ = this.auth.uid$
 
   constructor(
+    private auth: AuthService,
     private goalService: GoalService,
     private milestoneService: MilestoneService,
+    private modalCtrl: ModalController,
     private notification: NotificationService,
     private seo: SeoService,
     private supportService: SupportService,
-    public user: UserService,
-    private personal: PersonalService
+    private personal: PersonalService,
+    private profileService: ProfileService
   ) { }
 
   ngOnInit() {
     this.seo.generateTags({ title: `Notifications - Strive Journal` })
 
-    this.notifications$ = this.user.user$.pipe(
+    this.notifications$ = this.auth.profile$.pipe(
       tap(_ => this.personal.updateLastCheckedNotification()),
-      switchMap(user => {
-        if (!user) return of([])
-        return this.notification.valueChanges([orderBy('createdAt', 'desc')], { uid: user.uid }).pipe(
+      switchMap(profile => {
+        if (!profile) return of([])
+        return this.notification.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }).pipe(
           map(notifications => notifications.filter(n => notificationEvents.includes(n.event)))
         )
       }),
@@ -51,8 +57,17 @@ export class NotificationsComponent implements OnInit {
         goal: ({ goalId }) => goalId ? this.goalService.valueChanges(goalId) : of(undefined),
         milestone: ({ milestoneId, goalId }) => milestoneId && goalId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         support: ({ supportId, goalId }) => supportId && goalId ? this.supportService.valueChanges(supportId, { goalId }) : of(undefined),
-        user: ({ userId }) => userId ? this.user.valueChanges(userId) : of(undefined)
+        user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined)
       }, { shouldAwait: true })
     )
+  }
+
+  openAuthModal() {
+    this.modalCtrl.create({
+      component: AuthModalComponent,
+      componentProps: {
+        authSegment: enumAuthSegment.login
+      }
+    }).then(modal => modal.present())
   }
 }

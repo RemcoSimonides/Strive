@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core'
-import { arrayUnion, DocumentSnapshot, getFirestore } from 'firebase/firestore'
-import { toDate } from 'ngfire';
+import { arrayUnion, DocumentSnapshot } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 
 import { Observable } from 'rxjs'
 
-import { FireCollection } from '@strive/utils/services/collection.service'
 import { DearFutureSelf, Message } from '@strive/model'
 
 @Injectable({
   providedIn: 'root'
 })
-export class DearFutureSelfService extends FireCollection<DearFutureSelf> {
+export class DearFutureSelfService extends FireSubCollection<DearFutureSelf> {
   readonly path = 'Users/:uid/Exercises'
-
-  constructor() {
-    super(getFirestore())
-  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf | undefined {
     if (!snapshot.exists()) return
