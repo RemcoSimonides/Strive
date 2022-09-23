@@ -24,34 +24,36 @@ export class PWAService implements OnDestroy {
     const everyHour$ = interval(1 * 60 * 60 * 1000)
     const everyHoursOnceAppIsStable$ = concat(appIsStable$, everyHour$)
 
-    this.subs.push(everyHoursOnceAppIsStable$.subscribe(() => sw.checkForUpdate()))
+    if (isPlatformBrowser(this.platformId)) {
+      this.subs.push(everyHoursOnceAppIsStable$.subscribe(() => sw.checkForUpdate()))
 
-    const sub = sw.versionUpdates.subscribe(event => {
+      const sub = sw.versionUpdates.subscribe(event => {
 
-      switch (event.type) {
-        case 'VERSION_DETECTED':
-          break
-        case 'VERSION_INSTALLATION_FAILED':
-          break
-        case 'VERSION_READY': {
-          if (event.type === 'VERSION_READY') {
-            toastCtrl.create({
-              header: 'New version available',
-              icon: 'alert-outline',
-              buttons: [
-                {
-                  text: 'UPDATE',
-                  handler: () => {
-                    sw.activateUpdate().then(() => document.location.reload())
+        switch (event.type) {
+          case 'VERSION_DETECTED':
+            break
+          case 'VERSION_INSTALLATION_FAILED':
+            break
+          case 'VERSION_READY': {
+            if (event.type === 'VERSION_READY') {
+              toastCtrl.create({
+                header: 'New version available',
+                icon: 'alert-outline',
+                buttons: [
+                  {
+                    text: 'UPDATE',
+                    handler: () => {
+                      sw.activateUpdate().then(() => document.location.reload())
+                    }
                   }
-                }
-              ]
-            }).then(toast => toast.present())
+                ]
+              }).then(toast => toast.present())
+            }
           }
         }
-      }
-    })
-    this.subs.push(sub)
+      })
+      this.subs.push(sub)
+    }
   }
 
   ngOnDestroy() {

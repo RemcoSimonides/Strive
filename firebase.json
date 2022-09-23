@@ -9,14 +9,14 @@
   "functions": {
     "predeploy": [
       "npx nx run backend-functions:lint",
-      "npx nx run backend-functions:build"
+      "npx nx run backend-functions:build",
+      "node apps/backend-functions/cp-angular.js"
     ],
     "source": "dist/apps/backend-functions"
   },
   "hosting": [
     {
       "target": "journal",
-      "public": "dist/apps/journal/",
       "ignore": [
         "firebase.json",
         "**/.*",
@@ -25,7 +25,7 @@
       "rewrites": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "function": "ssr"
         }
       ]
     },
