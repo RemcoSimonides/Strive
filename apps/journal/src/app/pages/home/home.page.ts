@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 
-import { exercises } from '@strive/model'
-import { PWAService } from '@strive/utils/services/pwa.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
 
@@ -14,7 +12,6 @@ import { AggregationService } from '@strive/utils/services/aggregation.service'
 })
 export class HomeComponent {
 
-  exercises = exercises
   enumAuthSegment = enumAuthSegment
 
   aggregation$ = this.aggregationService.getAggregation$()
@@ -22,7 +19,6 @@ export class HomeComponent {
   constructor (
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
-    public pwa: PWAService
   ) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach((entry) => {
