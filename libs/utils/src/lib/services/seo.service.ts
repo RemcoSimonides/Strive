@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core'
 import { Title, Meta, MetaDefinition } from '@angular/platform-browser'
 import { Router } from '@angular/router'
 
-@Injectable({
-  providedIn: 'root'
-})
+const initial: MetaDefinition[] = [
+  { name: 'og:title', content: 'Strive Journal' },
+  { name: 'og:description', content: 'Stay focused on your goals and help others achieve theirs!' },
+  { name: 'og:type', content: 'website' },
+  { name: 'og:url', content: 'https://strivejournal.com/' },
+  { name: 'og:image', content: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ffull_logo-1200x630.png?alt=media&token=88184b80-d54f-423a-8378-aa0e826b330e' }
+]
+
+@Injectable({ providedIn: 'root' })
 export class SeoService {
 
   constructor(
@@ -24,6 +30,12 @@ export class SeoService {
 
     for (const tag of tags) {
       this.meta.updateTag(tag)
+    }
+  }
+
+  setInitial() {
+    for (const tag of initial) {
+      this.meta.addTag(tag)
     }
   }
 }

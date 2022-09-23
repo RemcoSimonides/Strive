@@ -1,5 +1,6 @@
-import { Component, HostListener, OnDestroy } from '@angular/core'
+import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router'
+import { isPlatformServer } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Unsubscribe } from 'firebase/firestore'
 
@@ -15,6 +16,7 @@ import { PersonalService } from '@strive/user/personal/personal.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
+import { SeoService } from '@strive/utils/services/seo.service'
 
 @Component({
   selector: 'strive-root',
@@ -39,8 +41,10 @@ export class AppComponent implements OnDestroy {
     private popoverCtrl: PopoverController,
     private router: Router,
     public screensize: ScreensizeService,
+    private seo: SeoService,
     private support: SupportService,
-    public user: UserService
+    public user: UserService,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.platform.ready().then(() => {
       this.screensize.onResize(this.platform.width());
@@ -60,6 +64,8 @@ export class AppComponent implements OnDestroy {
 
       this.openAuthModalOnStartup()
     })
+
+    this.seo.setInitial()
   }
 
   ngOnDestroy() {
@@ -67,6 +73,8 @@ export class AppComponent implements OnDestroy {
   }
 
   async openAuthModalOnStartup() {
+    if (isPlatformServer(this.platformId)) return
+
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       const isLoggedIn = await firstValueFrom(this.user.isLoggedIn$)
       if (isLoggedIn) return

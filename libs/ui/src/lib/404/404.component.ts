@@ -12,7 +12,7 @@ export class PagenotfoundComponent {
 
   constructor(private location: Location) {
     const state = this.location.getState() as { navigationId: number }
-    this.hasBack = state.navigationId > 1
+    this.hasBack = state?.navigationId > 1
   }
 
   goBack() {
