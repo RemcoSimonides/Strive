@@ -6,15 +6,13 @@ import { GoalUpdatesModalComponent } from './goal-updates.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { GoalThumbnailModule } from '../../thumbnail/thumbnail.module'
-import { OptionsPopoverModule } from '../../popovers/options/options.module'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     ImageModule,
-    GoalThumbnailModule,
-    OptionsPopoverModule
+    GoalThumbnailModule
   ],
   declarations: [GoalUpdatesModalComponent],
 })

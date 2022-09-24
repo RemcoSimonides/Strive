@@ -4,8 +4,8 @@ import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
-import { switchMap, map, filter, startWith, tap } from 'rxjs/operators'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { switchMap, map, filter } from 'rxjs/operators'
 
 import { isBefore, min } from 'date-fns'
 import { delay } from '@strive/utils/helpers'
@@ -17,12 +17,11 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 
-import { filterGoalEvents, GoalStakeholder, GoalStakeholderRole, StakeholderWithGoalAndEvents } from '@strive/model'
+import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalUpdatesModalComponent } from '@strive/goal/goal/components/modals/goals/goal-updates.component'
-import { OptionsPopoverComponent, Roles, RolesForm } from '@strive/goal/goal/components/popovers/options/options.component'
 
 @Component({
   selector: 'journal-goals',
@@ -32,13 +31,11 @@ import { OptionsPopoverComponent, Roles, RolesForm } from '@strive/goal/goal/com
 })
 export class GoalsComponent {
 
-  all$: Observable<StakeholderWithGoalAndEvents[]>
   seeAll = new BehaviorSubject(false)
 
   achieving$: Observable<StakeholderWithGoalAndEvents[]>
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
 
-  form = new RolesForm(JSON.parse(localStorage.getItem('goals options') ?? '{}'))
   uid$ = this.auth.uid$
 
   constructor(
@@ -66,22 +63,7 @@ export class GoalsComponent {
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
     ) as Observable<StakeholderWithGoalAndEvents[]>
 
-    this.all$ = combineLatest([
-      stakeholders$,
-      this.form.valueChanges.pipe(
-        startWith(this.form.value as any),
-        tap((value: Roles) => localStorage.setItem('goals options', JSON.stringify(value)))
-      )
-    ]).pipe(
-      map(([ stakeholders, roles ]) => stakeholders.filter(stakeholder => {
-        for (const [key, bool] of Object.entries(roles) as [GoalStakeholderRole, boolean][]) {
-          if (bool && stakeholder[key]) return true
-        }
-        return false
-      }))
-    )
-
-    this.achieving$ = this.all$.pipe(
+    this.achieving$ = stakeholders$.pipe(
       map(stakeholders => stakeholders.filter(stakeholder => !stakeholder.isAchiever)),
       map(stakeholders => stakeholders.sort((a, b) => {
         if (!a.events || !b.events) return 0
@@ -94,7 +76,7 @@ export class GoalsComponent {
       }))
     )
     
-    this.stakeholders$ = this.all$.pipe(
+    this.stakeholders$ = stakeholders$.pipe(
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.isAchiever)),
       map(stakeholders => stakeholders.sort((first, second) => {
         // Sort finished goals to the end and in progress goals to top
@@ -133,14 +115,6 @@ export class GoalsComponent {
       component: GoalUpdatesModalComponent,
       componentProps: { stakeholder }
     }).then(modal => modal.present())
-  }
-
-  openOptions(event: UIEvent) {
-    this.popoverCtrl.create({
-      component: OptionsPopoverComponent,
-      componentProps: { form: this.form },
-      event
-    }).then(popover => popover.present())
   }
 
   createGoal() {
