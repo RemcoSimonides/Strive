@@ -15,7 +15,7 @@ export { captureMessage, captureException } from '@sentry/serverless'
 
 export type DocumentReference = admin.firestore.DocumentReference
 export const gcs = new Storage.Storage
-export const gcsBucket = gcs.bucket(environment.firebase.storageBucket)
+export const gcsBucket = gcs.bucket(environment.firebase.options.storageBucket)
 export { logger } from 'firebase-functions'
 
 admin.initializeApp()
