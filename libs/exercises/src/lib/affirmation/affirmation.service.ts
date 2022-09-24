@@ -7,6 +7,7 @@ import { Affirmations } from '@strive/model'
 @Injectable({providedIn: 'root'})
 export class AffirmationService extends FireSubCollection<Affirmations> {
   readonly path = 'Users/:uid/Exercises'
+  override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
     return snapshot.exists()

@@ -22,6 +22,7 @@ import { AuthService } from '../auth/auth.service'
 export class PersonalService extends FireSubCollection<Personal> {
   readonly path = 'Users/:uid/Personal'
   override readonly idKey = 'uid'
+  override readonly memorize = true
 
   personal$: Observable<Personal | undefined> = user(getAuth()).pipe(
     switchMap(user => user ? this.valueChanges(user.uid, { uid: user.uid }) : of(undefined)),

@@ -11,6 +11,7 @@ import { DearFutureSelf, Message } from '@strive/model'
 })
 export class DearFutureSelfService extends FireSubCollection<DearFutureSelf> {
   readonly path = 'Users/:uid/Exercises'
+  override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf | undefined {
     if (!snapshot.exists()) return

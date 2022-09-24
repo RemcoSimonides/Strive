@@ -14,6 +14,7 @@ import { getProgress } from './pipes/progress.pipe'
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {
   readonly path = `Goals`
+  override readonly memorize = true
 
   constructor(
     private auth: AuthService,

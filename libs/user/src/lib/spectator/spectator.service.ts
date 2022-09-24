@@ -13,6 +13,7 @@ import { AuthService } from '../auth/auth.service'
 export class UserSpectateService extends FireSubCollection<Spectator> {
   readonly path = `Users/:uid/Spectators`
   override readonly idKey = 'uid'
+  override readonly memorize = true
 
   constructor(
     private auth: AuthService,

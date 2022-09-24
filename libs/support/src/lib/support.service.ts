@@ -11,6 +11,7 @@ import { createSupportBase, SupportBase } from '@strive/model'
 @Injectable({ providedIn: 'root' })
 export class SupportService extends FireSubCollection<SupportBase> {
   readonly path = 'Goals/:goalId/Supports'
+  override readonly memorize = true
 
   hasSupportNeedingDecision$ = this.auth.user$.pipe(
     switchMap(user => {

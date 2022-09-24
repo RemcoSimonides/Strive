@@ -10,6 +10,7 @@ import { createPost, Post } from '@strive/model'
 })
 export class PostService extends FireSubCollection<Post> {
   readonly path = 'Goals/:goalId/Posts'
+  override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Post>) {
     return snapshot.exists()

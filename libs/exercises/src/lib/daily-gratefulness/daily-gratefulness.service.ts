@@ -16,6 +16,7 @@ import { createRandomString } from '@strive/utils/helpers'
 })
 export class DailyGratefulnessService extends FireSubCollection<DailyGratefulness> {
   readonly path = 'Users/:uid/Exercises'
+  override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness | undefined {
     if (!snapshot.exists()) return

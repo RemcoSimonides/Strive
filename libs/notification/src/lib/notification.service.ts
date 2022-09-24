@@ -12,6 +12,7 @@ import { PersonalService } from '@strive/user/personal/personal.service'
 })
 export class NotificationService extends FireSubCollection<NotificationBase> {
   readonly path = `Users/:uid/Notifications`
+  override readonly memorize = true
 
   hasUnreadNotification$ = this.personal.personal$.pipe(
     switchMap(personal => {

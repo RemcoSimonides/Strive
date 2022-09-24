@@ -4,7 +4,7 @@ import { toDate, WriteOptions, FireSubCollection } from 'ngfire'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 
-import { Goal, GoalStakeholder, createGoalStakeholder, User, createUser, createGoal } from '@strive/model'
+import { GoalStakeholder, createGoalStakeholder, createUser, createGoal } from '@strive/model'
 
 export interface roleArgs {
   isAdmin?: boolean;
@@ -20,6 +20,7 @@ export interface roleArgs {
 export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
   readonly path = 'Goals/:goalId/GStakeholders'
   override readonly idKey = 'uid'
+  override readonly memorize = true
 
   constructor(private auth: AuthService) {
     super()

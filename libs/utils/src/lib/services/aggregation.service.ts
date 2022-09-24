@@ -6,6 +6,7 @@ import { Aggregation } from '@strive/model'
 @Injectable({providedIn: 'root'})
 export class AggregationService extends FireCollection<Aggregation> {
   readonly path = 'miscellaneous'
+  override readonly memorize = true
 
   getAggregation$() {
     return this.valueChanges('aggregation')

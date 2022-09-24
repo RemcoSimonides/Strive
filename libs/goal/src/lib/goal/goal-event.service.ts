@@ -7,6 +7,7 @@ import { createGoalEvent, GoalEvent } from '@strive/model'
 @Injectable({ providedIn: 'root' })
 export class GoalEventService extends FireCollection<GoalEvent> {
   readonly path = `GoalEvents`
+  override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<GoalEvent>) {
     return snapshot.exists()

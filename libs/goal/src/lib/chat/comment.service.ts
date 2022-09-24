@@ -9,6 +9,7 @@ import { Comment, createComment } from '@strive/model'
 })
 export class CommentService extends FireSubCollection<Comment> {
   readonly path = `Goals/:goalId/Comments`
+  override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Comment> | QueryDocumentSnapshot<Comment>): Comment | undefined {
     return snapshot.exists()

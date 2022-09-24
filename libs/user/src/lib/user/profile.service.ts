@@ -8,6 +8,7 @@ import { createUser, User } from '@strive/model'
 export class ProfileService extends FireCollection<User> {
   protected override readonly path = 'Users'
   protected override readonly idKey = 'uid'
+  protected override readonly memorize = true
 
   protected override fromFirestore(snapshot: DocumentSnapshot<User>) {
     return snapshot.exists()
