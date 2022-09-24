@@ -31,7 +31,7 @@
     "@capacitor/clipboard": "^4.0.1",
     "@capacitor/push-notifications": "^4.0.1",
     "@capacitor/share": "^4.0.1",
-    "@ionic/angular": "^6.2.1",
+    "@ionic/angular": "^6.2.8",
     "@ionic/pwa-elements": "^3.1.1",
     "@nguniversal/express-engine": "^14.1.0",
     "@nrwl/angular": "14.5.2",
