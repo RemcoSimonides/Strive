@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ModalController } from '@ionic/angular'
 import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service';
-import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
-import { UserService } from '@strive/user/user/user.service';
-import { Observable } from 'rxjs';
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
+import { Observable } from 'rxjs'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 
 @Component({
@@ -20,7 +20,7 @@ export class TeamComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private user: UserService,
+    private profileService: ProfileService,
 		private stakeholder: GoalStakeholderService
   ) {}
 
@@ -33,7 +33,7 @@ export class TeamComponent implements OnInit {
     modal.onDidDismiss().then(async res => {
       const uid = res.data as string
       if (uid) {
-        const user = await this.user.getValue(uid, { uid })
+        const user = await this.profileService.getValue(uid)
         const stakeholder = createGoalStakeholder({ username: user?.username, photoURL: user?.photoURL, uid });
         this.stakeholder.upsert(stakeholder, { params: { goalId: this.id }});
       }

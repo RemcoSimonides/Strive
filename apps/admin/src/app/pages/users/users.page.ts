@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UserService } from '@strive/user/user/user.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
   selector: 'strive-users',
@@ -7,9 +7,9 @@ import { UserService } from '@strive/user/user/user.service';
   styleUrls: ['./users.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersPage {
+export class UsersComponent {
 
-  users$ = this.user.valueChanges()
+  users$ = this.profileService.valueChanges()
 
-  constructor(private user: UserService) {}
+  constructor(private profileService: ProfileService) {}
 }

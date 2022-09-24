@@ -5,13 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UsersPage } from './users.page';
+import { UsersComponent } from './users.page';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: UsersPage
+    component: UsersComponent
   },
   {
     path: ':uid',
@@ -27,6 +27,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingModule
   ],
-  declarations: [UsersPage]
+  declarations: [UsersComponent]
 })
 export class UsersPageModule {}
