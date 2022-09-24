@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
+import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
@@ -19,19 +20,22 @@ export class HomeComponent {
   constructor (
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
+    @Inject(PLATFORM_ID) platformId: any
   ) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('show')
-        }
+    if (isPlatformBrowser(platformId)) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show')
+          }
+        })
       })
-    })
-
-    setTimeout(() => {
-      const elements = document.querySelectorAll('.fade')
-      elements.forEach(el => observer.observe(el))
-    }, 800)
+  
+      setTimeout(() => {
+        const elements = document.querySelectorAll('.fade')
+        elements.forEach(el => observer.observe(el))
+      }, 800)
+    }
   }
 
   openAuthModal() {
