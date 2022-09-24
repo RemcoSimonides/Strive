@@ -6,7 +6,7 @@
     <p>Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative. Receive a daily push notification to remind you to think of three things you are grateful for that day.</p>
 
     <ng-container *ngIf="!isLoading else loading">
-      <ng-container *ngIf="user.uid else login">
+      <ng-container *ngIf="uid$ | async else login">
 
         <exercises-activate-push-notification></exercises-activate-push-notification>
 

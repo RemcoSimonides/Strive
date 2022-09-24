@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 
 import { orderBy, where } from 'firebase/firestore'
@@ -7,15 +7,16 @@ import { joinWith } from 'ngfire'
 import { Observable, of } from 'rxjs'
 import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 
-import { UserService } from '@strive/user/user/user.service'
-import { UserForm } from '@strive/user/user/forms/user.form'
 import { GoalService } from '@strive/goal/goal/goal.service'
-import { Affirmations, createUser, DailyGratefulness, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
-import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
+import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
+
+import { UserForm } from '@strive/user/user/forms/user.form'
+import { Affirmations, createUser, DailyGratefulness, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
 import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
 
@@ -42,7 +43,7 @@ export class UserPage {
     private affirmationService: AffirmationService,
     private dailyGratefulnessService: DailyGratefulnessService,
     private dearFutureSelfService: DearFutureSelfService,
-    private user: UserService,
+    private profileService: ProfileService,
     private route: ActivatedRoute,
     private goal: GoalService,
     private stakeholder: GoalStakeholderService,
@@ -50,7 +51,7 @@ export class UserPage {
     this.route.params.subscribe(params => {
       const uid = params['uid'] as string
 
-      this.user$ = this.user.valueChanges(uid, { uid }).pipe(
+      this.user$ = this.profileService.valueChanges(uid).pipe(
         tap(user => this.userForm.patchValue(createUser(user))),
         shareReplay({ bufferSize: 1, refCount: true })
       )
@@ -69,15 +70,16 @@ export class UserPage {
 
       this.stakeholders$ = this.user$.pipe(
         filter(user => !!user),
-        switchMap(user => this.stakeholder.groupChanges([where('uid', '==', user!.uid), orderBy('createdAt', 'desc')])),
+        switchMap(user => this.stakeholder.valueChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
         joinWith({
           goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId)
         }, { shouldAwait: true }),
         map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
         map(stakeholders => stakeholders.sort((first, second) => {
+          if (!first?.goal || !second?.goal) return 0
           // Sort finished goals to the end and in progress goals to top
-          const a = getProgress(first.goal!)
-          const b = getProgress(second.goal!)
+          const a = getProgress(first.goal)
+          const b = getProgress(second.goal)
 
           if (a === b) return 0
           if (b === 1) return -1

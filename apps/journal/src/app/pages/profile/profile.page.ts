@@ -22,6 +22,7 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 import { SupportingComponent } from '@strive/goal/goal/components/modals/supporting/supporting.component'
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
+import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 
 @Component({
   selector: 'journal-profile',
@@ -83,8 +84,16 @@ export class ProfileComponent {
     this.isOwner$
   ]).pipe(
     map(([profile, isOwner]) => {
-      const title = isOwner || !profile ? 'Your Profile' : profile.username
-      this.seo.generateTags({ title: `${title} - Strive Journal` })
+      const title: string = (isOwner || !profile) ? 'Your Profile' : profile.username
+      const description = profile?.username
+        ? `${profile.username} is journaling about their goals on Strive Journal. Follow ${profile.username} to stay up-to-date about the progress and help out wherever you can because together we achieve more`
+        : ''
+
+      this.seo.generateTags({
+        title: `${title} - Strive Journal`,
+        description,
+        image: profile?.photoURL ? getImgIxResourceUrl(profile.photoURL) : undefined
+      })
       return title
     })
   )

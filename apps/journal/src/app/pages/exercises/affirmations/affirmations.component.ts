@@ -43,6 +43,7 @@ export class AffirmationsComponent implements OnDestroy {
   get times(): string[] { return this.timesForm.value }
 
   private subs: Subscription[] = []
+  uid$ = this.auth.uid$
 
   constructor(
     private auth: AuthService,

@@ -58,6 +58,8 @@ export class DailyGratefulnessComponent implements OnDestroy {
     })
   ).subscribe()
 
+  uid$ = this.auth.uid$
+
   constructor(
     private auth: AuthService,
     private cdr: ChangeDetectorRef,

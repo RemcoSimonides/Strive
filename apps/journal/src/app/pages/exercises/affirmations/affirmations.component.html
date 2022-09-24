@@ -11,7 +11,7 @@
     </p>
 
     <ng-container *ngIf="!isLoading else loading">
-      <ng-container *ngIf="user.uid else login">
+      <ng-container *ngIf="uid$ | async else login">
 
         <exercises-activate-push-notification></exercises-activate-push-notification>
 

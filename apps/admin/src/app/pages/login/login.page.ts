@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AlertController, LoadingController } from '@ionic/angular'
-import { UserService } from '@strive/user/user/user.service'
+
+import { AuthService } from '@strive/user/auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 
 @Component({
@@ -23,9 +25,10 @@ export class LoginComponent {
 
   constructor(
     private alertCtrl: AlertController,
+    private auth: AuthService,
     private loadingCtrl: LoadingController,
-    private router: Router,
-    private user: UserService
+    private profileService: ProfileService,
+    private router: Router
   ) {}
 
   async loginUser() {
@@ -45,7 +48,7 @@ export class LoginComponent {
       try {
 
         const { user } = await signInWithEmailAndPassword(getAuth(), email, password)
-        const isAdmin = await this.user.isStriveAdmin(user.uid)
+        const isAdmin = await this.auth.isStriveAdmin(user.uid)
 
         if (isAdmin) {
           this.router.navigate(['/a'])
@@ -76,7 +79,7 @@ export class LoginComponent {
       const credentials = await signInWithPopup(getAuth(), new GoogleAuthProvider())
       const { uid } = credentials.user
 
-      const user = await this.user.getValue(uid)
+      const user = await this.profileService.getValue(uid)
       if (!user) {
         getAuth().signOut()
         this.alertCtrl.create({
@@ -86,7 +89,7 @@ export class LoginComponent {
         return
       }
       
-      const isAdmin = await this.user.isStriveAdmin(user.uid)
+      const isAdmin = await this.auth.isStriveAdmin(user.uid)
       if (!isAdmin) {
         getAuth().signOut()
         this.alertCtrl.create({

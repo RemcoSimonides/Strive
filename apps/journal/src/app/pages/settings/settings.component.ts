@@ -9,7 +9,7 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { getAuth } from 'firebase/auth'
 
 @Component({
-  selector: 'user-settings',
+  selector: 'journal-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -52,7 +52,7 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param storagePath
  * @param parameters
  */
-export function getImgIxResourceUrl(storagePath: string, parameters: ImageParameters) {
+export function getImgIxResourceUrl(storagePath: string, parameters: ImageParameters = {}) {
   const query = formatParameters(parameters);
   return `https://${environment.firebase.options.projectId}.imgix.net/${encodeURI(storagePath)}?${query}`;
 }

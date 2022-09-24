@@ -20,6 +20,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 
 import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem, createPost } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -153,8 +154,8 @@ export class GoalViewComponent implements OnDestroy {
   
     this.seo.generateTags({
       title: `${goal.title} - Strive Journal`,
-      description: goal.description,
-      image: goal.image
+      description: goal.description ? goal.description : `Check the plan, follow the progress, chat with the team, and help out wherever you can`,
+      image: goal.image ? getImgIxResourceUrl(goal.image) : undefined
     })
   }
 
@@ -162,8 +163,6 @@ export class GoalViewComponent implements OnDestroy {
     this.pageIsLoading = false
     this.canAccess = false
     this.cdr.markForCheck()
-
-    this.seo.generateTags({ title: `Page not found - Strive Journal` })
   }
 
   segmentChanged(ev: CustomEvent) {

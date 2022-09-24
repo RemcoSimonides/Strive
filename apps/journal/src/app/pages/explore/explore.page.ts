@@ -80,7 +80,7 @@ export class ExploreComponent implements OnDestroy {
   ) {
     this.seo.generateTags({
       title: `Explore - Strive Journal`,
-      description: 'Get inspired by searching goal of other users, and discover exercises to increase your chance of succeeding'
+      description: 'Get inspired by searching goal of other users, and discover exercises which help to increase your chance of succeeding'
     })
   }
 

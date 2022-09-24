@@ -10,6 +10,10 @@ const initial: MetaDefinition[] = [
   { name: 'og:image', content: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ffull_logo-1200x630.png?alt=media&token=88184b80-d54f-423a-8378-aa0e826b330e' }
 ]
 
+function getInitial(name: string) {
+  return initial.find(tag => tag.name === name)?.content ?? ''
+}
+
 @Injectable({ providedIn: 'root' })
 export class SeoService {
 
@@ -19,7 +23,7 @@ export class SeoService {
     private router: Router
   ) { }
 
-  generateTags({ title = '', description = 'Stay focused on your goals and help others achieve theirs', image = 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ffull_logo-1200x630.png?alt=media&token=88184b80-d54f-423a-8378-aa0e826b330e' }) {
+  generateTags({ title = getInitial('og:title'), description = getInitial('og:description'), image = getInitial('og:image') }) {
     this.title.setTitle(title)
     const tags: MetaDefinition[] = [
       { name: 'og:url', content: `https://strivejournal.com/${this.router.url}` },

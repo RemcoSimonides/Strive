@@ -1,23 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Router, CanActivate } from '@angular/router';
-import { user } from 'rxfire/auth'
-import { getAuth } from 'firebase/auth';
-import { UserService } from '@strive/user/user/user.service';
+import { Injectable } from '@angular/core'
+import { Router, CanActivate } from '@angular/router'
+
+import { of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
-import { of } from 'rxjs';
+
+import { AuthService } from '@strive/user/auth/auth.service'
 
 @Injectable({ providedIn: 'root' })
 export class StriveAdminGuard implements CanActivate {
   constructor(
-    private router: Router,
-    private user: UserService
+    private auth: AuthService,
+    private router: Router
   ) { }
 
   canActivate() {
-    return user(getAuth()).pipe(
+    return this.auth.user$.pipe(
       switchMap(user => {
         if (!user) return of(false)
-        return this.user.isStriveAdmin(user.uid)
+        return this.auth.isStriveAdmin(user.uid)
       }),
       map(isAdmin =>  isAdmin ? true : this.router.parseUrl('/login'))
     )
