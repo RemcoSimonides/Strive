@@ -17,16 +17,19 @@
   "hosting": [
     {
       "target": "journal",
+      "public": "dist/apps/journal/browser",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
       "rewrites": [
-        {
-          "source": "**",
-          "function": "ssr"
-        }
+        { "source": "/explore", "function": "ssr" },
+        { "source": "/goal/*", "function": "ssr" },
+        { "source": "/profile/*", "function": "ssr" },
+        { "source": "/exercise", "function": "ssr" },
+        { "source": "/exercise/*", "function": "ssr" },
+        { "source": "/download", "function": "ssr" }
       ]
     },
     {
