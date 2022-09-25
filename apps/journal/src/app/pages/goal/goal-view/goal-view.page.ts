@@ -6,6 +6,7 @@ import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 import { Subscription, of, Observable, combineLatest } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
+import { isEqual } from 'date-fns'
 
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -36,7 +37,12 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     'lastCheckedChat'
   ]
 
-  return fields.some(field => before[field] !== after[field])
+  return fields.some(field => {
+    const b = before[field]
+    const a = after[field]
+    if (b instanceof Date && a instanceof Date) { return !isEqual(b, a) }
+    return before[field] !== after[field]
+  })
 }
 
 @Component({
