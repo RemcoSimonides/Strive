@@ -29,7 +29,8 @@
         { "source": "/profile/*", "function": "ssr" },
         { "source": "/exercise", "function": "ssr" },
         { "source": "/exercise/*", "function": "ssr" },
-        { "source": "/download", "function": "ssr" }
+        { "source": "/download", "function": "ssr" },
+        { "source": "**", "destination": "/index.html" }
       ]
     },
     {
