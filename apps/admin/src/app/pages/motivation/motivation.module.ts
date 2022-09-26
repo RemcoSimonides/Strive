@@ -1,13 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { IonicModule } from '@ionic/angular';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule, Routes } from '@angular/router'
+import { ReactiveFormsModule } from '@angular/forms'
+import { IonicModule } from '@ionic/angular'
 
-import { MotivationComponent } from './motivation.component';
+import { MotivationComponent } from './motivation.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
 const routes: Routes = [
   {
@@ -22,7 +21,6 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    FlexLayoutModule,
     RouterModule.forChild(routes),
     PageLoadingModule
   ],

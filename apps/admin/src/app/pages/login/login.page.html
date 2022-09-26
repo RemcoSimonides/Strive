@@ -19,14 +19,12 @@
         <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
       </ion-item>
 
-      <div fxLayout="row" fxLayoutAlign="center">
-        <ion-button class="submit_button" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
-      </div>
+      <ion-button class="submit_button" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
     </form>
 
     <ion-button fill="outline" (click)="loginWithGoogle()">
       <ion-icon name="logo-google" slot="start"></ion-icon>
-      Continue with Google
+      <span>Continue with Google</span>
     </ion-button>
   </section>
 

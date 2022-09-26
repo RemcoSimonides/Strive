@@ -10,6 +10,7 @@ import { serverTimestamp } from 'firebase/firestore'
 @Component({
   selector: '[id] strive-goal',
   templateUrl: './goal.component.html',
+  styleUrls: ['./goal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalComponent implements OnInit {
