@@ -19,7 +19,7 @@
     
         <section *ngIf="mode === 'duration'">
           <h5>Deliver in</h5>
-          <article fxLayout="row wrap" fxLayoutGap="8px">
+          <article>
             <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" (click)="duration = 2">2 Years</ion-button>
             <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" (click)="duration = 5">5 Years</ion-button>
             <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" (click)="duration = 10">10 Years</ion-button>
@@ -43,7 +43,7 @@
             <ng-container *ngFor="let message of pendingMessages">
               <ion-item>
                 <ion-icon name="mail-outline"></ion-icon>
-                <article fxLayout="column">
+                <article>
                   <span>Delivered in {{ message.deliveryDate | timeToGo }}</span>
                   <small>Sent {{ message.createdAt | timeAgo }}</small>
                 </article>
@@ -60,7 +60,7 @@
             <ng-container *ngFor="let message of deliveredMessages">
               <ion-item button (click)="openMessage(message)">
                 <ion-icon name="mail-open-outline"></ion-icon>
-                <article fxLayout="column">
+                <article>
                   <span>Delivered on {{ message.deliveryDate | date }}</span>
                   <small>Sent on {{ message.createdAt | date }}</small>
                 </article>

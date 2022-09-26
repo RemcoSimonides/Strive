@@ -16,6 +16,12 @@ ion-card {
     ion-datetime {
       border-radius: 12px;
     }
+
+    article {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
   }
 }
 
@@ -29,6 +35,8 @@ ion-list {
   }
 
   article {
+    display: flex;
+    flex-direction: column;
     margin-left: 12px;
   }
 }
