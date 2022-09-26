@@ -3,9 +3,16 @@ ion-router-outlet {
 }
 
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin: auto;
   max-width: 1600px;
   padding-right: 16px;
+
+  section {
+    display: flex;
+  }
 
   .badge:after {
     right: 0;

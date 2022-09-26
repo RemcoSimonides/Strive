@@ -9,11 +9,11 @@
     <!-- Main navbar -->
     <ion-header>
       <ion-toolbar>
-        <header fxLayout fxLayoutAlign="space-between center">
+        <header>
           <a routerLink="/">
             <img asset="strivejournal-light-without-margin.png" class="logo">
           </a>
-          <section fxLayout>
+          <section>
 
             <ng-container *ngIf="profile$ | async as user; else notLoggedInMain">
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">

@@ -1,6 +1,5 @@
 import { ErrorHandler, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
-import { FlexLayoutModule } from '@angular/flex-layout'
 import { RouterModule } from '@angular/router'
 import { ServiceWorkerModule } from '@angular/service-worker'
 
@@ -48,7 +47,6 @@ Sentry.init(
     AppRoutingModule,
     RouterModule,
     BrowserModule.withServerTransition({ appId: 'journal' }),
-    FlexLayoutModule,
     IonicModule.forRoot(),
     // Strive
     ImageModule,
