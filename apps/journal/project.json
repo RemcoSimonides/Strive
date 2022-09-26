@@ -36,6 +36,7 @@
           "apps/journal/src/theme/variables.scss"
         ],
         "scripts": [],
+        "serviceWorker": true,
         "ngswConfigPath": "apps/journal/ngsw-config.json"
       },
       "configurations": {
