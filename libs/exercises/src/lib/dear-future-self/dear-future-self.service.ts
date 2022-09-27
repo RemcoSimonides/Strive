@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { arrayUnion, DocumentSnapshot } from 'firebase/firestore'
+import { arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { Observable } from 'rxjs'
@@ -12,6 +12,15 @@ import { DearFutureSelf, Message } from '@strive/model'
 export class DearFutureSelfService extends FireSubCollection<DearFutureSelf> {
   readonly path = 'Users/:uid/Exercises'
   override readonly memorize = true
+
+  protected override toFirestore(settings: DearFutureSelf, actionType: 'add' | 'update'): DearFutureSelf {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') settings.createdAt = timestamp
+    settings.updatedAt = timestamp
+
+    return settings
+  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf | undefined {
     if (!snapshot.exists()) return

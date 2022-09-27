@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot } from 'firebase/firestore'
+import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { Affirmations } from '@strive/model'
@@ -8,6 +8,15 @@ import { Affirmations } from '@strive/model'
 export class AffirmationService extends FireSubCollection<Affirmations> {
   readonly path = 'Users/:uid/Exercises'
   override readonly memorize = true
+
+  protected override toFirestore(affirmations: Affirmations, actionType: 'add' | 'update'): Affirmations {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') affirmations.createdAt = timestamp
+    affirmations.updatedAt = timestamp
+
+    return affirmations
+  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
     return snapshot.exists()

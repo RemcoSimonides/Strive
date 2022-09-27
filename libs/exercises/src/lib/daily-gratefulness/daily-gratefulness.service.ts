@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot } from 'firebase/firestore'
+import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 import { firstValueFrom, Observable } from 'rxjs'
 
@@ -17,6 +17,15 @@ import { createRandomString } from '@strive/utils/helpers'
 export class DailyGratefulnessService extends FireSubCollection<DailyGratefulness> {
   readonly path = 'Users/:uid/Exercises'
   override readonly memorize = true
+
+  protected override toFirestore(settings: DailyGratefulness, actionType: 'add' | 'update'): DailyGratefulness {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') settings.createdAt = timestamp
+    settings.updatedAt = timestamp
+    
+    return settings
+  }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulness>): DailyGratefulness | undefined {
     if (!snapshot.exists()) return
@@ -44,6 +53,15 @@ export class DailyGratefulnessItemService extends FireSubCollection<DailyGratefu
 
   constructor(private personalService: PersonalService) {
     super()
+  }
+
+  protected override toFirestore(item: DailyGratefulnessItem, actionType: 'add' | 'update'): DailyGratefulnessItem {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') item.createdAt = timestamp
+    item.updatedAt = timestamp
+    
+    return item
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<DailyGratefulnessItem>): DailyGratefulnessItem | undefined {
