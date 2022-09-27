@@ -4,8 +4,8 @@
 
 <ion-content class="ion-no-padding">
 
-  <div class="max-width" [ngSwitch]="segmentChoice">
-    <header fxLayout>
+  <main [ngSwitch]="segmentChoice">
+    <header>
       <form [formGroup]="searchForm">
         <ion-searchbar
           formControlName="query"
@@ -24,15 +24,15 @@
       </form>
     </header>
 
-    <div *ngSwitchCase="'overview'">
-      <section fxLayout fxLayoutAlign="space-between end">
+    <ng-container *ngSwitchCase="'overview'">
+      <section>
         <h2>Goals</h2>
         <ion-button fill="clear" (click)="setType('goals')">view more</ion-button>
       </section>
       <strive-thumbnail-list [width]="250">
         <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
           <ng-template #thumb>
-            <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+            <article class="small-thumbnail-column">
               <ng-container *ngFor="let goal of rows; let i = index">
                 <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
                   <small>{{ goal.numberOfAchievers }} Achiever{goal.numberOfAchievers, plural, =1 {} other {s}}</small>
@@ -44,14 +44,14 @@
         </ng-container>
       </strive-thumbnail-list>
   
-      <section fxLayout fxLayoutAlign="space-between end">
+      <section>
         <h2>Users</h2>
         <ion-button fill="clear" (click)="setType('users')">view more</ion-button>
       </section>
       <strive-thumbnail-list [width]="250">
         <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
           <ng-template #thumb>
-            <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+            <article class="small-thumbnail-column">
               <ng-container *ngFor="let profile of rows">
                 <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.objectID" borderRadius="50%"></strive-small-thumbnail>
               </ng-container>
@@ -60,15 +60,14 @@
         </ng-container>
       </strive-thumbnail-list>
 
-      <section fxLayout fxLayoutAlign="space-between end">
+      <section>
         <h2>Exercises</h2>
         <ion-button fill="clear" (click)="setType('exercises')">view more</ion-button>
       </section>
-
       <strive-thumbnail-list [width]="250">
         <ng-container *ngFor="let rows of exercises$ | async | rows:2">
           <ng-template #thumb>
-            <article fxFlex class="small-thumbnail-column" fxLayout="column" fxLayoutGap="16px">
+            <article class="small-thumbnail-column">
               <ng-container *ngFor="let exercise of rows">
                 <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link"></strive-small-thumbnail>
               </ng-container>
@@ -76,35 +75,34 @@
           </ng-template>
         </ng-container>
       </strive-thumbnail-list>
-    </div>
+    </ng-container>
 
-
-    <section *ngSwitchCase="'search'" class="search">
+    <ul *ngSwitchCase="'search'" class="search">
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
-        <ng-container *ngFor="let goal of algolia.goalResults | async">
+        <li *ngFor="let goal of algolia.goalResults | async">
           <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
             <small *ngIf="searchForm.value.type === 'all'">Type: Goal</small>
           </strive-small-thumbnail>
-        </ng-container>
+        </li>
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'users'">
-        <ng-container *ngFor="let profile of algolia.profileResults | async">
+        <li *ngFor="let profile of algolia.profileResults | async">
           <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.objectID" borderRadius="50%">
             <small *ngIf="searchForm.value.type === 'all'">Type: User</small>
           </strive-small-thumbnail>
-        </ng-container>
+        </li>
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'exercises'">
-        <ng-container *ngFor="let exercise of exercises$ | async">
+        <li *ngFor="let exercise of exercises$ | async">
           <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
             <small *ngIf="searchForm.value.type === 'all'">Type: Exercise</small>
           </strive-small-thumbnail>
-        </ng-container>
+        </li>
       </ng-container>
-    </section>
+    </ul>
 
     <a href="https://algolia.com/" target="_blank">
       <img class="algolia"  asset="search-by-algolia-light-background.svg"/>
     </a>
-  </div>
+  </main>
 </ion-content>

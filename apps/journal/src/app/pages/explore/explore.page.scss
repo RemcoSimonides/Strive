@@ -1,4 +1,4 @@
-div.max-width {
+main {
   margin: auto;
   max-width: 1600px;
 }
@@ -6,7 +6,6 @@ div.max-width {
 h2 {
   color: var(--ion-color-primary);
 }
-
 
 header {
   padding: 96px;
@@ -38,6 +37,9 @@ header {
 }
 
 section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   padding: 0 48px;
 
   ion-button {
@@ -45,12 +47,9 @@ section {
   }
 }
 
-article {
-  width: 100%;
-}
-
-section.search {
+ul {
   padding-top: 16px;
+  padding-inline: 48px;
 
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

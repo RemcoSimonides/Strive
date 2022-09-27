@@ -9,6 +9,13 @@
   margin: 0 48px;
 }
 
+.small-thumbnail-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
 @media screen and (max-width: 1024px) {
   .browser {
     margin: 0 16px;
