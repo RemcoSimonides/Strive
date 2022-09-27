@@ -2,19 +2,19 @@
   display: block;
 }
 
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 32px;
-}
-
 ion-header header {
   display: flex;
   position: absolute;
   width: 100%;
   justify-content: center;
   top: 8px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
 }
 
 ion-item.main {
@@ -33,8 +33,30 @@ ion-item.main {
   }
 }
 
-strive-milestone-deadline {
-  margin-left: 4px;
+.deadline {
+  display: flex;
+  gap: 4px;
+}
+
+.assignee {
+  display: flex;
+  gap: 4px;
+}
+
+.support {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.description {
+  ion-item {
+    border-radius: 12px;
+  }
+}
+
+h5 {
+  color: var(--ion-color-primary);
 }
 
 ion-list {
@@ -58,21 +80,4 @@ ion-list {
 
 ion-item {
   --highlight-background: var(--ion-color-primary); 
-}
-
-.description {
-  ion-item {
-    border-radius: 12px;
-  }
-
-  header {
-    display: flex;
-    gap: 16px;
-    justify-content: space-between;
-  }
-}
-
-
-h5 {
-  color: var(--ion-color-primary);
 }

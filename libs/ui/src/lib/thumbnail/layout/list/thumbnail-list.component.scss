@@ -5,7 +5,9 @@
 }
 
 .browser {
-  row-gap: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
   margin: 0 48px;
 }
 

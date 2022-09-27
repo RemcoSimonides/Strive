@@ -18,9 +18,9 @@
           <img [ref]="you.photoURL" asset="profile.png"/>
         </ion-avatar>
         <article>
-          <ion-label fxLayout="column" fxLayoutGap="4px">
+          <ion-label>
             <b>{{ you.username }}</b>
-            <small fxLayout fxLayoutGap="8px">
+            <small>
               <span *ngIf="you.isAdmin">
                 <ion-icon src="assets/icons/user-tie-solid.svg" slot="end"></ion-icon>Admin
               </span>
@@ -58,9 +58,9 @@
               <img [ref]="stakeholder.photoURL" asset="profile.png"/>
             </ion-avatar>
             <article>
-              <ion-label fxLayout="column" fxLayoutGap="4px">
+              <ion-label>
                 <b>{{ stakeholder.username }}</b>
-                <small fxLayout fxLayoutGap="8px">
+                <small>
                   <span *ngIf="stakeholder.isAdmin">
                     <ion-icon src="assets/icons/user-tie-solid.svg" slot="end"></ion-icon>Admin
                   </span>

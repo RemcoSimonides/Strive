@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { FlexLayoutModule } from '@angular/flex-layout'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 
@@ -19,7 +18,6 @@ import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     IonicModule,
     

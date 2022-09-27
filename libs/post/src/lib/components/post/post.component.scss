@@ -10,12 +10,19 @@
 
 ion-card {
   ion-card-header {
+    display: flex;
     padding: 8px;
 
     ion-avatar {
       height: 32px;
       width: 32px;
       margin-right: 16px;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     ion-button {

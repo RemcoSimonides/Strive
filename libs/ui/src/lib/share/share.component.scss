@@ -5,6 +5,10 @@
 }
 
 section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   overflow-wrap: anywhere;
   background-color: var(--ion-color-light-tint);
   color: var(--ion-color-dark);

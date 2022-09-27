@@ -6,7 +6,7 @@
     <ng-content select="[title]"></ng-content>
     <p>Drag 'n drop an Image</p>
     <p>or <a (click)="selectImage()">choose a file</a></p>
-    <div fxLayout="column" fxLayoutAlign="start center" *ngIf="defaultImage">
+    <div *ngIf="defaultImage">
       <span class="caption">Image used if not customized:</span>
       <img [asset]="defaultImage">
     </div>
@@ -19,9 +19,9 @@
   </article>
 
   <!-- Crop -->
-  <article *ngSwitchCase="'crop'">
+  <article *ngSwitchCase="'crop'" class="crop">
     <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)"></image-cropper>
-    <div fxLayout="row" fxLayoutAlign="space-evenly center">
+    <div>
       <ion-fab-button color="primary" (click)="cropIt()">
         <ion-icon name="checkmark-outline"></ion-icon>
       </ion-fab-button>
@@ -32,9 +32,9 @@
   </article>
 
   <!-- Show -->
-  <article class="show" *ngSwitchCase="'show'">
+  <article *ngSwitchCase="'show'" class="show">
     <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
-    <div fxLayout="row" fxLayoutAlign="space-evenly center">
+    <div>
       <ion-fab-button color="primary" (click)="remove()">
         <ion-icon name="close-outline"></ion-icon>
       </ion-fab-button>

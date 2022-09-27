@@ -19,11 +19,22 @@ section {
     border: 2px dashed var(--ion-color-primary);
 
     div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-bottom: 1em;
 
       img {
         width: 100px;
       }
+    }
+  }
+
+  .crop, .show {
+    div {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
     }
   }
 }

@@ -13,7 +13,7 @@
   <ng-container [ngSwitch]="authSegmentChoice">
     <ng-container *ngSwitchCase="enumAuthSegment.login">
 
-      <section fxLayout="column" fxLayoutAlign="start center">
+      <section>
         <article>
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
@@ -35,7 +35,7 @@
             </ion-item>
           </ion-list>
 
-          <div fxLayout="row" fxLayoutAlign="center">
+          <div class="action">
             <ion-button class="submit_button" color="primary" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
           </div>
         </form>
@@ -51,7 +51,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="enumAuthSegment.register">
 
-      <section fxLayout="column" fxLayoutAlign="start center">
+      <section>
         <article>
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
@@ -104,7 +104,7 @@
             </ng-container>  
           </ion-list>
 
-          <div fxLayout fxLayoutAlign="center">
+          <div class="action">
             <ion-button class="submit_button" color="primary" type="submit" [disabled]="!signupForm.valid">Register</ion-button>
           </div>
 
@@ -118,7 +118,7 @@
 
         <hr />
 
-        <article fxLayout fxLayoutAlign="center">
+        <article class="action">
           <span>Already a member?</span>
           <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.login">Log in</span>
         </article>
@@ -127,7 +127,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="enumAuthSegment.forgot_password">
 
-      <section fxLayout="column" fxLayoutAlign="start center">
+      <section>
 
         <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
           <ion-list mode="md">
@@ -138,7 +138,7 @@
             </ion-item>
           </ion-list>
 
-          <div fxLayout fxLayoutAlign="center">
+          <div class="action">
             <ion-button class="submit_button" color="primary" type="submit" [disabled]="!resetPasswordForm.valid">Reset Password
             </ion-button>
           </div>
@@ -148,7 +148,7 @@
 
       <hr />
       
-      <div fxLayout fxLayoutAlign="center">
+      <div class="action">
         <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.login">Back to login</span>
       </div>
     </ng-container>

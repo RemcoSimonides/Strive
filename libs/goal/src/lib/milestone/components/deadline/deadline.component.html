@@ -1,4 +1,4 @@
-<section fxLayout [ngClass]="{'overdue': milestone.status === 'overdue' }" (click)="openDatePicker($event)">
+<section [ngClass]="{'overdue': milestone.status === 'overdue' }" (click)="openDatePicker($event)">
   <ion-icon name="alarm-outline"></ion-icon>
   <span>{{ milestone.deadline ? (milestone.deadline | date:'MMM d, y') : ('-- -- --') }}</span>
 </section>

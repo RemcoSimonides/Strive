@@ -1,15 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
 
-import { AssigneeComponent } from './assignee.component';
+import { AssigneeComponent } from './assignee.component'
 
-import { ImageModule } from '@strive/media/directives/image.module';
+import { ImageModule } from '@strive/media/directives/image.module'
 
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
     ImageModule
   ],
   declarations: [AssigneeComponent],

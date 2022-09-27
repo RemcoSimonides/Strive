@@ -18,7 +18,7 @@
 					<ion-icon [name]="message.icon"></ion-icon>
 				</div>
 
-				<div class="timelineContent" fxLayout fxLayoutAlign="start start">
+				<div class="timelineContent">
 					<span>
 						<ng-container *ngFor="let text of message.message">
 							<ng-container *ngIf="text.link; else noLink">

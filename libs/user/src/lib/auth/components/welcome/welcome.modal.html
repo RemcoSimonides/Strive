@@ -2,7 +2,7 @@
 <swiper #swiper>
   <ng-container *ngIf="showStep1$ | async">
     <ng-template swiperSlide>
-      <section class="notification" fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="12px">
+      <section class="notification">
         <article>
           <p>
             Activate push notifications for the best experience.<br/>
@@ -10,7 +10,7 @@
           </p>
         </article>
         <img asset="theo-notifications.png"/>
-        <article fxLayout="column" fxLayoutAlign="start center">
+        <article>
           <ion-button (click)="pushNotifications()">activate notifications</ion-button>
           <ion-button (click)="next()" fill="clear">skip</ion-button>
         </article>
@@ -21,12 +21,12 @@
     <ng-template swiperSlide>
 
       <section class="goal">
-        <article fxLayout="row wrap-reverse" fxLayoutAlign="center center" fxLayoutGap="16px">
+        <article class="create">
           <img asset="theo-superman-square.svg">
           <ion-button class="create-goal" (click)="createGoal()">create first goal</ion-button>
         </article>
 
-        <article fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="16px">
+        <article class="explore">
           <ion-button class="explore" (click)="dismiss('/explore')">explore around</ion-button>
           <img asset="theo-direction-square.svg">
         </article>
@@ -36,13 +36,13 @@
   </ng-container>
   <ng-container *ngIf="(showStep1$ | async) === false && !showStep2">
     <ng-template swiperSlide>
-      <section fxLayout="column" fxLayoutAlign="space-between center">
+      <section class="extra">
         <p>Let's achieve great things together.</p>
         <p>
           Your browser doesn't support push notifications yet.<br/>
           Apple is working on this for Safari version 16.
         </p>
-        <article fxLayout="column" fxLayoutAlign="start center">
+        <article>
           <ion-button (click)="next()">Continue</ion-button>
         </article>
       </section>

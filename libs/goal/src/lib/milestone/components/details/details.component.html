@@ -20,8 +20,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <section fxLayout="column" fxLayoutGap="8px" class="ion-padding">
+<ion-content class="ion-padding">
+  <main>
     <h5>Milestone</h5>
     <form [formGroup]="form">
       <ion-item class="main">
@@ -33,13 +33,13 @@
       </ion-item>
     </form>
 
-    <article fxLayout>
+    <section class="deadline">
       <b>Deadline:</b>
       <strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
-    </article>
+    </section>
     
     <ng-container *ngIf="goal.numberOfAchievers > 1">
-      <div fxLayout fxLayoutGap="8px" *ngIf="canEdit || milestone.achiever?.uid">
+      <section class="assignee" *ngIf="canEdit || milestone.achiever?.uid">
         <b>Assignee:</b>
         <ng-container *ngIf="milestone.achiever?.uid else empty">
           <goal-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}"></goal-milestone-assignee>
@@ -47,19 +47,19 @@
         <ng-template #empty>
           <i (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}">No one - Assign me</i>
         </ng-template>
-      </div>
+      </section>
     </ng-container>
 
-    <div fxLayout="row wrap" fxLayoutAlign="space-between">
+    <section class="support">
       <span><b>Supports: </b>{{ milestone.supports?.length }}</span>
 
       <ion-button (click)="openSupportModal()" color="secondary" fill="outline">
         <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
         <span>{{ milestone.status === 'pending' ? 'SUPPORT' : 'SHOW SUPPORTS'}}</span>
       </ion-button>
-    </div>
+    </section>
 
-    <article class="description">
+    <section class="description">
       <ng-container *ngIf="!isAdmin else editable">
         <ng-container *ngIf="milestone.description">
           <h5>Description</h5>
@@ -72,7 +72,7 @@
           <ion-textarea [formControl]="form.description" placeholder="..." autocapitalize="sentences" [maxlength]="200" autoGrow></ion-textarea>
         </ion-item>
       </ng-template>
-    </article>
+    </section>
 
     <ng-container *ngIf="isAdmin || milestone.subtasks?.length">
       <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
@@ -112,6 +112,6 @@
       <b>Finished at:</b> {{ milestone.finishedAt | date:'longDate' }}
     </small> -->
 
-  </section>
+  </main>
 </ion-content>
 

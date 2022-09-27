@@ -1,9 +1,9 @@
 <ion-card *ngIf="post && author">
-  <ion-card-header fxLayout>
+  <ion-card-header>
     <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
       <img [ref]="author.photoURL" asset="profile.png">
     </ion-avatar>
-    <section fxLayout="column" fxLayoutAlign="center start">
+    <section>
       <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
       <small>{{ post.date | date:'longDate' }}</small>
     </section>

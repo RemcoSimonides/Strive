@@ -13,35 +13,45 @@ ion-list {
     --inner-padding-bottom: 8px;
     --inner-padding-top: 8px;
 
-    ion-button {
-      margin-inline-start: 16px;
-    }
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
 
-    .description {
-      color: var(--ion-color-medium);
-    }
-
-    article {
-      color: var(--ion-color-medium);
-      white-space: nowrap;
-
-      .supports small {
-        display: flex;
-        gap: 4px;
+      .description {
+        color: var(--ion-color-medium);
       }
 
-      goal-milestone-assignee, strive-milestone-deadline {
-        font-size: small;
-      }
-
-      .subtasks {
+      article {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
+        gap: 16px;
+        color: var(--ion-color-medium);
+        white-space: nowrap;
 
-        ion-icon {
-          margin-right: 6px;
+        .supports small {
+          display: flex;
+          gap: 4px;
+        }
+  
+        goal-milestone-assignee, strive-milestone-deadline {
+          font-size: small;
+        }
+  
+        .subtasks {
+          display: flex;
+          align-items: center;
+  
+          ion-icon {
+            margin-right: 6px;
+          }
         }
       }
+    }
+
+    ion-button {
+      margin-inline-start: 16px;
     }
   }
 }
@@ -52,7 +62,14 @@ img {
 }
 
 .skeleton {
+  display: flex;
+  flex-direction: column;
   width: 100%;
+
+  article {
+    display: flex;
+    gap: 16px
+  }
 }
 
 ion-reorder {

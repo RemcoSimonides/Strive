@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
-import { FlexLayoutModule } from '@angular/flex-layout'
 import { RouterModule } from '@angular/router'
 
 import { IonicModule } from '@ionic/angular'
@@ -26,7 +25,6 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
     ReactiveFormsModule,
     RouterModule,
     IonicModule,
-    FlexLayoutModule,
     ImageSelectorModule,
     SwiperModule,
     RoadmapModule,
