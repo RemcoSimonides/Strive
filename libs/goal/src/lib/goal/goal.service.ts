@@ -25,14 +25,20 @@ export class GoalService extends FireCollection<Goal> {
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Goal>) {
     return snapshot.exists()
-      ? createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
+      ? createGoal(toDate({ ...snapshot.data(), [this.idKey]: snapshot.id }))
       : undefined
   }
 
-  protected override toFirestore(goal: Goal): Goal {
+  protected override toFirestore(goal: Goal, actionType: 'add' | 'update'): Goal {
+    const timestamp = serverTimestamp() as any
+
     if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
-    if (goal.isFinished === true) goal.isFinished = serverTimestamp() as any
+    if (goal.isFinished === true) goal.isFinished = timestamp
+    if (actionType === 'add') goal.createdAt = timestamp
+
     goal.updatedBy = this.auth.uid
+    goal.updatedAt = timestamp
+
     return goal
   }
 

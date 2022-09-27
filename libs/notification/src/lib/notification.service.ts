@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, limit, where } from 'firebase/firestore'
+import { DocumentSnapshot, limit, serverTimestamp, where } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { of, switchMap, shareReplay, map } from 'rxjs'
@@ -30,6 +30,15 @@ export class NotificationService extends FireSubCollection<NotificationBase> {
   
   constructor(private personal: PersonalService) { 
     super()
+  }
+
+  protected override toFirestore(notification: NotificationBase, actionType: 'add' | 'update'): NotificationBase {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') notification.createdAt = timestamp
+    notification.updatedAt = timestamp
+
+    return notification
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<NotificationBase>) {

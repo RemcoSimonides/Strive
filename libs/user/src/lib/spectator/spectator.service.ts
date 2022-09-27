@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, where, WriteBatch } from 'firebase/firestore'
+import { DocumentSnapshot, serverTimestamp, where, WriteBatch } from 'firebase/firestore'
 import { FireSubCollection, WriteOptions } from 'ngfire'
 
 import { Spectator, createSpectator } from '@strive/model'
@@ -20,6 +20,15 @@ export class UserSpectateService extends FireSubCollection<Spectator> {
     private profile: ProfileService
   ) {
     super()
+  }
+
+  protected override toFirestore(spectator: Spectator, actionType: 'add' | 'update'): Spectator {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') spectator.createdAt = timestamp
+    spectator.updatedAt = timestamp
+    
+    return spectator
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Spectator>) {

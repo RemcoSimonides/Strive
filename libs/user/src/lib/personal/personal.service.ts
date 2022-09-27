@@ -41,6 +41,15 @@ export class PersonalService extends FireSubCollection<Personal> {
     super()
   }
 
+  protected override toFirestore(personal: Personal, actionType: 'add' | 'update'): Personal {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') personal.createdAt = timestamp
+    personal.updatedAt = timestamp
+    
+    return personal
+  }
+
   protected override fromFirestore(snapshot: DocumentSnapshot<Personal>) {
     return snapshot.exists()
       ? { ...snapshot.data(), uid: snapshot.id }

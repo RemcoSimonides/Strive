@@ -32,8 +32,14 @@ export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
       : undefined
   }
 
-  override toFirestore(stakeholder: GoalStakeholder): GoalStakeholder {
+  override toFirestore(stakeholder: GoalStakeholder, actionType: 'add' | 'update'): GoalStakeholder {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') stakeholder.createdAt = timestamp
+
+    stakeholder.updatedAt = timestamp
     stakeholder.updatedBy = this.auth.uid
+    
     return stakeholder
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot } from 'firebase/firestore'
+import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { AuthService } from '@strive/user/auth/auth.service'
@@ -21,9 +21,14 @@ export class MilestoneService extends FireSubCollection<Milestone> {
       : undefined
   }
 
-  protected override toFirestore(milestone: Milestone): Milestone {
+  protected override toFirestore(milestone: Milestone, actionType: 'add' | 'update'): Milestone {
+    const timestamp = serverTimestamp() as any
     if (milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
+    if (actionType === 'add') milestone.createdAt = timestamp
+
     milestone.updatedBy = this.auth.uid
+    milestone.updatedAt = timestamp
+
     return milestone
   }
 

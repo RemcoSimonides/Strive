@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core'
-import { DocumentSnapshot, getDoc, getFirestore, doc } from 'firebase/firestore'
+import { DocumentSnapshot, getDoc, getFirestore, doc, serverTimestamp } from 'firebase/firestore'
 import { FireAuth, toDate } from 'ngfire'
 import { setUser } from '@sentry/angular'
 
@@ -32,7 +32,7 @@ export class AuthService extends FireAuth<User> implements OnDestroy {
 
   protected override fromFirestore(snapshot: DocumentSnapshot<User>) {
     return snapshot.exists()
-      ? createUser(toDate({ ...snapshot.data(), uid: snapshot.id }))
+      ? createUser(toDate({ ...snapshot.data(), [this.idKey]: snapshot.id }))
       : undefined
   }
 
