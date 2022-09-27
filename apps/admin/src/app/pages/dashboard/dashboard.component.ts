@@ -9,7 +9,7 @@ import { AggregationService } from '@strive/utils/services/aggregation.service'
 })
 export class DashboardComponent {
 
-	aggregation$ = this.aggregation.getAggregation$()
+	aggregation$ = this.aggregation.valueChanges()
 
 	constructor(private aggregation: AggregationService) {}
 }

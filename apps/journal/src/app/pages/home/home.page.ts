@@ -15,7 +15,7 @@ export class HomeComponent {
 
   enumAuthSegment = enumAuthSegment
 
-  aggregation$ = this.aggregationService.getAggregation$()
+  aggregation$ = this.aggregationService.valueChanges()
 
   constructor (
     private aggregationService: AggregationService,
