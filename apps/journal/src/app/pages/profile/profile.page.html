@@ -70,7 +70,7 @@
       </header>
 
       <section class="goals">
-        <article fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
+        <article>
           <h2>Goals</h2>
           <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="createGoal()">
             <ion-icon name="add" slot="start"></ion-icon>

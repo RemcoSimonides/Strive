@@ -8,10 +8,12 @@ ion-content {
   border-bottom: 1px solid var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.13))));
 }
 
-section {
+main {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
   padding: 16px 8px 0 8px;
   max-width: 700px;
-  margin: auto;
 }
 
 h3 {
@@ -23,6 +25,8 @@ h3 {
 }
 
 article {
+  display: flex;
+  gap: 8px;
   margin-bottom: 16px;
 
   div {

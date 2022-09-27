@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
-import { FlexLayoutModule } from '@angular/flex-layout'
 
 import { GoalComponent } from './goal.page'
 
@@ -24,7 +23,6 @@ import { FocusModalModule } from '@strive/goal/stakeholder/modals/upsert-focus/u
     CommonModule,
     IonicModule,
     RouterModule,
-    FlexLayoutModule,
     
     // Strive
     GoalOptionsModule,

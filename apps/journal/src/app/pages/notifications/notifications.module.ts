@@ -1,16 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { IonicModule } from '@ionic/angular'
 
-import { HeaderModule } from '@strive/ui/header/header.module';
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
-import { MessagePipeModule } from '@strive/notification/pipes/message.pipe';
-import { ImageModule } from '@strive/media/directives/image.module';
-import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe';
+import { HeaderModule } from '@strive/ui/header/header.module'
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { MessagePipeModule } from '@strive/notification/pipes/message.pipe'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
 
-import { NotificationsComponent } from './notifications.component';
+import { NotificationsComponent } from './notifications.component'
 
 const routes: Routes = [
   {
@@ -23,7 +22,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     IonicModule,
-    FlexLayoutModule,
     RouterModule.forChild(routes),
     HeaderModule,
     PageLoadingModule,

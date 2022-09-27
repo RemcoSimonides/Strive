@@ -3,12 +3,12 @@
 <ng-container *ngIf="(uid$ | async) !== undefined else loading">
   <ng-container *ngIf="uid$ | async else notLoggedIn">
     <ion-content>
-      <section fxLayout="column" fxLayoutAlign="start">
+      <main>
         <ng-container *ngIf="notifications$ | async as notifications; else loading">
           <ng-container *ngIf="notifications.length; else empty">
             <ng-container *ngFor="let notification of notifications; let isLast = last; let index = index">
               <ng-container *ngIf="notification | message as _message">
-                <article fxLayout fxLayoutGap="8px" class="clickable" [routerLink]="_message.link">
+                <article class="clickable" [routerLink]="_message.link">
                   <img
                     [ref]="_message.image"
                     [asset]="_message.link.includes('profile') ? 'profile.png' : 'goal.png'"
@@ -44,7 +44,7 @@
         <ng-template #empty>
           No notifications
         </ng-template>
-      </section>
+      </main>
     </ion-content>
   </ng-container>
 </ng-container> 

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Routes, RouterModule } from '@angular/router'
-import { FlexLayoutModule } from '@angular/flex-layout'
 import { ReactiveFormsModule } from '@angular/forms'
 
 import { IonicModule } from '@ionic/angular'
@@ -31,7 +30,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     IonicModule,
-    FlexLayoutModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
     HeaderRootModule,
