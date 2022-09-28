@@ -1,17 +1,14 @@
-import * as functions from 'firebase-functions'
+import { RuntimeOptions, runWith } from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
 import { GCPFunction } from '@sentry/serverless'
 import { environment } from '@env'
+import { wrapFirestoreOnCreateHandler, wrapFirestoreOnDeleteHandler, wrapFirestoreOnUpdateHandler } from './sentry'
 
 GCPFunction.init({
-	dsn: 'https://ffce7e74e39a4cff942d02419858ce55@o1354459.ingest.sentry.io/6656082',
+	dsn: process.env.SENTRY_DSN,
 	tracesSampleRate: 1.0
 })
-export const Sentry = GCPFunction
-export const wrapCloudEventFunction = Sentry.wrapCloudEventFunction
-export const wrapHttpFunction = Sentry.wrapHttpFunction
-export { captureMessage, captureException } from '@sentry/serverless'
 
 export type DocumentReference = admin.firestore.DocumentReference
 export const gcs = new Storage.Storage
@@ -26,4 +23,42 @@ export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp
 export const increment = admin.firestore.FieldValue.increment
 export const arrayUnion = admin.firestore.FieldValue.arrayUnion
 
-export { admin, functions, Storage };
+export { admin, Storage }
+export const functions = (config = defaultConfig) => runWith({ ...config, ...defaultConfig} )
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FunctionType = (...args: any[]) => any
+
+export function onDocumentCreate(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+	return functions(config)
+		.firestore
+		.document(docPath)
+		.onCreate(wrapFirestoreOnCreateHandler(name, fn))
+}
+
+export function onDocumentUpdate(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+	return functions(config)
+		.firestore
+		.document(docPath)
+		.onWrite(wrapFirestoreOnUpdateHandler(name, fn))
+}
+
+export function onDocumentDelete(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+	return functions(config)
+		.firestore
+		.document(docPath)
+		.onDelete(wrapFirestoreOnDeleteHandler(name, fn))
+}
+
+const secrets = [
+	'URLMETA_APIKEY',
+	'URLMETA_USERNAME',
+	'ALGOLIA_APIKEY',
+	'ALGOLIA_APPID',
+	'SENDGRID_APIKEY',
+	'SENTRY_DSN'
+]
+
+export const defaultConfig: RuntimeOptions = {
+	secrets
+}

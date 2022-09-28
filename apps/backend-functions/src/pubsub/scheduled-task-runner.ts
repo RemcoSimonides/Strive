@@ -1,18 +1,20 @@
-import { db, functions, admin, wrapCloudEventFunction } from '../internals/firebase';
+import { db, functions, admin } from '../internals/firebase'
 
 import { Affirmations } from '@strive/model'
-import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations';
-import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness';
-import { logger } from 'firebase-functions';
-import { getDocument } from '../shared/utils';
-import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface';
-import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self';
+import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations'
+import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness'
+import { logger } from 'firebase-functions'
+import { getDocument } from '../shared/utils'
+import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface'
+import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
 import { DearFutureSelf, Personal } from '@strive/model'
-import { updateAggregation } from '../shared/aggregation/aggregation';
+import { updateAggregation } from '../shared/aggregation/aggregation'
+import { wrapPubsubOnRunHandler } from '../internals/sentry'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
-export const scheduledTasksRunner = wrapCloudEventFunction(functions.runWith( { memory: '2GB' }).pubsub.schedule('* * * * *').onRun(async () => {
+export const scheduledTasksRunner = functions({ memory: '2GB' }).pubsub.schedule('* * * * *').onRun(wrapPubsubOnRunHandler('scheduledTasksRunner',
+async () => {
 
   // Consistent timestamp
   const now = admin.firestore.Timestamp.now();

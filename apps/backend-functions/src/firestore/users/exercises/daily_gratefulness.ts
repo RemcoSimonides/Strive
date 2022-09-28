@@ -1,54 +1,54 @@
-import { functions } from '../../../internals/firebase';
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 import { DailyGratefulness } from '@strive/model'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
-import { updateAggregation } from '../../../shared/aggregation/aggregation';
+import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
-export const dailyGratefulnessCreatedHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
-  .onCreate(async (snapshot, context) => {
+export const dailyGratefulnessCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/DailyGratefulness`, 'dailyGratefulnessCreatedHandler',
+async (snapshot, context) => {
 
-    const uid = context.params.uid
-    const dailyGratefulnessSettings = snapshot.data() as DailyGratefulness
-    if (!dailyGratefulnessSettings?.on) return
+  const uid = context.params.uid
+  const dailyGratefulnessSettings = snapshot.data() as DailyGratefulness
+  if (!dailyGratefulnessSettings?.on) return
 
-    // aggregation
-    updateAggregation({ usersGratefulnessOn: 1 })
+  // aggregation
+  updateAggregation({ usersGratefulnessOn: 1 })
 
-    scheduleScheduledTask(uid, dailyGratefulnessSettings)
-  })
+  scheduleScheduledTask(uid, dailyGratefulnessSettings)
+})
 
-export const dailyGratefulnessChangedHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
-  .onUpdate(async (snapshot, context) => {
+export const dailyGratefulnessChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/DailyGratefulness`, 'dailyGratefulnessChangedHandler',
+async (snapshot, context) => {
 
-    const uid = context.params.uid
-    const before = snapshot.before.data() as DailyGratefulness
-    const after = snapshot.after.data() as DailyGratefulness
+  const uid = context.params.uid
+  const before = snapshot.before.data() as DailyGratefulness
+  const after = snapshot.after.data() as DailyGratefulness
 
-    if (before.on !== after.on) {
-      updateAggregation({ usersGratefulnessOn: after.on ? 1 : -1 })
+  if (before.on !== after.on) {
+    updateAggregation({ usersGratefulnessOn: after.on ? 1 : -1 })
 
-      if (after.on) {
-        //  create task
-        scheduleScheduledTask(uid, after)
-      } else {
-        // delete task
-        deleteScheduledTask(`${uid}dailygratefulness`)
-      }
-    } else if (before.time !== after.time) {
+    if (after.on) {
+      //  create task
       scheduleScheduledTask(uid, after)
+    } else {
+      // delete task
+      deleteScheduledTask(`${uid}dailygratefulness`)
     }
-  })
+  } else if (before.time !== after.time) {
+    scheduleScheduledTask(uid, after)
+  }
+})
 
-export const dailyGratefulnessDeleteHandler = functions.firestore.document(`Users/{uid}/Exercises/DailyGratefulness`)
-  .onDelete(async (snapshot, context) => {
+export const dailyGratefulnessDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/DailyGratefulness`, 'dailyGratefulnessDeleteHandler',
+async (snapshot, context) => {
 
-    const { uid } = context.params
+  const { uid } = context.params
 
-    deleteScheduledTask(`${uid}dailygratefulness`)
+  deleteScheduledTask(`${uid}dailygratefulness`)
 
-    updateAggregation({ usersGratefulnessOn: -1 })
+  updateAggregation({ usersGratefulnessOn: -1 })
 
-  })
+})
 
 async function scheduleScheduledTask(userId: string, setting: DailyGratefulness) {
 

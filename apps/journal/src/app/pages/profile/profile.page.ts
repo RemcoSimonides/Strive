@@ -176,10 +176,16 @@ export class ProfileComponent {
     }).then(popover => popover.present())
   }
 
-  async toggleSpectate(spectate: boolean) {
+  async toggleSpectate(isSpectator: boolean) {
     if (this.auth.uid) {
       const profileId = await firstValueFrom(this.profileId$)
-      if (profileId) this.userSpectateService.toggleSpectate(profileId, spectate)
+      if (profileId) {
+        this.userSpectateService.upsert({
+          uid: this.auth.uid,
+          profileId,
+          isSpectator
+        }, { params: { uid: profileId }})
+      }
     } else {
       this.openAuthModal()
     }

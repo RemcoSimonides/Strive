@@ -1,11 +1,11 @@
-import { db, functions, increment } from '../../../internals/firebase';
+import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 
-import { toDate } from '../../../shared/utils';
+import { toDate } from '../../../shared/utils'
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
 import { createNotificationBase, createSpectator, Spectator } from '@strive/model'
 
-export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
-  .onCreate(async (snapshot, context) => {
+export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorCreatedHandler',
+  async (snapshot, context) => {
 
     const spectator = createSpectator(toDate({ ...snapshot.data(), id: snapshot.id }))
     const { uidToBeSpectated, uidSpectator } = context.params
@@ -16,10 +16,11 @@ export const userSpectatorCreatedHandler = functions.firestore.document(`Users/{
       changeNumberOfSpectators(uidToBeSpectated, 1)
       changeNumberOfSpectating(uidSpectator, 1)
     }
-  })
+  }
+)
 
-export const userSpectatorChangeHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
-  .onUpdate(async (snapshot, context) => {
+export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorChangeHandler', 
+  async (snapshot, context) => {
 
     const before = createSpectator(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
     const after = createSpectator(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
@@ -30,20 +31,22 @@ export const userSpectatorChangeHandler = functions.firestore.document(`Users/{u
       changeNumberOfSpectators(uidToBeSpectated, delta)
       changeNumberOfSpectating(uidSpectator, delta)
     }
-})
-
-export const userSpectatorDeleteHandler = functions.firestore.document(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`)
-  .onDelete(async (snapshot, context) => {
-
-  const { uidToBeSpectated, uidSpectator} = context.params
-
-  const userSnap = await db.doc(`Users/${uidToBeSpectated}`).get()
-  if (userSnap.exists) {
-    changeNumberOfSpectators(uidToBeSpectated, -1)
   }
-  changeNumberOfSpectating(uidSpectator, -1)
+)
 
-})
+export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorDeleteHandler',
+  async (snapshot, context) => {
+
+    const { uidToBeSpectated, uidSpectator} = context.params
+  
+    const userSnap = await db.doc(`Users/${uidToBeSpectated}`).get()
+    if (userSnap.exists) {
+      changeNumberOfSpectators(uidToBeSpectated, -1)
+    }
+    changeNumberOfSpectating(uidSpectator, -1)
+  
+  }
+)
 
 function changeNumberOfSpectators(uidToBeSpectated: string, change: number) {
   const ref = db.doc(`Users/${uidToBeSpectated}`)

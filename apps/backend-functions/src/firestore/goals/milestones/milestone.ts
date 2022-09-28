@@ -1,94 +1,87 @@
-import { db, functions, serverTimestamp, logger, increment } from '../../../internals/firebase'
+import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 
-import {
-  Goal,
-  createMilestone,
-  Milestone,
-  createGoalSource,
-  SupportBase
-} from '@strive/model'
+import { Goal, createMilestone, Milestone, createGoalSource, SupportBase } from '@strive/model'
 
-// Shared
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { toDate } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
 
-export const milestoneCreatedhandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
-  .onCreate(async (snapshot, context) => {
+export const milestoneCreatedhandler = onDocumentCreate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneCreatedhandler',
+async (snapshot, context) => {
 
-    const milestone = createMilestone(toDate({ ...snapshot.data(), id: snapshot.id }))
-    const { goalId, milestoneId } = context.params
+  const milestone = createMilestone(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { goalId, milestoneId } = context.params
 
-    // events
-    const source = createGoalSource({ goalId, userId: milestone.updatedBy })
-    addGoalEvent('goalMilestoneCreated', source)
+  // events
+  const source = createGoalSource({ goalId, userId: milestone.updatedBy })
+  addGoalEvent('goalMilestoneCreated', source)
 
-    // progress
-    const completed = milestone.status === 'failed' || milestone.status === 'succeeded'
-    const data: Partial<Goal> = { tasksTotal: increment(1) as any }
-    if (completed) data.tasksCompleted = increment(1) as any
-    db.doc(`Goals/${goalId}`).update(data)
+  // progress
+  const completed = milestone.status === 'failed' || milestone.status === 'succeeded'
+  const data: Partial<Goal> = { tasksTotal: increment(1) as any }
+  if (completed) data.tasksCompleted = increment(1) as any
+  db.doc(`Goals/${goalId}`).update(data)
 
-    // scheduled task
-    if (milestone.deadline) {
-      upsertScheduledTask(milestoneId, {
-        worker: enumWorkerType.milestoneDeadline,
-        performAt: milestone.deadline,
-        options: { goalId, milestoneId }
-      })
-    }
-  })
+  // scheduled task
+  if (milestone.deadline) {
+    upsertScheduledTask(milestoneId, {
+      worker: enumWorkerType.milestoneDeadline,
+      performAt: milestone.deadline,
+      options: { goalId, milestoneId }
+    })
+  }
+})
 
-export const milestoneDeletedHandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
-  .onDelete(async (snapshot, context) => {
+export const milestoneDeletedHandler = onDocumentDelete(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneDeletedHandler',
+async (snapshot, context) => {
 
-    const { goalId, milestoneId } = context.params
+  const { goalId, milestoneId } = context.params
 
-    // scheduled task
-    await deleteScheduledTask(milestoneId)
+  // scheduled task
+  await deleteScheduledTask(milestoneId)
 
-    // delete supports
-    // get supports
-    const supportssColSnap = await db.collection(`Goals/${goalId}/Supports`)
-      .where('milestone.id', '==', milestoneId)
-      .get()
+  // delete supports
+  // get supports
+  const supportssColSnap = await db.collection(`Goals/${goalId}/Supports`)
+    .where('milestone.id', '==', milestoneId)
+    .get()
 
-    const promises = supportssColSnap.docs.map(snap => db.doc(`Goals/${goalId}/Supports/${snap.id}`).delete())
-    await Promise.all(promises)
-  })
+  const promises = supportssColSnap.docs.map(snap => db.doc(`Goals/${goalId}/Supports/${snap.id}`).delete())
+  await Promise.all(promises)
+})
 
-export const milestoneChangeHandler = functions.firestore.document(`Goals/{goalId}/Milestones/{milestoneId}`)
-  .onUpdate(async (snapshot, context) => {
+export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneChangeHandler',
+async (snapshot, context) => {
 
-    const before = createMilestone(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
-    const after = createMilestone(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
-    const { goalId, milestoneId } = context.params
+  const before = createMilestone(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
+  const after = createMilestone(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
+  const { goalId, milestoneId } = context.params
 
-    // events
-    await handleMilestoneEvents(before, after, goalId)
+  // events
+  await handleMilestoneEvents(before, after, goalId)
 
-    const completed = (before.status === 'pending' || before.status === 'overdue') && (after.status === 'failed' || after.status === 'succeeded')
-    if (completed) {
-      db.doc(`Goals/${goalId}`).update({
-        tasksCompleted: increment(1)
-      })
-    }
+  const completed = (before.status === 'pending' || before.status === 'overdue') && (after.status === 'failed' || after.status === 'succeeded')
+  if (completed) {
+    db.doc(`Goals/${goalId}`).update({
+      tasksCompleted: increment(1)
+    })
+  }
 
-    // scheduled tasks
-    if (before.status === 'pending' && (after.status === 'succeeded' || after.status === 'failed')) { 
-      deleteScheduledTask(milestoneId)
-    }
+  // scheduled tasks
+  if (before.status === 'pending' && (after.status === 'succeeded' || after.status === 'failed')) { 
+    deleteScheduledTask(milestoneId)
+  }
 
-    if (before.deadline !== after.deadline) {
-      upsertScheduledTask(milestoneId, {
-        worker: enumWorkerType.milestoneDeadline,
-        performAt: after.deadline,
-        options: { goalId, milestoneId }
-      })
-    }
-  })
+  if (before.deadline !== after.deadline) {
+    upsertScheduledTask(milestoneId, {
+      worker: enumWorkerType.milestoneDeadline,
+      performAt: after.deadline,
+      options: { goalId, milestoneId }
+    })
+  }
+})
 
 async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId: string) {
   if (before.status === after.status) return

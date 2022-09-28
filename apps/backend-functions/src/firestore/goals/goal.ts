@@ -1,4 +1,4 @@
-import { db, functions, gcsBucket, increment, serverTimestamp } from '../../internals/firebase'
+import { db, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp } from '../../internals/firebase'
 import { logger } from 'firebase-functions'
 
 import {
@@ -20,123 +20,123 @@ import { addStoryItem } from '../../shared/goal-story/story'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
 
 
-export const goalCreatedHandler = functions.firestore.document(`Goals/{goalId}`)
-  .onCreate(async snapshot => {
+export const goalCreatedHandler = onDocumentCreate(`Goals/{goalId}`, 'goalCreatedHandler',
+async snapshot => {
 
-    const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
-    const goalId = snapshot.id
+  const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const goalId = snapshot.id
 
-    // event
-    const source = createGoalSource({ goalId, userId: goal.updatedBy })
-    const event = goal.isFinished ? 'goalCreatedFinished' : 'goalCreated'
-    addGoalEvent(event, source)
-    addStoryItem(event, source)
+  // event
+  const source = createGoalSource({ goalId, userId: goal.updatedBy })
+  const event = goal.isFinished ? 'goalCreatedFinished' : 'goalCreated'
+  addGoalEvent(event, source)
+  addStoryItem(event, source)
+  
+  // aggregation
+  handleAggregation(undefined, goal)
+
+  // deadline
+  if (goal.deadline) {
+    upsertScheduledTask(goalId, {
+      worker: enumWorkerType.goalDeadline,
+      performAt: goal.deadline,
+      options: { goalId }
+    })
+  }
+
+  // algolia
+  if (goal.publicity === 'public') {
+    await addToAlgolia('goal', goalId, createAlgoliaGoal(goal))
+  }
+})
+
+export const goalDeletedHandler = onDocumentDelete(`Goals/{goalId}`, 'goalDeletedHandler',
+async snapshot => {
+
+  const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
+
+  // aggregation
+  handleAggregation(goal, undefined)
+
+  // event
+  const source = createGoalSource({ goalId: goal.id })
+  addGoalEvent('goalDeleted', source)
+
+  deleteScheduledTask(goal.id)
+
+  if (goal.image) {
+    gcsBucket.file(goal.image).delete({ ignoreNotFound: true })
+  }
+
+  //delete subcollections too
+  deleteCollection(db, `Goals/${goal.id}/Milestones`, 500)
+  deleteCollection(db, `Goals/${goal.id}/Supports`, 500)
+  deleteCollection(db, `Goals/${goal.id}/Posts`, 500)
+  deleteCollection(db, `Goals/${goal.id}/InviteTokens`, 500)
+  deleteCollection(db, `Goals/${goal.id}/GStakeholders`, 500)
+  deleteCollection(db, `Goals/${goal.id}/Story`, 500)
+  deleteCollection(db, `Goals/${goal.id}/Comments`, 500)
+
+  if (goal.publicity === 'public') {
+    await deleteFromAlgolia('goal', goal.id)
+  }
+})
+
+export const goalChangeHandler = onDocumentUpdate(`Goals/{goalId}`, 'goalChangeHandler',
+async (snapshot, context) => {
+
+  const goalId = context.params.goalId
+  const before = createGoal(toDate({ ...snapshot.before.data(), id: goalId }))
+  const after = createGoal(toDate({ ...snapshot.after.data(), id: goalId }))
+
+  const publicityChanged = before.publicity !== after.publicity
+  const becamePublic = before.publicity !== 'public' && after.publicity === 'public'
+
+  const becameFinished = !before.isFinished && !!after.isFinished
+
+  handleAggregation(before, after)
+
+  // events
+  if (becameFinished) {
+    logger.log('Goal is finished')
+    const source = createGoalSource({ goalId, userId: after.updatedBy })
+    addGoalEvent('goalIsFinished', source)
+    addStoryItem('goalIsFinished', source)
+
+    supportsNeedDecision(after)
     
-    // aggregation
-    handleAggregation(undefined, goal)
+    snapshot.after.ref.update({
+      tasksCompleted: increment(1)
+    })
+  }
 
-    // deadline
-    if (goal.deadline) {
-      upsertScheduledTask(goalId, {
-        worker: enumWorkerType.goalDeadline,
-        performAt: goal.deadline,
-        options: { goalId }
-      })
+  // Update goal stakeholders
+  if (publicityChanged) {
+    updateGoalStakeholders(goalId, after)
+  }
+
+  if (becameFinished) {
+    const batch = db.batch()
+    const stakeholders = await db.collection(`Goals/${goalId}/GStakeholders`).where('focus.on', '==', true).get()
+    for (const { ref } of stakeholders.docs) {
+      batch.update(ref, { 'focus.on': false })
+    }
+    batch.commit()
+  }
+
+  
+  // algolia
+  if (publicityChanged) {
+    if (becamePublic) {
+      addToAlgolia('goal', goalId, createAlgoliaGoal(after))
+    } else {
+      await deleteFromAlgolia('goal', goalId)
     }
 
-    // algolia
-    if (goal.publicity === 'public') {
-      await addToAlgolia('goal', goalId, createAlgoliaGoal(goal))
-    }
-  })
-
-export const goalDeletedHandler = functions.firestore.document(`Goals/{goalId}`)
-  .onDelete(async snapshot => {
-
-    const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
-
-    // aggregation
-    handleAggregation(goal, undefined)
-
-    // event
-    const source = createGoalSource({ goalId: goal.id })
-    addGoalEvent('goalDeleted', source)
-
-    deleteScheduledTask(goal.id)
-
-    if (goal.image) {
-      gcsBucket.file(goal.image).delete({ ignoreNotFound: true })
-    }
-
-    //delete subcollections too
-    deleteCollection(db, `Goals/${goal.id}/Milestones`, 500)
-    deleteCollection(db, `Goals/${goal.id}/Supports`, 500)
-    deleteCollection(db, `Goals/${goal.id}/Posts`, 500)
-    deleteCollection(db, `Goals/${goal.id}/InviteTokens`, 500)
-    deleteCollection(db, `Goals/${goal.id}/GStakeholders`, 500)
-    deleteCollection(db, `Goals/${goal.id}/Story`, 500)
-    deleteCollection(db, `Goals/${goal.id}/Comments`, 500)
-
-    if (goal.publicity === 'public') {
-      await deleteFromAlgolia('goal', goal.id)
-    }
-  })
-
-export const goalChangeHandler = functions.firestore.document(`Goals/{goalId}`)
-  .onUpdate(async (snapshot, context) => {
-
-    const goalId = context.params.goalId
-    const before = createGoal(toDate({ ...snapshot.before.data(), id: goalId }))
-    const after = createGoal(toDate({ ...snapshot.after.data(), id: goalId }))
-
-    const publicityChanged = before.publicity !== after.publicity
-    const becamePublic = before.publicity !== 'public' && after.publicity === 'public'
-
-    const becameFinished = !before.isFinished && !!after.isFinished
-
-    handleAggregation(before, after)
-
-    // events
-    if (becameFinished) {
-      logger.log('Goal is finished')
-      const source = createGoalSource({ goalId, userId: after.updatedBy })
-      addGoalEvent('goalIsFinished', source)
-      addStoryItem('goalIsFinished', source)
-
-      supportsNeedDecision(after)
-      
-      snapshot.after.ref.update({
-        tasksCompleted: increment(1)
-      })
-    }
-
-    // Update goal stakeholders
-    if (publicityChanged) {
-      updateGoalStakeholders(goalId, after)
-    }
-
-    if (becameFinished) {
-      const batch = db.batch()
-      const stakeholders = await db.collection(`Goals/${goalId}/GStakeholders`).where('focus.on', '==', true).get()
-      for (const { ref } of stakeholders.docs) {
-        batch.update(ref, { 'focus.on': false })
-      }
-      batch.commit()
-    }
-
-    
-    // algolia
-    if (publicityChanged) {
-      if (becamePublic) {
-        addToAlgolia('goal', goalId, createAlgoliaGoal(after))
-      } else {
-        await deleteFromAlgolia('goal', goalId)
-      }
-
-    } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters) {
-      await updateAlgoliaObject('goal', goalId, createAlgoliaGoal(after))
-    }
-  })
+  } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters) {
+    await updateAlgoliaObject('goal', goalId, createAlgoliaGoal(after))
+  }
+})
 
 function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   const aggregation = createAggregation()
@@ -150,8 +150,8 @@ function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   const becamePrivate = before?.publicity !== 'private' && after?.publicity === 'private'
   const wasPrivate = before?.publicity === 'public' && after?.publicity !== 'private'
 
-  const becameFinished = !before.isFinished && !!after.isFinished
-  const wasFinished = !!before.isFinished && !after.isFinished
+  const becameFinished = !before?.isFinished && !!after?.isFinished
+  const wasFinished = !!before?.isFinished && !after?.isFinished
 
   aggregation.goalsPublic = becamePublic ? 1 : wasPublic ? -1 : 0
   aggregation.goalsPrivate = becamePrivate ? 1 : wasPrivate ? -1 : 0

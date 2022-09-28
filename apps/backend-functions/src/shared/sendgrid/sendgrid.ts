@@ -1,7 +1,6 @@
 import * as SendGrid from '@sendgrid/mail'
-import { MailDataRequired } from "@sendgrid/mail";
-import { sendgridApiKey } from '../../environments/environment';
-import { groupIds } from "../../pubsub/email/ids";
+import { MailDataRequired } from '@sendgrid/mail'
+import { groupIds } from "../../pubsub/email/ids"
 
 import { logger } from 'firebase-functions';
 
@@ -38,22 +37,21 @@ export function sendMailFromTemplate({ to, templateId, data, attachments  }: Ema
     dynamicTemplateData: { ...data, ...substitutions, from }
   };
 
-  return send(msg);
+  return send(msg)
 }
 
 async function send(msg: MailDataRequired) {
-  if (sendgridApiKey === '') {
-    throw new Error('sendgrid api key missing');
-  }
+  const { SENDGRID_APIKEY } = process.env 
+  if (!SENDGRID_APIKEY) throw new Error('sendgrid api key missing')
 
-  SendGrid.setApiKey(sendgridApiKey);
+  SendGrid.setApiKey(SENDGRID_APIKEY)
   return SendGrid.send(msg).catch(e => {
     if (e.message === 'Unauthorized') {
-      logger.error('unauthorized');
-      throw new Error('unauthorized');
+      logger.error('unauthorized')
+      throw new Error('unauthorized')
     } else {
       logger.error(e);
-      throw new Error('error');
+      throw new Error('error')
     }
   });
 }

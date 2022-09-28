@@ -43,7 +43,7 @@
     "firebase": "^9.9.2",
     "firebase-admin": "^11.0.1",
     "firebase-functions": "^3.22.0",
-    "ngfire": "^0.0.46",
+    "ngfire": "^0.0.48",
     "ngx-image-cropper": "^6.2.2",
     "rxfire": "^6.0.3",
     "rxjs": "~7.5.0",

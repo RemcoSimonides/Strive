@@ -1,7 +1,7 @@
 import { createGoalEvent } from '@strive/model';
 import { db, functions, logger } from './internals/firebase';
 
-export const migrate = functions.https.onRequest(async (req, res) => {
+export const migrate = functions().https.onRequest(async (req, res) => {
 
   try {
     let counter = 0

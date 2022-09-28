@@ -1,9 +1,8 @@
-import * as algoliasearch from 'algoliasearch';
-import { algoliaApiKey, algoliaAppId } from '../../environments/environment';
-import { environment } from '../../../../../environments/environment'
-import { logger } from '../../internals/firebase';
+import * as algoliasearch from 'algoliasearch'
+import { environment } from '@env'
+import { logger } from '../../internals/firebase'
 
-const client: algoliasearch.SearchClient = algoliasearch.default(algoliaAppId, algoliaApiKey);
+const client: algoliasearch.SearchClient = algoliasearch.default(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY);
 let idx: algoliasearch.SearchIndex
 
 const initAlgoliaIndex = (index: AlgoliaIndex) => {
@@ -19,10 +18,7 @@ const initAlgoliaIndex = (index: AlgoliaIndex) => {
 }
 
 export const addToAlgolia = async (index: AlgoliaIndex, objectID: string, data): Promise<void> => {
-
   initAlgoliaIndex(index)
-
-  if (data.description) delete data.description
 
   await idx.saveObject({
     objectID,
@@ -34,10 +30,7 @@ export const addToAlgolia = async (index: AlgoliaIndex, objectID: string, data):
 }
 
 export const updateAlgoliaObject = async (index: AlgoliaIndex, objectID: string, data): Promise<void> => {
-
   initAlgoliaIndex(index)
-
-  if (data.description) delete data.description
 
   idx.partialUpdateObject({
     objectID,

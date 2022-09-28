@@ -1,6 +1,5 @@
-import { db, functions, increment } from '../../../internals/firebase'
+import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 
-// interfaces
 import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createAggregation } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { getDocument } from '../../../shared/utils'
@@ -9,103 +8,103 @@ import { addStoryItem } from '../../../shared/goal-story/story'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
 
-export const goalStakeholderCreatedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
-  .onCreate(async (snapshot, context) => {
+export const goalStakeholderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderCreatedHandler',
+async (snapshot, context) => {
 
-    const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
-    const { goalId } = context.params
+  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { goalId } = context.params
 
-    const goal = await getDocument<Goal>(`Goals/${goalId}`)
+  const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
-    if (stakeholder.isAchiever) {
-      changeNumberOfAchievers(goalId, 1)
+  if (stakeholder.isAchiever) {
+    changeNumberOfAchievers(goalId, 1)
+  }
+
+  if (stakeholder.isSupporter) {
+    changeNumberOfSupporters(goalId, 1)
+  }
+
+  if (stakeholder.isSpectator) {
+    changeNumberOfSpectators(goalId, 1)
+  }
+
+  // events
+  handleStakeholderEvents(createGoalStakeholder(), stakeholder, goal)
+
+  // aggregation
+  handleAggregation(undefined, stakeholder)
+})
+
+export const goalStakeholderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderChangeHandler',
+async (snapshot, context) => {
+
+  const before = createGoalStakeholder(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
+  const after = createGoalStakeholder(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
+  const { goalId } = context.params
+
+  const goal = await getDocument<Goal>(`Goals/${goalId}`)
+
+  // events
+  handleStakeholderEvents(before, after, goal)
+
+  // aggregation
+  handleAggregation(before, after)
+
+  // isAchiever changed
+  if (before.isAchiever !== after.isAchiever) {
+    changeNumberOfAchievers(goalId, after.isAchiever ? 1 : -1)
+  }
+
+  // increase or decrease number of Supporters
+  if (before.isSupporter !== after.isSupporter) {
+    changeNumberOfSupporters(goalId, after.isSupporter ? 1 : -1)
+  }
+
+  if (before.isSpectator !== after.isSpectator) {
+    changeNumberOfSpectators(goalId, after.isSpectator ? 1 : -1)
+  }
+
+  if (!after.isAdmin && !after.isAchiever && !after.isSupporter && !after.isSpectator && !after.hasOpenRequestToJoin) {
+    snapshot.after.ref.delete()
+  }
+})
+
+export const goalStakeholderDeletedHandler = onDocumentDelete(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderDeletedHandler',
+async (snapshot, context) => {
+
+  const { goalId } = context.params
+  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
+
+  // aggregation
+  handleAggregation(stakeholder, undefined)
+
+  if (stakeholder.isAchiever) {
+    changeNumberOfAchievers(goalId, -1)
+
+    const snaps = await db.collection(`Goals/${goalId}/Milestones`).where('achieverId', '==', stakeholder.uid).get()
+    const batch = db.batch()
+    for (const doc of snaps.docs) {
+      batch.update(doc.ref, { achieverId: '' })
     }
+    batch.commit()
+  }
 
-    if (stakeholder.isSupporter) {
-      changeNumberOfSupporters(goalId, 1)
+  if (stakeholder.isSupporter) {
+    changeNumberOfSupporters(goalId, -1)
+
+    const snaps = await db.collection(`Goals/${goalId}/Supports`).where('supporterId', '==', stakeholder.uid).get()
+    const batch = db.batch()
+    for (const doc of snaps.docs) {
+      batch.delete(doc.ref)
     }
+    batch.commit()
+  }
 
-    if (stakeholder.isSpectator) {
-      changeNumberOfSpectators(goalId, 1)
-    }
+  if (stakeholder.isSpectator) {
+    changeNumberOfSpectators(goalId, -1)
+  }
 
-    // events
-    handleStakeholderEvents(createGoalStakeholder(), stakeholder, goal)
-
-    // aggregation
-    handleAggregation(undefined, stakeholder)
-  })
-
-export const goalStakeholderChangeHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
-  .onUpdate(async (snapshot, context) => {
-
-    const before = createGoalStakeholder(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
-    const after = createGoalStakeholder(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
-    const { stakeholderId, goalId } = context.params
-
-    const goal = await getDocument<Goal>(`Goals/${goalId}`)
-
-    // events
-    handleStakeholderEvents(before, after, goal)
-
-    // aggregation
-    handleAggregation(before, after)
-
-    // isAchiever changed
-    if (before.isAchiever !== after.isAchiever) {
-      changeNumberOfAchievers(goalId, after.isAchiever ? 1 : -1)
-    }
-
-    // increase or decrease number of Supporters
-    if (before.isSupporter !== after.isSupporter) {
-      changeNumberOfSupporters(goalId, after.isSupporter ? 1 : -1)
-    }
-
-    if (before.isSpectator !== after.isSpectator) {
-      changeNumberOfSpectators(goalId, after.isSpectator ? 1 : -1)
-    }
-
-    if (!after.isAdmin && !after.isAchiever && !after.isSupporter && !after.isSpectator && !after.hasOpenRequestToJoin) {
-      snapshot.after.ref.delete()
-    }
-  })
-
-export const goalStakeholderDeletedHandler = functions.firestore.document(`Goals/{goalId}/GStakeholders/{stakeholderId}`)
-  .onDelete(async (snapshot, context) => {
-
-    const { goalId, stakeholderId } = context.params
-    const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
-
-    // aggregation
-    handleAggregation(stakeholder, undefined)
-
-    if (stakeholder.isAchiever) {
-      changeNumberOfAchievers(goalId, -1)
-
-      const snaps = await db.collection(`Goals/${goalId}/Milestones`).where('achieverId', '==', stakeholder.uid).get()
-      const batch = db.batch()
-      for (const doc of snaps.docs) {
-        batch.update(doc.ref, { achieverId: '' })
-      }
-      batch.commit()
-    }
-
-    if (stakeholder.isSupporter) {
-      changeNumberOfSupporters(goalId, -1)
-
-      const snaps = await db.collection(`Goals/${goalId}/Supports`).where('supporterId', '==', stakeholder.uid).get()
-      const batch = db.batch()
-      for (const doc of snaps.docs) {
-        batch.delete(doc.ref)
-      }
-      batch.commit()
-    }
-
-    if (stakeholder.isSpectator) {
-      changeNumberOfSpectators(goalId, -1)
-    }
-
-  })
+})
 
 function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder, goal: Goal) {
 

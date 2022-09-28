@@ -8,6 +8,7 @@ import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { toDate } from '../../shared/utils'
 import { getImgIxResourceUrl } from '../../shared/image/image'
 import { isAfter, subDays } from 'date-fns'
+import { wrapPubsubOnRunHandler } from '../../internals/sentry'
 
 
 function getFocusData(goal: Goal, stakeholder: GoalStakeholder): { goal: Partial<Goal>, stakeholder: GoalStakeholder } {
@@ -23,7 +24,8 @@ function getFocusData(goal: Goal, stakeholder: GoalStakeholder): { goal: Partial
 
 // // crontab.guru to determine schedule value
 // export const scheduledFocusEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async () => {
-export const scheduledFocusEmailRunner = functions.pubsub.schedule('0 18 * * 5').onRun(async () => {
+export const scheduledFocusEmailRunner = functions().pubsub.schedule('0 18 * * 5').onRun(wrapPubsubOnRunHandler('scheduledFocusEmailRunner',
+async () => {
 
   const stakeholdersSnap = await db.collectionGroup('GStakeholders').where('focus.on', '==', true).get()
   const stakeholders = stakeholdersSnap.docs.map(doc => createGoalStakeholder(toDate({ ...doc.data(), uid: doc.id })))
@@ -62,7 +64,7 @@ export const scheduledFocusEmailRunner = functions.pubsub.schedule('0 18 * * 5')
       ]
     }, groupIds.unsubscribeAll)
   }
-})
+}))
 
 function newerThanFourDays(goal: Goal): boolean {
   const fourDaysAgo = subDays(new Date(), 4)

@@ -37,18 +37,18 @@ export class UserSpectateService extends FireSubCollection<Spectator> {
       : undefined
   }
 
-  override async onCreate(spectator: Spectator, { write, params }: WriteOptions) {
+  override async onCreate(spectator: Spectator, { write }: WriteOptions) {
     const uid = spectator.uid
-    if (!params?.['uid']) throw new Error('uid not provided')
+    if (!uid || !spectator.profileId) throw new Error('uid not provided')
     const [current, toBeSpectated] = await Promise.all([
       this.profile.getValue(uid),
-      this.profile.getValue(params['uid'])
+      this.profile.getValue(spectator.profileId)
     ])
 
     if (!current) throw new Error(`Couldn't find current user data`)
     if (!toBeSpectated) throw new Error(`Couldn't find data of user to be spectated`)
 
-    const ref = this.getRef(uid, { uid: params['uid'] });
+    const ref = this.getRef(uid, { uid: spectator.profileId });
     const data = createSpectator({
       uid,
       username: current.username,
@@ -76,13 +76,6 @@ export class UserSpectateService extends FireSubCollection<Spectator> {
 
   getSpectating(uid: string) {
     return this.load([where('uid', '==', uid)])
-  }
-
-  /**
-   * @param uid the uid of the user that is going to be spectated
-   */
-  toggleSpectate(uid: string, spectate: boolean) {
-    this.upsert({ uid: this.auth.uid, isSpectator: spectate }, { params: { uid }})
   }
 
 }

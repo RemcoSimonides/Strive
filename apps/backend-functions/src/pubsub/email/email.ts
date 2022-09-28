@@ -8,11 +8,13 @@ import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNo
 import { groupIds, templateIds } from './ids'
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { toDate } from '../../shared/utils'
+import { wrapPubsubOnRunHandler } from '../../internals/sentry'
 
 
 // // crontab.guru to determine schedule value
 // export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async () => {
-export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun(async () => {
+export const scheduledEmailRunner = functions().pubsub.schedule('0 0 1 * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner', 
+async () => {
 
   const [ personalSnaps, motivation, newFeatures ] = await Promise.all([
     db.collectionGroup('Personal').get(),
@@ -62,7 +64,7 @@ export const scheduledEmailRunner = functions.pubsub.schedule('0 0 1 * *').onRun
       data,
     }, groupIds.unsubscribeAll)
   }
-})
+}))
 
 async function getStakeholders(uid: string) {
   const stakeholderSnaps = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('isAchiever', '==', true).orderBy('createdAt', 'desc').get()
