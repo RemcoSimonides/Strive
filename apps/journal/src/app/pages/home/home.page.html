@@ -83,27 +83,27 @@
     <h3 class="fade"f>You're not alone</h3>
     <ul *ngIf="aggregation$ | async as a">
       <li>
-        <span class="number fade left">{{ a.goalsCreated }}</span>
+        <span class="number fade left">{{ a.goalsCreated | compact }}</span>
         <span class="label fade right">Goals created</span>
       </li>
   
       <li>
-        <span class="number fade left">{{ a.goalsCustomSupports }}</span>
+        <span class="number fade left">{{ a.goalsCustomSupports |compact }}</span>
         <span class="label fade right">Supports for goals</span>
       </li>
   
       <li>
-        <span class="number fade left">{{ a.usersFutureLetterSent }}</span>
+        <span class="number fade left">{{ a.usersFutureLetterSent | compact }}</span>
         <span class="label fade right">Letters sent to Future Self</span>
       </li>
   
       <li>
-        <span class="number fade left">{{ a.usersAffirmationsSet }}</span>
+        <span class="number fade left">{{ a.usersAffirmationsSet | compact }}</span>
         <span class="label fade right">Affirmations set</span>
       </li>
   
       <li>
-        <span class="number fade left">{{ a.usersGratefulnessOn }}</span>
+        <span class="number fade left">{{ a.usersGratefulnessOn | compact }}</span>
         <span class="label fade right">Daily gratefulness reminders set</span>
       </li>
     </ul>

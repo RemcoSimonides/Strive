@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular'
 import { HomeComponent } from './home.page'
 
 import { ImageModule } from '@strive/media/directives/image.module'
+import { CompactPipeModule } from '@strive/utils/pipes/compact.pipe'
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
     RouterModule,
     IonicModule,
     ImageModule,
+    CompactPipeModule
   ],
   declarations: [HomeComponent],
   exports: [HomeComponent]
