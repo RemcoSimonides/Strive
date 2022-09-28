@@ -10,21 +10,17 @@
 </ng-container>
 
 <ion-content class="ion-no-padding">
-  <ng-template #loading>
-    <ng-container *ngIf="!!profileId else login">
+
+  <ng-template #noProfile>
+    <ng-container *ngIf="loading$ | async; else notFound">
       <strive-page-loading></strive-page-loading>
     </ng-container>
-
-    <ng-template #login>
-      <section class="not-logged-in">
-        <p>
-            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your profile
-        </p>
-      </section>
-   </ng-template>
+    <ng-template #notFound>
+      <strive-404></strive-404>
+    </ng-template>
   </ng-template>
 
-  <ng-container *ngIf="profile$ | async as profile; else loading">
+  <ng-container *ngIf="profile$ | async as profile; else noProfile">
     <main>
       <header>
         <ion-card class="ion-padding">

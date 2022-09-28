@@ -2,8 +2,8 @@ import { Component } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { PopoverController, ModalController } from '@ionic/angular'
 
-import { combineLatest, firstValueFrom, Observable, of } from 'rxjs'
-import { distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs'
+import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 
 import { UserSpectateService } from '@strive/user/spectator/spectator.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
@@ -41,6 +41,7 @@ export class ProfileComponent {
 
   profile$ = this.profileId$.pipe(
     switchMap(profileId => profileId ? this.profileService.valueChanges(profileId) : of(undefined)),
+    tap(() => this.loading$.next(false)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
@@ -97,6 +98,8 @@ export class ProfileComponent {
       return title
     })
   )
+
+  loading$ = new BehaviorSubject<boolean>(true)
 
   constructor(
     private auth: AuthService,
