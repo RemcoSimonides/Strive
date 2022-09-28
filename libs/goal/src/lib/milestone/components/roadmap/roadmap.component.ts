@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { ItemReorderEventDetail, ModalController } from '@ionic/angular'
 import { Goal, Support } from '@strive/model'
 
 import { createMilestone, Milestone } from '@strive/model'
-import { MilestoneService } from '@strive/goal/milestone/milestone.service';
-import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form';
+import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form'
 
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component';
-import { DetailsComponent } from '../details/details.component';
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { AuthService } from '@strive/user/auth/auth.service'
+
+import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+import { DetailsComponent } from '../details/details.component'
+import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
@@ -31,6 +34,7 @@ export class RoadmapComponent {
   milestoneForm = new MilestoneForm()
 
   constructor(
+    private auth: AuthService,
     private modalCtrl: ModalController,
     private milestone: MilestoneService
   ) {}
@@ -81,10 +85,23 @@ export class RoadmapComponent {
     }).then(modal => modal.present())
   }
 
-  openSupportModal(event: Event, milestone: Milestone) {
+  async openSupportModal(event: Event, milestone: Milestone) {
     if (milestone.status !== 'pending') return
     event.stopPropagation()
-  
+
+    if (!this.auth.uid) {
+      const modal = await this.modalCtrl.create({
+        component: AuthModalComponent,
+        componentProps: {
+          authSegment: enumAuthSegment.login
+        }
+      })
+      modal.onDidDismiss().then(({ data: loggedIn }) => {
+        if (loggedIn) this.openSupportModal(event, milestone)
+      })
+      return modal.present()
+    }
+
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
@@ -93,5 +110,4 @@ export class RoadmapComponent {
       }
     }).then(modal => modal.present())
   }
-
 }
