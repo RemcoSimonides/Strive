@@ -235,14 +235,45 @@ export class GoalComponent {
     }
 
     if (hasOpenRequestToJoin) {
-      return this.stakeholderService.upsert({
-        uid: this.auth.uid,
-        isSpectator: true,
-        hasOpenRequestToJoin: false
-      }, { params: { goalId: this.goal.id }})
+      return this.alertCtrl.create({
+        subHeader: 'Are you sure you want to cancel your request to join goal?',
+        buttons: [
+          {
+            text: 'Yes',
+            handler: () => {
+              this.stakeholderService.upsert({
+                uid: this.auth.uid,
+                isSpectator: true,
+                hasOpenRequestToJoin: false
+              }, { params: { goalId: this.goal.id }})
+            }
+          },
+          {
+            text: 'No',
+            role: 'cancel'
+          }
+        ]
+      }).then(alert => alert.present())
     }
-    
-    this.openTeamModal()
+
+    return this.alertCtrl.create({
+      subHeader: 'Are you sure you no longer want to be an achiever in this goal?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.stakeholderService.upsert({
+              uid: this.auth.uid,
+              isAchiever: false
+            }, { params: { goalId: this.goal.id }})
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
   }
 
   async spectate() {

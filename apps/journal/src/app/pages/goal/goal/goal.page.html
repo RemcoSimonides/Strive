@@ -51,7 +51,7 @@
       <div class="info">
         <ul class="properties">
       
-          <li (click)="openTeamModal()">
+          <li (click)="openTeamModal()" class="clickable">
             <ion-icon name="flag"></ion-icon>
             <div>
               <b>{{ goal.numberOfAchievers ?? 0 }}</b>
@@ -59,7 +59,7 @@
             </div>
           </li>
       
-          <li (click)="openTeamModal()">
+          <li (click)="openTeamModal()" class="clickable">
             <ion-icon src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
             <div>
               <b>{{ goal.numberOfSupporters ?? 0 }}</b>
@@ -67,7 +67,7 @@
             </div>
           </li>
 
-          <li (click)="openTeamModal()">
+          <li (click)="openTeamModal()" class="clickable">
             <ion-icon name="star"></ion-icon>
             <div>
               <b>{{ goal.numberOfSpectators ?? 0 }}</b>

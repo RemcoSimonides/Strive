@@ -48,6 +48,10 @@ main {
           align-items: center;
           color: var(--ion-color-medium);
           font-size: clamp(12px, 2.5vw, 1rem);
+
+          &.clickable {
+            cursor: pointer;
+          }
         }
       }
     }

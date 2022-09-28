@@ -112,7 +112,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
         buttons: [
           {
             text: 'Yes',
-            handler: async () => {
+            handler: () => {
               this.stakeholder.remove(you.uid, { params: { goalId: this.goalId } })
               this.dismiss()
             }
@@ -146,7 +146,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
     }
 
     return this.alertCtrl.create({
-      subHeader: `You're the only admin of this goal. Please make another person admin.`,
+      subHeader: `You're the only admin of this goal. Please make another person admin first.`,
       buttons: [
         {
           text: 'Ok',
