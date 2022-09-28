@@ -12,7 +12,6 @@ import { ActivatePushNotificaitonsModule } from '@strive/exercises/components/ac
 import { HeaderModule } from '@strive/ui/header/header.module'
 
 import { CardsModule } from '@strive/exercises/daily-gratefulness/components/cards/cards.module'
-import { CardsModalModule } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
 const routes: Routes = [
@@ -34,7 +33,6 @@ const routes: Routes = [
     ActivatePushNotificaitonsModule,
     HeaderModule,
     CardsModule,
-    CardsModalModule,
     DatetimeModule
   ],
   declarations: [DailyGratefulnessComponent]

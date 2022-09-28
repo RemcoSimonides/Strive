@@ -20,6 +20,7 @@ import { AppComponent } from './app.component'
 import { TabsModule } from './pages/tabs/tabs.module'
 import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module'
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
+import { CardsModalModule } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.module'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { PWAService } from '@strive/utils/services/pwa.service'
@@ -48,17 +49,19 @@ Sentry.init(
     RouterModule,
     BrowserModule.withServerTransition({ appId: 'journal' }),
     IonicModule.forRoot(),
-    // Strive
-    ImageModule,
-    AuthModalModule,
-    TabsModule,
-    ProfileOptionsBrowserPageModule,
     ServiceWorkerModule.register('sw-master.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    
+    // Strive
+    ImageModule,
+    AuthModalModule,
+    TabsModule,
+    ProfileOptionsBrowserPageModule,
+    CardsModalModule,
   ],
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },

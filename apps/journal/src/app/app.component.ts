@@ -1,5 +1,5 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
-import { Router, NavigationEnd } from '@angular/router'
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router'
 import { isPlatformServer } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Unsubscribe } from 'firebase/firestore'
@@ -12,11 +12,12 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
-import { SeoService } from '@strive/utils/services/seo.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
 
 @Component({
   selector: 'journal-root',
@@ -42,6 +43,7 @@ export class AppComponent implements OnDestroy {
     private personalService: PersonalService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
+    private route: ActivatedRoute,
     private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,
@@ -64,7 +66,7 @@ export class AppComponent implements OnDestroy {
         })
       }
 
-      this.openAuthModalOnStartup()
+      this.openModalOnStartup()
     })
 
     this.seo.setInitial()
@@ -74,23 +76,34 @@ export class AppComponent implements OnDestroy {
     if (this.fcmUnsubscribe) this.fcmUnsubscribe()
   }
 
-  async openAuthModalOnStartup() {
+  async openModalOnStartup() {
     if (isPlatformServer(this.platformId)) return
 
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
-      if (isLoggedIn) return
 
-      const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
-      const doNotShowPartial = ['/goal/']
-      const doShowSignUpModalPages = ['/explore']
-
-      if (doNotShowExact.some(page => page === event.url)) return
-      if (doNotShowPartial.some(part => event.url.includes(part))) return
-      if (doShowSignUpModalPages.some(page => page === event.url)) {
-        this.openAuthModal(enumAuthSegment.register)
+      if (!isLoggedIn) {
+        const { url } = event
+        const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
+        const doNotShowPartial = ['/goal/']
+        const doShowSignUpModalPages = ['/explore']
+  
+        if (doNotShowExact.some(page => page === url)) return
+        if (doNotShowPartial.some(part => url.includes(part))) return
+        if (doShowSignUpModalPages.some(page => page === url)) {
+          this.openAuthModal(enumAuthSegment.register)
+        } else {
+          this.openAuthModal(enumAuthSegment.login)
+        }
       } else {
-        this.openAuthModal(enumAuthSegment.login)
+
+        const { t } = this.route.snapshot.queryParams
+        if (t === 'daily-gratefulness') {
+          return this.modalCtrl.create({
+            component: CardsModalComponent
+          }).then(modal => modal.present())
+        }
+
       }
     })
   }

@@ -9,6 +9,7 @@ exercise-daily-gratefulness-cards {
     min-width: 240px;
     width: 75%;
     height: 400px;
+    overflow: visible;
   }
   
   .swiper-slide {
@@ -30,6 +31,10 @@ exercise-daily-gratefulness-cards {
         --highlight-background: var(--ion-color-secondary);
         --background: transparent;
         --padding-start: 0;
+
+        span {
+          margin-top: 16px;
+        }
       }
 
       ion-button {
@@ -42,7 +47,6 @@ exercise-daily-gratefulness-cards {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      list-style-type: disc;
       margin-left: 16px;
     }
 
@@ -51,7 +55,7 @@ exercise-daily-gratefulness-cards {
       flex-direction: column;
       gap: 16px;
 
-      span {
+      .date {
         margin-left: auto;
         color: var(--ion-color-medium);
       }
@@ -78,5 +82,10 @@ exercise-daily-gratefulness-cards {
   
   .swiper-button-disabled {
     display: none;
+  }
+
+  .disc {
+    color: var(--ion-color-secondary);
+    margin-right: 8px;
   }
 }

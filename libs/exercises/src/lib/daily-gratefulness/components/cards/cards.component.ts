@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewEncapsulation } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
 
 import { limit } from 'firebase/firestore'
-import { debounceTime, map, of, switchMap } from 'rxjs'
+import { BehaviorSubject, map, of, switchMap } from 'rxjs'
 import { formatISO } from 'date-fns'
 
 import { AuthService } from '@strive/user/auth/auth.service'
@@ -10,6 +10,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { DailyGratefulnessItemService } from '../../daily-gratefulness.service'
 
 import { DailyGratefulnessItem } from '@strive/model'
+import { delay } from '@strive/utils/helpers'
 
 import SwiperCore, { EffectCards, Navigation } from 'swiper'
 SwiperCore.use([EffectCards, Navigation])
@@ -23,7 +24,7 @@ SwiperCore.use([EffectCards, Navigation])
 })
 export class CardsComponent implements OnDestroy {
 
-  startValue = 'I am grateful for '
+  startValue = ''
   today = formatISO(new Date(), { representation: 'date' })
   isDesktop$ = this.screensize.isDesktop$
 
@@ -33,32 +34,48 @@ export class CardsComponent implements OnDestroy {
     item3: new FormControl(this.startValue, { nonNullable: true })
   })
 
+  save$ = new BehaviorSubject<'save' | 'saving' | 'saved'>('save')
+
   cards$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.itemService.valueChanges([limit(500)] ,{ uid: profile.uid }) : of([]))
   ).pipe(
     switchMap(cards => this.itemService.decrypt(cards)),
     map(cards => {
-      for (const card of cards) {
-        if (card.id === this.today) {
-          const [item1, item2, item3,] = card.items
-          this.form.patchValue({
-            item1: item1 ?? this.startValue,
-            item2: item2 ?? this.startValue,
-            item3: item3 ?? this.startValue
-          }, { emitEvent: false })
-        }
+      const today = cards.find(card => card.id === this.today)
+      if (today) {
+        const [item1, item2, item3,] = today.items
+        this.form.patchValue({
+          item1: item1 ?? this.startValue,
+          item2: item2 ?? this.startValue,
+          item3: item3 ?? this.startValue
+        }, { emitEvent: false })
       }
 
       return cards.filter(card => card.id !== this.today)
     })
   )
 
-  private sub = this.form.valueChanges.pipe(
-    debounceTime(2000)
-  ).subscribe(value => {
-    if (!this.auth.uid) return
+  private sub = this.form.valueChanges.subscribe(() => {
+    if (this.save$.value === 'saved' && this.form.dirty) {
+      this.save$.next('save')
+    }
+  })
 
-    const { item1, item2, item3 } = value
+  constructor(
+    private auth: AuthService,
+    private itemService: DailyGratefulnessItemService,
+    private screensize: ScreensizeService
+  ) {}
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
+  }
+
+  save() {
+    if (!this.auth.uid) return
+    this.save$.next('saving')
+
+    const { item1, item2, item3 } = this.form.value
 
     const items: string[] = []
     if (item1 && item1 !== this.startValue) items.push(item1)
@@ -72,21 +89,10 @@ export class CardsComponent implements OnDestroy {
       }
 
       this.itemService.save(card)
+      this.form.markAsPristine()
     }
 
-    this.form.markAsPristine()
-    this.cdr.markForCheck()
-  })
-
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private itemService: DailyGratefulnessItemService,
-    private screensize: ScreensizeService
-  ) {}
-
-  ngOnDestroy() {
-    this.sub.unsubscribe()
+    delay(1500).then(() => { this.save$.next('saved') })
   }
 
 }

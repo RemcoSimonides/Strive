@@ -44,7 +44,7 @@ export async function sendDailyGratefulnessPushNotification(uid: string) {
         title: `Daily Gratefulness Reminder`,
         body: `Name three things you were grateful for today`,
         icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-        clickAction: 'exercise/daily-gratefulness?t=new'
+        clickAction: 't=daily-gratefulness'
       }
     })
   }

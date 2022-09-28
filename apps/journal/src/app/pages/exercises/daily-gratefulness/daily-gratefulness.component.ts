@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
 import { ModalController, PopoverController } from '@ionic/angular'
 
 import { of, switchMap, tap } from 'rxjs'
@@ -9,11 +8,10 @@ import { addDays, isPast, set } from 'date-fns'
 import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
-import { AuthService } from '@strive/user/auth/auth.service'
 
 interface DailyGratefulnessSetting {
   on: boolean
@@ -65,7 +63,6 @@ export class DailyGratefulnessComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
-    private route: ActivatedRoute,
     public screensize: ScreensizeService,
     private seo: SeoService,
     private service: DailyGratefulnessService
@@ -74,13 +71,6 @@ export class DailyGratefulnessComponent implements OnDestroy {
       title: 'Daily Gratefulness - Strive Journal',
       description: 'Focus on the positive and take a minute to be grateful'
     })
-
-    const { t } = this.route.snapshot.queryParams
-    if (t === 'new') {
-      this.modalCtrl.create({
-        component: CardsModalComponent
-      }).then(modal => modal.present())
-    }
   }
 
   toggle(event: any) {

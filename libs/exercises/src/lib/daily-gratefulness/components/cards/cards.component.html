@@ -5,24 +5,36 @@
       <section>
         <span class="question">What are three things you are grateful for today?</span>
         <ion-item>
+          <span class="disc">•</span>
           <ion-textarea rows="3" formControlName="item1" autoGrow></ion-textarea>
         </ion-item>
         <ion-item>
+          <span class="disc">•</span>
           <ion-textarea rows="3" formControlName="item2" autoGrow></ion-textarea>
         </ion-item>
         <ion-item>
+          <span class="disc">•</span>
           <ion-textarea rows="3" formControlName="item3" autoGrow></ion-textarea>
         </ion-item>
       </section>
   
-      <ion-button disabled color="priomary" fill="clear">
-        <ng-container *ngIf="form.dirty; else saved">
-          <span>ENCRYPTING & SAVING...</span>
+      <ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear">
+        <ng-container *ngIf="save$ | async as status">
+
+          <ng-container *ngIf="status === 'saved'">
+            <span>SAVED</span>
+            <ion-icon name="checkmark" slot="end"></ion-icon>
+          </ng-container>
+
+          <ng-container *ngIf="status === 'saving'">
+            <span>Encrypting...</span>
+          </ng-container>
+
+          <ng-container *ngIf="status === 'save'">
+            <span>SAVE</span>
+          </ng-container>
+
         </ng-container>
-        <ng-template #saved>
-          <span>ENCRYPTED & SAVED</span>
-          <ion-icon slot="end" name="checkmark-outline"></ion-icon>
-        </ng-template>
       </ion-button>
     </form>
   </ng-template>
@@ -30,10 +42,11 @@
   <ng-container *ngFor="let card of cards$ | async">
     <ng-template swiperSlide>
       <section class="card">
-        <span>{{ card.createdAt | date:'longDate' }}</span>
+        <span class="date">{{ card.createdAt | date:'longDate' }}</span>
 
         <ul>
           <li *ngFor="let item of card.items">
+            <span class="disc">•</span>
             {{ item }}
           </li>
         </ul>
