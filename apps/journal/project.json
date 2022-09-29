@@ -148,6 +148,26 @@
         }
       },
       "defaultConfiguration": "development"
+    },
+    "prerender": {
+      "builder": "@nguniversal/builders:prerender",
+      "options": {
+        "browserTarget": "journal:build:production",
+        "serverTarget": "journal:server:production",
+        "routes": [
+          "/",
+          "/download",
+          "/exercise",
+          "/exercise/affirmations",
+          "/exercise/daily-gratefulness",
+          "/exercise/dear-future-self",
+          "/explore"
+        ],
+        "guessRoutes": false
+      },
+      "configurations": {
+        "production": {}
+      }
     }
   },
   "tags": []

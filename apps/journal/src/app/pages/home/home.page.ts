@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
+import { SeoService } from '@strive/utils/services/seo.service'
 
 @Component({
   selector: 'journal-home',
@@ -20,8 +21,10 @@ export class HomeComponent {
   constructor (
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
+    seo: SeoService,
     @Inject(PLATFORM_ID) platformId: any
   ) {
+    seo.generateTags({})
     if (isPlatformBrowser(platformId)) {
       const observer = new IntersectionObserver(entries => {
         entries.forEach((entry) => {

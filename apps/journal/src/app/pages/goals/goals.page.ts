@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 import { Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
@@ -42,12 +42,12 @@ export class GoalsComponent {
     private auth: AuthService,
     private goal: GoalService,
     private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
     private router: Router,
-    private seo: SeoService,
+    seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private goalEvent: GoalEventService
   ) {
+    seo.generateTags({ title: `Goals - Strive Journal` })
     const stakeholders$ = this.auth.user$.pipe(
       filter(profile => !!profile),
       switchMap(profile => this.stakeholder.valueChanges([where('uid', '==', profile?.uid), orderBy('createdAt', 'desc')])),
@@ -92,8 +92,6 @@ export class GoalsComponent {
         return 0
       }))
     )
-
-    this.seo.generateTags({ title: `Goals - Strive Journal` })
   }
 
   openAuthModal() {
