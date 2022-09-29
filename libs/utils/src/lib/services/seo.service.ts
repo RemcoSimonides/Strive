@@ -7,7 +7,7 @@ const initial: MetaDefinition[] = [
   { name: 'og:description', content: 'Stay focused on your goals and help others achieve theirs!' },
   { name: 'og:type', content: 'website' },
   { name: 'og:url', content: 'https://strivejournal.com/' },
-  { name: 'og:image', content: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ffull_logo-1200x630.png?alt=media&token=88184b80-d54f-423a-8378-aa0e826b330e' }
+  { name: 'og:image', content: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ffull_logo-1200x630.jpg?alt=media&token=afe95daf-4897-4088-817f-6798e0566d87' }
 ]
 
 function getInitial(name: string) {
