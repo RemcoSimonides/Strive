@@ -17,7 +17,7 @@
   "hosting": [
     {
       "target": "journal",
-      "public": "dist/apps/journal/browser",
+      "public": "dist/apps/journal/browser/",
       "ignore": [
         "firebase.json",
         "**/.*",
