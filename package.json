@@ -8,9 +8,12 @@
     "start": "nx serve",
     "build": "npm run build:journal && nx build admin",
     "build:journal": "npx ng build journal:server && npx ng run journal:prerender",
-    "build:all": "npm run build:journal && npx ng build backend-functions",
+    "build:admin": "npx nx build admin",
     "test": "nx test",
-    "serve:ssr": "node dist/apps/journal/server/main.js"
+    "serve:ssr": "node dist/apps/journal/server/main.js",
+    "deploy:hosting": "npm run build && firebase deploy --only hosting && firebase deploy --only functions:ssr",
+    "deploy:hosting:journal": "npm run build:journal && firebase deploy --only hosting:journal && firebase deploy --only functions:ssr",
+    "deploy:hosting:admin": "npm run build:admin && firebase deploy --only hosting:admin"
   },
   "private": true,
   "dependencies": {
