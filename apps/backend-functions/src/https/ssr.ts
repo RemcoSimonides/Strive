@@ -8,7 +8,8 @@ const expressApp = __non_webpack_require__(`${__dirname}/dist/apps/journal/serve
 
 const config: RuntimeOptions = {
   timeoutSeconds: 60,
-  memory: '1GB'
+  memory: '1GB',
+  minInstances: 1
 }
 
 export const ssr = functions(config)
