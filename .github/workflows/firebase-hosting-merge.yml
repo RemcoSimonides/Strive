@@ -16,7 +16,7 @@ jobs:
       - name: Create SA key
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STRIVE_JOURNAL }}' > $HOME/gcloud.json
       - name: Deploy SSR Cloud FUnction
-        run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npx firebase-tools deploy --only functions:ssr --json
+        run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npx firebase-tools use prod && npx firebase-tools deploy --only functions:ssr --json
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
