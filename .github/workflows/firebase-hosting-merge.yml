@@ -13,7 +13,10 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
       - run: node apps/backend-functions/cp-angular.js
-      - run: npx firebase-tools use prod && npx firebase-tools deploy --only functions:ssr
+      - name: Create SA key
+        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STRIVE_JOURNAL }}' > $HOME/gcloud.json
+      - name: Deploy SSR Cloud FUnction
+        run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npx firebase-tools deploy --only functions:ssr --json
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
