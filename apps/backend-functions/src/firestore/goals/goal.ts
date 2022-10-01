@@ -177,7 +177,7 @@ export async function supportsNeedDecision(goal: Goal) {
     .where('status', '==', 'pending')
 
   const supportsQuery = db.collection(`Goals/${goal.id}/Supports`)
-    .where('source.goal.id', '==', goal.id)
+    .where('goalId', '==', goal.id)
     .where('needsDecision', '==', false)
 
    const [supportsSnap, milestonesSnap] = await Promise.all([

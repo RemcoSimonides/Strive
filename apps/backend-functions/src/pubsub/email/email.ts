@@ -77,7 +77,7 @@ async function getGoals(stakeholders: GoalStakeholder[]): Promise<Goal[]> {
 }
 
 async function getGoalEvents(stakeholders: GoalStakeholder[]): Promise<number> {
-  const promises = stakeholders.map(stakeholder => db.collection(`GoalEvents`).where('source.goal.id', '==', stakeholder.goalId).where('createdAt', '>', stakeholder.lastCheckedGoal).get())
+  const promises = stakeholders.map(stakeholder => db.collection(`GoalEvents`).where('goalId', '==', stakeholder.goalId).where('createdAt', '>', stakeholder.lastCheckedGoal).get())
   const eventsSnaps = await Promise.all(promises)  
   const events = eventsSnaps.map(snap => snap.docs.map(doc => createGoalEvent(toDate({ ...doc.data(), id: doc.id }))))
   const flatten = events.reduce((acc, val) => acc.concat(val), [])
