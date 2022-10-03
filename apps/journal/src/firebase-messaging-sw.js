@@ -24,7 +24,7 @@ onBackgroundMessage(messaging, payload => {
   self.addEventListener('notificationclick', (event) => {
     // Write the code to open
     if (clients.openWindow && event.notification.data.url) {
-      event.waitUntil(clients.openWindow(event.notification.data.url));
+      event.waitUntil(clients.openWindow(`${self.location.origin}/${event.notification.data.url}`));
     }
   });}
 ());
