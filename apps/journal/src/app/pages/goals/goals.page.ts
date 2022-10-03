@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { ModalController } from '@ionic/angular'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 
@@ -22,6 +22,8 @@ import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalUpdatesModalComponent } from '@strive/goal/goal/components/modals/goals/goal-updates.component'
+import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
+import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 
 @Component({
   selector: 'journal-goals',
@@ -42,12 +44,30 @@ export class GoalsComponent {
     private auth: AuthService,
     private goal: GoalService,
     private modalCtrl: ModalController,
+    private route: ActivatedRoute,
     private router: Router,
     seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private goalEvent: GoalEventService
   ) {
     seo.generateTags({ title: `Goals - Strive Journal` })
+
+    const { t, affirm } = this.route.snapshot.queryParams
+    console.log('t', t)
+    console.log('affirm', affirm)
+    if (t === 'daily-gratefulness') {
+      this.modalCtrl.create({
+        component: CardsModalComponent
+      }).then(modal => modal.present())
+    }
+
+    if (affirm) {
+      this.modalCtrl.create({
+        component: AffirmModalComponent,
+        componentProps: { affirmation: decodeURI(affirm) }
+      }).then(modal => modal.present())
+    }
+
     const stakeholders$ = this.auth.user$.pipe(
       filter(profile => !!profile),
       switchMap(profile => this.stakeholder.valueChanges([where('uid', '==', profile?.uid), orderBy('createdAt', 'desc')])),

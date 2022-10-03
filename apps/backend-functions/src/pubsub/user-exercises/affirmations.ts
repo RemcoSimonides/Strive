@@ -12,7 +12,7 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
     const randomAffirmation = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)];
     const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
 
-    const clickAction = `?affirm=${encodeURI(randomAffirmation)}`
+    const clickAction = `goals?affirm=${encodeURI(randomAffirmation)}`
 
     if (personal?.fcmTokens.some(token => token)) {
       return admin.messaging().sendToDevice(personal.fcmTokens, {

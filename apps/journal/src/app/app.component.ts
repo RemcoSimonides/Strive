@@ -1,5 +1,5 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router'
+import { Router, NavigationEnd } from '@angular/router'
 import { isPlatformServer } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Unsubscribe } from 'firebase/firestore'
@@ -17,8 +17,6 @@ import { AuthService } from '@strive/user/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
-import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
-import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 
 @Component({
   selector: 'journal-root',
@@ -45,7 +43,6 @@ export class AppComponent implements OnDestroy {
     private personalService: PersonalService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
-    private route: ActivatedRoute,
     private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,
@@ -97,21 +94,6 @@ export class AppComponent implements OnDestroy {
           this.openAuthModal(enumAuthSegment.register)
         } else {
           this.openAuthModal(enumAuthSegment.login)
-        }
-      } else {
-
-        const { t, affirm } = this.route.snapshot.queryParams
-        if (t === 'daily-gratefulness') {
-          return this.modalCtrl.create({
-            component: CardsModalComponent
-          }).then(modal => modal.present())
-        }
-
-        if (affirm) {
-          return this.modalCtrl.create({
-            component: AffirmModalComponent,
-            componentProps: { affirmation: decodeURI(affirm) }
-          }).then(modal => modal.present())
         }
       }
     })

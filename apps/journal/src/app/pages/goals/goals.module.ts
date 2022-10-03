@@ -19,6 +19,9 @@ import { GoalThumbnailModule } from '@strive/goal/goal/components/thumbnail/thum
 import { GoalUpdatesModalModule } from '@strive/goal/goal/components/modals/goals/goal-updates.module'
 import { MiniThumbnailSwiperModule } from '@strive/goal/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.module'
 
+import { CardsModalModule } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.module'
+import { AffirmModalModule } from '@strive/exercises/affirmation/modals/affirm-modal.module'
+
 const routes: Routes = [
   {
     path: '',
@@ -41,7 +44,10 @@ const routes: Routes = [
     ProgressPipeModule,
     GoalThumbnailModule,
     GoalUpdatesModalModule,
-    MiniThumbnailSwiperModule
+    MiniThumbnailSwiperModule,
+
+    CardsModalModule,
+    AffirmModalModule
   ],
   declarations: [GoalsComponent]
 })

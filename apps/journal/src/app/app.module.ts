@@ -20,8 +20,6 @@ import { AppComponent } from './app.component'
 import { TabsModule } from './pages/tabs/tabs.module'
 import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module'
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
-import { CardsModalModule } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.module'
-import { AffirmModalModule } from '@strive/exercises/affirmation/modals/affirm-modal.module'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { PWAService } from '@strive/utils/services/pwa.service'
@@ -61,9 +59,7 @@ Sentry.init(
     ImageModule,
     AuthModalModule,
     TabsModule,
-    ProfileOptionsBrowserPageModule,
-    CardsModalModule,
-    AffirmModalModule
+    ProfileOptionsBrowserPageModule
   ],
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },
