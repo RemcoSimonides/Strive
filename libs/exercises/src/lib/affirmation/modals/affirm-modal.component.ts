@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 @Component({
   selector: '[affirmation] exercise-affirm-modal',
@@ -6,7 +7,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
   styleUrls: ['./affirm-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AffirmModalComponent {
+export class AffirmModalComponent extends ModalDirective {
 
   @Input() affirmation!: string
   
