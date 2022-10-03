@@ -4,7 +4,7 @@ import { isPlatformServer } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Unsubscribe } from 'firebase/firestore'
 
-import { filter, first, firstValueFrom } from 'rxjs'
+import { filter, first, firstValueFrom, Subscription } from 'rxjs'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
 
@@ -33,6 +33,7 @@ export class AppComponent implements OnDestroy {
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
 
   private fcmUnsubscribe?: Unsubscribe | undefined
+  private sub?: Subscription
 
   profile$ = this.auth.profile$
 
@@ -50,6 +51,8 @@ export class AppComponent implements OnDestroy {
     private support: SupportService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
+    this.openModalOnStartup()
+
     this.platform.ready().then(() => {
       this.screensize.onResize(this.platform.width());
       // this.initializeMenu();
@@ -65,8 +68,6 @@ export class AppComponent implements OnDestroy {
           this.fcmUnsubscribe = res
         })
       }
-
-      this.openModalOnStartup()
     })
 
     this.seo.setInitial()
@@ -74,12 +75,13 @@ export class AppComponent implements OnDestroy {
 
   ngOnDestroy() {
     if (this.fcmUnsubscribe) this.fcmUnsubscribe()
+    this.sub?.unsubscribe()
   }
 
   async openModalOnStartup() {
     if (isPlatformServer(this.platformId)) return
 
-    this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
+    this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
 
       if (!isLoggedIn) {
