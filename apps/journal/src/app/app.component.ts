@@ -18,6 +18,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
+import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 
 @Component({
   selector: 'journal-root',
@@ -99,13 +100,19 @@ export class AppComponent implements OnDestroy {
         }
       } else {
 
-        const { t } = this.route.snapshot.queryParams
+        const { t, affirm } = this.route.snapshot.queryParams
         if (t === 'daily-gratefulness') {
           return this.modalCtrl.create({
             component: CardsModalComponent
           }).then(modal => modal.present())
         }
 
+        if (affirm) {
+          return this.modalCtrl.create({
+            component: AffirmModalComponent,
+            componentProps: { affirmation: decodeURI(affirm) }
+          }).then(modal => modal.present())
+        }
       }
     })
   }
