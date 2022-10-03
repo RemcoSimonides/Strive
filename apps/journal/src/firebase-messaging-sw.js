@@ -1,23 +1,22 @@
-importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js');
-firebase.initializeApp({
-  projectId: "strive-journal",
-  messagingSenderId: '423468347975',
-  apiKey: "AIzaSyAIg4VtWaOMi5ASSr9Dc5PH-memu-58xXQ",
-  appId: "1:423468347975:web:6e2be7bea1c4475ad2f762",
-});
-const messaging = firebase.messaging();
+import { initializeApp } from 'firebase/app'
+import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw'
+import { environment } from '../../../environments/environment'
 
-// messaging.onBackgroundMessage((payload) => {
-//   console.log('[firebase-messaging-sw.js] Received background message 2 ', payload);
+const firebaseApp = initializeApp(environment.firebase.options)
+const messaging = getMessaging(firebaseApp)
 
-//   const notificationOptions = {
-//     body: payload.notification.body,
-//     icon: payload.notification.icon || 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
-//   };
+onBackgroundMessage(messaging, payload => {
+  console.log('[firebase-messaging-sw.js] Received background message 2 ', payload)
 
-//   self.registration.showNotification(payload.notification.title, notificationOptions);
-// });
+  // Customize notification here
+  // const notificationTitle = 'Background Message Title';
+  // const notificationOptions = {
+  //   body: 'Background Message body.',
+  //   icon: '/firebase-logo.png'
+  // };
+
+  // self.registration.showNotification(notificationTitle, notificationOptions);
+})
 
 (function () {
   'use strict';
