@@ -22,7 +22,6 @@ export class PWAService implements OnDestroy {
   ) {
     if (isPlatformBrowser(this.platformId)) {
       const everyHourOnceAppIsStable$ = appRef.isStable.pipe(
-        tap(stable => console.log('app is stable: ', stable)),
         first(isStable => isStable),
         switchMap(() => interval(1 * 60 * 60 * 1000)) // check again every hour
       )
