@@ -53,8 +53,6 @@ export class GoalsComponent {
     seo.generateTags({ title: `Goals - Strive Journal` })
 
     const { t, affirm } = this.route.snapshot.queryParams
-    console.log('t', t)
-    console.log('affirm', affirm)
     if (t === 'daily-gratefulness') {
       this.modalCtrl.create({
         component: CardsModalComponent
