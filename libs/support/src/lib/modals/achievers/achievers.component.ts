@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/c
 import { FormControl } from '@angular/forms'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
-import { GoalStakeholder } from '@strive/model'
+import { GoalStakeholder, User } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
-type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean }
+type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile: User }
 
 @Component({
   selector: '[support] support-achievers',
@@ -17,7 +17,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
 
   _achievers: GoalStakeholderWithChecked[] = []
   private _all: GoalStakeholderWithChecked[] = []
-  @Input() set achievers(achievers: GoalStakeholder[]) {
+  @Input() set achievers(achievers: (GoalStakeholder & { profile: User })[]) {
     this._achievers = achievers.map(achiever => ({ ...achiever, checked: false }))
     this._all = achievers.map(achiever => ({ ...achiever, checked: false }))
   }
@@ -29,7 +29,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
 
   private sub = this.filter.valueChanges.pipe().subscribe(value => {
     const filter = value.toLowerCase().trim()
-    this._achievers = this._all.filter(achiever => achiever.username.toLowerCase().includes(filter))
+    this._achievers = this._all.filter(achiever => achiever.profile.username.toLowerCase().includes(filter))
 
     this.showEveryoneOption = !filter || 'everyone'.includes(filter) || 'goal'.includes(filter)
   })
@@ -57,7 +57,8 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
     const { checked } = event.detail
     
     const stakeholder = this._all.find(a => a.uid === achiever.uid)
-    stakeholder!.checked = checked
+    if (!stakeholder) throw new Error('stakeholder not found when selecting')
+    stakeholder.checked = checked
   }
 
 }

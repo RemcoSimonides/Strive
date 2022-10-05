@@ -8,8 +8,7 @@ import {
   createNotificationBase,
   createSupportBase,
   SupportBase,
-  createAggregation,
-  User
+  createAggregation
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getDocument, toDate } from '../../../shared/utils'
@@ -49,13 +48,10 @@ async (snapshot, context) => {
   } else {
     const goalSnap = await db.doc(`Goals/${goalId}`).get()
     const goal = createGoal(goalSnap.data())
-    const user = await getDocument<User>(`Users/${support.supporterId}`)
 
     // Create new stakeholder
     const goalStakeholder = createGoalStakeholder({
       uid: support.supporterId,
-      username: user.username,
-      photoURL: user.photoURL,
       goalId,
       goalPublicity: goal.publicity,
       isSupporter: true,

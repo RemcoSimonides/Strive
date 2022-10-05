@@ -15,11 +15,11 @@
     <ion-list mode="md" *ngIf="you.uid">
       <ion-item lines="none">
         <ion-avatar slot="start" (click)="navTo(you.uid)">
-          <img [ref]="you.photoURL" asset="profile.png"/>
+          <img [ref]="you.profile.photoURL" asset="profile.png"/>
         </ion-avatar>
         <article>
           <ion-label>
-            <b>{{ you.username }}</b>
+            <b>{{ you.profile.username }}</b>
             <small>
               <span *ngIf="you.isAdmin">
                 <ion-icon src="assets/icons/user-tie-solid.svg" slot="end"></ion-icon>Admin
@@ -55,11 +55,11 @@
         <ion-list mode="md">
           <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'inset'">
             <ion-avatar slot="start" (click)="navTo(stakeholder.uid)">
-              <img [ref]="stakeholder.photoURL" asset="profile.png"/>
+              <img [ref]="stakeholder.profile.photoURL" asset="profile.png"/>
             </ion-avatar>
             <article>
               <ion-label>
-                <b>{{ stakeholder.username }}</b>
+                <b>{{ stakeholder.profile.username }}</b>
                 <small>
                   <span *ngIf="stakeholder.isAdmin">
                     <ion-icon src="assets/icons/user-tie-solid.svg" slot="end"></ion-icon>Admin

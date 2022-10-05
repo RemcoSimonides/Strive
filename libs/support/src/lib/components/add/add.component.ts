@@ -109,7 +109,9 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       return this.supportService.add(support, { params: { goalId: this.goalId }})
     }
 
-    const achievers = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId: this.goalId })
+    const stakeholders = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId: this.goalId })
+    const profiles = await this.profileService.getValue(stakeholders.map(a => a.uid))
+    const achievers = stakeholders.map(stakeholder => ({ ...stakeholder, profile: profiles.find(profile => profile.uid === stakeholder.uid)}))
     if (achievers.length === 1) {
       support.recipientId = achievers[0].uid
       this.form.setValue('')

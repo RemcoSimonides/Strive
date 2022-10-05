@@ -36,16 +36,12 @@ export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
     const timestamp = serverTimestamp() as any
 
     if (actionType === 'add') {
-      if (!this.auth.profile) { throw new Error('Profile has to be defined when creating goal stakeholder')}
       if (!stakeholder.goalId) { throw new Error('Goal id needs to be defined when creating goal stakeholder') }
-      const { username, photoURL } = this.auth.profile
       const goal = await getDoc(doc(this.db, `Goals/${stakeholder.goalId}`)).then(snap => createGoal(snap.data()))
       
       stakeholder = createGoalStakeholder({
         ...stakeholder,
         createdAt: timestamp,
-        username,
-        photoURL,
         goalPublicity: goal.publicity
       })
     }

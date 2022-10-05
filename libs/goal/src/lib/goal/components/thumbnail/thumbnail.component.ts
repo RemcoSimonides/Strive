@@ -9,7 +9,7 @@ function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number
     
   for (const { name } of events) {
     if (!counter[name]) counter[name] = 0;
-    counter[name]!++;
+    (counter[name] as number)++;
   }
 
   return Object.entries(counter).map(([event, count]): any => ({ event, count }))
@@ -36,7 +36,10 @@ export class GoalThumbnailComponent {
     this.messages = aggregateEvents(events)
       .map(a => getAggregatedMessage(a))
       .filter(a => !!a)
-      .sort((a, b) => a!.importance - b!.importance) as any
+      .sort((a, b) => {
+        if (a && b) return a.importance - b.importance
+        else return 0 // <-- never
+      }) as any
   }
 
   constructor(private popoverCtrl: PopoverController) {}

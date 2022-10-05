@@ -4,8 +4,6 @@ export type GoalStakeholderRole = 'isAdmin' | 'isAchiever' | 'isSupporter' | 'is
 
 export interface GoalStakeholder {
   uid: string
-  username: string
-  photoURL: string
   isAdmin: boolean
   isAchiever: boolean
   isSupporter: boolean
@@ -31,8 +29,6 @@ export interface Focus {
 export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): GoalStakeholder {
   return {
     uid: params.uid ? params.uid : '',
-    username: '',
-    photoURL: '',
     isAdmin: false,
     isAchiever: false,
     isSpectator: false,

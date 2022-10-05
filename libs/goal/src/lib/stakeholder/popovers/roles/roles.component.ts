@@ -2,7 +2,7 @@ import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController, PopoverController } from '@ionic/angular'
-import { GoalStakeholder } from '@strive/model'
+import { GoalStakeholder, User } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 import { GoalStakeholderService } from '../../stakeholder.service'
 
@@ -14,7 +14,7 @@ import { GoalStakeholderService } from '../../stakeholder.service'
 })
 export class RolesPopoverComponent {
 	@Input() goalId!: string
-	@Input() stakeholder!: GoalStakeholder
+	@Input() stakeholder!: GoalStakeholder & { profile: User }
 
 	constructor(
     private alertCtrl: AlertController,
@@ -46,8 +46,8 @@ export class RolesPopoverComponent {
 
     const { isSupporter } = this.stakeholder
     return this.alertCtrl.create({
-      subHeader: `Are you sure you want to remove ${this.stakeholder.username} from this goal?`,
-      message: isSupporter ? `${this.stakeholder.username}'s supports will be removed` : '',
+      subHeader: `Are you sure you want to remove ${this.stakeholder.profile.username} from this goal?`,
+      message: isSupporter ? `${this.stakeholder.profile.username}'s supports will be removed` : '',
       buttons: [
         {
           text: 'Yes',

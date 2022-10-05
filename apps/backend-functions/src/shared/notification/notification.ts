@@ -1,9 +1,9 @@
-import * as admin from 'firebase-admin';
-import { logger } from 'firebase-functions';
+import * as admin from 'firebase-admin'
+import { logger } from 'firebase-functions'
 // Interfaces
 import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification } from '@strive/model'
-import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification';
-import { getDocument, toDate, unique } from '../utils';
+import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification'
+import { getDocument, toDate, unique } from '../utils'
 
 const db = admin.firestore()
 const { serverTimestamp } = admin.firestore.FieldValue

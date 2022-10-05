@@ -2,7 +2,7 @@ import { db, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpda
 import { logger } from 'firebase-functions'
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
-import { GoalStakeholder, createUser, User, createAlgoliaUser } from '@strive/model'
+import { createUser, createAlgoliaUser } from '@strive/model'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
 import { deleteCollection, toDate } from '../../shared/utils'
 
@@ -70,10 +70,6 @@ async (snapshot, context) => {
       logger.error('SOMETHING WENT WRONG BEFORE THIS - WHAT DID YOU DO?: ', before, after)
       return
     }
-
-    await Promise.all([
-      updateGoalStakeholders(uid, after),
-    ])
   }
 
   if (before.username !== after.username || before.photoURL !== after.photoURL || before.numberOfSpectators !== after.numberOfSpectators) {
@@ -81,14 +77,3 @@ async (snapshot, context) => {
     await updateAlgoliaObject('user', uid, createAlgoliaUser(after))
   }
 })
-
-async function updateGoalStakeholders(uid: string, after: User) {
-  const data: Partial<GoalStakeholder> = {
-    username: after.username,
-    photoURL: after.photoURL
-  }
-
-  const stakeholdersSnap = await db.collectionGroup(`GStakeholders`).where('uid', '==', uid).get()
-  const promises = stakeholdersSnap.docs.map(doc => doc.ref.update(data))
-  return Promise.all(promises)
-}

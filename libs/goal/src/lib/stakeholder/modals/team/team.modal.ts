@@ -7,12 +7,14 @@ import { AlertController, ModalController, PopoverController } from '@ionic/angu
 import { combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { map, shareReplay, startWith } from 'rxjs/operators'
 
-import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { joinWith } from 'ngfire'
+import { createGoalStakeholder, GoalStakeholder, User } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { AuthService } from '@strive/user/auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RolesPopoverComponent } from '../../popovers/roles/roles.component'
@@ -26,9 +28,9 @@ import { RolesPopoverComponent } from '../../popovers/roles/roles.component'
 export class TeamModalComponent extends ModalDirective implements OnInit {
   @Input() goalId!: string
 
-  you$?: Observable<GoalStakeholder>
+  you$?: Observable<GoalStakeholder & { profile: User }>
   hasOthers$?: Observable<boolean>
-  others$?: Observable<GoalStakeholder[]>
+  others$?: Observable<(GoalStakeholder & { profile: User })[]>
 
   filter = new FormControl<keyof GoalStakeholder | null>(null)
   
@@ -38,6 +40,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
     private goalService: GoalService,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private profileService: ProfileService,
     private router: Router,
     private stakeholder: GoalStakeholderService,
     protected override location: Location
@@ -48,7 +51,11 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     const stakeholders$ = combineLatest([
       this.auth.user$,
-      this.stakeholder.valueChanges({ goalId: this.goalId })
+      this.stakeholder.valueChanges({ goalId: this.goalId }).pipe(
+        joinWith({
+          profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+        }, { shouldAwait: true })
+      ) as Observable<any[]>
     ]).pipe(
       shareReplay({ bufferSize: 1, refCount: true })
     )
