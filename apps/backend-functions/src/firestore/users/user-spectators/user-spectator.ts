@@ -38,7 +38,10 @@ export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpecta
   async (snapshot, context) => {
 
     const { uidToBeSpectated, uidSpectator} = context.params
+    const spectator = createSpectator(toDate({ ...snapshot.data(), id: snapshot.id }))
   
+    if (!spectator.isSpectator) return
+
     const userSnap = await db.doc(`Users/${uidToBeSpectated}`).get()
     if (userSnap.exists) {
       changeNumberOfSpectators(uidToBeSpectated, -1)

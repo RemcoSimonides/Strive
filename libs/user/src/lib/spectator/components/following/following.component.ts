@@ -3,11 +3,13 @@ import { Router } from '@angular/router'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
 
+import { joinWith } from 'ngfire'
 import { map, switchMap, of } from 'rxjs'
 
 import { UserSpectateService } from '../../spectator.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '../../../auth/auth.service'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
   selector: 'user-following',
@@ -21,13 +23,17 @@ export class FollowingComponent extends ModalDirective {
       const uid = this.router.url.split('/').pop();
       return uid === 'profile' ? user?.uid : uid
     }),
-    switchMap(uid => uid ? this.service.getSpectating(uid) : of([]))
+    switchMap(uid => uid ? this.service.getSpectating(uid) : of([])),
+    joinWith({
+      profile: spectator => this.profileService.valueChanges(spectator.profileId)
+    }, { shouldAwait: true })
   )
 
   constructor(
     private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
+    private profileService: ProfileService,
     private service: UserSpectateService,
     private router: Router
   ) {

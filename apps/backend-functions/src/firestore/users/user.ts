@@ -2,7 +2,7 @@ import { db, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpda
 import { logger } from 'firebase-functions'
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
-import { GoalStakeholder, createUser, User, Spectator, createAlgoliaUser } from '@strive/model'
+import { GoalStakeholder, createUser, User, createAlgoliaUser } from '@strive/model'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
 import { deleteCollection, toDate } from '../../shared/utils'
 
@@ -72,8 +72,7 @@ async (snapshot, context) => {
     }
 
     await Promise.all([
-      updateGoalStakeholders(uid, after), 
-      updateSpectators(uid, after)
+      updateGoalStakeholders(uid, after),
     ])
   }
 
@@ -91,28 +90,5 @@ async function updateGoalStakeholders(uid: string, after: User) {
 
   const stakeholdersSnap = await db.collectionGroup(`GStakeholders`).where('uid', '==', uid).get()
   const promises = stakeholdersSnap.docs.map(doc => doc.ref.update(data))
-  return Promise.all(promises)
-}
-
-async function updateSpectators(uid: string, after: User) {
-  const spectating: Partial<Spectator> = {
-    username: after.username,
-    photoURL: after.photoURL
-  }
-
-  const spectator: Partial<Spectator> = {
-    profileUsername: after.username,
-    profilePhotoURL: after.photoURL
-  }
-
-  const spectatingsSnap = await db.collectionGroup(`Spectators`).where('uid', '==', uid).get()
-  const promises = spectatingsSnap.docs.map(doc => doc.ref.update(spectating))
-  
-  const spectatorsSnap = await db.collection(`Users/${uid}/Spectators`).get()
-  for (const doc of spectatorsSnap.docs) {
-    const promise = doc.ref.update(spectator)
-    promises.push(promise)
-  }
-
   return Promise.all(promises)
 }

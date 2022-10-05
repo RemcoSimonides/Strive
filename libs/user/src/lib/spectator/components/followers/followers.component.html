@@ -18,10 +18,10 @@
     <ng-container *ngFor="let spectator of spectators$ | async; let last = last">
       <ion-item button [lines]="last ? 'none' : 'inset'" (click)="navigateTo(spectator.uid)">
         <ion-avatar slot="start">
-          <img asset="profile.png" [ref]="spectator.photoURL">
+          <img asset="profile.png" [ref]="spectator.profile?.photoURL">
         </ion-avatar>
         <ion-label>
-          <h2>{{ spectator.username }}</h2>
+          <h2>{{ spectator.profile?.username }}</h2>
         </ion-label>
       </ion-item>
     </ng-container> 

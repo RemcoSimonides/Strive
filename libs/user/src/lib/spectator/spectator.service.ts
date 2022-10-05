@@ -4,7 +4,6 @@ import { FireSubCollection, WriteOptions } from 'ngfire'
 
 import { Spectator, createSpectator } from '@strive/model'
 
-import { ProfileService } from '../user/profile.service'
 import { AuthService } from '../auth/auth.service'
 
 @Injectable({
@@ -15,10 +14,7 @@ export class UserSpectateService extends FireSubCollection<Spectator> {
   override readonly idKey = 'uid'
   override readonly memorize = true
 
-  constructor(
-    private auth: AuthService,
-    private profile: ProfileService
-  ) {
+  constructor(private auth: AuthService) {
     super()
   }
 
@@ -35,30 +31,6 @@ export class UserSpectateService extends FireSubCollection<Spectator> {
     return snapshot.exists()
       ? createSpectator({ ...snapshot.data(), uid: snapshot.id })
       : undefined
-  }
-
-  override async onCreate(spectator: Spectator, { write }: WriteOptions) {
-    const uid = spectator.uid
-    if (!uid || !spectator.profileId) throw new Error('uid not provided')
-    const [current, toBeSpectated] = await Promise.all([
-      this.profile.getValue(uid),
-      this.profile.getValue(spectator.profileId)
-    ])
-
-    if (!current) throw new Error(`Couldn't find current user data`)
-    if (!toBeSpectated) throw new Error(`Couldn't find data of user to be spectated`)
-
-    const ref = this.getRef(uid, { uid: spectator.profileId });
-    const data = createSpectator({
-      uid,
-      username: current.username,
-      photoURL: current.photoURL,
-      isSpectator: true,
-      profileId: toBeSpectated.uid,
-      profileUsername: toBeSpectated.username,
-      profilePhotoURL: toBeSpectated.photoURL
-    });
-    (write as WriteBatch).update(ref, { ...data })
   }
 
   getCurrentSpectator(uidToBeSpectated: string) {

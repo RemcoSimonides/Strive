@@ -126,7 +126,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
     case 'goalCreatedFinished':
     case 'goalStakeholderRequestToJoinAccepted':
     case 'goalStakeholderRequestToJoinRejected':
-
+      return throwError(event, 'stakeholder')
     default:
       return throwError(event, 'stakeholder')
     
@@ -182,11 +182,11 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
     case 'goalStakeholderBecameAdmin':
     case 'goalStakeholderRequestToJoinRejected':
     case 'goalStakeholderRequestToJoinAccepted':
-    case 'goalStakeholderRequestToJoinRejected':
     case 'goalStoryPostCreated':
-
-    default:
       throwError(event, 'spectator')
+      break
+    default:
+      return throwError(event, 'spectator')
   }
 }
 
