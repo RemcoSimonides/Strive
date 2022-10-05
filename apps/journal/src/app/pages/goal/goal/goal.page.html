@@ -117,9 +117,9 @@
         <ion-list mode="md">
           <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'inset'" (click)="navTo(stakeholder.uid)">
             <ion-avatar slot="start">
-              <img [ref]="stakeholder.photoURL" asset="profile.png"/>
+              <img [ref]="stakeholder.profile.photoURL" asset="profile.png"/>
             </ion-avatar>
-            <ion-label>{{ stakeholder.username }}</ion-label>
+            <ion-label>{{ stakeholder.profile.username }}</ion-label>
             <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">
               <span *ngIf="(screensize.isMobile$ | async) === false">Accept</span>
               <ion-icon name="checkmark-outline"></ion-icon>

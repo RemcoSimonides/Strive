@@ -54,7 +54,11 @@ export class GoalComponent {
     this._stakeholder = stakeholder
     
     if (stakeholder.isAdmin) {
-      this.openRequests$ = this.stakeholderService.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId })
+      this.openRequests$ = this.stakeholderService.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId }).pipe(
+        joinWith({
+          profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+        }, { shouldAwait: true })
+      )
     }
   }
 
