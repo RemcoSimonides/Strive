@@ -12,7 +12,7 @@ import { UpsertPostModalComponent } from "@strive/post/components/upsert-modal/u
 export class StoryComponent {
 
 	@Input() story: StoryItem[] = []
-	@Input() isAdmin: boolean = false
+	@Input() isAdmin = false
 	@Input() goalId!: string
 	@Input() milestoneId?: string
 

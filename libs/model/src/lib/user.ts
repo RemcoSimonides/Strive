@@ -19,20 +19,6 @@ export function createUser(params: Partial<User> = {}): User {
   }
 }
 
-export interface UserLink {
-  uid: string
-  username: string
-  photoURL: string
-}
-
-export function createUserLink(params: Partial<UserLink | User> = {}): UserLink {
-  return {
-    uid: params.uid ?? '',
-    username: params.username ?? '',
-    photoURL: params.photoURL ?? ''
-  }
-}
-
 export interface AlgoliaUser {
   objectID?: string
   uid: string

@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular'
 
-import { Post, StoryItem, UserLink } from '@strive/model'
+import { Post, StoryItem, User } from '@strive/model'
 
 import { PostOptionsComponent } from '@strive/post/popovers/options/options.component'
 import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component'
@@ -23,7 +23,7 @@ export class PostComponent {
   }
   @Input() isAdmin = false
   
-  author?: UserLink
+  author?: User
   post?: Post
   
   constructor(
