@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { ModalController } from '@ionic/angular'
-import { createGoalStakeholder, GoalStakeholder } from '@strive/model'
+import { createGoalStakeholder, GoalStakeholder, User } from '@strive/model'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
 import { Observable } from 'rxjs'
+import { joinWith } from 'ngfire'
+import { ProfileService } from '@strive/user/user/profile.service'
 
 
 @Component({
@@ -13,17 +15,22 @@ import { Observable } from 'rxjs'
 })
 export class TeamComponent implements OnInit {
 
-	stakeholders$?: Observable<GoalStakeholder[]>
+	stakeholders$?: Observable<(GoalStakeholder & { profile: User })[]>
 
 	@Input() id!: string
 
   constructor(
     private modalCtrl: ModalController,
+    private profileService: ProfileService,
 		private stakeholder: GoalStakeholderService
   ) {}
 
 	ngOnInit() {
-		this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.id })
+		this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.id }).pipe(
+      joinWith({
+        profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+      }, { shouldAwait: true })
+    ) as Observable<any[]>
 	}
 
   async add() {
