@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
+import { ReactiveFormsModule } from '@angular/forms'
+import { IonicModule } from '@ionic/angular'
 
-import { RolesPopoverComponment } from './roles.component';
+import { RolesPopoverComponent } from './roles.component'
 
 @NgModule({
 	imports: [
@@ -12,7 +12,7 @@ import { RolesPopoverComponment } from './roles.component';
 		ReactiveFormsModule
 	],
 	declarations: [
-		RolesPopoverComponment
+		RolesPopoverComponent
 	]
 })
 export class RolesPopoverModule {}

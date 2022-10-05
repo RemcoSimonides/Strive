@@ -1,0 +1,4 @@
+<ion-button (click)="join()" class="primary" [disabled]="goal.isFinished" [ngClass]="{'fake-disable': stakeholder | joinButtonStatus }">
+  <ion-icon slot="start" name="flag"></ion-icon>
+  <span>{{ stakeholder | joinButtonText }}</span>
+</ion-button>

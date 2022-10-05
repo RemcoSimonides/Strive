@@ -78,6 +78,9 @@ async (snapshot, context) => {
   // aggregation
   handleAggregation(stakeholder, undefined)
 
+  const goalSnap = await db.doc(`Goals/${goalId}`).get()
+  if (!goalSnap.exists) return
+
   if (stakeholder.isAchiever) {
     changeNumberOfAchievers(goalId, -1)
 

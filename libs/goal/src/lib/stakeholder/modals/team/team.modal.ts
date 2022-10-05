@@ -15,7 +15,7 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { RolesPopoverComponment } from '../../popovers/roles/roles.component'
+import { RolesPopoverComponent } from '../../popovers/roles/roles.component'
 
 @Component({
   selector: '[goalId] goal-team-modal',
@@ -90,7 +90,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
 
   openRoles(stakeholder: GoalStakeholder, event: UIEvent) {
     this.popoverCtrl.create({
-      component: RolesPopoverComponment,
+      component: RolesPopoverComponent,
       componentProps: { stakeholder, goalId: this.goalId },
       event
     }).then(popover => popover.present())

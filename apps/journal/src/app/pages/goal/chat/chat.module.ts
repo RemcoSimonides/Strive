@@ -9,7 +9,7 @@ import { ChatComponent } from './chat.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
-import { JoinButtonPipeModule } from '@strive/goal/goal/pipes/join-button'
+import { JoinButtonModule } from '@strive/goal/goal/components/join-button/join-button.module'
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
 import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 
@@ -21,7 +21,7 @@ import { AddSupportModalModule } from '@strive/support/components/add/add.module
     RouterModule,
     ImageModule,
     TimeAgoPipeModule,
-    JoinButtonPipeModule,
+    JoinButtonModule,
     AuthModalModule,
     AddSupportModalModule
   ],

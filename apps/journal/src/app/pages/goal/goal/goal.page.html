@@ -8,10 +8,7 @@
     <section class="actions">
     
       <article>
-        <ion-button (click)="join()" size="block" [disabled]="goal.isFinished" class="block primary" [ngClass]="{'fake-disable': stakeholder | joinButtonStatus }">
-          <ion-icon slot="start" name="flag"></ion-icon>
-          <span> {{ stakeholder | joinButtonText }}</span>
-        </ion-button>
+        <goal-join-button [goal]="goal" [stakeholder]="stakeholder"></goal-join-button>
   
         <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
           <ion-button (click)="openSharePopover($event, goal)" class="primary">

@@ -70,7 +70,7 @@ main {
       display: flex;
       gap: 8px;
   
-      ion-button.button-block {  
+      ion-button.button-block, goal-join-button {  
         flex: 1;
       }
     }

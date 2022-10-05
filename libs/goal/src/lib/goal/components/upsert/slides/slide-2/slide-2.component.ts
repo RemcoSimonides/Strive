@@ -45,7 +45,7 @@ export class Slide2Component {
   step(direction: 'next' | 'previous') {
     if (this.form.dirty) {
 
-      this.stakeholder.upsert({
+      this.stakeholder.update({
         uid: this.auth.uid,
         focus: this.form.getFocus()
       }, { params: { goalId: this.goalId }})

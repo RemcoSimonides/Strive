@@ -1,10 +1,10 @@
-import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController, PopoverController } from '@ionic/angular';
-import { GoalStakeholder } from '@strive/model';
-import { delay } from '@strive/utils/helpers';
-import { GoalStakeholderService } from '../../stakeholder.service';
+import { Location } from '@angular/common'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { Router } from '@angular/router'
+import { AlertController, PopoverController } from '@ionic/angular'
+import { GoalStakeholder } from '@strive/model'
+import { delay } from '@strive/utils/helpers'
+import { GoalStakeholderService } from '../../stakeholder.service'
 
 @Component({
 	selector: '[goalId][stakeholder] goal-stakeholder-roles',
@@ -12,7 +12,7 @@ import { GoalStakeholderService } from '../../stakeholder.service';
 	styleUrls: ['./roles.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RolesPopoverComponment {
+export class RolesPopoverComponent {
 	@Input() goalId!: string
 	@Input() stakeholder!: GoalStakeholder
 

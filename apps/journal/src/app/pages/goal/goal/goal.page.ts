@@ -203,79 +203,6 @@ export class GoalComponent {
     }).then(modal => modal.present())
   }
 
-  async join() {
-    if (!this.auth.uid) {
-      const modal = await this.modalCtrl.create({
-        component: AuthModalComponent,
-        componentProps: {
-          authSegment: enumAuthSegment.login
-        }
-      })
-      modal.onDidDismiss().then(({ data: loggedIn }) => {
-        if (loggedIn) this.join()
-      })
-      return modal.present()
-    }
-
-    const { isAchiever, isAdmin, hasOpenRequestToJoin} = this.stakeholder
-
-    if (!isAchiever && !hasOpenRequestToJoin) {
-      if (isAdmin) {
-        return this.stakeholderService.upsert({
-          uid: this.auth.uid,
-          isAchiever: true
-        }, { params: { goalId: this.goal.id }})
-      } else {
-        return this.stakeholderService.upsert({
-          uid: this.auth.uid,
-          isSpectator: true,
-          hasOpenRequestToJoin: true
-        }, { params: { goalId: this.goal.id }})
-      }
-    }
-
-    if (hasOpenRequestToJoin) {
-      return this.alertCtrl.create({
-        subHeader: 'Are you sure you want to cancel your request to join goal?',
-        buttons: [
-          {
-            text: 'Yes',
-            handler: () => {
-              this.stakeholderService.upsert({
-                uid: this.auth.uid,
-                isSpectator: true,
-                hasOpenRequestToJoin: false
-              }, { params: { goalId: this.goal.id }})
-            }
-          },
-          {
-            text: 'No',
-            role: 'cancel'
-          }
-        ]
-      }).then(alert => alert.present())
-    }
-
-    return this.alertCtrl.create({
-      subHeader: 'Are you sure you no longer want to be an achiever in this goal?',
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-            this.stakeholderService.upsert({
-              uid: this.auth.uid,
-              isAchiever: false
-            }, { params: { goalId: this.goal.id }})
-          }
-        },
-        {
-          text: 'No',
-          role: 'cancel'
-        }
-      ]
-    }).then(alert => alert.present())
-  }
-
   async spectate() {
     if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
@@ -291,11 +218,13 @@ export class GoalComponent {
     }
 
     const { isSpectator } = this.stakeholder
+    const goalId = this.goal.id
 
     return this.stakeholderService.upsert({
       uid: this.auth.uid,
+      goalId,
       isSpectator: !isSpectator
-    }, { params: { goalId: this.goal.id }})
+    }, { params: { goalId }})
   }
 
 
@@ -352,7 +281,7 @@ export class GoalComponent {
 
   handleRequestDecision(stakeholder: GoalStakeholder, isAccepted: boolean, $event: UIEvent) {
     $event.stopPropagation()
-    this.stakeholderService.upsert({
+    this.stakeholderService.update({
       uid: stakeholder.uid,
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false

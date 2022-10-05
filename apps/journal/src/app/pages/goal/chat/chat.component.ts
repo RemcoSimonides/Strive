@@ -160,46 +160,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.scrolledToBottom = scrollHeight < currentScrollDepth + 10
   }
 
-  async join() {
-    if (!this.auth.uid) {
-      const modal = await this.modalCtrl.create({
-        component: AuthModalComponent,
-        componentProps: {
-          authSegment: enumAuthSegment.login
-        }
-      })
-      modal.onDidDismiss().then(({ data: loggedIn }) => {
-        if (loggedIn) this.join()
-      })
-      return modal.present()
-    }
-
-    const { isAchiever, isAdmin, hasOpenRequestToJoin} = this.stakeholder
-
-    if (!isAchiever && !hasOpenRequestToJoin) {
-      if (isAdmin) {
-        return this.stakeholderService.upsert({
-          uid: this.auth.uid,
-          isAchiever: true
-        }, { params: { goalId: this.goal.id }})
-      } else {
-        return this.stakeholderService.upsert({
-          uid: this.auth.uid,
-          isSpectator: true,
-          hasOpenRequestToJoin: true
-        }, { params: { goalId: this.goal.id }})
-      }
-    }
-
-    if (hasOpenRequestToJoin) {
-      return this.stakeholderService.upsert({
-        uid: this.auth.uid,
-        isSpectator: true,
-        hasOpenRequestToJoin: false
-      }, { params: { goalId: this.goal.id }})
-    }
-  }
-
   async support() {
     if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({

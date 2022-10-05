@@ -40,7 +40,7 @@ export function onDocumentUpdate(docPath: string, name: string, fn: FunctionType
 	return functions(config)
 		.firestore
 		.document(docPath)
-		.onWrite(wrapFirestoreOnUpdateHandler(name, fn))
+		.onUpdate(wrapFirestoreOnUpdateHandler(name, fn))
 }
 
 export function onDocumentDelete(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {

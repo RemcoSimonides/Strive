@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, getDoc, serverTimestamp, doc, WriteBatch } from 'firebase/firestore'
-import { toDate, WriteOptions, FireSubCollection } from 'ngfire'
+import { DocumentSnapshot, getDoc, serverTimestamp, doc } from 'firebase/firestore'
+import { toDate, FireSubCollection } from 'ngfire'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 
-import { GoalStakeholder, createGoalStakeholder, createUser, createGoal } from '@strive/model'
+import { GoalStakeholder, createGoalStakeholder, createGoal } from '@strive/model'
 
 export interface roleArgs {
   isAdmin?: boolean;
@@ -32,14 +32,27 @@ export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
       : undefined
   }
 
-  override toFirestore(stakeholder: GoalStakeholder, actionType: 'add' | 'update'): GoalStakeholder {
+  override async toFirestore(stakeholder: GoalStakeholder, actionType: 'add' | 'update'): Promise<GoalStakeholder> {
     const timestamp = serverTimestamp() as any
 
-    if (actionType === 'add') stakeholder.createdAt = timestamp
+    if (actionType === 'add') {
+      if (!this.auth.profile) { throw new Error('Profile has to be defined when creating goal stakeholder')}
+      if (!stakeholder.goalId) { throw new Error('Goal id needs to be defined when creating goal stakeholder') }
+      const { username, photoURL } = this.auth.profile
+      const goal = await getDoc(doc(this.db, `Goals/${stakeholder.goalId}`)).then(snap => createGoal(snap.data()))
+      
+      stakeholder = createGoalStakeholder({
+        ...stakeholder,
+        createdAt: timestamp,
+        username,
+        photoURL,
+        goalPublicity: goal.publicity
+      })
+    }
 
     stakeholder.updatedAt = timestamp
     stakeholder.updatedBy = this.auth.uid
-    
+
     return stakeholder
   }
 
@@ -59,31 +72,5 @@ export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
         lastCheckedChat: serverTimestamp() as any
       }, { params: { goalId }})
     }
-  }
-
-  override async onCreate(stakeholder: GoalStakeholder, { write, params }: WriteOptions) {
-    const goalId = params?.['goalId'] ?? stakeholder.goalId
-    const uid = stakeholder.uid
-
-    const [user, goal] = await Promise.all([
-      getDoc(doc(this.db, `Users/${uid}`)).then(snap => createUser(snap.data())),
-      getDoc(doc(this.db, `Goals/${goalId}`)).then(snap => createGoal(snap.data()))
-    ])
-
-    if (goal.id) {
-      stakeholder.goalPublicity = goal.publicity
-    }
-
-    const ref = this.getRef(uid, { goalId })
-    const data = createGoalStakeholder({
-      ...stakeholder,
-      username: user.username,
-      photoURL: user.photoURL,
-      uid,
-      lastCheckedGoal: serverTimestamp() as any,
-      lastCheckedChat: serverTimestamp() as any,
-      goalId
-    });
-    (write as WriteBatch).update(ref, { ...data })
   }
 }
