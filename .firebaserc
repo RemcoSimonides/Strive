@@ -12,6 +12,9 @@
         ],
         "admin": [
           "strive-admin"
+        ],
+        "blog": [
+          "strive-blogg"
         ]
       }
     },

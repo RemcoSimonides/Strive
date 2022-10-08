@@ -50,6 +50,15 @@
           "destination": "/index.html"
         }
       ]
+    },
+    {
+      "target": "blog",
+      "public": "dist/apps/blog/",
+      "ingore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ],
   "emulators": {

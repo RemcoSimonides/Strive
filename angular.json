@@ -15,39 +15,33 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "NjJhZTNmYmQtYTQxOC00NmJmLWFlNTYtYzViNGVhYzJjNWMxfHJlYWQtd3JpdGU="
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     }
   },
   "projects": {
-    "backend-functions": "apps/backend-functions",
-    "notification": "libs/notification",
-    "journal-e2e": "apps/journal-e2e",
-    "admin-e2e": "apps/admin-e2e",
-    "exercises": "libs/exercises",
-    "journal": "apps/journal",
-    "support": "libs/support",
     "admin": "apps/admin",
+    "admin-e2e": "apps/admin-e2e",
+    "backend-functions": "apps/backend-functions",
+    "blog": "apps/blog",
+    "exercises": "libs/exercises",
+    "goal": "libs/goal",
+    "journal": "apps/journal",
+    "journal-e2e": "apps/journal-e2e",
     "media": "libs/media",
     "model": "libs/model",
-    "utils": "libs/utils",
-    "goal": "libs/goal",
+    "notification": "libs/notification",
     "post": "libs/post",
+    "support": "libs/support",
+    "ui": "libs/ui",
     "user": "libs/user",
-    "ui": "libs/ui"
+    "utils": "libs/utils"
   },
   "version": 2
 }
