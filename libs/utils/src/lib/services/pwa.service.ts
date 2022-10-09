@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Injectable, ApplicationRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { ToastController } from '@ionic/angular'
-import { ReplaySubject, Subscription, first, switchMap, tap, interval } from 'rxjs'
+import { ReplaySubject, Subscription, first, switchMap, interval } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class PWAService implements OnDestroy {
@@ -27,12 +27,10 @@ export class PWAService implements OnDestroy {
       )
 
       this.subs.push(everyHourOnceAppIsStable$.subscribe(() => {
-        console.log('checking for update: ', sw.isEnabled)
-        sw.checkForUpdate().then(result => console.log('update available? ', result))
+        sw.checkForUpdate()
       }))
 
       const sub = sw.versionUpdates.subscribe(event => {
-        console.log('verison updates event: ', event)
         switch (event.type) {
           case 'VERSION_DETECTED':
             break
