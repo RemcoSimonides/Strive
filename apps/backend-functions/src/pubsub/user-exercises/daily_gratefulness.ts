@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
-import { Personal } from '@strive/model'
+import { DailyGratefulness, Personal } from '@strive/model'
 import { getDocument } from '../../shared/utils'
 import { addDays } from 'date-fns'
 
@@ -50,9 +50,15 @@ export async function sendDailyGratefulnessPushNotification(uid: string) {
   }
 }
 
-export function scheduleNextDailyGratefulnessReminder(uid: string) {
+export async function scheduleNextDailyGratefulnessReminder(uid: string) {
 
-  const performAt = addDays(new Date(), 1)
+  const settings = await getDocument<DailyGratefulness>(`Users/${uid}/Exercises/DailyGratefulness`)
+
+  const hours = settings.time.getHours()
+  const minutes = settings.time.getMinutes()
+  const now = new Date().setHours(hours, minutes)
+
+  const performAt = addDays(now, 1)
 
   const task: ScheduledTaskUserExerciseDailyGratefulness = {
     worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
