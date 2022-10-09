@@ -64,6 +64,9 @@ async snapshot => {
 
   deleteScheduledTask(goal.id)
 
+  const notificationsSnap = await db.collectionGroup('Notifications').where('goalId', '==', goal.id).get()
+  notificationsSnap.docs.forEach(doc => doc.ref.delete())
+
   if (goal.image) {
     gcsBucket.file(goal.image).delete({ ignoreNotFound: true })
   }
