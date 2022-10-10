@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { ModalController, PopoverController } from '@ionic/angular'
 import { Message } from '@strive/model'
@@ -61,8 +61,11 @@ export class DearFutureSelfComponent {
 
   isLoggedIn$ = this.auth.isLoggedIn$
 
+  state: 'writing' | 'sending' | 'sent' = 'writing' 
+
   constructor(
     private auth: AuthService,
+    private cdr: ChangeDetectorRef,
     private dearFutureSelfService: DearFutureSelfService,
     private modalCtrl: ModalController,
     private personalService: PersonalService,
@@ -89,6 +92,9 @@ export class DearFutureSelfComponent {
       deliveryDate = new Date(this.date.value)
     }
 
+    this.state = 'sending'
+    this.cdr.markForCheck()
+
     // saving line breaks
     const value = this.description.value.replace(/\n\r?/g, '<br />')
 
@@ -105,7 +111,15 @@ export class DearFutureSelfComponent {
 
     this.description.reset(initial)
     this.date.reset()
+    this.mode = 'duration'
     this.duration = undefined
+    this.state = 'sent'
+    this.cdr.markForCheck()
+  }
+
+  another() {
+    this.state = 'writing'
+    this.cdr.markForCheck()
   }
 
   openMessage(message: Message) {

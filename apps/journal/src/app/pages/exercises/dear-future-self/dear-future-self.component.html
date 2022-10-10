@@ -10,30 +10,43 @@
 
     <ng-container *ngIf="isLoggedIn$ | async else login">
       <ion-card class="ion-padding" mode="md">
-        <section>
-          <h5>Your message</h5>
-          <ion-item>
-            <ion-textarea [formControl]="description" autoGrow autocapitalize="sentences"></ion-textarea>
-          </ion-item>
-        </section>
+        <ng-container *ngIf="state !== 'sent'; else sent">
+
+          <section>
+            <h5>Your message</h5>
+            <ion-item>
+              <ion-textarea [formControl]="description" autoGrow autocapitalize="sentences"></ion-textarea>
+            </ion-item>
+          </section>
+      
+          <section *ngIf="mode === 'duration'">
+            <h5>Deliver in</h5>
+            <article>
+              <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 2">2 Years</ion-button>
+              <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 5">5 Years</ion-button>
+              <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 10">10 Years</ion-button>
+              <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
+            </article>
+          </section>
+      
+          <section *ngIf="mode === 'date'">
+            <h5>Deliver on</h5>
+            <ion-datetime presentation="date" [formControl]="date" [min]="min" [max]="max"></ion-datetime>
+            <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
+          </section>
     
-        <section *ngIf="mode === 'duration'">
-          <h5>Deliver in</h5>
-          <article>
-            <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 2">2 Years</ion-button>
-            <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 5">5 Years</ion-button>
-            <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 10">10 Years</ion-button>
-            <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
-          </article>
-        </section>
-    
-        <section *ngIf="mode === 'date'">
-          <h5>Deliver on</h5>
-          <ion-datetime presentation="date" [formControl]="date" [min]="min" [max]="max"></ion-datetime>
-          <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
-        </section>
-  
-        <ion-button expand="block" color="primary" (click)="send()">Send Message</ion-button>
+          <ion-button expand="block" color="primary" (click)="send()">Send Message</ion-button>
+
+        </ng-container>
+
+        <ng-template #sent>
+          <section class="sent">
+            <h5>Message sent <ion-icon name="checkmark-outline"></ion-icon></h5>
+            
+            <ion-button fill="outline" color="primary" (click)="another()">Write another</ion-button>
+          </section>
+        </ng-template>
+        
       </ion-card>
   
       <ng-container *ngIf="pendingMessages$ | async as pendingMessages">
