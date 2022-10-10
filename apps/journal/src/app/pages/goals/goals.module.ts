@@ -21,6 +21,7 @@ import { MiniThumbnailSwiperModule } from '@strive/goal/goal/components/mini-thu
 
 import { CardsModalModule } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.module'
 import { AffirmModalModule } from '@strive/exercises/affirmation/modals/affirm-modal.module'
+import { MessageModalModule } from '@strive/exercises/dear-future-self/components/message/message.module'
 
 const routes: Routes = [
   {
@@ -47,7 +48,8 @@ const routes: Routes = [
     MiniThumbnailSwiperModule,
 
     CardsModalModule,
-    AffirmModalModule
+    AffirmModalModule,
+    MessageModalModule
   ],
   declarations: [GoalsComponent]
 })

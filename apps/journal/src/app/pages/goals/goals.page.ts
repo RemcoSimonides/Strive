@@ -24,6 +24,7 @@ import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/up
 import { GoalUpdatesModalComponent } from '@strive/goal/goal/components/modals/goals/goal-updates.component'
 import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
+import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
 
 @Component({
   selector: 'journal-goals',
@@ -52,7 +53,7 @@ export class GoalsComponent {
   ) {
     seo.generateTags({ title: `Goals - Strive Journal` })
 
-    const { t, affirm } = this.route.snapshot.queryParams
+    const { t, affirm, dfs } = this.route.snapshot.queryParams
     if (t === 'daily-gratefulness') {
       this.modalCtrl.create({
         component: CardsModalComponent
@@ -63,6 +64,13 @@ export class GoalsComponent {
       this.modalCtrl.create({
         component: AffirmModalComponent,
         componentProps: { affirmation: decodeURI(affirm) }
+      }).then(modal => modal.present())
+    }
+
+    if (dfs) {
+      this.modalCtrl.create({
+        component: MessageModalComponent,
+        componentProps: { dfs }
       }).then(modal => modal.present())
     }
 

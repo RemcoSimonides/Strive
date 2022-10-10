@@ -30,6 +30,15 @@ export class AuthService extends FireAuth<User> implements OnDestroy {
     this.sub.unsubscribe()
   }
 
+  protected override toFirestore(profile: Partial<User>, actionType: 'add' | 'update') {
+    const timestamp = serverTimestamp() as any
+
+    if (actionType === 'add') profile.createdAt = timestamp
+    profile.updatedAt = timestamp
+
+    return profile
+  }
+
   protected override fromFirestore(snapshot: DocumentSnapshot<User>) {
     return snapshot.exists()
       ? createUser(toDate({ ...snapshot.data(), [this.idKey]: snapshot.id }))

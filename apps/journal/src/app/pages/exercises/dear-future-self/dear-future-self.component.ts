@@ -5,7 +5,7 @@ import { Message } from '@strive/model'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
 import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component'
-import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
+import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AuthService } from '@strive/user/auth/auth.service'
@@ -109,11 +109,10 @@ export class DearFutureSelfComponent {
   }
 
   openMessage(message: Message) {
-    this.popoverCtrl.create({
-      component: MessagePopoverComponent,
-      componentProps: { message },
-      cssClass: 'explanation_popover_class'
-    }).then(popover => popover.present())
+    this.modalCtrl.create({
+      component: MessageModalComponent,
+      componentProps: { message }
+    }).then(modal => modal.present())
   }
 
   openExplanation() {

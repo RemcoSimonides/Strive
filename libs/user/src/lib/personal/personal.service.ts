@@ -57,7 +57,7 @@ export class PersonalService extends FireSubCollection<Personal> {
   }
 
   async getEncryptionKey(): Promise<string> {
-    const uid = this.auth.uid
+    const uid = await this.auth.getUID()
     if (!uid) throw new Error('Should always have uid defined when getting decrypt key')
     const personal = await this.load(uid, { uid })
     if (!personal) throw new Error('Should always have personal defined when getting decrypt key')
