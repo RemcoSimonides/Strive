@@ -20,9 +20,9 @@
         <section *ngIf="mode === 'duration'">
           <h5>Deliver in</h5>
           <article>
-            <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" (click)="duration = 2">2 Years</ion-button>
-            <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" (click)="duration = 5">5 Years</ion-button>
-            <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" (click)="duration = 10">10 Years</ion-button>
+            <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 2">2 Years</ion-button>
+            <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 5">5 Years</ion-button>
+            <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 10">10 Years</ion-button>
             <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
           </article>
         </section>

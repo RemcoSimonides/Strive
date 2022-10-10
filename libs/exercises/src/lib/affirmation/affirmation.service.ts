@@ -3,25 +3,33 @@ import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { Affirmations } from '@strive/model'
+import { PersonalService } from '@strive/user/personal/personal.service'
+import { AES } from 'crypto-js'
 
 @Injectable({providedIn: 'root'})
 export class AffirmationService extends FireSubCollection<Affirmations> {
   readonly path = 'Users/:uid/Exercises'
   override readonly memorize = true
 
-  protected override toFirestore(affirmations: Affirmations, actionType: 'add' | 'update'): Affirmations {
+  constructor(private personalService: PersonalService) {
+    super()
+  }
+
+  protected override async toFirestore(settings: Affirmations, actionType: 'add' | 'update'): Promise<Affirmations> {
     const timestamp = serverTimestamp() as any
 
-    if (actionType === 'add') affirmations.createdAt = timestamp
-    affirmations.updatedAt = timestamp
+    const key = await this.personalService.getEncryptionKey()
+    settings.affirmations = settings.affirmations.map(affirmation => AES.encrypt(affirmation, key).toString())
 
-    return affirmations
+    if (actionType === 'add') settings.createdAt = timestamp
+    settings.updatedAt = timestamp
+
+    return settings
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
-    return snapshot.exists()
-      ? toDate<Affirmations>({ ...snapshot.data(), id: snapshot.id })
-      : undefined
+    if (!snapshot.exists()) return
+    return toDate<Affirmations>({ ...snapshot.data(), id: snapshot.id })
   }
 
   getAffirmations$(uid: string) {

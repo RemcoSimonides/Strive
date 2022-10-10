@@ -3,6 +3,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray } 
 import { ModalController, PopoverController } from '@ionic/angular'
 
 import { debounceTime, of, Subscription, switchMap, tap } from 'rxjs'
+import { AES, enc } from 'crypto-js'
 
 import { AffirmationSuggestion, enumAffirmationCategory, affirmationSuggestions } from '@strive/model'
 
@@ -14,6 +15,7 @@ import { AffirmationExplanationComponent } from '@strive/exercises/affirmation/c
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { AuthService } from '@strive/user/auth/auth.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
 
 function timeFormControls() {
   return [new FormControl(''), new FormControl(''), new FormControl('')]
@@ -49,6 +51,7 @@ export class AffirmationsComponent implements OnDestroy {
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
+    private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService,
@@ -63,14 +66,16 @@ export class AffirmationsComponent implements OnDestroy {
 
     const sub = this.auth.profile$.pipe(
       switchMap(profile => profile ? this.service.getAffirmations(profile.uid) : of(undefined)),
-      tap(doc => {
+      tap(async doc => {
         this.affirmationsForm.clear({ emitEvent: false })
 
         if (doc) {
           this.timesForm.setValue(doc.times, { emitEvent: false })
   
+          const key = await this.personalService.getEncryptionKey()
           for (const affirmation of doc.affirmations) {
-            this.affirmationsForm.push(new FormControl(affirmation), { emitEvent: false })
+            const decrypted = AES.decrypt(affirmation, key).toString(enc.Utf8)
+            this.affirmationsForm.push(new FormControl(decrypted), { emitEvent: false })
           }
         }
         
@@ -95,12 +100,17 @@ export class AffirmationsComponent implements OnDestroy {
     // autosave
     const formSub = this.form.valueChanges.pipe(
       debounceTime(2000)
-    ).subscribe(value => {
+    ).subscribe(async value => {
       if (!this.auth.uid) return
       if (!value?.affirmations) return
       if (!value?.times) return
       const { times } = value
-      const affirmations = value.affirmations.filter(a => a !== '')
+      const key = await this.personalService.getEncryptionKey()
+
+      const affirmations = value.affirmations
+        .filter(a => a !== '')
+        .map((a: string) => AES.encrypt(a, key).toString())
+
       this.service.saveAffirmations(this.auth.uid, { affirmations, times })
       this.form.markAsPristine()
       this.cdr.markForCheck()

@@ -1,15 +1,23 @@
-import { db, functions, admin } from '../internals/firebase'
-
-import { Affirmations } from '@strive/model'
-import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations'
-import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness'
-import { logger } from 'firebase-functions'
-import { getDocument } from '../shared/utils'
-import { enumWorkerType, ScheduledTaskGoalInviteLinkDeadline, ScheduledTaskMilestoneDeadline, ScheduledTaskUserExerciseAffirmations, ScheduledTaskUserExerciseDailyGratefulness, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../shared/scheduled-task/scheduled-task.interface'
-import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
-import { DearFutureSelf, Personal } from '@strive/model'
-import { updateAggregation } from '../shared/aggregation/aggregation'
+import { db, functions, admin, logger } from '../internals/firebase'
 import { wrapPubsubOnRunHandler } from '../internals/sentry'
+
+import { getDocument } from '../shared/utils'
+import { 
+  enumWorkerType,
+  ScheduledTaskGoalInviteLinkDeadline,
+  ScheduledTaskMilestoneDeadline,
+  ScheduledTaskUserExerciseAffirmations,
+  ScheduledTaskUserExerciseDailyGratefulness,
+  ScheduledTaskUserExerciseDearFutureSelfMessage
+} from '../shared/scheduled-task/scheduled-task.interface'
+import { updateAggregation } from '../shared/aggregation/aggregation'
+
+import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness'
+import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations'
+import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
+
+import { DearFutureSelf, Personal, Affirmations } from '@strive/model'
+import { AES, enc } from 'crypto-js'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -20,12 +28,12 @@ async () => {
   const now = admin.firestore.Timestamp.now();
 
   // Query all documents ready to perform
-  const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', 'scheduled');
+  const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', 'scheduled')
 
-  const tasks = await query.get();
+  const tasks = await query.get()
   
-  // Jobs to execute concurrently. 
-  const jobs: Promise<any>[] = [];
+  // Jobs to execute concurrently.
+  const jobs: Promise<any>[] = []
 
   const reschedulingTasks = [
     enumWorkerType.userExerciseAffirmation,
@@ -34,7 +42,7 @@ async () => {
 
   // Loop over documents and push job.
   for (const snapshot of tasks.docs) {
-    const { worker, options } = snapshot.data();
+    const { worker, options } = snapshot.data()
 
     if (!workers[worker]) {
       console.error('WORKER NOT FOUND FOR: ', worker)
@@ -55,7 +63,7 @@ async () => {
 
 
   // Execute all jobs concurrently
-  return await Promise.all(jobs);
+  return await Promise.all(jobs)
 }))
 
 // Optional interface, all worker functions should return Promise.
@@ -105,11 +113,13 @@ async function userExerciseDailyGratefulnessReminderHandler(options: ScheduledTa
 
 async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {
   const dearFutureSelf = await getDocument<DearFutureSelf>(`Users/${options.userId}/Exercises/DearFutureSelf`)
-  const message = dearFutureSelf.messages[options.index];
+  const message = dearFutureSelf.messages[options.index]
+
   const personal = await getDocument<Personal>(`Users/${options.userId}/Personal/${options.userId}`)
+  const description = AES.decrypt(message.description, personal.key).toString(enc.Utf8)
 
   sendDearFutureSelfPushNotification(personal, message)
-  sendDearFutureSelfEmail(personal, message.description)
+  sendDearFutureSelfEmail(personal, description)
 
   updateAggregation({ usersFutureLetterReceived: 1 })
 }

@@ -9,11 +9,13 @@ import { MessagePopoverComponent } from '@strive/exercises/dear-future-self/comp
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AuthService } from '@strive/user/auth/auth.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
 import { addDays, addYears, endOfYear, format, isFuture, isPast } from 'date-fns'
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
+import { AES, enc } from 'crypto-js'
 
 const initial = `Dear Future Self,
 
@@ -34,12 +36,18 @@ export class DearFutureSelfComponent {
 
   min = format(addDays(new Date(), 1), 'yyyy-MM-dd')
   max = format(endOfYear(addYears(new Date(), 100)), 'yyyy-MM-dd')
-
   private messages$: Observable<Message[]> = this.auth.profile$.pipe(
     switchMap(profile => profile
       ? this.dearFutureSelfService.getSettings$(profile.uid).pipe(map(settings => settings?.messages ?? []))
       : of([])
     ),
+    switchMap(async messages => {
+      const key = await this.personalService.getEncryptionKey()
+      for (const message of messages) {
+        message.description = AES.decrypt(message.description, key).toString(enc.Utf8)
+      }
+      return messages
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
@@ -57,6 +65,7 @@ export class DearFutureSelfComponent {
     private auth: AuthService,
     private dearFutureSelfService: DearFutureSelfService,
     private modalCtrl: ModalController,
+    private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService
@@ -81,7 +90,10 @@ export class DearFutureSelfComponent {
     }
 
     // saving line breaks
-    const description = this.description.value.replace(/\n\r?/g, '<br />');
+    const value = this.description.value.replace(/\n\r?/g, '<br />')
+
+    const key = await this.personalService.getEncryptionKey()
+    const description = AES.encrypt(value, key).toString()
 
     const message: Message = {
       description,

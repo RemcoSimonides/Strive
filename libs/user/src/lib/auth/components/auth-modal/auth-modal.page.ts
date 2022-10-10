@@ -8,6 +8,7 @@ import { ProfileService } from '@strive/user/user/profile.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
 import { createPersonal, createUser } from '@strive/model'
+import { createRandomString } from '@strive/utils/helpers'
 
 import { WelcomeModalComponent } from '../welcome/welcome.modal'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
@@ -125,7 +126,7 @@ export class AuthModalComponent implements OnInit {
       const profile = await this.profile.getValue(uid)
       if (!profile) {
         const user = createUser({ username: displayName ?? '', uid })
-        const personal = createPersonal({ uid, email: email ?? '' })
+        const personal = createPersonal({ uid, email: email ?? '', key: createRandomString(32) })
         await Promise.all([
           this.profile.upsert(user),
           this.personal.add(personal, { params: { uid }}),
@@ -235,7 +236,7 @@ export class AuthModalComponent implements OnInit {
       }
       const { user } = await createUserWithEmailAndPassword(getAuth(), email, password)
       const profile = createUser({ uid: user.uid, username })
-      const personal = createPersonal({ uid: user.uid, email })
+      const personal = createPersonal({ uid: user.uid, email, key: createRandomString(32) })
 
       await Promise.all([
         this.profile.add(profile),

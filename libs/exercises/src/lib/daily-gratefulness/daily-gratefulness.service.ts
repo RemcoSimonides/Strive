@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
-import { firstValueFrom, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import { AES, enc } from 'crypto-js'
 
 import { DailyGratefulness, DailyGratefulnessItem } from '@strive/model'
 
 import { PersonalService } from '@strive/user/personal/personal.service'
-import { createRandomString } from '@strive/utils/helpers'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 
 @Injectable({
@@ -51,7 +51,10 @@ export class DailyGratefulnessService extends FireSubCollection<DailyGratefulnes
 export class DailyGratefulnessItemService extends FireSubCollection<DailyGratefulnessItem> {
   readonly path = 'Users/:uid/Exercises/DailyGratefulness/Items'
 
-  constructor(private personalService: PersonalService) {
+  constructor(
+    private auth: AuthService,
+    private personalService: PersonalService
+  ) {
     super()
   }
 
@@ -70,12 +73,11 @@ export class DailyGratefulnessItemService extends FireSubCollection<DailyGratefu
   }
 
   async decrypt(cards: DailyGratefulnessItem[]) {
-    const personal = await firstValueFrom(this.personalService.personal$)
-    if (!personal) return []
+    const key = await this.personalService.getEncryptionKey()
 
     for (const card of cards) {
       card.items = card.items.map(item => {
-        return AES.decrypt(item, personal.key).toString(enc.Utf8)
+        return AES.decrypt(item, key).toString(enc.Utf8)
       })
     }
  
@@ -83,22 +85,11 @@ export class DailyGratefulnessItemService extends FireSubCollection<DailyGratefu
   }
 
   async save(data: DailyGratefulnessItem) {
-    const personal = await firstValueFrom(this.personalService.personal$)
-    if (!personal) return
-
-    let key = personal.key
-    
-    if (!key) {
-      key = createRandomString(32)
-      this.personalService.update({
-        uid: personal.uid,
-        key
-      }, { params: { uid: personal.uid }})
-    }
-
+    if (!this.auth.uid) throw new Error('uid should be defined when saving daily gratefulness items')
+    const key = await this.personalService.getEncryptionKey()
     data.items = data.items.map(item => AES.encrypt(item, key).toString())
 
-    this.upsert(data, { params: { uid: personal.uid }})
+    this.upsert(data, { params: { uid: this.auth.uid }})
   }
 
 }

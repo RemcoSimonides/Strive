@@ -8,10 +8,10 @@ import { FireSubCollection } from 'ngfire'
 import { getAuth } from 'firebase/auth'
 
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
+import * as Sentry from '@sentry/capacitor'
 
 import { user } from 'rxfire/auth'
 import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
-import * as Sentry from '@sentry/capacitor'
 
 import { Personal } from '@strive/model'
 
@@ -54,6 +54,14 @@ export class PersonalService extends FireSubCollection<Personal> {
     return snapshot.exists()
       ? { ...snapshot.data(), uid: snapshot.id }
       : undefined
+  }
+
+  async getEncryptionKey(): Promise<string> {
+    const uid = this.auth.uid
+    if (!uid) throw new Error('Should always have uid defined when getting decrypt key')
+    const personal = await this.load(uid, { uid })
+    if (!personal) throw new Error('Should always have personal defined when getting decrypt key')
+    return personal.key
   }
 
   updateLastCheckedNotification() {
