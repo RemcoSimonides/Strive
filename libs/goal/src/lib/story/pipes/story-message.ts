@@ -12,7 +12,7 @@ const empty: StoryItemMessage = {
   message: [] 
 }
 function throwError(item: StoryItem) {
-  captureException(`Story Item doesn't have required information for message`)
+  captureException(`Story Item doesn't have required information for message ${JSON.stringify(item)}`)
   return empty
 }
 
