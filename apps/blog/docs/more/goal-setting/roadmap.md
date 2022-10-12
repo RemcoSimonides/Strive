@@ -3,13 +3,14 @@ sidebar_position: 4
 title: Roadmap
 ---
 
-# Roadmap
+import PartialMilestone from '../../partials/_milestone.md'
+
 Now that you have a clear picture of what the end result will look like, it is time for some backwards reasoning to create a Roadmap on how to get there. Because without a plan, you don’t know if you’re falling off track. Engage with people who have walked the paths before you and get advice on how to do it. They might be able to create a plan with you and/or recognize when you’re going the wrong direction.
 
 ![Roadmap](/img/roadmap.jpg)
 
 ## Break up into small steps
-How small should the steps be? That is totally up to you of course. It is however best to be as detailed as possible so you move towards your goal more efficiently. At the same time, it takes a lot of time and a roadmap is not a to-do list. Personally I like to write down in such details to make it fun to read back on it later. For example, it is nice to read back that I ran 200km in one month, but not all the 7km runs I did every day. The 200km in one month milestone was enough to give me motivation and to strive towards the goal of running a marathon.
+<PartialMilestone/>
 
 ## Regularly update Roadmap
 It’s better to have a plan, than to have no plan. Along the way, anything can happen and the plan might change. It is then important to update the roadmap and continue striving towards your goal.

@@ -2,22 +2,19 @@
 sidebar_position: 1
 ---
 
-# Getting Started
+# Welcome
+You're currently in the guides section. Here you can find all the information needed to control Strive Journal.
 
-Let's discover **Strive Journal**.
+- ⚡ Strive Journal will help you to stay focused on your goals
+- ✍️ Journal about achievements you're proud of
+- 💝 Support others with their journey
+- 🙏 Increase your mental strength with exercises
 
-- [Goal Setting](/category/goal-setting)
-  - [Prioritize](/goal-setting/prioritize)
-  - [Define goal](/goal-setting/define-goal)
-  - [Visualize](/goal-setting/visualize)
-  - [Set up Roadmap](/goal-setting/roadmap)
-  - [Gather your Dream Team](/goal-setting/dream-team)
-  - [Stay Focused](/goal-setting/focus)
+## Open Source
+Strive Journal is [open source](https://github.com/RemcoSimonides/Strive/issues) which means anyone can contribute!
 
+## Report issues
+In case you encounter something that isn't working, you can create an issue on [Github](https://github.com/RemcoSimonides/Strive/issues)
 
-- [How To](/category/how-to)
-  - [Define Goal](/how-to/create-goal)
-  - [Support](/how-to/support)
-  - [Dialy Gratefulness Exercise](/how-to/daily-gratefulness)
-  - [Dear Future Self Exercise](/how-to/dear-future-self)
-  - [Affirmations Exercise](/how-to/affirmations)
+## Contact
+If you have any questions or feedback, you can contact me at [remco@strivejournal.com](mailto:remco@strivejournal.com)
