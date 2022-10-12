@@ -70,7 +70,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       }),
       joinWith({
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId),
-        milestone: ({ milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId) : of(undefined)
+        milestone: ({ goalId, milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined)
       }, { shouldAwait: true }),
       map(supports => supports.sort((a, b) => compareAsc(a.createdAt, b.createdAt))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))
@@ -85,7 +85,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       }),
       joinWith({
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
-        milestone: ({ milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId) : of(undefined)
+        milestone: ({ goalId, milestoneId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined)
       }, { shouldAwait: true }),
       map(supports => supports.sort((a, b) => compareAsc(a.createdAt, b.createdAt))),
       map(supports => supports.sort(support => support.status === 'open' ? -1 : 1))

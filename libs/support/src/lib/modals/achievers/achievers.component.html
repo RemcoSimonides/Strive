@@ -21,10 +21,10 @@
     </ion-item>
     <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'inset'">
       <ion-avatar slot="start">
-        <img [ref]="achiever.photoURL" asset="profile.png">
+        <img [ref]="achiever.profile.photoURL" asset="profile.png">
       </ion-avatar>
       <ion-label class="ion-text-wrap">
-        <ion-text>{{ achiever.username }}</ion-text>
+        <ion-text>{{ achiever.profile.username }}</ion-text>
       </ion-label>
       <ion-checkbox slot="end" color="primary" [(ngModel)]="achiever.checked" (ionChange)="selected($event, achiever)"></ion-checkbox>
     </ion-item>
