@@ -90,8 +90,8 @@ service cloud.firestore {
       match /Posts/{postId} {
         allow read;
         allow create: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
-        allow update: if userIsGoalAdmin(goalId)
-        allow delete: if userIsGoalAdmin(goalId)
+        allow update: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
+        allow delete: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
       }
 
       match /Supports/{supportId} {

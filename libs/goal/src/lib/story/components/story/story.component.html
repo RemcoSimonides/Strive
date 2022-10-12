@@ -1,5 +1,5 @@
 <ul>
-	<article class="add-button" *ngIf="isAdmin">
+	<article class="add-button" *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
 		<div></div>
 		<div>
 			<ion-button fill="clear" (click)="createCustomPost()">
@@ -37,7 +37,7 @@
 		<article *ngIf="item.name === 'goalStoryPostCreated'" class="extra">
 			<div></div>
 			<div>
-				<post-main [storyItem]="item" [isAdmin]="isAdmin"></post-main>
+				<post-main [storyItem]="item" [stakeholder]="stakeholder"></post-main>
 			</div>
 		</article>
 

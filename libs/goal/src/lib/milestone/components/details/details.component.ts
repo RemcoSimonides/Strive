@@ -9,7 +9,7 @@ import { joinWith } from 'ngfire'
 import { Observable, of, Subscription } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
 
-import { Goal, createSubtask, Milestone, Support, StoryItem, createUser } from '@strive/model'
+import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
@@ -23,7 +23,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 
 @Component({
-  selector: '[goal][milestone][isAdmin][isAchiever] goal-milestone-details',
+  selector: '[goal][milestone][stakeholder] goal-milestone-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,10 +38,9 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   @Input() goal!: Goal
   @Input() milestone!: Milestone & { supports?: Support[] }
-  @Input() isAdmin!: boolean
-  @Input() isAchiever!: boolean
+  @Input() stakeholder = createGoalStakeholder()
 
-  get canEdit(): boolean { return !!this.goal?.id && this.isAdmin }
+  get canEdit(): boolean { return !!this.goal?.id && this.stakeholder.isAdmin }
 
   constructor(
     private alertCtrl: AlertController,
@@ -164,7 +163,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   }
 
   addSubtask() {
-    if (!this.isAdmin || !this.isAchiever) return
+    if (!this.stakeholder.isAdmin || !this.stakeholder.isAchiever) return
     if (this.subtaskForm.valid) {
       const task = createSubtask(this.subtaskForm.value)
       const control = new SubtaskForm(task)

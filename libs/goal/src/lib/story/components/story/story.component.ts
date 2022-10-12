@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { ModalController } from "@ionic/angular";
-import { createPost, StoryItem } from "@strive/model";
-import { UpsertPostModalComponent } from "@strive/post/components/upsert-modal/upsert-modal.component";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ModalController } from '@ionic/angular'
+import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
 @Component({
 	selector: '[story][goalId] goal-story',
@@ -12,7 +12,7 @@ import { UpsertPostModalComponent } from "@strive/post/components/upsert-modal/u
 export class StoryComponent {
 
 	@Input() story: StoryItem[] = []
-	@Input() isAdmin = false
+	@Input() stakeholder = createGoalStakeholder()
 	@Input() goalId!: string
 	@Input() milestoneId?: string
 

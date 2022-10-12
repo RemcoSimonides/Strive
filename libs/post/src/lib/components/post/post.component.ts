@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular'
 
-import { Post, StoryItem, User } from '@strive/model'
+import { createGoalStakeholder, Post, StoryItem, User } from '@strive/model'
 
 import { PostOptionsComponent } from '@strive/post/popovers/options/options.component'
 import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component'
@@ -21,7 +21,7 @@ export class PostComponent {
     this.author = user
     this.post = post
   }
-  @Input() isAdmin = false
+  @Input() stakeholder = createGoalStakeholder()
   
   author?: User
   post?: Post

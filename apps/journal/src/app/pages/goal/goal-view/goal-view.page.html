@@ -40,18 +40,12 @@
   
     <ion-content *ngSwitchCase="'story'" class="ion-padding">
       <ng-container *ngIf="story$ | async as story; else loading">
-        <journal-goal-story [story]="story" [isAdmin]="stakeholder.isAdmin" [goalId]="goal.id"></journal-goal-story>
+        <journal-goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id"></journal-goal-story>
       </ng-container>
     </ion-content>
     
     <journal-chat *ngSwitchCase="'chat'" [goal]="goal$ | async" [stakeholder]="stakeholder"></journal-chat>
   
-  </ng-container>
-  
-  <ng-container *ngIf="stakeholder.isAdmin">
-    <ion-fab *ngIf="segmentChoice === 'story' || segmentChoice === 'goal'" vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="createCustomPost(goal)"><ion-icon name="add"></ion-icon></ion-fab-button>
-    </ion-fab>
   </ng-container>
 
 </ng-container>

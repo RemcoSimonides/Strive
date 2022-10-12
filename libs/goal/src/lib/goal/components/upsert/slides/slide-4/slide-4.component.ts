@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { orderBy } from 'firebase/firestore';
-import { Observable } from 'rxjs';
-import { Goal } from '@strive/model'
-import { Milestone } from '@strive/model'
-import { MilestoneService } from '@strive/goal/milestone/milestone.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { orderBy } from 'firebase/firestore'
+import { Observable } from 'rxjs'
+import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
+import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 
 @Component({
   selector: '[goal] goal-slide-4',
@@ -17,6 +16,7 @@ export class Slide4Component implements OnInit {
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
 
   milestones$?: Observable<Milestone[]>
+  stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true })
 
   constructor(
     private milestoneService: MilestoneService

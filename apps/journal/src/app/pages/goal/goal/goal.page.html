@@ -142,14 +142,13 @@
       <goal-strive-roadmap
         [goal]="goal"
         [milestones]="milestones$ | async"
-        [isAdmin]="stakeholder.isAdmin"
-        [isAchiever]="stakeholder.isAchiever">
+        [stakeholder]="stakeholder">
       </goal-strive-roadmap>
     </section>
 
     <section>
       <h3>Story</h3>
-      <goal-story [story]="story" [isAdmin]="stakeholder.isAdmin" [goalId]="goal.id"></goal-story>
+      <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id"></goal-story>
     </section>
 
   </main>

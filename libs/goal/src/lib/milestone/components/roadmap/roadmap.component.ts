@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { ItemReorderEventDetail, ModalController } from '@ionic/angular'
-import { Goal, Support } from '@strive/model'
+import { createGoalStakeholder, Goal, Support } from '@strive/model'
 
 import { createMilestone, Milestone } from '@strive/model'
 import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form'
@@ -15,7 +15,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/component
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
 @Component({
-  selector: '[goal][milestones][isAdmin] goal-strive-roadmap',
+  selector: '[goal][milestones][stakeholder] goal-strive-roadmap',
   templateUrl: 'roadmap.component.html',
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,8 +24,8 @@ export class RoadmapComponent {
 
   @Input() goal!: Goal
   @Input() milestones!: MilestoneWithSupport[]
-  @Input() isAdmin!: boolean
-  @Input() isAchiever?: boolean
+
+  @Input() stakeholder = createGoalStakeholder()
 
   @Input() createMode = false
 
@@ -77,8 +77,7 @@ export class RoadmapComponent {
       component: DetailsComponent,
       componentProps: {
         goal: this.goal,
-        isAdmin: this.isAdmin,
-        isAchiever: this.isAchiever,
+        stakeholder: this.stakeholder,
         milestone
       },
       cssClass: 'high-modal'

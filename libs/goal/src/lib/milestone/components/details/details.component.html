@@ -25,8 +25,8 @@
     <h5>Milestone</h5>
     <form [formGroup]="form">
       <ion-item class="main">
-        <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="isAdmin" [isAchiever]="isAchiever"></strive-milestone-status>
-        <ion-textarea autoGrow [readonly]="!isAdmin" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
+        <strive-milestone-status [goal]="goal" [milestone]="milestone" [isAdmin]="stakeholder.isAdmin" [isAchiever]="stakeholder.isAchiever"></strive-milestone-status>
+        <ion-textarea autoGrow [readonly]="!stakeholder.isAdmin" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
         <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
@@ -35,7 +35,7 @@
 
     <section class="deadline">
       <b>Deadline:</b>
-      <strive-milestone-deadline [milestone]="milestone" [isAdmin]="isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
+      <strive-milestone-deadline [milestone]="milestone" [isAdmin]="stakeholder.isAdmin" (deadlineChange)="updateDeadline($event)"></strive-milestone-deadline>
     </section>
     
     <ng-container *ngIf="goal.numberOfAchievers > 1">
@@ -60,7 +60,7 @@
     </section>
 
     <section class="description">
-      <ng-container *ngIf="!isAdmin else editable">
+      <ng-container *ngIf="!stakeholder.isAdmin else editable">
         <ng-container *ngIf="milestone.description">
           <h5>Description</h5>
           <article>{{ milestone.description }}</article>
@@ -74,10 +74,10 @@
       </ng-template>
     </section>
 
-    <ng-container *ngIf="isAdmin || milestone.subtasks?.length">
+    <ng-container *ngIf="stakeholder.isAdmin || milestone.subtasks?.length">
       <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
       <ion-list mode="md">
-        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!isAdmin">
+        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!stakeholder.isAdmin">
           <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
             <ion-button fill="clear" (click)="toggleSubtask(i)">
               <ion-icon  slot="icon-only"
@@ -85,12 +85,12 @@
                 color="primary">
               </ion-icon>
             </ion-button>
-            <ion-input [readonly]="!isAdmin" [formControl]="control.content" autocapitalize="sentences"></ion-input>
+            <ion-input [readonly]="!stakeholder.isAdmin" [formControl]="control.content" autocapitalize="sentences"></ion-input>
             <ion-reorder slot="end"></ion-reorder>
           </ion-item>
         </ion-reorder-group>
         
-        <form [formGroup]="subtaskForm" *ngIf="isAdmin">
+        <form [formGroup]="subtaskForm" *ngIf="stakeholder.isAdmin">
           <ion-item lines="none">
             <ion-icon class="icon" name="radio-button-off" color="primary"></ion-icon>
             <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences"></ion-input>
@@ -101,9 +101,9 @@
     </ng-container>
 
     <ng-container *ngIf="story$ | async as story">
-      <ng-container *ngIf="isAdmin || story.length">
+      <ng-container *ngIf="stakeholder.isAdmin || story.length">
         <h5>Story</h5>
-        <goal-story [story]="story" [isAdmin]="isAdmin" [goalId]="goal.id" [milestoneId]="milestone.id"></goal-story>
+        <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id"></goal-story>
       </ng-container>
     </ng-container>
 

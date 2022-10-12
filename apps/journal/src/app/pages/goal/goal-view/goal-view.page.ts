@@ -19,8 +19,7 @@ import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { PostService } from '@strive/post/post.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
-import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem, createPost } from '@strive/model'
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem } from '@strive/model'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
@@ -71,7 +70,6 @@ export class GoalViewComponent implements OnDestroy {
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private milestoneService: MilestoneService,
-    private modalCtrl: ModalController,
     private postService: PostService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
@@ -171,14 +169,5 @@ export class GoalViewComponent implements OnDestroy {
 
   segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
-  }
-
-  createCustomPost(goal: Goal) {
-    this.modalCtrl.create({
-      component: UpsertPostModalComponent,
-      componentProps: {
-        post: createPost({ goalId: goal.id })
-      }
-    }).then(modal => modal.present())
   }
 }

@@ -3,7 +3,7 @@
 </ion-refresher>
 
 <ng-container *ngIf="!!story.length else noStory">
-  <goal-story [story]="story" [isAdmin]="isAdmin" [goalId]="goalId"></goal-story>
+  <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goalId"></goal-story>
 </ng-container>
 
 <ng-template #noStory>
