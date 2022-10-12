@@ -26,7 +26,7 @@
     <form [formGroup]="form">
       <ion-item class="main">
         <goal-milestone-status [goal]="goal" [milestone]="milestone" [stakeholder]="stakeholder"></goal-milestone-status>
-        <ion-textarea autoGrow [readonly]="!stakeholder.isAdmin" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
+        <ion-textarea autoGrow [readonly]="!canEdit" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
         <ion-button *ngIf="canEdit" fill="clear" slot="end" (click)="deleteMilestone()">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
@@ -60,7 +60,7 @@
     </section>
 
     <section class="description">
-      <ng-container *ngIf="!stakeholder.isAdmin else editable">
+      <ng-container *ngIf="!canEdit else editable">
         <ng-container *ngIf="milestone.description">
           <h5>Description</h5>
           <article>{{ milestone.description }}</article>
@@ -74,10 +74,10 @@
       </ng-template>
     </section>
 
-    <ng-container *ngIf="stakeholder.isAdmin || milestone.subtasks?.length">
+    <ng-container *ngIf="canEdit || milestone.subtasks?.length">
       <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
       <ion-list mode="md">
-        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!stakeholder.isAdmin">
+        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!canEdit">
           <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
             <ion-button fill="clear" (click)="toggleSubtask(i)">
               <ion-icon  slot="icon-only"
@@ -85,12 +85,12 @@
                 color="primary">
               </ion-icon>
             </ion-button>
-            <ion-input [readonly]="!stakeholder.isAdmin" [formControl]="control.content" autocapitalize="sentences"></ion-input>
+            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences"></ion-input>
             <ion-reorder slot="end"></ion-reorder>
           </ion-item>
         </ion-reorder-group>
         
-        <form [formGroup]="subtaskForm" *ngIf="stakeholder.isAdmin">
+        <form [formGroup]="subtaskForm" *ngIf="canEdit">
           <ion-item lines="none">
             <ion-icon class="icon" name="radio-button-off" color="primary"></ion-icon>
             <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences"></ion-input>
@@ -101,7 +101,7 @@
     </ng-container>
 
     <ng-container *ngIf="story$ | async as story">
-      <ng-container *ngIf="stakeholder.isAdmin || story.length">
+      <ng-container *ngIf="canEdit || story.length">
         <h5>Story</h5>
         <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id"></goal-story>
       </ng-container>

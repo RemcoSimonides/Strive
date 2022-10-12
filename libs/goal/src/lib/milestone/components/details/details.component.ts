@@ -40,7 +40,11 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   @Input() milestone!: Milestone & { supports?: Support[] }
   @Input() stakeholder = createGoalStakeholder()
 
-  get canEdit(): boolean { return !!this.goal?.id && this.stakeholder.isAdmin }
+  get canEdit(): boolean {
+    if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return false
+    if (!this.goal.id) return false
+    return true
+  }
 
   constructor(
     private alertCtrl: AlertController,
@@ -77,11 +81,9 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         filter(_ => this.form.content.valid)
       ).subscribe(content => {
         if (!content || !this.form || !this.canEdit) return
-        if (this.canEdit) {
-          this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
-          this.form?.content.markAsPristine()
-          this.cdr.markForCheck()
-        }
+        this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+        this.form?.content.markAsPristine()
+        this.cdr.markForCheck()
       })
 
       const descriptionSub = this.form.description.valueChanges.pipe(
