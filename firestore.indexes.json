@@ -137,20 +137,6 @@
       ]
     },
     {
-      "collectionGroup": "Milestones",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "sequenceNumber",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "Notifications",
       "queryScope": "COLLECTION",
       "fields": [

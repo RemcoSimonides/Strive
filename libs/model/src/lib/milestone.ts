@@ -10,7 +10,6 @@ export interface Subtask {
 
 export interface Milestone {
   id?: string
-  sequenceNumber: string
   order: number
   content: string
   description: string
@@ -28,7 +27,6 @@ export interface Milestone {
 export interface MilestoneTemplate {
   id: string
   description: string
-  sequenceNumber: string
   deadline: string
 }
 
@@ -38,7 +36,6 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     id: params.id ?? '',
     order: params.order ?? 0,
     content: params.content ?? '',
-    sequenceNumber: params.sequenceNumber ?? '',
     description: params.description ?? '',
     deadline: params.deadline ? setDateToEndOfDay(params.deadline) : '',
     status: params.status ?? 'pending',
