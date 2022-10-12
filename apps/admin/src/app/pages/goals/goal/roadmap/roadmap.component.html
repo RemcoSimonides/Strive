@@ -14,10 +14,7 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.deadline">
-                <strive-milestone-deadline
-                  [milestone]="milestone"
-                  [isAdmin]="true">
-                </strive-milestone-deadline>
+                <goal-milestone-deadline [milestone]="milestone" [stakeholder]="stakeholder"></goal-milestone-deadline>
               </ng-container>
               <ng-container *ngIf="milestone.achiever?.uid">
                 <goal-milestone-assignee [achiever]="milestone.achiever!"></goal-milestone-assignee>

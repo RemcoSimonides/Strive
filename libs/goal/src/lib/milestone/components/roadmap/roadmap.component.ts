@@ -33,6 +33,10 @@ export class RoadmapComponent {
 
   milestoneForm = new MilestoneForm()
 
+  get canEdit(): boolean {
+    return this.stakeholder.isAdmin || this.stakeholder.isAchiever
+  }
+
   constructor(
     private auth: AuthService,
     private modalCtrl: ModalController,

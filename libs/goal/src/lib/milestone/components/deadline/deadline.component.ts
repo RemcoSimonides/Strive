@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
-import { Milestone } from '@strive/model'
-import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { PopoverController } from '@ionic/angular'
+import { createGoalStakeholder, Milestone } from '@strive/model'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 @Component({
-  selector: '[milestone] strive-milestone-deadline',
+  selector: '[milestone] goal-milestone-deadline',
   templateUrl: 'deadline.component.html',
   styleUrls: ['./deadline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -12,15 +12,20 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component';
 export class MilestoneDeadlineComponent {
   @Input() milestone!: Milestone
   @Input() maxDeadline?: string
-  @Input() isAdmin = false
+  @Input() stakeholder = createGoalStakeholder()
 
   @Output() deadlineChange = new EventEmitter<string>()
+
+  get canEdit(): boolean {
+    if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return false
+    if (this.milestone.status === 'failed' || this.milestone.status === 'succeeded') return false
+    return true
+  }
 
   constructor(private popoverCtrl: PopoverController) {}
 
   async openDatePicker(event: Event) {
-    if (!this.isAdmin) return
-    if (this.milestone.status !== 'pending' && this.milestone.status !== 'overdue') return
+    if (!this.canEdit) return
     event.stopPropagation()
 
     const minDate = new Date()

@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { createPost, Goal } from '@strive/model'
+import { createGoalStakeholder, createMilestone, createPost, Goal } from '@strive/model'
 
-import { createMilestone, Milestone, MilestoneStatus } from '@strive/model'
+import { Milestone, MilestoneStatus } from '@strive/model'
 import { MilestoneService  } from '@strive/goal/milestone/milestone.service';
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component';
 import { serverTimestamp } from 'firebase/firestore';
 
 @Component({
-  selector: 'strive-milestone-status',
+  selector: 'goal-milestone-status',
   templateUrl: 'status.component.html',
   styleUrls: ['./status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,10 +42,15 @@ export class MilestoneStatusComponent {
     }
   }
 
-  @Input() milestone: Milestone = createMilestone()
-  @Input() goal?: Goal
-  @Input() isAdmin?: boolean
-  @Input() isAchiever?: boolean
+  @Input() milestone = createMilestone()
+  @Input() goal!: Goal
+  @Input() stakeholder = createGoalStakeholder()
+
+  get canEdit() {
+    if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return false
+    if (this.milestone.status === 'failed' || this.milestone.status === 'succeeded') return false
+    return true
+  }
 
   constructor(
     private alertCtrl: AlertController,
@@ -56,8 +61,7 @@ export class MilestoneStatusComponent {
 
   updateStatus(event: UIEvent) {
     if (!this.goal?.id) return
-    if (this.milestone.status !== 'pending' && this.milestone.status !== 'overdue') return
-    if (!this.isAdmin && !this.isAchiever) return
+    if (!this.canEdit) return
     event.stopPropagation()
     
     this.alertCtrl.create({
@@ -72,7 +76,7 @@ export class MilestoneStatusComponent {
               id: this.milestone.id,
               status: 'succeeded',
               finishedAt: serverTimestamp() as any
-            }, { params: { goalId: this.goal!.id }})
+            }, { params: { goalId: this.goal.id }})
             this.milestone.status = 'succeeded'
             this.cdr.markForCheck()
             this.startPostCreation(this.milestone)
@@ -86,7 +90,7 @@ export class MilestoneStatusComponent {
               id: this.milestone.id,
               status: 'failed',
               finishedAt: serverTimestamp() as any
-            }, { params: { goalId: this.goal!.id }})
+            }, { params: { goalId: this.goal.id }})
             this.milestone.status = 'failed'
             this.cdr.markForCheck()
             this.startPostCreation(this.milestone)

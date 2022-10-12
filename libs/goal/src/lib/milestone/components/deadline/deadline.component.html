@@ -1,4 +1,4 @@
-<section [ngClass]="{'overdue': milestone.status === 'overdue', 'clickable': isAdmin || (milestone.status !== 'pending' && milestone.status !== 'overdue') }" (click)="openDatePicker($event)">
+<section [ngClass]="{'overdue': milestone.status === 'overdue', 'clickable': canEdit }" (click)="openDatePicker($event)">
   <ion-icon name="alarm-outline"></ion-icon>
   <span>{{ milestone.deadline ? (milestone.deadline | date:'MMM d, y') : ('-- -- --') }}</span>
 </section>

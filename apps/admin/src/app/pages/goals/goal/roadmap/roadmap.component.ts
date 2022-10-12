@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { orderBy } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 import { Observable, of } from 'rxjs'
-import { Goal, Milestone } from '@strive/model'
+import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { ProfileService } from '@strive/user/user/profile.service'
@@ -17,6 +17,7 @@ export class AdminRoadmapComponent implements OnInit {
 
   milestones$?: Observable<Milestone[]>
   goal$?: Observable<Goal | undefined>
+  stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true })
 
 	@Input() id!: string
 

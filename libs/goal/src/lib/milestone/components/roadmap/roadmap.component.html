@@ -1,15 +1,15 @@
 <ng-container *ngIf="milestones else loading">
-  <ng-container *ngIf="milestones.length || stakeholder.isAdmin else empty">
+  <ng-container *ngIf="milestones.length || canEdit else empty">
     <ion-list mode="md">
     
-      <ion-reorder-group [disabled]="!stakeholder.isAdmin" (ionItemReorder)="doReorder($event)">
+      <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
         <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}">
-          <strive-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [isAdmin]="stakeholder.isAdmin" [isAchiever]="stakeholder.isAdmin"></strive-milestone-status>
+          <goal-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [stakeholder]="stakeholder"></goal-milestone-status>
           <section>
             <span>{{ milestone.content }}</span>
             <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
-            <article *ngIf="(stakeholder.isAdmin && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId">
-              <ng-container *ngIf="stakeholder.isAdmin && !createMode">
+            <article *ngIf="(canEdit && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId">
+              <ng-container *ngIf="canEdit && !createMode">
                 <div class="supports">
                   <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.supports?.length ?? 0 }}</small>
                 </div>
@@ -20,17 +20,14 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.deadline">
-                <strive-milestone-deadline
-                  [milestone]="milestone"
-                  [isAdmin]="stakeholder.isAdmin">
-                </strive-milestone-deadline>
+                <goal-milestone-deadline [milestone]="milestone" [stakeholder]="stakeholder"></goal-milestone-deadline>
               </ng-container>
               <ng-container *ngIf="milestone.achiever?.uid">
                 <goal-milestone-assignee [achiever]="milestone.achiever!"></goal-milestone-assignee>
               </ng-container>
             </article>
           </section>
-          <ng-container *ngIf="!stakeholder.isAdmin">
+          <ng-container *ngIf="!canEdit">
             <ion-button slot="end" size="small" color="secondary" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
               <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
             </ion-button>
@@ -39,9 +36,9 @@
         </ion-item>
       </ion-reorder-group>
       
-      <form [formGroup]="milestoneForm" *ngIf="stakeholder.isAdmin">
+      <form [formGroup]="milestoneForm" *ngIf="canEdit">
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
-          <strive-milestone-status *ngIf="!createMode" status="pending"></strive-milestone-status>
+          <goal-milestone-status *ngIf="!createMode"></goal-milestone-status>
           <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
           <ion-button color="primary" (click)="add()">add</ion-button>
         </ion-item>
