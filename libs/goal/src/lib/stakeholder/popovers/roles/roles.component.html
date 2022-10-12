@@ -2,6 +2,9 @@
 	<ion-item (click)="toggleAdmin()" button>
 		<ion-label>{{ stakeholder.isAdmin ? 'Revoke Admin' : 'Make Admin' }}</ion-label>
 	</ion-item>
+	<ion-item (click)="toggleAchiever()" button>
+		<ion-label>{{ stakeholder.isAchiever ? 'Revoke Achiever' : 'Make Achiever' }}</ion-label>
+	</ion-item>
 	<ion-item (click)="navTo()" button>
 		View Profile
 	</ion-item>

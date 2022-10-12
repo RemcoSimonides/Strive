@@ -33,6 +33,15 @@ export class RolesPopoverComponent {
     }, { params: { goalId: this.goalId }})
   }
 
+  toggleAchiever() {
+    this.popoverCtrl.dismiss()
+    if (!this.goalId) return
+    this.stakeholderService.upsert({
+      uid: this.stakeholder.uid,
+      isAchiever: !this.stakeholder.isAchiever
+    }, { params: { goalId: this.goalId }})
+  }
+
   navTo() {
     this.popoverCtrl.dismiss()
     this.location.back()
