@@ -85,9 +85,25 @@ const config = {
             title: 'Guides',
             items: [
               {
-                label: 'Goal Setting',
-                to: '/category/goal-setting',
+                label: 'Goal',
+                to: '/category/goal',
               },
+              {
+                label: 'Support',
+                to: '/category/support',
+              },
+              {
+                label: 'Exercises',
+                to: '/category/exercises',
+              },
+              {
+                label: 'Profile',
+                to: '/category/profile',
+              },
+              {
+                label: 'Create the Perfect Goal',
+                to: '/category/create-the-perfect-goal',
+              }
             ],
           },
           {
