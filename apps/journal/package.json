@@ -1,0 +1,6 @@
+{
+  "name": "journal",
+  "devDependencies": {
+    "@capacitor/cli": "^4.3.0"
+  }
+}
