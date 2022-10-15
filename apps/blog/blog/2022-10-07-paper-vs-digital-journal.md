@@ -24,6 +24,7 @@ Each kind of journal has its strength and weaknesses. You're not limited to eith
 ### Advantages
 - Easy to share your goals and to chat about them
 - It's always with you on your phone
+- With Strive Journal, you will be guided in how to do proper goal setting, without having the invent your own system
 - It's very compact, despite the ability to add unlimited photos, videos or audio.
 - Send automated reminders for messages to future self / affirmations / daily gratefulness / focus questions / milestone deadlines
 
