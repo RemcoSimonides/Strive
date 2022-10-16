@@ -1,12 +1,10 @@
 <ion-app>
 
-	<!-- Mobile -->
   <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
     <ion-nav [root]="rootPage"></ion-nav>
   </ng-container>
 
   <ng-template #desktop>
-    <!-- Main navbar -->
     <ion-header>
       <ion-toolbar>
         <header>

@@ -53,9 +53,6 @@ export class AppComponent implements OnDestroy {
 
     this.platform.ready().then(() => {
       this.screensize.onResize(this.platform.width());
-      // this.initializeMenu();
-      // this.statusBar.styleDefault();
-      // this.splashScreen.hide();
 
       if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
         this.personalService.addListenersCapacitor()
