@@ -62,7 +62,8 @@ export async function sendGoalEventNotification(
   const { goalId, userId, milestoneId, supportId } = event
   const except =  excludeTriggerer ? userId : ''
   
-  const notification: Notification = createNotificationBase(event)
+  const notificationBase = createNotificationBase({ ...event, event: event.name })
+  const notification: Notification = createNotificationBase(notificationBase)
 
   const { send, roles } = options
   const stakeholders = await getGoalStakeholders(goalId, roles)
@@ -79,7 +80,7 @@ export async function sendGoalEventNotification(
   
   if (send.notification) {
     const recipients = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
-    sendNotificationToUsers(notification, recipients)
+    sendNotificationToUsers(notificationBase, recipients)
   }
 
   if (send.pushNotification) {
@@ -97,7 +98,7 @@ export async function sendGoalEventNotification(
     const spectators = distinct.filter(id => !stakeholders.some(uid => uid === id))
 
     if (send.toSpectator.notification) {
-      sendNotificationToUsers(notification, spectators)
+      sendNotificationToUsers(notificationBase, spectators)
     }
 
     if (send.toSpectator.pushNotification) {
