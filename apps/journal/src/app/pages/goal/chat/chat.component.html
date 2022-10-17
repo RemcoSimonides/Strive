@@ -13,7 +13,7 @@
 				<article>
 					<small><b>{{ comment.user.username }}</b></small>
 					<small class="date">{{ comment.createdAt | timeAgo }}</small>
-					<div>{{ comment.text }}</div>
+					<div [innerHTML]="comment.text | toHTML"></div>
 				</article>
 			</li>
 		</ul>

@@ -1,7 +1,7 @@
 <ng-container *ngIf="value; else noValue">
 	<ng-container *ngIf="!editMode else edit">
 		<section>
-			<article>{{ value }}</article>
+			<article [innerHTML]="value | toHTML"></article>
 			<ion-button fill="clear" (click)="editMode = true" size="small" *ngIf="canEdit">
 				<ion-icon name="pencil-outline" slot="start"></ion-icon>
 				<span>Edit description</span>
