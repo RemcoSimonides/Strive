@@ -44,6 +44,9 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   private sub = this.postForm.url.valueChanges.pipe(
     filter(url => url ? isValidHttpUrl(url) : false)
   ).subscribe(async url => {
+    const formValue = this.postForm.getRawValue()
+    if (formValue.title && formValue.description && formValue.mediaURL) return
+
     this.scrapingUrl = true;
     this.cdr.markForCheck()
 
@@ -55,9 +58,9 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       captureException(result)
     } else {
       const { image, title, description } = result.meta;
-      this.postForm.title.setValue(title ?? '')
-      this.postForm.description.setValue(description ?? '')
-      this.postForm.mediaURL.setValue(image ?? '')
+      if (!formValue.title) this.postForm.title.setValue(title ?? '')
+      if (!formValue.description) this.postForm.description.setValue(description ?? '')
+      if (!formValue.mediaURL) this.postForm.mediaURL.setValue(image ?? '')
     }
 
     this.scrapingUrl = false

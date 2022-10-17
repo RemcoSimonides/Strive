@@ -47,7 +47,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   @Input() defaultImage?: 'goal.png' | 'profile.png'
 
-  @Input() form!: FormControl
+  @Input() form!: FormControl<string>
   @Input() storagePath!: string
 
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>;
@@ -150,13 +150,18 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   remove() {
-    deleteObject(ref(getStorage(), this.form.value))
-    .catch((error: StorageError) => {
-      if (error.code === 'storage/object-not-found') {
-        // suppress
-      }
-      captureException(error)
-    })
+    const isHttpUrl = isValidHttpUrl(this.form.value) // it's an http url if image is fetched from other website for Post in Story
+
+    if (!isHttpUrl) { // if its not an http url, its a reference path in storage
+      deleteObject(ref(getStorage(), this.form.value))
+      .catch((error: StorageError) => {
+        if (error.code === 'storage/object-not-found') {
+          // suppress
+        }
+        captureException(error)
+      })
+    }
+
     this.form.setValue('');
     this.step.next('drop')
   }
