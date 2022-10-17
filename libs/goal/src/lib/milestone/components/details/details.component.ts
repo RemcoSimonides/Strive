@@ -182,6 +182,12 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     control?.setValue(!control.value)
   }
 
+  subtaskBlur(index: number) {
+    const subtasksForm = this.form?.subtasks as FormArray
+    const control = subtasksForm.at(index).get('content')
+    if (!control?.value) subtasksForm.removeAt(index)
+  }
+
   openSupportModal() {
     this.dismiss()
     delay(250).then(_ => {

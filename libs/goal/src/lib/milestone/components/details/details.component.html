@@ -85,7 +85,7 @@
                 color="primary">
               </ion-icon>
             </ion-button>
-            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences"></ion-input>
+            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)"></ion-input>
             <ion-reorder slot="end"></ion-reorder>
           </ion-item>
         </ion-reorder-group>
