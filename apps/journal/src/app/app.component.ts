@@ -2,6 +2,7 @@ import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angula
 import { Router, NavigationEnd } from '@angular/router'
 import { isPlatformServer } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
+import { Capacitor } from '@capacitor/core'
 import { Unsubscribe } from 'firebase/firestore'
 
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
@@ -54,14 +55,12 @@ export class AppComponent implements OnDestroy {
     this.platform.ready().then(() => {
       this.screensize.onResize(this.platform.width());
 
-      if ((this.platform.is('android') || this.platform.is('ios')) && !this.platform.is('mobileweb')) {
-        this.personalService.addListenersCapacitor()
-      }
-
-      if (this.platform.is('mobileweb')) {
+      if (Capacitor.getPlatform() === 'web') {
         this.personalService.showMessages().then(res => {
           this.fcmUnsubscribe = res
         })
+      } else {
+        this.personalService.addListenersCapacitor()
       }
     })
 
