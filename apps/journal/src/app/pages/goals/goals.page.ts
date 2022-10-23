@@ -25,6 +25,7 @@ import { GoalUpdatesModalComponent } from '@strive/goal/goal/components/modals/g
 import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
+import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 
 @Component({
   selector: 'journal-goals',
@@ -57,6 +58,12 @@ export class GoalsComponent {
     if (t === 'daily-gratefulness') {
       this.modalCtrl.create({
         component: CardsModalComponent
+      }).then(modal => modal.present())
+    }
+
+    if (t === 'wheeloflife') {
+      this.modalCtrl.create({
+        component: EntryModalComponent
       }).then(modal => modal.present())
     }
 

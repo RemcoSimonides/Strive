@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
 
-import { limit } from 'firebase/firestore'
+import { limit, orderBy } from 'firebase/firestore'
 import { BehaviorSubject, map, of, switchMap } from 'rxjs'
 import { formatISO } from 'date-fns'
 
@@ -24,8 +24,8 @@ SwiperCore.use([EffectCards, Navigation])
 })
 export class CardsComponent implements OnDestroy {
 
-  startValue = ''
-  today = formatISO(new Date(), { representation: 'date' })
+  private startValue = ''
+  private today = formatISO(new Date(), { representation: 'date' })
   isDesktop$ = this.screensize.isDesktop$
 
   form = new FormGroup({
@@ -37,8 +37,7 @@ export class CardsComponent implements OnDestroy {
   save$ = new BehaviorSubject<'save' | 'saving' | 'saved'>('save')
 
   cards$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.itemService.valueChanges([limit(500)] ,{ uid: profile.uid }) : of([]))
-  ).pipe(
+    switchMap(profile => profile ? this.itemService.valueChanges([orderBy('createdAt', 'desc'), limit(500)] ,{ uid: profile.uid }) : of([])),
     switchMap(cards => this.itemService.decrypt(cards)),
     map(cards => {
       const today = cards.find(card => card.id === this.today)

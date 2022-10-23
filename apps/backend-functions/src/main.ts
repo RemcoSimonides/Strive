@@ -8,6 +8,7 @@ export { userSpectatorChangeHandler, userSpectatorCreatedHandler, userSpectatorD
 export { affirmationsCreatedHandler, affirmationsChangeHandler, affirmationsDeleteHandler } from './firestore/users/exercises/affirmation'
 export { dailyGratefulnessCreatedHandler, dailyGratefulnessChangedHandler, dailyGratefulnessDeleteHandler } from './firestore/users/exercises/daily_gratefulness'
 export { dearFutureSelfCreatedHandler, dearFutureSelfChangedHandler, dearFutureSelfDeleteHandler } from './firestore/users/exercises/dear_future_self'
+export { wheelOfLifeCreatedHandler, wheelOfLifeChangedHandler, wheelOfLifeDeleteHandler } from './firestore/users/exercises/wheel_of_life'
 export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user'
 
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal'
