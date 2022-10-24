@@ -1,11 +1,12 @@
 import { WheelOfLifeSettings } from '@strive/model'
 import { logger, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from 'apps/backend-functions/src/internals/firebase'
+import { updateAggregation } from 'apps/backend-functions/src/shared/aggregation/aggregation'
 import { deleteScheduledTask, upsertScheduledTask } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task'
 import { enumWorkerType, ScheduledTaskUserExerciseWheelOfLife } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface'
 import { addMonths, addQuarters, addWeeks, addYears } from 'date-fns'
 
 
-export const wheelOfLifeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/{WheelOfLife}`, 'wheelOfLifeCreatedHandler',
+export const wheelOfLifeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/WheelOfLife`, 'wheelOfLifeCreatedHandler',
 async (snapshot, context) => {
 
   const { uid } = context.params
@@ -16,7 +17,14 @@ async (snapshot, context) => {
   scheduleScheduledTask(uid, wheelOfLifeSettings)
 })
 
-export const wheelOfLifeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/{WheelOfLife}`, 'wheelOfLifeChangedHandler',
+export const wheelOfLifeEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/WheelOfLife/Entries/{entryId}`, 'wheelOfLifeEntryCreatedHandler',
+async () => {
+
+  updateAggregation({ usersWheelOfLifeEntryAdded: 1 })
+
+})
+
+export const wheelOfLifeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/WheelOfLife`, 'wheelOfLifeChangedHandler',
 async (snapshot, context) => {
 
   const { uid } = context.params
@@ -33,7 +41,7 @@ async (snapshot, context) => {
   scheduleScheduledTask(uid, after)
 })
 
-export const wheelOfLifeDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/{WheelOfLife}`, 'wheelOfLifeDeleteHandler',
+export const wheelOfLifeDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/WheelOfLife`, 'wheelOfLifeDeleteHandler',
 async (snapshot, context) => {
 
   const { uid } = context.params

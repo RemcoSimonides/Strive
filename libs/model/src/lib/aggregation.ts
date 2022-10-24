@@ -17,6 +17,7 @@ export function createAggregation(aggregation: Partial<Aggregation> = {}): Aggre
 		usersFutureLetterReceived: 0,
 		usersAffirmationsSet: 0,
 		usersGratefulnessOn: 0,
+		usersWheelOfLifeEntryAdded: 0,
 		...aggregation
 	}
 }
@@ -39,6 +40,7 @@ export interface Aggregation {
 	usersFutureLetterReceived: number
 	usersAffirmationsSet: number
 	usersGratefulnessOn: number
+	usersWheelOfLifeEntryAdded: number
 }
 
 export type AggregationKey = keyof Aggregation
