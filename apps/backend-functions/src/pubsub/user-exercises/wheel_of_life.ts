@@ -7,13 +7,13 @@ import { getDocument } from '../../shared/utils'
 
 export async function sendWheelOfLifePushNotification(uid: string) {
 
-  const personal = await getDocument<Personal>(`Users/${uid}/Exercises/WheelOfLife`)
+  const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
 
   if (personal?.fcmTokens.some(token => token)) {
     return admin.messaging().sendToDevice(personal.fcmTokens, {
       notification: {
         title: `Wheel of Life reminder`,
-        body: `It's time again to fill in the wheel of life`,
+        body: `It's time to fill in the wheel of life`,
         icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
         clickAction: `goals?t=wheeloflife`
       }
