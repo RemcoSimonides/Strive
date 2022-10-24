@@ -97,11 +97,6 @@ image-cropper img {
   user-select: text;
 }
 
-.explanation_popover_class {
-  --width: 95%;
-  --max-width: 700px;
-}
-
 // To not have height: 0 in case of autoGrow used
 ion-textarea {
   min-height: 40px;

@@ -11,7 +11,6 @@ import { AffirmationService } from '@strive/exercises/affirmation/affirmation.se
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 
-import { AffirmationExplanationComponent } from '@strive/exercises/affirmation/components/explanation/explanation.component';
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { AuthService } from '@strive/user/auth/auth.service'
@@ -121,13 +120,6 @@ export class AffirmationsComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe())
-  }
-
-  openExplanation() {
-    this.popoverCtrl.create({
-      component: AffirmationExplanationComponent,
-      cssClass: "explanation_popover_class"
-    }).then(popover => popover.present())
   }
 
   async openDatetime(index: number) {

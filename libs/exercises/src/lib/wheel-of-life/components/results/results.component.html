@@ -1,3 +1,11 @@
+<ion-segment scrollable (ionChange)="segmentChanged($event)">
+  <ng-container *ngFor="let aspect of aspectsConfig">
+    <ion-segment-button [value]="aspect.id">
+      {{ aspect.title }}
+    </ion-segment-button>
+  </ng-container>
+</ion-segment>
+
 <canvas baseChart
   [datasets]="chartDatasets"
   [options]="chartOptions"

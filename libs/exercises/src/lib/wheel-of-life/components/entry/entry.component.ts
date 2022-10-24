@@ -1,15 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
-import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
-import { AuthService } from '@strive/user/auth/auth.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
 
+import { BehaviorSubject, startWith, Subscription } from 'rxjs'
 import { ChartConfiguration } from 'chart.js'
 import { AES } from 'crypto-js'
 import { formatISO } from 'date-fns'
 import { BaseChartDirective } from 'ng2-charts'
-import { debounceTime, startWith, Subscription } from 'rxjs'
+
+import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
+
+import { AuthService } from '@strive/user/auth/auth.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
+import { delay } from '@strive/utils/helpers'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const translucentPrimaryRGBA = 'rgba(249, 116, 29, 0.5)'
@@ -79,47 +82,24 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
 
   private today = formatISO(new Date(), { representation: 'date' })
   private sub: Subscription
-  private autoSaveSub: Subscription
-  
+
+  save$ = new BehaviorSubject<'save' | 'saving' | 'saved'>('save')
+
   constructor(
     private auth: AuthService,
-    private cdr: ChangeDetectorRef,
     private personalService: PersonalService,
     private service: WheelOfLifeEntryService
   ) {
-    this.sub = this.form.valueChanges.pipe(startWith()).subscribe(() => this.upsertChart())
-
-    this.autoSaveSub = this.form.valueChanges.pipe(
-      debounceTime(2000)
-    ).subscribe(async values => {
-      if (!this.auth.uid) return
-      const key = await this.personalService.getEncryptionKey()
-
-      const entry: WheelOfLifeEntry<string> = {
-        id: this.today,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        career: AES.encrypt(`${values['career']}`, key).toString(),
-        development: AES.encrypt(`${values['development']}`, key).toString(),
-        environment: AES.encrypt(`${values['environment']}`, key).toString(),
-        family: AES.encrypt(`${values['family']}`, key).toString(),
-        friends: AES.encrypt(`${values['friends']}`, key).toString(),
-        fun: AES.encrypt(`${values['fun']}`, key).toString(),
-        health: AES.encrypt(`${values['health']}`, key).toString(),
-        love: AES.encrypt(`${values['love']}`, key).toString(),
-        money: AES.encrypt(`${values['money']}`, key).toString(),
-        spirituality: AES.encrypt(`${values['spirituality']}`, key).toString(),
+    this.sub = this.form.valueChanges.pipe(startWith()).subscribe(() => {
+      this.upsertChart()
+      if (this.save$.value === 'saved' && this.form.dirty) {
+        this.save$.next('save')
       }
-
-      this.service.save(entry)
-      this.form.markAsPristine()
-      this.cdr.markForCheck()
     })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe()
-    this.autoSaveSub.unsubscribe()
   }
 
   upsertChart() {
@@ -136,6 +116,33 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
     }
 
     this.chart?.update()
+  }
+
+  async save() {
+    if (!this.auth.uid) return
+    this.save$.next('saving')
+    const key = await this.personalService.getEncryptionKey()
+    const values = this.form.value
+
+    const entry: WheelOfLifeEntry<string> = {
+      id: this.today,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      career: AES.encrypt(`${values['career']}`, key).toString(),
+      development: AES.encrypt(`${values['development']}`, key).toString(),
+      environment: AES.encrypt(`${values['environment']}`, key).toString(),
+      family: AES.encrypt(`${values['family']}`, key).toString(),
+      friends: AES.encrypt(`${values['friends']}`, key).toString(),
+      fun: AES.encrypt(`${values['fun']}`, key).toString(),
+      health: AES.encrypt(`${values['health']}`, key).toString(),
+      love: AES.encrypt(`${values['love']}`, key).toString(),
+      money: AES.encrypt(`${values['money']}`, key).toString(),
+      spirituality: AES.encrypt(`${values['spirituality']}`, key).toString(),
+    }
+
+    this.service.save(entry)
+
+    delay(1500).then(() => { this.save$.next('saved') })
   }
 
 }

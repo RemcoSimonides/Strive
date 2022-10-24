@@ -7,7 +7,7 @@ import { map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { Aspect, aspectsConfig, Interval } from '@strive/model'
+import { Interval } from '@strive/model'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
@@ -24,13 +24,10 @@ import { WheelOfLifeEntryService, WheelOfLifeService } from '@strive/exercises/w
 export class WheelOfLifeComponent implements OnDestroy {
   uid$ = this.auth.uid$
 
-  segmentChoice: Aspect = 'health'
-
-  aspectsConfig = aspectsConfig
   isMobile$ = this.screensize.isMobile$
 
   entries$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.load([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
+    switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
   )
 
@@ -72,10 +69,6 @@ export class WheelOfLifeComponent implements OnDestroy {
     this.modalCtrl.create({
       component: EntryModalComponent
     }).then(modal => modal.present())
-  }
-
-  segmentChanged(ev: any) {
-    this.segmentChoice = ev.detail.value
   }
 
   openAuthModal() {

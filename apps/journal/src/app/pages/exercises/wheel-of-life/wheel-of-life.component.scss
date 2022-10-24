@@ -1,16 +1,26 @@
 main {
   max-width: 700px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-small {
+h1 {
+  color: var(--ion-color-primary);
+}
+
+.explanation {
   color: var(--ion-color-medium);
 }
 
-section {
+section.reminder {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+}
+
+ion-button {
+  width: fit-content;
 }
 
 ion-segment {

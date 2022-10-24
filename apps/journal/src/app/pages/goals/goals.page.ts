@@ -63,7 +63,8 @@ export class GoalsComponent {
 
     if (t === 'wheeloflife') {
       this.modalCtrl.create({
-        component: EntryModalComponent
+        component: EntryModalComponent,
+        componentProps: { showResults: true }
       }).then(modal => modal.present())
     }
 

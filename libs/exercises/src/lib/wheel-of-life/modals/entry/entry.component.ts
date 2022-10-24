@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
 
@@ -7,7 +7,7 @@ import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
-import { limit, orderBy } from 'firebase/firestore'
+import { orderBy } from 'firebase/firestore'
 import { of, switchMap } from 'rxjs'
 
 @Component({
@@ -18,8 +18,10 @@ import { of, switchMap } from 'rxjs'
 })
 export class EntryModalComponent extends ModalDirective {
 
-  entry$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.load([orderBy('createdAt', 'desc'), limit(1)], { uid: profile.uid }) : of([])),
+  @Input() showResults = false
+
+  entries$ = this.auth.profile$.pipe(
+    switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => this.service.decrypt(entries))
   )
 
@@ -31,5 +33,4 @@ export class EntryModalComponent extends ModalDirective {
   ) {
     super(location, modalCtrl)
   }
-
 }

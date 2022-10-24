@@ -4,7 +4,6 @@ import { ModalController, PopoverController } from '@ionic/angular'
 import { Message } from '@strive/model'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
-import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component'
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
@@ -127,13 +126,6 @@ export class DearFutureSelfComponent {
       component: MessageModalComponent,
       componentProps: { message }
     }).then(modal => modal.present())
-  }
-
-  openExplanation() {
-    this.popoverCtrl.create({
-      component: DearFutureSelfExplanationComponent,
-      cssClass: 'explanation_popover_class'
-    }).then(popover => popover.present())
   }
 
   openAuthModal() {

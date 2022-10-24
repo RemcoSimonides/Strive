@@ -1,12 +1,22 @@
 main {
   max-width: 700px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+h1 {
+  color: var(--ion-color-primary);
+}
+
+.explanation {
+  color: var(--ion-color-medium);
 }
 
 section.toggle {
   display: flex;
   justify-content: space-between;
-  margin-block: 16px;
 
   article {
     display: flex;
@@ -23,10 +33,6 @@ section.time {
   ion-datetime {
     margin-top: 8px;
     border-radius: 12px;
-
   }
 }
 
-exercise-daily-gratefulness-cards {
-  margin-top: 32px;
-}

@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { DearFutureSelfComponent } from './dear-future-self.component'
-import { DearFutureSelfExplanationComponent } from '@strive/exercises/dear-future-self/components/explanation/explanation.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { MessageModalModule } from '@strive/exercises/dear-future-self/components/message/message.module'
 
@@ -35,9 +34,6 @@ const routes: Routes = [
     HeaderModule,
     MessageModalModule
   ],
-  declarations: [
-    DearFutureSelfComponent,
-    DearFutureSelfExplanationComponent
-  ]
+  declarations: [DearFutureSelfComponent]
 })
 export class DearFutureSelfModule {}

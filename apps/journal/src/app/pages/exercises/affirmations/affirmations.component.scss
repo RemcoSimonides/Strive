@@ -1,14 +1,21 @@
 main {
   max-width: 700px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 h1 {
   color: var(--ion-color-primary);
 }
 
-.read-more {
-  cursor: pointer;
+.explanation {
+  color: var(--ion-color-medium);
+  
+  .read-more {
+    cursor: pointer;
+  }
 }
 
 ion-list {
@@ -29,7 +36,7 @@ ion-list {
 }
 
 .suggestions {
-  margin-top: 26px;
+  margin-top: 16px;
 
   header {
     display: flex;

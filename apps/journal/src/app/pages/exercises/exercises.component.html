@@ -2,7 +2,7 @@
 
 <ion-content class="ion-padding">
   <main>
-    <h1 *ngIf="(screensize.isMobile$ | async) === false">Exercises</h1>
+    <h1 *ngIf="(isMobile$ | async) === false">Exercises</h1>
 
     <section class="grid">
       <ng-container *ngFor="let exercise of exercises">
@@ -29,9 +29,9 @@
               </article>
             </ng-container>
 
-            <ng-container *ngSwitchCase="'assess_life'">
-              <article>
-                <small>Coming Soon</small>
+            <ng-container *ngSwitchCase="'wheel_of_life'">
+              <article *ngIf="wheelOfLife$ | async as setting">
+                <small *ngIf="setting.interval !== 'never'">Receiving reminder {{ setting.interval }}</small>
               </article>
             </ng-container>
           </ng-container>

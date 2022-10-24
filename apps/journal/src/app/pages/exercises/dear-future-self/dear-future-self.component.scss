@@ -1,7 +1,19 @@
 main {
   max-width: 700px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
+
+h1 {
+  color: var(--ion-color-primary);
+}
+
+.explanation {
+  color: var(--ion-color-medium);
+}
+
 
 ion-card {
   margin-bottom: 16px;

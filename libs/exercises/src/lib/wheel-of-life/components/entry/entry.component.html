@@ -10,14 +10,22 @@
 		</article>
 	</section>
 
-	<ion-button disabled color="primary" fill="clear">
-		<ng-container *ngIf="form.dirty; else saved">
-			<span>SAVING...</span>
+	<ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear">
+		<ng-container *ngIf="save$ | async as status">
+
+			<ng-container *ngIf="status === 'saved'">
+				<span>SAVED</span>
+				<ion-icon name="checkmark" slot="end"></ion-icon>
+			</ng-container>
+
+			<ng-container *ngIf="status === 'saving'">
+				<span>Encrypting...</span>
+			</ng-container>
+
+			<ng-container *ngIf="status === 'save'">
+				<span>SAVE</span>
+			</ng-container>
 		</ng-container>
-		<ng-template #saved>
-			<span>SAVED</span>
-			<ion-icon slot="end" name="checkmark-outline"></ion-icon>
-		</ng-template>
 	</ion-button>
 </form>
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
-import { Aspect, AspectConfig, aspectsConfig, WheelOfLifeEntry } from '@strive/model'
+import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
 import { ChartConfiguration } from 'chart.js'
 import { BaseChartDirective } from 'ng2-charts'
 
@@ -14,15 +14,12 @@ const primaryRGBA = 'rgba(249, 116, 29)'
 export class WheelOfLifeResultsComponent {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective
 
-  private _aspectConfig?: AspectConfig
+  aspectsConfig = aspectsConfig
+  private _aspectConfig = aspectsConfig[0]
   private _entries: WheelOfLifeEntry<number>[] = []
 
-  @Input() set aspect(aspect: Aspect) {
-    this._aspectConfig = aspectsConfig.find(c => c.id === aspect)
-    this.upsertChart()
-  }
   @Input() set entries(entries: WheelOfLifeEntry<number>[]) {
-    this._entries = entries
+    this._entries = entries.filter(entry => !!entry.createdAt)
     this.upsertChart()
   }
 
@@ -62,12 +59,15 @@ export class WheelOfLifeResultsComponent {
 
   chartDatasets: ChartConfiguration<'line'>['data']['datasets'] = []
 
-  upsertChart() {
-    if (!this._aspectConfig) return
+  segmentChanged(ev: any) {
+    const config = aspectsConfig.find(c => c.id === ev.detail.value)
+    if (config) this._aspectConfig = config
+    this.upsertChart()
+  }
 
+  upsertChart() {
     this.chartDatasets = []
     const data = this._entries.map(entry => {
-      if (!this._aspectConfig) throw new Error('Aspect is undefined')
       return { x: entry.createdAt.getTime(), y: entry[this._aspectConfig.id] }
     })
 

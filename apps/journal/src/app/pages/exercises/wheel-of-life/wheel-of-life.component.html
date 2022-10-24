@@ -2,13 +2,17 @@
 
 <ion-content class="ion-padding">
   <main>
-    <h2 *ngIf="(isMobile$ | async) === false">Wheel of Life</h2>
-    <small>Get insight in which areas in your life needs more attention and track results over the long term.</small>
+    <section>
+      <h1 *ngIf="(isMobile$ | async) === false">Wheel of Life</h1>
+      <small class="explanation">
+        Get insight in which areas in your life needs more attention and track results over the long term.
+      </small>
+    </section>
 
     <ng-container *ngIf="finishedLoading$ | async else loading">
       <ng-container *ngIf="uid$ | async else login">
     
-        <section>
+        <section class="reminder">
           <span>Receive reminder</span>
           <ion-select interface="popover" [formControl]="form">
             <ion-select-option value="never">Never</ion-select-option>
@@ -37,17 +41,9 @@
           </ng-template>
     
           <ng-container *ngIf="entries.length">
-            <ion-segment scrollable (ionChange)="segmentChanged($event)">
-              <ng-container *ngFor="let aspect of aspectsConfig">
-                <ion-segment-button [value]="aspect.id">
-                  {{ aspect.title }}
-                </ion-segment-button>
-              </ng-container>
-            </ion-segment>
-    
-            <exercise-wheel-of-life-results [aspect]="segmentChoice" [entries]="entries"></exercise-wheel-of-life-results>
+            <exercise-wheel-of-life-results [entries]="entries"></exercise-wheel-of-life-results>
           </ng-container>
-        </ng-container>  
+        </ng-container>
 
       </ng-container>
     </ng-container>

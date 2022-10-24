@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { Affirmations, DailyGratefulness, DearFutureSelf, exercises } from '@strive/model'
+import { Affirmations, DailyGratefulness, DearFutureSelf, exercises, WheelOfLifeSettings } from '@strive/model'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { Observable, of, switchMap } from 'rxjs'
@@ -7,6 +7,7 @@ import { AffirmationService } from '@strive/exercises/affirmation/affirmation.se
 import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 import { AuthService } from '@strive/user/auth/auth.service'
+import { WheelOfLifeService } from '@strive/exercises/wheel-of-life/wheel-of-life.service'
 
 @Component({
   selector: 'journal-exercises',
@@ -20,14 +21,18 @@ export class ExercisesComponent {
   affirmations$: Observable<Affirmations | undefined>
   dailyGratefulness$: Observable<DailyGratefulness | undefined>
   dearFutureSelf$: Observable<DearFutureSelf | undefined>
+  wheelOfLife$: Observable<WheelOfLifeSettings | undefined>
+
+  isMobile$ = this.screensize.isMobile$
 
   constructor(
     private auth: AuthService,
     private affirmationService: AffirmationService,
     private dailyGratefulnessService: DailyGratefulnessService,
     private dearFutureSelfService: DearFutureSelfService,
-    public screensize: ScreensizeService,
-    private seo: SeoService
+    private screensize: ScreensizeService,
+    private seo: SeoService,
+    private wheelOfLifeService: WheelOfLifeService
   ) {
     this.seo.generateTags({
       title: 'Exercises - Strive Journal',
@@ -44,6 +49,10 @@ export class ExercisesComponent {
 
     this.dearFutureSelf$ = this.auth.user$.pipe(
       switchMap(profile => profile?.uid ? this.dearFutureSelfService.getSettings$(profile.uid) : of(undefined))
+    )
+
+    this.wheelOfLife$ = this.auth.user$.pipe(
+      switchMap(profile => profile?.uid ? this.wheelOfLifeService.getSettings$(profile.uid) : of(undefined))
     )
   }
 }

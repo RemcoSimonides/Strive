@@ -7,6 +7,7 @@ import { EntryModalComponent } from './entry.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { WheelOfLifeEntryModule } from '../../components/entry/entry.module'
 import { EntryPipeModule } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
+import { WheelOfLifeResultsModule } from '../../components/results/results.module'
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { EntryPipeModule } from '@strive/exercises/wheel-of-life/pipes/entry.pip
     IonicModule,
     HeaderModule,
     WheelOfLifeEntryModule,
-    EntryPipeModule
+    EntryPipeModule,
+    WheelOfLifeResultsModule
   ],
   declarations: [EntryModalComponent]
 })

@@ -2,11 +2,13 @@
 
 <ion-content class="ion-padding">
   <main>
-    <h1 *ngIf="(screensize.isMobile$ | async) === false">Dear Future Self</h1>
-    <p>
-      Write a message to yourself and receive it (far) in the future. You'll be amazed with how much came true.
-      <span class="read-more" (click)="openExplanation()">Learn more...</span>
-    </p>
+    <section>
+      <h1 *ngIf="(screensize.isMobile$ | async) === false">Dear Future Self</h1>
+      <small class="explanation">
+        Write a message to yourself and receive it (far) in the future. You'll be amazed with how much came true.
+        <a class="read-more" href="https://blog.strivejournal.com/blog/dear-future-self" target="_blank">Learn more...</a>
+      </small>
+    </section>
 
     <ng-container *ngIf="isLoggedIn$ | async else login">
       <ion-card class="ion-padding" mode="md">
