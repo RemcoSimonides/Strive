@@ -31,7 +31,7 @@ export class WheelOfLifeComponent implements OnDestroy {
 
   entries$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.service.load([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
-    switchMap(entries => entries.length ? this.service.decrypt(entries) : []),
+    switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
   )
 
   finishedLoading$ = this.auth.profile$.pipe(
