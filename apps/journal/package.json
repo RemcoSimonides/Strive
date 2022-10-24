@@ -1,10 +1,6 @@
 {
   "name": "journal",
   "devDependencies": {
-    "@capacitor/camera": "^4.1.2",
-    "@capacitor/clipboard": "^4.0.1",
-    "@capacitor/push-notifications": "^4.0.1",
-    "@capacitor/cli": "^4.3.0",
-    "@capacitor/share": "^4.0.1"
+    "@capacitor/cli": "^4.3.0"
   }
 }
