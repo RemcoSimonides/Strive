@@ -1,0 +1,35 @@
+<form [formGroup]="form">
+	<section *ngFor="let aspect of aspectConfigs" class="aspects">
+		<h3>{{ aspect.title }}</h3>
+		<small>{{ aspect.subtitle }}</small>
+
+		<article>
+			<span>😭</span>
+			<ion-range [formControlName]="aspect.id"></ion-range>
+			<span>😁</span>
+		</article>
+	</section>
+
+	<ion-button disabled color="primary" fill="clear">
+		<ng-container *ngIf="form.dirty; else saved">
+			<span>SAVING...</span>
+		</ng-container>
+		<ng-template #saved>
+			<span>SAVED</span>
+			<ion-icon slot="end" name="checkmark-outline"></ion-icon>
+		</ng-template>
+	</ion-button>
+</form>
+
+<section class="results">
+	<h2>Result</h2>
+	<article>
+		<canvas baseChart
+			[datasets]="radarChartDatasets"
+			[options]="radarChartOptions"
+			[labels]="radarChartLabels"
+			type="radar">
+		</canvas>
+	</article>
+
+</section>

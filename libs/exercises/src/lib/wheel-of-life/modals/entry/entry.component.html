@@ -1,0 +1,7 @@
+<strive-header title="Wheel of Life" color=""></strive-header>
+
+<ion-content class="ion-padding">
+  <ng-container *ngIf="entry$ | async as entry">
+    <exercise-wheel-of-life-entry [entry]="entry | today"></exercise-wheel-of-life-entry>    
+  </ng-container>
+</ion-content>
