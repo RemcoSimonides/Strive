@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular'
-import { Capacitor } from '@capacitor/core'
 
 import { arrayRemove, arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
@@ -30,7 +29,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  fcmIsSupported = Capacitor.getPlatform() === 'web' ? isSupported() : Promise.resolve(true)
+  fcmIsSupported = isSupported()
   fcmActive$ = new BehaviorSubject(false)
   private get localStorageName() { return `pushNotifications${this.auth.uid}` }
 
@@ -108,23 +107,21 @@ export class PersonalService extends FireSubCollection<Personal> {
   }
 
   async registerFCM(): Promise<string | undefined> {
+    // if ((this._platform.is('android') || this._platform.is('ios')) && !this._platform.is('mobileweb')) {
+    //   await this.registerCapacitor()
+    // }
 
-    if (Capacitor.getPlatform() === 'web') {
-      const fcm = await isSupported()
-      if (fcm) {
-        return this.getPermission()
-      } else {
-        this.toastController.create({
-          message: 'Sorry, this browser does not support push notifications',
-          duration: 5000,
-          position: 'bottom'
-        })
-        return
-      }
+    const fcm = await isSupported()
+    if (fcm) {
+      return this.getPermission()
     } else {
-      await this.registerCapacitor()
+      this.toastController.create({
+        message: 'Sorry, this browser does not support push notifications',
+        duration: 5000,
+        position: 'bottom'
+      })
       return
-    }    
+    }
   }
 
   addFCMToken(token: string) {
@@ -144,18 +141,10 @@ export class PersonalService extends FireSubCollection<Personal> {
   }
 
   private async registerCapacitor(): Promise<void> {
-    let permStatus = await PushNotifications.checkPermissions();
-
-    if (permStatus.receive === 'prompt') {
-      permStatus = await PushNotifications.requestPermissions();
-    }
-  
-    if (permStatus.receive !== 'granted') {
-      throw new Error('User denied push notification permission');
-    }
 
     // Register with Apple / Google to receive push via APNS/FCM
     await PushNotifications.register();
+
   }
 
   async addListenersCapacitor(): Promise<void> {
