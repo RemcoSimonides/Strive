@@ -1,4 +1,5 @@
 import { admin } from '../../internals/firebase'
+import type { Message } from 'firebase-admin/messaging'
 import { addWeeks, addMonths, addQuarters, addYears } from 'date-fns'
 import { Personal, WheelOfLifeSettings } from '@strive/model'
 import { enumWorkerType, ScheduledTaskUserExerciseWheelOfLife } from '../../shared/scheduled-task/scheduled-task.interface'
@@ -8,17 +9,22 @@ import { getDocument } from '../../shared/utils'
 export async function sendWheelOfLifePushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
-
-  if (personal?.fcmTokens.some(token => token)) {
-    return admin.messaging().sendToDevice(personal.fcmTokens, {
+  const link = 'goals?t=wheeloflife'
+  const messages: Message[] = personal.fcmTokens.map(token => ({
+    token,
+    notification: {
+      title: 'Wheel of Life reminder',
+      body: `It's time to fill in the wheel of life`
+    },
+    data: { link },
+    webpush: {
       notification: {
-        title: `Wheel of Life reminder`,
-        body: `It's time to fill in the wheel of life`,
         icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-        clickAction: `goals?t=wheeloflife`
-      }
-    })
-  }
+      },
+      fcmOptions: { link }
+    }
+  }))
+  return admin.messaging().sendAll(messages)
 }
 
 export async function scheduleNextReminder(settings: WheelOfLifeSettings, userId: string) {

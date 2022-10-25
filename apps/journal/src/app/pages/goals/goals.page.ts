@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router'
 import { joinWith } from 'ngfire'
@@ -33,7 +33,7 @@ import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entr
   styleUrls: ['./goals.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalsComponent {
+export class GoalsComponent implements OnDestroy {
 
   seeAll = new BehaviorSubject(false)
 
@@ -42,19 +42,8 @@ export class GoalsComponent {
 
   uid$ = this.auth.uid$
 
-  constructor(
-    private auth: AuthService,
-    private goal: GoalService,
-    private modalCtrl: ModalController,
-    private route: ActivatedRoute,
-    private router: Router,
-    seo: SeoService,
-    private stakeholder: GoalStakeholderService,
-    private goalEvent: GoalEventService
-  ) {
-    seo.generateTags({ title: `Goals - Strive Journal` })
-
-    const { t, affirm, dfs } = this.route.snapshot.queryParams
+  sub = this.route.queryParams.subscribe(params => {
+    const { t, affirm, dfs } = params
     if (t === 'daily-gratefulness') {
       this.modalCtrl.create({
         component: CardsModalComponent
@@ -81,6 +70,19 @@ export class GoalsComponent {
         componentProps: { dfs }
       }).then(modal => modal.present())
     }
+  })
+
+  constructor(
+    private auth: AuthService,
+    private goal: GoalService,
+    private modalCtrl: ModalController,
+    private route: ActivatedRoute,
+    private router: Router,
+    seo: SeoService,
+    private stakeholder: GoalStakeholderService,
+    private goalEvent: GoalEventService
+  ) {
+    seo.generateTags({ title: `Goals - Strive Journal` })
 
     const stakeholders$ = this.auth.user$.pipe(
       filter(profile => !!profile),
@@ -126,6 +128,10 @@ export class GoalsComponent {
         return 0
       }))
     )
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 
   openAuthModal() {

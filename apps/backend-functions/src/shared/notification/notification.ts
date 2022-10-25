@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin'
 import { logger } from 'firebase-functions'
+import type { Message } from 'firebase-admin/messaging'
 // Interfaces
 import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification } from '@strive/model'
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification'
@@ -118,24 +119,30 @@ export async function sendPushNotificationToUsers(message: PushMessage, recipien
     const personal = createPersonal(toDate({ ...snap.data(), id: snap.id }))
     logger.log(`going to send push notification to ${personal?.email}`)
 
-    if (personal.fcmTokens.some(token => token)) {
-      // TODO
-      // Try to define a tag for each too so they get aggregated
-      // Do so by getting the unread notifications.
-      // Add clickaction to set notification to being read
-      // GOOD LUCK!
+    // TODO
+    // Try to define a tag for each too so they get aggregated
+    // Do so by getting the unread notifications.
+    // Add clickaction to set notification to being read
+    // GOOD LUCK!
 
-      logger.log('sending notification to devices', personal.fcmTokens)
-
-      admin.messaging().sendToDevice(personal.fcmTokens, {
+    const link = message.link
+    const messages: Message[] = personal.fcmTokens.map(token => ({
+      token,
+      notification: {
+        title: message.title,
+        body: message.body 
+      },
+      data: { link },
+      webpush: {
         notification: {
-          ...message,
-          clickAction: message.url
-        }
-      }).catch((err => {
-        logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
-      }))
-    }
+          icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
+        },
+        fcmOptions: { link }
+      }
+    }))
+    admin.messaging().sendAll(messages).catch((err) => {
+      logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
+    })
   }
 }
 

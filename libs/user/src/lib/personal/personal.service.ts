@@ -164,7 +164,6 @@ export class PersonalService extends FireSubCollection<Personal> {
     PushNotifications.addListener('registration',
       (token: Token) => {
         this.addFCMToken(token.value)
-        console.log('Push registration success, token: ' + token.value);
       }
     );
 
@@ -180,14 +179,14 @@ export class PersonalService extends FireSubCollection<Personal> {
       (notification: PushNotificationSchema) => {
         const message = notification?.title || notification?.body || ''
         this.makeToast(message)
-        console.log('Push received: ' + JSON.stringify(notification));
       }
     );
 
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
       (notification: ActionPerformed) => {
-        console.log('Push action performed: ' + JSON.stringify(notification));
+        const link: string = notification.notification.data.link
+        this.router.navigateByUrl(link)
       }
     );
 

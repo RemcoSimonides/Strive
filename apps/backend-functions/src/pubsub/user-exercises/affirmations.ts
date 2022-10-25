@@ -1,4 +1,5 @@
 import { admin } from '../../internals/firebase'
+import type { Message } from 'firebase-admin/messaging'
 import { set, isPast, addDays, closestTo } from 'date-fns'
 import { Affirmations, Personal } from '@strive/model'
 import { ScheduledTaskUserExerciseAffirmations, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
@@ -14,18 +15,22 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
     const random = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)]
     const affirmation = AES.decrypt(random, personal.key).toString(enc.Utf8)
 
-    const clickAction = `goals?affirm=${encodeURI(affirmation)}`
-
-    if (personal?.fcmTokens.some(token => token)) {
-      return admin.messaging().sendToDevice(personal.fcmTokens, {
+    const link = `goals?affirm=${encodeURI(affirmation)}`
+    const messages: Message[] = personal.fcmTokens.map(token => ({
+      token,
+      notification: {
+        title: 'Repeat out loud 5 times',
+        body: affirmation,
+      },
+      data: { link },
+      webpush: {
         notification: {
-          title: `Repeat out loud 5 times`,
-          body: `${affirmation}`,
-          icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-          clickAction
-        }
-      })
-    }
+          icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
+        },
+        fcmOptions: { link }
+      }
+    }))
+    return admin.messaging().sendAll(messages)
   }
 }
 

@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin'
+import type { Message as FCMMessage } from 'firebase-admin/messaging'
 import { Message, Personal } from '@strive/model'
 import { format } from 'date-fns'
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
@@ -8,19 +9,22 @@ export function sendDearFutureSelfPushNotification(personal: Personal, message: 
   const from = format(message.createdAt, 'MMM yyyy')
   const time = message.createdAt.getTime()
 
-  const clickAction = `goals?dfs=${time}`
-
-  if (personal?.fcmTokens.some(token => token)) {
-
-    return admin.messaging().sendToDevice(personal.fcmTokens, {
+  const link = `goals?dfs=${time}`
+  const messages: FCMMessage[] = personal.fcmTokens.map(token => ({
+    token,
+    notification: {
+      title: 'A message from the past!',
+      body: `Your message from ${from} can now be read!`
+    },
+    data: { link },
+    webpush: {
       notification: {
-        title: `A message from the past!`,
-        body: `Your message from ${from} can now be read!`,
         icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-        clickAction
-      }
-    })
-  }
+      },
+      fcmOptions: { link }
+    }
+  }))
+  return admin.messaging().sendAll(messages)
 }
 
 export function sendDearFutureSelfEmail(personal: Personal, description: string) {

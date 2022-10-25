@@ -3,19 +3,16 @@ import { captureException } from '@sentry/serverless'
 
 export type PushNotificationTarget = 'user' | 'stakeholder' | 'spectator'
 export interface PushMessage {
-  tag?: string
   title: string
   body: string
-  icon: string
-  url: string
+  link: string
 }
 
 function createPushMessage(message: Partial<PushMessage> = {}): PushMessage {
   return {
     title: 'Something happened!',
     body: 'Go and check it out',
-    icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-    url: '/goals',
+    link: '/goals',
     ...message
   }
 }
@@ -39,7 +36,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `Congratulations! goal is finished`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalMilestoneDeadlinePassed':
@@ -49,7 +46,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `Milestone '${milestone.content}' passed due date`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalMilestoneCompletedSuccessfully':
@@ -59,7 +56,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `Milestone '${milestone.content}' succeeded`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalMilestoneCompletedUnsuccessfully':
@@ -69,7 +66,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `Milestone '${milestone.content}' failed`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
 
@@ -80,7 +77,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `${user.username} joined as Achiever`,
-        url: `/profile/${user.uid}`
+        link: `/profile/${user.uid}`
       })
 
     case 'goalStakeholderBecameAdmin':
@@ -90,7 +87,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `${user.username} is now admin`,
-        url: `goal/${goal.id}`
+        link: `goal/${goal.id}`
       })
 
     case 'goalStakeholderRequestedToJoin':
@@ -109,7 +106,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `${user.username} created a new post`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalChatMessageCreated':
@@ -119,7 +116,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return createPushMessage({
         title: goal.title,
         body: `${user.username} sent a message in chat`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalCreated':
@@ -142,7 +139,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
       return createPushMessage({
         title: user.username,
         body: `Started goal '${goal.title}'`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalCreatedFinished':
@@ -152,7 +149,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
       return createPushMessage({
         title: user.username,
         body: `Journaling about '${goal.title}'`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalIsFinished': 
@@ -162,7 +159,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
       return createPushMessage({
         title: user.username,
         body: `Finished goal '${goal.title}'`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
 
     case 'goalStakeholderBecameAchiever':
@@ -172,7 +169,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
       return createPushMessage({
         title: goal.title,
         body: `${user.username} joined as Achiever`,
-        url: `/profile/${user.uid}`
+        link: `/profile/${user.uid}`
       })
 
     
@@ -199,7 +196,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
       return createPushMessage({
         title: goal.title,
         body: `Request to join accepted`,
-        url: `goal/${goal.id}`
+        link: `goal/${goal.id}`
       })
 
     case 'goalStakeholderRequestToJoinRejected':
@@ -208,7 +205,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
       return createPushMessage({
         title: goal.title,
         body: `Request to join rejected`,
-        url: `goal/${goal.id}`
+        link: `goal/${goal.id}`
       })
 
     case 'goalSupportCreated': {
@@ -223,7 +220,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
       return createPushMessage({
         title: goal.title,
         body: `${user.username} ${text} with ${support.description}`,
-        url: `/goal/${goal.id}`
+        link: `/goal/${goal.id}`
       })
     }
   
@@ -242,7 +239,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
       return createPushMessage({
         title: 'New follower',
         body: `${user.username} is following you`,
-        url: `/profile/${user.uid}`
+        link: `/profile/${user.uid}`
       })
 
     default:

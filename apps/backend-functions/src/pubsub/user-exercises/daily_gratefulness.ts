@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin'
+import type { Message } from 'firebase-admin/messaging'
 import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { DailyGratefulness, Personal } from '@strive/model'
@@ -37,17 +38,25 @@ import { addDays } from 'date-fns'
 export async function sendDailyGratefulnessPushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
-  if (personal?.fcmTokens.some(token => token)) {
-
-    return admin.messaging().sendToDevice(personal.fcmTokens, {
+  if (!personal.fcmTokens) return
+  
+  const link = 'goals?t=daily-gratefulness'
+  const messages: Message[] = personal.fcmTokens.map(token => ({
+    token,
+    notification: {
+      title: `Daily Gratefulness Reminder`,
+      body: `Name three things you were grateful for today`,
+    },
+    data: { link },
+    webpush: {
       notification: {
-        title: `Daily Gratefulness Reminder`,
-        body: `Name three things you were grateful for today`,
         icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
-        clickAction: 'goals?t=daily-gratefulness'
-      }
-    })
-  }
+      },
+      fcmOptions: { link }
+    }
+  }))
+  return admin.messaging().sendAll(messages)
+
 }
 
 export async function scheduleNextDailyGratefulnessReminder(uid: string) {
