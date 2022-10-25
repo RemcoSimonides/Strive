@@ -1,13 +1,15 @@
 <strive-header title="Settings" color="primary" defaultHref="/profile"></strive-header>
 <ion-content>
   <ion-list mode="md">
-    <ion-item *ngIf="showInstallPromotion$ | async; else safari" (click)="installPWA()" lines="none" button>Install App</ion-item>
-    <ion-list-header>Notification</ion-list-header>
-    <ion-item *ngIf="fcmIsSupported | async" button (click)="registerFCM()" lines="none">
-      <span>Push Notifications</span>
-      <ion-toggle slot="end" [(ngModel)]="fcmActive"></ion-toggle>
-    </ion-item>
-    <ion-item *ngIf="(fcmIsSupported | async) === false" disabled lines="none">Push Notifications not supported</ion-item>
+    <ng-container *ngIf="isWeb">
+      <ion-item *ngIf="showInstallPromotion$ | async; else safari" (click)="installPWA()" lines="none" button>Install App</ion-item>
+      <ion-list-header>Notification</ion-list-header>
+      <ion-item *ngIf="fcmIsSupported | async" button (click)="registerFCM()" lines="none">
+        <span>Push Notifications</span>
+        <ion-toggle slot="end" [(ngModel)]="fcmActive"></ion-toggle>
+      </ion-item>
+      <ion-item *ngIf="(fcmIsSupported | async) === false" disabled lines="none">Push Notifications not supported</ion-item>  
+    </ng-container>
 
     <!-- <ion-item>Contact, bugs & suggestions</ion-item> -->
     <ion-list-header>Legal</ion-list-header>

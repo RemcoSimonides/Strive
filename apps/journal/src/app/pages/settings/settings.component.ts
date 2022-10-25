@@ -1,6 +1,7 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
 import { Router } from '@angular/router'
+import { Capacitor } from '@capacitor/core'
 import { ModalController } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { PersonalService } from '@strive/user/personal/personal.service'
@@ -19,6 +20,7 @@ export class SettingsPageComponent {
   showInstallPromotion$ = this.pwa.showInstallPromotion$
   fcmIsSupported = this.personalService.fcmIsSupported
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
+  isWeb = Capacitor.getPlatform() === 'web'
 
   fcmActive = false
 
