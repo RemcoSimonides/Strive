@@ -9,7 +9,9 @@ tags: [journal]
 Affirmations are short powerful statements, which allow you to consciously control your own thoughts. When you say them aloud, or think of them consciously, they can become the thoughts that shape your reality. ‘To affirm’, is to declare or proclaim something (positive). Therefore, an affirmation is firmly declaring a positive thought and assertively stating it as the truth.
 
 ## Why should I use them
-When you make affirmations part of your daily life, you can help your mind prioritize positive thoughts over negative thoughts.
+When you make affirmations part of your daily life, you can help your mind prioritize positive or self empowering thoughts over negative thoughts. Engraving these affirmations in your mindset enables you to make a decision in certain situations which you wouldn't have done without the practice of these affirmations.
+
+One of my personal affirmations is "You get what you ask for". There have been multiple situations in real-life in which I did ask for something, which I wouldn't have done without practising this affirmation because I was too shy.
 
 ## How to write affirmations that work?
 - **Step 1: Begin your affirmation with the words ‘I am’.**
@@ -31,3 +33,6 @@ When you make affirmations part of your daily life, you can help your mind prior
 
 - **Step 7: Make it mean something.**
   Make sure your affirmations mean something to you. They have to be meaningful and speak to you personally.
+
+## How to affirm
+Speak the world out loud and speak slowly and deliberately. Repeat that multiple times, several times a day. Basically, the more often and the more thoughtful you think about your affirmations, the more it will be ingrained into your thoughts. That is the ideal situation but in real life you don't always have time for this. In some situations you aren't able to speak out loud. Then it is fine to only read them of course, but the effects will be less.
