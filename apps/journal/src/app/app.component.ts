@@ -1,8 +1,9 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router'
-import { isPlatformServer } from '@angular/common'
+import { isPlatformServer, Location } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
+import { App } from '@capacitor/app'
 import { Unsubscribe } from 'firebase/firestore'
 
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
@@ -26,7 +27,7 @@ import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  rootPage: typeof TabsComponent = TabsComponent;
+  rootPage: typeof TabsComponent = TabsComponent
 
   enumAuthSegment = enumAuthSegment
 
@@ -40,10 +41,11 @@ export class AppComponent implements OnDestroy {
 
   constructor(
     private auth: AuthService,
+    location: Location,
     private modalCtrl: ModalController,
     private notification: NotificationService,
     private personalService: PersonalService,
-    private platform: Platform,
+    platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
     public screensize: ScreensizeService,
@@ -53,8 +55,44 @@ export class AppComponent implements OnDestroy {
   ) {
     this.openModalOnStartup()
 
-    this.platform.ready().then(() => {
-      this.screensize.onResize(this.platform.width())
+    platform.backButton.subscribeWithPriority(0, async () => {
+      const segments = this.router.url.split('/').slice(1)
+
+      if (!segments[0] || segments[0] === 'goals') {
+        return App.exitApp()
+      }
+
+      if (segments[0] === 'supports') {
+        return this.router.navigate(['goals'])
+      }
+
+      if (segments[0] === 'explore') {
+        return this.router.navigate(['goals'])
+      }
+
+      if (segments[0] === 'exercise') {
+        const id = segments[1]
+        if (id) {
+          return location.back()
+        } else {
+          return this.router.navigate(['goals'])
+        }
+      }
+
+      if (segments[0] === 'profile') {
+        const isOwner = segments[1] === this.auth.uid
+        if (isOwner) {
+          return this.router.navigate(['goals'])
+        } else {
+          return location.back()
+        }
+      }
+
+      return location.back()
+    })
+
+    platform.ready().then(() => {
+      this.screensize.onResize(platform.width())
 
       GoogleAuth.initialize({
         clientId: '423468347975-tjkdd38gna8rfgqd16f0jpf1o5bl6204.apps.googleusercontent.com',

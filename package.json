@@ -32,6 +32,7 @@
     "@angular/pwa": "^14.2.3",
     "@angular/router": "~14.1.0",
     "@angular/service-worker": "~14.1.0",
+    "@capacitor/app": "^4.1.0",
     "@capacitor/camera": "^4.0.1",
     "@capacitor/clipboard": "^4.0.1",
     "@capacitor/core": "^4.3.0",
