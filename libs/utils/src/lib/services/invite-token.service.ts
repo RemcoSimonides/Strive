@@ -28,12 +28,9 @@ export class InviteTokenService {
     return true
   }
 
-  /**
-   * @param {string} path override current page url with the url you'd like
-   */
-  async getShareLink(goalId: string, isSecret: boolean, isAdmin: boolean, path?: string): Promise<string> {
-    const { href, origin } = new URL(window.location.href)
-    const url = path ? `${origin}/${path}` : href
+  async getShareLink(goalId: string, isSecret: boolean, isAdmin: boolean): Promise<string> {
+    const origin = 'https://strivejournal.com'
+    const url = `${origin}/goal/${goalId}`
 
     if (isSecret) {
       if (isAdmin) {

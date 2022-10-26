@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Platform, PopoverController } from '@ionic/angular'
+import { PopoverController } from '@ionic/angular'
 import { Share } from '@capacitor/share'
 // Strive
 import { GoalForm } from '@strive/goal/goal/forms/goal.form'
@@ -24,16 +24,14 @@ export class Slide5Component {
 
   constructor(
     private inviteTokenService: InviteTokenService,
-    private platform: Platform,
     private popoverCtrl: PopoverController
   ) {}
 
   async openSharePopover(ev: UIEvent) {
-    const goal = createGoal({ ...this.form.getGoalValue, id: this.goalId })
-    const path = `goal/${this.goalId}`
+    const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
 
     const isSecret = goal.publicity !== 'public'
-    const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, true, path)
+    const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, true)
 
     const canShare = await Share.canShare()
     if (canShare.value) {
