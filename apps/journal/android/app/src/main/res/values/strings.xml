@@ -4,4 +4,5 @@
     <string name="title_activity_main">Strive Journal</string>
     <string name="package_name">com.strive.journal</string>
     <string name="custom_url_scheme">com.strive.journal</string>
+    <string name="server_client_id">423468347975-tjkdd38gna8rfgqd16f0jpf1o5bl6204.apps.googleusercontent.com</string>
 </resources>

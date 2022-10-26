@@ -1,6 +1,15 @@
 import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Location } from '@angular/common'
-import { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup, getAuth } from 'firebase/auth'
+import { 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  getAuth,
+  signInWithCredential,
+  GoogleAuthProvider
+} from 'firebase/auth'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
 
@@ -11,7 +20,6 @@ import { createPersonal, createUser } from '@strive/model'
 import { createRandomString } from '@strive/utils/helpers'
 
 import { WelcomeModalComponent } from '../welcome/welcome.modal'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 export enum enumAuthSegment {
   login,
@@ -120,8 +128,11 @@ export class AuthModalComponent implements OnInit {
 
   async loginWithGoogle() {
     try {
-      const credentials = await signInWithPopup(getAuth(), new GoogleAuthProvider())
-      const { displayName, uid, email } = credentials.user;
+      const gUser = await GoogleAuth.signIn()
+      const gCredentials = GoogleAuthProvider.credential(gUser.authentication.idToken, gUser.authentication.accessToken)
+      const credentials = await signInWithCredential(getAuth(), gCredentials)
+      
+      const { displayName, uid, email } = credentials.user
 
       const profile = await this.profile.getValue(uid)
       if (!profile) {

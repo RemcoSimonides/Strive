@@ -5,6 +5,7 @@
     "@capacitor/clipboard": "^4.0.1",
     "@capacitor/push-notifications": "^4.0.1",
     "@capacitor/cli": "^4.3.0",
-    "@capacitor/share": "^4.0.1"
+    "@capacitor/share": "^4.0.1",
+    "@codetrix-studio/capacitor-google-auth": "^3.2.0"
   }
 }
