@@ -2,6 +2,7 @@ import { GoalStakeholder } from './stakeholder'
 import { GoalEvent } from './goal-event'
 
 export type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
+export type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
 export type GoalPublicityType = 'public' | 'private'
 
 export interface GoalSource {

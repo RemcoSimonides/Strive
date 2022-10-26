@@ -73,20 +73,20 @@
             <span>add goal</span>
           </ion-button>
         </article>
-        <ng-container *ngIf="achievingGoals$ | async as achievingGoals">
-          <ng-container *ngIf="achievingGoals.length > 0 else noBucketList">
+        <ng-container *ngIf="achievingStakeholders$ | async as achievingStakeholders">
+          <ng-container *ngIf="achievingStakeholders.length > 0 else noBucketList">
             <ul>
-              <li *ngFor="let value of achievingGoals">
-                <goal-thumbnail [goal]="value.goal" [stakeholder]="(isOwner$ | async) ? value.stakeholder : undefined" [routerLink]="['/goal/', value.goal.id]">
+              <li *ngFor="let stakeholder of achievingStakeholders">
+                <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="(isOwner$ | async) ? stakeholder : undefined" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <div>
-                    <small *ngIf="value.stakeholder.focus.on">⚡Current Focus</small>
-                    <small *ngIf="value.goal.publicity === 'private'">
+                    <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
+                    <small *ngIf="stakeholder.goal.publicity === 'private'">
                       <ion-icon name="lock-closed-outline"></ion-icon>
                       <span>Private</span>
                     </small>
                     <small>
                       <ion-icon name="flag-outline"></ion-icon>
-                      <span>{{ value.goal.numberOfAchievers }} Achiever{value.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                      <span>{{ stakeholder.goal.numberOfAchievers }} Achiever{stakeholder.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
                     </small>
                   </div>
                 </goal-thumbnail>

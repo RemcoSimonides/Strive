@@ -62,7 +62,7 @@ export class ProfileComponent {
     map(spectator => spectator?.isSpectator ?? false)
   )
 
-  achievingGoals$ = combineLatest([
+  achievingStakeholders$ = combineLatest([
     this.isOwner$,
     this.profileId$
   ]).pipe(
@@ -77,7 +77,7 @@ export class ProfileComponent {
     this.profileId$
   ]).pipe(
     switchMap(([isOwner, profileId]) => profileId ? this.goalService.getStakeholderGoals(profileId, 'isSupporter', !isOwner) : of([])),
-    map(values => values.map(value => value.goal))
+    map(stakeholders => stakeholders.map(stakeholder => stakeholder.goal))
   )
 
   title$ = combineLatest([
