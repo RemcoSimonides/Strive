@@ -39,13 +39,49 @@ export class AppComponent implements OnDestroy {
 
   profile$ = this.auth.profile$
 
+  backButtonSub = this.platform.backButton.subscribeWithPriority(0, async () => {
+    const segments = this.router.url.split('/').slice(1)
+
+    if (!segments[0] || segments[0] === 'goals') {
+      return App.exitApp()
+    }
+
+    if (segments[0] === 'supports') {
+      return this.router.navigate(['goals'])
+    }
+
+    if (segments[0] === 'explore') {
+      return this.router.navigate(['goals'])
+    }
+
+    if (segments[0] === 'exercise') {
+      const id = segments[1]
+      if (id) {
+        return this.location.back()
+      } else {
+        return this.router.navigate(['goals'])
+      }
+    }
+
+    if (segments[0] === 'profile') {
+      const isOwner = segments[1] === this.auth.uid
+      if (isOwner) {
+        return this.router.navigate(['goals'])
+      } else {
+        return this.location.back()
+      }
+    }
+
+    return this.location.back()
+  })
+
   constructor(
     private auth: AuthService,
-    location: Location,
+    private location: Location,
     private modalCtrl: ModalController,
     private notification: NotificationService,
     private personalService: PersonalService,
-    platform: Platform,
+    private platform: Platform,
     private popoverCtrl: PopoverController,
     private router: Router,
     public screensize: ScreensizeService,
@@ -54,42 +90,6 @@ export class AppComponent implements OnDestroy {
     @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.openModalOnStartup()
-
-    platform.backButton.subscribeWithPriority(0, async () => {
-      const segments = this.router.url.split('/').slice(1)
-
-      if (!segments[0] || segments[0] === 'goals') {
-        return App.exitApp()
-      }
-
-      if (segments[0] === 'supports') {
-        return this.router.navigate(['goals'])
-      }
-
-      if (segments[0] === 'explore') {
-        return this.router.navigate(['goals'])
-      }
-
-      if (segments[0] === 'exercise') {
-        const id = segments[1]
-        if (id) {
-          return location.back()
-        } else {
-          return this.router.navigate(['goals'])
-        }
-      }
-
-      if (segments[0] === 'profile') {
-        const isOwner = segments[1] === this.auth.uid
-        if (isOwner) {
-          return this.router.navigate(['goals'])
-        } else {
-          return location.back()
-        }
-      }
-
-      return location.back()
-    })
 
     platform.ready().then(() => {
       this.screensize.onResize(platform.width())
@@ -115,6 +115,7 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy() {
     if (this.fcmUnsubscribe) this.fcmUnsubscribe()
     this.sub?.unsubscribe()
+    this.backButtonSub.unsubscribe()
   }
 
   async openModalOnStartup() {
