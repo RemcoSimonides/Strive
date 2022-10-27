@@ -20,6 +20,7 @@ import { createPersonal, createUser } from '@strive/model'
 import { createRandomString } from '@strive/utils/helpers'
 
 import { WelcomeModalComponent } from '../welcome/welcome.modal'
+import { captureException } from '@sentry/angular'
 
 export enum enumAuthSegment {
   login,
@@ -154,6 +155,7 @@ export class AuthModalComponent implements OnInit {
       }
   
     } catch (error: any) {
+      captureException(error)
       switch (error.code) {
         case 'auth/popup-closed-by-user':
         case 'auth/popup-blocked':
@@ -209,7 +211,7 @@ export class AuthModalComponent implements OnInit {
         this.dismiss(true)
 
       } catch (error: any) {
-
+        captureException(error)
         let message: string;
         switch (error.code) {
           case 'auth/wrong-password':
@@ -259,7 +261,7 @@ export class AuthModalComponent implements OnInit {
       this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
 
     } catch(error: any) {
-
+      captureException(error)
       let message: string;
       switch (error.code) {
         case 'auth/email-already-in-use':
