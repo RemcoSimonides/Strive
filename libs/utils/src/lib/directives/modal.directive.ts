@@ -1,34 +1,42 @@
-import { Location } from "@angular/common";
-import { Directive, HostBinding, HostListener } from "@angular/core";
-import { ModalController } from "@ionic/angular";
+import { Location } from '@angular/common'
+import { Directive, HostBinding, HostListener } from '@angular/core'
+import { ModalController } from '@ionic/angular'
+import { Capacitor } from '@capacitor/core'
 
 @Directive({
-  selector: 'strive-modal'
+  selector: '[striveModal]'
 })
 export class ModalDirective {
+  private data?: unknown
+
   @HostBinding() modal?: HTMLIonModalElement
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     this.modalCtrl.dismiss(this.data)
   }
 
-  private data: any
-
   constructor(
     protected location: Location,
     protected modalCtrl: ModalController
   ) {
-    window.history.pushState(null, '', window.location.href)
+    if (Capacitor.getPlatform() === 'web') {
+      window.history.pushState(null, '', window.location.href)
 
-  this.modalCtrl.getTop().then(() => {
-      this.modal?.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
+      this.modalCtrl.getTop().then(() => {
+        this.modal?.onWillDismiss().then(res => {
+          console.log('on will dismiss: ', res.role)
+          if (res.role === 'backdrop') this.location.back()
+        })
       })
-    })
+    }
   }
 
-  dismiss(data?: any) {
+  dismiss(data?: unknown) {
     this.data = data
-    this.location.back()
+    if (Capacitor.getPlatform() === 'web') {
+      this.location.back()
+    } else {
+      this.modalCtrl.dismiss(this.data)
+    }
   }
 }
