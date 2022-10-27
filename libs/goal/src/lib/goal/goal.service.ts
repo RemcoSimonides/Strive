@@ -67,6 +67,7 @@ export class GoalService extends FireCollection<Goal> {
       joinWith({
         goal: (stakeholder: GoalStakeholder) => this.valueChanges(stakeholder.goalId)
       }, { shouldAwait: true }),
+      map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
       // Sort finished goals to the end
       map(result => result.sort((first, second)  => {
         if (!first.goal || !second.goal) return 0

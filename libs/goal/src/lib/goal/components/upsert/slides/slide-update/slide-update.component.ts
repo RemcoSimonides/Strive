@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
-import { AlertController, LoadingController, NavParams } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
+import { Location } from '@angular/common'
+import { Capacitor } from '@capacitor/core'
+import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular'
 import { createGoal } from '@strive/model'
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalForm } from '@strive/goal/goal/forms/goal.form';
-import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component';
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalForm } from '@strive/goal/goal/forms/goal.form'
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
 @Component({
   selector: '[form][goalId] goal-slide-update',
@@ -23,6 +24,7 @@ export class SlideUpdateComponent {
     private goal: GoalService,
     private loadingCtrl: LoadingController,
     private location: Location,
+    private modalCtrl: ModalController,
     private navParams: NavParams
   ) {}
 
@@ -33,7 +35,7 @@ export class SlideUpdateComponent {
 
       const loading = await this.loadingCtrl.create({
         spinner: 'lines',
-        message: 'Please wait...'
+        message: 'Saving...'
       })
       loading.present()
 
@@ -45,7 +47,11 @@ export class SlideUpdateComponent {
         const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
         await this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
 
-        this.location.back()
+        if (Capacitor.getPlatform() === 'web') {
+          this.location.back()
+        } else {
+          this.modalCtrl.dismiss()
+        }
         loading.dismiss()
 
       } catch (error: any) {
