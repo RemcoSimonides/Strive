@@ -18,7 +18,11 @@ section {
     flex-direction: column;
 
     small {
-      color: var(--ion-color-medium);
+      color: var(--ion-color-secondary);
     }
+  }
+
+  small {
+    color: var(--ion-color-medium);
   }
 }

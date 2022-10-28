@@ -4,40 +4,61 @@
   <main>
     <h1 *ngIf="(isMobile$ | async) === false">Exercises</h1>
 
-    <section class="grid">
+    <section *ngIf="exercises$ | async as settings; else loading">
       <ng-container *ngFor="let exercise of exercises">
         <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
           <ng-container [ngSwitch]="exercise.id">
-            <ng-container *ngSwitchCase="'affirmations'">
-              <article *ngIf="affirmations$ | async as setting">
-                <small *ngIf="setting.affirmations?.length">{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
-              </article>
-            </ng-container>
 
-            <ng-container *ngSwitchCase="'dear_future_self'">
-              <article *ngIf="dearFutureSelf$ | async as setting">
-                <ng-container *ngIf="setting?.messages?.length">
+            <ng-container *ngSwitchCase="'Affirmations'">
+
+              <ng-container *ngIf="settings | get:'Affirmations' as setting; else notSet">
+                <article *ngIf="setting.affirmations?.length; else notSet">
+                  <small>{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
+                </article>
+              </ng-container>
+
+            </ng-container>
+            <ng-container *ngSwitchCase="'DearFutureSelf'">
+
+              <ng-container *ngIf="settings | get:'DearFutureSelf' as setting; else notSet">
+                <article *ngIf="setting?.messages?.length; else notSet">
                   <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
                   <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
-                </ng-container>
+                </article>
+              </ng-container>
+
+            </ng-container>
+            <ng-container *ngSwitchCase="'DailyGratefulness'">
+
+              <article *ngIf="settings | get:'DailyGratefulness' as setting; else notSet">
+                <small *ngIf="setting.on; else notSet">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
               </article>
+
             </ng-container>
 
-            <ng-container *ngSwitchCase="'daily_gratefulness'">
-              <article *ngIf="dailyGratefulness$ | async as setting">
-                <small *ngIf="setting.on">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
-              </article>
-            </ng-container>
+            <ng-container *ngSwitchCase="'WheelOfLife'">
 
-            <ng-container *ngSwitchCase="'wheel_of_life'">
-              <article *ngIf="wheelOfLife$ | async as setting">
-                <small *ngIf="setting.interval !== 'never'">Receiving reminder {{ setting.interval }}</small>
-              </article>
+              <ng-container *ngIf="settings | get:'WheelOfLife' as setting; else notSet">
+                <article *ngIf="setting.interval !== 'never'; else notSet">
+                  <small>Receiving reminder {{ setting.interval }}</small>
+                </article>
+
+              </ng-container>
+
             </ng-container>
           </ng-container>
+
+          <ng-template #notSet>
+            <small>{{ exercise.description }}</small>
+          </ng-template>
         </strive-small-thumbnail>
       </ng-container>
     </section>
+
+    <ng-template #loading>
+      <strive-page-loading></strive-page-loading>
+    </ng-template>
+
   </main>
 
 </ion-content>
