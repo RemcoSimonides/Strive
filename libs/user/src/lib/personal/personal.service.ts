@@ -82,29 +82,16 @@ export class PersonalService extends FireSubCollection<Personal> {
       return token
     } catch(err) {
       this.fcmActive$.next(false)
-      this.toastController.create({
-        message: 'Something went wrong. Try again',
-        duration: 5000,
-        position: 'bottom',
-      }).then(toast => toast.present())
       Sentry.captureException(err)
       return ''
     }
   }
 
   async unregisterFCM() {
-    try {
-      const token = await getToken(getMessaging())
-      this.removeFCMToken(token)
-      localStorage.removeItem(this.localStorageName)
-      this.fcmActive$.next(false)
-    } catch(err) {
-      this.toastController.create({
-        message: 'Something went wrong',
-        duration: 5000,
-        position: 'bottom',
-      }).then(toast => toast.present())
-    }
+    const token = await getToken(getMessaging())
+    this.removeFCMToken(token)
+    localStorage.removeItem(this.localStorageName)
+    this.fcmActive$.next(false)
   }
 
   async registerFCM(): Promise<string | undefined> {

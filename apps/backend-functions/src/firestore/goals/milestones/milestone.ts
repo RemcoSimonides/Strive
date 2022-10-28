@@ -1,4 +1,4 @@
-import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
+import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, logger } from '../../../internals/firebase'
 
 import { Goal, createMilestone, Milestone, createGoalSource, SupportBase } from '@strive/model'
 
@@ -114,7 +114,7 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
 }
 
 async function supportsNeedDecision(goalId: string, milestone: Milestone) {
-  const supportsSnap = await db.collection(`Goals/${goalId}/Supports`).where('source.milestone.id', '==', milestone.id).get()
+  const supportsSnap = await db.collection(`Goals/${goalId}/Supports`).where('milestoneId', '==', milestone.id).get()
   
   // TODO batch might get bigger than 500
   const batch = db.batch()

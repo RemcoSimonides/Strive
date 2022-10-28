@@ -9,10 +9,10 @@
     <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
     </p>
-  </div> 
+  </div>
 </ng-container>
 
-<ion-content class="ion-padding" *ngIf="uid$ | async">
+<ion-content class="ion-no-padding" *ngIf="uid$ | async">
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>

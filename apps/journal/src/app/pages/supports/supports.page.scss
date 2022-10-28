@@ -6,11 +6,11 @@ main {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 16px;
+    padding: 16px;
   }
 
   section.segment {
-    margin-top: 16px;
+    padding: 16px;
   }
 
   ion-list {

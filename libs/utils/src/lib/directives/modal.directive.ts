@@ -24,7 +24,6 @@ export class ModalDirective {
 
       this.modalCtrl.getTop().then(() => {
         this.modal?.onWillDismiss().then(res => {
-          console.log('on will dismiss: ', res.role)
           if (res.role === 'backdrop') this.location.back()
         })
       })
