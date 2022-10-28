@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
 import { FormControl } from '@angular/forms'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 import { Message } from '@strive/model'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
@@ -68,7 +68,6 @@ export class DearFutureSelfComponent {
     private dearFutureSelfService: DearFutureSelfService,
     private modalCtrl: ModalController,
     private personalService: PersonalService,
-    private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {
