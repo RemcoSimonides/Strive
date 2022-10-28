@@ -152,6 +152,7 @@ export class AuthModalComponent implements OnInit {
       } else {
         const top = await this.modalCtrl.getTop()
         if (top) this.dismiss(true)
+        this.personal.registerFCM()
       }
   
     } catch (error: any) {
@@ -209,6 +210,7 @@ export class AuthModalComponent implements OnInit {
         await signInWithEmailAndPassword(getAuth(), email, password)
         loading.dismiss()
         this.dismiss(true)
+        this.personal.registerFCM()
 
       } catch (error: any) {
         captureException(error)
