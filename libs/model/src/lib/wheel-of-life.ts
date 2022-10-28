@@ -61,7 +61,7 @@ export const aspectsConfig: AspectConfig[] = [
   {
     id: 'love',
     title: 'Love & Romance',
-    subtitle: 'Love you feel in your life, vibrant life even if you are single'
+    subtitle: 'Love you feel in your life, vibrant life also when you are single'
   },
   {
     id: 'career',
@@ -85,8 +85,8 @@ export const aspectsConfig: AspectConfig[] = [
   },
   {
     id: 'environment',
-    title: 'Environment',
-    subtitle: 'Pleasant, stimulating'
+    title: 'Physical Environment',
+    subtitle: 'Pleasant, stimulating, safe'
   },
   {
     id: 'spirituality',
