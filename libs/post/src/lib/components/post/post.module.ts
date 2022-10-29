@@ -7,6 +7,7 @@ import { PostComponent } from './post.component'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PostOptionsModule } from '@strive/post/popovers/options/options.module'
+import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { PostOptionsModule } from '@strive/post/popovers/options/options.module'
     IonicModule,
     ImageModule,
     ImageZoomModalModule,
-    PostOptionsModule
+    PostOptionsModule,
+    HTMLPipeModule
   ],
   exports: [PostComponent],
   declarations: [PostComponent],

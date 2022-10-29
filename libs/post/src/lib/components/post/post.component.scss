@@ -32,6 +32,11 @@ ion-card {
 
   ion-card-content {
     padding: 8px;
+    word-break: break-word;
+
+    p {
+      white-space: pre-line;
+    }
   }
 }
 
