@@ -22,7 +22,7 @@ import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalUpdatesModalComponent } from '@strive/goal/goal/components/modals/goals/goal-updates.component'
-import { CardsModalComponent } from '@strive/exercises/daily-gratefulness/modals/cards/cards-modal.component'
+import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
@@ -44,7 +44,7 @@ export class GoalsComponent implements OnDestroy {
 
   sub = this.route.queryParams.subscribe(params => {
     const { t, affirm, dfs } = params
-    if (t === 'daily-gratefulness') {
+    if (t === 'daily-gratitude') {
       this.modalCtrl.create({
         component: CardsModalComponent
       }).then(modal => modal.present())

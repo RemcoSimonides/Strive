@@ -44,8 +44,9 @@ Also note that when you overwork, you will pay for it the next day. So stop when
 
 ## Affirmations
 You can use [affirmations](https://strivejournal.com/exercie/affirmations) to get a regular boost of confidence / motivation / inspiration.
-## Daily Gratefulness
-Focus on the positive by [daily reminding](https://strivejournal.com/exercise/daily-gratefulness) yourself of the good things that happened that day.
+
+## Daily Gratitude
+Focus on the positive by [daily reminding](https://strivejournal.com/exercise/daily-gratitude) yourself of the good things that happened that day.
 
 ## Keep yourself accountable
 Find a friend, family member or another person you trust and share your list of goals with them. You can also share the list with a mentor or [life coach](https://www.tonyrobbins.com/coaching/results-coaching/). Sharing your list will make you more accountable and give you a partner who will work with you through frustrations or roadblocks. The right partner can help you [transform obstacles into opportunities](https://www.tonyrobbins.com/career-business/is-it-an-obstacle-or-opportunity/) and stay on track.

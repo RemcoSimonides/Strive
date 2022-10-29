@@ -7,13 +7,13 @@ import {
   ScheduledTaskGoalInviteLinkDeadline,
   ScheduledTaskMilestoneDeadline,
   ScheduledTaskUserExerciseAffirmations,
-  ScheduledTaskUserExerciseDailyGratefulness,
+  ScheduledTaskUserExerciseDailyGratitude,
   ScheduledTaskUserExerciseDearFutureSelfMessage,
   ScheduledTaskUserExerciseWheelOfLife
 } from '../shared/scheduled-task/scheduled-task.interface'
 import { updateAggregation } from '../shared/aggregation/aggregation'
 
-import { sendDailyGratefulnessPushNotification, scheduleNextDailyGratefulnessReminder } from './user-exercises/daily_gratefulness'
+import { sendDailyGratitudePushNotification, scheduleNextDailyGratitudeReminder } from './user-exercises/daily_gratitude'
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations'
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
 
@@ -39,7 +39,7 @@ async () => {
 
   const reschedulingTasks = [
     enumWorkerType.userExerciseAffirmation,
-    enumWorkerType.userExerciseDailyGratefulnessReminder,
+    enumWorkerType.userExerciseDailyGratitudeReminder,
     enumWorkerType.userExerciseWheelOfLifeReminder
   ]
 
@@ -79,7 +79,7 @@ const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
-  userExerciseDailyGratefulnessReminder: (options) => userExerciseDailyGratefulnessReminderHandler(options),
+  userExerciseDailyGratitudeReminder: (options) => userExerciseDailyGratitudeReminderHandler(options),
   userExerciseDearFutureSelfMessage: (options) => userExerciseDearFutureSelfMessageHandler(options),
   userExerciseWheelOfLifeReminder: (options) => userExerciseWheelOfLifeReminderHandler(options)
 }
@@ -106,13 +106,13 @@ async function userExerciseAffirmationsHandler(options: ScheduledTaskUserExercis
   scheduleNextAffirmation(options.userId, affirmations)
 }
 
-async function userExerciseDailyGratefulnessReminderHandler(options: ScheduledTaskUserExerciseDailyGratefulness['options']) {
+async function userExerciseDailyGratitudeReminderHandler(options: ScheduledTaskUserExerciseDailyGratitude['options']) {
   // send push notification
-  sendDailyGratefulnessPushNotification(options.userId)
+  sendDailyGratitudePushNotification(options.userId)
 
   // reschedule task for tomorrow
-  logger.log('scheduling for tomorrow userExerciseDailyGratefulnessReminderHandler')
-  scheduleNextDailyGratefulnessReminder(options.userId)
+  logger.log('scheduling for tomorrow userExerciseDailyGratitudeReminderHandler')
+  scheduleNextDailyGratitudeReminder(options.userId)
 }
 
 async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {

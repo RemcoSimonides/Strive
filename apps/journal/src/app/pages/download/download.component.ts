@@ -23,7 +23,7 @@ export class DownloadComponent {
   ) {
     seo.generateTags({
       title: 'Download - Strive Journal',
-      description: 'Journaling, Affirmations, Dear Future Self, Daily Gratefulness and more to increase your chance of succeeding'
+      description: 'Journaling, Affirmations, Dear Future Self, Daily Gratitude and more to increase your chance of succeeding'
     })
   }
 

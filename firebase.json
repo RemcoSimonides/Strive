@@ -29,7 +29,7 @@
         { "source": "/download", "destination": "download/index.html" },
         { "source": "/exercise", "destination": "exercise/index.html" },
         { "source": "/exercise/affirmations", "destination": "exercise/affirmations/index.html" },
-        { "source": "/exercise/daily-gratefulness", "destination": "exercise/daily-gratefulness/index.html" },
+        { "source": "/exercise/daily-gratitude", "destination": "exercise/daily-gratitude/index.html" },
         { "source": "/exercise/dear-future-self", "destination": "exercise/dear-future-self/index.html" },
         { "source": "/explore", "destination": "explore/index.html" },
         { "source": "/", "destination": "index.html" },

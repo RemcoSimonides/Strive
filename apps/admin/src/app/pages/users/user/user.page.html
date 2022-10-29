@@ -29,13 +29,13 @@
       <ng-container *ngFor="let exercise of exercises">
         <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
           <ng-container [ngSwitch]="exercise.id">
-            <ng-container *ngSwitchCase="'affirmations'">
+            <ng-container *ngSwitchCase="'Affirmations'">
               <article *ngIf="affirmations$ | async as setting">
                 <small *ngIf="setting.affirmations?.length">{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
               </article>
             </ng-container>
 
-            <ng-container *ngSwitchCase="'dear_future_self'">
+            <ng-container *ngSwitchCase="'DearFutureSelf'">
               <article *ngIf="dearFutureSelf$ | async as setting">
                 <ng-container *ngIf="setting?.messages?.length">
                   <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
@@ -44,13 +44,13 @@
               </article>
             </ng-container>
 
-            <ng-container *ngSwitchCase="'daily_gratefulness'">
-              <article *ngIf="dailyGratefulness$ | async as setting">
+            <ng-container *ngSwitchCase="'DailyGratitude'">
+              <article *ngIf="dailyGratitude$ | async as setting">
                 <small *ngIf="setting.on">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
               </article>
             </ng-container>
 
-            <ng-container *ngSwitchCase="'assess_life'">
+            <ng-container *ngSwitchCase="'WheelOfLife'">
               <article>
                 <small>Coming Soon</small>
               </article>

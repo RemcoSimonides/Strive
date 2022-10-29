@@ -28,9 +28,9 @@
               </ng-container>
 
             </ng-container>
-            <ng-container *ngSwitchCase="'DailyGratefulness'">
+            <ng-container *ngSwitchCase="'DailyGratitude'">
 
-              <article *ngIf="settings | get:'DailyGratefulness' as setting; else notSet">
+              <article *ngIf="settings | get:'DailyGratitude' as setting; else notSet">
                 <small *ngIf="setting.on; else notSet">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
               </article>
 

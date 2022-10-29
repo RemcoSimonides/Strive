@@ -16,7 +16,7 @@ export enum enumWorkerType {
   milestoneDeadline = 'milestoneDeadline',
   goalDeadline = 'goalDeadline',
   userExerciseAffirmation = 'userExerciseAffirmation',
-  userExerciseDailyGratefulnessReminder = 'userExerciseDailyGratefulnessReminder',
+  userExerciseDailyGratitudeReminder = 'userExerciseDailyGratitudeReminder',
   userExerciseDearFutureSelfMessage = 'userExerciseDearFutureSelfMessage',
   userExerciseWheelOfLifeReminder = 'userExerciseWheelOfLifeReminder'
 }
@@ -47,7 +47,7 @@ export interface ScheduledTaskUserExerciseAffirmations extends ScheduledTaskBase
   };
 }
 
-export interface ScheduledTaskUserExerciseDailyGratefulness extends ScheduledTaskBase {
+export interface ScheduledTaskUserExerciseDailyGratitude extends ScheduledTaskBase {
   options: {
     userId: string;
   };

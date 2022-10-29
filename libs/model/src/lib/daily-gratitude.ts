@@ -1,4 +1,4 @@
-export interface DailyGratefulness {
+export interface DailyGratitude {
   id?: string
   on: boolean
   time: Date
@@ -6,7 +6,7 @@ export interface DailyGratefulness {
   updatedAt: Date
 }
 
-export interface DailyGratefulnessItem {
+export interface DailyGratitudeEntry {
   id: string,
   items: string[]
   createdAt?: Date,

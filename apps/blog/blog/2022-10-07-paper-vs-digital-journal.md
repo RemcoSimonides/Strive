@@ -26,14 +26,14 @@ Each kind of journal has its strength and weaknesses. You're not limited to eith
 - It's always with you on your phone
 - With Strive Journal, you will be guided in how to do proper goal setting, without having the invent your own system
 - It's very compact, despite the ability to add unlimited photos, videos or audio.
-- Send automated reminders for messages to future self / affirmations / daily gratefulness / focus questions / milestone deadlines
+- Send automated reminders for messages to future self / affirmations / daily gratitude / focus questions / milestone deadlines
 
 ### Disadvantages
 - A journal is personal and putting this information online doesn't feel good [^1]
 - It's easy to get distracted
 
 ## Combine their powers
-There is no need to choose one or the other. In some cases you might prefer a paper journal over a digital journal, or the other way around. I, for instance, use a paper journal for daily gratefulness. Let me go over some scenarios where and how to combine their powers.
+There is no need to choose one or the other. In some cases you might prefer a paper journal over a digital journal, or the other way around. I, for instance, use a paper journal for daily gratitude. Let me go over some scenarios where and how to combine their powers.
 
 ### Goal Setting
 For very basic goal setting, only writing your goals down on paper is enough. But if you want to enable any of the strengths of a digital journal, then you have to write it down digitally too.
@@ -55,8 +55,8 @@ Choose one or the other for each affirmation. The fun thing about a post-it with
 For the more personal ones, which you don't want to bother others with, you can add them to [Affirmations in Strive Journal](https://strivejournal.com/exercise/affirmations) so only you see them on your phone.
 <img src="/img/affirmations-post-its.jpg" className="horizontal"/>
 
-### Daily gratefulness
-Use [Daily Gratefulness in Strive Journal](https://strivejournal.com/exercise/daily-gratefulness) to receive a daily reminder to write in your Paper Gratefulness Journal. And use the digital journal as a back-up in case your paper journal is not with you.
+### Daily gratitude
+Use [Daily Gratitude in Strive Journal](https://strivejournal.com/exercise/daily-gratitude) to receive a daily reminder to write in your Paper Gratitude Journal. And use the digital journal as a back-up in case your paper journal is not with you.
 
 ### Dear Future Self
 1. Write the letter on Paper, then copy it to [Dear Future Self in Strive Journal](https://strivejournal.com/exercise/dear-future-self) to make sure you will never lose it.

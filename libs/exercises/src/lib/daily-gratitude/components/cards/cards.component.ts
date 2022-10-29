@@ -7,16 +7,16 @@ import { formatISO } from 'date-fns'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { DailyGratefulnessItemService } from '../../daily-gratefulness.service'
+import { DailyGratitudeEntryService } from '../../daily-gratitude.service'
 
-import { DailyGratefulnessItem } from '@strive/model'
+import { DailyGratitudeEntry } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import SwiperCore, { EffectCards, Navigation } from 'swiper'
 SwiperCore.use([EffectCards, Navigation])
 
 @Component({
-  selector: 'exercise-daily-gratefulness-cards',
+  selector: 'exercise-daily-gratitude-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -37,8 +37,8 @@ export class CardsComponent implements OnDestroy {
   save$ = new BehaviorSubject<'save' | 'saving' | 'saved'>('save')
 
   cards$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.itemService.valueChanges([orderBy('createdAt', 'desc'), limit(500)] ,{ uid: profile.uid }) : of([])),
-    switchMap(cards => this.itemService.decrypt(cards)),
+    switchMap(profile => profile ? this.entryService.valueChanges([orderBy('createdAt', 'desc'), limit(500)] ,{ uid: profile.uid }) : of([])),
+    switchMap(cards => this.entryService.decrypt(cards)),
     map(cards => {
       const today = cards.find(card => card.id === this.today)
       if (today) {
@@ -62,7 +62,7 @@ export class CardsComponent implements OnDestroy {
 
   constructor(
     private auth: AuthService,
-    private itemService: DailyGratefulnessItemService,
+    private entryService: DailyGratitudeEntryService,
     private screensize: ScreensizeService
   ) {}
 
@@ -82,12 +82,12 @@ export class CardsComponent implements OnDestroy {
     if (item3 && item3 !== this.startValue) items.push(item3)
 
     if (items.length) {
-      const card: DailyGratefulnessItem = {
+      const card: DailyGratitudeEntry = {
         id: this.today,
         items
       }
 
-      this.itemService.save(card)
+      this.entryService.save(card)
       this.form.markAsPristine()
     }
 

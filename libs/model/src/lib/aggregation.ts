@@ -16,7 +16,7 @@ export function createAggregation(aggregation: Partial<Aggregation> = {}): Aggre
 		usersFutureLetterSent: 0,
 		usersFutureLetterReceived: 0,
 		usersAffirmationsSet: 0,
-		usersGratefulnessOn: 0,
+		usersGratitudeOn: 0,
 		usersWheelOfLifeEntryAdded: 0,
 		...aggregation
 	}
@@ -39,7 +39,7 @@ export interface Aggregation {
 	usersFutureLetterSent: number
 	usersFutureLetterReceived: number
 	usersAffirmationsSet: number
-	usersGratefulnessOn: number
+	usersGratitudeOn: number
 	usersWheelOfLifeEntryAdded: number
 }
 

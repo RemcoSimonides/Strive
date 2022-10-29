@@ -1,8 +1,8 @@
 import * as admin from 'firebase-admin'
 import type { Message } from 'firebase-admin/messaging'
-import { ScheduledTaskUserExerciseDailyGratefulness, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
+import { ScheduledTaskUserExerciseDailyGratitude, enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
-import { DailyGratefulness, Personal } from '@strive/model'
+import { DailyGratitude, Personal } from '@strive/model'
 import { getDocument } from '../../shared/utils'
 import { addDays } from 'date-fns'
 
@@ -35,16 +35,16 @@ import { addDays } from 'date-fns'
 // Write and share a Letter of Gratitude to someone who's brought a positive difference in your life
 // Write three things down what you did well that day
 
-export async function sendDailyGratefulnessPushNotification(uid: string) {
+export async function sendDailyGratitudePushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal.fcmTokens) return
   
-  const link = 'goals?t=daily-gratefulness'
+  const link = 'goals?t=daily-gratitude'
   const messages: Message[] = personal.fcmTokens.map(token => ({
     token,
     notification: {
-      title: `Daily Gratefulness Reminder`,
+      title: `Daily Gratitude Reminder`,
       body: `Name three things you were grateful for today`,
     },
     data: { link },
@@ -59,9 +59,9 @@ export async function sendDailyGratefulnessPushNotification(uid: string) {
 
 }
 
-export async function scheduleNextDailyGratefulnessReminder(uid: string) {
+export async function scheduleNextDailyGratitudeReminder(uid: string) {
 
-  const settings = await getDocument<DailyGratefulness>(`Users/${uid}/Exercises/DailyGratefulness`)
+  const settings = await getDocument<DailyGratitude>(`Users/${uid}/Exercises/DailyGratitude`)
 
   const hours = settings.time.getHours()
   const minutes = settings.time.getMinutes()
@@ -69,12 +69,12 @@ export async function scheduleNextDailyGratefulnessReminder(uid: string) {
 
   const performAt = addDays(now, 1)
 
-  const task: ScheduledTaskUserExerciseDailyGratefulness = {
-    worker: enumWorkerType.userExerciseDailyGratefulnessReminder,
+  const task: ScheduledTaskUserExerciseDailyGratitude = {
+    worker: enumWorkerType.userExerciseDailyGratitudeReminder,
     performAt,
     options: { userId: uid },
     status: 'scheduled'
   }
 
-  return upsertScheduledTask(`${uid}dailygratefulness`, task) 
+  return upsertScheduledTask(`${uid}dailygratitude`, task) 
 }

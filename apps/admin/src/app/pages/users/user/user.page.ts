@@ -11,10 +11,10 @@ import { GoalService } from '@strive/goal/goal/goal.service'
 import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
-import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
+import { DailyGratitudeService } from '@strive/exercises/daily-gratitude/daily-gratitude.service'
 
 import { UserForm } from '@strive/user/user/forms/user.form'
-import { Affirmations, createUser, DailyGratefulness, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
+import { Affirmations, createUser, DailyGratitude, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
 import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
 import { ProfileService } from '@strive/user/user/profile.service'
 
@@ -32,7 +32,7 @@ export class UserPage {
   user$?: Observable<User | undefined>
 
   affirmations$?: Observable<Affirmations | undefined>
-  dailyGratefulness$?: Observable<DailyGratefulness | undefined>
+  dailyGratitude$?: Observable<DailyGratitude | undefined>
   dearFutureSelf$?: Observable<DearFutureSelf | undefined>
 
   stakeholders$?: Observable<StakeholderWithGoal[]>
@@ -41,7 +41,7 @@ export class UserPage {
 
   constructor(
     private affirmationService: AffirmationService,
-    private dailyGratefulnessService: DailyGratefulnessService,
+    private dailyGratitudeService: DailyGratitudeService,
     private dearFutureSelfService: DearFutureSelfService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
@@ -60,8 +60,8 @@ export class UserPage {
         switchMap(user => user?.uid ? this.affirmationService.getAffirmations$(user.uid) : of(undefined))
       )
   
-      this.dailyGratefulness$ = this.user$.pipe(
-        switchMap(user => user?.uid ? this.dailyGratefulnessService.getSettings$(user.uid) : of(undefined))
+      this.dailyGratitude$ = this.user$.pipe(
+        switchMap(user => user?.uid ? this.dailyGratitudeService.getSettings$(user.uid) : of(undefined))
       )
   
       this.dearFutureSelf$ = this.user$.pipe(

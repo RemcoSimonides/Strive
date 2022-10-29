@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
-import { Affirmations, DailyGratefulness, DearFutureSelf, WheelOfLifeSettings } from '@strive/model'
+import { Affirmations, DailyGratitude, DearFutureSelf, WheelOfLifeSettings } from '@strive/model'
 import { DocumentSnapshot } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
-export type ExerciseSettings = Affirmations | DailyGratefulness | WheelOfLifeSettings | DearFutureSelf
+export type ExerciseSettings = Affirmations | DailyGratitude | WheelOfLifeSettings | DearFutureSelf
 
 @Injectable({providedIn: 'root'})
 export class ExerciseService extends FireSubCollection<ExerciseSettings> {

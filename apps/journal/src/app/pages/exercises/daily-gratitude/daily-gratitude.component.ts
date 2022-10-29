@@ -5,7 +5,7 @@ import { ModalController, PopoverController } from '@ionic/angular'
 import { of, switchMap, tap } from 'rxjs'
 import { addDays, isPast, set } from 'date-fns'
 
-import { DailyGratefulnessService } from '@strive/exercises/daily-gratefulness/daily-gratefulness.service'
+import { DailyGratitudeService } from '@strive/exercises/daily-gratitude/daily-gratitude.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { AuthService } from '@strive/user/auth/auth.service'
@@ -13,18 +13,18 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
-interface DailyGratefulnessSetting {
+interface DailyGratitudeSetting {
   on: boolean
   time: string
 }
 
 @Component({
-  selector: 'journal-daily-gratefulness',
-  templateUrl: './daily-gratefulness.component.html',
-  styleUrls: ['./daily-gratefulness.component.scss'],
+  selector: 'journal-daily-gratitude',
+  templateUrl: './daily-gratitude.component.html',
+  styleUrls: ['./daily-gratitude.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DailyGratefulnessComponent implements OnDestroy {
+export class DailyGratitudeComponent implements OnDestroy {
   isLoading = true
 
   form = new FormGroup({
@@ -32,17 +32,17 @@ export class DailyGratefulnessComponent implements OnDestroy {
     time: new FormControl('21:00', { nonNullable: true })
   })
 
-  get dailyGratefulness(): DailyGratefulnessSetting {
-    return this.form.value as DailyGratefulnessSetting
+  get dailyGratitude(): DailyGratitudeSetting {
+    return this.form.value as DailyGratitudeSetting
   }
 
   private sub = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.getDailyGratefulnessSettings(profile.uid) : of(undefined)),
-    tap(dailyGratefulness => {
+    switchMap(profile => profile ? this.service.getDailyGratitudeSettings(profile.uid) : of(undefined)),
+    tap(dailyGratitude => {
 
       const setting = { on: false, time: '21:00' } // default
-      if (dailyGratefulness) {
-        const { time, on } = dailyGratefulness
+      if (dailyGratitude) {
+        const { time, on } = dailyGratitude
 
         const hours = time.getHours()
         const minutes = time.getMinutes() < 10 ? `0${time.getMinutes()}` : time.getMinutes()
@@ -65,10 +65,10 @@ export class DailyGratefulnessComponent implements OnDestroy {
     private popoverCtrl: PopoverController,
     public screensize: ScreensizeService,
     private seo: SeoService,
-    private service: DailyGratefulnessService
+    private service: DailyGratitudeService
   ) {
     this.seo.generateTags({
-      title: 'Daily Gratefulness - Strive Journal',
+      title: 'Daily Gratitude - Strive Journal',
       description: 'Focus on the positive and take a minute to be grateful'
     })
   }

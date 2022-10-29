@@ -1,13 +1,13 @@
-<strive-header title="Daily Gratefulness" defaultBack="/exercise" color="primary"></strive-header>
+<strive-header title="Daily Gratitude" defaultBack="/exercise" color="primary"></strive-header>
 
 <ion-content class="ion-padding">
   <main>
     <section>
-      <h1 *ngIf="(screensize.isMobile$ | async) === false">Daily Gratefulness</h1>
+      <h1 *ngIf="(screensize.isMobile$ | async) === false">Daily Gratitude</h1>
       <small class="explanation">
         Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative.
         Receive a daily push notification to remind you to think of three things you are grateful for that day.
-        <a href="https://blog.strivejournal.com/blog/daily-gratefulness" target="_blank">Learn more...</a>
+        <a href="https://blog.strivejournal.com/blog/daily-gratitude" target="_blank">Learn more...</a>
       </small>
     </section>
 
@@ -19,11 +19,11 @@
         <section class="toggle">
           <article>
             <ion-toggle [formControl]="form.get('on')" (ionChange)="toggle($event)"></ion-toggle>
-            <span (click)="openDatetime()"><b>{{ dailyGratefulness.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</b></span>
+            <span (click)="openDatetime()"><b>{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</b></span>
           </article>
         </section>
 
-        <exercise-daily-gratefulness-cards></exercise-daily-gratefulness-cards>
+        <exercise-daily-gratitude-cards></exercise-daily-gratitude-cards>
 
       </ng-container>
     </ng-container>
@@ -35,7 +35,7 @@
     <ng-template #login>
       <div class="not-logged-in">
         <p>
-          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratefulness
+          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratitude
         </p>
       </div>
     </ng-template>

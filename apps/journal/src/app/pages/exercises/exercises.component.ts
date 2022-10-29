@@ -36,7 +36,7 @@ export class ExercisesComponent {
   ) {
     this.seo.generateTags({
       title: 'Exercises - Strive Journal',
-      description: 'Dear Future Self, Affirmations, Daily Gratefulness and more'
+      description: 'Dear Future Self, Affirmations, Daily Gratitude and more'
     })
   }
 }

@@ -22,8 +22,8 @@ const routes: Routes = [
     loadChildren: () => import('./affirmations/affirmations.module').then(m => m.AffirmationsModule)
   },
   {
-    path: 'daily-gratefulness',
-    loadChildren: () => import('./daily-gratefulness/daily-gratefulness.module').then(m => m.DailyGratefulnessModule)
+    path: 'daily-gratitude',
+    loadChildren: () => import('./daily-gratitude/daily-gratitude.module').then(m => m.DailyGratitudeModule)
   },
   {
     path: 'wheel-of-life',

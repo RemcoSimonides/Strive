@@ -97,7 +97,7 @@ export class WheelOfLifeEntryService extends FireSubCollection<WheelOfLifeEntry<
   }
 
   async save(entry: WheelOfLifeEntry<string>) {
-    if (!this.auth.uid) throw new Error('uid should be defined when saving daily gratefulness items')
+    if (!this.auth.uid) throw new Error('uid should be defined when saving wheel of life entries')
     this.upsert(entry, { params: { uid: this.auth.uid }})
   }
 
