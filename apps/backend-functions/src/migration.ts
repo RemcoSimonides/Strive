@@ -1,41 +1,9 @@
-import { createGoalEvent } from '@strive/model';
-import { db, functions, logger } from './internals/firebase';
+import { functions } from './internals/firebase'
 
 export const migrate = functions().https.onRequest(async (req, res) => {
 
   try {
-    let counter = 0
 
-    const eventsSnap = await db.collection('GoalEvents').get()
-
-    const chunkSize = 500;
-    for (let i = 0; i < eventsSnap.size; i += chunkSize) {
-      const chunk = eventsSnap.docs.slice(i, i + chunkSize);
-
-      counter = 0
-      const batch = db.batch()
-      for (const doc of chunk) {
-        const data = doc.data()
-  
-        const event = createGoalEvent({
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt,
-          goalId: data.source.goal.id,
-          name: data.name,
-          commentId: data.source.comment?.id,
-          milestoneId: data.source.milestone?.id,
-          postId: data.source.postId,
-          supportId: data.source.support?.id,
-          userId: data.source.user?.uid
-        })
-  
-        counter++
-        batch.set(doc.ref, event)
-      }
-      logger.log('counter: ', counter)
-      await batch.commit()
-      
-    }
 
     res.status(200).send('all good')
   } catch (err) {
