@@ -88,10 +88,21 @@ export class PersonalService extends FireSubCollection<Personal> {
   }
 
   async unregisterFCM() {
-    const token = await getToken(getMessaging())
-    this.removeFCMToken(token)
-    localStorage.removeItem(this.localStorageName)
-    this.fcmActive$.next(false)
+    let token
+    if (Capacitor.getPlatform() === 'web') {
+      const supported = await isSupported()
+      if (supported) {
+        token = await getToken(getMessaging())
+      }
+    } else {
+      //  cant get token on Android or iOS
+    }
+
+    if (token) {
+      this.removeFCMToken(token)
+      localStorage.removeItem(this.localStorageName)
+      this.fcmActive$.next(false)
+    }
   }
 
   async registerFCM(): Promise<string | undefined> {
@@ -122,7 +133,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
   }
 
-  removeFCMToken(token: string) {
+  removeFCMToken(token: string | undefined) {
     if (token && this.auth.uid) {
       this.update(this.auth.uid, {
         fcmTokens: arrayRemove(token) as any
