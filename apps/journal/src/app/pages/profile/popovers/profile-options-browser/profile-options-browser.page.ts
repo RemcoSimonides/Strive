@@ -46,6 +46,7 @@ export class ProfileOptionsBrowserComponent {
   }
 
   async signOut() {
+    await this.personalService.unregisterFCM()
     await getAuth().signOut()
     this.popoverCtrl.dismiss()
 

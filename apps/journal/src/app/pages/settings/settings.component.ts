@@ -50,8 +50,9 @@ export class SettingsPageComponent {
     this.pwa.showInstallPromotion()
   }
 
-  signOut() {
-    getAuth().signOut()
+  async signOut() {
+    await this.personalService.unregisterFCM()
+    await getAuth().signOut()
     this.router.navigate(['/'])
 
     this.modalCtrl.create({
