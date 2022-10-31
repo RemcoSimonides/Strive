@@ -51,7 +51,6 @@ export class SettingsPageComponent {
   }
 
   async signOut() {
-    await this.personalService.unregisterFCM()
     await getAuth().signOut()
     this.router.navigate(['/'])
 
