@@ -161,7 +161,9 @@
           "/exercise/affirmations",
           "/exercise/daily-gratitude",
           "/exercise/dear-future-self",
-          "/explore"
+          "/explore",
+          "/privacy-policy",
+          "/terms"
         ],
         "guessRoutes": false
       },

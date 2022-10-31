@@ -52,6 +52,7 @@ export function isValidHttpUrl(url: string) {
  * More details about the code below here : https://stackoverflow.com/questions/7944460/detect-safari-browser
 */
 export function isSafari() {
+  if (typeof navigator === "undefined") return false
   return navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
   navigator.userAgent &&
   navigator.userAgent.indexOf('CriOS') == -1 &&

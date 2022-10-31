@@ -11,8 +11,8 @@ import { SeoService } from '@strive/utils/services/seo.service'
 })
 export class DownloadComponent {
 
-  isStandalone = matchMedia('(display-mode: standalone)').matches
-  isBrowser = matchMedia('(display-mode: browser)').matches
+  isStandalone = typeof matchMedia !== "undefined" ? matchMedia('(display-mode: standalone)').matches : false
+  isBrowser = typeof matchMedia !== "undefined" ? matchMedia('(display-mode: browser)').matches : false
   isSafari = isSafari()
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
