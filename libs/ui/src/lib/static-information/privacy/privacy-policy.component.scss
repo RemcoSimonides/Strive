@@ -1,0 +1,20 @@
+h2 {
+  color: var(--ion-color-primary);
+}
+
+section {
+  border-radius: 12px;
+  background: var(--ion-card-background);
+  padding: 16px;
+  margin-bottom: 16px;
+
+  p {
+    color: var(--ion-color-medium);
+  }
+
+  ul {
+    color: var(--ion-color-medium);
+    list-style-type: initial;
+    padding-left: 40px;
+  }
+}
