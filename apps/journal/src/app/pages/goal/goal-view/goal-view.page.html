@@ -14,6 +14,18 @@
 <ng-container *ngIf="canAccess; else noAccess">
 <ng-container *ngIf="goal$ | async as goal">
 <ng-container *ngIf="stakeholder$ | async as stakeholder">
+
+  <ng-container *ngIf="isIOS && (isLoggedIn$ | async)">
+    <ion-header mode="md">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="back()">
+            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+  </ng-container>
   
   <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
     <ion-segment-button value="goal">

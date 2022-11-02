@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
-import { ModalController } from '@ionic/angular'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Location } from '@angular/common'
+import { Capacitor } from '@capacitor/core'
 
 import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -51,6 +52,7 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
 export class GoalViewComponent implements OnDestroy {
   pageIsLoading = true
   canAccess = false
+  isIOS = Capacitor.getPlatform() === 'ios'
 
   segmentChoice: 'goal' | 'story' | 'chat' = 'goal'
 
@@ -69,10 +71,12 @@ export class GoalViewComponent implements OnDestroy {
     private commentService: CommentService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
+    private location: Location,
     private milestoneService: MilestoneService,
     private postService: PostService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
+    private router: Router,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private storyService: StoryService
@@ -169,5 +173,15 @@ export class GoalViewComponent implements OnDestroy {
 
   segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
+  }
+
+  back() {
+    const state = this.location.getState() as { navigationId: number}
+
+    if (state?.navigationId === 1) {
+      this.router.navigateByUrl('/')
+    } else {
+      this.location.back()
+    }
   }
 }
