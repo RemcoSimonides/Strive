@@ -9,7 +9,7 @@ export function getEnterAnimation(baseEl: HTMLElement) {
 	const root = baseEl.shadowRoot;
 	if (!root) return createAnimation()
 
-	const modalWrapper = root.querySelector('.modal-wrappper')
+	const modalWrapper = root.querySelector('.modal-wrapper')
 	const ionBackdrop = root.querySelector('ion-backdrop')
 	if (!modalWrapper || !ionBackdrop) return createAnimation()
 
