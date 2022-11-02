@@ -5,9 +5,11 @@ import { ServiceWorkerModule } from '@angular/service-worker'
 
 // Ionic
 import { IonicModule } from '@ionic/angular'
+import { Capacitor } from '@capacitor/core'
 
 //  Firebase
-import { FIREBASE_CONFIG } from 'ngfire'
+import { AUTH_DEPS, FIREBASE_CONFIG } from 'ngfire'
+import { indexedDBLocalPersistence } from 'firebase/auth'
 
 // Environments
 import { environment } from 'environments/environment'
@@ -64,6 +66,7 @@ Sentry.init(
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },
     { provide: FIREBASE_CONFIG, useValue: environment.firebase },
+    { provide: AUTH_DEPS, useValue: Capacitor.isNativePlatform() ? { persistance: indexedDBLocalPersistence } : undefined},
     { provide: ErrorHandler, useValue: SentryAngular.createErrorHandler() },
   ],
   bootstrap: [AppComponent],
