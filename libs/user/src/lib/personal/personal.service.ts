@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
+import { FCM } from '@capacitor-community/fcm'
 
 import { arrayRemove, arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
@@ -125,11 +126,12 @@ export class PersonalService extends FireSubCollection<Personal> {
     }    
   }
 
-  addFCMToken(token: string) {
-    if (token && this.auth.uid) {
-      this.update(this.auth.uid, {
+  async addFCMToken(token: string) {
+    const user = await this.auth.awaitUser()
+    if (token && user?.uid) {
+      this.update(user.uid, {
         fcmTokens: arrayUnion(token) as any
-      }, { params: { uid: this.auth.uid }})
+      }, { params: { uid: user.uid }})
     }
   }
 
@@ -154,6 +156,11 @@ export class PersonalService extends FireSubCollection<Personal> {
 
     // Register with Apple / Google to receive push via APNS/FCM
     await PushNotifications.register();
+
+    if (Capacitor.getPlatform() === 'ios') {
+      const token = await FCM.getToken() // get FCM token instead of APNS
+      this.addFCMToken(token.token)
+    }
   }
 
   async addListenersCapacitor(): Promise<void> {
@@ -161,6 +168,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
       (token: Token) => {
+        if (Capacitor.getPlatform() === 'ios') return // Capacitor returns APNS token instead of FCM
         this.addFCMToken(token.value)
       }
     );
