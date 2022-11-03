@@ -101,7 +101,6 @@ export class AuthModalComponent implements OnInit {
     this.screensize.isMobile$,
     of(Capacitor.getPlatform() === 'ios')
   ]).pipe(
-    // map(([isMobile, isIOS]) => isMobile && isIOS)
     map(([isMobile, isIOS]) => isMobile && isIOS)
   )
 

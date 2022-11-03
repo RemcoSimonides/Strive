@@ -1,7 +1,7 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { ModalController } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { delay, isSafari } from '@strive/utils/helpers'
@@ -22,10 +22,11 @@ export class MenuComponent extends ModalDirective {
     constructor(
         protected override location: Location,
         protected override modalCtrl: ModalController,
+        protected override platform: Platform,
         private pwa: PWAService,
         private router: Router,
     ){
-        super(location, modalCtrl)
+        super(location, modalCtrl, platform)
     }
 
     openAuthModal(authSegment: enumAuthSegment) {

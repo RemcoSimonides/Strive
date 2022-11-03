@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { FormControl } from '@angular/forms'
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular'
+import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular'
 
 import { combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { map, shareReplay, startWith } from 'rxjs/operators'
@@ -38,14 +38,15 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
     private auth: AuthService,
     private alertCtrl: AlertController,
     private goalService: GoalService,
+    protected override location: Location,
     protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
     private router: Router,
     private stakeholder: GoalStakeholderService,
-    protected override location: Location
   ) {
-    super(location, modalCtrl)
+    super(location, modalCtrl, platform)
   }
 
   ngOnInit() {

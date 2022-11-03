@@ -1,13 +1,16 @@
 import { Location } from '@angular/common'
-import { Directive, HostBinding, HostListener } from '@angular/core'
-import { ModalController } from '@ionic/angular'
-import { Capacitor } from '@capacitor/core'
+import { Directive, HostBinding, HostListener, OnDestroy } from '@angular/core'
+import { ModalController, Platform } from '@ionic/angular'
 
 @Directive({
   selector: '[striveModal]'
 })
-export class ModalDirective {
+export class ModalDirective implements OnDestroy {
   private data?: unknown
+
+  private backButtonSub = this.platform.backButton.subscribeWithPriority(101, () => {
+    this.location.back()
+  })
 
   @HostBinding() modal?: HTMLIonModalElement
   @HostListener('window:popstate', ['$event'])
@@ -17,25 +20,24 @@ export class ModalDirective {
 
   constructor(
     protected location: Location,
-    protected modalCtrl: ModalController
+    protected modalCtrl: ModalController,
+    protected platform: Platform
   ) {
-    if (Capacitor.getPlatform() === 'web') {
-      window.history.pushState(null, '', window.location.href)
+    window.history.pushState(null, '', window.location.href)
 
-      this.modalCtrl.getTop().then(() => {
-        this.modal?.onWillDismiss().then(res => {
-          if (res.role === 'backdrop') this.location.back()
-        })
+    this.modalCtrl.getTop().then(() => {
+      this.modal?.onWillDismiss().then(res => {
+        if (res.role === 'backdrop') this.location.back()
       })
-    }
+    })
+  }
+
+  ngOnDestroy() {
+    this.backButtonSub.unsubscribe()
   }
 
   dismiss(data?: unknown) {
     this.data = data
-    if (Capacitor.getPlatform() === 'web') {
-      this.location.back()
-    } else {
-      this.modalCtrl.dismiss(this.data)
-    }
+    this.location.back()
   }
 }

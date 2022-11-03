@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
 import { Location } from '@angular/common'
-import { Capacitor } from '@capacitor/core'
-import { AlertController, LoadingController, ModalController, NavParams } from '@ionic/angular'
+import { AlertController, LoadingController, NavParams } from '@ionic/angular'
 import { createGoal } from '@strive/model'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalForm } from '@strive/goal/goal/forms/goal.form'
@@ -24,7 +23,6 @@ export class SlideUpdateComponent {
     private goal: GoalService,
     private loadingCtrl: LoadingController,
     private location: Location,
-    private modalCtrl: ModalController,
     private navParams: NavParams
   ) {}
 
@@ -47,11 +45,7 @@ export class SlideUpdateComponent {
         const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
         await this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
 
-        if (Capacitor.getPlatform() === 'web') {
-          this.location.back()
-        } else {
-          this.modalCtrl.dismiss()
-        }
+        this.location.back()
         loading.dismiss()
 
       } catch (error: any) {

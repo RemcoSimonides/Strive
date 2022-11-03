@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core'
 import { Location } from '@angular/common'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController, Platform, PopoverController } from '@ionic/angular'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
@@ -72,13 +72,15 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     private cdr: ChangeDetectorRef,
     protected override location: Location,
     protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private postService: PostService
   ) {
-    super(location, modalCtrl)
+    super(location, modalCtrl, platform)
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy()
     this.sub.unsubscribe()
   }
 

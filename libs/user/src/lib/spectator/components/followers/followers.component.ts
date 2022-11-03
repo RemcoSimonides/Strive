@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Location } from '@angular/common'
 import { Router } from '@angular/router'
-import { ModalController } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular'
 
 import { joinWith } from 'ngfire'
 
@@ -35,11 +35,12 @@ export class FollowersComponent extends ModalDirective {
     private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private profileService: ProfileService,
     private service: UserSpectateService,
     private router: Router
   ) {
-    super(location, modalCtrl)
+    super(location, modalCtrl, platform)
   }
 
   navigateTo(uid: string) {

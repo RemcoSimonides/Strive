@@ -1,6 +1,6 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { AlertController, ModalController } from '@ionic/angular'
+import { AlertController, ModalController, Platform } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
 
 import { orderBy, where } from 'firebase/firestore'
@@ -53,11 +53,12 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private postService: PostService,
     private profileService: ProfileService,
     private storyService: StoryService
   ) {
-    super (location, modalCtrl)
+    super (location, modalCtrl, platform)
   }
 
   ngOnInit() {
@@ -111,7 +112,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     }
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy()
     this.subs.forEach(sub => sub.unsubscribe())
   }
 

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular'
 import { GoalStakeholder, User } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
@@ -36,12 +36,14 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
 
   constructor(
     protected override location: Location,
-    protected override modalCtrl: ModalController
+    protected override modalCtrl: ModalController,
+    protected override platform: Platform
   ) {
-    super(location, modalCtrl)
+    super(location, modalCtrl, platform)
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy()
     this.sub.unsubscribe()
   }
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
@@ -27,10 +27,11 @@ export class EntryModalComponent extends ModalDirective {
 
   constructor(
     private auth: AuthService,
-    location: Location,
-    modalCtrl: ModalController,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private service: WheelOfLifeEntryService
   ) {
-    super(location, modalCtrl)
+    super(location, modalCtrl, platform)
   }
 }

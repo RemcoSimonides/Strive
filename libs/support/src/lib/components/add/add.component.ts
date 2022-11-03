@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { Location } from '@angular/common'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController, Platform, PopoverController } from '@ionic/angular'
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 
@@ -48,12 +48,13 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService,
     private supportService: SupportService
   ) {
-    super(location, modalCtrl)
+    super(location, modalCtrl, platform)
   }
 
   ngOnInit() {

@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { ScreensizeService } from '@strive/utils/services/screensize.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class HeaderComponent {
 
   constructor(
     private location: Location,
+    private platform: Platform,
     private router: Router,
     public screensize: ScreensizeService
   ) { }

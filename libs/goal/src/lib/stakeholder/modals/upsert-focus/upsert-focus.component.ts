@@ -1,6 +1,6 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular'
 import { GoalStakeholder } from '@strive/model'
 import { AuthService } from '@strive/user/auth/auth.service'
 
@@ -29,9 +29,10 @@ export class FocusModalComponent extends ModalDirective {
 		private cdr: ChangeDetectorRef,
 		protected override location: Location,
 		protected override modalCtrl: ModalController,
+		protected override platform: Platform,
 		private stakeholderService: GoalStakeholderService
 	) {
-		super(location, modalCtrl)
+		super(location, modalCtrl, platform)
 		this.form.valueChanges.pipe(
 			debounceTime(2000)
 		).subscribe(_ => {
