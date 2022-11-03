@@ -15,29 +15,24 @@
 <ng-container *ngIf="goal$ | async as goal">
 <ng-container *ngIf="stakeholder$ | async as stakeholder">
 
-  <ng-container *ngIf="isIOS && (isLoggedIn$ | async)">
-    <ion-header mode="md">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button (click)="back()">
-            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-  </ng-container>
-  
-  <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
-    <ion-segment-button value="goal">
-      Goal
-    </ion-segment-button>
-    <ion-segment-button value="story">
-      Story
-    </ion-segment-button>
-    <ion-segment-button value="chat">
-      Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
-    </ion-segment-button>
-  </ion-segment>
+  <section>    
+    <ng-container *ngIf="isIOS && (isLoggedIn$ | async)">
+      <ion-button (click)="back()" fill="clear" size="small">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ng-container>
+    <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
+      <ion-segment-button value="goal">
+        Goal
+      </ion-segment-button>
+      <ion-segment-button value="story">
+        Story
+      </ion-segment-button>
+      <ion-segment-button value="chat">
+        Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
+      </ion-segment-button>
+    </ion-segment>
+  </section>
   
   <ng-container [ngSwitch]="segmentChoice">
   
