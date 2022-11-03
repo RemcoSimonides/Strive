@@ -10,17 +10,21 @@ import {
   GoogleAuthProvider
 } from 'firebase/auth'
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+import { captureException } from '@sentry/angular'
 
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
+import { Capacitor } from '@capacitor/core'
 
 import { ProfileService } from '@strive/user/user/profile.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 import { createPersonal, createUser } from '@strive/model'
 import { createRandomString } from '@strive/utils/helpers'
 
+import { combineLatest, map, of } from 'rxjs'
+
 import { WelcomeModalComponent } from '../welcome/welcome.modal'
-import { captureException } from '@sentry/angular'
 
 export enum enumAuthSegment {
   login,
@@ -93,6 +97,14 @@ export class AuthModalComponent implements OnInit {
     ]
   }
 
+  showIOSHeader$ = combineLatest([
+    this.screensize.isMobile$,
+    of(Capacitor.getPlatform() === 'ios')
+  ]).pipe(
+    // map(([isMobile, isIOS]) => isMobile && isIOS)
+    map(([isMobile, isIOS]) => isMobile && isIOS)
+  )
+
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
@@ -113,7 +125,8 @@ export class AuthModalComponent implements OnInit {
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private personal: PersonalService,
-    private profile: ProfileService
+    private profile: ProfileService,
+    private screensize: ScreensizeService
   ) {
     window.history.pushState(null, '', window.location.href)
   }

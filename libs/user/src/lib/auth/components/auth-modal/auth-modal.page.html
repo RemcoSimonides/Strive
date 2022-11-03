@@ -1,4 +1,4 @@
-<ion-content class="ion-padding">
+<ng-template #backButton>
   <ng-container *ngIf="authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register || authSegmentChoice === enumAuthSegment.forgot_password; else previous">
     <ion-button fill="clear" (click)="dismiss(false)">
       <ion-icon name="close" slot="icon-only"></ion-icon>
@@ -9,6 +9,20 @@
       <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
     </ion-button>
   </ng-template>
+</ng-template>
+
+<ion-header *ngIf="showIOSHeader$ | async">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ng-container *ngTemplateOutlet="backButton"></ng-container>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ng-container *ngIf="(showIOSHeader$ | async) === false">
+    <ng-container *ngTemplateOutlet="backButton"></ng-container>
+  </ng-container>
 
   <ng-container [ngSwitch]="authSegmentChoice">
     <ng-container *ngSwitchCase="enumAuthSegment.login">
