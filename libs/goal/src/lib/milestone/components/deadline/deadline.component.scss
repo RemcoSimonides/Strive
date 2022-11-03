@@ -2,6 +2,10 @@ section {
   display: flex;
   width: fit-content;
   align-items: center;
+
+  span {
+    font-size: small;
+  }
 }
 
 ion-icon {
