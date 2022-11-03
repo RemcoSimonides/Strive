@@ -22,6 +22,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 
 import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem } from '@strive/model'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -52,7 +53,14 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
 export class GoalViewComponent implements OnDestroy {
   pageIsLoading = true
   canAccess = false
-  isIOS = Capacitor.getPlatform() === 'ios'
+
+  showIOSHeader$ = combineLatest([
+    this.auth.isLoggedIn$,
+    this.screensize.isMobile$,
+    of(Capacitor.getPlatform() === 'ios')
+  ]).pipe(
+    map(([ isLoggedIn, isMobile, isIOS ]) => isLoggedIn && isMobile && isIOS )
+  )
 
   segmentChoice: 'goal' | 'story' | 'chat' = 'goal'
 
@@ -77,6 +85,7 @@ export class GoalViewComponent implements OnDestroy {
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
+    private screensize: ScreensizeService,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private storyService: StoryService

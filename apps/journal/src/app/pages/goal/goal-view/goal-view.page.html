@@ -15,12 +15,30 @@
 <ng-container *ngIf="goal$ | async as goal">
 <ng-container *ngIf="stakeholder$ | async as stakeholder">
 
-  <section>    
-    <ng-container *ngIf="isIOS && (isLoggedIn$ | async)">
-      <ion-button (click)="back()" fill="clear" size="small">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
-    </ng-container>
+  <ng-container *ngIf="showIOSHeader$ | async; else noHeader">
+    <ion-header>
+      <ion-toolbar>
+        <section class="ios-header">
+          <ion-button (click)="back()" fill="clear" size="small">
+            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+          <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
+            <ion-segment-button value="goal">
+              Goal
+            </ion-segment-button>
+            <ion-segment-button value="story">
+              Story
+            </ion-segment-button>
+            <ion-segment-button value="chat">
+              Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
+            </ion-segment-button>
+          </ion-segment>
+        </section>
+      </ion-toolbar>
+    </ion-header>
+  </ng-container>
+
+  <ng-template #noHeader>
     <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
       <ion-segment-button value="goal">
         Goal
@@ -32,7 +50,8 @@
         Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
       </ion-segment-button>
     </ion-segment>
-  </section>
+  </ng-template>
+
   
   <ng-container [ngSwitch]="segmentChoice">
   
