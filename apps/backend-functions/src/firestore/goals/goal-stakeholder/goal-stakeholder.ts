@@ -78,6 +78,11 @@ async (snapshot, context) => {
   // aggregation
   handleAggregation(stakeholder, undefined)
 
+  const goalStakeholdersSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
+  if (goalStakeholdersSnap.size === 0) {
+    return db.doc(`Goals/${goalId}`).delete()
+  }
+
   const goalSnap = await db.doc(`Goals/${goalId}`).get()
   if (!goalSnap.exists) return
 

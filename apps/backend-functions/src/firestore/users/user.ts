@@ -43,6 +43,9 @@ async (snapshot) => {
   supportsSnap.forEach(snap => supportBatch.delete(snap.ref))
   supportBatch.commit()
 
+  // TODO anonimyze comments from deleted user
+  
+
   // also delete subcollections
   deleteCollection(db, `Users/${uid}/Personal`, 500)
   deleteCollection(db, `Users/${uid}/Notifications`, 500)

@@ -33,6 +33,12 @@ a {
   text-decoration: none;
 }
 
+hr {
+  border-top: 1px solid var(--ion-color-primary);
+  max-width: 400px;
+  width: 50%;
+}
+
 .wide-popover {
   --width: 80vw;
   --max-width: 400px;
@@ -134,4 +140,9 @@ ion-button {
   &.secondary {
     --color: var(--ion-color-secondary);
   }
+}
+
+button.alert-button.alert-button-delete {
+  color: var(--ion-color-danger);
+  margin-bottom: 8px;
 }

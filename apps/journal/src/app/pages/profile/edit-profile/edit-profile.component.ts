@@ -1,6 +1,7 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { Router } from '@angular/router'
+import { AlertController, ModalController } from '@ionic/angular'
 
 import { take } from 'rxjs/operators'
 
@@ -28,11 +29,13 @@ export class EditProfileComponent {
   uid = this.auth.uid
 
   constructor(
+    private alertCtrl: AlertController,
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private location: Location,
     private modalCtrl: ModalController,
     private profileService: ProfileService,
+    private router: Router,
     public screensize: ScreensizeService
   ) {
     this.auth.profile$.pipe(take(1)).subscribe(profile => {
@@ -67,5 +70,29 @@ export class EditProfileComponent {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
+  }
+
+  deleteAccount() {
+    this.alertCtrl.create({
+      subHeader: 'Are you sure you want to delete your account?',
+      message: `This action is irreversible`,
+      buttons: [
+        {
+          text: 'No, dont delete',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel',
+        },
+        {
+          text: 'Yes, delete',
+          cssClass: 'alert-button-delete',
+          handler: async () => {
+            if (!this.auth.uid) return
+            await this.profileService.remove(this.auth.uid)
+            await this.auth.signout()
+            this.router.navigate(['/'])
+          }
+        },
+      ]
+    }).then(alert => alert.present())
   }
 }

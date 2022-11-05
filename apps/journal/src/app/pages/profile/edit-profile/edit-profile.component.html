@@ -2,24 +2,32 @@
 
 <ng-container *ngIf="isLoggedIn$ | async else login">
   <ion-content class="ion-no-padding">
-    <ion-card>
-      <ion-card-content>
-        <ion-item>
-          <ion-label position="floating">Username</ion-label>
-          <ion-input
-            type="text"
-            maxlength="16"
-            autocapitalize="sentences"
-            [formControl]="form.username"
-            (keydown.enter)="update()">
-          </ion-input>
-        </ion-item>
-  
-        <media-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid"></media-image-selector>
-      
-        <ion-button color="primary" (click)="update()">Save</ion-button>
-      </ion-card-content>
-    </ion-card>
+    <main>
+      <ion-card>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="floating">Username</ion-label>
+            <ion-input
+              type="text"
+              maxlength="16"
+              autocapitalize="sentences"
+              [formControl]="form.username"
+              (keydown.enter)="update()">
+            </ion-input>
+          </ion-item>
+    
+          <media-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid"></media-image-selector>
+        
+          <ion-button color="primary" (click)="update()">Save</ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <hr/>
+
+      <ion-button color="danger" fill="outline" (click)="deleteAccount()">
+        <span>Delete Account</span>
+      </ion-button>
+    </main>
   </ion-content>
 </ng-container>
 
