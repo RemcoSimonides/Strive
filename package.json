@@ -32,6 +32,7 @@
     "@angular/pwa": "^14.2.3",
     "@angular/router": "~14.1.0",
     "@angular/service-worker": "~14.1.0",
+    "@capacitor-community/apple-sign-in": "^4.0.0",
     "@capacitor-community/fcm": "^3.0.0",
     "@capacitor/app": "^4.1.0",
     "@capacitor/camera": "^4.0.1",

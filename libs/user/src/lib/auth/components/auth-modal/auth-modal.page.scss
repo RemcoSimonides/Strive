@@ -8,6 +8,12 @@ article {
   margin-bottom: 16px;
 }
 
+article.oauth {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 form {
   width: 100%;
 

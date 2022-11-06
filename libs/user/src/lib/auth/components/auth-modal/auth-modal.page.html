@@ -28,10 +28,15 @@
     <ng-container *ngSwitchCase="enumAuthSegment.login">
 
       <section>
-        <article>
+        <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
             Continue with Google
+          </ion-button>
+
+          <ion-button fill="outline" (click)="loginWithApple()">
+            <ion-icon name="logo-apple" slot="start"></ion-icon>
+            Continue with Apple
           </ion-button>
         </article>
 
@@ -66,10 +71,15 @@
     <ng-container *ngSwitchCase="enumAuthSegment.register">
 
       <section>
-        <article>
+        <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
             Continue with Google
+          </ion-button>
+
+          <ion-button fill="outline" (click)="loginWithApple()">
+            <ion-icon name="logo-apple" slot="start"></ion-icon>
+            Continue with Apple
           </ion-button>
         </article>
 

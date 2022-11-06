@@ -7,9 +7,13 @@ import {
   sendPasswordResetEmail,
   getAuth,
   signInWithCredential,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  OAuthProvider,
+  signInWithPopup,
+  User
 } from 'firebase/auth'
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+import { SignInWithAppleOptions, SignInWithApple } from '@capacitor-community/apple-sign-in'
 import { captureException } from '@sentry/angular'
 
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
@@ -145,28 +149,47 @@ export class AuthModalComponent implements OnInit {
       const gCredentials = GoogleAuthProvider.credential(gUser.authentication.idToken, gUser.authentication.accessToken)
       const credentials = await signInWithCredential(getAuth(), gCredentials)
       
-      const { displayName, uid, email } = credentials.user
-
-      const profile = await this.profile.getValue(uid)
-      if (!profile) {
-        const user = createUser({ username: displayName ?? '', uid })
-        const personal = createPersonal({ uid, email: email ?? '', key: createRandomString(32) })
-        await Promise.all([
-          this.profile.upsert(user),
-          this.personal.add(personal, { params: { uid }}),
-        ])
-        const top = await this.modalCtrl.getTop()
-        if (top) {
-          top.dismiss(true)
-          this.dismiss(true)
-        }
-        this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
-      } else {
-        const top = await this.modalCtrl.getTop()
-        if (top) this.dismiss(true)
-        this.personal.registerFCM()
-      }
+      this.oAuthLogin(credentials.user)
   
+    } catch (error: any) {
+      captureException(error)
+      switch (error.code) {
+        case 'auth/popup-closed-by-user':
+        case 'auth/popup-blocked':
+          break
+        default:
+          this.alertCtrl.create({
+            message: error,
+            buttons: [{ text: 'Ok', role: 'cancel' }]
+          }).then(alert => alert.present())
+      }
+    }
+  }
+
+  async loginWithApple() {
+    try {
+
+      if (Capacitor.getPlatform() === 'web') {
+        const provider = new OAuthProvider('apple.com')
+        const credentials = await signInWithPopup(getAuth(), provider)
+        this.oAuthLogin(credentials.user)
+      }
+
+      if (Capacitor.getPlatform() === 'ios') {
+        const options: SignInWithAppleOptions = {
+          clientId: 'com.strive.journal',
+          redirectURI: 'https://strive-journal.firebaseapp.com/__/auth/handler',
+          scopes: 'name email'
+        }
+
+        const { response } = await SignInWithApple.authorize(options)
+        const provider = new OAuthProvider('apple.com')
+        const aCredentials = provider.credential({ idToken: response.identityToken })
+        const credentials = await signInWithCredential(getAuth(), aCredentials)
+
+        this.oAuthLogin(credentials.user)
+      }
+
     } catch (error: any) {
       captureException(error)
       switch (error.code) {
@@ -331,5 +354,29 @@ export class AuthModalComponent implements OnInit {
   hideShowPassword() {
     this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
     this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
+  }
+
+  private async oAuthLogin(user: User) {
+    const { displayName, uid, email } = user
+
+    const profile = await this.profile.getValue(uid)
+    if (!profile) {
+      const user = createUser({ username: displayName ?? '', uid })
+      const personal = createPersonal({ uid, email: email ?? '', key: createRandomString(32) })
+      await Promise.all([
+        this.profile.upsert(user),
+        this.personal.add(personal, { params: { uid }})
+      ])
+      const top = await this.modalCtrl.getTop()
+      if (top) {
+        top.dismiss(true)
+        this.dismiss(true)
+      }
+      this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
+    } else {
+      const top = await this.modalCtrl.getTop()
+      if (top) this.dismiss(true)
+      this.personal.registerFCM()
+    }
   }
 }
