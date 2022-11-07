@@ -152,7 +152,14 @@ export class AuthModalComponent implements OnInit {
   
     } catch (error: any) {
       captureException(error)
-      switch (error.code) {
+
+      let code = undefined
+      if (error?.code) code = error.code
+      if (error?.error) code = error.error
+      
+      switch (code) {
+        case '12501':
+        case 'popup_closed_by_user':
         case 'auth/popup-closed-by-user':
         case 'auth/popup-blocked':
           break
@@ -179,6 +186,9 @@ export class AuthModalComponent implements OnInit {
 
     } catch (error: any) {
       captureException(error)
+
+      if (error == 'Error: The web operation was canceled by the user.') return
+
       switch (error.code) {
         case 'auth/popup-closed-by-user':
         case 'auth/popup-blocked':
