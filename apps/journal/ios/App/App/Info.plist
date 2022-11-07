@@ -65,10 +65,10 @@
 		</dict>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>To capture images</string>
+	<string>To capture an image for your profile photo, a goal, or for posts in the story of a goal</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>To add images</string>
+	<string>To select an image for your profile photo, a goal, or for posts in the story of a goal</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To store images</string>
+	<string>To select an image for your profile photo, a goal, or for posts in the story of a goal</string>
 </dict>
 </plist>
