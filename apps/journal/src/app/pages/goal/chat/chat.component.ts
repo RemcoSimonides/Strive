@@ -41,7 +41,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i)),
     joinWith({
       user: comment => this.profileService.valueChanges(comment.userId)
-    })
+    }),
+    map(comments => comments.filter(comment => comment.user))
   )
   done$ = this._done.asObservable()
 
@@ -82,7 +83,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const sub = this.commentService.valueChanges([orderBy('createdAt', 'desc'), limit(1)], { goalId: this.goal.id }).pipe(
       skip(1),
       map(comments => comments[0]),
-      filter(comment => !!comment.createdAt)
+      filter(comment => !!comment?.createdAt)
     ).subscribe(comment => {
       const next = [...this._comments.value, comment]
       this._comments.next(next)
