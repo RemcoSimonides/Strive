@@ -18,6 +18,7 @@ def capacitor_pods
   pod 'CapacitorShare', :path => '../../../../node_modules/@capacitor/share'
   pod 'CapacitorCommunityAppleSignIn', :path => '../../../../node_modules/@capacitor-community/apple-sign-in'
   pod 'CapacitorCommunityFcm', :path => '../../../../node_modules/@capacitor-community/fcm'
+  pod 'CapacitorFirebaseAuthentication', :path => '../../../../node_modules/@capacitor-firebase/authentication'
   pod 'CodetrixStudioCapacitorGoogleAuth', :path => '../../../../node_modules/@codetrix-studio/capacitor-google-auth'
 end
 

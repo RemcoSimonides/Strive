@@ -168,33 +168,14 @@ export class AuthModalComponent implements OnInit {
   async loginWithApple() {
     try {
 
-      const result = await FirebaseAuthentication.signInWithApple()
-
+      const result = await FirebaseAuthentication.signInWithApple({ skipNativeAuth: true })
       const provider = new OAuthProvider('apple.com')
-
       const oAuthCredentials = provider.credential({
         idToken: result.credential?.idToken,
         rawNonce: result.credential?.nonce
       })
-
       const credentials = await signInWithCredential(getAuth(), oAuthCredentials)
-
       this.oAuthLogin(credentials.user)
-
-      // if (Capacitor.getPlatform() === 'ios') {
-      //   const options: SignInWithAppleOptions = {
-      //     clientId: 'com.strive.journal',
-      //     redirectURI: 'https://strive-journal.firebaseapp.com/__/auth/handler',
-      //     scopes: 'name email'
-      //   }
-
-      //   const { response } = await SignInWithApple.authorize(options)
-      //   const provider = new OAuthProvider('apple.com')
-      //   const aCredentials = provider.credential({ idToken: response.identityToken })
-      //   const credentials = await signInWithCredential(getAuth(), aCredentials)
-
-      //   this.oAuthLogin(credentials.user)
-      // }
 
     } catch (error: any) {
       captureException(error)
