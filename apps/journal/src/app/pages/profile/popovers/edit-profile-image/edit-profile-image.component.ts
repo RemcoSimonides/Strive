@@ -34,9 +34,7 @@ export class EditProfileImagePopoverComponent implements OnInit {
       this.imageSelector.cropIt()
     }
 
-    if (!this.form?.value) {
-      throw new Error('Nothing to update')
-    }
+    if (!this.form?.value) return
 
     this.profileService.update({ uid: this.auth.uid, photoURL: this.form.value })
     this.popoverCtrl.dismiss(this.form.value)
