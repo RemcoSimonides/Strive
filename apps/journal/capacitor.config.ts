@@ -10,6 +10,10 @@ const config: CapacitorConfig = {
       scopes: ['profile', 'email'],
       serverClientId: '423468347975-tjkdd38gna8rfgqd16f0jpf1o5bl6204.apps.googleusercontent.com',
       forceCodeForRefreshToken: true
+    },
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ['apple.com']
     }
   }
 };

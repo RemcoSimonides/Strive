@@ -9,11 +9,10 @@ import {
   signInWithCredential,
   GoogleAuthProvider,
   OAuthProvider,
-  signInWithPopup,
   User
 } from 'firebase/auth'
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
-import { SignInWithAppleOptions, SignInWithApple } from '@capacitor-community/apple-sign-in'
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication'
 import { captureException } from '@sentry/angular'
 
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
@@ -169,26 +168,33 @@ export class AuthModalComponent implements OnInit {
   async loginWithApple() {
     try {
 
-      if (Capacitor.getPlatform() === 'web') {
-        const provider = new OAuthProvider('apple.com')
-        const credentials = await signInWithPopup(getAuth(), provider)
-        this.oAuthLogin(credentials.user)
-      }
+      const result = await FirebaseAuthentication.signInWithApple()
 
-      if (Capacitor.getPlatform() === 'ios') {
-        const options: SignInWithAppleOptions = {
-          clientId: 'com.strive.journal',
-          redirectURI: 'https://strive-journal.firebaseapp.com/__/auth/handler',
-          scopes: 'name email'
-        }
+      const provider = new OAuthProvider('apple.com')
 
-        const { response } = await SignInWithApple.authorize(options)
-        const provider = new OAuthProvider('apple.com')
-        const aCredentials = provider.credential({ idToken: response.identityToken })
-        const credentials = await signInWithCredential(getAuth(), aCredentials)
+      const oAuthCredentials = provider.credential({
+        idToken: result.credential?.idToken,
+        rawNonce: result.credential?.nonce
+      })
 
-        this.oAuthLogin(credentials.user)
-      }
+      const credentials = await signInWithCredential(getAuth(), oAuthCredentials)
+
+      this.oAuthLogin(credentials.user)
+
+      // if (Capacitor.getPlatform() === 'ios') {
+      //   const options: SignInWithAppleOptions = {
+      //     clientId: 'com.strive.journal',
+      //     redirectURI: 'https://strive-journal.firebaseapp.com/__/auth/handler',
+      //     scopes: 'name email'
+      //   }
+
+      //   const { response } = await SignInWithApple.authorize(options)
+      //   const provider = new OAuthProvider('apple.com')
+      //   const aCredentials = provider.credential({ idToken: response.identityToken })
+      //   const credentials = await signInWithCredential(getAuth(), aCredentials)
+
+      //   this.oAuthLogin(credentials.user)
+      // }
 
     } catch (error: any) {
       captureException(error)

@@ -16,6 +16,7 @@ dependencies {
     implementation project(':capacitor-share')
     implementation project(':capacitor-community-apple-sign-in')
     implementation project(':capacitor-community-fcm')
+    implementation project(':capacitor-firebase-authentication')
     implementation project(':codetrix-studio-capacitor-google-auth')
 
 }
