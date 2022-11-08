@@ -34,7 +34,8 @@ Sentry.init(
     dsn: 'https://4f1406746eae4c7aa069055270c617d9@o1354459.ingest.sentry.io/6638131',
     release: 'strivejournal@1',
     dist: '1',
-    tracesSampleRate: 1.0
+    tracesSampleRate: 1.0,
+    enableNative: false
   },
   SentryAngular.init
 );
