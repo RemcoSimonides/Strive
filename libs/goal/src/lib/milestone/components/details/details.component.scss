@@ -17,19 +17,28 @@ main {
   margin-bottom: 32px;
 }
 
-ion-item.main {
-  --inner-padding-top: 8px;
-  --inner-padding-end: 8px;
-  --padding-start: 0;
-  border-radius: 12px;
-  
-  ion-textarea {
-    --padding-top: 0;
+section.main {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  ion-button {
-    margin-inline-start: 8px;
-    margin-top: 8px;
+  ion-item {
+    --inner-padding-top: 24px;
+    --inner-padding-end: 8px;
+    --padding-start: 0;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    
+    ion-textarea {
+      --padding-top: 0;
+    }
+  
+    ion-button {
+      margin-inline-start: 8px;
+      margin-top: 8px;
+    }
   }
 }
 
@@ -48,6 +57,10 @@ ion-item.main {
   display: flex;
   flex-direction: column;
   gap: 8px;
+   
+  i {
+    color: var(--ion-color-medium);
+  }
 
   ion-button {
     width: fit-content;
