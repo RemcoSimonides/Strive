@@ -46,8 +46,12 @@ ion-item.main {
 
 .support {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
+
+  ion-button {
+    width: fit-content;
+  }
 }
 
 .description {

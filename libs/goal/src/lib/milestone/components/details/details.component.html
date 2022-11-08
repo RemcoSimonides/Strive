@@ -50,15 +50,6 @@
       </section>
     </ng-container>
 
-    <section class="support">
-      <span><b>Supports: </b>{{ milestone.supports?.length }}</span>
-
-      <ion-button (click)="openSupportModal()" color="secondary" fill="outline">
-        <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
-        <span>{{ milestone.status === 'pending' ? 'SUPPORT' : 'SHOW SUPPORTS'}}</span>
-      </ion-button>
-    </section>
-
     <section class="description">
       <ng-container *ngIf="!canEdit else editable">
         <ng-container *ngIf="milestone.description">
@@ -99,6 +90,23 @@
         </form>
       </ion-list>
     </ng-container>
+
+    <section class="support">
+      <h5>Supports</h5>
+      <article (click)="openSupportModal()">
+        <ng-container *ngIf="milestone.supports?.length else noSupports">
+          <span>{{ milestone.supports.length }} {{ milestone.supports.length === 1 ? 'support' : 'supports' }}</span>
+        </ng-container>
+        <ng-template #noSupports>
+          <i>no supports</i>
+        </ng-template>
+      </article>
+
+      <ion-button (click)="openSupportModal()" class="secondary">
+        <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
+        <span>{{ milestone.status === 'pending' ? 'SUPPORT' : 'ADD SUPPORT'}}</span>
+      </ion-button>
+    </section>
 
     <ng-container *ngIf="story$ | async as story">
       <ng-container *ngIf="canEdit || story.length">
