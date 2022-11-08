@@ -38,6 +38,7 @@
     "@capacitor/camera": "^4.0.1",
     "@capacitor/clipboard": "^4.0.1",
     "@capacitor/core": "^4.3.0",
+    "@capacitor/keyboard": "^4.0.1",
     "@capacitor/push-notifications": "^4.0.1",
     "@capacitor/share": "^4.0.1",
     "@codetrix-studio/capacitor-google-auth": "^3.2.0",
