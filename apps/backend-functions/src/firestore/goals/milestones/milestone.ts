@@ -39,17 +39,7 @@ async (snapshot, context) => {
 
   const { goalId, milestoneId } = context.params
 
-  // scheduled task
-  await deleteScheduledTask(milestoneId)
-
-  // delete supports
-  // get supports
-  const supportssColSnap = await db.collection(`Goals/${goalId}/Supports`)
-    .where('milestone.id', '==', milestoneId)
-    .get()
-
-  const promises = supportssColSnap.docs.map(snap => db.doc(`Goals/${goalId}/Supports/${snap.id}`).delete())
-  await Promise.all(promises)
+  milestoneDeleted(goalId, milestoneId)
 })
 
 export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneChangeHandler',
@@ -61,6 +51,11 @@ async (snapshot, context) => {
 
   // events
   await handleMilestoneEvents(before, after, goalId)
+
+  const deleted = before.deletedAt === null && after.deletedAt !== null
+  if (deleted) {
+    milestoneDeleted(goalId, milestoneId)
+  }
 
   const completed = (before.status === 'pending' || before.status === 'overdue') && (after.status === 'failed' || after.status === 'succeeded')
   if (completed) {
@@ -126,4 +121,18 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
     batch.update(doc.ref, support)
   }
   batch.commit()
+}
+
+async function milestoneDeleted(goalId: string, milestoneId: string) {
+  // scheduled task
+  await deleteScheduledTask(milestoneId)
+
+  // delete supports
+  // get supports
+  const supportssColSnap = await db.collection(`Goals/${goalId}/Supports`)
+    .where('milestone.id', '==', milestoneId)
+    .get()
+
+  const promises = supportssColSnap.docs.map(snap => db.doc(`Goals/${goalId}/Supports/${snap.id}`).delete())
+  await Promise.all(promises)
 }

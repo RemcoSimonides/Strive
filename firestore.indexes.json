@@ -43,6 +43,20 @@
       ]
     },
     {
+      "collectionGroup": "Milestones",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "deletedAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "order",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "GStakeholders",
       "queryScope": "COLLECTION_GROUP",
       "fields": [

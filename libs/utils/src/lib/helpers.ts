@@ -1,14 +1,8 @@
-
 export function sum(array: number[]): number
 export function sum<T>(array: T[], getAmount: (item: T) => number): number
 export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
   const cb = getAmount || ((item: number) => item);
   return array.reduce((total, item) => total + cb(item as any), 0);
-}
-
-
-export function setDateToEndOfDay(date: string): string {
-  return new Date(date).setHours(23, 59, 59, 999).toString()
 }
 
 /** Basic function to create a delay in a function when called

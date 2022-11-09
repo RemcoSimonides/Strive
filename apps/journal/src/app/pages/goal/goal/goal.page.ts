@@ -87,7 +87,7 @@ export class GoalComponent {
   ) {
     this.milestones$ = this.route.params.pipe(
       map(params => params['id'] as string),
-      switchMap(goalId => this.milestone.valueChanges([orderBy('order', 'asc')], { goalId }).pipe(
+      switchMap(goalId => this.milestone.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
         joinWith({
           achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
           supports: milestone => this.auth.profile$.pipe(

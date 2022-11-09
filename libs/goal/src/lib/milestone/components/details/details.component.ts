@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { AlertController, ModalController, Platform } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
 
-import { orderBy, where } from 'firebase/firestore'
+import { orderBy, serverTimestamp, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 
 import { Observable, of, Subscription } from 'rxjs'
@@ -145,7 +145,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     alert.onDidDismiss().then((res) => {
       if (res.role == 'delete') {
         if (!this.milestone?.id) return
-        this.milestoneService.remove(this.milestone.id, { params: { goalId: this.goal.id }})
+        this.milestoneService.update(this.milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id }})
         this.dismiss()
       }
     })

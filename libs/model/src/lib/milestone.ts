@@ -1,5 +1,5 @@
 import { User } from '@strive/model'
-import { setDateToEndOfDay } from '@strive/utils/helpers';
+import { endOfDay } from 'date-fns'
 
 export type MilestoneStatus = 'pending' | 'succeeded' | 'failed' | 'overdue'
 
@@ -18,6 +18,7 @@ export interface Milestone {
   achieverId: string
   achiever?: User // joined data
   subtasks: Subtask[]
+  deletedAt: null | Date
   updatedBy?: string
   updatedAt?: Date 
   createdAt?: Date
@@ -37,10 +38,11 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     order: params.order ?? 0,
     content: params.content ?? '',
     description: params.description ?? '',
-    deadline: params.deadline ? setDateToEndOfDay(params.deadline) : '',
+    deadline: params.deadline ? endOfDay(new Date(params.deadline)).toISOString() : '',
     status: params.status ?? 'pending',
     achieverId: params.achieverId ?? '',
     subtasks: params.subtasks ?? [],
+    deletedAt: params.deletedAt ?? null
   }
 
   if (params.updatedBy) milestone.updatedBy = params.updatedBy
