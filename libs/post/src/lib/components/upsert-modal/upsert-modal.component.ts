@@ -3,6 +3,7 @@ import { Location } from '@angular/common'
 import { ModalController, Platform, PopoverController } from '@ionic/angular'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { getStorage, ref, deleteObject } from '@firebase/storage'
 
 import { captureException } from '@sentry/capacitor'
 
@@ -34,6 +35,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   private _post!: Post
   get post() { return this._post }
   @Input() set post(post: Post) {
+    if (!post.id) throw new Error('Upsert post modal needs id')
     if (!post.goalId) throw new Error('Upsert post modal needs goalId')
     this._post = post
 
@@ -84,6 +86,14 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     this.sub.unsubscribe()
   }
 
+  override dismiss(saved = false) {
+    if (!saved && this.postForm.mediaURL.value) {
+      const storageRef = ref(getStorage(), this.postForm.mediaURL.value)
+      deleteObject(storageRef)
+    }
+    super.dismiss()
+  }
+
   async submitPost() {
     if (!this.auth.uid) return
 
@@ -106,7 +116,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       await this.postService.upsert(post, { params: { goalId: post.goalId }});
     }
 
-    this.dismiss()
+    this.dismiss(true)
   }
 
   async openDatePicker() {

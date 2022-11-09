@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ModalController } from '@ionic/angular'
+import { GoalService } from '@strive/goal/goal/goal.service'
 import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
@@ -16,12 +17,18 @@ export class StoryComponent {
 	@Input() goalId!: string
 	@Input() milestoneId?: string
 
-	constructor(private modalCtrl: ModalController) {}
+	constructor(
+		private modalCtrl: ModalController,
+		private goalService: GoalService
+	) {}
 
 	createCustomPost() {
 		if (!this.goalId) return
 
-		const post = createPost({ goalId: this.goalId })
+		const post = createPost({
+			id: this.goalService.createId(),
+			goalId: this.goalId
+		})
 		if (this.milestoneId) post.milestoneId = this.milestoneId
 
 		this.modalCtrl.create({
