@@ -10,6 +10,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole, StakeholderWithGoal } from '@strive/model'
 import { getProgress } from './pipes/progress.pipe'
+import { endOfDay } from 'date-fns'
 
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {
@@ -93,6 +94,6 @@ export class GoalService extends FireCollection<Goal> {
 
   private setDeadlineToEndOfDay(deadline: string): string {
     const date = new Date(deadline)
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
+    return endOfDay(date).toISOString()
   }
 }
