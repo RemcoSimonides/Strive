@@ -53,15 +53,6 @@ export function getStoryItemMessage(item: StoryItem): StoryItemMessage {
           { text: `Milestone "${milestone.content}" failed to complete` }
         ]
       }
-    case 'goalMilestoneDeadlinePassed':
-      if (!milestone) return throwError(item)
-
-      return {
-        icon: 'alert-outline',
-        message: [
-          { text: `Milestone "${milestone.content}" passed its due date` }
-        ]
-      }
     case 'goalStakeholderBecameAchiever':
       if (!user) return throwError(item)
 

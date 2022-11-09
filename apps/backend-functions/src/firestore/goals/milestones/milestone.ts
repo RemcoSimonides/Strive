@@ -89,7 +89,6 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
 
   if (after.status === 'overdue') {
     addGoalEvent('goalMilestoneDeadlinePassed', source)
-    addStoryItem('goalMilestoneDeadlinePassed', source)
   }
 
   if (after.status === 'succeeded') {

@@ -9,7 +9,6 @@ export const storyEvents: EventType[] = [
   'goalIsFinished',
   'goalMilestoneCompletedSuccessfully',
   'goalMilestoneCompletedUnsuccessfully',
-  'goalMilestoneDeadlinePassed',
   'goalStakeholderBecameAchiever',
   'goalStakeholderBecameAdmin',
   'goalStoryPostCreated'
