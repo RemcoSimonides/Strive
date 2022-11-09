@@ -151,8 +151,6 @@ export class AuthModalComponent implements OnInit {
       this.oAuthLogin(credentials.user)
   
     } catch (error: any) {
-      captureException(error)
-
       let code = undefined
       if (error?.code) code = error.code
       if (error?.error) code = error.error
@@ -164,6 +162,7 @@ export class AuthModalComponent implements OnInit {
         case 'auth/popup-blocked':
           break
         default:
+          captureException(error)
           this.alertCtrl.create({
             message: error,
             buttons: [{ text: 'Ok', role: 'cancel' }]
@@ -185,8 +184,6 @@ export class AuthModalComponent implements OnInit {
       this.oAuthLogin(credentials.user)
 
     } catch (error: any) {
-      captureException(error)
-
       if (error == 'Error: The web operation was canceled by the user.') return
 
       switch (error.code) {
@@ -194,6 +191,7 @@ export class AuthModalComponent implements OnInit {
         case 'auth/popup-blocked':
           break
         default:
+          captureException(error)
           this.alertCtrl.create({
             message: error,
             buttons: [{ text: 'Ok', role: 'cancel' }]
@@ -245,7 +243,6 @@ export class AuthModalComponent implements OnInit {
         this.personal.registerFCM()
 
       } catch (error: any) {
-        captureException(error)
         let message: string;
         switch (error.code) {
           case 'auth/wrong-password':
@@ -257,6 +254,7 @@ export class AuthModalComponent implements OnInit {
             break
         
           default:
+            captureException(error)
             message = error.message
             break
         }
@@ -295,13 +293,13 @@ export class AuthModalComponent implements OnInit {
       this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
 
     } catch(error: any) {
-      captureException(error)
       let message: string;
       switch (error.code) {
         case 'auth/email-already-in-use':
           message = 'An account with this email already exists'
           break
         default:
+          captureException(error)
           message = error.message
           break
       }
@@ -339,6 +337,7 @@ export class AuthModalComponent implements OnInit {
         }).then(alert => alert.present())
 
       } catch (error: any) {
+        captureException(error)
         await loading.dismiss()
         this.alertCtrl.create({
           message: error.message,
