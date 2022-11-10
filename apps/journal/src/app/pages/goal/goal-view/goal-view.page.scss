@@ -5,13 +5,13 @@ section.ios-header {
 }
 
 ion-segment {
-  max-width: 800px;
+  max-width: var(--page-max-width);
   margin: auto;
 }
 
 journal-goal, journal-goal-story {
   display: block;
-  max-width: 800px;
+  max-width: var(--page-max-width);
   margin: auto;
 }
 

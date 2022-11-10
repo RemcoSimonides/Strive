@@ -17,7 +17,7 @@ import { PrivacyPolicyModule } from "./privacy-policy.module";
   styles: [
     `strive-privacy-policy {
       display: block;
-      max-width: 700px;
+      max-width: var(--page-max-width);
       margin: auto;
       padding: 0 16px;
     }`

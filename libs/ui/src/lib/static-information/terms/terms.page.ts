@@ -17,7 +17,7 @@ import { TermsModule } from "./terms.module";
   styles: [
     `strive-terms {
       display: block;
-      max-width: 700px;
+      max-width: var(--page-max-width);
       margin: auto;
       padding: 0 16px;
     }`

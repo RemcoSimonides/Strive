@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  background-color: var(--ion-color-light);
+  margin-top: 46px;
+}
+
+footer {
+  max-width: var(--page-max-width);
+  margin: auto;
+  padding: 16px;
+
+  article {
+    display: flex;
+    flex-direction: column;
+
+    a {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+  }
+}

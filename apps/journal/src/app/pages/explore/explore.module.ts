@@ -15,6 +15,8 @@ import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 
+import { FooterModule } from '@strive/ui/footer/footer.module'
+
 const routes: Routes = [
   {
     path: '',
@@ -35,7 +37,8 @@ const routes: Routes = [
     LargeThumbnailModule,
     RowsPipeModule,
     ImageModule,
-    HeaderRootModule
+    HeaderRootModule,
+    FooterModule
   ],
   declarations: [
     ExploreComponent

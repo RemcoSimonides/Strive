@@ -5,7 +5,7 @@ h4 {
 main {
   display: flex;
   flex-direction: column;
-  max-width: 700px;
+  max-width: var(--page-max-width);
   margin: auto;
 
   goal-mini-thumbnail-swiper {

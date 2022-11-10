@@ -1,5 +1,5 @@
 main {
-  max-width: 700px;
+  max-width: var(--page-max-width);
   margin: auto;
 
   section.needs-decision {
