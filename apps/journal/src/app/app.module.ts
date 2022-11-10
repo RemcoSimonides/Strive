@@ -67,7 +67,7 @@ Sentry.init(
   providers: [
     { provide: 'APP_NAME', useValue: 'journal' },
     { provide: FIREBASE_CONFIG, useValue: environment.firebase },
-    { provide: AUTH_DEPS, useValue: Capacitor.isNativePlatform() ? { persistance: indexedDBLocalPersistence } : undefined},
+    { provide: AUTH_DEPS, useValue: Capacitor.getPlatform() === 'ios' ? { persistance: indexedDBLocalPersistence } : undefined},
     { provide: ErrorHandler, useValue: SentryAngular.createErrorHandler() },
   ],
   bootstrap: [AppComponent],
