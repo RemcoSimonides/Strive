@@ -1,13 +1,12 @@
 {
+  "name": "post",
   "projectType": "library",
   "sourceRoot": "libs/post/src",
   "prefix": "strive",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/libs/post"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/libs/post"],
       "options": {
         "jestConfig": "libs/post/jest.config.ts",
         "passWithNoTests": true
@@ -16,10 +15,7 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": [
-          "libs/post/**/*.ts",
-          "libs/post/**/*.html"
-        ]
+        "lintFilePatterns": ["libs/post/**/*.ts", "libs/post/**/*.html"]
       }
     }
   },

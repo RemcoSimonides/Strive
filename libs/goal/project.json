@@ -1,13 +1,12 @@
 {
+  "name": "goal",
   "projectType": "library",
   "sourceRoot": "libs/goal/src",
   "prefix": "goal",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/libs/goal"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/libs/goal"],
       "options": {
         "jestConfig": "libs/goal/jest.config.ts",
         "passWithNoTests": true
@@ -16,10 +15,7 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": [
-          "libs/goal/**/*.ts",
-          "libs/goal/**/*.html"
-        ]
+        "lintFilePatterns": ["libs/goal/**/*.ts", "libs/goal/**/*.html"]
       }
     }
   },

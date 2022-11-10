@@ -1,13 +1,12 @@
 {
+  "name": "exercises",
   "projectType": "library",
   "sourceRoot": "libs/exercises/src",
   "prefix": "exercise",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/libs/exercises"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/libs/exercises"],
       "options": {
         "jestConfig": "libs/exercises/jest.config.ts",
         "passWithNoTests": true

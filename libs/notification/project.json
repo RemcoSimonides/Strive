@@ -1,13 +1,12 @@
 {
+  "name": "notification",
   "projectType": "library",
   "sourceRoot": "libs/notification/src",
   "prefix": "strive",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/libs/notification"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/libs/notification"],
       "options": {
         "jestConfig": "libs/notification/jest.config.ts",
         "passWithNoTests": true

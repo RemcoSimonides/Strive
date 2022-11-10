@@ -1,13 +1,12 @@
 {
+  "name": "journal",
   "projectType": "application",
   "sourceRoot": "apps/journal/src",
   "prefix": "journal",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/journal/browser",
         "index": "apps/journal/src/index.html",
@@ -93,17 +92,12 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": [
-          "apps/journal/**/*.ts",
-          "apps/journal/**/*.html"
-        ]
+        "lintFilePatterns": ["apps/journal/**/*.ts", "apps/journal/**/*.html"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/apps/journal"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/apps/journal"],
       "options": {
         "jestConfig": "apps/journal/jest.config.ts",
         "passWithNoTests": true
@@ -150,7 +144,7 @@
       "defaultConfiguration": "development"
     },
     "prerender": {
-      "builder": "@nguniversal/builders:prerender",
+      "executor": "@nguniversal/builders:prerender",
       "options": {
         "browserTarget": "journal:build:production",
         "serverTarget": "journal:server:production",
