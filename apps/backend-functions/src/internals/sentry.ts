@@ -3,19 +3,19 @@
  * It currently supports wrapping https, pubsub and firestore handlers.
  * usage: https.onRequest(wrap((req, res) => {...}))
  */
-import type {https} from 'firebase-functions';
-import type {onRequest, onCall} from 'firebase-functions/lib/providers/https';
-import type {ScheduleBuilder} from 'firebase-functions/lib/providers/pubsub';
-import type {DocumentBuilder} from 'firebase-functions/lib/providers/firestore';
+import type { https } from 'firebase-functions';
+import type { onRequest, onCall } from 'firebase-functions/lib/v1/providers/https';
+import type { ScheduleBuilder } from 'firebase-functions/lib/v1/providers/pubsub';
+import type { DocumentBuilder } from 'firebase-functions/lib/v1/providers/firestore';
 import { addRequestDataToEvent } from '@sentry/serverless';
  
 type httpsOnRequestHandler = Parameters<typeof onRequest>[0];
 type httpsOnCallHandler = Parameters<typeof onCall>[0];
 type pubsubOnRunHandler = Parameters<ScheduleBuilder['onRun']>[0];
-type firestoreOnWriteHandler = Parameters<DocumentBuilder['onWrite']>[0];
-type firestoreOnUpdateHandler = Parameters<DocumentBuilder['onUpdate']>[0];
-type firestoreOnCreateHandler = Parameters<DocumentBuilder['onCreate']>[0];
-type firestoreOnDeleteHandler = Parameters<DocumentBuilder['onDelete']>[0];
+type firestoreOnWriteHandler = Parameters<DocumentBuilder<''>['onWrite']>[0];
+type firestoreOnUpdateHandler = Parameters<DocumentBuilder<''>['onUpdate']>[0];
+type firestoreOnCreateHandler = Parameters<DocumentBuilder<''>['onCreate']>[0];
+type firestoreOnDeleteHandler = Parameters<DocumentBuilder<''>['onDelete']>[0];
 
 type FunctionType = 'http' | 'callable' | 'document' | 'schedule';
 
