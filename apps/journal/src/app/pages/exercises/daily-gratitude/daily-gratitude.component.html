@@ -18,7 +18,7 @@
 
         <section class="toggle">
           <article>
-            <ion-toggle [formControl]="form.get('on')" (ionChange)="toggle($event)"></ion-toggle>
+            <ion-toggle [formControl]="form.get('on')"></ion-toggle>
             <span (click)="openDatetime()"><b>{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</b></span>
           </article>
         </section>

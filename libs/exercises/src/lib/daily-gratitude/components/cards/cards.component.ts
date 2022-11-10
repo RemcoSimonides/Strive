@@ -37,8 +37,12 @@ export class CardsComponent implements OnDestroy {
   save$ = new BehaviorSubject<'save' | 'saving' | 'saved'>('save')
 
   cards$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.entryService.valueChanges([orderBy('createdAt', 'desc'), limit(500)] ,{ uid: profile.uid }) : of([])),
-    switchMap(cards => this.entryService.decrypt(cards)),
+    switchMap(profile => {
+      if (!profile) return of([])
+      return this.entryService.valueChanges([orderBy('createdAt', 'desc'), limit(500)], { uid: profile.uid }).pipe(
+        switchMap(cards => this.entryService.decrypt(cards))
+      )
+    }),
     map(cards => {
       const today = cards.find(card => card.id === this.today)
       if (today) {

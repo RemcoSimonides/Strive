@@ -50,11 +50,20 @@ export class DailyGratitudeComponent implements OnDestroy {
         setting.on = on
       }
 
-      this.form.patchValue(setting)
+      this.form.patchValue(setting, { emitEvent: false })
       this.isLoading = false
       this.cdr.markForCheck()
     })
   ).subscribe()
+
+  private toggleSub = this.form.get('on')?.valueChanges.subscribe(on => {
+    if (on) {
+      this.openDatetime()
+    } else {
+      if (!this.auth.uid) return
+      this.service.save(this.auth.uid, { on: false })
+    }
+  })
 
   uid$ = this.auth.uid$
 
@@ -71,17 +80,6 @@ export class DailyGratitudeComponent implements OnDestroy {
       title: 'Daily Gratitude - Strive Journal',
       description: 'Focus on the positive and take a minute to be grateful'
     })
-  }
-
-  toggle(event: any) {
-    if (!this.auth.uid) return
-    const on = event.detail.checked
-  
-    if (on) {
-      this.openDatetime()
-    } else {
-      this.service.save(this.auth.uid, { on: false })
-    }
   }
 
   async openDatetime() {
@@ -133,6 +131,7 @@ export class DailyGratitudeComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe()
+    this.toggleSub?.unsubscribe()
   }
 
   openAuthModal() {
