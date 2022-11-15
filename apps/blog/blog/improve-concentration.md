@@ -29,3 +29,6 @@ The water should be uncomfortable to the point that you want to get out, but you
 
 ## Meditation
 Set a timer for 13 minutes, sit or lie down and close your eyes, and focus on your breathing during these 13 minutes. Unless you are a very experienced meditator, your focus is going to drift away every 5, 10 or 20 seconds. Important is to refocus to your breathing the moment you realise you drift away. This drifting and refocusing is actually important part of training your concentration. If you wouldn't drift, then doing this meditation wouldn't be helpful for improving focus. Studies have found that doing this practice not only improves your focus, but improvements in mood, sleep, memory, and reduction in stress have also been shown.
+
+Source:
+[Focus Toolkit: Tools to Improve your Focus & Concentration by Dr. Andrew Huberman](https://hubermanlab.com/focus-toolkit-tools-to-improve-your-focus-and-concentration/)
