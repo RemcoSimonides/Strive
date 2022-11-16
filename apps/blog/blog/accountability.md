@@ -16,7 +16,7 @@ Most of your friends won't care enough to actually keep you accountable. If you 
 
 To make this accountability relationship work even better, you should share written progress reports with your accountability partner [^4]. Assessing the process over the outcome prevents you from having tunnel-vision towards the outcome, losing flexibility to think outside-the-box in situation where that might be beneficial.
 
-[^1] [Keep your goals to yourself](https://www.youtube.com/watch?v=NHopJHSlVo4)  
-[^2] [Effects of person versus process praise on student motivation: stability and change in emerging adulthood](https://www.reed.edu/psychology/motivation/assets/downloads/Haimovitz_Corpus_2011.pdf)  
-[^3] [When goals are known: The effects of audience relative status on goal commitment and performance.](https://psycnet.apa.org/record/2019-45131-001)  
+[^1] [Keep your goals to yourself](https://www.youtube.com/watch?v=NHopJHSlVo4)<br/>
+[^2] [Effects of person versus process praise on student motivation: stability and change in emerging adulthood](https://www.reed.edu/psychology/motivation/assets/downloads/Haimovitz_Corpus_2011.pdf)<br/>
+[^3] [When goals are known: The effects of audience relative status on goal commitment and performance.](https://psycnet.apa.org/record/2019-45131-001)<br/>
 [^4] [Does Sharing Goals Help or Hurt Your Chances of Success](https://www.dataquest.io/blog/does-sharing-goals-help-or-hurt-your-chances-of-success/)
