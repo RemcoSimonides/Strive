@@ -2,7 +2,7 @@ import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
-import { ModalController } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { PersonalService } from '@strive/user/personal/personal.service'
 import { isSafari } from '@strive/utils/helpers'
@@ -22,13 +22,17 @@ export class SettingsPageComponent {
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
   isWeb = Capacitor.getPlatform() === 'web'
 
+  showPlayStore = this.isWeb && !this.platform.platforms().includes('ios')
+  showAppStore = this.isWeb && !this.platform.platforms().includes('android')
+
   fcmActive = false
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private personalService: PersonalService,
     private location: Location,
     private modalCtrl: ModalController,
+    private personalService: PersonalService,
+    private platform: Platform,
     private pwa: PWAService,
     private router: Router
   ) {

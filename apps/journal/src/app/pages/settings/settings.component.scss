@@ -1,11 +1,23 @@
 ion-list {
-    border-radius: 0;
+	border-radius: 0;
 }
 
 .version {
-    display: flex;
-    justify-content: flex-end;
-    padding: 16px;
-    color: var(--ion-color-medium);
-    font-size: small;
+	display: flex;
+	justify-content: flex-end;
+	padding: 16px;
+	color: var(--ion-color-medium);
+	font-size: small;
+}
+
+article {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 16px;
+	padding: 16px;
+
+	img {
+		height: 30px;
+	}
 }

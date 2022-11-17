@@ -1,7 +1,7 @@
 <strive-header title="Settings" color="primary" defaultHref="/profile"></strive-header>
 <ion-content>
   <ion-list mode="md">
-    <ion-item *ngIf="showInstallPromotion$ | async; else safari" (click)="installPWA()" lines="none" button>
+    <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>
       <ion-label>Install App</ion-label>
     </ion-item>
     <ion-list-header>Account</ion-list-header>
@@ -48,11 +48,21 @@
     </ion-item>
 
   </ion-list>
-  <span class="version">Version 1.0.12</span>
-</ion-content>
 
-<ng-template #safari>
-  <ng-container *ngIf="isSafari">
-    <ion-item button (click)="goTo('/download')">Add to Home Screen</ion-item>
-  </ng-container>
-</ng-template>
+  <span class="version">Version 1.0.13</span>
+
+  <article class="download">
+    <ng-container *ngIf="showPlayStore">
+      <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
+        <img class="download" asset="google_play.png"/>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="showAppStore">
+      <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
+        <img class="download" asset="app_store.png"/>
+      </a>
+    </ng-container>
+  </article>
+
+</ion-content>

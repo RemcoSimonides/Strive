@@ -5,14 +5,17 @@ import { IonicModule } from '@ionic/angular'
 
 import { MenuComponent } from './menu.component'
 
+import { ImageModule } from '@strive/media/directives/image.module'
+
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        IonicModule
-    ],
-    declarations: [
-        MenuComponent
-    ]
+	imports: [
+		CommonModule,
+		RouterModule,
+		IonicModule,
+		ImageModule
+	],
+	declarations: [
+		MenuComponent
+	]
 })
 export class MenuModule {}

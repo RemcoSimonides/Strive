@@ -26,7 +26,7 @@
 			<ion-label>Explore</ion-label>
 		</ion-item>
 
-		<ion-item button *ngIf="isInstallable$ | async; else safari" (click)="install()">
+		<ion-item button *ngIf="isInstallable$ | async;" (click)="install()">
 			<ion-label>Install app</ion-label>
 		</ion-item>
 
@@ -48,10 +48,19 @@
 			<ion-label>Terms</ion-label>
 		</ion-item>
 	</ion-list>
-</ion-content>
 
-<ng-template #safari>
-	<ng-container *ngIf="isSafari">
-		<ion-item button (click)="goTo('/download')">Add to Home Screen</ion-item>
-	</ng-container>
-</ng-template>
+  <article class="download">
+    <ng-container *ngIf="showPlayStore">
+      <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
+        <img class="download" asset="google_play.png"/>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="showAppStore">
+      <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
+        <img class="download" asset="app_store.png"/>
+      </a>
+    </ng-container>
+  </article>
+
+</ion-content>

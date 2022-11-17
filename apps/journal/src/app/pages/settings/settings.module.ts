@@ -8,6 +8,7 @@ import { SettingsPageComponent } from './settings.component'
 
 import { AuthGuardService } from '@strive/user/auth/guard/auth-guard.service'
 import { HeaderModule } from '@strive/ui/header/header.module'
+import { ImageModule } from '@strive/media/directives/image.module'
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
     IonicModule,
     FormsModule,
     RouterModule.forChild(routes),
-    HeaderModule
+    HeaderModule,
+    ImageModule
   ],
   declarations: [SettingsPageComponent]
 })
