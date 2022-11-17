@@ -1,5 +1,18 @@
 <ion-content class="ion-no-padding">
   <section class="fade">
+    <article class="download">
+      <ng-container *ngIf="showPlayStore">
+        <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
+          <img class="download" asset="google_play.png"/>
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="showAppStore">
+        <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
+          <img class="download" asset="app_store.png"/>
+        </a>
+      </ng-container>
+    </article>
     <h1>Stay focused on your goals and help others achieve theirs</h1>
   </section>
 

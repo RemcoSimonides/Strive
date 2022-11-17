@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { Capacitor } from '@capacitor/core'
+import { ModalController, Platform } from '@ionic/angular'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
@@ -18,9 +19,13 @@ export class HomeComponent {
 
   aggregation$ = this.aggregationService.valueChanges()
 
+  showPlayStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('ios')
+  showAppStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('android')
+
   constructor (
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
+    private platform: Platform,
     seo: SeoService,
     @Inject(PLATFORM_ID) platformId: any
   ) {

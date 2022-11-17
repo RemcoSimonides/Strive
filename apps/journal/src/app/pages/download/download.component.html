@@ -6,40 +6,26 @@
     <section class="main">
       <img class="theo" asset="theo-phone-sitting-square.svg"/>
 
-      <ng-container *ngIf="showInstallPromotion$ | async; else noPWA">
-        <h1>Download Strive Journal</h1>
+      <ng-container *ngIf="showInstallPromotion$ | async;">
+        <h1>Install Strive Journal</h1>
         <ion-button color="primary" (click)="install()">
-          <span>DOWNLOAD</span>
+          <span>INSTALL</span>
         </ion-button>
+        <hr/>
       </ng-container>
-      
-      <ng-template #noPWA>
-        <ng-container *ngIf="isSafari; else noOption">
-          <article>
-            <h1>Add Strive Journal to your Home Screen</h1>
-            <p>It is not possible to install the app on iOS but you can get a real app experience by adding Strive Journal to your home page using Safari.</p>
-          </article>
+
+
+      <h5>Journal on your phone or tablet</h5>
+      <article>
+        <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
+          <img class="download" asset="google_play.png"/>
+        </a>
   
-          <img class="gif" src="assets/gifs/add_to_homescreen.gif"/>
-        </ng-container>
-      </ng-template>
+        <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
+          <img class="download" asset="app_store.png"/>
+        </a>
+      </article>
 
     </section>
   </main>
-
-  <section>
-    <h3>Why is the app not in the play or app store?</h3>
-    <p>Main reasons being that it costs time and thus money. It is more difficult to release new versions if the app is in those stores too. There would be more code to maintain and new releases would have to be approved by Apple. Also, the users have to update their app regularly. With an installable website like this, it updates automatically for the user while also feeling like a real app.</p>
-  </section>
 </ion-content>
-
-<ng-template #noOption>
-  <article>
-    <h3>Sorry, it is not possible to download Strive Journal on this device.</h3>
-    <p>Try using one of the following:</p>
-    <ul>
-      <li>Chrome, Brave or Firefox browser on Windows or Android</li>
-      <li>Safari browser on iOS</li>
-    </ul>
-  </article>
-</ng-template>

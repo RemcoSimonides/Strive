@@ -31,6 +31,16 @@
 }
 /** END ANIMATION */
 
+.download {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+
+  img {
+    height: 30px;
+  }
+}
+
 .demo {
   margin: auto;
   border-radius: 12px;
