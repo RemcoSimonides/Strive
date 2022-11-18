@@ -1,6 +1,6 @@
 ---
 slug: getting-started
-title: Getting Started on Long Term Goals
+title: Getting Started with Long Term Goals
 authors: remco
 tags: [journal]
 ---
