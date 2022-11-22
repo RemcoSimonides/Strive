@@ -33,7 +33,7 @@ export class WheelOfLifeComponent implements OnDestroy {
     switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
   )
-  hasEntries$ = firstValueFrom(this.entries$).then(entries => entries.length)
+  hasEntries$ = firstValueFrom(this.entries$).then(entries => !!entries.length)
 
   finishedLoading$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.wheelOfLifeSettingsService.getSettings(profile.uid) : of(undefined)),
