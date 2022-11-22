@@ -42,7 +42,10 @@ export class GoalsComponent implements OnDestroy {
 
   uid$ = this.auth.uid$
 
-  sub = this.route.queryParams.subscribe(params => {
+  sub = this.route.queryParams.subscribe(async params => {
+    const uid = await this.auth.getUID()
+    if (!uid) return
+
     const { t, affirm, dfs } = params
     if (t === 'daily-gratitude') {
       this.modalCtrl.create({
