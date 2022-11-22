@@ -4,6 +4,7 @@ import { ChartConfiguration } from 'chart.js'
 import { BaseChartDirective } from 'ng2-charts'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
+const secondaryRGBA = 'rgba(0,179,163)'
 
 @Component({
   selector: 'exercise-wheel-of-life-results',
@@ -26,7 +27,9 @@ export class WheelOfLifeResultsComponent {
   chartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
     plugins: {
-      legend: { display: false },
+      legend: {
+        position: 'bottom'
+      },
       tooltip: { enabled: false }
     },
     scales: {
@@ -70,15 +73,28 @@ export class WheelOfLifeResultsComponent {
     const data = this._entries.map(entry => {
       return { x: entry.createdAt.getTime(), y: entry[this._aspectConfig.id] }
     })
-
-    this.chartDatasets.push({
-      data,
-      label: this._aspectConfig.title,
-      backgroundColor: primaryRGBA,
-      borderColor: primaryRGBA,
-      pointBorderColor: 'white',
-      pointBackgroundColor: 'white'
+    const wishData = this._entries.map(entry => {
+      return { x: entry.createdAt.getTime(), y: entry[`desired_${this._aspectConfig.id}`]}
     })
+
+    this.chartDatasets.push(
+      {
+        data,
+        label: 'How you felt',
+        backgroundColor: primaryRGBA,
+        borderColor: primaryRGBA,
+        pointBorderColor: 'white',
+        pointBackgroundColor: 'white'
+      },
+      {
+        data: wishData,
+        label: `How you wanted to feel`,
+        backgroundColor: secondaryRGBA,
+        borderColor: secondaryRGBA,
+        pointBorderColor: 'gray',
+        pointBackgroundColor: 'gray'
+      }
+    )
     this.chart?.update()
   }
 }

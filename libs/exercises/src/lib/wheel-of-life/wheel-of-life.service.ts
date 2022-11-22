@@ -87,7 +87,17 @@ export class WheelOfLifeEntryService extends FireSubCollection<WheelOfLifeEntry<
         health: +AES.decrypt(`${entry['health']}`, key).toString(enc.Utf8),
         love: +AES.decrypt(`${entry['love']}`, key).toString(enc.Utf8),
         money: +AES.decrypt(`${entry['money']}`, key).toString(enc.Utf8),
-        spirituality: +AES.decrypt(`${entry['spirituality']}`, key).toString(enc.Utf8)
+        spirituality: +AES.decrypt(`${entry['spirituality']}`, key).toString(enc.Utf8),
+        desired_career: +AES.decrypt(`${entry['desired_career']}`, key).toString(enc.Utf8),
+        desired_development: +AES.decrypt(`${entry['desired_development']}`, key).toString(enc.Utf8),
+        desired_environment: +AES.decrypt(`${entry['desired_environment']}`, key).toString(enc.Utf8),
+        desired_family: +AES.decrypt(`${entry['desired_family']}`, key).toString(enc.Utf8),
+        desired_friends: +AES.decrypt(`${entry['desired_friends']}`, key).toString(enc.Utf8),
+        desired_fun: +AES.decrypt(`${entry['desired_fun']}`, key).toString(enc.Utf8),
+        desired_health: +AES.decrypt(`${entry['desired_health']}`, key).toString(enc.Utf8),
+        desired_love: +AES.decrypt(`${entry['desired_love']}`, key).toString(enc.Utf8),
+        desired_money: +AES.decrypt(`${entry['desired_money']}`, key).toString(enc.Utf8),
+        desired_spirituality: +AES.decrypt(`${entry['desired_spirituality']}`, key).toString(enc.Utf8)
       }
 
       return result

@@ -38,6 +38,16 @@ export interface WheelOfLifeEntry<T extends number | string>{
   love: T
   money: T
   spirituality: T
+  desired_career: T
+  desired_development: T
+  desired_environment: T
+  desired_family: T
+  desired_friends: T
+  desired_fun: T
+  desired_health: T
+  desired_love: T
+  desired_money: T
+  desired_spirituality: T
   createdAt: Date
   updatedAt: Date
 }

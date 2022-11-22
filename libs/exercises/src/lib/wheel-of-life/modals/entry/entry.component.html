@@ -2,7 +2,7 @@
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="entries$ | async as entries">
-    <exercise-wheel-of-life-entry [entry]="entries | today"></exercise-wheel-of-life-entry>    
+    <exercise-wheel-of-life-entry [entry]="entries | today" [previousEntry]="previousEntry" (closeNavTo)="createGoal()"></exercise-wheel-of-life-entry>    
  
     <ng-container *ngIf="showResults && entries.length">
       <h2>All time results</h2>

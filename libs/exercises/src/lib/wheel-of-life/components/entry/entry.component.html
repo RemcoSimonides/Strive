@@ -1,37 +1,48 @@
-<form [formGroup]="form">
-	<section *ngFor="let aspect of aspectConfigs" class="aspects">
-		<h3>{{ aspect.title }}</h3>
-		<small>{{ aspect.subtitle }}</small>
+<ng-container *ngIf="showForm else results">
+	<form [formGroup]="form" class="aspects">
+		<section *ngFor="let aspect of aspectConfigs">
+			<h3>{{ aspect.title }}</h3>
+			<small>{{ aspect.subtitle }}</small>
 
-		<article>
-			<span>😭</span>
-			<ion-range [formControlName]="aspect.id"></ion-range>
-			<span>😁</span>
-		</article>
-	</section>
+			<article>
+				<small>How do you feel</small>
+				<div>
+					<span>😭</span>
+					<ion-range [formControlName]="aspect.id" color="primary"></ion-range>
+					<span>😁</span>
+				</div>
 
-	<ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear">
-		<ng-container *ngIf="save$ | async as status">
+				<small class="wished">How would you like to feel</small>
+				<div>
+					<span>😭</span>
+					<ion-range [formControl]="desiredForm.get('desired_' + aspect.id)" color="secondary"></ion-range>
+					<span>😁</span>
+				</div>
+			</article>
+		</section>
 
-			<ng-container *ngIf="status === 'saved'">
-				<span>SAVED</span>
-				<ion-icon name="checkmark" slot="end"></ion-icon>
+		<ion-button (click)="save()" [disabled]="form.pristine && desiredForm.pristine" class="primary">
+			<ng-container *ngIf="save$ | async as status">
+
+				<ng-container *ngIf="status === 'saved'">
+					<span>SAVED</span>
+					<ion-icon name="checkmark" slot="end"></ion-icon>
+				</ng-container>
+
+				<ng-container *ngIf="status === 'saving'">
+					<span>Encrypting...</span>
+				</ng-container>
+
+				<ng-container *ngIf="status === 'save'">
+					<span>SAVE</span>
+				</ng-container>
 			</ng-container>
+		</ion-button>
+	</form>
+</ng-container>
 
-			<ng-container *ngIf="status === 'saving'">
-				<span>Encrypting...</span>
-			</ng-container>
-
-			<ng-container *ngIf="status === 'save'">
-				<span>SAVE</span>
-			</ng-container>
-		</ng-container>
-	</ion-button>
-</form>
-
-<section class="results">
-	<h2>Result</h2>
-	<article>
+<ng-template #results>
+	<article class="graph">
 		<canvas baseChart
 			[datasets]="radarChartDatasets"
 			[options]="radarChartOptions"
@@ -40,4 +51,20 @@
 		</canvas>
 	</article>
 
-</section>
+	<ng-container *ngIf="top3 | async as top">
+		<ng-container *ngIf="top.length">
+			<article>
+				<p>{{ top.length === 1 ? 'This area in your life requires' : 'These areas in your life require'}} most improvement</p>
+				<ol>
+					<li *ngFor="let aspect of top">{{ aspect.title }}</li>
+				</ol>	
+		
+				<ion-button class="primary" (click)="createGoal()">
+					<span>Creat Goal</span>
+					<ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+				</ion-button>
+			</article>
+		</ng-container>
+
+	</ng-container>
+</ng-template>

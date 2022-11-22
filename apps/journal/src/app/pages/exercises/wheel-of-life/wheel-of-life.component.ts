@@ -1,18 +1,21 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { FormControl } from '@angular/forms'
+import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 
 import { orderBy } from 'firebase/firestore'
-import { map, of, switchMap } from 'rxjs'
+import { firstValueFrom, map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { Interval } from '@strive/model'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { WheelOfLifeEntryService, WheelOfLifeService } from '@strive/exercises/wheel-of-life/wheel-of-life.service'
+import { getPreviousEntry } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
 
 
 @Component({
@@ -30,6 +33,7 @@ export class WheelOfLifeComponent implements OnDestroy {
     switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
   )
+  hasEntries$ = firstValueFrom(this.entries$).then(entries => entries.length)
 
   finishedLoading$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.wheelOfLifeSettingsService.getSettings(profile.uid) : of(undefined)),
@@ -50,6 +54,7 @@ export class WheelOfLifeComponent implements OnDestroy {
   constructor(
     private auth: AuthService,
     private modalCtrl: ModalController,
+    private router: Router,
     private screensize: ScreensizeService,
     private seo: SeoService,
     private wheelOfLifeSettingsService: WheelOfLifeService,
@@ -65,9 +70,13 @@ export class WheelOfLifeComponent implements OnDestroy {
     this.sub.unsubscribe()
   }
 
-  addEntry() {
+  async addEntry() {
+    const entries = await firstValueFrom(this.entries$)
+    const previousEntry = getPreviousEntry(entries)
+
     this.modalCtrl.create({
-      component: EntryModalComponent
+      component: EntryModalComponent,
+      componentProps: { previousEntry }
     }).then(modal => modal.present())
   }
 
@@ -78,5 +87,16 @@ export class WheelOfLifeComponent implements OnDestroy {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
+  }
+
+  async createGoal() {
+    const modal = await this.modalCtrl.create({
+      component: UpsertGoalModalComponent
+    })    
+    modal.onDidDismiss().then((data) => {
+      const navToGoal = data.data?.['navToGoal']
+      if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+    })
+    modal.present()
   }
 }

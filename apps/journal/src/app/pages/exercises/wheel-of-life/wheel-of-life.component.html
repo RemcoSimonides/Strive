@@ -26,20 +26,20 @@
     
         <ng-container *ngIf="entries$ | async as entries">
     
-          <ng-container *ngIf="entries.length else noEntries">
-            <ion-button fill="clear" (click)="addEntry()">
+          <ng-container *ngIf="hasEntries$ | async">
+            <ion-button class="primary" (click)="addEntry()">
               <ion-icon name="add" slot="start"></ion-icon>
               <span>Add new entry</span>
             </ion-button>
           </ng-container>
     
-          <ng-template #noEntries>
+          <ng-container *ngIf="(hasEntries$ | async) === false">
             <ion-card>
               <ion-card-content>
-                <exercise-wheel-of-life-entry [entry]="entries | today"></exercise-wheel-of-life-entry>
+                <exercise-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"></exercise-wheel-of-life-entry>
               </ion-card-content>
             </ion-card>
-          </ng-template>
+          </ng-container>
     
           <ng-container *ngIf="entries.length">
             <exercise-wheel-of-life-results [entries]="entries"></exercise-wheel-of-life-results>

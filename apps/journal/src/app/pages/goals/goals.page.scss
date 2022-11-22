@@ -12,10 +12,6 @@ main {
     margin-bottom: 16px;
   }
 
-  .cards-header {
-    width: fit-content;
-  }
-
   .cards {
     display: flex;
     flex-direction: column;
@@ -31,6 +27,38 @@ main {
         gap: 4px;
         align-items: center;
         white-space: nowrap;
+      }
+    }
+  }
+
+  .no_goals {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    
+    span.subtitle {
+      text-align: center;
+      color: var(--ion-color-medium);
+    }
+  }
+
+  .wheel_of_life {
+    display: flex;
+    width: fit-content;
+    margin-top: 128px;
+    align-self: center;
+
+    ion-item {
+      --padding-start: 0;
+
+      ion-thumbnail {
+        position: relative;
+        border-radius: 12px;
+      
+        img {
+          border-radius: 12px;
+          object-fit: cover;
+        }
       }
     }
   }
