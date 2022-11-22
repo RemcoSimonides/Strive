@@ -1,3 +1,15 @@
+<ng-container *ngIf="showIOSHeader$ | async">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="dismiss()" fill="clear" size="small">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>  
+</ng-container>
+
 <h1>Welcome to Strive Journal</h1>
 <swiper #swiper>
   <ng-container *ngIf="showStep1$ | async">

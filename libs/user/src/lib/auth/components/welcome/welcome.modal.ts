@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
+import { Capacitor } from '@capacitor/core'
+
 import { SwiperComponent } from 'swiper/angular'
+import { combineLatest, map, of } from 'rxjs'
 
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { PersonalService } from '../../../personal/personal.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 
 @Component({
@@ -17,13 +21,21 @@ import { PersonalService } from '../../../personal/personal.service'
 export class WelcomeModalComponent {
   @ViewChild('swiper') swiper?: SwiperComponent;
 
+  showIOSHeader$ = combineLatest([
+    this.screensize.isMobile$,
+    of(Capacitor.getPlatform() === 'ios')
+  ]).pipe(
+    map(([ isMobile, isIOS ]) => isMobile && isIOS)
+  )
+
   showStep1$ = this.personalService.fcmIsSupported;
   showStep2 = false;
 
   constructor(
     private modalCtrl: ModalController,
     private personalService: PersonalService,
-    private router: Router
+    private router: Router,
+    private screensize: ScreensizeService
   ) {
     const pages = ['/goal/', '/profile', '/exercise']
     this.showStep2 = !pages.some(value => this.router.url.includes(value))
