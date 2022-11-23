@@ -8,14 +8,14 @@
 				<small>How do you feel</small>
 				<div>
 					<span>😭</span>
-					<ion-range [formControlName]="aspect.id" color="primary"></ion-range>
+					<ion-range mode="md" [formControlName]="aspect.id" color="primary"></ion-range>
 					<span>😁</span>
 				</div>
 
 				<small class="wished">How would you like to feel</small>
 				<div>
 					<span>😭</span>
-					<ion-range [formControl]="desiredForm.get('desired_' + aspect.id)" color="secondary"></ion-range>
+					<ion-range mode="md" [formControl]="desiredForm.get('desired_' + aspect.id)" color="secondary"></ion-range>
 					<span>😁</span>
 				</div>
 			</article>
