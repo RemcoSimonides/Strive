@@ -16,6 +16,8 @@ Obtaining good habits and fighting of bad habits is an uphill battle. Humans wan
 
 So we need to use our frontal cortex, the part of the brain that can override impulsive behavior, and build good habits instead. This blog describes some practical tips what you can do, to improve your control over your habits which then also increases your chance of reaching your long term goals.
 
+<!--truncate-->
+
 ## Creating new habits
 Learning a new habit takes time. Or better yet, it takes repetitions. How many repetitions it will take can vary a lot. A study where people were learning the habit to go for a walk after dinner, took people 18 to 254 days. It is also hard to measure if a new habit really has become a habit. The goal is that the new behavior costs very little friction to execute it. Now let’s get into how we can reduce this friction the most and increase our chances of forming the habit.
 

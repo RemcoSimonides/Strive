@@ -8,6 +8,8 @@ tags: [journal]
 # Stay Focused on Long Term Goals
 Once you’ve started your journey towards your goal, it is key to stay focused. While in the first week you’re still excited about your goal, this feeling gets less and less. While this feeling starts to lessen, other goals start to become more appealing… Yet if we keep to change goals, then we will never actually finish one. There are ways to combat the loss of excitement and to continue the pursuit.
 
+<!--truncate-->
+
 ## Aim Low
 Nothing defeats motivation faster than failure. When starting your goal, you’re fully motivated and willing to dedicate lots of time. However, after a short period of time you start to realize this isn’t sustainable. Therefore you should set low standards for yourself. Instead of running 10km every day, start with putting on your running shoes every day. It’s easy to overshoot this and you should, but at least you don’t have the feeling of failure if you ‘only ran 9km’. The momentum you gain with all the small wins will keep you going for longer.
 

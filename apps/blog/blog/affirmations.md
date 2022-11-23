@@ -1,12 +1,15 @@
 ---
 slug: affirmations
 title: Affirmations
+description: This is the description
 authors: remco
 tags: [journal]
+image: https://i.imgur.com/mErPwqL.png
 ---
 
-## What is an affirmation?
 Affirmations are short powerful statements, which allow you to consciously control your own thoughts. When you say them aloud, or think of them consciously, they can become the thoughts that shape your reality. ‘To affirm’, is to declare or proclaim something (positive). Therefore, an affirmation is firmly declaring a positive thought and assertively stating it as the truth.
+
+<!--truncate-->
 
 ## Why should I use them
 When you make affirmations part of your daily life, you can help your mind prioritize positive or self empowering thoughts over negative thoughts. Engraving these affirmations in your mindset enables you to make a decision in certain situations which you wouldn't have done without the practice of these affirmations.

@@ -5,8 +5,10 @@ authors: remco
 tags: [journal]
 ---
 
-# The importance of Prioritizing
+# The Importance of Prioritizing
 If we have particular goals that are important to us, we have to be careful to not get distracted by other goals. We shouldn't get distracted by other goals. Therefore we need to set priorities so we can work on the goals that are important to us, and not get distracted by the ones that aren't.
+
+<!--truncate-->
 
 ## How to Set Priorities?
 First make a list with twenty-five things you want to accomplish in the next few years.

@@ -10,6 +10,8 @@ Accountability in the context of achieving goals, as that is what this website i
 
 Imagine the following situation; you want to loose weight but your partner is usually buys and prepares the food. Without telling your partner, you decreased your chances of success significantly. In this situation it might be beneficial to tell your partner, however it is not always beneficial to tell someone else.
 
+<!--truncate-->
+
 When you announce your goal to somebody and they affirm it, you feel good [^1]. It makes you feel like you've taken a step towards achieving that goal, even though you haven't done anything yet that gets you closer to your goal. It gives a fake sense of accomplishment which decreases your chances of actually making it happen. Ideally you shouldn't be satisfied until you've actually done the work.
 
 Most of your friends won't care enough to actually keep you accountable. If you do find the right people that can hold you accountable properly, like a coach, then it can increase your chance of succeeding. Find someone that praises the progress you make instead of someone that praise you because of who you are [^2]. Studies have also shown that it is more likely to achieve your goal if you share it with a person you look up to, simply because you care what this person thinks of you [^3].

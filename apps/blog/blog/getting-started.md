@@ -8,6 +8,8 @@ tags: [journal]
 # Getting Started on Long Term Goals
 You know you want it, but getting started is not that easy… The further away the reward is, the less motivation we feel. Nevertheless, there are ways to trick your mind and experience more motivation and drive to start your journey towards that goal.
 
+<!--truncate-->
+
 ## Write down your Goal
 
 Writing down your goal is the first step towards creating a commitment for yourself. It also helps you to clarify what you want to achieve and how you are going to achieve it. Make sure you write down your goal in a clear, measurable and actionable way.

@@ -8,6 +8,8 @@ tags: [journal]
 # Improve Concentration
 The average human attention span is getting shorter. In 2000 the average human had an attention span of around 12 seconds and in 2015 this was 8.25 seconds. Hope is not lost because the ability to concentrate is one that can be practices and improved.
 
+<!--truncate-->
+
 ## Sleep
 A good night sleep is essential for being able to concentrate. Sleep has been shown to improve cognitive performance, physical performance, hormone output, and many other things including immune system function. There is simply no tool to overcome sleep deprivation and remain concentrated. So if during more than 20% of your nights your sleep quality isn't good, then start with improving your sleep. Nobody's sleep is perfect but during 80% of your nights you should get high quality sleep.
 

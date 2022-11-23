@@ -8,6 +8,8 @@ tags: [journal]
 # The Neuroscience of Setting & Achieving Goals
 Andrew Huberman is a professor of Neurobiology and Ophthalmology at the Stanford School of Medicine and he also has an interesting podcast show called the Huberman Lab podcast. In his episode "The Science of Setting & Achieving Goals" he describes setting goals, assessing progress and the execution towards this goal in the context of neuroscience. In this blog post I provide some key take aways from this episode. If this is interesting to you, I encourage you to listen to the whole episode.
 
+<!--truncate-->
+
 ## Learning
 In order to reach your goal, you have to learn new skills or habits. Learning is the creation or reorganization of connections in the nervous system (the brain, spinal cord and the body). One of the key principles for your nervous system to create or reorganize connections, is to make errors. Making errors feel frustrating, but that state of frustration actually increases your focus on your next attempts and therefore gives a higher probability of learning a new skill. However, you shouldn't make too many errors either because that defeats all the fun. As a guideline for optimal learning the 85% rule can be used. This rule suggests to do things right 85% of the time, and make errors about 15% of the time.
 

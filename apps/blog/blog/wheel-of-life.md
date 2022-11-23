@@ -8,6 +8,8 @@ tags: [journal]
 ## What is the Wheel of Life?
 With the Wheel of Life you rate several areas in your life based on how you feel about them. It will visualize which area in your life is lacking and which is prospering. In order to create balance in your life, it is important that all areas are in balance. Once everything is in balance, the graph will look like a wheel.
 
+<!--truncate-->
+
 We all have the tendencie to focus on areas in life which we are more proficient in and neglect the ones we are less proficient in. For example you are good at your work and earn a lot of money, but your family at home therefore doesn't get enough attention.
 
 ## Clear your mind
