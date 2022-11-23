@@ -40,7 +40,6 @@ const config = {
         blog: {
           showReadingTime: true,
           editUrl: 'https://github.com/remcosimonides/strive/apps/blog/src',
-          blogTitle: 'Strive Journal Blog',
           blogDescription: 'Everything you need to know to increase your chance of achieving your long-term goals',
         },
         theme: {
