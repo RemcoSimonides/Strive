@@ -8,6 +8,7 @@ Get insight in which areas in your life needs more attention and track results o
 
 ## How it works
 import HowToWheelOfLife from '../../partials/how-to/_wheel-of-life.md';
+
 <HowToWheelOfLife/>
 
 ## Privacy
