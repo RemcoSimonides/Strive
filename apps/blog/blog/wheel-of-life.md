@@ -10,7 +10,7 @@ With the Wheel of Life you rate several areas in your life based on how you feel
 
 <!--truncate-->
 
-We all have the tendencie to focus on areas in life which we are more proficient in and neglect the ones we are less proficient in. For example you are good at your work and earn a lot of money, but your family at home therefore doesn't get enough attention.
+We all have the tendency to focus on areas in life which we are more proficient in and neglect the ones we are less proficient in. For example you are good at your work and earn a lot of money, but your family at home therefore doesn't get enough attention.
 
 ## Clear your mind
 In order to fill in the Wheel of Life, your mind should be clear. If you are going through a tough time, it is better not to fill in the Wheel of Life because it is likely that you are biased towards some areas in life. Also, it is important not to answer based on what you "should" answer but really what you feel.
