@@ -1,30 +1,30 @@
-import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
-import { isValidHttpUrl } from '@strive/utils/helpers';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers';
+import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core'
+import { isValidHttpUrl } from '@strive/utils/helpers'
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs'
+import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers'
 
 function getAssetPath(asset: string) {
-  return `assets/images/${asset}`;
+  return `assets/images/${asset}`
 }
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
 })
 export class ImageDirective implements OnInit, OnDestroy {
-  private sub?: Subscription;
+  private sub?: Subscription
 
   private parameters = new BehaviorSubject<ImageParameters>({
     auto: 'compress,format',
     fit: 'crop',
-  });
+  })
 
-  private asset$ = new BehaviorSubject('');
-  private ref$ = new BehaviorSubject<string | undefined>(undefined);
+  private asset$ = new BehaviorSubject('')
+  private ref$ = new BehaviorSubject<string | undefined>(undefined)
 
-  @HostBinding('srcset') srcset?: string;
-  @HostBinding('src') src?: string;
-  @HostBinding('alt') alt?: string;
-  @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
+  @HostBinding('srcset') srcset = ''
+  @HostBinding('src') src = ''
+  @HostBinding('alt') alt = ''
+  @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy'
 
   // -----------------------------------
   //           MEDIA IMAGE INPUT
@@ -32,11 +32,11 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   /** the image to display */
   @Input() set ref(file: string | undefined) {
-    this.ref$.next(file);
+    this.ref$.next(file)
   }
 
   @Input() set loading(strategy: 'lazy' | 'eager') {
-    this._loading = strategy;
+    this._loading = strategy
   }
 
   // -----------------------------------
@@ -44,7 +44,7 @@ export class ImageDirective implements OnInit, OnDestroy {
   // -----------------------------------
 
   @Input() set ratio(ar: string) {
-    this.parameters.next({ ...this.parameters.getValue(), ar });
+    this.parameters.next({ ...this.parameters.getValue(), ar })
   }
 
   @Input() set height(h: number) {
@@ -62,7 +62,7 @@ export class ImageDirective implements OnInit, OnDestroy {
    * @example asset="empty_poster.webp"
    */
   @Input() set asset(asset: string) {
-    this.asset$.next(asset);
+    this.asset$.next(asset)
   }
 
   constructor(
@@ -71,8 +71,8 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   @HostListener('error')
   error() {
-    const asset = this.asset$.getValue();
-    this.srcset = getAssetPath(asset);
+    const asset = this.asset$.getValue()
+    this.srcset = getAssetPath(asset)
     this.src = this.srcset
   }
 
@@ -91,14 +91,14 @@ export class ImageDirective implements OnInit, OnDestroy {
         }
       } else {
         // asset
-        this.srcset = getAssetPath(asset);
-        this.src = this.srcset;
+        this.srcset = getAssetPath(asset)
+        this.src = this.srcset
       }
       this.cdr.markForCheck()
-    });
+    })
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.sub?.unsubscribe()
   }
 }
