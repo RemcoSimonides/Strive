@@ -7,7 +7,7 @@ import { getStorage, ref, deleteObject } from '@firebase/storage'
 
 import { captureException } from '@sentry/capacitor'
 
-import { filter } from 'rxjs/operators'
+import { debounceTime, filter } from 'rxjs/operators'
 import { addYears } from 'date-fns'
 
 import { PostService } from '@strive/post/post.service'
@@ -44,12 +44,13 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   }
 
   private sub = this.postForm.url.valueChanges.pipe(
+    debounceTime(1000),
     filter(url => url ? isValidHttpUrl(url) : false)
   ).subscribe(async url => {
     const formValue = this.postForm.getRawValue()
     if (formValue.title && formValue.description && formValue.mediaURL) return
 
-    this.scrapingUrl = true;
+    this.scrapingUrl = true
     this.cdr.markForCheck()
 
     const scrape = httpsCallable(getFunctions(), 'scrapeMetatags')
@@ -59,7 +60,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       console.error(result)
       captureException(result)
     } else {
-      const { image, title, description } = result.meta;
+      const { image, title, description } = result;
       if (!formValue.title) this.postForm.title.setValue(title ?? '')
       if (!formValue.description) this.postForm.description.setValue(description ?? '')
       if (!formValue.mediaURL) this.postForm.mediaURL.setValue(image ?? '')

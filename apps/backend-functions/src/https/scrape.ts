@@ -27,9 +27,20 @@ async (data: { url: string }): Promise<ErrorResultResponse> => {
     }
   }
 
-  const result = await response.json() 
+  const json   = await response.json()
+  const { result, meta } = json
+  const { status } = result
+
+  if (status !== 'OK') {
+    logger.error(json)
+    return {
+      error: `${status}`,
+      result: json
+    }
+  }
+
   return {
     error: '',
-    result
+    result: meta
   }
 }))
