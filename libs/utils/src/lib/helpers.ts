@@ -42,7 +42,6 @@ export function isValidHttpUrl(_url: string) {
   const urlConstructorTest = (url: string) => {
     try {
       const value = new URL(url);
-      console.log(value)
       return value.protocol === "http:" || value.protocol === "https:";
     } catch (_) {
       return false;  
