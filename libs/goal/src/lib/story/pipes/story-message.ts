@@ -1,6 +1,6 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { captureException } from '@sentry/capacitor';
-import { NotificationIcons, NotificationMessageText, StoryItem } from '@strive/model';
+import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { captureException } from '@sentry/capacitor'
+import { NotificationIcons, NotificationMessageText, StoryItem } from '@strive/model'
 
 export interface StoryItemMessage {
   icon: NotificationIcons
