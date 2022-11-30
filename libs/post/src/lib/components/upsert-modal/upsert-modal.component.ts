@@ -48,7 +48,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     filter(url => url ? isValidHttpUrl(url) : false)
   ).subscribe(async url => {
     const formValue = this.postForm.getRawValue()
-    if (formValue.title && formValue.description && formValue.mediaURL) return
+    if (formValue.description && formValue.mediaURL) return
 
     this.scrapingUrl = true
     this.cdr.markForCheck()
@@ -60,8 +60,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       console.error(result)
       captureException(result)
     } else {
-      const { image, title, description } = result;
-      if (!formValue.title) this.postForm.title.setValue(title ?? '')
+      const { image, description } = result
       if (!formValue.description) this.postForm.description.setValue(description ?? '')
       if (!formValue.mediaURL) this.postForm.mediaURL.setValue(image ?? '')
     }
@@ -103,13 +102,12 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     }
 
     if (!this.postForm.isEmpty) {
-      const { date, description, mediaURL, title, url } = this.postForm.value
+      const { date, description, mediaURL, url } = this.postForm.value
       const post = createPost({
         ...this.post,
         date,
         description,
         mediaURL,
-        title,
         url,
         uid: this.auth.uid
       })
