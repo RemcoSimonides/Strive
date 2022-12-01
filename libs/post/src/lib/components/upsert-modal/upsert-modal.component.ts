@@ -81,8 +81,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     super(location, modalCtrl, platform)
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy()
+  ngOnDestroy() {
     this.sub.unsubscribe()
   }
 
