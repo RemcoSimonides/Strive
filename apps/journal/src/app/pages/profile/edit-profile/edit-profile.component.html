@@ -18,7 +18,7 @@
     
           <media-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid"></media-image-selector>
         
-          <ion-button color="primary" (click)="update()">Save</ion-button>
+          <ion-button color="primary" [disabled]="form.invalid" (click)="update()">Save</ion-button>
         </ion-card-content>
       </ion-card>
 

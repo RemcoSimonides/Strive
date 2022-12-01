@@ -5,7 +5,12 @@ function createUserFormControl(params: Partial<User> = {}) {
   const user = createUser(params)
   return {
     uid: new FormControl(user.uid),
-    username: new FormControl(user.username, [Validators.required, Validators.maxLength(16)]),
+    username: new FormControl(user.username, [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(16),
+      Validators.pattern('^[0-9a-zA-Z]+$')
+    ]),
     photoURL: new FormControl(user.photoURL),
   }
 }

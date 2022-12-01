@@ -70,7 +70,7 @@ export class AuthModalComponent implements OnInit {
       Validators.required,
       Validators.maxLength(16),
       Validators.minLength(2),
-      Validators.pattern('^[0-9a-zA-Z ]+$')
+      Validators.pattern('^[0-9a-zA-Z]+$')
     ])
   })
 
