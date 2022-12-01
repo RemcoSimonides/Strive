@@ -18,6 +18,7 @@ import { ProfileService } from '@strive/user/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { SupportOptionsComponent } from '@strive/support/components/options/options.component'
+import { ActivatedRoute } from '@angular/router'
 
 type GroupedByMilestone = Milestone & { supports: Support[] }
 type GroupedByGoal = Goal & { milestones: GroupedByMilestone[], supports: Support[] }
@@ -75,6 +76,7 @@ export class SupportsComponent {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
+    private route: ActivatedRoute,
     seo: SeoService,
     private support: SupportService
   ) {
@@ -122,6 +124,9 @@ export class SupportsComponent {
       map(supports => supports.filter(support => support.needsDecision)),
       map(groupByObjective)
     )
+
+    const { t } = this.route.snapshot.queryParams
+    this.segmentChoice = ['forYou', 'fromYou'].includes(t) ? t : 'fromYou'
   }
 
   segmentChanged(ev: CustomEvent) {
