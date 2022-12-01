@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController, SearchbarCustomEvent } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
 
 @Component({
@@ -17,10 +17,8 @@ export class SelectUserModalComponent {
     this.search('')
   }
 
-  search(event: SearchbarCustomEvent | string) {
-    const query = typeof event === 'string'
-      ? event
-      : event.target.value ? event.target.value : ''
+  search(event: any) {
+    const query = typeof event === 'string' ? event : event.target.value
     this.algolia.searchProfiles(query, 1000)
   }
 
