@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { ModalController, RefresherCustomEvent } from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
@@ -174,7 +174,7 @@ export class GoalsComponent implements OnDestroy {
     return stakeholder.uid
   }
 
-  async refresh($event: any) {
+  async refresh($event: RefresherCustomEvent) {
     await delay(500)
     $event?.target.complete()
   }

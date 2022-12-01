@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController, PopoverController, RefresherCustomEvent } from '@ionic/angular'
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 
@@ -147,7 +147,7 @@ export class SupportsComponent {
     this.support.update(support.id, { status: 'paid' }, { params: { goalId: support.goalId }})
   }
 
-  openOptions(support: Support, event: any) {
+  openOptions(support: Support, event: Event) {
     this.popoverCtrl.create({
       component: SupportOptionsComponent,
       event,
@@ -165,7 +165,7 @@ export class SupportsComponent {
     this.support.update(support.id, { status: 'rejected', needsDecision: false }, { params: { goalId: support.goalId }})
   }
   
-  async refresh($event: any) {
+  async refresh($event: RefresherCustomEvent) {
     await delay(500)
     $event?.target.complete()
   }

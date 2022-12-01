@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { RefresherCustomEvent } from '@ionic/angular'
 import { delay } from '@strive/utils/helpers'
 import { createGoalStakeholder, StoryItem } from '@strive/model'
 
@@ -13,7 +14,7 @@ export class StoryComponent {
   @Input() stakeholder = createGoalStakeholder()
   @Input() goalId = ''
 
-  async refresh($event: any) {
+  async refresh($event: RefresherCustomEvent) {
     await delay(500)
     $event?.target.complete()
   }
