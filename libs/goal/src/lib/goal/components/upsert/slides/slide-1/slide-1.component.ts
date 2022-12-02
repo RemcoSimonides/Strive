@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { NavParams } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { NavParams, ToggleCustomEvent } from '@ionic/angular'
 import { createGoal } from '@strive/model'
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalForm } from '@strive/goal/goal/forms/goal.form';
+import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalForm } from '@strive/goal/goal/forms/goal.form'
 
 @Component({
   selector: '[form][goalId] goal-slide-1',
@@ -35,7 +35,7 @@ export class Slide1Component {
     }
   }
 
-  toggle(event: any) {
+  toggle(event: ToggleCustomEvent) {
     this.focus.emit(event.detail.checked)
   }
 

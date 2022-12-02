@@ -12,37 +12,46 @@
             <ng-container *ngSwitchCase="'Affirmations'">
 
               <ng-container *ngIf="settings | get:'Affirmations' as setting; else notSet">
-                <article *ngIf="setting.affirmations?.length; else notSet">
-                  <small>{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
-                </article>
+                <ng-container *ngIf="setting.affirmations?.length; else notSet">
+                  <article>
+                    <small>{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
+                  </article>
+                </ng-container>
               </ng-container>
 
             </ng-container>
             <ng-container *ngSwitchCase="'DearFutureSelf'">
 
               <ng-container *ngIf="settings | get:'DearFutureSelf' as setting; else notSet">
-                <article *ngIf="setting?.messages?.length; else notSet">
-                  <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
-                  <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
-                </article>
+                <ng-container *ngIf="setting?.messages?.length; else notSet">
+                  <article>
+                    <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
+                    <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
+                  </article>
+                </ng-container>
               </ng-container>
 
             </ng-container>
             <ng-container *ngSwitchCase="'DailyGratitude'">
-
-              <article *ngIf="settings | get:'DailyGratitude' as setting; else notSet">
-                <small *ngIf="setting.on; else notSet">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
-              </article>
+              
+              <ng-container *ngIf="settings | get:'DailyGratitude' as setting; else notSet">
+                <ng-container *ngIf="setting.on else notSet">
+                  <article>
+                    <small>Receiving daily at {{ setting.time | date:'shortTime'}}</small>
+                  </article>
+                </ng-container>
+              </ng-container>
 
             </ng-container>
 
             <ng-container *ngSwitchCase="'WheelOfLife'">
 
               <ng-container *ngIf="settings | get:'WheelOfLife' as setting; else notSet">
-                <article *ngIf="setting.interval !== 'never'; else notSet">
-                  <small>Receiving reminder {{ setting.interval }}</small>
-                </article>
-
+                <ng-container *ngIf="setting.interval !== 'never'; else notSet">
+                  <article>
+                    <small>Receiving reminder {{ setting.interval }}</small>
+                  </article>
+                </ng-container>
               </ng-container>
 
             </ng-container>

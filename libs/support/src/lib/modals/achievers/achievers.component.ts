@@ -42,8 +42,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
     super(location, modalCtrl, platform)
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy()
+  ngOnDestroy() {
     this.sub.unsubscribe()
   }
 

@@ -112,8 +112,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     }
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy()
+  ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe())
   }
 

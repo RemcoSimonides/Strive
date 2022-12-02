@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular'
+import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
 // Sentry
 import { captureException, captureMessage } from '@sentry/capacitor'
 // Firebase
@@ -150,7 +150,7 @@ export class GoalComponent {
     this.goalService.update(this.goal.id, { description })
   }
 
-  updatePrivacy($event: any, goal: Goal) {
+  updatePrivacy($event: SelectCustomEvent, goal: Goal) {
     if (!this.stakeholder.isAdmin) return;
     const publicity = $event.detail.value
     if (publicity === goal.publicity) return

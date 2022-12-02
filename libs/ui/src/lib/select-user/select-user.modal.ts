@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ModalController } from "@ionic/angular";
-import { AlgoliaService } from '@strive/utils/services/algolia.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ModalController } from '@ionic/angular'
+import { AlgoliaService } from '@strive/utils/services/algolia.service'
 
 @Component({
   selector: 'strive-select-user',
@@ -18,7 +18,7 @@ export class SelectUserModalComponent {
   }
 
   search(event: any) {
-    const query = event.target.value
+    const query = typeof event === 'string' ? event : event.target.value
     this.algolia.searchProfiles(query, 1000)
   }
 

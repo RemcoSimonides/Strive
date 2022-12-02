@@ -8,7 +8,7 @@
           <ng-container *ngIf="notifications.length; else empty">
             <ng-container *ngFor="let notification of notifications; let isLast = last; let index = index">
               <ng-container *ngIf="notification | message as _message">
-                <article class="clickable" [routerLink]="_message.link">
+                <article class="clickable" [routerLink]="_message.link" [queryParams]="_message.params">
                   <img
                     [ref]="_message.image"
                     [asset]="_message.link.includes('profile') ? 'profile.png' : 'goal.png'"
@@ -18,7 +18,7 @@
                     <span>
                       <ng-container *ngFor="let message of _message.message">
                         <ng-container *ngIf="message.link; else noLink">
-                          <a [routerLink]="'/' + message.link">{{ message.text }}</a>
+                          <a [routerLink]="'/' + message.link" [queryParams]="message.params">{{ message.text }}</a>
                         </ng-container>
                         <ng-template #noLink>{{ message.text }}</ng-template>
                       </ng-container>

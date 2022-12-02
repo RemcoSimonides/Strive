@@ -1,16 +1,18 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { SafeUrl } from '@angular/platform-browser';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { deleteObject, getStorage, ref, uploadBytes, StorageError } from 'firebase/storage';
-import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers';
-import { isValidHttpUrl } from '@strive/utils/helpers';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { AbstractControl } from '@angular/forms'
+import { SafeUrl } from '@angular/platform-browser'
+import { ToastController } from '@ionic/angular'
 
-import { Camera, CameraResultType } from '@capacitor/camera';
+import { BehaviorSubject, Subscription } from 'rxjs'
+import { filter } from 'rxjs/operators'
+
+import { ImageCroppedEvent } from 'ngx-image-cropper'
+import { deleteObject, getStorage, ref, uploadBytes, StorageError } from 'firebase/storage'
+import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers'
+import { isValidHttpUrl } from '@strive/utils/helpers'
+
+import { Camera, CameraResultType } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
-import { ToastController } from '@ionic/angular';
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -47,7 +49,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   @Input() defaultImage?: 'goal.png' | 'profile.png'
 
-  @Input() form!: FormControl<string>
+  @Input() form!: AbstractControl<string> | null
   @Input() storagePath!: string
 
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>;
@@ -57,9 +59,10 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.resetState();
 
+    if (!this.form) return
     this.sub = this.form.valueChanges.pipe(
       filter(value => isValidHttpUrl(value))
-    ).subscribe(_ => this.resetState())
+    ).subscribe(() => this.resetState())
   }
 
   ngOnDestroy() {
@@ -89,6 +92,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   private resetState() {
+    if (!this.form) return
     if (this.form.value) {
       if (isValidHttpUrl(this.form.value)) {
         this.previewUrl$.next(this.form.value);
@@ -150,6 +154,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   remove() {
+    if (!this.form) return
     const isHttpUrl = isValidHttpUrl(this.form.value) // it's an http url if image is fetched from other website for Post in Story
 
     if (!isHttpUrl) { // if its not an http url, its a reference path in storage
@@ -167,6 +172,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   cropIt() {
+    if (!this.form) return
     try {
       if (!this.croppedImage) {
         throw new Error('No image cropped yet')

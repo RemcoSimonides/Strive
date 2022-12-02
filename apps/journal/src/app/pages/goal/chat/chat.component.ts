@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonContent, ModalController, Platform} from '@ionic/angular'
+import { InfiniteScrollCustomEvent, IonContent, ModalController, Platform, ScrollCustomEvent} from '@ionic/angular'
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
 import { joinWith, toDate } from 'ngfire'
 
@@ -114,7 +114,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._loading.next(false)
   }
 
-  async more($event: any) {
+  async more($event: InfiniteScrollCustomEvent) {
     const comments = this._comments.value
     const cursor = comments[0]?.createdAt ?? null
 
@@ -142,7 +142,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid)
   }
 
-  async logScrolling($event: any) {
+  async logScrolling($event: ScrollCustomEvent) {
     // https://stackoverflow.com/questions/56886454/how-to-detect-scroll-reached-end-in-ion-content-component-of-ionic-4
 
     if ($event.target.localName != "ion-content") {

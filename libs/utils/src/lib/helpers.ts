@@ -31,13 +31,34 @@ export function unique<T>(array: T[]) {
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
 }
 
-export function isValidHttpUrl(url: string) {
-  try {
-    const value = new URL(url);
-    return value.protocol === "http:" || value.protocol === "https:";
-  } catch (_) {
-    return false;  
-  } 
+export function isValidHttpUrl(_url: string) {
+
+  /**
+   * url constructor test returns true for https://a
+   * because of this, there is also a regExTest
+   * regExTest returns even more false positives but together it eliminates some
+   */
+
+  const urlConstructorTest = (url: string) => {
+    try {
+      const value = new URL(url);
+      return value.protocol === "http:" || value.protocol === "https:";
+    } catch (_) {
+      return false;  
+    } 
+  }
+   
+  const regExTest = (url: string) => {
+    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(url);
+  }
+
+  return urlConstructorTest(_url) && regExTest(_url)
 }
 
 /** This is black magic from stack-overflow to detect if the browser is Safari or not.

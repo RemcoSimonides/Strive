@@ -1,17 +1,15 @@
 import { Location } from '@angular/common'
-import { Directive, HostBinding, HostListener, OnDestroy } from '@angular/core'
+import { Directive, HostBinding, HostListener } from '@angular/core'
+import { Capacitor } from '@capacitor/core'
 import { Platform, PopoverController } from '@ionic/angular'
 
 @Directive({
   selector: '[strivePopover]'
 })
-export class PopoverDirective implements OnDestroy {
+export class PopoverDirective {
   private returnData: unknown
   private returnRole?: string
-
-  private backButtonSub = this.platform.backButton.subscribeWithPriority(101, () => {
-    this.location.back()
-  })
+  private isWeb = Capacitor.getPlatform() === 'web'
 
   @HostBinding() popover?: HTMLIonPopoverElement
   @HostListener('window:popstate', ['$event'])
@@ -24,23 +22,24 @@ export class PopoverDirective implements OnDestroy {
     protected platform: Platform,
     protected popoverCtrl: PopoverController
   ) {
-    window.history.pushState(null, '', window.location.href)
+    if (this.isWeb) {
+      window.history.pushState(null, '', window.location.href)
 
-    this.popoverCtrl.getTop().then(() => {
-      this.popover?.onWillDismiss().then(res => {
-        if (res.role === 'backdrop') this.location.back()
+      this.popoverCtrl.getTop().then(() => {
+        this.popover?.onWillDismiss().then(res => {
+          if (res.role === 'backdrop') this.location.back()
+        })
       })
-    })
-  }
-
-  ngOnDestroy() {
-    this.backButtonSub.unsubscribe()
+    }
   }
 
   dismiss(data?: unknown, role?: string) {
-    this.returnData = data
-    this.returnRole = role
-
-    this.location.back()
+    if (this.isWeb) {
+      this.returnData = data
+      this.returnRole = role
+      this.location.back()
+    } else {
+      this.popoverCtrl.dismiss(data, role)
+    }
   }
 }

@@ -1,6 +1,5 @@
 export interface Post {
   id?: string
-  title: string
   description: string
   mediaURL: string
   url: string
@@ -15,7 +14,6 @@ export interface Post {
 /** A factory function that creates a PostDocument. */
 export function createPost(params: Partial<Post> = {}): Post {
   return {
-    title: '',
     description: '',
     mediaURL: '',
     url: '',

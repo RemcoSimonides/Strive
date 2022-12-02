@@ -12,10 +12,6 @@
     </ion-button>
   </ion-card-header>
 
-  <ion-card-content *ngIf="post.title">
-    <h2>{{ post.title }}</h2>
-  </ion-card-content>
-
   <ng-container *ngIf="post.mediaURL">
     <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)">
   </ng-container>
