@@ -17,7 +17,16 @@ main {
   margin-bottom: 32px;
 }
 
-section.main {
+section {
+  display: flex;
+  flex-direction: column;
+
+  h5, h6 {
+    color: var(--ion-color-primary);
+  }
+}
+
+.main {
   header {
     display: flex;
     justify-content: space-between;
@@ -29,7 +38,6 @@ section.main {
     --inner-padding-end: 8px;
     --padding-start: 0;
     border-radius: 12px;
-    margin-bottom: 16px;
     
     ion-textarea {
       --padding-top: 0;
@@ -42,28 +50,25 @@ section.main {
   }
 }
 
-.deadline {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 .assignee {
-  display: flex;
-  gap: 4px;
+  small {
+    color: var(--ion-color-medium);
+  }
 }
 
 .support {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-   
-  i {
-    color: var(--ion-color-medium);
-  }
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 
-  ion-button {
-    width: fit-content;
+    i {
+      color: var(--ion-color-medium);
+    }
+  
+    ion-button {
+      width: fit-content;
+    }
   }
 }
 
@@ -71,10 +76,6 @@ section.main {
   ion-item {
     border-radius: 12px;
   }
-}
-
-h5 {
-  color: var(--ion-color-primary);
 }
 
 ion-list {

@@ -2,14 +2,14 @@ section {
   display: flex;
   width: fit-content;
   align-items: center;
-
-  span {
-    font-size: small;
-  }
 }
 
 ion-icon {
   padding-right: 4px;
+}
+
+.no-deadline {
+  color: var(--ion-color-medium);
 }
 
 .overdue {

@@ -30,7 +30,7 @@
         </ion-button>
       </header>
       <form [formGroup]="form">
-        <ion-item class="main">
+        <ion-item class="main" lines="none">
           <goal-milestone-status [goal]="goal" [milestone]="milestone" [stakeholder]="stakeholder"></goal-milestone-status>
           <ion-textarea autoGrow [readonly]="!canEdit" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
         </ion-item>
@@ -38,18 +38,20 @@
     </section>
 
     <section class="deadline">
-      <b>Deadline:</b>
+      <h6>Deadline</h6>
       <goal-milestone-deadline [milestone]="milestone" [stakeholder]="stakeholder" (deadlineChange)="updateDeadline($event)"></goal-milestone-deadline>
     </section>
     
     <ng-container *ngIf="goal.numberOfAchievers > 1">
-      <section class="assignee" *ngIf="canEdit || milestone.achiever?.uid">
-        <b>Assignee:</b>
+      <section *ngIf="canEdit || milestone.achiever?.uid" class="assignee">
+        <h6>Assignee</h6>
         <ng-container *ngIf="milestone.achiever?.uid else empty">
           <goal-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}"></goal-milestone-assignee>
         </ng-container>
         <ng-template #empty>
-          <i (click)="toggleAssignMe()" [ngClass]="{'clickable': canEdit}">No one - Assign me</i>
+          <small (click)="toggleAssignMe()" class="clickable">
+            <i >No one - Assign me</i>
+          </small>
         </ng-template>
       </section>
     </ng-container>
@@ -57,20 +59,20 @@
     <section class="description">
       <ng-container *ngIf="!canEdit else editable">
         <ng-container *ngIf="milestone.description">
-          <h5>Description</h5>
+          <h6>Description</h6>
           <article>{{ milestone.description }}</article>
         </ng-container>
       </ng-container>
       <ng-template #editable>
-        <h5>Description</h5>
-        <ion-item>
-          <ion-textarea [formControl]="form.description" placeholder="..." autocapitalize="sentences" [maxlength]="200" autoGrow></ion-textarea>
+        <h6>Description</h6>
+        <ion-item lines="none">
+          <ion-textarea [formControl]="form.description" placeholder="description" autocapitalize="sentences" [maxlength]="200" autoGrow></ion-textarea>
         </ion-item>
       </ng-template>
     </section>
 
-    <ng-container *ngIf="canEdit || milestone.subtasks?.length">
-      <h5>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h5>
+    <section *ngIf="canEdit || milestone.subtasks?.length">
+      <h6>Subtasks ({{ form.subtasks.value | subtasksCompleted}})</h6>
       <ion-list mode="md">
         <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!canEdit">
           <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
@@ -93,30 +95,32 @@
           </ion-item>
         </form>
       </ion-list>
-    </ng-container>
+    </section>
 
     <section class="support">
-      <h5>Supports</h5>
-      <article (click)="openSupportModal()">
-        <ng-container *ngIf="milestone.supports?.length else noSupports">
-          <span>{{ milestone.supports.length }} {{ milestone.supports.length === 1 ? 'support' : 'supports' }}</span>
-        </ng-container>
-        <ng-template #noSupports>
-          <i>no supports</i>
-        </ng-template>
-      </article>
+      <h6>Supports</h6>
+      <article>
+        <div (click)="openSupportModal()">
+          <ng-container *ngIf="milestone.supports?.length else noSupports">
+            <span>{{ milestone.supports.length }} {{ milestone.supports.length === 1 ? 'support' : 'supports' }}</span>
+          </ng-container>
+          <ng-template #noSupports>
+            <i>no supports</i>
+          </ng-template>
+        </div>
 
-      <ion-button (click)="openSupportModal()" class="secondary">
-        <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
-        <span>{{ milestone.status === 'pending' ? 'SUPPORT' : 'ADD SUPPORT'}}</span>
-      </ion-button>
+        <ion-button (click)="openSupportModal()" class="secondary">
+          <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
+          <span>{{ milestone.status === 'pending' ? 'SUPPORT' : 'ADD SUPPORT'}}</span>
+        </ion-button>
+      </article>
     </section>
 
     <ng-container *ngIf="story$ | async as story">
-      <ng-container *ngIf="canEdit || story.length">
-        <h5>Story</h5>
+      <section *ngIf="canEdit || story.length">
+        <h6>Story</h6>
         <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id"></goal-story>
-      </ng-container>
+      </section>
     </ng-container>
 
     <!-- <small><b>Created at:</b> {{ milestone.createdAt | date:'longDate' }}</small>
