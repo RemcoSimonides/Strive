@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { AdminRoadmapComponent } from './roadmap.component';
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
-import { MilestoneDeadlineModule } from '@strive/goal/milestone/components/deadline/deadline.module'
 import { SubtaskPipeModule } from '@strive/goal/milestone/pipes/subtask.pipe'
 import { AssigneeModule } from '@strive/goal/milestone/components/assignee/assignee.module'
 
@@ -16,7 +15,6 @@ import { AssigneeModule } from '@strive/goal/milestone/components/assignee/assig
     IonicModule,
     RouterModule,
     PageLoadingModule,
-    MilestoneDeadlineModule,
     SubtaskPipeModule,
     AssigneeModule,
   ],

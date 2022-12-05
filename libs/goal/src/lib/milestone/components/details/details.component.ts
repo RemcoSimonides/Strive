@@ -1,6 +1,6 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { AlertController, ModalController, Platform } from '@ionic/angular'
+import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
 
 import { orderBy, serverTimestamp, where } from 'firebase/firestore'
@@ -8,6 +8,7 @@ import { joinWith } from 'ngfire'
 
 import { Observable, of, Subscription } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
+import { addYears, endOfYear } from 'date-fns'
 
 import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
@@ -21,6 +22,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 @Component({
   selector: '[goal][milestone][stakeholder] goal-milestone-details',
@@ -33,6 +35,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   form!: MilestoneForm
   subtaskForm = new SubtaskForm()
+
+  showDescription = false
 
   story$?: Observable<StoryItem[]>
 
@@ -54,6 +58,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
     protected override platform: Platform,
+    private popoverCtrl: PopoverController,
     private postService: PostService,
     private profileService: ProfileService,
     private storyService: StoryService
@@ -116,12 +121,6 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     this.subs.forEach(sub => sub.unsubscribe())
   }
 
-  updateDeadline(deadline: string) {
-    if (this.canEdit) {
-      this.milestoneService.update({ deadline, id: this.milestone.id }, { params: { goalId: this.goal.id }})
-    }
-  }
-
   async deleteMilestone() {
     if (!this.canEdit) return
 
@@ -165,6 +164,27 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     }, { params: { goalId: this.goal.id }})
   }
 
+  async openDatepicker() {
+    if (!this.canEdit) return    
+    if (this.milestone.status === 'failed' || this.milestone.status === 'succeeded') return
+  
+    const minDate = new Date()
+    const maxDate = endOfYear(addYears(new Date(), 1000))
+
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { minDate, maxDate }
+    })
+    popover.onDidDismiss().then(({ data, role }) => {
+      const deadline = role === 'remove' ? '' : data ?? ''
+
+      this.milestone.deadline = deadline
+      this.milestoneService.update({ deadline, id: this.milestone.id }, { params: { goalId: this.goal.id }})  
+      this.cdr.markForCheck()
+    })
+    popover.present()
+  }
+
   addSubtask() {
     if (!this.stakeholder.isAdmin || !this.stakeholder.isAchiever) return
     if (this.subtaskForm.valid) {
@@ -189,19 +209,6 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     if (!control?.value) subtasksForm.removeAt(index)
   }
 
-  openSupportModal() {
-    this.dismiss()
-    delay(250).then(_ => {
-      this.modalCtrl.create({
-        component: AddSupportModalComponent,
-        componentProps: {
-          goalId: this.goal.id,
-          milestone: this.milestone
-        }
-      }).then(modal => modal.present())
-    })
-  }
-
   doReorder(ev: any) {
     if (!this.form) return
     const { from, to } = ev.detail
@@ -214,5 +221,18 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     this.form.subtasks.setValue(subtasks)
 
     ev.detail.complete()
+  }
+
+  openSupportModal() {
+    this.dismiss()
+    delay(250).then(() => {
+      this.modalCtrl.create({
+        component: AddSupportModalComponent,
+        componentProps: {
+          goalId: this.goal.id,
+          milestone: this.milestone
+        }
+      }).then(modal => modal.present())
+    })
   }
 }

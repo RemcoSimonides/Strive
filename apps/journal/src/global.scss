@@ -129,6 +129,10 @@ ion-button {
     opacity: 0.5;
   }
 
+  &.fake-enable {
+    opacity: 1;
+  }
+
   &.button-solid {
     --background: var(--ion-card-background);
   }
@@ -139,6 +143,14 @@ ion-button {
 
   &.secondary {
     --color: var(--ion-color-secondary);
+  }
+
+  &.danger {
+    --color: var(--ion-color-danger);
+  }
+
+  &.contrast {
+    --color: var(--ion-color-primary-contrast);
   }
 }
 

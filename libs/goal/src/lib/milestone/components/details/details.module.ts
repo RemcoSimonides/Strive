@@ -11,6 +11,7 @@ import { AssigneeModule } from '../assignee/assignee.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { StoryModule } from '../../../story/components/story/story.module'
+import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { StoryModule } from '../../../story/components/story/story.module'
     AssigneeModule,
     SubtaskPipeModule,
     AddSupportModalModule,
-    StoryModule
+    StoryModule,
+    DatetimeModule
   ],
   declarations: [
     DetailsComponent

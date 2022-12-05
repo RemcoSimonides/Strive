@@ -5,7 +5,6 @@ import { IonicModule } from '@ionic/angular'
 
 import { RoadmapComponent } from './roadmap.component'
 
-import { MilestoneDeadlineModule } from '../deadline/deadline.module'
 import { MilestoneStatusModule } from '../status/status.module'
 import { AssigneeModule } from '../assignee/assignee.module'
 
@@ -22,7 +21,6 @@ import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
     IonicModule,
     
     ImageModule,
-    MilestoneDeadlineModule,
     MilestoneStatusModule,
     AssigneeModule,
     AddSupportModalModule,

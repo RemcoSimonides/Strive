@@ -20,7 +20,10 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.deadline">
-                <goal-milestone-deadline [milestone]="milestone" [stakeholder]="stakeholder"></goal-milestone-deadline>
+                <div class="deadline">
+                  <ion-icon name="alarm-outline"></ion-icon>
+                  <small>{{ milestone.deadline | date:'MMM d, y' }}</small>
+                </div>
               </ng-container>
               <ng-container *ngIf="milestone.achiever?.uid">
                 <goal-milestone-assignee [achiever]="milestone.achiever!"></goal-milestone-assignee>

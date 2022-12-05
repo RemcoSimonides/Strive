@@ -50,9 +50,44 @@ section {
   }
 }
 
+.details {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  overflow: auto;
+
+  ion-button:not(.button-has-icon-only) {
+    width: fit-content;
+    text-transform: none;
+
+    ion-icon {
+      font-size: small;
+    }
+  }
+}
+
+.deadline {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
 .assignee {
-  small {
-    color: var(--ion-color-medium);
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.subtasks {
+  header {
+    display: flex;
+    gap: 4px;
+
+    small {
+      color: var(--ion-color-medium);
+      margin-bottom: 10px;
+      margin-top: auto;
+    }
   }
 }
 
@@ -73,8 +108,14 @@ section {
 }
 
 .description {
-  ion-item {
-    border-radius: 12px;
+  small {
+    display: flex;
+
+    ion-textarea {
+      margin-top: 0;
+      --padding-top: 0;
+      --padding-bottom: 0;
+    }  
   }
 }
 

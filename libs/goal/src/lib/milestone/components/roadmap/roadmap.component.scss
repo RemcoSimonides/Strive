@@ -30,6 +30,12 @@ ion-list {
         color: var(--ion-color-medium);
         white-space: nowrap;
 
+        .deadline {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+        }
+
         .supports small {
           display: flex;
           gap: 4px;
