@@ -3,8 +3,9 @@ import { ModalController, RefresherCustomEvent } from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
+import { SplashScreen } from '@capacitor/splash-screen'
 
-import { BehaviorSubject, Observable } from 'rxjs'
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { switchMap, map, filter } from 'rxjs/operators'
 
 import { isBefore, min } from 'date-fns'
@@ -131,6 +132,13 @@ export class GoalsComponent implements OnDestroy {
         return 0
       }))
     )
+
+    firstValueFrom(
+      combineLatest([
+        this.stakeholders$,
+        this.achieving$
+      ])
+    ).then(() => SplashScreen.hide())
   }
 
   ngOnDestroy() {

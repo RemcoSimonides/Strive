@@ -1,6 +1,6 @@
 <strive-header-root [title]="(uid$ | async) ? 'Goals' : ''"></strive-header-root>
 
-<ng-container *ngIf="(uid$ | async) !== undefined else loading">
+<ng-container *ngIf="(uid$ | async) !== undefined">
   <ng-container *ngIf="uid$ | async else notLoggedIn">
     <ion-content class="ion-padding">
 
@@ -9,7 +9,7 @@
       </ion-refresher>
 
       <main>
-        <ng-container *ngIf="achieving$ | async as stakeholders">
+        <ng-container *ngIf="achieving$ | async as stakeholders; else loadingSpectating">
           <ng-container *ngIf="stakeholders.length">
             <goal-mini-thumbnail-swiper
               [stakeholders]="stakeholders"
@@ -23,7 +23,7 @@
 
             <ion-button expand="block" fill="clear" (click)="createGoal()">
               <ion-icon name="add" slot="start"></ion-icon>
-              <span>ADD GOAL</span>
+              <span>CREATE GOAL</span>
             </ion-button>
 
             <section class="cards">
@@ -81,6 +81,22 @@
   <journal-home></journal-home>
 </ng-template>
 
-<ng-template #loading>
-  <strive-page-loading></strive-page-loading>
+<ng-template #loadingGoals>
+  <ion-button expand="block" fill="clear" (click)="createGoal()">
+    <ion-icon name="add" slot="start"></ion-icon>
+    <span>CREATE GOAL</span>
+  </ion-button>
+</ng-template>
+
+<ng-template #loadingSpectating>
+  <section class="skeleton-spectating">
+    <ng-container *ngFor="let i of [].constructor(5)">
+      <article>
+        <ion-thumbnail>
+          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </article>
+    </ng-container>
+  </section>
 </ng-template>

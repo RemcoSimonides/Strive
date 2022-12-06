@@ -64,6 +64,7 @@ ion-thumbnail {
     img {
       border-radius: 12px;
       object-fit: cover;
+		  background-color: var(--ion-card-background);
     }
     
     div {

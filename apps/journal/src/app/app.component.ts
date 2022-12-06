@@ -4,6 +4,7 @@ import { isPlatformServer, Location } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
+import { SplashScreen } from '@capacitor/splash-screen'
 import { Unsubscribe } from 'firebase/firestore'
 
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
@@ -123,9 +124,13 @@ export class AppComponent implements OnDestroy {
 
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
+      const { url } = event
+
+      const reroutesToGoals = isLoggedIn && url === '/'
+      const goalsRoute = '/goals'
+      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
 
       if (!isLoggedIn) {
-        const { url } = event
         const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
         const doNotShowPartial = ['/goal/']
         const doShowSignUpModalPages = ['/explore']

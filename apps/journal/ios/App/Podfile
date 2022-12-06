@@ -17,6 +17,7 @@ def capacitor_pods
   pod 'CapacitorKeyboard', :path => '../../../../node_modules/@capacitor/keyboard'
   pod 'CapacitorPushNotifications', :path => '../../../../node_modules/@capacitor/push-notifications'
   pod 'CapacitorShare', :path => '../../../../node_modules/@capacitor/share'
+  pod 'CapacitorSplashScreen', :path => '../../../../node_modules/@capacitor/splash-screen'
   pod 'CapacitorCommunityFcm', :path => '../../../../node_modules/@capacitor-community/fcm'
   pod 'CapacitorFirebaseAuthentication', :path => '../../../../node_modules/@capacitor-firebase/authentication'
   pod 'CodetrixStudioCapacitorGoogleAuth', :path => '../../../../node_modules/@codetrix-studio/capacitor-google-auth'
