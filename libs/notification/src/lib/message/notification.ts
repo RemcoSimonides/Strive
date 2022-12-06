@@ -1,23 +1,27 @@
 import { Goal, Notification, NotificationMessageText, User } from '@strive/model'
 import { captureException } from '@sentry/angular'
 
-function getUser(user: User): { title: string, image: string, link: string } {
+type NotificationSourceType = 'goal' | 'profile'
+
+function getUser(user: User): { title: string, image: string, type: NotificationSourceType, link: string } {
   return {
     title: user.username ?? '',
     image: user.photoURL ?? '',
+    type: 'profile',
     link: `/profile/${user.uid}`
   }
 }
 
-function getGoal(goal: Goal): { title: string, image: string, link: string } {
+function getGoal(goal: Goal): { title: string, image: string, type: NotificationSourceType, link: string } {
   return {
     title: goal?.title ?? '',
     image: goal?.image ?? '',
+    type: 'goal',
     link: `/goal/${goal?.id}`
   }
 }
 
-const empty = { image: '', link: '', message: [], title: '' }
+const empty: NotificationMessage = { image: '', link: '', message: [], title: '', type: 'goal' }
 function throwError(notification: Notification) {
   captureException(`Notification doesn't contain needed information`, notification)
   return empty
@@ -25,6 +29,7 @@ function throwError(notification: Notification) {
 export interface NotificationMessage {
   title: string
   image: string
+  type: NotificationSourceType
   link: string
   params?: unknown
   message: NotificationMessageText[]
