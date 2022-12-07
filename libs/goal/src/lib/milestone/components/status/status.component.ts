@@ -11,28 +11,23 @@ export class MilestoneStatusComponent {
 
   icon: Record<MilestoneStatus, { 
     name: string,
-    color: 'primary' | 'secondary' | 'warning' | 'danger' | 'none',
-    pointer: boolean
+    color: 'primary' | 'secondary' | 'warning' | 'danger' | 'none'
   }> = {
     pending: {
       name: 'radio-button-off',
-      color: 'primary',
-      pointer: true
+      color: 'primary'
     },
     succeeded: {
       name: 'checkmark-circle',
-      color: 'secondary',
-      pointer: false
+      color: 'secondary'
     },
     failed: {
       name: 'close-circle',
-      color: 'danger',
-      pointer: false
+      color: 'danger'
     },
     overdue: {
       name: 'radio-button-off',
-      color: 'primary',
-      pointer: true
+      color: 'primary'
     }
   }
 
