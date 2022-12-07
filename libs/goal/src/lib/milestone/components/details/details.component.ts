@@ -10,7 +10,7 @@ import { Observable, of, Subscription } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
 import { addYears, endOfYear } from 'date-fns'
 
-import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder } from '@strive/model'
+import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
@@ -23,6 +23,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
 @Component({
   selector: '[goal][milestone][stakeholder] goal-milestone-details',
@@ -119,6 +120,57 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe())
+  }
+
+  updateStatus() {
+    if (!this.canEdit) return
+    if (this.milestone.status === 'failed' || this.milestone.status === 'succeeded') return
+
+    const openPostModal = () => {
+      this.modalCtrl.create({
+        component: UpsertPostModalComponent,
+        componentProps: {
+          post: createPost({
+            goalId: this.goal.id,
+            milestoneId: this.milestone.id
+          })
+        }
+      }).then(modal => modal.present())
+    }
+
+    const getHandler = (status: MilestoneStatus) => {
+      return () => {
+        this.milestoneService.upsert({
+          id: this.milestone.id,
+          status,
+          finishedAt: serverTimestamp() as any
+        }, { params: { goalId: this.goal.id }})
+        this.milestone.status = status
+        this.cdr.markForCheck()
+        openPostModal()
+      }
+    }
+
+    this.alertCtrl.create({
+      header: 'Good job!',
+      subHeader: 'Or didn\'t you?',
+      buttons: [
+        {
+          text: 'Succeeded',
+          role: 'succeeded',
+          handler: getHandler('succeeded')
+        },
+        {
+          text: 'Failed',
+          role: 'succeeded',
+          handler: getHandler('failed')
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ]
+    }).then(alert => alert.present())
   }
 
   async deleteMilestone() {

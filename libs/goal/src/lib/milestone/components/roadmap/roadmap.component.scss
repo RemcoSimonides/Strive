@@ -5,8 +5,8 @@
 ion-list {
   border-radius: 12px;
 
-  ion-item.no-padding {
-    --padding-start: 0;
+  .status-button {
+    margin-inline-end: 16px;
   }
 
   ion-item.milestone {
@@ -50,10 +50,6 @@ ion-list {
           }
         }
       }
-    }
-
-    ion-button {
-      margin-inline-start: 16px;
     }
   }
 }

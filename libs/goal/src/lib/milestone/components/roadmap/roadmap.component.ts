@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
-import { ItemReorderEventDetail, ModalController } from '@ionic/angular'
-import { createGoalStakeholder, Goal, Support } from '@strive/model'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core'
+import { AlertController, ItemReorderEventDetail, ModalController } from '@ionic/angular'
+import { createGoalStakeholder, createPost, Goal, MilestoneStatus, Support } from '@strive/model'
+
+import { serverTimestamp } from 'firebase/firestore'
 
 import { createMilestone, Milestone } from '@strive/model'
 import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form'
@@ -11,6 +13,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
@@ -38,13 +41,68 @@ export class RoadmapComponent {
   }
 
   constructor(
+    private alertCtrl: AlertController,
     private auth: AuthService,
+    private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
     private milestone: MilestoneService
   ) {}
 
   trackByFn(index: number, milestone: Milestone) {
     return milestone.id
+  }
+
+  updateStatus(milestone: Milestone, event: UIEvent) {
+    if (!this.canEdit) return
+    if (milestone.status === 'failed' || milestone.status === 'succeeded') return
+
+    event.stopPropagation()
+
+    const openPostModal = () => {
+      this.modalCtrl.create({
+        component: UpsertPostModalComponent,
+        componentProps: {
+          post: createPost({
+            goalId: this.goal.id,
+            milestoneId: milestone.id
+          })
+        }
+      }).then(modal => modal.present())
+    }
+
+    const getHandler = (status: MilestoneStatus) => {
+      return () => {
+        this.milestone.upsert({
+          id: milestone.id,
+          status,
+          finishedAt: serverTimestamp() as any
+        }, { params: { goalId: this.goal.id }})
+        milestone.status = status
+        this.cdr.markForCheck()
+        openPostModal()
+      }
+    }
+
+    this.alertCtrl.create({
+      header: 'Good job!',
+      subHeader: 'Or didn\'t you?',
+      buttons: [
+        {
+          text: 'Succeeded',
+          role: 'succeeded',
+          handler: getHandler('succeeded')
+        },
+        {
+          text: 'Failed',
+          role: 'succeeded',
+          handler: getHandler('failed')
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ]
+    }).then(alert => alert.present())
   }
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>) {

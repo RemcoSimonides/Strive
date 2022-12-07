@@ -12,6 +12,7 @@ import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { StoryModule } from '../../../story/components/story/story.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
     SubtaskPipeModule,
     AddSupportModalModule,
     StoryModule,
-    DatetimeModule
+    DatetimeModule,
+    UpsertPostModalModule
   ],
   declarations: [
     DetailsComponent

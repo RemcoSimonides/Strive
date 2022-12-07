@@ -25,7 +25,9 @@
     <section class="main">
       <form [formGroup]="form">
         <ion-item class="main" lines="none">
-          <goal-milestone-status [goal]="goal" [milestone]="milestone" [stakeholder]="stakeholder"></goal-milestone-status>
+          <ion-button (click)="updateStatus()" fill="clear" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
+            <goal-milestone-status [milestone]="milestone"></goal-milestone-status>
+          </ion-button>
           <ion-textarea autoGrow [readonly]="!canEdit" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
         </ion-item>
       </form>

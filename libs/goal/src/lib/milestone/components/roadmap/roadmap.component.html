@@ -4,7 +4,9 @@
     
       <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
         <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}">
-          <goal-milestone-status *ngIf="!createMode" [milestone]="milestone" [goal]="goal" [stakeholder]="stakeholder"></goal-milestone-status>
+          <ion-button *ngIf="!createMode" (click)="updateStatus(milestone, $event)" fill="clear" slot="start" class="status-button" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
+            <goal-milestone-status slot="icon-only" [milestone]="milestone"></goal-milestone-status>
+          </ion-button>
           <section>
             <span>{{ milestone.content }}</span>
             <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
@@ -41,7 +43,9 @@
       
       <form [formGroup]="milestoneForm" *ngIf="canEdit">
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
-          <goal-milestone-status *ngIf="!createMode"></goal-milestone-status>
+          <ion-button *ngIf="!createMode" fill="clear" slot="start" class="status-button" disabled class="fake-enable">
+            <goal-milestone-status slot="icon-only"></goal-milestone-status>
+          </ion-button>
           <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
           <ion-button color="primary" (click)="add()">add</ion-button>
         </ion-item>
@@ -57,8 +61,8 @@
 <ng-template #loading>
   <ion-list>
     <ion-item *ngFor="let i of [].constructor(5)">
-      <ion-button fill="clear">
-        <ion-icon slot="icon-only" name="radio-button-off"color="primary"></ion-icon>
+      <ion-button fill="clear" slot="start" disabled class="status-button fake-enable">
+        <goal-milestone-status slot="icon-only"></goal-milestone-status>
       </ion-button>
 
       <section class="skeleton">
