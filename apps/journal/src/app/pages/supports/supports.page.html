@@ -18,149 +18,73 @@
   </ion-refresher>
 
   <main>
-    <ng-container *ngIf="supportsNeedDecision$ | async as goals">
-      <section *ngIf="goals.length" class="needs-decision">
-        <ng-container *ngFor="let goal of goals">
 
-          <ng-container *ngIf="goal.supports.length; else milestones">
-            <ion-list mode="md">
-              <h5>Goal "<a [routerLink]="['/goal', goal.id]">{{ goal.title }}</a>" has been finished</h5>
+    <section *ngIf="objectivesWithSupports$ | async as goals; else loading">
+      <ion-list *ngFor="let goal of goals" mode="md">
+        <ion-item lines="none" *ngIf="goal.supports.length">
+          <ion-label>
+            <small><a [routerLink]="'../goal/' + goal.id">{{ goal.title }}</a></small>
+            <ng-template [ngTemplateOutlet]="goalStatus" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-template>
+          </ion-label>
+        </ion-item>
 
-              <ion-item *ngFor="let support of goal.supports" lines="inset">
-                <ng-container *ngTemplateOutlet="supportTemplate; context: { $implicit: support }"></ng-container>
-              </ion-item>
-
-              <ng-container *ngFor="let milestone of goal.milestones">
-                <ion-item *ngFor="let support of milestone.supports" lines="inset">
-                  <ng-container *ngTemplateOutlet="supportTemplate; context: { $implicit: support }"></ng-container>
-                </ion-item>
-              </ng-container>
-
-            </ion-list>
-          </ng-container>
-
-          <ng-template #milestones>
-            <ng-container *ngIf="goal.milestones.length > 1; else oneMilestone">
-              <ion-list mode="md">
-                <h5>Several milestones of goal "<a [routerLink]="['/goal', goal.id]">{{ goal.title }}</a>" have been completed</h5>
-  
-                <ng-container *ngFor="let milestone of goal.milestones">
-                  <ion-item *ngFor="let support of milestone.supports; let last = last" [lines]="last ? 'none' : 'inset'">
-                    <ng-container *ngTemplateOutlet="supportTemplate; context: { $implicit: support }"></ng-container>                
-                  </ion-item>
-                </ng-container>
-  
-              </ion-list>
-            </ng-container>
-
-            <ng-template #oneMilestone>
-              <ion-list *ngIf="goal.milestones[0] as milestone" mode="md">
-                <h5>Milestone "{{ milestone.content }}" of goal "<a [routerLink]="['/goal', goal.id]">{{ goal.title }}</a>" has been completed</h5>
-
-                <ion-item *ngFor="let support of milestone.supports; let last = last" [lines]="last ? 'none' : 'inset'">
-                  <ng-container *ngTemplateOutlet="supportTemplate; context: { $implicit: support }"></ng-container>
-                </ion-item>
-              </ion-list>
-            </ng-template>
-          </ng-template>
+        <ng-container *ngFor="let support of goal.supports">
+          <article *ngIf="support.needsDecision">
+            <small>Goal has been finished. Decide to give support or not.</small>
+            <div>
+              <ion-button (click)="give(support)" color="secondary" size="small">
+                Give
+              </ion-button>
+              <ion-button (click)="reject(support)" fill="outline" size="small">
+                Reject
+              </ion-button>
+            </div>
+          </article>
+          <ion-item lines="inset" button [disabled]="support.status !== 'open'">
+            <support-pledge [support]="support"></support-pledge>
+          </ion-item>
         </ng-container>
 
-      </section>
-    </ng-container>
-
-    <ng-container *ngIf="fromYouSupports$ | async as fromYouSupports; else loading">
-    <ng-container *ngIf="toYouSupports$ | async as toYouSupports; else loading">
-
-      <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
-        <ion-segment-button value="fromYou">
-          FOR OTHERS <ng-container *ngIf="fromYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>
-        </ion-segment-button>
-        <ion-segment-button value="forYou">
-          FOR YOU <ng-container *ngIf="toYouSupports | filterStatus:'open' as open">{{ open.length ? '(' + open.length + ')' : '' }}</ng-container>
-        </ion-segment-button>
-      </ion-segment>
-
-      <ng-container [ngSwitch]="segmentChoice">
-        <section *ngSwitchCase="'fromYou'" class="segment">
-
-          <ng-container *ngIf="fromYouSupports.length else noFromYou">
-            <ion-list mode="md">
-              <ion-item *ngFor="let support of fromYouSupports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
-                <ion-thumbnail slot="start">
-                  <img [ref]="support.goal.image" asset="goal.png"/>
-                </ion-thumbnail>
-                <ion-label class="ion-text-wrap">
-                  <article>
-                    <span><b>{{ support.description }}</b> {{ support.status !== 'open' ? '(Given)' : '' }}</span>
-                    <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
-                    <small>Recipient: {{ support.recipient.username }}</small>
-                  </article>
-                </ion-label>
-                <ion-button fill="clear" (click)="openOptions(support, $event)">
-                  <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+        <ng-container *ngFor="let milestone of goal.milestones">
+          <ion-item lines="none">
+            <ion-label>
+              <small><a [routerLink]="'../goal/' + goal.id">{{ goal.title | mSlice}}</a>&nbsp;<span>&#8702;</span> {{ milestone.content | mSlice }}</small>
+              <ng-template [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-template>
+            </ion-label>
+          </ion-item>
+          <ng-container *ngFor="let support of milestone.supports">
+            <article *ngIf="support.needsDecision">
+              <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+              <div>
+                <ion-button (click)="give(support)" color="secondary" size="small">
+                  Give
                 </ion-button>
-              </ion-item>
-            </ion-list>
-          </ng-container>
+                <ion-button (click)="reject(support)" fill="outline" size="small">
+                  Reject
+                </ion-button>
+              </div>
+            </article>
 
-        </section>
-        <section *ngSwitchCase="'forYou'" class="segment">
-
-          <ng-container *ngIf="toYouSupports.length else noToYou">
-            <ion-list mode="md">
-              <ion-item *ngFor="let support of toYouSupports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
-                <ion-thumbnail slot="start">
-                  <img [ref]="support.goal.image" asset="goal.png"/>
-                </ion-thumbnail>
-                <ion-label class="ion-text-wrap">
-                  <article>
-                    <span><b>{{ support.description }}</b> {{ support.status !== 'open' ? '(Received)' : '' }}</span>
-                    <ng-template [ngTemplateOutlet]="path" [ngTemplateOutletContext]="{ $implicit: support }"></ng-template>
-                    <small>Supporter: {{ support.supporter.username }}</small>
-                  </article>
-                </ion-label>
-              </ion-item>
-            </ion-list>
-          </ng-container>
-
-        </section>
-      </ng-container>
-
-    </ng-container>
-    </ng-container>
+            <ion-item lines="inset" button [disabled]="support.status !== 'open'">
+              <support-pledge [support]="support"></support-pledge>
+            </ion-item>
+          </ng-container> 
+        </ng-container>
+      </ion-list>
+    </section>
       
   </main>
 </ion-content>
 
-<ng-template #noFromYou>
-  <p>You're not supporting any goals yet. Give incentive to yourself or someone else by rewarding one of their objectives.</p>
-</ng-template>
-
-<ng-template #noToYou>
-  <p>No one is supporting you yet. Share your goals to find out someone might be able to help.</p>
-</ng-template>
-
-<ng-template #path let-support>
-  <small *ngIf="!support.milestoneId">Goal: <a [routerLink]="'../goal/' + (support.goalId)">{{ support.goal.title }}</a></small>
-  <small *ngIf="support.milestoneId">Goal: <a [routerLink]="'../goal/' + (support.goalId)">{{ support.goal.title | mSlice}}</a>&nbsp;<span>&#8702;</span> {{ support.milestone.content | mSlice }}</small>
-</ng-template>
-
-<ng-template #supportTemplate let-support>
-  <ion-label class="ion-text-wrap">
-    <article>
-      <span>Support: <b>{{ support.description }}</b></span>
-      <small>Recipient: {{ support.recipient.username }}</small>
-      <small *ngIf="support.milestoneId">Milestone: {{ support.milestone.content }}</small>
-    </article>
-  </ion-label>
-  <ion-button color="primary" (click)="give(support)">
-    Give
-  </ion-button>
-  <ion-button fill="outline" (click)="reject(support)">
-    Reject
-  </ion-button>
-</ng-template>
-
 <ng-template #loading>
   <strive-page-loading></strive-page-loading>
+</ng-template>
+
+<ng-template #milestoneStatus let-milestone>
+  <small *ngIf="milestone.status === 'succeeded'">(achieved)</small>
+  <small *ngIf="milestone.status === 'failed'">(not achieved)</small>
+</ng-template>
+
+<ng-template #goalStatus let-goal>
+  <small *ngIf="goal.isFinished">(finished)</small>
 </ng-template>

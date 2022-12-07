@@ -2,44 +2,37 @@ main {
   max-width: var(--page-max-width);
   margin: auto;
 
-  section.needs-decision {
+  section {
     display: flex;
     flex-direction: column;
     gap: 16px;
     padding: 16px;
-  }
-
-  section.segment {
-    padding: 16px;
-  }
-
-  ion-list {
-    ion-label {
-      display: flex;
-      flex-direction: column;
+  
+    ion-list {
+      ion-item {
+        small {
+          color: var(--ion-color-medium);
+        }
+  
+        ion-label {
+          display: flex;
+          gap: 4px;
+        } 
+      }
+  
+      article {
+        display: block;
+        padding-inline: 16px;
+        white-space: pre-wrap;
+        text-align: center;
+        margin-block: 16px;
+  
+        div {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+        }
+      }
     }
-  }
-}
-
-h5 {
-  padding-inline: 16px;
-}
-
-article {
-  display: flex;
-  flex-direction: column;
-
-  small {
-    white-space: nowrap;
-  }
-}
-
-ion-thumbnail {
-  position: relative;
-  border-radius: 12px;
-
-  img {
-    border-radius: 12px;
-    object-fit: cover;
   }
 }

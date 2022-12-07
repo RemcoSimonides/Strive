@@ -1,13 +1,14 @@
-import { Component } from '@angular/core'
-import { ModalController, PopoverController, RefresherCustomEvent } from '@ionic/angular'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ModalController, RefresherCustomEvent } from '@ionic/angular'
+
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 
-import { Observable, of, shareReplay } from 'rxjs'
+import { combineLatest, Observable, of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
-import { compareDesc } from 'date-fns'
+
 import { delay, unique } from '@strive/utils/helpers'
-import { Goal, Milestone, Support, SupportStatus } from '@strive/model'
+import { Goal, Milestone, Support } from '@strive/model'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { SupportService } from '@strive/support/support.service'
@@ -17,8 +18,6 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { SupportOptionsComponent } from '@strive/support/components/options/options.component'
-import { ActivatedRoute } from '@angular/router'
 
 type GroupedByMilestone = Milestone & { supports: Support[] }
 type GroupedByGoal = Goal & { milestones: GroupedByMilestone[], supports: Support[] }
@@ -58,15 +57,11 @@ function groupByObjective(supports: Support[]): GroupedByGoal[] {
   selector: 'journal-supports',
   templateUrl: './supports.page.html',
   styleUrls: ['./supports.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SupportsComponent {
 
-  supportsNeedDecision$: Observable<GroupedByGoal[]>
-  fromYouSupports$: Observable<Support[]>
-  toYouSupports$: Observable<Support[]>
-
-  segmentChoice: 'forYou' | 'fromYou' = 'fromYou'
-
+  objectivesWithSupports$: Observable<GroupedByGoal[]>
   uid$ = this.auth.uid$
 
   constructor(
@@ -74,63 +69,29 @@ export class SupportsComponent {
     private goalService: GoalService,
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
     private profileService: ProfileService,
-    private route: ActivatedRoute,
     seo: SeoService,
     private support: SupportService
   ) {
     seo.generateTags({ title: `Supports - Strive Journal` })
 
-    const supportsGive$: Observable<Support[]> = this.auth.profile$.pipe(
-      switchMap(profile => profile ? this.support.valueChanges([where('supporterId', '==', profile.uid)]) : of([])),
-      joinWith({
-        goal: ({ goalId }) => this.goalService.valueChanges(goalId),
-        milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
-        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId)
+    this.objectivesWithSupports$ = this.auth.profile$.pipe(
+      switchMap(profile => {
+        if (!profile) return of([[], []])
+        return combineLatest([
+          this.support.valueChanges([where('supporterId', '==', profile.uid)]),
+          this.support.valueChanges([where('recipientId', '==', profile.uid)])
+        ])
       }),
-      shareReplay({ bufferSize: 1, refCount: true }),
-    )
-    
-    this.fromYouSupports$ = supportsGive$.pipe(
-      map(supports => supports.filter(support => support.status !== 'rejected' )), // dont show rejected supporteds
-      map(supports => supports.sort((a, b) => compareDesc(a.createdAt, b.createdAt))),
-      map(supports => supports.sort((a: any, b: any) => {
-        const order: SupportStatus[] = ['open', 'waiting_to_be_paid', 'paid', 'rejected']
-        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
-        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
-        return 0
-      }))
-    )
-
-    this.toYouSupports$ = this.auth.profile$.pipe(
-      switchMap(user => user ? this.support.valueChanges([where('recipientId', '==', user.uid)]) : of([])),
+      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
       joinWith({
         goal: ({ goalId }) => this.goalService.valueChanges(goalId),
         milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
+        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }),
-      map(supports => supports.filter(support => support.status !== 'rejected' )), // dont show rejected supporteds
-      map(supports => supports.sort((a, b) => compareDesc(a.createdAt, b.createdAt))),
-      map(supports => supports.sort((a: any, b: any) => {
-        const order: SupportStatus[] = ['open', 'waiting_to_be_paid', 'paid', 'rejected']
-        if (order.indexOf(a.status) > order.indexOf(b.status)) return 1
-        if (order.indexOf(a.status) < order.indexOf(b.status)) return -1
-        return 0
-      }))
-    )
-
-    this.supportsNeedDecision$ = supportsGive$.pipe(
-      map(supports => supports.filter(support => support.needsDecision)),
       map(groupByObjective)
     )
-
-    const { t } = this.route.snapshot.queryParams
-    this.segmentChoice = ['forYou', 'fromYou'].includes(t) ? t : 'fromYou'
-  }
-
-  segmentChanged(ev: CustomEvent) {
-    this.segmentChoice = ev.detail.value
   }
 
   openAuthModal() {
@@ -140,19 +101,6 @@ export class SupportsComponent {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
-  }
-
-  supportPaid(support: Support) {
-    if (!support.id) return
-    this.support.update(support.id, { status: 'paid' }, { params: { goalId: support.goalId }})
-  }
-
-  openOptions(support: Support, event: Event) {
-    this.popoverCtrl.create({
-      component: SupportOptionsComponent,
-      event,
-      componentProps: { support, goalId: support.goalId }
-    }).then(popover => popover.present())
   }
 
   give(support: Support) {

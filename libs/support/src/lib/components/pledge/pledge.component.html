@@ -1,0 +1,16 @@
+<section>
+  <ion-avatar slot="start">
+    <img [ref]="support.supporter?.photoURL" asset="profile.png"/>
+  </ion-avatar>
+  <small>{{ support.supporter?.username! | maxLength: 8 }}</small>
+</section>
+<article>
+  <span>{{ support.description }}</span>
+  <strive-arrow-forward color="var(--ion-color-secondary)"></strive-arrow-forward>
+</article>
+<section>
+  <ion-avatar slot="start">
+    <img [ref]="support.recipient?.photoURL" asset="profile.png"/>
+  </ion-avatar>
+  <small>{{ support.recipient?.username! | maxLength: 8 }}</small>
+</section>

@@ -31,7 +31,6 @@ export interface NotificationMessage {
   image: string
   type: NotificationSourceType
   link: string
-  params?: unknown
   message: NotificationMessageText[]
 }
 
@@ -161,7 +160,6 @@ export function getNotificationMessage(notification: Notification): Notification
       return {
         ...getUser(user),
         link: '/supports',
-        params: { t: 'forYou' },
         message
       }
     }
@@ -187,7 +185,6 @@ export function getNotificationMessage(notification: Notification): Notification
       return {
         ...getGoal(goal),
         link: '/supports',
-        params: { t: 'forYou' },
         message: [
           {
             text: user.username,
