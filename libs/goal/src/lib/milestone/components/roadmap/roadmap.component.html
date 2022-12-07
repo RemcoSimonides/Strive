@@ -43,7 +43,7 @@
       
       <form [formGroup]="milestoneForm" *ngIf="canEdit">
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
-          <ion-button *ngIf="!createMode" fill="clear" slot="start" class="status-button" disabled class="fake-enable">
+          <ion-button *ngIf="!createMode" fill="clear" slot="start" disabled class="status-button fake-enable">
             <goal-milestone-status slot="icon-only"></goal-milestone-status>
           </ion-button>
           <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
