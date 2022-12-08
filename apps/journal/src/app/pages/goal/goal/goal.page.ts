@@ -29,7 +29,7 @@ import { SupportService } from '@strive/support/support.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 // Strive Interfaces
-import { createGoal, Goal, GoalStakeholder, Milestone, StoryItem } from '@strive/model'
+import { createGoal, Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem } from '@strive/model'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
@@ -67,6 +67,8 @@ export class GoalComponent {
   milestones$?: Observable<Milestone[]>
   openRequests$?: Observable<GoalStakeholder[]>
 
+  supports$: Observable<SupportsGroupedByGoal[]>
+
   @Output() segmentChange = new EventEmitter<'goal' | 'roadmap' | 'story'>()
 
   constructor(
@@ -81,12 +83,15 @@ export class GoalComponent {
     private route: ActivatedRoute,
     private router: Router,
     private stakeholderService: GoalStakeholderService,
-    private supportService: SupportService,
+    private support: SupportService,
     public screensize: ScreensizeService,
     private seo: SeoService
   ) {
-    this.milestones$ = this.route.params.pipe(
-      map(params => params['id'] as string),
+    const goalId$ = this.route.params.pipe(
+      map(params => params['id'] as string)
+    )
+
+    this.milestones$ = goalId$.pipe(
       switchMap(goalId => this.milestone.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
         joinWith({
           achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
@@ -102,8 +107,8 @@ export class GoalComponent {
                 where('supporterId', '==', user.uid)
               ]
               return combineLatest([
-                this.supportService.valueChanges(recipientQuery, { goalId }),
-                this.supportService.valueChanges(supporterQuery, { goalId }),
+                this.support.valueChanges(recipientQuery, { goalId }),
+                this.support.valueChanges(supporterQuery, { goalId }),
               ]).pipe(
                 map(([ recipientSupports, supporterSupports ]) => {
                   const supports = [ ...recipientSupports, ...supporterSupports]
@@ -114,6 +119,27 @@ export class GoalComponent {
           )}, { shouldAwait: false })  
         )
       )
+    )
+
+    this.supports$ = combineLatest([
+      this.auth.profile$,
+      goalId$
+    ]).pipe(
+      switchMap(([ profile, goalId ]) => {
+        if (!profile) return of([[], []])
+        return combineLatest([
+          this.support.valueChanges([where('supporterId', '==', profile.uid)], { goalId }),
+          this.support.valueChanges([where('recipientId', '==', profile.uid)], { goalId })
+        ])
+      }),
+      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      joinWith({
+        goal: () => this.goal,
+        milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
+        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
+        supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
+      }),
+      map(groupByObjective)
     )
   }
 

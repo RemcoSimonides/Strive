@@ -6,12 +6,11 @@ import { IonicModule } from '@ionic/angular'
 
 import { SupportsComponent } from './supports.page'
 
-import { HeaderModule } from '@strive/ui/header/header.module'
-import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
-import { ImageModule } from '@strive/media/directives/image.module'
-import { PledgeModule } from '@strive/support/components/pledge/pledge.module'
+
+import { SupportListModule } from '@strive/support/components/list/list.module'
+import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 
 const routes: Routes = [
   {
@@ -25,12 +24,10 @@ const routes: Routes = [
     CommonModule,
     IonicModule,
     RouterModule.forChild(routes),
-    HeaderModule,
-    MilestonePathPipeModule,
     PageLoadingModule,
     HeaderRootModule,
-    ImageModule,
-    PledgeModule,
+    SupportListModule,
+    MilestonePathPipeModule
   ],
   declarations: [
     SupportsComponent,

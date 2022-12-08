@@ -7,8 +7,8 @@ import { joinWith } from 'ngfire'
 import { combineLatest, Observable, of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
-import { delay, unique } from '@strive/utils/helpers'
-import { Goal, Milestone, Support } from '@strive/model'
+import { delay } from '@strive/utils/helpers'
+import { groupByObjective, SupportsGroupedByGoal, Support } from '@strive/model'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { SupportService } from '@strive/support/support.service'
@@ -19,40 +19,6 @@ import { ProfileService } from '@strive/user/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
-type GroupedByMilestone = Milestone & { supports: Support[] }
-type GroupedByGoal = Goal & { milestones: GroupedByMilestone[], supports: Support[] }
-
-function groupByObjective(supports: Support[]): GroupedByGoal[] {
-
-  const groups: GroupedByGoal[] = []
-
-  const goalIds = unique(supports.map(support => support.goalId))
-  for (const goalId of goalIds) {
-    const supportsOfGoal = supports.filter(support => support.goalId === goalId).sort((a) => a.milestoneId ? 1 : -1)
-    const supportsWithoutMilestone = supportsOfGoal.filter(support => !support.milestoneId)
-
-    const group: GroupedByGoal = {
-      ...supportsOfGoal[0].goal as Goal,
-      supports: supportsWithoutMilestone,
-      milestones: []
-    }
-
-    const milestoneIds = unique(supportsOfGoal.filter(support => support.milestoneId).map(support => support.milestoneId))
-    for (const milestoneId of milestoneIds) {
-      const supportsOfMilestone = supportsOfGoal.filter(support => support.milestoneId === milestoneId)
-      const groupByMilestone: GroupedByMilestone = {
-        ...supportsOfMilestone[0].milestone as Milestone,
-        supports: supportsOfMilestone
-      }
-      group.milestones.push(groupByMilestone)
-    }
-
-    groups.push(group)
-  }
-
-  return groups
-}
-
 @Component({
   selector: 'journal-supports',
   templateUrl: './supports.page.html',
@@ -61,7 +27,7 @@ function groupByObjective(supports: Support[]): GroupedByGoal[] {
 })
 export class SupportsComponent {
 
-  objectivesWithSupports$: Observable<GroupedByGoal[]>
+  objectivesWithSupports$: Observable<SupportsGroupedByGoal[]>
   uid$ = this.auth.uid$
 
   constructor(

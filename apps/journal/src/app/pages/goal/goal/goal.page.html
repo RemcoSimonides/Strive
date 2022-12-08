@@ -147,6 +147,17 @@
     </section>
 
     <section>
+      <h3>Supports</h3>
+      <ng-container *ngIf="supports$ | async as supports">
+        <support-list [goal]="supports[0]">
+          <ng-template #milestone let-milestone="milestone">
+            <small>Milestone: {{ milestone.content }}</small>
+          </ng-template>
+        </support-list>
+      </ng-container>
+    </section>  
+
+    <section>
       <h3>Story</h3>
       <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id"></goal-story>
     </section>
