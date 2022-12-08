@@ -154,6 +154,12 @@ ion-button {
   }
 }
 
+ion-item {
+  &.fake-disable {
+    opacity: 0.5;
+  }
+}
+
 button.alert-button.alert-button-delete {
   color: var(--ion-color-danger);
   margin-bottom: 8px;

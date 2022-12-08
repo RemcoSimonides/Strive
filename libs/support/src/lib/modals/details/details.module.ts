@@ -5,12 +5,14 @@ import { IonicModule } from '@ionic/angular'
 import { SupportDetailsComponent } from './details.component'
 
 import { PledgeModule } from '../../components/pledge/pledge.module'
+import { SupportDecisionModule } from '../../components/decision/decision.module'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    PledgeModule
+    PledgeModule,
+    SupportDecisionModule
   ],
   declarations: [SupportDetailsComponent],
   exports: [SupportDetailsComponent]

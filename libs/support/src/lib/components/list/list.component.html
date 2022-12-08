@@ -14,7 +14,7 @@
     <ion-item
       [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'inset'"
       button
-      [disabled]="support.status !== 'open'"
+      [ngClass]="{'fake-disable': support.status !== 'open'}"
       (click)="openDetails(support)"
     >
       <support-pledge [support]="support"></support-pledge>
@@ -37,7 +37,7 @@
       <ion-item
         [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'inset'"
         button
-        [disabled]="support.status !== 'open'"
+        [ngClass]="{'fake-disable': support.status !== 'open'}"
         (click)="openDetails(support, milestone)"
       >
         <support-pledge [support]="support"></support-pledge>

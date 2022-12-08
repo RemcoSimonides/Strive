@@ -4,8 +4,22 @@ main {
   gap: 16px;
 }
 
-ion-item {
-  --highlight-background: var(--ion-color-primary); 
+.decision {
+  display: block;
+  padding-inline: 16px;
+  white-space: pre-wrap;
+  text-align: center;
+  margin-block: 16px;
+
+  support-decision {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+}
+
+support-pledge {
+  margin-block: 16px;
 }
 
 .actions {

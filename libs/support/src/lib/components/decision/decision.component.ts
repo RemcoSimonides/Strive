@@ -17,5 +17,7 @@ export class SupportDecisionComponent {
   updateStatus(status: SupportStatus) {
     if (!this.support?.id) return
     this.supportService.update(this.support.id, { status, needsDecision: false }, { params: { goalId: this.support.goalId }})
+    this.support.status = status
+    this.support.needsDecision = false
   }
 }
