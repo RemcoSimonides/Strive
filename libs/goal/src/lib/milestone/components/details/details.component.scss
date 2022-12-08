@@ -78,35 +78,6 @@ section {
   align-items: center;
 }
 
-.subtasks {
-  header {
-    display: flex;
-    gap: 4px;
-
-    small {
-      color: var(--ion-color-medium);
-      margin-bottom: 10px;
-      margin-top: auto;
-    }
-  }
-}
-
-.support {
-  article {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    i {
-      color: var(--ion-color-medium);
-    }
-  
-    ion-button {
-      width: fit-content;
-    }
-  }
-}
-
 .description {
   small {
     display: flex;
@@ -119,18 +90,63 @@ section {
   }
 }
 
-ion-list {
-  ion-item {
-    --padding-start: 0;
+.subtasks {
+  header {
+    display: flex;
+    gap: 4px;
+
+    small {
+      color: var(--ion-color-medium);
+      margin-bottom: 10px;
+      margin-top: auto;
+    }
   }
 
-  .icon {
-    margin: 0 8px;
+  ion-list {
+    ion-item {
+      --padding-start: 0;
+    }
+  
+    .icon {
+      margin: 0 8px;
+    }
+  
+    ion-icon {
+      height: 16px;
+      margin-right: auto;
+    }
   }
+}
 
-  ion-icon {
-    height: 16px;
-    margin-right: auto;
+.supports {
+  ion-list {
+    ion-item {
+      --inner-padding-bottom: 4px;
+      --inner-padding-top: 4px;
+  
+      small {
+        color: var(--ion-color-medium);
+      }
+  
+      ion-label {
+        display: flex;
+        gap: 4px;
+      } 
+    }
+  
+    article {
+      display: block;
+      padding-inline: 16px;
+      white-space: pre-wrap;
+      text-align: center;
+      margin-block: 16px;
+  
+      support-decision {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+    }
   }
 }
 

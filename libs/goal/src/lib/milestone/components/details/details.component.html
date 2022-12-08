@@ -122,23 +122,21 @@
       </ion-list>
     </section>
 
-    <section class="support">
+    <section class="supports">
       <h6>Supports</h6>
-      <article>
-        <div (click)="openSupportModal()">
-          <ng-container *ngIf="milestone.supports?.length else noSupports">
-            <span>{{ milestone.supports.length }} {{ milestone.supports.length === 1 ? 'support' : 'supports' }}</span>
-          </ng-container>
-          <ng-template #noSupports>
-            <i>no supports</i>
-          </ng-template>
-        </div>
 
-        <ion-button (click)="openSupportModal()" class="secondary">
-          <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
-          <span>{{ milestone.status === 'pending' ? 'SUPPORT' : 'ADD SUPPORT'}}</span>
-        </ion-button>
-      </article>
+      <ion-list mode="md">
+        <ng-container *ngFor="let support of milestone.supports; let last = last">
+          <article *ngIf="support.needsDecision">
+            <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+            <support-decision [support]="support"></support-decision>
+          </article>
+
+          <ion-item [lines]="last ? 'none' : 'inset'" button [disabled]="support.status !== 'open'">
+            <support-pledge [support]="support"></support-pledge>
+          </ion-item>
+        </ng-container>
+      </ion-list>
     </section>
 
     <ng-container *ngIf="story$ | async as story">

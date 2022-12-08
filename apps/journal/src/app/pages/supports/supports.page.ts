@@ -8,7 +8,7 @@ import { combineLatest, Observable, of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
 import { delay } from '@strive/utils/helpers'
-import { groupByObjective, SupportsGroupedByGoal, Support } from '@strive/model'
+import { groupByObjective, SupportsGroupedByGoal } from '@strive/model'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { SupportService } from '@strive/support/support.service'
@@ -69,16 +69,6 @@ export class SupportsComponent {
     }).then(modal => modal.present())
   }
 
-  give(support: Support) {
-    if (!support.id) return
-    this.support.update(support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: support.goalId }})
-  }
-
-  reject(support: Support) {
-    if (!support.id) throw new Error('Trying to reject support but support.id is unknown')
-    this.support.update(support.id, { status: 'rejected', needsDecision: false }, { params: { goalId: support.goalId }})
-  }
-  
   async refresh($event: RefresherCustomEvent) {
     await delay(500)
     $event?.target.complete()

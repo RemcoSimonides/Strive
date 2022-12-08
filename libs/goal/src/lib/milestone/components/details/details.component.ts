@@ -25,6 +25,8 @@ import { AddSupportModalComponent } from '@strive/support/components/add/add.com
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
+type MilestoneWithSupport = Milestone & { supports?: Support[] }
+
 @Component({
   selector: '[goal][milestone][stakeholder] goal-milestone-details',
   templateUrl: './details.component.html',
@@ -42,7 +44,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   story$?: Observable<StoryItem[]>
 
   @Input() goal!: Goal
-  @Input() milestone!: Milestone & { supports?: Support[] }
+  @Input() milestone!: MilestoneWithSupport
   @Input() stakeholder = createGoalStakeholder()
 
   get canEdit(): boolean {

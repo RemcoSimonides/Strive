@@ -42,7 +42,7 @@ export function createSupportBase(params: Partial<SupportBase> = {}): SupportBas
   return support
 }
 
-type SupportsGroupedByMilestone = Milestone & { supports: Support[] }
+export type SupportsGroupedByMilestone = Milestone & { supports: Support[] }
 export type SupportsGroupedByGoal = Goal & { milestones: SupportsGroupedByMilestone[], supports: Support[] }
 
 export function groupByObjective(supports: Support[]): SupportsGroupedByGoal[] {

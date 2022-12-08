@@ -8,7 +8,7 @@ import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 // Rxjs
 import { combineLatest, Observable, of } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+import { map, shareReplay, switchMap } from 'rxjs/operators'
 // Capacitor
 import { Share } from '@capacitor/share'
 // Strive Components
@@ -91,37 +91,7 @@ export class GoalComponent {
       map(params => params['id'] as string)
     )
 
-    this.milestones$ = goalId$.pipe(
-      switchMap(goalId => this.milestone.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
-        joinWith({
-          achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
-          supports: milestone => this.auth.profile$.pipe(
-            switchMap(user => {
-              if (!user) return of([])
-              const recipientQuery = [
-                where('milestoneId', '==', milestone.id),
-                where('recipientId', '==', user.uid)
-              ]
-              const supporterQuery = [
-                where('milestoneId', '==', milestone.id),
-                where('supporterId', '==', user.uid)
-              ]
-              return combineLatest([
-                this.support.valueChanges(recipientQuery, { goalId }),
-                this.support.valueChanges(supporterQuery, { goalId }),
-              ]).pipe(
-                map(([ recipientSupports, supporterSupports ]) => {
-                  const supports = [ ...recipientSupports, ...supporterSupports]
-                  return supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)
-                })
-              )
-            })
-          )}, { shouldAwait: false })  
-        )
-      )
-    )
-
-    this.supports$ = combineLatest([
+    const supports$ = combineLatest([
       this.auth.profile$,
       goalId$
     ]).pipe(
@@ -138,8 +108,21 @@ export class GoalComponent {
         milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
-      }),
-      map(groupByObjective)
+      }, { shouldAwait: true }),
+      shareReplay({ bufferSize: 1, refCount: true })
+    )
+
+    this.supports$ = supports$.pipe(map(groupByObjective))
+
+    this.milestones$ = goalId$.pipe(
+      switchMap(goalId => this.milestone.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
+        joinWith({
+          achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
+          supports: milestone => supports$.pipe(
+            map(supports => supports.filter(support => support.milestoneId === milestone.id))
+          )
+        },{ shouldAwait: false })
+      ))
     )
   }
 

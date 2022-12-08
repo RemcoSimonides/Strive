@@ -5,7 +5,8 @@ import { IonicModule } from '@ionic/angular'
 
 import { SupportListComponent } from './list.component'
 
-import { PledgeModule } from '@strive/support/components/pledge/pledge.module'
+import { PledgeModule } from '../pledge/pledge.module'
+import { SupportDecisionModule } from '../decision/decision.module'
 import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 
 @NgModule({
@@ -14,7 +15,8 @@ import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
     RouterModule,
     IonicModule,
     PledgeModule,
-    MilestonePathPipeModule
+    MilestonePathPipeModule,
+    SupportDecisionModule
   ],
   declarations: [
     SupportListComponent

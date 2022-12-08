@@ -6,17 +6,10 @@
     </ion-label>
   </ion-item>
 
-  <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last">
+  <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last; trackBy: trackBySupport">
     <article *ngIf="support.needsDecision">
       <small>Goal has been finished. Decide to give support or not.</small>
-      <div>
-        <ion-button (click)="give(support)" color="secondary" size="small">
-          Give
-        </ion-button>
-        <ion-button (click)="reject(support)" fill="outline" size="small">
-          Reject
-        </ion-button>
-      </div>
+      <support-decision [support]="support"></support-decision>
     </article>
     <ion-item [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'inset'" button [disabled]="support.status !== 'open'">
       <support-pledge [support]="support"></support-pledge>
@@ -30,22 +23,15 @@
         <ng-template [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-template>
       </ion-label>
     </ion-item>
-    <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last">
+    <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; ; trackBy: trackBySupport">
       <article *ngIf="support.needsDecision">
         <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
-        <div>
-          <ion-button (click)="give(support)" color="secondary" size="small">
-            Give
-          </ion-button>
-          <ion-button (click)="reject(support)" fill="outline" size="small">
-            Reject
-          </ion-button>
-        </div>
+        <support-decision [support]="support"></support-decision>
       </article>
 
       <ion-item [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'inset'" button [disabled]="support.status !== 'open'">
         <support-pledge [support]="support"></support-pledge>
       </ion-item>
-    </ng-container> 
+    </ng-container>
   </ng-container>
 </ion-list>

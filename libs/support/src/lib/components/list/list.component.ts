@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core'
-import { SupportsGroupedByGoal } from '@strive/model'
+import { Support, SupportsGroupedByGoal } from '@strive/model'
 
 @Component({
   selector: 'support-list',
@@ -12,4 +12,8 @@ export class SupportListComponent {
 
   @ContentChild('goal') goalDescription?: TemplateRef<unknown>
   @ContentChild('milestone') milestoneDescription?: TemplateRef<unknown>
+
+  trackBySupport(index: number, support: Support) {
+    return support.id
+  }
 }
