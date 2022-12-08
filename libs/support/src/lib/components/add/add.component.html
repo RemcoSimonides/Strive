@@ -12,6 +12,7 @@
         slot="end" 
         (click)="addSupport()"
         color="secondary"
+        [disabled]="form.invalid"
       >
         <span>ADD</span>
         <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>

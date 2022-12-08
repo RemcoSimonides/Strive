@@ -14,6 +14,7 @@ export class SupportListComponent {
 
   @ContentChild('goal') goalDescription?: TemplateRef<unknown>
   @ContentChild('milestone') milestoneDescription?: TemplateRef<unknown>
+  @ContentChild('empty') emptyDescription?: TemplateRef<unknown>
 
   constructor(private modalCtrl: ModalController) {}
 

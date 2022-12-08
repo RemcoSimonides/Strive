@@ -2,6 +2,11 @@ main {
   max-width: var(--page-max-width);
   margin: auto;
 
+  h1 {
+    color: var(--ion-color-primary);
+    padding-inline: 16px;
+  }
+
   section {
     display: flex;
     flex-direction: column;

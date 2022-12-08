@@ -122,6 +122,10 @@ section {
   support-add {
     margin-bottom: 16px;
   }
+
+  support-list i {
+    color: var(--ion-color-medium);
+  }
 }
 
 .clickable {

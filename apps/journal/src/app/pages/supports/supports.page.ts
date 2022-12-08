@@ -18,6 +18,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 @Component({
   selector: 'journal-supports',
@@ -29,6 +30,7 @@ export class SupportsComponent {
 
   objectivesWithSupports$: Observable<SupportsGroupedByGoal[]>
   uid$ = this.auth.uid$
+  isMobile$ = this.screensize.isMobile$
 
   constructor(
     private auth: AuthService,
@@ -36,6 +38,7 @@ export class SupportsComponent {
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
     private profileService: ProfileService,
+    private screensize: ScreensizeService,
     seo: SeoService,
     private support: SupportService
   ) {

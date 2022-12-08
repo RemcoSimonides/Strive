@@ -9,6 +9,7 @@ import { PledgeModule } from '../pledge/pledge.module'
 import { SupportDecisionModule } from '../decision/decision.module'
 import { SupportDetailsModule } from '../../modals/details/details.module'
 import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
+import { SupportNotEmptyPipeModule } from '../../pipes/not-empty.pipe'
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
     PledgeModule,
     MilestonePathPipeModule,
     SupportDecisionModule,
-    SupportDetailsModule
+    SupportDetailsModule,
+    SupportNotEmptyPipeModule
   ],
   declarations: [
     SupportListComponent

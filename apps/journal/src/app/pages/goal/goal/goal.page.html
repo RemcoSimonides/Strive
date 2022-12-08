@@ -151,6 +151,11 @@
             <ng-template #milestone let-milestone="milestone">
               <small>Milestone: {{ milestone.content }}</small>
             </ng-template>
+            <ng-container *ngIf="!goal.isFinished">
+              <ng-template #empty>
+                <i>No supports yet</i>
+              </ng-template>
+            </ng-container>
           </support-list>
         </ng-container>
       </article>

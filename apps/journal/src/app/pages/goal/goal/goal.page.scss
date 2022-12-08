@@ -120,10 +120,16 @@ strive-description, goal-strive-roadmap  {
     flex-direction: column;
     gap: 16px;
 
-    support-list  small {
+    support-list {
+      small {
         overflow: hidden;
         text-overflow: ellipsis;
         color: var(--ion-color-medium);
+      }
+
+      i {
+        color: var(--ion-color-medium);
+      }
     }
   }
 }
