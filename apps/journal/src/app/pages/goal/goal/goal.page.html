@@ -142,7 +142,9 @@
     <section class="supports">
       <h3>Supports</h3>
       <article>
-        <support-add [goal]="goal" *ngIf="!goal.isFinished"></support-add>
+        <ng-container *ngIf="!goal.isFinished">
+          <support-add [goal]="goal"></support-add>
+        </ng-container>
 
         <ng-container *ngIf="supports$ | async as supports">
           <support-list [goal]="supports[0]">

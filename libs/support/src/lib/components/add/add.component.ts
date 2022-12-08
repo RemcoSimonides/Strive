@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
+import { ModalController } from '@ionic/angular'
 
 import { where } from 'firebase/firestore'
 
@@ -9,8 +10,9 @@ import { SupportService } from '@strive/support/support.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/user/profile.service'
-import { ModalController } from '@ionic/angular'
+
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
+import { AuthModalComponent } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 
 @Component({
   selector: '[goal] support-add',
@@ -24,6 +26,8 @@ export class AddSupportComponent {
   @Input() milestone?: Milestone
 
   form = new FormControl('', { validators: [Validators.required, Validators.maxLength(60)], nonNullable: true })
+
+  isLoggedIn$ = this.auth.isLoggedIn$
 
   constructor(
     private auth: AuthService,
@@ -76,5 +80,11 @@ export class AddSupportComponent {
       this.form.setValue('')
     }
     return
+  }
+
+  openAuthModal() {
+    this.modalCtrl.create({
+      component: AuthModalComponent
+    }).then(modal => modal.present())
   }
 }

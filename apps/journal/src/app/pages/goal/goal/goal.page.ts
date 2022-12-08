@@ -65,7 +65,6 @@ export class GoalComponent {
 
   milestones$?: Observable<Milestone[]>
   openRequests$?: Observable<GoalStakeholder[]>
-
   supports$: Observable<SupportsGroupedByGoal[]>
 
   @Output() segmentChange = new EventEmitter<'goal' | 'roadmap' | 'story'>()
