@@ -103,6 +103,7 @@ export class GoalComponent {
         ])
       }),
       map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: () => this.goal,
         milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
