@@ -15,6 +15,7 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 import { PledgeModule } from '@strive/support/components/pledge/pledge.module'
 import { SupportDecisionModule } from '@strive/support/components/decision/decision.module'
+import { AddSupportModule } from '@strive/support/components/add-2/add.module'
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { SupportDecisionModule } from '@strive/support/components/decision/decis
     DatetimeModule,
     UpsertPostModalModule,
     PledgeModule,
-    SupportDecisionModule
+    SupportDecisionModule,
+    AddSupportModule
   ],
   declarations: [
     DetailsComponent

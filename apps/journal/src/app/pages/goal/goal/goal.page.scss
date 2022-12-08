@@ -108,12 +108,22 @@ ion-select {
   padding: 0 4px;
 }
 
-strive-description, goal-strive-roadmap, support-list  {
+strive-description, goal-strive-roadmap  {
   margin-block: 32px; 
 }
 
-support-list small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--ion-color-medium);
+.supports {
+
+  article {
+    margin-block: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    support-list  small {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--ion-color-medium);
+    }
+  }
 }

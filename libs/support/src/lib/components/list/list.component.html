@@ -19,7 +19,7 @@
   <ng-container *ngFor="let milestone of goal.milestones; let lastMilestone = last">
     <ion-item lines="none" *ngIf="milestoneDescription">
       <ion-label>
-        <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone: milestone }"></ng-container>
+        <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }"></ng-container>
         <ng-template [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-template>
       </ion-label>
     </ion-item>

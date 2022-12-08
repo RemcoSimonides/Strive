@@ -18,8 +18,10 @@ import { FocusModalModule } from '@strive/goal/stakeholder/modals/upsert-focus/u
 import { DescriptionModule } from '@strive/ui/description/description.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
+
 import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { SupportListModule } from '@strive/support/components/list/list.module'
+import { AddSupportModule } from '@strive/support/components/add-2/add.module'
 
 @NgModule({
   imports: [
@@ -40,7 +42,8 @@ import { SupportListModule } from '@strive/support/components/list/list.module'
     DescriptionModule,
     JoinButtonModule,
     FocusModalModule,
-    SupportListModule
+    SupportListModule,
+    AddSupportModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

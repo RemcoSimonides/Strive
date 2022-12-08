@@ -146,15 +146,19 @@
       </goal-strive-roadmap>
     </section>
 
-    <section>
+    <section class="supports">
       <h3>Supports</h3>
-      <ng-container *ngIf="supports$ | async as supports">
-        <support-list [goal]="supports[0]">
-          <ng-template #milestone let-milestone="milestone">
-            <small>Milestone: {{ milestone.content }}</small>
-          </ng-template>
-        </support-list>
-      </ng-container>
+      <article>
+        <support-add [goal]="goal" *ngIf="!goal.isFinished"></support-add>
+
+        <ng-container *ngIf="supports$ | async as supports">
+          <support-list [goal]="supports[0]">
+            <ng-template #milestone let-milestone="milestone">
+              <small>Milestone: {{ milestone.content }}</small>
+            </ng-template>
+          </support-list>
+        </ng-container>
+      </article>
     </section>
 
     <section>

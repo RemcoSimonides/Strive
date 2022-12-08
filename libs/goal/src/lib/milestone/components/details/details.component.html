@@ -125,18 +125,28 @@
     <section class="supports">
       <h6>Supports</h6>
 
-      <ion-list mode="md">
-        <ng-container *ngFor="let support of milestone.supports; let last = last">
-          <article *ngIf="support.needsDecision">
-            <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
-            <support-decision [support]="support"></support-decision>
-          </article>
+      <ng-container *ngIf="milestone.status === 'pending'">
+        <support-add [goal]="goal" [milestone]="milestone"></support-add>
+      </ng-container>
 
-          <ion-item [lines]="last ? 'none' : 'inset'" button [disabled]="support.status !== 'open'">
-            <support-pledge [support]="support"></support-pledge>
-          </ion-item>
-        </ng-container>
-      </ion-list>
+      <ng-container *ngIf="supports$ | async as supports">
+        <ion-list mode="md" *ngIf="supports.length; else noSupports">
+          <ng-container *ngFor="let support of supports; let last = last">
+            <article *ngIf="support.needsDecision">
+              <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+              <support-decision [support]="support"></support-decision>
+            </article>
+  
+            <ion-item [lines]="last ? 'none' : 'inset'" button [disabled]="support.status !== 'open'">
+              <support-pledge [support]="support"></support-pledge>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+  
+        <ng-template #noSupports>
+          <small class="empty">No supports</small>
+        </ng-template>
+      </ng-container>
     </section>
 
     <ng-container *ngIf="story$ | async as story">

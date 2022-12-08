@@ -119,6 +119,10 @@ section {
 }
 
 .supports {
+  support-add {
+    margin-bottom: 16px;
+  }
+
   ion-list {
     ion-item {
       --inner-padding-bottom: 4px;
@@ -147,6 +151,10 @@ section {
         justify-content: center;
       }
     }
+  }
+
+  .empty {
+    color: var(--ion-color-medium);
   }
 }
 

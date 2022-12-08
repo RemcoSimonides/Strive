@@ -6,8 +6,8 @@ import { FormArray } from '@angular/forms'
 import { orderBy, serverTimestamp, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 
-import { Observable, of, Subscription } from 'rxjs'
-import { debounceTime, filter } from 'rxjs/operators'
+import { combineLatest, Observable, of, Subscription } from 'rxjs'
+import { debounceTime, filter, map, switchMap } from 'rxjs/operators'
 import { addYears, endOfYear } from 'date-fns'
 
 import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus } from '@strive/model'
@@ -19,6 +19,7 @@ import { StoryService } from '@strive/goal/story/story.service'
 import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { AuthService } from '@strive/user/auth/auth.service'
+import { SupportService } from '@strive/support/support.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
@@ -42,6 +43,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   showDescription = false
 
   story$?: Observable<StoryItem[]>
+  supports$?: Observable<Support[]>
 
   @Input() goal!: Goal
   @Input() milestone!: MilestoneWithSupport
@@ -64,7 +66,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     private popoverCtrl: PopoverController,
     private postService: PostService,
     private profileService: ProfileService,
-    private storyService: StoryService
+    private storyService: StoryService,
+    private supportService: SupportService
   ) {
     super (location, modalCtrl, platform)
   }
@@ -82,6 +85,24 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
       })
+    )
+
+    this.supports$ = this.auth.profile$.pipe(
+      switchMap(profile => {
+        if (!profile) return []
+        return combineLatest([
+          this.supportService.valueChanges([where('supporterId', '==', profile.uid)], { goalId: this.goal.id }),
+          this.supportService.valueChanges([where('recipientId', '==', profile.uid)], { goalId: this.goal.id })
+        ])
+      }),
+      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
+      joinWith({
+        goal: () => this.goal,
+        milestone: () => this.milestone,
+        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
+        supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
+      }, { shouldAwait: true })
     )
 
     if (this.canEdit) {
