@@ -122,40 +122,6 @@ section {
   support-add {
     margin-bottom: 16px;
   }
-
-  ion-list {
-    ion-item {
-      --inner-padding-bottom: 4px;
-      --inner-padding-top: 4px;
-  
-      small {
-        color: var(--ion-color-medium);
-      }
-  
-      ion-label {
-        display: flex;
-        gap: 4px;
-      } 
-    }
-  
-    article {
-      display: block;
-      padding-inline: 16px;
-      white-space: pre-wrap;
-      text-align: center;
-      margin-block: 16px;
-  
-      support-decision {
-        display: flex;
-        gap: 16px;
-        justify-content: center;
-      }
-    }
-  }
-
-  .empty {
-    color: var(--ion-color-medium);
-  }
 }
 
 .clickable {

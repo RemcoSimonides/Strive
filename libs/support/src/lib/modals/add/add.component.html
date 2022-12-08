@@ -14,7 +14,9 @@
 </ion-header>
   
 <ion-content class="ion-padding">
-  <support-add [goal]="goal" [milestone]="milestone"></support-add>
+  <ng-container *ngIf="!goal.isFinished || milestone?.status === 'pending'">
+    <support-add [goal]="goal" [milestone]="milestone"></support-add>
+  </ng-container>
 
   <ng-container *ngIf="supports$ | async as supports">
     <support-list [goal]="supports[0]">

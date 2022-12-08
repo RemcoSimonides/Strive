@@ -10,7 +10,7 @@ import { combineLatest, Observable, of, Subscription } from 'rxjs'
 import { debounceTime, filter, map, switchMap } from 'rxjs/operators'
 import { addYears, endOfYear } from 'date-fns'
 
-import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus } from '@strive/model'
+import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus, groupByObjective, SupportsGroupedByGoal } from '@strive/model'
 
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
@@ -41,7 +41,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   showDescription = false
 
   story$?: Observable<StoryItem[]>
-  supports$?: Observable<Support[]>
+  supports$?: Observable<SupportsGroupedByGoal[]>
 
   @Input() goal!: Goal
   @Input() milestone!: MilestoneWithSupport
@@ -89,8 +89,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       switchMap(profile => {
         if (!profile) return []
         return combineLatest([
-          this.supportService.valueChanges([where('supporterId', '==', profile.uid)], { goalId: this.goal.id }),
-          this.supportService.valueChanges([where('recipientId', '==', profile.uid)], { goalId: this.goal.id })
+          this.supportService.valueChanges([where('supporterId', '==', profile.uid), where('milestoneId', '==', this.milestone.id)], { goalId: this.goal.id }),
+          this.supportService.valueChanges([where('recipientId', '==', profile.uid), where('milestoneId', '==', this.milestone.id)], { goalId: this.goal.id })
         ])
       }),
       map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
@@ -100,7 +100,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         milestone: () => this.milestone,
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
-      }, { shouldAwait: true })
+      }, { shouldAwait: true }),
+      map(groupByObjective)
     )
 
     if (this.canEdit) {

@@ -1,0 +1,30 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+ion-item {
+  --highlight-background: var(--ion-color-primary); 
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  ion-button small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .gray {
+    color: var(--ion-color-medium);
+  }
+}

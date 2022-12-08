@@ -1,0 +1,18 @@
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
+import { IonicModule } from '@ionic/angular'
+
+import { SupportDetailsComponent } from './details.component'
+
+import { PledgeModule } from '../../components/pledge/pledge.module'
+
+@NgModule({
+  imports: [
+    CommonModule,
+    IonicModule,
+    PledgeModule
+  ],
+  declarations: [SupportDetailsComponent],
+  exports: [SupportDetailsComponent]
+})
+export class SupportDetailsModule {}

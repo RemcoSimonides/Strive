@@ -1,8 +1,0 @@
-<ng-container *ngIf="support.status === 'open'">
-  <ion-item button (click)="give()">Give</ion-item>
-  <ion-item button lines="none" (click)="remove()">Remove</ion-item>
-</ng-container>
-
-<ng-container *ngIf="support.status === 'waiting_to_be_paid'">
-  <ion-item button lines="none" (click)="updateStatus('paid')">Gave it</ion-item>
-</ng-container>

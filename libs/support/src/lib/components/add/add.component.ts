@@ -33,7 +33,7 @@ export class AddSupportComponent {
     private supportService: SupportService
   ) {}
 
-  async addSupport(goal: Goal) {
+  async addSupport() {
     if (this.form.invalid) return
     if (!this.auth.uid) return
     if (!this.goal) return
@@ -42,7 +42,7 @@ export class AddSupportComponent {
 
     const support = createSupportBase({
       description: this.form.value,
-      goalId: goal.id,
+      goalId: this.goal.id,
       milestoneId: this.milestone?.id,
       supporterId: this.auth.uid
     })
