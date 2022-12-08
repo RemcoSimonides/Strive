@@ -16,7 +16,7 @@ import { Goal, Comment, createComment, GoalStakeholder } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 
 
 @Component({
@@ -92,7 +92,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subs.push(sub)
 
     await this.mapAndUpdate([])
-    delay(250).then(_ => this.contentArea?.scrollToBottom())
+    delay(250).then(() => this.contentArea?.scrollToBottom())
   }
 
   ngOnDestroy() {
@@ -178,7 +178,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
-        goalId: this.goal.id
+        goal: this.goal
       }
     }).then(modal => modal.present())
   }

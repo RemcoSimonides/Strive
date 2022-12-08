@@ -15,21 +15,14 @@
             <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
           </ion-button>
         </ng-container>
-        <ng-container>
-          <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="primary">
-            <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
-          </ion-button>
-        </ng-container>
       </article>
   
       <article>
-        <ion-button (click)="supportGoal()" size="block" class="secondary">
-          <ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
-          <span>SUPPORT</span>
-        </ion-button>
-  
         <ion-button (click)="spectate()" size="block" class="secondary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
           <span>{{ stakeholder.isSpectator ? 'FOLLOWING' : 'FOLLOW' }}</span>
+        </ion-button>
+        <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="primary">
+          <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
         </ion-button>
       </article>
   

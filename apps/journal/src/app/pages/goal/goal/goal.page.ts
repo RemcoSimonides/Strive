@@ -13,7 +13,6 @@ import { map, shareReplay, switchMap } from 'rxjs/operators'
 import { Share } from '@capacitor/share'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component'
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
@@ -193,28 +192,6 @@ export class GoalComponent {
         }
       ]
     }).then(alert => alert.present())
-  }
-  
-  async supportGoal() {
-    if (!this.auth.uid) {
-      const modal = await this.modalCtrl.create({
-        component: AuthModalComponent,
-        componentProps: {
-          authSegment: enumAuthSegment.login
-        }
-      })
-      modal.onDidDismiss().then(({ data: loggedIn }) => {
-        if (loggedIn) this.supportGoal()
-      })
-      return modal.present()
-    }
-
-    this.modalCtrl.create({
-      component: AddSupportModalComponent,
-      componentProps: {
-        goalId: this.goal.id
-      }
-    }).then(modal => modal.present())
   }
 
   async spectate() {

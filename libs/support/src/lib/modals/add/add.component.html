@@ -1,0 +1,28 @@
+<ion-header mode="md">
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title *ngIf="milestone">Support milestone '{{ milestone.content }}'</ion-title>
+    <ion-title *ngIf="!milestone">Support goal '{{ goal?.title }}'</ion-title>
+  
+  </ion-toolbar>
+</ion-header>
+  
+<ion-content class="ion-padding">
+  <support-add [goal]="goal" [milestone]="milestone"></support-add>
+
+  <ng-container *ngIf="supports$ | async as supports">
+    <support-list [goal]="supports[0]">
+      <ng-container *ngIf="!milestone">
+        <ng-template #milestone let-milestone="milestone">
+          <small>Milestone: {{ milestone.content }}</small>
+        </ng-template>
+      </ng-container>
+    </support-list>
+  </ng-container>
+</ion-content>

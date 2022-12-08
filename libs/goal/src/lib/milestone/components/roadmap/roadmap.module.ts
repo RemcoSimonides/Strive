@@ -8,7 +8,7 @@ import { RoadmapComponent } from './roadmap.component'
 import { MilestoneStatusModule } from '../status/status.module'
 import { AssigneeModule } from '../assignee/assignee.module'
 
-import { AddSupportModalModule } from '@strive/support/components/add/add.module'
+import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { DetailsModule } from '../details/details.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'

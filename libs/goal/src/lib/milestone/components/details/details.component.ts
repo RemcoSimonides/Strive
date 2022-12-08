@@ -11,7 +11,6 @@ import { debounceTime, filter, map, switchMap } from 'rxjs/operators'
 import { addYears, endOfYear } from 'date-fns'
 
 import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus } from '@strive/model'
-import { delay } from '@strive/utils/helpers'
 
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
@@ -22,7 +21,6 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
@@ -296,18 +294,5 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     this.form.subtasks.setValue(subtasks)
 
     ev.detail.complete()
-  }
-
-  openSupportModal() {
-    this.dismiss()
-    delay(250).then(() => {
-      this.modalCtrl.create({
-        component: AddSupportModalComponent,
-        componentProps: {
-          goalId: this.goal.id,
-          milestone: this.milestone
-        }
-      }).then(modal => modal.present())
-    })
   }
 }

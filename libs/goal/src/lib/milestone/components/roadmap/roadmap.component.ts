@@ -10,7 +10,7 @@ import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
-import { AddSupportModalComponent } from '@strive/support/components/add/add.component'
+import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
@@ -166,7 +166,7 @@ export class RoadmapComponent {
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: {
-        goalId: this.goal.id,
+        goal: this.goal,
         milestone
       }
     }).then(modal => modal.present())

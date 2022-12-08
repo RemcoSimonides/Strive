@@ -9,13 +9,12 @@ import { MilestoneStatusModule } from '../status/status.module'
 import { MilestoneDeadlineModule } from '../deadline/deadline.module'
 import { AssigneeModule } from '../assignee/assignee.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
-import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { StoryModule } from '../../../story/components/story/story.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 import { PledgeModule } from '@strive/support/components/pledge/pledge.module'
 import { SupportDecisionModule } from '@strive/support/components/decision/decision.module'
-import { AddSupportModule } from '@strive/support/components/add-2/add.module'
+import { AddSupportModule } from '@strive/support/components/add/add.module'
 
 @NgModule({
   imports: [
@@ -27,7 +26,6 @@ import { AddSupportModule } from '@strive/support/components/add-2/add.module'
     MilestoneDeadlineModule,
     AssigneeModule,
     SubtaskPipeModule,
-    AddSupportModalModule,
     StoryModule,
     DatetimeModule,
     UpsertPostModalModule,

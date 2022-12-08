@@ -1,84 +1,20 @@
-<ion-header mode="md">
-  <ion-toolbar color="primary">
-
-    <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <ion-title *ngIf="origin === 'milestone'">Supports milestone '{{ milestone?.content }}'</ion-title>
-    <ion-title *ngIf="origin === 'goal'">Supports goal '{{ (goal$ | async)?.title }}'</ion-title>
-  
-  </ion-toolbar>
-</ion-header>
-  
-<ion-content class="ion-padding">
-
-  <h2>Supports for others</h2>
-
-  <ng-container *ngIf="goal$ | async as goal">
-    <ion-list>
-      <ion-item>
-        <ion-input [formControl]="form"
-          type="text"
-          [placeholder]="goal.isFinished ? 'Cant support more because goal finished' : (!!milestone && milestone.status !== 'pending') ? 'Cant support more because milestone finished' : 'e.g. Bottle of wine or €20'"
-          [disabled]="!!goal.isFinished || (!!milestone && milestone.status !== 'pending')"
-          autocapitalize="sentences"
-          maxlength="60"
-          (keydown.enter)="addSupport(goal)"></ion-input>
-        <ion-button slot="end" 
-          (click)="addSupport(goal)"
-          color="secondary"
-          [disabled]="goal.isFinished || (!!milestone && milestone.status !== 'pending')">
-          ADD<ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
-        </ion-button>
-      </ion-item>
-      <ion-item *ngFor="let support of fromYouSupports$ | async; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
-        <ion-label class="ion-text-wrap">
-          <article>
-            <b>{{ support.description }} {{ support.status !== 'open' ? '(Given)' : ''}}</b>
-            <small>Recipient: {{ support.recipient?.username }}</small>
-            <ng-container *ngIf="origin === 'goal'">
-              <small *ngIf="support.milestone?.content">Milestone: {{ support.milestone?.content }}</small>
-            </ng-container>
-          </article>
-        </ion-label>
-
-        <ng-container *ngIf="support.status === 'open' || support.status === 'waiting_to_be_paid'">
-          <ion-button fill="clear" (click)="openOptions(support, $event)">
-            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-          </ion-button>
-        </ng-container>
-
-      </ion-item>
-    </ion-list>
-
-  </ng-container>
-
-  <h2>Supports for you</h2>
-  <ng-container *ngIf="forYouSupports$ | async as supports">
-    <ng-container *ngIf="supports.length else empty">
-      <ion-list>
-        <ion-item *ngFor="let support of supports; let last = last" [lines]="last ? 'none' : 'inset'" [disabled]="support.status !== 'open'">
-          <ion-avatar slot="start">
-            <img [ref]="support.supporter?.photoURL" asset="profile.png">
-          </ion-avatar>
-          <ion-label class="ion-text-wrap">
-            <article>
-              <b>{{ support.description }} {{ support.status !== 'open' ? '(Received)' : ''}}</b>
-              <small>Supporter: {{ support.supporter?.username }}</small>
-              <ng-container *ngIf="origin === 'goal'">
-                <small *ngIf="support.milestone?.content">Milestone: {{ support.milestone?.content }}</small>
-              </ng-container>
-            </article>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </ng-container>
-    <ng-template #empty>
-      No supports yet
-    </ng-template>
-  </ng-container>
-
-</ion-content>
+<ion-list mode="md">
+  <ion-item *ngIf="goal" lines="none">
+    <ion-input
+      [formControl]="form"
+      type="text"
+      placeholder="e.g. chocolate or €20"
+      autocapitalize="sentences"
+      maxlength="60"
+      (keydown.enter)="addSupport(goal)"></ion-input>
+    <ion-button
+      slot="end" 
+      (click)="addSupport(goal)"
+      color="secondary"
+      [disabled]="goal.isFinished || (!!milestone && milestone.status !== 'pending')"
+    >
+      <span>ADD</span>
+      <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-list>

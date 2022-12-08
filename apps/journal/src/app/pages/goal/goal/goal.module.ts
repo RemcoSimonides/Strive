@@ -19,9 +19,8 @@ import { DescriptionModule } from '@strive/ui/description/description.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 
-import { AddSupportModalModule } from '@strive/support/components/add/add.module'
 import { SupportListModule } from '@strive/support/components/list/list.module'
-import { AddSupportModule } from '@strive/support/components/add-2/add.module'
+import { AddSupportModule } from '@strive/support/components/add/add.module'
 
 @NgModule({
   imports: [
@@ -34,7 +33,6 @@ import { AddSupportModule } from '@strive/support/components/add-2/add.module'
     GoalSharePopoverModule,
     UpsertGoalModalModule,
     TeamModalModule,
-    AddSupportModalModule,
     ImageModule,
     ImageZoomModalModule,
     RoadmapModule,
