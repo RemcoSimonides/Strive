@@ -1,5 +1,6 @@
 import { Goal, Milestone, User } from '@strive/model'
 import { unique } from '@strive/utils/helpers'
+import { compareDesc } from 'date-fns'
 
 export type SupportDecision = 'give' | 'keep'
 export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
@@ -74,4 +75,18 @@ export function groupByObjective(supports: Support[]): SupportsGroupedByGoal[] {
   }
 
   return groups
+}
+
+export function sortGroupedSupports(supports: SupportsGroupedByGoal[]): SupportsGroupedByGoal[] {
+  for (const goal of supports) {
+    goal.supports = sortSupports(goal.supports)
+    for (const milestone of goal.milestones) {
+      milestone.supports = sortSupports(milestone.supports)
+    }
+  }
+  return supports
+}
+
+function sortSupports(supports: Support[]): Support[] {
+  return supports.sort((a, b) => compareDesc(a.createdAt, b.createdAt))
 }

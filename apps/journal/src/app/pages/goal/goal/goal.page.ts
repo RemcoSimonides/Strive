@@ -28,7 +28,7 @@ import { SupportService } from '@strive/support/support.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 // Strive Interfaces
-import { createGoal, Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem } from '@strive/model'
+import { createGoal, Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports } from '@strive/model'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
@@ -111,7 +111,7 @@ export class GoalComponent {
       shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    this.supports$ = supports$.pipe(map(groupByObjective))
+    this.supports$ = supports$.pipe(map(groupByObjective), map(sortGroupedSupports))
 
     this.milestones$ = goalId$.pipe(
       switchMap(goalId => this.milestone.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(

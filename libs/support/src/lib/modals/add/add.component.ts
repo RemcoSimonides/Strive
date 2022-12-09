@@ -8,7 +8,7 @@ import { joinWith } from 'ngfire'
 import { combineLatest, map, Observable, of, switchMap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { Goal, groupByObjective, Milestone, SupportsGroupedByGoal } from '@strive/model'
+import { Goal, groupByObjective, Milestone, sortGroupedSupports, SupportsGroupedByGoal } from '@strive/model'
 
 import { AuthService } from '@strive/user/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
@@ -66,7 +66,8 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }, { shouldAwait: true }),
-      map(groupByObjective)
+      map(groupByObjective),
+      map(sortGroupedSupports)
     )
   }
 }

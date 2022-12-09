@@ -8,7 +8,7 @@ import { combineLatest, Observable, of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
 import { delay } from '@strive/utils/helpers'
-import { groupByObjective, SupportsGroupedByGoal } from '@strive/model'
+import { groupByObjective, sortGroupedSupports, SupportsGroupedByGoal } from '@strive/model'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { SupportService } from '@strive/support/support.service'
@@ -60,7 +60,8 @@ export class SupportsComponent {
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }),
-      map(groupByObjective)
+      map(groupByObjective),
+      map(sortGroupedSupports)
     )
   }
 

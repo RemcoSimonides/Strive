@@ -10,7 +10,7 @@ import { combineLatest, Observable, of, Subscription } from 'rxjs'
 import { debounceTime, filter, map, switchMap } from 'rxjs/operators'
 import { addYears, endOfYear } from 'date-fns'
 
-import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus, groupByObjective, SupportsGroupedByGoal } from '@strive/model'
+import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus, groupByObjective, SupportsGroupedByGoal, sortGroupedSupports } from '@strive/model'
 
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
@@ -101,7 +101,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }, { shouldAwait: true }),
-      map(groupByObjective)
+      map(groupByObjective),
+      map(sortGroupedSupports)
     )
 
     if (this.canEdit) {

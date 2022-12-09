@@ -6,9 +6,11 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
 
 import { PledgeComponent } from './pledge.component'
+import { CommonModule } from '@angular/common'
 
 @NgModule({
   imports: [
+    CommonModule,
     IonicModule,
     ArrowModule,
     ImageModule,
