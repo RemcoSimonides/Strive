@@ -6,7 +6,7 @@
     </ion-label>
   </ion-item>
 
-  <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last; trackBy: trackBySupport">
+  <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last; trackBy: trackBy">
     <ng-container *ngIf="showAll || (goal | count: support.id) <= showAmount">
       <article *ngIf="support.needsDecision">
         <small>Goal has been finished. Decide to give '{{ support.description }}' or not.</small>
@@ -23,7 +23,7 @@
     </ng-container>
   </ng-container>
 
-  <ng-container *ngFor="let milestone of goal.milestones; let lastMilestone = last">
+  <ng-container *ngFor="let milestone of goal.milestones; let lastMilestone = last; trackBy: trackBy">
     <ng-container *ngIf="showAll || (goal | count: milestone.id) < showAmount">
       <ion-item lines="none" *ngIf="milestoneDescription">
         <ion-label>
@@ -31,7 +31,7 @@
           <ng-container [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-container>
         </ion-label>
       </ion-item>
-      <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBySupport">
+      <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBy">
         <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount">
           <article *ngIf="support.needsDecision">
             <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>

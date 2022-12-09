@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core'
 import { ModalController } from '@ionic/angular'
-import { Support, SupportsGroupedByGoal } from '@strive/model'
+import { Milestone, Support, SupportsGroupedByGoal } from '@strive/model'
 import { SupportDetailsModalComponent } from '@strive/support/modals/details/details.component'
 
 @Component({
@@ -21,8 +21,8 @@ export class SupportListComponent {
 
   constructor(private modalCtrl: ModalController) {}
 
-  trackBySupport(index: number, support: Support) {
-    return support.id
+  trackBy(index: number, object: Support | Milestone) {
+    return object.id
   }
 
   openDetails(support: Support) {
