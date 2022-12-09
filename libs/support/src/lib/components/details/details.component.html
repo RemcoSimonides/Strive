@@ -1,5 +1,5 @@
 <ng-container *ngIf="support">
-  <article *ngIf="support.needsDecision" class="decision">
+  <article *ngIf="support.needsDecision && (isSupporter$ | async)" class="decision">
     <small *ngIf="!support.milestone">Goal has been finished. Decide to give support or not.</small>
     <small *ngIf="support.milestone">Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
     <support-decision [support]="support"></support-decision>
@@ -40,12 +40,14 @@
 
   <section class="actions">
     <ng-container *ngIf="support.status === 'open'">
-      <ion-button (click)="give()" class="secondary" expand="block">
-        <span>Give to {{ support.recipient?.username }}</span>
-      </ion-button>
-      <ion-button (click)="remove()" class="danger" expand="block">
-        Remove Support
-      </ion-button>
+      <ng-container *ngIf="isSupporter$ | async">
+        <ion-button (click)="give()" class="secondary" expand="block">
+          <span>Give to {{ support.recipient?.username }}</span>
+        </ion-button>
+        <ion-button (click)="remove()" class="danger" expand="block">
+          Remove Support
+        </ion-button>
+      </ng-container>
     </ng-container>
   </section>
 </ng-container>

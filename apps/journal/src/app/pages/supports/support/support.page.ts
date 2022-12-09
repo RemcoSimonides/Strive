@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { combineLatest, map, of, switchMap } from 'rxjs'
 
 import { SupportService } from '@strive/support/support.service'
@@ -52,6 +52,11 @@ export class SupportPageComponent {
     private milestone: MilestoneService,
     private profile: ProfileService,
     private route: ActivatedRoute,
+    private router: Router,
     private support: SupportService
   ) {}
+
+  supportRemoved() {
+    this.router.navigate(['/supports'])
+  }
 }
