@@ -93,7 +93,6 @@ async snapshot =>  {
       completedSuccessfully = true
     }
 
-    // send notification to supporter
     const notification = createNotificationBase({
       event: completedSuccessfully ? 'goalSupportStatusPendingSuccessful' : 'goalSupportStatusPendingUnsuccessful',
       goalId,
@@ -101,7 +100,7 @@ async snapshot =>  {
       supportId: after.id,
       userId: supporterId
     })
-    return sendNotificationToUsers(notification, supporterId)
+    return sendNotificationToUsers(notification, supporterId, 'user')
   }
 
 

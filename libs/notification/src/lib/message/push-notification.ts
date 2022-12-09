@@ -220,7 +220,23 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
       return createPushMessage({
         title: goal.title,
         body: `${user.username} ${text} with ${support.description}`,
-        link: `/goal/${goal.id}`
+        link: `supports/${support.id}?goalId=${support.goalId}`
+      })
+    }
+
+    case 'goalSupportStatusPendingSuccessful': {
+      if (!user) throw new Error(`${event} spectator push message needs user defined`)
+      if (!support) throw new Error(`${event} spectator push message needs support defined`)
+      if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
+
+      const title = milestone?.id
+        ? `Milestone '${milestone.content}' completed`
+        : `Goal '${goal.title}' finished`
+
+      return createPushMessage({
+        title,
+        body: `Decide to give '${support.description}' or not`,
+        link: `supports/${support.id}?goalId=${support.goalId}`
       })
     }
   
@@ -230,7 +246,8 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
 
       return createPushMessage({
         title: user.username,
-        body: `Now owes you '${support.description}'`
+        body: `Now owes you '${support.description}'`,
+        link: `supports/${support.id}?goalId=${support.goalId}`
       })
 
     case 'userSpectatorCreated':

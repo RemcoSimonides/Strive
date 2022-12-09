@@ -1,4 +1,4 @@
-import { Goal, Milestone, Support, User } from '@strive/model'
+import { Goal, Milestone, SupportBase, User } from '@strive/model'
 
 
 /**
@@ -93,7 +93,7 @@ export interface Notification extends NotificationBase {
   user?: User,
   goal?: Goal,
   milestone?: Milestone,
-  support?: Support
+  support?: SupportBase
 }
 
 export function createNotificationBase(params: Partial<NotificationBase> = {}): NotificationBase {

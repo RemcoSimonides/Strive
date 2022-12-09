@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin'
 import { logger } from 'firebase-functions'
 import type { Message } from 'firebase-admin/messaging'
 // Interfaces
-import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification } from '@strive/model'
+import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification, SupportBase } from '@strive/model'
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification'
 import { getDocument, toDate, unique } from '../utils'
 
@@ -41,7 +41,7 @@ export async function sendNotificationToUsers(notificationBase: NotificationBase
     const { goalId, milestoneId, supportId, userId } = notificationBase
     const goal = goalId ? await getDocument<Goal>(`Goals/${goalId}`) : undefined
     const milestone = milestoneId ? await getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`) : undefined
-    const support = supportId ? await getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`) : undefined
+    const support = supportId ? await getDocument<SupportBase>(`Goals/${goalId}/Supports/${supportId}`) : undefined
     const user = userId ? await getDocument<User>(`Users/${userId}`) : undefined
   
     const notification: Notification = notificationBase
