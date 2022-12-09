@@ -2,48 +2,59 @@
   <ion-item lines="none" *ngIf="goal.supports.length && goalDescription">
     <ion-label>
       <ng-container [ngTemplateOutlet]="goalDescription" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-container>
-      <ng-template [ngTemplateOutlet]="goalStatus" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-template>
     </ion-label>
   </ion-item>
 
   <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last; trackBy: trackBySupport">
-    <article *ngIf="support.needsDecision">
-      <small>Goal has been finished. Decide to give support or not.</small>
-      <support-decision [support]="support"></support-decision>
-    </article>
-    <ion-item
-      [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'inset'"
-      button
-      [ngClass]="{'fake-disable': support.status !== 'open'}"
-      (click)="openDetails(support)"
-    >
-      <support-pledge [support]="support"></support-pledge>
-    </ion-item>
-  </ng-container>
-
-  <ng-container *ngFor="let milestone of goal.milestones; let lastMilestone = last">
-    <ion-item lines="none" *ngIf="milestoneDescription">
-      <ion-label>
-        <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }"></ng-container>
-        <ng-template [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-template>
-      </ion-label>
-    </ion-item>
-    <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; ; trackBy: trackBySupport">
+    <ng-container *ngIf="showAll || (goal | count: support.id) <= showAmount">
       <article *ngIf="support.needsDecision">
-        <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+        <small>Goal has been finished. Decide to give support or not.</small>
         <support-decision [support]="support"></support-decision>
       </article>
-
       <ion-item
-        [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'inset'"
+        [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'inset'"
         button
         [ngClass]="{'fake-disable': support.status !== 'open'}"
-        (click)="openDetails(support, milestone)"
+        (click)="openDetails(support)"
       >
         <support-pledge [support]="support"></support-pledge>
       </ion-item>
     </ng-container>
   </ng-container>
+
+  <ng-container *ngFor="let milestone of goal.milestones; let lastMilestone = last">
+    <ng-container *ngIf="showAll || (goal | count: milestone.id) < showAmount">
+      <ion-item lines="none" *ngIf="milestoneDescription">
+        <ion-label>
+          <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }"></ng-container>
+        </ion-label>
+      </ion-item>
+      <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBySupport">
+        <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount">
+          <article *ngIf="support.needsDecision">
+            <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+            <support-decision [support]="support"></support-decision>
+          </article>
+    
+          <ion-item
+            [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'inset'"
+            button
+            [ngClass]="{'fake-disable': support.status !== 'open'}"
+            (click)="openDetails(support)"
+          >
+            <support-pledge [support]="support"></support-pledge>
+          </ion-item>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ion-item button *ngIf="!showAll && (goal | total) > showAmount">
+    <ion-button (click)="showAll = true" fill="clear" expand="block" class="more">
+      <span>Show {{ (goal | total) - showAmount }} more</span>
+      <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+    </ion-button>
+  </ion-item>
 </ion-list>
 
 <ng-template #empty>

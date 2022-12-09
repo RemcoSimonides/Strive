@@ -12,6 +12,9 @@ import { SupportDetailsComponent } from '@strive/support/modals/details/details.
 export class SupportListComponent {
   @Input() goal?: SupportsGroupedByGoal
 
+  @Input() showAll = false
+  showAmount = 3
+
   @ContentChild('goal') goalDescription?: TemplateRef<unknown>
   @ContentChild('milestone') milestoneDescription?: TemplateRef<unknown>
   @ContentChild('empty') emptyDescription?: TemplateRef<unknown>
