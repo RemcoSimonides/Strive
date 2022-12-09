@@ -9,7 +9,7 @@
   <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last; trackBy: trackBySupport">
     <ng-container *ngIf="showAll || (goal | count: support.id) <= showAmount">
       <article *ngIf="support.needsDecision">
-        <small>Goal has been finished. Decide to give support or not.</small>
+        <small>Goal has been finished. Decide to give '{{ support.description }}' or not.</small>
         <support-decision [support]="support"></support-decision>
       </article>
       <ion-item
@@ -34,7 +34,7 @@
       <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBySupport">
         <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount">
           <article *ngIf="support.needsDecision">
-            <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+            <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
             <support-decision [support]="support"></support-decision>
           </article>
     

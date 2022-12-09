@@ -1,7 +1,7 @@
 <ng-container *ngIf="support">
   <article *ngIf="support.needsDecision && (isSupporter$ | async)" class="decision">
-    <small *ngIf="!support.milestone">Goal has been finished. Decide to give support or not.</small>
-    <small *ngIf="support.milestone">Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give support or not.</small>
+    <small *ngIf="!support.milestone">Goal has been finished. Decide to give '{{ support.description }}' or not.</small>
+    <small *ngIf="support.milestone">Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
     <support-decision [support]="support"></support-decision>
   </article>
 
