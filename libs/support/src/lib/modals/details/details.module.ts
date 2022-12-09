@@ -6,13 +6,15 @@ import { SupportDetailsComponent } from './details.component'
 
 import { PledgeModule } from '../../components/pledge/pledge.module'
 import { SupportDecisionModule } from '../../components/decision/decision.module'
+import { PostComponentModule } from '@strive/post/components/post/post.module'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     PledgeModule,
-    SupportDecisionModule
+    SupportDecisionModule,
+    PostComponentModule
   ],
   declarations: [SupportDetailsComponent],
   exports: [SupportDetailsComponent]

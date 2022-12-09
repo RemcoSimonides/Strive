@@ -17,6 +17,10 @@
       <support-decision [support]="support"></support-decision>
     </article>
 
+    <ng-container *ngIf="post$ | async as post">
+      <post-main [storyItem]="post"></post-main>
+    </ng-container>
+
     <support-pledge [support]="support"></support-pledge>
 
     <section class="details">

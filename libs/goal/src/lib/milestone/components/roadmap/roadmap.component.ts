@@ -63,6 +63,7 @@ export class RoadmapComponent {
         component: UpsertPostModalComponent,
         componentProps: {
           post: createPost({
+            id: milestone.id,
             goalId: this.goal.id,
             milestoneId: milestone.id
           })

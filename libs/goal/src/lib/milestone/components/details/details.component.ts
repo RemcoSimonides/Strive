@@ -153,6 +153,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         component: UpsertPostModalComponent,
         componentProps: {
           post: createPost({
+            id: this.milestone.id,
             goalId: this.goal.id,
             milestoneId: this.milestone.id
           })
