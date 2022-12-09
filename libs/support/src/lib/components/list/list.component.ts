@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { Support, SupportsGroupedByGoal } from '@strive/model'
-import { SupportDetailsComponent } from '@strive/support/modals/details/details.component'
+import { SupportDetailsModalComponent } from '@strive/support/modals/details/details.component'
 
 @Component({
   selector: 'support-list',
@@ -27,7 +27,7 @@ export class SupportListComponent {
 
   openDetails(support: Support) {
     this.modalCtrl.create({
-      component: SupportDetailsComponent,
+      component: SupportDetailsModalComponent,
       componentProps: { support }
     }).then(modal => modal.present())
   }

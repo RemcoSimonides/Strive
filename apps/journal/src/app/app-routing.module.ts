@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'goal/:id', loadChildren: () => import('./pages/goal/goal-view/goal-view.module').then(m => m.GoalViewPageModule) },
   { path: 'notifications', loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsModule) },
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
+  { path: 'supports/:id', loadChildren: () => import('./pages/supports/support/support.module').then(m => m.SupportPageModule) },
   { path: 'profile', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'settings', loadChildren: () => import('./pages//settings/settings.module').then(m => m.SettingsPageModule)},

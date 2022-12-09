@@ -31,6 +31,7 @@ export interface NotificationMessage {
   image: string
   type: NotificationSourceType
   link: string
+  params?: unknown
   message: NotificationMessageText[]
 }
 
@@ -159,7 +160,8 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getUser(user),
-        link: '/supports',
+        link: `/supports/${support.id}`,
+        params: { goalId: support.goalId },
         message
       }
     }
@@ -172,7 +174,8 @@ export function getNotificationMessage(notification: Notification): Notification
       const prefix = isMilestone ? `Milestone "${milestone.content}"` : `Goal`
       return {
         ...getGoal(goal),
-        link: '/supports',
+        link: `/supports/${support.id}`,
+        params: { goalId: support.goalId },
         message: [
           { text: `${prefix} has been completed. Decide to give "${support.description}" or not` }
         ]
@@ -184,7 +187,8 @@ export function getNotificationMessage(notification: Notification): Notification
       
       return {
         ...getGoal(goal),
-        link: '/supports',
+        link: `/supports/${support.id}`,
+        params: { goalId: support.goalId },
         message: [
           {
             text: user.username,
@@ -204,7 +208,8 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        link: '/supports',
+        link: `/supports/${support.id}`,
+        params: { goalId: support.goalId },
         message: [
           {
             text: user.username,

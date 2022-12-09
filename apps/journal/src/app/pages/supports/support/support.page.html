@@ -1,0 +1,20 @@
+<ng-template #noAccess>
+  <strive-404></strive-404>
+</ng-template>
+
+<ng-container *ngIf="support$ | async as support">
+  <ng-container *ngIf="support.description; else noAccess">
+
+    <strive-header title="Support" defaultBack="/supports" color="primary"></strive-header>
+
+    <ion-content class="ion-padding">
+      <main>
+    
+        <ng-container *ngIf="support$ | async as support">
+          <support-details [support]="support"></support-details>
+        </ng-container>
+    
+      </main>
+    </ion-content>
+  </ng-container>
+</ng-container>

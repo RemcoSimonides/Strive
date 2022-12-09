@@ -2,6 +2,7 @@
   <ion-item lines="none" *ngIf="goal.supports.length && goalDescription">
     <ion-label>
       <ng-container [ngTemplateOutlet]="goalDescription" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-container>
+      <ng-container [ngTemplateOutlet]="goalStatus" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-container>
     </ion-label>
   </ion-item>
 
@@ -27,6 +28,7 @@
       <ion-item lines="none" *ngIf="milestoneDescription">
         <ion-label>
           <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }"></ng-container>
+          <ng-container [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-container>
         </ion-label>
       </ion-item>
       <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBySupport">
@@ -64,4 +66,13 @@
   <ng-template #default>
     <i>No supports</i>
   </ng-template>
+</ng-template>
+
+<ng-template #milestoneStatus let-milestone>
+  <small *ngIf="milestone.status === 'succeeded'">(achieved)</small>
+  <small *ngIf="milestone.status === 'failed'">(not achieved)</small>
+</ng-template>
+
+<ng-template #goalStatus let-goal>
+  <small *ngIf="goal.isFinished">(finished)</small>
 </ng-template>
