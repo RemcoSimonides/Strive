@@ -126,23 +126,31 @@ export class AppComponent implements OnDestroy {
       const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
       const { url } = event
 
-      const reroutesToGoals = isLoggedIn && url === '/'
-      const goalsRoute = '/goals'
-      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
-
       if (!isLoggedIn) {
-        const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
-        const doNotShowPartial = ['/goal/']
-        const doShowSignUpModalPages = ['/explore']
-  
-        if (doNotShowExact.some(page => page === url)) return
-        if (doNotShowPartial.some(part => url.includes(part))) return
-        if (doShowSignUpModalPages.some(page => page === url)) {
-          this.openAuthModal(enumAuthSegment.register)
+        if (Capacitor.getPlatform() === 'web') {
+          const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
+          const doNotShowPartial = ['/goal/']
+          const showRegisterModalPages = ['/explore']
+
+          const dontShow = doNotShowExact.some(page => page === url) && doNotShowPartial.some(part => url.includes(part))
+          const showRegister = showRegisterModalPages.some(page => page === url)
+
+          if (!dontShow) {
+            if (showRegister) {
+              await this.openAuthModal(enumAuthSegment.register)
+            } else {
+              await this.openAuthModal(enumAuthSegment.login)
+            }
+          }
+        
         } else {
-          this.openAuthModal(enumAuthSegment.login)
+          await this.openAuthModal(enumAuthSegment.register)
         }
       }
+
+      const reroutesToGoals = isLoggedIn && url === '/'
+      const goalsRoute = url === '/goals'
+      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
     })
   }
 
@@ -154,13 +162,12 @@ export class AppComponent implements OnDestroy {
     }).then(popover => popover.present())
   }
 
-  openAuthModal(segment: enumAuthSegment) {
-    this.modalCtrl.create({
+  async openAuthModal(authSegment: enumAuthSegment) {
+    const modal = await this.modalCtrl.create({
       component: AuthModalComponent,
-      componentProps: {
-        authSegment: segment
-      }
-    }).then(modal => modal.present())
+      componentProps: { authSegment }
+    })
+    modal.present()
   }
 
   @HostListener('window:resize', ['$event'])
