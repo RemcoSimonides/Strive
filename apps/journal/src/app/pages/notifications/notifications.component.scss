@@ -4,7 +4,7 @@ ion-content {
 
 .divider {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.13))));
 }
 
@@ -27,18 +27,28 @@ h3 {
 article {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 
   div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow: auto;
+
+    span {
+      font-size: smaller;
+    }
+
+    .time {
+      color: var(--ion-color-medium);
+      margin-top: 4px;
+    }
   }
 
   img {
-    height: 40px;
-    width: 40px;
+    height: 48px;
+    width: 48px;
+    margin-inline: 8px;
   }
 }
 
