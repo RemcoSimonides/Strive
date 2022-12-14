@@ -169,11 +169,13 @@
           "/exercise/affirmations",
           "/exercise/daily-gratitude",
           "/exercise/dear-future-self",
+          "/exercise/wheel-of-life",
           "/explore",
           "/privacy-policy",
           "/terms"
         ],
-        "guessRoutes": false
+        "guessRoutes": false,
+        "routesFile": ""
       },
       "configurations": {
         "production": {}
