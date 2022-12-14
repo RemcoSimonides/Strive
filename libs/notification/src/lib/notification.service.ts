@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, limit, serverTimestamp, where } from 'firebase/firestore'
+import { DocumentSnapshot, limit, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { of, switchMap, shareReplay, map } from 'rxjs'
@@ -18,7 +18,7 @@ export class NotificationService extends FireSubCollection<NotificationBase> {
     switchMap(personal => {
       if (!personal) return of(false)
 
-      const query = [limit(1)]
+      const query: QueryConstraint[] = [limit(1)]
       if (personal.lastCheckedNotifications) query.push(where('createdAt', '>', personal.lastCheckedNotifications))
       return this.valueChanges(query, { uid: personal.uid }).pipe(
         map(notifications => notifications.filter(n => notificationEvents.includes(n.event))),

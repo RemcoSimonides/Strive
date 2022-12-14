@@ -127,7 +127,21 @@
           "extractLicenses": false
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "production",
+      "production": {
+        "outputHashing": "media",
+        "fileReplacements": [
+          {
+            "replace": "environments/environment.ts",
+            "with": "environments/environment.prod.ts"
+          }
+        ]
+      },
+      "development": {
+        "optimization": false,
+        "sourceMap": true,
+        "extractLicenses": false
+      }
     },
     "serve-ssr": {
       "executor": "@nguniversal/builders:ssr-dev-server",
