@@ -130,6 +130,32 @@ async (snapshot) => {
 
   // aggregation
   handleAggregation(support, undefined)
+
+  // delete notifications
+  const { supporterId, recipientId } = support
+
+  const batch = db.batch()
+
+  const supportNotificationsColSnap = await db
+    .collection(`Users/${supporterId}/Notifications`)
+    .where('supportId', '==', support.id)
+    .get()
+
+  const recipientNotificationsColSnap = await db
+    .collection(`Users/${recipientId}/Notifications`)
+    .where('supportId', '==', support.id)
+    .get()
+
+  const paths = [
+    ...supportNotificationsColSnap.docs.map(doc => doc.ref.path),
+    ...recipientNotificationsColSnap.docs.map(doc => doc.ref.path)
+  ]
+
+  const noDuplicates = [...new Set(paths)]
+  const refs = noDuplicates.map(path => db.doc(path))
+  refs.forEach(ref => batch.delete(ref))
+
+  await batch.commit()
 })
 
 

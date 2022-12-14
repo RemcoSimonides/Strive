@@ -5,8 +5,9 @@ import { getNotificationMessage } from '../message/notification';
 
 @Pipe({ name: 'message' })
 export class MessagePipe implements PipeTransform {
-  transform(notification: Notification): { title: string, image: string, message: NotificationMessageText[] } {
-    return getNotificationMessage(notification)
+  transform(notification: Notification): { title: string, image: string, message: NotificationMessageText[] } | undefined {
+    const message = getNotificationMessage(notification)
+    return message.message.length ? message : undefined
   }
 }
 
