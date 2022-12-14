@@ -26,5 +26,11 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    min-width: 0;
+
+    span {
+      max-width: 100%;
+      text-align: center;
+    }
   }
 }
