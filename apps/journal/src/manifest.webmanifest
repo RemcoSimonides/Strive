@@ -1,5 +1,6 @@
 {
   "name": "Strive Journal",
+  "id": "/",
   "short_name": "Strive",
   "description": "Stay focused on your goals and help others achieve theirs",
   "theme_color": "#F7941D",
