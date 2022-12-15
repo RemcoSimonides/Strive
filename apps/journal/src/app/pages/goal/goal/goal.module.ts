@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterModule } from '@angular/router'
+import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { GoalComponent } from './goal.page'
@@ -16,18 +16,26 @@ import { JoinButtonModule } from '@strive/goal/goal/components/join-button/join-
 import { FocusModalModule } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.module'
 import { ChatModalModule } from '@strive/goal/chat/modals/chat/chat.module'
 
-import { DescriptionModule } from '@strive/ui/description/description.module'
-import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PagenotfoundModule } from '@strive/ui/404/404.module'
+import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
+import { DescriptionModule } from '@strive/ui/description/description.module'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'
+
+import { ImageModule } from '@strive/media/directives/image.module'
+
+const routes: Routes = [
+  { path: '', component: GoalComponent }
+]
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    RouterModule,
+    RouterModule.forChild(routes),
     
     // Strive
     GoalOptionsModule,
@@ -43,7 +51,10 @@ import { AddSupportModule } from '@strive/support/components/add/add.module'
     FocusModalModule,
     SupportListModule,
     AddSupportModule,
-    ChatModalModule
+    ChatModalModule,
+    PageLoadingModule,
+    PagenotfoundModule,
+    HeaderRootModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

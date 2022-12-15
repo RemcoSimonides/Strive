@@ -1,4 +1,22 @@
-<ng-container *ngIf="goal && stakeholder">
+<ng-container *ngIf="(isLoggedIn$ | async) === false">
+  <strive-header-root></strive-header-root>
+</ng-container>
+
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
+</ng-template>
+
+<ng-template #noAccess>
+  <strive-404></strive-404>
+</ng-template>
+
+<ng-container *ngIf="(pageIsLoading$ | async) === false else loading">
+<ng-container *ngIf="canAccess$ | async else noAccess">
+<ng-container *ngIf="goal$ | async as goal">
+<ng-container *ngIf="stakeholder$ | async as stakeholder">
+
+<ion-content>
+
   <picture (click)="openZoom(goal)" *ngIf="screensize.isMobile$ | async" class="mobile">
     <img [ref]="goal.image" asset="goal.png" [width]="500" [height]="500"/>
     <div *ngIf="goal.isFinished">finished</div>
@@ -40,7 +58,7 @@
     <h1>{{ goal.title }}</h1>
 
     <div class="main">
-      <picture (click)="openZoom(goal)" *ngIf="(screensize.isMobile$ | async) === false">
+      <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false">
         <img [ref]="goal.image" asset="goal.png" [width]="500" [height]="500"/>
         <div *ngIf="goal.isFinished">finished</div>
       </picture>
@@ -100,13 +118,13 @@
       
         </ul>
 
-        <ng-container *ngIf="(screensize.isMobile$ | async) === false">
+        <ng-container *ngIf="(isMobile$ | async) === false">
           <ng-container *ngTemplateOutlet="actions"></ng-container>
         </ng-container>
       </div>
     </div>
 
-    <ng-container *ngIf="screensize.isMobile$ | async">
+    <ng-container *ngIf="isMobile$ | async">
       <ng-container *ngTemplateOutlet="actions"></ng-container>
     </ng-container>
 
@@ -121,11 +139,11 @@
             </ion-avatar>
             <ion-label>{{ stakeholder.profile.username }}</ion-label>
             <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">
-              <span *ngIf="(screensize.isMobile$ | async) === false">Accept</span>
+              <span *ngIf="(isMobile$ | async) === false">Accept</span>
               <ion-icon name="checkmark-outline"></ion-icon>
             </ion-button>
             <ion-button (click)="handleRequestDecision(stakeholder, false, $event)" size="default" fill="outline">
-              <span *ngIf="(screensize.isMobile$ | async) === false">Reject</span>
+              <span *ngIf="(isMobile$ | async) === false">Reject</span>
               <ion-icon name="close-outline"></ion-icon>
             </ion-button>
           </ion-item>
@@ -170,9 +188,14 @@
 
     <section>
       <h3>Story</h3>
-      <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id"></goal-story>
+      <goal-story [story]="story$ | async" [stakeholder]="stakeholder" [goalId]="goal.id"></goal-story>
     </section>
 
   </main>
 
+</ion-content>
+
+</ng-container>
+</ng-container>
+</ng-container>
 </ng-container>

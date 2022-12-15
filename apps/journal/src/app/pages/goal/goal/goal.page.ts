@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
 // Sentry
@@ -7,10 +7,14 @@ import { captureException } from '@sentry/capacitor'
 import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 // Rxjs
-import { combineLatest, Observable, of } from 'rxjs'
-import { map, shareReplay, switchMap } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs'
+import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 // Capacitor
 import { Share } from '@capacitor/share'
+// Date fns
+import { isEqual } from 'date-fns'
+// Strive Utils
+import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
@@ -30,8 +34,30 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { SupportService } from '@strive/support/support.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { StoryService } from '@strive/goal/story/story.service'
+import { PostService } from '@strive/post/post.service'
 // Strive Interfaces
-import { createGoal, Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports } from '@strive/model'
+import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder } from '@strive/model'
+
+function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
+  if (!before || !after) return true
+
+  const fields: (keyof GoalStakeholder)[] = [
+    'isAchiever',
+    'isAdmin',
+    'isSupporter',
+    'isSpectator',
+    'hasOpenRequestToJoin',
+    'lastCheckedChat'
+  ]
+
+  return fields.some(field => {
+    const b = before[field]
+    const a = after[field]
+    if (b instanceof Date && a instanceof Date) { return !isEqual(b, a) }
+    return before[field] !== after[field]
+  })
+}
 
 @Component({
   selector: 'journal-goal',
@@ -39,52 +65,89 @@ import { createGoal, Goal, GoalStakeholder, groupByObjective, SupportsGroupedByG
   styleUrls: ['./goal.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalComponent {
+export class GoalComponent implements OnDestroy {
 
-  private _goal?: Goal
-  get goal() { return this._goal ?? createGoal() }
-  @Input() set goal(goal: Goal) {
-    this._goal = goal
-  }
+  goal: Goal | undefined
+  goal$: Observable<Goal | undefined>
 
-  private _stakeholder!: GoalStakeholder
-  get stakeholder() { return this._stakeholder }
-  @Input() set stakeholder(stakeholder: GoalStakeholder) {
-    this._stakeholder = stakeholder
-    
-    if (stakeholder.isAdmin) {
-      this.openRequests$ = this.stakeholderService.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId }).pipe(
-        joinWith({
-          profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
-        }, { shouldAwait: true })
-      )
-    }
-  }
+  stakeholder = createGoalStakeholder()
+  stakeholder$: Observable<GoalStakeholder>
 
-  @Input() story: StoryItem[] = []
+  story$: Observable<StoryItem[]>
 
   milestones$?: Observable<Milestone[]>
+
   openRequests$?: Observable<GoalStakeholder[]>
+  
   supports$: Observable<SupportsGroupedByGoal[]>
+
+  isMobile$ = this.screensize.isMobile$
+
+  isLoggedIn$ = this.auth.isLoggedIn$
+  canAccess$ = new BehaviorSubject(false)
+  pageIsLoading$ = new BehaviorSubject(true)
+  private accessSubscription: Subscription
 
   constructor(
     private alertCtrl: AlertController,
     private auth: AuthService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
-    private milestone: MilestoneService,
+    private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
+    private postService: PostService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
     private stakeholderService: GoalStakeholderService,
+    private storyService: StoryService,
     private support: SupportService,
-    public screensize: ScreensizeService,
+    private screensize: ScreensizeService,
     private seo: SeoService
   ) {
     const goalId$ = this.route.params.pipe(
-      map(params => params['id'] as string)
+      map(params => params['id'] as string),
+      shareReplay({ bufferSize: 1, refCount: true })
+    )
+
+    this.goal$ = goalId$.pipe(
+      switchMap(goalId => this.goalService.valueChanges(goalId)),
+      tap(goal => this.goal = goal),
+      shareReplay({ bufferSize: 1, refCount: true })
+    )
+
+    this.stakeholder$ = combineLatest([
+      goalId$,
+      this.auth.profile$
+    ]).pipe(
+      tap(([ goalId, profile ]) => {
+        if (profile) this.stakeholderService.updateLastCheckedGoal(goalId, profile.uid)
+      }),
+      switchMap(([ goalId, user ]) => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
+      distinctUntilChanged((a, b) => !stakeholderChanged(a, b)),
+      map(stakeholder => createGoalStakeholder(stakeholder)),
+      shareReplay({ bufferSize: 1, refCount: true })
+    )
+
+    this.openRequests$ = this.stakeholder$.pipe(
+      switchMap(stakeholder => {
+        if (!stakeholder.isAdmin) return of([])
+        return this.stakeholderService.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId }).pipe(
+          joinWith({
+            profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+          }, { shouldAwait: true })
+        )
+      })
+    )
+
+    this.story$ = goalId$.pipe(
+      switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([])),
+      joinWith({
+        user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
+        post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
+      })
     )
 
     const supports$ = combineLatest([
@@ -102,7 +165,7 @@ export class GoalComponent {
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: () => this.goal,
-        milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
+        milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }, { shouldAwait: true }),
@@ -112,7 +175,7 @@ export class GoalComponent {
     this.supports$ = supports$.pipe(map(groupByObjective), map(sortGroupedSupports))
 
     this.milestones$ = goalId$.pipe(
-      switchMap(goalId => this.milestone.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
+      switchMap(goalId => this.milestoneService.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
         joinWith({
           achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
           supports: milestone => supports$.pipe(
@@ -121,6 +184,39 @@ export class GoalComponent {
         },{ shouldAwait: false })
       ))
     )
+
+    this.accessSubscription = combineLatest([
+      this.goal$,
+      this.stakeholder$
+    ]).pipe(
+      map(async ([ goal, stakeholder ]) => {
+        if (!goal) return { access: false, goal }
+        if (goal.publicity === 'public') return { access: true, goal }
+        const { isAdmin, isAchiever, isSupporter, isSpectator } = stakeholder
+        if (isAdmin || isAchiever || isSupporter || isSpectator) return { access: true, goal }
+        const access = await this.inviteTokenService.checkInviteToken(goal.id)
+        return { access, goal }
+      })
+    ).subscribe(async promise => {
+      const { goal, access } = await promise
+      if (access && goal) {
+        this.canAccess$.next(true)
+        this.pageIsLoading$.next(false)
+      
+        this.seo.generateTags({
+          title: `${goal.title} - Strive Journal`,
+          description: goal.description ? goal.description : `Check the plan, follow the progress, chat with the team, and help out wherever you can`,
+          image: goal.image ? getImgIxResourceUrl(goal.image) : undefined
+        })
+      } else {
+        this.pageIsLoading$.next(false)
+        this.canAccess$.next(false)
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.accessSubscription.unsubscribe()
   }
 
   async presentGoalOptionsPopover(event: UIEvent, goal: Goal) {
@@ -153,11 +249,14 @@ export class GoalComponent {
   }
 
   updateDescription(description: string) {
+    if (!this.goal?.id) return
     this.goalService.update(this.goal.id, { description })
   }
 
   updatePrivacy($event: SelectCustomEvent, goal: Goal) {
-    if (!this.stakeholder.isAdmin) return;
+    if (!this.goal?.id) return
+    if (!this.stakeholder.isAdmin) return
+
     const publicity = $event.detail.value
     if (publicity === goal.publicity) return
     this.goalService.update({ id: this.goal.id, publicity })
@@ -178,6 +277,7 @@ export class GoalComponent {
         {
           text: 'Yes',
           handler: async () => {
+            if (!this.goal?.id) return
             await this.goalService.remove(this.goal.id)
             this.router.navigate(['/goals'])
             this.seo.generateTags({ title: `Goals - Strive Journal` })
@@ -192,6 +292,8 @@ export class GoalComponent {
   }
 
   async spectate() {
+    if (!this.goal?.id) return
+
     if (!this.auth.uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
@@ -217,6 +319,8 @@ export class GoalComponent {
 
 
   openTeamModal() {
+    if (!this.goal?.id) return
+
     this.modalCtrl.create({
       component: TeamModalComponent,
       componentProps: { goalId: this.goal.id }
@@ -233,6 +337,8 @@ export class GoalComponent {
   }
 
   async openSharePopover(ev: UIEvent, goal: Goal) {
+    if (!this.goal?.id) return
+
     const isSecret = goal.publicity !== 'public'
     const url = await this.inviteTokenService.getShareLink(this.goal.id, isSecret, this.stakeholder.isAdmin)
 
@@ -256,6 +362,7 @@ export class GoalComponent {
   }
 
   saveDescription(description: string) {
+    if (!this.goal?.id) return
     return this.goalService.updateDescription(this.goal.id, description)
   }
 
@@ -264,6 +371,7 @@ export class GoalComponent {
   }
 
   handleRequestDecision(stakeholder: GoalStakeholder, isAccepted: boolean, $event: UIEvent) {
+    if (!this.goal?.id) return
     $event.stopPropagation()
     this.stakeholderService.update({
       uid: stakeholder.uid,

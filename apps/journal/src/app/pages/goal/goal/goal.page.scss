@@ -2,11 +2,20 @@ picture.mobile {
   height: 60vw;
 }
 
+ion-content {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
 main {
-  padding: 16px;
+  max-width: var(--page-max-width);
+  margin: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 16px;
 
   h1 {
     font-size: clamp(1.5rem, 5vw, 2.5rem);
