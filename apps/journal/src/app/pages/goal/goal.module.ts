@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { GoalComponent } from './goal.page'
 
-import { GoalOptionsModule } from '../popovers/options/options.module'
+import { GoalOptionsModule } from './popovers/options/options.module'
 
 import { GoalSharePopoverModule } from '@strive/goal/goal/components/popovers/share/share.module'
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module'

@@ -16,7 +16,7 @@ import { isEqual } from 'date-fns'
 // Strive Utils
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
-import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/options/options.component'
+import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options/options.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
