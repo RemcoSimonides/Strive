@@ -69,8 +69,12 @@ main {
     article {
       display: flex;
       gap: 8px;
+
+      goal-join-button {
+        flex: 1.5;
+      }
   
-      ion-button.button-block, goal-join-button {  
+      ion-button.button-block {  
         flex: 1;
       }
     }

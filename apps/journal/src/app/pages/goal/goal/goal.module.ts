@@ -14,6 +14,7 @@ import { RoadmapModule } from '@strive/goal/milestone/components/roadmap/roadmap
 import { StoryModule } from '@strive/goal/story/components/story/story.module'
 import { JoinButtonModule } from '@strive/goal/goal/components/join-button/join-button.module'
 import { FocusModalModule } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.module'
+import { ChatModalModule } from '@strive/goal/chat/modals/chat/chat.module'
 
 import { DescriptionModule } from '@strive/ui/description/description.module'
 import { ImageModule } from '@strive/media/directives/image.module'
@@ -41,7 +42,8 @@ import { AddSupportModule } from '@strive/support/components/add/add.module'
     JoinButtonModule,
     FocusModalModule,
     SupportListModule,
-    AddSupportModule
+    AddSupportModule,
+    ChatModalModule
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

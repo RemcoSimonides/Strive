@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
-import { RouterModule } from '@angular/router'
 
 import { IonicModule } from '@ionic/angular'
 
-import { ChatComponent } from './chat.component'
+import { ChatModalComponent } from './chat.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
@@ -19,7 +18,6 @@ import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    RouterModule,
     ImageModule,
     TimeAgoPipeModule,
     HTMLPipeModule,
@@ -29,10 +27,10 @@ import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
     AddSupportModalModule
   ],
   declarations: [
-    ChatComponent
+    ChatModalComponent
   ],
   exports: [
-    ChatComponent
+    ChatModalComponent
   ]
 })
-export class ChatModule {}
+export class ChatModalModule {}

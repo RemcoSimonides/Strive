@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Location } from '@angular/common'
-import { Capacitor } from '@capacitor/core'
+import { ActivatedRoute } from '@angular/router'
 
 import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -22,7 +20,6 @@ import { AuthService } from '@strive/user/auth/auth.service'
 
 import { Goal, createGoalStakeholder, GoalStakeholder, StoryItem } from '@strive/model'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
-import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -54,16 +51,6 @@ export class GoalViewComponent implements OnDestroy {
   pageIsLoading = true
   canAccess = false
 
-  showIOSHeader$ = combineLatest([
-    this.auth.isLoggedIn$,
-    this.screensize.isMobile$,
-    of(Capacitor.getPlatform() === 'ios')
-  ]).pipe(
-    map(([ isLoggedIn, isMobile, isIOS ]) => isLoggedIn && isMobile && isIOS )
-  )
-
-  segmentChoice: 'goal' | 'story' | 'chat' = 'goal'
-
   goal$?: Observable<Goal | undefined>
   stakeholder$?: Observable<GoalStakeholder>
   unreadMessages$?: Observable<number>
@@ -79,13 +66,10 @@ export class GoalViewComponent implements OnDestroy {
     private commentService: CommentService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
-    private location: Location,
     private milestoneService: MilestoneService,
     private postService: PostService,
     private profileService: ProfileService,
     private route: ActivatedRoute,
-    private router: Router,
-    private screensize: ScreensizeService,
     private seo: SeoService,
     private stakeholder: GoalStakeholderService,
     private storyService: StoryService
@@ -153,9 +137,6 @@ export class GoalViewComponent implements OnDestroy {
       const { goal, access } = await promise
       access && goal ? this.initGoal(goal) : this.initNoAccess()
     })
-
-    const { t } = this.route.snapshot.queryParams;
-    this.segmentChoice = ['goal', 'story', 'chat'].includes(t) ? t : 'goal'
   }
 
   ngOnDestroy() {
@@ -178,19 +159,5 @@ export class GoalViewComponent implements OnDestroy {
     this.pageIsLoading = false
     this.canAccess = false
     this.cdr.markForCheck()
-  }
-
-  segmentChanged(ev: CustomEvent) {
-    this.segmentChoice = ev.detail.value
-  }
-
-  back() {
-    const state = this.location.getState() as { navigationId: number}
-
-    if (state?.navigationId === 1) {
-      this.router.navigateByUrl('/')
-    } else {
-      this.location.back()
-    }
   }
 }

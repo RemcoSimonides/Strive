@@ -12,69 +12,14 @@
 
 <ng-container *ngIf="!pageIsLoading else loading">
 <ng-container *ngIf="canAccess; else noAccess">
-<ng-container *ngIf="goal$ | async as goal">
-<ng-container *ngIf="stakeholder$ | async as stakeholder">
 
-  <ng-container *ngIf="showIOSHeader$ | async; else noHeader">
-    <ion-header>
-      <ion-toolbar>
-        <section class="ios-header">
-          <ion-button (click)="back()" fill="clear" size="small">
-            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-          </ion-button>
-          <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
-            <ion-segment-button value="goal">
-              Goal
-            </ion-segment-button>
-            <ion-segment-button value="story">
-              Story
-            </ion-segment-button>
-            <ion-segment-button value="chat">
-              Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
-            </ion-segment-button>
-          </ion-segment>
-        </section>
-      </ion-toolbar>
-    </ion-header>
-  </ng-container>
-
-  <ng-template #noHeader>
-    <ion-segment [value]="segmentChoice" (ionChange)="segmentChanged($event)" mode="md">
-      <ion-segment-button value="goal">
-        Goal
-      </ion-segment-button>
-      <ion-segment-button value="story">
-        Story
-      </ion-segment-button>
-      <ion-segment-button value="chat">
-        Chat <ng-container *ngIf="unreadMessages$ | async as messages">({{messages}})</ng-container>
-      </ion-segment-button>
-    </ion-segment>
-  </ng-template>
-
+  <ion-content class="ion-no-padding">
+    <journal-goal
+      [goal]="goal$ | async"
+      [stakeholder]="stakeholder$ | async"
+      [story]="story$ | async"
+    ></journal-goal>
+  </ion-content>
   
-  <ng-container [ngSwitch]="segmentChoice">
-  
-    <ion-content *ngSwitchCase="'goal'" class="ion-no-padding">
-      <journal-goal
-        [goal]="goal"
-        [stakeholder]="stakeholder"
-        [story]="story$ | async"
-        (segmentChange)="segmentChoice = $event"
-      ></journal-goal>
-    </ion-content>
-  
-    <ion-content *ngSwitchCase="'story'" class="ion-padding">
-      <ng-container *ngIf="story$ | async as story; else loading">
-        <journal-goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id"></journal-goal-story>
-      </ng-container>
-    </ion-content>
-    
-    <journal-chat *ngSwitchCase="'chat'" [goal]="goal$ | async" [stakeholder]="stakeholder"></journal-chat>
-  
-  </ng-container>
-
-</ng-container>
-</ng-container>
 </ng-container>
 </ng-container>

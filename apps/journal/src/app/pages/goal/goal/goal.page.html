@@ -9,20 +9,27 @@
     
       <article>
         <goal-join-button [goal]="goal" [stakeholder]="stakeholder"></goal-join-button>
-  
-        <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
-          <ion-button (click)="openSharePopover($event, goal)" class="primary">
-            <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
-          </ion-button>
-        </ng-container>
+
+        <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
+          <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon> 
+          <span>{{ stakeholder.isSpectator ? 'FOLLOWING' : 'FOLLOW' }}</span>
+        </ion-button>
       </article>
   
       <article>
-        <ion-button (click)="spectate()" size="block" class="secondary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
-          <span>{{ stakeholder.isSpectator ? 'FOLLOWING' : 'FOLLOW' }}</span>
+        <ion-button (click)="openChat()" size="block" class="secondary">
+          <ion-icon name="chatbubbles-outline" slot="start" size="small"></ion-icon>
+          <span>Chat</span>
         </ion-button>
-        <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="primary">
-          <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
+
+        <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
+          <ion-button (click)="openSharePopover($event, goal)" class="secondary">
+            <ion-icon slot="icon-only" size="small" name="share-social-outline"></ion-icon>
+          </ion-button>
+        </ng-container>
+
+        <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="secondary">
+          <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"></ion-icon>
         </ion-button>
       </article>
   

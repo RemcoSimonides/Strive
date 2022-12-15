@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
 // Sentry
-import { captureException, captureMessage } from '@sentry/capacitor'
+import { captureException } from '@sentry/capacitor'
 // Firebase
 import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -16,6 +16,10 @@ import { GoalOptionsPopoverComponent, enumGoalOptions } from '../popovers/option
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
 import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { ChatModalComponent } from '@strive/goal/chat/modals/chat/chat.component'
+import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
+import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -26,12 +30,8 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { MilestoneService } from '@strive/goal/milestone/milestone.service'
 import { SupportService } from '@strive/support/support.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-
 // Strive Interfaces
 import { createGoal, Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports } from '@strive/model'
-import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
-import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
-import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
 
 @Component({
   selector: 'journal-goal',
@@ -66,8 +66,6 @@ export class GoalComponent {
   milestones$?: Observable<Milestone[]>
   openRequests$?: Observable<GoalStakeholder[]>
   supports$: Observable<SupportsGroupedByGoal[]>
-
-  @Output() segmentChange = new EventEmitter<'goal' | 'roadmap' | 'story'>()
 
   constructor(
     private alertCtrl: AlertController,
@@ -240,18 +238,14 @@ export class GoalComponent {
 
     const canShare = await Share.canShare()
     if (canShare.value) {
-      try {
-        Share.share({
-          title: goal.title,
-          text: 'Check out this goal',
-          url,
-          dialogTitle: 'Together we achieve!'
-        }).catch(err => {
-          captureException(err)
-        })
-      } catch(err: any) {
-        captureMessage(err['message'])
-      }
+      Share.share({
+        title: goal.title,
+        text: 'Check out this goal',
+        url,
+        dialogTitle: 'Together we achieve!'
+      }).catch(err => {
+        captureException(err)
+      })
     } else {
       this.popoverCtrl.create({
         component: GoalSharePopoverComponent,
@@ -291,6 +285,15 @@ export class GoalComponent {
       },
       enterAnimation: getEnterAnimation,
       leaveAnimation: getLeaveAnimation
+    }).then(modal => modal.present())
+  }
+
+  openChat() {
+    this.modalCtrl.create({
+      component: ChatModalComponent,
+      componentProps: {
+        goal: this.goal
+      }
     }).then(modal => modal.present())
   }
 }

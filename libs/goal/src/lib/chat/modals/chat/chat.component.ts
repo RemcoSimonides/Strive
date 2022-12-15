@@ -4,31 +4,34 @@ import { InfiniteScrollCustomEvent, IonContent, ModalController, Platform, Scrol
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
 import { joinWith, toDate } from 'ngfire'
 
-import { BehaviorSubject, Subscription } from 'rxjs'
-import { filter, map, skip } from 'rxjs/operators'
+import { BehaviorSubject, firstValueFrom, Observable, of, Subscription } from 'rxjs'
+import { distinctUntilChanged, filter, map, shareReplay, skip, switchMap } from 'rxjs/operators'
 
 import { CommentService } from '@strive/goal/chat/comment.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
-import { Goal, Comment, createComment, GoalStakeholder } from '@strive/model'
+import { Goal, Comment, createComment, GoalStakeholder, createGoalStakeholder } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { Location } from '@angular/common'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 
 
 @Component({
-  selector: '[goal][stakeholder] journal-chat',
+  selector: '[goal] goal-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatModalComponent extends ModalDirective implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea?: IonContent
   @Input() goal!: Goal
-  @Input() stakeholder!: GoalStakeholder
+
+  stakeholder$?: Observable<GoalStakeholder>
 
   private commentsPerQuery = 20
   private query?: Query<DocumentData>
@@ -55,26 +58,39 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private commentService: CommentService,
-    private modalCtrl: ModalController,
-    private platform: Platform,
+    protected override location: Location,
+    protected override modalCtrl: ModalController,
+    protected override platform: Platform,
     private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService
   ) {
+    super(location, modalCtrl, platform)
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
     this.subs.push(sub)
   }
 
   async ngOnInit() {
+    if (!this.goal) return
+
+    this.stakeholder$ = this.auth.profile$.pipe(
+      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: this.goal.id }) : of(undefined)),
+      map(value => createGoalStakeholder(value)),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+      shareReplay({ bufferSize: 1, refCount: true })
+    )
+
     if (!this.auth.uid) return
-    if (!this.stakeholder) return
-    const { isAdmin, isAchiever, isSupporter } = this.stakeholder
+
+    const stakeholder = await firstValueFrom(this.stakeholder$)
+    const { isAdmin, isAchiever, isSupporter } = stakeholder
+
     if (!isAdmin && !isAchiever && !isSupporter) return
 
     this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid)
 
     const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
     const constraints = [
-      where('createdAt', '>', this.stakeholder.createdAt),
+      where('createdAt', '>', stakeholder.createdAt),
       orderBy('createdAt', 'desc'),
       limit(this.commentsPerQuery)
     ]
@@ -153,7 +169,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const scrollElement = await $event.target.getScrollElement();
 
     // minus clientHeight because trigger is scrollTop
-    // otherwise you hit the bottom of the page before 
+    // otherwise you hit the bottom of the page before
     // the top screen can get to 80% total document height
     const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
     const currentScrollDepth = $event.detail.scrollTop;
