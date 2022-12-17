@@ -1,12 +1,4 @@
-:host {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-
 ion-content {
-  height: calc(100% - 140px);
-
   ul {
     max-width: var(--page-max-width);
     margin:auto;
