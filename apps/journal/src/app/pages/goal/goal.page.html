@@ -2,6 +2,14 @@
   <strive-header-root></strive-header-root>
 </ng-container>
 
+<ng-container *ngIf="showIOSHeader$ | async">
+  <ion-fab slot="fixed" vertical="top" horizontal="start">
+    <ion-fab-button (click)="back()" color="light" size="small">
+      <ion-icon name="arrow-back"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ng-container>
+
 <ng-template #loading>
   <strive-page-loading></strive-page-loading>
 </ng-template>

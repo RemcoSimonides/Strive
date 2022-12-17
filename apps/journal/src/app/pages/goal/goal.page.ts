@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
+import { Location } from '@angular/common'
 // Sentry
 import { captureException } from '@sentry/capacitor'
 // Firebase
@@ -10,6 +11,7 @@ import { joinWith } from 'ngfire'
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 // Capacitor
+import { Capacitor } from '@capacitor/core'
 import { Share } from '@capacitor/share'
 // Date fns
 import { isEqual } from 'date-fns'
@@ -86,6 +88,14 @@ export class GoalComponent implements OnDestroy {
   isLoggedIn$ = this.auth.isLoggedIn$
   canAccess$ = new BehaviorSubject(false)
   pageIsLoading$ = new BehaviorSubject(true)
+  showIOSHeader$ = combineLatest([
+    this.auth.isLoggedIn$,
+    this.screensize.isMobile$,
+    of(Capacitor.getPlatform() === 'ios')
+  ]).pipe(
+    map(([ isLoggedIn, isMobile, isIOS ]) => isLoggedIn && isMobile && isIOS )
+  )
+
   private accessSubscription: Subscription
 
   constructor(
@@ -93,6 +103,7 @@ export class GoalComponent implements OnDestroy {
     private auth: AuthService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
+    private location: Location,
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
@@ -403,5 +414,15 @@ export class GoalComponent implements OnDestroy {
         goal: this.goal
       }
     }).then(modal => modal.present())
+  }
+
+  back() {
+    const state = this.location.getState() as { navigationId: number}
+
+    if (state?.navigationId === 1) {
+      this.router.navigateByUrl('/')
+    } else {
+      this.location.back()
+    }
   }
 }
