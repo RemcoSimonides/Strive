@@ -132,7 +132,7 @@ export class AppComponent implements OnDestroy {
           const doNotShowPartial = ['/goal/']
           const showRegisterModalPages = ['/explore']
 
-          const dontShow = doNotShowExact.some(page => page === url) && doNotShowPartial.some(part => url.includes(part))
+          const dontShow = doNotShowExact.some(page => page === url) || doNotShowPartial.some(part => url.includes(part))
           const showRegister = showRegisterModalPages.some(page => page === url)
 
           if (!dontShow) {
