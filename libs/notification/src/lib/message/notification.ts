@@ -1,4 +1,4 @@
-import { Goal, Notification, NotificationMessageText, User } from '@strive/model'
+import { Goal, Notification, User } from '@strive/model'
 import { captureException } from '@sentry/angular'
 
 type NotificationSourceType = 'goal' | 'profile'
@@ -21,18 +21,19 @@ function getGoal(goal: Goal): { title: string, image: string, type: Notification
   }
 }
 
-const empty: NotificationMessage = { image: '', link: '', message: [], title: '', type: 'goal' }
+const empty: NotificationMessage = { image: '', link: '', message: '', title: '', type: 'goal' }
 function throwError(notification: Notification) {
   captureException(`Notification doesn't contain needed information`, notification)
   return empty
 }
+
 export interface NotificationMessage {
   title: string
   image: string
   type: NotificationSourceType
   link: string
   params?: unknown
-  message: NotificationMessageText[]
+  message: string
 }
 
 export function getNotificationMessage(notification: Notification): NotificationMessage {
@@ -45,22 +46,14 @@ export function getNotificationMessage(notification: Notification): Notification
       return {
         ...getUser(user),
         link: `/goal/${goal.id}`,
-        message: [
-          { text: `${user.username} created goal "` },
-          { text: goal.title, link: `goal/${goal.id}` },
-          { text: `"` }
-        ]
+        message: `${user.username} created goal "${goal.title}"`
       }
     case 'goalCreatedFinished':
       if (!user || !goal) return throwError(notification)
 
       return {
         ...getUser(user),
-        message: [
-          { text: `${user.username} journaled about "` },
-          { text: goal.title, link: `goal/${goal.id}` },
-          { text: `"` }
-        ]
+        message: `${user.username} journaled about "${goal.title}"`
       }
 
     case 'goalDeleted':
@@ -69,9 +62,7 @@ export function getNotificationMessage(notification: Notification): Notification
       return {
         ...getGoal(goal),
         link: `/supports`,
-        message: [
-          { text: `${goal.title} has been deleted and therefore your supports are cancelled` }
-        ]
+        message: `${goal.title} has been deleted and therefore your supports are cancelled`
       }
 
     case 'goalIsFinished':
@@ -79,14 +70,7 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        message: [
-          { text: `${user.username} finished goal "` },
-          {
-            text: goal.title,
-            link: `goal/${goal.id}`
-          },
-          { text: `"` }
-        ]
+        message: `${user.username} finished goal "${goal.title}"`
       }
 
     case 'goalMilestoneDeadlinePassed':
@@ -94,9 +78,7 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        message: [
-          { text: `Milestone "${milestone.content}" of goal "${goal.title}" passed its due date` }
-        ]
+        message: `Milestone "${milestone.content}" of goal "${goal.title}" passed its due date`
       }
 
     case 'goalStakeholderInvitedToJoin':
@@ -104,15 +86,7 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        message: [
-          {
-            text: user.username,
-            link: `profile/${user.uid}`
-          },
-          {
-            text: ` invited you to join goal '${goal.title}'`
-          }
-        ]
+        message: `${user.username} invited you to join goal "${goal.title}"`
       }
 
     case 'goalStakeholderRequestedToJoin':
@@ -120,13 +94,7 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        message: [
-          {
-            text: user.username,
-            link: `profile/${user.uid}`
-          },
-          { text: ` requests to join goal` }
-        ]
+        message: `${user.username} requests to join goal`
       }
 
     case 'goalStakeholderRequestToJoinAccepted':
@@ -134,9 +102,7 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        message: [
-          { text: `Your request to join goal "${goal.title}" has been accepted` }
-        ]
+        message: `Your request to join goal "${goal.title}" has been accepted`
       }
 
     case 'goalStakeholderRequestToJoinRejected':
@@ -144,9 +110,7 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getGoal(goal),
-        message: [
-          { text: `Your request to join "${goal.title}" has been rejected` }
-        ]
+        message: `Your request to join "${goal.title}" has been rejected`
       }
 
     case 'userSpectatorCreated':
@@ -154,25 +118,15 @@ export function getNotificationMessage(notification: Notification): Notification
 
       return {
         ...getUser(user),
-        message: [
-          { text: `${user.username} started following you` }
-        ]
+        message: `${user.username} started following you`
       }
 
     case 'goalSupportCreated': {
       if (!user || !goal || !support) return throwError(notification)
 
-      const suffix = `with "${support.description}"`
-      const message: NotificationMessageText[] = []
-      if (milestone?.id) {
-        message.push({ text: `${user.username} supports milestone "${milestone.content}" of goal "` })
-        message.push({ text: goal.title, link: `/goal/${goal.id}` })
-        message.push({ text: `" ${suffix}`})
-      } else {
-        message.push({ text: `${user.username} supports goal "` })
-        message.push({ text: goal.title, link: `/goal/${goal.id}` })
-        message.push({ text: `" ${suffix}`})
-      }
+      const message = milestone?.id
+        ? `${user.username} supports milestone "${milestone.content}" of goal "${goal.title}" with "${support.description}"`
+        : `${user.username} supports goal "${goal.title}" with "${support.description}"`
 
       return {
         ...getUser(user),
@@ -192,9 +146,7 @@ export function getNotificationMessage(notification: Notification): Notification
         ...getGoal(goal),
         link: `/supports/${support.id}`,
         params: { goalId: support.goalId },
-        message: [
-          { text: `${prefix} has been completed. Decide to give "${support.description}" or not` }
-        ]
+        message: `${prefix} has been completed. Decide to give "${support.description}" or not`
       }
     }
 
@@ -205,15 +157,7 @@ export function getNotificationMessage(notification: Notification): Notification
         ...getGoal(goal),
         link: `/supports/${support.id}`,
         params: { goalId: support.goalId },
-        message: [
-          {
-            text: user.username,
-            link: `profile/${user.uid}`
-          },
-          {
-            text: ` paid support "${support.description}"`
-          }
-        ]
+        message: `${user.username} paid support "${support.description}"`
       }
     
     case 'goalSupportStatusRejected': {
@@ -226,13 +170,7 @@ export function getNotificationMessage(notification: Notification): Notification
         ...getGoal(goal),
         link: `/supports/${support.id}`,
         params: { goalId: support.goalId },
-        message: [
-          {
-            text: user.username,
-            link: `profile/${user.uid}`
-          },
-          { text: ` rejected paying support "${support.description}"${suffix}`}
-        ]
+        message: `${user.username} rejected paying support "${support.description}"${suffix}`
       }
     }
 

@@ -15,14 +15,7 @@
                     [ngStyle]="{'border-radius': _message.type === 'profile' ? '50%' : '12px'}"
                   />
                   <div>
-                    <span>
-                      <ng-container *ngFor="let message of _message.message">
-                        <ng-container *ngIf="message.link; else noLink">
-                          <a [routerLink]="'/' + message.link" [queryParams]="message.params">{{ message.text }}</a>
-                        </ng-container>
-                        <ng-template #noLink>{{ message.text }}</ng-template>
-                      </ng-container>
-                    </span>
+                    <span>{{ _message.message }}</span>
                     <small class="time">{{ notification.createdAt | timeAgo }}</small>
                   </div>
                 </article>

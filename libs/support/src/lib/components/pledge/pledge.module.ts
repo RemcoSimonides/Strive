@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core'
+import { RouterModule } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { ArrowModule } from '@strive/ui/responsive-arrow/arrow.module'
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common'
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     IonicModule,
     ArrowModule,
     ImageModule,

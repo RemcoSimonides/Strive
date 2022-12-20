@@ -11,7 +11,7 @@
       <main>
     
         <ng-container *ngIf="support$ | async as support">
-          <support-details [support]="support" (removed)="supportRemoved()"></support-details>
+          <support-details [support]="support" (removed)="supportRemoved()" [showGoalLink]="true"></support-details>
         </ng-container>
     
       </main>

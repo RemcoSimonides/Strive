@@ -22,6 +22,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 export class SupportDetailsComponent implements OnInit {
 
   @Input() support?: Support
+  @Input() showGoalLink = false
 
   @Output() removed = new EventEmitter()
 
