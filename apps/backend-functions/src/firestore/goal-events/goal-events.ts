@@ -108,6 +108,10 @@ async snapshot => {
       // TODO optional send push notification to spectators of new stakeholder
       // TOD send (push) notification to achievers of goal (except the person who accepted the request and the new stakeholder)
       break
+  
+    case 'goalStakeholderInvitedToJoin': {
+      return sendNotificationToUsers(notification, userId, 'user')
+    }
 
     case 'goalStakeholderRequestedToJoin': {
       const options: SendOptions = {

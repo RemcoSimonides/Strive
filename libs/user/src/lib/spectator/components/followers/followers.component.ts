@@ -8,7 +8,7 @@ import { joinWith } from 'ngfire'
 import { map, of, switchMap } from 'rxjs'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
-import { UserSpectateService } from '../../spectator.service'
+import { SpectatorService } from '../../spectator.service'
 import { AuthService } from '../../../auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
@@ -37,7 +37,7 @@ export class FollowersComponent extends ModalDirective {
     protected override modalCtrl: ModalController,
     protected override platform: Platform,
     private profileService: ProfileService,
-    private service: UserSpectateService,
+    private service: SpectatorService,
     private router: Router
   ) {
     super(location, modalCtrl, platform)

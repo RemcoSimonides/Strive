@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
 import { Location } from '@angular/common'
-// Sentry
-import { captureException } from '@sentry/capacitor'
 // Firebase
 import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -12,7 +10,6 @@ import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rx
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 // Capacitor
 import { Capacitor } from '@capacitor/core'
-import { Share } from '@capacitor/share'
 // Date fns
 import { isEqual } from 'date-fns'
 // Strive Utils
@@ -20,12 +17,12 @@ import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options/options.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
-import { GoalSharePopoverComponent } from '@strive/goal/goal/components/popovers/share/share.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
 import { ChatModalComponent } from '@strive/goal/chat/modals/chat/chat.component'
 import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
+import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -138,6 +135,7 @@ export class GoalComponent implements OnDestroy {
       switchMap(([ goalId, user ]) => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
       distinctUntilChanged((a, b) => !stakeholderChanged(a, b)),
       map(stakeholder => createGoalStakeholder(stakeholder)),
+      tap(stakeholder => this.stakeholder = stakeholder),
       shareReplay({ bufferSize: 1, refCount: true })
     )
 
@@ -203,8 +201,8 @@ export class GoalComponent implements OnDestroy {
       map(async ([ goal, stakeholder ]) => {
         if (!goal) return { access: false, goal }
         if (goal.publicity === 'public') return { access: true, goal }
-        const { isAdmin, isAchiever, isSupporter, isSpectator } = stakeholder
-        if (isAdmin || isAchiever || isSupporter || isSpectator) return { access: true, goal }
+        const { isAdmin, isAchiever, isSupporter, isSpectator, hasInviteToJoin } = stakeholder
+        if (isAdmin || isAchiever || isSupporter || isSpectator || hasInviteToJoin ) return { access: true, goal }
         const access = await this.inviteTokenService.checkInviteToken(goal.id)
         return { access, goal }
       })
@@ -347,29 +345,15 @@ export class GoalComponent implements OnDestroy {
     }).then(modal => modal.present())
   }
 
-  async openSharePopover(ev: UIEvent, goal: Goal) {
-    if (!this.goal?.id) return
 
-    const isSecret = goal.publicity !== 'public'
-    const url = await this.inviteTokenService.getShareLink(this.goal.id, isSecret, this.stakeholder.isAdmin)
-
-    const canShare = await Share.canShare()
-    if (canShare.value) {
-      Share.share({
-        title: goal.title,
-        text: 'Check out this goal',
-        url,
-        dialogTitle: 'Together we achieve!'
-      }).catch(err => {
-        captureException(err)
-      })
-    } else {
-      this.popoverCtrl.create({
-        component: GoalSharePopoverComponent,
-        event: ev,
-        componentProps: { url }
-      }).then(popover => popover.present())
-    }
+  openShareModal() {
+    this.modalCtrl.create({
+      component: AddOthersModalComponent,
+      componentProps: {
+        goal: this.goal,
+        stakeholder: this.stakeholder
+      }
+    }).then(modal => modal.present())
   }
 
   saveDescription(description: string) {

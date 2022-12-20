@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular'
 import { GoalComponent } from './goal.page'
 
 import { GoalOptionsModule } from './popovers/options/options.module'
+import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 
 import { GoalSharePopoverModule } from '@strive/goal/goal/components/popovers/share/share.module'
 import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module'
@@ -54,7 +55,8 @@ const routes: Routes = [
     ChatModalModule,
     PageLoadingModule,
     PagenotfoundModule,
-    HeaderRootModule
+    HeaderRootModule,
+    AddOthersModalComponent
   ],
   exports: [GoalComponent],
   declarations: [GoalComponent],

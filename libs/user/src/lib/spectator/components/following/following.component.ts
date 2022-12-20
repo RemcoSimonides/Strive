@@ -6,7 +6,7 @@ import { ModalController, Platform } from '@ionic/angular'
 import { joinWith } from 'ngfire'
 import { map, switchMap, of } from 'rxjs'
 
-import { UserSpectateService } from '../../spectator.service'
+import { SpectatorService } from '../../spectator.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '../../../auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
@@ -35,7 +35,7 @@ export class FollowingComponent extends ModalDirective {
     protected override modalCtrl: ModalController,
     protected override platform: Platform,
     private profileService: ProfileService,
-    private service: UserSpectateService,
+    private service: SpectatorService,
     private router: Router
   ) {
     super(location, modalCtrl, platform)

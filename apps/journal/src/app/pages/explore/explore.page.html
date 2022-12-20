@@ -30,7 +30,7 @@
         <ion-button fill="clear" (click)="setType('goals')">view more</ion-button>
       </section>
       <strive-thumbnail-list [width]="250">
-        <ng-container *ngFor="let rows of algolia.goalResults | async | rows:2">
+        <ng-container *ngFor="let rows of algolia.goals$ | async | rows:2">
           <ng-template #thumb>
             <article class="small-thumbnail-column">
               <ng-container *ngFor="let goal of rows; let i = index">
@@ -49,7 +49,7 @@
         <ion-button fill="clear" (click)="setType('users')">view more</ion-button>
       </section>
       <strive-thumbnail-list [width]="250">
-        <ng-container *ngFor="let rows of algolia.profileResults | async | rows:2">
+        <ng-container *ngFor="let rows of algolia.profiles$ | async | rows:2">
           <ng-template #thumb>
             <article class="small-thumbnail-column">
               <ng-container *ngFor="let profile of rows">
@@ -79,14 +79,14 @@
 
     <ul *ngSwitchCase="'search'" class="search">
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
-        <li *ngFor="let goal of algolia.goalResults | async">
+        <li *ngFor="let goal of algolia.goals$ | async">
           <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
             <small *ngIf="searchForm.value.type === 'all'">Type: Goal</small>
           </strive-small-thumbnail>
         </li>
       </ng-container>
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'users'">
-        <li *ngFor="let profile of algolia.profileResults | async">
+        <li *ngFor="let profile of algolia.profiles$ | async">
           <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.objectID" borderRadius="50%">
             <small *ngIf="searchForm.value.type === 'all'">Type: User</small>
           </strive-small-thumbnail>

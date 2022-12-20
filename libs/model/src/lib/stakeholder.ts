@@ -9,6 +9,7 @@ export interface GoalStakeholder {
   isSupporter: boolean
   isSpectator: boolean
   hasOpenRequestToJoin: boolean
+  hasInviteToJoin: boolean
   focus: Focus
   goalId: string
   goalPublicity: GoalPublicityType
@@ -20,9 +21,9 @@ export interface GoalStakeholder {
 }
 
 export interface Focus {
-  on: boolean;
-  why: string;
-  inspiration: string;
+  on: boolean
+  why: string
+  inspiration: string
 }
 
 /** A factory function that creates a GoalStakeholderDocument */
@@ -34,6 +35,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     isSpectator: false,
     isSupporter: false,
     hasOpenRequestToJoin: false,
+    hasInviteToJoin: false,
     focus: createFocus(params.focus),
     goalId: '',
     goalPublicity: 'private',

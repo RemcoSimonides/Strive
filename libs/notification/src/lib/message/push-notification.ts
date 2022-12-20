@@ -90,6 +90,16 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
         link: `goal/${goal.id}`
       })
 
+    case 'goalStakeholderInvitedToJoin':
+      if (!goal) throw new Error(`${event} push message needs goal defined`)
+      if (!user) throw new Error(`${event} push message needs user defined`)
+
+      return createPushMessage({
+        title: goal.title,
+        body: `${user.username} invited you to join their goal`,
+        link: `goal/${goal.id}`
+      })
+
     case 'goalStakeholderRequestedToJoin':
       if (!goal) throw new Error(`${event} push message needs goal defined`)
       if (!user) throw new Error(`${event} push message needs user defined`)

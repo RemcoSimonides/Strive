@@ -14,12 +14,11 @@ export class AlgoliaService {
   private goalsIndex = this.client.initIndex(environment.algolia.indexNameGoals)
   private profilesIndex = this.client.initIndex(environment.algolia.indexNameUsers)
 
-  private _goalResults = new BehaviorSubject<AlgoliaGoal[]>([])
-  private _profileResults = new BehaviorSubject<AlgoliaUser[]>([])
+  private _goals = new BehaviorSubject<AlgoliaGoal[]>([])
+  private _profiles = new BehaviorSubject<AlgoliaUser[]>([])
 
-  goalResults: Observable<AlgoliaGoal[]> = this._goalResults.asObservable()
-  profileResults: Observable<AlgoliaUser[]> = this._profileResults.asObservable()
-  
+  goals$: Observable<AlgoliaGoal[]> = this._goals.asObservable()
+  profiles$: Observable<AlgoliaUser[]> = this._profiles.asObservable()
 
   search(query: string, hitsPerPage?: number | { goals?: number, profiles?: number}) {
     
@@ -32,7 +31,7 @@ export class AlgoliaService {
       hitsPerPage,
     }).then(data => {
       const goals = data.hits.map(hit => createAlgoliaGoal(hit))
-      this._goalResults.next(goals)
+      this._goals.next(goals)
     })
   }
 
@@ -41,7 +40,7 @@ export class AlgoliaService {
       hitsPerPage,
     }).then(data => {
       const users = data.hits.map(hit => createAlgoliaUser(hit))
-      this._profileResults.next(users)
+      this._profiles.next(users)
     })
   }
   

@@ -99,6 +99,22 @@ export function getNotificationMessage(notification: Notification): Notification
         ]
       }
 
+    case 'goalStakeholderInvitedToJoin':
+      if (!user || !goal) return throwError(notification)
+
+      return {
+        ...getGoal(goal),
+        message: [
+          {
+            text: user.username,
+            link: `profile/${user.uid}`
+          },
+          {
+            text: ` invited you to join goal '${goal.title}'`
+          }
+        ]
+      }
+
     case 'goalStakeholderRequestedToJoin':
       if (!user || !goal) return throwError(notification)
 

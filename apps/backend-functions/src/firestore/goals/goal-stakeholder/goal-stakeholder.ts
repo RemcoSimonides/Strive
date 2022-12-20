@@ -1,11 +1,12 @@
 import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 
-import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createAggregation } from '@strive/model'
+import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createAggregation, createNotificationBase } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { getDocument } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
+import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification'
 
 
 export const goalStakeholderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderCreatedHandler',
@@ -64,7 +65,7 @@ async (snapshot, context) => {
     changeNumberOfSpectators(goalId, after.isSpectator ? 1 : -1)
   }
 
-  if (!after.isAdmin && !after.isAchiever && !after.isSupporter && !after.isSpectator && !after.hasOpenRequestToJoin) {
+  if (!after.isAdmin && !after.isAchiever && !after.isSupporter && !after.isSpectator && !after.hasOpenRequestToJoin && !after.hasInviteToJoin) {
     snapshot.after.ref.delete()
   }
 })
@@ -125,6 +126,8 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   const requestToJoinAccepted = requestToJoinDecided && !before.isAchiever && after.isAchiever
   const requestToJoinRejected = requestToJoinDecided && !before.isAchiever && !after.isAchiever && after.updatedBy !== after.uid
 
+  const invitedToJoin = !before.hasInviteToJoin && after.hasInviteToJoin
+
   const source = createGoalSource({
     goalId: after.goalId,
     userId: after.uid
@@ -145,6 +148,15 @@ function handleStakeholderEvents(before: GoalStakeholder, after: GoalStakeholder
   if (requestToJoin) addGoalEvent('goalStakeholderRequestedToJoin', source)
   if (requestToJoinAccepted) addGoalEvent('goalStakeholderRequestToJoinAccepted', source)
   if (requestToJoinRejected) addGoalEvent('goalStakeholderRequestToJoinRejected', source)
+
+  if (invitedToJoin) {
+    const notification = createNotificationBase({
+      goalId: after.goalId,
+      userId: after.updatedBy,
+      event: 'goalStakeholderInvitedToJoin'
+    })
+    sendNotificationToUsers(notification, after.uid, 'user')
+  }
 }
 
 function handleAggregation(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined) {

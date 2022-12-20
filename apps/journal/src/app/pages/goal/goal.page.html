@@ -49,8 +49,8 @@
         </ion-button>
 
         <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
-          <ion-button (click)="openSharePopover($event, goal)" class="secondary">
-            <ion-icon slot="icon-only" size="small" name="share-social-outline"></ion-icon>
+          <ion-button (click)="openShareModal()" class="secondary">
+            <ion-icon slot="icon-only" size="small" name="person-add-outline"></ion-icon>
           </ion-button>
         </ng-container>
 

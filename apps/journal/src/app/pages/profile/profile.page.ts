@@ -5,7 +5,7 @@ import { PopoverController, ModalController } from '@ionic/angular'
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 
-import { UserSpectateService } from '@strive/user/spectator/spectator.service'
+import { SpectatorService } from '@strive/user/spectator/spectator.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 
@@ -58,7 +58,7 @@ export class ProfileComponent {
     this.auth.user$,
     this.profileId$
   ]).pipe(
-    switchMap(([user, profileId]) => user?.uid && profileId ? this.userSpectateService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
+    switchMap(([user, profileId]) => user?.uid && profileId ? this.spectatorService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
     map(spectator => spectator?.isSpectator ?? false)
   )
 
@@ -85,7 +85,7 @@ export class ProfileComponent {
     this.isOwner$
   ]).pipe(
     map(([profile, isOwner]) => {
-      const title: string = (isOwner || !profile) ? 'Your Profile' : profile.username
+      const title = (isOwner || !profile) ? 'Your Profile' : profile.username
       const description = profile?.username
         ? `${profile.username} is journaling about their goals on Strive Journal. Follow ${profile.username} to stay up-to-date about the progress and help out wherever you can because together we achieve more`
         : ''
@@ -110,7 +110,7 @@ export class ProfileComponent {
     private route: ActivatedRoute,
     private router: Router,
     private seo: SeoService,
-    private userSpectateService: UserSpectateService
+    private spectatorService: SpectatorService
   ) {}
 
   openAuthModal() {
@@ -180,7 +180,7 @@ export class ProfileComponent {
     if (this.auth.uid) {
       const profileId = await firstValueFrom(this.profileId$)
       if (profileId) {
-        this.userSpectateService.upsert({
+        this.spectatorService.upsert({
           uid: this.auth.uid,
           profileId,
           isSpectator

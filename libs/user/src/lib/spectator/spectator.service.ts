@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp, where, WriteBatch } from 'firebase/firestore'
-import { FireSubCollection, WriteOptions } from 'ngfire'
+import { DocumentSnapshot, serverTimestamp, where } from 'firebase/firestore'
+import { FireSubCollection } from 'ngfire'
+import { map } from 'rxjs'
 
 import { Spectator, createSpectator } from '@strive/model'
 
@@ -9,7 +10,7 @@ import { AuthService } from '../auth/auth.service'
 @Injectable({
   providedIn: 'root'
 })
-export class UserSpectateService extends FireSubCollection<Spectator> {
+export class SpectatorService extends FireSubCollection<Spectator> {
   readonly path = `Users/:uid/Spectators`
   override readonly idKey = 'uid'
   override readonly memorize = true
@@ -46,8 +47,20 @@ export class UserSpectateService extends FireSubCollection<Spectator> {
     return this.load([where('isSpectator', '==', true)], { uid })
   }
 
+  getSpectators$(uid: string) {
+    return this.valueChanges([where('isSpectator', '==', true)], { uid })
+  }
+
   getSpectating(uid: string) {
-    return this.load([where('uid', '==', uid)])
+    return this.load([where('uid', '==', uid)]).then(
+      spectators => spectators.filter(spectator => spectator.isSpectator)
+    )
+  }
+
+  getSpectating$(uid: string) {
+    return this.valueChanges([where('uid', '==', uid)]).pipe(
+      map(spectators => spectators.filter(spectator => spectator.isSpectator))
+    )
   }
 
 }
