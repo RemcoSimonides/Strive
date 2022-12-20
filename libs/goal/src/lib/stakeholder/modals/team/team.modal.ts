@@ -19,6 +19,10 @@ import { ProfileService } from '@strive/user/user/profile.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RolesPopoverComponent } from '../../popovers/roles/roles.component'
 
+function isTeamMember({ isAdmin, isAchiever, isSupporter, isSpectator }: GoalStakeholder) {
+  return isAdmin || isAchiever || isSupporter || isSpectator
+}
+
 @Component({
   selector: '[goalId] goal-team-modal',
   templateUrl: './team.modal.html',
@@ -53,6 +57,7 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
     const stakeholders$ = combineLatest([
       this.auth.user$,
       this.stakeholder.valueChanges({ goalId: this.goalId }).pipe(
+        map(stakeholders => stakeholders.filter(isTeamMember)),
         joinWith({
           profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
         }, { shouldAwait: true })
