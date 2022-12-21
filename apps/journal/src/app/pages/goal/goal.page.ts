@@ -233,7 +233,8 @@ export class GoalComponent implements OnDestroy {
       component: GoalOptionsPopoverComponent,
       event,
       componentProps: {
-        stakeholder: this.stakeholder
+        stakeholder: this.stakeholder,
+        goal: this.goal
       }
     })
     await popover.present()
