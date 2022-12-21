@@ -16,7 +16,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module'
 import { HomePageModule } from '../home/home.module'
 import { GoalThumbnailModule } from '@strive/goal/goal/components/thumbnail/thumbnail.module'
-import { GoalUpdatesModalModule } from '@strive/goal/goal/modals/goals/goal-updates.module'
+import { GoalUpdatesModalModule } from '@strive/goal/goal/modals/goal-updates/goal-updates.module'
 import { MiniThumbnailSwiperModule } from '@strive/goal/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.module'
 
 import { CardsModalModule } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.module'
