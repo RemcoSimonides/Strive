@@ -129,7 +129,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
         this.postForm.date.setValue(new Date())
         this.postForm.date.markAsDirty()
       } else if (role === 'dismiss') {
-        const date = new Date(data)
+        const date = new Date(data ?? new Date())
         this.postForm.date.setValue(date)
         this.postForm.date.markAsDirty()
       }
