@@ -16,7 +16,7 @@ export class Slide1Component {
 
   @Output() stepper = new EventEmitter<'next' | 'previous'>()
   @Output() created = new EventEmitter<boolean>()
-  @Output() focus = new EventEmitter<boolean>()
+  @Output() hasFocus = new EventEmitter<boolean>()
 
   constructor(
     private goal: GoalService,
@@ -36,7 +36,7 @@ export class Slide1Component {
   }
 
   toggle(event: ToggleCustomEvent) {
-    this.focus.emit(event.detail.checked)
+    this.hasFocus.emit(event.detail.checked)
   }
 
 }

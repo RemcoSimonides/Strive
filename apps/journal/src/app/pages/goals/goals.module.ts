@@ -9,14 +9,14 @@ import { GoalsComponent } from './goals.page'
 
 // Strive
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
-import { UpsertGoalModalModule } from '@strive/goal/goal/components/upsert/upsert.module'
+import { UpsertGoalModalModule } from '@strive/goal/goal/modals/upsert/upsert.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ProgressPipeModule } from '@strive/goal/goal/pipes/progress.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { GoalOptionsModule } from '@strive/goal/goal/components/goal-options/goal-options.module'
 import { HomePageModule } from '../home/home.module'
 import { GoalThumbnailModule } from '@strive/goal/goal/components/thumbnail/thumbnail.module'
-import { GoalUpdatesModalModule } from '@strive/goal/goal/components/modals/goals/goal-updates.module'
+import { GoalUpdatesModalModule } from '@strive/goal/goal/modals/goals/goal-updates.module'
 import { MiniThumbnailSwiperModule } from '@strive/goal/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.module'
 
 import { CardsModalModule } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.module'

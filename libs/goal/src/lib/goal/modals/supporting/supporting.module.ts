@@ -2,18 +2,17 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
 
-import { GoalUpdatesModalComponent } from './goal-updates.component'
+import { SupportingComponent } from './supporting.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { GoalThumbnailModule } from '../../thumbnail/thumbnail.module'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     ImageModule,
-    GoalThumbnailModule
   ],
-  declarations: [GoalUpdatesModalComponent],
+  exports: [],
+  declarations: [SupportingComponent],
 })
-export class GoalUpdatesModalModule { }
+export class SupportingModule { }

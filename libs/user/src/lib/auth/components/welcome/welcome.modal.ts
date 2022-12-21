@@ -6,7 +6,7 @@ import { Capacitor } from '@capacitor/core'
 import { SwiperComponent } from 'swiper/angular'
 import { combineLatest, map, of } from 'rxjs'
 
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/modals/upsert/upsert.component'
 import { PersonalService } from '../../../personal/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 

@@ -8,7 +8,7 @@ import { firstValueFrom, map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { UpsertGoalModalComponent } from '@strive/goal/goal/components/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/goal/modals/upsert/upsert.component'
 import { Interval } from '@strive/model'
 
 import { AuthService } from '@strive/user/auth/auth.service'

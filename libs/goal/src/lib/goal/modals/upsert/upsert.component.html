@@ -16,7 +16,7 @@
   <ng-container *ngIf="mode === 'create' else update">
     <swiper #swiper [allowTouchMove]="false">
       <ng-template swiperSlide>
-        <goal-slide-1 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)" (created)="created = $event" (focus)="focus = $event"></goal-slide-1>
+        <goal-slide-1 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)" (created)="created = $event" (hasFocus)="focus = $event"></goal-slide-1>
       </ng-template>
       <ng-container *ngIf="focus">
         <ng-template swiperSlide>

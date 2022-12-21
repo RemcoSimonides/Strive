@@ -4,7 +4,7 @@ import { Share } from '@capacitor/share'
 // Strive
 import { GoalForm } from '@strive/goal/goal/forms/goal.form'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
-import { GoalSharePopoverComponent } from '../../../popovers/share/share.component'
+import { GoalSharePopoverComponent } from '../../../../popovers/share/share.component'
 import { createGoal, exercises } from '@strive/model'
 import { captureException, captureMessage } from '@sentry/capacitor'
 
