@@ -104,7 +104,7 @@ export class GoalsComponent implements OnDestroy {
     ) as Observable<StakeholderWithGoalAndEvents[]>
 
     this.achieving$ = stakeholders$.pipe(
-      map(stakeholders => stakeholders.filter(stakeholder => !stakeholder.isAchiever)),
+      map(stakeholders => stakeholders.filter(({ isAdmin, isAchiever, isSupporter, isSpectator }) => !isAchiever && (isAdmin || isSupporter || isSpectator))),
       map(stakeholders => stakeholders.sort((a, b) => {
         if (!a.events || !b.events) return 0
         if (a.events.length > 0 && b.events.length === 0) return -1
