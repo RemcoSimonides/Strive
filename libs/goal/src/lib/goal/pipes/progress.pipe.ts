@@ -2,7 +2,7 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core'
 import { Goal, inProgress, isFinished } from '@strive/model'
 
 export function getProgress(goal: Goal): number {
-  if (goal.isFinished) return 1
+  if (goal.status !== 'pending') return 1
   return goal.tasksCompleted / goal.tasksTotal
 }
 

@@ -4,6 +4,7 @@ import { wrapPubsubOnRunHandler } from '../internals/sentry'
 import { getDocument } from '../shared/utils'
 import { 
   enumWorkerType,
+  ScheduledTaskGoalDeadline,
   ScheduledTaskGoalInviteLinkDeadline,
   ScheduledTaskMilestoneDeadline,
   ScheduledTaskUserExerciseAffirmations,
@@ -77,6 +78,7 @@ interface IWorkers {
 // Business logic for named tasks. Function name should match worker field on task document. 
 const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
+  goalDeadline: (options) => goalDeadlineHandler(options),
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
   userExerciseDailyGratitudeReminder: (options) => userExerciseDailyGratitudeReminderHandler(options),
@@ -86,6 +88,11 @@ const workers: IWorkers = {
 
 function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['options']) {
   return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
+}
+
+async function goalDeadlineHandler(options: ScheduledTaskGoalDeadline['options']) {
+  // TODO send notification
+  logger.log('goal deadline handler triggered')
 }
 
 async function milestoneDeadlineHandler(options: ScheduledTaskMilestoneDeadline['options']) {

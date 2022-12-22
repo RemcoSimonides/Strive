@@ -10,6 +10,6 @@ export class SmallThumbnailComponent {
   @Input() image?: string
   @Input() asset = ''
   @Input() title = ''
-  @Input() isFinished?: boolean
+  @Input() isFinished = false
   @Input() borderRadius = "12px"
 }

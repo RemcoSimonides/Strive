@@ -1,5 +1,6 @@
 import { GoalStakeholder } from './stakeholder'
 import { GoalEvent } from './goal-event'
+import { addYears, endOfYear, getMonth } from 'date-fns'
 
 export type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
 export type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
@@ -17,16 +18,16 @@ export interface GoalSource {
 export interface Goal {
   id: string
   title: string
+  deadline: Date
   description: string
   image: string
-  isFinished: Date | boolean
+  status: 'pending' | 'succeeded' | 'failed'
   publicity: GoalPublicityType
   numberOfAchievers: number
   numberOfSupporters: number
   numberOfSpectators: number
   tasksCompleted: number
   tasksTotal: number
-  deadline?: string
   updatedBy?: string
   updatedAt?: Date
   createdAt?: Date
@@ -42,7 +43,7 @@ export interface AlgoliaGoal {
 }
 
 export function isFinished(goal: Goal) {
-  if (goal.isFinished) return true
+  if (goal.status !== 'pending') return true
   return goal.tasksCompleted === goal.tasksTotal
 }
 
@@ -56,11 +57,15 @@ export function inBucketlist(goal: Goal) {
 
 /** A factory function that creates a GoalDocument. */
 export function createGoal(params: Partial<Goal> = {}): Goal {
+  const date = new Date()
+  const deadline = getMonth(date) < 6 ? endOfYear(date) : endOfYear(addYears(date, 1))
+
   return {
     id: params.id ? params.id : '',
     description: '',
     image: '',
-    isFinished: false,
+    deadline,
+    status: 'pending',
     numberOfAchievers: 0,
     numberOfSupporters: 0,
     numberOfSpectators: 0,

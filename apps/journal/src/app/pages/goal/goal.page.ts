@@ -11,7 +11,7 @@ import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/ope
 // Capacitor
 import { Capacitor } from '@capacitor/core'
 // Date fns
-import { isEqual } from 'date-fns'
+import { addYears, endOfYear, isEqual, isPast, startOfYear } from 'date-fns'
 // Strive Utils
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
@@ -23,6 +23,7 @@ import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focu
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -362,8 +363,35 @@ export class GoalComponent implements OnDestroy {
     return this.goalService.updateDescription(this.goal.id, description)
   }
 
-  isOverdue(deadline: string) {
-    return new Date(deadline) < new Date()
+  isOverdue(deadline: Date) {
+    return isPast(deadline)
+  }
+
+  async openDatePicker(event: Event) {
+    if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return
+    event.stopPropagation()
+
+    const minDate = startOfYear(addYears(new Date(), -100))
+    const maxDate = endOfYear(addYears(new Date(), 1000))
+
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { minDate, maxDate, hideRemove: true }
+    })
+    popover.onDidDismiss().then(({ data, role }) => {
+      if (!this.goal) return
+      if (role === 'dismiss') {
+        const deadline = data ? new Date(data) : new Date()
+        this.goalService.update(this.goal.id, { deadline })
+      }
+    })
+    popover.present()
+  }
+
+  finishGoal(status: Goal['status']) {
+    if (!this.stakeholder.isAdmin) return
+    if (!this.goal) return
+    this.goalService.update(this.goal.id, { status })
   }
 
   handleRequestDecision(stakeholder: GoalStakeholder, isAccepted: boolean, $event: UIEvent) {

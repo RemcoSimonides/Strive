@@ -29,6 +29,8 @@ export class DatetimeComponent {
   }
   @Input() presentation: 'date' | 'date-time' | 'month' | 'month-year' | 'time' | 'time-date' | 'year' = 'date'
   @Input() label?: string
+  @Input() caption?: string
+  @Input() hideRemove = false
 
   constructor(private popoverCtrl: PopoverController) {}
   

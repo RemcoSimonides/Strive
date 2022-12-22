@@ -17,6 +17,7 @@ import { SwiperModule } from 'swiper/angular'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { RoadmapModule } from '../../../milestone/components/roadmap/roadmap.module'
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
+import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
     ImageSelectorModule,
     SwiperModule,
     RoadmapModule,
-    SmallThumbnailModule
+    SmallThumbnailModule,
+    DatetimeModule  
   ],
   declarations: [
     UpsertGoalModalComponent,

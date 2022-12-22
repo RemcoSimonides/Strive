@@ -1,6 +1,9 @@
 <section *ngIf="label" class="label">
   {{ label }}
 </section>
+<section *ngIf="caption" class="label">
+  <small>{{ caption }}</small>
+</section>
 <ion-datetime #datePicker 
   [presentation]="presentation"
   [value]="_value"
@@ -8,6 +11,6 @@
   [min]="_minDate">
 </ion-datetime>
 <section class="buttons">
-  <ion-button fill="clear" (click)="remove()">Remove</ion-button>
-  <ion-button fill="clear" (click)="confirm()">OK</ion-button>
+  <ion-button *ngIf="!hideRemove" fill="clear" (click)="remove()">Remove</ion-button>
+  <ion-button class="confirm" fill="clear" (click)="confirm()">OK</ion-button>
 </section>

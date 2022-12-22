@@ -8,8 +8,10 @@ import { SupportListComponent } from './list.component'
 import { PledgeModule } from '../pledge/pledge.module'
 import { SupportDecisionModule } from '../decision/decision.module'
 import { SupportDetailsModalModule } from '../../modals/details/details.module'
-import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 import { SupportCounterPipeModule } from '../../pipes/count.pipe'
+import { SupportRolePipeModule } from '../../pipes/role.pipe'
+
+import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
 
 @NgModule({
   imports: [
@@ -20,7 +22,8 @@ import { SupportCounterPipeModule } from '../../pipes/count.pipe'
     MilestonePathPipeModule,
     SupportDecisionModule,
     SupportDetailsModalModule,
-    SupportCounterPipeModule
+    SupportCounterPipeModule,
+    SupportRolePipeModule
   ],
   declarations: [
     SupportListComponent

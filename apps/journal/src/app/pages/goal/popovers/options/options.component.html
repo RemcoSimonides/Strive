@@ -1,5 +1,5 @@
 <ion-list mode="md">
-  <ng-container *ngIf="goal?.isFinished === false && (stakeholder.isAchiever || stakeholder.isAdmin)">
+  <ng-container *ngIf="goal?.status === 'pending' && (stakeholder.isAchiever || stakeholder.isAdmin)">
     <ion-item (click)="markAsFinished()" button>Mark goal as Finished</ion-item>
   </ng-container>
   <ion-item (click)="close(enumGoalOptions.openTeamModal)" button>Show Team</ion-item>

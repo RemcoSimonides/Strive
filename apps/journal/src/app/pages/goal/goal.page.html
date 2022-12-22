@@ -27,7 +27,7 @@
 
   <picture (click)="openZoom(goal)" *ngIf="screensize.isMobile$ | async" class="mobile">
     <img [ref]="goal.image" asset="goal.png" [width]="500" [height]="500"/>
-    <div *ngIf="goal.isFinished">finished</div>
+    <div *ngIf="goal.status !== 'pending'">finished</div>
   </picture>
 
   <ng-template #actions>
@@ -68,7 +68,7 @@
     <div class="main">
       <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false">
         <img [ref]="goal.image" asset="goal.png" [width]="500" [height]="500"/>
-        <div *ngIf="goal.isFinished">finished</div>
+        <div *ngIf="goal.status !== 'pending'">finished</div>
       </picture>
 
       <div class="info">
@@ -114,11 +114,14 @@
           </li>
       
           <!-- Deadline -->
-          <li *ngIf="goal.deadline" [ngStyle]="{ 'color': isOverdue(goal.deadline) ? 'var(--ion-color-danger-tint)' : ''}">
+          <li *ngIf="goal.deadline"
+            [ngStyle]="{ 'color': isOverdue(goal.deadline) && goal.status === 'pending' ? 'var(--ion-color-danger-tint)' : ''}"
+            (click)="openDatePicker($event)"
+          >
             <ion-icon name="timer-outline"></ion-icon>
             <div>
               <div>
-                <span>Deadline: </span>
+                <span>End date: </span>
                 <b>{{ goal.deadline | date:'fullDate' }}</b>
               </div>
             </div>
@@ -134,6 +137,17 @@
 
     <ng-container *ngIf="isMobile$ | async">
       <ng-container *ngTemplateOutlet="actions"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isOverdue(goal.deadline) && goal.status === 'pending' && (stakeholder.isAdmin || stakeholder.isAchiever)">
+      <ion-card class="finish">
+        <h3>Did you finish the goal?</h3>
+        <article>
+          <ion-button (click)="finishGoal('succeeded')" color="primary">Yes!</ion-button>
+          <ion-button (click)="openDatePicker($event)" fill="clear" color="primary">Set new end date</ion-button>
+          <ion-button (click)="finishGoal('failed')" fill="clear" color="danger">No, I give up</ion-button>
+        </article>
+      </ion-card>
     </ng-container>
 
     <!-- Request to join -->
@@ -175,7 +189,7 @@
     <section class="supports">
       <h3>Supports</h3>
       <article>
-        <ng-container *ngIf="!goal.isFinished">
+        <ng-container *ngIf="goal.status === 'pending'">
           <support-add [goal]="goal"></support-add>
         </ng-container>
 
@@ -184,7 +198,7 @@
             <ng-template #milestone let-milestone="milestone">
               <small>Milestone: {{ milestone.content }}</small>
             </ng-template>
-            <ng-container *ngIf="!goal.isFinished">
+            <ng-container *ngIf="goal.status === 'pending'">
               <ng-template #empty>
                 <i>No supports yet</i>
               </ng-template>

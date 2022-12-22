@@ -48,7 +48,7 @@ async snapshot => {
       return sendGoalEventNotification(event, options, true)
     }
 
-    case 'goalIsFinished': {
+    case 'goalFinishedSuccessfully': {
       const goal = await getDocument<Goal>(`Goals/${goalId}`)
       const options: SendOptions = {
         send: {
@@ -57,6 +57,21 @@ async snapshot => {
           toSpectator: {
             pushNotification: goal.publicity === 'public'
           }
+        },
+        roles: {
+          isAdmin: true,
+          isAchiever: true,
+          isSupporter: true
+        }
+      }
+      return sendGoalEventNotification(event, options, true)
+    }
+
+    case 'goalFinishedUnsuccessfully': {
+      const options: SendOptions = {
+        send: {
+          notification: true,
+          pushNotification: true
         },
         roles: {
           isAdmin: true,

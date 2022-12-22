@@ -6,7 +6,8 @@ import { User } from './user'
 export const storyEvents: EventType[] = [
   'goalCreated',
   'goalCreatedFinished',
-  'goalIsFinished',
+  'goalFinishedSuccessfully',
+  'goalFinishedUnsuccessfully',
   'goalMilestoneCompletedSuccessfully',
   'goalMilestoneCompletedUnsuccessfully',
   'goalStakeholderBecameAchiever',

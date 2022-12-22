@@ -3,7 +3,7 @@
   
   <ion-list>
     <ion-item lines="none">
-      <ion-label color="primary">What do you want to achieve?*</ion-label>
+      <ion-label color="primary">What do you want to achieve? *</ion-label>
     </ion-item>
     <ion-item class="what">
       <ion-input formControlName="title"
@@ -13,38 +13,22 @@
                 autocapitalize="sentences"
                 [autofocus]="true"></ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked" color="primary">When should the goal be finished? *</ion-label>
+      <ion-input (ionFocus)="openDatePicker($event)" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
+    </ion-item>
   
     <ion-item>
-      <ion-label position="stacked" color="primary">Who is able to see your goal</ion-label>
+      <ion-label position="stacked" color="primary">Who can see this goal? *</ion-label>
       <ion-select interface="popover" formControlName="isSecret"> 
         <ion-select-option [value]="false">Everyone</ion-select-option>
-        <ion-select-option [value]="true">Only you</ion-select-option>
+        <ion-select-option [value]="true">Invited users only</ion-select-option>
       </ion-select>
     </ion-item>
-  
-    <ion-item>
-      <ion-label position="stacked" color="primary">Is goal finished already?</ion-label>
-      <ion-select interface="popover" formControlName="isFinished"> 
-        <ion-select-option [value]="true">Yes</ion-select-option>
-        <ion-select-option [value]="false">No</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-  <!-- TODO move it to editable on goal page or on edit goal only -->
-  <!-- <ion-item>
-    <ion-label position="stacked">End date &#40;optional&#41;</ion-label>
-    <ion-datetime
-      placeholder="-- -- --"
-      displayFormat="DDDD DD MMMM YYYY"
-      pickerFormat="DDDD MMMM YYYY" 
-      formControlName="deadline"
-      (click)="openingDatetime($event)"
-    ></ion-datetime>
-  </ion-item> -->
-
   </ion-list>
 
-  <ion-card class="focus" *ngIf="form.isFinished.value === false">
+  <ion-card class="focus" *ngIf="!isOverdue(form.deadline.value)">
     <ion-item lines="none">
       <ion-toggle mode="md" (ionChange)="toggle($event)"></ion-toggle>
       <ion-label>

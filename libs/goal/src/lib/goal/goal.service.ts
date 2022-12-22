@@ -33,8 +33,7 @@ export class GoalService extends FireCollection<Goal> {
   protected override toFirestore(goal: Goal, actionType: 'add' | 'update'): Goal {
     const timestamp = serverTimestamp() as any
 
-    if (goal.deadline) goal.deadline = this.setDeadlineToEndOfDay(goal.deadline)
-    if (goal.isFinished === true) goal.isFinished = timestamp
+    if (goal.deadline) goal.deadline = endOfDay(goal.deadline)
     if (actionType === 'add') goal.createdAt = timestamp
 
     goal.updatedBy = this.auth.uid
@@ -90,10 +89,5 @@ export class GoalService extends FireCollection<Goal> {
 
   public updateDescription(goalId: string, description: string) {
     return this.update(goalId, { description })
-  }
-
-  private setDeadlineToEndOfDay(deadline: string): string {
-    const date = new Date(deadline)
-    return endOfDay(date).toISOString()
   }
 }

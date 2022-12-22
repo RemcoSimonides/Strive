@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
-import { serverTimestamp } from 'firebase/firestore'
 import { createPost, Goal, GoalStakeholder } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 import { GoalService } from '../../goal.service'
@@ -37,7 +36,7 @@ export class GoalOptionsComponent {
             if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')
             this.goalService.update({
               id: this.goal.id,
-              isFinished: serverTimestamp() as any
+              status: 'succeeded'
             })
             this.modalCtrl.create({
               component: UpsertPostModalComponent,

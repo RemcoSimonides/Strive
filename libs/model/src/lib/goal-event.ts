@@ -34,7 +34,8 @@ export function createGoalEvent(params: GoalEvent): GoalEvent {
 export function filterGoalEvents(events: GoalEvent[], stakeholder: GoalStakeholder): GoalEvent[] {
 
 	const all: EventType[] = [
-		'goalIsFinished',
+		'goalFinishedSuccessfully',
+		'goalFinishedUnsuccessfully',
 		'goalMilestoneCompletedSuccessfully',
 		'goalMilestoneCompletedUnsuccessfully',
 		'goalMilestoneCreated',

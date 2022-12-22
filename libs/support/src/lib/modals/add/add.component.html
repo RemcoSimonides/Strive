@@ -8,13 +8,13 @@
     </ion-buttons>
 
     <ion-title *ngIf="milestone">Support milestone '{{ milestone.content }}'</ion-title>
-    <ion-title *ngIf="!milestone">Support goal '{{ goal?.title }}'</ion-title>
+    <ion-title *ngIf="!milestone">Support goal '{{ goal.title }}'</ion-title>
   
   </ion-toolbar>
 </ion-header>
   
 <ion-content class="ion-padding">
-  <ng-container *ngIf="!goal.isFinished || milestone?.status === 'pending'">
+  <ng-container *ngIf="goal.status === 'pending' || milestone?.status === 'pending'">
     <support-add [goal]="goal" [milestone]="milestone"></support-add>
   </ng-container>
 

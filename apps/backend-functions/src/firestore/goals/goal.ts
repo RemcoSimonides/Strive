@@ -1,5 +1,6 @@
 import { db, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp } from '../../internals/firebase'
 import { logger } from 'firebase-functions'
+import { isFuture } from 'date-fns'
 
 import {
   createGoal,
@@ -9,7 +10,8 @@ import {
   createMilestone,
   GoalStakeholder,
   createAggregation,
-  createAlgoliaGoal
+  createAlgoliaGoal,
+  EventType
 } from '@strive/model'
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
@@ -28,7 +30,7 @@ async snapshot => {
 
   // event
   const source = createGoalSource({ goalId, userId: goal.updatedBy })
-  const event = goal.isFinished ? 'goalCreatedFinished' : 'goalCreated'
+  const event = goal.status === 'pending' ?  'goalCreated' : 'goalCreatedFinished'
   addGoalEvent(event, source)
   addStoryItem(event, source)
   
@@ -36,7 +38,7 @@ async snapshot => {
   handleAggregation(undefined, goal)
 
   // deadline
-  if (goal.deadline) {
+  if (goal.deadline && isFuture(goal.deadline)) {
     upsertScheduledTask(goalId, {
       worker: enumWorkerType.goalDeadline,
       performAt: goal.deadline,
@@ -95,19 +97,23 @@ async (snapshot, context) => {
   const publicityChanged = before.publicity !== after.publicity
   const becamePublic = before.publicity !== 'public' && after.publicity === 'public'
 
-  const becameFinished = !before.isFinished && !!after.isFinished
+  const becameFinishedSuccessfully = before.status ==='pending' && after.status === 'succeeded'
+  const becameFinishedUnsuccessfully = before.status === 'pending' && after.status === 'failed'
+
+  const deadlineChanged = before.deadline !== after.deadline
 
   handleAggregation(before, after)
 
   // events
-  if (becameFinished) {
-    logger.log('Goal is finished')
+  if (becameFinishedSuccessfully || becameFinishedUnsuccessfully) {
+    logger.log('Goal finished successfully')
     const source = createGoalSource({ goalId, userId: after.updatedBy })
-    addGoalEvent('goalIsFinished', source)
-    addStoryItem('goalIsFinished', source)
+    const name: EventType = becameFinishedSuccessfully ? 'goalFinishedSuccessfully' : 'goalFinishedUnsuccessfully'
+    addGoalEvent(name, source)
+    addStoryItem(name, source)
 
     supportsNeedDecision(after)
-    
+
     snapshot.after.ref.update({
       tasksCompleted: increment(1)
     })
@@ -118,7 +124,7 @@ async (snapshot, context) => {
     updateGoalStakeholders(goalId, after)
   }
 
-  if (becameFinished) {
+  if (becameFinishedSuccessfully || becameFinishedUnsuccessfully) {
     const batch = db.batch()
     const stakeholders = await db.collection(`Goals/${goalId}/GStakeholders`).where('focus.on', '==', true).get()
     for (const { ref } of stakeholders.docs) {
@@ -127,7 +133,18 @@ async (snapshot, context) => {
     batch.commit()
   }
 
-  
+  if (deadlineChanged) {
+    if (isFuture) {
+      upsertScheduledTask(goalId, {
+        worker: enumWorkerType.goalDeadline,
+        performAt: after.deadline,
+        options: { goalId }
+      })
+    } else {
+      deleteScheduledTask(goalId)
+    }
+  }
+
   // algolia
   if (publicityChanged) {
     if (becamePublic) {
@@ -153,13 +170,17 @@ function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   const becamePrivate = before?.publicity !== 'private' && after?.publicity === 'private'
   const wasPrivate = before?.publicity === 'public' && after?.publicity !== 'private'
 
-  const becameFinished = !before?.isFinished && !!after?.isFinished
-  const wasFinished = !!before?.isFinished && !after?.isFinished
+  const becameFinished = before.status === 'pending' && after.status !== 'pending'
+  const wasFinished = before.status !== 'pending' && after.status === 'pending'
+  const becameFinishedSuccessfully = before.status === 'pending' && after.status === 'succeeded'
+  const becameFinishedUnsuccessfully = before.status === 'pending' && after.status === 'failed'
 
   aggregation.goalsPublic = becamePublic ? 1 : wasPublic ? -1 : 0
   aggregation.goalsPrivate = becamePrivate ? 1 : wasPrivate ? -1 : 0
 
   aggregation.goalsFinished = becameFinished ? 1 : wasFinished ? -1 : 0
+  aggregation.goalsFinishedSuccessfully = becameFinishedSuccessfully ? 1 : 0
+  aggregation.goalsFinishedUnsuccessfully = becameFinishedUnsuccessfully ? 1 : 0
 
   updateAggregation(aggregation)
 }

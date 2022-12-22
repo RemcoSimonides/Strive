@@ -1,5 +1,9 @@
 section {
 	background: var(--ion-card-background);
+
+	small {
+		color: var(--ion-color-medium);
+	}
 }
 
 section.label {
@@ -9,4 +13,8 @@ section.label {
 section.buttons {
 	display: flex;
 	justify-content: space-between;
+
+	.confirm {
+		margin-left: auto;
+	}
 }

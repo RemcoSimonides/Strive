@@ -30,12 +30,22 @@ export function getPushMessage(notification: Notification, target: PushNotificat
 
 function getStakeholderPushMessage({ event, goal, milestone, user }: Notification): PushMessage | void {
   switch (event) {
-    case 'goalIsFinished':
+    case 'goalFinishedSuccessfully': {
       if (!goal) throw new Error(`${event} push message needs goal defined`)
 
       return createPushMessage({
         title: goal.title,
         body: `Congratulations! goal is finished`,
+        link: `/goal/${goal.id}`
+      })
+    }
+
+    case 'goalFinishedUnsuccessfully':
+      if (!goal) throw new Error(`${event} push message needs goal defined`)
+
+      return createPushMessage({
+        title: goal.title,
+        body: `Goal is finished unsuccesfully`,
         link: `/goal/${goal.id}`
       })
 
@@ -162,7 +172,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
         link: `/goal/${goal.id}`
       })
 
-    case 'goalIsFinished': 
+    case 'goalFinishedSuccessfully': 
     if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
     if (!user) throw new Error(`${event} spectator push message needs user defined`)
 
@@ -171,6 +181,17 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
         body: `Finished goal '${goal.title}'`,
         link: `/goal/${goal.id}`
       })
+
+    case 'goalFinishedUnsuccessfully': 
+      if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
+      if (!user) throw new Error(`${event} spectator push message needs user defined`)
+  
+        return createPushMessage({
+          title: user.username,
+          body: `Finished goal '${goal.title}' unsuccessfully`,
+          link: `/goal/${goal.id}`
+        })
+  
 
     case 'goalStakeholderBecameAchiever':
       if (!goal) throw new Error(`${event} spectator push message needs goal defined`)

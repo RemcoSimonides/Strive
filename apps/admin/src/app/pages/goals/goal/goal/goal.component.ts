@@ -65,10 +65,6 @@ export class GoalComponent implements OnInit {
     }).then(alert => alert.present())
   }
 
-  finish() {
-    this.goal.update(this.id, { isFinished: serverTimestamp() as any })
-  }
-
   // async duplicate() {
     // const modal = await this.modalCtrl.create({ component: SelectUserModalComponent })
     // modal.onDidDismiss().then(async res => {

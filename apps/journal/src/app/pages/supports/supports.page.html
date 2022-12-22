@@ -52,5 +52,5 @@
 </ng-template>
 
 <ng-template #goalStatus let-goal>
-  <small *ngIf="goal.isFinished">(finished)</small>
+  <small *ngIf="goal.status !== 'pending'">(finished)</small>
 </ng-template>

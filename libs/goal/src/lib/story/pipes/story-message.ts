@@ -30,10 +30,15 @@ export function getStoryItemMessage(item: StoryItem): StoryItemMessage {
           { text: user.username, link: `/profile/${user.uid}` }
         ]
       }
-    case 'goalIsFinished':
+    case 'goalFinishedSuccessfully':
       return {
         icon: 'flag-outline',
         message: [{ text: `Goal is finished!` }]
+      }
+    case 'goalFinishedUnsuccessfully':
+      return {
+        icon: 'flag-outline',
+        message: [{ text: `Goal finished unsuccessfully` }]
       }
     case 'goalMilestoneCompletedSuccessfully':
       if (!milestone) return throwError(item)

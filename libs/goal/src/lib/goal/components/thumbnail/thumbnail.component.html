@@ -2,7 +2,7 @@
     <section>
         <ion-thumbnail [ngClass]="{'gradient-border': _stakeholder.focus.on }">
             <img [ref]="goal.image" asset="goal.png"/>
-            <div *ngIf="goal.isFinished">finished</div>
+            <div *ngIf="goal.status !== 'pending'">finished</div>
         </ion-thumbnail>
         <article>
             <b>{{ goal.title }}</b>

@@ -1,36 +1,38 @@
 <form [formGroup]="form">
-  <ion-item>
-    <ion-label position="stacked">Title</ion-label>
-    <ion-input formControlName="title" 
-              type="text"
-              autocapitalize="sentences"
-              autofocus
-              maxlength="60"></ion-input>
-  </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Access</ion-label>
-    <ion-select interface="popover" formControlName="isSecret"> 
-      <ion-select-option [value]="false">Everyone can access</ion-select-option>
-      <ion-select-option [value]="true">Invites only</ion-select-option>
-    </ion-select>
-  </ion-item>
+  <ion-list mode="md">
+    <ion-item>
+      <ion-label position="stacked">Title *</ion-label>
+      <ion-input
+        formControlName="title" 
+        type="text"
+        autocapitalize="sentences"
+        autofocus
+        maxlength="60"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <media-image-selector
-      [form]="form.image"
-      [storagePath]="'goals/' + goalId"
-      defaultImage="goal.png"
-    ></media-image-selector>
-  </ion-item>
+    <ion-item>
+      <ion-label position="stacked">When should the goal be finished? *</ion-label>
+      <ion-input (ionFocus)="openDatePicker($event)" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Is the goal finished?</ion-label>
-    <ion-select interface="popover" formControlName="isFinished"> 
-      <ion-select-option [value]="true">Yes</ion-select-option>
-      <ion-select-option [value]="false">No</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Who can see this goal? *</ion-label>
+      <ion-select interface="popover" formControlName="isSecret">
+        <ion-select-option [value]="false">Everyone</ion-select-option>
+        <ion-select-option [value]="true">Invited users only</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <media-image-selector
+        [form]="form.image"
+        [storagePath]="'goals/' + goalId"
+        defaultImage="goal.png"
+      ></media-image-selector>
+    </ion-item>
+  </ion-list>
+
 </form>
 
 <footer>

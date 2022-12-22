@@ -65,13 +65,23 @@ export function getNotificationMessage(notification: Notification): Notification
         message: `${goal.title} has been deleted and therefore your supports are cancelled`
       }
 
-    case 'goalIsFinished':
+    case 'goalFinishedSuccessfully': {
       if (!user || !goal) return throwError(notification)
 
       return {
         ...getGoal(goal),
         message: `${user.username} finished goal "${goal.title}"`
       }
+    }
+
+    case 'goalFinishedUnsuccessfully': {
+      if (!user || !goal) return throwError(notification)
+
+      return {
+        ...getGoal(goal),
+        message: `${user.username} finished goal "${goal.title}" unsuccesfully`
+      }
+    }
 
     case 'goalMilestoneDeadlinePassed':
       if (!milestone || !goal) return throwError(notification)

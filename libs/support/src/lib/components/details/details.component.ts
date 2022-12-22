@@ -75,7 +75,7 @@ export class SupportDetailsComponent implements OnInit {
 
     const completed = this.support.milestone
       ? this.support.milestone.status === 'failed' || this.support.milestone.status === 'succeeded'
-      : this.support.goal?.isFinished
+      : this.support.goal?.status !== 'pending'
 
     if (completed) return give()
 

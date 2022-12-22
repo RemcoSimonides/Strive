@@ -126,6 +126,25 @@ ion-select {
   padding: 0 4px;
 }
 
+ion-card.finish {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+
+  article {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media only screen and (max-width: 568px) {
+    article {
+      grid-template-columns: auto;
+    }
+  }
+}
+
 strive-description, goal-strive-roadmap  {
   margin-block: 32px; 
 }
