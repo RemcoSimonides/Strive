@@ -62,9 +62,41 @@ export class SlideUpdateComponent {
     }
   }
 
-  async openDatePicker(event: Event) {
-    event.stopPropagation()
+  deadlineSelect(value: '1' | 'end0' | 'end1' | '3' | '10' | 'custom') {
+    const now = new Date()
+    switch (value) {
+      case '1': {
+        this.form.deadline.setValue(addYears(now, 1))
+        break
+      }
+      case 'end0': {
+        const date = endOfYear(now)
+        this.form.deadline.setValue(date)
+        break
+      }
+      case 'end1': {
+        const date = endOfYear(addYears(now, 1))
+        this.form.deadline.setValue(date)
+        break
+      }
+      case '3': {
+        this.form.deadline.setValue(addYears(now, 3))
+        break
+      }
+      case '10': {
+        this.form.deadline.setValue(addYears(now, 10))
+        break
+      }
+      case 'custom': {
+        this.openDatePicker()
+        break
+      }
+      default:
+        throw new Error('invalid option selected')
+    }
+  }
 
+  async openDatePicker() {
     const minDate = startOfYear(addYears(new Date(), -100))
     const maxDate = endOfYear(addYears(new Date(), 1000))
 
