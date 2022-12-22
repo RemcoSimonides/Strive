@@ -1,16 +1,8 @@
-import { db, functions } from './internals/firebase'
+import { functions } from './internals/firebase'
 
 export const migrate = functions().https.onRequest(async (req, res) => {
 
   try {
-
-    const batch = db.batch()
-    const stakeholdersSnap = await db.collectionGroup(`GStakeholders`).get()
-    for (const doc of stakeholdersSnap.docs) {
-      batch.update(doc.ref, { hasInviteToJoin: false })
-    }
-
-    await batch.commit()
 
     res.status(200).send('all good')
   } catch (err) {
