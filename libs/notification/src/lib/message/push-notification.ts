@@ -30,6 +30,15 @@ export function getPushMessage(notification: Notification, target: PushNotificat
 
 function getStakeholderPushMessage({ event, goal, milestone, user }: Notification): PushMessage | void {
   switch (event) {
+    case 'goalDeadlinePassed':
+      if (!goal) throw new Error(`${event} push message needs goal defined`)
+
+      return createPushMessage({
+        title: goal.title,
+        body: `Goal passed its end date`,
+        link: `/goal/${goal.id}`
+      })
+
     case 'goalFinishedSuccessfully': {
       if (!goal) throw new Error(`${event} push message needs goal defined`)
 

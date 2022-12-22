@@ -2,7 +2,8 @@ import { db, functions, admin, logger } from '../internals/firebase'
 import { wrapPubsubOnRunHandler } from '../internals/sentry'
 
 import { getDocument } from '../shared/utils'
-import { 
+import { addGoalEvent } from '../shared/goal-event/goal.events'
+import {
   enumWorkerType,
   ScheduledTaskGoalDeadline,
   ScheduledTaskGoalInviteLinkDeadline,
@@ -16,11 +17,11 @@ import { updateAggregation } from '../shared/aggregation/aggregation'
 
 import { sendDailyGratitudePushNotification, scheduleNextDailyGratitudeReminder } from './user-exercises/daily_gratitude'
 import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user-exercises/affirmations'
+import { scheduleNextReminder, sendWheelOfLifePushNotification } from './user-exercises/wheel_of_life'
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
 
-import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings } from '@strive/model'
+import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource } from '@strive/model'
 import { AES, enc } from 'crypto-js'
-import { scheduleNextReminder, sendWheelOfLifePushNotification } from './user-exercises/wheel_of_life'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -90,9 +91,9 @@ function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['opti
   return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
-async function goalDeadlineHandler(options: ScheduledTaskGoalDeadline['options']) {
-  // TODO send notification
-  logger.log('goal deadline handler triggered')
+async function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['options']) {
+  const source = createGoalSource({ goalId })
+  addGoalEvent('goalDeadlinePassed', source)
 }
 
 async function milestoneDeadlineHandler(options: ScheduledTaskMilestoneDeadline['options']) {

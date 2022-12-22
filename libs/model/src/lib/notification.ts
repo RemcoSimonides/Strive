@@ -15,6 +15,7 @@ const eventTypes = [
   'goalDeleted',
   'goalPublicityPublic',
   'goalPublicityPrivate',
+  'goalDeadlinePassed',
   'goalFinishedSuccessfully',
   'goalFinishedUnsuccessfully',
   'goalMilestoneCreated',
@@ -52,6 +53,7 @@ export type EventType = typeof eventTypes[number]
 export const notificationEvents: EventType[] = [
   'goalCreated',
   'goalCreatedFinished',
+  'goalDeadlinePassed',
   'goalFinishedSuccessfully',
   'goalFinishedUnsuccessfully',
   'goalMilestoneDeadlinePassed',

@@ -11,6 +11,12 @@ export function getAggregatedMessage({ event, count }: { event: EventType, count
     case 'goalCreated':
     case 'goalCreatedFinished':
       break
+    case 'goalDeadlinePassed':
+      return {
+        message: `Goal passed its end date`,
+        icon: 'alert-outline',
+        importance: 2
+      }
     case 'goalFinishedSuccessfully':
       return {
         message: `Goal is finished!`,

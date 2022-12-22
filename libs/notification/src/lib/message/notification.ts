@@ -48,6 +48,15 @@ export function getNotificationMessage(notification: Notification): Notification
         link: `/goal/${goal.id}`,
         message: `${user.username} created goal "${goal.title}"`
       }
+
+    case 'goalDeadlinePassed':
+      if (!goal) return throwError(notification)
+
+      return {
+        ...getGoal(goal),
+        message: `Goal "${goal.title}" passed its end date`
+      }
+
     case 'goalCreatedFinished':
       if (!user || !goal) return throwError(notification)
 

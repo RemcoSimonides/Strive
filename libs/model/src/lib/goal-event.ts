@@ -49,6 +49,7 @@ export function filterGoalEvents(events: GoalEvent[], stakeholder: GoalStakehold
 
 	const achiever: EventType[] = [
 		'goalChatMessageCreated',
+		'goalDeadlinePassed',
 		'goalMilestoneDeadlinePassed'
 
 	]

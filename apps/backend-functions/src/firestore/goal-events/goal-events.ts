@@ -36,6 +36,19 @@ async snapshot => {
       break
     }
 
+    case 'goalDeadlinePassed': {
+      const options: SendOptions = {
+        send: {
+          notification: true,
+          pushNotification: true
+        },
+        roles: {
+          isAchiever: true
+        }
+      }
+      return sendGoalEventNotification(event, options, false)
+    }
+
     case 'goalDeleted': {
       const options: SendOptions = {
         send: {
