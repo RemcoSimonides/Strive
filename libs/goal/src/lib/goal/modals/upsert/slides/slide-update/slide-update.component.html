@@ -13,22 +13,7 @@
 
     <ion-item>
       <ion-label position="stacked">When should the goal be finished? *</ion-label>
-      <ion-input id="click-trigger" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
-
-      <ion-popover trigger="click-trigger" triggerAction="click" dismissOnSelect>
-        <ng-template>
-          <ion-content>
-            <ion-list mode="md">
-              <ion-item button (click)="deadlineSelect('1')">In 1 year</ion-item>
-              <ion-item button (click)="deadlineSelect('end0')">End of this year</ion-item>
-              <ion-item button (click)="deadlineSelect('end1')">End of next year</ion-item>
-              <ion-item button (click)="deadlineSelect('3')">In 3 years</ion-item>
-              <ion-item button (click)="deadlineSelect('10')">In 10 years</ion-item>
-              <ion-item button (click)="deadlineSelect('custom')">Select a date</ion-item>
-            </ion-list>
-          </ion-content>
-        </ng-template>
-      </ion-popover>
+      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
     </ion-item>
 
     <ion-item>

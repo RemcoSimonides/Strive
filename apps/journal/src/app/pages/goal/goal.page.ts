@@ -23,7 +23,7 @@ import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focu
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
-import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
+import { DeadlinePopoverSComponent } from '@strive/goal/goal/popovers/deadline/deadline.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
@@ -371,18 +371,14 @@ export class GoalComponent implements OnDestroy {
     if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return
     event.stopPropagation()
 
-    const minDate = startOfYear(addYears(new Date(), -100))
-    const maxDate = endOfYear(addYears(new Date(), 1000))
-
     const popover = await this.popoverCtrl.create({
-      component: DatetimeComponent,
-      componentProps: { minDate, maxDate, hideRemove: true }
+      component: DeadlinePopoverSComponent,
+      event
     })
-    popover.onDidDismiss().then(({ data, role }) => {
+    popover.onDidDismiss().then(({ data }) => {
       if (!this.goal) return
-      if (role === 'dismiss') {
-        const deadline = data ? new Date(data) : new Date()
-        this.goalService.update(this.goal.id, { deadline })
+      if (data) {
+        this.goalService.update(this.goal.id, { deadline: data })
       }
     })
     popover.present()

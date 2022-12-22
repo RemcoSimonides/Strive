@@ -16,7 +16,7 @@
 
     <ion-item>
       <ion-label position="stacked" color="primary">When should the goal be finished? *</ion-label>
-      <ion-input (ionFocus)="openDatePicker($event)" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
+      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
     </ion-item>
   
     <ion-item>
