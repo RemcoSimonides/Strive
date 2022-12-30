@@ -3,13 +3,16 @@ import { unique } from '@strive/utils/helpers'
 import { compareDesc } from 'date-fns'
 
 export type SupportDecision = 'give' | 'keep'
-export type SupportStatus = 'open' | 'rejected' | 'waiting_to_be_paid' | 'paid'
+export type SupportStatus = 'open' | 'rejected' | 'accepted'
 
 export interface SupportBase {
   id?: string
   description: string
   status: SupportStatus
   needsDecision: Date | false
+  counterDescription: string
+  counterNeedsDecision: Date | false
+  counterStatus: SupportStatus
   goalId: string
   milestoneId?: string
   supporterId: string
@@ -31,6 +34,9 @@ export function createSupportBase(params: Partial<SupportBase> = {}): SupportBas
     description: params.description ?? '',
     status: params.status ?? 'open',
     needsDecision: params.needsDecision ?? false,
+    counterDescription: params.counterDescription ?? '',
+    counterNeedsDecision: params.counterNeedsDecision ?? false,
+    counterStatus: params.counterStatus ?? 'open',
     goalId: params.goalId ?? '',
     supporterId: params.supporterId ?? '',
     recipientId: params.recipientId ?? '',

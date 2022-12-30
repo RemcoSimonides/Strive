@@ -33,11 +33,13 @@ const eventTypes = [
   'goalStakeholderRequestToJoinRejected',
   'goalSupportCreated',
   'goalSupportDeleted',
-  'goalSupportStatusWaitingToBePaid',
-  'goalSupportStatusPaid',
+  'goalSupportStatusAccepted',
   'goalSupportStatusRejected',
+  'goalSupportStatusCounterAccepted',
+  'goalSupportStatusCounterRejected',
   'goalSupportStatusPendingSuccessful',
   'goalSupportStatusPendingUnsuccessful',
+  'goalSupportCounterStatusPendingUnsuccessful',
   'goalChatMessageCreated',
   'goalStoryPostCreated',
   'userCreated',
@@ -64,8 +66,11 @@ export const notificationEvents: EventType[] = [
   'goalSupportCreated',
   'goalSupportStatusPendingSuccessful',
   'goalSupportStatusPendingUnsuccessful',
-  'goalSupportStatusPaid',
+  'goalSupportCounterStatusPendingUnsuccessful',
+  'goalSupportStatusAccepted',
   'goalSupportStatusRejected',
+  'goalSupportStatusCounterAccepted',
+  'goalSupportStatusCounterRejected',
   'userSpectatorCreated',
 ]
 
@@ -119,6 +124,6 @@ export function createNotificationBase(params: Partial<NotificationBase> = {}): 
 }
 
 export interface NotificationMessageText {
-  text: string;
-  link?: string;
+  text: string
+  link?: string
 }

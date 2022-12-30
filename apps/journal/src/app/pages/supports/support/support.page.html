@@ -10,9 +10,7 @@
     <ion-content class="ion-padding">
       <main>
     
-        <ng-container *ngIf="support$ | async as support">
-          <support-details [support]="support" (removed)="supportRemoved()" [showGoalLink]="true"></support-details>
-        </ng-container>
+        <support-details [support]="support" (removed)="supportRemoved()" [showGoalLink]="true"></support-details>
     
       </main>
     </ion-content>

@@ -1,6 +1,6 @@
-import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, logger } from '../../../internals/firebase'
+import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 
-import { Goal, createMilestone, Milestone, createGoalSource, SupportBase } from '@strive/model'
+import { Goal, createMilestone, Milestone, createGoalSource, SupportBase, createSupportBase } from '@strive/model'
 
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
@@ -112,12 +112,19 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
   
   // TODO batch might get bigger than 500
   const batch = db.batch()
+  const timestamp = serverTimestamp() as any
   for (const doc of supportsSnap.docs) {
-    const support: Partial<SupportBase> = {
-      needsDecision: serverTimestamp() as any
+    const support = createSupportBase(toDate({ ...doc.data(), id: doc.id }))
+    const isCounter = support.counterDescription && milestone.status === 'failed'
+
+    let result: Partial<SupportBase>
+    if (isCounter) {
+      result = { counterNeedsDecision: timestamp }
+    } else {
+      result = { needsDecision: timestamp }
     }
 
-    batch.update(doc.ref, support)
+    batch.update(doc.ref, result)
   }
   batch.commit()
 }

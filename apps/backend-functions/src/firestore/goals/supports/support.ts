@@ -1,4 +1,4 @@
-import { db, admin, onDocumentCreate, onDocumentUpdate, onDocumentDelete } from '../../../internals/firebase'
+import { db, admin, onDocumentCreate, onDocumentUpdate, onDocumentDelete, logger } from '../../../internals/firebase'
 import {
   createGoal,
   createGoalStakeholder,
@@ -8,7 +8,8 @@ import {
   createNotificationBase,
   createSupportBase,
   SupportBase,
-  createAggregation
+  createAggregation,
+  Goal
 } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { getDocument, toDate } from '../../../shared/utils'
@@ -76,50 +77,62 @@ async snapshot =>  {
 
   // events
   const needsDecision = !before.needsDecision && after.needsDecision
-  const paid = before.status !== 'paid' && after.status === 'paid'
-  const rejected = before.status !== 'rejected' && after.status === 'rejected'
-  const waitingToBePaid = before.status !== 'waiting_to_be_paid' && after.status === 'waiting_to_be_paid'
+  const counterNeedsDecision = !before.counterNeedsDecision && after.counterNeedsDecision
+
+  const rejected = before.status === 'open' && after.status === 'rejected'
+  const accepted = before.status === 'open' && after.status === 'accepted'
+  const counter_rejected = before.counterStatus === 'open' && after.counterStatus === 'rejected'
+  const counter_accepted = before.counterStatus === 'open' && after.counterStatus === 'accepted'
 
   const { goalId, milestoneId, supporterId, recipientId } = after
 
-  if (needsDecision) {
+  if (needsDecision || counterNeedsDecision) {
     let completedSuccessfully: boolean
 
     if (milestoneId) {
       const m = await getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`)
       completedSuccessfully = m.status === 'succeeded'
     } else {
-      // goals cant fail?
-      completedSuccessfully = true
+      const g = await getDocument<Goal>(`Goals/${goalId}`)
+      completedSuccessfully = g.status === 'succeeded'
     }
 
     const notification = createNotificationBase({
-      event: completedSuccessfully ? 'goalSupportStatusPendingSuccessful' : 'goalSupportStatusPendingUnsuccessful',
+      event: '',
       goalId,
       milestoneId,
       supportId: after.id,
       userId: supporterId
     })
-    return sendNotificationToUsers(notification, supporterId, 'user')
+
+    if (counterNeedsDecision) {
+      notification.event = 'goalSupportCounterStatusPendingUnsuccessful'
+      return sendNotificationToUsers(notification, recipientId, 'user')
+    } else {
+      notification.event = completedSuccessfully ? 'goalSupportStatusPendingSuccessful' : 'goalSupportStatusPendingUnsuccessful'
+      return sendNotificationToUsers(notification, supporterId, 'user')
+    }
   }
 
 
   let event: EventType
-  if (paid) event = 'goalSupportStatusPaid'
+  if (accepted) event = 'goalSupportStatusAccepted'
   if (rejected) event = 'goalSupportStatusRejected'
-  if (waitingToBePaid) event = 'goalSupportStatusWaitingToBePaid'
+  if (counter_accepted) event = 'goalSupportStatusCounterAccepted'
+  if (counter_rejected) event = 'goalSupportStatusCounterRejected'
 
-  if (!recipientId) return
   if (supporterId === recipientId) return
   if (event) {
+    const from = counter_accepted || counter_rejected ? recipientId : supporterId
+    const to = counter_accepted || counter_rejected ? supporterId : recipientId
     const notification = createNotificationBase({
       event,
       goalId,
       milestoneId,
       supportId: after.id,
-      userId: supporterId
+      userId: from
     })
-    return sendNotificationToUsers(notification, recipientId, 'user')
+    return sendNotificationToUsers(notification, to, 'user')
   }
 })
 

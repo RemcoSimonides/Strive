@@ -169,15 +169,46 @@ export function getNotificationMessage(notification: Notification): Notification
       }
     }
 
-    case 'goalSupportStatusPaid':
-      if (!goal || !support || !user) return throwError(notification)
-      
+    case 'goalSupportCounterStatusPendingUnsuccessful': {
+      if (!goal || !support) return throwError(notification)
+
+      const isMilestone = !!milestone?.id
+      const prefix = isMilestone ? `Milestone "${milestone?.content}"` : `Goal`
       return {
         ...getGoal(goal),
         link: `/supports/${support.id}`,
         params: { goalId: support.goalId },
-        message: `${user.username} paid support "${support.description}"`
+        message: `${prefix} completed unsuccessfully. Decide to give "${support.counterDescription}" or not`
       }
+    }
+
+    case 'goalSupportStatusAccepted': {
+      if (!goal || !user || !support) return throwError(notification)
+
+      const isMilestone = !!milestone?.id
+      const suffix = isMilestone ? ` for milestone "${milestone.content}"` : ''
+
+      return {
+        ...getGoal(goal),
+        link: `/supports/${support.id}`,
+        params: { goalId: support.goalId },
+        message: `${user.username} decided to give you "${support.description}"${suffix}`
+      }
+    }
+
+    case 'goalSupportStatusCounterAccepted': {
+      if (!goal || !user || !support) return throwError(notification)
+
+      const isMilestone = !!milestone?.id
+      const suffix = isMilestone ? ` for not succeeding milestone "${milestone.content}"` : ` for not succeeding goal "${goal.title}"`
+
+      return {
+        ...getGoal(goal),
+        link: `/supports/${support.id}`,
+        params: { goalId: support.goalId },
+        message: `${user.username} decided to give you "${support.description}"${suffix}`
+      }
+    }
     
     case 'goalSupportStatusRejected': {
       if (!goal || !user || !support) return throwError(notification)
@@ -189,7 +220,7 @@ export function getNotificationMessage(notification: Notification): Notification
         ...getGoal(goal),
         link: `/supports/${support.id}`,
         params: { goalId: support.goalId },
-        message: `${user.username} rejected paying support "${support.description}"${suffix}`
+        message: `${user.username} rejected giving support "${support.description}"${suffix}`
       }
     }
 

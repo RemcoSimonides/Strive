@@ -11,7 +11,8 @@ import {
   GoalStakeholder,
   createAggregation,
   createAlgoliaGoal,
-  EventType
+  EventType,
+  SupportBase
 } from '@strive/model'
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
@@ -106,13 +107,13 @@ async (snapshot, context) => {
 
   // events
   if (becameFinishedSuccessfully || becameFinishedUnsuccessfully) {
-    logger.log('Goal finished successfully')
+    logger.log('Goal finished')
     const source = createGoalSource({ goalId, userId: after.updatedBy })
     const name: EventType = becameFinishedSuccessfully ? 'goalFinishedSuccessfully' : 'goalFinishedUnsuccessfully'
     addGoalEvent(name, source)
     addStoryItem(name, source)
 
-    supportsNeedDecision(after)
+    supportsNeedDecision(after, becameFinishedSuccessfully)
 
     snapshot.after.ref.update({
       tasksCompleted: increment(1)
@@ -196,13 +197,12 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
   return Promise.all(promises)
 }
 
-export async function supportsNeedDecision(goal: Goal) {
+export async function supportsNeedDecision(goal: Goal, successful: boolean) {
   const milestonesQuery = db.collection(`Goals/${goal.id}/Milestones`)
     .where('status', '==', 'pending')
 
   const supportsQuery = db.collection(`Goals/${goal.id}/Supports`)
     .where('goalId', '==', goal.id)
-    .where('needsDecision', '==', false)
 
    const [supportsSnap, milestonesSnap] = await Promise.all([
     supportsQuery.get(),
@@ -218,12 +218,21 @@ export async function supportsNeedDecision(goal: Goal) {
   for (const snap of supportsSnap.docs) {
     const support = createSupportBase(toDate({ ...snap.data(), id: snap.id }))
 
+    const isCounter = support.counterDescription && !successful
+    if (isCounter && support.counterStatus !== 'open') continue
+    if (!isCounter && support.status !== 'open') continue
+
     const { milestoneId } = support
     if (milestoneId && !pendingMilestoneIds.includes(milestoneId)) continue // meaning the milestone of this support is not pending and thus skip
     
-    support.needsDecision = timestamp
+    let result: Partial<SupportBase>
+    if (isCounter) {
+      result = { counterNeedsDecision: timestamp }
+    } else {
+      result = { needsDecision: timestamp }
+    }
 
-    batch.update(snap.ref, { ...support })
+    batch.update(snap.ref, result)
   }
   batch.commit()
 }

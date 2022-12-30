@@ -5,11 +5,10 @@
 }
 
 .decision {
-  display: block;
-  padding-inline: 16px;
-  white-space: pre-wrap;
-  text-align: center;
-  margin-block: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 
   support-decision {
     display: flex;
@@ -20,6 +19,16 @@
 
 support-pledge {
   margin-block: 16px;
+}
+
+ion-list.counter-form {
+  ion-item {
+    --highlight-background: var(--ion-color-primary); 
+  }
+
+  small{
+    color: var(--ion-color-medium);
+  }
 }
 
 .actions {

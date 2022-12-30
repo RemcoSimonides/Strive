@@ -54,7 +54,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
 
       return createPushMessage({
         title: goal.title,
-        body: `Goal is finished unsuccesfully`,
+        body: `Goal finished unsuccesfully`,
         link: `/goal/${goal.id}`
       })
 
@@ -280,7 +280,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
       })
     }
   
-    case 'goalSupportStatusWaitingToBePaid':
+    case 'goalSupportStatusAccepted':
       if (!user) throw new Error(`${event} spectator push message needs user defined`)
       if (!support) throw new Error(`${event} spectator push message needs support defined`)
 

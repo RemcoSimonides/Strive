@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { FormControl } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 
 import { joinWith } from 'ngfire'
@@ -30,9 +31,12 @@ export class SupportDetailsComponent implements OnInit {
   isSupporter$?: Observable<boolean>
   isRecipient$?: Observable<boolean>
 
+  counterForm = new FormControl('', { nonNullable: true })
+
   constructor(
     private alertCtrl: AlertController,
     private auth: AuthService,
+    private cdr: ChangeDetectorRef,
     private milestoneService: MilestoneService,
     private postService: PostService,
     private profileService: ProfileService,
@@ -51,6 +55,8 @@ export class SupportDetailsComponent implements OnInit {
       map(uid => uid === this.support?.recipientId)
     )
 
+    this.counterForm.setValue(this.support.counterDescription)
+
     const id = this.support.milestone ? this.support.milestone.id : this.support.goalId
     this.post$ = this.storyService.valueChanges(id, { goalId: this.support.goalId }).pipe(
       filter(storyItem => !!storyItem),
@@ -68,8 +74,8 @@ export class SupportDetailsComponent implements OnInit {
 
     const give = () => {
       if (!this.support?.id) return
-      this.supportService.update(this.support.id, { status: 'waiting_to_be_paid', needsDecision: false }, { params: { goalId: this.support.goalId }})
-      this.support.status = 'waiting_to_be_paid'
+      this.supportService.update(this.support.id, { status: 'accepted', needsDecision: false }, { params: { goalId: this.support.goalId }})
+      this.support.status = 'accepted'
       this.support.needsDecision = false
     }
 
@@ -116,4 +122,15 @@ export class SupportDetailsComponent implements OnInit {
     }).then(alert => alert.present())
   }
 
+  counter() {
+    if (this.counterForm.invalid) return
+    if (!this.support) return
+
+    this.supportService.upsert({
+      id: this.support.id,
+      counterDescription: this.counterForm.value
+    }, { params: { goalId: this.support.goalId }})
+    this.support.counterDescription = this.counterForm.value
+    this.cdr.markForCheck()
+  }
 }

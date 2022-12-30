@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
 import { ModalController } from '@ionic/angular'
@@ -8,8 +8,7 @@ import { createSupportBase, Support } from '@strive/model'
 @Component({
   selector: 'support-pledge',
   templateUrl: './pledge.component.html',
-  styleUrls: ['./pledge.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./pledge.component.scss']
 })
 export class PledgeComponent {
   @Input() support: Support = createSupportBase()

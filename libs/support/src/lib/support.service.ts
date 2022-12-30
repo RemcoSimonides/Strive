@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { DocumentSnapshot, limit, serverTimestamp, where } from 'firebase/firestore'
+import { DocumentSnapshot, serverTimestamp, where } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
 import { of, switchMap, map, shareReplay } from 'rxjs'
@@ -16,12 +16,11 @@ export class SupportService extends FireSubCollection<SupportBase> {
   hasSupportNeedingDecision$ = this.auth.user$.pipe(
     switchMap(user => {
       if (!user) return of(false)
-      const query = [
-        where('supporterId', '==', user.uid),
-        where('needsDecision', '!=', false),
-        limit(1)
-      ]
-      return this.valueChanges(query).pipe(map(supports => !!supports.length))
+      const query = [where('supporterId', '==', user.uid)]
+      return this.valueChanges(query).pipe(
+        map(supports => supports.filter(support => support.needsDecision || support.counterNeedsDecision)),
+        map(supports => !!supports.length)
+      )
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   )

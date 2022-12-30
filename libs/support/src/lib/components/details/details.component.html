@@ -1,7 +1,15 @@
 <ng-container *ngIf="support">
-  <article *ngIf="support.needsDecision && (isSupporter$ | async)" class="decision">
-    <small *ngIf="!support.milestone">Goal has been finished. Decide to give '{{ support.description }}' or not.</small>
-    <small *ngIf="support.milestone">Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
+  <article *ngIf="support.counterNeedsDecision && (support | isRecipient)" class="decision">
+    <small>{{ support.milestone ? 'Milestone' : 'Goal'}} completed unsuccessfully. Decide to give '{{ support.counterDescription }}' or not</small>
+    <support-decision [support]="support" [counter]="true"></support-decision>
+  </article>
+  <article *ngIf="support.needsDecision && (support | isSupporter)" class="decision">
+    <ng-container *ngIf="support.milestone else goal">
+      <small>Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
+    </ng-container>
+    <ng-template #goal>
+      <small>Goal has been completed {{ support.goal?.status === 'succeeded' ? 'successfully' : 'unsuccessfully' }}. Decide to give '{{ support.description }}' or not.</small>
+    </ng-template>
     <support-decision [support]="support"></support-decision>
   </article>
 
@@ -11,21 +19,47 @@
 
   <support-pledge [support]="support"></support-pledge>
 
+  <ng-container *ngIf="(support | isRecipient) && support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
+      <ion-list mode="md" class="counter-form">
+        <ion-item *ngIf="!support.counterDescription">
+          <small>
+            Create extra accountability for yourself by giving something to {{ support.supporter?.username }} in case you dont succeed to "{{ support.milestoneId ? support.milestone?.content : support.goal?.title }}"
+          </small>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input [formControl]="counterForm" placeholder="e.g. 'Wash your car'"></ion-input>
+          <ion-button size="small" slot="end" (click)="counter()" color="primary">
+            <span>Save</span>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+  </ng-container>
+
   <section class="details">
 
     <small class="status">
       <span class="gray">Status: </span>
-      <ng-container *ngIf="support.status === 'open' && !support.needsDecision">
+      <ng-container *ngIf="support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
         <span *ngIf="!support.milestone">Waiting for goal '{{ support.goal?.title }}' to be finished</span>
         <span *ngIf="support.milestone">Waiting for milestone '{{ support.milestone.content }}' of goal '{{ support.goal?.title }}' to be completed</span>
       </ng-container>
 
-      <ng-container *ngIf="support.status === 'open' && support.needsDecision">
-        <span>Decide whether to give the support or not</span>
+      <ng-container *ngIf="support.needsDecision && support.status === 'open'">
+        <span *ngIf="support | isSupporter">Decide whether to give the support or not</span>
+        <span *ngIf="support | isRecipient">{{ support.supporter?.username }} decides whether to '{{ support.description }}' or not</span>
       </ng-container>
 
-      <ng-container *ngIf="support.status === 'waiting_to_be_paid'">
-        <span>Support should have been given to '{{ support.recipient?.username }}'</span>
+      <ng-container *ngIf="support.counterNeedsDecision && support.counterStatus === 'open'">
+        <span *ngIf="support | isRecipient">Decide whether to give the counter support or not</span>
+        <span *ngIf="support | isSupporter">{{ support.recipient?.username }} decides whether to give '{{ support.counterDescription }}' or not</span>
+      </ng-container>
+
+      <ng-container *ngIf="support.status === 'accepted'">
+        <span>{{ support.description }} should have been given to '{{ support.recipient?.username }}'</span>
+      </ng-container>
+
+      <ng-container *ngIf="support.counterStatus === 'accepted'">
+        <span>'{{ support.counterDescription }}'' support should have been given to '{{ support.supporter?.username }}'</span>
       </ng-container>
 
       <ng-container *ngIf="support.status === 'rejected'">
@@ -40,7 +74,7 @@
 
   <section class="actions">
     <ng-container *ngIf="support.status === 'open'">
-      <ng-container *ngIf="isSupporter$ | async">
+      <ng-container *ngIf="support | isSupporter">
         <ion-button (click)="give()" class="secondary" expand="block">
           <span>Give to {{ support.recipient?.username }}</span>
         </ion-button>
