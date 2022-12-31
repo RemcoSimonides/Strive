@@ -36,7 +36,7 @@
         { "source": "/privacy-policy", "destination": "privacy-policy/index.html" },
         { "source": "/terms", "destination": "terms/index.html" },
         { "source": "/", "destination": "index.html" },
-        { "source": "**", "destination": "index.original.html" }
+        { "source": "**", "destination": "/index.original.html" }
       ]
     },
     {
