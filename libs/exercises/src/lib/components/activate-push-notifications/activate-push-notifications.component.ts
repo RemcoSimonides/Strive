@@ -4,7 +4,7 @@ import { map } from 'rxjs'
 import { PersonalService } from '@strive/user/personal.service'
 
 @Component({
-  selector: 'exercise-activate-push-notification',
+  selector: 'strive-exercise-activate-push-notification',
   templateUrl: './activate-push-notifications.component.html',
   styleUrls: ['./activate-push-notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

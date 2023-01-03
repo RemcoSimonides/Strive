@@ -11,7 +11,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal.service'
 
 @Component({
-  selector: '[message] exercise-dear-future-self-message',
+  selector: '[message] strive-dear-future-self-message-modal',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

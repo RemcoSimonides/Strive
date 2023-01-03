@@ -7,7 +7,7 @@ const primaryRGBA = 'rgba(249, 116, 29)'
 const secondaryRGBA = 'rgba(0,179,163)'
 
 @Component({
-  selector: 'exercise-wheel-of-life-results',
+  selector: 'strive-wheel-of-life-results',
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -16,7 +16,7 @@ import SwiperCore, { EffectCards, Navigation } from 'swiper'
 SwiperCore.use([EffectCards, Navigation])
 
 @Component({
-  selector: 'exercise-daily-gratitude-cards',
+  selector: 'strive-daily-gratitude-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
   encapsulation: ViewEncapsulation.None,

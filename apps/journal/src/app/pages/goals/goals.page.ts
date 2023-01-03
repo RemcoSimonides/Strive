@@ -25,7 +25,7 @@ import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.comp
 import { GoalUpdatesModalComponent } from '@strive/goal/modals/goal-updates/goal-updates.component'
 import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
-import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
+import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals/message/message.component'
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 
 @Component({

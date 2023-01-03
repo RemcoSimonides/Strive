@@ -14,7 +14,7 @@
     <ng-container *ngIf="!isLoading else loading">
       <ng-container *ngIf="uid$ | async else login">
 
-        <exercise-activate-push-notification></exercise-activate-push-notification>
+        <strive-exercise-activate-push-notification></strive-exercise-activate-push-notification>
 
         <section class="toggle">
           <article>
@@ -23,7 +23,7 @@
           </article>
         </section>
 
-        <exercise-daily-gratitude-cards></exercise-daily-gratitude-cards>
+        <strive-daily-gratitude-cards></strive-daily-gratitude-cards>
 
       </ng-container>
     </ng-container>

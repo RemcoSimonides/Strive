@@ -47,7 +47,7 @@ interface DesiredFormType {
 }
 
 @Component({
-  selector: 'exercise-wheel-of-life-entry',
+  selector: 'strive-wheel-of-life-entry',
   templateUrl: './entry.component.html',
   styleUrls: ['./entry.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

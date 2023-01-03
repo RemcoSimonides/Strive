@@ -36,13 +36,13 @@
           <ng-container *ngIf="(hasEntries$ | async) === false">
             <ion-card>
               <ion-card-content>
-                <exercise-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"></exercise-wheel-of-life-entry>
+                <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"></strive-wheel-of-life-entry>
               </ion-card-content>
             </ion-card>
           </ng-container>
     
           <ng-container *ngIf="entries.length">
-            <exercise-wheel-of-life-results [entries]="entries"></exercise-wheel-of-life-results>
+            <strive-wheel-of-life-results [entries]="entries"></strive-wheel-of-life-results>
           </ng-container>
         </ng-container>
 

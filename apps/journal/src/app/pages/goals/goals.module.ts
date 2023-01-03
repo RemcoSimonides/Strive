@@ -21,7 +21,7 @@ import { MiniThumbnailSwiperModule } from '@strive/goal/components/mini-thumbnai
 
 import { CardsModalModule } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.module'
 import { AffirmModalModule } from '@strive/exercises/affirmation/modals/affirm-modal.module'
-import { MessageModalModule } from '@strive/exercises/dear-future-self/components/message/message.module'
+import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
 
 const routes: Routes = [

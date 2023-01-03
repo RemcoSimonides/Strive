@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular'
 import { Message } from '@strive/model'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
-import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
+import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals/message/message.component'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AuthService } from '@strive/auth/auth.service'

@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { DearFutureSelfPageComponent } from './dear-future-self.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
-import { MessageModalModule } from '@strive/exercises/dear-future-self/components/message/message.module'
+import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
