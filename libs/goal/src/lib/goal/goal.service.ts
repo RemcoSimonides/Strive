@@ -5,7 +5,7 @@ import { toDate, FireCollection, WriteOptions, joinWith } from 'ngfire'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-import { GoalStakeholderService } from '../stakeholder/stakeholder.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole, StakeholderWithGoal } from '@strive/model'

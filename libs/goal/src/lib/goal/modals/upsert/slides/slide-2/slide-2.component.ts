@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
-import { FocusForm } from '@strive/goal/stakeholder/forms/focus.form'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { FocusForm } from '@strive/stakeholder/forms/focus.form'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
 @Component({

@@ -11,7 +11,7 @@ import { joinWith } from 'ngfire'
 import { createGoalStakeholder, GoalStakeholder, User } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
@@ -24,7 +24,7 @@ function isTeamMember({ isAdmin, isAchiever, isSupporter, isSpectator }: GoalSta
 }
 
 @Component({
-  selector: '[goalId] goal-team-modal',
+  selector: '[goalId] strive-team-modal',
   templateUrl: './team.modal.html',
   styleUrls: ['./team.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -8,7 +8,7 @@ import { BehaviorSubject, firstValueFrom, Observable, of, Subscription } from 'r
 import { distinctUntilChanged, filter, map, shareReplay, skip, switchMap } from 'rxjs/operators'
 
 import { CommentService } from '@strive/chat/comment.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 

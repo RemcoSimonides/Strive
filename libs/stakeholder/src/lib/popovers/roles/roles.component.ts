@@ -7,7 +7,7 @@ import { delay } from '@strive/utils/helpers'
 import { GoalStakeholderService } from '../../stakeholder.service'
 
 @Component({
-	selector: '[goalId][stakeholder] goal-stakeholder-roles',
+	selector: '[goalId][stakeholder] strive-stakeholder-roles',
 	templateUrl: './roles.component.html',
 	styleUrls: ['./roles.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush

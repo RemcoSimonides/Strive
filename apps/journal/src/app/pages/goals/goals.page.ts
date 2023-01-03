@@ -16,7 +16,7 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal/goal-event.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
 import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 

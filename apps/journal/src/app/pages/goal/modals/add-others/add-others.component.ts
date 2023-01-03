@@ -22,7 +22,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { AlgoliaUser, createGoal, Goal, GoalStakeholder } from '@strive/model'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
 type MinimumProfile = {
   uid: string

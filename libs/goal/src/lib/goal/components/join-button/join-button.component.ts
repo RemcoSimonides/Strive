@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { AlertController, ModalController } from '@ionic/angular'
-import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { Goal, GoalStakeholder } from '@strive/model'
 import { AuthService } from '@strive/user/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'

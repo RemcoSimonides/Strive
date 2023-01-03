@@ -10,7 +10,7 @@ import { FocusForm } from '../../forms/focus.form'
 import { GoalStakeholderService } from '../../stakeholder.service'
 
 @Component({
-	selector: '[stakeholder] goal-focus-modal',
+	selector: '[stakeholder] strive-focus-modal',
 	templateUrl: './upsert-focus.component.html',
 	styleUrls: ['./upsert-focus.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush

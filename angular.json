@@ -40,6 +40,7 @@
     "notification": "libs/notification",
     "post": "libs/post",
     "roadmap": "libs/roadmap",
+    "stakeholder": "libs/stakeholder",
     "story": "libs/story",
     "support": "libs/support",
     "ui": "libs/ui",
