@@ -1,7 +1,7 @@
 <ng-container *ngIf="support">
   <article *ngIf="support.counterNeedsDecision && (support | isRecipient)" class="decision">
     <small>{{ support.milestone ? 'Milestone' : 'Goal'}} completed unsuccessfully. Decide to give '{{ support.counterDescription }}' or not</small>
-    <support-decision [support]="support" [counter]="true"></support-decision>
+    <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
   </article>
   <article *ngIf="support.needsDecision && (support | isSupporter)" class="decision">
     <ng-container *ngIf="support.milestone else goal">
@@ -10,14 +10,14 @@
     <ng-template #goal>
       <small>Goal has been completed {{ support.goal?.status === 'succeeded' ? 'successfully' : 'unsuccessfully' }}. Decide to give '{{ support.description }}' or not.</small>
     </ng-template>
-    <support-decision [support]="support"></support-decision>
+    <strive-support-decision [support]="support"></strive-support-decision>
   </article>
 
   <ng-container *ngIf="post$ | async as post">
     <strive-post [storyItem]="post"></strive-post>
   </ng-container>
 
-  <support-pledge [support]="support"></support-pledge>
+  <strive-support-pledge [support]="support"></strive-support-pledge>
 
   <ng-container *ngIf="(support | isRecipient) && support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
       <ion-list mode="md" class="counter-form">

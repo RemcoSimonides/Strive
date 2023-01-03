@@ -23,14 +23,14 @@
     <section *ngIf="objectivesWithSupports$ | async as goals; else loading">
       <ng-container *ngIf="goals.length; else empty">
         <ng-container *ngFor="let goal of goals">
-          <support-list [goal]="goal">
+          <strive-support-list [goal]="goal">
             <ng-template #goal let-goal>
               <small><a [routerLink]="'../goal/' + goal.id">{{ goal.title }}</a></small>
             </ng-template>
             <ng-template #milestone let-goal let-milestone="milestone">
               <small><a [routerLink]="'../goal/' + goal.id">{{ goal.title | mSlice}}</a>&nbsp;<span>&#8702;</span> {{ milestone.content | mSlice }}</small>
             </ng-template>
-          </support-list>
+          </strive-support-list>
         </ng-container>
       </ng-container>
     </section>

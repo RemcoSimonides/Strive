@@ -10,11 +10,11 @@
     <ng-container *ngIf="showAll || (goal | count: support.id) <= showAmount">
       <article *ngIf="support.counterNeedsDecision && (support | isRecipient)">
         <small>Goal finisheded unsuccessfully. Decide to give '{{ support.counterDescription }}' or not.</small>
-        <support-decision [support]="support" [counter]="true"></support-decision>
+        <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
       </article>
       <article *ngIf="support.needsDecision && (support | isSupporter)">
         <small>Goal finished{{ goal.status === 'failed' ? ' unsuccessfully' : ''}}. Decide to give '{{ support.description }}' or not.</small>
-        <support-decision [support]="support"></support-decision>
+        <strive-support-decision [support]="support"></strive-support-decision>
       </article>
       <ion-item
         [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'inset'"
@@ -22,7 +22,7 @@
         [ngClass]="{'fake-disable': support.status !== 'open' || support.counterStatus !== 'open'}"
         (click)="openDetails(support)"
       >
-        <support-pledge [support]="support"></support-pledge>
+        <strive-support-pledge [support]="support"></strive-support-pledge>
       </ion-item>
     </ng-container>
   </ng-container>
@@ -39,12 +39,12 @@
         <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount">
           <article *ngIf="support.counterNeedsDecision && (support | isRecipient)">
             <small>Milestone has been completed unsuccessfully. Decide to give '{{ support.counterNeedsDecision }}' or not.</small>
-            <support-decision [support]="support" [counter]="true"></support-decision>
+            <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
           </article>
 
           <article *ngIf="support.needsDecision && (support | isSupporter)">
             <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
-            <support-decision [support]="support"></support-decision>
+            <strive-support-decision [support]="support"></strive-support-decision>
           </article>
     
           <ion-item
@@ -53,7 +53,7 @@
             [ngClass]="{'fake-disable': support.status !== 'open' || support.counterStatus !== 'open'}"
             (click)="openDetails(support)"
           >
-            <support-pledge [support]="support"></support-pledge>
+            <strive-support-pledge [support]="support"></strive-support-pledge>
           </ion-item>
         </ng-container>
       </ng-container>

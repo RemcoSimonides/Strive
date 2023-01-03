@@ -6,7 +6,7 @@ import { ModalController } from '@ionic/angular'
 import { createSupportBase, Support } from '@strive/model'
 
 @Component({
-  selector: 'support-pledge',
+  selector: 'strive-support-pledge',
   templateUrl: './pledge.component.html',
   styleUrls: ['./pledge.component.scss']
 })

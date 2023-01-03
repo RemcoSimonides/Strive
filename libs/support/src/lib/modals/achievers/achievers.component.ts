@@ -8,7 +8,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile: User }
 
 @Component({
-  selector: '[support] support-achievers',
+  selector: '[support] strive-support-achievers',
   templateUrl: './achievers.component.html',
   styleUrls: ['./achievers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

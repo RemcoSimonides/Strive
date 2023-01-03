@@ -15,7 +15,7 @@ import { SupportService } from '@strive/support/support.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
-  selector: '[goal] support-modal',
+  selector: '[goal] strive-support-modal',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

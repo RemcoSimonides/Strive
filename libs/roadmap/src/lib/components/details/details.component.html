@@ -126,17 +126,17 @@
       <h6>Supports</h6>
 
       <ng-container *ngIf="milestone.status === 'pending'">
-        <support-add [goal]="goal" [milestone]="milestone"></support-add>
+        <strive-support-add [goal]="goal" [milestone]="milestone"></strive-support-add>
       </ng-container>
 
       <ng-container *ngIf="supports$ | async as supports">
-        <support-list [goal]="supports[0]">
+        <strive-support-list [goal]="supports[0]">
           <ng-container *ngIf="milestone.status === 'pending'">
             <ng-template #empty>
               <i>No supports yet</i>
             </ng-template>
           </ng-container>
-        </support-list>
+        </strive-support-list>
       </ng-container>
     </section>
 

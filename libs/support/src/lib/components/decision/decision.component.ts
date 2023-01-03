@@ -3,7 +3,7 @@ import { Support, SupportStatus } from '@strive/model'
 import { SupportService } from '../..//support.service'
 
 @Component({
-  selector: '[support] support-decision',
+  selector: '[support] strive-support-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

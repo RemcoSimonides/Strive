@@ -15,7 +15,7 @@ import { AchieversModalComponent } from '@strive/support/modals/achievers/achiev
 import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 @Component({
-  selector: '[goal] support-add',
+  selector: '[goal] strive-support-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -4,7 +4,7 @@ import { Milestone, Support, SupportsGroupedByGoal } from '@strive/model'
 import { SupportDetailsModalComponent } from '@strive/support/modals/details/details.component'
 
 @Component({
-  selector: 'support-list',
+  selector: 'strive-support-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

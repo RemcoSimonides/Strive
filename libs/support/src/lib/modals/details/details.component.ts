@@ -7,7 +7,7 @@ import { Support } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 @Component({
-  selector: 'support-details-modal',
+  selector: 'strive-support-details-modal',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

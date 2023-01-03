@@ -15,7 +15,7 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  selector: 'support-details',
+  selector: 'strive-support-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
