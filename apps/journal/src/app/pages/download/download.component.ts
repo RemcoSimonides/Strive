@@ -9,7 +9,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
   styleUrls: ['./download.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DownloadComponent {
+export class DownloadPageComponent {
 
   isStandalone = typeof matchMedia !== "undefined" ? matchMedia('(display-mode: standalone)').matches : false
   isBrowser = typeof matchMedia !== "undefined" ? matchMedia('(display-mode: browser)').matches : false

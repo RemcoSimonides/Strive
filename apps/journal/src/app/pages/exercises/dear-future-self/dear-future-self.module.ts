@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
-import { DearFutureSelfComponent } from './dear-future-self.component'
+import { DearFutureSelfPageComponent } from './dear-future-self.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { MessageModalModule } from '@strive/exercises/dear-future-self/components/message/message.module'
 
@@ -17,7 +17,7 @@ import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
 const routes: Routes = [
   {
     path: '',
-    component: DearFutureSelfComponent
+    component: DearFutureSelfPageComponent
   }
 ]
 
@@ -34,6 +34,6 @@ const routes: Routes = [
     HeaderModule,
     MessageModalModule
   ],
-  declarations: [DearFutureSelfComponent]
+  declarations: [DearFutureSelfPageComponent]
 })
 export class DearFutureSelfModule {}

@@ -4,13 +4,13 @@ import { RouterModule, Routes } from '@angular/router'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 
-import { EditProfileComponent } from './edit-profile.component'
+import { EditProfilePageComponent } from './edit-profile.component'
 
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
 
 const routes: Routes = [
-  { path: '', component: EditProfileComponent },
+  { path: '', component: EditProfilePageComponent },
 ]
 
 @NgModule({
@@ -22,6 +22,6 @@ const routes: Routes = [
     ImageSelectorModule,
     HeaderModule
   ],
-  declarations: [EditProfileComponent]
+  declarations: [EditProfilePageComponent]
 })
-export class EditProfileModule {}
+export class EditProfilePageModule {}

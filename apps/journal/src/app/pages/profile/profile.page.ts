@@ -29,7 +29,7 @@ import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfileComponent {
+export class ProfilePageComponent {
   private profileId$: Observable<string | undefined> = combineLatest([
     this.route.params.pipe(map(params => params['id'])),
     this.auth.profile$

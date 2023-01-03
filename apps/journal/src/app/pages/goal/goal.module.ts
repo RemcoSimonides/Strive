@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
-import { GoalComponent } from './goal.page'
+import { GoalPageComponent } from './goal.page'
 
 import { GoalOptionsModule } from './popovers/options/options.module'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
@@ -30,7 +30,7 @@ import { AddSupportModule } from '@strive/support/components/add/add.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 
 const routes: Routes = [
-  { path: '', component: GoalComponent }
+  { path: '', component: GoalPageComponent }
 ]
 
 @NgModule({
@@ -60,7 +60,6 @@ const routes: Routes = [
     AddOthersModalComponent,
     DeadlinePopoverSComponent
   ],
-  exports: [GoalComponent],
-  declarations: [GoalComponent],
+  declarations: [GoalPageComponent],
 })
 export class GoalPageModule { }

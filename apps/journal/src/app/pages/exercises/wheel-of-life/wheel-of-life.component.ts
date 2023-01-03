@@ -24,7 +24,7 @@ import { getPreviousEntry } from '@strive/exercises/wheel-of-life/pipes/entry.pi
   styleUrls: ['./wheel-of-life.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WheelOfLifeComponent implements OnDestroy {
+export class WheelOfLifePageComponent implements OnDestroy {
   uid$ = this.auth.uid$
 
   isMobile$ = this.screensize.isMobile$

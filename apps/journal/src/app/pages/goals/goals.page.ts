@@ -34,7 +34,7 @@ import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entr
   styleUrls: ['./goals.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalsComponent implements OnDestroy {
+export class GoalsPageComponent implements OnDestroy {
 
   seeAll = new BehaviorSubject(false)
 

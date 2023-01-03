@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
-import { WheelOfLifeComponent } from './wheel-of-life.component'
+import { WheelOfLifePageComponent } from './wheel-of-life.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
@@ -19,7 +19,7 @@ import { EntryPipeModule } from '@strive/exercises/wheel-of-life/pipes/entry.pip
 const routes: Routes = [
   {
     path: '',
-    component: WheelOfLifeComponent
+    component: WheelOfLifePageComponent
   }
 ]
 
@@ -37,6 +37,6 @@ const routes: Routes = [
     WheelOfLifeResultsModule,
     EntryPipeModule
   ],
-  declarations: [WheelOfLifeComponent]
+  declarations: [WheelOfLifePageComponent]
 })
 export class WheelOfLifeModule {}

@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular'
 import { RouterModule, Routes } from '@angular/router'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 
-import { DailyGratitudeComponent } from './daily-gratitude.component'
+import { DailyGratitudePageComponent } from './daily-gratitude.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
@@ -17,7 +17,7 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 const routes: Routes = [
   {
     path: '',
-    component: DailyGratitudeComponent
+    component: DailyGratitudePageComponent
   }
 ]
 
@@ -35,6 +35,6 @@ const routes: Routes = [
     CardsModule,
     DatetimeModule
   ],
-  declarations: [DailyGratitudeComponent]
+  declarations: [DailyGratitudePageComponent]
 })
 export class DailyGratitudeModule {}

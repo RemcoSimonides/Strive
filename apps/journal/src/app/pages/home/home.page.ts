@@ -13,7 +13,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
   styleUrls: ['./home.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent {
+export class HomePageComponent {
 
   enumAuthSegment = enumAuthSegment
 

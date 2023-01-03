@@ -20,7 +20,7 @@ import { ImageSelectorComponent } from '@strive/media/components/image-selector/
   styleUrls: ['./edit-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditProfileComponent {
+export class EditProfilePageComponent {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
   form = new UserForm(this.auth.profile)

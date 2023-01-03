@@ -26,7 +26,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
   styleUrls: ['./supports.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SupportsComponent {
+export class SupportsPageComponent {
 
   objectivesWithSupports$: Observable<SupportsGroupedByGoal[]>
   uid$ = this.auth.uid$

@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router'
 
 import { IonicModule } from '@ionic/angular'
 
-import { ExploreComponent } from './explore.page'
+import { ExplorePageComponent } from './explore.page'
 
 // Strive
 import { ThumbnailListModule } from '@strive/ui/thumbnail/layout/list/thumbnail-list.module'
@@ -20,7 +20,7 @@ import { FooterModule } from '@strive/ui/footer/footer.module'
 const routes: Routes = [
   {
     path: '',
-    component: ExploreComponent
+    component: ExplorePageComponent
   }
 ]
 
@@ -41,7 +41,7 @@ const routes: Routes = [
     FooterModule
   ],
   declarations: [
-    ExploreComponent
+    ExplorePageComponent
   ]
 })
 export class ExplorePageModule {}

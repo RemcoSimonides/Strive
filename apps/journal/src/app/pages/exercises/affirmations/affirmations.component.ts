@@ -26,7 +26,7 @@ function timeFormControls() {
   styleUrls: ['./affirmations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AffirmationsComponent implements OnDestroy {
+export class AffirmationsPageComponent implements OnDestroy {
   isLoading = true
 
   enumAffirmationCategory = enumAffirmationCategory

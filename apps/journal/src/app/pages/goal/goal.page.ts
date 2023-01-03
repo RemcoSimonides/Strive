@@ -65,7 +65,7 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
   styleUrls: ['./goal.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalComponent implements OnDestroy {
+export class GoalPageComponent implements OnDestroy {
 
   goal: Goal | undefined
   goal$: Observable<Goal | undefined>

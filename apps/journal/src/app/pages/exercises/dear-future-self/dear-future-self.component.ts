@@ -27,7 +27,7 @@ const initial = `Dear Future Self,
   styleUrls: ['./dear-future-self.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DearFutureSelfComponent {
+export class DearFutureSelfPageComponent {
   description = new FormControl(initial)
   date = new FormControl()
   duration?: 2 | 5 | 10

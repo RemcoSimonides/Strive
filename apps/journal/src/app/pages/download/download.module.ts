@@ -5,12 +5,12 @@ import { IonicModule } from '@ionic/angular'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
 
-import { DownloadComponent } from './download.component'
+import { DownloadPageComponent } from './download.component'
 
 const routes: Routes = [
   {
     path: '',
-    component: DownloadComponent
+    component: DownloadPageComponent
   }
 ]
 
@@ -23,7 +23,7 @@ const routes: Routes = [
     HeaderModule
   ],
   declarations: [
-    DownloadComponent
+    DownloadPageComponent
   ]
 })
 export class DownloadModule {}

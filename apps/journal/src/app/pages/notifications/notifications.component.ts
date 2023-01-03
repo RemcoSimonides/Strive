@@ -25,7 +25,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
   styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationsComponent implements OnInit {
+export class NotificationsPageComponent implements OnInit {
 
   notifications$?: Observable<Notification[]>
   uid$ = this.auth.uid$

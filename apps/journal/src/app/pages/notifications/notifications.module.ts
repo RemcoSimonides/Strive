@@ -9,12 +9,12 @@ import { MessagePipeModule } from '@strive/notification/pipes/message.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
 
-import { NotificationsComponent } from './notifications.component'
+import { NotificationsPageComponent } from './notifications.component'
 
 const routes: Routes = [
   {
     path: '',
-    component: NotificationsComponent
+    component: NotificationsPageComponent
   }
 ]
 
@@ -30,6 +30,6 @@ const routes: Routes = [
     TimeAgoPipeModule
   ],
   exports: [],
-  declarations: [NotificationsComponent]
+  declarations: [NotificationsPageComponent]
 })
-export class NotificationsModule { }
+export class NotificationsPageModule { }

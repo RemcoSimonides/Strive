@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router'
 
 import { IonicModule } from '@ionic/angular'
 
-import { ProfileComponent } from './profile.page'
+import { ProfilePageComponent } from './profile.page'
 
 // Followers / Followings
 import { FollowingModule } from '@strive/spectator/components/following/following.module'
@@ -30,7 +30,7 @@ import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
 const routes: Routes = [
-  { path: '', component: ProfileComponent },
+  { path: '', component: ProfilePageComponent },
 ]
 
 @NgModule({
@@ -57,7 +57,7 @@ const routes: Routes = [
     PagenotfoundModule
   ],
   declarations: [
-    ProfileComponent
+    ProfilePageComponent
   ]
 })
 export class ProfilePageModule {}

@@ -24,7 +24,7 @@ interface DailyGratitudeSetting {
   styleUrls: ['./daily-gratitude.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DailyGratitudeComponent implements OnDestroy {
+export class DailyGratitudePageComponent implements OnDestroy {
   isLoading = true
 
   form = new FormGroup({

@@ -18,7 +18,7 @@ import { AuthService } from '@strive/auth/auth.service'
   styleUrls: ['./explore.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExploreComponent implements OnDestroy {
+export class ExplorePageComponent implements OnDestroy {
   segmentChoice: 'overview' | 'search' = 'overview'
 
   isLoggedIn$ = this.auth.isLoggedIn$

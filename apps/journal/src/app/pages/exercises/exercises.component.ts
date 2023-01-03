@@ -19,7 +19,7 @@ export class GetExercisePipe implements PipeTransform {
   styleUrls: ['./exercises.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExercisesComponent {
+export class ExercisesPageComponent {
   exercises = exercises
 
   exercises$ = this.auth.profile$.pipe(

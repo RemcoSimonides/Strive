@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 
 import { IonicModule } from '@ionic/angular'
 
-import { GoalsComponent } from './goals.page'
+import { GoalsPageComponent } from './goals.page'
 
 // Strive
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
@@ -27,7 +27,7 @@ import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/e
 const routes: Routes = [
   {
     path: '',
-    component: GoalsComponent
+    component: GoalsPageComponent
   }
 ]
 
@@ -53,6 +53,6 @@ const routes: Routes = [
     MessageModalModule,
     EntryModalModule
   ],
-  declarations: [GoalsComponent]
+  declarations: [GoalsPageComponent]
 })
 export class GoalsPageModule {}

@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 
-import { AffirmationsComponent } from './affirmations.component'
+import { AffirmationsPageComponent } from './affirmations.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ActivatePushNotificaitonsModule } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.module'
@@ -14,7 +14,7 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 const routes: Routes = [
   {
     path: '',
-    component: AffirmationsComponent
+    component: AffirmationsPageComponent
   }
 ]
 
@@ -29,6 +29,6 @@ const routes: Routes = [
     HeaderModule,
     DatetimeModule
   ],
-  declarations: [AffirmationsComponent]
+  declarations: [AffirmationsPageComponent]
 })
 export class AffirmationsModule {}
