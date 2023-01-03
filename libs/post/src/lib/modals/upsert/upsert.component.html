@@ -19,10 +19,10 @@
 
   <form [formGroup]="postForm">
 
-    <media-image-selector 
+    <strive-image-selector 
       [form]="postForm.get('mediaURL')"
       [storagePath]="'goals/' + post.goalId + '/posts/' + post.id">
-    </media-image-selector>
+    </strive-image-selector>
 
     <ion-item>
       <ion-label color="primary" stacked>Description</ion-label>

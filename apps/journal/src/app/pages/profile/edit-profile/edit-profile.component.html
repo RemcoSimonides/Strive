@@ -16,7 +16,7 @@
             </ion-input>
           </ion-item>
     
-          <media-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid"></media-image-selector>
+          <strive-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid"></strive-image-selector>
         
           <ion-button color="primary" [disabled]="form.invalid" (click)="update()">Save</ion-button>
         </ion-card-content>

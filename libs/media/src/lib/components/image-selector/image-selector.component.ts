@@ -32,7 +32,7 @@ function b64toBlob(data: string) {
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
 @Component({
-  selector: '[form][storagePath] media-image-selector',
+  selector: '[form][storagePath] strive-image-selector',
   templateUrl: 'image-selector.component.html',
   styleUrls: ['./image-selector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
