@@ -128,7 +128,7 @@ export class AppComponent implements OnDestroy {
 
       if (!isLoggedIn) {
         if (Capacitor.getPlatform() === 'web') {
-          const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/']
+          const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/download', '/']
           const doNotShowPartial = ['/goal/']
           const showRegisterModalPages = ['/explore']
 
