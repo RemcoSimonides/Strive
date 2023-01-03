@@ -9,7 +9,7 @@ import { map, switchMap, of } from 'rxjs'
 import { SpectatorService } from '../../spectator.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
   selector: 'strive-user-following',

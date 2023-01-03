@@ -8,7 +8,7 @@ import { createSupportBase } from '@strive/model'
 import { joinWith } from 'ngfire'
 import { GoalService } from '@strive/goal/goal.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
   selector: 'journal-support',

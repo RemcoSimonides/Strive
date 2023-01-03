@@ -4,7 +4,7 @@ import { NavParams, PopoverController } from '@ionic/angular'
 
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
   selector: 'journal-edit-profile-image-popover',

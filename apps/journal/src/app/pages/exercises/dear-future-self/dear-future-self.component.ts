@@ -8,7 +8,7 @@ import { MessageModalComponent } from '@strive/exercises/dear-future-self/compon
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AuthService } from '@strive/auth/auth.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 

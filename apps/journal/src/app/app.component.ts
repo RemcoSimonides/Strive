@@ -14,7 +14,7 @@ import { TabsComponent } from './pages/tabs/tabs.component'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AuthService } from '@strive/auth/auth.service'
 

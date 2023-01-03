@@ -7,7 +7,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { NotificationService } from '@strive/notification/notification.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { isSafari } from '@strive/utils/helpers'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({

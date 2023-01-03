@@ -4,7 +4,7 @@ import { Router } from '@angular/router'
 import { AlertController, LoadingController } from '@ionic/angular'
 
 import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 
 @Component({

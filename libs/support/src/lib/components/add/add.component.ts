@@ -9,7 +9,7 @@ import { createSupportBase, Goal, Milestone } from '@strive/model'
 import { SupportService } from '@strive/support/support.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
 import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'

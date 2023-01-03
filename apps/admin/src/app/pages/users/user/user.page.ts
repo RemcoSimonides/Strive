@@ -13,10 +13,10 @@ import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-f
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { DailyGratitudeService } from '@strive/exercises/daily-gratitude/daily-gratitude.service'
 
-import { UserForm } from '@strive/user/user/forms/user.form'
+import { UserForm } from '@strive/user/forms/user.form'
 import { Affirmations, createUser, DailyGratitude, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
 import { getProgress } from '@strive/goal/pipes/progress.pipe'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
 

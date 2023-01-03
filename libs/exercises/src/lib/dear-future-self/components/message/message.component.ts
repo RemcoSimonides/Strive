@@ -8,7 +8,7 @@ import { AES, enc } from 'crypto-js'
 
 import { DearFutureSelfService } from '../../dear-future-self.service'
 import { AuthService } from '@strive/auth/auth.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 
 @Component({
   selector: '[message] exercise-dear-future-self-message',

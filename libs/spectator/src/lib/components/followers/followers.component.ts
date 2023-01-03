@@ -10,7 +10,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 import { SpectatorService } from '../../spectator.service'
 import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
   selector: 'strive-user-followers',

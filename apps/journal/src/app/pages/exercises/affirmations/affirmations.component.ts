@@ -14,7 +14,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AuthService } from '@strive/auth/auth.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 
 function timeFormControls() {
   return [new FormControl(''), new FormControl(''), new FormControl('')]

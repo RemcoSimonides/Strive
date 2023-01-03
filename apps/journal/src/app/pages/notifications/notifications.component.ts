@@ -11,12 +11,12 @@ import { Notification, notificationEvents } from '@strive/model'
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { NotificationService } from '@strive/notification/notification.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { SupportService } from '@strive/support/support.service'
 import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 @Component({

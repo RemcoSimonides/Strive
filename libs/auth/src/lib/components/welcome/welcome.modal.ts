@@ -7,7 +7,7 @@ import { SwiperComponent } from 'swiper/angular'
 import { combineLatest, map, of } from 'rxjs'
 
 import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 

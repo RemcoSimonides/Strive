@@ -18,8 +18,8 @@ import { captureException } from '@sentry/angular'
 import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
 
-import { ProfileService } from '@strive/user/user/profile.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { ProfileService } from '@strive/user/profile.service'
+import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 import { createPersonal, createUser } from '@strive/model'

@@ -9,7 +9,7 @@ import { distinctUntilChanged, filter, map, shareReplay, skip, switchMap } from 
 
 import { CommentService } from '@strive/chat/comment.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 import { Goal, Comment, createComment, GoalStakeholder, createGoalStakeholder } from '@strive/model'

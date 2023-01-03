@@ -10,7 +10,7 @@ import { BaseChartDirective } from 'ng2-charts'
 import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
 
 import { AuthService } from '@strive/auth/auth.service'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 import { delay } from '@strive/utils/helpers'
 

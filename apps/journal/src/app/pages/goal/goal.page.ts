@@ -28,7 +28,7 @@ import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadli
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'

@@ -15,7 +15,7 @@ import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module
 import { AuthService } from '@strive/auth/auth.service'
 import { SpectatorService } from '@strive/spectator/spectator.service'
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 // Directives
 import { ModalDirective } from '@strive/utils/directives/modal.directive'

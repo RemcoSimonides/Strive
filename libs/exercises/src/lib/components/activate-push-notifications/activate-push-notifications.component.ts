@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { ToastController } from '@ionic/angular'
 import { map } from 'rxjs'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 
 @Component({
   selector: 'exercise-activate-push-notification',

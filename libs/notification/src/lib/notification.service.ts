@@ -5,7 +5,7 @@ import { toDate, FireSubCollection } from 'ngfire'
 import { of, switchMap, shareReplay, map } from 'rxjs'
 
 import { createNotificationBase, NotificationBase, notificationEvents } from '@strive/model'
-import { PersonalService } from '@strive/user/personal/personal.service'
+import { PersonalService } from '@strive/user/personal.service'
 
 @Injectable({
   providedIn: 'root'

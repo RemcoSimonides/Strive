@@ -21,7 +21,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
 import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.component'
 import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 
 @Component({

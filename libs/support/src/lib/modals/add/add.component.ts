@@ -12,7 +12,7 @@ import { Goal, groupByObjective, Milestone, sortGroupedSupports, SupportsGrouped
 
 import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
   selector: '[goal] support-modal',

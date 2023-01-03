@@ -5,7 +5,7 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
 import { Observable } from 'rxjs'
 import { joinWith } from 'ngfire'
-import { ProfileService } from '@strive/user/user/profile.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 
 @Component({
