@@ -22,7 +22,7 @@ import { SupportService } from '@strive/support/support.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 

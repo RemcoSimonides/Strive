@@ -20,9 +20,9 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
 @Component({
-  selector: '[goalId] post-upsert-modal',
-  templateUrl: './upsert-modal.component.html',
-  styleUrls: ['./upsert-modal.component.scss'],
+  selector: '[goalId] strive-post-upsert',
+  templateUrl: './upsert.component.html',
+  styleUrls: ['./upsert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpsertPostModalComponent extends ModalDirective implements OnDestroy {

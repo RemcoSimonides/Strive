@@ -14,7 +14,7 @@
   </article>
 
   <ng-container *ngIf="post$ | async as post">
-    <post-main [storyItem]="post"></post-main>
+    <strive-post [storyItem]="post"></strive-post>
   </ng-container>
 
   <support-pledge [support]="support"></support-pledge>

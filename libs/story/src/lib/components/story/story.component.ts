@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { GoalService } from '@strive/goal/goal.service'
 import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
-import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
 
 @Component({
 	selector: '[story][goalId] strive-story',

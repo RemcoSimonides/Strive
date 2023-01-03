@@ -7,7 +7,7 @@ import { PostOptionsComponent } from '@strive/post/popovers/options/options.comp
 import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component'
 
 @Component({
-  selector: '[storyItem] post-main',
+  selector: '[storyItem] strive-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

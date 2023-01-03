@@ -3,16 +3,16 @@ import { NgModule } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
 
 import { PostOptionsComponent } from './options.component'
-import { UpsertPostModalModule } from '../../components/upsert-modal/upsert-modal.module'
+import { UpsertPostModalModule } from '../../modals/upsert/upsert.module'
 
 @NgModule({
-    imports: [
-        CommonModule,
-        IonicModule,
-        UpsertPostModalModule
-    ],
-    declarations: [
-        PostOptionsComponent
-    ]
+	imports: [
+		CommonModule,
+		IonicModule,
+		UpsertPostModalModule
+	],
+	declarations: [
+		PostOptionsComponent
+	]
 })
 export class PostOptionsModule {}
