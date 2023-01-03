@@ -6,7 +6,7 @@ import SwiperCore, { Zoom, SwiperOptions } from 'swiper'
 SwiperCore.use([Zoom])
 
 export function getEnterAnimation(baseEl: HTMLElement) {
-	const root = baseEl.shadowRoot;
+	const root = baseEl.shadowRoot
 	if (!root) return createAnimation()
 
 	const modalWrapper = root.querySelector('.modal-wrapper')
@@ -16,11 +16,11 @@ export function getEnterAnimation(baseEl: HTMLElement) {
 	const wrapper = createAnimation()
 	.addElement(modalWrapper)
 	.fromTo('transform', 'translateX(100%)', 'translateX(0)')
-	.fromTo('opacity', '0.01', '1');
+	.fromTo('opacity', '0.01', '1')
 
 	const backdrop = createAnimation()
 		.addElement(ionBackdrop)
-		.fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+		.fromTo('opacity', '0.01', 'var(--backdrop-opacity)')
 
 	return createAnimation()
 		.addElement(baseEl)

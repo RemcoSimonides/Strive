@@ -1,8 +1,8 @@
 export function sum(array: number[]): number
 export function sum<T>(array: T[], getAmount: (item: T) => number): number
 export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
-  const cb = getAmount || ((item: number) => item);
-  return array.reduce((total, item) => total + cb(item as any), 0);
+  const cb = getAmount || ((item: number) => item)
+  return array.reduce((total, item) => total + cb(item as any), 0)
 }
 
 /** Basic function to create a delay in a function when called
@@ -10,25 +10,25 @@ export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
  */
  export async function delay(ms: number) {
   return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
+    setTimeout(resolve, ms)
+  })
 }
 
 export function unique<T>(array: T[]) {
-  return Array.from(new Set(array));
+  return Array.from(new Set(array))
 }
 
 /**
  * Example with (['A', 'B', 'C'], ', ', ' & ')
- * output : "A, B & C";
+ * output : "A, B & C"
  * @param str
  * @param joinWith
  * @param endWith
  * @returns
  */
  export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
-  const last = str.pop();
-  return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
+  const last = str.pop()
+  return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`
 }
 
 export function isValidHttpUrl(_url: string) {
@@ -41,10 +41,10 @@ export function isValidHttpUrl(_url: string) {
 
   const urlConstructorTest = (url: string) => {
     try {
-      const value = new URL(url);
-      return value.protocol === "http:" || value.protocol === "https:";
+      const value = new URL(url)
+      return value.protocol === "http:" || value.protocol === "https:"
     } catch (_) {
-      return false;  
+      return false
     } 
   }
    
@@ -54,8 +54,8 @@ export function isValidHttpUrl(_url: string) {
       '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
       '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return !!pattern.test(url);
+      '(\\#[-a-z\\d_]*)?$','i') // fragment locator
+    return !!pattern.test(url)
   }
 
   return urlConstructorTest(_url) && regExTest(_url)

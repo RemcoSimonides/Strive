@@ -3,21 +3,21 @@
  * It currently supports wrapping https, pubsub and firestore handlers.
  * usage: https.onRequest(wrap((req, res) => {...}))
  */
-import type { https } from 'firebase-functions';
-import type { onRequest, onCall } from 'firebase-functions/lib/v1/providers/https';
-import type { ScheduleBuilder } from 'firebase-functions/lib/v1/providers/pubsub';
-import type { DocumentBuilder } from 'firebase-functions/lib/v1/providers/firestore';
-import { addRequestDataToEvent } from '@sentry/serverless';
+import type { https } from 'firebase-functions'
+import type { onRequest, onCall } from 'firebase-functions/lib/v1/providers/https'
+import type { ScheduleBuilder } from 'firebase-functions/lib/v1/providers/pubsub'
+import type { DocumentBuilder } from 'firebase-functions/lib/v1/providers/firestore'
+import { addRequestDataToEvent } from '@sentry/serverless'
  
-type httpsOnRequestHandler = Parameters<typeof onRequest>[0];
-type httpsOnCallHandler = Parameters<typeof onCall>[0];
-type pubsubOnRunHandler = Parameters<ScheduleBuilder['onRun']>[0];
-type firestoreOnWriteHandler = Parameters<DocumentBuilder<''>['onWrite']>[0];
-type firestoreOnUpdateHandler = Parameters<DocumentBuilder<''>['onUpdate']>[0];
-type firestoreOnCreateHandler = Parameters<DocumentBuilder<''>['onCreate']>[0];
-type firestoreOnDeleteHandler = Parameters<DocumentBuilder<''>['onDelete']>[0];
+type httpsOnRequestHandler = Parameters<typeof onRequest>[0]
+type httpsOnCallHandler = Parameters<typeof onCall>[0]
+type pubsubOnRunHandler = Parameters<ScheduleBuilder['onRun']>[0]
+type firestoreOnWriteHandler = Parameters<DocumentBuilder<''>['onWrite']>[0]
+type firestoreOnUpdateHandler = Parameters<DocumentBuilder<''>['onUpdate']>[0]
+type firestoreOnCreateHandler = Parameters<DocumentBuilder<''>['onCreate']>[0]
+type firestoreOnDeleteHandler = Parameters<DocumentBuilder<''>['onDelete']>[0]
 
-type FunctionType = 'http' | 'callable' | 'document' | 'schedule';
+type FunctionType = 'http' | 'callable' | 'document' | 'schedule'
 
 export function getLocationHeaders(req: https.Request): {country?: string; ip?: string} {
    /**
@@ -32,13 +32,13 @@ export function getLocationHeaders(req: https.Request): {country?: string; ip?: 
      req.header('X-Appengine-User-Ip') ||
      req.header('X-Forwarded-For')?.split(',')[0] ||
      req.connection.remoteAddress ||
-     req.socket.remoteAddress;
+     req.socket.remoteAddress
  
    const country =
      req.header('Cf-Ipcountry') ||
      req.header('X-Country-Code') ||
      req.header('X-Appengine-Country');
-   return {ip: ip?.toString(), country: country?.toString()};
+   return {ip: ip?.toString(), country: country?.toString()}
 }
  
 function wrap<A, C>(type: FunctionType, name: string, fn: (a: A) => C | Promise<C>): typeof fn;

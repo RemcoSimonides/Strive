@@ -144,18 +144,18 @@ export class PersonalService extends FireSubCollection<Personal> {
   }
 
   private async registerCapacitor(): Promise<void> {
-    let permStatus = await PushNotifications.checkPermissions();
+    let permStatus = await PushNotifications.checkPermissions()
 
     if (permStatus.receive === 'prompt') {
-      permStatus = await PushNotifications.requestPermissions();
+      permStatus = await PushNotifications.requestPermissions()
     }
   
     if (permStatus.receive !== 'granted') {
-      throw new Error('User denied push notification permission');
+      throw new Error('User denied push notification permission')
     }
 
     // Register with Apple / Google to receive push via APNS/FCM
-    await PushNotifications.register();
+    await PushNotifications.register()
 
     if (Capacitor.getPlatform() === 'ios') {
       const token = await FCM.getToken() // get FCM token instead of APNS
@@ -171,14 +171,14 @@ export class PersonalService extends FireSubCollection<Personal> {
         if (Capacitor.getPlatform() === 'ios') return // Capacitor returns APNS token instead of FCM
         this.addFCMToken(token.value)
       }
-    );
+    )
 
     // Some issue with our setup and push will not work
     PushNotifications.addListener('registrationError',
       (error: any) => {
-        console.log('Error on registration: ' + JSON.stringify(error));
+        console.log('Error on registration: ' + JSON.stringify(error))
       }
-    );
+    )
 
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
@@ -186,7 +186,7 @@ export class PersonalService extends FireSubCollection<Personal> {
         const message = notification?.title || notification?.body || ''
         this.makeToast(message)
       }
-    );
+    )
 
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
@@ -194,7 +194,7 @@ export class PersonalService extends FireSubCollection<Personal> {
         const link: string = notification.notification.data.link
         this.router.navigateByUrl(link)
       }
-    );
+    )
 
   }
 
@@ -225,6 +225,6 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
 
     const toast = await this.toastController.create(options)
-    toast.present();
+    toast.present()
   }
 }

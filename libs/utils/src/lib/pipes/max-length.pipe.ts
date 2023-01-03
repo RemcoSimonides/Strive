@@ -1,19 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { Pipe, PipeTransform } from '@angular/core';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 
 /**
  * Trims a string without cropping the last word if keepLastWordComplete is set to true
  */
 export function trimString(string: string, length: number, keepLastWordComplete?: boolean) {
-  if (!string?.length || string.length <= length) return string;
+  if (!string?.length || string.length <= length) return string
 
-  let trimmedString = string.substr(0, length);
+  let trimmedString = string.substr(0, length)
   if (keepLastWordComplete) {
-    const lastWordIndex = Math.min(trimmedString.length, trimmedString.lastIndexOf(' '));
-    trimmedString = trimmedString.substr(0, lastWordIndex);
+    const lastWordIndex = Math.min(trimmedString.length, trimmedString.lastIndexOf(' '))
+    trimmedString = trimmedString.substr(0, lastWordIndex)
   }
-  return `${trimmedString}...`;
+  return `${trimmedString}...`
 }
 
 /**
@@ -23,7 +23,7 @@ export function trimString(string: string, length: number, keepLastWordComplete?
 @Pipe({ name: 'maxLength' })
 export class MaxLengthPipe implements PipeTransform {
   transform(text: string, length: number, keepLastWordComplete = false) {
-    return trimString(text, length, keepLastWordComplete);
+    return trimString(text, length, keepLastWordComplete)
   }
 }
 

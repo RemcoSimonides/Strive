@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
 
-import { GoalSharePopoverComponent } from './share.component';
+import { GoalSharePopoverComponent } from './share.component'
 
-import { ShareModule } from '@strive/ui/share/share.module';
+import { ShareModule } from '@strive/ui/share/share.module'
 
 @NgModule({
   imports: [

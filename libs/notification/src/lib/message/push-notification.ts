@@ -301,7 +301,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
 
     default:
       throwError(event, 'user')
-      break;
+      break
   }
   return
 }

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { ImageDirective } from './image.directive';
+import { NgModule } from '@angular/core'
+import { ImageDirective } from './image.directive'
 
 @NgModule({
   declarations: [ImageDirective],

@@ -25,7 +25,7 @@ function createScheduledTask(id: string, scheduledTask: Partial<ScheduledTask>) 
   return db.doc(`ScheduledTasks/${id}`).create({
     status: 'scheduled',
     ...scheduledTask,
-  });
+  })
 }
 
 function updateScheduledTask(id: string, _performAt: string | FirebaseFirestore.FieldValue | Date) {

@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule, Routes } from '@angular/router'
+import { IonicModule } from '@ionic/angular'
 
-import { ShellComponent } from './shell.component';
+import { ShellComponent } from './shell.component'
 
 const routes: Routes = [
   {

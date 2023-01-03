@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { TabsComponent } from './tabs.component'
 
-import { ImageModule } from '@strive/media/directives/image.module';
+import { ImageModule } from '@strive/media/directives/image.module'
 
 @NgModule({
     imports: [

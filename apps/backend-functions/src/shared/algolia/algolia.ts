@@ -2,7 +2,7 @@ import * as algoliasearch from 'algoliasearch'
 import { environment } from '@env'
 import { logger } from '../../internals/firebase'
 
-const client: algoliasearch.SearchClient = algoliasearch.default(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY);
+const client: algoliasearch.SearchClient = algoliasearch.default(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY)
 let idx: algoliasearch.SearchIndex
 
 const initAlgoliaIndex = (index: AlgoliaIndex) => {
@@ -48,7 +48,7 @@ export const deleteFromAlgolia = async (index: AlgoliaIndex, objectID: string): 
   })
 }
 
-export type AlgoliaIndex = keyof typeof algoliaIndex;
+export type AlgoliaIndex = keyof typeof algoliaIndex
 
 /** A simple map to access the index name */
 export const algoliaIndex = {

@@ -24,6 +24,6 @@ const config: CapacitorConfig = {
       launchAutoHide: false
     }
   }
-};
+}
 
-export default config;
+export default config

@@ -21,7 +21,7 @@ export const environment = {
     indexNameGoals: 'dev_Goals',
     indexNameUsers: 'dev_Users'
   }
-};
+}
 
 // Firebase Cloud Messaging (https://firebase.google.com/docs/cloud-messaging/js/client#web-v8_1)
 export const vapidKey = "BBB0v4eDUHPpZVwMGCeGlhq09lCk9zMceuKAk4RRKmo6_OO8tPpJFlbPQThZxdnlAvKIa9MCB_0hR5b64CY7aEY"

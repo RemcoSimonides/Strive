@@ -12,7 +12,7 @@ function replaceURLs(value: string) {
       hyperlink = 'http://' + hyperlink
     }
     return '<a href="' + hyperlink + '" target="_blank" rel="noopener noreferrer">' + url + '</a>'
-  });
+  })
 }
 
 @Pipe({ name: 'toHTML' })

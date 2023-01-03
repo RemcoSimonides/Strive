@@ -7,11 +7,11 @@ import { AuthService } from '@strive/user/auth/auth.service'
 import { GoalStakeholder, createGoalStakeholder, createGoal } from '@strive/model'
 
 export interface roleArgs {
-  isAdmin?: boolean;
-  isAchiever?: boolean;
-  isSupporter?: boolean;
-  isSpectator?: boolean;
-  hasOpenRequestToJoin?: boolean;
+  isAdmin?: boolean
+  isAchiever?: boolean
+  isSupporter?: boolean
+  isSpectator?: boolean
+  hasOpenRequestToJoin?: boolean
 }
 
 @Injectable({

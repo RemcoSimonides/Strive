@@ -13,7 +13,7 @@ const routes: Routes = [
     path: '',
     component: FeaturesComponent
   }
-];
+]
 
 @NgModule({
   imports: [

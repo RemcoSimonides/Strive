@@ -1,13 +1,12 @@
 
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Support, SupportStatus } from '@strive/model';
+import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Support, SupportStatus } from '@strive/model'
 
 function getStatusLabel(support: Support) {
   const label: Record<SupportStatus, string> = {
     open: '',
     rejected: 'Rejected',
-    waiting_to_be_paid: 'Waiting to be paid',
-    paid: 'Given'
+    accepted: 'Accepted'
   }
 
   if (support.status === 'open') {

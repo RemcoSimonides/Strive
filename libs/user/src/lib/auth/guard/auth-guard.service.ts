@@ -25,9 +25,9 @@ export class AuthGuardService implements CanActivate {
       tap(loggedIn => {
         if (!loggedIn) {
           // not logged in so redirect to login page with the return url and return false
-          // this.router.navigate(['/'], { queryParams: { returnUrl: state.url }});
+          // this.router.navigate(['/'], { queryParams: { returnUrl: state.url }})
           const home = this.appName === 'journal' ? '/' : '/login'
-          this.router.navigate([home]);
+          this.router.navigate([home])
           return false
         } else {
           return true

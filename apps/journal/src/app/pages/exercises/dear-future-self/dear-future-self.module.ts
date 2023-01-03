@@ -19,7 +19,7 @@ const routes: Routes = [
     path: '',
     component: DearFutureSelfComponent
   }
-];
+]
 
 @NgModule({
   imports: [

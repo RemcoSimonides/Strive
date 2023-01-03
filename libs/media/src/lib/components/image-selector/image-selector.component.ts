@@ -16,20 +16,20 @@ import { captureException, captureMessage } from '@sentry/capacitor'
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
-  const [metadata, content] = data.split(',');
-  const byteString = atob(content);
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
+  const [metadata, content] = data.split(',')
+  const byteString = atob(content)
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
 
   for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
+    ia[i] = byteString.charCodeAt(i)
   }
 
-  const type = metadata.split(';')[0].split(':')[1];
-  return new Blob([ab], { type });
+  const type = metadata.split(';')[0].split(':')[1]
+  return new Blob([ab], { type })
 }
 
-type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
+type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
 @Component({
   selector: '[form][storagePath] media-image-selector',
@@ -52,12 +52,12 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   @Input() form!: AbstractControl<string> | null
   @Input() storagePath!: string
 
-  @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>;
+  @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>
 
   constructor(private toast: ToastController) {}
 
   ngOnInit() {
-    this.resetState();
+    this.resetState()
 
     if (!this.form) return
     this.sub = this.form.valueChanges.pipe(
@@ -71,31 +71,31 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
-    $event?.preventDefault();
+    $event?.preventDefault()
     if ($event?.dataTransfer?.files.length) {
-      this.filesSelected($event.dataTransfer.files);
+      this.filesSelected($event.dataTransfer.files)
     } else {
-      this.resetState();
+      this.resetState()
     }
   }
 
   @HostListener('dragover', ['$event'])
   onDragOver($event: DragEvent) {
-    $event.preventDefault();
-    this.step.next('hovering');
+    $event.preventDefault()
+    this.step.next('hovering')
   }
 
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
-    $event.preventDefault();
-    this.resetState();
+    $event.preventDefault()
+    this.resetState()
   }
 
   private resetState() {
     if (!this.form) return
     if (this.form.value) {
       if (isValidHttpUrl(this.form.value)) {
-        this.previewUrl$.next(this.form.value);
+        this.previewUrl$.next(this.form.value)
         this.step.next('show')
       } else {
         const params: ImageParameters = { w: 1024 }
@@ -110,7 +110,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   imageCropped(event: ImageCroppedEvent) {
     if (!event.base64) return
-    this.croppedImage = event.base64;
+    this.croppedImage = event.base64
   }
 
   async selectImage() {
@@ -140,16 +140,16 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   filesSelected(file: FileList | File) {
-    this.file = Array.isArray(file) ? file[0] : file;
+    this.file = Array.isArray(file) ? file[0] : file
 
     if (this.file?.type?.split('/')[0] !== 'image') {
       this.toast.create({ message: 'Unsupported file type', duration: 3000 })
       return
     }
 
-    this.step.next('crop');
+    this.step.next('crop')
     if (this.fileUploader) {
-      this.fileUploader.nativeElement.value = '';
+      this.fileUploader.nativeElement.value = ''
     }
   }
 
@@ -167,7 +167,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
       })
     }
 
-    this.form.setValue('');
+    this.form.setValue('')
     this.step.next('drop')
   }
 
@@ -189,21 +189,21 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
       this.step.next('show')
 
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
   }
 }
 
 function dataUrlToFile(dataUrl: string, fileName: string) {
-  const arr = dataUrl.split(',');
-  const mime = arr[0].match(/:(.*?);/)?.[1];
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
+  const arr = dataUrl.split(',')
+  const mime = arr[0].match(/:(.*?);/)?.[1]
+  const bstr = atob(arr[1])
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
 
     while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+      u8arr[n] = bstr.charCodeAt(n)
     }
 
-    return new File([u8arr], fileName, { type: mime });
+    return new File([u8arr], fileName, { type: mime })
 }

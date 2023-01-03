@@ -93,7 +93,7 @@ export class ExploreComponent implements OnDestroy {
     this.router.navigate(['.'], {
       queryParams: { t: type },
       relativeTo: this.route
-    });
+    })
     const control = this.searchForm.get('type') as AbstractControl<string>
     control.setValue(type)
   }

@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { Component, Input } from '@angular/core'
+import { PopoverController } from '@ionic/angular'
 
 @Component({
   selector: '[url] goal-share-popover',

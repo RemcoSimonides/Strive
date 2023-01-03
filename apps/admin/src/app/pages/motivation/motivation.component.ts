@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore'
 import { docData } from 'rxfire/firestore'

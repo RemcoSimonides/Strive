@@ -38,7 +38,7 @@ Sentry.init(
     enableNative: false
   },
   SentryAngular.init
-);
+)
 
 @NgModule({
   declarations: [

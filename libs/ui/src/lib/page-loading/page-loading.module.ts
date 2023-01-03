@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular'
 
-import { PageLoadingComponent } from './page-loading.component';
+import { PageLoadingComponent } from './page-loading.component'
 
 @NgModule({
   declarations: [PageLoadingComponent],

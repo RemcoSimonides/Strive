@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { DashboardComponent } from './dashboard.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
+import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AggregationPipeModule } from './dashboard.pipe'
 
 const routes: Routes = [
@@ -13,7 +13,7 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent
   }
-];
+]
 
 @NgModule({
 	imports: [

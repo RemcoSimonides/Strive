@@ -1,4 +1,4 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core'
 import { GoalStakeholder } from '@strive/model'
 
 // export const isCurrentFocus = (stakeholder: GoalStakeholder) => stakeholder.isAchiever && stakeholder.status === 'active'
@@ -6,7 +6,7 @@ import { GoalStakeholder } from '@strive/model'
 @Pipe({ name: 'currentFocus' })
 export class CurrentFocusPipe implements PipeTransform {
   transform(stakeholders: GoalStakeholder[], reverse = false) {
-    return stakeholders;
+    return stakeholders
 		// return stakeholders.filter(s => reverse ? !isCurrentFocus(s) : isCurrentFocus(s))
   }
 }

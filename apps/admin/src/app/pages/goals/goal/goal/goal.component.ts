@@ -67,7 +67,7 @@ export class GoalComponent implements OnInit {
   // async duplicate() {
     // const modal = await this.modalCtrl.create({ component: SelectUserModalComponent })
     // modal.onDidDismiss().then(async res => {
-    //   const uid = res.data as string;
+    //   const uid = res.data as string
     //   if (uid) {
 
     //     const loading = await this.loadingCtrl.create({
@@ -76,18 +76,18 @@ export class GoalComponent implements OnInit {
     //     })
     //     loading.present()
     
-    //     const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal');
+    //     const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal')
     //     const { error, result } = await duplicateGoalFn({ goalId: this.id, uid }).then(res => res.data) as { error: string, result: string }
     
     //     if (!!error) {
-    //       loading.dismiss();
+    //       loading.dismiss()
     //       throw new Error(result)
-    //     };
-    //     this.router.navigateByUrl(`/a/goals/${result}`);
-    //     loading.dismiss();
+    //     }
+    //     this.router.navigateByUrl(`/a/goals/${result}`)
+    //     loading.dismiss()
 
     //   }
     // })
-    // modal.present();
+    // modal.present()
   // }
 }

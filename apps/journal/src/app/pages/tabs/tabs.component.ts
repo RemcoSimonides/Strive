@@ -30,7 +30,7 @@ export class TabsComponent {
       if (uid) return url === `/profile/${uid}`
       return false
     })
-  );
+  )
 
   homeActive$ = this.route$.pipe(
     map(nav => {

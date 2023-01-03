@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common'
 import { Injectable, ApplicationRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { ToastController } from '@ionic/angular'
@@ -8,7 +8,7 @@ import { ReplaySubject, Subscription, first, switchMap, interval } from 'rxjs'
 export class PWAService implements OnDestroy {
 
   // https://web.dev/customize-install/
-  private deferredPrompt: any;
+  private deferredPrompt: any
 
   showInstallPromotion$ = new ReplaySubject<boolean>(1)
 

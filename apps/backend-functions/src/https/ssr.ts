@@ -4,7 +4,7 @@ import { wrapHttpsOnRequestHandler } from '../internals/sentry'
 
 // __non_webpack_require__ ensure webpack uses *require* at runtime
 declare const __non_webpack_require__: any
-const expressApp = __non_webpack_require__(`${__dirname}/dist/apps/journal/server/main`).app();
+const expressApp = __non_webpack_require__(`${__dirname}/dist/apps/journal/server/main`).app()
 
 const config: RuntimeOptions = {
   timeoutSeconds: 60,

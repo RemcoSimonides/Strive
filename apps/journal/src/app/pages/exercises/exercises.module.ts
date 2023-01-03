@@ -33,7 +33,7 @@ const routes: Routes = [
     path: 'dear-future-self',
     loadChildren: () => import('./dear-future-self/dear-future-self.module').then(m => m.DearFutureSelfModule)
   }
-];
+]
 
 @NgModule({
   imports: [

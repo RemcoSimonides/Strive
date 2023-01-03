@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
 
 const routes: Routes = [
   { path: '', loadChildren: () => import('./pages/goals/goals.module').then(m => m.GoalsPageModule) },
@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'exercise', loadChildren: () => import('./pages/exercises/exercises.module').then(m => m.ExercisesModule) },
   { path: 'download', loadChildren: () => import('./pages/download/download.module').then(m => m.DownloadModule) },
   { path: '**', pathMatch: 'full', loadChildren: () => import('./pages/404/404.module').then(m => m.NotfoundModule) },
-];
+]
 
 @NgModule({
   imports: [

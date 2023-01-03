@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core'
 
-import { Clipboard }  from '@capacitor/clipboard';
+import { Clipboard }  from '@capacitor/clipboard'
 
 
 @Component({

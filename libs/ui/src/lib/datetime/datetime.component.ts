@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
-import { IonDatetime, PopoverController } from "@ionic/angular";
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
+import { IonDatetime, PopoverController } from '@ionic/angular'
 
 @Component({
   selector: 'strive-datetime',

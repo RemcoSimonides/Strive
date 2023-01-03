@@ -8,7 +8,7 @@ import { createMilestone, Milestone } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireSubCollection<Milestone> {
-  readonly path = 'Goals/:goalId/Milestones';
+  readonly path = 'Goals/:goalId/Milestones'
   override readonly memorize = true
 
   constructor(private auth: AuthService) {

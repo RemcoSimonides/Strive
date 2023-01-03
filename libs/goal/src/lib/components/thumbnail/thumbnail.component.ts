@@ -5,7 +5,7 @@ import { GoalOptionsComponent } from '../goal-options/goal-options.component'
 import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated'
 
 function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number }[] {
-  const counter: Partial<Record<EventType, number>> = {};
+  const counter: Partial<Record<EventType, number>> = {}
     
   for (const { name } of events) {
     if (!counter[name]) counter[name] = 0;

@@ -20,7 +20,7 @@ import { ProfileService } from '@strive/user/user/profile.service'
 export class FollowingComponent extends ModalDirective {
   spectating$ = this.auth.user$.pipe(
     map(user => {
-      const uid = this.router.url.split('/').pop();
+      const uid = this.router.url.split('/').pop()
       return uid === 'profile' ? user?.uid : uid
     }),
     switchMap(uid => uid ? this.service.getSpectating(uid) : of([])),

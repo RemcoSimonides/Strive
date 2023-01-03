@@ -172,6 +172,6 @@ export class AppComponent implements OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   private onResize(event: any) {
-    this.screensize.onResize(event.target.innerWidth);
+    this.screensize.onResize(event.target.innerWidth)
   }
 }

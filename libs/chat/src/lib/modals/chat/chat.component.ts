@@ -163,16 +163,16 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
 
     if ($event.target.localName != "ion-content") {
       // not sure if this is required, just playing it safe
-      return;
+      return
     }
 
-    const scrollElement = await $event.target.getScrollElement();
+    const scrollElement = await $event.target.getScrollElement()
 
     // minus clientHeight because trigger is scrollTop
     // otherwise you hit the bottom of the page before
     // the top screen can get to 80% total document height
-    const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
-    const currentScrollDepth = $event.detail.scrollTop;
+    const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight
+    const currentScrollDepth = $event.detail.scrollTop
 
     this.scrolledToBottom = scrollHeight < currentScrollDepth + 10
   }

@@ -1,12 +1,12 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions'
+import * as admin from 'firebase-admin'
 
 export const subscribeToTopic = functions.https.onCall(async data => {
-  await admin.messaging().subscribeToTopic(data.token, data.topic);
-  return `subscribed to ${data.topic}`;
-});
+  await admin.messaging().subscribeToTopic(data.token, data.topic)
+  return `subscribed to ${data.topic}`
+})
   
 export const unsubscribeFromTopic = functions.https.onCall(async data => {
-  await admin.messaging().unsubscribeFromTopic(data.token, data.topic);
-  return `unsubscribed from ${data.topic}`;
-});
+  await admin.messaging().unsubscribeFromTopic(data.token, data.topic)
+  return `unsubscribed from ${data.topic}`
+})

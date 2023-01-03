@@ -81,7 +81,7 @@ export class DearFutureSelfComponent {
     if (!this.auth.uid) return
     if (!this.description.dirty || !this.description.value) return
 
-    let deliveryDate: Date;
+    let deliveryDate: Date
     if (this.mode === 'duration') {
       if (!this.duration) return
       deliveryDate = addYears(new Date(), this.duration)

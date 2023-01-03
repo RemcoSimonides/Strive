@@ -1,4 +1,4 @@
-import { environment } from '@env';
+import { environment } from '@env'
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -6,26 +6,26 @@ import { environment } from '@env';
  */
 export interface ImageParameters {
   /** automatic optimization : https://docs.imgix.com/apis/url/auto/auto */
-  auto?: string;
+  auto?: string
   /** resize behavior : https://docs.imgix.com/apis/url/size/fit */
-  fit?: 'clamp' | 'clip' | 'crop' | 'facearea' | 'fill' | 'fillmax' | 'max' | 'min' | 'scale';
+  fit?: 'clamp' | 'clip' | 'crop' | 'facearea' | 'fill' | 'fillmax' | 'max' | 'min' | 'scale'
   /** aspect ratio https://docs.imgix.com/apis/rendering/size/ar */
-  ar?: string;
+  ar?: string
   /** image width : https://docs.imgix.com/apis/url/size/w */
-  w?: number;
+  w?: number
   /** image height : https://docs.imgix.com/apis/url/size/h */
-  h?: number;
+  h?: number
   /** security token : https://github.com/imgix/imgix-blueprint#securing-urls */
-  s?: string;
+  s?: string
   /** PDF page to display : https://docs.imgix.com/apis/rendering/pdf/page */
-  page?: number;
+  page?: number
 }
 
 export function getImgSize(ref?: string) {
   if (ref?.includes('avatar')) {
-    return [50, 100, 300];
+    return [50, 100, 300]
   } else {
-    return [1024];
+    return [1024]
   }
 }
 
@@ -36,15 +36,15 @@ export function getImgSize(ref?: string) {
  *   fit: 'crop',
  *   w: 100,
  *   h: 100
- * };
- * formatParameters(param); // 'fit=crop&w=100&h=100&'
+ * }
+ * formatParameters(param) // 'fit=crop&w=100&h=100&'
  */
 export function formatParameters(parameters: ImageParameters): string {
   const query = Object.entries(parameters)
     .filter(([key, value]) => !!value)
     .map(([key, value]) => `${key}=${value}`)
-    .join('&');
-  return query;
+    .join('&')
+  return query
 }
 
 /**
@@ -53,6 +53,6 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param parameters
  */
 export function getImgIxResourceUrl(storagePath: string, parameters: ImageParameters = {}) {
-  const query = formatParameters(parameters);
-  return `https://${environment.firebase.options.projectId}.imgix.net/${encodeURI(storagePath)}?${query}`;
+  const query = formatParameters(parameters)
+  return `https://${environment.firebase.options.projectId}.imgix.net/${encodeURI(storagePath)}?${query}`
 }

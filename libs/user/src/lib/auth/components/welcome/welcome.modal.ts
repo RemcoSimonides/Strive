@@ -19,7 +19,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WelcomeModalComponent {
-  @ViewChild('swiper') swiper?: SwiperComponent;
+  @ViewChild('swiper') swiper?: SwiperComponent
 
   showIOSHeader$ = combineLatest([
     this.screensize.isMobile$,
@@ -28,8 +28,8 @@ export class WelcomeModalComponent {
     map(([ isMobile, isIOS ]) => isMobile && isIOS)
   )
 
-  showStep1$ = this.personalService.fcmIsSupported;
-  showStep2 = false;
+  showStep1$ = this.personalService.fcmIsSupported
+  showStep2 = false
 
   constructor(
     private modalCtrl: ModalController,

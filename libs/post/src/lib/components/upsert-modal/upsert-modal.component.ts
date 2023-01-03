@@ -111,7 +111,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
         uid: this.auth.uid
       })
 
-      await this.postService.upsert(post, { params: { goalId: post.goalId }});
+      await this.postService.upsert(post, { params: { goalId: post.goalId }})
     }
 
     this.dismiss(true)

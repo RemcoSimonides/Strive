@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { IonicModule } from '@ionic/angular'
 
-import { FollowingComponent } from './following.component';
+import { FollowingComponent } from './following.component'
 
-import { ImageModule } from '@strive/media/directives/image.module';
+import { ImageModule } from '@strive/media/directives/image.module'
 
 @NgModule({
   imports: [

@@ -31,7 +31,7 @@ import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
 const routes: Routes = [
   { path: '', component: ProfileComponent },
-];
+]
 
 @NgModule({
   imports: [

@@ -1,9 +1,9 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { RouterModule } from '@angular/router';
-import { IonicModule } from "@ionic/angular";
+import { CommonModule } from "@angular/common"
+import { NgModule } from "@angular/core"
+import { RouterModule } from '@angular/router'
+import { IonicModule } from "@ionic/angular"
 
-import { PagenotfoundComponent } from './404.component';
+import { PagenotfoundComponent } from './404.component'
 
 import { HeaderModule } from '../header/header.module'
 

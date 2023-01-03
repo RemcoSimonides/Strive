@@ -1,8 +1,8 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { IonicModule } from "@ionic/angular";
+import { CommonModule } from "@angular/common"
+import { NgModule } from "@angular/core"
+import { IonicModule } from "@ionic/angular"
 
-import { SelectUserModalComponent } from './select-user.modal';
+import { SelectUserModalComponent } from './select-user.modal'
 
 @NgModule({
   imports: [

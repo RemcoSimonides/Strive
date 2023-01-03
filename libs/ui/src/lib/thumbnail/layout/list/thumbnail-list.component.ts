@@ -1,13 +1,13 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation, AfterContentInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
-import { Subscription } from 'rxjs';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation, AfterContentInit, ChangeDetectorRef, OnDestroy } from '@angular/core'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { Subscription } from 'rxjs'
 
 export interface IThumbnail {
-  id: string;
-  title: string;
-  image: string;
-  isFinished: boolean;
+  id: string
+  title: string
+  image: string
+  isFinished: boolean
 }
 
 @Component({

@@ -19,7 +19,7 @@ const routes: Routes = [
     path: '',
     component: DailyGratitudeComponent
   }
-];
+]
 
 @NgModule({
   imports: [

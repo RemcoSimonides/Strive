@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Location } from '@angular/common';
-import { SeoService } from "@strive/utils/services/seo.service";
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Location } from '@angular/common'
+import { SeoService } from "@strive/utils/services/seo.service"
 
 @Component({
   selector: 'strive-404',

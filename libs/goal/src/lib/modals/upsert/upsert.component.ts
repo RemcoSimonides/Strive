@@ -40,7 +40,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
     this.goalId = goal.id
   }
 
-  @ViewChild('swiper') swiper?: SwiperComponent;
+  @ViewChild('swiper') swiper?: SwiperComponent
 
   constructor(
     private goalService: GoalService,

@@ -1,10 +1,10 @@
-import { CommonModule } from "@angular/common";
-import { Component, NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { IonicModule } from "@ionic/angular";
-import { HeaderModule } from "@strive/ui/header/header.module";
-import { SeoService } from "@strive/utils/services/seo.service";
-import { PrivacyPolicyModule } from "./privacy-policy.module";
+import { CommonModule } from "@angular/common"
+import { Component, NgModule } from "@angular/core"
+import { RouterModule } from "@angular/router"
+import { IonicModule } from "@ionic/angular"
+import { HeaderModule } from "@strive/ui/header/header.module"
+import { SeoService } from "@strive/utils/services/seo.service"
+import { PrivacyPolicyModule } from "./privacy-policy.module"
 
 @Component({
   selector: 'strive-privacy-policy-page',

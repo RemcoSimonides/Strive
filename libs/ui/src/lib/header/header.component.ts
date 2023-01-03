@@ -1,8 +1,7 @@
-import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
-import { ScreensizeService } from '@strive/utils/services/screensize.service';
+import { Location } from '@angular/common'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { Router } from '@angular/router'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 @Component({
   selector: '[title] strive-header',
@@ -18,13 +17,12 @@ export class HeaderComponent {
 
   constructor(
     private location: Location,
-    private platform: Platform,
     private router: Router,
     public screensize: ScreensizeService
   ) { }
 
   back() {
-    const state = this.location.getState() as { navigationId: number };
+    const state = this.location.getState() as { navigationId: number }
 
     if (state?.navigationId === 1) {
       this.router.navigateByUrl(this.defaultBack)

@@ -42,7 +42,7 @@ export class TeamComponent implements OnInit {
         this.stakeholder.upsert(stakeholder, { params: { goalId: this.id }})
       }
     })
-    modal.present();
+    modal.present()
   }
 
   toggleAdmin(stakeholder: GoalStakeholder, event: Event) {

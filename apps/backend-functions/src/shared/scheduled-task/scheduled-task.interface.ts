@@ -1,7 +1,7 @@
 interface ScheduledTaskBase {
-  worker: enumWorkerType;
-  performAt: FirebaseFirestore.FieldValue | string | Date;
-  status: 'scheduled' | 'complete' | 'error';
+  worker: enumWorkerType
+  performAt: FirebaseFirestore.FieldValue | string | Date
+  status: 'scheduled' | 'complete' | 'error'
 }
 
 export type ScheduledTask =
@@ -23,45 +23,45 @@ export enum enumWorkerType {
 
 export interface ScheduledTaskGoalInviteLinkDeadline extends ScheduledTaskBase {
   options: {
-    goalId: string;
-    inviteTokenId: string;
-  };
+    goalId: string
+    inviteTokenId: string
+  }
 }
 
 export interface ScheduledTaskMilestoneDeadline extends ScheduledTaskBase {
   options: {
-    goalId: string;
-    milestoneId: string;
-  };
+    goalId: string
+    milestoneId: string
+  }
 }
 
 export interface ScheduledTaskGoalDeadline extends ScheduledTaskBase {
   options: {
-    goalId: string;
-  };
+    goalId: string
+  }
 }
 
 export interface ScheduledTaskUserExerciseAffirmations extends ScheduledTaskBase {
   options: {
-    userId: string;
-  };
+    userId: string
+  }
 }
 
 export interface ScheduledTaskUserExerciseDailyGratitude extends ScheduledTaskBase {
   options: {
-    userId: string;
-  };
+    userId: string
+  }
 }
 
 export interface ScheduledTaskUserExerciseDearFutureSelfMessage extends ScheduledTaskBase {
   options: {
-    userId: string;
-    index: number;
-  };
+    userId: string
+    index: number
+  }
 }
 
 export interface ScheduledTaskUserExerciseWheelOfLife extends ScheduledTaskBase {
   options: {
-    userId: string;
+    userId: string
   }
 }

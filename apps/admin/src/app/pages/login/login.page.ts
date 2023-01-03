@@ -15,8 +15,8 @@ import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopu
 })
 export class LoginComponent {
 
-  passwordType = 'password';
-  passwordIcon = 'eye-off-outline';
+  passwordType = 'password'
+  passwordIcon = 'eye-off-outline'
 
   loginForm = new FormGroup({
     email: new FormControl('', { nonNullable: true, validators: [Validators.required]}),

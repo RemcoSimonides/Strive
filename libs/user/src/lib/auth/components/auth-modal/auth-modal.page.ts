@@ -110,10 +110,10 @@ export class AuthModalComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() {
     if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
-      window.history.pushState(null, '', window.location.href);
+      window.history.pushState(null, '', window.location.href)
       this.authSegmentChoice = enumAuthSegment.login
     } else if (this.authSegmentChoice === enumAuthSegment.terms || this.authSegmentChoice === enumAuthSegment.privacy_policy) {
-      window.history.pushState(null, '', window.location.href);
+      window.history.pushState(null, '', window.location.href)
       this.authSegmentChoice = enumAuthSegment.register
     } else {
       this.modalCtrl.dismiss(this.success)
@@ -215,7 +215,7 @@ export class AuthModalComponent implements OnInit {
   }
 
   dismiss(success: boolean) {
-    this.success = success;
+    this.success = success
     this.location.back()
   }
 
@@ -243,7 +243,7 @@ export class AuthModalComponent implements OnInit {
         this.personal.registerFCM()
 
       } catch (error: any) {
-        let message: string;
+        let message: string
         switch (error.code) {
           case 'auth/wrong-password':
             message = 'Wrong password'
@@ -293,7 +293,7 @@ export class AuthModalComponent implements OnInit {
       this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
 
     } catch(error: any) {
-      let message: string;
+      let message: string
       switch (error.code) {
         case 'auth/email-already-in-use':
           message = 'An account with this email already exists'
@@ -348,8 +348,8 @@ export class AuthModalComponent implements OnInit {
   }
 
   hideShowPassword() {
-    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
-    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline';
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text'
+    this.passwordIcon = this.passwordIcon === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline'
   }
 
   private async oAuthLogin(user: User) {

@@ -1,9 +1,9 @@
-import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase';
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType, ScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { Affirmations } from '@strive/model'
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
-import { updateAggregation } from '../../../shared/aggregation/aggregation';
+import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
 export const affirmationsCreatedHandler = onDocumentCreate(`Users/{userId}/Exercises/Affirmations`, 'affirmationsCreatedHandler',
 async (snapshot, context) => {

@@ -29,7 +29,7 @@ export const scheduledTasksRunner = functions({ memory: '2GB' }).pubsub.schedule
 async () => {
 
   // Consistent timestamp
-  const now = admin.firestore.Timestamp.now();
+  const now = admin.firestore.Timestamp.now()
 
   // Query all documents ready to perform
   const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', 'scheduled')
@@ -62,8 +62,8 @@ async () => {
       .catch(async () => {
         if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'error' })
-      });
-      jobs.push(job);
+      })
+      jobs.push(job)
   }
 
 

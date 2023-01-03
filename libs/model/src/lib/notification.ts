@@ -87,7 +87,7 @@ const notificationIcons = [
   'person-remove-outline',
   'close-outline'
 ] as const
-export type NotificationIcons = typeof notificationIcons[number];
+export type NotificationIcons = typeof notificationIcons[number]
 
 export interface NotificationBase {
   id?: string
