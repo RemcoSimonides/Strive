@@ -1,7 +1,7 @@
 import { User } from '@strive/model'
 import { endOfDay } from 'date-fns'
 
-export type MilestoneStatus = 'pending' | 'succeeded' | 'failed' | 'overdue'
+export type MilestoneStatus = 'pending' | 'succeeded' | 'failed'
 
 export interface Subtask {
   completed: boolean
@@ -14,7 +14,7 @@ export interface Milestone {
   content: string
   description: string
   status: MilestoneStatus
-  deadline: string
+  deadline: Date
   achieverId: string
   achiever?: User // joined data
   subtasks: Subtask[]
@@ -25,12 +25,6 @@ export interface Milestone {
   finishedAt?: Date
 }
 
-export interface MilestoneTemplate {
-  id: string
-  description: string
-  deadline: string
-}
-
 /** A factory function that creates a MilestoneDocument. */
 export function createMilestone(params: Partial<Milestone> = {}): Milestone {
   const milestone: Milestone = {
@@ -38,7 +32,7 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     order: params.order ?? 0,
     content: params.content ?? '',
     description: params.description ?? '',
-    deadline: params.deadline ? endOfDay(new Date(params.deadline)).toISOString() : '',
+    deadline: params.deadline ? endOfDay(new Date(params.deadline)) : endOfDay(new Date()),
     status: params.status ?? 'pending',
     achieverId: params.achieverId ?? '',
     subtasks: params.subtasks ?? [],

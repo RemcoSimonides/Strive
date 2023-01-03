@@ -24,10 +24,6 @@ export class MilestoneStatusComponent {
     failed: {
       name: 'close-circle',
       color: 'danger'
-    },
-    overdue: {
-      name: 'radio-button-off',
-      color: 'primary'
     }
   }
 

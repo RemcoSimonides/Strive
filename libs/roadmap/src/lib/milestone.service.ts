@@ -5,6 +5,7 @@ import { toDate, FireSubCollection } from 'ngfire'
 import { AuthService } from '@strive/auth/auth.service'
 
 import { createMilestone, Milestone } from '@strive/model'
+import { endOfDay } from 'date-fns'
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireSubCollection<Milestone> {
@@ -23,17 +24,12 @@ export class MilestoneService extends FireSubCollection<Milestone> {
 
   protected override toFirestore(milestone: Milestone, actionType: 'add' | 'update'): Milestone {
     const timestamp = serverTimestamp() as any
-    if (milestone.deadline) milestone.deadline = this.setDeadlineToEndOfDay(milestone.deadline)
+    if (milestone.deadline) milestone.deadline = endOfDay(milestone.deadline)
     if (actionType === 'add') milestone.createdAt = timestamp
 
     milestone.updatedBy = this.auth.uid
     milestone.updatedAt = timestamp
 
     return milestone
-  }
-
-  private setDeadlineToEndOfDay(deadline: string): string {
-    const date = new Date(deadline)
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
   }
 }

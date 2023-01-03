@@ -57,7 +57,7 @@ async (snapshot, context) => {
     milestoneDeleted(goalId, milestoneId)
   }
 
-  const completed = (before.status === 'pending' || before.status === 'overdue') && (after.status === 'failed' || after.status === 'succeeded')
+  const completed = before.status === 'pending' && (after.status === 'failed' || after.status === 'succeeded')
   if (completed) {
     db.doc(`Goals/${goalId}`).update({
       tasksCompleted: increment(1)
@@ -86,10 +86,6 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
     milestoneId: after.id,
     userId: after.updatedBy
   })
-
-  if (after.status === 'overdue') {
-    addGoalEvent('goalMilestoneDeadlinePassed', source)
-  }
 
   if (after.status === 'succeeded') {
     addGoalEvent('goalMilestoneCompletedSuccessfully', source)

@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular'
 import { DetailsComponent } from './details.component'
 
 import { MilestoneStatusModule } from '../status/status.module'
-import { MilestoneDeadlineModule } from '../deadline/deadline.module'
 import { AssigneeModule } from '../assignee/assignee.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { StoryModule } from '@strive/story/components/story/story.module'
@@ -23,7 +22,6 @@ import { AddSupportModule } from '@strive/support/components/add/add.module'
     ReactiveFormsModule,
 
     MilestoneStatusModule,
-    MilestoneDeadlineModule,
     AssigneeModule,
     SubtaskPipeModule,
     StoryModule,

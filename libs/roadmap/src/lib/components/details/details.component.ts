@@ -252,7 +252,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       componentProps: { minDate, maxDate }
     })
     popover.onDidDismiss().then(({ data, role }) => {
-      const deadline = role === 'remove' ? '' : data ?? ''
+      const deadline = role === 'remove' ? new Date() : data ? new Date(data) : new Date()
 
       this.milestone.deadline = deadline
       this.milestoneService.update({ deadline, id: this.milestone.id }, { params: { goalId: this.goal.id }})  

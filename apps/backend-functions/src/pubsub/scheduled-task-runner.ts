@@ -96,11 +96,9 @@ async function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['option
   addGoalEvent('goalDeadlinePassed', source)
 }
 
-async function milestoneDeadlineHandler(options: ScheduledTaskMilestoneDeadline['options']) {
-  // set status to overdue
-  return db.doc(`Goals/${options.goalId}/Milestones/${options.milestoneId}`).update({
-    status: 'overdue'
-  })
+async function milestoneDeadlineHandler({ goalId, milestoneId }: ScheduledTaskMilestoneDeadline['options']) {
+  const source = createGoalSource({ goalId, milestoneId })
+  addGoalEvent('goalMilestoneDeadlinePassed', source)
 }
 
 async function userExerciseAffirmationsHandler(options: ScheduledTaskUserExerciseAffirmations['options']) {
