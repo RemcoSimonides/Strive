@@ -4,7 +4,7 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  selector: '[goalId] goal-slide-2',
+  selector: '[goalId] strive-goal-slide-2',
   templateUrl: './slide-2.component.html',
   styleUrls: ['./slide-2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

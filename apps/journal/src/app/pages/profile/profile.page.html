@@ -77,7 +77,7 @@
           <ng-container *ngIf="achievingStakeholders.length > 0 else noBucketList">
             <ul>
               <li *ngFor="let stakeholder of achievingStakeholders">
-                <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="(isOwner$ | async) ? stakeholder : undefined" [routerLink]="['/goal/', stakeholder.goal.id]">
+                <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="(isOwner$ | async) ? stakeholder : undefined" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <div>
                     <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
                     <small *ngIf="stakeholder.goal.publicity === 'private'">
@@ -89,7 +89,7 @@
                       <span>{{ stakeholder.goal.numberOfAchievers }} Achiever{stakeholder.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
                     </small>
                   </div>
-                </goal-thumbnail>
+                </strive-goal-thumbnail>
               </li>
             </ul>
 

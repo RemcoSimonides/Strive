@@ -5,7 +5,7 @@ import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 
 @Component({
-  selector: '[goal] goal-slide-4',
+  selector: '[goal] strive-goal-slide-4',
   templateUrl: './slide-4.component.html',
   styleUrls: ['./slide-4.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

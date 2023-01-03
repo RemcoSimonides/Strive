@@ -7,7 +7,7 @@ import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 
 @Component({
-  selector: '[form][goalId] goal-slide-1',
+  selector: '[form][goalId] strive-goal-slide-1',
   templateUrl: './slide-1.component.html',
   styleUrls: ['./slide-1.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

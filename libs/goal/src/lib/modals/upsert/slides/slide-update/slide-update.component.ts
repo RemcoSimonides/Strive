@@ -8,7 +8,7 @@ import { ImageSelectorComponent } from '@strive/media/components/image-selector/
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 
 @Component({
-  selector: '[form][goalId] goal-slide-update',
+  selector: '[form][goalId] strive-goal-slide-update',
   templateUrl: './slide-update.component.html',
   styleUrls: ['./slide-update.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

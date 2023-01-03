@@ -7,7 +7,7 @@ import { GoalService } from '../../goal.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  selector: '[goal][stakeholder] goal-options',
+  selector: '[goal][stakeholder] strive-goal-options',
   templateUrl: './goal-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

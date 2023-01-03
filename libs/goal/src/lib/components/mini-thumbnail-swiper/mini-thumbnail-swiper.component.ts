@@ -20,7 +20,7 @@ function slidesPerView(width: number) {
 }
 
 @Component({
-  selector: 'goal-mini-thumbnail-swiper',
+  selector: 'strive-goal-mini-thumbnail-swiper',
   templateUrl: 'mini-thumbnail-swiper.component.html',
   styleUrls: ['./mini-thumbnail-swiper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

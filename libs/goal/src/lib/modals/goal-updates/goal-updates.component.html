@@ -12,7 +12,7 @@
   
 <ion-content class="ion-padding">
 
-	<goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" (click)="navigateTo(stakeholder.goal.id)">
+	<strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" (click)="navigateTo(stakeholder.goal.id)">
 		<article>
 			<small *ngIf="stakeholder.goal.publicity === 'private'">
 				<ion-icon name="lock-closed-outline"></ion-icon>
@@ -35,7 +35,7 @@
 				<span>Follower</span>
 			</small>
 		</article>
-	</goal-thumbnail>
+	</strive-goal-thumbnail>
     
 </ion-content>
   

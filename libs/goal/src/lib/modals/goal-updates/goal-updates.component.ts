@@ -7,7 +7,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { StakeholderWithGoalAndEvents } from '@strive/model'
 
 @Component({
-  selector: '[stakeholder] goal-updates',
+  selector: '[stakeholder] strive-goal-updates',
   templateUrl: 'goal-updates.component.html',
   styleUrls: ['./goal-updates.component.scss']
 })

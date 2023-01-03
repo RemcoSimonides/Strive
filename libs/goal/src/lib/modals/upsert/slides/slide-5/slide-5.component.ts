@@ -9,7 +9,7 @@ import { createGoal, exercises } from '@strive/model'
 import { captureException, captureMessage } from '@sentry/capacitor'
 
 @Component({
-  selector: '[form][goalId] goal-slide-5',
+  selector: '[form][goalId] strive-goal-slide-5',
   templateUrl: './slide-5.component.html',
   styleUrls: ['./slide-5.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

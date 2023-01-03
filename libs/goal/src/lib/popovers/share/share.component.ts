@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core'
 import { PopoverController } from '@ionic/angular'
 
 @Component({
-  selector: '[url] goal-share-popover',
+  selector: '[url] strive-goal-share-popover',
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })

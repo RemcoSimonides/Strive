@@ -7,7 +7,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Goal } from '@strive/model'
 
 @Component({
-  selector: 'goal-supporting',
+  selector: 'strive-goal-supporting',
   templateUrl: 'supporting.component.html',
   styleUrls: ['./supporting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

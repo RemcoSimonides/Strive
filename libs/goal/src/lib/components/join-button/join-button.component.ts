@@ -6,7 +6,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 @Component({
-  selector: '[goal][stakeholder] goal-join-button',
+  selector: '[goal][stakeholder] strive-goal-join-button',
   templateUrl: './join-button.component.html',
   styleUrls: ['./join-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

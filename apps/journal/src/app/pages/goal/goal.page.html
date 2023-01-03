@@ -34,7 +34,7 @@
     <section class="actions">
     
       <article>
-        <goal-join-button [goal]="goal" [stakeholder]="stakeholder"></goal-join-button>
+        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder"></strive-goal-join-button>
 
         <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
           <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon> 

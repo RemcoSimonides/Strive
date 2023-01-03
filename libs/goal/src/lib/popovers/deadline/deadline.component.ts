@@ -6,7 +6,7 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
 @Component({
-  selector: 'goal-deadline-popover',
+  selector: 'strive-goal-deadline-popover',
   templateUrl: './deadline.component.html',
   styleUrls: ['./deadline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

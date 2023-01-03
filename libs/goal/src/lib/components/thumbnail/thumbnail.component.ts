@@ -16,7 +16,7 @@ function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number
 }
 
 @Component({
-  selector: '[goal] goal-thumbnail',
+  selector: '[goal] strive-goal-thumbnail',
   templateUrl: './thumbnail.component.html',
   styleUrls: ['./thumbnail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

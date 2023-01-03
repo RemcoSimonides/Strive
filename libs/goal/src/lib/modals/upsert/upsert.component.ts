@@ -16,7 +16,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { SwiperComponent } from 'swiper/angular'
 
 @Component({
-  selector: 'goal-upsert',
+  selector: 'strive-goal-upsert',
   templateUrl: './upsert.component.html',
   styleUrls: ['./upsert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

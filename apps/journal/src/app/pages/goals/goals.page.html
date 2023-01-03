@@ -11,10 +11,10 @@
       <main>
         <ng-container *ngIf="achieving$ | async as stakeholders; else loadingSpectating">
           <ng-container *ngIf="stakeholders.length">
-            <goal-mini-thumbnail-swiper
+            <strive-goal-mini-thumbnail-swiper
               [stakeholders]="stakeholders"
               (clicked)="openFollowedGoal($event)">
-            </goal-mini-thumbnail-swiper>
+            </strive-goal-mini-thumbnail-swiper>
           </ng-container>
         </ng-container>
 
@@ -28,7 +28,7 @@
 
             <section class="cards">
               <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
-                <goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
+                <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <div>
                     <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
                     <small *ngIf="stakeholder.goal.publicity === 'private'">
@@ -36,7 +36,7 @@
                       <span>Private</span>
                     </small>
                   </div>
-                </goal-thumbnail>
+                </strive-goal-thumbnail>
               </ng-container>
             </section>
 

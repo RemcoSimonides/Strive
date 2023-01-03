@@ -4,7 +4,7 @@ import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
 @Component({
-  selector: '[form][goalId] goal-slide-3',
+  selector: '[form][goalId] strive-goal-slide-3',
   templateUrl: './slide-3.component.html',
   styleUrls: ['./slide-3.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
