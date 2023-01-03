@@ -3,7 +3,7 @@ import { orderBy } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 import { Observable, of } from 'rxjs'
 import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
-import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { GoalService } from '@strive/goal/goal/goal.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 

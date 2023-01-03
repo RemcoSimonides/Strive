@@ -23,6 +23,7 @@
       "@strive/model": ["libs/model/src/index.ts"],
       "@strive/notification/*": ["libs/notification/src/lib/*"],
       "@strive/post/*": ["libs/post/src/lib/*"],
+      "@strive/roadmap/*": ["libs/roadmap/src/lib/*"],
       "@strive/support/*": ["libs/support/src/lib/*"],
       "@strive/ui/*": ["libs/ui/src/lib/*"],
       "@strive/user/*": ["libs/user/src/lib/*"],

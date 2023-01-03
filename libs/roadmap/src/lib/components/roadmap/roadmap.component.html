@@ -5,7 +5,7 @@
       <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
         <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}">
           <ion-button *ngIf="!createMode" (click)="updateStatus(milestone, $event)" fill="clear" slot="start" class="status-button" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-            <goal-milestone-status slot="icon-only" [milestone]="milestone"></goal-milestone-status>
+            <strive-milestone-status slot="icon-only" [milestone]="milestone"></strive-milestone-status>
           </ion-button>
           <section>
             <span>{{ milestone.content }}</span>
@@ -28,7 +28,7 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.achiever?.uid">
-                <goal-milestone-assignee [achiever]="milestone.achiever!"></goal-milestone-assignee>
+                <strive-milestone-assignee [achiever]="milestone.achiever!"></strive-milestone-assignee>
               </ng-container>
             </article>
           </section>
@@ -44,7 +44,7 @@
       <form [formGroup]="milestoneForm" *ngIf="canEdit">
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
           <ion-button *ngIf="!createMode" fill="clear" slot="start" disabled class="status-button fake-enable">
-            <goal-milestone-status slot="icon-only"></goal-milestone-status>
+            <strive-milestone-status slot="icon-only"></strive-milestone-status>
           </ion-button>
           <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
           <ion-button color="primary" (click)="add()">add</ion-button>
@@ -62,7 +62,7 @@
   <ion-list>
     <ion-item *ngFor="let i of [].constructor(5)">
       <ion-button fill="clear" slot="start" disabled class="status-button fake-enable">
-        <goal-milestone-status slot="icon-only"></goal-milestone-status>
+        <strive-milestone-status slot="icon-only"></strive-milestone-status>
       </ion-button>
 
       <section class="skeleton">

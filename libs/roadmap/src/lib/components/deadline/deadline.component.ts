@@ -4,7 +4,7 @@ import { createGoalStakeholder, Milestone } from '@strive/model'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 @Component({
-  selector: '[milestone] goal-milestone-deadline',
+  selector: '[milestone] strive-milestone-deadline',
   templateUrl: 'deadline.component.html',
   styleUrls: ['./deadline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

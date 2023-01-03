@@ -12,8 +12,8 @@ import { addYears, endOfYear } from 'date-fns'
 
 import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus, groupByObjective, SupportsGroupedByGoal, sortGroupedSupports } from '@strive/model'
 
-import { MilestoneService } from '@strive/goal/milestone/milestone.service'
-import { MilestoneForm, SubtaskForm } from '@strive/goal/milestone/forms/milestone.form'
+import { MilestoneService } from '@strive/roadmap/milestone.service'
+import { MilestoneForm, SubtaskForm } from '@strive/roadmap/forms/milestone.form'
 import { StoryService } from '@strive/goal/story/story.service'
 import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/user/profile.service'
@@ -27,7 +27,7 @@ import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/u
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
 @Component({
-  selector: '[goal][milestone][stakeholder] goal-milestone-details',
+  selector: '[goal][milestone][stakeholder] strive-milestone-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

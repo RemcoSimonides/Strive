@@ -5,9 +5,9 @@ import { createGoalStakeholder, createPost, Goal, MilestoneStatus, Support } fro
 import { serverTimestamp } from 'firebase/firestore'
 
 import { createMilestone, Milestone } from '@strive/model'
-import { MilestoneForm } from '@strive/goal/milestone/forms/milestone.form'
+import { MilestoneForm } from '@strive/roadmap/forms/milestone.form'
 
-import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
@@ -18,7 +18,7 @@ import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/u
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
 @Component({
-  selector: '[goal][milestones][stakeholder] goal-strive-roadmap',
+  selector: '[goal][milestones][stakeholder] strive-roadmap',
   templateUrl: 'roadmap.component.html',
   styleUrls: ['./roadmap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

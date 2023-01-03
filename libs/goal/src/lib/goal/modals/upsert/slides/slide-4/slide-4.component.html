@@ -1,11 +1,11 @@
 <small>Break your goal up in smaller steps (milestones). Start with the end goal in mind, then think backwards which steps need to be taken in order to get to the end.</small>
 
-<goal-strive-roadmap
+<strive-roadmap
   [goal]="goal"
   [milestones]="milestones$ | async"
   [stakeholder]="stakeholder"
   [createMode]="true"
-></goal-strive-roadmap>
+></strive-roadmap>
 
 <footer>
   <ion-button (click)="step('previous')" fill="clear">Previous</ion-button>

@@ -39,6 +39,7 @@
     "model": "libs/model",
     "notification": "libs/notification",
     "post": "libs/post",
+    "roadmap": "libs/roadmap",
     "support": "libs/support",
     "ui": "libs/ui",
     "user": "libs/user",

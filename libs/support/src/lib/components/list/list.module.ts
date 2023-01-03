@@ -11,7 +11,7 @@ import { SupportDetailsModalModule } from '../../modals/details/details.module'
 import { SupportCounterPipeModule } from '../../pipes/count.pipe'
 import { SupportRolePipeModule } from '../../pipes/role.pipe'
 
-import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
+import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
 
 @NgModule({
   imports: [

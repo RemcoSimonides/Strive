@@ -7,7 +7,7 @@ import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
 
 import { StoryService } from '@strive/goal/story/story.service'
 import { ProfileService } from '@strive/user/user/profile.service'
-import { MilestoneService } from '@strive/goal/milestone/milestone.service'
+import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { PostService } from '@strive/post/post.service'
 import { createGoalStakeholder, StoryItem } from '@strive/model'
 

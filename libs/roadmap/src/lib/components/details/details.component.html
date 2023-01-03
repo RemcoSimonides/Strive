@@ -26,7 +26,7 @@
       <form [formGroup]="form">
         <ion-item class="main" lines="none">
           <ion-button (click)="updateStatus()" fill="clear" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-            <goal-milestone-status [milestone]="milestone"></goal-milestone-status>
+            <strive-milestone-status [milestone]="milestone"></strive-milestone-status>
           </ion-button>
           <ion-textarea autoGrow [readonly]="!canEdit" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
         </ion-item>
@@ -44,7 +44,7 @@
       <small class="assignee">
         <ion-icon name="person-outline"></ion-icon>
         <ion-button class="contrast" size="small" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-          <goal-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()"></goal-milestone-assignee>
+          <strive-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()"></strive-milestone-assignee>
         </ion-button>
       </small>
     </section>

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { createMilestone, MilestoneStatus } from '@strive/model'
 
 @Component({
-  selector: 'goal-milestone-status',
+  selector: 'strive-milestone-status',
   templateUrl: 'status.component.html',
   styleUrls: ['./status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

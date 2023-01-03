@@ -10,7 +10,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
-import { MilestonePathPipeModule } from '@strive/goal/milestone/pipes/path.pipe'
+import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
 
 const routes: Routes = [
   {

@@ -15,7 +15,7 @@ import { SlideUpdateComponent } from './slides/slide-update/slide-update.compone
 
 import { SwiperModule } from 'swiper/angular'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
-import { RoadmapModule } from '../../../milestone/components/roadmap/roadmap.module'
+import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
