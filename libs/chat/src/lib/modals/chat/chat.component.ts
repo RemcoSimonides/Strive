@@ -7,7 +7,7 @@ import { joinWith, toDate } from 'ngfire'
 import { BehaviorSubject, firstValueFrom, Observable, of, Subscription } from 'rxjs'
 import { distinctUntilChanged, filter, map, shareReplay, skip, switchMap } from 'rxjs/operators'
 
-import { CommentService } from '@strive/goal/chat/comment.service'
+import { CommentService } from '@strive/chat/comment.service'
 import { GoalStakeholderService } from '@strive/goal/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { AuthService } from '@strive/user/auth/auth.service'
@@ -22,7 +22,7 @@ import { AddSupportModalComponent } from '@strive/support/modals/add/add.compone
 
 
 @Component({
-  selector: '[goal] goal-chat',
+  selector: '[goal] strive-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

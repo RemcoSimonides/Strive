@@ -11,14 +11,14 @@ import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/ope
 // Capacitor
 import { Capacitor } from '@capacitor/core'
 // Date fns
-import { addYears, endOfYear, isEqual, isPast, startOfYear } from 'date-fns'
+import { isEqual, isPast } from 'date-fns'
 // Strive Utils
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options/options.component'
 import { UpsertGoalModalComponent } from '@strive/goal/goal/modals/upsert/upsert.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { ChatModalComponent } from '@strive/goal/chat/modals/chat/chat.component'
+import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 import { FocusModalComponent } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { TeamModalComponent } from '@strive/goal/stakeholder/modals/team/team.modal'

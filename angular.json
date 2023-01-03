@@ -30,6 +30,7 @@
     "admin-e2e": "apps/admin-e2e",
     "backend-functions": "apps/backend-functions",
     "blog": "apps/blog",
+    "chat": "libs/chat",
     "exercises": "libs/exercises",
     "goal": "libs/goal",
     "journal": "apps/journal",
