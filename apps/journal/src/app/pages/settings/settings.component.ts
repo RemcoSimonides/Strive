@@ -7,6 +7,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { PersonalService } from '@strive/user/personal.service'
 import { isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
+import { AppVersionService } from '@strive/utils/services/app-version.service'
 import { getAuth } from 'firebase/auth'
 
 @Component({
@@ -27,6 +28,8 @@ export class SettingsPageComponent {
 
   fcmActive = false
 
+  version = this.versionService.version
+
   constructor(
     private cdr: ChangeDetectorRef,
     private location: Location,
@@ -34,7 +37,8 @@ export class SettingsPageComponent {
     private personalService: PersonalService,
     private platform: Platform,
     private pwa: PWAService,
-    private router: Router
+    private router: Router,
+    private versionService: AppVersionService
   ) {
     this.personalService.fcmActive$.subscribe(value => {
       this.fcmActive = value

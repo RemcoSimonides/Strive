@@ -18,6 +18,7 @@ dependencies {
     implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-community-fcm')
     implementation project(':capacitor-firebase-authentication')
+    implementation project(':capawesome-capacitor-app-update')
     implementation project(':codetrix-studio-capacitor-google-auth')
 
 }

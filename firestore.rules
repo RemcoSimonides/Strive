@@ -16,6 +16,10 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/striveAdmin/$(userId));
     }
 
+    match /meta/version {
+      allow read;
+    }
+
     // collectionGroup query security rules
     match /{path=**}/{collection}/{doc} {
       allow read: if collection == "GStakeholders"

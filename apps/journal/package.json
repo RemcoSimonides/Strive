@@ -11,6 +11,7 @@
     "@capacitor/splash-screen": "^4.1.2",
     "@capacitor-community/fcm": "^3.0.0",
     "@capacitor-firebase/authentication": "^1.2.0",
+    "@capawesome/capacitor-app-update": "^2.0.1",
     "@codetrix-studio/capacitor-google-auth": "^3.2.0"
   }
 }

@@ -20,6 +20,7 @@ def capacitor_pods
   pod 'CapacitorSplashScreen', :path => '../../../../node_modules/@capacitor/splash-screen'
   pod 'CapacitorCommunityFcm', :path => '../../../../node_modules/@capacitor-community/fcm'
   pod 'CapacitorFirebaseAuthentication', :path => '../../../../node_modules/@capacitor-firebase/authentication'
+  pod 'CapawesomeCapacitorAppUpdate', :path => '../../../../node_modules/@capawesome/capacitor-app-update'
   pod 'CodetrixStudioCapacitorGoogleAuth', :path => '../../../../node_modules/@codetrix-studio/capacitor-google-auth'
 end
 

@@ -16,6 +16,7 @@ import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
 import { PersonalService } from '@strive/user/personal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
+import { AppVersionService } from '@strive/utils/services/app-version.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
@@ -88,9 +89,11 @@ export class AppComponent implements OnDestroy {
     public screensize: ScreensizeService,
     private seo: SeoService,
     private support: SupportService,
+    private versionService: AppVersionService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.openModalOnStartup()
+    this.versionService.checkForUpdate()
 
     platform.ready().then(() => {
       this.screensize.onResize(platform.width())

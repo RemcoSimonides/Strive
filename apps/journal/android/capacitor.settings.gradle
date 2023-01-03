@@ -29,5 +29,8 @@ project(':capacitor-community-fcm').projectDir = new File('../../../node_modules
 include ':capacitor-firebase-authentication'
 project(':capacitor-firebase-authentication').projectDir = new File('../../../node_modules/@capacitor-firebase/authentication/android')
 
+include ':capawesome-capacitor-app-update'
+project(':capawesome-capacitor-app-update').projectDir = new File('../../../node_modules/@capawesome/capacitor-app-update/android')
+
 include ':codetrix-studio-capacitor-google-auth'
 project(':codetrix-studio-capacitor-google-auth').projectDir = new File('../../../node_modules/@codetrix-studio/capacitor-google-auth/android')
