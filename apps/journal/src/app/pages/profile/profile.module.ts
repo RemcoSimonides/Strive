@@ -8,8 +8,8 @@ import { IonicModule } from '@ionic/angular'
 import { ProfileComponent } from './profile.page'
 
 // Followers / Followings
-import { FollowingModule } from '@strive/user/spectator/components/following/following.module'
-import { FollowersModule } from '@strive/user/spectator/components/followers/followers.module'
+import { FollowingModule } from '@strive/spectator/components/following/following.module'
+import { FollowersModule } from '@strive/spectator/components/followers/followers.module'
 import { SupportingModule } from '@strive/goal/modals/supporting/supporting.module'
 
 // Strive

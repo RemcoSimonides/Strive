@@ -1,31 +1,33 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { Router } from '@angular/router'
 import { Location } from '@angular/common'
+import { Router } from '@angular/router'
 import { ModalController, Platform } from '@ionic/angular'
 
 import { joinWith } from 'ngfire'
-import { map, switchMap, of } from 'rxjs'
+
+import { map, of, switchMap } from 'rxjs'
+import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 import { SpectatorService } from '../../spectator.service'
-import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { AuthService } from '../../../auth/auth.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({
-  selector: 'user-following',
-  templateUrl: 'following.component.html',
-  styleUrls: ['./following.component.scss'],
+  selector: 'strive-user-followers',
+  templateUrl: 'followers.component.html',
+  styleUrls: ['./followers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FollowingComponent extends ModalDirective {
-  spectating$ = this.auth.user$.pipe(
+export class FollowersComponent extends ModalDirective {
+
+  spectators$ = this.auth.user$.pipe(
     map(user => {
       const uid = this.router.url.split('/').pop()
       return uid === 'profile' ? user?.uid : uid
     }),
-    switchMap(uid => uid ? this.service.getSpectating(uid) : of([])),
+    switchMap(uid => uid ? this.service.getSpectators(uid) : of([])),
     joinWith({
-      profile: spectator => this.profileService.valueChanges(spectator.profileId)
+      profile: spectator => this.profileService.valueChanges(spectator.uid)
     }, { shouldAwait: true })
   )
 

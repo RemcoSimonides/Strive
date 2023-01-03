@@ -13,7 +13,7 @@ import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module
 
 // Services
 import { AuthService } from '@strive/user/auth/auth.service'
-import { SpectatorService } from '@strive/user/spectator/spectator.service'
+import { SpectatorService } from '@strive/spectator/spectator.service'
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 

@@ -5,7 +5,7 @@ import { map } from 'rxjs'
 
 import { Spectator, createSpectator } from '@strive/model'
 
-import { AuthService } from '../auth/auth.service'
+import { AuthService } from '@strive/user/auth/auth.service'
 
 @Injectable({
   providedIn: 'root'
