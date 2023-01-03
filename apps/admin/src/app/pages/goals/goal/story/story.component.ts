@@ -5,7 +5,7 @@ import { joinWith } from 'ngfire'
 import { orderBy } from 'firebase/firestore'
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
 
-import { StoryService } from '@strive/goal/story/story.service'
+import { StoryService } from '@strive/story/story.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { PostService } from '@strive/post/post.service'

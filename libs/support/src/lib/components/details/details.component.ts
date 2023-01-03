@@ -10,7 +10,7 @@ import { StoryItem, Support } from '@strive/model'
 import { SupportService } from '@strive/support/support.service'
 import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/user/profile.service'
-import { StoryService } from '@strive/goal/story/story.service'
+import { StoryService } from '@strive/story/story.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 

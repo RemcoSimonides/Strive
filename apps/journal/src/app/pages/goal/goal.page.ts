@@ -34,7 +34,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { SupportService } from '@strive/support/support.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { StoryService } from '@strive/goal/story/story.service'
+import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder } from '@strive/model'

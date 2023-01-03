@@ -12,7 +12,7 @@ import { GoalSharePopoverModule } from '@strive/goal/goal/popovers/share/share.m
 import { UpsertGoalModalModule } from '@strive/goal/goal/modals/upsert/upsert.module'
 import { TeamModalModule } from '@strive/goal/stakeholder/modals/team/team.module'
 import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
-import { StoryModule } from '@strive/goal/story/components/story/story.module'
+import { StoryModule } from '@strive/story/components/story/story.module'
 import { JoinButtonModule } from '@strive/goal/goal/components/join-button/join-button.module'
 import { FocusModalModule } from '@strive/goal/stakeholder/modals/upsert-focus/upsert-focus.module'
 import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'

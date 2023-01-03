@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular'
 import { StoryComponent } from './story.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
-import { StoryModule as GoalStoryModule } from '@strive/goal/story/components/story/story.module'
+import { StoryModule as GoalStoryModule } from '@strive/story/components/story/story.module'
 
 @NgModule({
   imports: [

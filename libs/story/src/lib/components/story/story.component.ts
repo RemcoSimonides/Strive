@@ -5,7 +5,7 @@ import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
 @Component({
-	selector: '[story][goalId] goal-story',
+	selector: '[story][goalId] strive-story',
 	templateUrl: './story.component.html',
 	styleUrls: ['./story.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush

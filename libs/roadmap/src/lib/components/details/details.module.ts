@@ -9,7 +9,7 @@ import { MilestoneStatusModule } from '../status/status.module'
 import { MilestoneDeadlineModule } from '../deadline/deadline.module'
 import { AssigneeModule } from '../assignee/assignee.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
-import { StoryModule } from '@strive/goal/story/components/story/story.module'
+import { StoryModule } from '@strive/story/components/story/story.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 import { UpsertPostModalModule } from '@strive/post/components/upsert-modal/upsert-modal.module'
 

@@ -143,7 +143,7 @@
     <ng-container *ngIf="story$ | async as story">
       <section *ngIf="canEdit || story.length">
         <h6>Story</h6>
-        <goal-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id"></goal-story>
+        <strive-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id"></strive-story>
       </section>
     </ng-container>
 

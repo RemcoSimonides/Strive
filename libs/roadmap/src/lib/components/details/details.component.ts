@@ -14,7 +14,7 @@ import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createG
 
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { MilestoneForm, SubtaskForm } from '@strive/roadmap/forms/milestone.form'
-import { StoryService } from '@strive/goal/story/story.service'
+import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { AuthService } from '@strive/user/auth/auth.service'
