@@ -11,7 +11,7 @@ import { debounceTime, filter } from 'rxjs/operators'
 import { addYears } from 'date-fns'
 
 import { PostService } from '@strive/post/post.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { PostForm } from '@strive/post/forms/post.form'
 import { createPost, Post } from '@strive/model'
 import { isValidHttpUrl } from '@strive/utils/helpers'

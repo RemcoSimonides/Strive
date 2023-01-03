@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angula
 import { Capacitor } from '@capacitor/core'
 import { ModalController, Platform } from '@ionic/angular'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 

@@ -17,10 +17,10 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 
 import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
 import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.component'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 

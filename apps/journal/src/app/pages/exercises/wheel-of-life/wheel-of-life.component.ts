@@ -7,11 +7,11 @@ import { orderBy } from 'firebase/firestore'
 import { firstValueFrom, map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
 import { Interval } from '@strive/model'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { WheelOfLifeEntryService, WheelOfLifeService } from '@strive/exercises/wheel-of-life/wheel-of-life.service'

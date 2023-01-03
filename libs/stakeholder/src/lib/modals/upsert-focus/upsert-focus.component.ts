@@ -2,7 +2,7 @@ import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core'
 import { ModalController, Platform } from '@ionic/angular'
 import { GoalStakeholder } from '@strive/model'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { debounceTime } from 'rxjs'

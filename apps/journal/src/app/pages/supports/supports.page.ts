@@ -14,10 +14,10 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { SupportService } from '@strive/support/support.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 @Component({

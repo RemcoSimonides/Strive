@@ -4,7 +4,7 @@ import { AlertController, ModalController, PopoverController } from '@ionic/angu
 import { createPost, Goal, GoalStakeholder } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 import { GoalService } from '../../goal.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
   selector: '[goal][stakeholder] goal-options',

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 import { createMilestone, Milestone } from '@strive/model'
 

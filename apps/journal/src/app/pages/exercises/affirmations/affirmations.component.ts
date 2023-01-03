@@ -12,8 +12,8 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
 function timeFormControls() {

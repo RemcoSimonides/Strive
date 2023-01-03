@@ -10,7 +10,7 @@ import { exercises } from '@strive/model'
 import { AlgoliaService  } from '@strive/utils/services/algolia.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
   selector: 'journal-explore',

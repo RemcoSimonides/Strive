@@ -4,7 +4,7 @@ import { toDate, FireSubCollection } from 'ngfire'
 
 import { of, switchMap, map, shareReplay } from 'rxjs'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 import { createSupportBase, SupportBase } from '@strive/model'
 

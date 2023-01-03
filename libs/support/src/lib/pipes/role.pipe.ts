@@ -1,7 +1,7 @@
 
 import { NgModule, Pipe, PipeTransform } from '@angular/core'
 import { Support } from '@strive/model'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Pipe({ name: 'isSupporter' })
 export class IsSupporterPipe implements PipeTransform {

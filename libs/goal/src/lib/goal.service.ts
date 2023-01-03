@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 import { Goal, createGoal, createGoalStakeholder, GoalStakeholder, GoalStakeholderRole, StakeholderWithGoal } from '@strive/model'
 import { getProgress } from './pipes/progress.pipe'

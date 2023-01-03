@@ -7,7 +7,7 @@ import { Message } from '@strive/model'
 import { AES, enc } from 'crypto-js'
 
 import { DearFutureSelfService } from '../../dear-future-self.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
 @Component({

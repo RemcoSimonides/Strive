@@ -16,9 +16,9 @@ import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 

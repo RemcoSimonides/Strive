@@ -5,7 +5,7 @@ import { combineLatest } from 'rxjs'
 import { filter, map, shareReplay, startWith } from 'rxjs/operators'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
 
 @Component({

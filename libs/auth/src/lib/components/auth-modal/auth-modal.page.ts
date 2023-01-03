@@ -38,7 +38,7 @@ export enum enumAuthSegment {
 }
 
 @Component({
-  selector: 'user-auth-modal',
+  selector: 'strive-auth-modal',
   templateUrl: './auth-modal.page.html',
   styleUrls: ['./auth-modal.page.scss'],
 })

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { FocusForm } from '@strive/stakeholder/forms/focus.form'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
   selector: '[goalId] goal-slide-2',

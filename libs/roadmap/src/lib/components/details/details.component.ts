@@ -17,7 +17,7 @@ import { MilestoneForm, SubtaskForm } from '@strive/roadmap/forms/milestone.form
 import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/user/profile.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'

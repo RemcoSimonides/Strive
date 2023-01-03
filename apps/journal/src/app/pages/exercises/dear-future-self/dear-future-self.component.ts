@@ -7,10 +7,10 @@ import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-f
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/components/message/message.component'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal/personal.service'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 import { addDays, addYears, endOfYear, format, isFuture, isPast } from 'date-fns'
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs'

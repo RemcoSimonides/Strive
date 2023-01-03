@@ -3,7 +3,7 @@ import { exercises, ExerciseType } from '@strive/model'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { of, switchMap } from 'rxjs'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ExerciseService, ExerciseSettings } from '@strive/exercises/exercise.service'
 
 @Pipe({ name: 'get' })

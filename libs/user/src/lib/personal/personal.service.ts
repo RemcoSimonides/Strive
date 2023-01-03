@@ -17,7 +17,7 @@ import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
 
 import { Personal } from '@strive/model'
 
-import { AuthService } from '../auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 
 @Injectable({ providedIn: 'root' })

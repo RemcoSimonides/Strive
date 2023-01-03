@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms'
 import { NavParams, PopoverController } from '@ionic/angular'
 
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({

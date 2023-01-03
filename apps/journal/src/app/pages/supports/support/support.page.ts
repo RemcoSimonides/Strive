@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { combineLatest, map, of, switchMap } from 'rxjs'
 
 import { SupportService } from '@strive/support/support.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { createSupportBase } from '@strive/model'
 import { joinWith } from 'ngfire'
 import { GoalService } from '@strive/goal/goal.service'

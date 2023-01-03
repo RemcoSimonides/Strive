@@ -5,7 +5,7 @@ import { limit, orderBy } from 'firebase/firestore'
 import { BehaviorSubject, map, of, switchMap } from 'rxjs'
 import { formatISO } from 'date-fns'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { DailyGratitudeEntryService } from '../../daily-gratitude.service'
 

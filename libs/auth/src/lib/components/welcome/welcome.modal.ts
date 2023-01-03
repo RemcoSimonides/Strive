@@ -7,12 +7,12 @@ import { SwiperComponent } from 'swiper/angular'
 import { combineLatest, map, of } from 'rxjs'
 
 import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
-import { PersonalService } from '../../../personal/personal.service'
+import { PersonalService } from '@strive/user/personal/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 
 @Component({
-  selector: 'user-auth-welcome-modal',
+  selector: 'strive-welcome-modal',
   templateUrl: './welcome.modal.html',
   styleUrls: ['./welcome.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

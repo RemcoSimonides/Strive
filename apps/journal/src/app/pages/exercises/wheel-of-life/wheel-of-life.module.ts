@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular'
 import { WheelOfLifeComponent } from './wheel-of-life.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
-import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
+import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
 
 import { WheelOfLifeEntryModule } from '@strive/exercises/wheel-of-life/components/entry/entry.module'

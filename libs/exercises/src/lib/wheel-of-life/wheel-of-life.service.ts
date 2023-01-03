@@ -8,7 +8,7 @@ import { AES, enc } from 'crypto-js'
 import { WheelOfLifeEntry, WheelOfLifeSettings } from '@strive/model'
 
 import { PersonalService } from '@strive/user/personal/personal.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 
 @Injectable({

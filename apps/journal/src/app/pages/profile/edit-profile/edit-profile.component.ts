@@ -8,10 +8,10 @@ import { take } from 'rxjs/operators'
 import { createUser } from '@strive/model'
 import { UserForm } from '@strive/user/user/forms/user.form'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
 @Component({

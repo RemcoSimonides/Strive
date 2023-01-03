@@ -6,7 +6,7 @@ import { ModalController, Platform } from '@ionic/angular'
 import { orderBy } from 'firebase/firestore'
 import { of, switchMap } from 'rxjs'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 
 import { WheelOfLifeEntry } from '@strive/model'

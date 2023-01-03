@@ -12,7 +12,7 @@ import { isBefore, min } from 'date-fns'
 import { delay } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/pipes/progress.pipe'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal-event.service'
@@ -20,7 +20,7 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
 import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
 import { GoalUpdatesModalComponent } from '@strive/goal/modals/goal-updates/goal-updates.component'
 import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'

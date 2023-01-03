@@ -8,11 +8,11 @@ import { createMilestone, Milestone } from '@strive/model'
 import { MilestoneForm } from '@strive/roadmap/forms/milestone.form'
 
 import { MilestoneService } from '@strive/roadmap/milestone.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { DetailsComponent } from '../details/details.component'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/components/upsert-modal/upsert-modal.component'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[] }

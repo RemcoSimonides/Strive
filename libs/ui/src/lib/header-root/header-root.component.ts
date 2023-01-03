@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { NotificationService } from '@strive/notification/notification.service'
 import { MenuComponent } from '../menu/menu.component'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
   selector: 'strive-header-root',

@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { SettingsPageComponent } from './settings.component'
 
-import { AuthGuardService } from '@strive/user/auth/guard/auth-guard.service'
+import { AuthGuardService } from '@strive/auth/guard/auth-guard.service'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 

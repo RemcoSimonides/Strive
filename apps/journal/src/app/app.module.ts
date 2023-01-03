@@ -21,7 +21,7 @@ import { AppComponent } from './app.component'
 // Pages
 import { TabsModule } from './pages/tabs/tabs.module'
 import { ProfileOptionsBrowserPageModule } from './pages/profile/popovers/profile-options-browser/profile-options-browser.module'
-import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
+import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { PWAService } from '@strive/utils/services/pwa.service'

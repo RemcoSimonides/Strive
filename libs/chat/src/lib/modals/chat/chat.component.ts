@@ -10,14 +10,14 @@ import { distinctUntilChanged, filter, map, shareReplay, skip, switchMap } from 
 import { CommentService } from '@strive/chat/comment.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/user/profile.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 import { Goal, Comment, createComment, GoalStakeholder, createGoalStakeholder } from '@strive/model'
 
 import { delay } from '@strive/utils/helpers'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Location } from '@angular/common'
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 
 

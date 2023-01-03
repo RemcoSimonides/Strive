@@ -28,6 +28,7 @@
   "projects": {
     "admin": "apps/admin",
     "admin-e2e": "apps/admin-e2e",
+    "auth": "libs/auth",
     "backend-functions": "apps/backend-functions",
     "blog": "apps/blog",
     "chat": "libs/chat",

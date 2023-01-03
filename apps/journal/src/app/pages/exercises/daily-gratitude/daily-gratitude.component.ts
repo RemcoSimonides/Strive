@@ -8,9 +8,9 @@ import { addDays, isPast, set } from 'date-fns'
 import { DailyGratitudeService } from '@strive/exercises/daily-gratitude/daily-gratitude.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
-import { AuthModalComponent, enumAuthSegment } from '@strive/user/auth/components/auth-modal/auth-modal.page'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 interface DailyGratitudeSetting {

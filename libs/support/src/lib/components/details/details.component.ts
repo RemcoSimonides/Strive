@@ -12,7 +12,7 @@ import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 import { StoryService } from '@strive/story/story.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
   selector: 'support-details',

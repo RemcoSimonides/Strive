@@ -4,7 +4,7 @@ import { Router, CanActivate } from '@angular/router'
 import { of } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
 
-import { AuthService } from '@strive/user/auth/auth.service'
+import { AuthService } from '@strive/auth/auth.service'
 
 @Injectable({ providedIn: 'root' })
 export class StriveAdminGuard implements CanActivate {

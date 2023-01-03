@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@env": ["environments/environment.ts"],
+      "@strive/auth/*": ["libs/auth/src/lib/*"],
       "@strive/chat/*": ["libs/chat/src/lib/*"],
       "@strive/exercises/*": ["libs/exercises/src/lib/*"],
       "@strive/goal/*": ["libs/goal/src/lib/*"],

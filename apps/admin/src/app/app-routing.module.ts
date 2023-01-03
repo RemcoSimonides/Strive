@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
-import { AuthGuardService } from '@strive/user/auth/guard/auth-guard.service'
+import { AuthGuardService } from '@strive/auth/guard/auth-guard.service'
 import { StriveAdminGuard } from './guards/admin.guard'
 
 const routes: Routes = [
