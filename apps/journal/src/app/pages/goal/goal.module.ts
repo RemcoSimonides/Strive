@@ -8,21 +8,27 @@ import { GoalPageComponent } from './goal.page'
 import { GoalOptionsModule } from './popovers/options/options.module'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 
-import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
 import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/upsert.module'
-import { TeamModalModule } from '@strive/stakeholder/modals/team/team.module'
-import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
-import { StoryModule } from '@strive/story/components/story/story.module'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
+import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
+
+import { TeamModalModule } from '@strive/stakeholder/modals/team/team.module'
 import { FocusModalModule } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.module'
+
+import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
+
+import { StoryModule } from '@strive/story/components/story/story.module'
+
 import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'
+
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/upsert.module'
 
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { PagenotfoundModule } from '@strive/ui/404/404.module'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { DescriptionModule } from '@strive/ui/description/description.module'
-import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'
@@ -58,7 +64,8 @@ const routes: Routes = [
     PagenotfoundModule,
     HeaderRootModule,
     AddOthersModalComponent,
-    DeadlinePopoverSComponent
+    DeadlinePopoverSComponent,
+    UpsertPostModalModule
   ],
   declarations: [GoalPageComponent],
 })

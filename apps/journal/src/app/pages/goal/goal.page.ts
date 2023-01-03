@@ -24,6 +24,7 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { TeamModalComponent } from '@strive/stakeholder/modals/team/team.modal'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -37,7 +38,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 // Strive Interfaces
-import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder } from '@strive/model'
+import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost } from '@strive/model'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -388,6 +389,16 @@ export class GoalPageComponent implements OnDestroy {
     if (!this.stakeholder.isAdmin) return
     if (!this.goal) return
     this.goalService.update(this.goal.id, { status })
+
+    this.modalCtrl.create({
+      component: UpsertPostModalComponent,
+      componentProps: {
+        post: createPost({
+          id: this.goal.id,
+          goalId: this.goal.id
+        })
+      }
+    }).then(modal => modal.present())
   }
 
   handleRequestDecision(stakeholder: GoalStakeholder, isAccepted: boolean, $event: UIEvent) {
