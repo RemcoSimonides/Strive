@@ -12,7 +12,7 @@ import { createGoalStakeholder, GoalStakeholder, User } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalService } from '@strive/goal/goal.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 

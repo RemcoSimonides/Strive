@@ -12,7 +12,7 @@ import { groupByObjective, sortGroupedSupports, SupportsGroupedByGoal } from '@s
 
 import { SeoService } from '@strive/utils/services/seo.service'
 import { SupportService } from '@strive/support/support.service'
-import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalService } from '@strive/goal/goal.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/user/auth/auth.service'
 import { ProfileService } from '@strive/user/user/profile.service'

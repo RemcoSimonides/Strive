@@ -12,7 +12,7 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
 import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
 import { TimeToGoPipeModule } from '@strive/utils/pipes/time-to-go.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { ProgressPipeModule } from '@strive/goal/goal/pipes/progress.pipe'
+import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
 const routes: Routes = [
   {

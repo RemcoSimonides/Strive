@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Router } from '@angular/router'
 import { AlertController } from '@ionic/angular'
 import { Goal } from '@strive/model'
-import { GoalService } from '@strive/goal/goal/goal.service'
-import { GoalForm } from '@strive/goal/goal/forms/goal.form'
+import { GoalService } from '@strive/goal/goal.service'
+import { GoalForm } from '@strive/goal/forms/goal.form'
 import { Observable } from 'rxjs'
-import { serverTimestamp } from 'firebase/firestore'
 
 @Component({
   selector: '[id] strive-goal',

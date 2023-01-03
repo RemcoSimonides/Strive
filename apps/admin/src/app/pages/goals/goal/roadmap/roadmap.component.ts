@@ -4,7 +4,7 @@ import { joinWith } from 'ngfire'
 import { Observable, of } from 'rxjs'
 import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
-import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalService } from '@strive/goal/goal.service'
 import { ProfileService } from '@strive/user/user/profile.service'
 
 @Component({

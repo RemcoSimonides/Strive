@@ -8,8 +8,8 @@ import { captureException } from '@sentry/angular'
 import { BehaviorSubject, combineLatest, map, Observable, of, ReplaySubject, startWith, switchMap } from 'rxjs'
 
 // Components
-import { GoalSharePopoverComponent } from '@strive/goal/goal/popovers/share/share.component'
-import { GoalSharePopoverModule } from '@strive/goal/goal/popovers/share/share.module'
+import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
+import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
 
 // Services
 import { AuthService } from '@strive/user/auth/auth.service'

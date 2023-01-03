@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GoalsPage } from './goals.page';
+import { GoalsComponent } from './goals.page';
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module';
 import { SelectUserModule } from '@strive/ui/select-user/select-user.module';
 
@@ -13,7 +13,7 @@ import { SelectUserModule } from '@strive/ui/select-user/select-user.module';
 const routes: Routes = [
   {
     path: '',
-    component: GoalsPage
+    component: GoalsComponent
   },
   {
     path: ':id',
@@ -30,6 +30,6 @@ const routes: Routes = [
     PageLoadingModule,
     SelectUserModule
   ],
-  declarations: [GoalsPage]
+  declarations: [GoalsComponent]
 })
 export class GoalsPageModule {}

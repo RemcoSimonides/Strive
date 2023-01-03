@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular'
 import { JoinButtonComponent } from './join-button.component'
 
 import { AuthModalModule } from '@strive/user/auth/components/auth-modal/auth-modal.module'
-import { JoinButtonPipeModule } from '@strive/goal/goal/pipes/join-button'
+import { JoinButtonPipeModule } from '../../pipes/join-button'
 
 @NgModule({
   imports: [

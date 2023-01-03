@@ -7,7 +7,7 @@ import { joinWith } from 'ngfire'
 import { Observable, of } from 'rxjs'
 import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 
-import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalService } from '@strive/goal/goal.service'
 import { AffirmationService } from '@strive/exercises/affirmation/affirmation.service'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -15,7 +15,7 @@ import { DailyGratitudeService } from '@strive/exercises/daily-gratitude/daily-g
 
 import { UserForm } from '@strive/user/user/forms/user.form'
 import { Affirmations, createUser, DailyGratitude, DearFutureSelf, exercises, Goal, GoalStakeholder, User } from '@strive/model'
-import { getProgress } from '@strive/goal/goal/pipes/progress.pipe'
+import { getProgress } from '@strive/goal/pipes/progress.pipe'
 import { ProfileService } from '@strive/user/user/profile.service'
 
 type StakeholderWithGoal = GoalStakeholder & { goal: Goal }

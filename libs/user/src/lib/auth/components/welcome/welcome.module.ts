@@ -7,7 +7,7 @@ import { SwiperModule } from 'swiper/angular'
 import { WelcomeModalComponent } from './welcome.modal'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { UpsertGoalModalModule } from '@strive/goal/goal/modals/upsert/upsert.module'
+import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/upsert.module'
 
 
 @NgModule({

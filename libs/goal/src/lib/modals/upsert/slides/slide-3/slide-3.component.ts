@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { GoalService } from '@strive/goal/goal/goal.service';
-import { GoalForm } from '@strive/goal/goal/forms/goal.form';
+import { GoalService } from '@strive/goal/goal.service';
+import { GoalForm } from '@strive/goal/forms/goal.form';
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component';
 
 @Component({

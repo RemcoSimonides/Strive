@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { NavParams, PopoverController, ToggleCustomEvent } from '@ionic/angular'
 import { isPast } from 'date-fns'
 import { createGoal } from '@strive/model'
-import { GoalService } from '@strive/goal/goal/goal.service'
-import { GoalForm } from '@strive/goal/goal/forms/goal.form'
-import { DeadlinePopoverSComponent } from '@strive/goal/goal/popovers/deadline/deadline.component'
+import { GoalService } from '@strive/goal/goal.service'
+import { GoalForm } from '@strive/goal/forms/goal.form'
+import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 
 @Component({
   selector: '[form][goalId] goal-slide-1',

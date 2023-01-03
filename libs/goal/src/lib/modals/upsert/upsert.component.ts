@@ -3,11 +3,11 @@ import { Location } from '@angular/common'
 import { LoadingController, ModalController, Platform } from '@ionic/angular'
 
 //Services
-import { GoalService } from '@strive/goal/goal/goal.service'
+import { GoalService } from '@strive/goal/goal.service'
 
 //Interfaces
 import { createGoal, Goal } from '@strive/model'
-import { GoalForm } from '@strive/goal/goal/forms/goal.form'
+import { GoalForm } from '@strive/goal/forms/goal.form'
 
 // Directives
 import { ModalDirective } from '@strive/utils/directives/modal.directive'

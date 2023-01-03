@@ -11,7 +11,7 @@ import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 
 import { WheelOfLifeEntry } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { UpsertGoalModalComponent } from '@strive/goal/goal/modals/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
 
 
 @Component({

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { orderBy } from 'firebase/firestore';
 import { ModalController } from '@ionic/angular';
-import { GoalService } from '@strive/goal/goal/goal.service';
+import { GoalService } from '@strive/goal/goal.service';
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal';
 
 @Component({
@@ -10,7 +10,7 @@ import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.mod
   styleUrls: ['./goals.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoalsPage {
+export class GoalsComponent {
 
   goals$ = this.goal.valueChanges([orderBy('createdAt', 'desc')]);
 
