@@ -1,6 +1,7 @@
 
 import { NgModule, Pipe, PipeTransform } from '@angular/core'
-import { SupportsGroupedByGoal } from '@strive/model'
+import { AuthService } from '@strive/auth/auth.service'
+import { Support, SupportsGroupedByGoal } from '@strive/model'
 
 @Pipe({ name: 'count' })
 export class SupportCounterPipe implements PipeTransform {
@@ -25,6 +26,44 @@ export class SupportCounterPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'needsDecision' })
+export class NeedsDecisionPipe implements PipeTransform {
+
+  constructor(private auth: AuthService) {}
+
+  transform(goal: SupportsGroupedByGoal, id?: string) {
+    if (!this.auth.uid) return false
+
+    const needsDecision = (support: Support) => {
+      const isSupporter = support.supporterId === this.auth.uid
+      const isRecipient = support.recipientId === this.auth.uid
+
+      if (support.needsDecision && isSupporter) return true
+      if (support.counterNeedsDecision && isRecipient) return true
+      return false
+    }
+    
+    if (goal.id === id) {
+      return goal.supports.some(needsDecision)
+    }
+
+    const milestone = goal.milestones.find(milestone => milestone.id === id)
+    if (milestone) {
+      return milestone.supports.some(needsDecision)
+    }
+
+    const support = goal.supports.find(s => s.id === id)
+    if (support) return needsDecision(support)
+
+    for (const milestone of goal.milestones) {
+      const sup = milestone.supports.find(s => s.id === id)
+      if (sup) return needsDecision(sup)
+    }
+
+    return false
+  }
+}
+
 @Pipe({ name: 'total' })
 export class SupportTotalPipe implements PipeTransform {
   transform(goal: SupportsGroupedByGoal) {
@@ -39,7 +78,7 @@ export class SupportTotalPipe implements PipeTransform {
 }
 
 @NgModule({
-  exports: [SupportCounterPipe, SupportTotalPipe],
-  declarations: [SupportCounterPipe, SupportTotalPipe]
+  exports: [SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe],
+  declarations: [SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe]
 })
 export class SupportCounterPipeModule { } 

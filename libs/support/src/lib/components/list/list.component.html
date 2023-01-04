@@ -7,7 +7,7 @@
   </ion-item>
 
   <ng-container *ngFor="let support of goal.supports; let lastGoalSupport = last; trackBy: trackBy">
-    <ng-container *ngIf="showAll || (goal | count: support.id) <= showAmount">
+    <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount || (goal | needsDecision: goal.id)">
       <article *ngIf="support.counterNeedsDecision && (support | isRecipient)">
         <small>Goal finisheded unsuccessfully. Decide to give '{{ support.counterDescription }}' or not.</small>
         <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
@@ -28,7 +28,7 @@
   </ng-container>
 
   <ng-container *ngFor="let milestone of goal.milestones; let lastMilestone = last; trackBy: trackBy">
-    <ng-container *ngIf="showAll || (goal | count: milestone.id) < showAmount">
+    <ng-container *ngIf="showAll || (goal | count: milestone.id) < showAmount || (goal | needsDecision: milestone.id)">
       <ion-item lines="none" *ngIf="milestoneDescription">
         <ion-label>
           <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }"></ng-container>
@@ -36,7 +36,7 @@
         </ion-label>
       </ion-item>
       <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBy">
-        <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount">
+        <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount || (goal | needsDecision: support.id)">
           <article *ngIf="support.counterNeedsDecision && (support | isRecipient)">
             <small>Milestone has been completed unsuccessfully. Decide to give '{{ support.counterNeedsDecision }}' or not.</small>
             <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>

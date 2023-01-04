@@ -94,5 +94,11 @@ export function sortGroupedSupports(supports: SupportsGroupedByGoal[]): Supports
 }
 
 function sortSupports(supports: Support[]): Support[] {
-  return supports.sort((a, b) => compareDesc(a.createdAt, b.createdAt))
+  return supports
+    .sort((a, b) => compareDesc(a.createdAt, b.createdAt))
+    .sort((a, b) => {
+      if (a.status === 'open' && b.status !== 'open') return -1
+      if (a.status !== 'open' && b.status === 'open') return 1
+      return 0
+    })
 }
