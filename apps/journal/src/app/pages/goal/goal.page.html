@@ -105,7 +105,7 @@
             <ng-container *ngIf="stakeholder.isAdmin; else privacyNoAdmin">
               <ion-select placeholder="Select Privacy" interface="popover" [value]="goal.publicity" (ionChange)="updatePrivacy($event, goal)">
                 <ion-select-option value="public">Everyone can access</ion-select-option>
-                <ion-select-option value="private">Invites only</ion-select-option>
+                <ion-select-option value="private">Only invited users</ion-select-option>
               </ion-select>
             </ng-container>
             <ng-template #privacyNoAdmin>
