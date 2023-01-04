@@ -174,7 +174,7 @@
     </ng-container>
 
     <ng-container *ngIf="goal.description || stakeholder.isAdmin">
-      <strive-description [value]="goal.description" [canEdit]="stakeholder.isAdmin" (onUpdate)="updateDescription($event)"></strive-description>
+      <strive-description [value]="goal.description" [canEdit]="stakeholder.isAdmin" (updated)="updateDescription($event)"></strive-description>
     </ng-container>
 
     <section>

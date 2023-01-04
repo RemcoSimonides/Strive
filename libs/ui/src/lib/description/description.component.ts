@@ -9,7 +9,7 @@ import { FormControl, Validators } from '@angular/forms'
 })
 export class DescriptionComponent implements OnInit {
 
-	@Output() onUpdate = new EventEmitter<string>()
+	@Output() updated = new EventEmitter<string>()
 
 	private _value!: string
 	get value() { return this._value }
@@ -35,6 +35,6 @@ export class DescriptionComponent implements OnInit {
 		if (this.description.invalid) return
 		if (this.description.value === this.value) return
 
-		this.onUpdate.emit(this.description.value)
+		this.updated.emit(this.description.value)
 	}
 }

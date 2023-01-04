@@ -145,7 +145,11 @@ ion-card.finish {
   }
 }
 
-strive-description, strive-roadmap  {
+strive-description {
+  margin-block: 16px;
+}
+
+strive-roadmap  {
   margin-block: 32px; 
 }
 

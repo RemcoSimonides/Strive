@@ -26,7 +26,7 @@
 					<ion-button (click)="delete()" color="warning">Delete</ion-button>
 				</div>
 
-				<strive-description [value]="goal.description" [canEdit]="true" (onUpdate)="updateDescription($event)"></strive-description>
+				<strive-description [value]="goal.description" [canEdit]="true" (updated)="updateDescription($event)"></strive-description>
 			</form>
 		</ion-card-content>
 	</ion-card>

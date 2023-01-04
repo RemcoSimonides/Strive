@@ -1,31 +1,21 @@
 <ng-container *ngIf="value; else noValue">
 	<ng-container *ngIf="!editMode else edit">
-		<section>
-			<article [innerHTML]="value | toHTML"></article>
-			<ion-button fill="clear" (click)="editMode = true" size="small" *ngIf="canEdit">
-				<ion-icon name="pencil-outline" slot="start"></ion-icon>
-				<span>Edit description</span>
-			</ion-button>
-		</section>
+		<article [innerHTML]="value | toHTML" (click)="canEdit ? editMode = true : undefined"></article>
 	</ng-container>
 </ng-container>
 <ng-template #noValue>
 	<ng-container *ngIf="canEdit">
 		<ng-container *ngIf="!editMode else edit">
-			<ion-button fill="clear" (click)="editMode = true" size="small">
-				<ion-icon name="pencil-outline" slot="start"></ion-icon>
-				<span>Add short description...</span>
-			</ion-button>
+			<i (click)="editMode = true">
+				Add short description...
+			</i>
 		</ng-container>
 	</ng-container>
 </ng-template>
 
 <ng-template #edit>
 	<ion-item>
-		<ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow autocapitalize="sentences"></ion-textarea>
-		<ion-button color="primary" slot="end" (click)="update()">
-			<ion-icon name="save-outline" slot="start"></ion-icon>
-			<span>SAVE</span>
-		</ion-button>
+		<ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow autocapitalize="sentences" placeholder="..." autofocus="true"></ion-textarea>
+		<ion-button (click)="update()" color="primary" slot="end" fill="clear">SAVE</ion-button>
 	</ion-item>
 </ng-template>

@@ -8,25 +8,18 @@ ion-item {
 
 	ion-button {
 		margin-top: auto;
-		margin-bottom: 16px;
+		margin-bottom: 8px;
 	}
 }
 
-section {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+i {
+	color: var(--ion-color-medium);
+}
 
-	article {
-		color: var(--ion-color-medium);
-		white-space: pre-line;
-		-webkit-user-select: text;
-		-moz-user-select: text;
-		-ms-user-select: text;
-		user-select: text;		  
-	}
-
-	ion-button {
-		width: fit-content;
-	}
+article {
+	color: var(--ion-color-medium);
+	white-space: pre-line;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
 }
