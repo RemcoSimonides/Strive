@@ -34,7 +34,7 @@
     <section class="actions">
     
       <article>
-        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder$ | async"></strive-goal-join-button>
+        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"></strive-goal-join-button>
 
         <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
           <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon> 
@@ -74,36 +74,66 @@
       <div class="info">
         <ul class="properties">
       
-          <li (click)="openTeamModal()" class="clickable">
+          <li (click)="openTeamModal('isAchiever')" class="clickable">
             <ion-icon name="flag"></ion-icon>
-            <div>
-              <b>{{ goal.numberOfAchievers ?? 0 }}</b>
-              <span> Achievers</span>
-            </div>
+            <ng-container *ngIf="stakeholder.isAchiever">
+              <ng-container *ngIf="goal.numberOfAchievers > 1">
+              <span><b>You</b> and <b>{{ goal.numberOfAchievers - 1 ?? 0 }}</b> other {{ goal.numberOfAchievers === 2 ? 'achiever' : 'achievers' }}</span>
+              </ng-container>
+              <ng-container *ngIf="goal.numberOfAchievers === 1">
+                <span><b>You</b> achieve</span>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!stakeholder.isAchiever">
+              <span><b>{{ goal.numberOfAchievers ?? 0 }}</b> {{ goal.numberOfAchievers === 1 ? 'Achiever' : 'Achievers' }}</span>
+            </ng-container>
           </li>
       
-          <li (click)="openTeamModal()" class="clickable">
+          <li (click)="openTeamModal('isSupporter')" class="clickable">
             <ion-icon src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
-            <div>
-              <b>{{ goal.numberOfSupporters ?? 0 }}</b>
-              <span> Supporters</span>
-            </div>
+            <ng-container *ngIf="stakeholder.isSupporter">
+              <ng-container *ngIf="goal.numberOfSupporters > 1">
+                <span><b>You</b> and <b>{{ goal.numberOfSupporters - 1 ?? 0 }}</b> other {{ goal.numberOfSupporters === 2 ? 'supporter' : 'supporters' }}</span>
+              </ng-container>
+              <ng-container *ngIf="goal.numberOfSupporters === 1">
+                <span><b>You</b> support</span>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!stakeholder.isSupporter">
+              <span><b>{{ goal.numberOfSupporters ?? 0 }}</b> {{ goal.numberOfSupporters === 1 ? 'Supporter' : 'Supporters' }}</span>
+            </ng-container>
           </li>
 
-          <li (click)="openTeamModal()" class="clickable">
-            <ion-icon name="star"></ion-icon>
-            <div>
-              <b>{{ goal.numberOfSpectators ?? 0 }}</b>
-              <span> Followers</span>
-            </div>
+          <li (click)="openTeamModal('isSpectator')" class="clickable">
+            <ion-icon name="notifications"></ion-icon>
+            <ng-container *ngIf="stakeholder.isSpectator">
+              <ng-container *ngIf="goal.numberOfSpectators > 1">
+                <span><b>You</b> and <b>{{ goal.numberOfSpectators - 1 ?? 0 }}</b> other {{ goal.numberOfSpectators === 2 ? 'follower' : 'followers' }}</span>
+              </ng-container>
+              <ng-container *ngIf="goal.numberOfSpectators === 1">
+                <span><b>You</b> follow</span>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!stakeholder.isSpectator">
+              <span><b>{{ goal.numberOfSpectators ?? 0 }}</b> {{ goal.numberOfSpectators === 1 ? 'Follow' : 'Followers' }}</span>
+            </ng-container>
           </li>
+
+          <ng-container *ngIf="collectiveStakeholders$ | async as stakeholders">
+            <ng-container *ngIf="stakeholders.length">
+              <li (click)="openCollectiveGoals(stakeholders)" class="clickable">
+                <ion-icon name="link"></ion-icon>
+                <span><b>{{ stakeholders.length }}</b> connected {{ stakeholders.length === 1 ? 'goal' : 'goals' }} </span>
+              </li>
+            </ng-container>
+          </ng-container>
       
           <!-- Privacy -->
           <li>
             <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>
             <span>Access:</span>
             <ng-container *ngIf="stakeholder.isAdmin; else privacyNoAdmin">
-              <ion-select placeholder="Select Privacy" interface="popover" [value]="goal.publicity" (ionChange)="updatePrivacy($event, goal)">
+              <ion-select placeholder="Select Privacy" interface="popover" [value]="goal.publicity" (ionChange)="updatePrivacy($event, goal)" class="clickable">
                 <ion-select-option value="public">Everyone can access</ion-select-option>
                 <ion-select-option value="private">Only invited users</ion-select-option>
               </ion-select>
@@ -115,16 +145,15 @@
       
           <!-- Deadline -->
           <li *ngIf="goal.deadline"
-            [ngStyle]="{ 'color': isOverdue(goal.deadline) && goal.status === 'pending' ? 'var(--ion-color-danger-tint)' : ''}"
+            [ngStyle]="{
+              'color': isOverdue(goal.deadline) && goal.status === 'pending' ? 'var(--ion-color-danger-tint)' : '',
+              'clickable': stakeholder.isAchiever
+            }"
             (click)="openDatePicker($event)"
           >
             <ion-icon name="timer-outline"></ion-icon>
-            <div>
-              <div>
-                <span>End date: </span>
-                <b>{{ goal.deadline | date:'fullDate' }}</b>
-              </div>
-            </div>
+            <span>End date: </span>
+            <b>{{ goal.deadline | date:'fullDate' }}</b>
           </li>
       
         </ul>
@@ -173,9 +202,6 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="goal.collectiveGoalId">
-      <strive-collective-stakeholders-list [goal]="goal"></strive-collective-stakeholders-list>
-    </ng-container>
 
     <ng-container *ngIf="goal.description || stakeholder.isAdmin">
       <strive-description [value]="goal.description" [canEdit]="stakeholder.isAdmin" (updated)="updateDescription($event)"></strive-description>

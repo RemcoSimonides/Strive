@@ -1,6 +1,12 @@
-import { GoalPublicityType } from './goal'
+import { Goal, GoalPublicityType } from './goal'
+import { User } from './user'
 
 export type GoalStakeholderRole = 'isAdmin' | 'isAchiever' | 'isSupporter' | 'isSpectator'
+
+export interface Stakeholder extends GoalStakeholder {
+  profile?: User
+  goal?: Goal
+}
 
 export interface GoalStakeholder {
   uid: string

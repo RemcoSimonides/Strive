@@ -25,6 +25,7 @@ import { TeamModalComponent } from '@strive/stakeholder/modals/team/team.modal'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
+import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -38,7 +39,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 // Strive Interfaces
-import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost } from '@strive/model'
+import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -74,7 +75,8 @@ export class GoalPageComponent implements OnDestroy {
   stakeholder = createGoalStakeholder()
   stakeholder$: Observable<GoalStakeholder>
 
-  collectiveStakeholder$: Observable<GoalStakeholder | undefined>
+  collectiveStakeholder: GoalStakeholder | undefined
+  collectiveStakeholders$: Observable<Stakeholder[]>
 
   story$: Observable<StoryItem[]>
 
@@ -154,20 +156,20 @@ export class GoalPageComponent implements OnDestroy {
       })
     )
 
-    this.collectiveStakeholder$ = combineLatest([
-      this.goal$,
-      this.auth.profile$
-    ]).pipe(
-      switchMap(([ goal, profile ]) => {
-        if (!goal?.collectiveGoalId || !profile) return of(undefined)
+    this.collectiveStakeholders$ = this.goal$.pipe(
+      switchMap(goal => {
+        if (!goal) return of([])
         const query = [
-          where('uid', '==', profile.uid),
           where('collectiveGoalId', '==', goal.collectiveGoalId),
           where('isAchiever', '==', true)
         ]
         return this.stakeholderService.valueChanges(query).pipe(
           map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goalId !== goal.id)),
-          map(stakeholders => stakeholders.length ? stakeholders[0] : undefined)
+          tap(stakeholders => this.collectiveStakeholder = stakeholders.find(stakeholder => stakeholder.uid === this.auth.uid)),
+          joinWith({
+            profile: stakeholder => this.profileService.valueChanges(stakeholder.uid),
+            goal: stakeholder => this.goalService.valueChanges(stakeholder.goalId)
+          }, { shouldAwait: true })
         )
       })
     )
@@ -350,12 +352,27 @@ export class GoalPageComponent implements OnDestroy {
   }
 
 
-  openTeamModal() {
+  openTeamModal(role?: keyof GoalStakeholder) {
     if (!this.goal?.id) return
 
     this.modalCtrl.create({
       component: TeamModalComponent,
-      componentProps: { goalId: this.goal.id }
+      componentProps: { 
+        goalId: this.goal.id,
+        role: role ? role : null
+      }
+    }).then(modal => modal.present())
+  }
+
+  openCollectiveGoals(stakeholders: GoalStakeholder[]) {
+    if (!this.goal?.id) return
+
+    this.modalCtrl.create({
+      component: CollectiveGoalsModalSComponent,
+      componentProps: { 
+        goal: this.goal,
+        stakeholders
+      }
     }).then(modal => modal.present())
   }
 
@@ -451,7 +468,8 @@ export class GoalPageComponent implements OnDestroy {
     this.modalCtrl.create({
       component: ChatModalComponent,
       componentProps: {
-        goal: this.goal
+        goal: this.goal,
+        collectiveStakeholder: this.collectiveStakeholder
       }
     }).then(modal => modal.present())
   }

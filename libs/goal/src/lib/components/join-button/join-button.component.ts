@@ -1,14 +1,24 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController, IonPopover, ModalController } from '@ionic/angular'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { createGoalStakeholder, Goal, GoalStakeholder } from '@strive/model'
+import { Goal, GoalStakeholder } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { BehaviorSubject } from 'rxjs'
+
+@Pipe({ name: 'joinButtonText', standalone: true })
+export class JoinButtonTextSPipe implements PipeTransform {
+  transform(stakeholder: GoalStakeholder, collectiveGoalStakeholder?: GoalStakeholder) {
+    if (stakeholder.isAchiever) return 'JOINED'
+    if (stakeholder.hasOpenRequestToJoin) return 'CANCEL REQUEST'
+    if (collectiveGoalStakeholder?.isAchiever) return 'JOINED'
+    return 'JOIN'
+  }
+}
 
 @Component({
   selector: '[goal][stakeholder] strive-goal-join-button',
@@ -18,25 +28,13 @@ import { BehaviorSubject } from 'rxjs'
 })
 export class JoinButtonComponent {
 
-  private _collectiveStakeholder = createGoalStakeholder()
-
   status$ = new BehaviorSubject<'choose' | 'creating' | 'created' | 'requested'>('choose')
 
   @Input() goal!: Goal
   @Input() stakeholder!: GoalStakeholder
-  @Input() set collectiveStakeholder(stakeholder: GoalStakeholder | undefined) {
-    if (!stakeholder) {
-      this._collectiveStakeholder = createGoalStakeholder()
-      return
-    }
-
-    if (stakeholder.isAchiever) this.stakeholder.isAchiever = true
-    this._collectiveStakeholder = stakeholder
-  }
+  @Input() collectiveStakeholder?: GoalStakeholder
 
   @ViewChild(IonPopover) popover?: IonPopover
-
-  creating = false
 
   constructor(
     private alertCtrl: AlertController,
@@ -84,15 +82,15 @@ export class JoinButtonComponent {
       }).then(alert => alert.present())
     }
 
+    if (this.collectiveStakeholder?.isAchiever) {
+      this.router.navigate(['/goal', this.collectiveStakeholder.goalId])
+      return
+    }
+
     if (!isAchiever && !hasOpenRequestToJoin) {
       if (!this.popover) throw new Error('Popover undfined') 
       this.popover.onDidDismiss().then(() => this.status$.next('choose'))
       this.popover?.present()
-      return
-    }
-
-    if (this._collectiveStakeholder.isAchiever) {
-      this.router.navigate(['/goal', this._collectiveStakeholder.goalId])
       return
     }
 

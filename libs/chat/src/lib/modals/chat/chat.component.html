@@ -43,7 +43,7 @@
 	<ng-template #noAccess>
 		<section>
 			<p>In order to chat, you need to</p>
-			<strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder"></strive-goal-join-button>
+			<strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"></strive-goal-join-button>
 			<p>or</p>
 			<ion-button (click)="support()" class="secondary">
 				<ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>

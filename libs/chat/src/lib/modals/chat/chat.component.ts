@@ -30,6 +30,7 @@ import { AddSupportModalComponent } from '@strive/support/modals/add/add.compone
 export class ChatModalComponent extends ModalDirective implements OnInit, OnDestroy {
   @ViewChild(IonContent) contentArea?: IonContent
   @Input() goal!: Goal
+  @Input() collectiveStakeholder?: GoalStakeholder
 
   stakeholder$?: Observable<GoalStakeholder>
 

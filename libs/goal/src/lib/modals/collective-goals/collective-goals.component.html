@@ -1,0 +1,30 @@
+<ion-header mode="md">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="primary">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <small>These people are striving for the same goal. Each with their own Roadmap and Story.</small>
+
+  <ion-list mode="md">
+    <ng-container *ngFor="let stakeholder of stakeholders; let last = last">
+      <ion-item [lines]="last ? 'none' : 'inset'" button (click)="navTo(stakeholder.goalId)">
+        <ion-avatar slot="start" (click)="navTo(stakeholder.goalId)">
+          <img [ref]="stakeholder.profile?.photoURL" asset="profile.png"/>
+        </ion-avatar>
+        <ion-label>
+          <article>
+            <b>{{ stakeholder.profile?.username }}</b>
+            <ion-progress-bar color="primary" [value]="goal | progress"></ion-progress-bar>
+          </article>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+</ion-content>

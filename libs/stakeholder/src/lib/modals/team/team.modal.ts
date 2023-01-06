@@ -31,6 +31,7 @@ function isTeamMember({ isAdmin, isAchiever, isSupporter, isSpectator }: GoalSta
 })
 export class TeamModalComponent extends ModalDirective implements OnInit {
   @Input() goalId!: string
+  @Input() role: keyof GoalStakeholder | null = null
 
   you$?: Observable<GoalStakeholder & { profile: User }>
   hasOthers$?: Observable<boolean>
@@ -54,6 +55,8 @@ export class TeamModalComponent extends ModalDirective implements OnInit {
   }
 
   ngOnInit() {
+    this.filter.setValue(this.role)
+
     const stakeholders$ = combineLatest([
       this.auth.user$,
       this.stakeholder.valueChanges({ goalId: this.goalId }).pipe(
