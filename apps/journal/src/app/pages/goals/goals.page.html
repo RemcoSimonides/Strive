@@ -11,10 +11,19 @@
       <main>
         <ng-container *ngIf="achieving$ | async as stakeholders; else loadingSpectating">
           <ng-container *ngIf="stakeholders.length">
-            <strive-goal-mini-thumbnail-swiper
-              [stakeholders]="stakeholders"
-              (clicked)="openFollowedGoal($event)">
-            </strive-goal-mini-thumbnail-swiper>
+            <strive-mini-thumbnail-swiper>
+              <ng-container *ngFor="let stakeholder of stakeholders">
+                <ng-template #thumb>
+                  <article (click)="openFollowedGoal(stakeholder)" class="thumb">
+                    <ion-thumbnail>
+                      <img [ref]="stakeholder.goal.image" asset="goal.png"/>
+                    </ion-thumbnail>
+                    <small>{{ stakeholder.goal.title }}</small>
+                    <ion-badge color="primary" *ngIf="stakeholder.events.length">{{ stakeholder.events.length }}</ion-badge>
+                  </article>
+                </ng-template>
+              </ng-container>
+            </strive-mini-thumbnail-swiper>
           </ng-container>
         </ng-container>
 

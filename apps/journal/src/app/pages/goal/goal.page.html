@@ -34,7 +34,7 @@
     <section class="actions">
     
       <article>
-        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder"></strive-goal-join-button>
+        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder$ | async"></strive-goal-join-button>
 
         <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
           <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon> 
@@ -109,7 +109,7 @@
               </ion-select>
             </ng-container>
             <ng-template #privacyNoAdmin>
-              <span>&nbsp;<b>{{ goal.publicity === 'public' ? 'Everyone can access' : 'Invites only' }}</b></span>
+              <span><b>{{ goal.publicity === 'public' ? 'Everyone can access' : 'Invites only' }}</b></span>
             </ng-template>
           </li>
       
@@ -171,6 +171,10 @@
           </ion-item>
         </ion-list>
       </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="goal.collectiveGoalId">
+      <strive-collective-stakeholders-list [goal]="goal"></strive-collective-stakeholders-list>
     </ng-container>
 
     <ng-container *ngIf="goal.description || stakeholder.isAdmin">

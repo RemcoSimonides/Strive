@@ -13,6 +13,7 @@ export interface GoalStakeholder {
   focus: Focus
   goalId: string
   goalPublicity: GoalPublicityType
+  collectiveGoalId: string
   lastCheckedGoal: Date
   lastCheckedChat: Date
   updatedBy?: string
@@ -39,6 +40,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     focus: createFocus(params.focus),
     goalId: '',
     goalPublicity: 'private',
+    collectiveGoalId: '',
     lastCheckedGoal: new Date(),
     lastCheckedChat: new Date(),
     ...params

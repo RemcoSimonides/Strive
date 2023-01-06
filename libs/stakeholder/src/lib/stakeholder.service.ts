@@ -44,7 +44,8 @@ export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
       stakeholder = createGoalStakeholder({
         ...stakeholder,
         createdAt: timestamp,
-        goalPublicity: goal.id ? goal.publicity : stakeholder.goalPublicity
+        goalPublicity: goal.id ? goal.publicity : stakeholder.goalPublicity,
+        collectiveGoalId: goal.collectiveGoalId ? goal.collectiveGoalId : ''
       })
     }
 

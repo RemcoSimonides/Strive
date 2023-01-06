@@ -1,0 +1,49 @@
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 12px;
+  background: var(--ion-card-background);
+  padding: 16px;
+}
+
+strive-mini-thumbnail-swiper {
+  .thumb {
+    $size: 40px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    cursor: pointer;
+
+    ion-avatar {
+      height: $size;
+      width: $size;
+    
+      img { 
+        background-color: var(--ion-card-background);
+      }
+    }
+    
+    small {
+      display: block;
+      max-width: $size;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: auto;
+      color: var(--ion-color-medium);
+    }
+
+    ion-badge {
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+small {
+  color: var(--ion-color-medium);
+}

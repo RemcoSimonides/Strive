@@ -2,17 +2,18 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core'
 import { GoalStakeholder } from '@strive/model'
 
 
-@Pipe({ name: 'joinButtonText' })
+// Pure is false because stakeholder can be updated through another Input on join-button.component
+@Pipe({ name: 'joinButtonText', pure: false })
 export class JoinButtonTextPipe implements PipeTransform {
   transform(stakeholder: GoalStakeholder) {
     if (stakeholder.isAchiever) return 'JOINED'
-    if (stakeholder.isAdmin) return 'JOIN'
     if (stakeholder.hasOpenRequestToJoin) return 'CANCEL REQUEST'
-    return 'REQUEST JOIN'
+    return 'JOIN'
   }
 }
 
-@Pipe({ name: 'joinButtonStatus' })
+// Pure is false because stakeholder can be updated through another Input on join-button.component
+@Pipe({ name: 'joinButtonStatus', pure: false })
 export class JoinButtonStatus implements PipeTransform {
   transform(stakeholder: GoalStakeholder) {
     return stakeholder.isAchiever || stakeholder.hasOpenRequestToJoin

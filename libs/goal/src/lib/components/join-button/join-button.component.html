@@ -2,3 +2,64 @@
   <ion-icon slot="start" name="flag-outline" size="small"></ion-icon>
   <span>{{ stakeholder | joinButtonText }}</span>
 </ion-button>
+
+<ion-popover #popover>
+  <ng-template>
+
+    <ng-container [ngSwitch]="status$ | async">
+      <ng-container *ngSwitchCase="'choose'">
+        <ion-list mode="md">
+          <ion-item (click)="joinGoal()" button>
+            <section>
+              <span>{{ stakeholder.isAdmin ? 'Join' : 'Request to Join' }}</span>
+              <small>
+                <ul>
+                  <li>All achievers work together<br/>(e.g. renovate bathroom or a travel together)</li>
+                  <li>Roadmap and Story is the same for you and other achievers</li>
+                </ul>
+              </small>
+            </section>
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+          <ion-item (click)="createCollectiveGoal()" button lines="none">
+            <section>
+              <span>Separate Roadmap and Story</span>
+              <small>
+                <ul>
+                  <li>You have the same goal but it is your own challenge<br/>(e.g. run marathon or graduating university)</li>
+                  <li>Your own Roadmap and Story</li>
+                </ul>
+              </small>
+            </section>
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'creating'">
+        <article class="creating">
+          <span>Creating separate goal...</span>
+          <ion-spinner name="lines" color="primary"></ion-spinner>
+          <small>This usually takes around 10 seconds</small>
+        </article>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'created'">
+        <article class="creating">
+          <span>Your goal is ready</span>
+          <small>We wish you the best of luck achieving.</small>
+          <ion-button (click)="dismiss()" color="primary" fill="clear">OK</ion-button>
+        </article>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'requested'">
+        <article class="creating">
+          <span>Request Sent</span>
+          <small>You'll be an achiever in this goal once your request has been accepted</small>
+          <ion-button (click)="dismiss()" color="primary" fill="clear">OK</ion-button>
+        </article>
+      </ng-container>
+
+    </ng-container>
+  </ng-template>
+</ion-popover>

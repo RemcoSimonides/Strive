@@ -3,13 +3,6 @@ import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { Subscription } from 'rxjs'
 
-export interface IThumbnail {
-  id: string
-  title: string
-  image: string
-  isFinished: boolean
-}
-
 @Component({
   selector: 'strive-thumbnail-list',
   templateUrl: 'thumbnail-list.component.html',

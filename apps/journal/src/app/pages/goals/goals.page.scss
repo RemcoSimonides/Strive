@@ -8,8 +8,44 @@ main {
   max-width: var(--page-max-width);
   margin: auto;
 
-  strive-goal-mini-thumbnail-swiper {
+  strive-mini-thumbnail-swiper {
     margin-bottom: 16px;
+
+    .thumb {
+      $size: 60px;
+  
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      cursor: pointer;
+  
+      ion-thumbnail {
+        height: $size;
+        width: $size;
+        border-radius: 12px;
+      
+        img { 
+          border-radius: 12px;
+          background-color: var(--ion-card-background);
+        }
+      }
+      
+      small {
+        display: block;
+        max-width: $size;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: auto;
+        color: var(--ion-color-medium);
+      }
+  
+      ion-badge {
+        position: absolute;
+        right: 0;
+      }
+    }
   }
 
   .cards {

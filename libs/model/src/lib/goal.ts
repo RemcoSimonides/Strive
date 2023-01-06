@@ -23,6 +23,7 @@ export interface Goal {
   image: string
   status: 'pending' | 'succeeded' | 'failed'
   publicity: GoalPublicityType
+  collectiveGoalId: string
   numberOfAchievers: number
   numberOfSupporters: number
   numberOfSpectators: number
@@ -72,6 +73,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     tasksCompleted: 0,
     tasksTotal: 1,
     publicity: 'public',
+    collectiveGoalId: '',
     title: '',
     ...params,
   }

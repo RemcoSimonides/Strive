@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { AlertController, ModalController } from '@ionic/angular'
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
+import { Router } from '@angular/router'
+import { AlertController, IonPopover, ModalController } from '@ionic/angular'
+
+import { getFunctions, httpsCallable } from 'firebase/functions'
+
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
-import { Goal, GoalStakeholder } from '@strive/model'
+import { createGoalStakeholder, Goal, GoalStakeholder } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: '[goal][stakeholder] strive-goal-join-button',
@@ -13,13 +18,31 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 })
 export class JoinButtonComponent {
 
+  private _collectiveStakeholder = createGoalStakeholder()
+
+  status$ = new BehaviorSubject<'choose' | 'creating' | 'created' | 'requested'>('choose')
+
   @Input() goal!: Goal
   @Input() stakeholder!: GoalStakeholder
+  @Input() set collectiveStakeholder(stakeholder: GoalStakeholder | undefined) {
+    if (!stakeholder) {
+      this._collectiveStakeholder = createGoalStakeholder()
+      return
+    }
+
+    if (stakeholder.isAchiever) this.stakeholder.isAchiever = true
+    this._collectiveStakeholder = stakeholder
+  }
+
+  @ViewChild(IonPopover) popover?: IonPopover
+
+  creating = false
 
   constructor(
     private alertCtrl: AlertController,
     private auth: AuthService,
     private modalCtrl: ModalController,
+    private router: Router,
     private stakeholderService: GoalStakeholderService
   ) {}
 
@@ -37,24 +60,8 @@ export class JoinButtonComponent {
       return modal.present()
     }
 
-    const { isAchiever, isAdmin, hasOpenRequestToJoin} = this.stakeholder
+    const { isAchiever, hasOpenRequestToJoin} = this.stakeholder
     const goalId = this.goal.id
-
-    if (!isAchiever && !hasOpenRequestToJoin) {
-      if (isAdmin) {
-        return this.stakeholderService.update({
-          uid: this.auth.uid,
-          isAchiever: true
-        }, { params: { goalId }})
-      } else {
-        return this.stakeholderService.upsert({
-          uid: this.auth.uid,
-          goalId,
-          isSpectator: true,
-          hasOpenRequestToJoin: true
-        }, { params: { goalId }})
-      }
-    }
 
     if (hasOpenRequestToJoin) {
       return this.alertCtrl.create({
@@ -77,6 +84,18 @@ export class JoinButtonComponent {
       }).then(alert => alert.present())
     }
 
+    if (!isAchiever && !hasOpenRequestToJoin) {
+      if (!this.popover) throw new Error('Popover undfined') 
+      this.popover.onDidDismiss().then(() => this.status$.next('choose'))
+      this.popover?.present()
+      return
+    }
+
+    if (this._collectiveStakeholder.isAchiever) {
+      this.router.navigate(['/goal', this._collectiveStakeholder.goalId])
+      return
+    }
+
     return this.alertCtrl.create({
       subHeader: 'Are you sure you no longer want to be an achiever in this goal?',
       buttons: [
@@ -95,5 +114,45 @@ export class JoinButtonComponent {
         }
       ]
     }).then(alert => alert.present())
+  }
+
+  joinGoal() {
+    const { isAdmin } = this.stakeholder
+    const goalId = this.goal.id
+
+    if (isAdmin) {
+      this.stakeholderService.update({
+        uid: this.auth.uid,
+        isAchiever: true
+      }, { params: { goalId }})
+      this.popover?.dismiss()
+    } else {
+      this.stakeholderService.upsert({
+        uid: this.auth.uid,
+        goalId,
+        isSpectator: true,
+        hasOpenRequestToJoin: true
+      }, { params: { goalId }})
+      this.status$.next('requested')
+    }
+  }
+
+  async createCollectiveGoal() {
+    this.status$.next('creating')
+
+    const createCollectiveGoalFn = httpsCallable(getFunctions(), 'createCollectiveGoal')
+    const collectiveGoal = await createCollectiveGoalFn({
+      goal: this.goal,
+      stakeholder: this.stakeholder
+    })
+
+    this.status$.next('created')
+
+    const { result } = collectiveGoal.data as { error: string, result: string }
+    if (result) this.router.navigate(['/goal', result])
+  }
+
+  dismiss() {
+    this.popover?.dismiss()
   }
 }

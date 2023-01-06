@@ -1,11 +1,11 @@
 @import "swiper/scss";
 @import "swiper/css/navigation";
 
-strive-goal-mini-thumbnail-swiper {
+strive-mini-thumbnail-swiper {
 
   .swiper-button-next, .swiper-button-prev {
-    height: 50px;
-    width: 50px;
+    height: 44px;
+    width: 44px;
     border-radius: 50%;
     background: var(--ion-card-background);
     top: calc(50% - 16px);
@@ -15,47 +15,5 @@ strive-goal-mini-thumbnail-swiper {
 
   .swiper-button-disabled {
     display: none;
-  }
-
-  $size: 60px;
-
-  article {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    position: relative;
-    cursor: pointer;
-  
-    ion-thumbnail {
-      height: $size;
-      width: $size;
-      border-radius: 12px;
-    
-      img { 
-        border-radius: 12px;
-        background-color: var(--ion-card-background);
-      }
-    }
-
-    ion-button {
-      height: $size;
-      width: $size;
-      margin: 0;
-    }
-    
-    small {
-      display: block;
-      max-width: $size;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin: auto;
-      color: var(--ion-color-medium);
-    }
-  
-    ion-badge {
-      position: absolute;
-      right: 0;
-    }
   }
 }

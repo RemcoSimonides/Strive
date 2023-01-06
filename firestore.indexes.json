@@ -151,6 +151,20 @@
       ]
     },
     {
+      "collectionGroup": "GStakeholders",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "collectiveGoalId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isAchiever",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "Notifications",
       "queryScope": "COLLECTION",
       "fields": [

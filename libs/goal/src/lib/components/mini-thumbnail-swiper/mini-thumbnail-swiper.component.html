@@ -1,23 +1,20 @@
 <ng-container *ngIf="slidesPerView$ | async as slidesPerView">
-  <swiper
-    [spaceBetween]="16"
-    [width]="60"
-    [navigation]="(isDesktop$ | async) && slidesPerView < stakeholders.length"
-    [slidesPerGroup]="slidesPerView - 1"
-    [allowTouchMove]="slidesPerView < stakeholders.length"
-  >
+  <ng-container *ngIf="thumbs">
 
-    <ng-container *ngFor="let stakeholder of stakeholders">
-      <ng-template swiperSlide>
-        <article (click)="clicked.emit(stakeholder)">
-          <ion-thumbnail>
-            <img [ref]="stakeholder.goal.image" asset="goal.png"/>
-          </ion-thumbnail>
-          <small>{{ stakeholder.goal.title }}</small>
-          <ion-badge color="primary" *ngIf="stakeholder.events.length">{{ stakeholder.events.length }}</ion-badge>
-        </article>
-      </ng-template>
-    </ng-container>
-  
-  </swiper>  
+    <swiper
+      [spaceBetween]="gap"
+      [width]="width"
+      [navigation]="(isDesktop$ | async) && slidesPerView < thumbs.length"
+      [slidesPerGroup]="slidesPerView - 1"
+      [allowTouchMove]="slidesPerView < thumbs.length"
+    >
+
+      <ng-container *ngFor="let thumb of thumbs">
+        <ng-template swiperSlide>
+          <ng-container *ngTemplateOutlet="thumb"></ng-container>
+        </ng-template>
+      </ng-container>
+    
+    </swiper>
+  </ng-container>
 </ng-container>

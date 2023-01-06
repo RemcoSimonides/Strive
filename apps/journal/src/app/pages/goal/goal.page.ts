@@ -74,6 +74,8 @@ export class GoalPageComponent implements OnDestroy {
   stakeholder = createGoalStakeholder()
   stakeholder$: Observable<GoalStakeholder>
 
+  collectiveStakeholder$: Observable<GoalStakeholder | undefined>
+
   story$: Observable<StoryItem[]>
 
   milestones$?: Observable<Milestone[]>
@@ -148,6 +150,24 @@ export class GoalPageComponent implements OnDestroy {
           joinWith({
             profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
           }, { shouldAwait: true })
+        )
+      })
+    )
+
+    this.collectiveStakeholder$ = combineLatest([
+      this.goal$,
+      this.auth.profile$
+    ]).pipe(
+      switchMap(([ goal, profile ]) => {
+        if (!goal?.collectiveGoalId || !profile) return of(undefined)
+        const query = [
+          where('uid', '==', profile.uid),
+          where('collectiveGoalId', '==', goal.collectiveGoalId),
+          where('isAchiever', '==', true)
+        ]
+        return this.stakeholderService.valueChanges(query).pipe(
+          map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goalId !== goal.id)),
+          map(stakeholders => stakeholders.length ? stakeholders[0] : undefined)
         )
       })
     )

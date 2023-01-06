@@ -12,6 +12,7 @@ import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/upsert.module'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
+import { CollectiveGoalListSComponent } from '@strive/goal/components/collective-goal-list/collective-goal-list.component'
 
 import { TeamModalModule } from '@strive/stakeholder/modals/team/team.module'
 import { FocusModalModule } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.module'
@@ -65,6 +66,7 @@ const routes: Routes = [
     HeaderRootModule,
     AddOthersModalComponent,
     DeadlinePopoverSComponent,
+    CollectiveGoalListSComponent,
     UpsertPostModalModule
   ],
   declarations: [GoalPageComponent],
