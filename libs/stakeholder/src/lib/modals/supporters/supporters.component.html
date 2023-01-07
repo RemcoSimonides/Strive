@@ -1,0 +1,45 @@
+<ion-header mode="md">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="primary">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Supporters</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ng-container *ngIf="view$ | async as view">
+    <ion-list mode="md">
+      <ng-container *ngIf="view.you as you">
+        <ng-container *ngIf="you.isSupporter">
+          <ion-item [lines]="view.others.length ? 'inset' : 'none'">
+            <ion-avatar slot="start" (click)="navTo(you.uid)">
+              <img [ref]="you.photoURL" asset="profile.png"/>
+            </ion-avatar>
+            <ion-label>
+              <b>{{ you.username }}</b>
+            </ion-label>
+          </ion-item>
+        </ng-container>
+      </ng-container>
+  
+      <ng-container *ngFor="let stakeholder of view.others; let last = last">
+        <ion-item [lines]="last ? 'none' : 'inset'">
+          <ion-avatar slot="start" (click)="navTo(stakeholder.uid)">
+            <img [ref]="stakeholder.profile.photoURL" asset="profile.png"/>
+          </ion-avatar>
+          <ion-label>
+            <b>{{ stakeholder.profile.username }}</b>
+          </ion-label>
+          <ion-button fill="clear" slot="end" *ngIf="view.you.isAdmin" (click)="openRoles(stakeholder, $event)">
+            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+  </ng-container>
+</ion-content>

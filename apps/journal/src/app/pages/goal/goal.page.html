@@ -85,7 +85,7 @@
               </ng-container>
             </ng-container>
             <ng-container *ngIf="!stakeholder.isAchiever">
-              <span><b>{{ goal.numberOfAchievers ?? 0 }}</b> {{ goal.numberOfAchievers === 1 ? 'Achiever' : 'Achievers' }}</span>
+              <span><b>{{ goal.numberOfAchievers ?? 0 }}</b> {{ goal.numberOfAchievers === 1 ? 'achiever' : 'achievers' }}</span>
             </ng-container>
           </li>
       
@@ -100,7 +100,7 @@
               </ng-container>
             </ng-container>
             <ng-container *ngIf="!stakeholder.isSupporter">
-              <span><b>{{ goal.numberOfSupporters ?? 0 }}</b> {{ goal.numberOfSupporters === 1 ? 'Supporter' : 'Supporters' }}</span>
+              <span><b>{{ goal.numberOfSupporters ?? 0 }}</b> {{ goal.numberOfSupporters === 1 ? 'supporter' : 'supporters' }}</span>
             </ng-container>
           </li>
 
@@ -115,7 +115,7 @@
               </ng-container>
             </ng-container>
             <ng-container *ngIf="!stakeholder.isSpectator">
-              <span><b>{{ goal.numberOfSpectators ?? 0 }}</b> {{ goal.numberOfSpectators === 1 ? 'Follow' : 'Followers' }}</span>
+              <span><b>{{ goal.numberOfSpectators ?? 0 }}</b> {{ goal.numberOfSpectators === 1 ? 'follower' : 'followers' }}</span>
             </ng-container>
           </li>
 

@@ -1,0 +1,9 @@
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}

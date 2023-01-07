@@ -39,6 +39,10 @@ hr {
   width: 50%;
 }
 
+ion-popover::part(content) {
+  border-radius: 12px;
+}
+
 .wide-popover {
   --width: 80vw;
   --max-width: 400px;

@@ -21,11 +21,13 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 import { FocusModalComponent } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
-import { TeamModalComponent } from '@strive/stakeholder/modals/team/team.modal'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
 import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
+import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
+import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
+import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -264,9 +266,6 @@ export class GoalPageComponent implements OnDestroy {
     await popover.present()
     await popover.onDidDismiss().then((data) => {
       switch (data.data) {
-        case enumGoalOptions.openTeamModal:
-          this.openTeamModal()
-          break
         case enumGoalOptions.openFocusModal:
           this.openFocusModal()
           break
@@ -352,11 +351,17 @@ export class GoalPageComponent implements OnDestroy {
   }
 
 
-  openTeamModal(role?: keyof GoalStakeholder) {
+  openTeamModal(role: keyof GoalStakeholder) {
     if (!this.goal?.id) return
 
+    const component = role === 'isAchiever'
+      ? AchieversModalComponent
+      : role === 'isSpectator'
+        ? SpectatorsModalComponent
+        : SupportersModalComponent
+
     this.modalCtrl.create({
-      component: TeamModalComponent,
+      component,
       componentProps: { 
         goalId: this.goal.id,
         role: role ? role : null

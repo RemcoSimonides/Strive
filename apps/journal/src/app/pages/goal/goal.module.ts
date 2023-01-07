@@ -14,7 +14,9 @@ import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadli
 import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
 import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
 
-import { TeamModalModule } from '@strive/stakeholder/modals/team/team.module'
+import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
+import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
+import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
 import { FocusModalModule } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.module'
 
 import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
@@ -50,7 +52,9 @@ const routes: Routes = [
     GoalOptionsModule,
     GoalSharePopoverModule,
     UpsertGoalModalModule,
-    TeamModalModule,
+    AchieversModalComponent,
+    SpectatorsModalComponent,
+    SupportersModalComponent,
     ImageModule,
     ImageZoomModalModule,
     RoadmapModule,

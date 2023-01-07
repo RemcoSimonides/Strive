@@ -13,7 +13,6 @@ export enum enumGoalOptions {
   finishGoal,
   editGoal,
   deleteGoal,
-  openTeamModal,
   openFocusModal
 }
 

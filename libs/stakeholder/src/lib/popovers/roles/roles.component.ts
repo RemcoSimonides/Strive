@@ -1,26 +1,29 @@
-import { Location } from '@angular/common'
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { Router } from '@angular/router'
-import { AlertController, PopoverController } from '@ionic/angular'
+import { ReactiveFormsModule } from '@angular/forms'
+import { AlertController, IonicModule, PopoverController } from '@ionic/angular'
 import { GoalStakeholder, User } from '@strive/model'
-import { delay } from '@strive/utils/helpers'
 import { GoalStakeholderService } from '../../stakeholder.service'
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+		IonicModule,
+		ReactiveFormsModule
+  ],
 	selector: '[goalId][stakeholder] strive-stakeholder-roles',
 	templateUrl: './roles.component.html',
-	styleUrls: ['./roles.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RolesPopoverComponent {
 	@Input() goalId!: string
 	@Input() stakeholder!: GoalStakeholder & { profile: User }
+  @Input() manageRoles = false
 
 	constructor(
     private alertCtrl: AlertController,
-    private location: Location,
 		private popoverCtrl: PopoverController,
-    private router: Router,
 		private stakeholderService: GoalStakeholderService
 	) {}
 
@@ -40,14 +43,6 @@ export class RolesPopoverComponent {
       uid: this.stakeholder.uid,
       isAchiever: !this.stakeholder.isAchiever
     }, { params: { goalId: this.goalId }})
-  }
-
-  navTo() {
-    this.popoverCtrl.dismiss()
-    this.location.back()
-    delay(250).then(_ => {
-      this.router.navigate(['/profile/', this.stakeholder.uid])
-    })
   }
 
   async remove() {
