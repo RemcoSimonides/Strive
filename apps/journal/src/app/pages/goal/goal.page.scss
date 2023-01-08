@@ -19,24 +19,26 @@ main {
   margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   padding: 16px;
 
   h1 {
     font-size: clamp(1.5rem, 5vw, 2.5rem);
     font-weight: 500;
     color: var(--ion-text-color);
+    margin-top: 8px;
+    margin-bottom: 0;
   }
 
-  h3 {
-    margin-top: 32px;
+  h5 {
     color: var(--ion-color-primary);
-    margin: 0;
+    margin-top: 0;
+    margin-bottom: 16px;
   }
   
   div.main {
     display: flex;
-    gap: 16px;
+    gap: 24px;
 
     picture {
       flex: 1;
@@ -54,7 +56,6 @@ main {
         display: flex;
         flex-direction: column;
         gap: 8px;
-        margin: 0;
       
         li {
           display: flex;
@@ -145,18 +146,9 @@ ion-card.finish {
   }
 }
 
-strive-description {
-  margin-block: 16px;
-}
-
-strive-roadmap  {
-  margin-block: 32px; 
-}
-
 .supports {
 
   article {
-    margin-block: 32px;
     display: flex;
     flex-direction: column;
     gap: 16px;

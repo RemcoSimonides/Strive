@@ -208,7 +208,7 @@
     </ng-container>
 
     <section>
-      <h3>Roadmap</h3>
+      <h5>Roadmap</h5>
       <strive-roadmap
         [goal]="goal"
         [milestones]="milestones$ | async"
@@ -217,7 +217,7 @@
     </section>
 
     <section class="supports">
-      <h3>Supports</h3>
+      <h5>Supports</h5>
       <article>
         <ng-container *ngIf="goal.status === 'pending'">
           <strive-support-add [goal]="goal"></strive-support-add>
@@ -239,7 +239,7 @@
     </section>
 
     <section>
-      <h3>Story</h3>
+      <h5>Story</h5>
       <strive-story [story]="story$ | async" [stakeholder]="stakeholder" [goalId]="goal.id"></strive-story>
     </section>
 

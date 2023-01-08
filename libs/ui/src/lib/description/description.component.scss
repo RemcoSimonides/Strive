@@ -1,10 +1,16 @@
 :host {
 	display: block;
+	font-size: clamp(12px, 2.5vw, 1rem);
 }
 
 ion-item {
 	border-radius: 12px;
 	--highlight-background: var(--ion-color-primary);
+
+	ion-textarea {
+		font-size: clamp(12px, 2.5vw, 1rem);
+		margin-bottom: 8px;
+	}
 
 	ion-button {
 		margin-top: auto;

@@ -60,7 +60,7 @@
     </ng-container>
   </ng-container>
 
-  <ion-item *ngIf="!showAll && (goal | total) > showAmount" (click)="showAll = true" button>
+  <ion-item *ngIf="!showAll && (goal | total) > showAmount" (click)="showAll = true" button lines="none">
     <ion-button fill="clear" expand="block" class="more">
       <span>Show {{ (goal | total) - showAmount }} more</span>
       <ion-icon name="chevron-down-outline" slot="end"></ion-icon>

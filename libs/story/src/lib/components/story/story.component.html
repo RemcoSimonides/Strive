@@ -2,7 +2,7 @@
 	<article class="add-button" *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
 		<div></div>
 		<div>
-			<ion-button fill="clear" (click)="createCustomPost()">
+			<ion-button (click)="createCustomPost()" fill="clear" size="small">
 				<ion-icon name="pencil-outline" slot="start"></ion-icon>
 				<span>Add to story...</span>
 			</ion-button>
