@@ -31,6 +31,3 @@ project(':capacitor-firebase-authentication').projectDir = new File('../../../no
 
 include ':capawesome-capacitor-app-update'
 project(':capawesome-capacitor-app-update').projectDir = new File('../../../node_modules/@capawesome/capacitor-app-update/android')
-
-include ':codetrix-studio-capacitor-google-auth'
-project(':codetrix-studio-capacitor-google-auth').projectDir = new File('../../../node_modules/@codetrix-studio/capacitor-google-auth/android')

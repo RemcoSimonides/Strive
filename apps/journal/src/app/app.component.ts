@@ -21,7 +21,6 @@ import { AuthService } from '@strive/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 
 @Component({
   selector: 'journal-root',
@@ -97,12 +96,6 @@ export class AppComponent implements OnDestroy {
 
     platform.ready().then(() => {
       this.screensize.onResize(platform.width())
-
-      GoogleAuth.initialize({
-        clientId: '423468347975-tjkdd38gna8rfgqd16f0jpf1o5bl6204.apps.googleusercontent.com',
-        scopes: ['profile', 'email'],
-        grantOfflineAccess: true
-      })
 
       if (Capacitor.getPlatform() === 'web') {
         this.personalService.showMessages().then(res => {

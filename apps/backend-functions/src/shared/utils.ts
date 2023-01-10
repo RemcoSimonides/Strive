@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin'
+export * from './bigbatch'
 
 export interface ErrorResultResponse {
   error: string

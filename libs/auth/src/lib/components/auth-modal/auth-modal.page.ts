@@ -7,11 +7,9 @@ import {
   sendPasswordResetEmail,
   getAuth,
   signInWithCredential,
-  GoogleAuthProvider,
   OAuthProvider,
   User
 } from 'firebase/auth'
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication'
 import { captureException } from '@sentry/angular'
 
@@ -144,9 +142,14 @@ export class AuthModalComponent implements OnInit {
 
   async loginWithGoogle() {
     try {
-      const gUser = await GoogleAuth.signIn()
-      const gCredentials = GoogleAuthProvider.credential(gUser.authentication.idToken, gUser.authentication.accessToken)
-      const credentials = await signInWithCredential(getAuth(), gCredentials)
+
+      const result = await FirebaseAuthentication.signInWithGoogle({ skipNativeAuth: true })
+      const provider = new OAuthProvider('google.com')
+      const oAuthCredentials = provider.credential({
+        idToken: result.credential?.idToken,
+        rawNonce: result.credential?.nonce
+      })
+      const credentials = await signInWithCredential(getAuth(), oAuthCredentials)
       
       this.oAuthLogin(credentials.user)
   

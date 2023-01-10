@@ -14,7 +14,7 @@ interface Version {
 export class AppVersionService extends FireDocument<Version> {
   override path = `meta/version`
 
-  version = "1.0.0"
+  version = "1.0.23"
 
   constructor(
     private alertCtrl: AlertController,
