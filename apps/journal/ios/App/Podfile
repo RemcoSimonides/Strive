@@ -21,14 +21,23 @@ def capacitor_pods
   pod 'CapacitorCommunityFcm', :path => '../../../../node_modules/@capacitor-community/fcm'
   pod 'CapacitorFirebaseAuthentication', :path => '../../../../node_modules/@capacitor-firebase/authentication'
   pod 'CapawesomeCapacitorAppUpdate', :path => '../../../../node_modules/@capawesome/capacitor-app-update'
-  pod 'CodetrixStudioCapacitorGoogleAuth', :path => '../../../../node_modules/@codetrix-studio/capacitor-google-auth'
 end
 
 target 'App' do
   capacitor_pods
   # Add your Pods here
+  pod 'CapacitorFirebaseAuthentication/Google', :path => '../../../../node_modules/@capacitor-firebase/authentication'
 end
 
 post_install do |installer|
   assertDeploymentTarget(installer)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+        target.build_configurations.each do |config|
+          config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        end
+      end
+    end
+  end
 end
