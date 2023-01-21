@@ -14,7 +14,7 @@ export interface Milestone {
   content: string
   description: string
   status: MilestoneStatus
-  deadline: Date
+  deadline?: Date
   achieverId: string
   achiever?: User // joined data
   subtasks: Subtask[]
@@ -32,13 +32,13 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     order: params.order ?? 0,
     content: params.content ?? '',
     description: params.description ?? '',
-    deadline: params.deadline ? endOfDay(new Date(params.deadline)) : endOfDay(new Date()),
     status: params.status ?? 'pending',
     achieverId: params.achieverId ?? '',
     subtasks: params.subtasks ?? [],
     deletedAt: params.deletedAt ?? null
   }
 
+  if (params.deadline) milestone.deadline = endOfDay(new Date(params.deadline))
   if (params.updatedBy) milestone.updatedBy = params.updatedBy
   if (params.updatedAt) milestone.updatedAt = params.updatedAt
   if (params.createdAt) milestone.createdAt = params.createdAt
