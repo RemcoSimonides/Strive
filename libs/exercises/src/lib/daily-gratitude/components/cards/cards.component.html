@@ -3,7 +3,12 @@
   <ng-template swiperSlide>
     <form [formGroup]="form">
       <section>
-        <span class="question">What are three things you are grateful for today?</span>
+        <ng-container *ngIf="date | toDate | isToday; else notToday">
+          <span class="question" (click)="selectDate()">What are three things you are grateful for today?</span>
+        </ng-container>
+        <ng-template #notToday>
+          <span class="question" (click)="selectDate()">What were three things you are grateful for on {{ date | toDate | date:'longDate' }}?</span>
+        </ng-template>
         <ion-item>
           <span class="disc">•</span>
           <ion-textarea rows="3" formControlName="item1" autoGrow></ion-textarea>
@@ -17,35 +22,42 @@
           <ion-textarea rows="3" formControlName="item3" autoGrow></ion-textarea>
         </ion-item>
       </section>
+
+      <footer>
+        <ion-button fill="clear" color="secondary" (click)="selectDate()" *ngIf="enteredToday$ | async">
+          <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear" class="save">
+          <ng-container *ngIf="save$ | async as status">
   
-      <ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear">
-        <ng-container *ngIf="save$ | async as status">
-
-          <ng-container *ngIf="status === 'saved'">
-            <span>SAVED</span>
-            <ion-icon name="checkmark" slot="end"></ion-icon>
+            <ng-container *ngIf="status === 'saved'">
+              <span>SAVED</span>
+              <ion-icon name="checkmark" slot="end"></ion-icon>
+            </ng-container>
+  
+            <ng-container *ngIf="status === 'saving'">
+              <span>Encrypting...</span>
+            </ng-container>
+  
+            <ng-container *ngIf="status === 'save'">
+              <span>SAVE</span>
+            </ng-container>
+  
           </ng-container>
+        </ion-button>
+      </footer>
 
-          <ng-container *ngIf="status === 'saving'">
-            <span>Encrypting...</span>
-          </ng-container>
-
-          <ng-container *ngIf="status === 'save'">
-            <span>SAVE</span>
-          </ng-container>
-
-        </ng-container>
-      </ion-button>
     </form>
   </ng-template>
 
-  <ng-container *ngFor="let card of cards$ | async">
+  <ng-container *ngFor="let entry of entries$ | async">
     <ng-template swiperSlide>
       <section class="card">
-        <span class="date">{{ card.createdAt | date:'longDate' }}</span>
+        <span class="date">{{ entry.id | toDate | date:'longDate' }}</span>
 
         <ul>
-          <li *ngFor="let item of card.items">
+          <li *ngFor="let item of entry.items">
             <span class="disc">•</span>
             {{ item }}
           </li>

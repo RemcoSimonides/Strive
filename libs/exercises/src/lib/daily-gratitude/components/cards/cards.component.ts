@@ -1,14 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewEncapsulation } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
+import { PopoverController } from '@ionic/angular'
 
 import { limit, orderBy } from 'firebase/firestore'
-import { BehaviorSubject, map, of, switchMap } from 'rxjs'
-import { formatISO } from 'date-fns'
+import { BehaviorSubject, firstValueFrom, of, switchMap, tap } from 'rxjs'
+import { formatISO, isToday, startOfDay } from 'date-fns'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { DailyGratitudeEntryService } from '../../daily-gratitude.service'
 
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { DailyGratitudeEntry } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
@@ -25,7 +27,7 @@ SwiperCore.use([EffectCards, Navigation])
 export class CardsComponent implements OnDestroy {
 
   private startValue = ''
-  private today = formatISO(new Date(), { representation: 'date' })
+  date = formatISO(new Date(), { representation: 'date' })
   isDesktop$ = this.screensize.isDesktop$
 
   form = new FormGroup({
@@ -35,26 +37,18 @@ export class CardsComponent implements OnDestroy {
   })
 
   save$ = new BehaviorSubject<'save' | 'saving' | 'saved'>('save')
+  enteredToday$ = new BehaviorSubject(false)
 
-  cards$ = this.auth.profile$.pipe(
+  entries$ = this.auth.profile$.pipe(
     switchMap(profile => {
       if (!profile) return of([])
-      return this.entryService.valueChanges([orderBy('createdAt', 'desc'), limit(500)], { uid: profile.uid }).pipe(
+      return this.entryService.valueChanges([orderBy('id', 'desc'), limit(500)], { uid: profile.uid }).pipe(
         switchMap(cards => this.entryService.decrypt(cards))
       )
     }),
-    map(cards => {
-      const today = cards.find(card => card.id === this.today)
-      if (today) {
-        const [item1, item2, item3,] = today.items
-        this.form.patchValue({
-          item1: item1 ?? this.startValue,
-          item2: item2 ?? this.startValue,
-          item3: item3 ?? this.startValue
-        }, { emitEvent: false })
-      }
-
-      return cards.filter(card => card.id !== this.today)
+    tap(entries => {
+      const today = entries.find(e => isToday(new Date(e.id)))
+      this.enteredToday$.next(!!today)
     })
   )
 
@@ -66,9 +60,13 @@ export class CardsComponent implements OnDestroy {
 
   constructor(
     private auth: AuthService,
+    private cdr: ChangeDetectorRef,
     private entryService: DailyGratitudeEntryService,
+    private popoverCtrl: PopoverController,
     private screensize: ScreensizeService
-  ) {}
+  ) {
+    this.getEntry()
+  }
 
   ngOnDestroy() {
     this.sub.unsubscribe()
@@ -87,7 +85,7 @@ export class CardsComponent implements OnDestroy {
 
     if (items.length) {
       const card: DailyGratitudeEntry = {
-        id: this.today,
+        id: this.date,
         items
       }
 
@@ -98,4 +96,44 @@ export class CardsComponent implements OnDestroy {
     delay(1500).then(() => { this.save$.next('saved') })
   }
 
+  async selectDate() {
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: {
+        maxDate: startOfDay(new Date()),
+        hideRemove: true
+      }
+    })
+    popover.onDidDismiss().then(async ({ data, role }) => {
+      if (role === 'dismiss') {
+        const date = data ? new Date(data) : new Date()
+        this.date = formatISO(date, { representation: 'date' })
+
+        this.getEntry()
+        this.save$.next('save')
+      }
+      this.cdr.markForCheck()
+    })
+    popover.present()
+  }
+
+  private async getEntry() {
+    const entries = await firstValueFrom(this.entries$)
+
+    const entry = entries.find(e => e.id === this.date)
+    if (entry) {
+      const [item1, item2, item3,] = entry.items
+      this.form.patchValue({
+        item1: item1 ?? this.startValue,
+        item2: item2 ?? this.startValue,
+        item3: item3 ?? this.startValue
+      })
+    } else {
+      this.form.patchValue({
+        item1: this.startValue,
+        item2: this.startValue,
+        item3: this.startValue
+      })
+    }
+  }
 }

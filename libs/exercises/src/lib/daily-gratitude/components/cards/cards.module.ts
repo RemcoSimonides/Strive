@@ -6,13 +6,18 @@ import { IonicModule } from '@ionic/angular'
 import { CardsComponent } from './cards.component'
 
 import { SwiperModule } from 'swiper/angular'
+import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { IsTodayPipe, ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    SwiperModule
+    SwiperModule,
+    DatetimeModule,
+    IsTodayPipe,
+    ToDatePipe
   ],
   declarations: [
     CardsComponent

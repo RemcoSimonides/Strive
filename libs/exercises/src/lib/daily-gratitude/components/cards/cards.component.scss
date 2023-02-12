@@ -37,9 +37,13 @@ strive-daily-gratitude-cards {
         }
       }
 
-      ion-button {
-        width: fit-content;
-        margin-left: auto;
+      footer {
+        display: flex;
+        justify-content: space-between;
+
+        .save {
+          margin-left: auto;
+        }
       }
     }
 
