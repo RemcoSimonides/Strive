@@ -3,10 +3,11 @@
 <ion-content class="ion-padding">
   <h1>Page not found</h1>
   <p>Everyone gets off track of their goal sometimes. It's important to get back on quickly as you can.</p>
-  <p><a routerLink="/">Go to home</a></p>
 
-
-  <ng-container *ngIf="hasBack">
+  <ng-container *ngIf="hasBack; else noBack">
     <ion-button (click)="goBack()" class="primary">Go back</ion-button>
   </ng-container>
+  <ng-template #noBack>
+    <p><a routerLink="/">Go to home</a></p>
+  </ng-template>
 </ion-content>
