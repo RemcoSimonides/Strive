@@ -160,7 +160,7 @@ export class GoalPageComponent implements OnDestroy {
 
     this.collectiveStakeholders$ = this.goal$.pipe(
       switchMap(goal => {
-        if (!goal) return of([])
+        if (!goal?.collectiveGoalId) return of([])
         const query = [
           where('collectiveGoalId', '==', goal.collectiveGoalId),
           where('isAchiever', '==', true)
