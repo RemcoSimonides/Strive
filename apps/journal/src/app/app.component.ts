@@ -6,6 +6,7 @@ import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { Unsubscribe } from 'firebase/firestore'
+import { differenceInMilliseconds } from 'date-fns'
 
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
 
@@ -40,7 +41,13 @@ export class AppComponent implements OnDestroy {
 
   profile$ = this.auth.profile$
 
+  private lastBack = new Date()
   backButtonSub = this.platform.backButton.subscribeWithPriority(0, async () => {
+    // prevent double trigger when going back (doesn't happen in debug mode, only in live action)
+    const now = new Date()
+    if (differenceInMilliseconds(new Date(), this.lastBack) <= 100) return
+    this.lastBack = now
+
     const segments = this.router.url.split('/').slice(1)
 
     if (!segments[0] || segments[0] === 'goals') {

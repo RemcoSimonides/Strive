@@ -26,16 +26,13 @@ export class ModalDirective {
       
       this.modalCtrl.getTop().then(() => {
         this.modal?.onWillDismiss().then(res => {
-          if (res.role === 'backdrop') {
-            this.location.back()
-          }
+          if (res.role === 'backdrop') this.location.back()
         })
       })
     }
   }
 
   dismiss(data?: unknown) {
-    
     if (this.isWeb) {
       this.data = data
       this.location.back()
