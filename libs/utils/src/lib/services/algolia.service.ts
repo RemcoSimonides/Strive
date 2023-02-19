@@ -21,7 +21,6 @@ export class AlgoliaService {
   profiles$: Observable<AlgoliaUser[]> = this._profiles.asObservable()
 
   search(query: string, hitsPerPage?: number | { goals?: number, profiles?: number}) {
-    
     this.searchGoals(query, typeof hitsPerPage === 'object' ? hitsPerPage?.goals : hitsPerPage)
     this.searchProfiles(query, typeof hitsPerPage === 'object' ? hitsPerPage?.profiles : hitsPerPage)
   }

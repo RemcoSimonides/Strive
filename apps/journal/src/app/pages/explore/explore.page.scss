@@ -1,6 +1,7 @@
 main {
   margin: auto;
   max-width: 1600px;
+  min-height: calc(100vh - 64px);
 }
 
 header {
@@ -41,10 +42,9 @@ section {
 ul {
   padding-top: 16px;
   padding-inline: 48px;
-  min-height: 60vh;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 16px;
 
   i {
@@ -52,10 +52,6 @@ ul {
     margin-top: 16px;
     color: var(--ion-color-medium);
   }
-}
-
-strive-banner {
-  margin: 16px 48px 0 48px;
 }
 
 small {
@@ -76,8 +72,8 @@ img.algolia {
     padding: 0 16px;
   }
 
-  strive-banner {
-    margin: 16px 16px 0 16px;
+  ul {
+    padding-inline: 16px;
   }
 }
 

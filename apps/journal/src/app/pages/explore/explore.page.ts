@@ -35,8 +35,7 @@ export class ExplorePageComponent implements OnDestroy {
   noResults$ = combineLatest([
     this.exercises$, this.goals$, this.profiles$
   ]).pipe(
-    map(([exercises, goals, profiles]) => !exercises.length && !goals.length && !profiles.length),
-    tap(console.log)
+    map(([exercises, goals, profiles]) => !exercises.length && !goals.length && !profiles.length)
   )
 
   private searchSubscription = this.searchForm.valueChanges.pipe(
