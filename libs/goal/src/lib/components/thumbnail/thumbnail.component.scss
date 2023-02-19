@@ -9,8 +9,8 @@ ion-card {
 			display: grid;
 			gap: 4px;
 
-			b {
-				color: var(--ion-color-dark);
+			span {
+				color: var(--ion-text-color);
 				font-size: medium;
 			}
 

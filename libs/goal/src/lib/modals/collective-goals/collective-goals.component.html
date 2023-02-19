@@ -13,7 +13,7 @@
 
   <ion-list mode="md">
     <ng-container *ngFor="let stakeholder of stakeholders; let last = last">
-      <ion-item [lines]="last ? 'none' : 'inset'" button (click)="navTo(stakeholder.goalId)">
+      <ion-item [lines]="last ? 'none' : 'full'" button (click)="navTo(stakeholder.goalId)">
         <ion-avatar slot="start" (click)="navTo(stakeholder.goalId)">
           <img [ref]="stakeholder.profile?.photoURL" asset="profile.png"/>
         </ion-avatar>

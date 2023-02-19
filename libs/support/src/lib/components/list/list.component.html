@@ -17,7 +17,7 @@
         <strive-support-decision [support]="support"></strive-support-decision>
       </article>
       <ion-item
-        [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'inset'"
+        [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'full'"
         button
         [ngClass]="{'fake-disable': support.status !== 'open' || support.counterStatus !== 'open'}"
         (click)="openDetails(support)"
@@ -48,7 +48,7 @@
           </article>
     
           <ion-item
-            [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'inset'"
+            [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'full'"
             button
             [ngClass]="{'fake-disable': support.status !== 'open' || support.counterStatus !== 'open'}"
             (click)="openDetails(support)"

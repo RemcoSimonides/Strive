@@ -1,6 +1,15 @@
-<strive-header title="Settings" color="primary" defaultHref="/profile"></strive-header>
+<strive-header title="Settings" color="primary" defaultHref="/profile">
+  <ng-container *ngIf="theme$ | async as theme">
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleTheme()" fill="clear">
+        <ion-icon *ngIf="theme === 'light'" name="moon-outline"></ion-icon>
+        <ion-icon *ngIf="theme === 'dark'" name="sunny-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ng-container>
+</strive-header>
 <ion-content>
-  <ion-list mode="md">
+  <ion-list mode="md" lines="full">
     <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>
       <ion-label>Install App</ion-label>
     </ion-item>
@@ -34,7 +43,7 @@
 			<ion-icon name="open-outline"></ion-icon>
 		</ion-item>
 
-    <ion-item button href="mailto:support@strivejournal.com">
+    <ion-item button href="mailto:support@strivejournal.com" lines="none">
       <ion-label>Contact Support</ion-label>
 			<ion-icon name="open-outline"></ion-icon>
     </ion-item>

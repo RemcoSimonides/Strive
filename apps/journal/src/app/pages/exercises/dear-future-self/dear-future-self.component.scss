@@ -6,14 +6,9 @@ main {
   gap: 16px;
 }
 
-h1 {
-  color: var(--ion-color-primary);
-}
-
 .explanation {
   color: var(--ion-color-medium);
 }
-
 
 ion-card {
   margin-bottom: 16px;
@@ -63,6 +58,10 @@ ion-list {
     display: flex;
     flex-direction: column;
     margin-left: 12px;
+  }
+
+  small {
+    color: var(--ion-color-medium);
   }
 }
 

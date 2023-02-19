@@ -1,4 +1,4 @@
-<ion-list lines="none" mode="md">
+<ion-list lines="full" mode="md">
   <!-- <ion-item button (click)="pushNotifications()">Give push notification permission</ion-item> -->
   <ion-item button (click)="goToProfile()">Profile</ion-item>
   <ion-item button *ngIf="pwa.showInstallPromotion$ | async" (click)="pwa.showInstallPromotion()">Install app</ion-item>
@@ -7,4 +7,12 @@
   </ion-item>
   <ion-item button (click)="goTo('/edit-profile')">Edit Profile</ion-item>
   <ion-item button (click)="signOut()">Log out</ion-item>
+  
+  <ng-container *ngIf="theme$ | async as theme">
+    <ion-item button (click)="toggleTheme()" lines="none">
+      <ion-icon *ngIf="theme === 'light'" name="moon-outline" slot="end"></ion-icon>
+      <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" slot="end"></ion-icon>
+    </ion-item>
+  </ng-container>
+
 </ion-list>

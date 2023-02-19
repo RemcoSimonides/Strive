@@ -1,4 +1,4 @@
-<ion-list mode="md">
+<ion-list mode="md" lines="full">
   <ng-container *ngIf="goal?.status === 'pending' && (stakeholder.isAchiever || stakeholder.isAdmin)">
     <ion-item (click)="markAsFinished()" button>Mark goal as Finished</ion-item>
   </ng-container>

@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content>
   <ion-list mode="md">
-    <ion-item *ngFor="let profile of algolia.profiles$ | async" button (click)="select(profile.uid)">
+    <ion-item *ngFor="let profile of algolia.profiles$ | async; let last = last" button (click)="select(profile.uid)" [lines]="last ? 'none' : 'full'">
       {{ profile.username }}
     </ion-item>
   </ion-list>

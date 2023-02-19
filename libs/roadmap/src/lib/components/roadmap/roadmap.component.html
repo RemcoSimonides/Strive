@@ -3,7 +3,7 @@
     <ion-list mode="md">
     
       <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
-        <ion-item *ngFor="let milestone of milestones; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}">
+        <ion-item *ngFor="let milestone of milestones; let last = last; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}" [lines]="last && !canEdit ? 'none' : 'full'">
           <ion-button *ngIf="!createMode" (click)="updateStatus(milestone, $event)" fill="clear" slot="start" class="status-button" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
             <strive-milestone-status slot="icon-only" [milestone]="milestone"></strive-milestone-status>
           </ion-button>
@@ -60,7 +60,7 @@
 
 <ng-template #loading>
   <ion-list>
-    <ion-item *ngFor="let i of [].constructor(5)">
+    <ion-item *ngFor="let i of [].constructor(5); let last = last" [lines]="last ? 'none' : 'full'">
       <ion-button fill="clear" slot="start" disabled class="status-button fake-enable">
         <strive-milestone-status slot="icon-only"></strive-milestone-status>
       </ion-button>

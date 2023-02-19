@@ -41,7 +41,7 @@
         </article>
 
         <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
-          <ion-list mode="md">
+          <ion-list mode="md" lines="full">
             <ion-item>
               <ion-label position="floating">Email</ion-label>
               <ion-input formControlName="email" type="email"></ion-input>
@@ -85,7 +85,7 @@
 
         <form [formGroup]="signupForm" (ngSubmit)="signUpUser()">
 
-          <ion-list mode="md">
+          <ion-list mode="md" lines="full">
             <ion-item>
               <ion-label position="floating">Username</ion-label>
               <ion-input formControlName="username" type="text" autocapitalize="sentences"></ion-input>

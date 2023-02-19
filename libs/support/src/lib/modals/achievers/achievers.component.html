@@ -19,7 +19,7 @@
         OK, DONE
       </ion-button>
     </ion-item>
-    <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'inset'">
+    <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'full'">
       <ion-avatar slot="start">
         <img [ref]="achiever.profile.photoURL" asset="profile.png">
       </ion-avatar>

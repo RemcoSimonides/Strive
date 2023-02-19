@@ -4,7 +4,7 @@
   <main>
     <section>
       <h1 *ngIf="(screensize.isMobile$ | async) === false">Daily Gratitude</h1>
-      <small class="explanation">
+      <small>
         Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative.
         Receive a daily push notification to remind you to think of three things you are grateful for that day.
         <a href="https://blog.strivejournal.com/blog/daily-gratitude" target="_blank">Learn more...</a>
@@ -19,7 +19,7 @@
         <section class="toggle">
           <article>
             <ion-toggle [formControl]="form.get('on')"></ion-toggle>
-            <span (click)="openDatetime()"><b>{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</b></span>
+            <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</span>
           </article>
         </section>
 

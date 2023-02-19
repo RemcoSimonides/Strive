@@ -31,7 +31,6 @@ main {
   }
 
   h5 {
-    color: var(--ion-color-primary);
     margin-top: 0;
     margin-bottom: 16px;
   }
@@ -61,7 +60,7 @@ main {
           display: flex;
           gap: 4px;
           align-items: center;
-          color: var(--ion-color-medium);
+          color: var(--ion-color-step-350);
           font-size: clamp(12px, 2.5vw, 1rem);
 
           &.clickable {

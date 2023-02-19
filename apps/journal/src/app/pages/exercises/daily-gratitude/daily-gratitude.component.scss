@@ -6,11 +6,7 @@ main {
   gap: 16px;
 }
 
-h1 {
-  color: var(--ion-color-primary);
-}
-
-.explanation {
+small {
   color: var(--ion-color-medium);
 }
 
@@ -24,15 +20,3 @@ section.toggle {
     gap: 16px;
   }
 }
-
-section.time {
-  width: 350px;
-  max-width: 100%;
-  margin: auto;
-
-  ion-datetime {
-    margin-top: 8px;
-    border-radius: 12px;
-  }
-}
-

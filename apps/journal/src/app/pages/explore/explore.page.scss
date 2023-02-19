@@ -3,10 +3,6 @@ main {
   max-width: 1600px;
 }
 
-h2 {
-  color: var(--ion-color-primary);
-}
-
 header {
   padding: 96px;
   background-image: url("/assets/images/banner.png");
@@ -18,11 +14,6 @@ header {
     width: 100%;
     max-width: 600px;
     margin: auto;
-
-    ion-searchbar {
-      --background: var(--ion-color-light);
-      --border-radius: 12px;
-    }
 
     ion-card {
       width: fit-content;

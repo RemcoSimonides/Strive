@@ -20,7 +20,7 @@
   <strive-support-pledge [support]="support"></strive-support-pledge>
 
   <ng-container *ngIf="(support | isRecipient) && support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
-      <ion-list mode="md" class="counter-form">
+      <ion-list mode="md" lines="full" class="counter-form">
         <ion-item *ngIf="!support.counterDescription">
           <small>
             Create extra accountability for yourself by giving something to {{ support.supporter?.username }} in case you dont succeed to "{{ support.milestoneId ? support.milestone?.content : support.goal?.title }}"

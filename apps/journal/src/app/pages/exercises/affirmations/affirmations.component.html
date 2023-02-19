@@ -18,13 +18,13 @@
         <strive-exercise-activate-push-notification></strive-exercise-activate-push-notification>
 
         <section>
-          <h3>Set Affirmation Time</h3>
+          <h5>Set Affirmation Time</h5>
           <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
         </section>
 
         <ion-list mode="md">
-          <ng-container *ngFor="let time of times; let i = index; let last = last">
-            <ion-item (click)="openDatetime(i)">
+          <ng-container *ngFor="let time of times; let i = index">
+            <ion-item (click)="openDatetime(i)" lines="full">
               <ion-label>Set time {{ i + 1 }}</ion-label>
               <ion-text>{{ time ? (time | date:'HH:mm') : '--:--'}}</ion-text>
               <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"></ion-icon> 
@@ -42,9 +42,9 @@
         </ion-list>
 
         <section>
-          <h3>Your Affirmations</h3>
+          <h5>Your Affirmations</h5>
           <ion-list mode="md">
-            <ion-item *ngFor="let control of affirmationsForm.controls; let i = index; let last = last">
+            <ion-item *ngFor="let control of affirmationsForm.controls; let i = index">
               <ion-input class="ion-text-wrap" autocapitalize="sentences" type="text" placeholder="Enter affirmation" [formControl]="control"></ion-input>
               <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"></ion-icon>
             </ion-item>
@@ -63,7 +63,7 @@
 
         <section class="suggestions">
           <header>
-            <h4>Suggestions</h4>
+            <h5>Suggestions</h5>
             <ion-select [value]="enumAffirmationCategory.all" interface="popover" (ionChange)="filterSuggestions($event.detail.value)">
               <ion-select-option [value]="enumAffirmationCategory.all">All</ion-select-option>
               <ion-select-option [value]="enumAffirmationCategory.health">Health</ion-select-option>
@@ -76,7 +76,7 @@
           </header>
       
           <ion-list mode="md">
-            <ion-item *ngFor="let suggestion of suggestions; let last = last" [lines]="last ? 'none' : 'inset'">
+            <ion-item *ngFor="let suggestion of suggestions; let last = last" [lines]="last ? 'none' : 'full'">
               <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
               <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"></ion-icon>
             </ion-item>

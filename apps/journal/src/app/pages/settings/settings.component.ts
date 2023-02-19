@@ -3,12 +3,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { Router } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
 import { ModalController, Platform } from '@ionic/angular'
+import { getAuth } from 'firebase/auth'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { PersonalService } from '@strive/user/personal.service'
 import { isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { AppVersionService } from '@strive/utils/services/app-version.service'
-import { getAuth } from 'firebase/auth'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
   selector: 'journal-settings',
@@ -22,6 +23,7 @@ export class SettingsPageComponent {
   fcmIsSupported = this.personalService.fcmIsSupported
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
   isWeb = Capacitor.getPlatform() === 'web'
+  theme$ = this.themeService.theme$
 
   showPlayStore = this.isWeb && !this.platform.platforms().includes('ios')
   showAppStore = this.isWeb && !this.platform.platforms().includes('android')
@@ -38,6 +40,7 @@ export class SettingsPageComponent {
     private platform: Platform,
     private pwa: PWAService,
     private router: Router,
+    private themeService: ThemeService,
     private versionService: AppVersionService
   ) {
     this.personalService.fcmActive$.subscribe(value => {
@@ -72,5 +75,9 @@ export class SettingsPageComponent {
 
   back() {
     this.location.back()
+  }
+
+  toggleTheme() {
+    this.themeService.toggle()
   }
 }

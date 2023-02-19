@@ -13,6 +13,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 import { delay } from '@strive/utils/helpers'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const translucentPrimaryRGBA = 'rgba(249, 116, 29, 0.5)'
@@ -118,7 +119,7 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
           circular: true,
         },
         pointLabels: {
-          color: 'white',
+          color: this.themeServive.theme === 'dark' ? 'white' : 'black',
           font: {
             weight: 'bold'
           }
@@ -167,7 +168,8 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
   constructor(
     private auth: AuthService,
     private personalService: PersonalService,
-    private service: WheelOfLifeEntryService
+    private service: WheelOfLifeEntryService,
+    private themeServive: ThemeService
   ) {
 
     this.sub = this.form.valueChanges.subscribe(value => {
@@ -201,16 +203,16 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
           data: Object.values(this.form.value),
           backgroundColor: translucentPrimaryRGBA,
           borderColor: primaryRGBA,
-          pointBorderColor: 'white',
-          pointBackgroundColor: 'white',
+          pointBorderColor: this.themeServive.theme === 'dark' ? 'white' : primaryRGBA,
+          pointBackgroundColor: this.themeServive.theme === 'dark' ? 'white' : primaryRGBA,
           label: 'How you feel'
         },
         {
           data: Object.values(this.desiredForm.value),
           backgroundColor: translucentSecondaryRGBA,
           borderColor: secondaryRGBA,
-          pointBorderColor: 'gray',
-          pointBackgroundColor: 'gray',
+          pointBorderColor: secondaryRGBA,
+          pointBackgroundColor: secondaryRGBA,
           label: 'How you want to feel'
         }
       )

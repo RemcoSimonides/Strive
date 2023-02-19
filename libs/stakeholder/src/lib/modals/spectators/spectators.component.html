@@ -16,12 +16,12 @@
     <ion-list mode="md">
       <ng-container *ngIf="view.you as you">
         <ng-container *ngIf="view.you.isSpectator">
-          <ion-item [lines]="view.others.length ? 'inset' : 'none'">
+          <ion-item [lines]="view.others.length ? 'full' : 'none'">
             <ion-avatar slot="start" (click)="navTo(you.uid)">
-              <img [ref]="you.profile.photoURL" asset="profile.png"/>
+              <img [ref]="you.profile?.photoURL" asset="profile.png"/>
             </ion-avatar>
             <ion-label>
-              <b>{{ you.profile.username }}</b>
+              <b>{{ you.profile?.username }}</b>
             </ion-label>
             <ion-button fill="outline" slot="end" (click)="stopFollowing()">UNFOLLOW</ion-button>
           </ion-item>
@@ -29,12 +29,12 @@
       </ng-container>
 
       <ng-container *ngFor="let stakeholder of view.others; let last = last">
-        <ion-item [lines]="last ? 'none' : 'inset'">
+        <ion-item [lines]="last ? 'none' : 'full'">
           <ion-avatar slot="start" (click)="navTo(stakeholder.uid)">
-            <img [ref]="stakeholder.profile.photoURL" asset="profile.png"/>
+            <img [ref]="stakeholder.profile?.photoURL" asset="profile.png"/>
           </ion-avatar>
           <ion-label>
-            <b>{{ stakeholder.profile.username }}</b>
+            <b>{{ stakeholder.profile?.username }}</b>
           </ion-label>
           <ion-button fill="clear" slot="end" *ngIf="view.you.isAdmin" (click)="openRoles(stakeholder, $event)">
             <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>

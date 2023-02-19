@@ -56,7 +56,7 @@
           <ion-list class="pending-list" mode="md">
             <h5>Pending Messages</h5>
             <ng-container *ngFor="let message of pendingMessages; let last = last">
-              <ion-item [lines]="last ? 'none' : 'inset'">
+              <ion-item [lines]="last ? 'none' : 'full'">
                 <ion-icon name="mail-outline"></ion-icon>
                 <article>
                   <span>Delivered in {{ message.deliveryDate | timeToGo }}</span>
@@ -73,7 +73,7 @@
           <ion-list mode="md">
             <h5>Delivered Messages</h5>
             <ng-container *ngFor="let message of deliveredMessages; let last = last">
-              <ion-item button (click)="openMessage(message)" [lines]="last ? 'none' : 'inset'">
+              <ion-item button (click)="openMessage(message)" [lines]="last ? 'none' : 'full'">
                 <ion-icon name="mail-open-outline"></ion-icon>
                 <article>
                   <span>Delivered on {{ message.deliveryDate | date }}</span>

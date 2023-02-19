@@ -1,19 +1,19 @@
-<ion-header>
-  <ion-toolbar mode="md">
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="md" transparent>
     <ion-searchbar placeholder="Search" (ionChange)="search($event)"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-  <ion-buttons slot="end">
-    <ion-button (click)="dismiss()">
-      <ion-icon slot="icon-only" name="close"></ion-icon>
-    </ion-button>
-  </ion-buttons>
 </ion-header>
 <ion-content class="ion-padding">
   <ng-container *ngIf="results$ | async as profiles; else loading">
     <ng-container *ngIf="profiles.length else empty">
       <ion-list mode="md">
         <ng-container *ngFor="let profile of results$ | async; let last = last">
-          <ion-item [lines]="last ? 'none' : 'inset'">
+          <ion-item [lines]="last ? 'none' : 'full'">
             <ion-avatar slot="start">
               <img asset="profile.png" [ref]="profile.photoURL">
             </ion-avatar>
@@ -32,7 +32,7 @@
     </ng-container>
   </ng-container>
 </ion-content>
-<ion-footer>
+<ion-footer class="ion-no-border">
   <small>Invite someone without Strive Journal account?</small>
   <ion-button (click)="share($event)" color="primary" size="small">
     <ion-icon slot="start" name="share-social-outline"></ion-icon>

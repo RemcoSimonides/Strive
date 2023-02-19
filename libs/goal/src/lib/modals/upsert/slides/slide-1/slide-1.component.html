@@ -1,7 +1,7 @@
 <form [formGroup]="form">
   <small>Without a clear target, you'll never hit your mark. That's why it's crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you've lost one kilo? Five? Forty?</small>
   
-  <ion-list>
+  <ion-list mode="md" lines="full">
     <ion-item lines="none">
       <ion-label color="primary">What do you want to achieve? *</ion-label>
     </ion-item>
@@ -19,7 +19,7 @@
       <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
     </ion-item>
   
-    <ion-item>
+    <ion-item lines="none">
       <ion-label position="stacked" color="primary">Who can see this goal? *</ion-label>
       <ion-select interface="popover" formControlName="isSecret"> 
         <ion-select-option [value]="false">Everyone</ion-select-option>

@@ -1,10 +1,11 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core'
 import { isValidHttpUrl } from '@strive/utils/helpers'
+import { Theme, ThemeService } from '@strive/utils/services/theme.service'
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs'
 import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers'
 
-function getAssetPath(asset: string) {
-  return `assets/images/${asset}`
+function getAssetPath(asset: string, theme: Theme) {
+  return `assets/images/${theme}/${asset}`
 }
 
 @Directive({
@@ -66,21 +67,22 @@ export class ImageDirective implements OnInit, OnDestroy {
   }
 
   constructor(
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private themeService: ThemeService
   ) { }
 
   @HostListener('error')
   error() {
     const asset = this.asset$.getValue()
-    this.srcset = getAssetPath(asset)
+    this.srcset = getAssetPath(asset, this.themeService.theme)
     this.src = this.srcset
   }
 
   ngOnInit() {
-    const obs$: Observable<any>[] = [this.asset$, this.parameters, this.ref$]
+    const obs$: Observable<any>[] = [this.asset$, this.parameters, this.themeService.theme$, this.ref$]
 
     // apply latest changes
-    this.sub = combineLatest(obs$).subscribe(async ([asset, params, ref]) => {
+    this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
       if (ref) {
         // ref
         if (isValidHttpUrl(ref)) {
@@ -91,7 +93,7 @@ export class ImageDirective implements OnInit, OnDestroy {
         }
       } else {
         // asset
-        this.srcset = getAssetPath(asset)
+        this.srcset = getAssetPath(asset, theme)
         this.src = this.srcset
       }
       this.cdr.markForCheck()

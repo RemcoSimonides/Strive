@@ -22,6 +22,7 @@ import { AuthService } from '@strive/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
   selector: 'journal-root',
@@ -95,9 +96,11 @@ export class AppComponent implements OnDestroy {
     public screensize: ScreensizeService,
     private seo: SeoService,
     private support: SupportService,
+    private theme: ThemeService,
     private versionService: AppVersionService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
+    this.theme.initTheme('dark')
     this.openModalOnStartup()
     this.versionService.checkForUpdate()
 

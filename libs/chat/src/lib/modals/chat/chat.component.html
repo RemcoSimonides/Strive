@@ -32,7 +32,7 @@
 			</ul>
 		</ion-content>
 	
-		<ion-footer>
+		<ion-footer class="ion-no-border">
 			<ion-item>
 				<ion-textarea type="text" placeholder="Reply..." [formControl]="form" (keydown.enter)="addReply($event)" autoGrow autocapitalize="sentences"></ion-textarea>
 				<ion-icon name="send" (click)="addReply()"></ion-icon>

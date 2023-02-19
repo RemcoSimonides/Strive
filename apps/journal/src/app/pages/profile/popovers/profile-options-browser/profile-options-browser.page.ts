@@ -9,6 +9,7 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { isSafari } from '@strive/utils/helpers'
 import { PersonalService } from '@strive/user/personal.service'
 import { AuthService } from '@strive/auth/auth.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
   selector: 'journal-profile-options-browser',
@@ -19,15 +20,17 @@ export class ProfileOptionsBrowserComponent {
 
   unreadNotifications$ = this.notification.hasUnreadNotification$
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
+  theme$ = this.themeService.theme$
 
   constructor(
     private auth: AuthService,
     private modalCtrl: ModalController,
+    private notification: NotificationService,
     private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     public pwa: PWAService,
     private router: Router,
-    private notification: NotificationService
+    private themeService: ThemeService
   ) {}
 
   goTo(url: string) {
@@ -56,5 +59,9 @@ export class ProfileOptionsBrowserComponent {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
+  }
+
+  toggleTheme() {
+    this.themeService.toggle()
   }
 }
