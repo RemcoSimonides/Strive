@@ -10,6 +10,9 @@ import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rx
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 // Capacitor
 import { Capacitor } from '@capacitor/core'
+import { Share } from '@capacitor/share'
+// Sentry
+import { captureException } from '@sentry/angular'
 // Date fns
 import { isEqual, isPast } from 'date-fns'
 // Strive Utils
@@ -28,6 +31,7 @@ import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-g
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
 import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
+import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -391,7 +395,7 @@ export class GoalPageComponent implements OnDestroy {
   }
 
 
-  openShareModal() {
+  openAddOthersModal() {
     this.modalCtrl.create({
       component: AddOthersModalComponent,
       componentProps: {
@@ -399,6 +403,31 @@ export class GoalPageComponent implements OnDestroy {
         stakeholder: this.stakeholder
       }
     }).then(modal => modal.present())
+  }
+
+  async openShare(event: Event) {
+    if (!this.goal || !this.stakeholder) return
+
+    const isSecret = this.goal.publicity !== 'public'
+    const url = await this.inviteTokenService.getShareLink(this.goal.id, isSecret, this.stakeholder.isAdmin)
+
+    const canShare = await Share.canShare()
+    if (canShare.value) {
+      Share.share({
+        title: this.goal.title,
+        text: 'Check out this goal',
+        url,
+        dialogTitle: 'Together we achieve!'
+      }).catch(err => {
+        captureException(err)
+      })
+    } else {
+      this.popoverCtrl.create({
+        component: GoalSharePopoverComponent,
+        event,
+        componentProps: { url }
+      }).then(popover => popover.present())
+    }
   }
 
   saveDescription(description: string) {

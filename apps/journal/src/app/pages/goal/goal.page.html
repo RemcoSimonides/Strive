@@ -48,11 +48,18 @@
           <span>Chat</span>
         </ion-button>
 
-        <ng-container *ngIf="goal.publicity === 'public' || stakeholder.isAdmin">
-          <ion-button (click)="openShareModal()" class="secondary">
+        <ng-container *ngIf="stakeholder.isAdmin; else share">
+          <ion-button (click)="openAddOthersModal()" class="secondary">
             <ion-icon slot="icon-only" size="small" name="person-add-outline"></ion-icon>
           </ion-button>
         </ng-container>
+        <ng-template #share>
+          <ng-container *ngIf="goal.publicity === 'public'">
+            <ion-button (click)="openShare($event)" class="secondary">
+              <ion-icon slot="icon-only" size="small" name="share-social-outline"></ion-icon>
+            </ion-button>
+          </ng-container>
+        </ng-template>
 
         <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="secondary">
           <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"></ion-icon>
