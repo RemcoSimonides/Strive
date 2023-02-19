@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 // Rxjs
-import { BehaviorSubject } from 'rxjs'
-import { debounceTime, map, startWith } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest } from 'rxjs'
+import { debounceTime, map, startWith, tap } from 'rxjs/operators'
 
 import { exercises } from '@strive/model'
 
@@ -28,8 +28,16 @@ export class ExplorePageComponent implements OnDestroy {
     type: new FormControl('all')
   })
 
-  private _exercises = new BehaviorSubject(exercises)
-  exercises$ = this._exercises.asObservable()
+  exercises$ = new BehaviorSubject(exercises)
+  goals$ = this.algolia.goals$
+  profiles$ = this.algolia.profiles$
+
+  noResults$ = combineLatest([
+    this.exercises$, this.goals$, this.profiles$
+  ]).pipe(
+    map(([exercises, goals, profiles]) => !exercises.length && !goals.length && !profiles.length),
+    tap(console.log)
+  )
 
   private searchSubscription = this.searchForm.valueChanges.pipe(
     debounceTime(500),
@@ -53,7 +61,7 @@ export class ExplorePageComponent implements OnDestroy {
         this.algolia.search(query, hpp)
 
         const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
-        this._exercises.next(filteredExercises)
+        this.exercises$.next(filteredExercises)
         break
       }
     }
@@ -71,7 +79,7 @@ export class ExplorePageComponent implements OnDestroy {
   })
 
   constructor(
-    public algolia: AlgoliaService,
+    private algolia: AlgoliaService,
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,

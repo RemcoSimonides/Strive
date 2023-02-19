@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { NotificationService } from '@strive/notification/notification.service'
 import { MenuComponent } from '../menu/menu.component'
@@ -20,12 +21,15 @@ export class HeaderRootComponent {
   unreadNotifications$ = this.notification.hasUnreadNotification$
 
   isLoggedIn$ = this.auth.isLoggedIn$
+  isMobile$ = this.screensize.isMobile$
+  lightTheme$ = this.themeService.light$
 
   constructor(
     private auth: AuthService,
     private modalCtrl: ModalController,
     private notification: NotificationService,
-    public screensize: ScreensizeService
+    private screensize: ScreensizeService,
+    private themeService: ThemeService
   ) { }
 
   openAuthModal(authSegment: enumAuthSegment) {

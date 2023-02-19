@@ -41,10 +41,17 @@ section {
 ul {
   padding-top: 16px;
   padding-inline: 48px;
+  min-height: 60vh;
 
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 16px;
+
+  i {
+    text-align: center;
+    margin-top: 16px;
+    color: var(--ion-color-medium);
+  }
 }
 
 strive-banner {

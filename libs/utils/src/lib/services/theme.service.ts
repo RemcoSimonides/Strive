@@ -1,12 +1,14 @@
 import { Injectable, Inject, Renderer2, RendererFactory2 } from '@angular/core'
 import { DOCUMENT } from '@angular/common'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, map } from 'rxjs'
 
 export type Theme = 'dark' | 'light'
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   theme$ = new BehaviorSubject<Theme>('light')
+  light$ = this.theme$.pipe(map(theme => theme === 'light'))
+  dark$ = this.theme$.pipe(map(theme => theme === 'dark'))
 
   private renderer: Renderer2
 

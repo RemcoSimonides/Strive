@@ -1,4 +1,4 @@
-<ng-container *ngIf="screensize.isMobile$ | async">
+<ng-container *ngIf="isMobile$ | async">
   <ion-header mode="md">
     <ion-toolbar>
       <ng-container *ngIf="title; else noTitle">
@@ -23,7 +23,7 @@
           <ion-button routerLink="/explore">
             <ion-icon slot="icon-only" name="search-outline"></ion-icon>
           </ion-button>
-          <ion-button class="button-round" fill="solid" (click)="openAuthModal(enumAuthSegment.register)">
+          <ion-button class="button-round" [color]="(lightTheme$ | async) ? 'primary' : 'dark'" fill="solid" (click)="openAuthModal(enumAuthSegment.register)">
             <b>Sign up</b>
           </ion-button>
           <ion-button (click)="openMenu()">

@@ -7,6 +7,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { delay, isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
 	selector: 'strive-menu',
@@ -19,6 +20,7 @@ export class MenuComponent extends ModalDirective {
 
 	isInstallable$ = this.pwa.showInstallPromotion$
 	isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
+	theme$ = this.themeService.theme$
 
 	showPlayStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('ios')
 	showAppStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('android')
@@ -29,6 +31,7 @@ export class MenuComponent extends ModalDirective {
 		protected override platform: Platform,
 		private pwa: PWAService,
 		private router: Router,
+		private themeService: ThemeService
 	){
 		super(location, modalCtrl, platform)
 	}
@@ -53,4 +56,8 @@ export class MenuComponent extends ModalDirective {
 	install() {
 		this.pwa.showInstallPromotion()
 	}
+
+	toggleTheme() {
+    this.themeService.toggle()
+  }
 }

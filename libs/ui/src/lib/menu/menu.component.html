@@ -1,5 +1,13 @@
 <ion-header mode="md">
 	<ion-toolbar>
+		<ng-container *ngIf="theme$ | async as theme">
+			<ion-buttons slot="start">
+				<ion-button (click)="toggleTheme()" fill="clear">
+					<ion-icon *ngIf="theme === 'light'" name="moon-outline"></ion-icon>
+					<ion-icon *ngIf="theme === 'dark'" name="sunny-outline"></ion-icon>
+				</ion-button>
+			</ion-buttons>
+		</ng-container>
 		<ion-buttons slot="end">
 			<ion-button (click)="dismiss()">
 				<ion-icon name="close" slot="icon-only"></ion-icon>
