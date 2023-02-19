@@ -108,6 +108,7 @@
 
   --ion-item-background: white;
   --ion-toolbar-background: white;
+  --ion-tab-bar-color: var(--ion-color-step-400);
   --ion-tab-bar-background: white;
   --ion-card-background: white;
 }
@@ -212,6 +213,7 @@ body[data-theme="dark"] {
 
   --ion-item-background: #1e1e1e;
   --ion-toolbar-background: #1f1f1f;
+  --ion-tab-bar-color: var(--ion-color-step-400);
   --ion-tab-bar-background: #1f1f1f;
   --ion-card-background: #1e1e1e;
 }
