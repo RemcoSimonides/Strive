@@ -45,14 +45,13 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
     private goalService: GoalService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService,
     private router: Router
 
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
@@ -76,10 +75,8 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
   }
 
   navTo(uid: string) {
-    this.location.back()
-    delay(250).then(() => {
-      this.router.navigate(['/profile/', uid])
-    })
+    const path = ['/profile', uid]
+    this.navigateTo(this.router, path)
   }
 
   async leave() {

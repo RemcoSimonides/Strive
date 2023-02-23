@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { IonicModule, ModalController, Platform, PopoverController } from '@ionic/angular'
+import { IonicModule, ModalController, PopoverController } from '@ionic/angular'
 import { joinWith } from 'ngfire'
 import { combineLatest, map, Observable } from 'rxjs'
 
@@ -13,7 +13,6 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { delay } from '@strive/utils/helpers'
 import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/model'
 
 @Component({
@@ -41,14 +40,12 @@ export class SupportersModalComponent extends ModalDirective implements OnInit {
     private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
+    private router: Router,
     private stakeholderService: GoalStakeholderService,
-    private router: Router
-
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
@@ -72,10 +69,8 @@ export class SupportersModalComponent extends ModalDirective implements OnInit {
   }
 
   navTo(uid: string) {
-    this.location.back()
-    delay(250).then(() => {
-      this.router.navigate(['/profile/', uid])
-    })
+    const path = ['/profile', uid]
+    this.navigateTo(this.router, path)
   }
 
   openRoles(stakeholder: GoalStakeholder, event: UIEvent) {

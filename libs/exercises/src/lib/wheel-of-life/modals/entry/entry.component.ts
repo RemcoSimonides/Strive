@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Location } from '@angular/common'
 import { Router } from '@angular/router'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 
 import { orderBy } from 'firebase/firestore'
 import { of, switchMap } from 'rxjs'
@@ -34,11 +34,10 @@ export class EntryModalComponent extends ModalDirective {
     private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private router: Router,
     private service: WheelOfLifeEntryService
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   async createGoal() {

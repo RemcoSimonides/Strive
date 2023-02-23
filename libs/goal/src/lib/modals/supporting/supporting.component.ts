@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Goal } from '@strive/model'
@@ -19,14 +19,13 @@ export class SupportingComponent extends ModalDirective {
   constructor(
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private router: Router,
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
-  navigateTo(id: string) {
-    this.router.navigateByUrl(`goal/${id}`)
-    this.modalCtrl.dismiss()
+  navTo(id: string) {
+    const path = ['/goal', id]
+    this.navigateTo(this.router, path)
   }
 }

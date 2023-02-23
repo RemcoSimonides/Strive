@@ -16,7 +16,7 @@
 
   <ion-list mode="md">
     <ng-container *ngFor="let goal of goals; let last = last">
-      <ion-item button [lines]="last ? 'none' : 'full'" (click)="navigateTo(goal.id)">
+      <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(goal.id)">
         <ion-thumbnail slot="start">
           <img asset="goal.png" [ref]="goal.image">
         </ion-thumbnail>

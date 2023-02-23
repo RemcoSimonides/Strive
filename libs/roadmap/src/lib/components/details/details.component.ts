@@ -1,6 +1,6 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular'
+import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
 
 import { orderBy, serverTimestamp, where } from 'firebase/firestore'
@@ -60,14 +60,13 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     protected override location: Location,
     private milestoneService: MilestoneService,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private postService: PostService,
     private profileService: ProfileService,
     private storyService: StoryService,
     private supportService: SupportService
   ) {
-    super (location, modalCtrl, platform)
+    super (location, modalCtrl)
   }
 
   ngOnInit() {

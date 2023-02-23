@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Message } from '@strive/model'
@@ -27,10 +27,9 @@ export class MessageModalComponent extends ModalDirective implements OnInit {
     private dfsService: DearFutureSelfService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    private personalService: PersonalService,
-    protected override platform: Platform
+    private personalService: PersonalService
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   async ngOnInit() {

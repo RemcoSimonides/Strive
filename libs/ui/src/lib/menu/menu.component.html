@@ -26,11 +26,11 @@
 
 		<ion-item lines="none"></ion-item>
 
-		<ion-item button (click)="goTo('/')">
+		<ion-item button (click)="navTo(['/'])">
 			<ion-label>Home</ion-label>
 		</ion-item>
 
-		<ion-item button (click)="goTo('explore')">
+		<ion-item button (click)="navTo(['/explore'])">
 			<ion-label>Explore</ion-label>
 		</ion-item>
 
@@ -48,11 +48,11 @@
 			<ion-icon name="open-outline"></ion-icon>
 		</ion-item>
 
-		<ion-item button (click)="goTo('privacy-policy')">
+		<ion-item button (click)="navTo(['/privacy-policy'])">
 			<ion-label>Privacy</ion-label>
 		</ion-item>
 
-		<ion-item button lines="none" (click)="goTo('terms')">
+		<ion-item button lines="none" (click)="navTo(['/terms'])">
 			<ion-label>Terms</ion-label>
 		</ion-item>
 	</ion-list>

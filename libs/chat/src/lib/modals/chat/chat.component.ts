@@ -61,11 +61,11 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
     private commentService: CommentService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
+    private platform: Platform,
     private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
     const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
     this.subs.push(sub)
   }

@@ -1,6 +1,6 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 
 import { Support } from '@strive/model'
 
@@ -18,9 +18,8 @@ export class SupportDetailsModalComponent extends ModalDirective {
 
   constructor(
     protected override location: Location,
-    protected override modalCtrl: ModalController,
-    protected override platform: Platform,
+    protected override modalCtrl: ModalController
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 }

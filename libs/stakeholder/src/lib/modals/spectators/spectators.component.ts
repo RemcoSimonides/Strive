@@ -41,14 +41,13 @@ export class SpectatorsModalComponent extends ModalDirective implements OnInit {
     private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService,
     private router: Router
 
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
@@ -72,10 +71,8 @@ export class SpectatorsModalComponent extends ModalDirective implements OnInit {
   }
 
   navTo(uid: string) {
-    this.location.back()
-    delay(250).then(() => {
-      this.router.navigate(['/profile/', uid])
-    })
+    const path = ['/profile', uid]
+    this.navigateTo(this.router, path)
   }
 
   stopFollowing() {

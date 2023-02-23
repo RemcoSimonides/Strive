@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common'
 import { Component, Input, Pipe, PipeTransform } from '@angular/core'
-import { IonicModule, ModalController, Platform, PopoverController } from '@ionic/angular'
+import { IonicModule, ModalController, PopoverController } from '@ionic/angular'
 
 import { Share } from '@capacitor/share'
 import { joinWith } from 'ngfire'
@@ -162,12 +162,11 @@ export class AddOthersModalComponent extends ModalDirective {
     private inviteTokenService: InviteTokenService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private popoverCtrl: PopoverController,
     private profileService: ProfileService,
     private spectatorService: SpectatorService
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   search(event: any) {

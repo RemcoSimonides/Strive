@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Location } from '@angular/common'
-import { LoadingController, ModalController, Platform } from '@ionic/angular'
+import { LoadingController, ModalController } from '@ionic/angular'
 
 //Services
 import { GoalService } from '@strive/goal/goal.service'
@@ -46,10 +46,9 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
     protected override location: Location,
-    protected override modalCtrl: ModalController,
-    protected override platform: Platform
+    protected override modalCtrl: ModalController
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
 
     this.loadingCtrl.getTop().then((v) => v ? this.loadingCtrl.dismiss() : undefined)
   }

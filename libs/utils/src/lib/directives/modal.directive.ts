@@ -1,7 +1,9 @@
 import { Location } from '@angular/common'
 import { Directive, HostBinding, HostListener } from '@angular/core'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
+import { Router } from '@angular/router'
+import { delay } from '../helpers'
 
 @Directive({
   selector: '[striveModal]'
@@ -18,8 +20,7 @@ export class ModalDirective {
 
   constructor(
     protected location: Location,
-    protected modalCtrl: ModalController,
-    protected platform: Platform
+    protected modalCtrl: ModalController
   ) {
     if (this.isWeb) {
       window.history.pushState(null, '', window.location.href)
@@ -38,6 +39,18 @@ export class ModalDirective {
       this.location.back()
     } else {
       this.modalCtrl.dismiss(data)
+    }
+  }
+
+  navigateTo(router: Router, path: string[]) {
+    if (this.isWeb) {
+      this.location.back()
+      delay(250).then(() => {
+        router.navigate(path)
+      })
+    } else {
+      this.modalCtrl.dismiss()
+      router.navigate(path)
     }
   }
 }

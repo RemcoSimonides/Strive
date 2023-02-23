@@ -28,12 +28,12 @@ export class MenuComponent extends ModalDirective {
 	constructor(
 		protected override location: Location,
 		protected override modalCtrl: ModalController,
-		protected override platform: Platform,
+		private platform: Platform,
 		private pwa: PWAService,
 		private router: Router,
 		private themeService: ThemeService
 	){
-		super(location, modalCtrl, platform)
+		super(location, modalCtrl)
 	}
 
 	openAuthModal(authSegment: enumAuthSegment) {
@@ -46,11 +46,8 @@ export class MenuComponent extends ModalDirective {
 		})
 	}
 
-	goTo(url: string) {
-		this.dismiss()
-		delay(250).then(_ => {
-			this.router.navigateByUrl(url)
-		})
+	navTo(path: string[]) {
+		this.navigateTo(this.router, path)
 	}
     
 	install() {

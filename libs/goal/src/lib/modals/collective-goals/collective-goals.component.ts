@@ -1,11 +1,10 @@
 import { CommonModule, Location } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { IonicModule, ModalController, Platform } from '@ionic/angular'
+import { IonicModule, ModalController } from '@ionic/angular'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { createGoal, Stakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { delay } from '@strive/utils/helpers'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
 
@@ -29,17 +28,14 @@ export class CollectiveGoalsModalSComponent extends ModalDirective {
   constructor(
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private router: Router
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   navTo(goalId: string) {
-    this.location.back()
-    delay(250).then(_ => {
-      this.router.navigate(['/goal', goalId])
-    })
+    const path = ['/goal', goalId]
+    this.navigateTo(this.router, path)
   }
 
 }

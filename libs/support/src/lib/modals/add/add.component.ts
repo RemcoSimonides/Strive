@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController } from '@ionic/angular'
 
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -31,11 +31,10 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     private auth: AuthService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
-    protected override platform: Platform,
     private profileService: ProfileService,
     private support: SupportService
   ) {
-    super(location, modalCtrl, platform)
+    super(location, modalCtrl)
   }
 
   ngOnInit() {
