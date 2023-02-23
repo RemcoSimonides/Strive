@@ -7,7 +7,7 @@ import { StoryItem } from '@strive/model'
 @Injectable({ providedIn: 'root' })
 export class StoryService extends FireSubCollection<StoryItem> {
   readonly path = 'Goals/:goalId/Story'
-  override readonly memorize = true
+  override readonly memorize = false // no memorize for changing story order
 
   protected override toFirestore(item: StoryItem, actionType: 'add' | 'update'): StoryItem {
     const timestamp = serverTimestamp() as any

@@ -245,8 +245,14 @@
       </article>
     </section>
 
-    <section>
-      <h5>Story</h5>
+    <section class="story">
+      <header>
+        <h5>Story</h5>
+        <ion-button fill="clear" *ngIf="storyOrder$ | async as order" (click)="toggleStoryOrder()">
+          <ion-icon *ngIf="order === 'desc'" name="chevron-up-outline" slot="icon-only"></ion-icon>
+          <ion-icon *ngIf="order === 'asc'" name="chevron-down-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </header>
       <strive-story [story]="story$ | async" [stakeholder]="stakeholder" [goalId]="goal.id"></strive-story>
     </section>
 

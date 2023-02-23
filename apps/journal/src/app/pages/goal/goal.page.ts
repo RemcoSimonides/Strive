@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
 import { Location } from '@angular/common'
 // Firebase
-import { orderBy, where } from 'firebase/firestore'
+import { orderBy, OrderByDirection, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 // Rxjs
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs'
@@ -84,6 +84,7 @@ export class GoalPageComponent implements OnDestroy {
   collectiveStakeholder: GoalStakeholder | undefined
   collectiveStakeholders$: Observable<Stakeholder[]>
 
+  storyOrder$ = new BehaviorSubject<OrderByDirection>('desc')
   story$: Observable<StoryItem[]>
 
   milestones$?: Observable<Milestone[]>
@@ -180,8 +181,8 @@ export class GoalPageComponent implements OnDestroy {
       })
     )
 
-    this.story$ = goalId$.pipe(
-      switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([])),
+    this.story$ = combineLatest([goalId$, this.storyOrder$]).pipe(
+      switchMap(([goalId, order]) => goalId ? this.storyService.valueChanges([orderBy('date', order)], { goalId }) : of([])),
       joinWith({
         user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
@@ -516,5 +517,10 @@ export class GoalPageComponent implements OnDestroy {
     } else {
       this.location.back()
     }
+  }
+
+  toggleStoryOrder() {
+    const order: OrderByDirection = this.storyOrder$.value === 'desc' ? 'asc' : 'desc'
+    this.storyOrder$.next(order)
   }
 }
