@@ -2,6 +2,7 @@ import { Injectable, Inject, Renderer2, RendererFactory2 } from '@angular/core'
 import { DOCUMENT } from '@angular/common'
 import { BehaviorSubject, map } from 'rxjs'
 import { KeyboardStyle, Keyboard } from '@capacitor/keyboard'
+import { Capacitor } from '@capacitor/core'
 
 export type Theme = 'dark' | 'light'
 
@@ -37,9 +38,12 @@ export class ThemeService {
 
   setTheme(mode: Theme) {
     this.renderer.setAttribute(this.document.body, 'data-theme', mode)
-    const style = mode === 'dark' ? KeyboardStyle.Dark : KeyboardStyle.Light
-    Keyboard.setStyle({ style })
     this.theme$.next(mode)
+    
+    if (Capacitor.getPlatform() !== 'web') {
+      const style = mode === 'dark' ? KeyboardStyle.Dark : KeyboardStyle.Light
+      Keyboard.setStyle({ style })
+    }
   }
 
   toggle() {
