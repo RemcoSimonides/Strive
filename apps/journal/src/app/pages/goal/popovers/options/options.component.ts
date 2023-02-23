@@ -71,6 +71,6 @@ export class GoalOptionsPopoverComponent {
           role: 'cancel'
         }
       ]
-    })
+    }).then(alert => alert.present())
   }
 }
