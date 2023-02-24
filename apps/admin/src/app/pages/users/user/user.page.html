@@ -67,7 +67,7 @@
       <ion-card *ngFor="let stakeholder of stakeholders">
         <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
           <ion-thumbnail slot="start">
-            <img [ref]="stakeholder.goal.image" asset="goal.png"/>
+            <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="60" [height]="60"/>
             <div *ngIf="stakeholder.goal.status !== 'pending'">finished</div>
           </ion-thumbnail>
           <article>

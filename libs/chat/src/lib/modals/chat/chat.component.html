@@ -22,7 +22,7 @@
 				</ion-infinite-scroll>
 				
 				<li *ngFor="let comment of comments$ | async">
-					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="40" [height]="40"/>
+					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="60" [height]="60"/>
 					<article>
 						<small><b>{{ comment.user?.username }}</b></small>
 						<small class="date">{{ comment.createdAt | timeAgo }}</small>

@@ -18,7 +18,7 @@
         <ng-container *ngIf="you.isAchiever">
           <ion-item [lines]="view.others.length ? 'full' : 'none'">
             <ion-avatar slot="start" (click)="navTo(you.uid)">
-              <img [ref]="you.profile?.photoURL" asset="profile.png"/>
+              <img [ref]="you.profile?.photoURL" asset="profile.png" [width]="60" [height]="60"/>
             </ion-avatar>
             <ion-label>
               <article>
@@ -34,7 +34,7 @@
       <ng-container *ngFor="let stakeholder of view.others; let last = last">
         <ion-item [lines]="last ? 'none' : 'full'">
           <ion-avatar slot="start" (click)="navTo(stakeholder.uid)">
-            <img [ref]="stakeholder.profile?.photoURL" asset="profile.png"/>
+            <img [ref]="stakeholder.profile?.photoURL" asset="profile.png" [width]="60" [height]="60"/>
           </ion-avatar>
           <ion-label>
             <article>

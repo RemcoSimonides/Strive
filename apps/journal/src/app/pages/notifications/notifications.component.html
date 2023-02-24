@@ -13,6 +13,7 @@
                     [ref]="_message.image"
                     [asset]="_message.type === 'profile' ? 'profile.png' : 'goal.png'"
                     [ngStyle]="{'border-radius': _message.type === 'profile' ? '50%' : '12px'}"
+                    [width]="60" [height]="60"
                   />
                   <div>
                     <span>{{ _message.message }}</span>

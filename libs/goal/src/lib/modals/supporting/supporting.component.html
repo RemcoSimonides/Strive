@@ -18,7 +18,7 @@
     <ng-container *ngFor="let goal of goals; let last = last">
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(goal.id)">
         <ion-thumbnail slot="start">
-          <img asset="goal.png" [ref]="goal.image">
+          <img asset="goal.png" [ref]="goal.image" [width]="60" [height]="60">
         </ion-thumbnail>
         <ion-label>{{ goal.title }}</ion-label>
       </ion-item>

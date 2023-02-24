@@ -1,7 +1,7 @@
 <ion-card mode="md" button>
     <section>
         <ion-thumbnail [ngClass]="{'gradient-border': _stakeholder.focus.on }">
-            <img [ref]="goal.image" asset="goal.png"/>
+            <img [ref]="goal.image" asset="goal.png" [width]="60" [height]="60"/>
             <div *ngIf="goal.status !== 'pending'">finished</div>
         </ion-thumbnail>
         <article>
