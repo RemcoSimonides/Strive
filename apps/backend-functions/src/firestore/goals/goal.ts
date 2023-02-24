@@ -1,6 +1,6 @@
 import { db, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp } from '../../internals/firebase'
 import { logger } from 'firebase-functions'
-import { isFuture } from 'date-fns'
+import { isEqual, isFuture } from 'date-fns'
 
 import {
   createGoal,
@@ -101,7 +101,7 @@ async (snapshot, context) => {
   const becameFinishedSuccessfully = before.status ==='pending' && after.status === 'succeeded'
   const becameFinishedUnsuccessfully = before.status === 'pending' && after.status === 'failed'
 
-  const deadlineChanged = before.deadline !== after.deadline
+  const deadlineChanged = !isEqual(before.deadline, after.deadline)
 
   handleAggregation(before, after)
 

@@ -7,6 +7,7 @@ import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.in
 import { toDate } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
+import { isEqual } from 'date-fns'
 
 export const milestoneCreatedhandler = onDocumentCreate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneCreatedhandler',
 async (snapshot, context) => {
@@ -69,7 +70,7 @@ async (snapshot, context) => {
     deleteScheduledTask(milestoneId)
   }
 
-  if (before.deadline !== after.deadline) {
+  if (!isEqual(before.deadline, after.deadline)) {
     upsertScheduledTask(milestoneId, {
       worker: enumWorkerType.milestoneDeadline,
       performAt: after.deadline,
