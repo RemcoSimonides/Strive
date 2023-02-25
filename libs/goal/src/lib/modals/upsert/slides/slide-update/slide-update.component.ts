@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core'
-import { Location } from '@angular/common'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
 import { AlertController, LoadingController, NavParams, PopoverController } from '@ionic/angular'
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalForm } from '@strive/goal/forms/goal.form'
@@ -18,12 +17,13 @@ export class SlideUpdateComponent {
   @Input() form!: GoalForm
   @Input() goalId!: string
 
+  @Output() saved = new EventEmitter()
+
   constructor(
     private alertCtrl: AlertController,
     private cdr: ChangeDetectorRef,
     private goal: GoalService,
     private loadingCtrl: LoadingController,
-    private location: Location,
     private navParams: NavParams,
     private popoverCtrl: PopoverController
   ) {}
@@ -47,7 +47,7 @@ export class SlideUpdateComponent {
         const goal = { ...this.form.getGoalValue(), id: this.goalId }
         await this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
 
-        this.location.back()
+        this.saved.emit()
         loading.dismiss()
 
       } catch (error: any) {

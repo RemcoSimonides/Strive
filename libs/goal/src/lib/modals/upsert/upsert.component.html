@@ -36,6 +36,6 @@
   </ng-container>
 
   <ng-template #update>
-    <strive-goal-slide-update [form]="goalForm" [goalId]="goal.id"></strive-goal-slide-update>
+    <strive-goal-slide-update [form]="goalForm" [goalId]="goal.id" (saved)="close()"></strive-goal-slide-update>
   </ng-template>
 </ion-content>
