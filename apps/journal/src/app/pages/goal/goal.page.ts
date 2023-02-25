@@ -187,7 +187,8 @@ export class GoalPageComponent implements OnDestroy {
         user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
-      })
+      }),
+      shareReplay({ bufferSize: 1, refCount: true })
     )
 
     const supports$ = combineLatest([
@@ -220,6 +221,9 @@ export class GoalPageComponent implements OnDestroy {
           achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
           supports: milestone => supports$.pipe(
             map(supports => supports.filter(support => support.milestoneId === milestone.id))
+          ),
+          story: milestone => this.story$.pipe(
+            map(story => story.filter(item => item.post && item.milestoneId === milestone.id))
           )
         },{ shouldAwait: false })
       ))

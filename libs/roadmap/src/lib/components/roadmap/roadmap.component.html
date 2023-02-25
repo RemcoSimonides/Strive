@@ -10,11 +10,18 @@
           <section>
             <span>{{ milestone.content }}</span>
             <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
-            <article *ngIf="(canEdit && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId">
+            <article *ngIf="(canEdit && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId || milestone.story?.length">
               <ng-container *ngIf="canEdit && !createMode">
-                <div class="supports">
-                  <small><ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>{{ milestone.supports?.length ?? 0 }}</small>
-                </div>
+                <small class="icon">
+                  <ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>
+                  <span>{{ milestone.supports?.length ?? 0 }}</span>
+                </small>
+              </ng-container>
+              <ng-container *ngIf="milestone.story?.length">
+                <small class="icon">
+                  <ion-icon name="chatbox-outline"></ion-icon>
+                  <span>{{ milestone.story?.length }}</span>
+                </small>
               </ng-container>
               <ng-container *ngIf="milestone.subtasks?.length">
                 <div class="subtasks">

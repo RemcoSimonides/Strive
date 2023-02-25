@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core'
 import { AlertController, ItemReorderEventDetail, ModalController } from '@ionic/angular'
-import { createGoalStakeholder, createPost, Goal, MilestoneStatus, Support } from '@strive/model'
+import { createGoalStakeholder, createPost, Goal, MilestoneStatus, StoryItem, Support } from '@strive/model'
 
 import { serverTimestamp } from 'firebase/firestore'
 
@@ -15,7 +15,7 @@ import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
 
-type MilestoneWithSupport = Milestone & { supports?: Support[] }
+type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryItem[] }
 
 @Component({
   selector: '[goal][milestones][stakeholder] strive-roadmap',
