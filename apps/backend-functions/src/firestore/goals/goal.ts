@@ -171,10 +171,10 @@ function handleAggregation(before: undefined | Goal, after: undefined | Goal) {
   const becamePrivate = before?.publicity !== 'private' && after?.publicity === 'private'
   const wasPrivate = before?.publicity === 'public' && after?.publicity !== 'private'
 
-  const becameFinished = before.status === 'pending' && after.status !== 'pending'
-  const wasFinished = before.status !== 'pending' && after.status === 'pending'
-  const becameFinishedSuccessfully = before.status === 'pending' && after.status === 'succeeded'
-  const becameFinishedUnsuccessfully = before.status === 'pending' && after.status === 'failed'
+  const becameFinished = before?.status === 'pending' && after !== undefined && after.status !== 'pending'
+  const wasFinished = before !== undefined && before.status !== 'pending' && after?.status === 'pending'
+  const becameFinishedSuccessfully = before?.status === 'pending' && after?.status === 'succeeded'
+  const becameFinishedUnsuccessfully = before?.status === 'pending' && after?.status === 'failed'
 
   aggregation.goalsPublic = becamePublic ? 1 : wasPublic ? -1 : 0
   aggregation.goalsPrivate = becamePrivate ? 1 : wasPrivate ? -1 : 0
