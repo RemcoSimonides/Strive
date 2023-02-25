@@ -5,7 +5,7 @@ import { createMilestone, MilestoneStatus } from '@strive/model'
   selector: 'strive-milestone-status',
   templateUrl: 'status.component.html',
   styleUrls: ['./status.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default // Default because when updating status, icon wasn't updated (despite markForCheck())
 })
 export class MilestoneStatusComponent {
 
