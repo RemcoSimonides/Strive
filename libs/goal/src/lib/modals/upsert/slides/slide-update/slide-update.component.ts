@@ -45,7 +45,7 @@ export class SlideUpdateComponent {
           this.imageSelector.cropIt()
         }
 
-        const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
+        const goal = { ...this.form.getGoalValue(), id: this.goalId }
         await this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
 
         this.location.back()

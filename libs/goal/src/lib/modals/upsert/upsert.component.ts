@@ -24,7 +24,7 @@ import { SwiperComponent } from 'swiper/angular'
 })
 export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
-  goalId?: string
+  goalId = ''
   goalForm!: GoalForm
   mode?: 'update' | 'create'
 
@@ -32,9 +32,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   focus = false
 
   private _goal?: Goal
-  get goal(): Goal {
-    return createGoal({ ...this.goalForm?.getGoalValue(), id: this.goalId })
-  }
+  get goal(): Goal { return this._goal ? this._goal : createGoal() }
   @Input() set goal(goal: Goal) {
     this._goal = goal
     this.goalId = goal.id
@@ -56,7 +54,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     if (this.goalId) {
       this.mode = 'update'
-      this.goalForm = new GoalForm(this._goal)
+      this.goalForm = new GoalForm(this.goal)
     } else {
       this.mode = 'create'
       this.goalId = this.goalService.createId()

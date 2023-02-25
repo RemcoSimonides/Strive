@@ -26,16 +26,16 @@ export class GoalForm extends FormGroup<GoalFormControl> {
   get isSecret() { return this.get('isSecret')! }
   get image() { return this.get('image')! }
 
-  getGoalValue() {
+  getGoalValue(): Partial<Goal> {
     const { description, image, deadline, isSecret, title } = this.value
     const publicity: GoalPublicityType = isSecret ? 'private' : 'public'
 
-    return createGoal({
+    return {
       description,
       title,
       image,
       deadline,
       publicity
-    })
+    }
   }
 }
