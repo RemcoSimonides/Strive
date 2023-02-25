@@ -26,7 +26,7 @@
 <ion-content>
 
   <picture (click)="openZoom(goal)" *ngIf="screensize.isMobile$ | async" class="mobile">
-    <img [ref]="goal.image" asset="goal.png" [width]="260" [height]="260"/>
+    <img [ref]="goal.image" asset="goal.png" [width]="600" [height]="600"/>
     <div *ngIf="goal.status !== 'pending'">finished</div>
   </picture>
 
@@ -74,7 +74,7 @@
 
     <div class="main">
       <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false">
-        <img [ref]="goal.image" asset="goal.png" [width]="260" [height]="260"/>
+        <img [ref]="goal.image" asset="goal.png" [width]="600" [height]="600"/>
         <div *ngIf="goal.status !== 'pending'">finished</div>
       </picture>
 
@@ -216,6 +216,18 @@
 
     <section>
       <h5>Roadmap</h5>
+      <ion-segment scrollable>
+        <ion-segment-button>
+          2021
+        </ion-segment-button>
+        <ion-segment-button>
+          2022
+        </ion-segment-button>
+        <ion-segment-button>
+          2023
+        </ion-segment-button>
+      </ion-segment>
+
       <strive-roadmap
         [goal]="goal"
         [milestones]="milestones$ | async"
