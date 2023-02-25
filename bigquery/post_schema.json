@@ -1,0 +1,44 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "mediaURL",
+      "type": "string"
+    },
+    {
+      "name": "url",
+      "type": "string"
+    },
+    {
+      "name": "goalId",
+      "type": "string"
+    },
+    {
+      "name": "uid",
+      "type": "string"
+    },
+    {
+      "name": "milestoneId",
+      "type": "string"
+    },
+    {
+      "name": "date",
+      "type": "timestamp"
+    }
+  ]
+}

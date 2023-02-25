@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "uid",
+      "type": "string"
+    },
+    {
+      "name": "username",
+      "type": "string"
+    },
+    {
+      "name": "photoURL",
+      "type": "string"
+    },
+    {
+      "name": "numberOfSpectating",
+      "type": "number"
+    },
+    {
+      "name": "numberOfSpectators",
+      "type": "number"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "needsDecision",
+      "type": "timestamp"
+    },
+    {
+      "name": "counterDescription",
+      "type": "string"
+    },
+    {
+      "name": "counterNeedsDecision",
+      "type": "timestamp"
+    },
+    {
+      "name": "counterStatus",
+      "type": "string"
+    },
+    {
+      "name": "goalId",
+      "type": "string"
+    },
+    {
+      "name": "milestoneId",
+      "type": "string"
+    },
+    {
+      "name": "supporterId",
+      "type": "string"
+    },
+    {
+      "name": "recipientId",
+      "type": "string"
+    }
+  ]
+}

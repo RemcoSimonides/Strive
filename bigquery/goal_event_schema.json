@@ -1,0 +1,40 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "goalId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "milestoneId",
+      "type": "string"
+    },
+    {
+      "name": "postId",
+      "type": "string"
+    },
+    {
+      "name": "supportId",
+      "type": "string"
+    },
+    {
+      "name": "commentId",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "image",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "deadline",
+      "type": "timestamp"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "publicity",
+      "type": "string"
+    },
+    {
+      "name": "collectiveGoalId",
+      "type": "string"
+    },
+    {
+      "name": "numberOfAchievers",
+      "type": "number"
+    },
+    {
+      "name": "numberOfSupporters",
+      "type": "number"
+    },
+    {
+      "name": "numberOfSpectators",
+      "type": "number"
+    },
+    {
+      "name": "tasksCompleted",
+      "type": "number"
+    },
+    {
+      "name": "tasksTotal",
+      "type": "number"
+    }
+  ]
+}

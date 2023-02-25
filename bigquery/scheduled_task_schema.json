@@ -1,0 +1,42 @@
+{
+  "fields": [
+    {
+      "name": "worker",
+      "type": "string"
+    },
+    {
+      "name": "performAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "fields": [
+        {
+          "name": "goalId",
+          "type": "string"
+        },
+        {
+          "name": "milestoneId",
+          "type": "string"
+        },
+        {
+          "name": "userId",
+          "type": "string"
+        },
+        {
+          "name": "inviteTokenId",
+          "type": "string"
+        },
+        {
+          "name": "index",
+          "type": "number"
+        }
+      ],
+      "name": "options",
+      "type": "map"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "date",
+      "type": "timestamp"
+    },
+    {
+      "name": "goalId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "milestoneId",
+      "type": "string"
+    },
+    {
+      "name": "postId",
+      "type": "string"
+    }
+  ]
+}

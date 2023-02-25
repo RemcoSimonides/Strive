@@ -1,0 +1,53 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedBy",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "order",
+      "type": "number",
+      "column_name": "_order"
+    },
+    {
+      "name": "content",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "deadline",
+      "type": "timestamp"
+    },
+    {
+      "name": "achieverId",
+      "type": "string"
+    },
+    {
+      "name": "deletedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "finishedAt",
+      "type": "timestamp"
+    }
+  ]
+}

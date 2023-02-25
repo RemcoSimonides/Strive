@@ -1,0 +1,64 @@
+{
+  "fields": [
+    {
+      "name": "createdAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedAt",
+      "type": "timestamp"
+    },
+    {
+      "name": "updatedBy",
+      "type": "string"
+    },
+    {
+      "name": "uid",
+      "type": "string"
+    },
+    {
+      "name": "isAdmin",
+      "type": "boolean"
+    },
+    {
+      "name": "isAchiever",
+      "type": "boolean"
+    },
+    {
+      "name": "isSupporter",
+      "type": "boolean"
+    },
+    {
+      "name": "isSpectator",
+      "type": "boolean"
+    },
+    {
+      "name": "hasOpenRequestToJoin",
+      "type": "boolean"
+    },
+    {
+      "name": "hasInviteToJoin",
+      "type": "boolean"
+    },
+    {
+      "name": "goalId",
+      "type": "string"
+    },
+    {
+      "name": "goalPublicity",
+      "type": "string"
+    },
+    {
+      "name": "collectiveGoalId",
+      "type": "string"
+    },
+    {
+      "name": "lastCheckedGoal",
+      "type": "timestamp"
+    },
+    {
+      "name": "lastCheckedChat",
+      "type": "timestamp"
+    }
+  ]
+}
