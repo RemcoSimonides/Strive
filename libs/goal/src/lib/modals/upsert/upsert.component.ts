@@ -6,7 +6,7 @@ import { LoadingController, ModalController } from '@ionic/angular'
 import { GoalService } from '@strive/goal/goal.service'
 
 //Interfaces
-import { createGoal, Goal } from '@strive/model'
+import { createGoal } from '@strive/model'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 
 // Directives
@@ -24,19 +24,13 @@ import { SwiperComponent } from 'swiper/angular'
 })
 export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
-  goalId = ''
   goalForm!: GoalForm
   mode?: 'update' | 'create'
 
   created = false // used for navigating to goal (only if goal is created)
   focus = false
 
-  private _goal?: Goal
-  get goal(): Goal { return this._goal ? this._goal : createGoal() }
-  @Input() set goal(goal: Goal) {
-    this._goal = goal
-    this.goalId = goal.id
-  }
+  @Input() goal = createGoal()
 
   @ViewChild('swiper') swiper?: SwiperComponent
 
@@ -52,12 +46,12 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   }
 
   ngOnInit() {
-    if (this.goalId) {
+    if (this.goal.id) {
       this.mode = 'update'
       this.goalForm = new GoalForm(this.goal)
     } else {
       this.mode = 'create'
-      this.goalId = this.goalService.createId()
+      this.goal.id = this.goalService.createId()
       this.goalForm = new GoalForm()
     }
   }
@@ -76,6 +70,6 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   }
 
   close() {
-    this.dismiss({ navToGoal: this.created ? this.goalId : false })
+    this.dismiss({ navToGoal: this.created ? this.goal.id : false })
   }
 }

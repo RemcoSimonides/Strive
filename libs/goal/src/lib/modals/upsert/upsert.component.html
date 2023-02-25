@@ -14,28 +14,28 @@
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="mode === 'create' else update">
-    <swiper #swiper [allowTouchMove]="false">
+    <swiper #swiper [allowTouchMove]="false" *ngIf="goal.id">
       <ng-template swiperSlide>
-        <strive-goal-slide-1 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)" (created)="created = $event" (hasFocus)="focus = $event"></strive-goal-slide-1>
+        <strive-goal-slide-1 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)" (created)="created = $event" (hasFocus)="focus = $event"></strive-goal-slide-1>
       </ng-template>
       <ng-container *ngIf="focus">
         <ng-template swiperSlide>
-          <strive-goal-slide-2 [goalId]="goalId" (stepper)="stepper($event)"></strive-goal-slide-2>
+          <strive-goal-slide-2 [goalId]="goal.id" (stepper)="stepper($event)"></strive-goal-slide-2>
         </ng-template>
       </ng-container>
       <ng-template swiperSlide>
-        <strive-goal-slide-3 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></strive-goal-slide-3>
+        <strive-goal-slide-3 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)"></strive-goal-slide-3>
       </ng-template>
       <ng-template swiperSlide>
         <strive-goal-slide-4 [goal]="goal" (stepper)="stepper($event)"></strive-goal-slide-4>
       </ng-template>
       <ng-template swiperSlide>
-        <strive-goal-slide-5 [form]="goalForm" [goalId]="goalId" (stepper)="stepper($event)"></strive-goal-slide-5>
+        <strive-goal-slide-5 [form]="goalForm" [goalId]="goal.id" (stepper)="stepper($event)"></strive-goal-slide-5>
       </ng-template>
     </swiper>
   </ng-container>
 
   <ng-template #update>
-    <strive-goal-slide-update [form]="goalForm" [goalId]="goalId"></strive-goal-slide-update>
+    <strive-goal-slide-update [form]="goalForm" [goalId]="goal.id"></strive-goal-slide-update>
   </ng-template>
 </ion-content>

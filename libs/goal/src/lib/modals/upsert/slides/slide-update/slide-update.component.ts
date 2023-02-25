@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core'
 import { Location } from '@angular/common'
 import { AlertController, LoadingController, NavParams, PopoverController } from '@ionic/angular'
-import { createGoal } from '@strive/model'
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
