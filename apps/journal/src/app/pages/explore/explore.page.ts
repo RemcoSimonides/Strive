@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute, Params, Router } from '@angular/router'
 // Rxjs
 import { BehaviorSubject, combineLatest } from 'rxjs'
-import { debounceTime, map, startWith, tap } from 'rxjs/operators'
+import { debounceTime, map, startWith } from 'rxjs/operators'
 
 import { exercises } from '@strive/model'
 
@@ -44,7 +44,14 @@ export class ExplorePageComponent implements OnDestroy {
   ).subscribe(({ query, type }) => {
     if (query === undefined || query === null) return
     this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
-    
+
+    const queryParams: Params = { t: type, q: query }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge'
+    })
+
     switch (type) {
       case 'goals':
         this.algolia.searchGoals(query, undefined)
@@ -53,10 +60,10 @@ export class ExplorePageComponent implements OnDestroy {
       case 'users':
         this.algolia.searchProfiles(query, undefined)
         break
-    
+
       case 'exercises':
       default: {
-        const hpp = query ? undefined : { goals: 8, profiles: 8 } 
+        const hpp = query ? undefined : { goals: 8, profiles: 8 }
         this.algolia.search(query, hpp)
 
         const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
@@ -67,11 +74,12 @@ export class ExplorePageComponent implements OnDestroy {
 
   })
 
-  private paramsSub = this.route.queryParams.pipe(
-    map(params => params['t'])
-  ).subscribe(t => {
+  private paramsSub = this.route.queryParams.subscribe(({ t, q }) => {
+    const queryControl = this.searchForm.get('query') as AbstractControl<string>
+    q ? queryControl.setValue(q) : queryControl.setValue('')
+
     const typeControl = this.searchForm.get('type') as AbstractControl<string>
-    if (!t) typeControl.setValue('all') 
+    if (!t) typeControl.setValue('all')
     const types = ['goals', 'users', 'exercises']
     if (!types.includes(t)) return
     typeControl.setValue(t)
