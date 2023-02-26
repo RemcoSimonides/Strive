@@ -14,7 +14,7 @@ interface Version {
 export class AppVersionService extends FireDocument<Version> {
   override path = `meta/version`
 
-  version = "1.4.0"
+  version = "1.5.0"
 
   constructor(
     private alertCtrl: AlertController,
@@ -43,7 +43,7 @@ export class AppVersionService extends FireDocument<Version> {
       const available = version[platform]
       const getMajor = (value: string) => +value.split('.')[0]
       const getMinor = (value: string) => +value.split('.')[1]
-      
+
       if (getMajor(this.version) < getMajor(available)) {
 
         this.alertCtrl.create({
@@ -57,9 +57,9 @@ export class AppVersionService extends FireDocument<Version> {
           ],
           backdropDismiss: false
         }).then(alert => alert.present())
-  
+
       } else if (getMinor(this.version) < getMinor(available)) {
-  
+
         this.toastCtrl.create({
           header: 'New version available',
           icon: 'alert-outline',
