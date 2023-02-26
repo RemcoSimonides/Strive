@@ -34,7 +34,7 @@ async snapshot => {
   const event = goal.status === 'pending' ?  'goalCreated' : 'goalCreatedFinished'
   addGoalEvent(event, source)
   addStoryItem(event, source)
-  
+
   // aggregation
   handleAggregation(undefined, goal)
 
@@ -191,7 +191,7 @@ async function updateGoalStakeholders(goalId: string, after: Goal) {
     goalId,
     goalPublicity: after.publicity
   }
-  
+
   const stakeholderSnaps = await db.collection(`Goals/${goalId}/GStakeholders`).get()
   const promises = stakeholderSnaps.docs.map(doc => doc.ref.update(data))
   return Promise.all(promises)
@@ -224,7 +224,7 @@ export async function supportsNeedDecision(goal: Goal, successful: boolean) {
 
     const { milestoneId } = support
     if (milestoneId && !pendingMilestoneIds.includes(milestoneId)) continue // meaning the milestone of this support is not pending and thus skip
-    
+
     let result: Partial<SupportBase>
     if (isCounter) {
       result = { counterNeedsDecision: timestamp }

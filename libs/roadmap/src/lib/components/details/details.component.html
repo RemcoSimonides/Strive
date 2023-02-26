@@ -1,9 +1,9 @@
 <ion-header mode="md">
   <ion-toolbar>
-    <header *ngIf="canEdit">
+    <header *ngIf="canEdit && form?.touched">
       <ion-button fill="clear" disabled color="primary">
         <ng-container *ngIf="form?.dirty; else saved">
-          <span>SAVING...</span>
+          <span>SAVING CHANGES...</span>
         </ng-container>
         <ng-template #saved>
           <span>SAVED</span>
@@ -62,7 +62,6 @@
         ></ion-textarea>
       </small>
     </section>
-    
 
     <section class="details" *ngIf="canEdit">
 
@@ -111,7 +110,7 @@
             <ion-reorder slot="end"></ion-reorder>
           </ion-item>
         </ion-reorder-group>
-        
+
         <form [formGroup]="subtaskForm" *ngIf="canEdit">
           <ion-item lines="none">
             <ion-icon class="icon" name="radio-button-off" color="primary"></ion-icon>

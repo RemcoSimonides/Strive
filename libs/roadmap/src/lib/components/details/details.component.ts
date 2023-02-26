@@ -7,7 +7,7 @@ import { orderBy, serverTimestamp, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 
 import { combineLatest, Observable, of, Subscription } from 'rxjs'
-import { debounceTime, filter, map, switchMap } from 'rxjs/operators'
+import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators'
 import { addYears, endOfYear } from 'date-fns'
 
 import { Goal, createSubtask, Milestone, Support, StoryItem, createUser, createGoalStakeholder, createPost, MilestoneStatus, groupByObjective, SupportsGroupedByGoal, sortGroupedSupports } from '@strive/model'
@@ -106,6 +106,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
+        tap(() => this.form.markAsTouched()),
         debounceTime(2000),
         filter(_ => this.form.content.valid)
       ).subscribe(content => {
@@ -240,9 +241,9 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   }
 
   async openDatepicker() {
-    if (!this.canEdit) return    
+    if (!this.canEdit) return
     if (this.milestone.status === 'failed' || this.milestone.status === 'succeeded') return
-  
+
     const minDate = new Date()
     const maxDate = endOfYear(addYears(new Date(), 1000))
 
@@ -254,7 +255,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       const deadline = role === 'remove' ? new Date() : data ? new Date(data) : new Date()
 
       this.milestone.deadline = deadline
-      this.milestoneService.update({ deadline, id: this.milestone.id }, { params: { goalId: this.goal.id }})  
+      this.milestoneService.update({ deadline, id: this.milestone.id }, { params: { goalId: this.goal.id }})
       this.cdr.markForCheck()
     })
     popover.present()
