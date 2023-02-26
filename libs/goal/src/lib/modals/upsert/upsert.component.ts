@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Location } from '@angular/common'
 import { LoadingController, ModalController } from '@ionic/angular'
+import { captureException } from '@sentry/angular'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { SwiperComponent } from 'swiper/angular'
-import { isPast } from 'date-fns'
+import { format, isFuture, isPast } from 'date-fns'
+import { BehaviorSubject } from 'rxjs'
 
 import { GoalService } from '@strive/goal/goal.service'
 import { AuthService } from '@strive/auth/auth.service'
@@ -20,6 +23,7 @@ import { Slide3Component } from './slides/slide-3/slide-3.component'
 })
 export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   @ViewChild(Slide3Component) slide3?: Slide3Component
+  @ViewChild('swiper') swiper?: SwiperComponent
 
   form!: GoalForm
   mode?: 'update' | 'create'
@@ -29,7 +33,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
   @Input() goal = createGoal()
 
-  @ViewChild('swiper') swiper?: SwiperComponent
+  suggestion$ = new BehaviorSubject<string>('')
 
   constructor(
     private auth: AuthService,
@@ -67,6 +71,24 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
           this.goalService.upsert(goal, { params: { uid: this.auth.uid }})
           this.form.markAsPristine()
           this.created = true
+
+          const title = this.form.title.value
+          const deadline = format(this.form.deadline.value, 'dd/MM/yyyy')
+          const now = format(new Date(), 'dd/MM/yyyy')
+          const location = 'The Netherlands'
+          if (title.length > 6 && isFuture(this.form.deadline.value)) {
+            const prompt = `I want to achieve "${title}" by "${deadline}". Today is ${now} and I live in ${location}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for milestone. Return response ONLY in a JSON parsable array of strings.`
+            const askOpenAI = httpsCallable<{ prompt: string }, { error: string, result: string }>(getFunctions(), 'askOpenAI')
+            askOpenAI({ prompt }).then(res => {
+              const { error, result } = res.data
+              if (error) {
+                captureException(result)
+                this.suggestion$.next(`Sorry, couldn't create a suggestion`)
+              } else {
+                this.suggestion$.next(result)
+              }
+            })
+          }
         }
       }
 

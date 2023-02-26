@@ -12,6 +12,7 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 })
 export class Slide4Component implements OnInit {
   @Input() goal!: Goal
+  @Input() suggestion = ''
 
   milestones$?: Observable<Milestone[]>
   stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true })

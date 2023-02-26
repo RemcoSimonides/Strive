@@ -56,7 +56,8 @@ const secrets = [
 	'ALGOLIA_APIKEY',
 	'ALGOLIA_APPID',
 	'SENDGRID_APIKEY',
-	'SENTRY_DSN'
+	'SENTRY_DSN',
+	'OPENAI_APIKEY'
 ]
 
 export const defaultConfig: RuntimeOptions = {

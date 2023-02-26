@@ -11,11 +11,11 @@ Read the [Create the perfect goal](/category/create-the-perfect-goal) guide for 
 
 ## Privacy
 When creating the goal, you will get the question "Who is able to see your goal?" There are two options:
-- **Everyone**: The goal will be able to be seen by anyone, visible on your profile page and searchable on the explore page 
+- **Everyone**: The goal will be able to be seen by anyone, visible on your profile page and searchable on the explore page
 - **Only you**: The goal is invisible but you can invite people to join it by using the share link
 
-## Activate Focus Boost
-Activate the Focus Boost to 
+<!-- ## Activate Focus Boost
+Activate the Focus Boost to
 - Receive a weekly email with exercises
 - Two extra questions to remember you what you're doing all the effort for
-- Highlighted goal in the app
+- Highlighted goal in the app -->

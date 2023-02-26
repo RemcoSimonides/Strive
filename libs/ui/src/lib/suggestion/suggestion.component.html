@@ -1,0 +1,36 @@
+<header>
+  <ion-icon name="sparkles-outline" color="secondary"></ion-icon>
+  <h5>Suggestion</h5>
+</header>
+
+<main>
+  <ng-container *ngIf="(_suggestion || _suggestions.length) else typing">
+
+    <ng-container *ngIf="_suggestions.length">
+      <p>Artificial Intelligence generated these milestones for you</p>
+
+      <ol>
+        <li *ngFor="let milestone of _suggestions">{{ milestone }}</li>
+      </ol>
+
+      <p>Click the button below to add these suggestions to your Roadmap. The suggestions might not be perfect, but you can still tweak them after adding.</p>
+    </ng-container>
+
+    <ng-container *ngIf="_suggestion">
+      <p>Artificial Intelligence generated this suggestion for you. Use it as inspiration for your Roadmap.</p>
+      <article>{{ _suggestion }}</article>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #typing>
+    <p>To help you break down a goal, Artifical Intelligence will generate a suggestion. This generally takes around 30 seconds.</p>
+    <p>Generating suggestion{{ thinking$ | async }}</p>
+  </ng-template>
+</main>
+
+<footer *ngIf="_suggestions.length">
+  <ion-button class="secondary" (click)="apply()" [disabled]="added$ | async">
+    <ion-icon name="sparkles-outline" slot="start" color="secondary"></ion-icon>
+    <span>USE SUGGESTION</span>
+  </ion-button>
+</footer>

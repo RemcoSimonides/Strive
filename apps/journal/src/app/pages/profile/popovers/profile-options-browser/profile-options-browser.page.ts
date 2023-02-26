@@ -63,5 +63,6 @@ export class ProfileOptionsBrowserComponent {
 
   toggleTheme() {
     this.themeService.toggle()
+    this.popoverCtrl.dismiss()
   }
 }

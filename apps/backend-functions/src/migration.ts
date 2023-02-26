@@ -1,4 +1,4 @@
-import { functions, db, admin, deleteField } from './internals/firebase'
+import { functions, admin } from './internals/firebase'
 import type { RuntimeOptions } from 'firebase-functions'
 import { BigBatch } from './shared/bigbatch'
 
