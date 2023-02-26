@@ -73,8 +73,8 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
           this.created = true
 
           const title = this.form.title.value
-          const deadline = format(this.form.deadline.value, 'dd/MM/yyyy')
-          const now = format(new Date(), 'dd/MM/yyyy')
+          const deadline = format(this.form.deadline.value, 'dd MMMM yyyy')
+          const now = format(new Date(), 'dd MMMM yyyy')
           const location = 'The Netherlands'
           if (title.length > 6 && isFuture(this.form.deadline.value)) {
             const prompt = `I want to achieve "${title}" by "${deadline}". Today is ${now} and I live in ${location}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for milestone. Return response ONLY in a JSON parsable array of strings.`

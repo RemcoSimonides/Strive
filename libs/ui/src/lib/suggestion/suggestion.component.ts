@@ -32,7 +32,12 @@ export class SuggestionSComponent {
   @Input() goalId = ''
   @Input() set suggestion(value: string) {
     const trimmed = value.trim().replace(/\r?\n|\r/g, '').trim() // regex removes new lines
-    const parsed = parse(trimmed)
+
+    let parsed = parse(trimmed)
+    if (!Array.isArray(parsed)) {
+      // Replace single quotes with double quotes
+      parsed = parse(trimmed.replace(new RegExp("'", 'g'), "\""))
+    }
 
     if (Array.isArray(parsed)) {
       this._suggestions = parsed
