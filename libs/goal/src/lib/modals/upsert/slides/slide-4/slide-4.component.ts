@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { orderBy } from 'firebase/firestore'
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { orderBy, where } from 'firebase/firestore'
 import { Observable } from 'rxjs'
 import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
@@ -13,8 +13,6 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 export class Slide4Component implements OnInit {
   @Input() goal!: Goal
 
-  @Output() stepper = new EventEmitter<'next' | 'previous'>()
-
   milestones$?: Observable<Milestone[]>
   stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true })
 
@@ -23,10 +21,9 @@ export class Slide4Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.milestones$ = this.milestoneService.valueChanges([orderBy('order', 'asc')], { goalId: this.goal.id })
-  }
-
-  step(direction: 'next' | 'previous') {
-    this.stepper.emit(direction)
+    this.milestones$ = this.milestoneService.valueChanges([
+      where('deletedAt', '==', null),
+      orderBy('order', 'asc')
+    ], { goalId: this.goal.id })
   }
 }

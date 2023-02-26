@@ -1,6 +1,6 @@
 <form [formGroup]="form">
   <small>Without a clear target, you'll never hit your mark. That's why it's crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you've lost one kilo? Five? Forty?</small>
-  
+
   <ion-list mode="md" lines="full">
     <ion-item lines="none">
       <ion-label color="primary">What do you want to achieve? *</ion-label>
@@ -18,17 +18,17 @@
       <ion-label position="stacked" color="primary">When should the goal be finished? *</ion-label>
       <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
     </ion-item>
-  
+
     <ion-item lines="none">
       <ion-label position="stacked" color="primary">Who can see this goal? *</ion-label>
-      <ion-select interface="popover" formControlName="isSecret"> 
+      <ion-select interface="popover" formControlName="isSecret">
         <ion-select-option [value]="false">Everyone</ion-select-option>
         <ion-select-option [value]="true">Invited users only</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-list>
 
-  <ion-card class="focus" *ngIf="!isOverdue(form.deadline.value)">
+  <!-- <ion-card class="focus" *ngIf="!isOverdue(form.deadline.value)">
     <ion-item lines="none">
       <ion-toggle mode="md" (ionChange)="toggle($event)"></ion-toggle>
       <ion-label>
@@ -44,10 +44,5 @@
         </section>
       </ion-label>
     </ion-item>
-  </ion-card>
-
+  </ion-card> -->
 </form>
-
-<footer>
-  <ion-button color="primary" (click)="next()" [disabled]="form.invalid">Next</ion-button>
-</footer>

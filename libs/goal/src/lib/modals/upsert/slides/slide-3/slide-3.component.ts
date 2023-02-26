@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
-import { GoalService } from '@strive/goal/goal.service'
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
@@ -11,23 +10,13 @@ import { ImageSelectorComponent } from '@strive/media/components/image-selector/
 })
 export class Slide3Component {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
-  
+
   @Input() form!: GoalForm
   @Input() goalId!: string
 
-  @Output() stepper = new EventEmitter<'next' | 'previous'>()
-
-  constructor(private goal: GoalService) {}
-
-  step(direction: 'next' | 'previous') {
+  cropImage() {
     if (this.imageSelector?.step.value === 'crop') {
       this.imageSelector.cropIt()
     }
-
-    if (this.form.image.dirty) {
-      this.goal.upsert({ id: this.goalId, image: this.form.image.value })
-      this.form.image.markAsPristine()
-    }
-    this.stepper.emit(direction)
   }
 }

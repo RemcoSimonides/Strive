@@ -1,19 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Location } from '@angular/common'
 import { LoadingController, ModalController } from '@ionic/angular'
+import { SwiperComponent } from 'swiper/angular'
+import { isPast } from 'date-fns'
 
-//Services
 import { GoalService } from '@strive/goal/goal.service'
-
-//Interfaces
+import { AuthService } from '@strive/auth/auth.service'
 import { createGoal } from '@strive/model'
 import { GoalForm } from '@strive/goal/forms/goal.form'
-
-// Directives
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-
-// Swiper
-import { SwiperComponent } from 'swiper/angular'
+import { Slide3Component } from './slides/slide-3/slide-3.component'
 
 @Component({
   selector: 'strive-goal-upsert',
@@ -23,8 +19,9 @@ import { SwiperComponent } from 'swiper/angular'
   encapsulation: ViewEncapsulation.None
 })
 export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
+  @ViewChild(Slide3Component) slide3?: Slide3Component
 
-  goalForm!: GoalForm
+  form!: GoalForm
   mode?: 'update' | 'create'
 
   created = false // used for navigating to goal (only if goal is created)
@@ -35,6 +32,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   @ViewChild('swiper') swiper?: SwiperComponent
 
   constructor(
+    private auth: AuthService,
     private goalService: GoalService,
     private loadingCtrl: LoadingController,
     protected override location: Location,
@@ -48,15 +46,41 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     if (this.goal.id) {
       this.mode = 'update'
-      this.goalForm = new GoalForm(this.goal)
+      this.form = new GoalForm(this.goal)
     } else {
       this.mode = 'create'
       this.goal.id = this.goalService.createId()
-      this.goalForm = new GoalForm()
+      this.form = new GoalForm()
     }
   }
 
   stepper(direction: 'next' | 'previous') {
+
+    const activeIndex = this.swiper?.swiperRef.activeIndex
+    if (activeIndex !== undefined) {
+      if (activeIndex === 0) {
+        if (this.form.dirty) {
+          const goal = createGoal({ ...this.form.getGoalValue(), id: this.goal.id })
+          if (isPast(goal.deadline)) goal.status = 'succeeded'
+
+          if (!this.auth.uid) throw new Error('User needs to be logged in in order to create goal')
+          this.goalService.upsert(goal, { params: { uid: this.auth.uid }})
+          this.form.markAsPristine()
+          this.created = true
+        }
+      }
+
+      if (activeIndex === 1) {
+        if (this.slide3) {
+          this.slide3.cropImage()
+        }
+
+        if (this.form.image.dirty) {
+          this.goalService.upsert({ id: this.goal.id, image: this.form.image.value })
+          this.form.image.markAsPristine()
+        }
+      }
+    }
 
     if (direction === 'next') {
       if (this.swiper?.swiperRef.isEnd) {

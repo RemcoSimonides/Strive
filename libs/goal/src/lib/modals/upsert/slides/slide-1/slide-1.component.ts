@@ -1,48 +1,23 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core'
-import { NavParams, PopoverController, ToggleCustomEvent } from '@ionic/angular'
-import { isPast } from 'date-fns'
-import { createGoal } from '@strive/model'
-import { GoalService } from '@strive/goal/goal.service'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core'
+import { PopoverController } from '@ionic/angular'
+// import { isPast } from 'date-fns'
+
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 
 @Component({
-  selector: '[form][goalId] strive-goal-slide-1',
+  selector: '[form] strive-goal-slide-1',
   templateUrl: './slide-1.component.html',
   styleUrls: ['./slide-1.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Slide1Component {
   @Input() form!: GoalForm
-  @Input() goalId!: string
-
-  @Output() stepper = new EventEmitter<'next' | 'previous'>()
-  @Output() created = new EventEmitter<boolean>()
-  @Output() hasFocus = new EventEmitter<boolean>()
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private goal: GoalService,
-    private navParams: NavParams,
     private popoverCtrl: PopoverController
   ) {}
-
-  async next() {
-    this.stepper.next('next')
-
-    if (this.form.dirty) {
-      const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
-      if (isPast(goal.deadline)) goal.status = 'succeeded'
-
-      this.goal.upsert(goal, { params: { uid: this.navParams.data?.['uid'] }})
-      this.created.emit(true)
-      this.form.markAsPristine()
-    }
-  }
-
-  toggle(event: ToggleCustomEvent) {
-    this.hasFocus.emit(event.detail.checked)
-  }
 
   async openDatePicker() {
     const caption = 'Is the goal already finished? Pick the date when it was'
@@ -61,7 +36,11 @@ export class Slide1Component {
     popover.present()
   }
 
-  isOverdue(date: Date) {
-    return isPast(date)
-  }
+  // toggle(event: ToggleCustomEvent) {
+  //   this.hasFocus.emit(event.detail.checked)
+  // }
+
+  // isOverdue(date: Date) {
+  //   return isPast(date)
+  // }
 }

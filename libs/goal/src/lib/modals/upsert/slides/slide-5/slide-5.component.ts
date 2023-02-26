@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { PopoverController } from '@ionic/angular'
 import { Share } from '@capacitor/share'
 // Strive
@@ -17,8 +17,6 @@ import { captureException, captureMessage } from '@sentry/capacitor'
 export class Slide5Component {
   @Input() form!: GoalForm
   @Input() goalId!: string
-
-  @Output() stepper = new EventEmitter<'next' | 'previous'>()
 
   exercises = exercises.filter(exercise => ['affirmations', 'daily_gratitude', 'dear_future_self'].includes(exercise.id) )
 

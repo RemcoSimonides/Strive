@@ -7,42 +7,36 @@ ion-item {
   --highlight-background: var(--ion-color-primary);
 }
 
-.focus {
-  margin-top: 16px;
-  padding-top: 16px;
+// .focus {
+//   margin-top: 16px;
+//   padding-top: 16px;
 
-  ion-item {
-    align-items: flex-start;
-  }
+//   ion-item {
+//     align-items: flex-start;
+//   }
 
-  section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    white-space: initial;
+//   section {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 8px;
+//     white-space: initial;
 
-    ul {
-      margin: 0;
-      color: var(--ion-color-medium);
+//     ul {
+//       margin: 0;
+//       color: var(--ion-color-medium);
 
-      li::before {
-        content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
-        color: var(--ion-color-primary); /* Change the color */
-        font-weight: bold; /* If you want it to be bold */
-        display: inline-block; /* Needed to add space between the bullet and the text */
-        width: 1em; /* Also needed for space (tweak if needed) */
-      }
-    }
+//       li::before {
+//         content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+//         color: var(--ion-color-primary); /* Change the color */
+//         font-weight: bold; /* If you want it to be bold */
+//         display: inline-block; /* Needed to add space between the bullet and the text */
+//         width: 1em; /* Also needed for space (tweak if needed) */
+//       }
+//     }
 
-    small {
-      margin-top: 0;
-      color: var(--ion-color-medium);
-    }
-  }
-}
-
-footer {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
-}
+//     small {
+//       margin-top: 0;
+//       color: var(--ion-color-medium);
+//     }
+//   }
+// }
