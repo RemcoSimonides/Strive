@@ -1,8 +1,21 @@
-import { functions } from './internals/firebase'
+import { functions, db, admin, deleteField } from './internals/firebase'
+import type { RuntimeOptions } from 'firebase-functions'
+import { BigBatch } from './shared/bigbatch'
 
-export const migrate = functions().https.onRequest(async (req, res) => {
+const config: RuntimeOptions = {
+  timeoutSeconds: 540,
+  memory: '1GB',
+}
+
+export const migrate = functions(config).https.onRequest(async (req, res) => {
 
   try {
+    const firestore = admin.firestore()
+    const batch = new BigBatch({ firestore })
+
+
+
+    await batch.commit()
 
     res.status(200).send('all good')
   } catch (err) {
@@ -27,8 +40,8 @@ export const migrate = functions().https.onRequest(async (req, res) => {
 
 //   const goalPromises = goalIds.map(id => getDocument<Goal>(`Goals/${id}`))
 //   const userPromises = userIds.map(id => getDocument<User>(`Users/${id}`))
-//   const milestonePromises = milestoneRefs.map(ref => getDocument<Milestone>(ref))      
-//   const supportPromises = supportRefs.map(ref => getDocument<Milestone>(ref))      
+//   const milestonePromises = milestoneRefs.map(ref => getDocument<Milestone>(ref))
+//   const supportPromises = supportRefs.map(ref => getDocument<Milestone>(ref))
 
 //   const goals = (await Promise.all(goalPromises)).filter(g => !!g)
 //   const users = (await Promise.all(userPromises)).filter(u => !!u)
