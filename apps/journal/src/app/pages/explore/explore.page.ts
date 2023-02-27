@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
 import { ActivatedRoute, Params, Router } from '@angular/router'
 // Rxjs
 import { BehaviorSubject, combineLatest } from 'rxjs'
-import { debounceTime, map, startWith } from 'rxjs/operators'
+import { debounceTime, map, startWith, tap } from 'rxjs/operators'
 
 import { exercises } from '@strive/model'
 
@@ -38,19 +38,13 @@ export class ExplorePageComponent implements OnDestroy {
     map(([exercises, goals, profiles]) => !exercises.length && !goals.length && !profiles.length)
   )
 
-  private searchSubscription = this.searchForm.valueChanges.pipe(
-    debounceTime(500),
-    startWith(this.searchForm.value)
-  ).subscribe(({ query, type }) => {
+  private searchSubscription = combineLatest([
+    this.searchForm.controls.query.valueChanges.pipe(debounceTime(500), startWith('')),
+    this.searchForm.controls.type.valueChanges.pipe(startWith('all'))
+  ]).subscribe(([query, type]) => {
+
     if (query === undefined || query === null) return
     this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
-
-    const queryParams: Params = { t: type, q: query }
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge'
-    })
 
     switch (type) {
       case 'goals':
@@ -74,15 +68,29 @@ export class ExplorePageComponent implements OnDestroy {
 
   })
 
+  private searchSubscription2 = this.searchForm.valueChanges.pipe(
+    debounceTime(500),
+    startWith(this.searchForm.value)
+  ).subscribe(({ query, type }) => {
+    const queryParams: Params = {}
+    if (type && type !== 'all') queryParams['t'] = type
+    if (query) queryParams['q'] = query
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge'
+    })
+  })
+
   private paramsSub = this.route.queryParams.subscribe(({ t, q }) => {
+
     const queryControl = this.searchForm.get('query') as AbstractControl<string>
     q ? queryControl.setValue(q) : queryControl.setValue('')
 
     const typeControl = this.searchForm.get('type') as AbstractControl<string>
-    if (!t) typeControl.setValue('all')
     const types = ['goals', 'users', 'exercises']
-    if (!types.includes(t)) return
-    typeControl.setValue(t)
+    types.includes(t) ? typeControl.setValue(t) : typeControl.setValue('all')
   })
 
   constructor(
@@ -101,6 +109,7 @@ export class ExplorePageComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.searchSubscription.unsubscribe()
+    this.searchSubscription2.unsubscribe()
     this.paramsSub.unsubscribe()
   }
 
