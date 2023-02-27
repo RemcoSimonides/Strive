@@ -6,7 +6,7 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-  
+
     <ion-title>Following</ion-title>
 
   </ion-toolbar>
@@ -18,11 +18,11 @@
     <ng-container *ngFor="let spectator of spectating$ | async; let last = last">
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(spectator.profileId)">
         <ion-avatar slot="start">
-          <img asset="profile.png" [ref]="spectator.profile?.photoURL" [width]="60" [height]="60">
+          <img asset="profile.png" [ref]="spectator.profile?.photoURL" [width]="120" [height]="120">
         </ion-avatar>
         <ion-label>{{ spectator.profile?.username }}</ion-label>
       </ion-item>
-    </ng-container> 
+    </ng-container>
   </ion-list>
-  
+
 </ion-content>

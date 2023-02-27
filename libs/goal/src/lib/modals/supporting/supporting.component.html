@@ -6,7 +6,7 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-  
+
     <ion-title>Supporting</ion-title>
 
   </ion-toolbar>
@@ -18,11 +18,11 @@
     <ng-container *ngFor="let goal of goals; let last = last">
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(goal.id)">
         <ion-thumbnail slot="start">
-          <img asset="goal.png" [ref]="goal.image" [width]="60" [height]="60">
+          <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120">
         </ion-thumbnail>
         <ion-label>{{ goal.title }}</ion-label>
       </ion-item>
-    </ng-container> 
+    </ng-container>
   </ion-list>
-  
+
 </ion-content>

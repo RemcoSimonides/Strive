@@ -21,7 +21,7 @@
     </ion-item>
     <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'full'">
       <ion-avatar slot="start">
-        <img [ref]="achiever.profile.photoURL" asset="profile.png" [width]="60" [height]="60">
+        <img [ref]="achiever.profile.photoURL" asset="profile.png" [width]="120" [height]="120">
       </ion-avatar>
       <ion-label class="ion-text-wrap">
         <ion-text>{{ achiever.profile.username }}</ion-text>

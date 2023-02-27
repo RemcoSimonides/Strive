@@ -6,7 +6,7 @@
 				<ion-icon slot="icon-only" name="close"></ion-icon>
 			</ion-button>
 		</ion-buttons>
-		
+
 	</ion-toolbar>
 </ion-header>
 
@@ -20,9 +20,9 @@
 						loadingText="Loading more data...">
 					</ion-infinite-scroll-content>
 				</ion-infinite-scroll>
-				
+
 				<li *ngFor="let comment of comments$ | async">
-					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
 					<article>
 						<small><b>{{ comment.user?.username }}</b></small>
 						<small class="date">{{ comment.createdAt | timeAgo }}</small>
@@ -31,7 +31,7 @@
 				</li>
 			</ul>
 		</ion-content>
-	
+
 		<ion-footer class="ion-no-border">
 			<ion-item>
 				<ion-textarea type="text" placeholder="Reply..." [formControl]="form" (keydown.enter)="addReply($event)" autoGrow autocapitalize="sentences"></ion-textarea>

@@ -13,12 +13,12 @@
             <ion-label position="floating"></ion-label>
             <ion-input formControlName="username" [disabled]="true"></ion-input>
           </ion-item>
-        
+
           <!-- <strive-image-selector
             [form]="userForm.photoURL"
             [storagePath]="'profiles/' + user.uid"
           ></strive-image-selector> -->
-        
+
           <ion-button class="submit_button" type="submit" [disabled]="!userForm.valid">Update</ion-button>
         </form>
       </ion-card-content>
@@ -67,7 +67,7 @@
       <ion-card *ngFor="let stakeholder of stakeholders">
         <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
           <ion-thumbnail slot="start">
-            <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="60" [height]="60"/>
+            <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
             <div *ngIf="stakeholder.goal.status !== 'pending'">finished</div>
           </ion-thumbnail>
           <article>

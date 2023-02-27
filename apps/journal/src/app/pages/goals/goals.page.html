@@ -16,7 +16,7 @@
                 <ng-template #thumb>
                   <article (click)="openFollowedGoal(stakeholder)" class="thumb">
                     <ion-thumbnail>
-                      <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="60" [height]="60"/>
+                      <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
                     </ion-thumbnail>
                     <small>{{ stakeholder.goal.title }}</small>
                     <ion-badge color="primary" *ngIf="stakeholder.events.length">{{ stakeholder.events.length }}</ion-badge>
@@ -57,13 +57,13 @@
                 <ion-icon name="add" slot="start"></ion-icon>
                 <span>CREATE GOAL</span>
               </ion-button>
-              <span class="subtitle">No goals yet. Create your first.</span>  
+              <span class="subtitle">No goals yet. Create your first.</span>
             </section>
 
             <ion-card class="wheel_of_life">
               <ion-card-content>
                 <p>Fill in the Wheel of Life to find out what are of life you should focus on</p>
-                
+
                 <a routerLink="/exercise/wheel-of-life">
                   <ion-item button lines="none">
                     <ion-thumbnail slot="start">

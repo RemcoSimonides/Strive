@@ -26,22 +26,22 @@
 <ion-content>
 
   <picture (click)="openZoom(goal)" *ngIf="screensize.isMobile$ | async" class="mobile">
-    <img [ref]="goal.image" asset="goal.png" [width]="600" [height]="600"/>
+    <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
     <div *ngIf="goal.status !== 'pending'">finished</div>
   </picture>
 
   <ng-template #actions>
     <section class="actions">
-    
+
       <article>
         <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"></strive-goal-join-button>
 
         <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
-          <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon> 
+          <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon>
           <span>{{ stakeholder.isSpectator ? 'FOLLOWING' : 'FOLLOW' }}</span>
         </ion-button>
       </article>
-  
+
       <article>
         <ion-button (click)="openChat()" size="block" class="secondary">
           <ion-icon name="chatbubbles-outline" slot="start" size="small"></ion-icon>
@@ -65,7 +65,7 @@
           <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"></ion-icon>
         </ion-button>
       </article>
-  
+
     </section>
   </ng-template>
 
@@ -74,13 +74,13 @@
 
     <div class="main">
       <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false">
-        <img [ref]="goal.image" asset="goal.png" [width]="600" [height]="600"/>
+        <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
         <div *ngIf="goal.status !== 'pending'">finished</div>
       </picture>
 
       <div class="info">
         <ul class="properties">
-      
+
           <li (click)="openTeamModal('isAchiever')" class="clickable">
             <ion-icon name="flag"></ion-icon>
             <ng-container *ngIf="stakeholder.isAchiever">
@@ -95,7 +95,7 @@
               <span><b>{{ goal.numberOfAchievers ?? 0 }}</b> {{ goal.numberOfAchievers === 1 ? 'achiever' : 'achievers' }}</span>
             </ng-container>
           </li>
-      
+
           <li (click)="openTeamModal('isSupporter')" class="clickable">
             <ion-icon src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
             <ng-container *ngIf="stakeholder.isSupporter">
@@ -134,7 +134,7 @@
               </li>
             </ng-container>
           </ng-container>
-      
+
           <!-- Privacy -->
           <li>
             <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>
@@ -149,7 +149,7 @@
               <span><b>{{ goal.publicity === 'public' ? 'Everyone can access' : 'Invites only' }}</b></span>
             </ng-template>
           </li>
-      
+
           <!-- Deadline -->
           <li *ngIf="goal.deadline"
             [ngStyle]="{
@@ -162,7 +162,7 @@
             <span>End date: </span>
             <b>{{ goal.deadline | date:'fullDate' }}</b>
           </li>
-      
+
         </ul>
 
         <ng-container *ngIf="(isMobile$ | async) === false">
@@ -193,7 +193,7 @@
         <ion-list mode="md">
           <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'full'" (click)="navTo(stakeholder.uid)" button>
             <ion-avatar slot="start">
-              <img [ref]="stakeholder.profile.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+              <img [ref]="stakeholder.profile.photoURL" asset="profile.png" [width]="120" [height]="120"/>
             </ion-avatar>
             <ion-label>{{ stakeholder.profile.username }}</ion-label>
             <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">

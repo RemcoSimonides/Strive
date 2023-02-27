@@ -15,7 +15,7 @@
         <ng-container *ngFor="let profile of results$ | async; let last = last">
           <ion-item [lines]="last ? 'none' : 'full'">
             <ion-avatar slot="start">
-              <img asset="profile.png" [ref]="profile.photoURL" [width]="60" [height]="60">
+              <img asset="profile.png" [ref]="profile.photoURL" [width]="120" [height]="120">
             </ion-avatar>
             <ion-label>
               <article>

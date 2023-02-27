@@ -1,7 +1,7 @@
 <ng-container *ngIf="support.supporter as supporter">
   <section (click)="navTo(['/profile', supporter.uid])">
     <ion-avatar slot="start">
-      <img [ref]="supporter.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+      <img [ref]="supporter.photoURL" asset="profile.png" [width]="120" [height]="120"/>
     </ion-avatar>
     <small>{{ supporter.username! | maxLength: 8 }}</small>
   </section>
@@ -17,7 +17,7 @@
 <ng-container *ngIf="support.recipient as recipient">
   <section (click)="navTo(['/profile', recipient.uid])">
     <ion-avatar slot="start">
-      <img [ref]="recipient.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+      <img [ref]="recipient.photoURL" asset="profile.png" [width]="120" [height]="120"/>
     </ion-avatar>
     <small>{{ recipient.username! | maxLength: 8 }}</small>
   </section>

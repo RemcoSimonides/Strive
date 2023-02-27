@@ -1,7 +1,7 @@
 <ion-card *ngIf="post && author">
   <ion-card-header>
     <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
-      <img [ref]="author.photoURL" asset="profile.png" [width]="60" [height]="60">
+      <img [ref]="author.photoURL" asset="profile.png" [width]="120" [height]="120">
     </ion-avatar>
     <section>
       <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
@@ -13,7 +13,7 @@
   </ion-card-header>
 
   <ng-container *ngIf="post.mediaURL">
-    <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)" [width]="800" [height]="800">
+    <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)" [width]="1200" [height]="1200">
   </ng-container>
 
   <ion-card-content *ngIf="post.description || post.url">

@@ -27,7 +27,7 @@
                 Exercises
               </ion-button>
               <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openUserPopover($event)">
-                <img [ref]="user.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+                <img [ref]="user.photoURL" asset="profile.png" [width]="120" [height]="120"/>
               </ion-avatar>
             </ng-container>
 
@@ -47,7 +47,7 @@
             </ng-template>
 
           </section>
-        </header>  
+        </header>
       </ion-toolbar>
     </ion-header>
 

@@ -17,7 +17,7 @@
         <ng-container *ngIf="you.isSupporter">
           <ion-item [lines]="view.others.length ? 'full' : 'none'">
             <ion-avatar slot="start" (click)="navTo(you.uid)">
-              <img [ref]="you.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+              <img [ref]="you.photoURL" asset="profile.png" [width]="120" [height]="120"/>
             </ion-avatar>
             <ion-label>
               <b>{{ you.username }}</b>
@@ -25,11 +25,11 @@
           </ion-item>
         </ng-container>
       </ng-container>
-  
+
       <ng-container *ngFor="let stakeholder of view.others; let last = last">
         <ion-item [lines]="last ? 'none' : 'full'">
           <ion-avatar slot="start" (click)="navTo(stakeholder.uid)">
-            <img [ref]="stakeholder.profile.photoURL" asset="profile.png" [width]="60" [height]="60"/>
+            <img [ref]="stakeholder.profile.photoURL" asset="profile.png" [width]="120" [height]="120"/>
           </ion-avatar>
           <ion-label>
             <b>{{ stakeholder.profile.username }}</b>
