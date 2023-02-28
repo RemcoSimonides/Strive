@@ -19,6 +19,7 @@ import { PostService } from '@strive/post/post.service'
 import { ProfileService } from '@strive/user/profile.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
@@ -43,6 +44,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   story$?: Observable<StoryItem[]>
   supports$?: Observable<SupportsGroupedByGoal[]>
 
+  isDesktop$ = this.screensize.isDesktop$
+
   @Input() goal!: Goal
   @Input() milestone!: MilestoneWithSupport
   @Input() stakeholder = createGoalStakeholder()
@@ -63,6 +66,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     private popoverCtrl: PopoverController,
     private postService: PostService,
     private profileService: ProfileService,
+    private screensize: ScreensizeService,
     private storyService: StoryService,
     private supportService: SupportService
   ) {
@@ -106,19 +110,21 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
     if (this.canEdit) {
       const sub = this.form.content.valueChanges.pipe(
+        filter(_ => this.form.content.valid),
         tap(() => this.form.markAsTouched()),
-        debounceTime(2000),
-        filter(_ => this.form.content.valid)
+        debounceTime(500)
       ).subscribe(content => {
-        if (!content || !this.form || !this.canEdit) return
+        if (!content || !this.canEdit) return
+
         this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
-        this.form?.content.markAsPristine()
+        this.form.content.markAsPristine()
         this.cdr.markForCheck()
       })
 
       const descriptionSub = this.form.description.valueChanges.pipe(
-        debounceTime(2000),
-        filter(_ => this.form.content.valid)
+        filter(() => this.form.content.valid),
+        tap(() => this.form.markAsTouched()),
+        debounceTime(500)
       ).subscribe(description => {
         if (!this.canEdit || !this.form) return
         this.milestoneService.update({ description, id: this.milestone.id }, { params: { goalId: this.goal.id }})
@@ -128,7 +134,9 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       })
 
       const subtaskSub = this.form.subtasks.valueChanges.pipe(
-        debounceTime(2000)
+        filter(() => this.form.content.valid),
+        tap(() => this.form.markAsTouched()),
+        debounceTime(500)
       ).subscribe(subtasks => {
         if (!this.canEdit || !this.form) return
         if (this.form.subtasks.valid) {
@@ -275,7 +283,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   }
 
   addSubtask() {
-    if (!this.stakeholder.isAdmin || !this.stakeholder.isAchiever) return
+    if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return
     if (this.subtaskForm.valid) {
       const task = createSubtask(this.subtaskForm.value)
       const control = new SubtaskForm(task)

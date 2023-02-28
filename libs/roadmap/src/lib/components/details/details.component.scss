@@ -8,6 +8,7 @@ ion-header header {
   width: 100%;
   justify-content: center;
   top: 8px;
+  left: 0;
 }
 
 main {
@@ -38,11 +39,11 @@ section {
     --inner-padding-end: 8px;
     --padding-start: 0;
     border-radius: 12px;
-    
+
     ion-textarea {
       --padding-top: 0;
     }
-  
+
     ion-button {
       margin-inline-start: 8px;
       margin-top: 8px;
@@ -86,7 +87,7 @@ section {
       margin-top: 0;
       --padding-top: 0;
       --padding-bottom: 0;
-    }  
+    }
   }
 }
 
@@ -106,11 +107,11 @@ section {
     ion-item {
       --padding-start: 0;
     }
-  
+
     .icon {
       margin: 0 8px;
     }
-  
+
     ion-icon {
       height: 16px;
       margin-right: auto;
@@ -133,5 +134,5 @@ section {
 }
 
 ion-item {
-  --highlight-background: var(--ion-color-primary); 
+  --highlight-background: var(--ion-color-primary);
 }
