@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
 import { ActivatedRoute, Params, Router } from '@angular/router'
+import { IonContent } from '@ionic/angular'
+
 // Rxjs
 import { BehaviorSubject, combineLatest } from 'rxjs'
-import { debounceTime, map, startWith, tap } from 'rxjs/operators'
+import { debounceTime, map, startWith } from 'rxjs/operators'
 
 import { exercises } from '@strive/model'
 
@@ -19,6 +21,8 @@ import { AuthService } from '@strive/auth/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplorePageComponent implements OnDestroy {
+  @ViewChild(IonContent) content?: IonContent
+
   segmentChoice: 'overview' | 'search' = 'overview'
 
   isLoggedIn$ = this.auth.isLoggedIn$
@@ -66,12 +70,6 @@ export class ExplorePageComponent implements OnDestroy {
       }
     }
 
-  })
-
-  private searchSubscription2 = this.searchForm.valueChanges.pipe(
-    debounceTime(500),
-    startWith(this.searchForm.value)
-  ).subscribe(({ query, type }) => {
     const queryParams: Params = {}
     if (type && type !== 'all') queryParams['t'] = type
     if (query) queryParams['q'] = query
@@ -84,13 +82,14 @@ export class ExplorePageComponent implements OnDestroy {
   })
 
   private paramsSub = this.route.queryParams.subscribe(({ t, q }) => {
-
     const queryControl = this.searchForm.get('query') as AbstractControl<string>
     q ? queryControl.setValue(q) : queryControl.setValue('')
 
     const typeControl = this.searchForm.get('type') as AbstractControl<string>
     const types = ['goals', 'users', 'exercises']
     types.includes(t) ? typeControl.setValue(t) : typeControl.setValue('all')
+
+    this.content?.scrollToTop()
   })
 
   constructor(
@@ -109,7 +108,6 @@ export class ExplorePageComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.searchSubscription.unsubscribe()
-    this.searchSubscription2.unsubscribe()
     this.paramsSub.unsubscribe()
   }
 

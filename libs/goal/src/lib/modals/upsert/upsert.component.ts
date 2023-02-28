@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Location } from '@angular/common'
-import { LoadingController, ModalController } from '@ionic/angular'
+import { IonContent, LoadingController, ModalController } from '@ionic/angular'
 import { captureException } from '@sentry/angular'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { SwiperComponent } from 'swiper/angular'
@@ -24,6 +24,7 @@ import { Slide3Component } from './slides/slide-3/slide-3.component'
 export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   @ViewChild(Slide3Component) slide3?: Slide3Component
   @ViewChild('swiper') swiper?: SwiperComponent
+  @ViewChild(IonContent) content?: IonContent
 
   form!: GoalForm
   mode?: 'update' | 'create'
@@ -59,6 +60,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
   }
 
   stepper(direction: 'next' | 'previous') {
+    this.content?.scrollToTop()
 
     const activeIndex = this.swiper?.swiperRef.activeIndex
     if (activeIndex !== undefined) {
