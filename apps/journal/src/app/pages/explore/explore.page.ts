@@ -74,20 +74,30 @@ export class ExplorePageComponent implements OnDestroy {
     if (type && type !== 'all') queryParams['t'] = type
     if (query) queryParams['q'] = query
 
+    const currentParams = this.router.parseUrl(this.router.url).queryParams
+    const emptyParams = { q: null, t: null }
+
+    if (!Object.keys(currentParams).length && !Object.keys(queryParams).length) {
+      //  don't update params if there are no params anyway because this will prevent NavigationEnd router event
+      return
+    }
+
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
+      queryParams: Object.keys(queryParams).length ? queryParams : emptyParams,
       queryParamsHandling: 'merge'
     })
   })
 
   private paramsSub = this.route.queryParams.subscribe(({ t, q }) => {
     const queryControl = this.searchForm.get('query') as AbstractControl<string>
-    q ? queryControl.setValue(q) : queryControl.setValue('')
+    const query = q ? q : ''
+    if (query !== queryControl.value) queryControl.setValue(query)
 
     const typeControl = this.searchForm.get('type') as AbstractControl<string>
     const types = ['goals', 'users', 'exercises']
-    types.includes(t) ? typeControl.setValue(t) : typeControl.setValue('all')
+    const type = types.includes(t) ? t : 'all'
+    if (type !== typeControl.value) typeControl.setValue(type)
 
     this.content?.scrollToTop()
   })

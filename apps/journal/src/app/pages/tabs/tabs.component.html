@@ -3,23 +3,35 @@
 		<ion-tab-bar slot="bottom" *ngIf="profile$ | async as you">
 
 			<ion-tab-button tab="goals">
-				<ion-icon name="flag-sharp" [color]="(homeActive$ | async) ? 'primary' : 'inherit'"></ion-icon>
+				<ion-icon
+					name="flag-sharp"
+					[color]="(homeActive$ | async) ? 'primary' : 'inherit'"
+				></ion-icon>
 				<ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">Goals</ion-label>
 			</ion-tab-button>
 
 			<ion-tab-button tab="supports">
-				<ion-icon [src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"></ion-icon>
-				<ion-label>Supports</ion-label>
+				<ion-icon
+					[src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"
+					[color]="(supportActive$ | async) ? 'primary' : 'inherit'"
+				></ion-icon>
+				<ion-label [color]="(supportActive$ | async) ? 'primary' : 'inherit'">Supports</ion-label>
 			</ion-tab-button>
 
-			<ion-tab-button tab="explore">
-				<ion-icon name="earth-sharp"></ion-icon>
-				<ion-label>Explore</ion-label>
+			<ion-tab-button tab="explore" [routerLink]="['/explore']">
+				<ion-icon
+					name="earth-sharp"
+					[color]="(exploreActive$ | async) ? 'primary' : 'inherit'"
+				></ion-icon>
+				<ion-label [color]="(exploreActive$ | async) ? 'primary' : 'inherit'">Explore</ion-label>
 			</ion-tab-button>
 
 			<ion-tab-button tab="exercise" [routerLink]="['/exercise']">
-				<ion-icon name="barbell-sharp"></ion-icon>
-				<ion-label>Exercises</ion-label>
+				<ion-icon
+					name="barbell-sharp"
+					[color]="(exerciseActive$ | async) ? 'primary' : 'inherit'"
+				></ion-icon>
+				<ion-label [color]="(exerciseActive$ | async) ? 'primary' : 'inherit'">Exercises</ion-label>
 			</ion-tab-button>
 
 			<ion-tab-button [tab]="'profile/' + you.uid">

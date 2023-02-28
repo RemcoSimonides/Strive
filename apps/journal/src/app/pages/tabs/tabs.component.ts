@@ -20,6 +20,22 @@ export class TabsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
+  homeActive$ = this.route$.pipe(
+    map(nav => nav.url.startsWith('/goals') || nav.url === '/')
+  )
+
+  supportActive$ = this.route$.pipe(
+    map(nav => nav.url.startsWith('/supports'))
+  )
+
+  exploreActive$ = this.route$.pipe(
+    map(nav => nav.url.startsWith('/explore'))
+  )
+
+  exerciseActive$ = this.route$.pipe(
+    map(nav => nav.url.startsWith('/exercise'))
+  )
+
   profileActive$ = combineLatest([
     this.route$,
     this.auth.profile$.pipe(map(profile => profile?.uid))
@@ -29,13 +45,6 @@ export class TabsComponent {
       if (url === '/profile' || url === '/profile/') return true
       if (uid) return url === `/profile/${uid}`
       return false
-    })
-  )
-
-  homeActive$ = this.route$.pipe(
-    map(nav => {
-      const url = nav.url
-      return url === '/goals' || url === '/'
     })
   )
 
