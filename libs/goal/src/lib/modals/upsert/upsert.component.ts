@@ -12,6 +12,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { createGoal } from '@strive/model'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { getCountry } from '@strive/utils/country'
 import { Slide3Component } from './slides/slide-3/slide-3.component'
 
 @Component({
@@ -77,9 +78,9 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
           const title = this.form.title.value
           const deadline = format(this.form.deadline.value, 'dd MMMM yyyy')
           const now = format(new Date(), 'dd MMMM yyyy')
-          const location = 'The Netherlands'
+          const country = getCountry() ?? 'the Netherlands'
           if (title.length > 6 && isFuture(this.form.deadline.value)) {
-            const prompt = `I want to achieve "${title}" by "${deadline}". Today is ${now} and I live in ${location}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for milestone. Return response ONLY in a JSON parsable array of strings.`
+            const prompt = `I want to achieve "${title}" by "${deadline}". Today is ${now} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for milestone. Return response ONLY in a JSON parsable array of strings.`
             const askOpenAI = httpsCallable<{ prompt: string }, { error: string, result: string }>(getFunctions(), 'askOpenAI')
             askOpenAI({ prompt }).then(res => {
               const { error, result } = res.data
