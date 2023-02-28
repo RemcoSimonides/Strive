@@ -33,11 +33,11 @@ export class DatetimeComponent {
   @Input() hideRemove = false
 
   constructor(private popoverCtrl: PopoverController) {}
-  
+
   confirm() {
     this.popoverCtrl.dismiss(this.datetime?.value, 'dismiss')
   }
-  
+
   remove() {
     this.popoverCtrl.dismiss(undefined, 'remove')
   }

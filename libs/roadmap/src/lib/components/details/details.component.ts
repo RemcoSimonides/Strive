@@ -246,16 +246,29 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
     const minDate = new Date()
     const maxDate = endOfYear(addYears(new Date(), 1000))
+    const value = this.milestone.deadline
 
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
-      componentProps: { minDate, maxDate }
+      componentProps: { minDate, maxDate, value }
     })
     popover.onDidDismiss().then(({ data, role }) => {
-      const deadline = role === 'remove' ? new Date() : data ? new Date(data) : new Date()
+      if ((role === 'backdrop' || role === 'dismiss') && !data) return
 
-      this.milestone.deadline = deadline
-      this.milestoneService.update({ deadline, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+      if (role === 'remove') {
+        this.milestone.deadline = undefined
+        this.milestoneService.update({
+          deadline: null,
+          id: this.milestone.id
+        }, { params: { goalId: this.goal.id }})
+      } else {
+        this.milestone.deadline = new Date(data)
+        this.milestoneService.update({
+          deadline: new Date(data),
+          id: this.milestone.id
+        }, { params: { goalId: this.goal.id }})
+      }
+
       this.cdr.markForCheck()
     })
     popover.present()

@@ -14,13 +14,13 @@ export interface Milestone {
   content: string
   description: string
   status: MilestoneStatus
-  deadline?: Date
+  deadline?: Date | null
   achieverId: string
   achiever?: User // joined data
   subtasks: Subtask[]
   deletedAt: null | Date
   updatedBy?: string
-  updatedAt?: Date 
+  updatedAt?: Date
   createdAt?: Date
   finishedAt?: Date
 }
