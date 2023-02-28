@@ -3,8 +3,8 @@
     <ion-item *ngIf="goal.status === 'pending'" button (click)="markFinished()">Mark as Finished</ion-item>
   </ng-container>
   <!-- Remove View goal if there is an action for 'finished' goals -->
-  <ion-item button (click)="goTo()">View goal</ion-item> 
+  <ion-item button (click)="goTo()">View goal</ion-item>
   <ng-container *ngIf="stakeholder.isAdmin">
-    <ion-item button lines="none" (click)="deleteGoal()">Delete goal</ion-item> 
+    <ion-item button lines="none" (click)="deleteGoal()">Delete goal</ion-item>
   </ng-container>
 </ion-list>

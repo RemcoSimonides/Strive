@@ -74,7 +74,7 @@ service cloud.firestore {
 
       allow read;
       allow create: if isSignedIn()
-      allow update: if userIsGoalAdmin(goalId)
+      allow update: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
       allow delete: if userIsGoalAdmin(goalId)
 
       match /GStakeholders/{uid} {

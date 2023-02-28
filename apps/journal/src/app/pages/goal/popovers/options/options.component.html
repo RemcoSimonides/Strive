@@ -1,12 +1,14 @@
 <ion-list mode="md" lines="full">
   <ng-container *ngIf="goal?.status === 'pending' && (stakeholder.isAchiever || stakeholder.isAdmin)">
-    <ion-item (click)="markAsFinished()" button>Mark goal as Finished</ion-item>
+    <ion-item (click)="markAsFinished()" button>Mark as Finished</ion-item>
   </ng-container>
   <!-- <ng-container *ngIf="stakeholder.isAchiever">
     <ion-item (click)="close(enumGoalOptions.openFocusModal)" button>{{ stakeholder.focus.on ? 'Focus Setting' : 'Activate Focus Boost ⚡' }}</ion-item>
   </ng-container> -->
-  <ng-container *ngIf="stakeholder.isAdmin">
+  <ng-container *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
     <ion-item (click)="close(enumGoalOptions.editGoal)" button>Edit Goal</ion-item>
+  </ng-container>
+  <ng-container *ngIf="stakeholder.isAdmin">
     <ion-item lines="none" (click)="close(enumGoalOptions.deleteGoal)" button>Delete Goal</ion-item>
   </ng-container>
 </ion-list>
