@@ -1,175 +1,219 @@
 <ion-content class="ion-no-padding">
-  <section class="fade">
-    <article class="download">
-      <ng-container *ngIf="showPlayStore">
-        <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
-          <img class="download" asset="google_play.png"/>
-        </a>
+  <ng-container *ngIf="theme$ | async as theme">
+    <header [ngStyle]="{'background': theme === 'light' ? 'var(--ion-color-dark)' : ''}">
+      <section class="fade">
+        <article class="download">
+          <ng-container *ngIf="showPlayStore">
+            <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
+              <img class="download" asset="google_play.png"/>
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="showAppStore">
+            <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
+              <img class="download" asset="app_store.png"/>
+            </a>
+          </ng-container>
+        </article>
+        <h1><b>Stay focused on your goals</b> and help others achieve theirs</h1>
+      </section>
+
+      <ng-container *ngIf="theme === 'light'">
+        <svg width="1600" height="72.78" viewBox="0 0 1600 72.78" fill="none" xmlns="http://www.w3.org/2000/svg" id="wave">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M1600 5.01752V67V67.5V73H0V67.5V67V5.01752C168.421 51.3416 288.087 66.9763 399.587 67C399.757 67 399.926 67 400.096 67C492.191 66.9804 578.755 56.3217 682.673 43.5261C877.365 19.5532 1132.97 -11.9202 1600 5.01752Z" fill="currentColor"/>
+        </svg>
       </ng-container>
+    </header>
 
-      <ng-container *ngIf="showAppStore">
-        <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
-          <img class="download" asset="app_store.png"/>
-        </a>
-      </ng-container>
-    </article>
-    <h1>Stay focused on your goals and help others achieve theirs</h1>
-  </section>
+    <section class="overview">
 
-  <section class="overview">
+      <ul>
+        <li class="main">
+          <img asset="home_demo.gif" class="demo fade left">
+          <article class="fade right">
+            <div>
+              <h3>Set Goals</h3>
+              <p>What do you want to achieve? Write it down, visualize it, increase your chance of achieving it.</p>
+            </div>
 
-    <ul>
-      <li>
-        <img asset="home_demo.gif" class="demo fade left">
-        <article class="fade right">
-          <h3>Set Goals</h3>
-          <p>Write down your goal, make a plan, ask others to join and start achieving (alone or together). Make a story about your journey to look back at what you've achieved with pride.</p>
-          <ion-button fill="clear" (click)="openAuthModal()">
-            <span>CREATE GOAL</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </article>
-      </li>
+            <div>
+              <h3>Create Roadmap</h3>
+              <p>Break your big audacious goal down into small achievable steps. Artificial Intelligence will give you a suggestion how you can break down your goal to make this easier.</p>
+            </div>
 
-      <hr class="fade right" />
+            <div>
+              <h3>Journal</h3>
+              <p>Do you remember all you have achieved in life? You'll be surprised how much you've done in the last 5 years. Keep a Journal and be able to read back on all your accomplishments and failures.</p>
+            </div>
+            <ion-button color="primary" (click)="openAuthModal()">
+              <span>CREATE GOAL</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </article>
+        </li>
 
-      <li routerLink="/exercise/dear-future-self" class="dear-future-self">
-        <img asset="home_dear_future_self.png" class="fade left">
-        <article class="fade right">
-          <h3>Dear Future Self</h3>
-          <p>Write a letter to your future self. What does your live look like in 5 years? You'll be surprised how much of it will come true.</p>
-          <ion-button fill="clear">
-            <span>WRITE LETTER</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </article>
-      </li>
+        <hr class="fade-right" />
 
-      <hr class="fade right"/>
+        <li>
+          <article>
+            <ng-container *ngIf="theme === 'light'; else dark">
+              <ion-button (click)="toggleTheme()" color="dark">
+                <span>SWITCH TO DARK MODE</span>
+                <ion-icon name="moon-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ng-container>
+            <ng-template #dark>
+              <ion-button (click)="toggleTheme()" color="dark">
+                <span>SWITCH TO LIGHT MODE</span>
+                <ion-icon name="sunny-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ng-template>
+          </article>
+          <img asset="darklight.png" class="demo fade right small" />
 
-      <li routerLink="/exercise/wheel-of-life">
-        <img asset="home_wheel_of_life.png" class="fade left">
-        <article class="fade right">
-          <h3>Wheel of Life</h3>
-          <p>Get insight in which areas in your life needs more attention and track results over the long term.</p>
-          <ion-button fill="clear">
-            <span>Fill in Wheel of Life</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </article>
-      </li>
+        </li>
 
-      <hr class="fade right" />
 
-      <li routerLink="/exercise/affirmations">
-        <img asset="home_affirmations.png" class="fade left">
-        <article class="fade right">
-          <h3>Affirmations</h3>
-          <p>Set your own affirmations and receive them at set times. Affirmations will help your mind to prioritize positive thoughts over negative thoughts.</p>
-          <ion-button fill="clear">
-            <span>START AFFIRMING</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </article>
-      </li>
+        <hr class="fade right" />
 
-      <hr class="fade right"/>
+        <li routerLink="/exercise/dear-future-self" class="dear-future-self">
+          <img asset="home_dear_future_self.png" class="fade left">
+          <article class="fade right">
+            <h3>Dear Future Self</h3>
+            <p>Write a letter to your future self. What does your live look like in 5 years? You'll be surprised how much of it will come true.</p>
+            <ion-button fill="clear">
+              <span>WRITE LETTER</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </article>
+        </li>
 
-      <li routerLink="/exercise/daily-gratitude">
-        <img asset="home_daily_gratitude.png" class="fade left">
-        <article class="fade right">
-          <h3>Daily Gratitude</h3>
-          <p>What 3 things were you grateful for today? Receive a daily reminder and write down 3 things you were grateful for. Whatever you write down will be encrypted and saved.</p>
-          <ion-button fill="clear">
-            <span>SET REMINDER</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </article>
-      </li>
-    </ul>
-  </section>
+        <hr class="fade right"/>
 
-  <hr class="fade right"/>
+        <li routerLink="/exercise/wheel-of-life">
+          <img asset="home_wheel_of_life.png" class="fade left">
+          <article class="fade right">
+            <h3>Wheel of Life</h3>
+            <p>Get insight in which areas in your life needs more attention and track results over the long term.</p>
+            <ion-button fill="clear">
+              <span>Fill in Wheel of Life</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </article>
+        </li>
 
-  <section class="statistics">
-    
-    <h3 class="fade"f>You're not alone</h3>
-    <ul *ngIf="aggregation$ | async as a">
-      <li>
-        <span class="number fade left">{{ a.goalsCreated ?? 0 | compact }}</span>
-        <span class="label fade right">Goals created</span>
-      </li>
-  
-      <li>
-        <span class="number fade left">{{ a.goalsCustomSupports ?? 0 | compact }}</span>
-        <span class="label fade right">Supports for goals</span>
-      </li>
-  
-      <li>
-        <span class="number fade left">{{ a.usersFutureLetterSent ?? 0 | compact }}</span>
-        <span class="label fade right">Letters sent to Future Self</span>
-      </li>
-  
-      <li>
-        <span class="number fade left">{{ a.usersAffirmationsSet ?? 0 | compact }}</span>
-        <span class="label fade right">Affirmations set</span>
-      </li>
-  
-      <li>
-        <span class="number fade left">{{ a.usersGratitudeOn ?? 0 | compact }}</span>
-        <span class="label fade right">Daily gratitude reminders set</span>
-      </li>
-    </ul>
+        <hr class="fade right" />
 
-  </section>
+        <li routerLink="/exercise/affirmations">
+          <img asset="home_affirmations.png" class="fade left">
+          <article class="fade right">
+            <h3>Affirmations</h3>
+            <p>Set your own affirmations and receive them at set times. Affirmations will help your mind to prioritize positive thoughts over negative thoughts.</p>
+            <ion-button fill="clear">
+              <span>START AFFIRMING</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </article>
+        </li>
 
-  <hr/>
+        <hr class="fade right"/>
 
-  <section class="blogs">
-    <h3 class="fade">Guides</h3>
+        <li routerLink="/exercise/daily-gratitude">
+          <img asset="home_daily_gratitude.png" class="fade left">
+          <article class="fade right">
+            <h3>Daily Gratitude</h3>
+            <p>What 3 things were you grateful for today? Receive a daily reminder and write down 3 things you were grateful for. Whatever you write down will be encrypted and saved.</p>
+            <ion-button fill="clear">
+              <span>SET REMINDER</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </article>
+        </li>
+      </ul>
+    </section>
 
-    <article>
-      <ion-card href="https://blog.strivejournal.com/category/create-the-perfect-goal" target="_blank" class="fade left">
-        <img asset="home_goal_setting.png" loading='eager'/>
-        <ion-card-header>
-          <ion-card-title>The Ultime Guide to Achieving Goals</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-text>
-            What do you want to achieve? Is it worth the offers you have to make in order to achieve it? It is important to think about it beforehand.
-            This guide walks you through important steps you have to think about before embarking on the journey...
-          </ion-text>
-          <ion-button fill="clear">
-            <span>CONTINUE READING</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
+    <hr class="fade right"/>
 
-      <ion-card href="https://blog.strivejournal.com/blog/dear-future-self" target="_blank" class="fade right">
-        <img asset="home_future_self_letter.png" loading='eager'/>
-        <ion-card-header>
-          <ion-card-title>Writing to your Future Self</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-text>
-            What should you write in this letter? You can write a message from your current self to your future self, or try to predict what your future will look like.
-            Chances are small you will remember sending the letter in a couple of years and your future self will be...
-          </ion-text>
-          <ion-button fill="clear">
-            <span>CONTINUE READING</span>
-            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
-    </article>
+    <section class="statistics">
 
-    <ion-button fill="clear" class="more fade" href="https://blog.strivejournal.com/intro" target="_blank">
-      <span>MORE GUIDES</span>
-      <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-    </ion-button>
+      <h3 class="fade"f>You're not alone</h3>
+      <ul *ngIf="aggregation$ | async as a">
+        <li>
+          <span class="number fade left">{{ a.goalsCreated ?? 0 | compact }}</span>
+          <span class="label fade right">Goals created</span>
+        </li>
 
-  </section>
+        <li>
+          <span class="number fade left">{{ a.goalsCustomSupports ?? 0 | compact }}</span>
+          <span class="label fade right">Supports for goals</span>
+        </li>
 
-  <strive-footer></strive-footer>
+        <li>
+          <span class="number fade left">{{ a.usersFutureLetterSent ?? 0 | compact }}</span>
+          <span class="label fade right">Letters sent to Future Self</span>
+        </li>
+
+        <li>
+          <span class="number fade left">{{ a.usersAffirmationsSet ?? 0 | compact }}</span>
+          <span class="label fade right">Affirmations set</span>
+        </li>
+
+        <li>
+          <span class="number fade left">{{ a.usersGratitudeOn ?? 0 | compact }}</span>
+          <span class="label fade right">Daily gratitude reminders set</span>
+        </li>
+      </ul>
+
+    </section>
+
+    <hr/>
+
+    <section class="blogs">
+      <h3 class="fade">Guides</h3>
+
+      <article>
+        <ion-card href="https://blog.strivejournal.com/category/create-the-perfect-goal" target="_blank" class="fade left">
+          <img asset="home_goal_setting.png" loading='eager'/>
+          <ion-card-header>
+            <ion-card-title>The Ultime Guide to Achieving Goals</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-text>
+              What do you want to achieve? Is it worth the offers you have to make in order to achieve it? It is important to think about it beforehand.
+              This guide walks you through important steps you have to think about before embarking on the journey...
+            </ion-text>
+            <ion-button fill="clear">
+              <span>CONTINUE READING</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card href="https://blog.strivejournal.com/blog/dear-future-self" target="_blank" class="fade right">
+          <img asset="home_future_self_letter.png" loading='eager'/>
+          <ion-card-header>
+            <ion-card-title>Writing to your Future Self</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-text>
+              What should you write in this letter? You can write a message from your current self to your future self, or try to predict what your future will look like.
+              Chances are small you will remember sending the letter in a couple of years and your future self will be...
+            </ion-text>
+            <ion-button fill="clear">
+              <span>CONTINUE READING</span>
+              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </article>
+
+      <ion-button fill="clear" class="more fade" href="https://blog.strivejournal.com/intro" target="_blank">
+        <span>MORE GUIDES</span>
+        <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+      </ion-button>
+
+    </section>
+
+    <strive-footer></strive-footer>
+  </ng-container>
 </ion-content>

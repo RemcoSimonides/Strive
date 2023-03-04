@@ -31,6 +31,29 @@
 }
 /** END ANIMATION */
 
+header {
+  position: relative;
+
+  h1 {
+    margin-block: 64px;
+    text-align: center;
+    font-size: clamp(3rem, 10vw, 4rem);
+    background: -webkit-linear-gradient(#fbb35a, #a36213);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  svg {
+    position: absolute;
+    bottom: -1px;
+    width: 100%;
+    height: fit-content;
+    vertical-align: middle;
+    color: var(--ion-background-color);
+  }
+}
+
 .download {
   display: flex;
   flex-direction: row;
@@ -54,14 +77,6 @@ section {
   padding: 16px;
 }
 
-h1 {
-  margin-block: 64px;
-  font-size: clamp(3rem, 10vw, 4rem);
-  background: -webkit-linear-gradient(#fbb35a, #a36213);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
 h3 {
   font-size: 2rem;
@@ -83,6 +98,10 @@ section.overview {
       img {
         width: 250px;
         margin: 16px;
+
+        &.small {
+          width: 125px;
+        }
       }
 
       article {
@@ -90,7 +109,16 @@ section.overview {
         flex-direction: column;
         gap: 16px;
         margin: auto;
+
+        div {
+          display: flex;
+          flex-direction: column;
+        }
       }
+    }
+
+    li.main {
+      margin-top: 32px;
     }
 
     li.dear-future-self {
@@ -118,7 +146,7 @@ section.statistics {
       display: flex;;
       align-items: center;
       gap: 16px;
-  
+
       .number {
         width: 80px;
         min-width: 80px;
@@ -160,7 +188,6 @@ section.blogs {
 }
 
 
-
 @media only screen and (min-width: 700px) {
   section.overview {
     li {
@@ -178,6 +205,12 @@ section.blogs {
       article {
         text-align: center;
         align-items: center;
+      }
+    }
+
+    li.main {
+      article {
+        margin-top: 32px !important;
       }
     }
   }

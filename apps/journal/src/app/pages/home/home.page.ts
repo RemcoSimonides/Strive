@@ -6,6 +6,7 @@ import { ModalController, Platform } from '@ionic/angular'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
 import { SeoService } from '@strive/utils/services/seo.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
   selector: 'journal-home',
@@ -22,11 +23,14 @@ export class HomePageComponent {
   showPlayStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('ios')
   showAppStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('android')
 
+  theme$ = this.themeService.theme$
+
   constructor (
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
     private platform: Platform,
     seo: SeoService,
+    private themeService: ThemeService,
     @Inject(PLATFORM_ID) platformId: any
   ) {
     seo.generateTags({})
@@ -38,7 +42,7 @@ export class HomePageComponent {
           }
         })
       })
-  
+
       setTimeout(() => {
         const elements = document.querySelectorAll('.fade')
         elements.forEach(el => observer.observe(el))
@@ -50,9 +54,12 @@ export class HomePageComponent {
     this.modalCtrl.create({
       component: AuthModalComponent,
       componentProps: {
-        authSegment: enumAuthSegment.register,
-        
+        authSegment: enumAuthSegment.register
       }
     }).then(modal => modal.present())
+  }
+
+  toggleTheme() {
+    this.themeService.toggle()
   }
 }
