@@ -30,6 +30,7 @@ body {
   --page-max-width: 800px;
   --swiper-navigation-size: 20px;
   --swiper-navigation-color: var(--ion-color-secondary);
+  scrollbar-color: light;
 }
 
 /* Elements */
@@ -38,6 +39,8 @@ body {
 }
 
 body[data-theme="dark"] {
+  scrollbar-color: dark;
+
   h1, h2, h3, h4, h5 {
     color: var(--ion-color-primary);
   }

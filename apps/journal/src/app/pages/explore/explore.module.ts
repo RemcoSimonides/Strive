@@ -30,7 +30,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    
+
     // Strive
     ThumbnailListModule,
     SmallThumbnailModule,

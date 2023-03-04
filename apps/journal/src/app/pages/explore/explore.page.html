@@ -3,27 +3,26 @@
 </ng-container>
 
 <ion-content class="ion-no-padding">
+  <header>
+    <form [formGroup]="searchForm">
+      <ion-searchbar
+        formControlName="query"
+        placeholder='Try "Eat Healthy" or "Remco"'
+        inputmode="search"
+        mode="md">
+      </ion-searchbar>
+      <ion-card>
+        <ion-select placeholder="Type" interface="popover" formControlName="type">
+          <ion-select-option value="all">All</ion-select-option>
+          <ion-select-option value="goals">Goals</ion-select-option>
+          <ion-select-option value="users">Users</ion-select-option>
+          <ion-select-option value="exercises">Exercises</ion-select-option>
+        </ion-select>
+      </ion-card>
+    </form>
+  </header>
 
   <main [ngSwitch]="segmentChoice">
-    <header>
-      <form [formGroup]="searchForm">
-        <ion-searchbar
-          formControlName="query"
-          placeholder='Try "Eat Healthy" or "Remco"'
-          inputmode="search"
-          mode="md">
-        </ion-searchbar>
-        <ion-card>
-          <ion-select placeholder="Type" interface="popover" formControlName="type">
-            <ion-select-option value="all">All</ion-select-option>
-            <ion-select-option value="goals">Goals</ion-select-option>
-            <ion-select-option value="users">Users</ion-select-option>
-            <ion-select-option value="exercises">Exercises</ion-select-option>
-          </ion-select>
-        </ion-card>
-      </form>
-    </header>
-
     <ng-container *ngSwitchCase="'overview'">
       <section>
         <h5>Goals</h5>
@@ -39,11 +38,11 @@
                 </strive-small-thumbnail>
               </ng-container>
             </article>
-  
+
           </ng-template>
         </ng-container>
       </strive-thumbnail-list>
-  
+
       <section>
         <h5>Users</h5>
         <ion-button fill="clear" (click)="setType('users')">view more</ion-button>
