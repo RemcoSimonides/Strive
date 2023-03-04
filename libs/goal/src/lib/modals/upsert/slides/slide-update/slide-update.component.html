@@ -4,16 +4,17 @@
     <ion-item>
       <ion-label position="stacked">Title *</ion-label>
       <ion-input
-        formControlName="title" 
+        formControlName="title"
         type="text"
         autocapitalize="sentences"
         autofocus
-        maxlength="60"></ion-input>
+        maxlength="60"
+      />
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">When should the goal be finished? *</ion-label>
-      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
+      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'" />
     </ion-item>
 
     <ion-item>
@@ -29,7 +30,7 @@
         [form]="form.image"
         [storagePath]="'goals/' + goalId"
         defaultImage="goal.png"
-      ></strive-image-selector>
+      />
     </ion-item>
   </ion-list>
 

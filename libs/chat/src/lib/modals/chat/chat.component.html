@@ -3,7 +3,7 @@
 
 		<ion-buttons slot="end">
 			<ion-button (click)="dismiss()">
-				<ion-icon slot="icon-only" name="close"></ion-icon>
+				<ion-icon slot="icon-only" name="close" />
 			</ion-button>
 		</ion-buttons>
 
@@ -17,8 +17,8 @@
 				<ion-infinite-scroll position="top" threshold="100px" (ionInfinite)="more($event)" [disabled]="done$ | async">
 					<ion-infinite-scroll-content
 						loadingSpinner="bubbles"
-						loadingText="Loading more data...">
-					</ion-infinite-scroll-content>
+						loadingText="Loading more data..."
+					/>
 				</ion-infinite-scroll>
 
 				<li *ngFor="let comment of comments$ | async">
@@ -34,8 +34,8 @@
 
 		<ion-footer class="ion-no-border">
 			<ion-item>
-				<ion-textarea type="text" placeholder="Reply..." [formControl]="form" (keydown.enter)="addReply($event)" autoGrow autocapitalize="sentences"></ion-textarea>
-				<ion-icon name="send" (click)="addReply()"></ion-icon>
+				<ion-textarea type="text" placeholder="Reply..." [formControl]="form" (keydown.enter)="addReply($event)" autoGrow autocapitalize="sentences" />
+				<ion-icon name="send" (click)="addReply()" />
 			</ion-item>
 		</ion-footer>
 	</ng-container>
@@ -43,10 +43,10 @@
 	<ng-template #noAccess>
 		<section>
 			<p>In order to chat, you need to</p>
-			<strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"></strive-goal-join-button>
+			<strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder" />
 			<p>or</p>
 			<ion-button (click)="support()" class="secondary">
-				<ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
+				<ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg" />
 				<span>Support</span>
 			</ion-button>
 		</section>

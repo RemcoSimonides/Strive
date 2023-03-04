@@ -2,12 +2,12 @@
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()" color="primary">
-        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="close-outline" />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content *ngIf="support" class="ion-padding">
-  <strive-support-details [support]="support" (removed)="dismiss()"></strive-support-details>
+  <strive-support-details [support]="support" (removed)="dismiss()" />
 </ion-content>

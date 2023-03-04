@@ -1,4 +1,4 @@
-<strive-header-root title="Exercises" color="primary"></strive-header-root>
+<strive-header-root title="Exercises" color="primary"/>
 
 <ion-content class="ion-padding">
   <main>
@@ -33,7 +33,7 @@
 
             </ng-container>
             <ng-container *ngSwitchCase="'DailyGratitude'">
-              
+
               <ng-container *ngIf="settings | get:'DailyGratitude' as setting; else notSet">
                 <ng-container *ngIf="setting.on else notSet">
                   <article>
@@ -65,7 +65,7 @@
     </section>
 
     <ng-template #loading>
-      <strive-page-loading></strive-page-loading>
+      <strive-page-loading/>
     </ng-template>
 
   </main>

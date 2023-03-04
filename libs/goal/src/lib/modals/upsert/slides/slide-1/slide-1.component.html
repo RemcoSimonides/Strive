@@ -6,17 +6,19 @@
       <ion-label color="primary">What do you want to achieve? *</ion-label>
     </ion-item>
     <ion-item class="what">
-      <ion-input formControlName="title"
-                type="text"
-                placeholder="I want to ..."
-                maxlength="60"
-                autocapitalize="sentences"
-                [autofocus]="true"></ion-input>
+      <ion-input
+        formControlName="title"
+        type="text"
+        placeholder="I want to ..."
+        maxlength="60"
+        autocapitalize="sentences"
+        [autofocus]="true"
+      />
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked" color="primary">When should the goal be finished? *</ion-label>
-      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'"></ion-input>
+      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'" />
     </ion-item>
 
     <ion-item lines="none">

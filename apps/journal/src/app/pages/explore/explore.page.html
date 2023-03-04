@@ -1,5 +1,5 @@
 <ng-container *ngIf="(isLoggedIn$ | async) === false">
-  <strive-header-root></strive-header-root>
+  <strive-header-root/>
 </ng-container>
 
 <ion-content class="ion-no-padding">
@@ -52,7 +52,7 @@
           <ng-template #thumb>
             <article class="small-thumbnail-column">
               <ng-container *ngFor="let profile of rows">
-                <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.objectID" borderRadius="50%"></strive-small-thumbnail>
+                <strive-small-thumbnail [title]="profile.username" [image]="profile.photoURL" asset="profile.png" [routerLink]="'/profile/' + profile.objectID" borderRadius="50%"/>
               </ng-container>
             </article>
           </ng-template>
@@ -68,7 +68,7 @@
           <ng-template #thumb>
             <article class="small-thumbnail-column">
               <ng-container *ngFor="let exercise of rows">
-                <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link"></strive-small-thumbnail>
+                <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link"/>
               </ng-container>
             </article>
           </ng-template>
@@ -109,5 +109,5 @@
     </a>
   </main>
 
-  <strive-footer></strive-footer>
+  <strive-footer/>
 </ion-content>

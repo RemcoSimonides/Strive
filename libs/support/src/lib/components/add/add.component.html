@@ -7,14 +7,15 @@
         placeholder="e.g. chocolate or €20"
         autocapitalize="sentences"
         maxlength="60"
-        (keydown.enter)="addSupport()"></ion-input>
+        (keydown.enter)="addSupport()"
+      />
       <ion-button
-        slot="end" 
+        slot="end"
         (click)="addSupport()"
         color="secondary"
       >
         <span>ADD</span>
-        <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
+        <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
       </ion-button>
     </ion-item>
   </ion-list>

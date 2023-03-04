@@ -1,9 +1,9 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="md" transparent>
-    <ion-searchbar placeholder="Search" (ionChange)="search($event)"></ion-searchbar>
+    <ion-searchbar placeholder="Search" (ionChange)="search($event)"/>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" name="close"/>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -35,14 +35,14 @@
 <ion-footer class="ion-no-border">
   <small>Invite someone without Strive Journal account?</small>
   <ion-button (click)="share($event)" color="primary" size="small">
-    <ion-icon slot="start" name="share-social-outline"></ion-icon>
+    <ion-icon slot="start" name="share-social-outline"/>
     <span>Share link</span>
   </ion-button>
 </ion-footer>
 
 <ng-template #loading>
   <section>
-    <ion-spinner name="lines" color="primary"></ion-spinner>
+    <ion-spinner name="lines" color="primary"/>
   </section>
 </ng-template>
 

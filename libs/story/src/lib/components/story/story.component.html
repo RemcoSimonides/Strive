@@ -3,7 +3,7 @@
 		<div></div>
 		<div>
 			<ion-button (click)="createCustomPost()" fill="clear" size="small">
-				<ion-icon name="pencil-outline" slot="start"></ion-icon>
+				<ion-icon name="pencil-outline" slot="start" />
 				<span>Add to story...</span>
 			</ion-button>
 		</div>
@@ -15,7 +15,7 @@
 
 			<article *ngIf="message.message.length">
 				<div class="emblem">
-					<ion-icon [name]="message.icon"></ion-icon>
+					<ion-icon [name]="message.icon" />
 				</div>
 
 				<div class="timelineContent">
@@ -37,7 +37,7 @@
 		<article *ngIf="item.name === 'goalStoryPostCreated'" class="extra">
 			<div></div>
 			<div>
-				<strive-post [storyItem]="item" [stakeholder]="stakeholder"></strive-post>
+				<strive-post [storyItem]="item" [stakeholder]="stakeholder" />
 			</div>
 		</article>
 

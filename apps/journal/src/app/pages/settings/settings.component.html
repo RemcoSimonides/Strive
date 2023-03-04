@@ -2,8 +2,8 @@
   <ng-container *ngIf="theme$ | async as theme">
     <ion-buttons slot="end">
       <ion-button (click)="toggleTheme()" fill="clear">
-        <ion-icon *ngIf="theme === 'light'" name="moon-outline"></ion-icon>
-        <ion-icon *ngIf="theme === 'dark'" name="sunny-outline"></ion-icon>
+        <ion-icon *ngIf="theme === 'light'" name="moon-outline" />
+        <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" />
       </ion-button>
     </ion-buttons>
   </ng-container>
@@ -25,27 +25,28 @@
       <ion-list-header>Notifications</ion-list-header>
       <ion-item *ngIf="fcmIsSupported | async" button (click)="registerFCM()" lines="none">
         <ion-label>Push Notifications</ion-label>
-        <ion-toggle slot="end" [(ngModel)]="fcmActive"></ion-toggle>
+        <ion-toggle slot="end" [(ngModel)]="fcmActive" />
       </ion-item>
       <ion-item *ngIf="(fcmIsSupported | async) === false" disabled lines="none">
-        <ion-label>Push Notifications not supported</ion-label></ion-item>  
+        <ion-label>Push Notifications not supported</ion-label>
+      </ion-item>
     </ng-container>
 
 
     <ion-list-header>Support</ion-list-header>
-    <ion-item button href="https://blog.strivejournal.com/intro" target="_blank"> 
+    <ion-item button href="https://blog.strivejournal.com/intro" target="_blank">
 			<ion-label>Guides</ion-label>
-			<ion-icon name="open-outline"></ion-icon>
+			<ion-icon name="open-outline" />
 		</ion-item>
 
 		<ion-item button href="https://blog.strivejournal.com/blog" target="_blank">
 			<ion-label>Blog</ion-label>
-			<ion-icon name="open-outline"></ion-icon>
+			<ion-icon name="open-outline" />
 		</ion-item>
 
     <ion-item button href="mailto:support@strivejournal.com" lines="none">
       <ion-label>Contact Support</ion-label>
-			<ion-icon name="open-outline"></ion-icon>
+			<ion-icon name="open-outline" />
     </ion-item>
 
     <ion-list-header>Legal</ion-list-header>

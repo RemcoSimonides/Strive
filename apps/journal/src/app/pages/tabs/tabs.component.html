@@ -6,7 +6,7 @@
 				<ion-icon
 					name="flag-sharp"
 					[color]="(homeActive$ | async) ? 'primary' : 'inherit'"
-				></ion-icon>
+				/>
 				<ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">Goals</ion-label>
 			</ion-tab-button>
 
@@ -14,7 +14,7 @@
 				<ion-icon
 					[src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"
 					[color]="(supportActive$ | async) ? 'primary' : 'inherit'"
-				></ion-icon>
+				/>
 				<ion-label [color]="(supportActive$ | async) ? 'primary' : 'inherit'">Supports</ion-label>
 			</ion-tab-button>
 
@@ -22,7 +22,7 @@
 				<ion-icon
 					name="earth-sharp"
 					[color]="(exploreActive$ | async) ? 'primary' : 'inherit'"
-				></ion-icon>
+				/>
 				<ion-label [color]="(exploreActive$ | async) ? 'primary' : 'inherit'">Explore</ion-label>
 			</ion-tab-button>
 
@@ -30,13 +30,13 @@
 				<ion-icon
 					name="barbell-sharp"
 					[color]="(exerciseActive$ | async) ? 'primary' : 'inherit'"
-				></ion-icon>
+				/>
 				<ion-label [color]="(exerciseActive$ | async) ? 'primary' : 'inherit'">Exercises</ion-label>
 			</ion-tab-button>
 
 			<ion-tab-button [tab]="'profile/' + you.uid">
 				<ion-avatar>
-					<img [ref]="you.photoURL" asset="profile.png" [width]="120" [height]="120">
+					<img [ref]="you.photoURL" asset="profile.png" [width]="120" [height]="120" />
 				</ion-avatar>
 				<ion-label [color]="(profileActive$ | async) ? 'primary' : 'inherit'">You</ion-label>
 			</ion-tab-button>

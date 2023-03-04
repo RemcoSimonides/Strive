@@ -1,4 +1,4 @@
-<strive-header title="Notifications" color="primary"></strive-header>
+<strive-header title="Notifications" color="primary" />
 
 <ng-container *ngIf="(uid$ | async) !== undefined else loading">
   <ng-container *ngIf="uid$ | async else notLoggedIn">
@@ -52,5 +52,5 @@
 </ng-template>
 
 <ng-template #loading>
-  <strive-page-loading></strive-page-loading>
+  <strive-page-loading />
 </ng-template>

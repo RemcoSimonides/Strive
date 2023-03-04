@@ -1,17 +1,17 @@
 <ng-template #noAccess>
-  <strive-404></strive-404>
+  <strive-404 />
 </ng-template>
 
 <ng-container *ngIf="support$ | async as support">
   <ng-container *ngIf="support.description; else noAccess">
 
-    <strive-header title="Support" defaultBack="/supports" color="primary"></strive-header>
+    <strive-header title="Support" defaultBack="/supports" color="primary" />
 
     <ion-content class="ion-padding">
       <main>
-    
-        <strive-support-details [support]="support" (removed)="supportRemoved()" [showGoalLink]="true"></strive-support-details>
-    
+
+        <strive-support-details [support]="support" (removed)="supportRemoved()" [showGoalLink]="true" />
+
       </main>
     </ion-content>
   </ng-container>

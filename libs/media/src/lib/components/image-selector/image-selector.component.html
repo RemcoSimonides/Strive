@@ -3,30 +3,30 @@
 
   <!-- Drop -->
   <article *ngSwitchCase="'drop'" class="drop-zone">
-    <ng-content select="[title]"></ng-content>
+    <ng-content select="[title]" />
     <p>Drag 'n drop an Image</p>
     <p>or <a (click)="selectImage()">choose a file</a></p>
     <div *ngIf="defaultImage">
       <span class="caption">Image used if not customized:</span>
-      <img [asset]="defaultImage">
+      <img [asset]="defaultImage" />
     </div>
   </article>
 
   <!-- Hovering -->
   <article *ngSwitchCase="'hovering'" class="drop-zone">
-    <img asset="goal.png" alt="upload image" class="picture-hover">
+    <img asset="goal.png" alt="upload image" class="picture-hover" />
     <h3>Drop your file here</h3>
   </article>
 
   <!-- Crop -->
   <article *ngSwitchCase="'crop'" class="crop">
-    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)"></image-cropper>
+    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)" />
     <div>
       <ion-fab-button color="primary" (click)="cropIt()">
-        <ion-icon name="checkmark-outline"></ion-icon>
+        <ion-icon name="checkmark-outline" />
       </ion-fab-button>
       <ion-fab-button color="primary" (click)="step.next('drop')">
-        <ion-icon name="close-outline"></ion-icon>
+        <ion-icon name="close-outline" />
       </ion-fab-button>
     </div>
   </article>
@@ -36,7 +36,7 @@
     <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
     <div>
       <ion-fab-button color="primary" (click)="remove()">
-        <ion-icon name="close-outline"></ion-icon>
+        <ion-icon name="close-outline" />
       </ion-fab-button>
     </div>
   </article>

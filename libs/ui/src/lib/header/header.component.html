@@ -3,11 +3,11 @@
     <ion-toolbar [color]="color">
       <ion-buttons slot="start">
         <ion-button (click)="back()">
-          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          <ion-icon slot="icon-only" name="arrow-back" />
         </ion-button>
       </ion-buttons>
       <ion-title> {{ title }} </ion-title>
-      <ng-content></ng-content>
+      <ng-content />
     </ion-toolbar>
   </ion-header>
 </ng-container>

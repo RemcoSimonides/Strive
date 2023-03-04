@@ -7,11 +7,11 @@
   </ion-item>
   <ion-item button (click)="goTo('/edit-profile')">Edit Profile</ion-item>
   <ion-item button (click)="signOut()">Log out</ion-item>
-  
+
   <ng-container *ngIf="theme$ | async as theme">
     <ion-item button (click)="toggleTheme()" lines="none">
-      <ion-icon *ngIf="theme === 'light'" name="moon-outline" slot="end"></ion-icon>
-      <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" slot="end"></ion-icon>
+      <ion-icon *ngIf="theme === 'light'" name="moon-outline" slot="end" />
+      <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" slot="end" />
     </ion-item>
   </ng-container>
 

@@ -3,7 +3,7 @@
     <ng-template #noDesktop>
       <ion-buttons slot="start">
         <ion-button (click)="dismiss()" color="primary">
-          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          <ion-icon slot="icon-only" name="arrow-back" />
         </ion-button>
       </ion-buttons>
     </ng-template>
@@ -15,14 +15,14 @@
         </ng-container>
         <ng-template #saved>
           <span>SAVED</span>
-          <ion-icon name="checkmark-outline" slot="end"></ion-icon>
+          <ion-icon name="checkmark-outline" slot="end" />
         </ng-template>
       </ion-button>
     </header>
 
     <ion-buttons slot="end" *ngIf="isDesktop$ | async; else noDesktop">
       <ion-button (click)="dismiss()" color="primary">
-        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="close-outline" />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -34,16 +34,16 @@
       <form [formGroup]="form">
         <ion-item class="main" lines="none">
           <ion-button (click)="updateStatus()" fill="clear" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-            <strive-milestone-status [milestone]="milestone"></strive-milestone-status>
+            <strive-milestone-status [milestone]="milestone" />
           </ion-button>
-          <ion-textarea autoGrow [readonly]="!canEdit" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"></ion-textarea>
+          <ion-textarea autoGrow [readonly]="!canEdit" formControlName="content" placeholder="Type milestone" autocapitalize="sentences"/>
         </ion-item>
       </form>
     </section>
 
     <section *ngIf="milestone.deadline">
       <div (click)="openDatepicker()" class="deadline" [ngClass]="{'clickable': canEdit}">
-        <ion-icon name="alarm-outline"></ion-icon>
+        <ion-icon name="alarm-outline" />
         <small>{{ milestone.deadline | date: 'MMM d, y' }}</small>
       </div>
     </section>
@@ -52,14 +52,14 @@
       <small class="assignee">
         <ion-icon name="person-outline"></ion-icon>
         <ion-button class="contrast" size="small" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-          <strive-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()"></strive-milestone-assignee>
+          <strive-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()" />
         </ion-button>
       </small>
     </section>
 
     <section *ngIf="milestone.description || showDescription" class="description">
       <small>
-        <ion-icon name="reorder-four-outline"></ion-icon>
+        <ion-icon name="reorder-four-outline" />
         <ion-textarea
           [formControl]="form.description"
           placeholder="Description"
@@ -67,33 +67,33 @@
           [maxlength]="200"
           autoGrow
           [readonly]="!canEdit"
-        ></ion-textarea>
+        />
       </small>
     </section>
 
     <section class="details" *ngIf="canEdit">
 
       <ion-button (click)="deleteMilestone()" class="danger" size="small">
-        <ion-icon slot="icon-only" name="trash-outline" size="small"></ion-icon>
+        <ion-icon slot="icon-only" name="trash-outline" size="small" />
       </ion-button>
 
       <ng-container *ngIf="!milestone.deadline">
         <ion-button (click)="openDatepicker()" class="primary" size="small">
-          <ion-icon name="alarm-outline" slot="start"></ion-icon>
+          <ion-icon name="alarm-outline" slot="start" />
           <span>Deadline</span>
         </ion-button>
       </ng-container>
 
       <ng-container *ngIf="goal.numberOfAchievers > 1 && !milestone.achiever?.uid">
         <ion-button (click)="toggleAssignMe()" class="primary" size="small">
-          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-icon name="person-outline" slot="start" />
           <span>Assign me</span>
         </ion-button>
       </ng-container>
 
       <ng-container *ngIf="!showDescription && !milestone.description">
         <ion-button (click)="showDescription = true" class="primary" size="small">
-          <ion-icon name="reorder-four-outline" slot="start"></ion-icon>
+          <ion-icon name="reorder-four-outline" slot="start" />
           <span>Description</span>
         </ion-button>
       </ng-container>
@@ -111,18 +111,18 @@
             <ion-button fill="clear" (click)="toggleSubtask(i)">
               <ion-icon  slot="icon-only"
                 [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
-                color="primary">
-              </ion-icon>
+                color="primary"
+              />
             </ion-button>
-            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)"></ion-input>
-            <ion-reorder slot="end"></ion-reorder>
+            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)" />
+            <ion-reorder slot="end" />
           </ion-item>
         </ion-reorder-group>
 
         <form [formGroup]="subtaskForm" *ngIf="canEdit">
           <ion-item lines="none">
-            <ion-icon class="icon" name="radio-button-off" color="primary"></ion-icon>
-            <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences"></ion-input>
+            <ion-icon class="icon" name="radio-button-off" color="primary" />
+            <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences" />
             <ion-button color="primary" (click)="addSubtask()">add</ion-button>
           </ion-item>
         </form>
@@ -133,7 +133,7 @@
       <h6>Supports</h6>
 
       <ng-container *ngIf="milestone.status === 'pending'">
-        <strive-support-add [goal]="goal" [milestone]="milestone"></strive-support-add>
+        <strive-support-add [goal]="goal" [milestone]="milestone" />
       </ng-container>
 
       <ng-container *ngIf="supports$ | async as supports">
@@ -150,7 +150,7 @@
     <ng-container *ngIf="story$ | async as story">
       <section *ngIf="canEdit || story.length">
         <h6>Story</h6>
-        <strive-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id"></strive-story>
+        <strive-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id" />
       </section>
     </ng-container>
 

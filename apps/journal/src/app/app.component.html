@@ -1,7 +1,7 @@
 <ion-app>
 
   <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
-    <ion-nav [root]="rootPage"></ion-nav>
+    <ion-nav [root]="rootPage" />
   </ng-container>
 
   <ng-template #desktop>
@@ -9,7 +9,7 @@
       <ion-toolbar>
         <header>
           <a routerLink="/">
-            <img asset="strivejournal-without-margin.png" class="logo">
+            <img asset="strivejournal-without-margin.png" class="logo" />
           </a>
           <section>
 
@@ -51,6 +51,6 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-router-outlet id="main"></ion-router-outlet>
+    <ion-router-outlet id="main" />
   </ng-template>
 </ion-app>

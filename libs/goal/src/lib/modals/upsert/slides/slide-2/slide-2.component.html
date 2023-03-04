@@ -4,12 +4,14 @@
     <small>{{ field.value.description }}</small>
     <ion-item lines="none">
       <ion-label position="stacked" color="primary">{{ field.value.title }}</ion-label>
-      <ion-textarea [formControlName]="field.key"
-                    type="text"
-                    maxlength="256"
-                    placeholder="..."
-                    autocapitalize="sentences"
-                    autoGrow></ion-textarea>
+      <ion-textarea
+        [formControlName]="field.key"
+        type="text"
+        maxlength="256"
+        placeholder="..."
+        autocapitalize="sentences"
+        autoGrow
+      />
     </ion-item>
   </ng-container>
 </form>

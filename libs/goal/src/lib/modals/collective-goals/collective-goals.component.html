@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()" color="primary">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" name="close" />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -20,7 +20,7 @@
         <ion-label>
           <article>
             <b>{{ stakeholder.profile?.username }}</b>
-            <ion-progress-bar color="primary" [value]="goal | progress"></ion-progress-bar>
+            <ion-progress-bar color="primary" [value]="goal | progress" />
           </article>
         </ion-label>
       </ion-item>

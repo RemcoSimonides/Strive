@@ -12,7 +12,7 @@
 
     <ng-container *ngIf="finishedLoading$ | async else loading">
       <ng-container *ngIf="uid$ | async else login">
-    
+
         <section class="reminder">
           <span>Receive reminder</span>
           <ion-select interface="popover" [formControl]="form">
@@ -23,26 +23,26 @@
             <ion-select-option value="yearly">Yearly</ion-select-option>
           </ion-select>
         </section>
-    
+
         <ng-container *ngIf="entries$ | async as entries">
-    
+
           <ng-container *ngIf="hasEntries$ | async">
             <ion-button class="primary" (click)="addEntry()">
-              <ion-icon name="add" slot="start"></ion-icon>
+              <ion-icon name="add" slot="start"/>
               <span>Add new entry</span>
             </ion-button>
           </ng-container>
-    
+
           <ng-container *ngIf="(hasEntries$ | async) === false">
             <ion-card>
               <ion-card-content>
-                <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"></strive-wheel-of-life-entry>
+                <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"/>
               </ion-card-content>
             </ion-card>
           </ng-container>
-    
+
           <ng-container *ngIf="entries.length">
-            <strive-wheel-of-life-results [entries]="entries"></strive-wheel-of-life-results>
+            <strive-wheel-of-life-results [entries]="entries"/>
           </ng-container>
         </ng-container>
 
@@ -50,7 +50,7 @@
     </ng-container>
 
     <ng-template #loading>
-      <strive-page-loading></strive-page-loading>
+      <strive-page-loading/>
     </ng-template>
 
     <ng-template #login>

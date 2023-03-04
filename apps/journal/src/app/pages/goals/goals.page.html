@@ -1,11 +1,11 @@
-<strive-header-root [title]="(uid$ | async) ? 'Goals' : ''"></strive-header-root>
+<strive-header-root [title]="(uid$ | async) ? 'Goals' : ''"/>
 
 <ng-container *ngIf="(uid$ | async) !== undefined">
   <ng-container *ngIf="uid$ | async else notLoggedIn">
     <ion-content class="ion-padding">
 
       <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-        <ion-refresher-content></ion-refresher-content>
+        <ion-refresher-content/>
       </ion-refresher>
 
       <main>
@@ -31,7 +31,7 @@
           <ng-container *ngIf="stakeholders.length else noGoals">
 
             <ion-button expand="block" fill="clear" (click)="createGoal()">
-              <ion-icon name="add" slot="start"></ion-icon>
+              <ion-icon name="add" slot="start"/>
               <span>CREATE GOAL</span>
             </ion-button>
 
@@ -41,7 +41,7 @@
                   <div>
                     <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
                     <small *ngIf="stakeholder.goal.publicity === 'private'">
-                      <ion-icon name="lock-closed-outline"></ion-icon>
+                      <ion-icon name="lock-closed-outline"/>
                       <span>Private</span>
                     </small>
                   </div>
@@ -54,7 +54,7 @@
           <ng-template #noGoals>
             <section class="no_goals">
               <ion-button class="primary" (click)="createGoal()">
-                <ion-icon name="add" slot="start"></ion-icon>
+                <ion-icon name="add" slot="start"/>
                 <span>CREATE GOAL</span>
               </ion-button>
               <span class="subtitle">No goals yet. Create your first.</span>
@@ -70,9 +70,9 @@
                       <img asset="wheel_of_life.jpg"/>
                     </ion-thumbnail>
                     <ion-label>
-                        <span>Wheel of Life</span>
+                      <span>Wheel of Life</span>
                     </ion-label>
-                    <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+                    <ion-icon name="arrow-forward-outline" slot="end"/>
                   </ion-item>
                 </a>
               </ion-card-content>
@@ -87,12 +87,12 @@
 </ng-container>
 
 <ng-template #notLoggedIn>
-  <journal-home></journal-home>
+  <journal-home/>
 </ng-template>
 
 <ng-template #loadingGoals>
   <ion-button expand="block" fill="clear" (click)="createGoal()">
-    <ion-icon name="add" slot="start"></ion-icon>
+    <ion-icon name="add" slot="start"/>
     <span>CREATE GOAL</span>
   </ion-button>
 </ng-template>
@@ -102,9 +102,9 @@
     <ng-container *ngFor="let i of [].constructor(5)">
       <article>
         <ion-thumbnail>
-          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true"/>
         </ion-thumbnail>
-        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true"/>
       </article>
     </ng-container>
   </section>

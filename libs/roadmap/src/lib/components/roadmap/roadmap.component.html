@@ -1,11 +1,11 @@
 <ng-container *ngIf="milestones else loading">
   <ng-container *ngIf="milestones.length || canEdit else empty">
     <ion-list mode="md">
-    
+
       <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
         <ion-item *ngFor="let milestone of milestones; let last = last; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}" [lines]="last && !canEdit ? 'none' : 'full'">
           <ion-button *ngIf="!createMode" (click)="updateStatus(milestone, $event)" fill="clear" slot="start" class="status-button" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-            <strive-milestone-status slot="icon-only" [milestone]="milestone"></strive-milestone-status>
+            <strive-milestone-status slot="icon-only" [milestone]="milestone" />
           </ion-button>
           <section>
             <span>{{ milestone.content }}</span>
@@ -13,47 +13,48 @@
             <article *ngIf="(canEdit && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId || milestone.story?.length">
               <ng-container *ngIf="canEdit && !createMode">
                 <small class="icon">
-                  <ion-icon src="assets/icons/hand-holding-heart-outline.svg"></ion-icon>
+                  <ion-icon src="assets/icons/hand-holding-heart-outline.svg" />
                   <span>{{ milestone.supports?.length ?? 0 }}</span>
                 </small>
               </ng-container>
               <ng-container *ngIf="milestone.story?.length">
                 <small class="icon">
-                  <ion-icon name="chatbox-outline"></ion-icon>
+                  <ion-icon name="chatbox-outline" />
                   <span>{{ milestone.story?.length }}</span>
                 </small>
               </ng-container>
               <ng-container *ngIf="milestone.subtasks?.length">
                 <div class="subtasks">
-                  <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                  <ion-icon name="list-outline" />
+                  <small>{{ milestone.subtasks | subtasksCompleted }}</small>
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.deadline">
                 <div class="deadline">
-                  <ion-icon name="alarm-outline"></ion-icon>
+                  <ion-icon name="alarm-outline" />
                   <small>{{ milestone.deadline | date:'MMM d, y' }}</small>
                 </div>
               </ng-container>
               <ng-container *ngIf="milestone.achiever?.uid">
-                <strive-milestone-assignee [achiever]="milestone.achiever!"></strive-milestone-assignee>
+                <strive-milestone-assignee [achiever]="milestone.achiever!" />
               </ng-container>
             </article>
           </section>
           <ng-container *ngIf="!canEdit">
             <ion-button slot="end" size="small" color="secondary" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
-              <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end"></ion-icon>
+              <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
             </ion-button>
           </ng-container>
-          <ion-reorder slot="end"></ion-reorder>
+          <ion-reorder slot="end" />
         </ion-item>
       </ion-reorder-group>
-      
+
       <form [formGroup]="milestoneForm" *ngIf="canEdit">
         <ion-item lines="none" [ngClass]="{'no-padding': !createMode}">
           <ion-button *ngIf="!createMode" fill="clear" slot="start" disabled class="status-button fake-enable">
-            <strive-milestone-status slot="icon-only"></strive-milestone-status>
+            <strive-milestone-status slot="icon-only" />
           </ion-button>
-          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences"></ion-input>
+          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences" />
           <ion-button color="primary" (click)="add()">add</ion-button>
         </ion-item>
       </form>
@@ -69,14 +70,14 @@
   <ion-list>
     <ion-item *ngFor="let i of [].constructor(5); let last = last" [lines]="last ? 'none' : 'full'">
       <ion-button fill="clear" slot="start" disabled class="status-button fake-enable">
-        <strive-milestone-status slot="icon-only"></strive-milestone-status>
+        <strive-milestone-status slot="icon-only" />
       </ion-button>
 
       <section class="skeleton">
-        <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="width: 80%;" />
         <article>
-          <ion-skeleton-text [animated]="true" style="width: 20%;"></ion-skeleton-text>
-          <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 20%;" />
+          <ion-skeleton-text [animated]="true" style="width: 30%;" />
         </article>
       </section>
     </ion-item>

@@ -11,23 +11,23 @@
       </ng-template>
       <ion-buttons slot="end">
         <ng-container *ngIf="isLoggedIn$ | async else notLoggedIn">
-          <ng-content></ng-content>
+          <ng-content />
           <ion-button routerLink="/notifications">
-            <ion-icon slot="icon-only" name="notifications-outline" [ngClass]="{'badge': unreadNotifications$ | async}"></ion-icon>
+            <ion-icon slot="icon-only" name="notifications-outline" [ngClass]="{'badge': unreadNotifications$ | async}" />
           </ion-button>
           <ion-button routerLink="/settings">
-            <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+            <ion-icon slot="icon-only" name="settings-outline" />
           </ion-button>
         </ng-container>
         <ng-template #notLoggedIn>
           <ion-button routerLink="/explore">
-            <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+            <ion-icon slot="icon-only" name="search-outline" />
           </ion-button>
           <ion-button class="button-round" [color]="(lightTheme$ | async) ? 'primary' : 'dark'" fill="solid" (click)="openAuthModal(enumAuthSegment.register)">
             <b>Sign up</b>
           </ion-button>
           <ion-button (click)="openMenu()">
-            <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
+            <ion-icon slot="icon-only" name="menu-outline" />
           </ion-button>
         </ng-template>
       </ion-buttons>

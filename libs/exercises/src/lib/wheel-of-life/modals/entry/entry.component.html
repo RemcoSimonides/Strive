@@ -1,13 +1,13 @@
-<strive-header title="Wheel of Life" color=""></strive-header>
+<strive-header title="Wheel of Life" color="" />
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="entries$ | async as entries">
-    <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="previousEntry" (closeNavTo)="createGoal()"></strive-wheel-of-life-entry>    
- 
+    <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="previousEntry" (closeNavTo)="createGoal()" />
+
     <ng-container *ngIf="showResults && entries.length">
       <h2>All time results</h2>
-      <strive-wheel-of-life-results [entries]="entries"></strive-wheel-of-life-results>
-    </ng-container> 
+      <strive-wheel-of-life-results [entries]="entries" />
+    </ng-container>
   </ng-container>
 
 </ion-content>

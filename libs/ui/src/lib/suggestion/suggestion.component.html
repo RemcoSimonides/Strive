@@ -1,5 +1,5 @@
 <header>
-  <ion-icon name="sparkles-outline" color="secondary"></ion-icon>
+  <ion-icon name="sparkles-outline" color="secondary" />
   <h5>Suggestion</h5>
 </header>
 
@@ -30,7 +30,7 @@
 
 <footer *ngIf="_suggestions.length">
   <ion-button class="secondary" (click)="apply()" [disabled]="added$ | async">
-    <ion-icon name="sparkles-outline" slot="start" color="secondary"></ion-icon>
+    <ion-icon name="sparkles-outline" slot="start" color="secondary" />
     <span>USE SUGGESTION</span>
   </ion-button>
 </footer>

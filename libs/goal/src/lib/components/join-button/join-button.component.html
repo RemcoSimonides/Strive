@@ -1,5 +1,5 @@
 <ion-button (click)="join()" class="primary" [ngClass]="{'fake-disable': stakeholder.isAchiever || stakeholder.hasOpenRequestToJoin || collectiveStakeholder?.isAchiever }">
-  <ion-icon slot="start" name="flag-outline" size="small"></ion-icon>
+  <ion-icon slot="start" name="flag-outline" size="small" />
   <span>{{ stakeholder | joinButtonText: collectiveStakeholder }}</span>
 </ion-button>
 
@@ -19,7 +19,7 @@
                 </ul>
               </small>
             </section>
-            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            <ion-icon slot="end" name="chevron-forward-outline" />
           </ion-item>
           <ion-item (click)="createCollectiveGoal()" button lines="none">
             <section>
@@ -31,7 +31,7 @@
                 </ul>
               </small>
             </section>
-            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            <ion-icon slot="end" name="chevron-forward-outline" />
           </ion-item>
         </ion-list>
       </ng-container>
@@ -39,7 +39,7 @@
       <ng-container *ngSwitchCase="'creating'">
         <article class="creating">
           <span>Creating separate goal...</span>
-          <ion-spinner name="lines" color="primary"></ion-spinner>
+          <ion-spinner name="lines" color="primary" />
           <small>This usually takes around 10 seconds</small>
         </article>
       </ng-container>

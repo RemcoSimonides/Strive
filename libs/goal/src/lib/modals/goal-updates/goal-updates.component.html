@@ -3,39 +3,38 @@
 
 		<ion-buttons slot="end">
 			<ion-button (click)="dismiss()">
-				<ion-icon slot="icon-only" name="close"></ion-icon>
+				<ion-icon slot="icon-only" name="close" />
 			</ion-button>
 		</ion-buttons>
-		
+
 	</ion-toolbar>
 </ion-header>
-  
+
 <ion-content class="ion-padding">
 
 	<strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" (click)="navTo(stakeholder.goal.id)">
 		<article>
 			<small *ngIf="stakeholder.goal.publicity === 'private'">
-				<ion-icon name="lock-closed-outline"></ion-icon>
+				<ion-icon name="lock-closed-outline" />
 				<span>Private</span>
 			</small>
 			<small *ngIf="stakeholder.isAdmin">
-				<ion-icon name="shield"></ion-icon>
+				<ion-icon name="shield" />
 				<span>Admin</span>
 			</small>
 			<small *ngIf="stakeholder.isAchiever">
-				<ion-icon name="flag"></ion-icon>
+				<ion-icon name="flag" />
 				<span>Achiever</span>
 			</small>
 			<small *ngIf="stakeholder.isSupporter">
-				<ion-icon src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
+				<ion-icon src="assets/icons/hand-holding-heart-solid.svg" />
 				<span>Supporter</span>
 			</small>
 			<small *ngIf="stakeholder.isSpectator">
-				<ion-icon name="star"></ion-icon>
+				<ion-icon name="star" />
 				<span>Follower</span>
 			</small>
 		</article>
 	</strive-goal-thumbnail>
-    
+
 </ion-content>
-  

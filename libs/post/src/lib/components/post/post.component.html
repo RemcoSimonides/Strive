@@ -1,19 +1,19 @@
 <ion-card *ngIf="post && author">
   <ion-card-header>
     <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
-      <img [ref]="author.photoURL" asset="profile.png" [width]="120" [height]="120">
+      <img [ref]="author.photoURL" asset="profile.png" [width]="120" [height]="120" />
     </ion-avatar>
     <section>
       <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
       <small>{{ post.date | date:'longDate' }}</small>
     </section>
     <ion-button fill="clear" size="small" *ngIf="stakeholder.isAdmin || (stakeholder.isAchiever && stakeholder.uid === author.uid)" (click)="openPostOptions(post, $event)">
-      <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+      <ion-icon slot="icon-only" name="ellipsis-vertical-outline" />
     </ion-button>
   </ion-card-header>
 
   <ng-container *ngIf="post.mediaURL">
-    <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)" [width]="1200" [height]="1200">
+    <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)" [width]="1200" [height]="1200" />
   </ng-container>
 
   <ion-card-content *ngIf="post.description || post.url">

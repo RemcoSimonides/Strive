@@ -1,7 +1,7 @@
 <ng-container *ngIf="support">
   <article *ngIf="support.counterNeedsDecision && (support | isRecipient)" class="decision">
     <small>{{ support.milestone ? 'Milestone' : 'Goal'}} completed unsuccessfully. Decide to give '{{ support.counterDescription }}' or not</small>
-    <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
+    <strive-support-decision [support]="support" [counter]="true" />
   </article>
   <article *ngIf="support.needsDecision && (support | isSupporter)" class="decision">
     <ng-container *ngIf="support.milestone else goal">
@@ -10,14 +10,14 @@
     <ng-template #goal>
       <small>Goal has been completed {{ support.goal?.status === 'succeeded' ? 'successfully' : 'unsuccessfully' }}. Decide to give '{{ support.description }}' or not.</small>
     </ng-template>
-    <strive-support-decision [support]="support"></strive-support-decision>
+    <strive-support-decision [support]="support" />
   </article>
 
   <ng-container *ngIf="post$ | async as post">
-    <strive-post [storyItem]="post"></strive-post>
+    <strive-post [storyItem]="post" />
   </ng-container>
 
-  <strive-support-pledge [support]="support"></strive-support-pledge>
+  <strive-support-pledge [support]="support" />
 
   <ng-container *ngIf="(support | isRecipient) && support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
       <ion-list mode="md" lines="full" class="counter-form">
@@ -27,7 +27,7 @@
           </small>
         </ion-item>
         <ion-item lines="none">
-          <ion-input [formControl]="counterForm" placeholder="e.g. 'Wash your car'"></ion-input>
+          <ion-input [formControl]="counterForm" placeholder="e.g. 'Wash your car'" />
           <ion-button size="small" slot="end" (click)="counter()" color="primary">
             <span>Save</span>
           </ion-button>
@@ -65,7 +65,7 @@
       <ng-container *ngIf="support.status === 'rejected'">
         <span>Supporter decided not to give the support</span>
       </ng-container>
-      
+
     </small>
     <small class="gray" *ngIf="showGoalLink">Goal: <a [routerLink]="['/goal', support.goal?.id]">{{ support.goal?.title }}</a></small>
     <small class="gray" *ngIf="support.milestone?.content">Milestone: {{ support.milestone?.content }}</small>

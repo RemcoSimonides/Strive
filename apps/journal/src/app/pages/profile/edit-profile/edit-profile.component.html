@@ -1,4 +1,4 @@
-<strive-header title="Edit Profile"></strive-header>
+<strive-header title="Edit Profile" />
 
 <ng-container *ngIf="isLoggedIn$ | async else login">
   <ion-content class="ion-no-padding">
@@ -12,12 +12,12 @@
               maxlength="16"
               autocapitalize="sentences"
               [formControl]="form.username"
-              (keydown.enter)="update()">
-            </ion-input>
+              (keydown.enter)="update()"
+            />
           </ion-item>
-    
-          <strive-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid"></strive-image-selector>
-        
+
+          <strive-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid" />
+
           <ion-button color="primary" [disabled]="form.invalid" (click)="update()">Save</ion-button>
         </ion-card-content>
       </ion-card>

@@ -1,21 +1,21 @@
 <ng-container *ngIf="(isLoggedIn$ | async) === false">
-  <strive-header-root></strive-header-root>
+  <strive-header-root/>
 </ng-container>
 
 <ng-container *ngIf="showIOSHeader$ | async">
   <ion-fab slot="fixed" vertical="top" horizontal="start">
     <ion-fab-button (click)="back()" color="light" size="small">
-      <ion-icon name="arrow-back"></ion-icon>
+      <ion-icon name="arrow-back"/>
     </ion-fab-button>
   </ion-fab>
 </ng-container>
 
 <ng-template #loading>
-  <strive-page-loading></strive-page-loading>
+  <strive-page-loading/>
 </ng-template>
 
 <ng-template #noAccess>
-  <strive-404></strive-404>
+  <strive-404/>
 </ng-template>
 
 <ng-container *ngIf="(pageIsLoading$ | async) === false else loading">
@@ -34,35 +34,35 @@
     <section class="actions">
 
       <article>
-        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"></strive-goal-join-button>
+        <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"/>
 
         <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
-          <ion-icon name="notifications-outline" size="small" slot="start"></ion-icon>
+          <ion-icon name="notifications-outline" size="small" slot="start"/>
           <span>{{ stakeholder.isSpectator ? 'FOLLOWING' : 'FOLLOW' }}</span>
         </ion-button>
       </article>
 
       <article>
         <ion-button (click)="openChat()" size="block" class="secondary">
-          <ion-icon name="chatbubbles-outline" slot="start" size="small"></ion-icon>
+          <ion-icon name="chatbubbles-outline" slot="start" size="small"/>
           <span>Chat</span>
         </ion-button>
 
         <ng-container *ngIf="stakeholder.isAdmin; else share">
           <ion-button (click)="openAddOthersModal()" class="secondary">
-            <ion-icon slot="icon-only" size="small" name="person-add-outline"></ion-icon>
+            <ion-icon slot="icon-only" size="small" name="person-add-outline"/>
           </ion-button>
         </ng-container>
         <ng-template #share>
           <ng-container *ngIf="goal.publicity === 'public'">
             <ion-button (click)="openShare($event)" class="secondary">
-              <ion-icon slot="icon-only" size="small" name="share-social-outline"></ion-icon>
+              <ion-icon slot="icon-only" size="small" name="share-social-outline"/>
             </ion-button>
           </ng-container>
         </ng-template>
 
         <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="secondary">
-          <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"></ion-icon>
+          <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"/>
         </ion-button>
       </article>
 
@@ -82,7 +82,7 @@
         <ul class="properties">
 
           <li (click)="openTeamModal('isAchiever')" class="clickable">
-            <ion-icon name="flag"></ion-icon>
+            <ion-icon name="flag"/>
             <ng-container *ngIf="stakeholder.isAchiever">
               <ng-container *ngIf="goal.numberOfAchievers > 1">
               <span><b>You</b> and <b>{{ goal.numberOfAchievers - 1 ?? 0 }}</b> other {{ goal.numberOfAchievers === 2 ? 'achiever' : 'achievers' }}</span>
@@ -97,7 +97,7 @@
           </li>
 
           <li (click)="openTeamModal('isSupporter')" class="clickable">
-            <ion-icon src="assets/icons/hand-holding-heart-solid.svg"></ion-icon>
+            <ion-icon src="assets/icons/hand-holding-heart-solid.svg"/>
             <ng-container *ngIf="stakeholder.isSupporter">
               <ng-container *ngIf="goal.numberOfSupporters > 1">
                 <span><b>You</b> and <b>{{ goal.numberOfSupporters - 1 ?? 0 }}</b> other {{ goal.numberOfSupporters === 2 ? 'supporter' : 'supporters' }}</span>
@@ -112,7 +112,7 @@
           </li>
 
           <li (click)="openTeamModal('isSpectator')" class="clickable">
-            <ion-icon name="notifications"></ion-icon>
+            <ion-icon name="notifications"/>
             <ng-container *ngIf="stakeholder.isSpectator">
               <ng-container *ngIf="goal.numberOfSpectators > 1">
                 <span><b>You</b> and <b>{{ goal.numberOfSpectators - 1 ?? 0 }}</b> other {{ goal.numberOfSpectators === 2 ? 'follower' : 'followers' }}</span>
@@ -129,7 +129,7 @@
           <ng-container *ngIf="collectiveStakeholders$ | async as stakeholders">
             <ng-container *ngIf="stakeholders.length">
               <li (click)="openCollectiveGoals(stakeholders)" class="clickable">
-                <ion-icon name="link"></ion-icon>
+                <ion-icon name="link"/>
                 <span><b>{{ stakeholders.length }}</b> connected {{ stakeholders.length === 1 ? 'goal' : 'goals' }} </span>
               </li>
             </ng-container>
@@ -137,7 +137,7 @@
 
           <!-- Privacy -->
           <li>
-            <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"></ion-icon>
+            <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"/>
             <span>Access:</span>
             <ng-container *ngIf="stakeholder.isAdmin; else privacyNoAdmin">
               <ion-select placeholder="Select Privacy" interface="popover" [value]="goal.publicity" (ionChange)="updatePrivacy($event, goal)" class="clickable">
@@ -158,7 +158,7 @@
             }"
             (click)="openDatePicker($event)"
           >
-            <ion-icon name="timer-outline"></ion-icon>
+            <ion-icon name="timer-outline"/>
             <span>End date: </span>
             <b>{{ goal.deadline | date:'fullDate' }}</b>
           </li>
@@ -166,13 +166,13 @@
         </ul>
 
         <ng-container *ngIf="(isMobile$ | async) === false">
-          <ng-container *ngTemplateOutlet="actions"></ng-container>
+          <ng-container *ngTemplateOutlet="actions"/>
         </ng-container>
       </div>
     </div>
 
     <ng-container *ngIf="isMobile$ | async">
-      <ng-container *ngTemplateOutlet="actions"></ng-container>
+      <ng-container *ngTemplateOutlet="actions"/>
     </ng-container>
 
     <ng-container *ngIf="isOverdue(goal.deadline) && goal.status === 'pending' && (stakeholder.isAdmin || stakeholder.isAchiever)">
@@ -198,11 +198,11 @@
             <ion-label>{{ stakeholder.profile.username }}</ion-label>
             <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">
               <span *ngIf="(isMobile$ | async) === false">Accept</span>
-              <ion-icon name="checkmark-outline" slot="end"></ion-icon>
+              <ion-icon name="checkmark-outline" slot="end"/>
             </ion-button>
             <ion-button (click)="handleRequestDecision(stakeholder, false, $event)" size="default" fill="outline">
               <span *ngIf="(isMobile$ | async) === false">Reject</span>
-              <ion-icon name="close-outline" slot="end"></ion-icon>
+              <ion-icon name="close-outline" slot="end"/>
             </ion-button>
           </ion-item>
         </ion-list>

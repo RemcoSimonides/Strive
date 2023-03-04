@@ -1,4 +1,4 @@
-<strive-header title="Affirmations" defaultBack="/exercise" color="primary"></strive-header>
+<strive-header title="Affirmations" defaultBack="/exercise" color="primary"/>
 
 <ion-content class="ion-padding">
   <main>
@@ -7,7 +7,7 @@
       <small class="explanation">
         An affirmation is a short, powerful statement.
         They allow you to conciously be in control of your thoughts.
-        When you say or think them, they become thoughts that shape your reality. 
+        When you say or think them, they become thoughts that shape your reality.
         <a href="https://blog.strivejournal.com/blog/affirmations" target="_blank">Learn more...</a>
       </small>
     </section>
@@ -15,7 +15,7 @@
     <ng-container *ngIf="!isLoading else loading">
       <ng-container *ngIf="uid$ | async else login">
 
-        <strive-exercise-activate-push-notification></strive-exercise-activate-push-notification>
+        <strive-exercise-activate-push-notification/>
 
         <section>
           <h5>Set Affirmation Time</h5>
@@ -27,7 +27,7 @@
             <ion-item (click)="openDatetime(i)" lines="full">
               <ion-label>Set time {{ i + 1 }}</ion-label>
               <ion-text>{{ time ? (time | date:'HH:mm') : '--:--'}}</ion-text>
-              <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"></ion-icon> 
+              <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"/>
             </ion-item>
           </ng-container>
           <ion-button disabled color="primary" fill="clear">
@@ -36,7 +36,7 @@
             </ng-container>
             <ng-template #saved>
               <span>SAVED</span>
-              <ion-icon slot="end" name="checkmark-outline"></ion-icon>
+              <ion-icon slot="end" name="checkmark-outline"/>
             </ng-template>
           </ion-button>
         </ion-list>
@@ -45,8 +45,8 @@
           <h5>Your Affirmations</h5>
           <ion-list mode="md">
             <ion-item *ngFor="let control of affirmationsForm.controls; let i = index">
-              <ion-input class="ion-text-wrap" autocapitalize="sentences" type="text" placeholder="Enter affirmation" [formControl]="control"></ion-input>
-              <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"></ion-icon>
+              <ion-input class="ion-text-wrap" autocapitalize="sentences" type="text" placeholder="Enter affirmation" [formControl]="control"/>
+              <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"/>
             </ion-item>
             <ion-button disabled color="primary" fill="clear">
               <ng-container *ngIf="affirmationsForm.dirty; else saved">
@@ -54,7 +54,7 @@
               </ng-container>
               <ng-template #saved>
                 <span>SAVED</span>
-                <ion-icon slot="end" name="checkmark-outline"></ion-icon>
+                <ion-icon slot="end" name="checkmark-outline"/>
               </ng-template>
             </ion-button>
           </ion-list>
@@ -72,13 +72,13 @@
               <ion-select-option [value]="enumAffirmationCategory.positive_mindset">Positive Mindset</ion-select-option>
               <ion-select-option [value]="enumAffirmationCategory.money">Money</ion-select-option>
               <ion-select-option [value]="enumAffirmationCategory.love">Love</ion-select-option>
-            </ion-select>  
+            </ion-select>
           </header>
-      
+
           <ion-list mode="md">
             <ion-item *ngFor="let suggestion of suggestions; let last = last" [lines]="last ? 'none' : 'full'">
               <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
-              <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"></ion-icon>
+              <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"/>
             </ion-item>
           </ion-list>
         </section>
@@ -86,13 +86,13 @@
     </ng-container>
 
     <ng-template #loading>
-      <strive-page-loading></strive-page-loading>
+      <strive-page-loading/>
     </ng-template>
 
     <ng-template #login>
       <section class="not-logged-in">
         <p>
-            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
+          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
         </p>
       </section>
     </ng-template>

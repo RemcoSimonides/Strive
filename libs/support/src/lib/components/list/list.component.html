@@ -1,8 +1,8 @@
 <ion-list *ngIf="goal else empty" mode="md">
   <ion-item lines="none" *ngIf="goal.supports.length && goalDescription">
     <ion-label>
-      <ng-container [ngTemplateOutlet]="goalDescription" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-container>
-      <ng-container [ngTemplateOutlet]="goalStatus" [ngTemplateOutletContext]="{ $implicit: goal }"></ng-container>
+      <ng-container [ngTemplateOutlet]="goalDescription" [ngTemplateOutletContext]="{ $implicit: goal }" />
+      <ng-container [ngTemplateOutlet]="goalStatus" [ngTemplateOutletContext]="{ $implicit: goal }" />
     </ion-label>
   </ion-item>
 
@@ -10,11 +10,11 @@
     <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount || (goal | needsDecision: goal.id)">
       <article *ngIf="support.counterNeedsDecision && (support | isRecipient)">
         <small>Goal finisheded unsuccessfully. Decide to give '{{ support.counterDescription }}' or not.</small>
-        <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
+        <strive-support-decision [support]="support" [counter]="true" />
       </article>
       <article *ngIf="support.needsDecision && (support | isSupporter)">
         <small>Goal finished{{ goal.status === 'failed' ? ' unsuccessfully' : ''}}. Decide to give '{{ support.description }}' or not.</small>
-        <strive-support-decision [support]="support"></strive-support-decision>
+        <strive-support-decision [support]="support" />
       </article>
       <ion-item
         [lines]="!goal.milestones.length && lastGoalSupport ? 'none' : 'full'"
@@ -22,7 +22,7 @@
         [ngClass]="{'fake-disable': support.status !== 'open' || support.counterStatus !== 'open'}"
         (click)="openDetails(support)"
       >
-        <strive-support-pledge [support]="support"></strive-support-pledge>
+        <strive-support-pledge [support]="support" />
       </ion-item>
     </ng-container>
   </ng-container>
@@ -31,29 +31,29 @@
     <ng-container *ngIf="showAll || (goal | count: milestone.id) < showAmount || (goal | needsDecision: milestone.id)">
       <ion-item lines="none" *ngIf="milestoneDescription">
         <ion-label>
-          <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }"></ng-container>
-          <ng-container [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }"></ng-container>
+          <ng-container [ngTemplateOutlet]="milestoneDescription" [ngTemplateOutletContext]="{ $implicit: goal, milestone }" />
+          <ng-container [ngTemplateOutlet]="milestoneStatus" [ngTemplateOutletContext]="{ $implicit: milestone }" />
         </ion-label>
       </ion-item>
       <ng-container *ngFor="let support of milestone.supports; let lastMilestoneSupport = last; trackBy: trackBy">
         <ng-container *ngIf="showAll || (goal | count: support.id) < showAmount || (goal | needsDecision: support.id)">
           <article *ngIf="support.counterNeedsDecision && (support | isRecipient)">
             <small>Milestone has been completed unsuccessfully. Decide to give '{{ support.counterNeedsDecision }}' or not.</small>
-            <strive-support-decision [support]="support" [counter]="true"></strive-support-decision>
+            <strive-support-decision [support]="support" [counter]="true" />
           </article>
 
           <article *ngIf="support.needsDecision && (support | isSupporter)">
             <small>Milestone has been completed {{ milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
-            <strive-support-decision [support]="support"></strive-support-decision>
+            <strive-support-decision [support]="support" />
           </article>
-    
+
           <ion-item
             [lines]="lastMilestone && lastMilestoneSupport ? 'none' : 'full'"
             button
             [ngClass]="{'fake-disable': support.status !== 'open' || support.counterStatus !== 'open'}"
             (click)="openDetails(support)"
           >
-            <strive-support-pledge [support]="support"></strive-support-pledge>
+            <strive-support-pledge [support]="support" />
           </ion-item>
         </ng-container>
       </ng-container>
@@ -63,14 +63,14 @@
   <ion-item *ngIf="!showAll && (goal | total) > showAmount" (click)="showAll = true" button lines="none">
     <ion-button fill="clear" expand="block" class="more">
       <span>Show {{ (goal | total) - showAmount }} more</span>
-      <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+      <ion-icon name="chevron-down-outline" slot="end" />
     </ion-button>
   </ion-item>
 </ion-list>
 
 <ng-template #empty>
   <ng-container *ngIf="emptyDescription; else default">
-    <ng-container [ngTemplateOutlet]="emptyDescription"></ng-container>
+    <ng-container [ngTemplateOutlet]="emptyDescription" />
   </ng-container>
   <ng-template #default>
     <i>No supports</i>

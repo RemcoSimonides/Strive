@@ -11,39 +11,39 @@
         </ng-template>
         <ion-item>
           <span class="disc">•</span>
-          <ion-textarea rows="3" formControlName="item1" autoGrow></ion-textarea>
+          <ion-textarea rows="3" formControlName="item1" autoGrow />
         </ion-item>
         <ion-item>
           <span class="disc">•</span>
-          <ion-textarea rows="3" formControlName="item2" autoGrow></ion-textarea>
+          <ion-textarea rows="3" formControlName="item2" autoGrow />
         </ion-item>
         <ion-item>
           <span class="disc">•</span>
-          <ion-textarea rows="3" formControlName="item3" autoGrow></ion-textarea>
+          <ion-textarea rows="3" formControlName="item3" autoGrow />
         </ion-item>
       </section>
 
       <footer>
         <ion-button fill="clear" color="secondary" (click)="selectDate()" *ngIf="enteredToday$ | async">
-          <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="calendar-outline" />
         </ion-button>
 
         <ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear" class="save">
           <ng-container *ngIf="save$ | async as status">
-  
+
             <ng-container *ngIf="status === 'saved'">
               <span>SAVED</span>
-              <ion-icon name="checkmark" slot="end"></ion-icon>
+              <ion-icon name="checkmark" slot="end" />
             </ng-container>
-  
+
             <ng-container *ngIf="status === 'saving'">
               <span>Encrypting...</span>
             </ng-container>
-  
+
             <ng-container *ngIf="status === 'save'">
               <span>SAVE</span>
             </ng-container>
-  
+
           </ng-container>
         </ion-button>
       </footer>

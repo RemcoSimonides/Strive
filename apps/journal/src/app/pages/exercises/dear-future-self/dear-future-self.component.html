@@ -1,4 +1,4 @@
-<strive-header title="Dear Future Self" defaultBack="/exercise" color="primary"></strive-header>
+<strive-header title="Dear Future Self" defaultBack="/exercise" color="primary"/>
 
 <ion-content class="ion-padding">
   <main>
@@ -17,10 +17,10 @@
           <section>
             <h5>Your message</h5>
             <ion-item>
-              <ion-textarea [formControl]="description" autoGrow autocapitalize="sentences"></ion-textarea>
+              <ion-textarea [formControl]="description" autoGrow autocapitalize="sentences"/>
             </ion-item>
           </section>
-      
+
           <section *ngIf="mode === 'duration'">
             <h5>Deliver in</h5>
             <article>
@@ -30,34 +30,34 @@
               <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
             </article>
           </section>
-      
+
           <section *ngIf="mode === 'date'">
             <h5>Deliver on</h5>
             <ion-datetime presentation="date" [formControl]="date" [min]="min" [max]="max"></ion-datetime>
             <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
           </section>
-    
+
           <ion-button expand="block" color="primary" (click)="send()">Send Message</ion-button>
 
         </ng-container>
 
         <ng-template #sent>
           <section class="sent">
-            <h5>Message sent <ion-icon name="checkmark-outline"></ion-icon></h5>
-            
+            <h5>Message sent <ion-icon name="checkmark-outline"/></h5>
+
             <ion-button fill="outline" color="primary" (click)="another()">Write another</ion-button>
           </section>
         </ng-template>
-        
+
       </ion-card>
-  
+
       <ng-container *ngIf="pendingMessages$ | async as pendingMessages">
         <ng-container *ngIf="pendingMessages.length">
           <ion-list class="pending-list" mode="md">
             <h5>Pending Messages</h5>
             <ng-container *ngFor="let message of pendingMessages; let last = last">
               <ion-item [lines]="last ? 'none' : 'full'">
-                <ion-icon name="mail-outline"></ion-icon>
+                <ion-icon name="mail-outline"/>
                 <article>
                   <span>Delivered in {{ message.deliveryDate | timeToGo }}</span>
                   <small>Sent {{ message.createdAt | timeAgo }}</small>
@@ -67,14 +67,14 @@
           </ion-list>
         </ng-container>
       </ng-container>
-  
+
       <ng-container *ngIf="deliveredMessages$ | async as deliveredMessages">
         <ng-container *ngIf="deliveredMessages.length">
           <ion-list mode="md">
             <h5>Delivered Messages</h5>
             <ng-container *ngFor="let message of deliveredMessages; let last = last">
               <ion-item button (click)="openMessage(message)" [lines]="last ? 'none' : 'full'">
-                <ion-icon name="mail-open-outline"></ion-icon>
+                <ion-icon name="mail-open-outline"/>
                 <article>
                   <span>Delivered on {{ message.deliveryDate | date }}</span>
                   <small>Sent on {{ message.createdAt | date }}</small>

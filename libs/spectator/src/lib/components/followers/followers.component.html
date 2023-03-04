@@ -3,7 +3,7 @@
 
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" name="close" />
       </ion-button>
     </ion-buttons>
 
@@ -18,7 +18,7 @@
     <ng-container *ngFor="let spectator of spectators$ | async; let last = last">
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(spectator.uid)">
         <ion-avatar slot="start">
-          <img asset="profile.png" [ref]="spectator.profile?.photoURL" [width]="120" [height]="120">
+          <img asset="profile.png" [ref]="spectator.profile?.photoURL" [width]="120" [height]="120" />
         </ion-avatar>
         <ion-label>{{ spectator.profile?.username }}</ion-label>
       </ion-item>

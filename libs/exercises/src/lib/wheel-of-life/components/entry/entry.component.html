@@ -8,14 +8,14 @@
 				<small>How do you feel</small>
 				<div>
 					<span>😭</span>
-					<ion-range mode="md" [formControlName]="aspect.id" color="primary"></ion-range>
+					<ion-range mode="md" [formControlName]="aspect.id" color="primary" />
 					<span>😁</span>
 				</div>
 
 				<small class="wished">How would you like to feel</small>
 				<div>
 					<span>😭</span>
-					<ion-range mode="md" [formControl]="desiredForm.get('desired_' + aspect.id)" color="secondary"></ion-range>
+					<ion-range mode="md" [formControl]="desiredForm.get('desired_' + aspect.id)" color="secondary" />
 					<span>😁</span>
 				</div>
 			</article>
@@ -26,7 +26,7 @@
 
 				<ng-container *ngIf="status === 'saved'">
 					<span>SAVED</span>
-					<ion-icon name="checkmark" slot="end"></ion-icon>
+					<ion-icon name="checkmark" slot="end" />
 				</ng-container>
 
 				<ng-container *ngIf="status === 'saving'">
@@ -57,11 +57,11 @@
 				<p>{{ top.length === 1 ? 'This area in your life requires' : 'These areas in your life require'}} most improvement</p>
 				<ol>
 					<li *ngFor="let aspect of top">{{ aspect.title }}</li>
-				</ol>	
-		
+				</ol>
+
 				<ion-button class="primary" (click)="createGoal()">
 					<span>Creat Goal</span>
-					<ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+					<ion-icon name="arrow-forward-outline" slot="end" />
 				</ion-button>
 			</article>
 		</ng-container>

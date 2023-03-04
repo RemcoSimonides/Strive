@@ -1,12 +1,12 @@
 <ng-template #backButton>
   <ng-container *ngIf="authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register || authSegmentChoice === enumAuthSegment.forgot_password; else previous">
     <ion-button fill="clear" (click)="dismiss(false)">
-      <ion-icon name="close" slot="icon-only"></ion-icon>
+      <ion-icon name="close" slot="icon-only" />
     </ion-button>
   </ng-container>
   <ng-template #previous>
     <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.register">
-      <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      <ion-icon name="arrow-back" slot="icon-only" />
     </ion-button>
   </ng-template>
 </ng-template>
@@ -14,14 +14,14 @@
 <ion-header *ngIf="showIOSHeader$ | async">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ng-container *ngTemplateOutlet="backButton"></ng-container>
+      <ng-container *ngTemplateOutlet="backButton" />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="(showIOSHeader$ | async) === false">
-    <ng-container *ngTemplateOutlet="backButton"></ng-container>
+    <ng-container *ngTemplateOutlet="backButton" />
   </ng-container>
 
   <ng-container [ngSwitch]="authSegmentChoice">
@@ -30,12 +30,12 @@
       <section>
         <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
-            <ion-icon name="logo-google" slot="start"></ion-icon>
+            <ion-icon name="logo-google" slot="start" />
             Continue with Google
           </ion-button>
 
           <ion-button fill="outline" (click)="loginWithApple()">
-            <ion-icon name="logo-apple" slot="start"></ion-icon>
+            <ion-icon name="logo-apple" slot="start" />
             Continue with Apple
           </ion-button>
         </article>
@@ -44,13 +44,13 @@
           <ion-list mode="md" lines="full">
             <ion-item>
               <ion-label position="floating">Email</ion-label>
-              <ion-input formControlName="email" type="email"></ion-input>
+              <ion-input formControlName="email" type="email" />
             </ion-item>
-  
+
             <ion-item lines="none">
               <ion-label position="floating">Password</ion-label>
-              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()"></ion-input>
-              <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
+              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()" />
+              <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
           </ion-list>
 
@@ -73,12 +73,12 @@
       <section>
         <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
-            <ion-icon name="logo-google" slot="start"></ion-icon>
+            <ion-icon name="logo-google" slot="start" />
             Continue with Google
           </ion-button>
 
           <ion-button fill="outline" (click)="loginWithApple()">
-            <ion-icon name="logo-apple" slot="start"></ion-icon>
+            <ion-icon name="logo-apple" slot="start" />
             Continue with Apple
           </ion-button>
         </article>
@@ -88,9 +88,9 @@
           <ion-list mode="md" lines="full">
             <ion-item>
               <ion-label position="floating">Username</ion-label>
-              <ion-input formControlName="username" type="text" autocapitalize="sentences"></ion-input>
+              <ion-input formControlName="username" type="text" autocapitalize="sentences" />
             </ion-item>
-  
+
             <ng-container *ngFor="let validation of validation_messages.username">
               <ng-container *ngIf="signupForm.get('username')?.hasError(validation.type) && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
                 <div class="error-message">
@@ -98,12 +98,12 @@
                 </div>
               </ng-container>
             </ng-container>
-  
+
             <ion-item>
               <ion-label position="floating">Email</ion-label>
-              <ion-input formControlName="email" type="email"></ion-input>
+              <ion-input formControlName="email" type="email" />
             </ion-item>
-  
+
             <ng-container *ngFor="let validation of validation_messages.email">
               <ng-container *ngIf="signupForm.get('email')?.hasError(validation.type) && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
                 <div class="error-message">
@@ -111,21 +111,20 @@
                 </div>
               </ng-container>
             </ng-container>
-  
+
             <ion-item lines="none">
               <ion-label position="floating">Password</ion-label>
-              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()">
-              </ion-input>
-              <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()"></ion-icon>
+              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()"/>
+              <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
-  
+
             <ng-container *ngFor="let validation of validation_messages.password">
               <ng-container *ngIf="signupForm.get('password')?.hasError(validation.type) && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
                 <div class="error-message">
                   {{ validation.message }}
                 </div>
               </ng-container>
-            </ng-container>  
+            </ng-container>
           </ion-list>
 
           <div class="action">
@@ -134,7 +133,7 @@
 
         </form>
 
-        <p>By signing up, you agree with the 
+        <p>By signing up, you agree with the
           <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.terms">Terms of Service</span>
           , <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.privacy_policy">Privacy Policy</span>
           , as well as to receive occasional emails from us.
@@ -157,32 +156,30 @@
           <ion-list mode="md">
             <ion-item lines="none">
               <ion-label position="floating">Email</ion-label>
-              <ion-input formControlName="email" type="email" (keydown.enter)="onEnter()">
-              </ion-input>
+              <ion-input formControlName="email" type="email" (keydown.enter)="onEnter()"/>
             </ion-item>
           </ion-list>
 
           <div class="action">
-            <ion-button class="submit_button" color="primary" type="submit" [disabled]="!resetPasswordForm.valid">Reset Password
-            </ion-button>
+            <ion-button class="submit_button" color="primary" type="submit" [disabled]="!resetPasswordForm.valid">Reset Password</ion-button>
           </div>
         </form>
 
       </section>
 
       <hr />
-      
+
       <div class="action">
         <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.login">Back to login</span>
       </div>
     </ng-container>
 
     <ng-container *ngSwitchCase="enumAuthSegment.terms">
-      <strive-terms></strive-terms>
+      <strive-terms />
     </ng-container>
 
     <ng-container *ngSwitchCase="enumAuthSegment.privacy_policy">
-      <strive-privacy-policy></strive-privacy-policy>
+      <strive-privacy-policy />
     </ng-container>
   </ng-container>
 </ion-content>

@@ -1,10 +1,10 @@
 <ng-container *ngIf="title$ | async as title">
 
   <ng-container *ngIf="isOwner$ | async else notOwner">
-    <strive-header-root [title]="title"></strive-header-root>
+    <strive-header-root [title]="title" />
   </ng-container>
   <ng-template #notOwner>
-    <strive-header [title]="title"></strive-header>
+    <strive-header [title]="title" />
   </ng-template>
 
 </ng-container>
@@ -13,10 +13,10 @@
 
   <ng-template #noProfile>
     <ng-container *ngIf="loading$ | async; else notFound">
-      <strive-page-loading></strive-page-loading>
+      <strive-page-loading />
     </ng-container>
     <ng-template #notFound>
-      <strive-404></strive-404>
+      <strive-404 />
     </ng-template>
   </ng-template>
 
@@ -59,13 +59,13 @@
         <ng-container *ngIf="(isOwner$ | async) === false">
           <ng-container *ngIf="isSpectator$ | async else notSpectator">
             <ion-button (click)="toggleSpectate(false)" size="block" class="fake-disable">
-              <ion-icon name="star" slot="start"></ion-icon>
+              <ion-icon name="star" slot="start" />
               <span>FOLLOWING</span>
             </ion-button>
           </ng-container>
           <ng-template #notSpectator>
             <ion-button (click)="toggleSpectate(true)" size="block">
-              <ion-icon name="star-outline" slot="start"></ion-icon>
+              <ion-icon name="star-outline" slot="start" />
               <span>FOLLOW</span>
             </ion-button>
           </ng-template>
@@ -76,7 +76,7 @@
         <article>
           <h2>Goals</h2>
           <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="createGoal()">
-            <ion-icon name="add" slot="start"></ion-icon>
+            <ion-icon name="add" slot="start" />
             <span>add goal</span>
           </ion-button>
         </article>
