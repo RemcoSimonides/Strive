@@ -18,7 +18,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 
-import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/upsert.module'
+import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.module'
 import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'

@@ -21,17 +21,17 @@ import { ImageSelectorComponent } from '@strive/media/components/image-selector/
 
 @Component({
   selector: '[goalId] strive-post-upsert',
-  templateUrl: './upsert.component.html',
-  styleUrls: ['./upsert.component.scss'],
+  templateUrl: './post-upsert.component.html',
+  styleUrls: ['./post-upsert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpsertPostModalComponent extends ModalDirective implements OnDestroy {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
-  
+
   postForm = new PostForm()
   scrapingUrl = false
   mode: 'create' | 'update' = 'create'
-  
+
   private _post!: Post
   get post() { return this._post }
   @Input() set post(post: Post) {

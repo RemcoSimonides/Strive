@@ -17,8 +17,8 @@ import { Slide3Component } from './slides/slide-3/slide-3.component'
 
 @Component({
   selector: 'strive-goal-upsert',
-  templateUrl: './upsert.component.html',
-  styleUrls: ['./upsert.component.scss'],
+  templateUrl: './goal-upsert.component.html',
+  styleUrls: ['./goal-upsert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })

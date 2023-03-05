@@ -13,14 +13,14 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { DetailsModule } from '../details/details.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/upsert.module'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonicModule,
-    
+
     ImageModule,
     MilestoneStatusModule,
     AssigneeModule,

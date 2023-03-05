@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router'
 
 import { IonicModule } from '@ionic/angular'
 
-import { UpsertGoalModalComponent } from './upsert.component'
+import { UpsertGoalModalComponent } from './goal-upsert.component'
 import { Slide1Component } from './slides/slide-1/slide-1.component'
 import { Slide2Component } from './slides/slide-2/slide-2.component'
 import { Slide3Component } from './slides/slide-3/slide-3.component'

@@ -8,7 +8,7 @@ import { StoryComponent } from './story.component'
 import { StoryItemMessagePipeModule } from '../../pipes/story-message'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
 import { PostComponentModule } from '@strive/post/components/post/post.module'
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/upsert.module'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 @NgModule({
 	imports: [

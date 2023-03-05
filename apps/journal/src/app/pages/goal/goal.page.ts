@@ -19,14 +19,14 @@ import { isEqual, isPast } from 'date-fns'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options/options.component'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 import { FocusModalComponent } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
-import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
@@ -90,7 +90,7 @@ export class GoalPageComponent implements OnDestroy {
   milestones$?: Observable<Milestone[]>
 
   openRequests$?: Observable<GoalStakeholder[]>
-  
+
   supports$: Observable<SupportsGroupedByGoal[]>
 
   isMobile$ = this.screensize.isMobile$
@@ -246,7 +246,7 @@ export class GoalPageComponent implements OnDestroy {
       if (access && goal) {
         this.canAccess$.next(true)
         this.pageIsLoading$.next(false)
-      
+
         this.seo.generateTags({
           title: `${goal.title} - Strive Journal`,
           description: goal.description ? goal.description : `Check the plan, follow the progress, chat with the team, and help out wherever you can`,
@@ -371,7 +371,7 @@ export class GoalPageComponent implements OnDestroy {
 
     this.modalCtrl.create({
       component,
-      componentProps: { 
+      componentProps: {
         goalId: this.goal.id,
         role: role ? role : null
       }
@@ -383,7 +383,7 @@ export class GoalPageComponent implements OnDestroy {
 
     this.modalCtrl.create({
       component: CollectiveGoalsModalSComponent,
-      componentProps: { 
+      componentProps: {
         goal: this.goal,
         stakeholders
       }

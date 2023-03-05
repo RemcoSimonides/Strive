@@ -3,7 +3,7 @@ import { AlertController, ModalController, PopoverController } from '@ionic/angu
 import { Post } from '@strive/model'
 import { PostService } from '@strive/post/post.service'
 
-import { UpsertPostModalComponent } from '../../modals/upsert/upsert.component'
+import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.component'
 
 @Component({
 	selector: '[post] strive-post-options',

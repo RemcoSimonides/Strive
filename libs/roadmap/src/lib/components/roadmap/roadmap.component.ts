@@ -13,7 +13,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryItem[] }
 

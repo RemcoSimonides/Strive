@@ -10,7 +10,7 @@ import { AssigneeModule } from '../assignee/assignee.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { StoryModule } from '@strive/story/components/story/story.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/upsert.module'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'

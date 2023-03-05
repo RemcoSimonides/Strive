@@ -6,7 +6,7 @@ import { Capacitor } from '@capacitor/core'
 import { SwiperComponent } from 'swiper/angular'
 import { combineLatest, map, of } from 'rxjs'
 
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
 import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
@@ -68,7 +68,7 @@ export class WelcomeModalComponent {
         const navToGoal = data.data?.['navToGoal']
         if (navToGoal) this.router.navigate(['/goal', navToGoal ])
       })
-      modal.present()     
+      modal.present()
     })
   }
 }

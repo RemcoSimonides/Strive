@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
 
 import { PostOptionsComponent } from './options.component'
-import { UpsertPostModalModule } from '../../modals/upsert/upsert.module'
+import { UpsertPostModalModule } from '../../modals/upsert/post-upsert.module'
 
 @NgModule({
 	imports: [

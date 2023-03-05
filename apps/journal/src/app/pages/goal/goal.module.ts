@@ -8,7 +8,7 @@ import { GoalPageComponent } from './goal.page'
 import { GoalOptionsModule } from './popovers/options/options.module'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 
-import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/upsert.module'
+import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.module'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
@@ -25,7 +25,7 @@ import { StoryModule } from '@strive/story/components/story/story.module'
 
 import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'
 
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/upsert.module'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
@@ -47,7 +47,7 @@ const routes: Routes = [
     CommonModule,
     IonicModule,
     RouterModule.forChild(routes),
-    
+
     // Strive
     GoalOptionsModule,
     GoalSharePopoverModule,

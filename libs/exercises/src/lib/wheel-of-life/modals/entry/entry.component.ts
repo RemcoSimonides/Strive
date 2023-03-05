@@ -11,7 +11,7 @@ import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 
 import { WheelOfLifeEntry } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
 
 
 @Component({
@@ -45,7 +45,7 @@ export class EntryModalComponent extends ModalDirective {
 
     const modal = await this.modalCtrl.create({
       component: UpsertGoalModalComponent
-    })    
+    })
     modal.onDidDismiss().then((data) => {
       const navToGoal = data.data?.['navToGoal']
       if (navToGoal) this.router.navigate(['/goal', navToGoal ])

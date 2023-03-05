@@ -6,7 +6,7 @@ import { AuthService } from '@strive/auth/auth.service'
 
 import { createGoalStakeholder, createPost, Goal } from '@strive/model'
 
-import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
 export enum enumGoalOptions {
   editNotificationSettings,

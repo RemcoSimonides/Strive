@@ -23,7 +23,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 

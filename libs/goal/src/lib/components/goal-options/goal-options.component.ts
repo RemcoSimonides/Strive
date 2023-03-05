@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 import { createPost, Goal, GoalStakeholder } from '@strive/model'
-import { UpsertPostModalComponent } from '@strive/post/modals/upsert/upsert.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { GoalService } from '../../goal.service'
 import { AuthService } from '@strive/auth/auth.service'
 

@@ -21,7 +21,7 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/upsert.component'
+import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
 import { GoalUpdatesModalComponent } from '@strive/goal/modals/goal-updates/goal-updates.component'
 import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
@@ -115,7 +115,7 @@ export class GoalsPageComponent implements OnDestroy {
         return isBefore(earliestA, earliestB) ? -1 : 1
       }))
     )
-    
+
     this.stakeholders$ = stakeholders$.pipe(
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.isAchiever)),
       map(stakeholders => stakeholders.sort((first, second) => {
@@ -158,7 +158,7 @@ export class GoalsPageComponent implements OnDestroy {
     if (stakeholder?.events.length === 0) {
       this.router.navigate(['/goal/', stakeholder.goal.id])
       return
-    } 
+    }
 
     this.modalCtrl.create({
       component: GoalUpdatesModalComponent,
