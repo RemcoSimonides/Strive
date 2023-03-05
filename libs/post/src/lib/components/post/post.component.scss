@@ -30,37 +30,30 @@ ion-card {
     }
   }
 
+  .post-image {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+  }
+
+  iframe {
+    width: 100%;
+  }
+
   ion-card-content {
     padding: 8px;
     word-break: break-word;
 
     p {
+      color: var(--ion-text-color);
       white-space: pre-line;
     }
+
+    a {
+      overflow-wrap: anywhere;
+    }
   }
-}
-
-.post-image {
-  display: block;
-  overflow: hidden;
-  width: 100%;
-  height: auto;
-}
-
-.date {
-  color: var(--ion-color-medium);
-}
-
-h2 {
-  color: var(--ion-text-color);
-}
-
-p {
-  color: var(--ion-text-color);
-}
-
-a {
-  overflow-wrap: anywhere;
 }
 
 .clickable {

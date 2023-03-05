@@ -19,29 +19,42 @@
 
   <form [formGroup]="postForm">
 
-    <strive-image-selector 
-      [form]="postForm.get('mediaURL')"
-      [storagePath]="'goals/' + post.goalId + '/posts/' + post.id">
-    </strive-image-selector>
+    <ng-container *ngIf="postForm.youtubeId.valueChanges | async as id; else notYoutube">
+      <iframe
+        height="300"
+        [src]="('https://www.youtube-nocookie.com/embed/' + id) | safe:'resourceUrl'"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </ng-container>
+
+    <ng-template #notYoutube>
+      <strive-image-selector
+        [form]="postForm.get('mediaURL')"
+        [storagePath]="'goals/' + post.goalId + '/posts/' + post.id">
+      </strive-image-selector>
+    </ng-template>
 
     <ion-list mode="md" lines="full">
       <ion-item>
         <ion-label color="primary" stacked>Description</ion-label>
         <ion-textarea autoGrow formControlName="description" placeholder="..." autocapitalize="sentences"></ion-textarea>
       </ion-item>
-  
+
       <ion-item>
         <ion-label color="primary" stacked>
           <ion-icon name="calendar-outline"></ion-icon>
         </ion-label>
         <ion-input (ionFocus)="openDatePicker()" placeholder="Date" [value]="postForm.date.value | date:'longDate'"></ion-input>
       </ion-item>
-  
+
       <ion-item lines="none">
         <ion-label color="primary" stacked>
           <ion-icon name="link-outline"></ion-icon>
         </ion-label>
-        <ion-input formControlName="url" type="url" placeholder="Link (auto fetch image and title)"></ion-input>
+        <ion-input formControlName="url" type="url" placeholder="Link (youtube, strava, etc..)"></ion-input>
         <ion-spinner *ngIf="scrapingUrl" slot="end" name="bubbles" color="primary"></ion-spinner>
       </ion-item>
     </ion-list>

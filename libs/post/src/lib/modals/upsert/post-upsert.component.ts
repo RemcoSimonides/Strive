@@ -47,6 +47,13 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     debounceTime(1000),
     filter(url => url ? isValidHttpUrl(url) : false)
   ).subscribe(async url => {
+    if (isYoutube(url)) {
+      const id = getYoutubeId(url)
+      if (id) {
+        this.postForm.youtubeId.setValue(id)
+      }
+    }
+
     const formValue = this.postForm.getRawValue()
     if (formValue.description && formValue.mediaURL) return
 
@@ -100,13 +107,14 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     }
 
     if (!this.postForm.isEmpty) {
-      const { date, description, mediaURL, url } = this.postForm.value
+      const { date, description, mediaURL, url, youtubeId } = this.postForm.value
       const post = createPost({
         ...this.post,
         date,
         description,
         mediaURL,
         url,
+        youtubeId,
         uid: this.auth.uid
       })
 
@@ -136,5 +144,15 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     })
     popover.present()
   }
+}
 
+function isYoutube(url: string) {
+  return url.includes("youtube.com") || url.includes("youtu.be")
+}
+
+function getYoutubeId(url: string) {
+  // https://stackoverflow.com/questions/3452546/how-do-i-get-the-youtube-video-id-from-a-url
+  const rx = new RegExp(/^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/)
+  const match = url.match(rx)
+  return match?.length === 2 ? match[1] : undefined
 }

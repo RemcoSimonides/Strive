@@ -8,6 +8,7 @@ import { UpsertPostModalComponent } from './post-upsert.component'
 
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
     ReactiveFormsModule,
     IonicModule,
     ImageSelectorModule,
-    DatetimeModule
+    DatetimeModule,
+    SafePipe
   ],
   declarations: [UpsertPostModalComponent]
 })
