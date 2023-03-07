@@ -12,7 +12,7 @@ import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/ope
 import { Capacitor } from '@capacitor/core'
 import { Share } from '@capacitor/share'
 // Sentry
-import { captureException } from '@sentry/angular'
+import { captureException, captureMessage } from '@sentry/angular'
 // Date fns
 import { isEqual, isPast } from 'date-fns'
 // Strive Utils
@@ -127,6 +127,7 @@ export class GoalPageComponent implements OnDestroy {
     private screensize: ScreensizeService,
     private seo: SeoService
   ) {
+    captureMessage(`Arrived on goal page: ${this.router.url}`)
     const goalId$ = this.route.params.pipe(
       map(params => params['id'] as string),
       shareReplay({ bufferSize: 1, refCount: true })

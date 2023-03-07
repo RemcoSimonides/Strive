@@ -148,7 +148,7 @@ export class AppComponent implements OnDestroy {
               await this.openAuthModal(enumAuthSegment.login)
             }
           }
-        
+
         } else {
           await this.openAuthModal(enumAuthSegment.register)
         }

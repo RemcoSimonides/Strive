@@ -19,6 +19,7 @@ import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
 import { SuggestionSComponent } from '@strive/ui/suggestion/suggestion.component'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { IsFuturePipe } from '@strive/utils/pipes/date-fns.pipe'
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
     RoadmapModule,
     SmallThumbnailModule,
     DatetimeModule,
-    SuggestionSComponent
+    SuggestionSComponent,
+    IsFuturePipe
   ],
   declarations: [
     UpsertGoalModalComponent,

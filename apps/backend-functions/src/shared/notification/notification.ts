@@ -27,7 +27,7 @@ export interface SendOptions {
 
 export async function sendNotificationToUsers(notificationBase: NotificationBase, to: string | string[], pushNotification?: PushNotificationTarget) {
   const recipients = Array.isArray(to) ? to : [to]
-  
+
   notificationBase.updatedAt = serverTimestamp() as any
   notificationBase.createdAt = serverTimestamp() as any
 
@@ -43,7 +43,7 @@ export async function sendNotificationToUsers(notificationBase: NotificationBase
     const milestone = milestoneId ? await getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`) : undefined
     const support = supportId ? await getDocument<SupportBase>(`Goals/${goalId}/Supports/${supportId}`) : undefined
     const user = userId ? await getDocument<User>(`Users/${userId}`) : undefined
-  
+
     const notification: Notification = notificationBase
     if (goal) notification.goal = goal
     if (milestone) notification.milestone = milestone
@@ -62,7 +62,7 @@ export async function sendGoalEventNotification(
 ) {
   const { goalId, userId, milestoneId, supportId } = event
   const except =  excludeTriggerer ? userId : ''
-  
+
   const notificationBase = createNotificationBase({ ...event, event: event.name })
   const notification: Notification = createNotificationBase(notificationBase)
 
@@ -78,7 +78,7 @@ export async function sendGoalEventNotification(
     await Promise.all([goalPromise, milestonePromise, supportPromise, userPromise])
   }
 
-  
+
   if (send.notification) {
     const recipients = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
     sendNotificationToUsers(notificationBase, recipients)
@@ -117,7 +117,7 @@ export async function sendPushNotificationToUsers(message: PushMessage, recipien
 
   for (const snap of snaps) {
     const personal = createPersonal(toDate({ ...snap.data(), id: snap.id }))
-    logger.log(`going to send push notification to ${personal?.email}`)
+    if (!personal.fcmTokens.length) continue
 
     // TODO
     // Try to define a tag for each too so they get aggregated
@@ -130,7 +130,7 @@ export async function sendPushNotificationToUsers(message: PushMessage, recipien
       token,
       notification: {
         title: message.title,
-        body: message.body 
+        body: message.body
       },
       data: { link },
       webpush: {
@@ -140,6 +140,7 @@ export async function sendPushNotificationToUsers(message: PushMessage, recipien
         fcmOptions: { link }
       }
     }))
+    logger.log(`going to send push notifications to ${personal?.email}`, messages[0])
     admin.messaging().sendAll(messages).catch((err) => {
       logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
     })
@@ -155,7 +156,7 @@ async function getGoalStakeholders(
   }
 ): Promise<string[]> {
 
-  const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get() 
+  const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
   const recipients: string[] = []
 
   for (const snap of stakeholderColSnap.docs) {

@@ -48,7 +48,7 @@ export class PersonalService extends FireSubCollection<Personal> {
 
     if (actionType === 'add') personal.createdAt = timestamp
     personal.updatedAt = timestamp
-    
+
     return personal
   }
 
@@ -123,7 +123,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     } else {
       await this.registerCapacitor()
       return
-    }    
+    }
   }
 
   async addFCMToken(token: string) {
@@ -149,7 +149,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     if (permStatus.receive === 'prompt') {
       permStatus = await PushNotifications.requestPermissions()
     }
-  
+
     if (permStatus.receive !== 'granted') {
       throw new Error('User denied push notification permission')
     }
@@ -191,8 +191,14 @@ export class PersonalService extends FireSubCollection<Personal> {
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
       (notification: ActionPerformed) => {
-        const link: string = notification.notification.data.link
-        this.router.navigateByUrl(link)
+        try {
+          Sentry.captureMessage('push notification action performed')
+          const link: string = notification.notification.data.link
+          Sentry.captureMessage(`going to ${link}`)
+          this.router.navigateByUrl(link)
+        } catch (err) {
+          Sentry.captureException(err)
+        }
       }
     )
 

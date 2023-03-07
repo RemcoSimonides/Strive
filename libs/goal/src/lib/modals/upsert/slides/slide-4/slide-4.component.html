@@ -7,4 +7,6 @@
   [createMode]="true"
 />
 
-<strive-suggestion [suggestion]="suggestion" [goalId]="goal.id" />
+<ng-container *ngIf="goal.title.length > 4 && (goal.deadline | isFuture)">
+  <strive-suggestion [suggestion]="suggestion" [goalId]="goal.id" />
+</ng-container>
