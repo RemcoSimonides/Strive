@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular'
+import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
 
@@ -192,10 +193,8 @@ export class PersonalService extends FireSubCollection<Personal> {
     PushNotifications.addListener('pushNotificationActionPerformed',
       (notification: ActionPerformed) => {
         try {
-          Sentry.captureMessage('push notification action performed')
           const link: string = notification.notification.data.link
-          Sentry.captureMessage(`going to ${link}`)
-          this.router.navigateByUrl(link)
+          this.router.navigateByUrl(link).then(() => SplashScreen.hide())
         } catch (err) {
           Sentry.captureException(err)
         }

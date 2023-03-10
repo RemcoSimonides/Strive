@@ -127,7 +127,6 @@ export class GoalPageComponent implements OnDestroy {
     private screensize: ScreensizeService,
     private seo: SeoService
   ) {
-    captureMessage(`Arrived on goal page: ${this.router.url}`)
     const goalId$ = this.route.params.pipe(
       map(params => params['id'] as string),
       shareReplay({ bufferSize: 1, refCount: true })
