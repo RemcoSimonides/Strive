@@ -35,7 +35,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
   @Input() goal = createGoal()
 
-  suggestion$ = new BehaviorSubject<string>('')
+  suggestion$ = new BehaviorSubject<string | undefined>(undefined)
 
   constructor(
     private auth: AuthService,
@@ -80,6 +80,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
           const now = format(new Date(), 'dd MMMM yyyy')
           const country = getCountry() ?? 'the Netherlands'
           if (title.length > 4 && isFuture(this.form.deadline.value)) {
+            this.suggestion$.next('')
             const prompt = `I want to achieve "${title}" by "${deadline}". Today is ${now} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for milestone. Return response ONLY in a JSON parsable array of strings.`
             const askOpenAI = httpsCallable<{ prompt: string }, { error: string, result: string }>(getFunctions(), 'askOpenAI')
             askOpenAI({ prompt }).then(res => {

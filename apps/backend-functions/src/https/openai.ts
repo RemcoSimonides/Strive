@@ -23,7 +23,7 @@ async (data: { prompt: string }, context): Promise<ErrorResultResponse> => {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt,
-      max_tokens: 500,
+      max_tokens: 1096,
       temperature: 1,
       user: uid
     })
