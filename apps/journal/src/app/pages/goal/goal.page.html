@@ -214,8 +214,13 @@
       <strive-description [value]="goal.description" [canEdit]="stakeholder.isAdmin" (updated)="updateDescription($event)"></strive-description>
     </ng-container>
 
-    <section>
-      <h5>Roadmap</h5>
+    <section class="roadmap">
+      <header>
+        <h5>Roadmap</h5>
+        <ion-button fill="clear" *ngIf="roadmapOrder$ | async as order" (click)="toggleRoadmapOrder()">
+          <ion-icon [name]="order === 'asc' ? 'arrow-down-outline' : 'arrow-up-outline'" size="small" />
+        </ion-button>
+      </header>
       <strive-roadmap
         [goal]="goal"
         [milestones]="milestones$ | async"
@@ -249,8 +254,7 @@
       <header>
         <h5>Story</h5>
         <ion-button fill="clear" *ngIf="storyOrder$ | async as order" (click)="toggleStoryOrder()" size="small">
-          <ion-icon *ngIf="order === 'desc'" name="arrow-up-outline" slot="icon-only" size="small"></ion-icon>
-          <ion-icon *ngIf="order === 'asc'" name="arrow-down-outline" slot="icon-only" size="small"></ion-icon>
+          <ion-icon [name]="order === 'asc' ? 'arrow-down-outline' : 'arrow-up-outline'" size="small" />
         </ion-button>
       </header>
       <strive-story [story]="story$ | async" [stakeholder]="stakeholder" [goalId]="goal.id"></strive-story>

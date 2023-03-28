@@ -10,7 +10,7 @@ import { endOfDay } from 'date-fns'
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireSubCollection<Milestone> {
   readonly path = 'Goals/:goalId/Milestones'
-  override readonly memorize = true
+  override readonly memorize = false // no memorize for changing story order
 
   constructor(private auth: AuthService) {
     super()

@@ -87,6 +87,7 @@ export class GoalPageComponent implements OnDestroy {
   storyOrder$ = new BehaviorSubject<OrderByDirection>('desc')
   story$: Observable<StoryItem[]>
 
+  roadmapOrder$ = new BehaviorSubject<OrderByDirection>('asc')
   milestones$?: Observable<Milestone[]>
 
   openRequests$?: Observable<GoalStakeholder[]>
@@ -215,18 +216,17 @@ export class GoalPageComponent implements OnDestroy {
 
     this.supports$ = supports$.pipe(map(groupByObjective), map(sortGroupedSupports))
 
-    this.milestones$ = goalId$.pipe(
-      switchMap(goalId => this.milestoneService.valueChanges([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId }).pipe(
-        joinWith({
-          achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
-          supports: milestone => supports$.pipe(
-            map(supports => supports.filter(support => support.milestoneId === milestone.id))
-          ),
-          story: milestone => this.story$.pipe(
-            map(story => story.filter(item => item.post && item.milestoneId === milestone.id))
-          )
-        },{ shouldAwait: false })
-      ))
+    this.milestones$ = combineLatest([goalId$, this.roadmapOrder$]).pipe(
+      switchMap(([goalId, order]) => goalId ? this.milestoneService.valueChanges([orderBy('order', order)], { goalId }) : of([])),
+      joinWith({
+        achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
+        supports: milestone => supports$.pipe(
+          map(supports => supports.filter(support => support.milestoneId === milestone.id))
+        ),
+        story: milestone => this.story$.pipe(
+          map(story => story.filter(item => item.post && item.milestoneId === milestone.id))
+        )
+      }, { shouldAwait: false })
     )
 
     this.accessSubscription = combineLatest([
@@ -521,6 +521,11 @@ export class GoalPageComponent implements OnDestroy {
     } else {
       this.location.back()
     }
+  }
+
+  toggleRoadmapOrder() {
+    const order: OrderByDirection = this.roadmapOrder$.value === 'desc' ? 'asc' : 'desc'
+    this.roadmapOrder$.next(order)
   }
 
   toggleStoryOrder() {

@@ -32,7 +32,7 @@ main {
     margin-top: 0;
     margin-bottom: 16px;
   }
-  
+
   div.main {
     display: flex;
     gap: 24px;
@@ -53,7 +53,7 @@ main {
         display: flex;
         flex-direction: column;
         gap: 8px;
-      
+
         li {
           display: flex;
           gap: 4px;
@@ -74,7 +74,7 @@ main {
     display: flex;
     flex-direction: column;
   }
-  
+
   section.actions {
     gap: 2px;
 
@@ -85,8 +85,8 @@ main {
       strive-goal-join-button {
         flex: 1.5;
       }
-  
-      ion-button.button-block {  
+
+      ion-button.button-block {
         flex: 1;
       }
     }
@@ -164,7 +164,7 @@ ion-card.finish {
   }
 }
 
-.story {
+.story, .roadmap {
   header {
     display: flex;
     justify-content: space-between;
