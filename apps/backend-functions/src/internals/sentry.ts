@@ -1,5 +1,5 @@
 /**
- * Temporary wrapper for firebase functions until @sentry/serverless support is implemented
+ * Temporary wrapper for firebase functions until @sentry/node support is implemented
  * It currently supports wrapping https, pubsub and firestore handlers.
  * usage: https.onRequest(wrap((req, res) => {...}))
  */
@@ -7,8 +7,8 @@ import type { https } from 'firebase-functions'
 import type { onRequest, onCall } from 'firebase-functions/lib/v1/providers/https'
 import type { ScheduleBuilder } from 'firebase-functions/lib/v1/providers/pubsub'
 import type { DocumentBuilder } from 'firebase-functions/lib/v1/providers/firestore'
-import { addRequestDataToEvent } from '@sentry/serverless'
- 
+import { addRequestDataToEvent } from '@sentry/node'
+
 type httpsOnRequestHandler = Parameters<typeof onRequest>[0]
 type httpsOnCallHandler = Parameters<typeof onCall>[0]
 type pubsubOnRunHandler = Parameters<ScheduleBuilder['onRun']>[0]
@@ -33,14 +33,14 @@ export function getLocationHeaders(req: https.Request): {country?: string; ip?: 
      req.header('X-Forwarded-For')?.split(',')[0] ||
      req.connection.remoteAddress ||
      req.socket.remoteAddress
- 
+
    const country =
      req.header('Cf-Ipcountry') ||
      req.header('X-Country-Code') ||
      req.header('X-Appengine-Country');
    return {ip: ip?.toString(), country: country?.toString()}
 }
- 
+
 function wrap<A, C>(type: FunctionType, name: string, fn: (a: A) => C | Promise<C>): typeof fn;
 function wrap<A, B, C>(
   type: FunctionType,
