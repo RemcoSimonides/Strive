@@ -1,26 +1,20 @@
-<ng-container *ngIf="isLoggedIn$ | async; else notLoggedIn">
-  <ion-list mode="md">
-    <ion-item *ngIf="goal" lines="none">
-      <ion-input
-        [formControl]="form"
-        type="text"
-        placeholder="e.g. chocolate or €20"
-        autocapitalize="sentences"
-        maxlength="60"
-        (keydown.enter)="addSupport()"
-      />
-      <ion-button
-        slot="end"
-        (click)="addSupport()"
-        color="secondary"
-      >
-        <span>ADD</span>
-        <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
-      </ion-button>
-    </ion-item>
-  </ion-list>
-</ng-container>
-
-<ng-template #notLoggedIn>
-  <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to support
-</ng-template>
+<ion-list mode="md">
+  <ion-item *ngIf="goal" lines="none">
+    <ion-input
+      [formControl]="form"
+      type="text"
+      placeholder="e.g. chocolate or €20"
+      autocapitalize="sentences"
+      maxlength="60"
+      (keydown.enter)="addSupport()"
+    />
+    <ion-button
+      slot="end"
+      (click)="addSupport()"
+      color="secondary"
+    >
+      <span>ADD</span>
+      <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
+    </ion-button>
+  </ion-item>
+</ion-list>

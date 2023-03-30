@@ -27,8 +27,6 @@ export class AddSupportComponent {
 
   form = new FormControl('', { validators: [Validators.required, Validators.maxLength(60)], nonNullable: true })
 
-  isLoggedIn$ = this.auth.isLoggedIn$
-
   constructor(
     private auth: AuthService,
     private modalCtrl: ModalController,

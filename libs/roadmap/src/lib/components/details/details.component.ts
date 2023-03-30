@@ -45,6 +45,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   supports$?: Observable<SupportsGroupedByGoal[]>
 
   isDesktop$ = this.screensize.isDesktop$
+  isLoggedIn$ = this.auth.isLoggedIn$
 
   @Input() goal!: Goal
   @Input() milestone!: MilestoneWithSupport
