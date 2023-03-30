@@ -1,5 +1,5 @@
 import { EventType, Notification } from '@strive/model'
-import { captureException } from '@sentry/serverless'
+import { captureException } from '@sentry/node'
 
 export type PushNotificationTarget = 'user' | 'stakeholder' | 'spectator'
 export interface PushMessage {
@@ -127,7 +127,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
         title: goal.title,
         body: `${user.username} requests to join goal`
       })
-   
+
     case 'goalStoryPostCreated':
       if (!goal) throw new Error(`${event} push message needs goal defined`)
       if (!user) throw new Error(`${event} push message needs user defined`)
@@ -155,7 +155,7 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
       return throwError(event, 'stakeholder')
     default:
       return throwError(event, 'stakeholder')
-    
+
   }
 }
 
@@ -181,7 +181,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
         link: `/goal/${goal.id}`
       })
 
-    case 'goalFinishedSuccessfully': 
+    case 'goalFinishedSuccessfully':
     if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
     if (!user) throw new Error(`${event} spectator push message needs user defined`)
 
@@ -191,16 +191,16 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
         link: `/goal/${goal.id}`
       })
 
-    case 'goalFinishedUnsuccessfully': 
+    case 'goalFinishedUnsuccessfully':
       if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
       if (!user) throw new Error(`${event} spectator push message needs user defined`)
-  
+
         return createPushMessage({
           title: user.username,
           body: `Finished goal '${goal.title}' unsuccessfully`,
           link: `/goal/${goal.id}`
         })
-  
+
 
     case 'goalStakeholderBecameAchiever':
       if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
@@ -212,7 +212,7 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
         link: `/profile/${user.uid}`
       })
 
-    
+
     case 'goalMilestoneDeadlinePassed':
     case 'goalMilestoneCompletedSuccessfully':
     case 'goalMilestoneCompletedUnsuccessfully':
@@ -279,7 +279,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
         link: `supports/${support.id}?goalId=${support.goalId}`
       })
     }
-  
+
     case 'goalSupportStatusAccepted':
       if (!user) throw new Error(`${event} spectator push message needs user defined`)
       if (!support) throw new Error(`${event} spectator push message needs support defined`)
