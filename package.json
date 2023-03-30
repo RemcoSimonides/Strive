@@ -53,7 +53,7 @@
     "@sendgrid/mail": "^7.7.0",
     "@sentry/angular": "^7.24.2",
     "@sentry/capacitor": "^0.10.1",
-    "@sentry/serverless": "^7.24.2",
+    "@sentry/node": "^7.46.0",
     "algoliasearch": "^4.14.2",
     "chart.js": "^4.0.1",
     "chartjs-adapter-date-fns": "^3.0.0",
