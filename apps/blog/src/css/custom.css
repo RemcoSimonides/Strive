@@ -13,7 +13,7 @@
   --ifm-color-primary-light: #f8a744;
   --ifm-color-primary-lighter: #fab96c;
   --ifm-color-primary-lightest: #fbcc93;
-  --ifm-color-primary-contrast: #ffffff;
+  --ifm-color-primary-contrast: black;
 
   /* --ifm-color-secondary: #00b3a3;
   --ifm-color-secondary-dark: #007b70;
@@ -36,7 +36,7 @@
   --ifm-color-primary-light: #f8a744;
   --ifm-color-primary-lighter: #fab96c;
   --ifm-color-primary-lightest: #fbcc93;
-  --ifm-color-primary-contrast: #ffffff;
+  --ifm-color-primary-contrast: white;
 
   /* --ifm-color-secondary: #00b3a3;
   --ifm-color-secondary-dark: #007b70;
@@ -62,4 +62,27 @@ img.gif {
 
 img.horizontal {
   max-height: 250px;
+}
+
+.privacy-policy {
+  max-width: 800px;
+  margin: auto;
+  margin-top: 16px;
+}
+
+.privacy-policy section {
+  border-radius: 12px;
+  border: 1px var(--ifm-color-primary) solid;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.privacy-policy section p {
+  color: var(--ion-color-medium);
+}
+
+.privacy-policy section ul {
+  color: var(--ion-color-medium);
+  list-style-type: initial;
+  padding-left: 40px;
 }

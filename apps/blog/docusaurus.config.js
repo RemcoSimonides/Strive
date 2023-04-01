@@ -120,6 +120,10 @@ const config = {
                 label: 'Twitter',
                 href: 'https://twitter.com/journalstrive',
               },
+              {
+                label: 'GitHub',
+                href: 'https://github.com/remcosimonides/strive',
+              },
             ],
           },
           {
@@ -130,8 +134,8 @@ const config = {
                 to: '/blog',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'Privacy Policy',
+                to: '/privacy-policy',
               },
             ],
           },
