@@ -6,6 +6,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { createGoal, Stakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 
 @Component({
@@ -14,7 +15,8 @@ import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
     CommonModule,
     IonicModule,
     ImageModule,
-    ProgressPipeModule
+    ProgressPipeModule,
+    HeaderModalComponent
   ],
   selector: 'strive-collective-goals-modal',
   templateUrl: './collective-goals.component.html',

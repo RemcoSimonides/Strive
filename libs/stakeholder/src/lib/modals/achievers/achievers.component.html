@@ -1,14 +1,6 @@
-<ion-header mode="md">
-  <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-button (click)="dismiss()" color="primary">
-        <ion-icon slot="icon-only" name="close" />
-      </ion-button>
-    </ion-buttons>
-
-    <ion-title>Achievers</ion-title>
-  </ion-toolbar>
-</ion-header>
+<strive-header-modal (dismiss)="dismiss()">
+  <ion-title>Achievers</ion-title>
+</strive-header-modal>
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="view$ | async as view">

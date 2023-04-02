@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 import { AchieversModalComponent } from './achievers.component'
 import { ImageModule } from '@strive/media/directives/image.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @NgModule({
   imports: [
@@ -11,7 +12,8 @@ import { ImageModule } from '@strive/media/directives/image.module'
     IonicModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageModule
+    ImageModule,
+    HeaderModalComponent
   ],
   declarations: [AchieversModalComponent]
 })

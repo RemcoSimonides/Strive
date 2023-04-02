@@ -1,15 +1,6 @@
-<ion-header mode="md">
-  <ion-toolbar>
-    <ion-searchbar placeholder="Search achiever" [formControl]="filter" />
-
-    <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">
-        <ion-icon slot="icon-only" name="close" />
-      </ion-button>
-    </ion-buttons>
-
-  </ion-toolbar>
-</ion-header>
+<strive-header-modal (dismiss)="dismiss()">
+  <ion-searchbar placeholder="Search achiever" [formControl]="filter" />
+</strive-header-modal>
 
 <ion-content>
   <ion-list mode="md">

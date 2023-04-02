@@ -6,6 +6,7 @@ import { AddSupportModalComponent } from './add.component'
 
 import { SupportListModule } from '../../components/list/list.module'
 import { AddSupportModule } from '../../components/add/add.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { AddSupportModule } from '../../components/add/add.module'
     CommonModule,
     IonicModule,
     SupportListModule,
-    AddSupportModule
+    AddSupportModule,
+    HeaderModalComponent
   ],
   declarations: [
     AddSupportModalComponent

@@ -12,7 +12,7 @@ import { StakeholderWithGoalAndEvents } from '@strive/model'
   styleUrls: ['./goal-updates.component.scss']
 })
 export class GoalUpdatesModalComponent extends ModalDirective {
-  
+
   @Input() stakeholder!: StakeholderWithGoalAndEvents
 
   constructor(

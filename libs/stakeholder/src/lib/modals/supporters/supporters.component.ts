@@ -9,6 +9,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { RolesPopoverComponent } from '@strive/stakeholder/popovers/roles/roles.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -24,7 +25,8 @@ import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/mod
     CommonModule,
     IonicModule,
     ImageModule,
-    RolesPopoverComponent
+    RolesPopoverComponent,
+    HeaderModalComponent
   ],
   selector: '[goalId] strive-supporters-modal',
   templateUrl: './supporters.component.html',

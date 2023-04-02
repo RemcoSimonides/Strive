@@ -1,32 +1,16 @@
-<ion-header mode="md">
-  <ion-toolbar>
-    <ng-template #noDesktop>
-      <ion-buttons slot="start">
-        <ion-button (click)="dismiss()" color="primary">
-          <ion-icon slot="icon-only" name="arrow-back" />
-        </ion-button>
-      </ion-buttons>
-    </ng-template>
-
-    <header *ngIf="canEdit && form?.touched">
-      <ion-button fill="clear" disabled color="primary">
-        <ng-container *ngIf="form?.dirty && form?.valid; else saved">
-          <span>SAVING CHANGES...</span>
-        </ng-container>
-        <ng-template #saved>
-          <span>SAVED</span>
-          <ion-icon name="checkmark-outline" slot="end" />
-        </ng-template>
-      </ion-button>
-    </header>
-
-    <ion-buttons slot="end" *ngIf="isDesktop$ | async; else noDesktop">
-      <ion-button (click)="dismiss()" color="primary">
-        <ion-icon slot="icon-only" name="close-outline" />
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<strive-header-modal (dismiss)="dismiss()">
+  <header class="header" *ngIf="canEdit && form?.touched">
+    <ion-button fill="clear" disabled color="primary">
+      <ng-container *ngIf="form?.dirty && form?.valid; else saved">
+        <span>SAVING CHANGES...</span>
+      </ng-container>
+      <ng-template #saved>
+        <span>SAVED</span>
+        <ion-icon name="checkmark-outline" slot="end" />
+      </ng-template>
+    </ion-button>
+  </header>
+</strive-header-modal>
 
 <ion-content class="ion-padding">
   <main>

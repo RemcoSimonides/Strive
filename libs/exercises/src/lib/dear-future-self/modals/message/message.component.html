@@ -1,8 +1,10 @@
-<strive-header title="Message from the past" color="" />
+<strive-header-modal (dismiss)="dismiss()" color="primary">
+  <ion-title>Message from the past</ion-title>
+</strive-header-modal>
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="message">
-    <p><small>This message was sent on {{ message.createdAt | date }} and delivered on {{ message.deliveryDate | date }}.</small></p>
+    <small>This message was sent on {{ message.createdAt | date }} and delivered on {{ message.deliveryDate | date }}.</small>
     <p [innerHTML]="message.description"></p>
   </ng-container>
 </ion-content>

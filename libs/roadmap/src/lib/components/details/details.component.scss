@@ -1,14 +1,14 @@
 :host {
   display: block;
-}
 
-ion-header header {
-  display: flex;
-  position: absolute;
-  width: 100%;
-  justify-content: center;
-  top: 8px;
-  left: 0;
+  ::ng-deep ion-header header {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    justify-content: center;
+    top: 8px;
+    left: 0;
+  }
 }
 
 main {

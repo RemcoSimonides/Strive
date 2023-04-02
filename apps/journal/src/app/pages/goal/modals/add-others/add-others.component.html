@@ -1,13 +1,7 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar mode="md" transparent>
-    <ion-searchbar placeholder="Search" (ionChange)="search($event)"/>
-    <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">
-        <ion-icon slot="icon-only" name="close"/>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<strive-header-modal (dismiss)="dismiss()" [transparent]="true">
+  <ion-searchbar placeholder="Search" (ionChange)="search($event)"/>
+</strive-header-modal>
+
 <ion-content class="ion-padding">
   <ng-container *ngIf="results$ | async as profiles; else loading">
     <ng-container *ngIf="profiles.length else empty">

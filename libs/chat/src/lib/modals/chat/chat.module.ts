@@ -12,6 +12,7 @@ import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @NgModule({
   imports: [
@@ -21,10 +22,11 @@ import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
     ImageModule,
     TimeAgoPipeModule,
     HTMLPipeModule,
-    
+
     JoinButtonModule,
     AuthModalModule,
-    AddSupportModalModule
+    AddSupportModalModule,
+    HeaderModalComponent
   ],
   declarations: [
     ChatModalComponent

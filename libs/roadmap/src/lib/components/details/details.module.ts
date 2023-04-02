@@ -14,6 +14,7 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { AddSupportModule } from '@strive/support/components/add/add.module'
     DatetimeModule,
     UpsertPostModalModule,
     AddSupportModule,
-    SupportListModule
+    SupportListModule,
+    HeaderModalComponent
   ],
   declarations: [
     DetailsComponent

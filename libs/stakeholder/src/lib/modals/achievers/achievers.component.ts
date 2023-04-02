@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { AlertController, IonicModule, ModalController, Platform, PopoverController } from '@ionic/angular'
+import { AlertController, IonicModule, ModalController, PopoverController } from '@ionic/angular'
 import { joinWith } from 'ngfire'
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs'
 
@@ -14,8 +14,8 @@ import { GoalService } from '@strive/goal/goal.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { delay } from '@strive/utils/helpers'
 import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/model'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
   standalone: true,
@@ -23,7 +23,8 @@ import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/mod
     CommonModule,
     IonicModule,
     ImageModule,
-    RolesPopoverComponent
+    RolesPopoverComponent,
+    HeaderModalComponent
   ],
   selector: '[goalId] strive-achievers-modal',
   templateUrl: './achievers.component.html',
@@ -66,7 +67,7 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
       map(([ user, stakeholders ]) => {
         const you = stakeholders.find(stakeholder => stakeholder.uid === user?.uid)
         const others = stakeholders.filter(stakeholder => stakeholder.isAchiever).filter(stakeholder => stakeholder.uid !== user?.uid)
-        return { 
+        return {
           you: you ? you : createGoalStakeholder(),
           others
         }
@@ -81,7 +82,7 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
 
   async leave() {
     if (!this.view$) return
-    
+
     const { you, others } = await firstValueFrom(this.view$)
     const otherAdmin = others.some(other => other.isAdmin)
 

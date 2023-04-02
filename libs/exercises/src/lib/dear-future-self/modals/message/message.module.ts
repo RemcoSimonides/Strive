@@ -4,13 +4,13 @@ import { IonicModule } from '@ionic/angular'
 
 import { MessageModalComponent } from './message.component'
 
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    HeaderModule
+    HeaderModalComponent
   ],
   declarations: [MessageModalComponent]
 })
