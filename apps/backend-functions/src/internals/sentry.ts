@@ -53,10 +53,13 @@ function wrap<A, B, C>(
   fn: (a: A, b: B) => C | Promise<C>
 ): typeof fn {
   return async (a: A, b: B): Promise<C> => {
-    const {startTransaction, configureScope, Handlers, captureException, flush} = await import(
+    const {startTransaction, configureScope, Handlers, captureException, flush, init} = await import(
       '@sentry/node'
     );
-    const {extractTraceparentData} = await import('@sentry/tracing');
+    init({
+      dsn: process.env.SENTRY_DSN,
+      tracesSampleRate: 1.0
+    })
 
     let req: https.Request | undefined;
     let ctx: Record<string, unknown> | undefined;
@@ -74,11 +77,9 @@ function wrap<A, B, C>(
       ctx = (a as unknown) as Record<string, unknown>;
     }
 
-    const traceparentData = extractTraceparentData(req?.header('sentry-trace') || '');
     const transaction = startTransaction({
       name,
-      op: 'transaction',
-      ...traceparentData,
+      op: 'transaction'
     });
 
     configureScope(scope => {

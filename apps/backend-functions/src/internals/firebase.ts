@@ -1,14 +1,8 @@
 import { RuntimeOptions, runWith } from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
-import { init } from '@sentry/node'
 import { environment } from '@env'
 import { wrapFirestoreOnCreateHandler, wrapFirestoreOnDeleteHandler, wrapFirestoreOnUpdateHandler } from './sentry'
-
-init({
-	dsn: process.env.SENTRY_DSN,
-	tracesSampleRate: 1.0
-})
 
 export type DocumentReference = admin.firestore.DocumentReference
 export const gcs = new Storage.Storage

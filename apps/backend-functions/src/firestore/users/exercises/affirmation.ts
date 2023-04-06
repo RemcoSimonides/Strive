@@ -14,7 +14,7 @@ async (snapshot, context) => {
   if (affirmations.times.every(time => time === '')) return
 
   const nextDate = getNextAffirmationDate(affirmations)
-  
+
   // create scheduled task on set time
   const task: ScheduledTaskUserExerciseAffirmations = {
     worker: enumWorkerType.userExerciseAffirmation,
@@ -24,7 +24,7 @@ async (snapshot, context) => {
   }
   upsertScheduledTask(`${uid}affirmations`, task)
 
-  updateAggregation({ usersAffirmationsSet: affirmations.affirmations.length }) 
+  updateAggregation({ usersAffirmationsSet: affirmations.affirmations.length })
 })
 
 
