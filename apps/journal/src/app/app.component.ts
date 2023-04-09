@@ -1,6 +1,6 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router'
-import { isPlatformServer, Location } from '@angular/common'
+import { isPlatformBrowser, isPlatformServer, Location } from '@angular/common'
 import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
@@ -102,7 +102,7 @@ export class AppComponent implements OnDestroy {
   ) {
     this.theme.initTheme('dark')
     this.openModalOnStartup()
-    this.versionService.checkForUpdate()
+    if (isPlatformBrowser(this.platformId)) this.versionService.checkForUpdate()
 
     platform.ready().then(() => {
       this.screensize.onResize(platform.width())

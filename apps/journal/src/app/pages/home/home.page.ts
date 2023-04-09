@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common'
+import { DOCUMENT, isPlatformBrowser } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 import { ModalController, Platform } from '@ionic/angular'
@@ -31,7 +31,8 @@ export class HomePageComponent {
     private platform: Platform,
     seo: SeoService,
     private themeService: ThemeService,
-    @Inject(PLATFORM_ID) platformId: any
+    @Inject(PLATFORM_ID) platformId: any,
+    @Inject(DOCUMENT) document: Document
   ) {
     seo.generateTags({})
     if (isPlatformBrowser(platformId)) {
