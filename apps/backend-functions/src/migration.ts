@@ -1,5 +1,4 @@
-import { functions, admin } from './internals/firebase'
-import type { RuntimeOptions } from 'firebase-functions'
+import { functions, admin, RuntimeOptions } from '@strive/api/firebase'
 import { BigBatch } from './shared/bigbatch'
 
 const config: RuntimeOptions = {

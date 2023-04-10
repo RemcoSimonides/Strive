@@ -19,28 +19,6 @@ type firestoreOnDeleteHandler = Parameters<DocumentBuilder<''>['onDelete']>[0]
 
 type FunctionType = 'http' | 'callable' | 'document' | 'schedule'
 
-export function getLocationHeaders(req: https.Request): {country?: string; ip?: string} {
-   /**
-    * Checking order:
-    * Cloudflare: in case user is proxying functions through it
-    * Fastly: in case user is service functions through firebase hosting (Fastly is the default Firebase CDN)
-    * App Engine: in case user is serving functions directly through cloudfunctions.net
-    */
-   const ip =
-     req.header('Cf-Connecting-Ip') ||
-     req.header('Fastly-Client-Ip') ||
-     req.header('X-Appengine-User-Ip') ||
-     req.header('X-Forwarded-For')?.split(',')[0] ||
-     req.connection.remoteAddress ||
-     req.socket.remoteAddress
-
-   const country =
-     req.header('Cf-Ipcountry') ||
-     req.header('X-Country-Code') ||
-     req.header('X-Appengine-Country');
-   return {ip: ip?.toString(), country: country?.toString()}
-}
-
 function wrap<A, C>(type: FunctionType, name: string, fn: (a: A) => C | Promise<C>): typeof fn;
 function wrap<A, B, C>(
   type: FunctionType,
@@ -57,7 +35,7 @@ function wrap<A, B, C>(
       '@sentry/node'
     );
     init({
-      dsn: process.env.SENTRY_DSN,
+      dsn: process.env['SENTRY_DSN'],
       tracesSampleRate: 1.0
     })
 
@@ -88,9 +66,6 @@ function wrap<A, B, C>(
 
         if (req) {
           ev = addRequestDataToEvent(event, req);
-          const loc = getLocationHeaders(req);
-          loc.ip && Object.assign(ev.user, {ip_address: loc.ip});
-          loc.country && Object.assign(ev.user, {country: loc.country});
         }
         if (ctx) {
           ev = Handlers.parseRequest(event, ctx);
@@ -102,7 +77,7 @@ function wrap<A, B, C>(
 
         // force catpuring uncaughtError as not handled
         const mechanism = ev.exception?.values?.[0].mechanism;
-        if (mechanism && ev.tags?.handled === false) {
+        if (mechanism && ev.tags?.['handled'] === false) {
           mechanism.handled = false;
         }
         return ev;

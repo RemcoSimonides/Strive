@@ -1,4 +1,4 @@
-import { db, admin } from '../../internals/firebase'
+import { db, admin } from '@strive/api/firebase'
 import { ScheduledTask } from './scheduled-task.interface'
 
 function getTimestamp(performAt: ScheduledTask['performAt']) {

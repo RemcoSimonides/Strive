@@ -16,6 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@env": ["environments/environment.ts"],
+      "@strive/api": ["libs/api/src/index.ts"],
+      "@strive/api/firebase": ["libs/api/src/lib/utils/firebase.ts"],
+      "@strive/api/sentry": ["libs/api/src/lib/utils/sentry.ts"],
       "@strive/auth/*": ["libs/auth/src/lib/*"],
       "@strive/chat/*": ["libs/chat/src/lib/*"],
       "@strive/exercises/*": ["libs/exercises/src/lib/*"],

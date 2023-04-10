@@ -1,5 +1,5 @@
-import { db, functions, admin, logger } from '../internals/firebase'
-import { wrapPubsubOnRunHandler } from '../internals/sentry'
+import { db, functions, admin, logger } from '@strive/api/firebase'
+import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 import { getDocument } from '../shared/utils'
 import { addGoalEvent } from '../shared/goal-event/goal.events'
@@ -35,7 +35,7 @@ async () => {
   const query = db.collection('ScheduledTasks').where('performAt', '<=', now).where('status', '==', 'scheduled')
 
   const tasks = await query.get()
-  
+
   // Jobs to execute concurrently.
   const jobs: Promise<any>[] = []
 
@@ -53,7 +53,7 @@ async () => {
       console.error('WORKER NOT FOUND FOR: ', worker)
       continue
     }
-    const job = workers[worker](options)      
+    const job = workers[worker](options)
       // Update doc with status on success or error
       .then(async () => {
         if (reschedulingTasks.some(task => task === worker)) return
@@ -76,7 +76,7 @@ interface IWorkers {
   [key: string]: (options: any) => Promise<any>
 }
 
-// Business logic for named tasks. Function name should match worker field on task document. 
+// Business logic for named tasks. Function name should match worker field on task document.
 const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
   goalDeadline: (options) => goalDeadlineHandler(options),

@@ -1,5 +1,4 @@
-import { db, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp } from '../../internals/firebase'
-import { logger } from 'firebase-functions'
+import { db, logger, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp } from '@strive/api/firebase'
 import { isEqual, isFuture } from 'date-fns'
 
 import {

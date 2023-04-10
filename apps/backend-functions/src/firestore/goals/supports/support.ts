@@ -1,4 +1,4 @@
-import { db, admin, onDocumentCreate, onDocumentUpdate, onDocumentDelete, logger } from '../../../internals/firebase'
+import { db, admin, onDocumentCreate, onDocumentUpdate, onDocumentDelete } from '@strive/api/firebase'
 import {
   createGoal,
   createGoalStakeholder,

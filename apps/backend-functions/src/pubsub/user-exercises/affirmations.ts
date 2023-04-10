@@ -1,4 +1,4 @@
-import { admin } from '../../internals/firebase'
+import { admin } from '@strive/api/firebase'
 import type { Message } from 'firebase-admin/messaging'
 import { set, isPast, addDays, closestTo } from 'date-fns'
 import { Affirmations, Personal } from '@strive/model'
@@ -48,7 +48,7 @@ export async function scheduleNextAffirmation(userId: string, affirmations: Affi
 
 export function getNextAffirmationDate(affirmations: Affirmations): string {
   const now = new Date()
-  
+
   const times = affirmations.times.filter(time => time !== '')
   const dates = times
     // set date to today

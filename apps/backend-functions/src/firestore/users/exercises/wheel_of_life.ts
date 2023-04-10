@@ -1,5 +1,5 @@
 import { WheelOfLifeSettings } from '@strive/model'
-import { logger, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from 'apps/backend-functions/src/internals/firebase'
+import { logger, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { updateAggregation } from 'apps/backend-functions/src/shared/aggregation/aggregation'
 import { deleteScheduledTask, upsertScheduledTask } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task'
 import { enumWorkerType, ScheduledTaskUserExerciseWheelOfLife } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface'

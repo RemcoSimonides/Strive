@@ -1,13 +1,9 @@
-import * as admin from 'firebase-admin'
-import { logger } from 'firebase-functions'
+import { admin, logger, db, serverTimestamp } from '@strive/api/firebase'
 import type { Message } from 'firebase-admin/messaging'
 // Interfaces
 import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification, SupportBase } from '@strive/model'
 import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification'
 import { getDocument, toDate, unique } from '../utils'
-
-const db = admin.firestore()
-const { serverTimestamp } = admin.firestore.FieldValue
 
 export interface SendOptions {
   send: {

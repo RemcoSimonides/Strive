@@ -2,15 +2,21 @@ import 'zone.js/node'
 
 import { ngExpressEngine } from '@nguniversal/express-engine'
 import * as express from 'express'
+import { Express } from 'express'
 import { join } from 'path'
 
 import { AppServerModule } from './main.server'
 import { APP_BASE_HREF } from '@angular/common'
 import { existsSync } from 'fs'
 
+import { setupAPIEndpoints } from '@strive/api'
+
 // The Express app is exported so that it can be used by serverless Functions.
-export function app(): express.Express {
+export function app(): Express {
   const server = express()
+
+  setupAPIEndpoints(server)
+
   const distFolder = join(process.cwd(), 'dist/apps/journal/browser')
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index'
 
@@ -21,9 +27,6 @@ export function app(): express.Express {
 
   server.set('view engine', 'html')
   server.set('views', distFolder)
-
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { })
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {

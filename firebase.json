@@ -26,6 +26,8 @@
       "rewrites": [
         { "source": "/goal/*", "function": "ssr" },
         { "source": "/profile/*", "function": "ssr" },
+        { "source": "/api", "function": "ssr" },
+        { "source": "/api/*", "function": "ssr" },
         { "source": "/download", "destination": "download/index.html" },
         { "source": "/exercise", "destination": "exercise/index.html" },
         { "source": "/exercise/affirmations", "destination": "exercise/affirmations/index.html" },

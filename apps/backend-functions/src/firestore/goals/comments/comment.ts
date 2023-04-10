@@ -1,5 +1,4 @@
-import { logger } from 'firebase-functions'
-import { onDocumentCreate } from '../../../internals/firebase'
+import { logger, onDocumentCreate } from '@strive/api/firebase'
 
 import { createComment } from '@strive/model'
 import { toDate } from '../../../shared/utils'

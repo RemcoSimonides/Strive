@@ -1,4 +1,4 @@
-import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
+import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { DearFutureSelf } from '@strive/model'
 
 import { enumWorkerType, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../../../shared/scheduled-task/scheduled-task.interface'

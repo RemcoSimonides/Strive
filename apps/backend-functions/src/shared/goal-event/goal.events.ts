@@ -1,4 +1,4 @@
-import { serverTimestamp, db } from '../../internals/firebase'
+import { serverTimestamp, db } from '@strive/api/firebase'
 import { GoalSource, EventType, createGoalEvent } from '@strive/model'
 
 export function addGoalEvent(name: EventType, source: GoalSource, id?: string) {

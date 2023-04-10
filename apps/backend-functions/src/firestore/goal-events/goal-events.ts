@@ -1,10 +1,9 @@
 import { Goal, GoalEvent, createNotificationBase, SupportBase } from '@strive/model'
-import { logger } from 'firebase-functions'
-import { onDocumentCreate } from '../../internals/firebase'
+import { onDocumentCreate, logger } from '@strive/api/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification'
 import { getDocument, toDate } from '../../shared/utils'
 
-export const goalEventCreatedHandler = onDocumentCreate(`GoalEvents/{eventId}`, 'goalEventCreatedHandler', 
+export const goalEventCreatedHandler = onDocumentCreate(`GoalEvents/{eventId}`, 'goalEventCreatedHandler',
 async snapshot => {
 
   const event = toDate<GoalEvent>({ ...snapshot.data(), id: snapshot.id })
@@ -109,7 +108,7 @@ async snapshot => {
       return sendGoalEventNotification(event, options, true)
     }
 
-    case 'goalMilestoneCreated': 
+    case 'goalMilestoneCreated':
       break
 
     case 'goalMilestoneDeadlinePassed': {
@@ -136,7 +135,7 @@ async snapshot => {
       // TODO optional send push notification to spectators of new stakeholder
       // TOD send (push) notification to achievers of goal (except the person who accepted the request and the new stakeholder)
       break
-  
+
     case 'goalStakeholderInvitedToJoin': {
       return sendNotificationToUsers(notification, userId, 'user')
     }

@@ -4,10 +4,13 @@ import * as Storage from '@google-cloud/storage'
 import { environment } from '@env'
 import { wrapFirestoreOnCreateHandler, wrapFirestoreOnDeleteHandler, wrapFirestoreOnUpdateHandler } from './sentry'
 
+
 export type DocumentReference = admin.firestore.DocumentReference
 export const gcs = new Storage.Storage
 export const gcsBucket = gcs.bucket(environment.firebase.options.storageBucket)
+
 export { logger } from 'firebase-functions'
+export type { RuntimeOptions } from 'firebase-functions'
 
 admin.initializeApp()
 export const db = admin.firestore()

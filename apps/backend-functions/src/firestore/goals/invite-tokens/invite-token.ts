@@ -1,4 +1,4 @@
-import { onDocumentCreate } from '../../../internals/firebase'
+import { onDocumentCreate } from '@strive/api/firebase'
 import { upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 

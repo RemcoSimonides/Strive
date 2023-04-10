@@ -1,5 +1,5 @@
 import { Aggregation, AggregationKey, createAggregation } from '@strive/model'
-import { db, increment } from '../../internals/firebase'
+import { db, increment } from '@strive/api/firebase'
 
 export function updateAggregation(aggregation: Partial<Aggregation>) {
     const agg = createAggregation(aggregation)

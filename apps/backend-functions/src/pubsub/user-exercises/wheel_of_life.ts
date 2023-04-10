@@ -1,4 +1,4 @@
-import { admin } from '../../internals/firebase'
+import { admin } from '@strive/api/firebase'
 import type { Message } from 'firebase-admin/messaging'
 import { addWeeks, addMonths, addQuarters, addYears } from 'date-fns'
 import { Personal, WheelOfLifeSettings } from '@strive/model'
@@ -35,7 +35,7 @@ export async function scheduleNextReminder(settings: WheelOfLifeSettings, userId
   if (settings.interval === 'monthly') performAt = addMonths(now, 1)
   if (settings.interval === 'quarterly') performAt = addQuarters(now, 1)
   if (settings.interval === 'yearly') performAt = addYears(now, 1)
-    
+
   const task: ScheduledTaskUserExerciseWheelOfLife = {
     worker: enumWorkerType.userExerciseWheelOfLifeReminder,
     performAt,

@@ -1,4 +1,4 @@
-import { db, serverTimestamp } from '../../internals/firebase'
+import { db, serverTimestamp } from '@strive/api/firebase'
 import { createStoryItemBase, EventType, GoalSource  } from '@strive/model'
 
 export function addStoryItem(name: EventType, source: GoalSource, id?: string, date?: Date) {

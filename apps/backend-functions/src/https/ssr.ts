@@ -1,5 +1,4 @@
-import type { RuntimeOptions } from 'firebase-functions'
-import { functions } from '../internals/firebase'
+import { functions, RuntimeOptions } from '@strive/api/firebase'
 
 // __non_webpack_require__ ensure webpack uses *require* at runtime
 declare const __non_webpack_require__: any

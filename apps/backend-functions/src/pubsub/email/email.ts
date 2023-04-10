@@ -1,4 +1,4 @@
-import { db, functions } from '../../internals/firebase'
+import { db, functions } from '@strive/api/firebase'
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
@@ -8,12 +8,12 @@ import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNo
 import { groupIds, templateIds } from './ids'
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { toDate } from '../../shared/utils'
-import { wrapPubsubOnRunHandler } from '../../internals/sentry'
+import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 
 // // crontab.guru to determine schedule value
 // export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async () => {
-export const scheduledEmailRunner = functions().pubsub.schedule('0 0 1 * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner', 
+export const scheduledEmailRunner = functions().pubsub.schedule('0 0 1 * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner',
 async () => {
 
   const [ personalSnaps, motivation, newFeatures ] = await Promise.all([
@@ -35,7 +35,7 @@ async () => {
     ])
 
     const inProgressGoals = goals.filter(goal => inProgress(goal))
-    const bucketlistGoals = goals.filter(goal => inBucketlist(goal))  
+    const bucketlistGoals = goals.filter(goal => inBucketlist(goal))
     if (!inProgressGoals.length && !bucketlistGoals.length) continue
 
     const unreadNotifications = notifications.length
@@ -78,7 +78,7 @@ async function getGoals(stakeholders: GoalStakeholder[]): Promise<Goal[]> {
 
 async function getGoalEvents(stakeholders: GoalStakeholder[]): Promise<number> {
   const promises = stakeholders.map(stakeholder => db.collection(`GoalEvents`).where('goalId', '==', stakeholder.goalId).where('createdAt', '>', stakeholder.lastCheckedGoal).get())
-  const eventsSnaps = await Promise.all(promises)  
+  const eventsSnaps = await Promise.all(promises)
   const events = eventsSnaps.map(snap => snap.docs.map(doc => createGoalEvent(toDate({ ...doc.data(), id: doc.id }))))
   const flatten = events.reduce((acc, val) => acc.concat(val), [])
   const messages = flatten.map(event => storyEvents.includes(event.name)).length

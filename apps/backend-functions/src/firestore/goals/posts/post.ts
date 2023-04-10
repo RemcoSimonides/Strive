@@ -1,4 +1,4 @@
-import { db, gcsBucket, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
+import { db, gcsBucket, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { toDate } from '../../../shared/utils'
 import { createGoalSource, createPost } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
@@ -41,6 +41,6 @@ async (snapshot, context) => {
   if (post.mediaURL) {
     gcsBucket.file(post.mediaURL).delete({ ignoreNotFound: true })
   }
-  
+
   db.doc(`Goals/${goalId}/Story/${postId}`).delete()
 })

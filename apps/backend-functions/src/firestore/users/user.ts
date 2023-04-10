@@ -1,5 +1,4 @@
-import { db, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../internals/firebase'
-import { logger } from 'firebase-functions'
+import { db, logger, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
 import { createUser, createAlgoliaUser } from '@strive/model'
@@ -44,7 +43,7 @@ async (snapshot) => {
   supportBatch.commit()
 
   // TODO anonimyze comments from deleted user
-  
+
 
   // also delete subcollections
   deleteCollection(db, `Users/${uid}/Personal`, 500)

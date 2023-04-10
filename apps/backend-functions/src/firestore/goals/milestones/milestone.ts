@@ -1,4 +1,4 @@
-import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
+import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 
 import { Goal, createMilestone, Milestone, createGoalSource, SupportBase, createSupportBase } from '@strive/model'
 
@@ -66,7 +66,7 @@ async (snapshot, context) => {
   }
 
   // scheduled tasks
-  if (before.status === 'pending' && (after.status === 'succeeded' || after.status === 'failed')) { 
+  if (before.status === 'pending' && (after.status === 'succeeded' || after.status === 'failed')) {
     deleteScheduledTask(milestoneId)
   }
 
@@ -106,7 +106,7 @@ async function handleMilestoneEvents(before: Milestone, after: Milestone, goalId
 
 async function supportsNeedDecision(goalId: string, milestone: Milestone) {
   const supportsSnap = await db.collection(`Goals/${goalId}/Supports`).where('milestoneId', '==', milestone.id).get()
-  
+
   // TODO batch might get bigger than 500
   const batch = db.batch()
   const timestamp = serverTimestamp() as any

@@ -1,4 +1,4 @@
-import { db, functions, gcsBucket } from '../../internals/firebase'
+import { db, functions, gcsBucket } from '@strive/api/firebase'
 
 import { Personal } from '@strive/model'
 import { getDocument, unique } from '../../shared/utils'
@@ -8,7 +8,7 @@ import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { toDate } from '../../shared/utils'
 import { getImgIxResourceUrl } from '../../shared/image/image'
 import { isAfter, subDays } from 'date-fns'
-import { wrapPubsubOnRunHandler } from '../../internals/sentry'
+import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 
 function getFocusData(goal: Goal, stakeholder: GoalStakeholder): { goal: Partial<Goal>, stakeholder: GoalStakeholder } {

@@ -1,4 +1,4 @@
-import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
+import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 
 import { toDate } from '../../../shared/utils'
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
@@ -19,7 +19,7 @@ export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpect
   }
 )
 
-export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorChangeHandler', 
+export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorChangeHandler',
   async (snapshot, context) => {
 
     const before = createSpectator(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
@@ -39,7 +39,7 @@ export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpecta
 
     const { uidToBeSpectated, uidSpectator} = context.params
     const spectator = createSpectator(toDate({ ...snapshot.data(), id: snapshot.id }))
-  
+
     if (!spectator.isSpectator) return
 
     const userSnap = await db.doc(`Users/${uidToBeSpectated}`).get()
@@ -47,7 +47,7 @@ export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpecta
       changeNumberOfSpectators(uidToBeSpectated, -1)
     }
     changeNumberOfSpectating(uidSpectator, -1)
-  
+
   }
 )
 

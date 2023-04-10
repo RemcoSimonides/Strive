@@ -1,4 +1,4 @@
-import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '../../../internals/firebase'
+import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 
 import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createAggregation, createNotificationBase } from '@strive/model'
 import { toDate } from '../../../shared/utils'

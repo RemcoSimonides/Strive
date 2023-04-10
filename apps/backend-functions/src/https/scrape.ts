@@ -1,8 +1,7 @@
-import { functions } from '../internals/firebase'
-import { logger } from 'firebase-functions'
+import { functions, logger } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
 import fetch from 'node-fetch'
-import { wrapHttpsOnCallHandler } from '../internals/sentry'
+import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
 
 /**
  * This function is accessible to anyone, go here to change it

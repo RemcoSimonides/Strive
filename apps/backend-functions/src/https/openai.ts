@@ -1,7 +1,6 @@
-import { functions } from '../internals/firebase'
-import { logger } from 'firebase-functions'
+import { functions, logger } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
-import { wrapHttpsOnCallHandler } from '../internals/sentry'
+import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
 import { Configuration, OpenAIApi } from 'openai'
 
 /**

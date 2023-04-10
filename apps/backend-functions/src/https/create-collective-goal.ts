@@ -1,6 +1,6 @@
-import { db, functions, serverTimestamp, gcsBucket } from '../internals/firebase'
+import { db, functions, serverTimestamp, gcsBucket } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
-import { wrapHttpsOnCallHandler } from '../internals/sentry'
+import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
 import { createGoal, createGoalStakeholder, Goal, GoalStakeholder } from '@strive/model'
 
 export const createCollectiveGoal = functions().https.onCall(wrapHttpsOnCallHandler('createCollectiveGoal',

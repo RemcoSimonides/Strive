@@ -1,6 +1,6 @@
 import * as algoliasearch from 'algoliasearch'
 import { environment } from '@env'
-import { logger } from '../../internals/firebase'
+import { logger } from '@strive/api/firebase'
 
 const client: algoliasearch.SearchClient = algoliasearch.default(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY)
 let idx: algoliasearch.SearchIndex
