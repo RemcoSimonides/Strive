@@ -3,8 +3,9 @@ import { auth, logger } from './utils/firebase'
 
 export function setupAPIEndpoints(api: Express) {
 
-  // TODO implement health check endpoint
-
+  api.get('/api', async (req: Request, res: Response) => {
+    return res.status(200).send({ message: 'Hello achiever!' })
+  })
 
   api.get('/api/**', async (req: Request, res: Response) => {
 
