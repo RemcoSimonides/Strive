@@ -13,24 +13,24 @@ main {
 
     .thumb {
       $size: 60px;
-  
+
       display: flex;
       flex-direction: column;
       gap: 8px;
       position: relative;
       cursor: pointer;
-  
+
       ion-thumbnail {
         height: $size;
         width: $size;
         border-radius: 12px;
-      
-        img { 
+
+        img {
           border-radius: 12px;
           background-color: var(--ion-card-background);
         }
       }
-      
+
       small {
         display: block;
         max-width: $size;
@@ -40,7 +40,7 @@ main {
         margin: auto;
         color: var(--ion-color-medium);
       }
-  
+
       ion-badge {
         position: absolute;
         right: 0;
@@ -71,31 +71,10 @@ main {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    
+
     span.subtitle {
       text-align: center;
       color: var(--ion-color-medium);
-    }
-  }
-
-  .wheel_of_life {
-    display: flex;
-    width: fit-content;
-    margin-top: 128px;
-    align-self: center;
-
-    ion-item {
-      --padding-start: 0;
-
-      ion-thumbnail {
-        position: relative;
-        border-radius: 12px;
-      
-        img {
-          border-radius: 12px;
-          object-fit: cover;
-        }
-      }
     }
   }
 
