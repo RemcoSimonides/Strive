@@ -1,6 +1,6 @@
 <ng-container *ngIf="screenSize.isMobile$ | async">
 	<ion-tabs mode="md">
-		<ion-tab-bar slot="bottom" *ngIf="profile$ | async as you">
+		<ion-tab-bar slot="bottom" *ngIf="profile$ | async as you" [scrollable]="true">
 
 			<ion-tab-button tab="goals">
 				<ion-icon
@@ -20,7 +20,7 @@
 
 			<ion-tab-button tab="explore" [routerLink]="['/explore']">
 				<ion-icon
-					name="earth-sharp"
+					name="search-sharp"
 					[color]="(exploreActive$ | async) ? 'primary' : 'inherit'"
 				/>
 				<ion-label [color]="(exploreActive$ | async) ? 'primary' : 'inherit'">Explore</ion-label>
