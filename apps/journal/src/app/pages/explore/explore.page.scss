@@ -5,11 +5,11 @@ main {
 }
 
 header {
-  padding: 96px;
-  background-image: url("/assets/images/banner.png");
+  padding: 60px;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--ion-background-color)), url("/assets/images/banner.png");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: bottom;
+  background-position: top;
 
   form {
     width: 100%;
