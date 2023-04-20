@@ -24,7 +24,7 @@
         </ng-template>
       </ng-container> -->
       <ng-template swiperSlide>
-        <strive-goal-slide-3 [form]="form" [goalId]="goal.id" />
+        <strive-goal-slide-3 [form]="form" [goalId]="goal.id" [query]="pexelsQuery" (stepper)="stepper($event)" />
       </ng-template>
       <ng-template swiperSlide>
         <strive-goal-slide-4 [goalId]="goal.id" [form]="form" [suggestion]="suggestion$ | async" />

@@ -35,6 +35,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
 
   @Input() goal = createGoal()
 
+  pexelsQuery = ''
   suggestion$ = new BehaviorSubject<string | undefined>(undefined)
 
   constructor(
@@ -76,6 +77,7 @@ export class UpsertGoalModalComponent extends ModalDirective implements OnInit {
           this.created = true
 
           const title = this.form.title.value
+          this.pexelsQuery = title
           const deadline = format(this.form.deadline.value, 'dd MMMM yyyy')
           const now = format(new Date(), 'dd MMMM yyyy')
           const country = getCountry() ?? 'the Netherlands'

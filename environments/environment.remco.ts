@@ -20,6 +20,9 @@ export const environment = {
     apiKey: "db3455ecf457168f65d91c4238522f04",
     indexNameGoals: 'dev_Goals',
     indexNameUsers: 'dev_Users'
+  },
+  pexels: {
+    apikey: 'cgINQggV3efRS17LqzHMz7j94VyvvUK8IgQwz31irTAGvnKeJFeFq9NQ'
   }
 }
 

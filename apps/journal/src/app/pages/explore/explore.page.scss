@@ -15,10 +15,12 @@ header {
     width: 100%;
     max-width: 600px;
     margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
     ion-card {
       width: fit-content;
-      margin: 8px;
       border-radius: 12px;
 
       ion-select {

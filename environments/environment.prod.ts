@@ -18,6 +18,9 @@ export const environment = {
     indexNameGoals: 'prod_Goals',
     indexNameUsers: 'prod_Users'
   },
+  pexels: {
+    apikey: 'cgINQggV3efRS17LqzHMz7j94VyvvUK8IgQwz31irTAGvnKeJFeFq9NQ'
+  }
 }
 
 export const vapidKey = 'BKj9FmfZe_rm1L-PRhytI_4AgCcmwJdHjKaegw5buVk5Eo7Pu3T3vf__EjlUgUfV2TAbBdzLQkDfwrwPJxjBYDI'

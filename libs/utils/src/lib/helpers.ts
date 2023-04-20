@@ -26,7 +26,7 @@ export function unique<T>(array: T[]) {
  * @param endWith
  * @returns
  */
- export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
   const last = str.pop()
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`
 }
@@ -45,9 +45,9 @@ export function isValidHttpUrl(_url: string) {
       return value.protocol === "http:" || value.protocol === "https:"
     } catch (_) {
       return false
-    } 
+    }
   }
-   
+
   const regExTest = (url: string) => {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
