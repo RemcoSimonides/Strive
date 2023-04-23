@@ -1,18 +1,26 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core'
-import { PopoverController } from '@ionic/angular'
-// import { isPast } from 'date-fns'
-
+import { ReactiveFormsModule } from '@angular/forms'
+import { IonicModule, PopoverController } from '@ionic/angular'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 
 @Component({
-  selector: '[form] strive-goal-slide-1',
-  templateUrl: './slide-1.component.html',
-  styleUrls: ['./slide-1.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  selector: '[form] strive-goal-details',
+  templateUrl: './details.component.html',
+  styleUrls: ['./details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonicModule,
+    ReactiveFormsModule,
+    DeadlinePopoverSComponent
+  ]
 })
-export class Slide1Component {
-  @Input() form!: GoalForm
+export class GoalDetailsComponent {
+
+  @Input() form?: GoalForm
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -27,7 +35,7 @@ export class Slide1Component {
       componentProps: { caption }
     })
     popover.onDidDismiss().then(({ data }) => {
-      if (data) {
+      if (data && this.form) {
         this.form.deadline.setValue(data)
         this.form.deadline.markAsDirty()
       }
@@ -35,12 +43,4 @@ export class Slide1Component {
     })
     popover.present()
   }
-
-  // toggle(event: ToggleCustomEvent) {
-  //   this.hasFocus.emit(event.detail.checked)
-  // }
-
-  // isOverdue(date: Date) {
-  //   return isPast(date)
-  // }
 }

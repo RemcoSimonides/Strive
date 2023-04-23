@@ -87,6 +87,7 @@ export class ImageDirective implements OnInit, OnDestroy {
         // ref
         if (isValidHttpUrl(ref)) {
           this.src = ref
+          this.srcset = ref
         } else {
           this.srcset = getImgIxResourceUrl(ref, params)
           this.src = this.srcset.split(' ')[0]

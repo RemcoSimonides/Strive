@@ -18,11 +18,11 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 
-import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.module'
 import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PagenotfoundModule } from '@strive/ui/404/404.module'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
@@ -46,7 +46,6 @@ const routes: Routes = [
     FollowingModule,
     FollowersModule,
     GoalOptionsModule,
-    UpsertGoalModalModule,
     EditProfileImagePopoverModule,
     ImageZoomModalModule,
     HeaderRootModule,
@@ -54,7 +53,8 @@ const routes: Routes = [
     ProgressPipeModule,
     SupportingModule,
     GoalThumbnailModule,
-    PagenotfoundModule
+    PagenotfoundModule,
+    GoalCreateModalComponent
   ],
   declarations: [
     ProfilePageComponent

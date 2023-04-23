@@ -154,8 +154,8 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   remove() {
-    if (!this.form) return
-    const isHttpUrl = isValidHttpUrl(this.form.value) // it's an http url if image is fetched from other website for Post in Story
+    if (!this.form?.value) return
+    const isHttpUrl = isValidHttpUrl(this.form.value) // it's an http url if image is fetched from other website for Post in Story or from pexels
 
     if (!isHttpUrl) { // if its not an http url, its a reference path in storage
       deleteObject(ref(getStorage(), this.form.value))

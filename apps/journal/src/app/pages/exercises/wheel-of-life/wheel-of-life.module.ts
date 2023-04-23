@@ -13,6 +13,7 @@ import { HeaderModule } from '@strive/ui/header/header.module'
 import { WheelOfLifeEntryModule } from '@strive/exercises/wheel-of-life/components/entry/entry.module'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
 import { WheelOfLifeResultsModule } from '@strive/exercises/wheel-of-life/components/results/results.module'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 
 import { EntryPipeModule } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
 
@@ -35,7 +36,8 @@ const routes: Routes = [
     WheelOfLifeEntryModule,
     EntryModalModule,
     WheelOfLifeResultsModule,
-    EntryPipeModule
+    EntryPipeModule,
+    GoalCreateModalComponent
   ],
   declarations: [WheelOfLifePageComponent]
 })

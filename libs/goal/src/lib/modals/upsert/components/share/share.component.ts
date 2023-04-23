@@ -1,24 +1,28 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { PopoverController } from '@ionic/angular'
+import { IonicModule, PopoverController } from '@ionic/angular'
 import { Share } from '@capacitor/share'
-// Strive
-import { GoalForm } from '@strive/goal/forms/goal.form'
+
+import { Goal } from '@strive/model'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
-import { GoalSharePopoverComponent } from '../../../../popovers/share/share.component'
-import { createGoal, exercises } from '@strive/model'
 import { captureException, captureMessage } from '@sentry/capacitor'
+import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 
 @Component({
-  selector: '[form][goalId] strive-goal-slide-5',
-  templateUrl: './slide-5.component.html',
-  styleUrls: ['./slide-5.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  selector: '[goal] strive-goal-share',
+  templateUrl: './share.component.html',
+  styleUrls: ['./share.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonicModule,
+    GoalSharePopoverComponent
+  ]
 })
-export class Slide5Component {
-  @Input() form!: GoalForm
-  @Input() goalId!: string
+export class GoalShareComponent {
 
-  exercises = exercises.filter(exercise => ['affirmations', 'daily_gratitude', 'dear_future_self'].includes(exercise.id) )
+  @Input() goal?: Goal
 
   constructor(
     private inviteTokenService: InviteTokenService,
@@ -26,17 +30,18 @@ export class Slide5Component {
   ) {}
 
   async openSharePopover(ev: UIEvent) {
-    const goal = createGoal({ ...this.form.getGoalValue(), id: this.goalId })
+    if (!this.goal) return
 
-    const isSecret = goal.publicity !== 'public'
-    const url = await this.inviteTokenService.getShareLink(this.goalId, isSecret, true)
+    const { id, title, publicity } = this.goal
+    const isSecret = publicity !== 'public'
+    const url = await this.inviteTokenService.getShareLink(id, isSecret, true)
 
     const canShare = await Share.canShare()
     if (canShare.value) {
 
       try {
         await Share.share({
-          title: goal.title,
+          title,
           text: 'Check out this goal',
           url,
           dialogTitle: 'Together we achieve!'

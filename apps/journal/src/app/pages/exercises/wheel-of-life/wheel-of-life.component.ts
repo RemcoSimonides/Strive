@@ -8,7 +8,7 @@ import { firstValueFrom, map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { Interval } from '@strive/model'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -91,7 +91,7 @@ export class WheelOfLifePageComponent implements OnDestroy {
 
   async createGoal() {
     const modal = await this.modalCtrl.create({
-      component: UpsertGoalModalComponent
+      component: GoalCreateModalComponent
     })
     modal.onDidDismiss().then((data) => {
       const navToGoal = data.data?.['navToGoal']

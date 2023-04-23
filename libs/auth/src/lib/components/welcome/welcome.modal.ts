@@ -6,7 +6,7 @@ import { Capacitor } from '@capacitor/core'
 import { SwiperComponent } from 'swiper/angular'
 import { combineLatest, map, of } from 'rxjs'
 
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
@@ -62,7 +62,7 @@ export class WelcomeModalComponent {
   createGoal() {
     this.modalCtrl.dismiss()
     this.modalCtrl.create({
-      component: UpsertGoalModalComponent
+      component: GoalCreateModalComponent
     }).then(modal => {
       modal.onDidDismiss().then((data) => {
         const navToGoal = data.data?.['navToGoal']

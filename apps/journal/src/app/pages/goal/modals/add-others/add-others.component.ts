@@ -9,7 +9,6 @@ import { BehaviorSubject, combineLatest, map, Observable, of, ReplaySubject, sta
 
 // Components
 import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
-import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 // Services
@@ -72,7 +71,7 @@ export class InviteTextPipe implements PipeTransform {
     ImageModule,
     SubtitlePipe,
     InviteTextPipe,
-    GoalSharePopoverModule,
+    GoalSharePopoverComponent,
     HeaderModalComponent
   ]
 })

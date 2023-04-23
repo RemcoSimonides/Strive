@@ -21,7 +21,7 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { GoalUpdatesModalComponent } from '@strive/goal/modals/goal-updates/goal-updates.component'
 import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
@@ -168,10 +168,10 @@ export class GoalsPageComponent implements OnDestroy {
 
   createGoal() {
     this.modalCtrl.create({
-      component: UpsertGoalModalComponent
+      component: GoalCreateModalComponent
     }).then(modal => {
-      modal.onDidDismiss().then((data) => {
-        const navToGoal = data.data?.['navToGoal']
+      modal.onDidDismiss().then(({ data }) => {
+        const navToGoal = data['navToGoal']
         if (navToGoal) this.router.navigate(['/goal', navToGoal ])
       })
       modal.present()

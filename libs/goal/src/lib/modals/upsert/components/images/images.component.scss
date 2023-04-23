@@ -1,10 +1,7 @@
-ion-item {
-  border-radius: 12px;
-}
-
-small {
-  display: block;
-  margin-bottom: 16px;
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 strive-image-selector {
@@ -13,13 +10,18 @@ strive-image-selector {
 
 header {
   display: flex;
-  align-items: center;
-  gap: 16px;
-}
+  flex-direction: column;
+  gap: 8px;
 
-.poweredby {
-  color: gray;
-  margin-top: 8px;
+  article {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .poweredby {
+    color: gray;
+  }
 }
 
 ul {
@@ -46,6 +48,11 @@ ul {
       justify-content: center;
       background-color: rgba(0,0,0,.5);
       border-radius: 12px;
+
+      ion-icon {
+        font-size: 40px;
+        color: white;
+      }
     }
   }
 }

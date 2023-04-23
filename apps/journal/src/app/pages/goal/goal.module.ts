@@ -8,10 +8,10 @@ import { GoalPageComponent } from './goal.page'
 import { GoalOptionsModule } from './popovers/options/options.module'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 
-import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.module'
+import { GoalUpdateModalComponent } from '@strive/goal/modals/upsert/update/update.component'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
-import { GoalSharePopoverModule } from '@strive/goal/popovers/share/share.module'
+import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
 
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
@@ -50,8 +50,8 @@ const routes: Routes = [
 
     // Strive
     GoalOptionsModule,
-    GoalSharePopoverModule,
-    UpsertGoalModalModule,
+    GoalSharePopoverComponent,
+    GoalUpdateModalComponent,
     AchieversModalComponent,
     SpectatorsModalComponent,
     SupportersModalComponent,

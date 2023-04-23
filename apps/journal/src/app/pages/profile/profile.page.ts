@@ -18,7 +18,7 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.component'
 import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
@@ -155,7 +155,7 @@ export class ProfilePageComponent {
 
   createGoal() {
     this.modalCtrl.create({
-      component: UpsertGoalModalComponent
+      component: GoalCreateModalComponent
     }).then(modal => {
       modal.onDidDismiss().then((data) => {
         const navToGoal = data.data?.['navToGoal']

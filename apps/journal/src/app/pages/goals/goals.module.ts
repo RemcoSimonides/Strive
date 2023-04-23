@@ -9,7 +9,7 @@ import { GoalsPageComponent } from './goals.page'
 
 // Strive
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
-import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.module'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
@@ -38,7 +38,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingModule,
     HeaderRootModule,
-    UpsertGoalModalModule,
+    GoalCreateModalComponent,
     ImageModule,
     GoalOptionsModule,
     HomePageModule,

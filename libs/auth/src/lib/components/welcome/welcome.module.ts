@@ -7,7 +7,7 @@ import { SwiperModule } from 'swiper/angular'
 import { WelcomeModalComponent } from './welcome.modal'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.module'
+import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 
 
 @NgModule({
@@ -16,7 +16,7 @@ import { UpsertGoalModalModule } from '@strive/goal/modals/upsert/goal-upsert.mo
     SwiperModule,
     IonicModule,
     ImageModule,
-    UpsertGoalModalModule
+    GoalCreateModalComponent
   ],
   declarations: [
     WelcomeModalComponent

@@ -12,14 +12,14 @@ import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/ope
 import { Capacitor } from '@capacitor/core'
 import { Share } from '@capacitor/share'
 // Sentry
-import { captureException, captureMessage } from '@sentry/angular'
+import { captureException } from '@sentry/angular'
 // Date fns
 import { isEqual, isPast } from 'date-fns'
 // Strive Utils
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options/options.component'
-import { UpsertGoalModalComponent } from '@strive/goal/modals/upsert/goal-upsert.component'
+import { GoalUpdateModalComponent } from '@strive/goal/modals/upsert/update/update.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 import { FocusModalComponent } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.component'
@@ -306,7 +306,7 @@ export class GoalPageComponent implements OnDestroy {
 
   private editGoal(goal: Goal) {
     this.modalCtrl.create({
-      component: UpsertGoalModalComponent,
+      component: GoalUpdateModalComponent,
       componentProps: { goal }
     }).then(modal => modal.present())
   }
