@@ -109,9 +109,8 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
 
   async search(query: string) {
     if (!query) {
-      this.images$.next([])
       this.done$.next(true)
-      return
+      return []
     }
 
     const per_page = 18
@@ -144,7 +143,7 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
       delay(5000),
       this.search(this.queryFormControl.value).then(images => {
         const currentImages = this.images$.value ?? []
-        if (images) this.images$.next([...currentImages, ...images])
+        this.images$.next([...currentImages, ...images])
       })
     ])
 
