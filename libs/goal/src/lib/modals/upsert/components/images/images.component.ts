@@ -114,7 +114,7 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
       return
     }
 
-    const per_page = 15
+    const per_page = 18
     const page = this.page$.value
 
     const result = await this.pexels.photos.search({
