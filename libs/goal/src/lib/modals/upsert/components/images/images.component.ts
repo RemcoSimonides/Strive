@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { environment } from '@env'
-import { IonicModule } from '@ionic/angular'
+import { InfiniteScrollCustomEvent, IonicModule } from '@ionic/angular'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { ErrorResponse, PhotosWithTotalResults, createClient } from 'pexels'
-import { BehaviorSubject, debounceTime } from 'rxjs'
+import { BehaviorSubject, debounceTime, delay } from 'rxjs'
 
 interface Image {
   src: string
@@ -34,10 +34,19 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
 
   pexels = createClient(environment.pexels.apikey)
   images$ = new BehaviorSubject<Image[] | undefined>(undefined)
+  done$ = new BehaviorSubject<boolean>(false)
+  page$ = new BehaviorSubject<number>(1)
+
   queryFormControl = new FormControl()
   querySub = this.queryFormControl.valueChanges.pipe(
     debounceTime(1000)
-  ).subscribe(async query => this.search(query))
+  ).subscribe(async query => {
+    this.page$.next(1)
+    this.done$.next(false)
+
+    const images = await this.search(query)
+    this.images$.next(images)
+  })
 
   @Input() goalId?: string
   @Input() form?: GoalForm
@@ -101,23 +110,45 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
   async search(query: string) {
     if (!query) {
       this.images$.next([])
+      this.done$.next(true)
       return
     }
+
+    const per_page = 15
+    const page = this.page$.value
 
     const result = await this.pexels.photos.search({
       query,
       orientation: 'square',
-      per_page: 15,
+      per_page,
+      page
     })
 
     if (isErrorResponse(result)) throw new Error(result.error)
 
-    const images = result.photos.map(p => ({
+    const { total_results } = result
+    const total_pages = Math.ceil(total_results / per_page)
+
+    if (page >= total_pages) this.done$.next(true)
+
+    return result.photos.map(p => ({
       src: p.src.large,
       selected: false
     }))
+  }
 
-    this.images$.next(images)
+  async more($event: InfiniteScrollCustomEvent) {
+    this.page$.next(this.page$.value + 1)
+
+    await Promise.race([
+      delay(5000),
+      this.search(this.queryFormControl.value).then(images => {
+        const currentImages = this.images$.value ?? []
+        if (images) this.images$.next([...currentImages, ...images])
+      })
+    ])
+
+    $event.target.complete()
   }
 
   cropImage() {
@@ -125,6 +156,7 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
       this.imageSelector.cropIt()
     }
   }
+
 }
 
 function isErrorResponse(result: PhotosWithTotalResults | ErrorResponse): result is ErrorResponse {

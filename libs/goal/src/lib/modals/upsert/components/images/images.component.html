@@ -25,17 +25,26 @@
 <ng-container *ngIf="images$ | async as images; else loading">
   <ng-container *ngIf="images; else loading">
 
-    <ul *ngIf="images.length; else empty">
-      <ng-container *ngFor="let image of images">
-        <li (click)="selectImage(image.src)">
-          <img [src]="image.src">
-          <div *ngIf="image.selected">
-            <ion-icon name="checkmark-outline" />
-            <span>SELECTED</span>
-          </div>
-        </li>
-      </ng-container>
-    </ul>
+    <ng-container *ngIf="images.length; else empty">
+      <ul>
+        <ng-container *ngFor="let image of images">
+          <li (click)="selectImage(image.src)">
+            <img [src]="image.src">
+            <div *ngIf="image.selected">
+              <ion-icon name="checkmark-outline" />
+              <span>SELECTED</span>
+            </div>
+          </li>
+        </ng-container>
+
+        <ion-infinite-scroll position="bottom" threshold="100px" (ionInfinite)="more($event)" [disabled]="done$ | async">
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Loading more images..."
+          />
+        </ion-infinite-scroll>
+      </ul>
+    </ng-container>
 
   </ng-container>
 </ng-container>
