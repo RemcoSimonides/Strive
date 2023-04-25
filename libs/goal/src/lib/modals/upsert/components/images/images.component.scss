@@ -4,8 +4,12 @@
   gap: 16px;
 }
 
-strive-image-selector {
-  width: 100%;
+ion-card {
+  box-shadow: none;
+
+  strive-image-selector {
+    width: 100%;
+  }
 }
 
 header {
