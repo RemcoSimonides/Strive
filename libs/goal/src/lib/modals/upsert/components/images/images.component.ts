@@ -118,7 +118,6 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
 
     const result = await this.pexels.photos.search({
       query,
-      orientation: 'square',
       per_page,
       page
     })
