@@ -11,7 +11,9 @@
         <ion-list mode="md" lines="full">
           <ion-item (click)="joinGoal()" button>
             <section>
-              <span>{{ stakeholder.isAdmin ? 'Join' : 'Request to Join' }}</span>
+              <ion-button color="primary">
+                {{ stakeholder.isAdmin ? 'Join' : 'Request to Join' }}
+              </ion-button>
               <small>
                 <ul>
                   <li>All achievers work together<br/>(e.g. renovate bathroom or a travel together)</li>
@@ -19,11 +21,15 @@
                 </ul>
               </small>
             </section>
-            <ion-icon slot="end" name="chevron-forward-outline" />
+          </ion-item>
+          <ion-item lines="full">
+            <small class="center">or</small>
           </ion-item>
           <ion-item (click)="createCollectiveGoal()" button lines="none">
             <section>
-              <span>Separate Roadmap and Story</span>
+              <ion-button color="primary">
+                Separate Roadmap and Story
+              </ion-button>
               <small>
                 <ul>
                   <li>You have the same goal but it is your own challenge<br/>(e.g. run marathon or graduating university)</li>
@@ -31,7 +37,6 @@
                 </ul>
               </small>
             </section>
-            <ion-icon slot="end" name="chevron-forward-outline" />
           </ion-item>
         </ion-list>
       </ng-container>

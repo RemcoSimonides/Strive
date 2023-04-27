@@ -13,14 +13,14 @@ ion-popover {
   section {
     display: flex;
     flex-direction: column;
-  
-    span {
-      margin-top: 8px;
+    margin-bottom: 16px;
+
+    ion-button {
+      margin-block: 16px;
     }
 
     small {
       margin-top: 4px;
-      color: var(--ion-color-medium);
 
       ul {
         margin-top: 0;
@@ -30,15 +30,19 @@ ion-popover {
     }
   }
 
+  .center {
+    margin: auto;
+    color: var(--ion-color-medium);
+  }
+
   .creating {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
     padding: 32px;
-    
     small {
       color: var(--ion-color-medium);
     }
-  } 
+  }
 }

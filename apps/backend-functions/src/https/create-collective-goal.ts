@@ -1,12 +1,12 @@
 import { db, functions, serverTimestamp, gcsBucket } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
 import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
-import { createGoal, createGoalStakeholder, Goal, GoalStakeholder } from '@strive/model'
+import { createGoal, createGoalStakeholder, Goal } from '@strive/model'
 
 export const createCollectiveGoal = functions().https.onCall(wrapHttpsOnCallHandler('createCollectiveGoal',
-async (data: { goal: Goal, stakeholder: GoalStakeholder }): Promise<ErrorResultResponse> => {
+async (data: { goal: Goal, uid: string }): Promise<ErrorResultResponse> => {
 
-  const { goal, stakeholder } = data
+  const { goal, uid } = data
   const collectiveGoalId = goal.collectiveGoalId ? goal.collectiveGoalId : goal.id
   const batch = db.batch()
 
@@ -22,7 +22,7 @@ async (data: { goal: Goal, stakeholder: GoalStakeholder }): Promise<ErrorResultR
 
   const goalId = db.collection('abc').doc().id
   const goalRef = db.doc(`Goals/${goalId}`)
-  const stakeholderRef = goalRef.collection(`GStakeholders`).doc(stakeholder.uid)
+  const stakeholderRef = goalRef.collection(`GStakeholders`).doc(uid)
 
   // copy image
   let image = ''
@@ -42,11 +42,11 @@ async (data: { goal: Goal, stakeholder: GoalStakeholder }): Promise<ErrorResultR
     collectiveGoalId,
     createdAt: serverTimestamp() as any,
     updatedAt: serverTimestamp() as any,
-    updatedBy: stakeholder.uid
+    updatedBy: uid
   })
 
   const newStakeholder = createGoalStakeholder({
-    uid: stakeholder.uid,
+    uid: uid,
     goalId,
     goalPublicity: goal.publicity,
     collectiveGoalId,
@@ -55,7 +55,7 @@ async (data: { goal: Goal, stakeholder: GoalStakeholder }): Promise<ErrorResultR
     isSpectator: true,
     createdAt: serverTimestamp() as any,
     updatedAt: serverTimestamp() as any,
-    updatedBy: stakeholder.uid
+    updatedBy: uid
   })
 
   batch.set(goalRef, newGoal)

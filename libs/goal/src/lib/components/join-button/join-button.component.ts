@@ -88,7 +88,7 @@ export class JoinButtonComponent {
     }
 
     if (!isAchiever && !hasOpenRequestToJoin) {
-      if (!this.popover) throw new Error('Popover undfined') 
+      if (!this.popover) throw new Error('Popover undefined')
       this.popover.onDidDismiss().then(() => this.status$.next('choose'))
       this.popover?.present()
       return
@@ -141,7 +141,7 @@ export class JoinButtonComponent {
     const createCollectiveGoalFn = httpsCallable(getFunctions(), 'createCollectiveGoal')
     const collectiveGoal = await createCollectiveGoalFn({
       goal: this.goal,
-      stakeholder: this.stakeholder
+      uid: this.auth.uid
     })
 
     this.status$.next('created')
