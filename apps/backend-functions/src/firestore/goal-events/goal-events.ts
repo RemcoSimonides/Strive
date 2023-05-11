@@ -19,15 +19,9 @@ async snapshot => {
       if (goal.publicity === 'public') {
 
         const options: SendOptions = {
-          send: {
-            toSpectator: {
-              notification: true,
-              pushNotification: true
-            }
-          },
-          roles: {
-            isAdmin: true,
-            isAchiever: true
+          toSpectator: {
+            notification: 'isAchiever',
+            pushNotification: 'userSpectatingGeneral' // always achiever
           }
         }
         return sendGoalEventNotification(event, options, false)
@@ -37,12 +31,10 @@ async snapshot => {
 
     case 'goalDeadlinePassed': {
       const options: SendOptions = {
-        send: {
+        toStakeholder: {
           notification: true,
-          pushNotification: true
-        },
-        roles: {
-          isAchiever: true
+          pushNotification: true,
+          role: 'isAchiever'
         }
       }
       return sendGoalEventNotification(event, options, false)
@@ -50,11 +42,9 @@ async snapshot => {
 
     case 'goalDeleted': {
       const options: SendOptions = {
-        send: {
-          notification: true
-        },
-        roles: {
-          isSupporter: true
+        toStakeholder: {
+          notification: true,
+          role: 'isSupporter'
         }
       }
       return sendGoalEventNotification(event, options, true)
@@ -63,32 +53,30 @@ async snapshot => {
     case 'goalFinishedSuccessfully': {
       const goal = await getDocument<Goal>(`Goals/${goalId}`)
       const options: SendOptions = {
-        send: {
+        toStakeholder: {
           notification: true,
           pushNotification: true,
-          toSpectator: {
-            pushNotification: goal.publicity === 'public'
-          }
+          role: 'isSpectator',
         },
-        roles: {
-          isAdmin: true,
-          isAchiever: true,
-          isSupporter: true
+        toSpectator: {
+          pushNotification: goal.publicity === 'public' ? 'userSpectatingGeneral' : undefined
         }
+        // roles: {
+          // isAdmin: true,
+          // isAchiever: true,
+          // TODO should also send notification to supporters about their supports
+          // isSpectator: true
+        // }
       }
       return sendGoalEventNotification(event, options, true)
     }
 
     case 'goalFinishedUnsuccessfully': {
       const options: SendOptions = {
-        send: {
+        toStakeholder: {
           notification: true,
-          pushNotification: true
-        },
-        roles: {
-          isAdmin: true,
-          isAchiever: true,
-          isSupporter: true
+          pushNotification: true,
+          role: 'isSpectator'
         }
       }
       return sendGoalEventNotification(event, options, true)
@@ -96,13 +84,9 @@ async snapshot => {
 
     case 'goalStoryPostCreated': {
       const options: SendOptions = {
-        send: {
-          pushNotification: true
-        },
-        roles: {
-          isAdmin: true,
-          isAchiever: true,
-          isSupporter: true
+        toStakeholder: {
+          pushNotification: true,
+          role: 'isSpectator'
         }
       }
       return sendGoalEventNotification(event, options, true)
@@ -113,12 +97,10 @@ async snapshot => {
 
     case 'goalMilestoneDeadlinePassed': {
       const options: SendOptions = {
-        send: {
+        toStakeholder: {
           notification: true,
-          pushNotification: true
-        },
-        roles: {
-          isAchiever: true
+          pushNotification: true,
+          role: 'isAchiever'
         }
       }
       return sendGoalEventNotification(event, options, false)
@@ -133,7 +115,7 @@ async snapshot => {
       break
     case 'goalStakeholderBecameAchiever':
       // TODO optional send push notification to spectators of new stakeholder
-      // TOD send (push) notification to achievers of goal (except the person who accepted the request and the new stakeholder)
+      // TODO send (push) notification to achievers of goal (except the person who accepted the request and the new stakeholder)
       break
 
     case 'goalStakeholderInvitedToJoin': {
@@ -142,11 +124,9 @@ async snapshot => {
 
     case 'goalStakeholderRequestedToJoin': {
       const options: SendOptions = {
-        send: {
-          pushNotification: true
-        },
-        roles: {
-          isAdmin: true
+        toStakeholder: {
+          pushNotification: true,
+          role: 'isAdmin'
         }
       }
       return sendGoalEventNotification(event, options, true)
@@ -159,13 +139,9 @@ async snapshot => {
 
     case 'goalChatMessageCreated': {
       const options: SendOptions = {
-        send: {
-          pushNotification: true
-        },
-        roles: {
-          isAdmin: true,
-          isSupporter: true,
-          isAchiever: true
+        toStakeholder: {
+          pushNotification: true,
+          role: 'isSpectator'
         }
       }
       return sendGoalEventNotification(event, options, true)

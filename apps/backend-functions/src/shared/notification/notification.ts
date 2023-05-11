@@ -1,23 +1,19 @@
 import { admin, logger, db, serverTimestamp } from '@strive/api/firebase'
 import type { Message } from 'firebase-admin/messaging'
 // Interfaces
-import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification, SupportBase } from '@strive/model'
-import { getPushMessage, PushMessage, PushNotificationTarget } from '@strive/notification/message/push-notification'
+import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification, SupportBase, GoalStakeholder, Roles, PushNotificationSettingKey } from '@strive/model'
+import { getPushMessage, PushMessage, PushNotificationSetting, PushNotificationTarget } from '@strive/notification/message/push-notification'
 import { getDocument, toDate, unique } from '../utils'
 
 export interface SendOptions {
-  send: {
+  toStakeholder?: {
     notification?: boolean
-    pushNotification?: boolean,
-    toSpectator?: {
-      notification?: boolean
-      pushNotification?: boolean
-    }
-  },
-  roles: {
-    isAdmin?: boolean
-    isAchiever?: boolean
-    isSupporter?: boolean
+    pushNotification?: boolean
+    role: keyof Roles
+  }
+  toSpectator?: {
+    notification?: keyof Pick<Roles, 'isAchiever'>
+    pushNotification?: Extract<PushNotificationSettingKey, 'userSpectatingGeneral'>
   }
 }
 
@@ -46,7 +42,7 @@ export async function sendNotificationToUsers(notificationBase: NotificationBase
     if (support) notification.support = support
     if (user) notification.user = user
 
-    const message = getPushMessage(notification, pushNotification)
+    const message = getPushMessage(notification, 'user')
     if (message) sendPushNotificationToUsers(message, recipients)
   }
 }
@@ -57,16 +53,19 @@ export async function sendGoalEventNotification(
   excludeTriggerer: boolean
 ) {
   const { goalId, userId, milestoneId, supportId } = event
-  const except =  excludeTriggerer ? userId : ''
 
   const notificationBase = createNotificationBase({ ...event, event: event.name })
   const notification: Notification = createNotificationBase(notificationBase)
 
-  const { send, roles } = options
-  const stakeholders = await getGoalStakeholders(goalId, roles)
-  const stakeholdersExceptTriggerer = stakeholders.filter(uid => uid !== except)
+  const roles: Partial<Roles> = {}
+  if (options.toStakeholder) roles[options.toStakeholder?.role] = true
+  if (options.toSpectator?.notification) roles[options.toSpectator.notification] = true
 
-  if (send.pushNotification || send.toSpectator?.pushNotification) {
+  const all = await getGoalStakeholders(goalId, roles)
+  const except =  excludeTriggerer ? userId : ''
+  const stakeholders = except ? all.filter(stakeholder => stakeholder.uid !== except) : all
+
+  if (options.toStakeholder?.pushNotification || options.toSpectator?.pushNotification) {
     const goalPromise = getDocument<Goal>(`Goals/${goalId}`).then(goal => notification.goal = goal)
     const milestonePromise = milestoneId ? getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`).then(milestone => notification.milestone = milestone) : undefined
     const supportPromise = supportId ? getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`).then(support => notification.support = support) : undefined
@@ -74,38 +73,40 @@ export async function sendGoalEventNotification(
     await Promise.all([goalPromise, milestonePromise, supportPromise, userPromise])
   }
 
-
-  if (send.notification) {
-    const recipients = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
-    sendNotificationToUsers(notificationBase, recipients)
+  if (options.toStakeholder?.notification) {
+    const recipients = stakeholders.filter(stakeholder => stakeholder[options.toStakeholder.role] === true)
+    const recipientIds = recipients.map(stakeholder => stakeholder.uid)
+    sendNotificationToUsers(notificationBase, recipientIds)
   }
 
-  if (send.pushNotification) {
+  if (options.toStakeholder?.pushNotification) {
     const message = getPushMessage(notification, 'stakeholder')
-    const recipients = excludeTriggerer ? stakeholdersExceptTriggerer : stakeholders
-    if (message) sendPushNotificationToUsers(message, recipients)
+    const recipients = stakeholders.filter(stakeholder => stakeholder[options.toStakeholder.role] === true)
+    const recipientIds = recipients.map(stakeholder => stakeholder.uid)
+    if (message) sendPushNotificationToUsers(message, recipientIds)
   }
 
-  if (send.toSpectator) {
-    const promises = stakeholders.map(uid => db.collection(`Users/${uid}/Spectators`).where('isSpectator', '==', true).get())
+  if (options.toSpectator) {
+    const achievers = stakeholders.filter(stakeholder => stakeholder.isAchiever) // spectators are only interested in achievers (not admins or supporters)
+    const promises = achievers.map(uid => db.collection(`Users/${uid}/Spectators`).where('isSpectator', '==', true).get())
     const snaps = await Promise.all(promises)
     const ids: string[][] = snaps.map(snap => snap.docs.map(doc => doc.id))
     const flatten = ids.reduce((acc, val) => acc.concat(val), [])
     const distinct = unique<string>(flatten)
-    const spectators = distinct.filter(id => !stakeholders.some(uid => uid === id))
+    const spectators = distinct.filter(id => !stakeholders.some(stakeholder => stakeholder.uid === id))
 
-    if (send.toSpectator.notification) {
+    if (options.toSpectator.notification) {
       sendNotificationToUsers(notificationBase, spectators)
     }
 
-    if (send.toSpectator.pushNotification) {
+    if (options.toSpectator.pushNotification) {
       const message = getPushMessage(notification, 'spectator')
       if (message) sendPushNotificationToUsers(message, spectators)
     }
   }
 }
 
-export async function sendPushNotificationToUsers(message: PushMessage, recipient: string | string[]) {
+async function sendPushNotificationToUsers(message: PushMessage, recipient: string | string[]) {
   const recipients = Array.isArray(recipient) ? recipient : [recipient]
   if (!recipients.length) return
   const refs = recipients.map(uid => db.doc(`Users/${uid}/Personal/${uid}`))
@@ -115,27 +116,21 @@ export async function sendPushNotificationToUsers(message: PushMessage, recipien
     const personal = createPersonal(toDate({ ...snap.data(), id: snap.id }))
     if (!personal.fcmTokens.length) continue
 
+    // check settings and stop sending push notification if any setting is turned off
+    const { pushNotification } = personal.settings
+    const relevantSettings = PushNotificationSetting[message.setting]
+    if (relevantSettings.some(key => pushNotification[key] === false)) {
+      logger.log(`${personal.email} has turned off push notifications for ${message.setting}`)
+      continue
+    }
+
     // TODO
     // Try to define a tag for each too so they get aggregated
     // Do so by getting the unread notifications.
     // Add clickaction to set notification to being read
     // GOOD LUCK!
 
-    const link = message.link
-    const messages: Message[] = personal.fcmTokens.map(token => ({
-      token,
-      notification: {
-        title: message.title,
-        body: message.body
-      },
-      data: { link },
-      webpush: {
-        notification: {
-          icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
-        },
-        fcmOptions: { link }
-      }
-    }))
+    const messages = personal.fcmTokens.map(token => createPushMessage(message, token))
     logger.log(`going to send push notifications to ${personal?.email}`, messages[0])
     admin.messaging().sendAll(messages).catch((err) => {
       logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
@@ -150,17 +145,35 @@ async function getGoalStakeholders(
     isAchiever?: boolean,
     isSupporter?: boolean
   }
-): Promise<string[]> {
+): Promise<GoalStakeholder[]> {
 
   const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
-  const recipients: string[] = []
+  const recipients: GoalStakeholder[] = []
 
   for (const snap of stakeholderColSnap.docs) {
-    const stakeholder = createGoalStakeholder(snap.data())
+    const stakeholder = createGoalStakeholder(toDate({ ...snap.data(), uid: snap.id }))
     if (roles.isAdmin === stakeholder.isAdmin || roles.isAchiever === stakeholder.isAchiever || roles.isSupporter === stakeholder.isSupporter) {
-      recipients.push(snap.id)
+      recipients.push(stakeholder)
     }
   }
 
   return recipients
+}
+
+function createPushMessage(message: PushMessage, token: string): Message {
+  const { link } = message
+  return {
+    token,
+    notification: {
+      title: message.title,
+      body: message.body
+    },
+    data: { link },
+    webpush: {
+      notification: {
+        icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
+      },
+      fcmOptions: { link }
+    }
+  }
 }

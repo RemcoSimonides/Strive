@@ -37,14 +37,14 @@ export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
 
     if (actionType === 'add') {
       if (!stakeholder.goalId) { throw new Error('Goal id needs to be defined when creating goal stakeholder') }
-      
+
       // 👇 goal is empty goal object in case this stakeholder is created when goal is created. All stakeholders that join after, should have goal defined
       const goal = await getDoc(doc(this.db, `Goals/${stakeholder.goalId}`)).then(snap => createGoal(snap.data()))
-  
+
       stakeholder = createGoalStakeholder({
         ...stakeholder,
         createdAt: timestamp,
-        goalPublicity: goal.id ? goal.publicity : stakeholder.goalPublicity,
+        goalPublicity: goal.publicity ? goal.publicity : stakeholder.goalPublicity,
         collectiveGoalId: goal.collectiveGoalId ? goal.collectiveGoalId : ''
       })
     }

@@ -3,17 +3,20 @@ import { User } from './user'
 
 export type GoalStakeholderRole = 'isAdmin' | 'isAchiever' | 'isSupporter' | 'isSpectator'
 
+export interface Roles {
+  isAdmin: boolean
+  isAchiever: boolean
+  isSupporter: boolean
+  isSpectator: boolean
+}
+
 export interface Stakeholder extends GoalStakeholder {
   profile?: User
   goal?: Goal
 }
 
-export interface GoalStakeholder {
+export interface GoalStakeholder extends Roles {
   uid: string
-  isAdmin: boolean
-  isAchiever: boolean
-  isSupporter: boolean
-  isSpectator: boolean
   hasOpenRequestToJoin: boolean
   hasInviteToJoin: boolean
   focus: Focus

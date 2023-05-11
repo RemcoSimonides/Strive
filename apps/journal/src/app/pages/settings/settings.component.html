@@ -8,71 +8,80 @@
     </ion-buttons>
   </ng-container>
 </strive-header>
-<ion-content>
-  <ion-list mode="md" lines="full">
-    <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>
-      <ion-label>Install App</ion-label>
-    </ion-item>
-    <ion-list-header>Account</ion-list-header>
-    <ion-item button routerLink="/edit-profile">
-      <ion-label>Edit Profile</ion-label>
-    </ion-item>
-    <ion-item button (click)="signOut()" lines="none">
-      <ion-label>Log out</ion-label>
-    </ion-item>
+<ion-content [ngClass]="(isMobile$ | async) ? 'ion-no-padding' : 'ion-padding'">
+  <main>
 
-    <ng-container *ngIf="isWeb">
+    <header *ngIf="(isMobile$ | async) === false">
+      <h1>Settings</h1>
+      <ng-container *ngIf="theme$ | async as theme">
+        <ion-button (click)="toggleTheme()" fill="clear">
+          <ion-icon *ngIf="theme === 'light'" name="moon-outline" />
+          <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" />
+        </ion-button>
+      </ng-container>
+    </header>
+
+    <ion-list mode="md" lines="full">
+      <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>
+        <ion-label>Install App</ion-label>
+      </ion-item>
+      <ion-list-header>Account</ion-list-header>
+      <ion-item button routerLink="/edit-profile">
+        <ion-label>Edit Profile</ion-label>
+      </ion-item>
+      <ion-item button (click)="signOut()" lines="none">
+        <ion-label>Log out</ion-label>
+      </ion-item>
+
       <ion-list-header>Notifications</ion-list-header>
-      <ion-item *ngIf="fcmIsSupported | async" button (click)="registerFCM()" lines="none">
+      <ion-item routerLink="email-notifications">
+        <ion-label>Email Notifications</ion-label>
+      </ion-item>
+      <ion-item routerLink="push-notifications" lines="none">
         <ion-label>Push Notifications</ion-label>
-        <ion-toggle slot="end" [(ngModel)]="fcmActive" />
       </ion-item>
-      <ion-item *ngIf="(fcmIsSupported | async) === false" disabled lines="none">
-        <ion-label>Push Notifications not supported</ion-label>
+
+
+      <ion-list-header>Support</ion-list-header>
+      <ion-item button href="https://blog.strivejournal.com/intro" target="_blank">
+        <ion-label>Guides</ion-label>
+        <ion-icon size="small" name="open-outline" />
       </ion-item>
-    </ng-container>
 
+      <ion-item button href="https://blog.strivejournal.com/blog" target="_blank">
+        <ion-label>Blog</ion-label>
+        <ion-icon size="small" name="open-outline" />
+      </ion-item>
 
-    <ion-list-header>Support</ion-list-header>
-    <ion-item button href="https://blog.strivejournal.com/intro" target="_blank">
-			<ion-label>Guides</ion-label>
-			<ion-icon name="open-outline" />
-		</ion-item>
+      <ion-item button href="mailto:support@strivejournal.com" lines="none">
+        <ion-label>Contact Support</ion-label>
+        <ion-icon size="small" name="open-outline" />
+      </ion-item>
 
-		<ion-item button href="https://blog.strivejournal.com/blog" target="_blank">
-			<ion-label>Blog</ion-label>
-			<ion-icon name="open-outline" />
-		</ion-item>
+      <ion-list-header>Legal</ion-list-header>
+      <ion-item routerLink="/terms">
+        <ion-label>Terms of Use</ion-label>
+      </ion-item>
+      <ion-item routerLink="/privacy-policy" lines="none">
+        <ion-label>Privacy Policy</ion-label>
+      </ion-item>
 
-    <ion-item button href="mailto:support@strivejournal.com" lines="none">
-      <ion-label>Contact Support</ion-label>
-			<ion-icon name="open-outline" />
-    </ion-item>
+    </ion-list>
 
-    <ion-list-header>Legal</ion-list-header>
-    <ion-item routerLink="/terms">
-      <ion-label>Terms of Use</ion-label>
-    </ion-item>
-    <ion-item routerLink="/privacy-policy" lines="none">
-      <ion-label>Privacy Policy</ion-label>
-    </ion-item>
+    <span class="version">Version {{ version }}</span>
 
-  </ion-list>
+    <article class="download">
+      <ng-container *ngIf="showPlayStore">
+        <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
+          <img class="download" asset="google_play.png"/>
+        </a>
+      </ng-container>
 
-  <span class="version">Version {{ version }}</span>
-
-  <article class="download">
-    <ng-container *ngIf="showPlayStore">
-      <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
-        <img class="download" asset="google_play.png"/>
-      </a>
-    </ng-container>
-
-    <ng-container *ngIf="showAppStore">
-      <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
-        <img class="download" asset="app_store.png"/>
-      </a>
-    </ng-container>
-  </article>
-
+      <ng-container *ngIf="showAppStore">
+        <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
+          <img class="download" asset="app_store.png"/>
+        </a>
+      </ng-container>
+    </article>
+  </main>
 </ion-content>

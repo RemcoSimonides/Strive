@@ -1,41 +1,40 @@
-main {
+form {
   max-width: var(--page-max-width);
-	margin: auto;
-	display: flex;
+  margin: auto;
+  display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
 header {
-	display: flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px; // same has h1
   margin-bottom: 10px; // same has h1
 
-	h1 {
+  h1 {
     margin: 0;
+  }
+
+  ion-toggle {
+    padding: 8px;
   }
 }
 
-.version {
-	display: flex;
-	justify-content: flex-end;
-	padding: 16px;
-	color: var(--ion-color-medium);
-	font-size: small;
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
 }
 
-article {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	gap: 16px;
-	padding: 16px;
-
-	img {
-		height: 30px;
-	}
+section {
+  display: flex;
+  justify-content: center;
 }
 
 @media only screen and (max-width: 768px) {

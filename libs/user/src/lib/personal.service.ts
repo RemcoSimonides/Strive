@@ -14,11 +14,12 @@ import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } fro
 import * as Sentry from '@sentry/capacitor'
 
 import { user } from 'rxfire/auth'
-import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
+import { Observable, of, switchMap, shareReplay, BehaviorSubject, startWith } from 'rxjs'
 
 import { Personal } from '@strive/model'
 
 import { AuthService } from '@strive/auth/auth.service'
+import { PushNotificationSettingsForm, SettingsForm } from './forms/settings.form'
 
 
 @Injectable({ providedIn: 'root' })
@@ -33,8 +34,10 @@ export class PersonalService extends FireSubCollection<Personal> {
   )
 
   fcmIsSupported = Capacitor.getPlatform() === 'web' ? isSupported() : Promise.resolve(true)
-  fcmActive$ = new BehaviorSubject(false)
   private get localStorageName() { return `pushNotifications${this.auth.uid}` }
+  fcmIsRegistered = new BehaviorSubject(false)
+
+  form = new SettingsForm()
 
   constructor(
     private auth: AuthService,
@@ -42,6 +45,34 @@ export class PersonalService extends FireSubCollection<Personal> {
     private toastController: ToastController
   ) {
     super()
+    this.personal$.subscribe(personal => {
+      if (personal) {
+        // check if FCM is registered
+        if (localStorage.getItem(this.localStorageName)) this.fcmIsRegistered.next(true)
+
+        this.form.patchValue(personal.settings, { emitEvent: false })
+
+        if (!personal.fcmTokens?.length) {
+          const { main } = this.form.pushNotification as PushNotificationSettingsForm
+          main.setValue(false, { emitEvent: false })
+        }
+      }
+    })
+
+    this.form.valueChanges.subscribe(() => {
+      if (!this.auth.uid) return
+      this.update(this.auth.uid, { settings: this.form.getRawValue() }, { params: { uid: this.auth.uid }})
+    })
+
+    const form = this.form.pushNotification as PushNotificationSettingsForm
+    form.main.valueChanges.subscribe(value => {
+      if (value) {
+        this.registerFCM()
+        form.enableControls()
+      } else {
+        form.disableControls()
+      }
+    })
   }
 
   protected override toFirestore(personal: Personal, actionType: 'add' | 'update'): Personal {
@@ -79,11 +110,27 @@ export class PersonalService extends FireSubCollection<Personal> {
     try {
       const token = await getToken(getMessaging())
       this.addFCMToken(token)
+
+      if (!localStorage.getItem(this.localStorageName)) {
+        // turn push notifications on in settings if this is the first time
+        const { main } = this.form.pushNotification as PushNotificationSettingsForm
+        main.setValue(true)
+      }
+
       localStorage.setItem(this.localStorageName, token)
-      this.fcmActive$.next(true)
+      this.fcmIsRegistered.next(true)
+
       return token
     } catch(err) {
-      this.fcmActive$.next(false)
+      const { main } = this.form.pushNotification as PushNotificationSettingsForm
+      main.setValue(false)
+
+      this.toastController.create({
+        message: `Sorry, couldn't activate push notifications on this device`,
+        duration: 5000,
+        position: 'bottom'
+      }).then(toast => toast.present())
+
       Sentry.captureException(err)
       return ''
     }
@@ -103,22 +150,20 @@ export class PersonalService extends FireSubCollection<Personal> {
     if (token) {
       this.removeFCMToken(token)
       localStorage.removeItem(this.localStorageName)
-      this.fcmActive$.next(false)
+      this.fcmIsRegistered.next(false)
     }
   }
-
   async registerFCM(): Promise<string | undefined> {
-
     if (Capacitor.getPlatform() === 'web') {
-      const fcm = await isSupported()
-      if (fcm) {
+      const supported = await isSupported()
+      if (supported) {
         return this.getPermission()
       } else {
         this.toastController.create({
           message: 'Sorry, this browser does not support push notifications',
           duration: 5000,
           position: 'bottom'
-        })
+        }).then(toast => toast.present())
         return
       }
     } else {

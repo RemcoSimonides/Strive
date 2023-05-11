@@ -12,6 +12,8 @@ const routes: Routes = [
   { path: 'profile', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'settings', loadChildren: () => import('./pages//settings/settings.module').then(m => m.SettingsPageModule)},
+  { path: 'settings/email-notifications', loadChildren: () => import('./pages/settings/email-notification-settings/email-notification-settings.module').then(m => m.EmailNotificationSettingsModule) },
+  { path: 'settings/push-notifications', loadChildren: () => import('./pages/settings/push-notification-settings/push-notification-settings.module').then(m => m.PushNotificationsSettingsModule) },
   { path: 'terms', loadChildren: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageModule) },
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) },
   { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfilePageModule) },
