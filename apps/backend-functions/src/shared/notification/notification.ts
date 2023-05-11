@@ -140,11 +140,7 @@ async function sendPushNotificationToUsers(message: PushMessage, recipient: stri
 
 async function getGoalStakeholders(
   goalId: string,
-  roles: {
-    isAdmin?: boolean,
-    isAchiever?: boolean,
-    isSupporter?: boolean
-  }
+  roles: Partial<Roles>
 ): Promise<GoalStakeholder[]> {
 
   const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
@@ -152,7 +148,7 @@ async function getGoalStakeholders(
 
   for (const snap of stakeholderColSnap.docs) {
     const stakeholder = createGoalStakeholder(toDate({ ...snap.data(), uid: snap.id }))
-    if (roles.isAdmin === stakeholder.isAdmin || roles.isAchiever === stakeholder.isAchiever || roles.isSupporter === stakeholder.isSupporter) {
+    if (roles.isAdmin === stakeholder.isAdmin || roles.isAchiever === stakeholder.isAchiever || roles.isSupporter === stakeholder.isSupporter || roles.isSpectator === stakeholder.isSpectator) {
       recipients.push(stakeholder)
     }
   }
