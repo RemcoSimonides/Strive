@@ -67,7 +67,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     const form = this.form.pushNotification as PushNotificationSettingsForm
     form.main.valueChanges.subscribe(value => {
       if (value) {
-        this.registerFCM()
+        this.registerFCM(true)
         form.enableControls()
       } else {
         form.disableControls()
@@ -106,7 +106,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
   }
 
-  private async getPermission(): Promise<string> {
+  private async getPermission(showError: boolean): Promise<string> {
     try {
       const token = await getToken(getMessaging())
       this.addFCMToken(token)
@@ -125,11 +125,13 @@ export class PersonalService extends FireSubCollection<Personal> {
       const { main } = this.form.pushNotification as PushNotificationSettingsForm
       main.setValue(false)
 
-      this.toastController.create({
-        message: `Sorry, couldn't activate push notifications on this device`,
-        duration: 5000,
-        position: 'bottom'
-      }).then(toast => toast.present())
+      if (showError) {
+        this.toastController.create({
+          message: `Sorry, couldn't activate push notifications on this device`,
+          duration: 5000,
+          position: 'bottom'
+        }).then(toast => toast.present())
+      }
 
       Sentry.captureException(err)
       return ''
@@ -153,11 +155,11 @@ export class PersonalService extends FireSubCollection<Personal> {
       this.fcmIsRegistered.next(false)
     }
   }
-  async registerFCM(): Promise<string | undefined> {
+  async registerFCM(showError: boolean): Promise<string | undefined> {
     if (Capacitor.getPlatform() === 'web') {
       const supported = await isSupported()
       if (supported) {
-        return this.getPermission()
+        return this.getPermission(showError)
       } else {
         this.toastController.create({
           message: 'Sorry, this browser does not support push notifications',

@@ -1,11 +1,28 @@
 
 export interface Settings {
+  emailNotification: EmailNotificationSettings
   pushNotification: PushNotificationSettings
 }
 
 export function createSettings(params?: Partial<Settings>): Settings {
   return {
+    emailNotification: createEmailNotificationSettings(params?.emailNotification),
     pushNotification: createPushNotificationSettings(params?.pushNotification)
+  }
+}
+
+export interface EmailNotificationSettings {
+  main: boolean
+  monthlyGoalReminder: boolean
+}
+
+export type EmailNotificationSettingKey = keyof EmailNotificationSettings
+
+export function createEmailNotificationSettings(params?: Partial<EmailNotificationSettings>): EmailNotificationSettings {
+  return {
+    main: true,
+    monthlyGoalReminder: true,
+    ...params,
   }
 }
 

@@ -12,7 +12,7 @@ import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 
 // // crontab.guru to determine schedule value
-// export const scheduledEmailRunner = functions.pubsub.schedule('*/5 * * * *').onRun(async () => {
+// export const scheduledEmailRunner = functions().pubsub.schedule('*/5 * * * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner',
 export const scheduledEmailRunner = functions().pubsub.schedule('0 0 1 * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner',
 async () => {
 
@@ -24,6 +24,8 @@ async () => {
 
   for (const doc of personalSnaps.docs) {
     const personal = createPersonal(toDate(doc.data()))
+
+    if (personal.settings.emailNotification.main === false || personal.settings.emailNotification.monthlyGoalReminder === false) continue
     if (newerThanWeek(personal)) continue
 
     const stakeholders = await getStakeholders(personal.uid)

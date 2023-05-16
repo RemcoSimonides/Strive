@@ -1,9 +1,10 @@
 import { FormControl, FormGroup } from '@angular/forms'
-import { PushNotificationSettings, Settings, createPushNotificationSettings } from '@strive/model'
+import { EmailNotificationSettings, PushNotificationSettings, Settings, createEmailNotificationSettings, createPushNotificationSettings } from '@strive/model'
 
 
 function createSettingsFormControl(params?: Partial<Settings>) {
   return {
+    emailNotification: new EmailNotificationSettingsForm(params?.emailNotification),
     pushNotification: new PushNotificationSettingsForm(params?.pushNotification)
   }
 }
@@ -15,7 +16,28 @@ export class SettingsForm extends FormGroup<SettingsFormControl> {
     super(createSettingsFormControl(settings))
   }
 
+  get emailNotification() { return this.get('emailNotification')! }
   get pushNotification() { return this.get('pushNotification')! }
+}
+
+function createEmailNotificationSettingsFormControl(params?: Partial<EmailNotificationSettings>) {
+  const settings = createEmailNotificationSettings(params)
+
+  return {
+    main: new FormControl(settings.main, { nonNullable: true }),
+    monthlyGoalReminder: new FormControl(settings.monthlyGoalReminder, { nonNullable: true }),
+  }
+}
+
+export type EmailNotificationSettingsFormControl = ReturnType<typeof createEmailNotificationSettingsFormControl>
+
+export class EmailNotificationSettingsForm extends FormGroup<EmailNotificationSettingsFormControl> {
+  constructor(settings?: Partial<EmailNotificationSettings>) {
+    super(createEmailNotificationSettingsFormControl(settings))
+  }
+
+  get main() { return this.get('main')! }
+  get monthlyGoalReminder() { return this.get('monthlyGoalReminder')! }
 }
 
 function createPushNotificationSettingsFormControl(params?: Partial<PushNotificationSettings>) {

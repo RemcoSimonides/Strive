@@ -7,7 +7,6 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { NotificationService } from '@strive/notification/notification.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { isSafari } from '@strive/utils/helpers'
-import { PersonalService } from '@strive/user/personal.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
@@ -26,7 +25,6 @@ export class ProfileOptionsBrowserComponent {
     private auth: AuthService,
     private modalCtrl: ModalController,
     private notification: NotificationService,
-    private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     public pwa: PWAService,
     private router: Router,
@@ -40,11 +38,6 @@ export class ProfileOptionsBrowserComponent {
 
   goToProfile() {
     this.router.navigateByUrl(`/profile/${this.auth.uid}`)
-    this.popoverCtrl.dismiss()
-  }
-
-  pushNotifications() {
-    this.personalService.registerFCM()
     this.popoverCtrl.dismiss()
   }
 

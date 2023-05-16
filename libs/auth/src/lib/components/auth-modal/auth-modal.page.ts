@@ -1,7 +1,7 @@
 import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Location } from '@angular/common'
-import { 
+import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -52,7 +52,7 @@ export class AuthModalComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required])
   })
- 
+
   signupForm = new FormGroup({
     email: new FormControl<string>('', [
       Validators.required,
@@ -150,14 +150,14 @@ export class AuthModalComponent implements OnInit {
         rawNonce: result.credential?.nonce
       })
       const credentials = await signInWithCredential(getAuth(), oAuthCredentials)
-      
+
       this.oAuthLogin(credentials.user)
-  
+
     } catch (error: any) {
       let code = undefined
       if (error?.code) code = error.code
       if (error?.error) code = error.error
-      
+
       switch (code) {
         case '12501':
         case 'popup_closed_by_user':
@@ -243,7 +243,7 @@ export class AuthModalComponent implements OnInit {
         await signInWithEmailAndPassword(getAuth(), email, password)
         loading.dismiss()
         this.dismiss(true)
-        this.personal.registerFCM()
+        this.personal.registerFCM(false)
 
       } catch (error: any) {
         let message: string
@@ -255,7 +255,7 @@ export class AuthModalComponent implements OnInit {
           case 'auth/user-not-found':
             message = 'User not found'
             break
-        
+
           default:
             captureException(error)
             message = error.message
@@ -312,7 +312,7 @@ export class AuthModalComponent implements OnInit {
         buttons: [{ text: 'Ok', role: 'cancel' }]
       }).then(alert => alert.present())
     }
-    
+
     loading.dismiss()
   }
 
@@ -320,7 +320,7 @@ export class AuthModalComponent implements OnInit {
 
     if (!this.resetPasswordForm.valid) {
       console.log(`Form is not valid yet, current value: ${this.resetPasswordForm.value}`)
-    } else { 
+    } else {
       const loading = await this.loadingCtrl.create()
       await loading.present()
 
@@ -375,7 +375,7 @@ export class AuthModalComponent implements OnInit {
     } else {
       const top = await this.modalCtrl.getTop()
       if (top) this.dismiss(true)
-      this.personal.registerFCM()
+      this.personal.registerFCM(false)
     }
   }
 }

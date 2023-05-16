@@ -1,0 +1,30 @@
+<strive-header title="Email Notifications" color="" defaultHref="/profile">
+  <ion-buttons slot="end">
+    <ion-button fill="clear">
+      <ion-toggle slot="end" [formControl]="form.main" />
+    </ion-button>
+  </ion-buttons>
+</strive-header>
+
+<ion-content [ngClass]="(isMobile$ | async) ? 'ion-no-padding' : 'ion-padding'">
+  <form [formGroup]="form">
+    <header *ngIf="(isMobile$ | async) === false">
+      <h1>Email Notifications</h1>
+      <ion-toggle slot="end" formControlName="main" />
+    </header>
+
+    <ion-list mode="md" lines="full">
+      <ion-list-header>General</ion-list-header>
+      <ion-item lines="none">
+        <ion-label>
+          <article>
+            <span>Monthly Goal Reminder</span>
+            <small>Your goals, missed notifications, new features</small>
+          </article>
+        </ion-label>
+        <ion-checkbox formControlName="monthlyGoalReminder" />
+      </ion-item>
+    </ion-list>
+  </form>
+
+</ion-content>

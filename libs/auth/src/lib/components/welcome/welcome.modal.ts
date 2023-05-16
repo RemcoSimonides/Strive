@@ -55,7 +55,7 @@ export class WelcomeModalComponent {
   }
 
   pushNotifications() {
-    this.personalService.registerFCM()
+    this.personalService.registerFCM(true)
     this.next()
   }
 
