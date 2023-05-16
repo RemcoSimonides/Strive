@@ -84,7 +84,6 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
 
       next = direction === 'next' ? 'images' : 'details'
     } else if (step === 'images') {
-      console.log('form: ', this.form)
       if (this.form.image.dirty) {
         this.imagesComponent?.cropImage()
         this.goalService.upsert({ id: this.goal.id, image: this.goal.image })
