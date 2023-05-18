@@ -51,6 +51,7 @@ image-cropper {
   max-width: 200px;
   width: 100%;
   aspect-ratio: 1/1;
+  object-fit: cover;
 }
 
 .caption {
