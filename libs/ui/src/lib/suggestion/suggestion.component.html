@@ -28,5 +28,27 @@
     <ng-container *ngIf="view.suggestion !== 'asking' && view.suggestion !== 'error'">
       <article>{{ view.suggestion }}</article>
     </ng-container>
+
+    <section *ngIf="questions.length && (view.suggestions.length || (view.suggestion !== 'asking' && view.suggestion !== 'error'))">
+      <p>Improve the suggestions by answering the following questions</p>
+      <ion-list mode="md">
+        <ng-container *ngFor="let question of questions; let last = last; let index = index">
+          <ion-item lines="none">
+            <ion-label color="secondary">
+              <small>{{ question.question }}</small>
+            </ion-label>
+          </ion-item>
+          <ion-item [lines]="last ? 'none' : 'full'">
+            <ion-input
+              [(ngModel)]="questions[index].answer"
+              type="text"
+              maxlength="222"
+            ></ion-input>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+      <ion-button class="secondary" (click)="submit()">Submit</ion-button>
+    </section>
+
   </ng-container>
 </main>

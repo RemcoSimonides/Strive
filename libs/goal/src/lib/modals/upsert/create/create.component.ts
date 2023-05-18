@@ -110,10 +110,18 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
       const prompt = `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account.`
 
       const message = createChatGPTMessage({
+        id: 'RoadmapSuggestion',
         prompt,
         type: 'RoadmapSuggestion'
       })
-      this.chatGPTService.add(message, { params: { goalId: this.goal.id }})
+      this.chatGPTService.upsert(message, { params: { goalId: this.goal.id }})
+
+      const message2 = createChatGPTMessage({
+        id: 'RoadmapMoreInfoQuestions',
+        prompt: `Soon I am going to ask you to break down my goal into milestones. I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. What are 3 questions to ask the user to create a more specific roadmap?`,
+        type: 'RoadmapMoreInfoQuestions'
+      })
+      this.chatGPTService.upsert(message2, { params: { goalId: this.goal.id }})
     }
   }
 }

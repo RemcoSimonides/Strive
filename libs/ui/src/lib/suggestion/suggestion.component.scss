@@ -13,16 +13,36 @@ main {
 	color: var(--ion-color-medium);
   font-size: small;
 
-  ol {
-    padding-left: 16px;
-  }
-
   ol li::marker {
     color: var(--ion-color-secondary);
+  }
+
+  li {
+    margin-bottom: 8px;
+  }
+
+  ion-button {
+    display: block;
   }
 
   article {
     white-space: pre-line;
     margin-top: 16px;
+  }
+
+  section {
+    margin-top: 16px;
+
+    ion-list {
+      margin-bottom: 8px;
+
+      ion-item {
+        --highlight-background: var(--ion-color-secondary);
+
+        ion-label {
+          white-space: normal !important;
+        }
+      }
+    }
   }
 }
