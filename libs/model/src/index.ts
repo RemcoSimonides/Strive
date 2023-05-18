@@ -1,5 +1,6 @@
 export * from './lib/affirmation'
 export * from './lib/aggregation'
+export * from './lib/chatgpt'
 export * from './lib/comment'
 export * from './lib/daily-gratitude'
 export * from './lib/dear-future-self'

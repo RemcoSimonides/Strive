@@ -28,7 +28,6 @@ export class GoalRoadmapComponent implements OnInit {
   stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true })
 
   @Input() goal?: Goal
-  @Input() suggestion = ''
 
   constructor(
     private milestoneService: MilestoneService

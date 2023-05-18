@@ -114,6 +114,11 @@ service cloud.firestore {
         allow read;
         allow write: if isSignedIn();
       }
+
+      match /ChatGPT/{messageId} {
+        allow read;
+        allow write: if isSignedIn();
+      }
     }
 
     // ===== GOAL EVENTS ====

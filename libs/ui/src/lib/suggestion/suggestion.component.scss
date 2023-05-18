@@ -13,6 +13,10 @@ main {
 	color: var(--ion-color-medium);
   font-size: small;
 
+  ol {
+    padding-left: 16px;
+  }
+
   ol li::marker {
     color: var(--ion-color-secondary);
   }

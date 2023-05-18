@@ -1,16 +1,15 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
 import { IonicModule, ModalController } from '@ionic/angular'
-import { captureException } from '@sentry/angular'
-import { getFunctions, httpsCallable } from 'firebase/functions'
 import { BehaviorSubject } from 'rxjs'
 import { format, isFuture, isPast } from 'date-fns'
 
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { GoalService } from '@strive/goal/goal.service'
 import { AuthService } from '@strive/auth/auth.service'
+import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { getCountry } from '@strive/utils/country'
-import { createGoal } from '@strive/model'
+import { createChatGPTMessage, createGoal } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 import { GoalDetailsComponent } from '../components/details/details.component'
@@ -49,11 +48,10 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
     })
   })
 
-  suggestion$ = new BehaviorSubject<string | undefined>(undefined)
-
   constructor(
     private auth: AuthService,
     private goalService: GoalService,
+    private chatGPTService: ChatGPTService,
     protected override location: Location,
     protected override modalCtrl: ModalController
   ) {
@@ -109,18 +107,13 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
     const today = format(new Date(), 'dd MMMM yyyy')
     const country = getCountry() ?? 'The Netherlands'
     if (title.length > 4 && isFuture(deadline)) {
-      this.suggestion$.next('')
-      const prompt = `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for the milestones. Return response ONLY in a JSON parsable array of strings.`
-      const askOpenAI = httpsCallable<{ prompt: string }, { error: string, result: string }>(getFunctions(), 'askOpenAI')
-      askOpenAI({ prompt }).then(res => {
-        const { error, result } = res.data
-        if (error) {
-          captureException(result)
-          this.suggestion$.next(`Sorry, couldn't create a suggestion`)
-        } else {
-          this.suggestion$.next(result)
-        }
+      const prompt = `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account.`
+
+      const message = createChatGPTMessage({
+        prompt,
+        type: 'RoadmapSuggestion'
       })
+      this.chatGPTService.add(message, { params: { goalId: this.goal.id }})
     }
   }
 }

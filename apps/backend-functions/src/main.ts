@@ -18,6 +18,7 @@ export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } fr
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token'
 export { postCreatedHandler, postDeletedHandler, postChangeHandler } from './firestore/goals/posts/post'
 export { commentCreatedHandler } from './firestore/goals/comments/comment'
+export { chatGPTMessageCreatedHandler } from './firestore/goals/chatgpt/chatgpt'
 
 export { goalEventCreatedHandler } from './firestore/goal-events/goal-events'
 
@@ -26,4 +27,3 @@ export { migrate } from './migration'
 export { scrapeMetatags } from './https/scrape'
 export { ssr } from './https/ssr'
 export { createCollectiveGoal } from './https/create-collective-goal'
-export { askOpenAI } from './https/openai'

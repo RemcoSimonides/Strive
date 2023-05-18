@@ -24,7 +24,7 @@
     </ion-content>
     <ion-content *ngSwitchCase="'roadmap'" class="ion-padding">
       <small>Break your goal up in smaller steps (milestones). Start with the end goal in mind, then think backwards which steps need to be taken in order to get to the end.</small>
-      <strive-goal-roadmap [goal]="goal" [suggestion]="suggestion$ | async" />
+      <strive-goal-roadmap [goal]="goal" />
     </ion-content>
     <ion-content *ngSwitchCase="'share'" class="ion-padding">
       <strive-goal-share [goal]="goal" />
