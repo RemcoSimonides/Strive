@@ -1,7 +1,7 @@
 <ion-content class="ion-no-padding">
   <ng-container *ngIf="theme$ | async as theme">
-    <header [ngStyle]="{'background': theme === 'light' ? 'var(--ion-color-dark)' : ''}">
-      <section class="fade">
+    <header [ngStyle]="{'background': theme === 'light' ? 'var(--ion-color-dark)' : ''}" class="fade">
+      <section>
         <article class="download">
           <ng-container *ngIf="showPlayStore">
             <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
@@ -52,10 +52,10 @@
           </article>
         </li>
 
-        <hr class="fade-right" />
+        <hr class="fade" />
 
         <li>
-          <article>
+          <article class="fade left">
             <ng-container *ngIf="theme === 'light'; else dark">
               <ion-button (click)="toggleTheme()" color="dark">
                 <span>SWITCH TO DARK MODE</span>
@@ -74,7 +74,7 @@
         </li>
 
 
-        <hr class="fade right" />
+        <hr class="fade" />
 
         <li routerLink="/exercise/dear-future-self" class="dear-future-self">
           <img asset="home_dear_future_self.png" class="fade left" />
@@ -88,7 +88,7 @@
           </article>
         </li>
 
-        <hr class="fade right"/>
+        <hr class="fade"/>
 
         <li routerLink="/exercise/wheel-of-life">
           <img asset="home_wheel_of_life.png" class="fade left" />
@@ -102,7 +102,7 @@
           </article>
         </li>
 
-        <hr class="fade right" />
+        <hr class="fade" />
 
         <li routerLink="/exercise/affirmations">
           <img asset="home_affirmations.png" class="fade left" />
@@ -116,7 +116,7 @@
           </article>
         </li>
 
-        <hr class="fade right"/>
+        <hr class="fade"/>
 
         <li routerLink="/exercise/daily-gratitude">
           <img asset="home_daily_gratitude.png" class="fade left" />
@@ -132,7 +132,7 @@
       </ul>
     </section>
 
-    <hr class="fade right"/>
+    <hr class="fade"/>
 
     <section class="statistics">
 
@@ -166,7 +166,7 @@
 
     </section>
 
-    <hr/>
+    <hr class="fade" />
 
     <section class="blogs">
       <h3 class="fade">Guides</h3>
