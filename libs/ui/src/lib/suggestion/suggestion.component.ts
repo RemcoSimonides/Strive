@@ -29,11 +29,15 @@ import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/m
 })
 export class SuggestionSComponent implements OnInit, OnDestroy {
 
-  suggestion$?: Observable<ChatGPTMessage | undefined>
   added$ = new BehaviorSubject<boolean>(false)
 
   questions: { question: string, answer: string }[] = []
   fetching$ = new BehaviorSubject<boolean>(false)
+
+  view$?: Observable<{
+    suggestion: ChatGPTMessage | undefined
+    fetching: boolean
+  }>
 
   thinking$ = combineLatest([
     timer(0, 1000),
@@ -60,10 +64,16 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.suggestion$ = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).pipe(
+    const suggestion$ = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).pipe(
       filter(message => !!message),
       tap(() => this.fetching$.next(false))
     )
+
+    this.view$ = combineLatest([
+      suggestion$,
+      this.fetching$.asObservable()
+    ]).pipe(map(([suggestion, fetching]) => ({ suggestion, fetching })))
+
     this.sub = this.chatGPTService.valueChanges('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
       if (!message) return
       this.fetching$.next(false)
@@ -95,8 +105,11 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    const prompt = this.questions
+      .filter(question => question.answer)
+      .map(question => `question: ${question.question} answer: ${question.answer} `).join(',')
+    if (!prompt) return
     this.fetching$.next(true)
-    const prompt = this.questions.map(question => `question: ${question.question} answer: ${question.answer} `).join(',')
     const message = createChatGPTMessage({
       type: 'RoadmapMoreInfoAnswers',
       prompt

@@ -220,11 +220,8 @@ function parse(answer: string): string[] | undefined {
 
   try {
     const parsed = JSON.parse(value)
-    logger.log('parsed: ', parsed)
     if (!Array.isArray(parsed)) return
-    logger.log('is array')
     if (parsed.some(item => typeof item !== 'string')) return
-    logger.log('all string')
 
     return parsed
   } catch (e) {
