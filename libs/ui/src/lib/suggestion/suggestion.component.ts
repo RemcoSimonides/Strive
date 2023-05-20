@@ -4,13 +4,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { IonicModule } from '@ionic/angular'
 import { orderBy, where } from 'firebase/firestore'
 
-import { BehaviorSubject, Subscription, combineLatest, filter, map, tap, timer } from 'rxjs'
+import { BehaviorSubject, Observable, Subscription, combineLatest, filter, map, tap, timer } from 'rxjs'
 
 import { ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
-import { createChatGPTMessage, createMilestone } from '@strive/model'
+import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/model'
 
 
 @Component({
@@ -29,10 +29,7 @@ import { createChatGPTMessage, createMilestone } from '@strive/model'
 })
 export class SuggestionSComponent implements OnInit, OnDestroy {
 
-  view$ = new BehaviorSubject<{ suggestion: string, suggestions: string[]}>({
-    suggestion: '',
-    suggestions: []
-  })
+  suggestion$?: Observable<ChatGPTMessage | undefined>
   added$ = new BehaviorSubject<boolean>(false)
 
   questions: { question: string, answer: string }[] = []
@@ -49,7 +46,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     })
   )
 
-  subs: Subscription[] = []
+  sub?: Subscription
   @Input() goalId = ''
 
   constructor(
@@ -59,44 +56,26 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const query = [where('type', '==', 'RoadmapSuggestion'), orderBy('createdAt', 'desc')]
-    const sub = this.chatGPTService.valueChanges(query, { goalId: this.goalId }).pipe(
-      map(messages => messages.map(message => message.answer)),
-      map(answers => parseAnswer(answers[0])),
-      tap(answer => {
-        if (Array.isArray(answer)) {
-          this.view$.next({
-            suggestion: '',
-            suggestions: answer
-          })
+    this.suggestion$ = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).pipe(
+      tap(_ => this.fetching$.next(false))
+    )
+    this.sub = this.chatGPTService.valueChanges('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
+      this.fetching$.next(false)
+      if (!message) return
+      message.answerParsed.forEach((question, index) => {
+        const item = this.questions[index]
+        if (item) {
+          this.questions[index].question = question
         } else {
-          this.view$.next({
-            suggestion: answer,
-            suggestions: []
-          })
+          this.questions[index] = { question, answer: '' }
         }
+        this.cdr.markForCheck()
       })
-    ).subscribe()
-
-    const query2 = [where('type', '==', 'RoadmapMoreInfoQuestions'), orderBy('createdAt', 'desc')]
-    const sub2 = this.chatGPTService.valueChanges(query2, { goalId: this.goalId }).pipe(
-      map(messages => messages.map(message => message.answer)),
-      filter(answers => answers.length > 0),
-      map(answers => parseAnswer(answers[0])),
-      tap(answer => {
-        if (Array.isArray(answer)) {
-          this.questions = answer.map(question => ({ question, answer: '' }))
-          this.fetching$.next(false)
-          this.cdr.markForCheck()
-        }
-      })
-    ).subscribe()
-
-    this.subs.push(sub, sub2)
+    })
   }
 
   ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe())
+    this.sub?.unsubscribe()
   }
 
   async apply(roadmap: string[]) {
@@ -111,6 +90,8 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    console.log('submitted questions and answers: ', this.questions)
+    this.fetching$.next(true)
     const prompt = this.questions.map(question => `question: ${question.question} answer: ${question.answer} `).join(',')
     const message = createChatGPTMessage({
       type: 'RoadmapMoreInfoAnswers',
@@ -118,55 +99,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     })
     this.chatGPTService.add(message, { params: { goalId: this.goalId }})
 
-    this.view$.next({
-      suggestion: 'asking',
-      suggestions: []
-    })
     this.questions = []
     this.cdr.markForCheck()
-  }
-}
-
-function parseAnswer(answer: string): string | string[] {
-  if (answer === 'asking' || answer === 'error') return answer
-
-  const trimmed = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
-  const split = trimmed.split('```')
-  const parsable = split.filter(canParse)
-
-  // return raw answer if no parsable json
-  if (!parsable.length) return answer.trim()
-
-  let parsed = parse(parsable[0])
-  if (!Array.isArray(parsed)) {
-    // Replace single quotes with double quotes
-    parsed = parse(trimmed.replace(new RegExp("'", 'g'), "\""))
-  }
-
-  if (Array.isArray(parsed)) {
-    return parsed as string[]
-  }
-
-  if (typeof parsed === 'string') {
-    return answer.trim() // show raw answer as last result
-  }
-
-  throw new Error(`Unrecognized type for suggestion`)
-}
-
-function parse(value: string) {
-  try {
-    return JSON.parse(value)
-  } catch (e) {
-    return value
-  }
-}
-
-function canParse(value: string) {
-  try {
-    JSON.parse(value)
-    return true
-  } catch (e) {
-    return false
   }
 }

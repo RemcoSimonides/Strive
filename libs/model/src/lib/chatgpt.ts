@@ -1,10 +1,13 @@
-export type PromptType = 'RoadmapSuggestion' | 'RoadmapMoreInfoQuestions' | 'RoadmapMoreInfoAnswers'
+export type MessageType = 'RoadmapSuggestion' | 'RoadmapMoreInfoQuestions' | 'RoadmapMoreInfoAnswers'
+export type MessageStatus = 'waiting' | 'streaming' | 'completed' | 'error'
 
 export interface ChatGPTMessage {
   id: string
-  type: PromptType
+  type: MessageType
   prompt: string
-  answer: string
+  answerRaw: string
+  answerParsed: string[]
+  status: MessageStatus
   updatedAt?: Date
   createdAt?: Date
 }
@@ -13,8 +16,10 @@ export function createChatGPTMessage(params: Partial<ChatGPTMessage> = {}): Chat
   return {
     id: '',
     type: 'RoadmapSuggestion',
+    status: 'waiting',
     prompt: '',
-    answer: 'asking',
+    answerRaw: '',
+    answerParsed: [],
     ...params,
   }
 }

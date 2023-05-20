@@ -1,8 +1,7 @@
-import { RuntimeOptions, db, logger, onDocumentCreate } from '@strive/api/firebase'
-import { createChatGPTMessage } from '@strive/model'
+import { DocumentReference, RuntimeOptions, db, logger, onDocumentCreate } from '@strive/api/firebase'
+import { ChatGPTMessage, createChatGPTMessage } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage } from 'openai'
-import { smartJoin } from '@strive/utils/helpers'
 
 const config: RuntimeOptions = {
   timeoutSeconds: 540,
@@ -20,20 +19,19 @@ async (snapshot, context) => {
   ]
 
   if (message.type === 'RoadmapSuggestion') {
-    const content = `${message.prompt} Don't suggest a due date for the milestones and don't use numbering for each milestone. The format of your response has to be a JSON parsable array of strings.`
-
-    messages.push({ role: 'user', content })
-    message.answer = await askOpenAI(messages)
-
-    snapshot.ref.update({ answer: message.answer })
+    messages.push({
+      role: 'user',
+      content: `${message.prompt} Don't suggest a due date for the milestones and don't use numbering for each milestone. The format of your response has to be a JSON parsable array of strings.`
+    })
+    await askOpenAI(messages, snapshot.ref)
+    return
   }
 
   if (message.type === 'RoadmapMoreInfoQuestions') {
     const content = `${message.prompt} The format of your response has to be a JSON parsable array of strings.`
     messages.push({ role: 'user', content })
-    message.answer = await askOpenAI(messages)
-
-    snapshot.ref.update({ answer: message.answer })
+    await askOpenAI(messages, snapshot.ref)
+    return
   }
 
   if (message.type === 'RoadmapMoreInfoAnswers') {
@@ -41,23 +39,19 @@ async (snapshot, context) => {
     const existing = snaps.docs.map(doc => createChatGPTMessage(toDate({ ...doc.data(), id: doc.id })))
 
     const roadmap = existing.find(m => m.type === 'RoadmapSuggestion')
-    const qa = existing.filter(m => m.type === 'RoadmapMoreInfoAnswers').map(m => m.prompt)
-    const questionsAndAnswers = smartJoin(qa, ', ', ' and')
+    const qa = existing.filter(m => m.type === 'RoadmapMoreInfoAnswers').map(m => m.prompt).join(', ')
 
-    if (!roadmap) {
-      logger.error('Need roadmap because it contains the initial goal description')
-    }
+    if (!roadmap) throw new Error('Need roadmap because it contains the initial goal description')
 
     messages.push({ role: 'user', content: roadmap.prompt })
-    messages.push({ role: 'assistant', content: roadmap.answer })
+    messages.push({ role: 'assistant', content: roadmap.answerRaw })
     messages.push({
       role: 'user',
-      content: `Here is some more information about the goal: ${questionsAndAnswers}. Please further specify the roadmap based on this information. The format of your response has to be a JSON parsable array of strings.`
+      content: `Here is some more information about the goal: ${qa}. Please further specify the roadmap based on this information. The format of your response has to be a JSON parsable array of strings.`
     })
 
-    const answer = await askOpenAI(messages)
     const ref = db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`)
-    ref.update({ answer })
+    const answer = await askOpenAI(messages, ref)
 
     messages.push({ role: 'assistant', content: answer })
     messages.push({
@@ -65,28 +59,67 @@ async (snapshot, context) => {
       content: `What are 3 questions you would ask the user to create a more specific roadmap? The format of your response has to be a JSON parsable array of strings.`
     })
 
-    const newQuestions = await askOpenAI(messages)
-    const moreInfoQuestionsRef = db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`)
-    moreInfoQuestionsRef.update({ answer: newQuestions })
+    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`))
+    return
   }
 
 }, config)
 
-async function askOpenAI(messages: ChatCompletionRequestMessage[]) {
-  const { OPENAI_APIKEY } = process.env
-  const configuration = new Configuration({ apiKey: OPENAI_APIKEY })
+async function askOpenAI(messages: ChatCompletionRequestMessage[], ref: DocumentReference): Promise<string> {
+  const configuration = new Configuration({ apiKey: process.env.OPENAI_APIKEY })
   const openai = new OpenAIApi(configuration)
 
   try {
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-4',
-      messages
+    let answerRaw = ''
+    const promise = new Promise<string>((resolve, reject) => {
+      const completion = openai.createChatCompletion({
+        model: 'gpt-4',
+        messages,
+        max_tokens: 200,
+        stream: true
+      }, { responseType: 'stream' })
+
+      completion.then(({ data: stream }: any) => {
+        stream.on('data', (chunk: Buffer) => {
+          // Messages in the event stream are separated by a pair of newline characters.
+          const payloads = chunk.toString().split('\n\n')
+          for (const payload of payloads) {
+            if (payload.includes('[DONE]')) return
+            if (!payload.startsWith("data:")) continue
+
+            const data = payload.replaceAll(/(\n)?^data:\s*/g, '') // in case there's multiline data event
+
+            try {
+              const delta = JSON.parse(data.trim())
+              const content = delta.choices[0].delta?.content
+              if (!content) continue
+
+              answerRaw += content
+              if (!answerRaw) continue
+
+              const parsed = parse(answerRaw)
+              const doc: Partial<ChatGPTMessage> = { answerRaw, status: 'streaming' }
+              if (parsed) doc.answerParsed = parsed
+
+              ref.update(doc)
+            } catch (error) {
+              logger.error(`Error with JSON.parse and ${payload}.\n${error}`)
+            }
+          }
+        })
+
+        stream.on('end', () => {
+          logger.log('Stream done: ', answerRaw)
+          const doc: Partial<ChatGPTMessage> = { status: 'completed' }
+          ref.update(doc)
+          resolve(answerRaw)
+        })
+
+        stream.on('error', reject)
+      })
     })
 
-    logger.log('all messages: ', messages)
-    logger.log('answer: ', completion.data.choices[0].message)
-
-    return completion.data.choices[0].message.content
+    return await promise
 
   } catch (error) {
     if (error.response) {
@@ -96,6 +129,28 @@ async function askOpenAI(messages: ChatCompletionRequestMessage[]) {
       logger.error(error.message)
     }
 
+    const doc: Partial<ChatGPTMessage> = { status: 'error' }
+    ref.update(doc)
     return 'error'
+  }
+}
+
+function parse(answer: string): string[] | undefined {
+  let value = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
+
+  if (value.split('"').length % 2 === 0) value = value + '"'
+  if (value.startsWith('[') && !value.endsWith(']')) value = value + ']'
+
+  try {
+    const parsed = JSON.parse(value)
+    logger.log('parsed: ', parsed)
+    if (!Array.isArray(parsed)) return
+    logger.log('is array')
+    if (parsed.some(item => typeof item !== 'string')) return
+    logger.log('all string')
+
+    return parsed
+  } catch (e) {
+    return
   }
 }

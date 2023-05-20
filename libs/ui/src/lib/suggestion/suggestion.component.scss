@@ -23,6 +23,10 @@ main {
 
   ion-button {
     display: block;
+
+    span {
+      color: var(--ion-color-secondary);
+    }
   }
 
   article {
@@ -31,7 +35,11 @@ main {
   }
 
   section {
-    margin-top: 16px;
+    margin-top: 48px;
+
+    p {
+      text-align: center;
+    }
 
     ion-list {
       margin-bottom: 8px;
@@ -45,4 +53,9 @@ main {
       }
     }
   }
+}
+
+.fade {
+  -webkit-animation: fadeEffect 3s;
+  animation: fadeEffect 3s;
 }
