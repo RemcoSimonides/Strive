@@ -75,7 +75,7 @@ async function askOpenAI(messages: ChatCompletionRequestMessage[], ref: Document
       const completion = openai.createChatCompletion({
         model: 'gpt-4',
         messages,
-        max_tokens: 200,
+        max_tokens: 1200,
         stream: true
       }, { responseType: 'stream' })
 
