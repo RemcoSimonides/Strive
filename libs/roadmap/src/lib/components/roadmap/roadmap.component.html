@@ -3,50 +3,59 @@
     <ion-list mode="md">
 
       <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
-        <ion-item *ngFor="let milestone of milestones; let last = last; trackBy: trackByFn" (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}" [lines]="last && !canEdit ? 'none' : 'full'">
-          <ion-button *ngIf="!createMode" (click)="updateStatus(milestone, $event)" fill="clear" slot="start" class="status-button" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-            <strive-milestone-status slot="icon-only" [milestone]="milestone" />
-          </ion-button>
-          <section>
-            <span>{{ milestone.content }}</span>
-            <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
-            <article *ngIf="(canEdit && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId || milestone.story?.length">
-              <ng-container *ngIf="canEdit && !createMode">
-                <small class="icon">
-                  <ion-icon src="assets/icons/hand-holding-heart-outline.svg" />
-                  <span>{{ milestone.supports?.length ?? 0 }}</span>
-                </small>
-              </ng-container>
-              <ng-container *ngIf="milestone.story?.length">
-                <small class="icon">
-                  <ion-icon name="chatbox-outline" />
-                  <span>{{ milestone.story?.length }}</span>
-                </small>
-              </ng-container>
-              <ng-container *ngIf="milestone.subtasks?.length">
-                <div class="subtasks">
-                  <ion-icon name="list-outline" />
-                  <small>{{ milestone.subtasks | subtasksCompleted }}</small>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="milestone.deadline">
-                <div class="deadline">
-                  <ion-icon name="alarm-outline" />
-                  <small>{{ milestone.deadline | date:'MMM d, y' }}</small>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="milestone.achiever?.uid">
-                <strive-milestone-assignee [achiever]="milestone.achiever!" />
-              </ng-container>
-            </article>
-          </section>
-          <ng-container *ngIf="!canEdit">
-            <ion-button slot="end" size="small" color="secondary" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
-              <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
+        <ion-item-sliding *ngFor="let milestone of milestones; let last = last; trackBy: trackByFn">
+
+          <ion-item (click)="openDetails(milestone)" button class="milestone" [ngClass]="{'no-padding': !createMode}" [lines]="last && !canEdit ? 'none' : 'full'">
+            <ion-button *ngIf="!createMode" (click)="updateStatus(milestone, $event)" fill="clear" slot="start" class="status-button" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
+              <strive-milestone-status slot="icon-only" [milestone]="milestone" />
             </ion-button>
-          </ng-container>
-          <ion-reorder slot="end" />
-        </ion-item>
+            <section>
+              <span class="small">{{ milestone.content }}</span>
+              <small class="description" *ngIf="milestone.description">{{ milestone.description | maxLength:100 }}</small>
+              <article *ngIf="(canEdit && !createMode) || milestone.subtasks?.length || milestone.deadline || milestone.achieverId || milestone.story?.length">
+                <ng-container *ngIf="canEdit && !createMode">
+                  <small class="icon">
+                    <ion-icon src="assets/icons/hand-holding-heart-outline.svg" />
+                    <span>{{ milestone.supports?.length ?? 0 }}</span>
+                  </small>
+                </ng-container>
+                <ng-container *ngIf="milestone.story?.length">
+                  <small class="icon">
+                    <ion-icon name="chatbox-outline" />
+                    <span>{{ milestone.story?.length }}</span>
+                  </small>
+                </ng-container>
+                <ng-container *ngIf="milestone.subtasks?.length">
+                  <div class="subtasks">
+                    <ion-icon name="list-outline" />
+                    <small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="milestone.deadline">
+                  <div class="deadline">
+                    <ion-icon name="alarm-outline" />
+                    <small>{{ milestone.deadline | date:'MMM d, y' }}</small>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="milestone.achiever?.uid">
+                  <strive-milestone-assignee [achiever]="milestone.achiever!" />
+                </ng-container>
+              </article>
+            </section>
+            <ng-container *ngIf="!canEdit">
+              <ion-button slot="end" size="small" color="secondary" [disabled]="milestone.status !== 'pending'" (click)="openSupportModal($event, milestone)">{{ milestone.supports?.length ?? 0 }}
+                <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
+              </ion-button>
+            </ng-container>
+            <ion-reorder slot="end" />
+          </ion-item>
+
+          <ion-item-options (ionSwipe)="deleteMilestone(milestone)">
+            <ion-item-option (click)="deleteMilestone(milestone)" color="danger" size="small" expandable>
+              <ion-icon slot="icon-only" name="trash-outline" size="small"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
       </ion-reorder-group>
 
       <form [formGroup]="milestoneForm" *ngIf="canEdit">
@@ -59,6 +68,7 @@
         </ion-item>
       </form>
     </ion-list>
+
   </ng-container>
 </ng-container>
 

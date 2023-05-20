@@ -32,6 +32,7 @@ import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/ac
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
 import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
 import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
+import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion-modal.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -531,5 +532,12 @@ export class GoalPageComponent implements OnDestroy {
   toggleStoryOrder() {
     const order: OrderByDirection = this.storyOrder$.value === 'desc' ? 'asc' : 'desc'
     this.storyOrder$.next(order)
+  }
+
+  openSuggestion() {
+    this.modalCtrl.create({
+      component: SuggestionModalComponent,
+      componentProps: { goal: this.goal }
+    }).then(modal => modal.present())
   }
 }

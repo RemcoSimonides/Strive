@@ -147,6 +147,34 @@ export class RoadmapComponent {
     }).then(modal => modal.present())
   }
 
+  async deleteMilestone(milestone: MilestoneWithSupport) {
+    if (!this.canEdit) return
+
+    const header =  milestone.supports?.length ? `Milestone has active supports` : ''
+
+    const alert = await this.alertCtrl.create({
+      header,
+      subHeader: `Are you sure you want to delete this milestone?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'delete'
+        }
+      ]
+    })
+    alert.onDidDismiss().then((res) => {
+      if (res.role == 'delete') {
+        if (!milestone.id) return
+        this.milestone.update(milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id }})
+      }
+    })
+    alert.present()
+  }
+
   async openSupportModal(event: Event, milestone: Milestone) {
     if (milestone.status !== 'pending') return
     event.stopPropagation()

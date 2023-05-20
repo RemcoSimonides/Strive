@@ -102,12 +102,9 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
   }
 
   prepareSuggestion() {
-    const { deadline, title  } = this.goal
-    const end = format(deadline, 'dd MMMM yyyy')
-    const today = format(new Date(), 'dd MMMM yyyy')
-    const country = getCountry() ?? 'The Netherlands'
+    const { deadline, title } = this.goal
     if (title.length > 4 && isFuture(deadline)) {
-      const prompt = `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account.`
+      const prompt = this.chatGPTService.getInitialPrompt(this.goal)
 
       const message = createChatGPTMessage({
         id: 'RoadmapSuggestion',
@@ -116,6 +113,10 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
       })
       this.chatGPTService.upsert(message, { params: { goalId: this.goal.id }})
 
+
+      const end = format(deadline, 'dd MMMM yyyy')
+      const today = format(new Date(), 'dd MMMM yyyy')
+      const country = getCountry() ?? 'The Netherlands'
       const message2 = createChatGPTMessage({
         id: 'RoadmapMoreInfoQuestions',
         prompt: `Soon I am going to ask you to break down my goal into milestones. I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. What are 3 questions to ask the user to create a more specific roadmap?`,

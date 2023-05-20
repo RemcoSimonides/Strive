@@ -228,6 +228,14 @@
         [milestones]="milestones$ | async"
         [stakeholder]="stakeholder">
       </strive-roadmap>
+
+      <article class="ai" *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
+        <ion-button size="small" fill="clear" color="secondary" (click)="openSuggestion()">
+          <span>Suggestion</span>
+          <ion-icon name="sparkles-outline" size="small" slot="end" />
+        </ion-button>
+      </article>
+
     </section>
 
     <ng-container *ngIf="isLoggedIn$ | async">

@@ -1,5 +1,5 @@
-export type MessageType = 'RoadmapSuggestion' | 'RoadmapMoreInfoQuestions' | 'RoadmapMoreInfoAnswers'
-export type MessageStatus = 'waiting' | 'streaming' | 'completed' | 'error'
+export type MessageType = 'RoadmapSuggestion' | 'RoadmapMoreInfoQuestions' | 'RoadmapMoreInfoAnswers' | 'RoadmapUpdateSuggestion'
+export type MessageStatus = 'waiting' | 'streaming' | 'completed' | 'error' | 'no-trigger'
 
 export interface ChatGPTMessage {
   id: string

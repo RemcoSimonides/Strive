@@ -48,6 +48,10 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
 
   sub?: Subscription
   @Input() goalId = ''
+  @Input() set fetch(value: boolean | undefined) {
+    if (value === undefined) return
+    this.fetching$.next(value)
+  }
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -57,11 +61,12 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.suggestion$ = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).pipe(
-      tap(_ => this.fetching$.next(false))
+      filter(message => !!message),
+      tap(() => this.fetching$.next(false))
     )
     this.sub = this.chatGPTService.valueChanges('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
-      this.fetching$.next(false)
       if (!message) return
+      this.fetching$.next(false)
       message.answerParsed.forEach((question, index) => {
         const item = this.questions[index]
         if (item) {
@@ -90,7 +95,6 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    console.log('submitted questions and answers: ', this.questions)
     this.fetching$.next(true)
     const prompt = this.questions.map(question => `question: ${question.question} answer: ${question.answer} `).join(',')
     const message = createChatGPTMessage({

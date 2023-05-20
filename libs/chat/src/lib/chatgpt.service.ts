@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core'
 import { DocumentSnapshot, QueryDocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
-import { ChatGPTMessage, createChatGPTMessage } from '@strive/model'
+import { ChatGPTMessage, Goal, createChatGPTMessage } from '@strive/model'
+import { format } from 'date-fns'
+import { getCountry } from '@strive/utils/country'
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,14 @@ export class ChatGPTService extends FireSubCollection<ChatGPTMessage> {
     return snapshot.exists()
       ? createChatGPTMessage(toDate({ ...snapshot.data(), id: snapshot.id }))
       : undefined
+  }
+
+  getInitialPrompt(goal: Goal) {
+    const { deadline, title  } = goal
+    const end = format(deadline, 'dd MMMM yyyy')
+    const today = format(new Date(), 'dd MMMM yyyy')
+    const country = getCountry() ?? 'The Netherlands'
+    return `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for the milestones and don't use numbering for each milestone.`
   }
 
 }
