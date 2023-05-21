@@ -22,14 +22,22 @@
 
         <ng-container *ngIf="view.suggestion.status === 'streaming' || view.suggestion.status === 'completed'">
           <ng-container *ngIf="view.suggestion.answerParsed.length; else noParsed">
-            <ol>
-              <li *ngFor="let milestone of view.suggestion.answerParsed">{{ milestone }}</li>
-            </ol>
+            <ion-list mode="md" class="small">
+              <ng-container *ngFor="let milestone of view.suggestion.answerParsed; let index = index; let last = last">
+                <ion-item (click)="addSuggestion(milestone, index)" [lines]="last ? 'none' : 'full'" button [disabled]="view.added.includes(index)" class="fade-out">
+                  <ion-label>
+                    <small class="number">{{ index + 1 }}.</small>
+                    <small>{{ milestone }}</small>
+                  </ion-label>
+                  <ion-icon slot="end" name="add-outline" color="secondary" size="small" />
+                </ion-item>
+              </ng-container>
+            </ion-list>
 
             <ng-container *ngIf="view.suggestion.status === 'completed'">
-              <ion-button class="secondary" (click)="apply(view.suggestion.answerParsed)" [disabled]="added$ | async" class="fade">
+              <ion-button class="secondary" (click)="addAllSuggestions(view.suggestion.answerParsed)" [disabled]="view.added.length === view.suggestion.answerParsed.length" class="fade-in">
                 <ion-icon name="sparkles-outline" slot="start" color="secondary" />
-                <span>USE SUGGESTION</span>
+                <span>ADD SUGGESTIONS</span>
               </ion-button>
             </ng-container>
           </ng-container>
@@ -38,16 +46,16 @@
             <article>{{ view.suggestion.answerRaw }}</article>
           </ng-template>
 
-          <section *ngIf="questions.length > 0 && view.suggestion.status === 'completed'" class="fade">
+          <section *ngIf="questions.length > 0 && view.suggestion.status === 'completed'" class="fade-in">
             <p>Improve the suggestions by answering the following questions</p>
             <ion-list mode="md">
               <ng-container *ngFor="let question of questions; let last = last; let index = index">
-                <ion-item lines="none">
+                <ion-item lines="none" class="fade-in">
                   <ion-label color="secondary">
                     <small>{{ question.question }}</small>
                   </ion-label>
                 </ion-item>
-                <ion-item [lines]="last ? 'none' : 'full'">
+                <ion-item [lines]="last ? 'none' : 'full'" class="fade-in">
                   <ion-input
                     [(ngModel)]="questions[index].answer"
                     type="text"
@@ -56,7 +64,7 @@
                 </ion-item>
               </ng-container>
             </ion-list>
-            <ion-button class="secondary" (click)="submit()">Submit</ion-button>
+            <ion-button class="secondary" (click)="submit()">Submit answers</ion-button>
           </section>
 
         </ng-container>

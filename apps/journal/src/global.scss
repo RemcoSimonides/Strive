@@ -209,11 +209,11 @@ button.alert-button.alert-button-delete {
 }
 
 /* Animation */
-@-webkit-keyframes fadeEffect {
+@-webkit-keyframes fadeInEffect {
   from {opacity: 0;}
   to {opacity: 1;}
 }
-@keyframes fadeEffect {
+@keyframes fadeInEffect {
   from {opacity: 0;}
   to {opacity: 1;}
 }

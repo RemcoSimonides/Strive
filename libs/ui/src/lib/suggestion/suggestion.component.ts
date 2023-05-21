@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { IonicModule } from '@ionic/angular'
 import { orderBy, where } from 'firebase/firestore'
 
-import { BehaviorSubject, Observable, Subscription, combineLatest, filter, map, tap, timer } from 'rxjs'
+import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
 
 import { ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
@@ -29,15 +29,17 @@ import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/m
 })
 export class SuggestionSComponent implements OnInit, OnDestroy {
 
-  added$ = new BehaviorSubject<boolean>(false)
+  added$ = new BehaviorSubject<number[]>([])
+  suggestions = new BehaviorSubject<ChatGPTMessage>(createChatGPTMessage())
 
   questions: { question: string, answer: string }[] = []
   fetching$ = new BehaviorSubject<boolean>(false)
 
-  view$?: Observable<{
-    suggestion: ChatGPTMessage | undefined
-    fetching: boolean
-  }>
+  view$ = combineLatest([
+    this.suggestions.asObservable(),
+    this.fetching$.asObservable(),
+    this.added$.asObservable()
+  ]).pipe(map(([suggestion, fetching, added]) => ({ suggestion, fetching, added })))
 
   thinking$ = combineLatest([
     timer(0, 1000),
@@ -50,7 +52,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     })
   )
 
-  sub?: Subscription
+  subs: Subscription[] = []
   @Input() goalId = ''
   @Input() set fetch(value: boolean | undefined) {
     if (value === undefined) return
@@ -64,17 +66,13 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const suggestion$ = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).pipe(
-      filter(message => !!message),
-      tap(() => this.fetching$.next(false))
-    )
+    const sub = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).subscribe(message => {
+      if (!message) return
+      this.suggestions.next(message)
+      this.fetching$.next(false)
+    })
 
-    this.view$ = combineLatest([
-      suggestion$,
-      this.fetching$.asObservable()
-    ]).pipe(map(([suggestion, fetching]) => ({ suggestion, fetching })))
-
-    this.sub = this.chatGPTService.valueChanges('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
+    const sub2 = this.chatGPTService.valueChanges('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
       if (!message) return
       this.fetching$.next(false)
       message.answerParsed.forEach((question, index) => {
@@ -87,21 +85,36 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck()
       })
     })
+
+    this.subs.push(sub, sub2)
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe()
+    this.subs.forEach(sub => sub.unsubscribe())
   }
 
-  async apply(roadmap: string[]) {
+  async addAllSuggestions(roadmap: string[]) {
     if (!this.goalId) throw new Error('Goal Id is required in order to add milestones')
 
-    this.added$.next(true)
+    this.added$.next(roadmap.map((_, index) => index))
+
     const current = await this.milestoneService.getValue([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
     const milestones = roadmap.map((content, index) => createMilestone({ order: max + index, content }))
     this.milestoneService.add(milestones, { params: { goalId: this.goalId }})
+  }
+
+  async addSuggestion(content: string, index: number) {
+    if (!this.goalId) throw new Error('Goal Id is required in order to add milestones')
+
+    const current = await this.milestoneService.getValue([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
+    const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
+
+    const milestone = createMilestone({ order: max, content })
+    this.milestoneService.add(milestone, { params: { goalId: this.goalId }})
+
+    this.added$.next([...this.added$.value, index])
   }
 
   submit() {

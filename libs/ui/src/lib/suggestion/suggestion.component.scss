@@ -17,12 +17,22 @@ main {
 	color: var(--ion-color-medium);
   font-size: small;
 
-  ol li::marker {
-    color: var(--ion-color-secondary);
-  }
+  ion-list.small {
+    margin-block: 16px;
+    padding-block: 0px;
 
-  li {
-    margin-bottom: 8px;
+    ion-item {
+      --min-height: 40px;
+
+      ion-label {
+        white-space: normal !important;
+      }
+
+      .number {
+        color: var(--ion-color-secondary);
+        margin-right: 8px;
+      }
+    }
   }
 
   ion-button {
@@ -59,7 +69,17 @@ main {
   }
 }
 
-.fade {
-  -webkit-animation: fadeEffect 3s;
-  animation: fadeEffect 3s;
+.fade-in {
+  -webkit-animation: fadeInEffect 3s;
+  animation: fadeInEffect 3s;
+}
+
+.fade-out {
+  transition: all 1s;
+}
+
+@media(prefers-reduced-motion) {
+  .fade {
+    transition: none;
+  }
 }

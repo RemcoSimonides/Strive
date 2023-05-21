@@ -2,6 +2,7 @@ import { DocumentReference, RuntimeOptions, db, logger, onDocumentCreate } from 
 import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { Configuration, OpenAIApi, ChatCompletionRequestMessage } from 'openai'
+import { delay } from '@strive/utils/helpers'
 
 const config: RuntimeOptions = {
   timeoutSeconds: 540,
@@ -188,7 +189,7 @@ async function askOpenAI(messages: ChatCompletionRequestMessage[], ref: Document
         stream.on('end', () => {
           logger.log('Stream done: ', answerRaw)
           const doc: Partial<ChatGPTMessage> = { status: 'completed' }
-          ref.update(doc)
+          delay(500).then(() => ref.update(doc))
           resolve(answerRaw)
         })
 
