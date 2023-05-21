@@ -1,0 +1,38 @@
+<strive-header-modal (dismiss)="dismiss()" />
+
+<ion-content class="ion-no-padding">
+  <header>
+    <h4>You're now following {{ username }}.</h4>
+    <small>
+      You'll receive a notification when {{ username }} starts or finishes a goal.
+      In order to receive more notifications about a goal, you can follow the goal too.
+    </small>
+  </header>
+
+  <ion-list mode="md">
+    <ng-container *ngFor="let goal of goals; let last = last">
+      <ng-container *ngIf="goal | getStakeholder | async as stakeholder">
+
+        <ion-item [lines]="last ? 'none' : 'full'">
+          <ion-thumbnail slot="start">
+            <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120" />
+          </ion-thumbnail>
+          <ion-label>{{ goal.title }}</ion-label>
+
+          <ng-container *ngIf="stakeholder.isSpectator; else notSpectator">
+            <ion-button (click)="spectate(goal.id, stakeholder)" color="primary" class="fake-disable">
+              <span>FOLLOWING</span>
+            </ion-button>
+          </ng-container>
+
+          <ng-template #notSpectator>
+            <ion-button (click)="spectate(goal.id, stakeholder)" color="primary">
+              <span>FOLLOW</span>
+            </ion-button>
+          </ng-template>
+        </ion-item>
+
+      </ng-container>
+    </ng-container>
+  </ion-list>
+</ion-content>

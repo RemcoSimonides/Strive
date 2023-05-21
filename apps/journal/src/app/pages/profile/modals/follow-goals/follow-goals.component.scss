@@ -1,0 +1,29 @@
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+
+  h4 {
+    margin: 0;
+    color: var(--ion-color-primary);
+  }
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-list {
+  border-radius: 0;
+
+  ion-thumbnail {
+    position: relative;
+    border-radius: 12px;
+
+    img {
+      border-radius: 12px;
+      object-fit: cover;
+    }
+  }
+}

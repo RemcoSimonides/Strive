@@ -14,6 +14,7 @@ import { FollowersComponent } from '@strive/spectator/components/followers/follo
 import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
 import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
+import { FollowGoalsModalComponent } from './modals/follow-goals/follow-goals.component'
 
 import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
 
@@ -177,18 +178,28 @@ export class ProfilePageComponent {
   }
 
   async toggleSpectate(isSpectator: boolean) {
-    if (this.auth.uid) {
-      const profileId = await firstValueFrom(this.profileId$)
-      if (profileId) {
-        this.spectatorService.upsert({
-          uid: this.auth.uid,
-          profileId,
-          isSpectator
-        }, { params: { uid: profileId }})
-      }
-    } else {
-      this.openAuthModal()
-    }
+    if (!this.auth.uid) return this.openAuthModal()
+
+    const profile = await firstValueFrom(this.profile$)
+    if (!profile) return
+    const { uid, username } = profile
+
+    this.spectatorService.upsert({
+      uid: this.auth.uid,
+      profileId: uid,
+      isSpectator
+    }, { params: { uid }})
+
+    if (!isSpectator) return
+    const achievingStakeholders = await firstValueFrom(this.achievingStakeholders$)
+    if (achievingStakeholders.length === 0) return
+
+    const goals = achievingStakeholders.map(stakeholder => stakeholder.goal)
+
+    this.modalCtrl.create({
+      component: FollowGoalsModalComponent,
+      componentProps: { goals, username }
+    }).then(modal => modal.present())
   }
 
   openFollowers() {

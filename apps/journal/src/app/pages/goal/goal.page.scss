@@ -39,7 +39,10 @@ main {
 
     picture {
       flex: 1;
-      border-radius: 12px;
+
+      img {
+        border-radius: 12px;
+      }
     }
 
     div.info {

@@ -5,7 +5,7 @@ import { setUser } from '@sentry/angular'
 
 import { createUser, User } from '@strive/model'
 
-import { map } from 'rxjs/operators'
+import { distinctUntilChanged, map } from 'rxjs/operators'
 import { BehaviorSubject, firstValueFrom } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
@@ -15,14 +15,15 @@ export class AuthService extends FireAuth<User> implements OnDestroy {
 
   profile?: User
   uid: string | undefined = undefined
-  uid$ = new BehaviorSubject<string | undefined>(undefined)
+  private _uid$ = new BehaviorSubject<string | undefined>(undefined)
+  uid$ = this._uid$.pipe(distinctUntilChanged())
 
   isLoggedIn$ = this.user$.pipe(map(user => !!user))
 
   private sub = this.profile$.subscribe(profile => {
     this.profile = createUser(profile)
     this.uid = profile ? profile.uid : ''
-    this.uid$.next(this.uid)
+    this._uid$.next(this.uid)
     profile ? setUser({ id: profile.uid, username: profile.username }) : setUser(null)
   })
 
