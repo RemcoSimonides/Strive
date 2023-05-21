@@ -70,7 +70,7 @@ async (snapshot, context) => {
 
   if (message.type === 'RoadmapUpdateSuggestion') {
     const [ milestoneSnaps, messagesSnaps ] = await Promise.all([
-      db.collection(`Goals/${goalId}/Milestones`).get(),
+      db.collection(`Goals/${goalId}/Milestones`).where('deletedAt', '==', null) .get(),
       db.collection(`Goals/${goalId}/ChatGPT`).get()
     ])
     const existing = messagesSnaps.docs.map(doc => createChatGPTMessage(toDate({ ...doc.data(), id: doc.id })))

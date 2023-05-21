@@ -132,4 +132,8 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     this.questions = []
     this.cdr.markForCheck()
   }
+
+  trackByFn(index: number) {
+    return index
+  }
 }

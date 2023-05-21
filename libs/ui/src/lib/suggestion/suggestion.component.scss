@@ -75,7 +75,7 @@ main {
 }
 
 .fade-out {
-  transition: all 1s;
+  transition: opacity 1s;
 }
 
 @media(prefers-reduced-motion) {
