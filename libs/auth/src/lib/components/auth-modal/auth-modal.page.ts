@@ -67,8 +67,7 @@ export class AuthModalComponent implements OnInit {
     username: new FormControl<string>('', [
       Validators.required,
       Validators.maxLength(16),
-      Validators.minLength(2),
-      Validators.pattern('^[0-9a-zA-Z]+$')
+      Validators.minLength(1)
     ])
   })
 
@@ -278,7 +277,8 @@ export class AuthModalComponent implements OnInit {
     loading.present()
 
     try {
-      const { email, password, username } = this.signupForm.value
+      const { email, password, username: untrimmed } = this.signupForm.value
+      const username = untrimmed?.trim()
       if (!email || !password || !username) {
         throw new Error('username, email or password not provided')
       }

@@ -7,9 +7,8 @@ function createUserFormControl(params: Partial<User> = {}) {
     uid: new FormControl(user.uid),
     username: new FormControl(user.username, [
       Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(16),
-      Validators.pattern('^[0-9a-zA-Z]+$')
+      Validators.minLength(1),
+      Validators.maxLength(16)
     ]),
     photoURL: new FormControl(user.photoURL),
   }
