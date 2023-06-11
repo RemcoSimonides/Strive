@@ -105,20 +105,20 @@ async function userExerciseAffirmationsHandler(options: ScheduledTaskUserExercis
   // get affirmation
   const affirmations = await getDocument<Affirmations>(`Users/${options.userId}/Exercises/Affirmations`)
 
-  // send push notification
-  sendAffirmationPushNotification(options.userId, affirmations)
-
   // reschedule task for tomorrow
   scheduleNextAffirmation(options.userId, affirmations)
+
+  // send push notification
+  sendAffirmationPushNotification(options.userId, affirmations)
 }
 
 async function userExerciseDailyGratitudeReminderHandler(options: ScheduledTaskUserExerciseDailyGratitude['options']) {
-  // send push notification
-  sendDailyGratitudePushNotification(options.userId)
-
   // reschedule task for tomorrow
   logger.log('scheduling for tomorrow userExerciseDailyGratitudeReminderHandler')
   scheduleNextDailyGratitudeReminder(options.userId)
+
+  // send push notification
+  sendDailyGratitudePushNotification(options.userId)
 }
 
 async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {
