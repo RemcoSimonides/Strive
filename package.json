@@ -29,7 +29,7 @@
     "@angular/platform-browser": "16.0.5",
     "@angular/platform-browser-dynamic": "16.0.5",
     "@angular/platform-server": "16.0.5",
-    "@angular/pwa": "^15.0.3",
+    "@angular/pwa": "^16.0.5",
     "@angular/router": "16.0.5",
     "@angular/service-worker": "16.0.5",
     "@capacitor-community/fcm": "^5.0.1",
