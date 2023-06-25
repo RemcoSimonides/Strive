@@ -168,6 +168,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
     }
 
     this.form.setValue('')
+    this.form.markAsDirty()
     this.step.next('drop')
   }
 
