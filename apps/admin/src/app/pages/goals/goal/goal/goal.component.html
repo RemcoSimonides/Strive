@@ -6,15 +6,19 @@
 
 			<form [formGroup]="goalForm" (ngSubmit)="update()">
 				<ion-item>
-					<ion-label position="floating">Title</ion-label>
-					<ion-input formControlName="title"></ion-input>
+					<ion-input
+						formControlName="title"
+						label="Title"
+						labelPlacement="floating"
+						class="primary"
+					/>
 				</ion-item>
 
 				<ion-item>
 					<ion-label position="stacked">Secret</ion-label>
 					<ion-toggle formControlName="isSecret"></ion-toggle>
 				</ion-item>
-		
+
 				<!-- <strive-image-selector
 					[form]="goalForm.image"
 					[storagePath]="'goals/' + goal.id"

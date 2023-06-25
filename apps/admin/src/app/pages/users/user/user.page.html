@@ -10,8 +10,13 @@
 
         <form [formGroup]="userForm" (ngSubmit)="update()">
           <ion-item>
-            <ion-label position="floating"></ion-label>
-            <ion-input formControlName="username" [disabled]="true"></ion-input>
+            <ion-input
+              formControlName="username"
+              label="Username"
+              labelPlacement="floating"
+              [disabled]="true"
+              class="primary"
+            />
           </ion-item>
 
           <!-- <strive-image-selector

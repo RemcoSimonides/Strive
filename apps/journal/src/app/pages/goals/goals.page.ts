@@ -171,7 +171,7 @@ export class GoalsPageComponent implements OnDestroy {
       component: GoalCreateModalComponent
     }).then(modal => {
       modal.onDidDismiss().then(({ data }) => {
-        const navToGoal = data['navToGoal']
+        const navToGoal = data?.['navToGoal']
         if (navToGoal) this.router.navigate(['/goal', navToGoal ])
       })
       modal.present()

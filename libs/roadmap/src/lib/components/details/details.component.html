@@ -98,7 +98,7 @@
                 color="primary"
               />
             </ion-button>
-            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)" />
+            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)" class="primary" />
             <ion-reorder slot="end" />
           </ion-item>
         </ion-reorder-group>
@@ -106,7 +106,7 @@
         <form [formGroup]="subtaskForm" *ngIf="canEdit">
           <ion-item lines="none">
             <ion-icon class="icon" name="radio-button-off" color="primary" />
-            <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences" />
+            <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences" class="primary" />
             <ion-button color="primary" (click)="addSubtask()">add</ion-button>
           </ion-item>
         </form>

@@ -12,8 +12,13 @@
   <ion-card>
     <form [formGroup]="form" (ngSubmit)="update()">
       <ion-item>
-        <ion-label position="floating">Header</ion-label>
-        <ion-input formControlName="header"></ion-input>
+        <ion-input
+          formControlName="header"
+          type="text"
+          label="Header"
+          labelPlacement="floating"
+          class="primary"
+        />
       </ion-item>
 
       <ion-item>

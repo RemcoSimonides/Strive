@@ -63,7 +63,7 @@
           <ion-button *ngIf="!createMode" fill="clear" slot="start" disabled class="status-button fake-enable">
             <strive-milestone-status slot="icon-only" />
           </ion-button>
-          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences" />
+          <ion-input formControlName="content" placeholder="Add milestone" (keydown.enter)="add()" autocapitalize="sentences" class="primary"/>
           <ion-button color="primary" (click)="add()">add</ion-button>
         </ion-item>
       </form>

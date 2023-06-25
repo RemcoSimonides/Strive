@@ -12,13 +12,21 @@
   <ion-card>
     <form [formGroup]="form" (ngSubmit)="update()">
       <ion-item>
-        <ion-label position="floating">Quote</ion-label>
-        <ion-input formControlName="quote"></ion-input>
+        <ion-input
+          formControlName="quote"
+          label="Quote"
+          labelPlacement="floating"
+          class="primary"
+        />
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">From</ion-label>
-        <ion-input formControlName="from"></ion-input>
+        <ion-input
+          formControlName="from"
+          label="From"
+          labelPlacement="floating"
+          class="primary"
+        />
       </ion-item>
 
       <ion-button type="submit" [disabled]="form.invalid">add</ion-button>

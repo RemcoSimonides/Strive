@@ -125,6 +125,10 @@ picture {
 ion-select {
   font-weight: bold;
   padding: 0;
+
+  label {
+    display: block;
+  }
 }
 
 ion-card.finish {

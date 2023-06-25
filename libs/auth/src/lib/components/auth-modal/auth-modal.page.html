@@ -43,13 +43,24 @@
         <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
           <ion-list mode="md" lines="full">
             <ion-item>
-              <ion-label position="floating">Email</ion-label>
-              <ion-input formControlName="email" type="email" />
+              <ion-input
+                formControlName="email"
+                type="email"
+                label="Email"
+                labelPlacement="floating"
+                class="primary"
+              />
             </ion-item>
 
             <ion-item lines="none">
-              <ion-label position="floating">Password</ion-label>
-              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()" />
+              <ion-input
+                formControlName="password"
+                [type]="passwordType"
+                (keydown.enter)="onEnter()"
+                label="Password"
+                labelPlacement="floating"
+                class="primary"
+              />
               <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
           </ion-list>
@@ -87,8 +98,13 @@
 
           <ion-list mode="md" lines="full">
             <ion-item>
-              <ion-label position="floating">Username</ion-label>
-              <ion-input formControlName="username" type="text" autocapitalize="sentences" />
+              <ion-input
+                formControlName="username"
+                type="text"
+                label="Username"
+                labelPlacement="floating"
+                autocapitalize="sentences"
+              />
             </ion-item>
 
             <ng-container *ngFor="let validation of validation_messages.username">
@@ -100,8 +116,12 @@
             </ng-container>
 
             <ion-item>
-              <ion-label position="floating">Email</ion-label>
-              <ion-input formControlName="email" type="email" />
+              <ion-input
+                formControlName="email"
+                type="email"
+                label="Email"
+                labelPlacement="floating"
+              />
             </ion-item>
 
             <ng-container *ngFor="let validation of validation_messages.email">
@@ -113,8 +133,13 @@
             </ng-container>
 
             <ion-item lines="none">
-              <ion-label position="floating">Password</ion-label>
-              <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="onEnter()"/>
+              <ion-input
+                formControlName="password"
+                [type]="passwordType"
+                (keydown.enter)="onEnter()"
+                label="Password"
+                labelPlacement="floating"
+              />
               <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
 
@@ -155,8 +180,13 @@
         <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
           <ion-list mode="md">
             <ion-item lines="none">
-              <ion-label position="floating">Email</ion-label>
-              <ion-input formControlName="email" type="email" (keydown.enter)="onEnter()"/>
+              <ion-input
+                formControlName="email"
+                type="email"
+                label="Email"
+                labelPlacement="floating"
+                (keydown.enter)="onEnter()"
+              />
             </ion-item>
           </ion-list>
 

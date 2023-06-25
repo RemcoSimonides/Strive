@@ -15,8 +15,14 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked" color="primary">When should the goal be finished? *</ion-label>
-      <ion-input (ionFocus)="openDatePicker()" placeholder="dd/mm/yyyy" [value]="form.deadline.value | date:'longDate'" />
+      <ion-input
+        [value]="form.deadline.value | date:'longDate'"
+        (ionFocus)="openDatePicker()"
+        placeholder="dd/mm/yyyy"
+        label="When should the goal be finished? *"
+        labelPlacement="stacked"
+        class="primary"
+      />
     </ion-item>
 
     <ion-item lines="none">

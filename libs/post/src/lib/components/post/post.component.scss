@@ -9,9 +9,9 @@
 }
 
 ion-card {
-  ion-card-header {
-    display: flex;
+  header {
     padding: 8px;
+    display: flex;
 
     ion-avatar {
       height: 32px;
@@ -19,7 +19,7 @@ ion-card {
       margin-right: 16px;
     }
 
-    section {
+    article {
       display: flex;
       flex-direction: column;
       justify-content: center;

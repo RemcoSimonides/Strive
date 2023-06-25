@@ -45,7 +45,13 @@
           <h5>Your Affirmations</h5>
           <ion-list mode="md">
             <ion-item *ngFor="let control of affirmationsForm.controls; let i = index">
-              <ion-input class="ion-text-wrap" autocapitalize="sentences" type="text" placeholder="Enter affirmation" [formControl]="control"/>
+              <ion-input
+                class="ion-text-wrap primary"
+                autocapitalize="sentences"
+                type="text"
+                placeholder="Enter affirmation"
+                [formControl]="control"
+              />
               <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"/>
             </ion-item>
             <ion-button disabled color="primary" fill="clear">

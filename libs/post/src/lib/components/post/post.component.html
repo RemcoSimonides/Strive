@@ -1,16 +1,16 @@
 <ion-card *ngIf="post && author">
-  <ion-card-header>
+  <header>
     <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
       <img [ref]="author.photoURL" asset="profile.png" [width]="120" [height]="120" />
     </ion-avatar>
-    <section>
+    <article>
       <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
       <small>{{ post.date | date:'longDate' }}</small>
-    </section>
+    </article>
     <ion-button fill="clear" size="small" *ngIf="stakeholder.isAdmin || (stakeholder.isAchiever && stakeholder.uid === author.uid)" (click)="openPostOptions(post, $event)">
       <ion-icon slot="icon-only" name="ellipsis-vertical-outline" />
     </ion-button>
-  </ion-card-header>
+  </header>
 
   <ng-container *ngIf="post.youtubeId as id; else media">
     <iframe

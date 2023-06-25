@@ -7,15 +7,24 @@
   <section>
     <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
       <ion-item>
-        <ion-label position="floating">Email</ion-label>
-        <ion-input formControlName="email" type="email">
-        </ion-input>
+        <ion-input
+          formControlName="email"
+          type="email"
+          label="Email"
+          labelPlacement="floating"
+          class="primary"
+        />
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Password</ion-label>
-        <ion-input formControlName="password" [type]="passwordType" clearOnEdit="false" (keydown.enter)="loginUser()">
-        </ion-input>
+        <ion-input
+          formControlName="password"
+          [type]="passwordType"
+          (keydown.enter)="loginUser()"
+          label="Password"
+          labelPlacement="floating"
+          class="primary"
+        />
         <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
       </ion-item>
 
