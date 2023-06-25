@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
-import { Post } from '@strive/model'
+import { Post, createGoalStakeholder } from '@strive/model'
 import { PostService } from '@strive/post/post.service'
 
 import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.component'
@@ -14,6 +14,7 @@ import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.compon
 export class PostOptionsComponent {
 
 	@Input() post!: Post
+	@Input() stakeholder = createGoalStakeholder()
 
 	constructor(
 		private alertCtrl: AlertController,

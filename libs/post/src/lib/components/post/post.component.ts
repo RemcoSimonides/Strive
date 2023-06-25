@@ -22,10 +22,10 @@ export class PostComponent {
     this.post = post
   }
   @Input() stakeholder = createGoalStakeholder()
-  
+
   author?: User
   post?: Post
-  
+
   constructor(
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
@@ -40,10 +40,14 @@ export class PostComponent {
     }).then(modal => modal.present())
   }
 
-  openPostOptions(post: Post, event: UIEvent) {
+  openPostOptions(event: UIEvent) {
+    if (!this.post) return
     this.popoverCtrl.create({
       component: PostOptionsComponent,
-      componentProps: { post },
+      componentProps: {
+        post: this.post,
+        stakeholder: this.stakeholder
+      },
       event
     }).then(popover => popover.present())
   }
