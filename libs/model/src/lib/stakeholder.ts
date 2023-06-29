@@ -1,4 +1,5 @@
 import { Goal, GoalPublicityType } from './goal'
+import { GoalSettings, createGoalSettings } from './settings'
 import { User } from './user'
 
 export type GoalStakeholderRole = 'isAdmin' | 'isAchiever' | 'isSupporter' | 'isSpectator'
@@ -25,6 +26,7 @@ export interface GoalStakeholder extends Roles {
   collectiveGoalId: string
   lastCheckedGoal: Date
   lastCheckedChat: Date
+  settings: GoalSettings
   updatedBy?: string
   updatedAt?: Date
   createdAt?: Date
@@ -52,6 +54,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     collectiveGoalId: '',
     lastCheckedGoal: new Date(),
     lastCheckedChat: new Date(),
+    settings: createGoalSettings(params.settings),
     ...params
   }
 }

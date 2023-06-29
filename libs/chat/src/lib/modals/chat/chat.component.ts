@@ -19,6 +19,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Location } from '@angular/common'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
+import { GoalService } from '@strive/goal/goal.service'
 
 
 @Component({
@@ -41,7 +42,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
   private _done = new BehaviorSubject<boolean>(false)
   private _loading = new BehaviorSubject<boolean>(false)
   comments$ = this._comments.asObservable().pipe(
-    // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages) 
+    // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages)
     map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i)),
     joinWith({
       user: comment => this.profileService.valueChanges(comment.userId)
@@ -59,6 +60,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
   constructor(
     private auth: AuthService,
     private commentService: CommentService,
+    private goalService: GoalService,
     protected override location: Location,
     protected override modalCtrl: ModalController,
     private platform: Platform,
@@ -102,8 +104,15 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
       map(comments => comments[0]),
       filter(comment => !!comment?.createdAt)
     ).subscribe(comment => {
-      const next = [...this._comments.value, comment]
-      this._comments.next(next)
+      const existing = this._comments.value.find(c => c.id === comment.id)
+      if (existing) {
+        existing.text = comment.text // update text if comment already exists
+        existing.status = comment.status // update status too
+        this._comments.next(this._comments.value)
+      } else {
+        const next = [...this._comments.value, comment]
+        this._comments.next(next)
+      }
       if (this.scrolledToBottom) this.contentArea?.scrollToBottom()
     })
     this.subs.push(sub)
@@ -198,5 +207,14 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
         goal: this.goal
       }
     }).then(modal => modal.present())
+  }
+
+  toggleAssistant(enableAssistant: boolean) {
+    this.goalService.update({ id: this.goal.id, enableAssistant })
+    this.goal.enableAssistant = enableAssistant
+  }
+
+  toggleNotifications(goalChat: boolean) {
+    this.stakeholderService.update({ uid: this.auth.uid, 'settings.goalChat': goalChat }, { params: { goalId: this.goal.id }})
   }
 }

@@ -1,12 +1,18 @@
-import { DocumentReference, RuntimeOptions, db, logger, onDocumentCreate } from '@strive/api/firebase'
-import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/model'
+import { RuntimeOptions, db, onDocumentCreate } from '@strive/api/firebase'
+import { createChatGPTMessage, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
-import { Configuration, OpenAIApi, ChatCompletionRequestMessage } from 'openai'
-import { delay } from '@strive/utils/helpers'
+import { ChatCompletionRequestMessage } from 'openai'
+import { AskOpenAIConfig, askOpenAI } from '../../../shared/chatgpt/chatgpt'
 
 const config: RuntimeOptions = {
   timeoutSeconds: 540,
   memory: '1GB',
+}
+
+const askOpenAIConfig: AskOpenAIConfig = {
+  model: 'gpt-4',
+  answerRawPath: 'answerRaw',
+  answerParsedPath: 'answer'
 }
 
 const parsablePrompt = `The format of your response has to be a JSON parsable array of strings.`
@@ -29,14 +35,14 @@ async (snapshot, context) => {
       role: 'user',
       content: `${message.prompt} ${parsablePrompt}`
     })
-    await askOpenAI(messages, snapshot.ref)
+    await askOpenAI(messages, snapshot.ref, askOpenAIConfig)
     return
   }
 
   if (message.type === 'RoadmapMoreInfoQuestions') {
     const content = `${message.prompt} ${parsablePrompt}`
     messages.push({ role: 'user', content })
-    await askOpenAI(messages, snapshot.ref)
+    await askOpenAI(messages, snapshot.ref, askOpenAIConfig)
     return
   }
 
@@ -56,7 +62,7 @@ async (snapshot, context) => {
       content: `Here is some more information about the goal: ${qa}. Please further specify the roadmap based on this information. ${parsablePrompt}`
     })
 
-    const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`))
+    const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`), askOpenAIConfig)
 
     messages.push({ role: 'assistant', content: answer })
     messages.push({
@@ -64,7 +70,7 @@ async (snapshot, context) => {
       content: `What are 3 questions you would ask the user to create a more specific roadmap? ${parsablePrompt}`
     })
 
-    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`))
+    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`), askOpenAIConfig)
     return
   }
 
@@ -128,7 +134,7 @@ async (snapshot, context) => {
       content: `Could you please update the roadmap based on this information? Only include milestones that still need to be done. ${parsablePrompt}`
     })
 
-    const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`))
+    const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`), askOpenAIConfig)
 
     messages.push({ role: 'assistant', content: answer })
     messages.push({
@@ -136,96 +142,9 @@ async (snapshot, context) => {
       content: `What are 3 questions you would ask the user to create a more specific roadmap? ${parsablePrompt}`
     })
 
-    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`))
+    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`), askOpenAIConfig)
 
     return
   }
 
 }, config)
-
-async function askOpenAI(messages: ChatCompletionRequestMessage[], ref: DocumentReference): Promise<string> {
-  const configuration = new Configuration({ apiKey: process.env.OPENAI_APIKEY })
-  const openai = new OpenAIApi(configuration)
-
-  try {
-    let answerRaw = ''
-    const promise = new Promise<string>((resolve, reject) => {
-      const completion = openai.createChatCompletion({
-        model: 'gpt-4',
-        messages,
-        max_tokens: 600,
-        stream: true
-      }, { responseType: 'stream' })
-
-      completion.then(({ data: stream }: any) => {
-        stream.on('data', (chunk: Buffer) => {
-          // Messages in the event stream are separated by a pair of newline characters.
-          const payloads = chunk.toString().split('\n\n')
-          for (const payload of payloads) {
-            if (payload.includes('[DONE]')) return
-            if (!payload.startsWith("data:")) continue
-
-            const data = payload.replaceAll(/(\n)?^data:\s*/g, '') // in case there's multiline data event
-
-            try {
-              const delta = JSON.parse(data.trim())
-              const content = delta.choices[0].delta?.content
-              if (!content) continue
-
-              answerRaw += content
-              if (!answerRaw) continue
-
-              const parsed = parse(answerRaw)
-              const doc: Partial<ChatGPTMessage> = { answerRaw, status: 'streaming' }
-              if (parsed) doc.answerParsed = parsed
-
-              ref.update(doc)
-            } catch (error) {
-              logger.error(`Error with JSON.parse and ${payload}.\n${error}`)
-            }
-          }
-        })
-
-        stream.on('end', () => {
-          logger.log('Stream done: ', answerRaw)
-          const doc: Partial<ChatGPTMessage> = { status: 'completed' }
-          delay(500).then(() => ref.update(doc))
-          resolve(answerRaw)
-        })
-
-        stream.on('error', reject)
-      })
-    })
-
-    return await promise
-
-  } catch (error) {
-    if (error.response) {
-      logger.error(error.response.status)
-      logger.error(error.response.data)
-    } else {
-      logger.error(error.message)
-    }
-
-    const doc: Partial<ChatGPTMessage> = { status: 'error' }
-    ref.update(doc)
-    return 'error'
-  }
-}
-
-function parse(answer: string): string[] | undefined {
-  let value = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
-
-  if (value.split('"').length % 2 === 0) value = value + '"'
-  if (value.startsWith('[') && !value.endsWith(']')) value = value + ']'
-
-  try {
-    const parsed = JSON.parse(value)
-    if (!Array.isArray(parsed)) return
-    if (parsed.some(item => typeof item !== 'string')) return
-
-    return parsed
-  } catch (e) {
-    return
-  }
-}

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { Pipe, PipeTransform } from '@angular/core'
 
 function replaceURLs(value: string) {
-  if(!value) return
+  if(!value) return ''
 
   const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g
   return value.replace(urlRegex, url => {

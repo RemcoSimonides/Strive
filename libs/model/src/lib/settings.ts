@@ -55,3 +55,14 @@ export function createPushNotificationSettings(params?: Partial<PushNotification
     ...params,
   }
 }
+
+export interface GoalSettings {
+  goalChat: boolean
+}
+
+export function createGoalSettings(params: Partial<GoalSettings> = {}): GoalSettings {
+  return {
+    goalChat: true,
+    ...params,
+  }
+}

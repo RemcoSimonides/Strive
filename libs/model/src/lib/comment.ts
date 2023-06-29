@@ -1,7 +1,10 @@
+import { MessageStatus } from './chatgpt'
+
 export interface Comment {
   id: string
   text: string
   userId: string
+  status?: MessageStatus // only for chatgpt
   createdAt: Date
   updatedAt: Date
 }

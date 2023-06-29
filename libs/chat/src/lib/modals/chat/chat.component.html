@@ -1,4 +1,8 @@
-<strive-header-modal (dismiss)="dismiss()" />
+<strive-header-modal (dismiss)="dismiss()">
+	<ion-button fill="clear" slot="end" size="small" id="popover-button">
+		<ion-icon slot="icon-only" name="settings-outline" />
+	</ion-button>
+</strive-header-modal>
 
 <ng-container *ngIf="stakeholder$ | async as stakeholder">
 	<ng-container *ngIf="stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter else noAccess">
@@ -11,12 +15,12 @@
 					/>
 				</ion-infinite-scroll>
 
-				<li *ngFor="let comment of comments$ | async">
+				<li *ngFor="let comment of comments$ | async" [ngClass]="{'my-message': comment.userId === stakeholder.uid}">
 					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
 					<article>
-						<small><b>{{ comment.user?.username }}</b></small>
+						<small class="username"><b>{{ comment.user?.username }}</b></small>
+						<div class="comment" [innerHTML]="comment.text | toHTML | toThinking: comment | async"></div>
 						<small class="date">{{ comment.createdAt | timeAgo }}</small>
-						<div [innerHTML]="comment.text | toHTML"></div>
 					</article>
 				</li>
 			</ul>
@@ -41,4 +45,15 @@
 			</ion-button>
 		</section>
 	</ng-template>
+
+	<ion-popover trigger="popover-button" [dismissOnSelect]="true">
+		<ng-template>
+			<ion-content>
+				<ion-list mode="md">
+					<ion-item button (click)="toggleAssistant(!goal.enableAssistant)">{{ goal.enableAssistant ? 'Disable' : 'Enable' }} Strive Assistant</ion-item>
+					<ion-item button lines="none" (click)="toggleNotifications(!stakeholder.settings.goalChat)">{{ stakeholder.settings.goalChat ? 'Mute' : 'Unmute' }} notifications</ion-item>
+				</ion-list>
+			</ion-content>
+		</ng-template>
+	</ion-popover>
 </ng-container>

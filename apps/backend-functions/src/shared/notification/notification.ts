@@ -62,8 +62,16 @@ export async function sendGoalEventNotification(
   if (options.toSpectator?.notification) roles[options.toSpectator.notification] = true
 
   const all = await getGoalStakeholders(goalId, roles)
+
+  const unmuted = all.filter(stakeholder => {
+    if (event.name === 'goalChatMessageCreated') {
+      return stakeholder.settings.goalChat
+    }
+    return true
+  })
+
   const except =  excludeTriggerer ? userId : ''
-  const stakeholders = except ? all.filter(stakeholder => stakeholder.uid !== except) : all
+  const stakeholders = except ? unmuted.filter(stakeholder => stakeholder.uid !== except) : unmuted
 
   if (options.toStakeholder?.pushNotification || options.toSpectator?.pushNotification) {
     const goalPromise = getDocument<Goal>(`Goals/${goalId}`).then(goal => notification.goal = goal)
@@ -142,16 +150,12 @@ async function getGoalStakeholders(
   goalId: string,
   roles: Partial<Roles>
 ): Promise<GoalStakeholder[]> {
-
   const stakeholderColSnap = await db.collection(`Goals/${goalId}/GStakeholders`).get()
-  const recipients: GoalStakeholder[] = []
-
-  for (const snap of stakeholderColSnap.docs) {
-    const stakeholder = createGoalStakeholder(toDate({ ...snap.data(), uid: snap.id }))
-    if (roles.isAdmin === stakeholder.isAdmin || roles.isAchiever === stakeholder.isAchiever || roles.isSupporter === stakeholder.isSupporter || roles.isSpectator === stakeholder.isSpectator) {
-      recipients.push(stakeholder)
-    }
-  }
+  const stakeholders = stakeholderColSnap.docs.map(snap => createGoalStakeholder(toDate({ ...snap.data(), uid: snap.id })))
+  const recipients = stakeholders.filter(stakeholder => {
+    const { isAdmin, isAchiever, isSupporter, isSpectator } = stakeholder
+    return roles.isAdmin === isAdmin || roles.isAchiever === isAchiever || roles.isSupporter === isSupporter || roles.isSpectator === isSpectator
+  })
 
   return recipients
 }

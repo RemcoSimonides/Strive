@@ -46,6 +46,9 @@
         <ion-button (click)="openChat()" size="block" class="secondary">
           <ion-icon name="chatbubbles-outline" slot="start" size="small"/>
           <span>Chat</span>
+          <ng-container *ngIf="missedMessages$ | async as missedMessages">
+            <span>&nbsp;({{ missedMessages | compact }})</span>
+          </ng-container>
         </ion-button>
 
         <ng-container *ngIf="stakeholder.isAdmin; else share">

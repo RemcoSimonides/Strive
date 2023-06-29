@@ -24,6 +24,7 @@ export interface Goal {
   status: 'pending' | 'succeeded' | 'failed'
   publicity: GoalPublicityType
   collectiveGoalId: string
+  enableAssistant: boolean
   numberOfAchievers: number
   numberOfSupporters: number
   numberOfSpectators: number
@@ -67,6 +68,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     image: '',
     deadline,
     status: 'pending',
+    enableAssistant: true,
     numberOfAchievers: 0,
     numberOfSupporters: 0,
     numberOfSpectators: 0,

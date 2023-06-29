@@ -11,7 +11,8 @@ import {
   createAggregation,
   createAlgoliaGoal,
   EventType,
-  SupportBase
+  SupportBase,
+  createComment
 } from '@strive/model'
 import { upsertScheduledTask, deleteScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType } from '../../shared/scheduled-task/scheduled-task.interface'
@@ -38,12 +39,20 @@ async snapshot => {
   handleAggregation(undefined, goal)
 
   // deadline
-  if (goal.deadline && isFuture(goal.deadline)) {
+  if (isFuture(goal.deadline)) {
     upsertScheduledTask(goalId, {
       worker: enumWorkerType.goalDeadline,
       performAt: goal.deadline,
       options: { goalId }
     })
+
+    // comment
+    const comment = createComment({
+      userId: 'chatgpt',
+      status: 'waiting',
+      text: `Hi! I'm here to help you achieve your goal. I will occassionaly check in with you to see how it is going. You can also ask me questions about your goal. Good luck!`
+    })
+    db.doc(`Goals/${goalId}/Comments/initial`).set(comment)
   }
 
   // algolia

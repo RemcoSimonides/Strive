@@ -47,6 +47,7 @@ import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
+import { CommentService } from '@strive/chat/comment.service'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -95,6 +96,8 @@ export class GoalPageComponent implements OnDestroy {
 
   supports$: Observable<SupportsGroupedByGoal[]>
 
+  missedMessages$: Observable<number>
+
   isMobile$ = this.screensize.isMobile$
 
   isLoggedIn$ = this.auth.isLoggedIn$
@@ -113,6 +116,7 @@ export class GoalPageComponent implements OnDestroy {
   constructor(
     private alertCtrl: AlertController,
     private auth: AuthService,
+    private commentService: CommentService,
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private location: Location,
@@ -228,6 +232,11 @@ export class GoalPageComponent implements OnDestroy {
           map(story => story.filter(item => item.post && item.milestoneId === milestone.id))
         )
       }, { shouldAwait: false })
+    )
+
+    this.missedMessages$ = this.stakeholder$.pipe(
+      switchMap(stakeholder => stakeholder.uid ? this.commentService.valueChanges([where('createdAt', '>', stakeholder.lastCheckedChat)], { goalId: stakeholder.goalId }) : of([])),
+      map(comments => comments.length)
     )
 
     this.accessSubscription = combineLatest([
