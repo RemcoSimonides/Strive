@@ -18,6 +18,9 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchAutoHide: false
     }
+  },
+  server: {
+    androidScheme: "http" // https://capacitorjs.com/docs/updating/5-0#update-androidscheme
   }
 }
 
