@@ -2,7 +2,7 @@ import { RuntimeOptions, db, onDocumentCreate } from '@strive/api/firebase'
 import { createChatGPTMessage, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { ChatCompletionRequestMessage } from 'openai'
-import { AskOpenAIConfig, askOpenAI } from '../../../shared/chatgpt/chatgpt'
+import { AskOpenAIConfig, askOpenAI } from '../../../shared/ask-open-ai/ask-open-ai'
 
 const config: RuntimeOptions = {
   timeoutSeconds: 540,

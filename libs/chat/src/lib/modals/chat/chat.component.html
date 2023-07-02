@@ -15,7 +15,7 @@
 					/>
 				</ion-infinite-scroll>
 
-				<li *ngFor="let comment of comments$ | async" [ngClass]="{'my-message': comment.userId === stakeholder.uid}">
+				<li *ngFor="let comment of comments$ | async" [ngClass]="{'my-message': comment.userId === stakeholder.uid}" #item>
 					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
 					<article>
 						<small class="username"><b>{{ comment.user?.username }}</b></small>

@@ -4,7 +4,7 @@ import { createComment, createGoal, createGoalStakeholder, createMilestone } fro
 import { toDate } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { ChatCompletionRequestMessage } from 'openai'
-import { askOpenAI, AskOpenAIConfig } from '../../../shared/chatgpt/chatgpt'
+import { askOpenAI, AskOpenAIConfig } from '../../../shared/ask-open-ai/ask-open-ai'
 import { format } from 'date-fns'
 
 const askOpenAIConfig: AskOpenAIConfig = {
@@ -67,5 +67,5 @@ async (snapshot, context) =>{
 
   messages.push({ role: 'user', content: comment.text })
 
-  askOpenAI(messages, ref, askOpenAIConfig)
+  return askOpenAI(messages, ref, askOpenAIConfig)
 })

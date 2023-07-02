@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { InfiniteScrollCustomEvent, IonContent, ModalController, Platform, ScrollCustomEvent} from '@ionic/angular'
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
@@ -28,8 +28,9 @@ import { GoalService } from '@strive/goal/goal.service'
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatModalComponent extends ModalDirective implements OnInit, OnDestroy {
-  @ViewChild(IonContent) contentArea?: IonContent
+export class ChatModalComponent extends ModalDirective implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(IonContent) content?: IonContent
+  @ViewChildren('item') list?: QueryList<ElementRef>
   @Input() goal!: Goal
   @Input() collectiveStakeholder?: GoalStakeholder
 
@@ -52,6 +53,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
   done$ = this._done.asObservable()
 
   scrolledToBottom = true
+  scrolledToBottomGenerous = true
 
   form = new FormControl('', { validators: [Validators.required], nonNullable: true })
 
@@ -68,7 +70,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
     private stakeholderService: GoalStakeholderService
   ) {
     super(location, modalCtrl)
-    const sub = this.platform.keyboardDidShow.subscribe(() => this.contentArea?.scrollToBottom())
+    const sub = this.platform.keyboardDidShow.subscribe(() => this.content?.scrollToBottom())
     this.subs.push(sub)
   }
 
@@ -104,21 +106,30 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
       map(comments => comments[0]),
       filter(comment => !!comment?.createdAt)
     ).subscribe(comment => {
+      if (this.auth.uid) {
+        this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid) // update last check chat everytime a comment is added
+      }
       const existing = this._comments.value.find(c => c.id === comment.id)
       if (existing) {
         existing.text = comment.text // update text if comment already exists
         existing.status = comment.status // update status too
         this._comments.next(this._comments.value)
+        if (this.scrolledToBottomGenerous) this.content?.scrollToBottom()
       } else {
         const next = [...this._comments.value, comment]
         this._comments.next(next)
       }
-      if (this.scrolledToBottom) this.contentArea?.scrollToBottom()
     })
     this.subs.push(sub)
 
     await this.mapAndUpdate([])
-    delay(250).then(() => this.contentArea?.scrollToBottom())
+    delay(250).then(() => this.content?.scrollToBottom())
+  }
+
+  ngAfterViewInit() {
+    this.list?.changes.subscribe(() => {
+      if (this.scrolledToBottom) this.content?.scrollToBottom()
+    })
   }
 
   ngOnDestroy() {
@@ -165,7 +176,6 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
 
     this.form.reset('')
     this.commentService.add(comment, { params: { goalId: this.goal.id }})
-    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid)
   }
 
   async logScrolling($event: ScrollCustomEvent) {
@@ -185,6 +195,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, OnDest
     const currentScrollDepth = $event.detail.scrollTop
 
     this.scrolledToBottom = scrollHeight < currentScrollDepth + 10
+    this.scrolledToBottomGenerous = scrollHeight < currentScrollDepth + 200
   }
 
   async support() {

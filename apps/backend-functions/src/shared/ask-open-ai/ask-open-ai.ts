@@ -68,7 +68,7 @@ export async function askOpenAI(messages: ChatCompletionRequestMessage[], ref: D
       })
     })
 
-    return await promise
+    return promise
 
   } catch (error) {
     if (error.response) {
