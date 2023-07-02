@@ -268,6 +268,8 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
 
     if (link) {
+      if (this.router.url.includes(link)) return // dont show notification if user is already on the page
+
       options.buttons = [{
         icon: 'arrow-forward',
         handler: () => {
