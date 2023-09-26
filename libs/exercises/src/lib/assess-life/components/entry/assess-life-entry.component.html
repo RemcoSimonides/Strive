@@ -37,6 +37,7 @@
 
   <ion-footer>
     <ion-toolbar>
+      <ion-progress-bar [value]="progress()" slot="start"></ion-progress-bar>
       <ion-buttons *ngIf="stepIndex()" slot="start" class="visible">
         <ion-button (click)="step('previous')" fill="clear" color="primary">Previous</ion-button>
       </ion-buttons>

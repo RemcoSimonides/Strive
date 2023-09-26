@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
 
@@ -87,6 +87,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   steps = signal<{ section: Section, subsection: Subsection }[]>([])
   stepIndex = signal<number>(0)
   stepping$ = new BehaviorSubject<boolean>(false)
+  progress = computed(() => this.stepIndex() / (this.steps().length - 1))
   loading = signal<boolean>(true)
 
   @Input() interval?: AssessLifeInterval
