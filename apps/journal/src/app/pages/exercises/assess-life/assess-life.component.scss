@@ -1,0 +1,35 @@
+main {
+  max-width: var(--page-max-width);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  h1, h3 {
+    margin: 0;
+  }
+
+  ion-button {
+    margin-left: auto;
+  }
+}
+
+small {
+  color: var(--ion-color-medium);
+}
+
+.explanation {
+  color: var(--ion-color-medium);
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

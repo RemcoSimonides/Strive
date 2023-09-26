@@ -1,0 +1,43 @@
+<ng-container *ngIf="form && interval">
+  <ion-list mode="md">
+    <!-- <h1>Actual time spent last week</h1> -->
+    <span>What did you spent time on which you should spend less time on past {{ interval | interval }}?</span>
+    <ion-item *ngFor="let control of form.entries.controls; let i = index">
+      <ion-input
+        class="ion-text-wrap primary"
+        autocapitalize="sentences"
+        type="text"
+        placeholder="..."
+        [formControl]="control"
+        (ionBlur)="blur(i)"
+      />
+      <ion-icon
+        *ngIf="control.value !== ''"
+        class="remove-item-icon"
+        (click)="removeValue(i)"
+        name="close-outline"
+      />
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input
+        [formControl]="inputForm"
+        placeholder="..."
+        (keydown.enter)="add()"
+        autocapitalize="sentences"
+        class="primary"
+      />
+      <ion-icon name="add-outline" slot="end" (click)="add()" />
+    </ion-item>
+  </ion-list>
+
+  <ng-container *ngIf="previousEntries">
+    <section>
+      <p>Last {{ interval | interval }} you intended to spend more time on:</p>
+      <ul>
+        <li *ngFor="let entry of previousEntries">{{ entry }}</li>
+      </ul>
+      <p>Did you manage to do that? If not, how come?</p>
+    </section>
+  </ng-container>
+</ng-container>

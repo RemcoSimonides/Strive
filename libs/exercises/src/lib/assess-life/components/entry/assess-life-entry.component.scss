@@ -1,0 +1,11 @@
+.visible {
+  animation: fadeInEffect ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.invisible {
+  animation: fadeOutEffect ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}

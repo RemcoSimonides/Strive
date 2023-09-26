@@ -1,4 +1,4 @@
-export type Interval = 'never' | 'weekly' | 'monthly' | 'monthly' | 'quarterly' | 'yearly'
+export type Interval = 'never' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 
 export interface WheelOfLifeSettings {
   id?: string

@@ -1,0 +1,51 @@
+<ion-header mode="md">
+  <ion-toolbar>
+    <ion-title [ngClass]="animatingSection()">{{ title() }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ng-container *ngIf="loading() else notLoading">
+  <strive-page-loading></strive-page-loading>
+</ng-container>
+
+<ng-template #notLoading>
+
+  <ng-container [ngSwitch]="subsection()">
+
+    <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-intro [interval]="interval" />
+    </ion-content>
+
+    <ion-content *ngSwitchCase="'timeManagementPast'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-time-management-past [form]="form.timeManagement.past" [interval]="interval" [previousEntries]="previousEntry?.timeManagement?.future?.entries" [stepping]="stepping$ | async" />
+    </ion-content>
+
+    <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-time-management-future [form]="form.timeManagement.future" [interval]="interval" [stepping]="stepping$ | async" />
+    </ion-content>
+
+    <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-outro [interval]="interval" />
+    </ion-content>
+
+  </ng-container>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-buttons *ngIf="stepIndex()" slot="start" class="visible">
+        <ion-button (click)="step('previous')" fill="clear" color="primary">Previous</ion-button>
+      </ion-buttons>
+
+      <ion-buttons slot="end">
+        <ion-button (click)="step('next')" color="primary" fill="solid">
+          {{ stepIndex() === steps().length - 1 ? 'Finish' : 'Next' }}
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</ng-template>

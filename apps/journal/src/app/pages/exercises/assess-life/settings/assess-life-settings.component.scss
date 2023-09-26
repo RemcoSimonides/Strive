@@ -1,0 +1,26 @@
+main {
+  max-width: var(--page-max-width);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+ion-item {
+  --highlight-background: var(--ion-color-primary);
+}
+
+ion-select {
+  width: 100%;
+  --padding-end: 16px;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}

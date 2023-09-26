@@ -1,0 +1,34 @@
+<strive-header title="Assess Life Settings" defaultBack="/exercise/assess-life" color="primary" />
+
+<ion-content class="ion-padding">
+  <main>
+    <h1 *ngIf="(isMobile$ | async) === false">Settings</h1>
+
+    <ng-container *ngIf="loading() else notLoading">
+	    <strive-page-loading></strive-page-loading>
+    </ng-container>
+
+  </main>
+</ion-content>
+
+<ng-template #notLoading>
+  <ion-list mode="md" lines="full">
+    <form [formGroup]="form">
+      <ion-item>
+        <ion-label>
+          <section>
+            <span>Time Management</span>
+            <small>What did you spend time on?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="timeManagement" interface="popover">
+          <ion-select-option value="never">Never</ion-select-option>
+          <ion-select-option value="weekly">Weekly</ion-select-option>
+          <ion-select-option value="monthly">Monthly</ion-select-option>
+          <ion-select-option value="quarterly">Quarterly</ion-select-option>
+          <ion-select-option value="yearly">Yearly</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </form>
+  </ion-list>
+</ng-template>

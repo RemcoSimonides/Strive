@@ -1,0 +1,10 @@
+span {
+  display: block;
+  margin: 8px 16px;
+  color: var(--ion-color-primary);
+}
+
+ion-icon:hover {
+  cursor: pointer;
+  color: var(--ion-color-primary);
+}

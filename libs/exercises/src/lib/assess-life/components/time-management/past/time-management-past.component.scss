@@ -1,0 +1,21 @@
+span {
+  display: block;
+  margin: 8px 16px;
+  color: var(--ion-color-primary);
+}
+
+ion-icon:hover {
+  cursor: pointer;
+  color: var(--ion-color-primary);
+}
+
+section {
+  font-size: small;
+  margin-left: 16px;
+
+  ul {
+    list-style-type: disc;
+    padding: revert;
+    margin: revert;
+  }
+}
