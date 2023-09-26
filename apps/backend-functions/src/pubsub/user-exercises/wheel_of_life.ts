@@ -24,7 +24,8 @@ export async function sendWheelOfLifePushNotification(uid: string) {
       fcmOptions: { link }
     }
   }))
-  return admin.messaging().sendAll(messages)
+  if (!messages.length) return
+  return admin.messaging().sendEach(messages)
 }
 
 export async function scheduleNextReminder(settings: WheelOfLifeSettings, userId: string) {

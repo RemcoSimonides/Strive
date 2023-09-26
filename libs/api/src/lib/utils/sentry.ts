@@ -3,7 +3,7 @@
  * It currently supports wrapping https, pubsub and firestore handlers.
  * usage: https.onRequest(wrap((req, res) => {...}))
  */
-import type { https } from 'firebase-functions'
+import { logger, type https } from 'firebase-functions'
 import type { onRequest, onCall } from 'firebase-functions/lib/v1/providers/https'
 import type { ScheduleBuilder } from 'firebase-functions/lib/v1/providers/pubsub'
 import type { DocumentBuilder } from 'firebase-functions/lib/v1/providers/firestore'
@@ -34,10 +34,15 @@ function wrap<A, B, C>(
     const {startTransaction, configureScope, Handlers, captureException, flush, init} = await import(
       '@sentry/node'
     );
-    init({
-      dsn: process.env['SENTRY_DSN'],
-      tracesSampleRate: 1.0
-    })
+    try {
+      init({
+        dsn: process.env['SENTRY_DSN'],
+        tracesSampleRate: 1.0
+      })
+    } catch (error) {
+      // TODO fix Sentry init (see error in logs)
+      logger.error(error)
+    }
 
     let req: https.Request | undefined;
     let ctx: Record<string, unknown> | undefined;

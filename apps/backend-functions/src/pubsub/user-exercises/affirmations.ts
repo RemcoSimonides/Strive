@@ -30,7 +30,8 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
         fcmOptions: { link }
       }
     }))
-    return admin.messaging().sendAll(messages)
+    if (!messages.length) return
+    return admin.messaging().sendEach(messages)
   }
 }
 

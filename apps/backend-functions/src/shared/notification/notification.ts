@@ -140,7 +140,8 @@ async function sendPushNotificationToUsers(message: PushMessage, recipient: stri
 
     const messages = personal.fcmTokens.map(token => createPushMessage(message, token))
     logger.log(`going to send push notifications to ${personal?.email}`, messages[0])
-    admin.messaging().sendAll(messages).catch((err) => {
+    if (!messages.length) continue
+    admin.messaging().sendEach(messages).catch((err) => {
       logger.error('error sending push notification', typeof err === 'object' ? JSON.stringify(err) : err)
     })
   }

@@ -24,7 +24,8 @@ export function sendDearFutureSelfPushNotification(personal: Personal, message: 
       fcmOptions: { link }
     }
   }))
-  return admin.messaging().sendAll(messages)
+  if (!messages.length) return
+  return admin.messaging().sendEach(messages)
 }
 
 export function sendDearFutureSelfEmail(personal: Personal, description: string) {

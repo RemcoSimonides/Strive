@@ -38,8 +38,8 @@ import { addDays } from 'date-fns'
 export async function sendDailyGratitudePushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
-  if (!personal.fcmTokens) return
-  
+  if (!personal.fcmTokens.length) return
+
   const link = 'goals?t=daily-gratitude'
   const messages: Message[] = personal.fcmTokens.map(token => ({
     token,
@@ -55,7 +55,8 @@ export async function sendDailyGratitudePushNotification(uid: string) {
       fcmOptions: { link }
     }
   }))
-  return admin.messaging().sendAll(messages)
+  if (!messages.length) return
+  return admin.messaging().sendEach(messages)
 
 }
 
@@ -76,5 +77,5 @@ export async function scheduleNextDailyGratitudeReminder(uid: string) {
     status: 'scheduled'
   }
 
-  return upsertScheduledTask(`${uid}dailygratitude`, task) 
+  return upsertScheduledTask(`${uid}dailygratitude`, task)
 }
