@@ -1,0 +1,9 @@
+<ng-container *ngIf="previousEntry && interval">
+  <small>Last week you made some intentions. Let's go over each and think by yourself whether you managed to comply with these intention or not. If not, why not? And what would you do differently next time.</small>
+
+  <h5>Last {{ interval | interval }} you intended to</h5>
+  <ng-container *ngIf="previousEntry.timeManagement.future.entries.length">
+    <p>Focus more on {{ previousEntry.timeManagement.future.entries | smartJoin:', ':' and '}}</p>
+  </ng-container>
+
+</ng-container>

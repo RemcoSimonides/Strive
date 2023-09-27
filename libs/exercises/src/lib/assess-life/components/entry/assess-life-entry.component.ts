@@ -15,7 +15,7 @@ import { PersonalService } from '@strive/user/personal.service'
 import { AES } from 'crypto-js'
 
 type Section = 'intro' | 'past' | 'future' | 'outro'
-type Subsection = 'intro' | 'timeManagementPast' | 'timeManagementFuture' | 'outro'
+type Subsection = 'intro' | 'previousIntention' | 'timeManagementPast' | 'timeManagementFuture' | 'outro'
 
 const titles: Record<AssessLifeInterval, { [key in Section]: string }> = {
   weekly: {
@@ -52,6 +52,11 @@ const allSteps: {
     setting: undefined,
     section: 'intro',
     subsection: 'intro'
+  },
+  {
+    setting: undefined,
+    section: 'past',
+    subsection: 'previousIntention'
   },
   {
     setting: 'timeManagement',

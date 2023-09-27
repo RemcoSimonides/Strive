@@ -1,6 +1,5 @@
 <ng-container *ngIf="form && interval">
   <ion-list mode="md">
-    <!-- <h1>Actual time spent last week</h1> -->
     <span>What did you spent time on which you should spend less time on past {{ interval | interval }}?</span>
     <ion-item *ngFor="let control of form.entries.controls; let i = index">
       <ion-input
@@ -30,14 +29,4 @@
       <ion-icon name="add-outline" slot="end" (click)="add()" />
     </ion-item>
   </ion-list>
-
-  <ng-container *ngIf="previousEntries">
-    <section>
-      <p>Last {{ interval | interval }} you intended to spend more time on:</p>
-      <ul>
-        <li *ngFor="let entry of previousEntries">{{ entry }}</li>
-      </ul>
-      <p>Did you manage to do that? If not, how come?</p>
-    </section>
-  </ng-container>
 </ng-container>

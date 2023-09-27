@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
 import { AssessLifeIntroComponent } from '../intro/intro.component'
+import { PreviousIntentionComponent } from '../previous-intention/previous-intention.component'
 import { AssessLifeTimeManagementPastComponent } from '../time-management/past/time-management-past.component'
 import { AssessLifeTimeManagementFutureComponent } from '../time-management/future/time-management-future.component'
 import { AssessLifeOutroComponent } from '../outro/outro.component'
@@ -21,6 +22,7 @@ import { AssessLifeOutroComponent } from '../outro/outro.component'
     PageLoadingModule,
 
     AssessLifeIntroComponent,
+    PreviousIntentionComponent,
     AssessLifeTimeManagementPastComponent,
     AssessLifeTimeManagementFutureComponent,
     AssessLifeOutroComponent

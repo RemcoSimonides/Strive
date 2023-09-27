@@ -8,7 +8,7 @@ import { AssessLifeInterval } from '@strive/model'
 
 @Component({
   standalone: true,
-  selector: 'strive-assess-life-time-management-future',
+  selector: '[form][interval] strive-assess-life-time-management-future',
   templateUrl: './time-management-future.component.html',
   styleUrls: ['./time-management-future.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

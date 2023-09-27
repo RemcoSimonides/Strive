@@ -8,7 +8,7 @@ import { AssessLifeInterval } from '@strive/model'
 
 @Component({
   standalone: true,
-  selector: 'strive-assess-life-time-management-past',
+  selector: '[form][interval] strive-assess-life-time-management-past',
   templateUrl: './time-management-past.component.html',
   styleUrls: ['./time-management-past.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +25,6 @@ export class AssessLifeTimeManagementPastComponent {
 
   @Input() interval?: AssessLifeInterval
   @Input() form?: FormList
-  @Input() previousEntries?: string[]
   @Input() set stepping(stepping: boolean | null) {
     if (stepping && this.inputForm.value) this.add()
   }

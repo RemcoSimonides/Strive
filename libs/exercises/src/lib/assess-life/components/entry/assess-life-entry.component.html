@@ -21,8 +21,12 @@
       <strive-assess-life-intro [interval]="interval" />
     </ion-content>
 
+    <ion-content *ngSwitchCase="'previousIntention'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-previous-intention [interval]="interval" [previousEntry]="previousEntry" />
+    </ion-content>
+
     <ion-content *ngSwitchCase="'timeManagementPast'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-time-management-past [form]="form.timeManagement.past" [interval]="interval" [previousEntries]="previousEntry?.timeManagement?.future?.entries" [stepping]="stepping$ | async" />
+      <strive-assess-life-time-management-past [form]="form.timeManagement.past" [interval]="interval" [stepping]="stepping$ | async" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
@@ -30,7 +34,7 @@
     </ion-content>
 
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-outro [interval]="interval" />
+      <strive-assess-life-outro />
     </ion-content>
 
   </ng-container>

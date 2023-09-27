@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular'
 
 @Component({
   standalone: true,
-  selector: '[interval] strive-assess-life-outro',
+  selector: 'strive-assess-life-outro',
   templateUrl: './outro.component.html',
   styles: [`
       :host {
