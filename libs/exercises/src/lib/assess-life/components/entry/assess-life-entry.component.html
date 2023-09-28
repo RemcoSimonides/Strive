@@ -15,7 +15,7 @@
 
 <ng-template #notLoading>
 
-  <ng-container [ngSwitch]="subsection()">
+  <ng-container [ngSwitch]="section()">
 
     <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-assess-life-intro [interval]="interval" />
@@ -31,6 +31,10 @@
 
     <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-assess-life-time-management-future [form]="form.timeManagement" [interval]="interval" [stepping]="stepping$ | async" />
+    </ion-content>
+
+    <ion-content *ngSwitchCase="'wheelOfLife'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-wheel-of-life [form]="form.wheelOfLife" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">

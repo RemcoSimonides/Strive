@@ -74,6 +74,17 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
       entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
       entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
       entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+
+      entry.wheelOfLife.career = +AES.decrypt(entry.wheelOfLife.career.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.development = +AES.decrypt(entry.wheelOfLife.development.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.environment = +AES.decrypt(entry.wheelOfLife.environment.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.family = +AES.decrypt(entry.wheelOfLife.family.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.friends = +AES.decrypt(entry.wheelOfLife.friends.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.fun = +AES.decrypt(entry.wheelOfLife.fun.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.health = +AES.decrypt(entry.wheelOfLife.health.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.love = +AES.decrypt(entry.wheelOfLife.love.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.money = +AES.decrypt(entry.wheelOfLife.money.toString(), encryptionKey).toString(enc.Utf8)
+      entry.wheelOfLife.spirituality = +AES.decrypt(entry.wheelOfLife.spirituality.toString(), encryptionKey).toString(enc.Utf8)
     }
 
     return entries

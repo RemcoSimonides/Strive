@@ -22,13 +22,29 @@
           </section>
         </ion-label>
         <ion-select [legacy]="true" formControlName="timeManagement" interface="popover">
-          <ion-select-option value="never">Never</ion-select-option>
-          <ion-select-option value="weekly">Weekly</ion-select-option>
-          <ion-select-option value="monthly">Monthly</ion-select-option>
-          <ion-select-option value="quarterly">Quarterly</ion-select-option>
-          <ion-select-option value="yearly">Yearly</ion-select-option>
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <section>
+            <span>Wheel of Life</span>
+            <small>How do you feel?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="wheelOfLife" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>
     </form>
   </ion-list>
+</ng-template>
+
+<ng-template #options>
+  <ion-select-option value="never">Never</ion-select-option>
+  <ion-select-option value="weekly">Weekly</ion-select-option>
+  <ion-select-option value="monthly">Monthly</ion-select-option>
+  <ion-select-option value="quarterly">Quarterly</ion-select-option>
+  <ion-select-option value="yearly">Yearly</ion-select-option>
 </ng-template>

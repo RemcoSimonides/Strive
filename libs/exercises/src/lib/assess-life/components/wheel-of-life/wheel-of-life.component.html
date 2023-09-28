@@ -1,0 +1,11 @@
+<form [formGroup]="form">
+  <section *ngFor="let aspect of aspectsConfig">
+    <span>{{ aspect.title }}</span>
+    <small>{{ aspect.subtitle }}</small>
+    <div>
+      <span>😭</span>
+      <ion-range mode="md" [formControlName]="aspect.id" color="primary" />
+      <span>😁</span>
+    </div>
+  </section>
+</form>

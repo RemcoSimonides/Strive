@@ -13,65 +13,48 @@ import { AssessLifeForm } from '../../forms/form'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '../../assess-life.service'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES } from 'crypto-js'
+import { getInterval } from '../../pipes/interval.pipe'
 
-type Section = 'intro' | 'past' | 'future' | 'outro'
-type Subsection = 'intro' | 'previousIntention' | 'timeManagementPast' | 'timeManagementFuture' | 'outro'
-
-const titles: Record<AssessLifeInterval, { [key in Section]: string }> = {
-  weekly: {
-    intro: '',
-    past: 'The past week',
-    future: 'The upcoming week',
-    outro: ''
-  },
-  monthly: {
-    intro: '',
-    past: 'The past month',
-    future: 'The upcoming month',
-    outro: ''
-  },
-  quarterly: {
-    intro: '',
-    past: 'The past quarter',
-    future: 'The upcoming quarter',
-    outro: ''
-  },
-  yearly: {
-    intro: '',
-    past: 'The past year',
-    future: 'The upcoming year',
-    outro: ''
-  }
-}
+type Section = 'intro'
+  | 'previousIntention'
+  | 'timeManagementPast'
+  | 'wheelOfLife'
+  | 'timeManagementFuture'
+  | 'outro'
 
 const allSteps: {
   setting: keyof Omit<AssessLifeSettings, "id" | "createdAt" | "updatedAt"> | undefined,
-  section: Section,
-  subsection: Subsection}[] = [
+  title: string,
+  section: Section}[] = [
   {
     setting: undefined,
-    section: 'intro',
-    subsection: 'intro'
+    title: '',
+    section: 'intro'
   },
   {
     setting: undefined,
-    section: 'past',
-    subsection: 'previousIntention'
+    title: 'Your previous intentions',
+    section: 'previousIntention'
   },
   {
     setting: 'timeManagement',
-    section: 'past',
-    subsection: 'timeManagementPast'
+    title: 'The past {interval}',
+    section: 'timeManagementPast'
+  },
+  {
+    setting: 'wheelOfLife',
+    title: 'How do you feel now?',
+    section: 'wheelOfLife'
   },
   {
     setting: 'timeManagement',
-    section: 'future',
-    subsection: 'timeManagementFuture'
+    title: 'The upcoming {interval}',
+    section: 'timeManagementFuture'
   },
   {
     setting: undefined,
-    section: 'outro',
-    subsection: 'outro'
+    title: '',
+    section: 'outro'
   }
 ]
 
@@ -85,11 +68,11 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
   animatingSection = signal<undefined | 'visible' | 'invisible'>('visible')
   title = signal<string>('Get Ready')
-  subsection = signal<Subsection>('intro')
+  section = signal<Section>('intro')
 
   form = new AssessLifeForm()
 
-  steps = signal<{ section: Section, subsection: Subsection }[]>([])
+  steps = signal<{ section: Section, title: string }[]>([])
   stepIndex = signal<number>(0)
   stepping$ = new BehaviorSubject<boolean>(false)
   progress = computed(() => this.stepIndex() / (this.steps().length - 1))
@@ -122,7 +105,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     if (settings) {
       this.steps.set(allSteps.filter(step => {
         if (step.setting && settings[step.setting] !== this.interval) return false
-        if (step.subsection === 'previousIntention' && !this.previousEntry) return false
+        if (step.section === 'previousIntention' && !this.previousEntry) return false
         return true
       }))
     }
@@ -153,8 +136,10 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     const nextIndex = this.stepIndex() + delta
     const nextStep = steps[nextIndex]
 
-    this.subsection.set(nextStep.subsection)
-    this.title.set(titles[this.interval][nextStep.section])
+    this.section.set(nextStep.section)
+
+    const title = nextStep.title.replace('{interval}', getInterval(this.interval))
+    this.title.set(title)
 
     this.stepIndex.set(nextIndex)
 
@@ -177,6 +162,17 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.encrypt(v, key).toString())
     entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.encrypt(v, key).toString())
     entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.encrypt(v, key).toString())
+
+    entry.wheelOfLife.career = AES.encrypt(entry.wheelOfLife.career.toString(), key).toString()
+    entry.wheelOfLife.development = AES.encrypt(entry.wheelOfLife.development.toString(), key).toString()
+    entry.wheelOfLife.environment = AES.encrypt(entry.wheelOfLife.environment.toString(), key).toString()
+    entry.wheelOfLife.family = AES.encrypt(entry.wheelOfLife.family.toString(), key).toString()
+    entry.wheelOfLife.friends = AES.encrypt(entry.wheelOfLife.friends.toString(), key).toString()
+    entry.wheelOfLife.fun = AES.encrypt(entry.wheelOfLife.fun.toString(), key).toString()
+    entry.wheelOfLife.health = AES.encrypt(entry.wheelOfLife.health.toString(), key).toString()
+    entry.wheelOfLife.love = AES.encrypt(entry.wheelOfLife.love.toString(), key).toString()
+    entry.wheelOfLife.money = AES.encrypt(entry.wheelOfLife.money.toString(), key).toString()
+    entry.wheelOfLife.spirituality = AES.encrypt(entry.wheelOfLife.spirituality.toString(), key).toString()
 
     const id = await this.service.upsert(entry, { params: { uid: this.auth.uid } })
     this.form.id.setValue(id)

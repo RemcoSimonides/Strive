@@ -30,7 +30,8 @@ export class AssessLifeSettingsComponent implements OnInit {
   loading = signal<boolean>(true)
 
   form = new FormGroup({
-    timeManagement: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true })
+    timeManagement: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
+    wheelOfLife: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true })
   })
 
   constructor(
