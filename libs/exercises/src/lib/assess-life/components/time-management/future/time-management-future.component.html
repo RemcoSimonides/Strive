@@ -1,32 +1,63 @@
 <ng-container *ngIf="form && interval">
   <ion-list mode="md">
-    <small>What are you going to spend more time on in the upcoming {{ interval | interval }}?</small>
-    <ion-item *ngFor="let control of form.entries.controls; let i = index">
+    <small>What will you spend more time on in the upcoming {{ interval | interval }}?</small>
+    <ion-item *ngFor="let control of form.futureMoreTime.entries.controls; let i = index">
       <ion-input
         class="ion-text-wrap primary"
         autocapitalize="sentences"
         type="text"
         placeholder="..."
         [formControl]="control"
-        (ionBlur)="blur(i)"
+        (ionBlur)="blur(i, 'futureMoreTime')"
       />
       <ion-icon
         *ngIf="control.value !== ''"
         class="remove-item-icon"
-        (click)="removeValue(i)"
+        (click)="removeValue(i, 'futureMoreTime')"
         name="close-outline"
       />
     </ion-item>
 
     <ion-item lines="none">
       <ion-input
-        [formControl]="inputForm"
+        [formControl]="inputMoreTimeForm"
         placeholder="..."
-        (keydown.enter)="add()"
+        (keydown.enter)="addMoreTimeValue()"
         autocapitalize="sentences"
         class="primary"
       />
-      <ion-icon name="add-outline" slot="end" (click)="add()" />
+      <ion-icon name="add-outline" slot="end" (click)="addMoreTimeValue()" />
+    </ion-item>
+  </ion-list>
+
+  <ion-list mode="md">
+    <small>What will you spend less time on in the upcoming {{ interval | interval }}?</small>
+    <ion-item *ngFor="let control of form.futureLessTime.entries.controls; let i = index">
+      <ion-input
+        class="ion-text-wrap primary"
+        autocapitalize="sentences"
+        type="text"
+        placeholder="..."
+        [formControl]="control"
+        (ionBlur)="blur(i, 'futureLessTime')"
+      />
+      <ion-icon
+        *ngIf="control.value !== ''"
+        class="remove-item-icon"
+        (click)="removeValue(i, 'futureLessTime')"
+        name="close-outline"
+      />
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input
+        [formControl]="inputLessTimeForm"
+        placeholder="..."
+        (keydown.enter)="addLessTimeValue()"
+        autocapitalize="sentences"
+        class="primary"
+      />
+      <ion-icon name="add-outline" slot="end" (click)="addLessTimeValue()" />
     </ion-item>
   </ion-list>
 </ng-container>

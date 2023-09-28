@@ -7,7 +7,8 @@ function createTimeManagementFormControl(params?: Partial<TimeManagement>) {
 
   return {
     past: new FormList(timeManagement.past),
-    future: new FormList(timeManagement.future)
+    futureMoreTime: new FormList(timeManagement.futureMoreTime),
+    futureLessTime: new FormList(timeManagement.futureLessTime)
   }
 }
 
@@ -19,5 +20,6 @@ export class TimeManagementForm extends FormGroup<TimeManagementFormControl> {
   }
 
   get past() { return this.get('past')! as FormList }
-  get future() { return this.get('future')! as FormList }
+  get futureMoreTime() { return this.get('futureMoreTime')! as FormList }
+  get futureLessTime() { return this.get('futureLessTime')! as FormList }
 }

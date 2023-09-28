@@ -122,6 +122,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     if (settings) {
       this.steps.set(allSteps.filter(step => {
         if (step.setting && settings[step.setting] !== this.interval) return false
+        if (step.subsection === 'previousIntention' && !this.previousEntry) return false
         return true
       }))
     }
@@ -174,7 +175,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     })
 
     entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.encrypt(v, key).toString())
-    entry.timeManagement.future.entries = entry.timeManagement.future.entries.map(v => AES.encrypt(v, key).toString())
+    entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.encrypt(v, key).toString())
+    entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.encrypt(v, key).toString())
 
     const id = await this.service.upsert(entry, { params: { uid: this.auth.uid } })
     this.form.id.setValue(id)

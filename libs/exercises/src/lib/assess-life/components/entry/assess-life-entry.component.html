@@ -30,7 +30,7 @@
     </ion-content>
 
     <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-time-management-future [form]="form.timeManagement.future" [interval]="interval" [stepping]="stepping$ | async" />
+      <strive-assess-life-time-management-future [form]="form.timeManagement" [interval]="interval" [stepping]="stepping$ | async" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">

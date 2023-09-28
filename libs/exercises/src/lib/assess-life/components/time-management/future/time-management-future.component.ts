@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 import { AssessLifeIntervalPipe } from '../../../pipes/interval.pipe'
-import { FormList } from '../../../utils/form.utils'
-import { AssessLifeInterval } from '@strive/model'
+import { AssessLifeInterval, TimeManagement } from '@strive/model'
+import { TimeManagementForm } from '../time-management.form'
 
 @Component({
   standalone: true,
@@ -21,30 +21,38 @@ import { AssessLifeInterval } from '@strive/model'
 })
 export class AssessLifeTimeManagementFutureComponent {
 
-  inputForm = new FormControl('', { nonNullable: true })
+  inputMoreTimeForm = new FormControl('', { nonNullable: true })
+  inputLessTimeForm = new FormControl('', { nonNullable: true })
 
   @Input() interval?: AssessLifeInterval
-  @Input() form?: FormList
+  @Input() form?: TimeManagementForm
 
   @Input() set stepping(stepping: boolean | null) {
-    if (stepping && this.inputForm.value) this.add()
+    if (stepping && this.inputMoreTimeForm.value) this.addMoreTimeValue()
+    if (stepping && this.inputLessTimeForm.value) this.addLessTimeValue()
   }
 
-  add() {
+  addMoreTimeValue() {
     if (!this.form) return
-    this.form.entries.push(new FormControl(this.inputForm.value, { nonNullable: true }))
-    this.inputForm.setValue('')
+    this.form.futureMoreTime.entries.push(new FormControl(this.inputMoreTimeForm.value, { nonNullable: true }))
+    this.inputMoreTimeForm.setValue('')
   }
 
-  blur(index: number) {
+  addLessTimeValue() {
     if (!this.form) return
-    const value = this.form.entries.at(index).value
-    if (!value) this.removeValue(index)
+    this.form.futureLessTime.entries.push(new FormControl(this.inputLessTimeForm.value, { nonNullable: true }))
+    this.inputLessTimeForm.setValue('')
   }
 
-  removeValue(index: number) {
+  blur(index: number, control: keyof TimeManagement) {
     if (!this.form) return
-    this.form.entries.removeAt(index)
+    const value = this.form[control].entries.at(index).value
+    if (!value) this.removeValue(index, control)
+  }
+
+  removeValue(index: number, control: keyof TimeManagement) {
+    if (!this.form) return
+    this.form[control].entries.removeAt(index)
     this.form.markAsDirty()
   }
 }

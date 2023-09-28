@@ -42,7 +42,10 @@ export interface TimeManagement {
   past: {
     entries: string[]
   }
-  future: {
+  futureMoreTime: {
+    entries: string[]
+  }
+  futureLessTime: {
     entries: string[]
   }
 }
@@ -50,6 +53,7 @@ export interface TimeManagement {
 export function createTimeManagement(params?: Partial<TimeManagement>): TimeManagement {
   return {
     past: createListEntries(params?.past),
-    future: createListEntries(params?.future)
+    futureMoreTime: createListEntries(params?.futureMoreTime),
+    futureLessTime: createListEntries(params?.futureLessTime)
   }
 }

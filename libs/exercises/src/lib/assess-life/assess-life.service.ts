@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
-import { AssessLifeEntry, AssessLifeSettings } from '@strive/model'
+import { AssessLifeEntry, AssessLifeSettings, createAssessLifeEntry } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
@@ -64,7 +64,7 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
 
   protected override fromFirestore(snapshot: DocumentSnapshot<AssessLifeEntry>): AssessLifeEntry | undefined {
     if (!snapshot.exists()) return
-    return toDate<AssessLifeEntry>({ ...snapshot.data(), id: snapshot.id })
+    return createAssessLifeEntry(toDate({ ...snapshot.data(), id: snapshot.id }))
   }
 
   async decrypt(entries: AssessLifeEntry[]): Promise<AssessLifeEntry[]> {
@@ -72,7 +72,8 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
 
     for (const entry of entries) {
       entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-      entry.timeManagement.future.entries = entry.timeManagement.future.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+      entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+      entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
     }
 
     return entries

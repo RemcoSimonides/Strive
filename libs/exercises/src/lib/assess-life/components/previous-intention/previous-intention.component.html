@@ -3,8 +3,11 @@
 
   <p>Last {{ interval | interval }} you intended to</p>
   <ul>
-    <li *ngIf="previousEntry.timeManagement.future.entries.length">
-      Spend more time on {{ previousEntry.timeManagement.future.entries | smartJoin:', ':' and '}}
+    <li *ngIf="previousEntry.timeManagement.futureLessTime.entries.length">
+      Spend less time on {{ previousEntry.timeManagement.futureLessTime.entries | smartJoin:', ':' and '}}
+    </li>
+    <li *ngIf="previousEntry.timeManagement.futureMoreTime.entries.length">
+      Spend more time on {{ previousEntry.timeManagement.futureMoreTime.entries | smartJoin:', ':' and '}}
     </li>
   </ul>
 

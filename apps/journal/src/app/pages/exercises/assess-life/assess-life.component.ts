@@ -32,6 +32,7 @@ function getMessage(entries: AssessLifeEntry[], settings: AssessLifeSettings | u
   }
 
   if (questions.length === 0) return { disabled: true, message: 'No questions activated - change in settings' }
+  if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!`}
 
   const lastEntry = entries[0]
   const today = new Date()
