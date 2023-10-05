@@ -12,6 +12,7 @@ import { PreviousIntentionComponent } from '../previous-intention/previous-inten
 import { AssessLifeTimeManagementPastComponent } from '../time-management/past/time-management-past.component'
 import { AssessLifeTimeManagementFutureComponent } from '../time-management/future/time-management-future.component'
 import { WheelOfLifeComponent } from '../wheel-of-life/wheel-of-life.component'
+import { PrioritizeGoalsComponent } from '../prioritize-goals/prioritize-goals.component'
 import { AssessLifeOutroComponent } from '../outro/outro.component'
 
 @NgModule({
@@ -28,6 +29,7 @@ import { AssessLifeOutroComponent } from '../outro/outro.component'
     WheelOfLifeComponent,
     AssessLifeTimeManagementFutureComponent,
     AssessLifeOutroComponent,
+    PrioritizeGoalsComponent
   ],
   declarations: [AssessLifeEntryComponent],
   exports: [AssessLifeEntryComponent]

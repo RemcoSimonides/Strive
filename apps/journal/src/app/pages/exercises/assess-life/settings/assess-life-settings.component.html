@@ -26,7 +26,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item>
         <ion-label>
           <section>
             <span>Wheel of Life</span>
@@ -34,6 +34,18 @@
           </section>
         </ion-label>
         <ion-select [legacy]="true" formControlName="wheelOfLife" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <section>
+            <span>Prioritize Goals</span>
+            <small>Order your goals by priority</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="prioritizeGoals" interface="popover">
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>

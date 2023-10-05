@@ -1,0 +1,26 @@
+$size: 42px;
+
+ion-thumbnail {
+  height: $size;
+  width: $size;
+  border-radius: 12px;
+  margin-right: 16px;
+
+  img {
+    border-radius: 12px;
+    background-color: var(--ion-card-background);
+  }
+}
+
+section {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}

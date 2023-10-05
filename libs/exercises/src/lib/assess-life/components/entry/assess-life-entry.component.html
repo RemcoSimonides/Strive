@@ -37,6 +37,10 @@
       <strive-assess-life-wheel-of-life [form]="form.wheelOfLife" />
     </ion-content>
 
+    <ion-content *ngSwitchCase="'prioritizeGoals'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-prioritize-goals (step)="step($event)" />
+    </ion-content>
+
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-assess-life-outro />
     </ion-content>

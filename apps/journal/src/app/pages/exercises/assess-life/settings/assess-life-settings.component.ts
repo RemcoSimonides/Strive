@@ -31,7 +31,8 @@ export class AssessLifeSettingsComponent implements OnInit {
 
   form = new FormGroup({
     timeManagement: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
-    wheelOfLife: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true })
+    wheelOfLife: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true }),
+    prioritizeGoals: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true }),
   })
 
   constructor(

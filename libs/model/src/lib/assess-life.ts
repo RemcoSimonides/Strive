@@ -7,6 +7,7 @@ export interface AssessLifeSettings {
   id?: string
   timeManagement: AssessLifeIntervalWithNever
   wheelOfLife: AssessLifeIntervalWithNever
+  prioritizeGoals: AssessLifeIntervalWithNever
   createdAt: Date
   updatedAt: Date
 }
@@ -16,7 +17,8 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
     ...params,
     id: params.id ?? '',
     timeManagement: params.timeManagement ?? 'weekly',
-    wheelOfLife: params.wheelOfLife ?? 'weekly',
+    wheelOfLife: params.wheelOfLife ?? 'quarterly',
+    prioritizeGoals: params.prioritizeGoals ?? 'monthly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date()
   }

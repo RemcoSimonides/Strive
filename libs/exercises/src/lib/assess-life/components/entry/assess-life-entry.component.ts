@@ -20,6 +20,7 @@ type Section = 'intro'
   | 'timeManagementPast'
   | 'wheelOfLife'
   | 'timeManagementFuture'
+  | 'prioritizeGoals'
   | 'outro'
 
 const allSteps: {
@@ -50,6 +51,11 @@ const allSteps: {
     setting: 'timeManagement',
     title: 'The upcoming {interval}',
     section: 'timeManagementFuture'
+  },
+  {
+    setting: undefined,
+    title: 'Order goals by priority',
+    section: 'prioritizeGoals'
   },
   {
     setting: undefined,

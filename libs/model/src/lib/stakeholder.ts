@@ -20,6 +20,7 @@ export interface GoalStakeholder extends Roles {
   uid: string
   hasOpenRequestToJoin: boolean
   hasInviteToJoin: boolean
+  priority: number
   focus: Focus
   goalId: string
   goalPublicity: GoalPublicityType
@@ -48,6 +49,7 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     isSupporter: false,
     hasOpenRequestToJoin: false,
     hasInviteToJoin: false,
+    priority: -1,
     focus: createFocus(params.focus),
     goalId: '',
     goalPublicity: 'private',

@@ -1,0 +1,35 @@
+<ng-container *ngIf="goals$ | async as stakeholders; else loading">
+  <ng-container *ngIf="stakeholders.length > 1; else notEnoughGoals">
+    <ion-list mode="md">
+      <ion-reorder-group (ionItemReorder)="doReorder($event, stakeholders)" [disabled]="false">
+        <ion-reorder *ngFor="let stakeholder of stakeholders; let last = last">
+          <ion-item [lines]="last ? 'none' : 'full'">
+            <ion-thumbnail>
+              <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120" />
+            </ion-thumbnail>
+            <ion-label>{{ stakeholder.goal.title }}</ion-label>
+            <ion-icon name="reorder-two-outline" slot="end" />
+          </ion-item>
+        </ion-reorder>
+    </ion-reorder-group>
+    </ion-list>
+  </ng-container>
+
+  <ng-template #notEnoughGoals>
+    <section>
+      <ng-container *ngIf="stakeholders.length; else noGoals">
+        <span>Perfect Focus!</span>
+        <small>No need to prioritize if you have one goal.</small>
+      </ng-container>
+      <ng-template #noGoals>
+        <span>No goals yet</span>
+        <small>You need to have at least 2 goals to prioritize them.</small>
+      </ng-template>
+      <ion-button (click)="step.emit('next')">Next</ion-button>
+    </section>
+  </ng-template>
+</ng-container>
+
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
+</ng-template>
