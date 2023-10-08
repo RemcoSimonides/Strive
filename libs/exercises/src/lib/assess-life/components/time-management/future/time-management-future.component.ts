@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 import { AssessLifeIntervalPipe } from '../../../pipes/interval.pipe'
@@ -24,12 +24,21 @@ export class AssessLifeTimeManagementFutureComponent {
   inputMoreTimeForm = new FormControl('', { nonNullable: true })
   inputLessTimeForm = new FormControl('', { nonNullable: true })
 
+  showMoreTimeInput = signal<boolean>(true)
+  showLessTimeInput = signal<boolean>(true)
+
   @Input() interval?: AssessLifeInterval
   @Input() form?: TimeManagementForm
 
   @Input() set stepping(stepping: boolean | null) {
-    if (stepping && this.inputMoreTimeForm.value) this.addMoreTimeValue()
-    if (stepping && this.inputLessTimeForm.value) this.addLessTimeValue()
+    if (stepping && this.inputMoreTimeForm.value) {
+      this.showMoreTimeInput.set(false)
+      this.addMoreTimeValue()
+    }
+    if (stepping && this.inputLessTimeForm.value) {
+      this.showLessTimeInput.set(false)
+      this.addLessTimeValue()
+    }
   }
 
   addMoreTimeValue() {

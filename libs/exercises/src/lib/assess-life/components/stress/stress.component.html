@@ -18,7 +18,7 @@
       />
     </ion-item>
 
-    <ion-item lines="none">
+    <ion-item lines="none" *ngIf="showInput()">
       <ion-input
         [formControl]="inputForm"
         placeholder="..."

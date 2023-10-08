@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 import { AssessLifeIntervalPipe } from '../../../pipes/interval.pipe'
@@ -22,11 +22,15 @@ import { AssessLifeInterval } from '@strive/model'
 export class AssessLifeTimeManagementPastComponent {
 
   inputForm = new FormControl('', { nonNullable: true })
+  showInput = signal<boolean>(true)
 
   @Input() interval?: AssessLifeInterval
   @Input() form?: FormList
   @Input() set stepping(stepping: boolean | null) {
-    if (stepping && this.inputForm.value) this.add()
+    if (stepping && this.inputForm.value) {
+      this.showInput.set(false)
+      this.add()
+    }
   }
 
   add() {

@@ -18,7 +18,7 @@
       />
     </ion-item>
 
-    <ion-item lines="none">
+    <ion-item lines="none" *ngIf="showMoreTimeInput()">
       <ion-input
         [formControl]="inputMoreTimeForm"
         placeholder="..."
@@ -49,7 +49,7 @@
       />
     </ion-item>
 
-    <ion-item lines="none">
+    <ion-item lines="none" *ngIf="showLessTimeInput()">
       <ion-input
         [formControl]="inputLessTimeForm"
         placeholder="..."
