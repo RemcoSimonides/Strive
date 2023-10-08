@@ -43,9 +43,7 @@ export class PrioritizeGoalsComponent {
     private auth: AuthService,
     private goalService: GoalService,
     private stakeholderService: GoalStakeholderService
-  ) {
-    this.goals$.subscribe(console.log)
-  }
+  ) {}
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>, stakeholders: StakeholderWithGoal[]) {
     if (!this.auth.uid) return

@@ -59,7 +59,7 @@ const allSteps: {
     section: 'timeManagementFuture'
   },
   {
-    setting: undefined,
+    setting: 'prioritizeGoals',
     title: 'Order goals by priority',
     section: 'prioritizeGoals'
   },

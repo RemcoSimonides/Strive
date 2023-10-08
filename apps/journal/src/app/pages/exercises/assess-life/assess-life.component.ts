@@ -22,7 +22,7 @@ function getActivatedQuestions(settings: AssessLifeSettings | undefined, interva
   return activated
 }
 
-function getMessage(entries: AssessLifeEntry[], settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
+function getEntryStatus(entries: AssessLifeEntry[], settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
   const questions = getActivatedQuestions(settings, interval)
   const minDays: Record<AssessLifeInterval, number> = {
     weekly: 7,
@@ -89,28 +89,28 @@ export class AssessLifeComponent {
     this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'weekly'))),
     this.settings$
   ]).pipe(
-    map(([entries, settings]) => getMessage(entries, settings, 'weekly'))
+    map(([entries, settings]) => getEntryStatus(entries, settings, 'weekly'))
   )
 
   monthly$ = combineLatest([
     this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'monthly'))),
     this.settings$
   ]).pipe(
-    map(([entries, settings]) => getMessage(entries, settings, 'monthly'))
+    map(([entries, settings]) => getEntryStatus(entries, settings, 'monthly'))
   )
 
   quarterly$ = combineLatest([
     this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'quarterly'))),
     this.settings$
   ]).pipe(
-    map(([entries, settings]) => getMessage(entries, settings, 'quarterly'))
+    map(([entries, settings]) => getEntryStatus(entries, settings, 'quarterly'))
   )
 
   yearly$ = combineLatest([
     this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'yearly'))),
     this.settings$
   ]).pipe(
-    map(([entries, settings]) => getMessage(entries, settings, 'yearly'))
+    map(([entries, settings]) => getEntryStatus(entries, settings, 'yearly'))
   )
 
   constructor(
