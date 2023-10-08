@@ -18,6 +18,7 @@ import { getInterval } from '../../pipes/interval.pipe'
 type Section = 'intro'
   | 'previousIntention'
   | 'timeManagementPast'
+  | 'stress'
   | 'wheelOfLife'
   | 'timeManagementFuture'
   | 'prioritizeGoals'
@@ -41,6 +42,11 @@ const allSteps: {
     setting: 'timeManagement',
     title: 'The past {interval}',
     section: 'timeManagementPast'
+  },
+  {
+    setting: 'stress',
+    title: 'The past {interval}',
+    section: 'stress'
   },
   {
     setting: 'wheelOfLife',
@@ -168,6 +174,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.encrypt(v, key).toString())
     entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.encrypt(v, key).toString())
     entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.encrypt(v, key).toString())
+
+    entry.stress.entries = entry.stress.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.wheelOfLife.career = AES.encrypt(entry.wheelOfLife.career.toString(), key).toString()
     entry.wheelOfLife.development = AES.encrypt(entry.wheelOfLife.development.toString(), key).toString()

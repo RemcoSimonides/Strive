@@ -137,11 +137,9 @@ export class AssessLifeComponent {
   }
 
   async openEntry(entry: AssessLifeEntry) {
-    const previousEntry = await this.getPreviousEntry(entry.interval)
-
     this.modal.create({
       component: AssessLifeEntryComponent,
-      componentProps: { entry, interval: entry.interval, previousEntry }
+      componentProps: { entry, interval: entry.interval }
     }).then(modal => modal.present())
   }
 

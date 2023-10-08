@@ -9,8 +9,9 @@ import { Pipe, PipeTransform } from '@angular/core'
  * @returns
  */
 export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
-  const last = str.pop()
-  return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`
+  const duplicate = [...str]
+  const last = duplicate.pop()
+  return `${duplicate.join(joinWith)}${duplicate.length ? endWith : ''}${last || ''}`
 }
 
 @Pipe({ name: 'smartJoin', standalone: true })

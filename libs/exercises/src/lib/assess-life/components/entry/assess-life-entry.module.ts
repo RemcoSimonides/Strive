@@ -14,6 +14,7 @@ import { AssessLifeTimeManagementFutureComponent } from '../time-management/futu
 import { WheelOfLifeComponent } from '../wheel-of-life/wheel-of-life.component'
 import { PrioritizeGoalsComponent } from '../prioritize-goals/prioritize-goals.component'
 import { AssessLifeOutroComponent } from '../outro/outro.component'
+import { AssessLifeStressComponent } from '../stress/stress.component'
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { AssessLifeOutroComponent } from '../outro/outro.component'
     WheelOfLifeComponent,
     AssessLifeTimeManagementFutureComponent,
     AssessLifeOutroComponent,
-    PrioritizeGoalsComponent
+    PrioritizeGoalsComponent,
+    AssessLifeStressComponent
   ],
   declarations: [AssessLifeEntryComponent],
   exports: [AssessLifeEntryComponent]

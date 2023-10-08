@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
-import { AssessLifeEntry, AssessLifeSettings, createAssessLifeEntry } from '@strive/model'
+import { AssessLifeEntry, AssessLifeSettings, createAssessLifeEntry, createAssessLifeSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
@@ -24,7 +24,7 @@ export class AssessLifeSettingsService extends FireSubCollection<AssessLifeSetti
 
   protected override fromFirestore(snapshot: DocumentSnapshot<AssessLifeSettings>): AssessLifeSettings | undefined {
     if (!snapshot.exists()) return
-    return toDate<AssessLifeSettings>({ ...snapshot.data(), id: snapshot.id })
+    return createAssessLifeSettings(toDate({ ...snapshot.data(), id: snapshot.id }))
   }
 
   getSettings(uid: string): Promise<AssessLifeSettings | undefined> {
@@ -74,6 +74,8 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
       entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
       entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
       entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+
+      entry.stress.entries = entry.stress.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
 
       entry.wheelOfLife.career = +AES.decrypt(entry.wheelOfLife.career.toString(), encryptionKey).toString(enc.Utf8)
       entry.wheelOfLife.development = +AES.decrypt(entry.wheelOfLife.development.toString(), encryptionKey).toString(enc.Utf8)

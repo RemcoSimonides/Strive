@@ -29,6 +29,10 @@
       <strive-assess-life-time-management-past [form]="form.timeManagement.past" [interval]="interval" [stepping]="stepping$ | async" />
     </ion-content>
 
+    <ion-content *ngSwitchCase="'stress'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-stress [form]="form.stress" [interval]="interval" [stepping]="stepping$ | async" />
+    </ion-content>
+
     <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-assess-life-time-management-future [form]="form.timeManagement" [interval]="interval" [stepping]="stepping$ | async" />
     </ion-content>

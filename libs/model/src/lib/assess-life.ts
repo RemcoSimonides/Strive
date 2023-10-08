@@ -1,13 +1,14 @@
-import { createListEntries } from './form-utils'
+import { ListEntries, createListEntries } from './form-utils'
 
 export type AssessLifeInterval = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 
 export interface AssessLifeSettings {
   id?: string
+  prioritizeGoals: AssessLifeIntervalWithNever
+  stress: AssessLifeIntervalWithNever
   timeManagement: AssessLifeIntervalWithNever
   wheelOfLife: AssessLifeIntervalWithNever
-  prioritizeGoals: AssessLifeIntervalWithNever
   createdAt: Date
   updatedAt: Date
 }
@@ -16,9 +17,10 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
   return {
     ...params,
     id: params.id ?? '',
+    prioritizeGoals: params.prioritizeGoals ?? 'monthly',
+    stress: params.stress ?? 'weekly',
     timeManagement: params.timeManagement ?? 'weekly',
     wheelOfLife: params.wheelOfLife ?? 'quarterly',
-    prioritizeGoals: params.prioritizeGoals ?? 'monthly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date()
   }
@@ -27,6 +29,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 export interface AssessLifeEntry {
   id?: string
   interval: AssessLifeInterval
+  stress: ListEntries
   timeManagement: TimeManagement
   wheelOfLife: WheelOfLife
   createdAt: Date
@@ -39,21 +42,16 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     interval: params.interval ?? 'weekly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),
+    stress: createListEntries(params?.stress),
     timeManagement: createTimeManagement(params?.timeManagement),
     wheelOfLife: createWheelOfLife(params?.wheelOfLife)
   }
 }
 
 export interface TimeManagement {
-  past: {
-    entries: string[]
-  }
-  futureMoreTime: {
-    entries: string[]
-  }
-  futureLessTime: {
-    entries: string[]
-  }
+  past: ListEntries
+  futureMoreTime: ListEntries
+  futureLessTime: ListEntries
 }
 
 export function createTimeManagement(params?: Partial<TimeManagement>): TimeManagement {

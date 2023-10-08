@@ -29,6 +29,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Stress</span>
+            <small>What gave you stress?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="stress" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Wheel of Life</span>
             <small>How do you feel?</small>
           </section>
