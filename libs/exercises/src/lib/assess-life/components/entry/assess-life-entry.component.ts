@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } f
 import { Location } from '@angular/common'
 import { ModalController } from '@ionic/angular'
 
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, shareReplay, switchMap, tap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
@@ -17,8 +17,7 @@ import { getInterval } from '../../pipes/interval.pipe'
 
 type Section = 'intro'
   | 'previousIntention'
-  | 'timeManagementPast'
-  | 'stress'
+  | 'listQuestionsPast'
   | 'wheelOfLife'
   | 'timeManagementFuture'
   | 'prioritizeGoals'
@@ -41,12 +40,12 @@ const allSteps: {
   {
     setting: 'timeManagement',
     title: 'The past {interval}',
-    section: 'timeManagementPast'
+    section: 'listQuestionsPast'
   },
   {
     setting: 'stress',
     title: 'The past {interval}',
-    section: 'stress'
+    section: 'listQuestionsPast'
   },
   {
     setting: 'wheelOfLife',
@@ -88,7 +87,29 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   stepIndex = signal<number>(0)
   stepping$ = new BehaviorSubject<boolean>(false)
   progress = computed(() => this.stepIndex() / (this.steps().length - 1))
-  loading = signal<boolean>(true)
+
+  settings$ = this.auth.profile$.pipe(
+    switchMap(profile => profile ? this.settingsService.getSettings$(profile.uid) : []),
+    shareReplay({ bufferSize: 1, refCount: true }),
+    tap(settings => {
+      if (settings) {
+        if (!this.interval) throw new Error('No interval provided')
+
+        const activatedSteps = allSteps.filter(step => {
+          if (step.setting && settings[step.setting] !== this.interval) return false
+          if (step.section === 'previousIntention' && !this.previousEntry) return false
+          return true
+        })
+        const squashedSteps = activatedSteps.reduce((acc, step) => {
+          if (acc.length === 0) return [step]
+          const lastStep = acc[acc.length - 1]
+          return lastStep.section === step.section ? acc : [...acc, step]
+        }, [] as typeof activatedSteps)
+
+        this.steps.set(squashedSteps)
+      }
+    })
+  )
 
   @Input() interval?: AssessLifeInterval
   @Input() entry?: AssessLifeEntry
@@ -105,23 +126,10 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     super(location, modalCtrl)
   }
 
-  async ngOnInit() {
-    if (!this.interval) return
-
+  ngOnInit() {
     if (this.entry) {
       this.form.patchValue(this.entry, { emitEvent: false })
     }
-
-    const uid = await this.auth.getUID()
-    const settings = await this.settingsService.getSettings(uid)
-    if (settings) {
-      this.steps.set(allSteps.filter(step => {
-        if (step.setting && settings[step.setting] !== this.interval) return false
-        if (step.section === 'previousIntention' && !this.previousEntry) return false
-        return true
-      }))
-    }
-    this.loading.set(false)
   }
 
   async step(direction: 'next' | 'previous') {

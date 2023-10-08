@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
+import { AssessLifeQuestionActivatedPipe } from '../../pipes/activated.pipe'
+
 import { AssessLifeIntroComponent } from '../intro/intro.component'
 import { PreviousIntentionComponent } from '../previous-intention/previous-intention.component'
 import { AssessLifeTimeManagementPastComponent } from '../time-management/past/time-management-past.component'
@@ -23,6 +25,7 @@ import { AssessLifeStressComponent } from '../stress/stress.component'
     ReactiveFormsModule,
 
     PageLoadingModule,
+    AssessLifeQuestionActivatedPipe,
 
     AssessLifeIntroComponent,
     PreviousIntentionComponent,

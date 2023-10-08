@@ -9,12 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ng-container *ngIf="loading() else notLoading">
-  <strive-page-loading></strive-page-loading>
-</ng-container>
-
-<ng-template #notLoading>
-
+<ng-container *ngIf="settings$ | async as settings; else loading">
   <ng-container [ngSwitch]="section()">
 
     <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
@@ -25,12 +20,21 @@
       <strive-assess-life-previous-intention [interval]="interval" [previousEntry]="previousEntry" />
     </ion-content>
 
-    <ion-content *ngSwitchCase="'timeManagementPast'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-time-management-past [form]="form.timeManagement.past" [interval]="interval" [stepping]="stepping$ | async" />
-    </ion-content>
-
-    <ion-content *ngSwitchCase="'stress'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-stress [form]="form.stress" [interval]="interval" [stepping]="stepping$ | async" />
+    <ion-content *ngSwitchCase="'listQuestionsPast'" class="ion-padding" [ngClass]="animatingSection()">
+      <section>
+        <strive-assess-life-time-management-past
+          *ngIf="settings | isActivated: interval: 'timeManagement'"
+          [form]="form.timeManagement.past"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
+        <strive-assess-life-stress
+          *ngIf="settings | isActivated: interval: 'stress'"
+          [form]="form.stress"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
+      </section>
     </ion-content>
 
     <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
@@ -65,4 +69,8 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-footer>
+</ng-container>
+
+<ng-template #loading>
+  <strive-page-loading></strive-page-loading>
 </ng-template>
