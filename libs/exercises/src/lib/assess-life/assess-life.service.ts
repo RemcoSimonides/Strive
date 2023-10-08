@@ -71,6 +71,10 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
     const encryptionKey = await this.personalService.getEncryptionKey()
 
     for (const entry of entries) {
+      entry.dearFutureSelf.advice = AES.decrypt(entry.dearFutureSelf.advice, encryptionKey).toString(enc.Utf8)
+      entry.dearFutureSelf.predictions = AES.decrypt(entry.dearFutureSelf.predictions, encryptionKey).toString(enc.Utf8)
+      entry.dearFutureSelf.anythingElse = AES.decrypt(entry.dearFutureSelf.anythingElse, encryptionKey).toString(enc.Utf8)
+
       entry.gratitude.entries = entry.gratitude.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
 
       entry.learn.past.entries = entry.learn.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))

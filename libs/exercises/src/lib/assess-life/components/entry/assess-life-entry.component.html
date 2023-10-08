@@ -74,6 +74,10 @@
       <strive-assess-life-prioritize-goals (step)="step($event)" />
     </ion-content>
 
+    <ion-content *ngSwitchCase="'dearFutureSelf'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-assess-life-dear-future-self [form]="form.dearFutureSelf" [interval]="interval" />
+    </ion-content>
+
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-assess-life-outro />
     </ion-content>

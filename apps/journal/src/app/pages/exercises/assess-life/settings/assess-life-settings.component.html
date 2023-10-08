@@ -17,6 +17,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Dear Future Self</span>
+            <small>Write a message/advice/predictions to your future self</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="dearFutureSelf" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Gratitude</span>
             <small>What are you grateful for?</small>
           </section>

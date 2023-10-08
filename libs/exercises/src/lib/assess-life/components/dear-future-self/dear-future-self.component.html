@@ -1,0 +1,22 @@
+<ng-container *ngIf="form && interval">
+  <ion-list mode="md">
+    <small>What advice would you give yourself in one {{ interval | interval }}?</small>
+    <ion-item lines="none">
+      <ion-textarea [formControl]="form.advice" autoGrow rows="4" placeholder="..." autocapitalize="sentences" class="primary"/>
+    </ion-item>
+  </ion-list>
+
+  <ion-list mode="md">
+    <small>What predictions do you make what will happen upcoming {{ interval | interval }}?</small>
+    <ion-item lines="none">
+      <ion-textarea [formControl]="form.predictions" autoGrow rows="4" placeholder="..." autocapitalize="sentences" class="primary"/>
+    </ion-item>
+  </ion-list>
+
+  <ion-list mode="md">
+    <small>Anything else you would like to mention?</small>
+    <ion-item lines="none">
+      <ion-textarea [formControl]="form.anythingElse" autoGrow rows="4" placeholder="..." autocapitalize="sentences" class="primary"/>
+    </ion-item>
+  </ion-list>
+</ng-container>

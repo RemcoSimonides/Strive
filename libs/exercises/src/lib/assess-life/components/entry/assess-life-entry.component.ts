@@ -21,6 +21,7 @@ type Section = 'intro'
   | 'wheelOfLife'
   | 'listQuestionsFuture'
   | 'prioritizeGoals'
+  | 'dearFutureSelf'
   | 'outro'
 
 const allSteps: {
@@ -76,6 +77,11 @@ const allSteps: {
     setting: 'prioritizeGoals',
     title: 'Order goals by priority',
     section: 'prioritizeGoals'
+  },
+  {
+    setting: 'dearFutureSelf',
+    title: 'Dear Future Self',
+    section: 'dearFutureSelf'
   },
   {
     setting: undefined,
@@ -194,6 +200,10 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
       ...this.entry,
       ...this.form.getRawValue()
     })
+
+    entry.dearFutureSelf.advice = AES.encrypt(entry.dearFutureSelf.advice, key).toString()
+    entry.dearFutureSelf.predictions = AES.encrypt(entry.dearFutureSelf.predictions, key).toString()
+    entry.dearFutureSelf.anythingElse = AES.encrypt(entry.dearFutureSelf.anythingElse, key).toString()
 
     entry.gratitude.entries = entry.gratitude.entries.map(v => AES.encrypt(v, key).toString())
 
