@@ -19,7 +19,7 @@ type Section = 'intro'
   | 'previousIntention'
   | 'listQuestionsPast'
   | 'wheelOfLife'
-  | 'timeManagementFuture'
+  | 'listQuestionsFuture'
   | 'prioritizeGoals'
   | 'outro'
 
@@ -48,6 +48,11 @@ const allSteps: {
     section: 'listQuestionsPast'
   },
   {
+    setting: 'learn',
+    title: 'The past {interval}',
+    section: 'listQuestionsPast'
+  },
+  {
     setting: 'wheelOfLife',
     title: 'How do you feel now?',
     section: 'wheelOfLife'
@@ -55,7 +60,12 @@ const allSteps: {
   {
     setting: 'timeManagement',
     title: 'The upcoming {interval}',
-    section: 'timeManagementFuture'
+    section: 'listQuestionsFuture'
+  },
+  {
+    setting: 'learn',
+    title: 'The upcoming {interval}',
+    section: 'listQuestionsFuture'
   },
   {
     setting: 'prioritizeGoals',
@@ -178,6 +188,9 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
       ...this.entry,
       ...this.form.getRawValue()
     })
+
+    entry.learn.past.entries = entry.learn.past.entries.map(v => AES.encrypt(v, key).toString())
+    entry.learn.future.entries = entry.learn.future.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.encrypt(v, key).toString())
     entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.encrypt(v, key).toString())

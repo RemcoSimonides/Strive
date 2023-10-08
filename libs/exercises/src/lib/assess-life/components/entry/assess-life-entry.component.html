@@ -34,11 +34,30 @@
           [interval]="interval"
           [stepping]="stepping$ | async"
         />
+        <strive-assess-life-learn-past
+          *ngIf="settings | isActivated: interval: 'learn'"
+          [form]="form.learn.past"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
       </section>
     </ion-content>
 
-    <ion-content *ngSwitchCase="'timeManagementFuture'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-time-management-future [form]="form.timeManagement" [interval]="interval" [stepping]="stepping$ | async" />
+    <ion-content *ngSwitchCase="'listQuestionsFuture'" class="ion-padding" [ngClass]="animatingSection()">
+      <section>
+        <strive-assess-life-time-management-future
+          *ngIf="settings | isActivated: interval: 'timeManagement'"
+          [form]="form.timeManagement"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
+        <strive-assess-life-learn-future
+          *ngIf="settings | isActivated: interval: 'learn'"
+          [form]="form.learn.future"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
+      </section>
     </ion-content>
 
     <ion-content *ngSwitchCase="'wheelOfLife'" class="ion-padding" [ngClass]="animatingSection()">

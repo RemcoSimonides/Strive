@@ -71,11 +71,14 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
     const encryptionKey = await this.personalService.getEncryptionKey()
 
     for (const entry of entries) {
+      entry.learn.past.entries = entry.learn.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+      entry.learn.future.entries = entry.learn.future.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+
+      entry.stress.entries = entry.stress.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
+
       entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
       entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
       entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.stress.entries = entry.stress.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
 
       entry.wheelOfLife.career = +AES.decrypt(entry.wheelOfLife.career.toString(), encryptionKey).toString(enc.Utf8)
       entry.wheelOfLife.development = +AES.decrypt(entry.wheelOfLife.development.toString(), encryptionKey).toString(enc.Utf8)

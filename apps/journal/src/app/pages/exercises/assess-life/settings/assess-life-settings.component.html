@@ -17,11 +17,23 @@
       <ion-item>
         <ion-label>
           <section>
-            <span>Time Management</span>
-            <small>What did you spend time on?</small>
+            <span>Learn</span>
+            <small>What do you want to learn?</small>
           </section>
         </ion-label>
-        <ion-select [legacy]="true" formControlName="timeManagement" interface="popover">
+        <ion-select [legacy]="true" formControlName="learn" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <section>
+            <span>Prioritize Goals</span>
+            <small>Order your goals by priority</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="prioritizeGoals" interface="popover">
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>
@@ -41,23 +53,23 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Time Management</span>
+            <small>What did you spend time on?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="timeManagement" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Wheel of Life</span>
             <small>How do you feel?</small>
           </section>
         </ion-label>
         <ion-select [legacy]="true" formControlName="wheelOfLife" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item lines="none">
-        <ion-label>
-          <section>
-            <span>Prioritize Goals</span>
-            <small>Order your goals by priority</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="prioritizeGoals" interface="popover">
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>

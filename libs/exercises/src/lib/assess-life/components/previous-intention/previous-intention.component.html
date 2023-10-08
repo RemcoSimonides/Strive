@@ -1,13 +1,16 @@
 <ng-container *ngIf="previousEntry && interval">
   <small>Last week you made some intentions. Let's go over each and think by yourself whether you managed to comply with these intention or not. If not, why not? And what would you do differently next time.</small>
 
-  <p>Last {{ interval | interval }} you intended to</p>
+  <p>Last {{ interval | interval }} you intended to:</p>
   <ul>
     <li *ngIf="previousEntry.timeManagement.futureLessTime.entries.length">
-      Spend less time on {{ previousEntry.timeManagement.futureLessTime.entries | smartJoin:', ':' and '}}
+      ⏱️&nbsp;&nbsp;Spend less time on {{ previousEntry.timeManagement.futureLessTime.entries | smartJoin:', ':' and '}}
     </li>
     <li *ngIf="previousEntry.timeManagement.futureMoreTime.entries.length">
-      Spend more time on {{ previousEntry.timeManagement.futureMoreTime.entries | smartJoin:', ':' and '}}
+      ⏱️&nbsp;&nbsp;Spend more time on {{ previousEntry.timeManagement.futureMoreTime.entries | smartJoin:', ':' and '}}
+    </li>
+    <li *ngIf="previousEntry.learn.future.entries.length">
+      📖&nbsp;&nbsp;Learn {{ previousEntry.learn.future.entries | smartJoin:', ':' and '}}
     </li>
   </ul>
 

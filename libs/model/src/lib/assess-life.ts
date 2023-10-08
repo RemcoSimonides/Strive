@@ -5,6 +5,7 @@ export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 
 export interface AssessLifeSettings {
   id?: string
+  learn: AssessLifeIntervalWithNever
   prioritizeGoals: AssessLifeIntervalWithNever
   stress: AssessLifeIntervalWithNever
   timeManagement: AssessLifeIntervalWithNever
@@ -17,6 +18,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
   return {
     ...params,
     id: params.id ?? '',
+    learn: params.learn ?? 'weekly',
     prioritizeGoals: params.prioritizeGoals ?? 'monthly',
     stress: params.stress ?? 'weekly',
     timeManagement: params.timeManagement ?? 'weekly',
@@ -29,6 +31,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 export interface AssessLifeEntry {
   id?: string
   interval: AssessLifeInterval
+  learn: Learn
   stress: ListEntries
   timeManagement: TimeManagement
   wheelOfLife: WheelOfLife
@@ -42,9 +45,22 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     interval: params.interval ?? 'weekly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),
+    learn: createLearn(params?.learn),
     stress: createListEntries(params?.stress),
     timeManagement: createTimeManagement(params?.timeManagement),
     wheelOfLife: createWheelOfLife(params?.wheelOfLife)
+  }
+}
+
+export interface Learn {
+  past: ListEntries
+  future: ListEntries
+}
+
+export function createLearn(params?: Partial<Learn>): Learn {
+  return {
+    past: createListEntries(params?.past),
+    future: createListEntries(params?.future)
   }
 }
 
