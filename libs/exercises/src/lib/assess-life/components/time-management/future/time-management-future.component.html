@@ -1,6 +1,6 @@
 <ng-container *ngIf="form && interval">
   <ion-list mode="md">
-    <small>What will you spend more time on in the upcoming {{ interval | interval }}?</small>
+    <small>What will you spend more time on upcoming {{ interval | interval }}?</small>
     <ion-item *ngFor="let control of form.futureMoreTime.entries.controls; let i = index">
       <ion-input
         class="ion-text-wrap primary"
@@ -31,7 +31,7 @@
   </ion-list>
 
   <ion-list mode="md">
-    <small>What will you spend less time on in the upcoming {{ interval | interval }}?</small>
+    <small>What will you spend less time on upcoming {{ interval | interval }}?</small>
     <ion-item *ngFor="let control of form.futureLessTime.entries.controls; let i = index">
       <ion-input
         class="ion-text-wrap primary"

@@ -26,7 +26,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item>
         <ion-label>
           <section>
             <span>Prioritize Goals</span>
@@ -41,11 +41,11 @@
       <ion-item>
         <ion-label>
           <section>
-            <span>Stress</span>
-            <small>What gave you stress?</small>
+            <span>Pride</span>
+            <small>What are you proud of?</small>
           </section>
         </ion-label>
-        <ion-select [legacy]="true" formControlName="stress" interface="popover">
+        <ion-select [legacy]="true" formControlName="proud" interface="popover">
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>
@@ -62,7 +62,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-item>
+      <ion-item lines="none">
         <ion-label>
           <section>
             <span>Wheel of Life</span>

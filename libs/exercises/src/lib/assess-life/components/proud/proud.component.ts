@@ -8,9 +8,9 @@ import { FormList } from '../../utils/form.utils'
 
 @Component({
   standalone: true,
-  selector: '[form][interval] strive-assess-life-stress',
-  templateUrl: './stress.component.html',
-  styleUrls: ['./stress.component.scss'],
+  selector: '[form][interval] strive-assess-life-proud',
+  templateUrl: './proud.component.html',
+  styleUrls: ['./proud.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
@@ -19,7 +19,7 @@ import { FormList } from '../../utils/form.utils'
     AssessLifeIntervalPipe
   ]
 })
-export class AssessLifeStressComponent {
+export class AssessLifeProudComponent {
 
   inputForm = new FormControl('', { nonNullable: true })
   showInput = signal<boolean>(true)

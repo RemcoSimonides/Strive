@@ -16,7 +16,7 @@ import { AssessLifeTimeManagementFutureComponent } from '../time-management/futu
 import { WheelOfLifeComponent } from '../wheel-of-life/wheel-of-life.component'
 import { PrioritizeGoalsComponent } from '../prioritize-goals/prioritize-goals.component'
 import { AssessLifeOutroComponent } from '../outro/outro.component'
-import { AssessLifeStressComponent } from '../stress/stress.component'
+import { AssessLifeProudComponent } from '../proud/proud.component'
 import { AssessLifeLearnFutureComponent } from '../learn/future/learn-future.component'
 import { AssessLifeLearnPastComponent } from '../learn/past/learn-past.component'
 
@@ -37,7 +37,7 @@ import { AssessLifeLearnPastComponent } from '../learn/past/learn-past.component
     AssessLifeTimeManagementFutureComponent,
     AssessLifeOutroComponent,
     PrioritizeGoalsComponent,
-    AssessLifeStressComponent,
+    AssessLifeProudComponent,
     AssessLifeLearnFutureComponent,
     AssessLifeLearnPastComponent
   ],

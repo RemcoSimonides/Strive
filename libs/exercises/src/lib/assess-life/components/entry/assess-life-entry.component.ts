@@ -43,7 +43,7 @@ const allSteps: {
     section: 'listQuestionsPast'
   },
   {
-    setting: 'stress',
+    setting: 'proud',
     title: 'The past {interval}',
     section: 'listQuestionsPast'
   },
@@ -197,7 +197,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.encrypt(v, key).toString())
     entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.encrypt(v, key).toString())
 
-    entry.stress.entries = entry.stress.entries.map(v => AES.encrypt(v, key).toString())
+    entry.proud.entries = entry.proud.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.wheelOfLife.career = AES.encrypt(entry.wheelOfLife.career.toString(), key).toString()
     entry.wheelOfLife.development = AES.encrypt(entry.wheelOfLife.development.toString(), key).toString()
