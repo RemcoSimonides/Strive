@@ -24,7 +24,7 @@ export class ModalDirective {
   ) {
     if (this.isWeb) {
       window.history.pushState(null, '', window.location.href)
-      
+
       this.modalCtrl.getTop().then(() => {
         this.modal?.onWillDismiss().then(res => {
           if (res.role === 'backdrop') this.location.back()
@@ -33,7 +33,14 @@ export class ModalDirective {
     }
   }
 
-  dismiss(data?: unknown) {
+  beforeDismiss(): Promise<boolean> | boolean {
+    return true
+  }
+
+  async dismiss(data?: unknown) {
+    const canDismiss = await this.beforeDismiss()
+    if (!canDismiss) return
+
     if (this.isWeb) {
       this.data = data
       this.location.back()

@@ -91,7 +91,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     this.sub.unsubscribe()
   }
 
-  override dismiss(saved = false) {
+  override async dismiss(saved = false) {
     if (!saved && this.postForm.mediaURL.value) {
       const storageRef = ref(getStorage(), this.postForm.mediaURL.value)
       deleteObject(storageRef)

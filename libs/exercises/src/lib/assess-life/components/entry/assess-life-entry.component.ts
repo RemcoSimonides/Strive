@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
 import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular'
+import { AlertController, ModalController } from '@ionic/angular'
 
 import { BehaviorSubject, shareReplay, switchMap, tap } from 'rxjs'
 
@@ -126,6 +126,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   @Input() previousEntry?: AssessLifeEntry
 
   constructor(
+    private alertCtrl: AlertController,
     private auth: AuthService,
     location: Location,
     modalCtrl: ModalController,
@@ -211,5 +212,30 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
     const id = await this.service.upsert(entry, { params: { uid: this.auth.uid } })
     this.form.id.setValue(id)
+    this.form.markAsPristine()
+  }
+
+  override beforeDismiss(): boolean | Promise<boolean> {
+    return new Promise((resolve) => {
+      if (this.form.dirty) {
+        this.alertCtrl.create({
+          subHeader: 'Are you sure you want to close this assessment?',
+          message: 'Your answers will not be saved.',
+          buttons: [
+            {
+              text: 'Yes',
+              handler: () => resolve(true)
+            },
+            {
+              text: 'No',
+              role: 'cancel',
+              handler: () => resolve(false)
+            }
+          ]
+        }).then(alert => alert.present())
+      } else {
+        resolve(true)
+      }
+    })
   }
 }

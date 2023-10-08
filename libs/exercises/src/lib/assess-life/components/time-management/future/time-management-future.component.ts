@@ -44,12 +44,14 @@ export class AssessLifeTimeManagementFutureComponent {
   addMoreTimeValue() {
     if (!this.form) return
     this.form.futureMoreTime.entries.push(new FormControl(this.inputMoreTimeForm.value, { nonNullable: true }))
+    this.form.markAsDirty()
     this.inputMoreTimeForm.setValue('')
   }
 
   addLessTimeValue() {
     if (!this.form) return
     this.form.futureLessTime.entries.push(new FormControl(this.inputLessTimeForm.value, { nonNullable: true }))
+    this.form.markAsDirty()
     this.inputLessTimeForm.setValue('')
   }
 

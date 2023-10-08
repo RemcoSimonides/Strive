@@ -36,6 +36,7 @@ export class AssessLifeTimeManagementPastComponent {
   add() {
     if (!this.form) return
     this.form.entries.push(new FormControl(this.inputForm.value, { nonNullable: true }))
+    this.form.markAsDirty()
     this.inputForm.setValue('')
   }
 
