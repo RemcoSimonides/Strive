@@ -17,6 +17,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Gratitude</span>
+            <small>What are you grateful for?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="gratitude" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Learn</span>
             <small>What do you want to learn?</small>
           </section>
@@ -29,11 +41,11 @@
       <ion-item>
         <ion-label>
           <section>
-            <span>Prioritize Goals</span>
-            <small>Order your goals by priority</small>
+            <span>Pride</span>
+            <small>What are you proud of?</small>
           </section>
         </ion-label>
-        <ion-select [legacy]="true" formControlName="prioritizeGoals" interface="popover">
+        <ion-select [legacy]="true" formControlName="proud" interface="popover">
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>
@@ -41,11 +53,11 @@
       <ion-item>
         <ion-label>
           <section>
-            <span>Pride</span>
-            <small>What are you proud of?</small>
+            <span>Prioritize Goals</span>
+            <small>Order your goals by priority</small>
           </section>
         </ion-label>
-        <ion-select [legacy]="true" formControlName="proud" interface="popover">
+        <ion-select [legacy]="true" formControlName="prioritizeGoals" interface="popover">
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>
@@ -66,7 +78,7 @@
         <ion-label>
           <section>
             <span>Wheel of Life</span>
-            <small>How do you feel?</small>
+            <small>Rate how you feel</small>
           </section>
         </ion-label>
         <ion-select [legacy]="true" formControlName="wheelOfLife" interface="popover">

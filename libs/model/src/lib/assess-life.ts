@@ -5,6 +5,7 @@ export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 
 export interface AssessLifeSettings {
   id?: string
+  gratitude: AssessLifeIntervalWithNever
   learn: AssessLifeIntervalWithNever
   prioritizeGoals: AssessLifeIntervalWithNever
   proud: AssessLifeIntervalWithNever
@@ -18,6 +19,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
   return {
     ...params,
     id: params.id ?? '',
+    gratitude: params.gratitude ?? 'weekly',
     learn: params.learn ?? 'weekly',
     prioritizeGoals: params.prioritizeGoals ?? 'monthly',
     proud: params.proud ?? 'weekly',
@@ -31,6 +33,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 export interface AssessLifeEntry {
   id?: string
   interval: AssessLifeInterval
+  gratitude: ListEntries
   learn: Learn
   proud: ListEntries
   timeManagement: TimeManagement
@@ -45,6 +48,7 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     interval: params.interval ?? 'weekly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),
+    gratitude: createListEntries(params?.gratitude),
     learn: createLearn(params?.learn),
     proud: createListEntries(params?.proud),
     timeManagement: createTimeManagement(params?.timeManagement),

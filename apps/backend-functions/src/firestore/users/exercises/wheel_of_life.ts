@@ -1,8 +1,8 @@
 import { WheelOfLifeSettings } from '@strive/model'
 import { logger, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
-import { updateAggregation } from 'apps/backend-functions/src/shared/aggregation/aggregation'
-import { deleteScheduledTask, upsertScheduledTask } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task'
-import { enumWorkerType, ScheduledTaskUserExerciseWheelOfLife } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface'
+import { updateAggregation } from '../../../shared/scheduled-task/aggregation'
+import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
+import { enumWorkerType, ScheduledTaskUserExerciseWheelOfLife } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { addMonths, addQuarters, addWeeks, addYears } from 'date-fns'
 
 

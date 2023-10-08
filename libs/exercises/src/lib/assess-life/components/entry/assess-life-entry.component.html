@@ -34,6 +34,12 @@
           [interval]="interval"
           [stepping]="stepping$ | async"
         />
+        <strive-assess-life-gratitude
+          *ngIf="settings | isActivated: interval: 'gratitude'"
+          [form]="form.gratitude"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
         <strive-assess-life-learn-past
           *ngIf="settings | isActivated: interval: 'learn'"
           [form]="form.learn.past"

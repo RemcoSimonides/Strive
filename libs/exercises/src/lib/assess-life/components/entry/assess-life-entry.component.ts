@@ -48,6 +48,11 @@ const allSteps: {
     section: 'listQuestionsPast'
   },
   {
+    setting: 'gratitude',
+    title: 'The past {interval}',
+    section: 'listQuestionsPast'
+  },
+  {
     setting: 'learn',
     title: 'The past {interval}',
     section: 'listQuestionsPast'
@@ -189,6 +194,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
       ...this.entry,
       ...this.form.getRawValue()
     })
+
+    entry.gratitude.entries = entry.gratitude.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.learn.past.entries = entry.learn.past.entries.map(v => AES.encrypt(v, key).toString())
     entry.learn.future.entries = entry.learn.future.entries.map(v => AES.encrypt(v, key).toString())

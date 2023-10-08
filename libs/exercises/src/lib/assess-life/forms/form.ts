@@ -10,6 +10,7 @@ function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
 
   return {
     id: new FormControl(assessLife.id, { nonNullable: true }),
+    gratitude: new FormList(assessLife.gratitude),
     learn: new LearnForm(assessLife.learn),
     proud: new FormList(assessLife.proud),
     timeManagement: new TimeManagementForm(assessLife.timeManagement),
@@ -25,6 +26,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   }
 
   get id() { return this.get('id')! as FormControl }
+  get gratitude() { return this.get('gratitude')! as FormList }
   get learn() { return this.get('learn')! as LearnForm }
   get proud() { return this.get('proud')! as FormList }
   get timeManagement() { return this.get('timeManagement')! as TimeManagementForm }
