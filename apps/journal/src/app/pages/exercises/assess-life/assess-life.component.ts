@@ -11,6 +11,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
 import { AssessLifeEntryComponent } from '@strive/exercises/assess-life/components/entry/assess-life-entry.component'
 import { differenceInDays } from 'date-fns'
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 function getActivatedQuestions(settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
   if (!settings) return []
@@ -52,6 +53,7 @@ function getEntryStatus(entries: AssessLifeEntry[], settings: AssessLifeSettings
 export class AssessLifeComponent {
 
   isMobile$ = this.screensize.isMobile$
+  uid$ = this.auth.uid$
 
   private dbEntries$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
@@ -115,7 +117,7 @@ export class AssessLifeComponent {
 
   constructor(
     private auth: AuthService,
-    private modal: ModalController,
+    private modalCtrl: ModalController,
     private screensize: ScreensizeService,
     private service: AssessLifeEntryService,
     private settingsService: AssessLifeSettingsService,
@@ -130,14 +132,14 @@ export class AssessLifeComponent {
   async addEntry(interval: AssessLifeInterval) {
     const previousEntry = await this.getPreviousEntry(interval)
 
-    this.modal.create({
+    this.modalCtrl.create({
       component: AssessLifeEntryComponent,
       componentProps: { interval, previousEntry }
     }).then(modal => modal.present())
   }
 
   async openEntry(entry: AssessLifeEntry) {
-    this.modal.create({
+    this.modalCtrl.create({
       component: AssessLifeEntryComponent,
       componentProps: { entry, interval: entry.interval }
     }).then(modal => modal.present())
@@ -147,5 +149,14 @@ export class AssessLifeComponent {
     const entries = await firstValueFrom(this.dbEntries$)
     const filtered = entries.filter(entry => entry.interval === interval)
     return filtered[0]
+  }
+
+  openAuthModal() {
+    this.modalCtrl.create({
+      component: AuthModalComponent,
+      componentProps: {
+        authSegment: enumAuthSegment.login
+      }
+    }).then(modal => modal.present())
   }
 }

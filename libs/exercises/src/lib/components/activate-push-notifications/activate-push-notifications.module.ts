@@ -12,4 +12,4 @@ import { ActivatePushNotificationsComponent } from './activate-push-notification
   declarations: [ActivatePushNotificationsComponent],
   exports: [ActivatePushNotificationsComponent]
 })
-export class ActivatePushNotificaitonsModule {}
+export class ActivatePushNotificationsModule {}

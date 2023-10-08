@@ -23,7 +23,7 @@ export class AssessLifeSettingsService extends FireSubCollection<AssessLifeSetti
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<AssessLifeSettings>): AssessLifeSettings | undefined {
-    if (!snapshot.exists()) return
+    if (!snapshot.exists()) return createAssessLifeSettings()
     return createAssessLifeSettings(toDate({ ...snapshot.data(), id: snapshot.id }))
   }
 

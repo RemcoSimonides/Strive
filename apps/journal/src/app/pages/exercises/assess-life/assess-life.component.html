@@ -7,7 +7,7 @@
 </strive-header>
 
 <ion-content class="ion-padding">
-  <main>
+  <main *ngIf="uid$ | async else login">
     <header>
       <h1 *ngIf="(isMobile$ | async) === false">Assess Life</h1>
       <ion-button
@@ -120,3 +120,11 @@
     </ion-content>
   </ng-template>
 </ion-popover>
+
+<ng-template #login>
+  <section class="not-logged-in">
+    <p>
+      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to assess your life
+    </p>
+  </section>
+</ng-template>
