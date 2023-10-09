@@ -29,6 +29,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Explore</span>
+            <small>What do you want to explore?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="explore" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Gratitude</span>
             <small>What are you grateful for?</small>
           </section>

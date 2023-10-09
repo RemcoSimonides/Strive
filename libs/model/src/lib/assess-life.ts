@@ -6,6 +6,7 @@ export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 export interface AssessLifeSettings {
   id?: string
   dearFutureSelf: AssessLifeIntervalWithNever
+  explore: AssessLifeIntervalWithNever
   gratitude: AssessLifeIntervalWithNever
   learn: AssessLifeIntervalWithNever
   prioritizeGoals: AssessLifeIntervalWithNever
@@ -21,6 +22,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
     ...params,
     id: params.id ?? '',
     dearFutureSelf: params.dearFutureSelf ?? 'monthly',
+    explore: params.explore ?? 'quarterly',
     gratitude: params.gratitude ?? 'weekly',
     learn: params.learn ?? 'weekly',
     prioritizeGoals: params.prioritizeGoals ?? 'monthly',
@@ -35,6 +37,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 export interface AssessLifeEntry {
   id?: string
   dearFutureSelf: AssessLifeDearFutureSelf
+  explore: AssessLifeExplore
   interval: AssessLifeInterval
   gratitude: ListEntries
   learn: Learn
@@ -52,6 +55,7 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),
     dearFutureSelf: createAssessLifeDearFutureSelf(params?.dearFutureSelf),
+    explore: createAssessLifeExplore(params?.explore),
     gratitude: createListEntries(params?.gratitude),
     learn: createLearn(params?.learn),
     proud: createListEntries(params?.proud),
@@ -71,6 +75,18 @@ export function createAssessLifeDearFutureSelf(params?: Partial<AssessLifeDearFu
     advice: params?.advice ?? '',
     predictions: params?.predictions ?? '',
     anythingElse: params?.anythingElse ?? ''
+  }
+}
+
+export interface AssessLifeExplore {
+  past: ListEntries
+  future: ListEntries
+}
+
+export function createAssessLifeExplore(params?: Partial<AssessLifeExplore>): AssessLifeExplore {
+  return {
+    past: createListEntries(params?.past),
+    future: createListEntries(params?.future)
   }
 }
 

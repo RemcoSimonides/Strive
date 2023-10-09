@@ -5,6 +5,7 @@ import { WheelOfLifeForm } from '../components/wheel-of-life/wheel-of-life.form'
 import { FormList } from '../utils/form.utils'
 import { LearnForm } from '../components/learn/learn.form'
 import { DearFutureSelfForm } from '../components/dear-future-self/dear-future-self.form'
+import { ExploreForm } from '../components/explore/explore.form'
 
 function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
   const assessLife = createAssessLifeEntry(params)
@@ -12,6 +13,7 @@ function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
   return {
     id: new FormControl(assessLife.id, { nonNullable: true }),
     dearFutureSelf: new DearFutureSelfForm(assessLife.dearFutureSelf),
+    explore: new ExploreForm(assessLife.explore),
     gratitude: new FormList(assessLife.gratitude),
     learn: new LearnForm(assessLife.learn),
     proud: new FormList(assessLife.proud),
@@ -29,6 +31,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
 
   get id() { return this.get('id')! as FormControl }
   get dearFutureSelf() { return this.get('dearFutureSelf')! as DearFutureSelfForm }
+  get explore() { return this.get('explore')! as ExploreForm }
   get gratitude() { return this.get('gratitude')! as FormList }
   get learn() { return this.get('learn')! as LearnForm }
   get proud() { return this.get('proud')! as FormList }

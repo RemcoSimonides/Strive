@@ -12,6 +12,9 @@
     <li *ngIf="previousEntry.learn.future.entries.length">
       📖&nbsp;&nbsp;Learn {{ previousEntry.learn.future.entries | smartJoin:', ':' and '}}
     </li>
+    <li *ngIf="previousEntry.explore.future.entries.length">
+      🌎&nbsp;&nbsp;Explore {{ previousEntry.explore.future.entries | smartJoin:', ':' and '}}
+    </li>
   </ul>
 
 </ng-container>

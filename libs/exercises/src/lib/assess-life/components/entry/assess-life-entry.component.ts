@@ -59,6 +59,11 @@ const allSteps: {
     section: 'listQuestionsPast'
   },
   {
+    setting: 'explore',
+    title: 'The past {interval}',
+    section: 'listQuestionsPast'
+  },
+  {
     setting: 'wheelOfLife',
     title: 'How do you feel now?',
     section: 'wheelOfLife'
@@ -70,6 +75,11 @@ const allSteps: {
   },
   {
     setting: 'learn',
+    title: 'The upcoming {interval}',
+    section: 'listQuestionsFuture'
+  },
+  {
+    setting: 'explore',
     title: 'The upcoming {interval}',
     section: 'listQuestionsFuture'
   },
@@ -204,6 +214,9 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     entry.dearFutureSelf.advice = AES.encrypt(entry.dearFutureSelf.advice, key).toString()
     entry.dearFutureSelf.predictions = AES.encrypt(entry.dearFutureSelf.predictions, key).toString()
     entry.dearFutureSelf.anythingElse = AES.encrypt(entry.dearFutureSelf.anythingElse, key).toString()
+
+    entry.explore.past.entries = entry.explore.past.entries.map(v => AES.encrypt(v, key).toString())
+    entry.explore.future.entries = entry.explore.future.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.gratitude.entries = entry.gratitude.entries.map(v => AES.encrypt(v, key).toString())
 
