@@ -21,7 +21,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
   return {
     ...params,
     id: params.id ?? '',
-    dearFutureSelf: params.dearFutureSelf ?? 'monthly',
+    dearFutureSelf: params.dearFutureSelf ?? 'yearly',
     explore: params.explore ?? 'quarterly',
     gratitude: params.gratitude ?? 'weekly',
     learn: params.learn ?? 'weekly',
