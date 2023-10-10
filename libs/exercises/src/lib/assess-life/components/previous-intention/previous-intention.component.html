@@ -19,6 +19,9 @@
       <li *ngIf="previousEntry.environment.future.entries.length">
         🌱&nbsp;&nbsp;Contribute to the environment by {{ previousEntry.environment.future.entries | smartJoin:', ':' and '}}
       </li>
+      <li *ngIf="previousEntry.forgive.entries.length">
+        🙏&nbsp;&nbsp;Forgive or let go of {{ previousEntry.forgive.entries | smartJoin:', ':' and '}}
+      </li>
     </ul>
   </ion-list>
 

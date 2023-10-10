@@ -53,6 +53,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Forgive / Letting go</span>
+            <small>What do you want to forgive or let go of?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="forgive" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Gratitude</span>
             <small>What are you grateful for?</small>
           </section>

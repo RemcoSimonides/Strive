@@ -25,6 +25,7 @@ import { AssessLifeExploreFutureComponent } from '../explore/future/explore-futu
 import { AssessLifeExplorePastComponent } from '../explore/past/explore-past.component'
 import { AssessLifeEnvironmentFutureComponent } from '../environment/future/environment-future.component'
 import { AssessLifeEnvironmentPastComponent } from '../environment/past/environment-past.component'
+import { AssessLifeForgiveFutureComponent } from '../forgive/forgive.component'
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { AssessLifeEnvironmentPastComponent } from '../environment/past/environm
     AssessLifeExploreFutureComponent,
     AssessLifeExplorePastComponent,
     AssessLifeEnvironmentFutureComponent,
-    AssessLifeEnvironmentPastComponent
+    AssessLifeEnvironmentPastComponent,
+    AssessLifeForgiveFutureComponent
   ],
   declarations: [AssessLifeEntryComponent],
   exports: [AssessLifeEntryComponent]

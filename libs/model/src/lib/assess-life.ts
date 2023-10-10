@@ -8,6 +8,7 @@ export interface AssessLifeSettings {
   dearFutureSelf: AssessLifeIntervalWithNever
   environment: AssessLifeIntervalWithNever
   explore: AssessLifeIntervalWithNever
+  forgive: AssessLifeIntervalWithNever
   gratitude: AssessLifeIntervalWithNever
   learn: AssessLifeIntervalWithNever
   prioritizeGoals: AssessLifeIntervalWithNever
@@ -25,6 +26,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
     dearFutureSelf: params.dearFutureSelf ?? 'yearly',
     environment: params.environment ?? 'quarterly',
     explore: params.explore ?? 'quarterly',
+    forgive: params.forgive ?? 'monthly',
     gratitude: params.gratitude ?? 'weekly',
     learn: params.learn ?? 'weekly',
     prioritizeGoals: params.prioritizeGoals ?? 'monthly',
@@ -41,8 +43,9 @@ export interface AssessLifeEntry {
   dearFutureSelf: AssessLifeDearFutureSelf
   environment: AssessLifeEnvironment
   explore: AssessLifeExplore
-  interval: AssessLifeInterval
+  forgive: ListEntries
   gratitude: ListEntries
+  interval: AssessLifeInterval
   learn: Learn
   proud: ListEntries
   timeManagement: TimeManagement
@@ -60,6 +63,7 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     dearFutureSelf: createAssessLifeDearFutureSelf(params?.dearFutureSelf),
     environment: createAssessLifeEnvironment(params?.environment),
     explore: createAssessLifeExplore(params?.explore),
+    forgive: createListEntries(params?.forgive),
     gratitude: createListEntries(params?.gratitude),
     learn: createLearn(params?.learn),
     proud: createListEntries(params?.proud),

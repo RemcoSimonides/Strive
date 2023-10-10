@@ -33,6 +33,7 @@ export class AssessLifeSettingsComponent implements OnInit {
     dearFutureSelf: new FormControl<AssessLifeIntervalWithNever>('yearly', { nonNullable: true }),
     environment: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
     explore: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
+    forgive: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true }),
     gratitude: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
     learn: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
     prioritizeGoals: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true }),

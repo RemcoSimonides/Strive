@@ -16,6 +16,7 @@ function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
     dearFutureSelf: new DearFutureSelfForm(assessLife.dearFutureSelf),
     environment: new EnvironmentForm(assessLife.environment),
     explore: new ExploreForm(assessLife.explore),
+    forgive: new FormList(assessLife.forgive),
     gratitude: new FormList(assessLife.gratitude),
     learn: new LearnForm(assessLife.learn),
     proud: new FormList(assessLife.proud),
@@ -35,6 +36,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   get dearFutureSelf() { return this.get('dearFutureSelf')! as DearFutureSelfForm }
   get environment() { return this.get('environment')! as EnvironmentForm }
   get explore() { return this.get('explore')! as ExploreForm }
+  get forgive() { return this.get('forgive')! as FormList }
   get gratitude() { return this.get('gratitude')! as FormList }
   get learn() { return this.get('learn')! as LearnForm }
   get proud() { return this.get('proud')! as FormList }

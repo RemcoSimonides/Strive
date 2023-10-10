@@ -19,6 +19,7 @@ type Section = 'intro'
   | 'previousIntention'
   | 'listQuestionsPast'
   | 'wheelOfLife'
+  | 'forgive'
   | 'listQuestionsFuture'
   | 'prioritizeGoals'
   | 'dearFutureSelf'
@@ -72,6 +73,11 @@ const allSteps: {
     setting: 'wheelOfLife',
     title: 'How do you feel now?',
     section: 'wheelOfLife'
+  },
+  {
+    setting: 'forgive',
+    title: 'Forgive and let go',
+    section: 'forgive'
   },
   {
     setting: 'timeManagement',
@@ -230,6 +236,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
     entry.explore.past.entries = entry.explore.past.entries.map(v => AES.encrypt(v, key).toString())
     entry.explore.future.entries = entry.explore.future.entries.map(v => AES.encrypt(v, key).toString())
+
+    entry.forgive.entries = entry.forgive.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.gratitude.entries = entry.gratitude.entries.map(v => AES.encrypt(v, key).toString())
 
