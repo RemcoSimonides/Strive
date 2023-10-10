@@ -35,7 +35,7 @@ const allSteps: {
   },
   {
     setting: undefined,
-    title: 'Your previous intentions',
+    title: 'Last {interval} you wrote...',
     section: 'previousIntention'
   },
   {

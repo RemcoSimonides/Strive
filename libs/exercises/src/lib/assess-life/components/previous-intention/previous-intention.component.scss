@@ -1,7 +1,26 @@
-small {
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro {
   color: var(--ion-color-medium);
 }
 
 ul {
-  margin-inline: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+ion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+
+  p {
+    margin: 0;
+  }
 }

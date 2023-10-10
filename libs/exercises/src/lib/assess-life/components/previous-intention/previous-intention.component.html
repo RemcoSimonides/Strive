@@ -1,20 +1,43 @@
 <ng-container *ngIf="previousEntry && interval">
-  <small>Last week you made some intentions. Let's go over each and think by yourself whether you managed to comply with these intention or not. If not, why not? And what would you do differently next time.</small>
+  <small class="intro">Last {{ interval | interval }} you wrote some intentions/predictions about the past {{ interval | interval }}. Let's read back and think by yourself what happened or not.</small>
 
-  <p>Last {{ interval | interval }} you intended to:</p>
-  <ul>
-    <li *ngIf="previousEntry.timeManagement.futureLessTime.entries.length">
-      ⏱️&nbsp;&nbsp;Spend less time on {{ previousEntry.timeManagement.futureLessTime.entries | smartJoin:', ':' and '}}
-    </li>
-    <li *ngIf="previousEntry.timeManagement.futureMoreTime.entries.length">
-      ⏱️&nbsp;&nbsp;Spend more time on {{ previousEntry.timeManagement.futureMoreTime.entries | smartJoin:', ':' and '}}
-    </li>
-    <li *ngIf="previousEntry.learn.future.entries.length">
-      📖&nbsp;&nbsp;Learn {{ previousEntry.learn.future.entries | smartJoin:', ':' and '}}
-    </li>
-    <li *ngIf="previousEntry.explore.future.entries.length">
-      🌎&nbsp;&nbsp;Explore {{ previousEntry.explore.future.entries | smartJoin:', ':' and '}}
-    </li>
-  </ul>
+  <ion-list mode="md" *ngIf="hasListItems()">
+    <small>Intentions for last {{ interval | interval }}</small>
+    <ul #list>
+      <li *ngIf="previousEntry.timeManagement.futureLessTime.entries.length">
+        ⏱️&nbsp;&nbsp;Spend less time on {{ previousEntry.timeManagement.futureLessTime.entries | smartJoin:', ':' and '}}
+      </li>
+      <li *ngIf="previousEntry.timeManagement.futureMoreTime.entries.length">
+        ⏱️&nbsp;&nbsp;Spend more time on {{ previousEntry.timeManagement.futureMoreTime.entries | smartJoin:', ':' and '}}
+      </li>
+      <li *ngIf="previousEntry.learn.future.entries.length">
+        📖&nbsp;&nbsp;Learn {{ previousEntry.learn.future.entries | smartJoin:', ':' and '}}
+      </li>
+      <li *ngIf="previousEntry.explore.future.entries.length">
+        🌎&nbsp;&nbsp;Explore {{ previousEntry.explore.future.entries | smartJoin:', ':' and '}}
+      </li>
+    </ul>
+  </ion-list>
+
+  <ng-container *ngIf="previousEntry.dearFutureSelf.advice">
+    <ion-list mode="md">
+      <small>Advice</small>
+      <p>{{ previousEntry.dearFutureSelf.advice }}</p>
+    </ion-list>
+  </ng-container>
+
+  <ng-container *ngIf="previousEntry.dearFutureSelf.predictions">
+    <ion-list mode="md">
+      <small>Predictions</small>
+      <p>{{ previousEntry.dearFutureSelf.predictions }}</p>
+    </ion-list>
+  </ng-container>
+
+  <ng-container *ngIf="previousEntry.dearFutureSelf.anythingElse">
+    <ion-list mode="md">
+      <small>Message</small>
+      <p>{{ previousEntry.dearFutureSelf.anythingElse }}</p>
+    </ion-list>
+  </ng-container>
 
 </ng-container>
