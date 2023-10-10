@@ -16,6 +16,9 @@
       <li *ngIf="previousEntry.explore.future.entries.length">
         🌎&nbsp;&nbsp;Explore {{ previousEntry.explore.future.entries | smartJoin:', ':' and '}}
       </li>
+      <li *ngIf="previousEntry.environment.future.entries.length">
+        🌱&nbsp;&nbsp;Contribute to the environment by {{ previousEntry.environment.future.entries | smartJoin:', ':' and '}}
+      </li>
     </ul>
   </ion-list>
 
