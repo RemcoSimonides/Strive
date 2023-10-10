@@ -29,6 +29,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Environment</span>
+            <small>What is your positive impact in the world?</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="environment" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Explore</span>
             <small>What do you want to explore?</small>
           </section>

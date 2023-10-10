@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 import { AssessLifeIntervalPipe } from '../../pipes/interval.pipe'
 import { AssessLifeInterval } from '@strive/model'
-import { AssessLifeDearFutureSelfForm } from './dear-future-self.form'
+import { DearFutureSelfForm } from './dear-future-self.form'
 
 @Component({
   standalone: true,
@@ -22,6 +22,6 @@ import { AssessLifeDearFutureSelfForm } from './dear-future-self.form'
 export class AssessLifeDearFutureSelfComponent {
 
   @Input() interval?: AssessLifeInterval
-  @Input() form?: AssessLifeDearFutureSelfForm
+  @Input() form?: DearFutureSelfForm
 
 }

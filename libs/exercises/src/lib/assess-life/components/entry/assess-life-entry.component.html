@@ -52,6 +52,12 @@
           [interval]="interval"
           [stepping]="stepping$ | async"
         />
+        <strive-assess-life-environment-past
+          *ngIf="settings | isActivated: interval: 'environment'"
+          [form]="form.environment.past"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
       </section>
     </ion-content>
 
@@ -72,6 +78,12 @@
         <strive-assess-life-explore-future
           *ngIf="settings | isActivated: interval: 'explore'"
           [form]="form.explore.future"
+          [interval]="interval"
+          [stepping]="stepping$ | async"
+        />
+        <strive-assess-life-environment-future
+          *ngIf="settings | isActivated: interval: 'environment'"
+          [form]="form.environment.future"
           [interval]="interval"
           [stepping]="stepping$ | async"
         />

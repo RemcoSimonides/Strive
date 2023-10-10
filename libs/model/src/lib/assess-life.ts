@@ -6,6 +6,7 @@ export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 export interface AssessLifeSettings {
   id?: string
   dearFutureSelf: AssessLifeIntervalWithNever
+  environment: AssessLifeIntervalWithNever
   explore: AssessLifeIntervalWithNever
   gratitude: AssessLifeIntervalWithNever
   learn: AssessLifeIntervalWithNever
@@ -22,6 +23,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
     ...params,
     id: params.id ?? '',
     dearFutureSelf: params.dearFutureSelf ?? 'yearly',
+    environment: params.environment ?? 'quarterly',
     explore: params.explore ?? 'quarterly',
     gratitude: params.gratitude ?? 'weekly',
     learn: params.learn ?? 'weekly',
@@ -37,6 +39,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 export interface AssessLifeEntry {
   id?: string
   dearFutureSelf: AssessLifeDearFutureSelf
+  environment: AssessLifeEnvironment
   explore: AssessLifeExplore
   interval: AssessLifeInterval
   gratitude: ListEntries
@@ -55,6 +58,7 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),
     dearFutureSelf: createAssessLifeDearFutureSelf(params?.dearFutureSelf),
+    environment: createAssessLifeEnvironment(params?.environment),
     explore: createAssessLifeExplore(params?.explore),
     gratitude: createListEntries(params?.gratitude),
     learn: createLearn(params?.learn),
@@ -75,6 +79,18 @@ export function createAssessLifeDearFutureSelf(params?: Partial<AssessLifeDearFu
     advice: params?.advice ?? '',
     predictions: params?.predictions ?? '',
     anythingElse: params?.anythingElse ?? ''
+  }
+}
+
+export interface AssessLifeEnvironment {
+  past: ListEntries
+  future: ListEntries
+}
+
+export function createAssessLifeEnvironment(params?: Partial<AssessLifeEnvironment>): AssessLifeEnvironment {
+  return {
+    past: createListEntries(params?.past),
+    future: createListEntries(params?.future)
   }
 }
 

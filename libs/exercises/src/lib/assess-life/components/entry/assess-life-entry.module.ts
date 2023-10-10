@@ -23,6 +23,8 @@ import { AssessLifeGratitudeComponent } from '../gratitude/gratitude.component'
 import { AssessLifeDearFutureSelfComponent } from '../dear-future-self/dear-future-self.component'
 import { AssessLifeExploreFutureComponent } from '../explore/future/explore-future.component'
 import { AssessLifeExplorePastComponent } from '../explore/past/explore-past.component'
+import { AssessLifeEnvironmentFutureComponent } from '../environment/future/environment-future.component'
+import { AssessLifeEnvironmentPastComponent } from '../environment/past/environment-past.component'
 
 @NgModule({
   imports: [
@@ -46,7 +48,9 @@ import { AssessLifeExplorePastComponent } from '../explore/past/explore-past.com
     AssessLifeGratitudeComponent,
     AssessLifeDearFutureSelfComponent,
     AssessLifeExploreFutureComponent,
-    AssessLifeExplorePastComponent
+    AssessLifeExplorePastComponent,
+    AssessLifeEnvironmentFutureComponent,
+    AssessLifeEnvironmentPastComponent
   ],
   declarations: [AssessLifeEntryComponent],
   exports: [AssessLifeEntryComponent]
