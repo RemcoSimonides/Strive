@@ -77,6 +77,18 @@
       <ion-item>
         <ion-label>
           <section>
+            <span>Imagine</span>
+            <small>Imagine your life in 5 years</small>
+          </section>
+        </ion-label>
+        <ion-select [legacy]="true" formControlName="imagine" interface="popover">
+          <ng-container *ngTemplateOutlet="options" />
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <section>
             <span>Learn</span>
             <small>What do you want to learn?</small>
           </section>

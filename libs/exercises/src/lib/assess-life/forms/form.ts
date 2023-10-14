@@ -7,6 +7,7 @@ import { LearnForm } from '../components/learn/learn.form'
 import { DearFutureSelfForm } from '../components/dear-future-self/dear-future-self.form'
 import { ExploreForm } from '../components/explore/explore.form'
 import { EnvironmentForm } from '../components/environment/environment.form'
+import { ImagineForm } from '../components/imagine/imagine.form'
 
 function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
   const assessLife = createAssessLifeEntry(params)
@@ -18,6 +19,7 @@ function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
     explore: new ExploreForm(assessLife.explore),
     forgive: new FormList(assessLife.forgive),
     gratitude: new FormList(assessLife.gratitude),
+    imagine: new ImagineForm(assessLife.imagine),
     learn: new LearnForm(assessLife.learn),
     proud: new FormList(assessLife.proud),
     timeManagement: new TimeManagementForm(assessLife.timeManagement),
@@ -38,6 +40,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   get explore() { return this.get('explore')! as ExploreForm }
   get forgive() { return this.get('forgive')! as FormList }
   get gratitude() { return this.get('gratitude')! as FormList }
+  get imagine() { return this.get('imagine')! as FormControl }
   get learn() { return this.get('learn')! as LearnForm }
   get proud() { return this.get('proud')! as FormList }
   get timeManagement() { return this.get('timeManagement')! as TimeManagementForm }

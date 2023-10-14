@@ -7,5 +7,6 @@ async (snapshot, context) => {
   // Sync gratitude with gratitude journal
   // Sync wheel of life with wheel of life
   // Sync dear future self with dear future self
+  // Send imagine.future and imagine.die as dear future self message
 
 })

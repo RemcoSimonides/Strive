@@ -1,0 +1,17 @@
+<ng-container *ngIf="form">
+  <ion-list mode="md">
+    <small>Imagine yourself 5 years in the future. What would your life look like?</small>
+    <ion-item lines="none">
+      <ion-textarea [formControl]="form.future" autoGrow rows="4" placeholder="..." autocapitalize="sentences" class="primary"/>
+    </ion-item>
+  </ion-list>
+
+
+  <ion-list mode="md">
+    <small>What would you do in the next 5 years if you were to die right after those years?</small>
+    <ion-item lines="none">
+      <ion-textarea [formControl]="form.die" autoGrow rows="4" placeholder="..." autocapitalize="sentences" class="primary"/>
+    </ion-item>
+    <small class="gray">Moment of realization: You could be living in these years already</small>
+  </ion-list>
+</ng-container>

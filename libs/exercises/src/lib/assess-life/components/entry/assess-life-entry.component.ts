@@ -22,6 +22,7 @@ type Section = 'intro'
   | 'forgive'
   | 'listQuestionsFuture'
   | 'prioritizeGoals'
+  | 'imagine'
   | 'dearFutureSelf'
   | 'outro'
 
@@ -103,6 +104,11 @@ const allSteps: {
     setting: 'prioritizeGoals',
     title: 'Order goals by priority',
     section: 'prioritizeGoals'
+  },
+  {
+    setting: 'imagine',
+    title: 'Imagine',
+    section: 'imagine'
   },
   {
     setting: 'dearFutureSelf',
@@ -240,6 +246,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     entry.forgive.entries = entry.forgive.entries.map(v => AES.encrypt(v, key).toString())
 
     entry.gratitude.entries = entry.gratitude.entries.map(v => AES.encrypt(v, key).toString())
+
+    entry.imagine.die = AES.encrypt(entry.imagine.die, key).toString()
 
     entry.learn.past.entries = entry.learn.past.entries.map(v => AES.encrypt(v, key).toString())
     entry.learn.future.entries = entry.learn.future.entries.map(v => AES.encrypt(v, key).toString())
