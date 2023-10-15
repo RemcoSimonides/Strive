@@ -1,27 +1,31 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
+import { AssessLifeInterval } from '@strive/model'
+import { AssessLifeIntervalPipe } from '../../pipes/interval.pipe'
 
 @Component({
   standalone: true,
-  selector: 'strive-assess-life-outro',
+  selector: '[interval] strive-assess-life-outro',
   templateUrl: './outro.component.html',
-  styles: [`
-      :host {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      justify-content: center;
-      max-width: 300px;
-      margin: auto;
-      height: 100%;
-      text-align: center;
-    }`
-  ],
+  styleUrls: ['./outro.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    AssessLifeIntervalPipe
   ]
 })
-export class AssessLifeOutroComponent {}
+export class AssessLifeOutroComponent implements OnInit {
+
+  possibleNextEntries: AssessLifeInterval[] = []
+
+  @Input() todos: AssessLifeInterval[] = []
+  @Input() interval?: AssessLifeInterval
+  @Output() next = new EventEmitter<AssessLifeInterval>()
+
+  ngOnInit() {
+    this.possibleNextEntries = this.todos.filter(todo => todo !== this.interval)
+  }
+
+}

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, PopoverController } from '@ionic/angular'
 import { AuthService } from '@strive/auth/auth.service'
 import { AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
-import { AssessLifeIntervalWithNever, createAssessLifeSettings } from '@strive/model'
+import { AssessLifeIntervalWithNever, createAssessLifeSettings, DayWithNever } from '@strive/model'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
@@ -30,6 +31,8 @@ export class AssessLifeSettingsComponent implements OnInit {
   loading = signal<boolean>(true)
 
   form = new FormGroup({
+    preferredDay: new FormControl<DayWithNever>('sunday', { nonNullable: true }),
+    preferredTime: new FormControl<string>('19:00', { nonNullable: true }),
     dearFutureSelf: new FormControl<AssessLifeIntervalWithNever>('yearly', { nonNullable: true }),
     environment: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
     explore: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
@@ -45,6 +48,8 @@ export class AssessLifeSettingsComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
+    private cdr: ChangeDetectorRef,
+    private popoverCtrl: PopoverController,
     private screensize: ScreensizeService,
     private service: AssessLifeSettingsService
   ) {
@@ -62,4 +67,21 @@ export class AssessLifeSettingsComponent implements OnInit {
     this.loading.set(false)
   }
 
+  async openTimePicker() {
+    const control = this.form.get('preferredTime')
+    if (!control) return
+
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { presentation: 'time', hideRemove: true, value: control.value }
+    })
+    popover.onDidDismiss().then(({ data }) => {
+      if (data && this.form) {
+        control.setValue(data)
+        control.markAsDirty()
+      }
+      this.cdr.markForCheck()
+    })
+    popover.present()
+  }
 }

@@ -40,7 +40,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   get explore() { return this.get('explore')! as ExploreForm }
   get forgive() { return this.get('forgive')! as FormList }
   get gratitude() { return this.get('gratitude')! as FormList }
-  get imagine() { return this.get('imagine')! as FormControl }
+  get imagine() { return this.get('imagine')! as ImagineForm }
   get learn() { return this.get('learn')! as LearnForm }
   get proud() { return this.get('proud')! as FormList }
   get timeManagement() { return this.get('timeManagement')! as TimeManagementForm }

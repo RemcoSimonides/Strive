@@ -85,6 +85,7 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
 
       entry.gratitude.entries = entry.gratitude.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
 
+      entry.imagine.die = AES.decrypt(entry.imagine.die, encryptionKey).toString(enc.Utf8)
       entry.imagine.future = AES.decrypt(entry.imagine.future, encryptionKey).toString(enc.Utf8)
 
       entry.learn.past.entries = entry.learn.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))

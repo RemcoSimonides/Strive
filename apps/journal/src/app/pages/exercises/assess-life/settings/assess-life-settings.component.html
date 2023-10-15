@@ -12,8 +12,30 @@
 </ion-content>
 
 <ng-template #notLoading>
-  <ion-list mode="md" lines="full">
-    <form [formGroup]="form">
+  <form [formGroup]="form">
+    <ion-list mode="md" lines="full">
+      <small class="reminder">What day and time would you prefer to receive the Asses Life reminder?</small>
+      <ion-item>
+        <ion-label>Day</ion-label>
+        <ion-select interface="popover" formControlName="preferredDay">
+          <ion-select-option value="monday">Monday</ion-select-option>
+          <ion-select-option value="tuesday">Tuesday</ion-select-option>
+          <ion-select-option value="wednesday">Wednesday</ion-select-option>
+          <ion-select-option value="thursday">Thursday</ion-select-option>
+          <ion-select-option value="friday">Friday</ion-select-option>
+          <ion-select-option value="saturday">Saturday</ion-select-option>
+          <ion-select-option value="sunday">Sunday</ion-select-option>
+          <ion-select-option value="never">Never</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none" button (click)="openTimePicker()">
+        <ion-label>Time</ion-label>
+        <ion-text>{{ form.get('preferredDay').value === 'never' ? '-' : form.get('preferredTime').value }}</ion-text>
+      </ion-item>
+    </ion-list>
+
+    <ion-list mode="md" lines="full">
       <ion-item>
         <ion-label>
           <section>
@@ -145,8 +167,8 @@
           <ng-container *ngTemplateOutlet="options" />
         </ion-select>
       </ion-item>
-    </form>
-  </ion-list>
+    </ion-list>
+  </form>
 </ng-template>
 
 <ng-template #options>

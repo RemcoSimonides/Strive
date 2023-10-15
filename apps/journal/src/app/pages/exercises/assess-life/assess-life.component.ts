@@ -130,12 +130,28 @@ export class AssessLifeComponent {
   }
 
   async addEntry(interval: AssessLifeInterval) {
-    const previousEntry = await this.getPreviousEntry(interval)
+    const [previousEntry, weekly, monthly, quarterly, yearly] = await Promise.all([
+      this.getPreviousEntry(interval),
+      firstValueFrom(this.weekly$),
+      firstValueFrom(this.monthly$),
+      firstValueFrom(this.quarterly$),
+      firstValueFrom(this.yearly$)
+    ])
 
-    this.modalCtrl.create({
+    const todos = []
+    if (!weekly.disabled) todos.push('weekly')
+    if (!monthly.disabled) todos.push('monthly')
+    if (!quarterly.disabled) todos.push('quarterly')
+    if (!yearly.disabled) todos.push('yearly')
+
+    const modal = await this.modalCtrl.create({
       component: AssessLifeEntryComponent,
-      componentProps: { interval, previousEntry }
-    }).then(modal => modal.present())
+      componentProps: { interval, previousEntry, todos }
+    })
+    modal.onDidDismiss().then(({ data: nextInterval }) => {
+      if (nextInterval) this.addEntry(nextInterval)
+    })
+    modal.present()
   }
 
   async openEntry(entry: AssessLifeEntry) {

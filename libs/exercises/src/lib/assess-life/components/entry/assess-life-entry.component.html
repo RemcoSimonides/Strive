@@ -111,7 +111,7 @@
     </ion-content>
 
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-outro />
+      <strive-assess-life-outro [interval]="interval" [todos]="todos" (next)="dismiss($event)" />
     </ion-content>
 
   </ng-container>

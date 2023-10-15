@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  justify-content: center;
+  max-width: 300px;
+  margin: auto;
+  height: 100%;
+  text-align: center;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+span {
+  color: var(--ion-color-medium);
+}

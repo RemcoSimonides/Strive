@@ -1,5 +1,6 @@
 import { ListEntries, createListEntries } from './form-utils'
 
+export type DayWithNever = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | 'never'
 export type AssessLifeInterval = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 
@@ -12,6 +13,8 @@ export interface AssessLifeSettings {
   gratitude: AssessLifeIntervalWithNever
   imagine: AssessLifeIntervalWithNever
   learn: AssessLifeIntervalWithNever
+  preferredDay: DayWithNever,
+  preferredTime: string,
   prioritizeGoals: AssessLifeIntervalWithNever
   proud: AssessLifeIntervalWithNever
   timeManagement: AssessLifeIntervalWithNever
@@ -31,6 +34,8 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
     gratitude: params.gratitude ?? 'weekly',
     imagine: params.imagine ?? 'yearly',
     learn: params.learn ?? 'weekly',
+    preferredDay: params.preferredDay ?? 'sunday',
+    preferredTime: params.preferredTime ?? '19:00',
     prioritizeGoals: params.prioritizeGoals ?? 'monthly',
     proud: params.proud ?? 'weekly',
     timeManagement: params.timeManagement ?? 'weekly',
@@ -167,15 +172,15 @@ export interface WheelOfLife {
 
 export function createWheelOfLife(params?: Partial<WheelOfLife>): WheelOfLife {
   return {
-    career: params?.career ?? 0,
-    development: params?.development ?? 0,
-    environment: params?.environment ?? 0,
-    family: params?.family ?? 0,
-    friends: params?.friends ?? 0,
-    fun: params?.fun ?? 0,
-    health: params?.health ?? 0,
-    love: params?.love ?? 0,
-    money: params?.money ?? 0,
-    spirituality: params?.spirituality ?? 0
+    career: params?.career ?? '',
+    development: params?.development ?? '',
+    environment: params?.environment ?? '',
+    family: params?.family ?? '',
+    friends: params?.friends ?? '',
+    fun: params?.fun ?? '',
+    health: params?.health ?? '',
+    love: params?.love ?? '',
+    money: params?.money ?? '',
+    spirituality: params?.spirituality ?? ''
   }
 }
