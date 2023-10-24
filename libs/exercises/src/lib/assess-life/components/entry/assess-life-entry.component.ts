@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } f
 import { Location } from '@angular/common'
 import { AlertController, ModalController } from '@ionic/angular'
 
-import { BehaviorSubject, shareReplay, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatest, of, shareReplay, switchMap, tap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
 import { delay } from '@strive/utils/helpers'
-import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry, getInterval } from '@strive/model'
+import { AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry, getInterval } from '@strive/model'
 
 import { AssessLifeForm } from '../../forms/assess-life.form'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '../../assess-life.service'
@@ -138,14 +138,28 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   stepping$ = new BehaviorSubject<boolean>(false)
   progress = computed(() => this.stepIndex() / (this.steps().length - 1))
 
+  private profile$ = this.auth.profile$.pipe(
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
+  previousEntry$ = this.profile$.pipe(
+    switchMap(profile => profile ? this.service.getPreviousEntry(profile.uid, this.interval) : of(undefined)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
   settings$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.settingsService.getSettings$(profile.uid) : []),
+    switchMap(profile => profile
+      ? combineLatest([
+          this.settingsService.getSettings$(profile.uid),
+          this.previousEntry$
+        ])
+      : of([])),
     shareReplay({ bufferSize: 1, refCount: true }),
-    tap(settings => {
+    tap(([settings, previousEntry]) => {
       if (settings) {
         const activatedSteps = allSteps.filter(step => {
           if (step.setting && settings[step.setting] !== this.interval) return false
-          if (step.section === 'previousIntention' && !this.previousEntry) return false
+          if (step.section === 'previousIntention' && !previousEntry) return false
           return true
         })
         const squashedSteps = activatedSteps.reduce((acc, step) => {
@@ -160,7 +174,6 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   )
 
   @Input() entry = createAssessLifeEntry()
-  @Input() previousEntry?: AssessLifeEntry
   @Input() todos: AssessLifeInterval[] = []
 
   get interval() { return this.entry.interval }

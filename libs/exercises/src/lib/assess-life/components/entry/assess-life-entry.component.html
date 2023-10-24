@@ -17,7 +17,7 @@
     </ion-content>
 
     <ion-content *ngSwitchCase="'previousIntention'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-previous-intention [interval]="interval" [previousEntry]="previousEntry" />
+      <strive-assess-life-previous-intention [interval]="interval" [previousEntry]="previousEntry$ | async" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'listQuestionsPast'" class="ion-padding" [ngClass]="animatingSection()">

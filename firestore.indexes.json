@@ -275,6 +275,20 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "Entries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "interval",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": [

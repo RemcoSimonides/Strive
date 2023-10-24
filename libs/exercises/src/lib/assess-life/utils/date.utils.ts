@@ -1,5 +1,5 @@
 import { AssessLifeInterval, Weekday } from '@strive/model'
-import { addDays, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter } from 'date-fns'
+import { addDays, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 
 const weekdayMapping: Record<Weekday, Day> = {
   'sunday': 0,
@@ -43,10 +43,10 @@ export function getAssessLifeId(interval: AssessLifeInterval, date?: Date) {
   const today = startOfDay(date ?? new Date())
 
   const startMethods = {
-    'weekly': getWeek,
+    'weekly': startOfWeek,
     'monthly': startOfMonth,
     'quarterly': startOfQuarter,
-    'yearly': (date: Date) => startOfAssessLifeYear(date, 12, 24)
+    'yearly': (_date: Date) => startOfAssessLifeYear(_date, 12, 24)
   }
 
   const start = startMethods[interval](today)

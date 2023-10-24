@@ -18,7 +18,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
-import { filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
+import { AssessLifeInterval, createAssessLifeEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -27,6 +27,8 @@ import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/ca
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals/message/message.component'
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
+import { AssessLifeEntryComponent } from '@strive/exercises/assess-life/components/entry/assess-life-entry.component'
+import { getAssessLifeId } from '@strive/exercises/assess-life/utils/date.utils'
 
 @Component({
   selector: 'journal-goals',
@@ -47,7 +49,7 @@ export class GoalsPageComponent implements OnDestroy {
     const uid = await this.auth.getUID()
     if (!uid) return
 
-    const { t, affirm, dfs } = params
+    const { t, affirm, dfs, assess } = params
     if (t === 'daily-gratitude') {
       this.modalCtrl.create({
         component: CardsModalComponent
@@ -58,6 +60,42 @@ export class GoalsPageComponent implements OnDestroy {
       this.modalCtrl.create({
         component: EntryModalComponent,
         componentProps: { showResults: true }
+      }).then(modal => modal.present())
+    }
+
+    if (assess) {
+      const todos: AssessLifeInterval[] = assess.split('').map((i: string) => {
+        if (i === 'y') return 'yearly'
+        if (i === 'q') return 'quarterly'
+        if (i === 'm') return 'monthly'
+        if (i === 'w') return 'weekly'
+        return undefined
+      }).filter((interval: AssessLifeInterval | undefined) => !!interval)
+      .sort((a: AssessLifeInterval, b: AssessLifeInterval) => {
+        // first yearly, then quarterly, then monthly, then weekly
+        if (a === 'yearly' && b !== 'yearly') return -1
+        if (a !== 'yearly' && b === 'yearly') return 1
+        if (a === 'quarterly' && b !== 'quarterly') return -1
+        if (a !== 'quarterly' && b === 'quarterly') return 1
+        if (a === 'monthly' && b !== 'monthly') return -1
+        if (a !== 'monthly' && b === 'monthly') return 1
+        if (a === 'weekly' && b !== 'weekly') return -1
+        if (a !== 'weekly' && b === 'weekly') return 1
+        return 0
+      })
+
+      if (!todos || !todos.length) {
+        this.router.navigate(['/exercise/assess-life'])
+        return
+      }
+
+      const interval = todos[0]
+      const id = getAssessLifeId(interval)
+      const entry = createAssessLifeEntry({ id, interval })
+
+      this.modalCtrl.create({
+        component: AssessLifeEntryComponent,
+        componentProps: { entry, todos }
       }).then(modal => modal.present())
     }
 

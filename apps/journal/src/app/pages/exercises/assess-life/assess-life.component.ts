@@ -147,8 +147,7 @@ export class AssessLifeComponent {
   }
 
   async addEntry(interval: AssessLifeInterval) {
-    const [previousEntry, weekly, monthly, quarterly, yearly] = await Promise.all([
-      this.getPreviousEntry(interval),
+    const [weekly, monthly, quarterly, yearly] = await Promise.all([
       firstValueFrom(this.weekly$),
       firstValueFrom(this.monthly$),
       firstValueFrom(this.quarterly$),
@@ -166,7 +165,7 @@ export class AssessLifeComponent {
 
     const modal = await this.modalCtrl.create({
       component: AssessLifeEntryComponent,
-      componentProps: { entry, previousEntry, todos }
+      componentProps: { entry, todos }
     })
     modal.onDidDismiss().then(({ data: nextInterval }) => {
       if (nextInterval) this.addEntry(nextInterval)

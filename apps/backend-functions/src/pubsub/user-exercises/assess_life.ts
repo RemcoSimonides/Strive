@@ -13,9 +13,10 @@ export async function sendAssessLifePuthNotification(options: ScheduledTaskUserE
 
   const converted = intervals.map(interval => getInterval(interval))
   const readable = smartJoin(converted, ', ', ' and ')
+  const firstLetters = intervals.map(interval => interval[0]).join('')
 
   const personal = await getDocument<Personal>(`Users/${userId}/Personal/${userId}`)
-  const link = `goals?t=assesslife`
+  const link = `goals?assess=${firstLetters}`
   const messages: Message[] = personal.fcmTokens.map(token => ({
     token,
     notification: {

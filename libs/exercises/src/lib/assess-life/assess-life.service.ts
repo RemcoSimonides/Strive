@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
-import { AssessLifeEntry, AssessLifeSettings, createAssessLifeEntry, createAssessLifeSettings } from '@strive/model'
+import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry, createAssessLifeSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
+import { DocumentSnapshot, limit, orderBy, serverTimestamp, where } from 'firebase/firestore'
 import { FireSubCollection, toDate } from 'ngfire'
+import { firstValueFrom, map, switchMap, take } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,16 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
     if (!this.auth.uid) throw new Error('uid should be defined when saving wheel of life entries')
     const encryptedEntry = await this.encrypt(entry)
     return this.upsert(encryptedEntry, { params: { uid: this.auth.uid }})
+  }
+
+  getPreviousEntry(uid: string, interval: AssessLifeInterval): Promise<AssessLifeEntry | undefined> {
+    const query = [where('interval', '==', interval), orderBy('createdAt', 'desc'), limit(1)]
+    const obs = this.valueChanges(query, { uid }).pipe(
+      take(1),
+      switchMap(entries => this.decrypt(entries)),
+      map(entries => entries.length ? entries[0] : undefined),
+    )
+    return firstValueFrom(obs)
   }
 
   async decrypt(entries: AssessLifeEntry[]): Promise<AssessLifeEntry[]> {
