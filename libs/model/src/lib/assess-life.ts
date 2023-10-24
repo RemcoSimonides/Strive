@@ -1,8 +1,19 @@
 import { ListEntries, createListEntries } from './form-utils'
 
-export type DayWithNever = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | 'never'
+export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+export type WeekdayWithNever = Weekday | 'never'
 export type AssessLifeInterval = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
+
+export function getInterval(value: AssessLifeInterval): string {
+  switch (value) {
+    case 'weekly': return 'week'
+    case 'monthly': return 'month'
+    case 'quarterly': return 'quarter'
+    case 'yearly': return 'year'
+    default: return ''
+  }
+}
 
 export interface AssessLifeSettings {
   id?: string
@@ -13,7 +24,7 @@ export interface AssessLifeSettings {
   gratitude: AssessLifeIntervalWithNever
   imagine: AssessLifeIntervalWithNever
   learn: AssessLifeIntervalWithNever
-  preferredDay: DayWithNever,
+  preferredDay: WeekdayWithNever,
   preferredTime: string,
   prioritizeGoals: AssessLifeIntervalWithNever
   proud: AssessLifeIntervalWithNever

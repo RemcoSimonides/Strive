@@ -67,53 +67,68 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
     return createAssessLifeEntry(toDate({ ...snapshot.data(), id: snapshot.id }))
   }
 
+  async save(entry: AssessLifeEntry) {
+    if (!this.auth.uid) throw new Error('uid should be defined when saving wheel of life entries')
+    const encryptedEntry = await this.encrypt(entry)
+    return this.upsert(encryptedEntry, { params: { uid: this.auth.uid }})
+  }
+
   async decrypt(entries: AssessLifeEntry[]): Promise<AssessLifeEntry[]> {
     const encryptionKey = await this.personalService.getEncryptionKey()
 
-    for (const entry of entries) {
-      entry.dearFutureSelf.advice = AES.decrypt(entry.dearFutureSelf.advice, encryptionKey).toString(enc.Utf8)
-      entry.dearFutureSelf.predictions = AES.decrypt(entry.dearFutureSelf.predictions, encryptionKey).toString(enc.Utf8)
-      entry.dearFutureSelf.anythingElse = AES.decrypt(entry.dearFutureSelf.anythingElse, encryptionKey).toString(enc.Utf8)
-
-      entry.environment.past.entries = entry.environment.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-      entry.environment.future.entries = entry.environment.future.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.explore.past.entries = entry.explore.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-      entry.explore.future.entries = entry.explore.future.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.forgive.entries = entry.forgive.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.gratitude.entries = entry.gratitude.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.imagine.die = AES.decrypt(entry.imagine.die, encryptionKey).toString(enc.Utf8)
-      entry.imagine.future = AES.decrypt(entry.imagine.future, encryptionKey).toString(enc.Utf8)
-
-      entry.learn.past.entries = entry.learn.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-      entry.learn.future.entries = entry.learn.future.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.proud.entries = entry.proud.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-      entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-      entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.decrypt(v, encryptionKey).toString(enc.Utf8))
-
-      entry.wheelOfLife.career = +AES.decrypt(entry.wheelOfLife.career.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.development = +AES.decrypt(entry.wheelOfLife.development.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.environment = +AES.decrypt(entry.wheelOfLife.environment.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.family = +AES.decrypt(entry.wheelOfLife.family.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.friends = +AES.decrypt(entry.wheelOfLife.friends.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.fun = +AES.decrypt(entry.wheelOfLife.fun.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.health = +AES.decrypt(entry.wheelOfLife.health.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.love = +AES.decrypt(entry.wheelOfLife.love.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.money = +AES.decrypt(entry.wheelOfLife.money.toString(), encryptionKey).toString(enc.Utf8)
-      entry.wheelOfLife.spirituality = +AES.decrypt(entry.wheelOfLife.spirituality.toString(), encryptionKey).toString(enc.Utf8)
-    }
+    entries = entries.map(entry => {
+      Object.keys(entry).forEach(key => {
+        const typedKey = key as keyof AssessLifeEntry
+        const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval']
+        if (excludedProperties.includes(key)) return
+        entry[typedKey] = _decrypt(entry[typedKey], encryptionKey)
+      })
+      return entry
+    })
 
     return entries
   }
 
-  save(entry: AssessLifeEntry) {
-    if (!this.auth.uid) throw new Error('uid should be defined when saving wheel of life entries')
-    this.upsert(entry, { params: { uid: this.auth.uid }})
+  private async encrypt(entry: AssessLifeEntry): Promise<AssessLifeEntry> {
+    const encryptionKey = await this.personalService.getEncryptionKey()
+
+    Object.keys(entry).forEach(key => {
+      const typedKey = key as keyof AssessLifeEntry
+      const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval']
+      if (excludedProperties.includes(key)) return
+      entry[typedKey] = _encrypt(entry[typedKey], encryptionKey)
+    })
+
+    return entry
   }
+}
+
+function _decrypt(object: any, decryptKey: string) {
+  Object.keys(object).forEach(key => {
+    if (typeof object[key] === 'object') {
+      _decrypt(object[key], decryptKey)
+    } else if (Array.isArray(object[key])) {
+      object[key] = object[key].map((v: string) =>  +AES.decrypt(v.toString(), decryptKey).toString(enc.Utf8))
+    } else if (typeof object[key] === 'string') {
+      object[key] = AES.decrypt(object[key], decryptKey).toString(enc.Utf8)
+    }
+  })
+
+  return object
+}
+
+function _encrypt(object: any, encryptKey: string) {
+  const encrypt = (value: string) => value ? AES.encrypt(value, encryptKey).toString() : ''
+
+  Object.keys(object).forEach(key => {
+    if (typeof object[key] === 'object') {
+      _encrypt(object[key], encryptKey)
+    } else if (Array.isArray(object[key])) {
+      object[key] = object[key].map(encrypt)
+    } else if (typeof object[key] === 'string') {
+      object[key] = encrypt(object[key])
+    }
+  })
+
+  return object
 }

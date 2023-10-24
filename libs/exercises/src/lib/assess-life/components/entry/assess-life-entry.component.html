@@ -13,7 +13,7 @@
   <ng-container [ngSwitch]="section()">
 
     <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-intro [interval]="interval" />
+      <strive-assess-life-intro [interval]="interval" [id]="entry.id" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'previousIntention'" class="ion-padding" [ngClass]="animatingSection()">

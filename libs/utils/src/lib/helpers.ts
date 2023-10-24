@@ -18,6 +18,20 @@ export function unique<T>(array: T[]) {
   return Array.from(new Set(array))
 }
 
+/**
+ * Example with (['A', 'B', 'C'], ', ', ' & ')
+ * output : "A, B & C"
+ * @param str
+ * @param joinWith
+ * @param endWith
+ * @returns
+ */
+export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+  const duplicate = [...str]
+  const last = duplicate.pop()
+  return `${duplicate.join(joinWith)}${duplicate.length ? endWith : ''}${last || ''}`
+}
+
 export function isValidHttpUrl(_url: string) {
 
   /**

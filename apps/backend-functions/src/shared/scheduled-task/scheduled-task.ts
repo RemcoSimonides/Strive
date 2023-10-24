@@ -16,7 +16,7 @@ export async function upsertScheduledTask(id: string, scheduledTask: Partial<Sch
   const scheduledTaskSnap = await db.doc(`ScheduledTasks/${id}`).get()
 
   return scheduledTaskSnap.exists
-    ? updateScheduledTask(id, scheduledTask.performAt)
+    ? updateScheduledTask(id, scheduledTask)
     : createScheduledTask(id, scheduledTask)
 }
 
@@ -28,9 +28,9 @@ function createScheduledTask(id: string, scheduledTask: Partial<ScheduledTask>) 
   })
 }
 
-function updateScheduledTask(id: string, _performAt: string | FirebaseFirestore.FieldValue | Date) {
-  const performAt = getTimestamp(_performAt)
-  return db.doc(`ScheduledTasks/${id}`).update({ performAt })
+function updateScheduledTask(id: string, scheduledTask: Partial<ScheduledTask>) {
+  const performAt = getTimestamp(scheduledTask.performAt)
+  return db.doc(`ScheduledTasks/${id}`).update({ performAt, options: scheduledTask.options })
 }
 
 export function deleteScheduledTask(id: string) {

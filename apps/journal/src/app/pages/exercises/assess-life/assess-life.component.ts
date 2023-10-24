@@ -6,12 +6,13 @@ import { combineLatest, firstValueFrom, map, of, shareReplay, startWith, switchM
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings } from '@strive/model'
+import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
 import { AssessLifeEntryComponent } from '@strive/exercises/assess-life/components/entry/assess-life-entry.component'
-import { differenceInDays } from 'date-fns'
+import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { getAssessLifeId, getAssessLifeYear, startOfAssessLifeYear, } from '@strive/exercises/assess-life/utils/date.utils'
 
 function getActivatedQuestions(settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
   if (!settings) return []
@@ -25,23 +26,39 @@ function getActivatedQuestions(settings: AssessLifeSettings | undefined, interva
 
 function getEntryStatus(entries: AssessLifeEntry[], settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
   const questions = getActivatedQuestions(settings, interval)
-  const minDays: Record<AssessLifeInterval, number> = {
-    weekly: 7,
-    monthly: 30,
-    quarterly: 90,
-    yearly: 365
-  }
 
   if (questions.length === 0) return { disabled: true, message: 'No questions activated - change in settings' }
   if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!`}
 
+  const today = startOfDay(new Date())
   const lastEntry = entries[0]
-  const today = new Date()
-  const days = differenceInDays(today, lastEntry.createdAt)
 
-  if (days < minDays[interval]) return { disabled: true, message: `You can't add a new entry yet. You can add a new entry in ${minDays[interval] - days} day${minDays[interval] - days === 1 ? '' : 's'}`}
+  const getInterval = {
+    weekly: getWeek,
+    monthly: getMonth,
+    quarterly: getQuarter,
+    yearly: (date: Date) => getAssessLifeYear(date, 12, 24)
+  }
+  const intervalDeltaSinceLastEntry = getInterval[interval](today) - getInterval[interval](lastEntry.createdAt)
+  if (intervalDeltaSinceLastEntry > 0) return { disabled: false, message: `Ready for a new entry!`}
 
-  return { disabled: false, message: `Ready for a new entry!`}
+  const startOfInterval = {
+    weekly: startOfWeek,
+    monthly: startOfMonth,
+    quarterly: startOfQuarter,
+    yearly: (date: Date) => startOfAssessLifeYear(date, 12, 24)
+  }
+
+  const addInterval = {
+    weekly: (date: Date) => addWeeks(date, 1),
+    monthly: (date: Date) => addMonths(date, 1),
+    quarterly: (date: Date) => addQuarters(date, 1),
+    yearly: (date: Date) => addYears(date, 1)
+  }
+
+  const startOfNextInterval = startOfInterval[interval](addInterval[interval](lastEntry.createdAt))
+  const daysLeft = differenceInDays(startOfNextInterval, today)
+  return { disabled: true, message: `You can't add a new entry yet. You can add a new entry in ${daysLeft} day${daysLeft === 1 ? '' : 's'}`}
 }
 
 @Component({
@@ -135,7 +152,7 @@ export class AssessLifeComponent {
       firstValueFrom(this.weekly$),
       firstValueFrom(this.monthly$),
       firstValueFrom(this.quarterly$),
-      firstValueFrom(this.yearly$)
+      firstValueFrom(this.yearly$),
     ])
 
     const todos = []
@@ -144,9 +161,12 @@ export class AssessLifeComponent {
     if (!quarterly.disabled) todos.push('quarterly')
     if (!yearly.disabled) todos.push('yearly')
 
+    const id = getAssessLifeId(interval)
+    const entry = createAssessLifeEntry({ id, interval })
+
     const modal = await this.modalCtrl.create({
       component: AssessLifeEntryComponent,
-      componentProps: { interval, previousEntry, todos }
+      componentProps: { entry, previousEntry, todos }
     })
     modal.onDidDismiss().then(({ data: nextInterval }) => {
       if (nextInterval) this.addEntry(nextInterval)
@@ -157,7 +177,7 @@ export class AssessLifeComponent {
   async openEntry(entry: AssessLifeEntry) {
     this.modalCtrl.create({
       component: AssessLifeEntryComponent,
-      componentProps: { entry, interval: entry.interval }
+      componentProps: { entry }
     }).then(modal => modal.present())
   }
 

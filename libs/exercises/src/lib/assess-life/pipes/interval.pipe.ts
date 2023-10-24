@@ -1,19 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core'
-
-export function getInterval(value: string): string {
-  switch (value) {
-    case 'weekly': return 'week'
-    case 'monthly': return 'month'
-    case 'quarterly': return 'quarter'
-    case 'yearly': return 'year'
-    default: return ''
-  }
-}
+import { AssessLifeInterval, getInterval } from '@strive/model'
 
 @Pipe({ name: 'interval', standalone: true })
 export class AssessLifeIntervalPipe implements PipeTransform {
 
-  transform(value: string): string {
+  transform(value: AssessLifeInterval): string {
     return getInterval(value)
   }
 }

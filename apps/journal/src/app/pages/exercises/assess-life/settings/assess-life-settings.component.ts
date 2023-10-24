@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule, PopoverController } from '@ionic/angular'
 import { AuthService } from '@strive/auth/auth.service'
 import { AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
-import { AssessLifeIntervalWithNever, createAssessLifeSettings, DayWithNever } from '@strive/model'
+import { AssessLifeIntervalWithNever, createAssessLifeSettings, WeekdayWithNever } from '@strive/model'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 import { HeaderModule } from '@strive/ui/header/header.module'
@@ -31,7 +31,7 @@ export class AssessLifeSettingsComponent implements OnInit {
   loading = signal<boolean>(true)
 
   form = new FormGroup({
-    preferredDay: new FormControl<DayWithNever>('sunday', { nonNullable: true }),
+    preferredDay: new FormControl<WeekdayWithNever>('sunday', { nonNullable: true }),
     preferredTime: new FormControl<string>('19:00', { nonNullable: true }),
     dearFutureSelf: new FormControl<AssessLifeIntervalWithNever>('yearly', { nonNullable: true }),
     environment: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),

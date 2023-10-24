@@ -9,6 +9,7 @@ import {
   ScheduledTaskGoalInviteLinkDeadline,
   ScheduledTaskMilestoneDeadline,
   ScheduledTaskUserExerciseAffirmations,
+  ScheduledTaskUserExerciseAssessLife,
   ScheduledTaskUserExerciseDailyGratitude,
   ScheduledTaskUserExerciseDearFutureSelfMessage,
   ScheduledTaskUserExerciseWheelOfLife
@@ -20,8 +21,9 @@ import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user
 import { scheduleNextReminder, sendWheelOfLifePushNotification } from './user-exercises/wheel_of_life'
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
 
-import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource } from '@strive/model'
+import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource, AssessLifeSettings } from '@strive/model'
 import { AES, enc } from 'crypto-js'
+import { scheduleNextAssessLifeReminder, sendAssessLifePuthNotification } from './user-exercises/assess_life'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -42,7 +44,8 @@ async () => {
   const reschedulingTasks = [
     enumWorkerType.userExerciseAffirmation,
     enumWorkerType.userExerciseDailyGratitudeReminder,
-    enumWorkerType.userExerciseWheelOfLifeReminder
+    enumWorkerType.userExerciseWheelOfLifeReminder,
+    enumWorkerType.userExerciseAssessLife
   ]
 
   // Loop over documents and push job.
@@ -84,7 +87,8 @@ const workers: IWorkers = {
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
   userExerciseDailyGratitudeReminder: (options) => userExerciseDailyGratitudeReminderHandler(options),
   userExerciseDearFutureSelfMessage: (options) => userExerciseDearFutureSelfMessageHandler(options),
-  userExerciseWheelOfLifeReminder: (options) => userExerciseWheelOfLifeReminderHandler(options)
+  userExerciseWheelOfLifeReminder: (options) => userExerciseWheelOfLifeReminderHandler(options),
+  userExerciseAssessLife: (options) => userExerciseAssessLifeHandler(options)
 }
 
 function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['options']) {
@@ -143,4 +147,10 @@ async function userExerciseWheelOfLifeReminderHandler(options: ScheduledTaskUser
 
   // reschedule task for next interval
   scheduleNextReminder(settings, options.userId)
+}
+
+async function userExerciseAssessLifeHandler(options: ScheduledTaskUserExerciseAssessLife['options']) {
+  const settings = await getDocument<AssessLifeSettings>(`Users/${options.userId}/Exercises/AssessLife`)
+  sendAssessLifePuthNotification(options)
+  scheduleNextAssessLifeReminder(settings, options.userId)
 }

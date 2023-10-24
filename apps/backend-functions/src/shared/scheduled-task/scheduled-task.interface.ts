@@ -1,3 +1,5 @@
+import { AssessLifeInterval } from "@strive/model"
+
 interface ScheduledTaskBase {
   worker: enumWorkerType
   performAt: FirebaseFirestore.FieldValue | string | Date
@@ -18,7 +20,8 @@ export enum enumWorkerType {
   userExerciseAffirmation = 'userExerciseAffirmation',
   userExerciseDailyGratitudeReminder = 'userExerciseDailyGratitudeReminder',
   userExerciseDearFutureSelfMessage = 'userExerciseDearFutureSelfMessage',
-  userExerciseWheelOfLifeReminder = 'userExerciseWheelOfLifeReminder'
+  userExerciseWheelOfLifeReminder = 'userExerciseWheelOfLifeReminder',
+  userExerciseAssessLife = 'userExerciseAssessLife'
 }
 
 export interface ScheduledTaskGoalInviteLinkDeadline extends ScheduledTaskBase {
@@ -63,5 +66,12 @@ export interface ScheduledTaskUserExerciseDearFutureSelfMessage extends Schedule
 export interface ScheduledTaskUserExerciseWheelOfLife extends ScheduledTaskBase {
   options: {
     userId: string
+  }
+}
+
+export interface ScheduledTaskUserExerciseAssessLife extends ScheduledTaskBase {
+  options: {
+    userId: string,
+    intervals: AssessLifeInterval[]
   }
 }

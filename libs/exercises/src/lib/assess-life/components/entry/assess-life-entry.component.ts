@@ -7,13 +7,10 @@ import { BehaviorSubject, shareReplay, switchMap, tap } from 'rxjs'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
 import { delay } from '@strive/utils/helpers'
-import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry } from '@strive/model'
+import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry, getInterval } from '@strive/model'
 
 import { AssessLifeForm } from '../../forms/assess-life.form'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '../../assess-life.service'
-import { PersonalService } from '@strive/user/personal.service'
-import { AES } from 'crypto-js'
-import { getInterval } from '../../pipes/interval.pipe'
 
 type Section = 'intro'
   | 'previousIntention'
@@ -123,7 +120,7 @@ const allSteps: {
 ]
 
 @Component({
-  selector: 'strive-assess-life-entry',
+  selector: '[entry] strive-assess-life-entry',
   templateUrl: './assess-life-entry.component.html',
   styleUrls: ['./assess-life-entry.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -146,8 +143,6 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true }),
     tap(settings => {
       if (settings) {
-        if (!this.interval) throw new Error('No interval provided')
-
         const activatedSteps = allSteps.filter(step => {
           if (step.setting && settings[step.setting] !== this.interval) return false
           if (step.section === 'previousIntention' && !this.previousEntry) return false
@@ -164,17 +159,17 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     })
   )
 
-  @Input() interval?: AssessLifeInterval
-  @Input() entry?: AssessLifeEntry
+  @Input() entry = createAssessLifeEntry()
   @Input() previousEntry?: AssessLifeEntry
   @Input() todos: AssessLifeInterval[] = []
+
+  get interval() { return this.entry.interval }
 
   constructor(
     private alertCtrl: AlertController,
     private auth: AuthService,
     location: Location,
     modalCtrl: ModalController,
-    private personalService: PersonalService,
     private service: AssessLifeEntryService,
     private settingsService: AssessLifeSettingsService
   ) {
@@ -182,14 +177,10 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   }
 
   ngOnInit() {
-    if (this.entry) {
-      this.form.patchValue(this.entry, { emitEvent: false })
-    }
+    this.form.patchValue(this.entry, { emitEvent: false })
   }
 
   async step(direction: 'next' | 'previous') {
-    if (!this.interval) return
-
     this.stepping$.next(true) // input value is being added to the form
     const steps = this.steps()
 
@@ -226,53 +217,12 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   async save() {
     if (!this.auth.uid) return
 
-    const key = await this.personalService.getEncryptionKey()
-
     const entry = createAssessLifeEntry({
-      interval: this.interval,
       ...this.entry,
       ...this.form.getRawValue()
     })
 
-    entry.dearFutureSelf.advice = entry.dearFutureSelf.advice === '' ? '' : AES.encrypt(entry.dearFutureSelf.advice, key).toString()
-    entry.dearFutureSelf.predictions = entry.dearFutureSelf.predictions === '' ? '' : AES.encrypt(entry.dearFutureSelf.predictions, key).toString()
-    entry.dearFutureSelf.anythingElse = entry.dearFutureSelf.anythingElse === '' ? '' : AES.encrypt(entry.dearFutureSelf.anythingElse, key).toString()
-
-    entry.environment.past.entries = entry.environment.past.entries.map(v => AES.encrypt(v, key).toString())
-    entry.environment.future.entries = entry.environment.future.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.explore.past.entries = entry.explore.past.entries.map(v => AES.encrypt(v, key).toString())
-    entry.explore.future.entries = entry.explore.future.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.forgive.entries = entry.forgive.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.gratitude.entries = entry.gratitude.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.imagine.future = entry.imagine.future === '' ? '' : AES.encrypt(entry.imagine.future, key).toString()
-    entry.imagine.die = entry.imagine.die === '' ? '' : AES.encrypt(entry.imagine.die, key).toString()
-
-    entry.learn.past.entries = entry.learn.past.entries.map(v => AES.encrypt(v, key).toString())
-    entry.learn.future.entries = entry.learn.future.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.timeManagement.past.entries = entry.timeManagement.past.entries.map(v => AES.encrypt(v, key).toString())
-    entry.timeManagement.futureMoreTime.entries = entry.timeManagement.futureMoreTime.entries.map(v => AES.encrypt(v, key).toString())
-    entry.timeManagement.futureLessTime.entries = entry.timeManagement.futureLessTime.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.proud.entries = entry.proud.entries.map(v => AES.encrypt(v, key).toString())
-
-    entry.wheelOfLife.career = entry.wheelOfLife.career === '' ? '' : AES.encrypt(entry.wheelOfLife.career.toString(), key).toString()
-    entry.wheelOfLife.development = entry.wheelOfLife.development === '' ? '' : AES.encrypt(entry.wheelOfLife.development.toString(), key).toString()
-    entry.wheelOfLife.environment = entry.wheelOfLife.environment === '' ? '' : AES.encrypt(entry.wheelOfLife.environment.toString(), key).toString()
-    entry.wheelOfLife.family = entry.wheelOfLife.family === '' ? '' : AES.encrypt(entry.wheelOfLife.family.toString(), key).toString()
-    entry.wheelOfLife.friends = entry.wheelOfLife.friends === '' ? '' : AES.encrypt(entry.wheelOfLife.friends.toString(), key).toString()
-    entry.wheelOfLife.fun = entry.wheelOfLife.fun === '' ? '' : AES.encrypt(entry.wheelOfLife.fun.toString(), key).toString()
-    entry.wheelOfLife.health = entry.wheelOfLife.health === '' ? '' : AES.encrypt(entry.wheelOfLife.health.toString(), key).toString()
-    entry.wheelOfLife.love = entry.wheelOfLife.love === '' ? '' : AES.encrypt(entry.wheelOfLife.love.toString(), key).toString()
-    entry.wheelOfLife.money = entry.wheelOfLife.money === '' ? '' : AES.encrypt(entry.wheelOfLife.money.toString(), key).toString()
-    entry.wheelOfLife.spirituality = entry.wheelOfLife.spirituality === '' ? '' : AES.encrypt(entry.wheelOfLife.spirituality.toString(), key).toString()
-
-    const id = await this.service.upsert(entry, { params: { uid: this.auth.uid } })
-    this.form.id.setValue(id)
+    await this.service.save(entry)
     this.form.markAsPristine()
   }
 

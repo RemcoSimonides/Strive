@@ -21,3 +21,10 @@ export class IsFuturePipe implements PipeTransform {
     return isFuture(date)
   }
 }
+
+@Pipe({ name: 'getMonthName', standalone: true })
+export class GetMonthNamePipe implements PipeTransform {
+  transform(month: number) {
+    return new Date(0, month).toLocaleString('default', { month: 'long' })
+  }
+}
