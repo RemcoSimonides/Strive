@@ -1,4 +1,4 @@
-import { arrayUnion, logger, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
+import { arrayUnion, db, logger, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
 import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, Message, Personal, createAssessLifeEntry, createAssessLifeSettings, createDearFutureSelf, createMessage, getInterval } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
@@ -71,22 +71,21 @@ async (snapshot, context) => {
   // TODO Sync goal priorities after submitting. And keep the goal priorities in the entry to see what the history was.
 })
 
-// export const assessLifeEntryChangeHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries/{entryId}`, 'assessLifeChangeHandler',
-// async (snapshot, context) => {
+export const assessLifeEntryChangeHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries/{entryId}`, 'assessLifeChangeHandler',
+async (snapshot, context) => {
 
-//   const { uid } = context.params
-//   const entry = createAssessLifeEntry(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { uid } = context.params as { uid: string }
+  const after = createAssessLifeEntry(toDate({ ...snapshot.after.data(), id: snapshot.id }))
 
-  // should not save entry when updating probably. Would have to update but that's getting complicated
-  // saveGratitude(uid, entry)
+  const promises = Promise.all([
+    // saveGratitude(uid, after)  // unable to update gratitudes as I don't know which gratitude has been updated and just adding them isn't the solution
+    saveWheelOfLife(uid, after), // wheel of life can be overwritten everytime
+    // saveDearFutureSelf(uid, after), // unable to update dear future self as I don't know which message has been updated and just adding them isn't the solution
+    // saveImagine(uid, after) // unable to update imagine as I don't know which message has been updated and just adding them isn't the solution
+  ])
 
-  // TO DO
-  // Sync gratitude with gratitude journal
-  // Sync wheel of life with wheel of life
-  // Sync dear future self with dear future self
-  // Send imagine.future and imagine.die as dear future self message
-
-// })
+  return promises
+})
 
 async function saveGratitude(uid: string, entry: AssessLifeEntry) {
   const items = entry.gratitude.entries.slice(0, 3)
@@ -94,15 +93,15 @@ async function saveGratitude(uid: string, entry: AssessLifeEntry) {
 
   const date = formatISO(new Date(), { representation: 'date' })
   const snap = await getDocumentSnap(`Users/${uid}/Exercises/DailyGratitude/Entries/${date}`)
-  if (!snap.exists) await snap.ref.set({ items, creeatedAt: entry.createdAt, updatedAt: entry.updatedAt, id: date })
+  if (!snap.exists) return snap.ref.set({ items, creeatedAt: entry.createdAt, updatedAt: entry.updatedAt, id: date })
 }
 
 async function saveWheelOfLife(uid: string, entry: AssessLifeEntry) {
   if (Object.values(entry.wheelOfLife).every(val => val === '')) return
 
   const date = formatISO(new Date(), { representation: 'date' })
-  const snap = await getDocumentSnap(`Users/${uid}/Exercises/WheelOfLife/Entries/${date}`)
-  if (!snap.exists) await snap.ref.set({ ...entry.wheelOfLife, createdAt: entry.createdAt, updatedAt: entry.updatedAt })
+  const ref = db.doc(`Users/${uid}/Exercises/WheelOfLife/Entries/${date}`)
+  return ref.set({ ...entry.wheelOfLife, createdAt: entry.createdAt, updatedAt: entry.updatedAt })
 }
 
 async function saveDearFutureSelf(uid: string, entry: AssessLifeEntry) {
