@@ -1,3 +1,14 @@
-<p>Prepare the space around you. Close your eyes and take a few deep breaths.</p>
-<p>Let go of your expectations.</p>
-<p>Start when you feel ready.</p>
+<ng-container *ngIf="interval">
+  <ng-container *ngIf="interval === 'weekly'">
+    <p>Bye week {{ week -1 }}, Hello week {{ week }}.</p>
+  </ng-container>
+  <ng-container *ngIf="interval === 'monthly'">
+    <p>Bye {{ month - 1 | getMonthName }}, Hello {{ month | getMonthName }}</p>
+  </ng-container>
+  <ng-container *ngIf="interval === 'quarterly'">
+    <p>Bye quarter {{ quarter - 1 }}, Hello quarter {{ quarter }}</p>
+  </ng-container>
+  <ng-container *ngIf="interval === 'yearly'">
+    <p>Bye {{ year - 1}}, Hello {{ year }}</p>
+  </ng-container>
+</ng-container>

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } f
 import { Location } from '@angular/common'
 import { AlertController, ModalController } from '@ionic/angular'
 
-import { BehaviorSubject, combineLatest, of, shareReplay, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap, tap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
@@ -170,7 +170,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
         this.steps.set(squashedSteps)
       }
-    })
+    }),
+    map(([settings]) => settings)
   )
 
   @Input() entry = createAssessLifeEntry()

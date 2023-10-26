@@ -1,10 +1,11 @@
 import { arrayUnion, logger, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
-import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, Message, createAssessLifeEntry, createAssessLifeSettings, createDearFutureSelf, createMessage } from '@strive/model'
-import { getDocumentSnap, toDate, unique } from '../../../shared/utils'
+import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, Message, Personal, createAssessLifeEntry, createAssessLifeSettings, createDearFutureSelf, createMessage, getInterval } from '@strive/model'
+import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { getNextDay, startOfAssessLifeYear } from '@strive/exercises/assess-life/utils/date.utils'
 import { deleteScheduledTask, upsertScheduledTask } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task'
 import { ScheduledTaskUserExerciseAssessLife, enumWorkerType } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface'
+import { AES, enc } from 'crypto-js'
 
 export const assessLifeSettingsCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife`, 'assessLifeSettingsCreatedHandler',
 async (snapshot, context) => {
@@ -12,7 +13,6 @@ async (snapshot, context) => {
   const { uid } = context.params as { uid: string }
   const settings = createAssessLifeSettings(toDate({ ...snapshot.data(), id: snapshot.id }))
 
-  // if the preferred day is never, then do not send reminders
   if (settings.preferredDay === 'never') return
 
   return upsertReminder(uid, settings)
@@ -27,45 +27,36 @@ async (snapshot, context) => {
   const before = createAssessLifeSettings(toDate({ ...snapshot.before.data(), id: snapshot.id }))
   const after = createAssessLifeSettings(toDate({ ...snapshot.after.data(), id: snapshot.id }))
 
-  logger.log('before', before)
-  logger.log('after', after)
-
   const preferredDayChanged = before.preferredDay !== after.preferredDay
   const preferredTimeChanged = before.preferredTime !== after.preferredTime
 
   if (preferredDayChanged && after.preferredDay === 'never') {
-    logger.log('delete scheduled task')
     return deleteScheduledTask(`${uid}assesslife`)
   }
 
   if (preferredDayChanged || preferredTimeChanged) {
-    logger.log('upsert reminder because of changed time')
     return upsertReminder(uid, after)
   }
 
   const beforeAvailableIntervals = getAvailableIntervals(before)
   const afterAvailableIntervals = getAvailableIntervals(after)
 
-  // check if all settings are never
   if (beforeAvailableIntervals.length && !afterAvailableIntervals.length) {
-    logger.log('delete scheduled task because all intervals are never')
     return deleteScheduledTask(`${uid}assesslife`)
   }
 
   // if any intervals have been added or if any intervals have been removed, update the reminder
   const addedIntervals = afterAvailableIntervals.filter(interval => !beforeAvailableIntervals.includes(interval))
   const removedIntervals = beforeAvailableIntervals.filter(interval => !afterAvailableIntervals.includes(interval))
-  logger.log('added intervals so updating', addedIntervals)
-  logger.log('removed intervals so updating', removedIntervals)
   if (addedIntervals.length || removedIntervals.length) {
     return upsertReminder(uid, after)
   }
 })
 
-export const assessLifeEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries`, 'assessLifeCreatedHandler',
+export const assessLifeEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries/{entryId}`, 'abcdef',
 async (snapshot, context) => {
 
-  const { uid } = context.params
+  const { uid } = context.params as { uid: string }
   const entry = createAssessLifeEntry(toDate({ ...snapshot.data(), id: snapshot.id }))
 
   const promises = Promise.all([
@@ -78,10 +69,9 @@ async (snapshot, context) => {
   return promises
 
   // TODO Sync goal priorities after submitting. And keep the goal priorities in the entry to see what the history was.
-
 })
 
-// export const assessLifeEntryChangeHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries`, 'assessLifeChangeHandler',
+// export const assessLifeEntryChangeHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries/{entryId}`, 'assessLifeChangeHandler',
 // async (snapshot, context) => {
 
 //   const { uid } = context.params
@@ -104,7 +94,7 @@ async function saveGratitude(uid: string, entry: AssessLifeEntry) {
 
   const date = formatISO(new Date(), { representation: 'date' })
   const snap = await getDocumentSnap(`Users/${uid}/Exercises/DailyGratitude/Entries/${date}`)
-  if (!snap.exists) await snap.ref.set({ items })
+  if (!snap.exists) await snap.ref.set({ items, creeatedAt: entry.createdAt, updatedAt: entry.updatedAt, id: date })
 }
 
 async function saveWheelOfLife(uid: string, entry: AssessLifeEntry) {
@@ -112,59 +102,79 @@ async function saveWheelOfLife(uid: string, entry: AssessLifeEntry) {
 
   const date = formatISO(new Date(), { representation: 'date' })
   const snap = await getDocumentSnap(`Users/${uid}/Exercises/WheelOfLife/Entries/${date}`)
-  if (!snap.exists) await snap.ref.set({ ...entry.wheelOfLife })
+  if (!snap.exists) await snap.ref.set({ ...entry.wheelOfLife, createdAt: entry.createdAt, updatedAt: entry.updatedAt })
 }
 
 async function saveDearFutureSelf(uid: string, entry: AssessLifeEntry) {
   if (Object.values(entry.dearFutureSelf).every(val => val === '')) return
+
+  const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
+  if (!personal) return
 
   const deliveryDate = entry.interval === 'weekly' ? addWeeks(entry.createdAt, 1)
     : entry.interval === 'monthly' ? addMonths(entry.createdAt, 1)
     : entry.interval === 'quarterly' ? addQuarters(entry.createdAt, 1)
     : addYears(entry.createdAt, 1)
 
-  const message1 = createMessage({
-    description: entry.dearFutureSelf.advice,
+  const { advice, predictions, anythingElse } = entry.dearFutureSelf
+  const interval = getInterval(entry.interval)
+
+  let description = ''
+  if (advice) {
+    const decrypted = AES.decrypt(advice, personal.key).toString(enc.Utf8)
+    description += `<b>What advice would you give yourself in one ${interval}?</b><br/><br/>${decrypted}`
+  }
+  if (predictions) {
+    if (description) description += '<br/><br/>'
+    const decrypted = AES.decrypt(predictions, personal.key).toString(enc.Utf8)
+    description += `<b>What predictions would you make what will happen upcoming ${interval}?</b><br/><br/>${decrypted}`
+  }
+  if (anythingElse) {
+    if (description) description += '<br/><br/>'
+    const decrypted = AES.decrypt(anythingElse, personal.key).toString(enc.Utf8)
+    description += `<b>Anything else you would like to mention?</b><br/><br/>${decrypted}`
+  }
+
+  const encryptedDescription = AES.encrypt(description, personal.key).toString()
+
+  const message = createMessage({
+    description: encryptedDescription,
     deliveryDate,
     createdAt: entry.createdAt
   })
 
-  const message2 = createMessage({
-    description: entry.dearFutureSelf.predictions,
-    deliveryDate,
-    createdAt: entry.createdAt
-  })
-
-  const message3 = createMessage({
-    description: entry.dearFutureSelf.anythingElse,
-    deliveryDate,
-    createdAt: entry.createdAt
-  })
-
-  addDearFutureSelfMessage(uid, message1)
-  addDearFutureSelfMessage(uid, message2)
-  addDearFutureSelfMessage(uid, message3)
+  addDearFutureSelfMessage(uid, message)
 }
 
 async function saveImagine(uid: string, entry: AssessLifeEntry) {
   if (Object.values(entry.imagine).every(val => val === '')) return
 
+  const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
+  if (!personal) return
+
   const deliveryDate = addYears(entry.createdAt, 5)
 
-  const message1 = createMessage({
-    description: entry.imagine.future,
+  const { die, future } = entry.imagine
+  let description = ''
+  if (future) {
+    const decrypted = AES.decrypt(future, personal.key).toString(enc.Utf8)
+    description += `<b>Imagine yourself 5 years in the future. What would your life look like?</b><br/><br/>${decrypted}`
+  }
+  if (die) {
+    if (description) description += '<br/><br/>'
+    const decrypted = AES.decrypt(die, personal.key).toString(enc.Utf8)
+    description += `<b>What would you do in the next 5 years if you were to die right after those years?</b><br/><br/>${decrypted}`
+  }
+
+  const encryptedDescription = AES.encrypt(description, personal.key).toString()
+
+  const message = createMessage({
+    description: encryptedDescription,
     deliveryDate,
     createdAt: entry.createdAt
   })
 
-  const message2 = createMessage({
-    description: entry.imagine.die,
-    deliveryDate,
-    createdAt: entry.createdAt
-  })
-
-  addDearFutureSelfMessage(uid, message1)
-  addDearFutureSelfMessage(uid, message2)
+  addDearFutureSelfMessage(uid, message)
 }
 
 async function addDearFutureSelfMessage(uid: string, message: Message) {
@@ -174,7 +184,7 @@ async function addDearFutureSelfMessage(uid: string, message: Message) {
       messages: arrayUnion(message)
     })
   } else {
-    const dfs = createDearFutureSelf({ id: 'DearFutureSelf', messages: [message] })
+    const dfs = createDearFutureSelf({ id: 'DearFutureSelf', messages: [message], createdAt: message.createdAt, updatedAt: message.createdAt })
     await snap.ref.set(dfs)
   }
 }
