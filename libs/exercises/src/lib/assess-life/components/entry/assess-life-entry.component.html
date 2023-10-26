@@ -99,7 +99,7 @@
     </ion-content>
 
     <ion-content *ngSwitchCase="'prioritizeGoals'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-assess-life-prioritize-goals (step)="step($event)" />
+      <strive-assess-life-prioritize-goals [form]="form.priorities" (step)="step($event)" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'imagine'" class="ion-padding" [ngClass]="animatingSection()">

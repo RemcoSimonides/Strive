@@ -66,6 +66,7 @@ export interface AssessLifeEntry {
   imagine: AssessLifeImagine
   interval: AssessLifeInterval
   learn: Learn
+  priorities: string[]
   proud: ListEntries
   timeManagement: TimeManagement
   wheelOfLife: WheelOfLife
@@ -86,6 +87,7 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     gratitude: createListEntries(params?.gratitude),
     imagine: createAssessLifeImagine(params?.imagine),
     learn: createLearn(params?.learn),
+    priorities: params?.priorities ?? [],
     proud: createListEntries(params?.proud),
     timeManagement: createTimeManagement(params?.timeManagement),
     wheelOfLife: createWheelOfLife(params?.wheelOfLife)

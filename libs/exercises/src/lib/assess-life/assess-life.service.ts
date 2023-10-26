@@ -90,7 +90,7 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
     entries = entries.map(entry => {
       Object.keys(entry).forEach(key => {
         const typedKey = key as keyof AssessLifeEntry
-        const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval']
+        const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
         if (excludedProperties.includes(key)) return
         entry[typedKey] = _decrypt(entry[typedKey], encryptionKey)
       })
@@ -105,7 +105,7 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
 
     Object.keys(entry).forEach(key => {
       const typedKey = key as keyof AssessLifeEntry
-      const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval']
+      const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
       if (excludedProperties.includes(key)) return
       entry[typedKey] = _encrypt(entry[typedKey], encryptionKey)
     })

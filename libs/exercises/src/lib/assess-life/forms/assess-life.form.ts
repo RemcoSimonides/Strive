@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms'
+import { FormArray, FormControl, FormGroup } from '@angular/forms'
 import { AssessLifeEntry, createAssessLifeEntry } from '@strive/model'
 import { TimeManagementForm } from '../components/time-management/time-management.form'
 import { WheelOfLifeForm } from '../components/wheel-of-life/wheel-of-life.form'
@@ -21,6 +21,7 @@ function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
     gratitude: new FormList(assessLife.gratitude),
     imagine: new ImagineForm(assessLife.imagine),
     learn: new LearnForm(assessLife.learn),
+    priorities: new FormArray<FormControl<string>>(assessLife.priorities.map(v => new FormControl(v, { nonNullable: true }))),
     proud: new FormList(assessLife.proud),
     timeManagement: new TimeManagementForm(assessLife.timeManagement),
     wheelOfLife: new WheelOfLifeForm(assessLife.wheelOfLife),
@@ -42,6 +43,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   get gratitude() { return this.get('gratitude')! as FormList }
   get imagine() { return this.get('imagine')! as ImagineForm }
   get learn() { return this.get('learn')! as LearnForm }
+  get priorities() { return this.get('priorities')! as FormArray<FormControl<string>> }
   get proud() { return this.get('proud')! as FormList }
   get timeManagement() { return this.get('timeManagement')! as TimeManagementForm }
   get wheelOfLife() { return this.get('wheelOfLife')! as WheelOfLifeForm }

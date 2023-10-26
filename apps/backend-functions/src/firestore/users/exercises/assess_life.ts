@@ -1,10 +1,10 @@
-import { arrayUnion, db, logger, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
-import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, Message, Personal, createAssessLifeEntry, createAssessLifeSettings, createDearFutureSelf, createMessage, getInterval } from '@strive/model'
+import { arrayUnion, db, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
+import { AssessLifeEntry, AssessLifeInterval, AssessLifeSettings, Message, Personal, Stakeholder, createAssessLifeEntry, createAssessLifeSettings, createDearFutureSelf, createMessage, getInterval } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { getNextDay, startOfAssessLifeYear } from '@strive/exercises/assess-life/utils/date.utils'
-import { deleteScheduledTask, upsertScheduledTask } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task'
-import { ScheduledTaskUserExerciseAssessLife, enumWorkerType } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface'
+import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
+import { ScheduledTaskUserExerciseAssessLife, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { AES, enc } from 'crypto-js'
 
 export const assessLifeSettingsCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife`, 'assessLifeSettingsCreatedHandler',
@@ -20,8 +20,6 @@ async (snapshot, context) => {
 
 export const assessLifeSettingsChangeHandler = onDocumentUpdate(`Users/{uid}/Exercises/AssessLife`, 'assessLifeChangeHandler',
 async (snapshot, context) => {
-
-  logger.log('changed assess life settings')
 
   const { uid } = context.params as { uid: string }
   const before = createAssessLifeSettings(toDate({ ...snapshot.before.data(), id: snapshot.id }))
@@ -63,15 +61,14 @@ async (snapshot, context) => {
     saveGratitude(uid, entry),
     saveWheelOfLife(uid, entry),
     saveDearFutureSelf(uid, entry),
-    saveImagine(uid, entry)
+    saveImagine(uid, entry),
+    savePriorities(uid, entry)
   ])
 
   return promises
-
-  // TODO Sync goal priorities after submitting. And keep the goal priorities in the entry to see what the history was.
 })
 
-export const assessLifeEntryChangeHandler = onDocumentCreate(`Users/{uid}/Exercises/AssessLife/Entries/{entryId}`, 'assessLifeChangeHandler',
+export const assessLifeEntryChangeHandler = onDocumentUpdate(`Users/{uid}/Exercises/AssessLife/Entries/{entryId}`, 'assessLifeChangeHandler',
 async (snapshot, context) => {
 
   const { uid } = context.params as { uid: string }
@@ -82,10 +79,22 @@ async (snapshot, context) => {
     saveWheelOfLife(uid, after), // wheel of life can be overwritten everytime
     // saveDearFutureSelf(uid, after), // unable to update dear future self as I don't know which message has been updated and just adding them isn't the solution
     // saveImagine(uid, after) // unable to update imagine as I don't know which message has been updated and just adding them isn't the solution
+    savePriorities(uid, after)
   ])
 
   return promises
 })
+
+async function savePriorities(uid: string, entry: AssessLifeEntry) {
+  const { priorities } = entry
+
+  const promises = priorities.map(goalId => getDocument<Stakeholder>(`Goals/${goalId}/GStakeholders/${uid}`))
+  const stakeholders = await Promise.all(promises)
+
+  return stakeholders.map((stakeholder, priority) => {
+    return db.doc(`Goals/${stakeholder.goalId}/GStakeholders/${uid}`).update({ priority })
+  })
+}
 
 async function saveGratitude(uid: string, entry: AssessLifeEntry) {
   const items = entry.gratitude.entries.slice(0, 3)
