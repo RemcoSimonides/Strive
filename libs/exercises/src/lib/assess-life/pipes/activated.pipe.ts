@@ -8,7 +8,6 @@ export class AssessLifeQuestionActivatedPipe implements PipeTransform {
     if (!question) throw new Error('No question provided')
     if (!interval) throw new Error('No interval provided')
 
-    const setting = settings[question]
-    return setting === interval
+    return settings[question] === interval
   }
 }
