@@ -34,147 +34,25 @@
         <ion-text>{{ form.get('preferredDay').value === 'never' ? '-' : form.get('preferredTime').value }}</ion-text>
       </ion-item>
     </ion-list>
+  </form>
 
+  <form [formGroup]="metaSettingsForm">
     <ion-list mode="md" lines="full">
-      <ion-item>
+      <ion-item *ngFor="let key of settingKeys; let last = last" [lines]="last ? 'none' : 'full'">
         <ion-label>
           <section>
-            <span>Dear Future Self</span>
-            <small>Write a message/advice/predictions to your future self</small>
+            <span>{{ settings[key].title }}</span>
+            <small>{{ settings[key].description }}</small>
           </section>
         </ion-label>
-        <ion-select [legacy]="true" formControlName="dearFutureSelf" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Environment</span>
-            <small>How did you contribute to the environment?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="environment" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Explore</span>
-            <small>What do you want to explore?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="explore" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Forgive / Letting go</span>
-            <small>What do you want to forgive or let go of?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="forgive" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Gratitude</span>
-            <small>What are you grateful for?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="gratitude" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Imagine</span>
-            <small>Imagine your life in 5 years</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="imagine" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Learn</span>
-            <small>What do you want to learn?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="learn" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Pride</span>
-            <small>What are you proud of?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="proud" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Prioritize Goals</span>
-            <small>Order your goals by priority</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="prioritizeGoals" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <section>
-            <span>Time Management</span>
-            <small>What did you spend time on?</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="timeManagement" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
-        </ion-select>
-      </ion-item>
-
-      <ion-item lines="none">
-        <ion-label>
-          <section>
-            <span>Wheel of Life</span>
-            <small>Rate how you feel</small>
-          </section>
-        </ion-label>
-        <ion-select [legacy]="true" formControlName="wheelOfLife" interface="popover">
-          <ng-container *ngTemplateOutlet="options" />
+        <ion-select [legacy]="true" [formControlName]="key" interface="popover">
+          <ion-select-option value="never">Never</ion-select-option>
+          <ion-select-option value="weekly">Weekly</ion-select-option>
+          <ion-select-option value="monthly">Monthly</ion-select-option>
+          <ion-select-option value="quarterly">Quarterly</ion-select-option>
+          <ion-select-option value="yearly">Yearly</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-list>
   </form>
-</ng-template>
-
-<ng-template #options>
-  <ion-select-option value="never">Never</ion-select-option>
-  <ion-select-option value="weekly">Weekly</ion-select-option>
-  <ion-select-option value="monthly">Monthly</ion-select-option>
-  <ion-select-option value="quarterly">Quarterly</ion-select-option>
-  <ion-select-option value="yearly">Yearly</ion-select-option>
 </ng-template>

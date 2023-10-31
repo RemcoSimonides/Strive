@@ -1,30 +1,11 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms'
+import { FormControl, FormGroup } from '@angular/forms'
 import { AssessLifeEntry, createAssessLifeEntry } from '@strive/model'
-import { TimeManagementForm } from '../components/time-management/time-management.form'
-import { WheelOfLifeForm } from '../components/wheel-of-life/wheel-of-life.form'
-import { FormList } from '../utils/form.utils'
-import { LearnForm } from '../components/learn/learn.form'
-import { DearFutureSelfForm } from '../components/dear-future-self/dear-future-self.form'
-import { ExploreForm } from '../components/explore/explore.form'
-import { EnvironmentForm } from '../components/environment/environment.form'
-import { ImagineForm } from '../components/imagine/imagine.form'
 
 function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
   const assessLife = createAssessLifeEntry(params)
 
   return {
     id: new FormControl(assessLife.id, { nonNullable: true }),
-    dearFutureSelf: new DearFutureSelfForm(assessLife.dearFutureSelf),
-    environment: new EnvironmentForm(assessLife.environment),
-    explore: new ExploreForm(assessLife.explore),
-    forgive: new FormList(assessLife.forgive),
-    gratitude: new FormList(assessLife.gratitude),
-    imagine: new ImagineForm(assessLife.imagine),
-    learn: new LearnForm(assessLife.learn),
-    priorities: new FormArray<FormControl<string>>(assessLife.priorities.map(v => new FormControl(v, { nonNullable: true }))),
-    proud: new FormList(assessLife.proud),
-    timeManagement: new TimeManagementForm(assessLife.timeManagement),
-    wheelOfLife: new WheelOfLifeForm(assessLife.wheelOfLife),
   }
 }
 
@@ -36,15 +17,4 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   }
 
   get id() { return this.get('id')! as FormControl }
-  get dearFutureSelf() { return this.get('dearFutureSelf')! as DearFutureSelfForm }
-  get environment() { return this.get('environment')! as EnvironmentForm }
-  get explore() { return this.get('explore')! as ExploreForm }
-  get forgive() { return this.get('forgive')! as FormList }
-  get gratitude() { return this.get('gratitude')! as FormList }
-  get imagine() { return this.get('imagine')! as ImagineForm }
-  get learn() { return this.get('learn')! as LearnForm }
-  get priorities() { return this.get('priorities')! as FormArray<FormControl<string>> }
-  get proud() { return this.get('proud')! as FormList }
-  get timeManagement() { return this.get('timeManagement')! as TimeManagementForm }
-  get wheelOfLife() { return this.get('wheelOfLife')! as WheelOfLifeForm }
 }

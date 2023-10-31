@@ -1,31 +1,30 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
-import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { AssessLifeIntervalPipe } from '../../../pipes/interval.pipe'
-import { FormList } from '../../../utils/form.utils'
-import { AssessLifeInterval } from '@strive/model'
+import { AssessLifeQuestion } from '@strive/model'
+import { AssessLifeReplaceIntervalPipe } from '../../pipes/interval.pipe'
 
 @Component({
   standalone: true,
-  selector: '[form][interval] strive-assess-life-time-management-past',
-  templateUrl: './time-management-past.component.html',
-  styleUrls: ['./time-management-past.component.scss'],
+  selector: 'strive-assess-life-form-list',
+  templateUrl: './form-list.component.html',
+  styleUrls: ['./form-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     IonicModule,
     ReactiveFormsModule,
-    AssessLifeIntervalPipe
+    AssessLifeReplaceIntervalPipe
   ]
 })
-export class AssessLifeTimeManagementPastComponent {
+export class AssessLifeFormListComponent {
 
   inputForm = new FormControl('', { nonNullable: true })
   showInput = signal<boolean>(true)
 
-  @Input() interval?: AssessLifeInterval
-  @Input() form?: FormList
+  @Input() form?: FormArray<FormControl<string>>
+  @Input() question?: AssessLifeQuestion
   @Input() set stepping(stepping: boolean | null) {
     if (stepping && this.inputForm.value) {
       this.showInput.set(false)
@@ -33,22 +32,30 @@ export class AssessLifeTimeManagementPastComponent {
     }
   }
 
+  patchValue(values: string[]) {
+    if (!this.form) return
+    this.form.clear()
+    for (const value of values) {
+      this.form.push(new FormControl(value, { nonNullable: true }))
+    }
+  }
+
   add() {
     if (!this.form) return
-    this.form.entries.push(new FormControl(this.inputForm.value, { nonNullable: true }))
+    this.form.push(new FormControl(this.inputForm.value, { nonNullable: true }))
     this.form.markAsDirty()
     this.inputForm.setValue('')
   }
 
   blur(index: number) {
     if (!this.form) return
-    const value = this.form.entries.at(index).value
+    const value = this.form.at(index).value
     if (!value) this.removeValue(index)
   }
 
   removeValue(index: number) {
     if (!this.form) return
-    this.form.entries.removeAt(index)
+    this.form.removeAt(index)
     this.form.markAsDirty()
   }
 }

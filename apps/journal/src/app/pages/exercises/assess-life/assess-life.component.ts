@@ -14,18 +14,9 @@ import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, getMonth,
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getAssessLifeId, getAssessLifeYear, startOfAssessLifeYear, } from '@strive/exercises/assess-life/utils/date.utils'
 
-function getActivatedQuestions(settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
-  if (!settings) return []
-  const activated = []
-
-  for (const [key, value] of Object.entries(settings)) {
-    if (value === interval) activated.push(key)
-  }
-  return activated
-}
-
 function getEntryStatus(entries: AssessLifeEntry[], settings: AssessLifeSettings | undefined, interval: AssessLifeInterval) {
-  const questions = getActivatedQuestions(settings, interval)
+  if (!settings) return { disabled: true, message: 'No settings found' }
+  const questions = settings.questions.filter(question => question.interval === interval)
 
   if (questions.length === 0) return { disabled: true, message: 'No questions activated - change in settings' }
   if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!`}

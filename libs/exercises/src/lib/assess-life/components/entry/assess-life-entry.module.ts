@@ -11,22 +11,12 @@ import { AssessLifeQuestionActivatedPipe } from '../../pipes/activated.pipe'
 
 import { AssessLifeIntroComponent } from '../intro/intro.component'
 import { PreviousIntentionComponent } from '../previous-intention/previous-intention.component'
-import { AssessLifeTimeManagementPastComponent } from '../time-management/past/time-management-past.component'
-import { AssessLifeTimeManagementFutureComponent } from '../time-management/future/time-management-future.component'
 import { WheelOfLifeComponent } from '../wheel-of-life/wheel-of-life.component'
 import { PrioritizeGoalsComponent } from '../prioritize-goals/prioritize-goals.component'
 import { AssessLifeOutroComponent } from '../outro/outro.component'
-import { AssessLifeProudComponent } from '../proud/proud.component'
-import { AssessLifeLearnFutureComponent } from '../learn/future/learn-future.component'
-import { AssessLifeLearnPastComponent } from '../learn/past/learn-past.component'
-import { AssessLifeGratitudeComponent } from '../gratitude/gratitude.component'
-import { AssessLifeDearFutureSelfComponent } from '../dear-future-self/dear-future-self.component'
-import { AssessLifeExploreFutureComponent } from '../explore/future/explore-future.component'
-import { AssessLifeExplorePastComponent } from '../explore/past/explore-past.component'
-import { AssessLifeEnvironmentFutureComponent } from '../environment/future/environment-future.component'
-import { AssessLifeEnvironmentPastComponent } from '../environment/past/environment-past.component'
-import { AssessLifeForgiveFutureComponent } from '../forgive/forgive.component'
-import { AssessLifeImagineComponent } from '../imagine/imagine.component'
+import { AssessLifeFormListComponent } from '../form-list/form-list.component'
+import { AssessLifeTextareaComponent } from '../textarea/textarea.component'
+import { AssessLifeStepFilterPipe } from '../../pipes/step.pipe'
 
 @NgModule({
   imports: [
@@ -39,22 +29,12 @@ import { AssessLifeImagineComponent } from '../imagine/imagine.component'
 
     AssessLifeIntroComponent,
     PreviousIntentionComponent,
-    AssessLifeTimeManagementPastComponent,
     WheelOfLifeComponent,
-    AssessLifeTimeManagementFutureComponent,
     AssessLifeOutroComponent,
     PrioritizeGoalsComponent,
-    AssessLifeProudComponent,
-    AssessLifeLearnFutureComponent,
-    AssessLifeLearnPastComponent,
-    AssessLifeGratitudeComponent,
-    AssessLifeDearFutureSelfComponent,
-    AssessLifeExploreFutureComponent,
-    AssessLifeExplorePastComponent,
-    AssessLifeEnvironmentFutureComponent,
-    AssessLifeEnvironmentPastComponent,
-    AssessLifeForgiveFutureComponent,
-    AssessLifeImagineComponent
+    AssessLifeFormListComponent,
+    AssessLifeTextareaComponent,
+    AssessLifeStepFilterPipe
   ],
   declarations: [AssessLifeEntryComponent],
   exports: [AssessLifeEntryComponent]

@@ -1,0 +1,15 @@
+<ng-container *ngIf="form && question">
+  <ion-list mode="md">
+    <small>{{ question.question | replaceInterval:question.interval }}</small>
+    <ion-item lines="none">
+      <ion-textarea
+        [formControl]="form"
+        autoGrow
+        rows="4"
+        placeholder="..."
+        autocapitalize="sentences"
+        class="primary"
+      />
+    </ion-item>
+  </ion-list>
+</ng-container>

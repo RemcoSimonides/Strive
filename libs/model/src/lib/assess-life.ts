@@ -1,9 +1,8 @@
-import { ListEntries, createListEntries } from './form-utils'
-
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
 export type WeekdayWithNever = Weekday | 'never'
 export type AssessLifeInterval = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
+export type AssessLifeType = 'formlist' | 'textarea' | 'prioritizeGoals' | 'wheelOfLife'
 
 export function getInterval(value: AssessLifeInterval): string {
   switch (value) {
@@ -15,21 +14,225 @@ export function getInterval(value: AssessLifeInterval): string {
   }
 }
 
+export const settings = [
+  'dearFutureSelf',
+  'environment',
+  'explore',
+  'forgive',
+  'gratitude',
+  'imagine',
+  'learn',
+  'pride',
+  'prioritizeGoals',
+  'timeManagement',
+  'wheelOfLife',
+] as const
+export type Setting = typeof settings[number]
+
+export const assessLifeSteps = [
+  'intro',
+  'previousIntention',
+  'listQuestionsPast',
+  'wheelOfLife',
+  'forgive',
+  'listQuestionsFuture',
+  'prioritizeGoals',
+  'imagine',
+  'dearFutureSelf',
+  'custom',
+  'outro'
+] as const
+export type Step = typeof assessLifeSteps[number]
+
+export interface AssessLifeQuestion {
+  key: string
+  step: Step
+  question: string
+  type: AssessLifeType,
+  interval: AssessLifeIntervalWithNever,
+  setting: Setting
+}
+
+export const assessLifeQuestions: AssessLifeQuestion[] = [
+  {
+    key: 'dearFutureSelfAdvice',
+    step: 'dearFutureSelf',
+    question: 'What advice would you give yourself in one {interval}?',
+    type: 'textarea',
+    interval: 'yearly',
+    setting: 'dearFutureSelf'
+  },
+  {
+    key: 'dearFutureSelfPrediction',
+    step: 'dearFutureSelf',
+    question: 'What predictions do you make what will happen upcoming {interval}?',
+    type: 'textarea',
+    interval: 'yearly',
+    setting: 'dearFutureSelf'
+  },
+  {
+    key: 'dearFutureSelfAnythingElse',
+    step: 'dearFutureSelf',
+    question: 'Anything else you would like to mention?',
+    type: 'textarea',
+    interval: 'yearly',
+    setting: 'dearFutureSelf'
+  },
+  {
+    key: 'environmentPast',
+    step: 'listQuestionsPast',
+    question: 'What did you do past {interval} to leave the world in a better shape than you found it?',
+    type: 'formlist',
+    interval: 'monthly',
+    setting: 'environment'
+  },
+  {
+    key: 'environmentFuture',
+    step: 'listQuestionsFuture',
+    question: 'What do you want to explore upcoming {interval}?',
+    type: 'formlist',
+    interval: 'monthly',
+    setting: 'environment'
+  },
+  {
+    key: 'explorePast',
+    step: 'listQuestionsPast',
+    question: 'What did you explore past {interval}?',
+    type: 'formlist',
+    interval: 'quarterly',
+    setting: 'explore'
+  },
+  {
+    key: 'exploreFuture',
+    step: 'listQuestionsFuture',
+    question: 'What do you want to explore upcoming {interval}?',
+    type: 'formlist',
+    interval: 'quarterly',
+    setting: 'explore'
+  },
+  {
+    key: 'forgive',
+    step: 'forgive',
+    question: 'Did anything happen during the past {interval} that needs to be forgiven or let go of?',
+    type: 'formlist',
+    interval: 'monthly',
+    setting: 'forgive'
+  },
+  {
+    key: 'gratitude',
+    step: 'listQuestionsPast',
+    question: 'What are you grateful for past {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'gratitude'
+  },
+  {
+    key: 'imagineFuture',
+    step: 'imagine',
+    question: 'Imagine yourself 5 years in the future. What would your life look like?',
+    type: 'textarea',
+    interval: 'yearly',
+    setting: 'imagine'
+  },
+  {
+    key: 'imagineDie',
+    step: 'imagine',
+    question: 'What would you do in the next 5 years if you were to die right after those years?',
+    type: 'textarea',
+    interval: 'yearly',
+    setting: 'imagine'
+  },
+  {
+    key: 'learnFuture',
+    step: 'listQuestionsFuture',
+    question: 'What do you want to learn upcoming {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'learn'
+  },
+  {
+    key: 'learnPast',
+    step: 'listQuestionsPast',
+    question: 'What did you learn past {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'learn'
+  },
+  {
+    key: 'prioritizeGoals',
+    step: 'prioritizeGoals',
+    question: '',
+    type: 'prioritizeGoals',
+    interval: 'monthly',
+    setting: 'prioritizeGoals'
+  },
+  {
+    key: 'pride',
+    step: 'listQuestionsPast',
+    question: 'What are you proud of past {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'pride'
+  },
+  {
+    key: 'timeManagementFutureMoreTime',
+    step: 'listQuestionsFuture',
+    question: 'What will you spend more time on upcoming {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'timeManagement'
+  },
+  {
+    key: 'timeManagementFutureLessTime',
+    step: 'listQuestionsFuture',
+    question: 'What will you spend less time on upcoming {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'timeManagement'
+  },
+  {
+    key: 'timeManagementPast',
+    step: 'listQuestionsPast',
+    question: 'What did you spend too much time on past {interval}?',
+    type: 'formlist',
+    interval: 'weekly',
+    setting: 'timeManagement'
+  },
+    {
+    key: 'wheelOfLife',
+    step: 'wheelOfLife',
+    question: '',
+    type: 'wheelOfLife',
+    interval: 'quarterly',
+    setting: 'wheelOfLife'
+  },
+]
+
+export const assessLifeSettings: AssessLifeSettings = {
+  preferredDay: 'sunday',
+  preferredTime: '19:00',
+  questions: assessLifeQuestions,
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
+
+export function createAssessLifeQuestion(params: Partial<AssessLifeQuestion> = {}): AssessLifeQuestion {
+  return {
+    key: params.key ?? 'dearFutureSelfAdvice',
+    step: params.step ?? 'intro',
+    question: params.question ?? '',
+    type: params.type ?? 'textarea',
+    interval: params.interval ?? 'yearly',
+    setting: params.setting ?? 'dearFutureSelf',
+  }
+}
+
+
 export interface AssessLifeSettings {
   id?: string
-  dearFutureSelf: AssessLifeIntervalWithNever
-  environment: AssessLifeIntervalWithNever
-  explore: AssessLifeIntervalWithNever
-  forgive: AssessLifeIntervalWithNever
-  gratitude: AssessLifeIntervalWithNever
-  imagine: AssessLifeIntervalWithNever
-  learn: AssessLifeIntervalWithNever
+  questions: AssessLifeQuestion[]
   preferredDay: WeekdayWithNever,
   preferredTime: string,
-  prioritizeGoals: AssessLifeIntervalWithNever
-  proud: AssessLifeIntervalWithNever
-  timeManagement: AssessLifeIntervalWithNever
-  wheelOfLife: AssessLifeIntervalWithNever
   createdAt: Date
   updatedAt: Date
 }
@@ -38,19 +241,9 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
   return {
     ...params,
     id: params.id ?? '',
-    dearFutureSelf: params.dearFutureSelf ?? 'yearly',
-    environment: params.environment ?? 'quarterly',
-    explore: params.explore ?? 'quarterly',
-    forgive: params.forgive ?? 'monthly',
-    gratitude: params.gratitude ?? 'weekly',
-    imagine: params.imagine ?? 'yearly',
-    learn: params.learn ?? 'weekly',
+    questions: params.questions ? params.questions.map(createAssessLifeQuestion) : [],
     preferredDay: params.preferredDay ?? 'sunday',
     preferredTime: params.preferredTime ?? '19:00',
-    prioritizeGoals: params.prioritizeGoals ?? 'monthly',
-    proud: params.proud ?? 'weekly',
-    timeManagement: params.timeManagement ?? 'weekly',
-    wheelOfLife: params.wheelOfLife ?? 'quarterly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date()
   }
@@ -58,18 +251,26 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 
 export interface AssessLifeEntry {
   id?: string
-  dearFutureSelf: AssessLifeDearFutureSelf
-  environment: AssessLifeEnvironment
-  explore: AssessLifeExplore
-  forgive: ListEntries
-  gratitude: ListEntries
-  imagine: AssessLifeImagine
+  dearFutureSelfAdvice?: string
+  dearFutureSelfPrediction?: string
+  dearFutureSelfAnythingElse?: string
+  environmentPast?: string[]
+  environmentFuture?: string[]
+  explorePast?: string[]
+  exploreFuture?: string[]
+  forgive?: string[]
+  gratitude?: string[]
+  imagineFuture?: string
+  imagineDie?: string
   interval: AssessLifeInterval
-  learn: Learn
-  priorities: string[]
-  proud: ListEntries
-  timeManagement: TimeManagement
-  wheelOfLife: WheelOfLife
+  learnPast?: string[]
+  learnFuture?: string[]
+  priorities?: string[]
+  proud?: string[]
+  timeManagementPast?: string[]
+  timeManagementFutureMoreTime?: string[]
+  timeManagementFutureLessTime?: string[]
+  wheelOfLife?: WheelOfLife
   createdAt: Date
   updatedAt: Date
 }
@@ -80,93 +281,6 @@ export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): As
     interval: params.interval ?? 'weekly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),
-    dearFutureSelf: createAssessLifeDearFutureSelf(params?.dearFutureSelf),
-    environment: createAssessLifeEnvironment(params?.environment),
-    explore: createAssessLifeExplore(params?.explore),
-    forgive: createListEntries(params?.forgive),
-    gratitude: createListEntries(params?.gratitude),
-    imagine: createAssessLifeImagine(params?.imagine),
-    learn: createLearn(params?.learn),
-    priorities: params?.priorities ?? [],
-    proud: createListEntries(params?.proud),
-    timeManagement: createTimeManagement(params?.timeManagement),
-    wheelOfLife: createWheelOfLife(params?.wheelOfLife)
-  }
-}
-
-export interface AssessLifeDearFutureSelf {
-  advice: string
-  predictions: string
-  anythingElse: string
-}
-
-export function createAssessLifeDearFutureSelf(params?: Partial<AssessLifeDearFutureSelf>): AssessLifeDearFutureSelf {
-  return {
-    advice: params?.advice ?? '',
-    predictions: params?.predictions ?? '',
-    anythingElse: params?.anythingElse ?? ''
-  }
-}
-
-export interface AssessLifeImagine {
-  future: string
-  die: string
-}
-
-export function createAssessLifeImagine(params?: Partial<AssessLifeImagine>): AssessLifeImagine {
-  return {
-    future: params?.future ?? '',
-    die: params?.die ?? ''
-  }
-}
-
-export interface AssessLifeEnvironment {
-  past: ListEntries
-  future: ListEntries
-}
-
-export function createAssessLifeEnvironment(params?: Partial<AssessLifeEnvironment>): AssessLifeEnvironment {
-  return {
-    past: createListEntries(params?.past),
-    future: createListEntries(params?.future)
-  }
-}
-
-export interface AssessLifeExplore {
-  past: ListEntries
-  future: ListEntries
-}
-
-export function createAssessLifeExplore(params?: Partial<AssessLifeExplore>): AssessLifeExplore {
-  return {
-    past: createListEntries(params?.past),
-    future: createListEntries(params?.future)
-  }
-}
-
-export interface Learn {
-  past: ListEntries
-  future: ListEntries
-}
-
-export function createLearn(params?: Partial<Learn>): Learn {
-  return {
-    past: createListEntries(params?.past),
-    future: createListEntries(params?.future)
-  }
-}
-
-export interface TimeManagement {
-  past: ListEntries
-  futureMoreTime: ListEntries
-  futureLessTime: ListEntries
-}
-
-export function createTimeManagement(params?: Partial<TimeManagement>): TimeManagement {
-  return {
-    past: createListEntries(params?.past),
-    futureMoreTime: createListEntries(params?.futureMoreTime),
-    futureLessTime: createListEntries(params?.futureLessTime)
   }
 }
 

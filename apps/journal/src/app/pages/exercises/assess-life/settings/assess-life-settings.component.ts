@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule, PopoverController } from '@ionic/angular'
-import { AuthService } from '@strive/auth/auth.service'
-import { AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
-import { AssessLifeIntervalWithNever, createAssessLifeSettings, WeekdayWithNever } from '@strive/model'
-import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
+import { debounceTime } from 'rxjs'
+
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+
+import { AuthService } from '@strive/auth/auth.service'
+import { AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { Setting, assessLifeQuestions, assessLifeSettings, createAssessLifeSettings } from '@strive/model'
+import { AssessLifeMetaSettingsForm, AssessLifeSettingsForm } from '@strive/exercises/assess-life/forms/assess-life-settings.form'
 
 @Component({
   standalone: true,
@@ -30,21 +34,57 @@ export class AssessLifeSettingsComponent implements OnInit {
   isMobile$ = this.screensize.isMobile$
   loading = signal<boolean>(true)
 
-  form = new FormGroup({
-    preferredDay: new FormControl<WeekdayWithNever>('sunday', { nonNullable: true }),
-    preferredTime: new FormControl<string>('19:00', { nonNullable: true }),
-    dearFutureSelf: new FormControl<AssessLifeIntervalWithNever>('yearly', { nonNullable: true }),
-    environment: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
-    explore: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
-    forgive: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true }),
-    gratitude: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
-    imagine: new FormControl<AssessLifeIntervalWithNever>('yearly', { nonNullable: true }),
-    learn: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
-    prioritizeGoals: new FormControl<AssessLifeIntervalWithNever>('monthly', { nonNullable: true }),
-    proud: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
-    timeManagement: new FormControl<AssessLifeIntervalWithNever>('weekly', { nonNullable: true }),
-    wheelOfLife: new FormControl<AssessLifeIntervalWithNever>('quarterly', { nonNullable: true }),
-  })
+  metaSettingsForm = new AssessLifeMetaSettingsForm(assessLifeQuestions)
+  form = new AssessLifeSettingsForm(assessLifeSettings)
+
+  settings: Record<Setting, { title: string, description: string }> = {
+    dearFutureSelf: {
+      title: 'Dear Future Self',
+      description: 'Write a message/advice/predictions to your future self',
+    },
+    environment: {
+      title: 'Environment',
+      description: 'How did you contribute to the environment?',
+    },
+    explore: {
+      title: 'Explore',
+      description: 'What do you want to explore?',
+    },
+    forgive: {
+      title: 'Forgive / Letting go',
+      description: 'What do you want to forgive or let go of?'
+    },
+    gratitude: {
+      title: 'Gratitude',
+      description: 'What are you grateful for?'
+    },
+    imagine: {
+      title: 'Imagine',
+      description: 'Imagine your life in 5 years'
+    },
+    learn: {
+      title: 'Learn',
+      description: 'What do you want to learn?'
+    },
+    pride: {
+      title: 'Pride',
+      description: 'What are you proud of?'
+    },
+    prioritizeGoals: {
+      title: 'Prioritize Goals',
+      description: 'Order your goals by priority'
+    },
+    timeManagement: {
+      title: 'Time Management',
+      description: 'What did you spend your time on?'
+    },
+    wheelOfLife: {
+      title: 'Wheel of Life',
+      description: 'Rate how you feel'
+    }
+  }
+
+  get settingKeys() { return Object.keys(this.metaSettingsForm.controls) }
 
   constructor(
     private auth: AuthService,
@@ -53,17 +93,39 @@ export class AssessLifeSettingsComponent implements OnInit {
     private screensize: ScreensizeService,
     private service: AssessLifeSettingsService
   ) {
-    this.form.valueChanges.subscribe(value => {
+
+    this.form.valueChanges.pipe(
+      debounceTime(100),
+    ).subscribe(() => {
       if (!this.auth.uid) return
-      const settings = createAssessLifeSettings(value)
+
+      const raw = this.form.getRawValue()
+      const settings = createAssessLifeSettings(raw)
       this.service.save(this.auth.uid, settings)
+    })
+
+    this.metaSettingsForm.valueChanges.subscribe(values => {
+      for (const [setting, value] of Object.entries(values)) {
+        const questions = assessLifeQuestions.filter(question => question.setting === setting)
+        for (const question of questions) {
+          const controls = this.form.questions.controls.filter(ctrl => ctrl.setting.value === question.setting)
+
+          for (const control of controls) {
+            if (control.interval.value === value) continue
+            control.interval.setValue(value)
+          }
+        }
+      }
     })
   }
 
   async ngOnInit() {
     const uid = await this.auth.getUID()
     const settings = await this.service.getSettings(uid)
-    if (settings) this.form.patchValue(settings)
+    if (settings) {
+      this.form.patchValue(settings)
+      this.metaSettingsForm.patchAllValue(settings.questions)
+    }
     this.loading.set(false)
   }
 

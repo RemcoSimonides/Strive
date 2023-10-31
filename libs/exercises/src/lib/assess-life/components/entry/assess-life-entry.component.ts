@@ -1,121 +1,113 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
 import { Location } from '@angular/common'
+import { FormArray, FormControl } from '@angular/forms'
 import { AlertController, ModalController } from '@ionic/angular'
 
-import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, combineLatest, firstValueFrom, map, of, shareReplay, switchMap, tap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
+import { AssessLifeInterval, Setting, Step, createAssessLifeEntry, getInterval } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
-import { AssessLifeInterval, AssessLifeSettings, createAssessLifeEntry, getInterval } from '@strive/model'
 
 import { AssessLifeForm } from '../../forms/assess-life.form'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '../../assess-life.service'
-
-type Section = 'intro'
-  | 'previousIntention'
-  | 'listQuestionsPast'
-  | 'wheelOfLife'
-  | 'forgive'
-  | 'listQuestionsFuture'
-  | 'prioritizeGoals'
-  | 'imagine'
-  | 'dearFutureSelf'
-  | 'outro'
+import { WheelOfLifeForm } from '../wheel-of-life/wheel-of-life.form'
 
 const allSteps: {
-  setting: keyof Omit<AssessLifeSettings, "id" | "createdAt" | "updatedAt"> | undefined,
+  setting: Setting | undefined,
   title: string,
-  section: Section}[] = [
+  step: Step
+}[] = [
   {
     setting: undefined,
     title: '',
-    section: 'intro'
+    step: 'intro'
   },
   {
     setting: undefined,
     title: 'Last {interval} you wrote...',
-    section: 'previousIntention'
+    step: 'previousIntention'
   },
   {
     setting: 'timeManagement',
     title: 'The past {interval}',
-    section: 'listQuestionsPast'
+    step: 'listQuestionsPast'
   },
   {
-    setting: 'proud',
+    setting: 'pride',
     title: 'The past {interval}',
-    section: 'listQuestionsPast'
+    step: 'listQuestionsPast'
   },
   {
     setting: 'gratitude',
     title: 'The past {interval}',
-    section: 'listQuestionsPast'
+    step: 'listQuestionsPast'
   },
   {
     setting: 'learn',
     title: 'The past {interval}',
-    section: 'listQuestionsPast'
+    step: 'listQuestionsPast'
   },
   {
     setting: 'environment',
     title: 'The past {interval}',
-    section: 'listQuestionsPast'
+    step: 'listQuestionsPast'
   },
   {
     setting: 'explore',
     title: 'The past {interval}',
-    section: 'listQuestionsPast'
+    step: 'listQuestionsPast'
   },
   {
     setting: 'wheelOfLife',
     title: 'How do you feel now?',
-    section: 'wheelOfLife'
+    step: 'wheelOfLife'
   },
   {
     setting: 'forgive',
     title: 'Forgive and let go',
-    section: 'forgive'
+    step: 'forgive'
   },
   {
     setting: 'timeManagement',
     title: 'The upcoming {interval}',
-    section: 'listQuestionsFuture'
+    step: 'listQuestionsFuture'
   },
   {
     setting: 'learn',
     title: 'The upcoming {interval}',
-    section: 'listQuestionsFuture'
+    step: 'listQuestionsFuture'
   },
   {
     setting: 'environment',
     title: 'The upcoming {interval}',
-    section: 'listQuestionsFuture'
+    step: 'listQuestionsFuture'
   },
   {
     setting: 'explore',
     title: 'The upcoming {interval}',
-    section: 'listQuestionsFuture'
+    step: 'listQuestionsFuture'
   },
   {
     setting: 'prioritizeGoals',
     title: 'Order goals by priority',
-    section: 'prioritizeGoals'
+    step: 'prioritizeGoals'
   },
   {
     setting: 'imagine',
     title: 'Imagine',
-    section: 'imagine'
+    step: 'imagine'
   },
   {
     setting: 'dearFutureSelf',
     title: 'Dear Future Self',
-    section: 'dearFutureSelf'
+    step: 'dearFutureSelf'
   },
   {
     setting: undefined,
     title: '',
-    section: 'outro'
+    step: 'outro'
   }
 ]
 
@@ -129,11 +121,11 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
   animatingSection = signal<undefined | 'visible' | 'invisible'>('visible')
   title = signal<string>('Get Ready')
-  section = signal<Section>('intro')
+  step = signal<Step>('intro')
 
   form = new AssessLifeForm()
 
-  steps = signal<{ section: Section, title: string }[]>([])
+  steps = signal<{ step: Step, title: string }[]>([])
   stepIndex = signal<number>(0)
   stepping$ = new BehaviorSubject<boolean>(false)
   progress = computed(() => this.stepIndex() / (this.steps().length - 1))
@@ -158,14 +150,16 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     tap(([settings, previousEntry]) => {
       if (settings) {
         const activatedSteps = allSteps.filter(step => {
-          if (step.setting && settings[step.setting] !== this.interval) return false
-          if (step.section === 'previousIntention' && !previousEntry) return false
-          return true
+          if (step.step === 'previousIntention') return !!previousEntry
+          if (step.setting === undefined) return true
+
+          const questions = settings.questions.filter(question => question.step === step.step)
+          return questions.some(question => question.interval === this.interval)
         })
         const squashedSteps = activatedSteps.reduce((acc, step) => {
           if (acc.length === 0) return [step]
           const lastStep = acc[acc.length - 1]
-          return lastStep.section === step.section ? acc : [...acc, step]
+          return lastStep.step === step.step ? acc : [...acc, step]
         }, [] as typeof activatedSteps)
 
         this.steps.set(squashedSteps)
@@ -176,6 +170,11 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
   @Input() entry = createAssessLifeEntry()
   @Input() todos: AssessLifeInterval[] = []
+
+  questions$ = this.settings$.pipe(
+    map(settings => settings ? settings.questions : []),
+    map(questions => questions.filter(question => question.interval === this.interval))
+  )
 
   get interval() { return this.entry.interval }
 
@@ -190,11 +189,26 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     super(location, modalCtrl)
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const questions = await firstValueFrom(this.questions$)
+
+    for (const question of questions) {
+      if (question.type === 'textarea') {
+        this.form.addControl(question.key, new FormControl<string>('', { nonNullable: true }))
+      } else if (question.type === 'formlist') {
+        this.form.addControl(question.key, new FormArray<FormControl<string>>([]))
+      } else if (question.type === 'prioritizeGoals') {
+        this.form.addControl(question.key, new FormArray<FormControl<string>>([]))
+      } else if (question.type === 'wheelOfLife') {
+        this.form.addControl(question.key, new WheelOfLifeForm())
+      } else {
+        throw new Error(`Unknown question type: ${question.type}`)
+      }
+    }
     this.form.patchValue(this.entry, { emitEvent: false })
   }
 
-  async step(direction: 'next' | 'previous') {
+  async doStep(direction: 'next' | 'previous') {
     this.stepping$.next(true) // input value is being added to the form
     const steps = this.steps()
 
@@ -216,7 +230,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     const nextIndex = this.stepIndex() + delta
     const nextStep = steps[nextIndex]
 
-    this.section.set(nextStep.section)
+    this.step.set(nextStep.step)
 
     const title = nextStep.title.replace('{interval}', getInterval(this.interval))
     this.title.set(title)
