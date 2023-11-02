@@ -97,15 +97,15 @@ async function savePriorities(uid: string, entry: AssessLifeEntry) {
 }
 
 async function saveGratitude(uid: string, entry: AssessLifeEntry) {
-  const items = entry.gratitude.entries.slice(0, 3)
-  if (!items.length) return
-
+  if (!entry.gratitude || !entry.gratitude.length) return
+  const items = entry.gratitude.slice(0, 3)
   const date = formatISO(new Date(), { representation: 'date' })
   const snap = await getDocumentSnap(`Users/${uid}/Exercises/DailyGratitude/Entries/${date}`)
   if (!snap.exists) return snap.ref.set({ items, creeatedAt: entry.createdAt, updatedAt: entry.updatedAt, id: date })
 }
 
 async function saveWheelOfLife(uid: string, entry: AssessLifeEntry) {
+  if (!entry.wheelOfLife) return
   if (Object.values(entry.wheelOfLife).every(val => val === '')) return
 
   const date = formatISO(new Date(), { representation: 'date' })
@@ -114,7 +114,7 @@ async function saveWheelOfLife(uid: string, entry: AssessLifeEntry) {
 }
 
 async function saveDearFutureSelf(uid: string, entry: AssessLifeEntry) {
-  if (Object.values(entry.dearFutureSelf).every(val => val === '')) return
+  if (!entry.dearFutureSelfAdvice && !entry.dearFutureSelfPrediction && !entry.dearFutureSelfAnythingElse) return
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal) return
@@ -124,22 +124,21 @@ async function saveDearFutureSelf(uid: string, entry: AssessLifeEntry) {
     : entry.interval === 'quarterly' ? addQuarters(entry.createdAt, 1)
     : addYears(entry.createdAt, 1)
 
-  const { advice, predictions, anythingElse } = entry.dearFutureSelf
   const interval = getInterval(entry.interval)
 
   let description = ''
-  if (advice) {
-    const decrypted = AES.decrypt(advice, personal.key).toString(enc.Utf8)
+  if (entry.dearFutureSelfAdvice) {
+    const decrypted = AES.decrypt(entry.dearFutureSelfAdvice, personal.key).toString(enc.Utf8)
     description += `<b>What advice would you give yourself in one ${interval}?</b><br/><br/>${decrypted}`
   }
-  if (predictions) {
+  if (entry.dearFutureSelfPrediction) {
     if (description) description += '<br/><br/>'
-    const decrypted = AES.decrypt(predictions, personal.key).toString(enc.Utf8)
+    const decrypted = AES.decrypt(entry.dearFutureSelfPrediction, personal.key).toString(enc.Utf8)
     description += `<b>What predictions would you make what will happen upcoming ${interval}?</b><br/><br/>${decrypted}`
   }
-  if (anythingElse) {
+  if (entry.dearFutureSelfAnythingElse) {
     if (description) description += '<br/><br/>'
-    const decrypted = AES.decrypt(anythingElse, personal.key).toString(enc.Utf8)
+    const decrypted = AES.decrypt(entry.dearFutureSelfAnythingElse, personal.key).toString(enc.Utf8)
     description += `<b>Anything else you would like to mention?</b><br/><br/>${decrypted}`
   }
 
@@ -155,22 +154,21 @@ async function saveDearFutureSelf(uid: string, entry: AssessLifeEntry) {
 }
 
 async function saveImagine(uid: string, entry: AssessLifeEntry) {
-  if (Object.values(entry.imagine).every(val => val === '')) return
+  if (!entry.imagineDie && !entry.imagineFuture) return
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal) return
 
   const deliveryDate = addYears(entry.createdAt, 5)
 
-  const { die, future } = entry.imagine
   let description = ''
-  if (future) {
-    const decrypted = AES.decrypt(future, personal.key).toString(enc.Utf8)
+  if (entry.imagineFuture) {
+    const decrypted = AES.decrypt(entry.imagineFuture, personal.key).toString(enc.Utf8)
     description += `<b>Imagine yourself 5 years in the future. What would your life look like?</b><br/><br/>${decrypted}`
   }
-  if (die) {
+  if (entry.imagineDie) {
     if (description) description += '<br/><br/>'
-    const decrypted = AES.decrypt(die, personal.key).toString(enc.Utf8)
+    const decrypted = AES.decrypt(entry.imagineDie, personal.key).toString(enc.Utf8)
     description += `<b>What would you do in the next 5 years if you were to die right after those years?</b><br/><br/>${decrypted}`
   }
 
