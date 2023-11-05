@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms'
+import { FormArray, FormControl, FormGroup } from '@angular/forms'
 import { AssessLifeEntry, createAssessLifeEntry } from '@strive/model'
 
 function createAssessLifeFormControl(params?: Partial<AssessLifeEntry>) {
@@ -17,4 +17,27 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   }
 
   get id() { return this.get('id')! as FormControl }
+
+  override patchValue(entry: AssessLifeEntry, options?: { onlySelf?: boolean, emitEvent?: boolean }) {
+    const excludedKeys = ['updatedAt', 'createdAt', 'interval']
+
+    Object.entries(entry).forEach(([key, value]) => {
+      if (excludedKeys.includes(key)) return
+
+      if (Array.isArray(value)) {
+        const control = this.get(key) as FormArray<FormControl<string>> | undefined
+        if (!control) throw new Error('Could not find form array control with key ' + key)
+        control.clear()
+        value.forEach(v => control.push(new FormControl(v, { nonNullable: true })))
+      } else if (typeof value === 'object') {
+        const control = this.get(key) as FormGroup | undefined
+        if (!control) throw new Error('Could not find form group control with key ' + key)
+        control.patchValue(value, options)
+      } else if (typeof value === 'string') {
+        const control = this.get(key) as FormControl<string> | undefined
+        if (!control) throw new Error('Could not find form control with key ' + key)
+        control.patchValue(value, options)
+      }
+    })
+  }
 }

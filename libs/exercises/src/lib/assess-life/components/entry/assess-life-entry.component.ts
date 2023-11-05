@@ -7,109 +7,37 @@ import { BehaviorSubject, combineLatest, firstValueFrom, map, of, shareReplay, s
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
-import { AssessLifeInterval, Setting, Step, createAssessLifeEntry, getInterval } from '@strive/model'
+import { AssessLifeInterval, AssessLifeTense, Step, createAssessLifeEntry, getInterval } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { AssessLifeForm } from '../../forms/assess-life.form'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '../../assess-life.service'
 import { WheelOfLifeForm } from '../wheel-of-life/wheel-of-life.form'
 
-const allSteps: {
-  setting: Setting | undefined,
-  title: string,
+interface EntryStep {
   step: Step
-}[] = [
-  {
-    setting: undefined,
-    title: '',
-    step: 'intro'
-  },
-  {
-    setting: undefined,
-    title: 'Last {interval} you wrote...',
-    step: 'previousIntention'
-  },
-  {
-    setting: 'timeManagement',
-    title: 'The past {interval}',
-    step: 'listQuestionsPast'
-  },
-  {
-    setting: 'pride',
-    title: 'The past {interval}',
-    step: 'listQuestionsPast'
-  },
-  {
-    setting: 'gratitude',
-    title: 'The past {interval}',
-    step: 'listQuestionsPast'
-  },
-  {
-    setting: 'learn',
-    title: 'The past {interval}',
-    step: 'listQuestionsPast'
-  },
-  {
-    setting: 'environment',
-    title: 'The past {interval}',
-    step: 'listQuestionsPast'
-  },
-  {
-    setting: 'explore',
-    title: 'The past {interval}',
-    step: 'listQuestionsPast'
-  },
-  {
-    setting: 'wheelOfLife',
-    title: 'How do you feel now?',
-    step: 'wheelOfLife'
-  },
-  {
-    setting: 'forgive',
-    title: 'Forgive and let go',
-    step: 'forgive'
-  },
-  {
-    setting: 'timeManagement',
-    title: 'The upcoming {interval}',
-    step: 'listQuestionsFuture'
-  },
-  {
-    setting: 'learn',
-    title: 'The upcoming {interval}',
-    step: 'listQuestionsFuture'
-  },
-  {
-    setting: 'environment',
-    title: 'The upcoming {interval}',
-    step: 'listQuestionsFuture'
-  },
-  {
-    setting: 'explore',
-    title: 'The upcoming {interval}',
-    step: 'listQuestionsFuture'
-  },
-  {
-    setting: 'prioritizeGoals',
-    title: 'Order goals by priority',
-    step: 'prioritizeGoals'
-  },
-  {
-    setting: 'imagine',
-    title: 'Imagine',
-    step: 'imagine'
-  },
-  {
-    setting: 'dearFutureSelf',
-    title: 'Dear Future Self',
-    step: 'dearFutureSelf'
-  },
-  {
-    setting: undefined,
-    title: '',
-    step: 'outro'
+  tense: AssessLifeTense | ''
+}
+
+function getTitle({ step, tense }: EntryStep): string {
+  switch (step) {
+    case 'intro':
+    case 'outro':
+      return ''
+    case 'dearFutureSelf':
+      return 'Dear Future Self'
+    case 'forgive':
+      return 'Forgive and let go'
+    case 'imagine':
+      return 'Imagine'
+    case 'prioritizeGoals':
+      return 'Order goals by priority'
+    case 'wheelOfLife':
+      return 'How do you feel now?'
+    default:
+      return tense === 'past' ? 'The past {interval}' : 'The upcoming {interval}'
   }
-]
+}
 
 @Component({
   selector: '[entry] strive-assess-life-entry',
@@ -125,7 +53,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
   form = new AssessLifeForm()
 
-  steps = signal<{ step: Step, title: string }[]>([])
+  steps = signal<EntryStep[]>([])
   stepIndex = signal<number>(0)
   stepping$ = new BehaviorSubject<boolean>(false)
   progress = computed(() => this.stepIndex() / (this.steps().length - 1))
@@ -149,20 +77,26 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true }),
     tap(([settings, previousEntry]) => {
       if (settings) {
-        const activatedSteps = allSteps.filter(step => {
-          if (step.step === 'previousIntention') return !!previousEntry
-          if (step.setting === undefined) return true
+        const questions = settings.questions.filter(({ interval }) => interval === this.interval)
+        const activatedSteps: EntryStep[] = [{ step: 'intro', tense: '' }]
+        if (previousEntry) activatedSteps.push({ step: 'previousIntention', tense: '' })
 
-          const questions = settings.questions.filter(question => question.step === step.step)
-          return questions.some(question => question.interval === this.interval)
-        })
-        const squashedSteps = activatedSteps.reduce((acc, step) => {
+        const past = questions.filter(({ tense }) => tense === 'past')
+        const pastSteps = past.map(({ step, tense }) => ({ step, tense }))
+        activatedSteps.push(...pastSteps)
+
+        const future = questions.filter(({ tense }) => tense === 'future')
+        const futureSteps = future.map(({ step, tense }) => ({ step, tense }))
+        activatedSteps.push(...futureSteps)
+        activatedSteps.push({ step: 'outro', tense: '' })
+
+        const uniqueSteps = activatedSteps.reduce((acc, step) => {
           if (acc.length === 0) return [step]
-          const lastStep = acc[acc.length - 1]
-          return lastStep.step === step.step ? acc : [...acc, step]
-        }, [] as typeof activatedSteps)
+          const res = acc.find(s => s.step === step.step && s.tense === step.tense)
+          return res ? acc : [...acc, step]
+        }, [] as EntryStep[])
 
-        this.steps.set(squashedSteps)
+        this.steps.set(uniqueSteps)
       }
     }),
     map(([settings]) => settings)
@@ -232,7 +166,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
     this.step.set(nextStep.step)
 
-    const title = nextStep.title.replace('{interval}', getInterval(this.interval))
+    const title = getTitle(nextStep).replace('{interval}', getInterval(this.interval))
     this.title.set(title)
 
     this.stepIndex.set(nextIndex)

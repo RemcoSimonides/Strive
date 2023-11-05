@@ -1,0 +1,67 @@
+<strive-header-modal (dismiss)="dismiss()" color="primary">
+  <ion-title>Custom Question</ion-title>
+</strive-header-modal>
+
+<section class="ion-padding">
+  <form [formGroup]="form">
+
+    <ion-list mode="md">
+      <ion-item lines="none">
+        <ion-textarea
+          label="Question"
+          labelPlacement="stacked"
+          formControlName="question"
+          type="text"
+          autocapitalize="sentences"
+          autofocus
+          autoGrow
+          rows="2"
+        />
+      </ion-item>
+    </ion-list>
+
+    <ion-list mode="md">
+      <ion-item lines="full">
+        <ion-select formControlName="interval" interface="popover" label="How often would you like to recieve this question?" labelPlacement="stacked">
+          <ion-select-option value="weekly">Weekly</ion-select-option>
+          <ion-select-option value="monthly">Monthly</ion-select-option>
+          <ion-select-option value="quarterly">Quarterly</ion-select-option>
+          <ion-select-option value="yearly">Yearly</ion-select-option>
+          <ion-select-option value="never">Turn off for now</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-select formControlName="tense" interface="popover" label="Is the question about the past or future?" labelPlacement="stacked">
+          <ion-select-option value="past">Past</ion-select-option>
+          <ion-select-option value="future">Future</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-select formControlName="type" interface="popover" label="What type of answer would you give?" labelPlacement="stacked">
+          <ion-select-option value="textarea">Text</ion-select-option>
+          <ion-select-option value="formlist">Multiple Answers</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-select formControlName="category" interface="popover" label="What category does this question fit in?" labelPlacement="stacked">
+          <ion-select-option value="career">Career</ion-select-option>
+          <ion-select-option value="creative">Creative</ion-select-option>
+          <ion-select-option value="education">Education</ion-select-option>
+          <ion-select-option value="environment">Environment</ion-select-option>
+          <ion-select-option value="financial">Financial</ion-select-option>
+          <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
+          <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
+          <ion-select-option value="relationships">Relationships</ion-select-option>
+          <ion-select-option value="spiritual">Spiritual</ion-select-option>
+          <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
+          <ion-select-option value="other">Other</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-list>
+  </form>
+  <ion-button expand="block" class="primary" (click)="submit()">Save</ion-button>
+</section>

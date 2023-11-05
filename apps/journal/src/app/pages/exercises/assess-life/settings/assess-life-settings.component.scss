@@ -35,3 +35,18 @@ section {
     color: var(--ion-color-medium);
   }
 }
+
+span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.add-question {
+  text-align: center;
+  color: var(--ion-color-primary);
+  --color-hover: var(--ion-color-primary);
+
+  ion-icon {
+    color: var(--ion-color-primary)
+  }
+}

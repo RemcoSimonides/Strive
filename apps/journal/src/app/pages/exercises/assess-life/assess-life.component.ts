@@ -65,7 +65,8 @@ export class AssessLifeComponent {
 
   private dbEntries$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
-    switchMap(entries => entries.length ? this.service.decrypt(entries) : of([]))
+    switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
+    shareReplay({ bufferSize: 1, refCount: true })
   )
 
   filterForm = new FormGroup({

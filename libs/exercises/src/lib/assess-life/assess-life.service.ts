@@ -86,42 +86,28 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
 
   async decrypt(entries: AssessLifeEntry[]): Promise<AssessLifeEntry[]> {
     const encryptionKey = await this.personalService.getEncryptionKey()
-
-    entries = entries.map(entry => {
-      Object.keys(entry).forEach(key => {
-        const typedKey = key as keyof AssessLifeEntry
-        const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
-        if (excludedProperties.includes(key)) return
-        entry[typedKey] = _decrypt(entry[typedKey], encryptionKey)
-      })
-      return entry
-    })
-
-    return entries
+    return entries.map(entry => _decrypt(entry, encryptionKey))
   }
 
   private async encrypt(entry: AssessLifeEntry): Promise<AssessLifeEntry> {
     const encryptionKey = await this.personalService.getEncryptionKey()
-
-    Object.keys(entry).forEach(key => {
-      const typedKey = key as keyof AssessLifeEntry
-      const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
-      if (excludedProperties.includes(key)) return
-      entry[typedKey] = _encrypt(entry[typedKey], encryptionKey)
-    })
-
-    return entry
+    return _encrypt(entry, encryptionKey)
   }
 }
 
 function _decrypt(object: any, decryptKey: string) {
+  const decrypt = (value: string) => value ? AES.decrypt(value, decryptKey).toString(enc.Utf8) : ''
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
+
   Object.keys(object).forEach(key => {
-    if (typeof object[key] === 'object') {
+    if (excludedProperties.includes(key)) return
+
+    if (Array.isArray(object[key])) {
+      object[key] = object[key].map(decrypt)
+    } else if (typeof object[key] === 'object') {
       _decrypt(object[key], decryptKey)
-    } else if (Array.isArray(object[key])) {
-      object[key] = object[key].map((v: string) =>  +AES.decrypt(v.toString(), decryptKey).toString(enc.Utf8))
     } else if (typeof object[key] === 'string') {
-      object[key] = AES.decrypt(object[key], decryptKey).toString(enc.Utf8)
+      object[key] = decrypt(object[key])
     }
   })
 
@@ -130,12 +116,15 @@ function _decrypt(object: any, decryptKey: string) {
 
 function _encrypt(object: any, encryptKey: string) {
   const encrypt = (value: string) => value ? AES.encrypt(value, encryptKey).toString() : ''
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
 
   Object.keys(object).forEach(key => {
-    if (typeof object[key] === 'object') {
-      _encrypt(object[key], encryptKey)
-    } else if (Array.isArray(object[key])) {
+    if (excludedProperties.includes(key)) return
+
+    if (Array.isArray(object[key])) {
       object[key] = object[key].map(encrypt)
+    } else if (typeof object[key] === 'object') {
+      _encrypt(object[key], encryptKey)
     } else if (typeof object[key] === 'string') {
       object[key] = encrypt(object[key])
     }

@@ -28,6 +28,19 @@ export class PrioritizeGoalsComponent {
     switchMap(profile => profile ? this.goalService.getStakeholderGoals(profile.uid, 'isAchiever', false) : of([])),
     map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal.status === 'pending')),
     map(stakeholders => stakeholders.sort((first, second) => {
+      if (this.form && this.form.value.length) {
+        const firstIndex = this.form.value.findIndex(id => id === first.goalId)
+        const secondIndex = this.form.value.findIndex(id => id === second.goalId)
+
+        if (firstIndex !== -1 && secondIndex !== -1) {
+          return firstIndex > secondIndex ? 1 : -1
+        } else if (firstIndex !== -1) {
+          return -1
+        } else if (secondIndex !== -1) {
+          return 1
+        }
+      }
+
       if (first.priority === second.priority) {
         if (!first.createdAt || !second.createdAt) return 0
         return first.createdAt > second.createdAt ? -1 : 1

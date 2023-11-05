@@ -3,6 +3,7 @@ export type WeekdayWithNever = Weekday | 'never'
 export type AssessLifeInterval = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 export type AssessLifeType = 'formlist' | 'textarea' | 'prioritizeGoals' | 'wheelOfLife'
+export type AssessLifeTense = 'future' | 'past'
 
 export function getInterval(value: AssessLifeInterval): string {
   switch (value) {
@@ -14,6 +15,12 @@ export function getInterval(value: AssessLifeInterval): string {
   }
 }
 
+
+/**
+ * These are the settings that affect the questions provided by Strive Journal
+ * Change the interval of the setting, changes the intervals of all the questions connected to this setting.
+ * For custom question, the interval can be adjusted manually.
+ */
 export const settings = [
   'dearFutureSelf',
   'environment',
@@ -26,31 +33,51 @@ export const settings = [
   'prioritizeGoals',
   'timeManagement',
   'wheelOfLife',
+  'custom'
 ] as const
 export type Setting = typeof settings[number]
+
+export const assessLifeCategories = [
+  'career',
+  'creative',
+  'education',
+  'environment',
+  'financial',
+  'healthAndFitness',
+  'personalDevelopment',
+  'relationships',
+  'spiritual',
+  'travelAndAdventures',
+  'other'
+] as const
+export type AssessLifeCategory = typeof assessLifeCategories[number]
 
 export const assessLifeSteps = [
   'intro',
   'previousIntention',
-  'listQuestionsPast',
+  'listQuestions',
   'wheelOfLife',
-  'forgive',
-  'listQuestionsFuture',
   'prioritizeGoals',
-  'imagine',
   'dearFutureSelf',
-  'custom',
-  'outro'
+  'imagine',
+  'forgive',
+  'outro',
 ] as const
-export type Step = typeof assessLifeSteps[number]
+
+export const allSteps = [
+  ...assessLifeSteps,
+  ...assessLifeCategories
+] as const
+export type Step = typeof allSteps[number]
 
 export interface AssessLifeQuestion {
   key: string
   step: Step
   question: string
-  type: AssessLifeType,
-  interval: AssessLifeIntervalWithNever,
+  type: AssessLifeType
+  interval: AssessLifeIntervalWithNever
   setting: Setting
+  tense: AssessLifeTense
 }
 
 export const assessLifeQuestions: AssessLifeQuestion[] = [
@@ -60,7 +87,8 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: 'What advice would you give yourself in one {interval}?',
     type: 'textarea',
     interval: 'yearly',
-    setting: 'dearFutureSelf'
+    setting: 'dearFutureSelf',
+    tense: 'future'
   },
   {
     key: 'dearFutureSelfPrediction',
@@ -68,7 +96,8 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: 'What predictions do you make what will happen upcoming {interval}?',
     type: 'textarea',
     interval: 'yearly',
-    setting: 'dearFutureSelf'
+    setting: 'dearFutureSelf',
+    tense: 'future'
   },
   {
     key: 'dearFutureSelfAnythingElse',
@@ -76,39 +105,44 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: 'Anything else you would like to mention?',
     type: 'textarea',
     interval: 'yearly',
-    setting: 'dearFutureSelf'
+    setting: 'dearFutureSelf',
+    tense: 'future'
   },
   {
     key: 'environmentPast',
-    step: 'listQuestionsPast',
+    step: 'listQuestions',
     question: 'What did you do past {interval} to leave the world in a better shape than you found it?',
     type: 'formlist',
     interval: 'monthly',
-    setting: 'environment'
+    setting: 'environment',
+    tense: 'past'
   },
   {
     key: 'environmentFuture',
-    step: 'listQuestionsFuture',
+    step: 'listQuestions',
     question: 'What do you want to explore upcoming {interval}?',
     type: 'formlist',
     interval: 'monthly',
-    setting: 'environment'
+    setting: 'environment',
+    tense: 'future'
   },
   {
     key: 'explorePast',
-    step: 'listQuestionsPast',
+    step: 'listQuestions',
     question: 'What did you explore past {interval}?',
     type: 'formlist',
     interval: 'quarterly',
-    setting: 'explore'
+    setting: 'explore',
+    tense: 'past'
   },
   {
     key: 'exploreFuture',
-    step: 'listQuestionsFuture',
+    step: 'listQuestions',
     question: 'What do you want to explore upcoming {interval}?',
     type: 'formlist',
     interval: 'quarterly',
-    setting: 'explore'
+    setting: 'explore',
+    tense: 'future'
   },
   {
     key: 'forgive',
@@ -116,15 +150,17 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: 'Did anything happen during the past {interval} that needs to be forgiven or let go of?',
     type: 'formlist',
     interval: 'monthly',
-    setting: 'forgive'
+    setting: 'forgive',
+    tense: 'past'
   },
   {
     key: 'gratitude',
-    step: 'listQuestionsPast',
+    step: 'listQuestions',
     question: 'What are you grateful for past {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'gratitude'
+    setting: 'gratitude',
+    tense: 'past'
   },
   {
     key: 'imagineFuture',
@@ -132,7 +168,8 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: 'Imagine yourself 5 years in the future. What would your life look like?',
     type: 'textarea',
     interval: 'yearly',
-    setting: 'imagine'
+    setting: 'imagine',
+    tense: 'future'
   },
   {
     key: 'imagineDie',
@@ -140,23 +177,26 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: 'What would you do in the next 5 years if you were to die right after those years?',
     type: 'textarea',
     interval: 'yearly',
-    setting: 'imagine'
+    setting: 'imagine',
+    tense: 'future'
   },
   {
     key: 'learnFuture',
-    step: 'listQuestionsFuture',
+    step: 'listQuestions',
     question: 'What do you want to learn upcoming {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'learn'
+    setting: 'learn',
+    tense: 'future'
   },
   {
     key: 'learnPast',
-    step: 'listQuestionsPast',
+    step: 'listQuestions',
     question: 'What did you learn past {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'learn'
+    setting: 'learn',
+    tense: 'past'
   },
   {
     key: 'prioritizeGoals',
@@ -164,39 +204,44 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: '',
     type: 'prioritizeGoals',
     interval: 'monthly',
-    setting: 'prioritizeGoals'
+    setting: 'prioritizeGoals',
+    tense: 'future'
   },
   {
     key: 'pride',
-    step: 'listQuestionsPast',
+    step: 'listQuestions',
     question: 'What are you proud of past {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'pride'
+    setting: 'pride',
+    tense: 'past'
   },
   {
     key: 'timeManagementFutureMoreTime',
-    step: 'listQuestionsFuture',
+    step: 'listQuestions',
     question: 'What will you spend more time on upcoming {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'timeManagement'
+    setting: 'timeManagement',
+    tense: 'future'
   },
   {
     key: 'timeManagementFutureLessTime',
-    step: 'listQuestionsFuture',
+    step: 'listQuestions',
     question: 'What will you spend less time on upcoming {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'timeManagement'
+    setting: 'timeManagement',
+    tense: 'future'
   },
   {
     key: 'timeManagementPast',
-    step: 'listQuestionsPast',
+    step: 'listQuestions',
     question: 'What did you spend too much time on past {interval}?',
     type: 'formlist',
     interval: 'weekly',
-    setting: 'timeManagement'
+    setting: 'timeManagement',
+    tense: 'future'
   },
     {
     key: 'wheelOfLife',
@@ -204,7 +249,8 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     question: '',
     type: 'wheelOfLife',
     interval: 'quarterly',
-    setting: 'wheelOfLife'
+    setting: 'wheelOfLife',
+    tense: 'future'
   },
 ]
 
@@ -218,12 +264,13 @@ export const assessLifeSettings: AssessLifeSettings = {
 
 export function createAssessLifeQuestion(params: Partial<AssessLifeQuestion> = {}): AssessLifeQuestion {
   return {
-    key: params.key ?? 'dearFutureSelfAdvice',
+    key: params.key ?? '',
     step: params.step ?? 'intro',
     question: params.question ?? '',
     type: params.type ?? 'textarea',
     interval: params.interval ?? 'yearly',
-    setting: params.setting ?? 'dearFutureSelf',
+    setting: params.setting ?? 'custom',
+    tense: params.tense ?? 'past'
   }
 }
 
@@ -273,6 +320,7 @@ export interface AssessLifeEntry {
   wheelOfLife?: WheelOfLife
   createdAt: Date
   updatedAt: Date
+  [key: string]: string | string[] | undefined | WheelOfLife | Date // needs to have all possible types
 }
 
 export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): AssessLifeEntry {

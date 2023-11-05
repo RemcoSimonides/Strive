@@ -1,5 +1,5 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms'
-import { AssessLifeIntervalWithNever, AssessLifeQuestion, AssessLifeSettings, AssessLifeType, Setting, Step, WeekdayWithNever, createAssessLifeQuestion, createAssessLifeSettings } from '@strive/model'
+import { AssessLifeIntervalWithNever, AssessLifeQuestion, AssessLifeSettings, AssessLifeTense, AssessLifeType, Setting, Step, WeekdayWithNever, createAssessLifeQuestion, createAssessLifeSettings } from '@strive/model'
 
 function createAssessLifeMetaSettingsFormControl(questions: AssessLifeQuestion[]) {
   const value: Record<string, FormControl<AssessLifeIntervalWithNever>> = {}
@@ -51,13 +51,16 @@ export class AssessLifeSettingsForm extends FormGroup<AssessLifeSettingsFormCont
   get preferredTime() { return this.get('preferredTime')! as FormControl }
   get questions() { return this.get('questions')! as FormArray<AssessLifeQuestionForm>}
 
-  override patchValue(settings: AssessLifeSettings) {
+  override patchValue(settings: AssessLifeSettings, options?: { onlySelf?: boolean, emitEvent?: boolean }) {
     for (const question of settings.questions) {
       const control = this.questions.controls.find(ctrl => ctrl.key.value === question.key)
-      if (!control) continue
-      control.patchValue(question)
+      if (control) {
+        control.patchValue(question, options)
+      } else {
+        this.questions.controls.push(new AssessLifeQuestionForm(question))
+      }
     }
-    super.patchValue(settings)
+    super.patchValue(settings, options)
   }
 }
 
@@ -71,6 +74,7 @@ function createAssessLifeQuestionFormControl(params?: Partial<AssessLifeQuestion
     type: new FormControl<AssessLifeType>(question.type, { nonNullable: true }),
     interval: new FormControl<AssessLifeIntervalWithNever>(question.interval, { nonNullable: true }),
     setting: new FormControl<Setting>(question.setting, { nonNullable: true }),
+    tense: new FormControl<AssessLifeTense>(question.tense, { nonNullable: true })
   }
 }
 
@@ -87,4 +91,5 @@ export class AssessLifeQuestionForm extends FormGroup<AssessLifeQuestionFormCont
   get type() { return this.get('type')! as FormControl }
   get interval() { return this.get('interval')! as FormControl }
   get setting() { return this.get('setting')! as FormControl }
+  get tense() { return this.get('tense')! as FormControl }
 }

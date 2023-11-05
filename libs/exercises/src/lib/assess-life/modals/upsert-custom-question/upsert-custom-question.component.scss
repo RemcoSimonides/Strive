@@ -1,0 +1,31 @@
+section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  overflow: auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+ion-item {
+  --highlight-background: var(--ion-color-primary);
+}
+
+ion-select {
+  width: 100%;
+  padding-left: 0;
+}
+
+.ion-valid {
+  --highlight-color: var(--ion-color-primary);
+}
+
+ion-button {
+  min-height: 36px; // needed when overflowing section
+}

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule, PopoverController } from '@ionic/angular'
+import { IonicModule, ModalController, PopoverController } from '@ionic/angular'
 
-import { debounceTime } from 'rxjs'
+import { firstValueFrom, map, of, shareReplay, switchMap } from 'rxjs'
 
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
@@ -12,8 +12,9 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthService } from '@strive/auth/auth.service'
 import { AssessLifeSettingsService } from '@strive/exercises/assess-life/assess-life.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { Setting, assessLifeQuestions, assessLifeSettings, createAssessLifeSettings } from '@strive/model'
+import { AssessLifeCategory, AssessLifeQuestion, Setting, assessLifeQuestions, assessLifeSettings, createAssessLifeQuestion, createAssessLifeSettings } from '@strive/model'
 import { AssessLifeMetaSettingsForm, AssessLifeSettingsForm } from '@strive/exercises/assess-life/forms/assess-life-settings.form'
+import { AssessLifeCustomQuestionModalComponent } from '@strive/exercises/assess-life/modals/upsert-custom-question/upsert-custom-question.component'
 
 @Component({
   standalone: true,
@@ -35,9 +36,18 @@ export class AssessLifeSettingsComponent implements OnInit {
   loading = signal<boolean>(true)
 
   metaSettingsForm = new AssessLifeMetaSettingsForm(assessLifeQuestions)
-  form = new AssessLifeSettingsForm(assessLifeSettings)
+  form = new AssessLifeSettingsForm()
 
-  settings: Record<Setting, { title: string, description: string }> = {
+  settings$ = this.auth.profile$.pipe(
+    switchMap(profile => profile ? this.service.valueChanges('AssessLife', { uid: profile.uid }) : of(undefined)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
+  customQuestions$ = this.settings$.pipe(
+    map(settings => settings ? settings.questions.filter(({ setting }) => setting === 'custom') : [])
+  )
+
+  settings: Record<Exclude<Setting, 'custom'> , { title: string, description: string }> = {
     dearFutureSelf: {
       title: 'Dear Future Self',
       description: 'Write a message/advice/predictions to your future self',
@@ -84,19 +94,32 @@ export class AssessLifeSettingsComponent implements OnInit {
     }
   }
 
+  steps: Record<AssessLifeCategory, string> = {
+    career: 'Career',
+    creative: 'Creative',
+    education: 'Education',
+    environment: 'Environment',
+    financial: 'Financial',
+    healthAndFitness: 'Health and Fitness',
+    personalDevelopment: 'Personal Development',
+    relationships: 'Relationships',
+    spiritual: 'Spiritual',
+    travelAndAdventures: 'Travel and Adventures',
+    other: 'Other'
+  }
+
   get settingKeys() { return Object.keys(this.metaSettingsForm.controls) }
 
   constructor(
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
+    private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private screensize: ScreensizeService,
     private service: AssessLifeSettingsService
   ) {
 
-    this.form.valueChanges.pipe(
-      debounceTime(100),
-    ).subscribe(() => {
+    this.form.valueChanges.subscribe(() => {
       if (!this.auth.uid) return
 
       const raw = this.form.getRawValue()
@@ -112,19 +135,22 @@ export class AssessLifeSettingsComponent implements OnInit {
 
           for (const control of controls) {
             if (control.interval.value === value) continue
-            control.interval.setValue(value)
+            control.interval.setValue(value, { emitEvent: false})
           }
         }
       }
+      this.form.updateValueAndValidity()
     })
   }
 
   async ngOnInit() {
-    const uid = await this.auth.getUID()
-    const settings = await this.service.getSettings(uid)
-    if (settings) {
-      this.form.patchValue(settings)
-      this.metaSettingsForm.patchAllValue(settings.questions)
+    const settings = await firstValueFrom(this.settings$)
+
+    if (settings && settings.questions.length) {
+      this.form.patchValue(settings, { emitEvent: false })
+      this.metaSettingsForm.patchAllValue(settings.questions.filter(({ setting }) => setting !== 'custom' ))
+    } else {
+      this.form.patchValue(assessLifeSettings, { emitEvent: false })
     }
     this.loading.set(false)
   }
@@ -145,5 +171,29 @@ export class AssessLifeSettingsComponent implements OnInit {
       this.cdr.markForCheck()
     })
     popover.present()
+  }
+
+  async openQuestion(question?: AssessLifeQuestion) {
+    const modal = await this.modalCtrl.create({
+      component: AssessLifeCustomQuestionModalComponent,
+      componentProps: { question }
+    })
+    modal.onDidDismiss().then(async ({ data }) => {
+      if (!data) return
+      const question = createAssessLifeQuestion(data)
+      const settings = await firstValueFrom(this.settings$)
+      if (!settings) throw new Error(`Couldn't get settings`)
+      const uid = this.auth.uid
+      if (!uid) throw new Error(`Can't save question without uid`)
+
+      const index = settings.questions.findIndex(({ key }) => key === question.key)
+      if (index > -1) {
+        settings.questions[index] = question
+      } else {
+        settings.questions.push(question)
+      }
+      this.service.save(uid, settings)
+    })
+    modal.present()
   }
 }

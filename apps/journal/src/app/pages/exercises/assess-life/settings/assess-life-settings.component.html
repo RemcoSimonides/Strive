@@ -55,4 +55,20 @@
       </ion-item>
     </ion-list>
   </form>
+
+    <h2>Custom Questions</h2>
+    <ion-list>
+      <ion-item *ngFor="let question of customQuestions$ | async" button (click)="openQuestion(question)">
+        <ion-label>
+          <section>
+            <span>{{ question.question }}</span>
+            <small>{{ steps[question.step] }} - {{ question.interval | titlecase }}</small>
+          </section>
+        </ion-label>
+      </ion-item>
+      <ion-item button (click)="openQuestion()" lines="none" class="add-question">
+        <ion-label>Add Question</ion-label>
+        <ion-icon slot="end" name="add-outline"/>
+      </ion-item>
+    </ion-list>
 </ng-template>
