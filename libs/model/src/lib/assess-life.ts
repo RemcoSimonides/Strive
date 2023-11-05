@@ -5,6 +5,11 @@ export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 export type AssessLifeType = 'formlist' | 'textarea' | 'prioritizeGoals' | 'wheelOfLife'
 export type AssessLifeTense = 'future' | 'past'
 
+export interface EntryStep {
+  step: Step
+  tense: AssessLifeTense | ''
+}
+
 export function getInterval(value: AssessLifeInterval): string {
   switch (value) {
     case 'weekly': return 'week'
@@ -79,6 +84,8 @@ export interface AssessLifeQuestion {
   setting: Setting
   tense: AssessLifeTense
 }
+
+export type AssessLifeQuestionConfig = Omit<AssessLifeQuestion, 'setting'>
 
 export const assessLifeQuestions: AssessLifeQuestion[] = [
   {
@@ -241,7 +248,7 @@ export const assessLifeQuestions: AssessLifeQuestion[] = [
     type: 'formlist',
     interval: 'weekly',
     setting: 'timeManagement',
-    tense: 'future'
+    tense: 'past'
   },
     {
     key: 'wheelOfLife',
@@ -274,6 +281,17 @@ export function createAssessLifeQuestion(params: Partial<AssessLifeQuestion> = {
   }
 }
 
+export function createAssessLifeQuestionConfig(params: Partial<AssessLifeQuestionConfig> = {}): AssessLifeQuestionConfig {
+  return {
+    key: params.key ?? '',
+    step: params.step ?? 'intro',
+    question: params.question ?? '',
+    type: params.type ?? 'textarea',
+    tense: params.tense ?? 'past',
+    interval: params.interval ?? 'yearly'
+  }
+}
+
 
 export interface AssessLifeSettings {
   id?: string
@@ -298,6 +316,7 @@ export function createAssessLifeSettings(params: Partial<AssessLifeSettings> = {
 
 export interface AssessLifeEntry {
   id?: string
+  config: AssessLifeQuestionConfig[],
   dearFutureSelfAdvice?: string
   dearFutureSelfPrediction?: string
   dearFutureSelfAnythingElse?: string
@@ -320,12 +339,13 @@ export interface AssessLifeEntry {
   wheelOfLife?: WheelOfLife
   createdAt: Date
   updatedAt: Date
-  [key: string]: string | string[] | undefined | WheelOfLife | Date // needs to have all possible types
+  [key: string]: string | string[] | undefined | WheelOfLife | Date | AssessLifeQuestionConfig[] // needs to have all possible types
 }
 
 export function createAssessLifeEntry(params: Partial<AssessLifeEntry> = {}): AssessLifeEntry {
   return {
     ...params,
+    config: params.config ?? [],
     interval: params.interval ?? 'weekly',
     createdAt: params.createdAt ?? new Date(),
     updatedAt: params.updatedAt ?? new Date(),

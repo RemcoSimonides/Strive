@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { AssessLifeQuestion } from '@strive/model'
+import { AssessLifeQuestionConfig } from '@strive/model'
 import { AssessLifeReplaceIntervalPipe } from '../../pipes/interval.pipe'
 
 @Component({
@@ -24,7 +24,7 @@ export class AssessLifeFormListComponent {
   showInput = signal<boolean>(true)
 
   @Input() form?: FormArray<FormControl<string>>
-  @Input() question?: AssessLifeQuestion
+  @Input() question?: AssessLifeQuestionConfig
   @Input() set stepping(stepping: boolean | null) {
     if (stepping && this.inputForm.value) {
       this.showInput.set(false)

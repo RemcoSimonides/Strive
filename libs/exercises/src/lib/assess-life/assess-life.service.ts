@@ -97,7 +97,7 @@ export class AssessLifeEntryService extends FireSubCollection<AssessLifeEntry> {
 
 function _decrypt(object: any, decryptKey: string) {
   const decrypt = (value: string) => value ? AES.decrypt(value, decryptKey).toString(enc.Utf8) : ''
-  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities', 'config']
 
   Object.keys(object).forEach(key => {
     if (excludedProperties.includes(key)) return
@@ -116,7 +116,7 @@ function _decrypt(object: any, decryptKey: string) {
 
 function _encrypt(object: any, encryptKey: string) {
   const encrypt = (value: string) => value ? AES.encrypt(value, encryptKey).toString() : ''
-  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities']
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities', 'config']
 
   Object.keys(object).forEach(key => {
     if (excludedProperties.includes(key)) return

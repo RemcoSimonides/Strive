@@ -9,8 +9,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ng-container *ngIf="settings$ | async as settings; else loading">
-  <ng-container [ngSwitch]="step()">
+<ng-container *ngIf="finishedLoading(); else loading">
+  <ng-container [ngSwitch]="step().step">
 
     <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-assess-life-intro [interval]="interval" [id]="entry.id" />
@@ -34,7 +34,7 @@
 
     <ion-content *ngSwitchDefault class="ion-padding" [ngClass]="animatingSection()">
       <section>
-        <ng-container *ngFor="let question of questions$ | async | stepFilter: step()">
+        <ng-container *ngFor="let question of entry.config | stepFilter: step()">
           <ng-container *ngIf="question.type === 'textarea'">
             <strive-assess-life-textarea
               [form]="form.get(question.key)"

@@ -19,7 +19,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
   get id() { return this.get('id')! as FormControl }
 
   override patchValue(entry: AssessLifeEntry, options?: { onlySelf?: boolean, emitEvent?: boolean }) {
-    const excludedKeys = ['updatedAt', 'createdAt', 'interval']
+    const excludedKeys = ['updatedAt', 'createdAt', 'interval', 'config']
 
     Object.entries(entry).forEach(([key, value]) => {
       if (excludedKeys.includes(key)) return
@@ -28,7 +28,7 @@ export class AssessLifeForm extends FormGroup<AssessLifeFormControl> {
         const control = this.get(key) as FormArray<FormControl<string>> | undefined
         if (!control) throw new Error('Could not find form array control with key ' + key)
         control.clear()
-        value.forEach(v => control.push(new FormControl(v, { nonNullable: true })))
+        value.forEach((v) => control.push(new FormControl<string>(v as string, { nonNullable: true }))) // overwriting type on v because it can't be of type AssessLifeQuestionConfig as its excluded
       } else if (typeof value === 'object') {
         const control = this.get(key) as FormGroup | undefined
         if (!control) throw new Error('Could not find form group control with key ' + key)

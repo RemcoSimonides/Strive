@@ -3,21 +3,16 @@ import { Location } from '@angular/common'
 import { FormArray, FormControl } from '@angular/forms'
 import { AlertController, ModalController } from '@ionic/angular'
 
-import { BehaviorSubject, combineLatest, firstValueFrom, map, of, shareReplay, switchMap, tap } from 'rxjs'
+import { BehaviorSubject, firstValueFrom, map, of, shareReplay, switchMap} from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
-import { AssessLifeInterval, AssessLifeTense, Step, createAssessLifeEntry, getInterval } from '@strive/model'
+import { AssessLifeEntry, AssessLifeInterval, EntryStep, createAssessLifeEntry, createAssessLifeQuestionConfig, getInterval } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { AssessLifeForm } from '../../forms/assess-life.form'
 import { AssessLifeEntryService, AssessLifeSettingsService } from '../../assess-life.service'
 import { WheelOfLifeForm } from '../wheel-of-life/wheel-of-life.form'
-
-interface EntryStep {
-  step: Step
-  tense: AssessLifeTense | ''
-}
 
 function getTitle({ step, tense }: EntryStep): string {
   switch (step) {
@@ -49,7 +44,8 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
 
   animatingSection = signal<undefined | 'visible' | 'invisible'>('visible')
   title = signal<string>('Get Ready')
-  step = signal<Step>('intro')
+  step = signal<EntryStep>({ step: 'intro', tense: '' })
+  finishedLoading = signal<boolean>(false)
 
   form = new AssessLifeForm()
 
@@ -67,48 +63,15 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  settings$ = this.auth.profile$.pipe(
-    switchMap(profile => profile
-      ? combineLatest([
-          this.settingsService.getSettings$(profile.uid),
-          this.previousEntry$
-        ])
-      : of([])),
-    shareReplay({ bufferSize: 1, refCount: true }),
-    tap(([settings, previousEntry]) => {
-      if (settings) {
-        const questions = settings.questions.filter(({ interval }) => interval === this.interval)
-        const activatedSteps: EntryStep[] = [{ step: 'intro', tense: '' }]
-        if (previousEntry) activatedSteps.push({ step: 'previousIntention', tense: '' })
-
-        const past = questions.filter(({ tense }) => tense === 'past')
-        const pastSteps = past.map(({ step, tense }) => ({ step, tense }))
-        activatedSteps.push(...pastSteps)
-
-        const future = questions.filter(({ tense }) => tense === 'future')
-        const futureSteps = future.map(({ step, tense }) => ({ step, tense }))
-        activatedSteps.push(...futureSteps)
-        activatedSteps.push({ step: 'outro', tense: '' })
-
-        const uniqueSteps = activatedSteps.reduce((acc, step) => {
-          if (acc.length === 0) return [step]
-          const res = acc.find(s => s.step === step.step && s.tense === step.tense)
-          return res ? acc : [...acc, step]
-        }, [] as EntryStep[])
-
-        this.steps.set(uniqueSteps)
-      }
-    }),
-    map(([settings]) => settings)
+  private questions$ = this.auth.profile$.pipe(
+    switchMap(profile => profile ? this.settingsService.getSettings$(profile.uid) : of(undefined)),
+    map(settings => settings ? settings.questions : []),
+    map(questions => questions.filter(({ interval }) => interval === this.interval)),
+    map(questions => questions.map(question => createAssessLifeQuestionConfig(question))),
   )
 
   @Input() entry = createAssessLifeEntry()
   @Input() todos: AssessLifeInterval[] = []
-
-  questions$ = this.settings$.pipe(
-    map(settings => settings ? settings.questions : []),
-    map(questions => questions.filter(question => question.interval === this.interval))
-  )
 
   get interval() { return this.entry.interval }
 
@@ -124,7 +87,34 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
   }
 
   async ngOnInit() {
-    const questions = await firstValueFrom(this.questions$)
+    const questions = this.entry.config.length
+      ? this.entry.config
+      : await firstValueFrom(this.questions$)
+
+    let previousEntry: AssessLifeEntry | undefined = undefined
+    if (!this.entry.config.length) {
+      this.entry.config = questions
+      previousEntry = await firstValueFrom(this.previousEntry$)
+    }
+
+    const activatedSteps: EntryStep[] = [{ step: 'intro', tense: '' }]
+    if (previousEntry) activatedSteps.push({ step: 'previousIntention', tense: '' })
+
+    const past = questions.filter(({ tense }) => tense === 'past')
+    const pastSteps = past.map(({ step, tense }) => ({ step, tense }))
+    activatedSteps.push(...pastSteps)
+
+    const future = questions.filter(({ tense }) => tense === 'future')
+    const futureSteps = future.map(({ step, tense }) => ({ step, tense }))
+    activatedSteps.push(...futureSteps)
+    activatedSteps.push({ step: 'outro', tense: '' })
+
+    const uniqueSteps = activatedSteps.reduce((acc, step) => {
+      if (acc.length === 0) return [step]
+      const res = acc.find(s => s.step === step.step && s.tense === step.tense)
+      return res ? acc : [...acc, step]
+    }, [] as EntryStep[])
+    this.steps.set(uniqueSteps)
 
     for (const question of questions) {
       if (question.type === 'textarea') {
@@ -140,6 +130,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
       }
     }
     this.form.patchValue(this.entry, { emitEvent: false })
+    this.finishedLoading.set(true)
   }
 
   async doStep(direction: 'next' | 'previous') {
@@ -164,7 +155,7 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     const nextIndex = this.stepIndex() + delta
     const nextStep = steps[nextIndex]
 
-    this.step.set(nextStep.step)
+    this.step.set(nextStep)
 
     const title = getTitle(nextStep).replace('{interval}', getInterval(this.interval))
     this.title.set(title)

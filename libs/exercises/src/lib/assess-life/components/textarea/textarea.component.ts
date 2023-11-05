@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { AssessLifeQuestion } from '@strive/model'
+import { AssessLifeQuestionConfig } from '@strive/model'
 import { AssessLifeReplaceIntervalPipe } from '../../pipes/interval.pipe'
 
 @Component({
@@ -21,6 +21,6 @@ import { AssessLifeReplaceIntervalPipe } from '../../pipes/interval.pipe'
 export class AssessLifeTextareaComponent {
 
   @Input() form?: FormControl<string>
-  @Input() question?: AssessLifeQuestion
+  @Input() question?: AssessLifeQuestionConfig
 
 }
