@@ -1,10 +1,24 @@
 import { ChangeDetectionStrategy, Component, Pipe, PipeTransform } from '@angular/core'
-import { exercises, ExerciseType } from '@strive/model'
+import { AssessLifeSettings, exercises, ExerciseType } from '@strive/model'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { of, switchMap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
 import { ExerciseService, ExerciseSettings } from '@strive/exercises/exercise.service'
+import { smartJoin } from '@strive/utils/helpers'
+
+@Pipe({ name: 'intervals', standalone: true })
+export class AssessLifeDescriptionPipe implements PipeTransform {
+  transform({ questions }: AssessLifeSettings) {
+    const intervals = []
+    if (questions.some(({ interval }) => interval === 'weekly')) intervals.push('weekly')
+    if (questions.some(({ interval }) => interval === 'monthly')) intervals.push('monthly')
+    if (questions.some(({ interval }) => interval === 'quarterly')) intervals.push('quarterly')
+    if (questions.some(({ interval }) => interval === 'yearly')) intervals.push('yearly')
+
+    return smartJoin(intervals, ', ', ' and ')
+  }
+}
 
 @Pipe({ name: 'get' })
 export class GetExercisePipe implements PipeTransform {

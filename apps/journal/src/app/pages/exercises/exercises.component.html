@@ -20,6 +20,16 @@
               </ng-container>
 
             </ng-container>
+            <ng-container *ngSwitchCase="'AssessLife'">
+                <ng-container *ngIf="settings | get:'AssessLife' as setting; else notSet">
+                  <ng-container *ngIf="setting?.preferredDay !== 'never'; else notSet">
+                    <article>
+                      <small>Recieving {{ setting | intervals }} on {{ setting.preferredDay | titlecase }} at {{ setting.preferredTime }}</small>
+                    </article>
+                  </ng-container>
+                </ng-container>
+            </ng-container>
+
             <ng-container *ngSwitchCase="'DearFutureSelf'">
 
               <ng-container *ngIf="settings | get:'DearFutureSelf' as setting; else notSet">
