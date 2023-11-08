@@ -17,6 +17,13 @@ export const exercises: Exercise[] = [
 		description: 'Control your thoughts by regularly repeating short, powerful statements'
 	},
 	{
+		id: 'AssessLife',
+		title: 'Assess Life',
+		image: 'exercise_review_and_plan.png',
+		link: '/exercise/assess-life',
+		description: 'Get a grasp on life by looking back and planning ahead'
+	},
+	{
 		id: 'DailyGratitude',
 		title: 'Daily Gratitude',
 		image: 'exercise_daily_gratitude.png',
@@ -29,13 +36,6 @@ export const exercises: Exercise[] = [
 		image: 'exercise_dear_future_self.png',
 		link: '/exercise/dear-future-self',
 		description: 'Write a message to yourself in the (far) future'
-	},
-	{
-		id: 'AssessLife',
-		title: 'Assess Life',
-		image: 'exercise_review_and_plan.png',
-		link: '/exercise/assess-life',
-		description: 'Get a grasp on life by looking back and planning ahead'
 	},
 	{
 		id: 'WheelOfLife',
