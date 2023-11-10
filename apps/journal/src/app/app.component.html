@@ -20,11 +20,11 @@
               <ion-button [ngClass]="{'badge2': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
                 Supports
               </ion-button>
-              <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
-                Explore
-              </ion-button>
               <ion-button fill="clear" routerLink="/exercise" routerDrouterDirection="root" routerLinkActive="active-link">
                 Exercises
+              </ion-button>
+              <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
+                <ion-icon name="search" slot="icon-only"></ion-icon>
               </ion-button>
               <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openUserPopover($event)">
                 <img [ref]="user.photoURL" asset="profile.png" [width]="120" [height]="120"/>
@@ -32,17 +32,14 @@
             </ng-container>
 
             <ng-template #notLoggedInMain>
-              <ion-button fill="clear" routerLink="/" routerDirection="root" routerLinkActive="active-link">
-                Home
-              </ion-button>
-              <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
-                Explore
-              </ion-button>
               <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)">
                 Log In
               </ion-button>
               <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.register)">
                 Sign Up
+              </ion-button>
+              <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
+                <ion-icon name="search" slot="icon-only"></ion-icon>
               </ion-button>
             </ng-template>
 

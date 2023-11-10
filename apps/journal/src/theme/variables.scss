@@ -110,6 +110,8 @@
   --ion-tab-bar-color: var(--ion-color-step-400);
   --ion-tab-bar-background: white;
   --ion-card-background: white;
+  --ion-loading-background: var(--ion-color-step-50);
+  --ion-loading-color: var(--ion-color-step-850);
 }
 
 /*
@@ -214,4 +216,6 @@ body[data-theme="dark"] {
   --ion-tab-bar-color: var(--ion-color-step-400);
   --ion-tab-bar-background: #1f1f1f;
   --ion-card-background: #1e1e1e;
+  --ion-loading-background: var(--ion-color-step-850);
+  --ion-loading-color: var(--ion-color-step-50);
 }
