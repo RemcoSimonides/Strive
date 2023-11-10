@@ -11,8 +11,7 @@ const config: RuntimeOptions = {
 
 const askOpenAIConfig: AskOpenAIConfig = {
   model: 'gpt-4',
-  answerRawPath: 'answerRaw',
-  answerParsedPath: 'answerParsed'
+  parse: true
 }
 
 const parsablePrompt = `The format of your response has to be a JSON parsable array of strings.`

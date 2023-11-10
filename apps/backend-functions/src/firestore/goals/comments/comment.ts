@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 
 const askOpenAIConfig: AskOpenAIConfig = {
   model: 'gpt-4',
-  answerRawPath: 'text'
+  parse: false
 }
 
 export const commentCreatedHandler = onDocumentCreate(`Goals/{goalId}/Comments/{commentId}`, 'commentCreatedHandler',

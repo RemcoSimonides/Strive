@@ -1,45 +1,53 @@
 import { DocumentReference, logger } from '@strive/api/firebase'
+import { ChatGPTMessage } from '@strive/model'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsStreaming, ChatCompletionMessageParam } from 'openai/resources'
 
 export interface AskOpenAIConfig {
   model: ChatCompletionCreateParamsStreaming['model']
-  answerRawPath: string
-  answerParsedPath?: string
+  parse: boolean
 }
 
-export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: DocumentReference, config: AskOpenAIConfig): Promise<string> {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY })
-  const { answerRawPath, answerParsedPath } = config
+type ChatGPTDoc = Pick<ChatGPTMessage, 'answerParsed'|'answerRaw'|'status'>
 
+function createChatGPTDoc(params: Partial<ChatGPTDoc> = {}) {
+  return {
+    answerParsed: params.answerParsed ?? [],
+    answerRaw: params.answerRaw ?? '',
+    status: params.status ?? 'waiting'
+  }
+}
+
+export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: DocumentReference, { model, parse }: AskOpenAIConfig): Promise<string> {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY })
+
+  let counter = 0
+  const doc = createChatGPTDoc({ status: 'streaming' })
   try {
     const stream = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model,
       messages,
       stream: true
     })
 
-    let answerRaw = ''
     for await (const chunk of stream) {
       const delta = chunk.choices[0].delta?.content
       if (delta) {
-        answerRaw += delta
-        if (!answerRaw) continue
+        doc.answerRaw += delta
+        if (!doc.answerRaw) continue
 
-        const doc = { status: 'streaming' }
-        doc[answerRawPath] = answerRaw
-
-        if (answerParsedPath) {
-          const parsed = parse(answerRaw)
-          if (parsed) {
-            doc[answerParsedPath] = parsed
-          }
+        if (parse) {
+          const parsed = parseRaw(doc.answerRaw)
+          if (parsed) doc.answerParsed = parsed
         }
 
-        ref.update(doc)
+        if (counter % 5) ref.update(doc) // only update every 5th iteration
       }
+      counter++
     }
-    ref.update({ status: 'completed' })
+
+    doc.status = 'completed'
+    ref.update(doc)
   } catch (error) {
     if (error.response) {
       logger.error(error.response.status)
@@ -48,13 +56,13 @@ export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: Doc
       logger.error(error.message)
     }
 
-    const doc = { status: 'error' }
+    doc.status = 'error'
     ref.update(doc)
     return 'error'
   }
 }
 
-function parse(answer: string): string[] | undefined {
+function parseRaw(answer: string): string[] | undefined {
   let value = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
 
   if (value.split('"').length % 2 === 0) value = value + '"'
