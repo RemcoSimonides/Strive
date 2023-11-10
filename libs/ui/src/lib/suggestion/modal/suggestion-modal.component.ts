@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { IonicModule, ModalController } from '@ionic/angular'
 import { orderBy, where } from '@firebase/firestore'
 
-import { subMinutes } from 'date-fns'
+import { isAfter, subMinutes } from 'date-fns'
 import { BehaviorSubject, Observable, map, of, switchMap } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -61,6 +61,7 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
     )
 
     const date = subMinutes(new Date(), 15)
+    if (this.goal.createdAt && isAfter(this.goal.createdAt, date)) return
     const messages = await this.chatGPTService.getValue([where('type', '==', 'RoadmapUpdateSuggestion'), where('createdAt', '>', date)], { goalId })
     if (!messages.length) this.regenerateSuggestion()
   }

@@ -75,7 +75,7 @@ async (snapshot, context) => {
 
   if (message.type === 'RoadmapUpdateSuggestion') {
     const [ milestoneSnaps, messagesSnaps ] = await Promise.all([
-      db.collection(`Goals/${goalId}/Milestones`).where('deletedAt', '==', null) .get(),
+      db.collection(`Goals/${goalId}/Milestones`).where('deletedAt', '==', null).get(),
       db.collection(`Goals/${goalId}/ChatGPT`).get()
     ])
     const existing = messagesSnaps.docs.map(doc => createChatGPTMessage(toDate({ ...doc.data(), id: doc.id })))
@@ -97,41 +97,43 @@ async (snapshot, context) => {
       await db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`).set(createChatGPTMessage({ type: 'RoadmapMoreInfoQuestions', status: 'no-trigger' }))
     }
 
-    messages.push({
-      role: 'user',
-      content: `Here is some more information about the goal: ${qa}.`
-    })
-
     const milestones = milestoneSnaps.docs.map(doc => createMilestone(toDate({ ...doc.data(), id: doc.id })))
     const achieved = milestones.filter(milestone => milestone.status === 'succeeded').map(milestone => milestone.content).join(', ')
     const failed = milestones.filter(milestone => milestone.status === 'failed').map(milestone => milestone.content).join(', ')
     const pending = milestones.filter(milestone => milestone.status === 'pending').map(milestone => milestone.content).join(', ')
 
-    if (achieved.length) {
+    if (achieved.length || failed.length || pending.length) {
       messages.push({
         role: 'user',
-        content: `These milestones I have already achieved: ${achieved}`
+        content: `Here is some more information about the goal: ${qa}.`
       })
-    }
 
-    if (failed.length) {
+      if (achieved.length) {
+        messages.push({
+          role: 'user',
+          content: `These milestones I have already achieved: ${achieved}`
+        })
+      }
+
+      if (failed.length) {
+        messages.push({
+          role: 'user',
+          content: `These milestones I have tried but have failed: ${failed}`
+        })
+      }
+
+      if (pending.length) {
+        messages.push({
+          role: 'user',
+          content: `These milestones I still have to do: ${pending}`
+        })
+      }
+
       messages.push({
         role: 'user',
-        content: `These milestones I have tried but have failed: ${failed}`
+        content: `Could you please update the roadmap based on this information? Only include milestones that still need to be done. ${parsablePrompt}`
       })
     }
-
-    if (pending.length) {
-      messages.push({
-        role: 'user',
-        content: `These milestones I still have to do: ${pending}`
-      })
-    }
-
-    messages.push({
-      role: 'user',
-      content: `Could you please update the roadmap based on this information? Only include milestones that still need to be done. ${parsablePrompt}`
-    })
 
     const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`), askOpenAIConfig)
 
