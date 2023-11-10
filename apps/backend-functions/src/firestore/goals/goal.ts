@@ -49,7 +49,7 @@ async snapshot => {
     // comment
     const comment = createComment({
       userId: 'chatgpt',
-      status: 'waiting',
+      status: 'completed',
       text: `Hi! I'm here to help you achieve your goal. I will occassionaly check in with you to see how it is going. You can also ask me questions about your goal. Good luck!`
     })
     db.doc(`Goals/${goalId}/Comments/initial`).set(comment)
