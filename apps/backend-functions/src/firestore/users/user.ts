@@ -1,7 +1,7 @@
 import { db, logger, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
-import { createUser, createAlgoliaUser } from '@strive/model'
+import { createUser, createAlgoliaUser, createAssessLifeSettings, assessLifeQuestions } from '@strive/model'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
 import { deleteCollection, toDate } from '../../shared/utils'
 
@@ -13,6 +13,9 @@ async (snapshot) => {
 
   // aggregation
   updateAggregation({ usersCreated: 1 })
+
+  // automatically activate assess life exercise by setting default settings
+  db.doc(`Users/${uid}/Exercises/AssessLife`).set(createAssessLifeSettings({ questions: assessLifeQuestions }))
 
   await addToAlgolia('user', uid, createAlgoliaUser(user))
 })
