@@ -1,75 +1,45 @@
 import { DocumentReference, logger } from '@strive/api/firebase'
-import { delay } from '@strive/utils/helpers'
-import { ChatCompletionRequestMessage, Configuration, CreateChatCompletionRequest, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
+import { ChatCompletionCreateParamsStreaming, ChatCompletionMessageParam } from 'openai/resources'
 
 export interface AskOpenAIConfig {
-  model: CreateChatCompletionRequest['model']
+  model: ChatCompletionCreateParamsStreaming['model']
   answerRawPath: string
   answerParsedPath?: string
 }
 
-export async function askOpenAI(messages: ChatCompletionRequestMessage[], ref: DocumentReference, config: AskOpenAIConfig): Promise<string> {
-  const configuration = new Configuration({ apiKey: process.env.OPENAI_APIKEY })
-  const openai = new OpenAIApi(configuration)
+export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: DocumentReference, config: AskOpenAIConfig): Promise<string> {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY })
   const { answerRawPath, answerParsedPath } = config
 
   try {
-    let answerRaw = ''
-    const promise = new Promise<string>((resolve, reject) => {
-      const completion = openai.createChatCompletion({
-        model: 'gpt-4',
-        messages,
-        max_tokens: 600,
-        stream: true
-      }, { responseType: 'stream' })
-
-      completion.then(({ data: stream }: any) => {
-        stream.on('data', (chunk: Buffer) => {
-          // Messages in the event stream are separated by a pair of newline characters.
-          const payloads = chunk.toString().split('\n\n')
-          for (const payload of payloads) {
-            if (payload.includes('[DONE]')) return
-            if (!payload.startsWith("data:")) continue
-
-            const data = payload.replaceAll(/(\n)?^data:\s*/g, '') // in case there's multiline data event
-
-            try {
-              const delta = JSON.parse(data.trim())
-              const content = delta.choices[0].delta?.content
-              if (!content) continue
-
-              answerRaw += content
-              if (!answerRaw) continue
-
-              const doc = { status: 'streaming' }
-              doc[answerRawPath] = answerRaw
-
-              if (answerParsedPath) {
-                const parsed = parse(answerRaw)
-                if (parsed) {
-                  doc[answerParsedPath] = parsed
-                }
-              }
-
-              ref.update(doc)
-            } catch (error) {
-              logger.error(`Error with JSON.parse and ${payload}.\n${error}`)
-            }
-          }
-        })
-
-        stream.on('end', () => {
-          logger.log('Stream done: ', answerRaw)
-          delay(500).then(() => ref.update({ status: 'completed' }))
-          resolve(answerRaw)
-        })
-
-        stream.on('error', reject)
-      })
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages,
+      stream: true
     })
 
-    return promise
+    let answerRaw = ''
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0].delta?.content
+      if (delta) {
+        answerRaw += delta
+        if (!answerRaw) continue
 
+        const doc = { status: 'streaming' }
+        doc[answerRawPath] = answerRaw
+
+        if (answerParsedPath) {
+          const parsed = parse(answerRaw)
+          if (parsed) {
+            doc[answerParsedPath] = parsed
+          }
+        }
+
+        ref.update(doc)
+      }
+    }
+    ref.update({ status: 'completed' })
   } catch (error) {
     if (error.response) {
       logger.error(error.response.status)

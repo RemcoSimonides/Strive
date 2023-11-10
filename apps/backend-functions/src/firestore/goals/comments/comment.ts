@@ -3,7 +3,7 @@ import { onDocumentCreate, db } from '@strive/api/firebase'
 import { createComment, createGoal, createGoalStakeholder, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
-import { ChatCompletionRequestMessage } from 'openai'
+import { ChatCompletionMessageParam } from 'openai/resources'
 import { askOpenAI, AskOpenAIConfig } from '../../../shared/ask-open-ai/ask-open-ai'
 import { format } from 'date-fns'
 
@@ -35,7 +35,7 @@ async (snapshot, context) =>{
   if (!goal.enableAssistant) return
   if (!stakeholder.isAdmin && !stakeholder.isAchiever) return // only respond to admins and achievers
 
-  const messages: ChatCompletionRequestMessage[] = [
+  const messages: ChatCompletionMessageParam[] = [
     { role: 'system', content: `You're a coach helping the user to achieve its goal by asking questions and motivating using short answers` },
   ]
 

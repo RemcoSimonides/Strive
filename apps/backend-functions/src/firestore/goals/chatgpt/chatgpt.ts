@@ -1,7 +1,7 @@
 import { RuntimeOptions, db, onDocumentCreate } from '@strive/api/firebase'
 import { createChatGPTMessage, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
-import { ChatCompletionRequestMessage } from 'openai'
+import { ChatCompletionMessageParam } from 'openai/resources'
 import { AskOpenAIConfig, askOpenAI } from '../../../shared/ask-open-ai/ask-open-ai'
 
 const config: RuntimeOptions = {
@@ -12,7 +12,7 @@ const config: RuntimeOptions = {
 const askOpenAIConfig: AskOpenAIConfig = {
   model: 'gpt-4',
   answerRawPath: 'answerRaw',
-  answerParsedPath: 'answer'
+  answerParsedPath: 'answerParsed'
 }
 
 const parsablePrompt = `The format of your response has to be a JSON parsable array of strings.`
@@ -26,7 +26,7 @@ async (snapshot, context) => {
   // doc is created in function of another trigger already
   if (message.status === 'no-trigger') return
 
-  const messages: ChatCompletionRequestMessage[] = [
+  const messages: ChatCompletionMessageParam[] = [
     { role: 'system', content: `You're a life coach helping the user to break down its goal in smaller steps and help the user to stay focused on this goal` },
   ]
 
