@@ -1,5 +1,10 @@
 <strive-header-modal (dismiss)="dismiss()" color="primary">
   <ion-title>Custom Question</ion-title>
+  <ion-buttons slot="end">
+    <ion-button (click)="delete()">
+      <ion-icon slot="icon-only" name="trash-outline" />
+    </ion-button>
+  </ion-buttons>
 </strive-header-modal>
 
 <section class="ion-padding">

@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { AlertController, IonicModule, ModalController } from '@ionic/angular'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { AssessLifeCategory, AssessLifeIntervalWithNever, AssessLifeQuestion, AssessLifeTense, AssessLifeType, createAssessLifeQuestion } from '@strive/model'
@@ -33,6 +33,7 @@ export class AssessLifeCustomQuestionModalComponent extends ModalDirective imple
   @Input() question?: AssessLifeQuestion
 
   constructor(
+    private alertCtrl: AlertController,
     location: Location,
     modalCtrl: ModalController
   ) {
@@ -63,5 +64,22 @@ export class AssessLifeCustomQuestionModalComponent extends ModalDirective imple
     }
 
     this.dismiss(assessLifeQuestion)
+  }
+
+  delete() {
+    this.alertCtrl.create({
+      subHeader: 'Are you sure you want to delete this question?',
+      message: 'This action is irreversible. Instead you could set frequency to "Never"',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => this.dismiss({ ...this.question, question: 'delete' })
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
   }
 }

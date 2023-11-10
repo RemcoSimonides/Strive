@@ -186,12 +186,17 @@ export class AssessLifeSettingsComponent implements OnInit {
       const uid = this.auth.uid
       if (!uid) throw new Error(`Can't save question without uid`)
 
-      const index = settings.questions.findIndex(({ key }) => key === question.key)
-      if (index > -1) {
-        settings.questions[index] = question
+      if (data.question === 'delete') {
+        settings.questions = settings.questions.filter(({ key }) => key !== question.key)
       } else {
-        settings.questions.push(question)
+        const index = settings.questions.findIndex(({ key }) => key === question.key)
+        if (index > -1) {
+          settings.questions[index] = question
+        } else {
+          settings.questions.push(question)
+        }
       }
+
       this.service.save(uid, settings)
     })
     modal.present()

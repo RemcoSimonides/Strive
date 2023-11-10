@@ -3,7 +3,6 @@
 
   <!-- Drop -->
   <article *ngSwitchCase="'drop'" class="drop-zone">
-    <ng-content select="[title]" />
     <p>Drag 'n drop an Image</p>
     <p>or <a (click)="selectImage()">choose a file</a></p>
     <div *ngIf="defaultImage">
