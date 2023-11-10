@@ -32,7 +32,7 @@
 
   <!-- Show -->
   <article *ngSwitchCase="'show'" class="show">
-    <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
+    <img class="croppedImage" [src]="previewUrl$ | async" />
     <div>
       <ion-fab-button color="primary" (click)="remove()">
         <ion-icon name="close-outline" />
