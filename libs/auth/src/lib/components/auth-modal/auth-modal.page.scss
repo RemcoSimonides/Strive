@@ -1,7 +1,8 @@
-section {
+section, form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 16px;
 }
 
 article {
@@ -17,25 +18,22 @@ article.oauth {
 form {
   width: 100%;
 
+  ion-list {
+    width: 100%;
+  }
+
   ion-item {
-    --highlight-background: var(--ion-color-primary); 
+    --highlight-background: var(--ion-color-primary);
   }
 }
-
 
 .action {
   display: flex;
-  justify-content: center;
-
-  .submit_button {
-    margin: 20px 0;
-  }
+  flex-direction: column;
+  align-items: center;
 }
 
 hr {
-  margin-top: 20px;
-  border-top: 1px solid #a2a4ab;
-  margin-bottom: 20px;
   width: 100%;
 }
 
@@ -46,11 +44,15 @@ hr {
   margin: 6px 12px;
 }
 
-.fat-text-button {
-  margin-left: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  color: var(--ion-color-primary);
+.terms {
+  font-size: small;
+  max-width: 400px; // same as hr
+  text-align: center;
+  color: var(--ion-color-medium);
+
+  b {
+    color: var(--ion-color-primary);
+  }
 }
 
 .passwordIcon {
