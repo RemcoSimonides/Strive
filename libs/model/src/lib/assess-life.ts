@@ -3,7 +3,7 @@ export type WeekdayWithNever = Weekday | 'never'
 export type AssessLifeInterval = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type AssessLifeIntervalWithNever = AssessLifeInterval | 'never'
 export type AssessLifeType = 'formlist' | 'textarea' | 'prioritizeGoals' | 'wheelOfLife'
-export type AssessLifeTense = 'future' | 'past'
+export type AssessLifeTense = 'future' | 'present' | 'past'
 
 export interface EntryStep {
   step: Step

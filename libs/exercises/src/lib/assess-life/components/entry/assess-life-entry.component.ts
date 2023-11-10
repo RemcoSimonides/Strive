@@ -30,7 +30,11 @@ function getTitle({ step, tense }: EntryStep): string {
     case 'wheelOfLife':
       return 'How do you feel now?'
     default:
-      return tense === 'past' ? 'The past {interval}' : 'The upcoming {interval}'
+      return tense === 'past'
+        ? 'The past {interval}'
+        : tense === 'present'
+          ? 'The now'
+          : 'The upcoming {interval}'
   }
 }
 
@@ -103,6 +107,10 @@ export class AssessLifeEntryComponent extends ModalDirective implements OnInit {
     const past = questions.filter(({ tense }) => tense === 'past')
     const pastSteps = past.map(({ step, tense }) => ({ step, tense }))
     activatedSteps.push(...pastSteps)
+
+    const present = questions.filter(({ tense }) => tense === 'present')
+    const presentSteps = present.map(({ step, tense }) => ({ step, tense }))
+    activatedSteps.push(...presentSteps)
 
     const future = questions.filter(({ tense }) => tense === 'future')
     const futureSteps = future.map(({ step, tense }) => ({ step, tense }))
