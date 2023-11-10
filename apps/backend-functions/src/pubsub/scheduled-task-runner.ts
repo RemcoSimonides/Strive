@@ -63,7 +63,6 @@ async () => {
         await snapshot.ref.update({ status: 'complete' })
       })
       .catch(async () => {
-        if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'error' })
       })
       jobs.push(job)

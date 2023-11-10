@@ -277,6 +277,5 @@ export function getNextReminder(settings: AssessLifeSettings) {
 }
 
 function getAvailableIntervals(settings: AssessLifeSettings) {
-  const availableIntervals = ['weekly', 'monthly', 'quarterly', 'yearly']
-  return unique(Object.values(settings).filter(interval => availableIntervals.includes(interval))) as AssessLifeInterval[]
+  return unique(settings.questions.map(({ interval }) => interval).filter(interval => interval !== 'never')) as AssessLifeInterval[]
 }
