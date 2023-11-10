@@ -8,10 +8,9 @@
 
 <ion-content class="ion-padding">
   <main *ngIf="uid$ | async else login">
-    <header>
-      <h1 *ngIf="(isMobile$ | async) === false">Assess Life</h1>
+    <header *ngIf="(isMobile$ | async) === false">
+      <h1>Assess Life</h1>
       <ion-button
-        *ngIf="(isMobile$ | async) === false"
         size="small"
         fill="clear"
         routerLink="settings"
