@@ -57,7 +57,7 @@
   </form>
 
     <h2>Custom Questions</h2>
-    <ion-list>
+    <ion-list mode="md">
       <ion-item *ngFor="let question of customQuestions$ | async" button (click)="openQuestion(question)">
         <ion-label>
           <section>
