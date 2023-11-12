@@ -70,14 +70,14 @@ export class AffirmationsPageComponent implements OnDestroy {
 
         if (doc) {
           this.timesForm.setValue(doc.times, { emitEvent: false })
-  
+
           const key = await this.personalService.getEncryptionKey()
           for (const affirmation of doc.affirmations) {
             const decrypted = AES.decrypt(affirmation, key).toString(enc.Utf8)
             this.affirmationsForm.push(new FormControl(decrypted), { emitEvent: false })
           }
         }
-        
+
         this.affirmationsForm.push(new FormControl(''), { emitEvent: false })
         this.isLoading = false
         this.cdr.markForCheck()
@@ -90,7 +90,7 @@ export class AffirmationsPageComponent implements OnDestroy {
         const index = affirmations.lastIndexOf('')
         this.affirmationsForm.removeAt(index)
       }
-  
+
       if (empty.length === 0) {
         this.affirmationsForm.push(new FormControl(''))
       }
@@ -125,7 +125,8 @@ export class AffirmationsPageComponent implements OnDestroy {
   async openDatetime(index: number) {
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
-      componentProps: { presentation: 'time' }
+      componentProps: { presentation: 'time' },
+      cssClass: 'datetime-popover'
     })
     popover.onDidDismiss().then(({ data, role }) => {
       const control = this.timesForm.get(`${index}`) as AbstractControl
@@ -157,7 +158,7 @@ export class AffirmationsPageComponent implements OnDestroy {
     this.cdr.markForCheck()
   }
 
-  filterSuggestions(filter: enumAffirmationCategory) {    
+  filterSuggestions(filter: enumAffirmationCategory) {
     this.suggestions = Object.assign([], this.suggestionsCopy)
     if (filter === enumAffirmationCategory.all) return
     this.suggestions = this.suggestions.filter(suggestion => suggestion.category === filter)

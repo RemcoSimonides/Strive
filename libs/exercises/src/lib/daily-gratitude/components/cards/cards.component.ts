@@ -102,7 +102,8 @@ export class CardsComponent implements OnDestroy {
       componentProps: {
         maxDate: startOfDay(new Date()),
         hideRemove: true
-      }
+      },
+      cssClass: 'datetime-popover'
     })
     popover.onDidDismiss().then(async ({ data, role }) => {
       if (role === 'dismiss') {

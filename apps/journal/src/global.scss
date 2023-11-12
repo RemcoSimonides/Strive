@@ -85,6 +85,10 @@ ion-popover::part(content) {
   border-radius: 12px;
 }
 
+.datetime-popover {
+  --width: 300px;
+}
+
 @media only screen and (min-width: 768px) {
   ion-modal {
     --border-radius: 12px;

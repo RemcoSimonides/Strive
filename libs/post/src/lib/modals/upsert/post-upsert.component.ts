@@ -129,7 +129,8 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
-      componentProps: { maxDate, value: this.postForm.date.value }
+      componentProps: { maxDate, value: this.postForm.date.value },
+      cssClass: 'datetime-popover'
     })
     popover.onDidDismiss().then(({ data, role }) => {
       if (role === 'remove') {

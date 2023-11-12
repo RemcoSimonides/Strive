@@ -259,7 +259,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
 
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
-      componentProps: { minDate, maxDate, value }
+      componentProps: { minDate, maxDate, value },
+      cssClass: 'datetime-popover'
     })
     popover.onDidDismiss().then(({ data, role }) => {
       if ((role === 'backdrop' || role === 'dismiss') && !data) return

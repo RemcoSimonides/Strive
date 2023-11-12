@@ -161,7 +161,8 @@ export class AssessLifeSettingsComponent implements OnInit {
 
     const popover = await this.popoverCtrl.create({
       component: DatetimeComponent,
-      componentProps: { presentation: 'time', hideRemove: true, value: control.value }
+      componentProps: { presentation: 'time', hideRemove: true, value: control.value },
+      cssClass: 'datetime-popover'
     })
     popover.onDidDismiss().then(({ data }) => {
       if (data && this.form) {

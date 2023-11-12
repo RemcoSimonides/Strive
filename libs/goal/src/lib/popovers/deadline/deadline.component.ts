@@ -31,7 +31,8 @@ export class DeadlinePopoverSComponent {
 
       const popover = await this.popoverCtrl.create({
         component: DatetimeComponent,
-        componentProps: { minDate, maxDate, showRemove: false, caption: this.caption }
+        componentProps: { minDate, maxDate, showRemove: false, caption: this.caption, width: '300px' },
+        cssClass: 'datetime-popover'
       })
       popover.onDidDismiss().then(({ data, role }) => {
         if (role === 'dismiss') {

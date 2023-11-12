@@ -91,7 +91,8 @@ export class DailyGratitudePageComponent implements OnDestroy {
         value: this.getDateFromTime(),
         presentation: 'time',
         label: 'What time would you like to receive the reminder?'
-      }
+      },
+      cssClass: 'datetime-popover'
     })
     popover.onDidDismiss<string>().then((value) => {
       if (!this.auth.uid) return
@@ -109,7 +110,7 @@ export class DailyGratitudePageComponent implements OnDestroy {
         const toDate = set(new Date(), { hours, minutes: date.getMinutes() })
         const performAt = isPast(toDate) ? addDays(toDate, 1) : toDate
         this.service.save(this.auth.uid, { on: true, time: performAt })
-      } 
+      }
 
       if (role === 'remove') {
         this.form.get('on')?.setValue(false)
@@ -124,7 +125,7 @@ export class DailyGratitudePageComponent implements OnDestroy {
 
   getDateFromTime() {
     const setting = this.form.value
-    
+
     const [ hours, minutes ] = (setting.time as string).split(':').map(time => +time)
     return set(new Date(), { hours, minutes })
   }
