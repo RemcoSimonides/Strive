@@ -60,13 +60,13 @@
           <ng-container *ngIf="isSpectator$ | async else notSpectator">
             <ion-button (click)="toggleSpectate(false)" size="block" class="fake-disable">
               <ion-icon name="star" slot="start" />
-              <span>FOLLOWING</span>
+              <span>Following</span>
             </ion-button>
           </ng-container>
           <ng-template #notSpectator>
             <ion-button (click)="toggleSpectate(true)" size="block">
               <ion-icon name="star-outline" slot="start" />
-              <span>FOLLOW</span>
+              <span>Follow</span>
             </ion-button>
           </ng-template>
         </ng-container>
@@ -77,7 +77,7 @@
           <h2>Goals</h2>
           <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="createGoal()">
             <ion-icon name="add" slot="start" />
-            <span>add goal</span>
+            <span>Create Goal</span>
           </ion-button>
         </article>
         <ng-container *ngIf="achievingStakeholders$ | async as achievingStakeholders">

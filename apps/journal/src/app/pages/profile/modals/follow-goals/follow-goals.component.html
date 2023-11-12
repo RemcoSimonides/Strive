@@ -21,13 +21,13 @@
 
           <ng-container *ngIf="stakeholder.isSpectator; else notSpectator">
             <ion-button (click)="spectate(goal.id, stakeholder)" color="primary" class="fake-disable">
-              <span>FOLLOWING</span>
+              <span>Following</span>
             </ion-button>
           </ng-container>
 
           <ng-template #notSpectator>
             <ion-button (click)="spectate(goal.id, stakeholder)" color="primary">
-              <span>FOLLOW</span>
+              <span>Follow</span>
             </ion-button>
           </ng-template>
         </ion-item>

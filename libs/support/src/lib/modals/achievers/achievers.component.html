@@ -7,7 +7,7 @@
     <ion-item>
       <h5>Select recipient(s)</h5>
       <ion-button slot="end" color="primary" (click)="submit()">
-        OK, DONE
+        Ok, done
       </ion-button>
     </ion-item>
     <ion-item *ngFor="let achiever of _achievers; let last = last" [lines]="last ? 'none' : 'full'">
@@ -21,6 +21,6 @@
     </ion-item>
   </ion-list>
   <ion-button color="primary" (click)="submit()" class="submit">
-    OK, DONE
+    Ok, done
   </ion-button>
 </ion-content>

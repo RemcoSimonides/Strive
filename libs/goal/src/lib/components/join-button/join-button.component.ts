@@ -13,10 +13,10 @@ import { BehaviorSubject } from 'rxjs'
 @Pipe({ name: 'joinButtonText', standalone: true })
 export class JoinButtonTextSPipe implements PipeTransform {
   transform(stakeholder: GoalStakeholder, collectiveGoalStakeholder?: GoalStakeholder) {
-    if (stakeholder.isAchiever) return 'JOINED'
-    if (stakeholder.hasOpenRequestToJoin) return 'CANCEL REQUEST'
-    if (collectiveGoalStakeholder?.isAchiever) return 'JOINED'
-    return 'JOIN'
+    if (stakeholder.isAchiever) return 'Joined'
+    if (stakeholder.hasOpenRequestToJoin) return 'Cancel request'
+    if (collectiveGoalStakeholder?.isAchiever) return 'Joined'
+    return 'Join'
   }
 }
 

@@ -4,10 +4,10 @@
 
 	<ion-button disabled color="primary" fill="clear">
 		<ng-container *ngIf="form.dirty; else saved">
-			<span>SAVING...</span>
+			<span>Saving...</span>
 		</ng-container>
 		<ng-template #saved>
-			<span>SAVED</span>
+			<span>Saved</span>
 			<ion-icon slot="end" name="checkmark-outline" />
 		</ng-template>
 	</ion-button>

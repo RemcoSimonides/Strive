@@ -25,7 +25,7 @@
 			<ng-container *ngIf="save$ | async as status">
 
 				<ng-container *ngIf="status === 'saved'">
-					<span>SAVED</span>
+					<span>Saved</span>
 					<ion-icon name="checkmark" slot="end" />
 				</ng-container>
 
@@ -34,7 +34,7 @@
 				</ng-container>
 
 				<ng-container *ngIf="status === 'save'">
-					<span>SAVE</span>
+					<span>Save</span>
 				</ng-container>
 			</ng-container>
 		</ion-button>
