@@ -1,11 +1,5 @@
 $size: 42px;
 
-@media (hover: none) { // add margin to the right of the list on mobile if device can only touch
-  ion-list {
-    margin-right: 32px;
-  }
-}
-
 ion-thumbnail {
   height: $size;
   width: $size;
