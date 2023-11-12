@@ -148,6 +148,8 @@ ion-textarea {
 }
 
 ion-button {
+  text-transform: none;
+
   &.fake-disable {
     opacity: 0.5;
   }
