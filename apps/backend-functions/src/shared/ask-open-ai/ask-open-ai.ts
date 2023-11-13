@@ -1,5 +1,6 @@
 import { DocumentReference, logger } from '@strive/api/firebase'
 import { ChatGPTMessage } from '@strive/model'
+import { delay } from '@strive/utils/helpers'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsStreaming, ChatCompletionMessageParam } from 'openai/resources'
 
@@ -41,13 +42,14 @@ export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: Doc
           if (parsed) doc.answerParsed = parsed
         }
 
-        if (counter % 5) ref.update(doc) // only update every 5th iteration
+        if (counter % 10) ref.update(doc) // only update every 5th iteration
       }
       counter++
     }
 
     doc.status = 'completed'
-    ref.update(doc)
+    delay(500).then(() => ref.update(doc))
+    return doc.answerRaw
   } catch (error) {
     if (error.response) {
       logger.error(error.response.status)
