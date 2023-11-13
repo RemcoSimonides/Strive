@@ -10,7 +10,7 @@ export interface EntryStep {
   tense: SelfReflectTense | ''
 }
 
-export function getInterval(value: SelfReflectInterval): string {
+export function getInterval(value: SelfReflectIntervalWithNever): string {
   switch (value) {
     case 'weekly': return 'week'
     case 'monthly': return 'month'

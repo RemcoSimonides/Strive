@@ -1,4 +1,4 @@
-import { SelfReflectInterval } from "@strive/model"
+import { SelfReflectIntervalWithNever } from "@strive/model"
 
 interface ScheduledTaskBase {
   worker: enumWorkerType
@@ -72,6 +72,6 @@ export interface ScheduledTaskUserExerciseWheelOfLife extends ScheduledTaskBase 
 export interface ScheduledTaskUserExerciseSelfReflect extends ScheduledTaskBase {
   options: {
     userId: string,
-    intervals: SelfReflectInterval[]
+    intervals: SelfReflectIntervalWithNever[]
   }
 }

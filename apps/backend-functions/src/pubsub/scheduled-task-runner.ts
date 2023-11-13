@@ -150,6 +150,6 @@ async function userExerciseWheelOfLifeReminderHandler(options: ScheduledTaskUser
 
 async function userExerciseSelfReflectHandler(options: ScheduledTaskUserExerciseSelfReflect['options']) {
   const settings = await getDocument<SelfReflectSettings>(`Users/${options.userId}/Exercises/SelfReflect`)
-  sendSelfReflectPuthNotification(options)
+  sendSelfReflectPuthNotification(settings, options)
   scheduleNextSelfReflectReminder(settings, options.userId)
 }

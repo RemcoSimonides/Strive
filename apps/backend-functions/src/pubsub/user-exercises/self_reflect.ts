@@ -7,9 +7,13 @@ import { smartJoin } from '@strive/utils/helpers'
 import { getNextReminder } from '../../firestore/users/exercises/self_reflect'
 import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 
-export async function sendSelfReflectPuthNotification(options: ScheduledTaskUserExerciseSelfReflect['options']) {
+export async function sendSelfReflectPuthNotification(settings: SelfReflectSettings, options: ScheduledTaskUserExerciseSelfReflect['options']) {
 
   const { userId, intervals } = options
+
+  const questionsInIntervals = settings.questions.filter(question => intervals.includes(question.interval))
+  const randomIndex = Math.floor(Math.random() * questionsInIntervals.length)
+  const question = questionsInIntervals[randomIndex]
 
   const converted = intervals.map(interval => getInterval(interval))
   const readable = smartJoin(converted, ', ', ' and ')
@@ -20,8 +24,8 @@ export async function sendSelfReflectPuthNotification(options: ScheduledTaskUser
   const messages: Message[] = personal.fcmTokens.map(token => ({
     token,
     notification: {
-      title: `Time to Self Reflect`,
-      body: `Take a moment to do the ${readable} reflection`
+      title: question.question,
+      body: `(Make) time to reflect the ${readable}`
     },
     data: { link },
     webpush: {
