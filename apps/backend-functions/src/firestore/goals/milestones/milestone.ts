@@ -39,8 +39,9 @@ export const milestoneDeletedHandler = onDocumentDelete(`Goals/{goalId}/Mileston
 async (snapshot, context) => {
 
   const { goalId, milestoneId } = context.params
+  const milestone = createMilestone(toDate({ ...snapshot.data(), id: snapshot.id }))
 
-  milestoneDeleted(goalId, milestoneId)
+  milestoneDeleted(goalId, milestoneId, milestone)
 })
 
 export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneChangeHandler',
@@ -55,7 +56,7 @@ async (snapshot, context) => {
 
   const deleted = before.deletedAt === null && after.deletedAt !== null
   if (deleted) {
-    milestoneDeleted(goalId, milestoneId)
+    milestoneDeleted(goalId, milestoneId, after)
   }
 
   const completed = before.status === 'pending' && (after.status === 'failed' || after.status === 'succeeded')
@@ -126,7 +127,12 @@ async function supportsNeedDecision(goalId: string, milestone: Milestone) {
   batch.commit()
 }
 
-async function milestoneDeleted(goalId: string, milestoneId: string) {
+async function milestoneDeleted(goalId: string, milestoneId: string, milestone: Milestone) {
+  // decrease tasks on goal
+  const data: Partial<Goal> = { tasksTotal: increment(-1) as any }
+  if (milestone.status === 'succeeded') data.tasksCompleted = increment(-1) as any
+  db.doc(`Goals/${goalId}`).update(data)
+
   // scheduled task
   await deleteScheduledTask(milestoneId)
 
