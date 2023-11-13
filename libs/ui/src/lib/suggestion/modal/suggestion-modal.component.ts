@@ -1,15 +1,16 @@
 import { CommonModule, Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
+import { IonContent, IonicModule, ModalController } from '@ionic/angular'
 import { orderBy, where } from '@firebase/firestore'
 
 import { isAfter, subMinutes } from 'date-fns'
-import { BehaviorSubject, Observable, map, of, switchMap } from 'rxjs'
+import { BehaviorSubject, Observable, map, of, switchMap, tap } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
+import { ScrollService } from '@strive/utils/services/scroll.service'
 
 import { Goal, GoalStakeholder, Milestone, createChatGPTMessage, createGoalStakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
@@ -32,6 +33,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   ],
 })
 export class SuggestionModalComponent extends ModalDirective implements OnInit {
+  @ViewChild(IonContent) content?: IonContent
 
   milestones$?: Observable<Milestone[]>
   stakeholder$?: Observable<GoalStakeholder>
@@ -45,6 +47,7 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
     location: Location,
     modalCtrl: ModalController,
     private milestoneService: MilestoneService,
+    private scrollService: ScrollService,
     private stakeholderService: GoalStakeholderService
   ) {
     super(location, modalCtrl)
@@ -54,7 +57,16 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
     if (!this.goal) return
     const goalId = this.goal.id
     const query = [where('deletedAt', '==', null), orderBy('order', 'asc')]
-    this.milestones$ = this.milestoneService.valueChanges(query, { goalId })
+    this.milestones$ = this.milestoneService.valueChanges(query, { goalId }).pipe(
+      tap(async () => {
+        const scrollHeight = this.scrollService.scrollHeight
+        if (!this.content || !scrollHeight) return
+        this.content.getScrollElement().then(scrollElement => {
+          this.content?.scrollToPoint(0, scrollElement.scrollTop + scrollHeight + 22)
+          this.scrollService.scrollHeight = undefined
+        })
+      })
+    )
     this.stakeholder$ = this.auth.profile$.pipe(
       switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
       map(createGoalStakeholder)

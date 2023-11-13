@@ -11,6 +11,7 @@ import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/model'
+import { ScrollService } from '@strive/utils/services/scroll.service'
 
 
 @Component({
@@ -62,7 +63,8 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private chatGPTService: ChatGPTService,
-    private milestoneService: MilestoneService
+    private milestoneService: MilestoneService,
+    private scrolLService: ScrollService
   ) {}
 
   ngOnInit() {
@@ -105,7 +107,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     this.milestoneService.add(milestones, { params: { goalId: this.goalId }})
   }
 
-  async addSuggestion(content: string, index: number) {
+  async addSuggestion(content: string, index: number, element: any) {
     if (!this.goalId) throw new Error('Goal Id is required in order to add milestones')
 
     const current = await this.milestoneService.getValue([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
@@ -113,8 +115,10 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
 
     const milestone = createMilestone({ order: max, content })
     this.milestoneService.add(milestone, { params: { goalId: this.goalId }})
-
     this.added$.next([...this.added$.value, index])
+
+    // save element height because added element added to list above this is similar height
+    this.scrolLService.scrollHeight = element.el.clientHeight
   }
 
   submit() {

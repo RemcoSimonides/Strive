@@ -24,7 +24,7 @@
           <ng-container *ngIf="view.suggestion.answerParsed.length; else noParsed">
             <ion-list mode="md" class="small">
               <ng-container *ngFor="let milestone of view.suggestion.answerParsed; let index = index; let last = last; trackBy: trackByFn">
-                <ion-item (click)="addSuggestion(milestone, index)" [lines]="last ? 'none' : 'full'" button [disabled]="view.added.includes(index)" class="fade-out">
+                <ion-item #item (click)="addSuggestion(milestone, index, item)" [lines]="last ? 'none' : 'full'" button [disabled]="view.added.includes(index)" class="fade-out">
                   <ion-label>
                     <small class="number">{{ index + 1 }}.</small>
                     <small>{{ milestone }}</small>
