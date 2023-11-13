@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
-import { ExercisesPageComponent, GetExercisePipe, AssessLifeDescriptionPipe } from './exercises.component'
+import { ExercisesPageComponent, GetExercisePipe, SelfReflectDescriptionPipe } from './exercises.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
@@ -34,8 +34,8 @@ const routes: Routes = [
     loadChildren: () => import('./dear-future-self/dear-future-self.module').then(m => m.DearFutureSelfModule)
   },
   {
-    path: 'assess-life',
-    loadChildren: () => import('./assess-life/assess-life.module').then(m => m.AssessLifeModule)
+    path: 'self-reflect',
+    loadChildren: () => import('./self-reflect/self-reflect.module').then(m => m.SelfReflectModule)
   }
 ]
 
@@ -49,7 +49,7 @@ const routes: Routes = [
     DearFutureSelfPipeModule,
     TimeToGoPipeModule,
     PageLoadingModule,
-    AssessLifeDescriptionPipe
+    SelfReflectDescriptionPipe
   ],
   declarations: [
     ExercisesPageComponent,

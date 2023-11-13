@@ -18,7 +18,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
-import { AssessLifeInterval, createAssessLifeEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
+import { SelfReflectInterval, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -27,8 +27,8 @@ import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/ca
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals/message/message.component'
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
-import { AssessLifeEntryComponent } from '@strive/exercises/assess-life/components/entry/assess-life-entry.component'
-import { getAssessLifeId } from '@strive/exercises/assess-life/utils/date.utils'
+import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
+import { getSelfReflectId } from '@strive/exercises/self-reflect/utils/date.utils'
 
 @Component({
   selector: 'journal-goals',
@@ -49,7 +49,7 @@ export class GoalsPageComponent implements OnDestroy {
     const uid = await this.auth.getUID()
     if (!uid) return
 
-    const { t, affirm, dfs, assess } = params
+    const { t, affirm, dfs, reflect } = params
     if (t === 'daily-gratitude') {
       this.modalCtrl.create({
         component: CardsModalComponent
@@ -63,15 +63,15 @@ export class GoalsPageComponent implements OnDestroy {
       }).then(modal => modal.present())
     }
 
-    if (assess) {
-      const todos: AssessLifeInterval[] = assess.split('').map((i: string) => {
+    if (reflect) {
+      const todos: SelfReflectInterval[] = reflect.split('').map((i: string) => {
         if (i === 'y') return 'yearly'
         if (i === 'q') return 'quarterly'
         if (i === 'm') return 'monthly'
         if (i === 'w') return 'weekly'
         return undefined
-      }).filter((interval: AssessLifeInterval | undefined) => !!interval)
-      .sort((a: AssessLifeInterval, b: AssessLifeInterval) => {
+      }).filter((interval: SelfReflectInterval | undefined) => !!interval)
+      .sort((a: SelfReflectInterval, b: SelfReflectInterval) => {
         // first yearly, then quarterly, then monthly, then weekly
         if (a === 'yearly' && b !== 'yearly') return -1
         if (a !== 'yearly' && b === 'yearly') return 1
@@ -85,16 +85,16 @@ export class GoalsPageComponent implements OnDestroy {
       })
 
       if (!todos || !todos.length) {
-        this.router.navigate(['/exercise/assess-life'])
+        this.router.navigate(['/exercise/self-reflect'])
         return
       }
 
       const interval = todos[0]
-      const id = getAssessLifeId(interval)
-      const entry = createAssessLifeEntry({ id, interval })
+      const id = getSelfReflectId(interval)
+      const entry = createSelfReflectEntry({ id, interval })
 
       this.modalCtrl.create({
-        component: AssessLifeEntryComponent,
+        component: SelfReflectEntryComponent,
         componentProps: { entry, todos }
       }).then(modal => modal.present())
     }

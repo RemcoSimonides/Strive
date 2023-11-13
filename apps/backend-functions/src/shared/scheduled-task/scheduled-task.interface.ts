@@ -1,4 +1,4 @@
-import { AssessLifeInterval } from "@strive/model"
+import { SelfReflectInterval } from "@strive/model"
 
 interface ScheduledTaskBase {
   worker: enumWorkerType
@@ -21,7 +21,7 @@ export enum enumWorkerType {
   userExerciseDailyGratitudeReminder = 'userExerciseDailyGratitudeReminder',
   userExerciseDearFutureSelfMessage = 'userExerciseDearFutureSelfMessage',
   userExerciseWheelOfLifeReminder = 'userExerciseWheelOfLifeReminder',
-  userExerciseAssessLife = 'userExerciseAssessLife'
+  userExerciseSelfReflect = 'userExerciseSelfReflect'
 }
 
 export interface ScheduledTaskGoalInviteLinkDeadline extends ScheduledTaskBase {
@@ -69,9 +69,9 @@ export interface ScheduledTaskUserExerciseWheelOfLife extends ScheduledTaskBase 
   }
 }
 
-export interface ScheduledTaskUserExerciseAssessLife extends ScheduledTaskBase {
+export interface ScheduledTaskUserExerciseSelfReflect extends ScheduledTaskBase {
   options: {
     userId: string,
-    intervals: AssessLifeInterval[]
+    intervals: SelfReflectInterval[]
   }
 }

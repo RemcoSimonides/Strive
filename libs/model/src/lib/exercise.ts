@@ -1,4 +1,4 @@
-export type ExerciseType = 'Affirmations' | 'DailyGratitude' | 'DearFutureSelf' | 'AssessLife' | 'WheelOfLife'
+export type ExerciseType = 'Affirmations' | 'DailyGratitude' | 'DearFutureSelf' | 'SelfReflect' | 'WheelOfLife'
 
 export interface Exercise {
 	id: ExerciseType
@@ -17,10 +17,10 @@ export const exercises: Exercise[] = [
 		description: 'Control your thoughts by regularly repeating short, powerful statements'
 	},
 	{
-		id: 'AssessLife',
-		title: 'Assess Life',
+		id: 'SelfReflect',
+		title: 'Self Reflect',
 		image: 'exercise_review_and_plan.png',
-		link: '/exercise/assess-life',
+		link: '/exercise/self-reflect',
 		description: 'Get a grasp on life by looking back and planning ahead'
 	},
 	{
