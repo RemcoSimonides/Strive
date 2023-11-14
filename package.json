@@ -45,10 +45,11 @@
     "@capawesome/capacitor-app-update": "^5.0.0",
     "@docusaurus/core": "^2.4.1",
     "@docusaurus/preset-classic": "^2.4.1",
-    "@ionic/angular": "^7.0.12",
+    "@ionic/angular": "^7.5.4",
     "@ionic/pwa-elements": "^3.1.1",
     "@mdx-js/react": "^2.3.0",
     "@nguniversal/express-engine": "16.0.2",
+    "@nx/angular": "16.3.2",
     "@sendgrid/mail": "^7.7.0",
     "@sentry/angular": "^7.24.2",
     "@sentry/capacitor": "^0.10.1",
@@ -75,8 +76,7 @@
     "rxjs": "7.8.1",
     "swiper": "^8.4.5",
     "tslib": "^2.5.3",
-    "zone.js": "0.13.1",
-    "@nx/angular": "16.3.2"
+    "zone.js": "0.13.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "16.0.5",
@@ -94,6 +94,13 @@
     "@docusaurus/module-type-aliases": "^2.4.1",
     "@nguniversal/builders": "16.0.2",
     "@nx-plus/docusaurus": "^15.0.0-rc.0",
+    "@nx/cypress": "16.3.2",
+    "@nx/eslint-plugin": "16.3.2",
+    "@nx/jest": "16.3.2",
+    "@nx/js": "16.3.2",
+    "@nx/linter": "16.3.2",
+    "@nx/node": "16.3.2",
+    "@nx/workspace": "16.3.2",
     "@nxext/ionic-angular": "^16.2.0",
     "@schematics/angular": "16.0.5",
     "@types/crypto-js": "^4.1.1",
@@ -111,17 +118,10 @@
     "jest-environment-node": "^29.5.0",
     "jest-preset-angular": "13.1.1",
     "nx": "16.3.2",
+    "nx-cloud": "16.0.5",
     "prettier": "^2.8.8",
     "ts-jest": "29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "5.0.4",
-    "nx-cloud": "16.0.5",
-    "@nx/workspace": "16.3.2",
-    "@nx/js": "16.3.2",
-    "@nx/cypress": "16.3.2",
-    "@nx/linter": "16.3.2",
-    "@nx/eslint-plugin": "16.3.2",
-    "@nx/jest": "16.3.2",
-    "@nx/node": "16.3.2"
+    "typescript": "5.0.4"
   }
 }
