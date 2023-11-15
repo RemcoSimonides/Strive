@@ -10,64 +10,23 @@ form {
   display: flex;
   flex-direction: column;
   gap: 32px;
-}
 
-ion-item {
-  --highlight-background: var(--ion-color-primary);
-}
-
-.reminder {
-  display: block;
-  margin: 8px 16px;
-  color: var(--ion-color-medium);
-}
-
-ion-text {
-  margin-right: 16px;
-}
-
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  small {
+  .reminder {
+    display: block;
+    margin: 8px 16px;
     color: var(--ion-color-medium);
   }
-}
 
-span {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
+  ion-item {
+    --highlight-background: var(--ion-color-primary);
 
-.add-question {
-  text-align: center;
-  color: var(--ion-color-primary);
-  --color-hover: var(--ion-color-primary);
-
-  ion-icon {
-    color: var(--ion-color-primary)
-  }
-}
-
-ion-select {
-  width: 100%;
-  padding-left: 0;
-}
-
-.question {
-  --min-height: 80px;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-
-  section {
-    width: 100%;
-
-    small {
-      display: grid;
-      column-gap: 8px;
-      grid-template-columns: auto 1fr;
+    ion-text {
+      margin-right: 16px;
     }
+  }
+
+  ion-select {
+    width: 100%;
+    padding-left: 0;
   }
 }

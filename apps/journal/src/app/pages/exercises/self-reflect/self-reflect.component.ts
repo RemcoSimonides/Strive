@@ -1,18 +1,20 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { FormControl, FormGroup } from '@angular/forms'
-import { ModalController } from '@ionic/angular'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
+import { AlertController, ModalController } from '@ionic/angular'
 import { orderBy } from 'firebase/firestore'
-import { combineLatest, firstValueFrom, map, of, shareReplay, startWith, switchMap } from 'rxjs'
+import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap } from 'rxjs'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry } from '@strive/model'
+import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflectQuestion, SelfReflectSettings, createSelfReflectEntry, createSelfReflectQuestion, createSelfReflectSettings, selfReflectKeys, selfReflectSettings } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
 import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@strive/exercises/self-reflect/utils/date.utils'
+import { SelfReflectQuestionFormControl, SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/self-reflect-settings.form'
+import { replaceFrequency } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
+import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-custom-question/upsert-custom-question.component'
 
 function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettings | undefined, frequency: SelfReflectFrequency) {
   if (!settings) return { disabled: true, message: 'No settings found' }
@@ -58,37 +60,16 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   styleUrls: ['./self-reflect.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelfReflectComponent {
+export class SelfReflectComponent implements OnInit {
 
   isMobile$ = this.screensize.isMobile$
   uid$ = this.auth.uid$
+  loadingQuestions = signal<boolean>(true)
 
   private dbEntries$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
     shareReplay({ bufferSize: 1, refCount: true })
-  )
-
-  filterForm = new FormGroup({
-    weekly: new FormControl<boolean>(true),
-    monthly: new FormControl<boolean>(true),
-    quarterly: new FormControl<boolean>(true),
-    yearly: new FormControl<boolean>(true)
-  })
-
-  entries$ = combineLatest([
-    this.dbEntries$,
-    this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
-  ]).pipe(
-    map(([entries, filter]) => entries.filter(entry => {
-      const frequencies: SelfReflectFrequency[] = []
-      if (filter.weekly) frequencies.push('weekly')
-      if (filter.monthly) frequencies.push('monthly')
-      if (filter.quarterly) frequencies.push('quarterly')
-      if (filter.yearly) frequencies.push('yearly')
-
-      return frequencies.includes(entry.frequency)
-    }))
   )
 
   private settings$ = this.auth.profile$.pipe(
@@ -124,8 +105,37 @@ export class SelfReflectComponent {
     map(([entries, settings]) => getEntryStatus(entries, settings, 'yearly'))
   )
 
+  form = new SelfReflectSettingsForm()
+
+  customQuestions$ = this.settings$.pipe(
+    map(settings => settings ? settings.questions.filter(({ key }) => !selfReflectKeys.includes(key)) : []),
+  )
+
+  categories: Record<SelfReflectCategory, string> = {
+    intro: '',
+    previousIntention: '',
+    career: 'Career',
+    creative: 'Creative',
+    education: 'Education',
+    environment: 'Environment',
+    financial: 'Financial',
+    healthAndFitness: 'Health and Fitness',
+    personalDevelopment: 'Personal Development',
+    relationships: 'Relationships',
+    spiritual: 'Spiritual',
+    travelAndAdventures: 'Travel and Adventures',
+    other: 'Other',
+    dearFutureSelf: 'Dear Future Self',
+    wheelOfLife: 'Wheel of Life',
+    gratitude: 'Gratitude',
+    prioritizeGoals: 'Prioritize Goals',
+    outro: ''
+  }
+
   constructor(
+    private alertCtrl: AlertController,
     private auth: AuthService,
+    private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
     private screensize: ScreensizeService,
     private service: SelfReflectEntryService,
@@ -136,6 +146,25 @@ export class SelfReflectComponent {
       title: 'Self Reflect - Strive Journal',
       description: 'Get a grasp on life by looking back and planning ahead',
     })
+
+    this.form.valueChanges.subscribe(() => {
+      if (!this.auth.uid) return
+
+      const raw = this.form.getRawValue()
+      const settings = createSelfReflectSettings(raw)
+      this.settingsService.save(this.auth.uid, settings)
+    })
+  }
+
+  async ngOnInit() {
+    const settings = await firstValueFrom(this.settings$)
+
+    if (settings && settings.questions.length) {
+      this.form.patchValue(settings, { emitEvent: false })
+    } else {
+      this.form.patchValue(selfReflectSettings, { emitEvent: false })
+    }
+    this.loadingQuestions.set(false)
   }
 
   async addEntry(frequency: SelfReflectFrequency) {
@@ -165,19 +194,6 @@ export class SelfReflectComponent {
     modal.present()
   }
 
-  async openEntry(entry: SelfReflectEntry) {
-    this.modalCtrl.create({
-      component: SelfReflectEntryComponent,
-      componentProps: { entry }
-    }).then(modal => modal.present())
-  }
-
-  async getPreviousEntry(frequency: SelfReflectFrequency) {
-    const entries = await firstValueFrom(this.dbEntries$)
-    const filtered = entries.filter(entry => entry.frequency === frequency)
-    return filtered[0]
-  }
-
   openAuthModal() {
     this.modalCtrl.create({
       component: AuthModalComponent,
@@ -185,5 +201,59 @@ export class SelfReflectComponent {
         authSegment: enumAuthSegment.login
       }
     }).then(modal => modal.present())
+  }
+
+  async openQuestion(questionControl: SelfReflectQuestionFormControl) {
+    const alert = await this.alertCtrl.create({
+      header: 'Choose frequency',
+      message: replaceFrequency(questionControl.question.value, questionControl.frequency.value),
+      inputs: [
+        { label: 'Never', value: 'never', type: 'radio', checked: questionControl.frequency.value === 'never' },
+        { label: 'Weekly', value: 'weekly', type: 'radio', checked: questionControl.frequency.value === 'weekly' },
+        { label: 'Monthly', value: 'monthly', type: 'radio', checked: questionControl.frequency.value === 'monthly' },
+        { label: 'Quarterly', value: 'quarterly', type: 'radio', checked: questionControl.frequency.value === 'quarterly' },
+        { label: 'Yearly', value: 'yearly', type: 'radio', checked: questionControl.frequency.value === 'yearly' },
+      ],
+      buttons: ['Save'],
+      mode: 'ios'
+    })
+    alert.onDidDismiss().then(({ data }) => {
+      if (!data) return
+      const { values } = data
+      if (!values) return
+      questionControl.frequency.setValue(values)
+      this.form.updateValueAndValidity()
+      this.cdr.markForCheck()
+    })
+    alert.present()
+  }
+
+  async openCustomQuestion(question?: SelfReflectQuestion) {
+    const modal = await this.modalCtrl.create({
+      component: SelfReflectCustomQuestionModalComponent,
+      componentProps: { question }
+    })
+    modal.onDidDismiss().then(async ({ data }) => {
+      if (!data) return
+      const question = createSelfReflectQuestion(data)
+      const settings = await firstValueFrom(this.settings$)
+      if (!settings) throw new Error(`Couldn't get settings`)
+      const uid = this.auth.uid
+      if (!uid) throw new Error(`Can't save question without uid`)
+
+      if (data.question === 'delete') {
+        settings.questions = settings.questions.filter(({ key }) => key !== question.key)
+      } else {
+        const index = settings.questions.findIndex(({ key }) => key === question.key)
+        if (index > -1) {
+          settings.questions[index] = question
+        } else {
+          settings.questions.push(question)
+        }
+      }
+
+      this.settingsService.save(uid, settings)
+    })
+    modal.present()
   }
 }

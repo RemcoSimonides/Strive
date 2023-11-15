@@ -8,7 +8,6 @@ main {
 
 header {
   display: flex;
-  justify-content: center;
   margin-top: 20px;
 
   h1, h3 {
@@ -24,12 +23,31 @@ small {
   color: var(--ion-color-medium);
 }
 
-.explanation {
-  color: var(--ion-color-medium);
+.question {
+  --min-height: 80px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+
+    small {
+      display: grid;
+      column-gap: 8px;
+      grid-template-columns: auto 1fr;
+    }
+  }
 }
 
-article {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.add-custom-question {
+  text-align: center;
+  color: var(--ion-color-primary);
+  --color-hover: var(--ion-color-primary);
+
+  ion-icon {
+    color: var(--ion-color-primary)
+  }
 }

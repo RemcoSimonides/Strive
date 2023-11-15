@@ -34,40 +34,4 @@
       </ion-item>
     </ion-list>
   </form>
-
-  <form>
-    <ion-list mode="md" lines="full">
-      <ng-container *ngFor="let questionControl of form.questions.controls; let last = last">
-        <ion-item [lines]="last ? 'none' : 'full'" button (click)="openAlert(questionControl)" class="question">
-          <section>
-            <span>{{ questionControl.question.value | replaceFrequency: questionControl.frequency.value }}</span>
-            <small>
-              <span>Frequency:</span>
-              <span>{{ questionControl.frequency.value | titlecase }}</span>
-              <span>Category:</span>
-              <span>{{ categories[questionControl.category.value] }}</span>
-              <span>Tense:</span>
-              <span>{{ questionControl.tense.value | titlecase }}</span>
-            </small>
-          </section>
-        </ion-item>
-      </ng-container>
-    </ion-list>
-  </form>
-
-    <h2>Custom Questions</h2>
-    <ion-list mode="md">
-      <ion-item *ngFor="let question of customQuestions$ | async" button (click)="openQuestion(question)">
-        <ion-label>
-          <section>
-            <span>{{ question.question }}</span>
-            <small>{{ categories[question.category] }} - {{ question.frequency | titlecase }}</small>
-          </section>
-        </ion-label>
-      </ion-item>
-      <ion-item button (click)="openQuestion()" lines="none" class="add-question">
-        <ion-label>Add Question</ion-label>
-        <ion-icon slot="end" name="add-outline"/>
-      </ion-item>
-    </ion-list>
 </ng-template>

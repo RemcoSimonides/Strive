@@ -1,4 +1,4 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms'
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms'
 import { SelfReflectSettings, SelfReflectTense, SelfReflectType, SelfReflectFrequencyWithNever, SelfReflectQuestion, WeekdayWithNever, createSelfReflectQuestion, createSelfReflectSettings, SelfReflectCategory } from '@strive/model'
 
 
@@ -40,12 +40,12 @@ function createSelfReflectQuestionFormControl(params?: Partial<SelfReflectQuesti
   const question = createSelfReflectQuestion(params)
 
   return {
-    key: new FormControl<string>(question.key, { nonNullable: true }),
-    category: new FormControl<SelfReflectCategory>(question.category, { nonNullable: true }),
-    question: new FormControl<string>(question.question, { nonNullable: true }),
-    type: new FormControl<SelfReflectType>(question.type, { nonNullable: true }),
-    frequency: new FormControl<SelfReflectFrequencyWithNever>(question.frequency, { nonNullable: true }),
-    tense: new FormControl<SelfReflectTense>(question.tense, { nonNullable: true })
+    key: new FormControl<string>(question.key, { nonNullable: true, validators: [Validators.required] }),
+    category: new FormControl<SelfReflectCategory>(question.category, { nonNullable: true, validators: [Validators.required] }),
+    question: new FormControl<string>(question.question, { nonNullable: true, validators: [Validators.required] }),
+    type: new FormControl<SelfReflectType>(question.type, { nonNullable: true, validators: [Validators.required] }),
+    frequency: new FormControl<SelfReflectFrequencyWithNever>(question.frequency, { nonNullable: true, validators: [Validators.required] }),
+    tense: new FormControl<SelfReflectTense>(question.tense, { nonNullable: true, validators: [Validators.required] })
   }
 }
 
