@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { SelfReflectIntervalPipe } from '../../pipes/interval.pipe'
 import { WheelOfLifeForm } from './wheel-of-life.form'
 import { aspectsConfig } from '@strive/model'
 
@@ -16,7 +15,6 @@ import { aspectsConfig } from '@strive/model'
     CommonModule,
     IonicModule,
     ReactiveFormsModule,
-    SelfReflectIntervalPipe
   ]
 })
 export class WheelOfLifeComponent {

@@ -1,4 +1,4 @@
-import { SelfReflectSettings, Personal, getInterval } from '@strive/model'
+import { SelfReflectSettings, Personal, getFrequency } from '@strive/model'
 import type { Message } from 'firebase-admin/messaging'
 import { getDocument } from '../../shared/utils'
 import { admin } from '@strive/api/firebase'
@@ -9,15 +9,15 @@ import { upsertScheduledTask } from '../../shared/scheduled-task/scheduled-task'
 
 export async function sendSelfReflectPuthNotification(settings: SelfReflectSettings, options: ScheduledTaskUserExerciseSelfReflect['options']) {
 
-  const { userId, intervals } = options
+  const { userId, frequencies } = options
 
-  const questionsInIntervals = settings.questions.filter(question => intervals.includes(question.interval))
-  const randomIndex = Math.floor(Math.random() * questionsInIntervals.length)
-  const question = questionsInIntervals[randomIndex]
+  const questionsInFrequencies = settings.questions.filter(question => frequencies.includes(question.frequency))
+  const randomIndex = Math.floor(Math.random() * questionsInFrequencies.length)
+  const question = questionsInFrequencies[randomIndex]
 
-  const converted = intervals.map(interval => getInterval(interval))
+  const converted = frequencies.map(frequency => getFrequency(frequency))
   const readable = smartJoin(converted, ', ', ' and ')
-  const firstLetters = intervals.map(interval => interval[0]).join('')
+  const firstLetters = frequencies.map(frequency => frequency[0]).join('')
 
   const personal = await getDocument<Personal>(`Users/${userId}/Personal/${userId}`)
   const link = `goals?reflect=${firstLetters}`
@@ -40,12 +40,12 @@ export async function sendSelfReflectPuthNotification(settings: SelfReflectSetti
 }
 
 export async function scheduleNextSelfReflectReminder(settings: SelfReflectSettings, userId: string) {
-  const { performAt, performIntervals: intervals } = getNextReminder(settings)
+  const { performAt, performFrequencies: frequencies } = getNextReminder(settings)
 
   const task: ScheduledTaskUserExerciseSelfReflect = {
     worker: enumWorkerType.userExerciseSelfReflect,
     performAt,
-    options: { userId, intervals },
+    options: { userId, frequencies },
     status: 'scheduled'
   }
   return upsertScheduledTask(`${userId}selfreflect`, task)

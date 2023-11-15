@@ -1,14 +1,14 @@
-<ng-container *ngIf="interval">
-  <ng-container *ngIf="interval === 'weekly'">
+<ng-container *ngIf="frequency">
+  <ng-container *ngIf="frequency === 'weekly'">
     <p>Bye week {{ week -1 }}, Hello week {{ week }}.</p>
   </ng-container>
-  <ng-container *ngIf="interval === 'monthly'">
+  <ng-container *ngIf="frequency === 'monthly'">
     <p>Bye {{ month - 1 | getMonthName }}, Hello {{ month | getMonthName }}</p>
   </ng-container>
-  <ng-container *ngIf="interval === 'quarterly'">
+  <ng-container *ngIf="frequency === 'quarterly'">
     <p>Bye quarter {{ quarter - 1 }}, Hello quarter {{ quarter }}</p>
   </ng-container>
-  <ng-container *ngIf="interval === 'yearly'">
+  <ng-container *ngIf="frequency === 'yearly'">
     <p>Bye {{ year - 1}}, Hello {{ year }}</p>
   </ng-container>
 </ng-container>

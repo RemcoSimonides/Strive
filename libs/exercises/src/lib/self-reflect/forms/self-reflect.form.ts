@@ -19,7 +19,7 @@ export class SelfReflectForm extends FormGroup<SelfReflectFormControl> {
   get id() { return this.get('id')! as FormControl }
 
   override patchValue(entry: SelfReflectEntry, options?: { onlySelf?: boolean, emitEvent?: boolean }) {
-    const excludedKeys = ['updatedAt', 'createdAt', 'interval', 'config']
+    const excludedKeys = ['updatedAt', 'createdAt', 'frequency', 'config']
 
     Object.entries(entry).forEach(([key, value]) => {
       if (excludedKeys.includes(key)) return

@@ -1,5 +1,5 @@
 import { arrayUnion, db, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
-import { SelfReflectEntry, SelfReflectInterval, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getInterval } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { getNextDay, startOfSelfReflectYear } from '@strive/exercises/self-reflect/utils/date.utils'
@@ -36,17 +36,17 @@ async (snapshot, context) => {
     return upsertReminder(uid, after)
   }
 
-  const beforeAvailableIntervals = getAvailableIntervals(before)
-  const afterAvailableIntervals = getAvailableIntervals(after)
+  const beforeAvailableFrequencies = getAvailableFrequencies(before)
+  const afterAvailableFrequencies = getAvailableFrequencies(after)
 
-  if (beforeAvailableIntervals.length && !afterAvailableIntervals.length) {
+  if (beforeAvailableFrequencies.length && !afterAvailableFrequencies.length) {
     return deleteScheduledTask(`${uid}selfreflect`)
   }
 
-  // if any intervals have been added or if any intervals have been removed, update the reminder
-  const addedIntervals = afterAvailableIntervals.filter(interval => !beforeAvailableIntervals.includes(interval))
-  const removedIntervals = beforeAvailableIntervals.filter(interval => !afterAvailableIntervals.includes(interval))
-  if (addedIntervals.length || removedIntervals.length) {
+  // if any frequencies have been added or if any frequencies have been removed, update the reminder
+  const addedFrequencies = afterAvailableFrequencies.filter(frequency => !beforeAvailableFrequencies.includes(frequency))
+  const removedFrequencies = beforeAvailableFrequencies.filter(frequency => !afterAvailableFrequencies.includes(frequency))
+  if (addedFrequencies.length || removedFrequencies.length) {
     return upsertReminder(uid, after)
   }
 })
@@ -119,22 +119,22 @@ async function saveDearFutureSelf(uid: string, entry: SelfReflectEntry) {
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal) return
 
-  const deliveryDate = entry.interval === 'weekly' ? addWeeks(entry.createdAt, 1)
-    : entry.interval === 'monthly' ? addMonths(entry.createdAt, 1)
-    : entry.interval === 'quarterly' ? addQuarters(entry.createdAt, 1)
+  const deliveryDate = entry.frequency === 'weekly' ? addWeeks(entry.createdAt, 1)
+    : entry.frequency === 'monthly' ? addMonths(entry.createdAt, 1)
+    : entry.frequency === 'quarterly' ? addQuarters(entry.createdAt, 1)
     : addYears(entry.createdAt, 1)
 
-  const interval = getInterval(entry.interval)
+  const frequency = getFrequency(entry.frequency)
 
   let description = ''
   if (entry.dearFutureSelfAdvice) {
     const decrypted = AES.decrypt(entry.dearFutureSelfAdvice, personal.key).toString(enc.Utf8)
-    description += `<b>What advice would you give yourself in one ${interval}?</b><br/><br/>${decrypted}`
+    description += `<b>What advice would you give yourself in one ${frequency}?</b><br/><br/>${decrypted}`
   }
   if (entry.dearFutureSelfPrediction) {
     if (description) description += '<br/><br/>'
     const decrypted = AES.decrypt(entry.dearFutureSelfPrediction, personal.key).toString(enc.Utf8)
-    description += `<b>What predictions would you make what will happen upcoming ${interval}?</b><br/><br/>${decrypted}`
+    description += `<b>What predictions would you make what will happen upcoming ${frequency}?</b><br/><br/>${decrypted}`
   }
   if (entry.dearFutureSelfAnythingElse) {
     if (description) description += '<br/><br/>'
@@ -196,13 +196,13 @@ async function addDearFutureSelfMessage(uid: string, message: Message) {
 }
 
 export function upsertReminder(uid: string, settings: SelfReflectSettings) {
-  const { performAt, performIntervals } = getNextReminder(settings)
+  const { performAt, performFrequencies } = getNextReminder(settings)
 
   const id = `${uid}selfreflect`
   const task: ScheduledTaskUserExerciseSelfReflect = {
     worker: enumWorkerType.userExerciseSelfReflect,
     performAt,
-    options: { userId: uid, intervals: performIntervals },
+    options: { userId: uid, frequencies: performFrequencies },
     status: 'scheduled'
   }
 
@@ -212,17 +212,17 @@ export function upsertReminder(uid: string, settings: SelfReflectSettings) {
 export function getNextReminder(settings: SelfReflectSettings) {
   if (settings.preferredDay === 'never') throw new Error('Should not set reminders if preferred day is never')
 
-  const intervals = getAvailableIntervals(settings)
+  const frequencies = getAvailableFrequencies(settings)
   const now = settings.createdAt
 
-  const startOfNextInterval = {
+  const startOfNextFrequency = {
     weekly: (date: Date) => startOfWeek(addWeeks(date, 1)),
     monthly: (date: Date) => startOfMonth(addMonths(date, 1)),
     quarterly: (date: Date) => startOfQuarter(addQuarters(date, 1)),
     yearly: (date: Date) => startOfSelfReflectYear(addYears(date, 1), 12, 24)
   }
 
-  const startOfNextNextInterval = {
+  const startOfNextNextFrequency = {
     weekly: (date: Date) => startOfWeek(addWeeks(date, 2)),
     monthly: (date: Date) => startOfMonth(addMonths(date, 2)),
     quarterly: (date: Date) => startOfQuarter(addQuarters(date, 2)),
@@ -237,32 +237,32 @@ export function getNextReminder(settings: SelfReflectSettings) {
   }
 
   let performAt: Date | undefined = undefined
-  let performIntervals: SelfReflectInterval[] = []
+  let performFrequencies: SelfReflectFrequency[] = []
 
-  for (const interval of intervals) {
-    const start = startOfNextInterval[interval](now)
+  for (const frequency of frequencies) {
+    const start = startOfNextFrequency[frequency](now)
     const next = getNextDay(start, settings.preferredDay)
 
     // do not send reminder if the next reminder is too soon - and thus try to set next next reminder
     const difference = differenceInDays(next, now)
-    if (difference > minDays[interval]) {
+    if (difference > minDays[frequency]) {
 
       if (!performAt || isBefore(next, performAt)) {
         performAt = next
-        performIntervals = [interval]
+        performFrequencies = [frequency]
       } else if (isEqual(next, performAt)) {
-        performIntervals.push(interval)
+        performFrequencies.push(frequency)
       }
 
     } else {
-      const startNextNext = startOfNextNextInterval[interval](now)
+      const startNextNext = startOfNextNextFrequency[frequency](now)
       const nextNext = getNextDay(startNextNext, settings.preferredDay)
 
       if (!performAt || isBefore(nextNext, performAt)) {
         performAt = nextNext
-        performIntervals = [interval]
+        performFrequencies = [frequency]
       } else if (isEqual(nextNext, performAt)) {
-        performIntervals.push(interval)
+        performFrequencies.push(frequency)
       }
     }
   }
@@ -273,9 +273,9 @@ export function getNextReminder(settings: SelfReflectSettings) {
   performAt.setHours(hours)
   performAt.setMinutes(minutes)
 
-  return { performAt, performIntervals }
+  return { performAt, performFrequencies }
 }
 
-function getAvailableIntervals(settings: SelfReflectSettings) {
-  return unique(settings.questions.map(({ interval }) => interval).filter(interval => interval !== 'never')) as SelfReflectInterval[]
+function getAvailableFrequencies(settings: SelfReflectSettings) {
+  return unique(settings.questions.map(({ frequency }) => frequency).filter(frequency => frequency !== 'never')) as SelfReflectFrequency[]
 }

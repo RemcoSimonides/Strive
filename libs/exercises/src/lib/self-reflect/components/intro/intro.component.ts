@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
-import { SelfReflectInterval } from '@strive/model'
+import { SelfReflectFrequency } from '@strive/model'
 import { GetMonthNamePipe } from '@strive/utils/pipes/date-fns.pipe'
 
 @Component({
   standalone: true,
-  selector: '[id][interval] strive-self-reflect-intro',
+  selector: '[id][frequency] strive-self-reflect-intro',
   templateUrl: './intro.component.html',
   styles: [`
     :host {
@@ -34,7 +34,7 @@ export class SelfReflectIntroComponent {
   quarter = 0
   year = 0
 
-  @Input() interval?: SelfReflectInterval
+  @Input() frequency?: SelfReflectFrequency
   @Input() set id(id: string | undefined) {
     if (!id) return
     const [year, quarter, month, week] = id.split('-')

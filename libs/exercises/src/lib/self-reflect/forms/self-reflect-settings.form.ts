@@ -1,5 +1,5 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms'
-import { SelfReflectSettings, SelfReflectTense, SelfReflectType, SelfReflectIntervalWithNever, SelfReflectQuestion, WeekdayWithNever, createSelfReflectQuestion, createSelfReflectSettings, SelfReflectCategory } from '@strive/model'
+import { SelfReflectSettings, SelfReflectTense, SelfReflectType, SelfReflectFrequencyWithNever, SelfReflectQuestion, WeekdayWithNever, createSelfReflectQuestion, createSelfReflectSettings, SelfReflectCategory } from '@strive/model'
 
 
 function createSelfReflectSettingsFormControl(params?: Partial<SelfReflectSettings>) {
@@ -44,7 +44,7 @@ function createSelfReflectQuestionFormControl(params?: Partial<SelfReflectQuesti
     category: new FormControl<SelfReflectCategory>(question.category, { nonNullable: true }),
     question: new FormControl<string>(question.question, { nonNullable: true }),
     type: new FormControl<SelfReflectType>(question.type, { nonNullable: true }),
-    interval: new FormControl<SelfReflectIntervalWithNever>(question.interval, { nonNullable: true }),
+    frequency: new FormControl<SelfReflectFrequencyWithNever>(question.frequency, { nonNullable: true }),
     tense: new FormControl<SelfReflectTense>(question.tense, { nonNullable: true })
   }
 }
@@ -60,6 +60,6 @@ export class SelfReflectQuestionForm extends FormGroup<SelfReflectQuestionFormCo
   get category() { return this.get('category')! as FormControl }
   get question() { return this.get('question')! as FormControl }
   get type() { return this.get('type')! as FormControl }
-  get interval() { return this.get('interval')! as FormControl }
+  get frequency() { return this.get('frequency')! as FormControl }
   get tense() { return this.get('tense')! as FormControl }
 }

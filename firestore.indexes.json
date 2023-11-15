@@ -281,7 +281,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "interval",
+          "fieldPath": "frequency",
           "order": "ASCENDING"
         },
         {

@@ -7,7 +7,7 @@ import { BehaviorSubject, firstValueFrom, map, of, shareReplay, switchMap} from 
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
-import { SelfReflectEntry, SelfReflectInterval, EntryStep, createSelfReflectEntry, createSelfReflectQuestionConfig, getInterval } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, EntryStep, createSelfReflectEntry, createSelfReflectQuestionConfig, getFrequency } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { SelfReflectForm } from '../../forms/self-reflect.form'
@@ -29,10 +29,10 @@ function getTitle({ category, tense }: EntryStep): string {
       return 'How do you feel now?'
     default:
       return tense === 'past'
-        ? 'The past {interval}'
+        ? 'The past {frequency}'
         : tense === 'present'
           ? 'The now'
-          : 'The upcoming {interval}'
+          : 'The upcoming {frequency}'
   }
 }
 
@@ -61,21 +61,21 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
   )
 
   previousEntry$ = this.profile$.pipe(
-    switchMap(profile => profile ? this.service.getPreviousEntry(profile.uid, this.interval) : of(undefined)),
+    switchMap(profile => profile ? this.service.getPreviousEntry(profile.uid, this.frequency) : of(undefined)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
   private questions$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.settingsService.getSettings$(profile.uid) : of(undefined)),
     map(settings => settings ? settings.questions : []),
-    map(questions => questions.filter(({ interval }) => interval === this.interval)),
+    map(questions => questions.filter(({ frequency }) => frequency === this.frequency)),
     map(questions => questions.map(question => createSelfReflectQuestionConfig(question))),
   )
 
   @Input() entry = createSelfReflectEntry()
-  @Input() todos: SelfReflectInterval[] = []
+  @Input() todos: SelfReflectFrequency[] = []
 
-  get interval() { return this.entry.interval }
+  get frequency() { return this.entry.frequency }
 
   constructor(
     private alertCtrl: AlertController,
@@ -163,7 +163,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
 
     this.step.set(nextStep)
 
-    const title = getTitle(nextStep).replace('{interval}', getInterval(this.interval))
+    const title = getTitle(nextStep).replace('{frequency}', getFrequency(this.frequency))
     this.title.set(title)
 
     this.stepIndex.set(nextIndex)

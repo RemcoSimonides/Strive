@@ -1,8 +1,8 @@
-<ng-container *ngIf="previousEntry && interval">
-  <small class="intro">Last {{ interval | interval }} you wrote some intentions/predictions about the past {{ interval | interval }}. Let's read back and think by yourself what happened or not.</small>
+<ng-container *ngIf="previousEntry && frequency">
+  <small class="intro">Last {{ frequency | frequency }} you wrote some intentions/predictions about the past {{ frequency | frequency }}. Let's read back and think by yourself what happened or not.</small>
 
   <ion-list mode="md" *ngIf="hasListItems()">
-    <small>Intentions for last {{ interval | interval }}</small>
+    <small>Intentions for last {{ frequency | frequency }}</small>
     <ul #list>
       <li *ngIf="previousEntry.timeManagementFutureLessTime && previousEntry.timeManagementFutureLessTime.length">
         ⏱️&nbsp;&nbsp;Spend less time on {{ previousEntry.timeManagementFutureLessTime | smartJoin:', ':' and '}}

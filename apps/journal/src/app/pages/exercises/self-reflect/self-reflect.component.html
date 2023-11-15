@@ -78,7 +78,7 @@
           <ng-container *ngFor="let entry of entries; let last = last">
             <ion-item (click)="openEntry(entry)" [lines]="last ? 'none' : 'inset'" button>
               <ion-label>
-                <span>{{ entry.interval | interval | titlecase }}ly entry</span>&nbsp;<small>({{ entry.createdAt | date:'longDate' }})</small>
+                <span>{{ entry.frequency | frequency | titlecase }}ly entry</span>&nbsp;<small>({{ entry.createdAt | date:'longDate' }})</small>
               </ion-label>
               <ion-icon name="arrow-forward-outline" slot="end" />
             </ion-item>

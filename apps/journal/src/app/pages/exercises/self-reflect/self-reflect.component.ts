@@ -6,7 +6,7 @@ import { combineLatest, firstValueFrom, map, of, shareReplay, startWith, switchM
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { SelfReflectEntry, SelfReflectInterval, SelfReflectSettings, createSelfReflectEntry } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
@@ -14,9 +14,9 @@ import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, getMonth,
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@strive/exercises/self-reflect/utils/date.utils'
 
-function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettings | undefined, interval: SelfReflectInterval) {
+function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettings | undefined, frequency: SelfReflectFrequency) {
   if (!settings) return { disabled: true, message: 'No settings found' }
-  const questions = settings.questions.filter(question => question.interval === interval)
+  const questions = settings.questions.filter(question => question.frequency === frequency)
 
   if (questions.length === 0) return { disabled: true, message: 'No questions activated - change in settings' }
   if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!`}
@@ -24,31 +24,31 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   const today = startOfDay(new Date())
   const lastEntry = entries[0]
 
-  const getInterval = {
+  const getFrequency = {
     weekly: getWeek,
     monthly: getMonth,
     quarterly: getQuarter,
     yearly: (date: Date) => getSelfReflectYear(date, 12, 24)
   }
-  const intervalDeltaSinceLastEntry = getInterval[interval](today) - getInterval[interval](lastEntry.createdAt)
-  if (intervalDeltaSinceLastEntry > 0) return { disabled: false, message: `Ready for a new entry!`}
+  const frequencyDeltaSinceLastEntry = getFrequency[frequency](today) - getFrequency[frequency](lastEntry.createdAt)
+  if (frequencyDeltaSinceLastEntry > 0) return { disabled: false, message: `Ready for a new entry!`}
 
-  const startOfInterval = {
+  const startOfFrequency = {
     weekly: startOfWeek,
     monthly: startOfMonth,
     quarterly: startOfQuarter,
     yearly: (date: Date) => startOfSelfReflectYear(date, 12, 24)
   }
 
-  const addInterval = {
+  const addFrequency = {
     weekly: (date: Date) => addWeeks(date, 1),
     monthly: (date: Date) => addMonths(date, 1),
     quarterly: (date: Date) => addQuarters(date, 1),
     yearly: (date: Date) => addYears(date, 1)
   }
 
-  const startOfNextInterval = startOfInterval[interval](addInterval[interval](lastEntry.createdAt))
-  const daysLeft = differenceInDays(startOfNextInterval, today)
+  const startOfNextFrequency = startOfFrequency[frequency](addFrequency[frequency](lastEntry.createdAt))
+  const daysLeft = differenceInDays(startOfNextFrequency, today)
   return { disabled: true, message: `You can't add a new entry yet. You can add a new entry in ${daysLeft} day${daysLeft === 1 ? '' : 's'}`}
 }
 
@@ -81,13 +81,13 @@ export class SelfReflectComponent {
     this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
   ]).pipe(
     map(([entries, filter]) => entries.filter(entry => {
-      const intervals: SelfReflectInterval[] = []
-      if (filter.weekly) intervals.push('weekly')
-      if (filter.monthly) intervals.push('monthly')
-      if (filter.quarterly) intervals.push('quarterly')
-      if (filter.yearly) intervals.push('yearly')
+      const frequencies: SelfReflectFrequency[] = []
+      if (filter.weekly) frequencies.push('weekly')
+      if (filter.monthly) frequencies.push('monthly')
+      if (filter.quarterly) frequencies.push('quarterly')
+      if (filter.yearly) frequencies.push('yearly')
 
-      return intervals.includes(entry.interval)
+      return frequencies.includes(entry.frequency)
     }))
   )
 
@@ -97,28 +97,28 @@ export class SelfReflectComponent {
   )
 
   weekly$ = combineLatest([
-    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'weekly'))),
+    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.frequency === 'weekly'))),
     this.settings$
   ]).pipe(
     map(([entries, settings]) => getEntryStatus(entries, settings, 'weekly'))
   )
 
   monthly$ = combineLatest([
-    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'monthly'))),
+    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.frequency === 'monthly'))),
     this.settings$
   ]).pipe(
     map(([entries, settings]) => getEntryStatus(entries, settings, 'monthly'))
   )
 
   quarterly$ = combineLatest([
-    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'quarterly'))),
+    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.frequency === 'quarterly'))),
     this.settings$
   ]).pipe(
     map(([entries, settings]) => getEntryStatus(entries, settings, 'quarterly'))
   )
 
   yearly$ = combineLatest([
-    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.interval === 'yearly'))),
+    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.frequency === 'yearly'))),
     this.settings$
   ]).pipe(
     map(([entries, settings]) => getEntryStatus(entries, settings, 'yearly'))
@@ -138,7 +138,7 @@ export class SelfReflectComponent {
     })
   }
 
-  async addEntry(interval: SelfReflectInterval) {
+  async addEntry(frequency: SelfReflectFrequency) {
     const [weekly, monthly, quarterly, yearly] = await Promise.all([
       firstValueFrom(this.weekly$),
       firstValueFrom(this.monthly$),
@@ -152,15 +152,15 @@ export class SelfReflectComponent {
     if (!quarterly.disabled) todos.push('quarterly')
     if (!yearly.disabled) todos.push('yearly')
 
-    const id = getSelfReflectId(interval)
-    const entry = createSelfReflectEntry({ id, interval })
+    const id = getSelfReflectId(frequency)
+    const entry = createSelfReflectEntry({ id, frequency })
 
     const modal = await this.modalCtrl.create({
       component: SelfReflectEntryComponent,
       componentProps: { entry, todos }
     })
-    modal.onDidDismiss().then(({ data: nextInterval }) => {
-      if (nextInterval) this.addEntry(nextInterval)
+    modal.onDidDismiss().then(({ data: nextFrequency }) => {
+      if (nextFrequency) this.addEntry(nextFrequency)
     })
     modal.present()
   }
@@ -172,9 +172,9 @@ export class SelfReflectComponent {
     }).then(modal => modal.present())
   }
 
-  async getPreviousEntry(interval: SelfReflectInterval) {
+  async getPreviousEntry(frequency: SelfReflectFrequency) {
     const entries = await firstValueFrom(this.dbEntries$)
-    const filtered = entries.filter(entry => entry.interval === interval)
+    const filtered = entries.filter(entry => entry.frequency === frequency)
     return filtered[0]
   }
 

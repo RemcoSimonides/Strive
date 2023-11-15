@@ -3,10 +3,10 @@
 <section *ngIf="possibleNextEntries.length">
   <span>Continue with more questions:</span>
   <ion-list mode="md">
-    <ng-container *ngFor="let nextInterval of possibleNextEntries; let last = last">
-      <ion-item button (click)="next.emit(nextInterval)" [lines]="last ? 'none' : 'inset'">
+    <ng-container *ngFor="let nextFrequency of possibleNextEntries; let last = last">
+      <ion-item button (click)="next.emit(nextFrequency)" [lines]="last ? 'none' : 'inset'">
         <ion-label>
-          <h2>{{ nextInterval | titlecase }} Entry</h2>
+          <h2>{{ nextFrequency | titlecase }} Entry</h2>
         </ion-label>
         <ion-icon name="arrow-forward-outline" slot="end" />
       </ion-item>

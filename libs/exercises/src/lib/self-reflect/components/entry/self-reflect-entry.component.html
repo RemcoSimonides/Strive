@@ -13,11 +13,11 @@
   <ng-container [ngSwitch]="step().category">
 
     <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-intro [interval]="interval" [id]="entry.id" />
+      <strive-self-reflect-intro [frequency]="frequency" [id]="entry.id" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'previousIntention'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-previous-intention [interval]="interval" [previousEntry]="previousEntry$ | async" />
+      <strive-self-reflect-previous-intention [frequency]="frequency" [previousEntry]="previousEntry$ | async" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'wheelOfLife'" class="ion-padding" [ngClass]="animatingSection()">
@@ -29,7 +29,7 @@
     </ion-content>
 
     <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-outro [interval]="interval" [todos]="todos" (next)="dismiss($event)" />
+      <strive-self-reflect-outro [frequency]="frequency" [todos]="todos" (next)="dismiss($event)" />
     </ion-content>
 
     <ion-content *ngSwitchDefault class="ion-padding" [ngClass]="animatingSection()">

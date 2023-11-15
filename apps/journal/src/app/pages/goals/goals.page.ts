@@ -18,7 +18,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
-import { SelfReflectInterval, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
+import { SelfReflectFrequency, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -64,14 +64,14 @@ export class GoalsPageComponent implements OnDestroy {
     }
 
     if (reflect) {
-      const todos: SelfReflectInterval[] = reflect.split('').map((i: string) => {
+      const todos: SelfReflectFrequency[] = reflect.split('').map((i: string) => {
         if (i === 'y') return 'yearly'
         if (i === 'q') return 'quarterly'
         if (i === 'm') return 'monthly'
         if (i === 'w') return 'weekly'
         return undefined
-      }).filter((interval: SelfReflectInterval | undefined) => !!interval)
-      .sort((a: SelfReflectInterval, b: SelfReflectInterval) => {
+      }).filter((frequency: SelfReflectFrequency | undefined) => !!frequency)
+      .sort((a: SelfReflectFrequency, b: SelfReflectFrequency) => {
         // first yearly, then quarterly, then monthly, then weekly
         if (a === 'yearly' && b !== 'yearly') return -1
         if (a !== 'yearly' && b === 'yearly') return 1
@@ -89,9 +89,9 @@ export class GoalsPageComponent implements OnDestroy {
         return
       }
 
-      const interval = todos[0]
-      const id = getSelfReflectId(interval)
-      const entry = createSelfReflectEntry({ id, interval })
+      const frequency = todos[0]
+      const id = getSelfReflectId(frequency)
+      const entry = createSelfReflectEntry({ id, frequency })
 
       this.modalCtrl.create({
         component: SelfReflectEntryComponent,

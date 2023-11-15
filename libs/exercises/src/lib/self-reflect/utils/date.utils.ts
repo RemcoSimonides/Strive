@@ -1,4 +1,4 @@
-import { SelfReflectInterval, Weekday } from '@strive/model'
+import { SelfReflectFrequency, Weekday } from '@strive/model'
 import { addDays, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 
 const weekdayMapping: Record<Weekday, Day> = {
@@ -39,7 +39,7 @@ export function startOfSelfReflectYear(date: Date, startMonth: number, startDay:
   return yearStart
 }
 
-export function getSelfReflectId(interval: SelfReflectInterval, date?: Date) {
+export function getSelfReflectId(frequency: SelfReflectFrequency, date?: Date) {
   const today = startOfDay(date ?? new Date())
 
   const startMethods = {
@@ -49,17 +49,17 @@ export function getSelfReflectId(interval: SelfReflectInterval, date?: Date) {
     'yearly': (_date: Date) => startOfSelfReflectYear(_date, 12, 24)
   }
 
-  const start = startMethods[interval](today)
+  const start = startMethods[frequency](today)
   const year = getYear(start)
   const quarter = getQuarter(start)
   const month = getMonth(start)
   const week = getWeek(start)
 
-  if (interval === 'weekly') {
+  if (frequency === 'weekly') {
     return `${year}-${quarter}-${month}-${week}`
-  } else if (interval === 'monthly') {
+  } else if (frequency === 'monthly') {
     return `${year}-${quarter}-${month}`
-  } else if (interval === 'quarterly') {
+  } else if (frequency === 'quarterly') {
     return `${year}-${quarter}`
   } else {
     return `${year}`

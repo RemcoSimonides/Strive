@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
-import { SelfReflectEntry, SelfReflectInterval, SelfReflectSettings, createSelfReflectEntry, createSelfReflectSettings } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry, createSelfReflectSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
 import { DocumentSnapshot, limit, orderBy, serverTimestamp, where } from 'firebase/firestore'
@@ -74,8 +74,8 @@ export class SelfReflectEntryService extends FireSubCollection<SelfReflectEntry>
     return this.upsert(encryptedEntry, { params: { uid: this.auth.uid }})
   }
 
-  getPreviousEntry(uid: string, interval: SelfReflectInterval): Promise<SelfReflectEntry | undefined> {
-    const query = [where('interval', '==', interval), orderBy('createdAt', 'desc'), limit(1)]
+  getPreviousEntry(uid: string, frequency: SelfReflectFrequency): Promise<SelfReflectEntry | undefined> {
+    const query = [where('frequency', '==', frequency), orderBy('createdAt', 'desc'), limit(1)]
     const obs = this.valueChanges(query, { uid }).pipe(
       take(1),
       switchMap(entries => this.decrypt(entries)),
@@ -97,7 +97,7 @@ export class SelfReflectEntryService extends FireSubCollection<SelfReflectEntry>
 
 function _decrypt(object: any, decryptKey: string) {
   const decrypt = (value: string) => value ? AES.decrypt(value, decryptKey).toString(enc.Utf8) : ''
-  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities', 'config']
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'frequency', 'priorities', 'config']
 
   Object.keys(object).forEach(key => {
     if (excludedProperties.includes(key)) return
@@ -116,7 +116,7 @@ function _decrypt(object: any, decryptKey: string) {
 
 function _encrypt(object: any, encryptKey: string) {
   const encrypt = (value: string) => value ? AES.encrypt(value, encryptKey).toString() : ''
-  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'interval', 'priorities', 'config']
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'frequency', 'priorities', 'config']
 
   Object.keys(object).forEach(key => {
     if (excludedProperties.includes(key)) return

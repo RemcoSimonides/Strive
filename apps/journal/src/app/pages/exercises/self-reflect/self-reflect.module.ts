@@ -10,7 +10,7 @@ import { SelfReflectComponent } from './self-reflect.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { SelfReflectEntryModule } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.module'
 import { SelfReflectSettingsComponent } from './settings/self-reflect-settings.component'
-import { SelfReflectIntervalPipe } from '@strive/exercises/self-reflect/pipes/interval.pipe'
+import { SelfReflectFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
 const routes: Routes = [
@@ -32,7 +32,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     HeaderModule,
     SelfReflectEntryModule,
-    SelfReflectIntervalPipe,
+    SelfReflectFrequencyPipe,
     PageLoadingModule
   ],
   declarations: [SelfReflectComponent]

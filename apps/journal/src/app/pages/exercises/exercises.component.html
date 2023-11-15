@@ -24,7 +24,7 @@
                 <ng-container *ngIf="settings | get:'SelfReflect' as setting; else notSet">
                   <ng-container *ngIf="setting?.preferredDay !== 'never'; else notSet">
                     <article>
-                      <small>Recieving {{ setting | intervals }} on {{ setting.preferredDay | titlecase }} at {{ setting.preferredTime }}</small>
+                      <small>Recieving {{ setting | frequencies }} on {{ setting.preferredDay | titlecase }} at {{ setting.preferredTime }}</small>
                     </article>
                   </ng-container>
                 </ng-container>

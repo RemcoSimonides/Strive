@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
 import { SelfReflectQuestionConfig } from '@strive/model'
-import { SelfReflectReplaceIntervalPipe } from '../../pipes/interval.pipe'
+import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 
 @Component({
   standalone: true,
@@ -15,7 +15,7 @@ import { SelfReflectReplaceIntervalPipe } from '../../pipes/interval.pipe'
     CommonModule,
     IonicModule,
     ReactiveFormsModule,
-    SelfReflectReplaceIntervalPipe
+    SelfReflectReplaceFrequencyPipe
   ]
 })
 export class SelfReflectFormListComponent {

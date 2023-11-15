@@ -1,6 +1,6 @@
 <ng-container *ngIf="form && question">
   <ion-list mode="md">
-    <small>{{ question.question | replaceInterval:question.interval }}</small>
+    <small>{{ question.question | replaceFrequency:question.frequency }}</small>
     <ion-item *ngFor="let control of form.controls; let i = index; let last = last" [lines]="last && !showInput() ? 'none' : 'inset'">
       <ion-input
         class="ion-text-wrap primary"

@@ -2,21 +2,21 @@ import { ChangeDetectionStrategy, Component, Pipe, PipeTransform } from '@angula
 import { SelfReflectSettings, exercises, ExerciseType } from '@strive/model'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { of, switchMap, tap } from 'rxjs'
+import { of, switchMap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
 import { ExerciseService, ExerciseSettings } from '@strive/exercises/exercise.service'
 import { smartJoin } from '@strive/utils/helpers'
 
-@Pipe({ name: 'intervals', standalone: true })
+@Pipe({ name: 'frequencies', standalone: true })
 export class SelfReflectDescriptionPipe implements PipeTransform {
   transform({ questions }: SelfReflectSettings) {
-    const intervals = []
-    if (questions.some(({ interval }) => interval === 'weekly')) intervals.push('weekly')
-    if (questions.some(({ interval }) => interval === 'monthly')) intervals.push('monthly')
-    if (questions.some(({ interval }) => interval === 'quarterly')) intervals.push('quarterly')
-    if (questions.some(({ interval }) => interval === 'yearly')) intervals.push('yearly')
+    const frequencies = []
+    if (questions.some(({ frequency }) => frequency === 'weekly')) frequencies.push('weekly')
+    if (questions.some(({ frequency }) => frequency === 'monthly')) frequencies.push('monthly')
+    if (questions.some(({ frequency }) => frequency === 'quarterly')) frequencies.push('quarterly')
+    if (questions.some(({ frequency }) => frequency === 'yearly')) frequencies.push('yearly')
 
-    return smartJoin(intervals, ', ', ' and ')
+    return smartJoin(frequencies, ', ', ' and ')
   }
 }
 

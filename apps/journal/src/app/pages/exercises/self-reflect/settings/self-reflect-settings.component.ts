@@ -15,7 +15,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SelfReflectCategory, SelfReflectQuestion, selfReflectSettings, createSelfReflectQuestion, createSelfReflectSettings, selfReflectKeys } from '@strive/model'
 import { SelfReflectQuestionFormControl, SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/self-reflect-settings.form'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-custom-question/upsert-custom-question.component'
-import { SelfReflectReplaceIntervalPipe, replaceInterval } from '@strive/exercises/self-reflect/pipes/interval.pipe'
+import { SelfReflectReplaceFrequencyPipe, replaceFrequency } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 
 @Component({
   standalone: true,
@@ -29,7 +29,7 @@ import { SelfReflectReplaceIntervalPipe, replaceInterval } from '@strive/exercis
     ReactiveFormsModule,
     HeaderModule,
     PageLoadingModule,
-    SelfReflectReplaceIntervalPipe
+    SelfReflectReplaceFrequencyPipe
   ]
 })
 export class SelfReflectSettingsComponent implements OnInit {
@@ -122,13 +122,13 @@ export class SelfReflectSettingsComponent implements OnInit {
   async openAlert(questionControl: SelfReflectQuestionFormControl) {
     const alert = await this.alertCtrl.create({
       header: 'Choose frequency',
-      message: replaceInterval(questionControl.question.value, questionControl.interval.value),
+      message: replaceFrequency(questionControl.question.value, questionControl.frequency.value),
       inputs: [
-        { label: 'Never', value: 'never', type: 'radio', checked: questionControl.interval.value === 'never' },
-        { label: 'Weekly', value: 'weekly', type: 'radio', checked: questionControl.interval.value === 'weekly' },
-        { label: 'Monthly', value: 'monthly', type: 'radio', checked: questionControl.interval.value === 'monthly' },
-        { label: 'Quarterly', value: 'quarterly', type: 'radio', checked: questionControl.interval.value === 'quarterly' },
-        { label: 'Yearly', value: 'yearly', type: 'radio', checked: questionControl.interval.value === 'yearly' },
+        { label: 'Never', value: 'never', type: 'radio', checked: questionControl.frequency.value === 'never' },
+        { label: 'Weekly', value: 'weekly', type: 'radio', checked: questionControl.frequency.value === 'weekly' },
+        { label: 'Monthly', value: 'monthly', type: 'radio', checked: questionControl.frequency.value === 'monthly' },
+        { label: 'Quarterly', value: 'quarterly', type: 'radio', checked: questionControl.frequency.value === 'quarterly' },
+        { label: 'Yearly', value: 'yearly', type: 'radio', checked: questionControl.frequency.value === 'yearly' },
       ],
       buttons: ['Save'],
       mode: 'ios'
@@ -137,7 +137,7 @@ export class SelfReflectSettingsComponent implements OnInit {
       if (!data) return
       const { values } = data
       if (!values) return
-      questionControl.interval.setValue(values)
+      questionControl.frequency.setValue(values)
       this.form.updateValueAndValidity()
       this.cdr.markForCheck()
     })

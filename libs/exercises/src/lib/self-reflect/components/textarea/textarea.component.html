@@ -1,6 +1,6 @@
 <ng-container *ngIf="form && question">
   <ion-list mode="md">
-    <small>{{ question.question | replaceInterval:question.interval }}</small>
+    <small>{{ question.question | replaceFrequency:question.frequency }}</small>
     <ion-item lines="none">
       <ion-textarea
         [formControl]="form"
