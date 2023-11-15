@@ -1,34 +1,6 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms'
-import { SelfReflectSettings, SelfReflectTense, SelfReflectType, SelfReflectIntervalWithNever, SelfReflectQuestion, Setting, Step, WeekdayWithNever, createSelfReflectQuestion, createSelfReflectSettings } from '@strive/model'
+import { SelfReflectSettings, SelfReflectTense, SelfReflectType, SelfReflectIntervalWithNever, SelfReflectQuestion, WeekdayWithNever, createSelfReflectQuestion, createSelfReflectSettings, SelfReflectCategory } from '@strive/model'
 
-function createSelfReflectMetaSettingsFormControl(questions: SelfReflectQuestion[]) {
-  const value: Record<string, FormControl<SelfReflectIntervalWithNever>> = {}
-
-  for (const question of questions) {
-    if (value[question.setting]) continue
-    value[question.setting] = new FormControl<SelfReflectIntervalWithNever>(question.interval, { nonNullable: true })
-  }
-
-  return value
-}
-
-export type SelfReflectMetaSettingsFormControl = ReturnType<typeof createSelfReflectMetaSettingsFormControl>
-
-export class SelfReflectMetaSettingsForm extends FormGroup<SelfReflectMetaSettingsFormControl> {
-  constructor(questions: SelfReflectQuestion[]) {
-    super(createSelfReflectMetaSettingsFormControl(questions))
-  }
-
-  patchAllValue(questions: SelfReflectQuestion[]) {
-    for (const question of questions) {
-      if (this.controls[question.setting]) {
-        this.controls[question.setting].patchValue(question.interval)
-      } else {
-        this.addControl(question.setting, new FormControl<SelfReflectIntervalWithNever>(question.interval, { nonNullable: true }))
-      }
-    }
-  }
-}
 
 function createSelfReflectSettingsFormControl(params?: Partial<SelfReflectSettings>) {
   const settings = createSelfReflectSettings(params)
@@ -69,11 +41,10 @@ function createSelfReflectQuestionFormControl(params?: Partial<SelfReflectQuesti
 
   return {
     key: new FormControl<string>(question.key, { nonNullable: true }),
-    step: new FormControl<Step>(question.step, { nonNullable: true }),
+    category: new FormControl<SelfReflectCategory>(question.category, { nonNullable: true }),
     question: new FormControl<string>(question.question, { nonNullable: true }),
     type: new FormControl<SelfReflectType>(question.type, { nonNullable: true }),
     interval: new FormControl<SelfReflectIntervalWithNever>(question.interval, { nonNullable: true }),
-    setting: new FormControl<Setting>(question.setting, { nonNullable: true }),
     tense: new FormControl<SelfReflectTense>(question.tense, { nonNullable: true })
   }
 }
@@ -86,10 +57,9 @@ export class SelfReflectQuestionForm extends FormGroup<SelfReflectQuestionFormCo
   }
 
   get key() { return this.get('key')! as FormControl }
-  get step() { return this.get('step')! as FormControl }
+  get category() { return this.get('category')! as FormControl }
   get question() { return this.get('question')! as FormControl }
   get type() { return this.get('type')! as FormControl }
   get interval() { return this.get('interval')! as FormControl }
-  get setting() { return this.get('setting')! as FormControl }
   get tense() { return this.get('tense')! as FormControl }
 }

@@ -14,17 +14,15 @@ import { SelfReflectForm } from '../../forms/self-reflect.form'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '../../self-reflect.service'
 import { WheelOfLifeForm } from '../wheel-of-life/wheel-of-life.form'
 
-function getTitle({ step, tense }: EntryStep): string {
-  switch (step) {
+function getTitle({ category, tense }: EntryStep): string {
+  switch (category) {
     case 'intro':
     case 'outro':
       return ''
+    case 'gratitude':
+      return 'Gratitude'
     case 'dearFutureSelf':
       return 'Dear Future Self'
-    case 'forgive':
-      return 'Forgive and let go'
-    case 'imagine':
-      return 'Imagine'
     case 'prioritizeGoals':
       return 'Order goals by priority'
     case 'wheelOfLife':
@@ -48,7 +46,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
 
   animatingSection = signal<undefined | 'visible' | 'invisible'>('visible')
   title = signal<string>('Get Ready')
-  step = signal<EntryStep>({ step: 'intro', tense: '' })
+  step = signal<EntryStep>({ category: 'intro', tense: '' })
   finishedLoading = signal<boolean>(false)
 
   form = new SelfReflectForm()
@@ -101,25 +99,25 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
       previousEntry = await firstValueFrom(this.previousEntry$)
     }
 
-    const activatedSteps: EntryStep[] = [{ step: 'intro', tense: '' }]
-    if (previousEntry) activatedSteps.push({ step: 'previousIntention', tense: '' })
+    const activatedSteps: EntryStep[] = [{ category: 'intro', tense: '' }]
+    if (previousEntry) activatedSteps.push({ category: 'previousIntention', tense: '' })
 
     const past = questions.filter(({ tense }) => tense === 'past')
-    const pastSteps = past.map(({ step, tense }) => ({ step, tense }))
+    const pastSteps = past.map(({ category, tense }) => ({ category, tense }))
     activatedSteps.push(...pastSteps)
 
     const present = questions.filter(({ tense }) => tense === 'present')
-    const presentSteps = present.map(({ step, tense }) => ({ step, tense }))
+    const presentSteps = present.map(({ category, tense }) => ({ category, tense }))
     activatedSteps.push(...presentSteps)
 
     const future = questions.filter(({ tense }) => tense === 'future')
-    const futureSteps = future.map(({ step, tense }) => ({ step, tense }))
+    const futureSteps = future.map(({ category, tense }) => ({ category, tense }))
     activatedSteps.push(...futureSteps)
-    activatedSteps.push({ step: 'outro', tense: '' })
+    activatedSteps.push({ category: 'outro', tense: '' })
 
     const uniqueSteps = activatedSteps.reduce((acc, step) => {
       if (acc.length === 0) return [step]
-      const res = acc.find(s => s.step === step.step && s.tense === step.tense)
+      const res = acc.find(s => s.category === step.category && s.tense === step.tense)
       return res ? acc : [...acc, step]
     }, [] as EntryStep[])
     this.steps.set(uniqueSteps)

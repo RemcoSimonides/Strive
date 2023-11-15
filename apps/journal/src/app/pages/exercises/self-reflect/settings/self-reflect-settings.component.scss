@@ -29,7 +29,7 @@ ion-text {
 section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 
   small {
     color: var(--ion-color-medium);
@@ -48,5 +48,26 @@ span {
 
   ion-icon {
     color: var(--ion-color-primary)
+  }
+}
+
+ion-select {
+  width: 100%;
+  padding-left: 0;
+}
+
+.question {
+  --min-height: 80px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+
+  section {
+    width: 100%;
+
+    small {
+      display: grid;
+      column-gap: 8px;
+      grid-template-columns: auto 1fr;
+    }
   }
 }

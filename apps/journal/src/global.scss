@@ -99,6 +99,14 @@ ion-modal.high-modal {
   --height: 100%;
 }
 
+ion-alert {
+  --background: var(--ion-card-background) !important;
+
+  .alert-message {
+    color: var(--ion-color-medium) !important;
+  }
+}
+
 ion-loading {
   --background: var(--ion-loading-background) !important;
   color: var(--ion-loading-color) !important;

@@ -16,8 +16,7 @@
     <ion-list mode="md" lines="full">
       <small class="reminder">What day and time would you prefer to receive the Self Reflection reminder?</small>
       <ion-item>
-        <ion-label>Day</ion-label>
-        <ion-select interface="popover" formControlName="preferredDay">
+        <ion-select interface="popover" formControlName="preferredDay" label="Day">
           <ion-select-option value="monday">Monday</ion-select-option>
           <ion-select-option value="tuesday">Tuesday</ion-select-option>
           <ion-select-option value="wednesday">Wednesday</ion-select-option>
@@ -36,23 +35,23 @@
     </ion-list>
   </form>
 
-  <form [formGroup]="metaSettingsForm">
+  <form>
     <ion-list mode="md" lines="full">
-      <ion-item *ngFor="let key of settingKeys; let last = last" [lines]="last ? 'none' : 'full'">
-        <ion-label>
+      <ng-container *ngFor="let questionControl of form.questions.controls; let last = last">
+        <ion-item [lines]="last ? 'none' : 'full'" button (click)="openAlert(questionControl)" class="question">
           <section>
-            <span>{{ settings[key].title }}</span>
-            <small>{{ settings[key].description }}</small>
+            <span>{{ questionControl.question.value | replaceInterval: questionControl.interval.value }}</span>
+            <small>
+              <span>Frequency:</span>
+              <span>{{ questionControl.interval.value | titlecase }}</span>
+              <span>Category:</span>
+              <span>{{ categories[questionControl.category.value] }}</span>
+              <span>Tense:</span>
+              <span>{{ questionControl.tense.value | titlecase }}</span>
+            </small>
           </section>
-        </ion-label>
-        <ion-select [legacy]="true" [formControlName]="key" interface="popover">
-          <ion-select-option value="never">Never</ion-select-option>
-          <ion-select-option value="weekly">Weekly</ion-select-option>
-          <ion-select-option value="monthly">Monthly</ion-select-option>
-          <ion-select-option value="quarterly">Quarterly</ion-select-option>
-          <ion-select-option value="yearly">Yearly</ion-select-option>
-        </ion-select>
-      </ion-item>
+        </ion-item>
+      </ng-container>
     </ion-list>
   </form>
 
@@ -62,7 +61,7 @@
         <ion-label>
           <section>
             <span>{{ question.question }}</span>
-            <small>{{ steps[question.step] }} - {{ question.interval | titlecase }}</small>
+            <small>{{ categories[question.category] }} - {{ question.interval | titlecase }}</small>
           </section>
         </ion-label>
       </ion-item>

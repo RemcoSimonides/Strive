@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule, ModalController, PopoverController } from '@ionic/angular'
+import { AlertController, IonicModule, ModalController, PopoverController } from '@ionic/angular'
 
 import { firstValueFrom, map, of, shareReplay, switchMap } from 'rxjs'
 
@@ -12,9 +12,10 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { SelfReflectCategory, SelfReflectQuestion, Setting, selfReflectQuestions, selfReflectSettings, createSelfReflectQuestion, createSelfReflectSettings } from '@strive/model'
-import { SelfReflectMetaSettingsForm, SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/self-reflect-settings.form'
+import { SelfReflectCategory, SelfReflectQuestion, selfReflectSettings, createSelfReflectQuestion, createSelfReflectSettings, selfReflectKeys } from '@strive/model'
+import { SelfReflectQuestionFormControl, SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/self-reflect-settings.form'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-custom-question/upsert-custom-question.component'
+import { SelfReflectReplaceIntervalPipe, replaceInterval } from '@strive/exercises/self-reflect/pipes/interval.pipe'
 
 @Component({
   standalone: true,
@@ -27,7 +28,8 @@ import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-
     IonicModule,
     ReactiveFormsModule,
     HeaderModule,
-    PageLoadingModule
+    PageLoadingModule,
+    SelfReflectReplaceIntervalPipe
   ]
 })
 export class SelfReflectSettingsComponent implements OnInit {
@@ -35,7 +37,6 @@ export class SelfReflectSettingsComponent implements OnInit {
   isMobile$ = this.screensize.isMobile$
   loading = signal<boolean>(true)
 
-  metaSettingsForm = new SelfReflectMetaSettingsForm(selfReflectQuestions)
   form = new SelfReflectSettingsForm()
 
   settings$ = this.auth.profile$.pipe(
@@ -44,57 +45,12 @@ export class SelfReflectSettingsComponent implements OnInit {
   )
 
   customQuestions$ = this.settings$.pipe(
-    map(settings => settings ? settings.questions.filter(({ setting }) => setting === 'custom') : [])
+    map(settings => settings ? settings.questions.filter(({ key }) => !selfReflectKeys.includes(key)) : []),
   )
 
-  settings: Record<Exclude<Setting, 'custom'> , { title: string, description: string }> = {
-    dearFutureSelf: {
-      title: 'Dear Future Self',
-      description: 'Write a message/advice/predictions to your future self',
-    },
-    environment: {
-      title: 'Environment',
-      description: 'How did you contribute to the environment?',
-    },
-    explore: {
-      title: 'Explore',
-      description: 'What do you want to explore?',
-    },
-    forgive: {
-      title: 'Forgive / Letting go',
-      description: 'What do you want to forgive or let go of?'
-    },
-    gratitude: {
-      title: 'Gratitude',
-      description: 'What are you grateful for?'
-    },
-    imagine: {
-      title: 'Imagine',
-      description: 'Imagine your life in 5 years'
-    },
-    learn: {
-      title: 'Learn',
-      description: 'What do you want to learn?'
-    },
-    pride: {
-      title: 'Pride',
-      description: 'What are you proud of?'
-    },
-    prioritizeGoals: {
-      title: 'Prioritize Goals',
-      description: 'Order your goals by priority'
-    },
-    timeManagement: {
-      title: 'Time Management',
-      description: 'What did you spend your time on?'
-    },
-    wheelOfLife: {
-      title: 'Wheel of Life',
-      description: 'Rate how you feel'
-    }
-  }
-
-  steps: Record<SelfReflectCategory, string> = {
+  categories: Record<SelfReflectCategory, string> = {
+    intro: '',
+    previousIntention: '',
     career: 'Career',
     creative: 'Creative',
     education: 'Education',
@@ -105,12 +61,17 @@ export class SelfReflectSettingsComponent implements OnInit {
     relationships: 'Relationships',
     spiritual: 'Spiritual',
     travelAndAdventures: 'Travel and Adventures',
-    other: 'Other'
+    other: 'Other',
+
+    dearFutureSelf: 'Dear Future Self',
+    wheelOfLife: 'Wheel of Life',
+    gratitude: 'Gratitude',
+    prioritizeGoals: 'Prioritize Goals',
+    outro: ''
   }
 
-  get settingKeys() { return Object.keys(this.metaSettingsForm.controls) }
-
   constructor(
+    private alertCtrl: AlertController,
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
@@ -126,21 +87,6 @@ export class SelfReflectSettingsComponent implements OnInit {
       const settings = createSelfReflectSettings(raw)
       this.service.save(this.auth.uid, settings)
     })
-
-    this.metaSettingsForm.valueChanges.subscribe(values => {
-      for (const [setting, value] of Object.entries(values)) {
-        const questions = selfReflectQuestions.filter(question => question.setting === setting)
-        for (const question of questions) {
-          const controls = this.form.questions.controls.filter(ctrl => ctrl.setting.value === question.setting)
-
-          for (const control of controls) {
-            if (control.interval.value === value) continue
-            control.interval.setValue(value, { emitEvent: false})
-          }
-        }
-      }
-      this.form.updateValueAndValidity()
-    })
   }
 
   async ngOnInit() {
@@ -148,7 +94,6 @@ export class SelfReflectSettingsComponent implements OnInit {
 
     if (settings && settings.questions.length) {
       this.form.patchValue(settings, { emitEvent: false })
-      this.metaSettingsForm.patchAllValue(settings.questions.filter(({ setting }) => setting !== 'custom' ))
     } else {
       this.form.patchValue(selfReflectSettings, { emitEvent: false })
     }
@@ -172,6 +117,31 @@ export class SelfReflectSettingsComponent implements OnInit {
       this.cdr.markForCheck()
     })
     popover.present()
+  }
+
+  async openAlert(questionControl: SelfReflectQuestionFormControl) {
+    const alert = await this.alertCtrl.create({
+      header: 'Choose frequency',
+      message: replaceInterval(questionControl.question.value, questionControl.interval.value),
+      inputs: [
+        { label: 'Never', value: 'never', type: 'radio', checked: questionControl.interval.value === 'never' },
+        { label: 'Weekly', value: 'weekly', type: 'radio', checked: questionControl.interval.value === 'weekly' },
+        { label: 'Monthly', value: 'monthly', type: 'radio', checked: questionControl.interval.value === 'monthly' },
+        { label: 'Quarterly', value: 'quarterly', type: 'radio', checked: questionControl.interval.value === 'quarterly' },
+        { label: 'Yearly', value: 'yearly', type: 'radio', checked: questionControl.interval.value === 'yearly' },
+      ],
+      buttons: ['Save'],
+      mode: 'ios'
+    })
+    alert.onDidDismiss().then(({ data }) => {
+      if (!data) return
+      const { values } = data
+      if (!values) return
+      questionControl.interval.setValue(values)
+      this.form.updateValueAndValidity()
+      this.cdr.markForCheck()
+    })
+    alert.present()
   }
 
   async openQuestion(question?: SelfReflectQuestion) {

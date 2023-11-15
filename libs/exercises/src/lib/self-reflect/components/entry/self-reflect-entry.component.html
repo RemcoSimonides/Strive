@@ -10,7 +10,7 @@
 </ion-header>
 
 <ng-container *ngIf="finishedLoading(); else loading">
-  <ng-container [ngSwitch]="step().step">
+  <ng-container [ngSwitch]="step().category">
 
     <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
       <strive-self-reflect-intro [interval]="interval" [id]="entry.id" />

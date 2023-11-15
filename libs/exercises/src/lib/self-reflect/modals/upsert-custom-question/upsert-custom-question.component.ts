@@ -42,7 +42,7 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective impl
 
   ngOnInit() {
     if (!this.question) return
-    this.form.patchValue({ ...this.question, category: this.question.step as SelfReflectCategory })
+    this.form.patchValue({ ...this.question, category: this.question.category as SelfReflectCategory })
   }
 
   submit() {
@@ -53,7 +53,7 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective impl
     const { category, interval, question, tense, type} = this.form.value
     if (!category || !interval || !question || !tense || !type ) return
 
-    selfReflectQuestion.step = category
+    selfReflectQuestion.category = category
     selfReflectQuestion.interval = interval
     selfReflectQuestion.question = question
     selfReflectQuestion.tense = tense

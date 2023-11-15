@@ -4,8 +4,8 @@ import { EntryStep, SelfReflectQuestionConfig } from '@strive/model'
 @Pipe({ name: 'stepFilter', standalone: true })
 export class SelfReflectStepFilterPipe implements PipeTransform {
 
-  transform(questions: SelfReflectQuestionConfig[] | null, { step, tense }: EntryStep): SelfReflectQuestionConfig[] {
+  transform(questions: SelfReflectQuestionConfig[] | null, { category, tense }: EntryStep): SelfReflectQuestionConfig[] {
     if (!questions) return []
-    return questions.filter(question => question.step === step && question.tense === tense)
+    return questions.filter(question => question.category === category && question.tense === tense)
   }
 }
