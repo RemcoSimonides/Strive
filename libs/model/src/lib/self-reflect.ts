@@ -51,8 +51,6 @@ export interface SelfReflectQuestion {
   tense: SelfReflectTense
 }
 
-export type SelfReflectQuestionConfig = Omit<SelfReflectQuestion, 'setting'>
-
 export const selfReflectQuestions: SelfReflectQuestion[] = [
   {
     key: 'dearFutureSelfAdvice',
@@ -229,18 +227,6 @@ export function createSelfReflectQuestion(params: Partial<SelfReflectQuestion> =
   }
 }
 
-export function createSelfReflectQuestionConfig(params: Partial<SelfReflectQuestionConfig> = {}): SelfReflectQuestionConfig {
-  return {
-    key: params.key ?? '',
-    category: params.category ?? 'other',
-    question: params.question ?? '',
-    type: params.type ?? 'textarea',
-    tense: params.tense ?? 'past',
-    frequency: params.frequency ?? 'yearly'
-  }
-}
-
-
 export interface SelfReflectSettings {
   id?: string
   questions: SelfReflectQuestion[]
@@ -264,7 +250,7 @@ export function createSelfReflectSettings(params: Partial<SelfReflectSettings> =
 
 export interface SelfReflectEntry {
   id?: string
-  config: SelfReflectQuestionConfig[],
+  config: SelfReflectQuestion[],
   dearFutureSelfAdvice?: string
   dearFutureSelfPrediction?: string
   dearFutureSelfAnythingElse?: string
@@ -287,7 +273,7 @@ export interface SelfReflectEntry {
   wheelOfLife?: WheelOfLife
   createdAt: Date
   updatedAt: Date
-  [key: string]: string | string[] | undefined | WheelOfLife | Date | SelfReflectQuestionConfig[] // needs to have all possible types
+  [key: string]: string | string[] | undefined | WheelOfLife | Date | SelfReflectQuestion[] // needs to have all possible types
 }
 
 export function createSelfReflectEntry(params: Partial<SelfReflectEntry> = {}): SelfReflectEntry {

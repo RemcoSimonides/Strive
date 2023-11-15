@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { SelfReflectQuestionConfig } from '@strive/model'
+import { SelfReflectQuestion } from '@strive/model'
 import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 
 @Component({
@@ -21,6 +21,6 @@ import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 export class SelfReflectTextareaComponent {
 
   @Input() form?: FormControl<string>
-  @Input() question?: SelfReflectQuestionConfig
+  @Input() question?: SelfReflectQuestion
 
 }

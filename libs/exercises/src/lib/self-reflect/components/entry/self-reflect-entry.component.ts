@@ -7,7 +7,7 @@ import { BehaviorSubject, firstValueFrom, map, of, shareReplay, switchMap} from 
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
-import { SelfReflectEntry, SelfReflectFrequency, EntryStep, createSelfReflectEntry, createSelfReflectQuestionConfig, getFrequency } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, EntryStep, createSelfReflectEntry, createSelfReflectQuestion, getFrequency } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { SelfReflectForm } from '../../forms/self-reflect.form'
@@ -69,7 +69,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
     switchMap(profile => profile ? this.settingsService.getSettings$(profile.uid) : of(undefined)),
     map(settings => settings ? settings.questions : []),
     map(questions => questions.filter(({ frequency }) => frequency === this.frequency)),
-    map(questions => questions.map(question => createSelfReflectQuestionConfig(question))),
+    map(questions => questions.map(question => createSelfReflectQuestion(question))),
   )
 
   @Input() entry = createSelfReflectEntry()

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { SelfReflectQuestionConfig } from '@strive/model'
+import { SelfReflectQuestion } from '@strive/model'
 import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 
 @Component({
@@ -24,7 +24,7 @@ export class SelfReflectFormListComponent {
   showInput = signal<boolean>(true)
 
   @Input() form?: FormArray<FormControl<string>>
-  @Input() question?: SelfReflectQuestionConfig
+  @Input() question?: SelfReflectQuestion
   @Input() set stepping(stepping: boolean | null) {
     if (stepping && this.inputForm.value) {
       this.showInput.set(false)
