@@ -28,7 +28,7 @@ export class SelfReflectForm extends FormGroup<SelfReflectFormControl> {
         const control = this.get(key) as FormArray<FormControl<string>> | undefined
         if (!control) throw new Error('Could not find form array control with key ' + key)
         control.clear()
-        value.forEach((v) => control.push(new FormControl<string>(v, { nonNullable: true })))
+        value.forEach((v) => control.push(new FormControl<string>((v as string), { nonNullable: true })))
       } else if (typeof value === 'object') {
         const control = this.get(key) as FormGroup | undefined
         if (!control) throw new Error('Could not find form group control with key ' + key)
