@@ -71,7 +71,7 @@
     <ion-list mode="md" lines="full" *ngIf="settings$ | async as settings; else loading">
       <ng-container *ngFor="let question of settings.questions; let last = last">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
-          <ion-item [lines]="last ? 'none' : 'full'" button (click)="openQuestion(question, entries)" class="question">
+          <ion-item [lines]="last ? 'none' : 'full'" button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
             <section>
               <span>{{ question.question | replaceFrequency: question.frequency }}</span>
               <small>

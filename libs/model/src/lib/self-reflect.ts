@@ -16,12 +16,12 @@ export function getFrequency(value: SelfReflectFrequencyWithNever): string {
     case 'monthly': return 'month'
     case 'quarterly': return 'quarter'
     case 'yearly': return 'year'
+    case 'never': return '...'
     default: return ''
   }
 }
 
 export function replaceFrequency(value: string, frequency: SelfReflectFrequencyWithNever): string {
-  if (frequency === 'never') throw new Error('Frequency never is not allowed in replaceFrequency pipe')
   return value.replace('{frequency}', getFrequency(frequency))
 }
 

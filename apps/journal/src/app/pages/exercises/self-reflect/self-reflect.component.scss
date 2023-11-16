@@ -42,6 +42,10 @@ small {
   }
 }
 
+.disabled {
+  opacity: 0.5;
+}
+
 .add-custom-question {
   text-align: center;
   color: var(--ion-color-primary);
