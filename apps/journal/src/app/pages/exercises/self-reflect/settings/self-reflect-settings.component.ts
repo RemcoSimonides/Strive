@@ -12,10 +12,10 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { SelfReflectCategory, SelfReflectQuestion, selfReflectSettings, createSelfReflectQuestion, createSelfReflectSettings, selfReflectKeys } from '@strive/model'
+import { SelfReflectCategory, SelfReflectQuestion, selfReflectSettings, createSelfReflectQuestion, createSelfReflectSettings, selfReflectKeys, replaceFrequency } from '@strive/model'
 import { SelfReflectQuestionFormControl, SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/self-reflect-settings.form'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-custom-question/upsert-custom-question.component'
-import { SelfReflectReplaceFrequencyPipe, replaceFrequency } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
+import { SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 
 @Component({
   standalone: true,
