@@ -20,6 +20,11 @@ export function getFrequency(value: SelfReflectFrequencyWithNever): string {
   }
 }
 
+export function replaceFrequency(value: string, frequency: SelfReflectFrequencyWithNever): string {
+  if (frequency === 'never') throw new Error('Frequency never is not allowed in replaceFrequency pipe')
+  return value.replace('{frequency}', getFrequency(frequency))
+}
+
 export const selfReflectCategories = [
   'intro',
   'previousIntention',

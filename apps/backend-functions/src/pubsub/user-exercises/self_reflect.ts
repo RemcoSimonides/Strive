@@ -1,4 +1,4 @@
-import { SelfReflectSettings, Personal, getFrequency } from '@strive/model'
+import { SelfReflectSettings, Personal, getFrequency, replaceFrequency } from '@strive/model'
 import type { Message } from 'firebase-admin/messaging'
 import { getDocument } from '../../shared/utils'
 import { admin } from '@strive/api/firebase'
@@ -24,7 +24,7 @@ export async function sendSelfReflectPuthNotification(settings: SelfReflectSetti
   const messages: Message[] = personal.fcmTokens.map(token => ({
     token,
     notification: {
-      title: question.question,
+      title: replaceFrequency(question.question, question.frequency),
       body: `(Make) time to reflect the ${readable}`
     },
     data: { link },

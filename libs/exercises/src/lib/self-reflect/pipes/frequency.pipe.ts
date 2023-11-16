@@ -1,10 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { SelfReflectFrequency, SelfReflectFrequencyWithNever, getFrequency } from '@strive/model'
-
-export function replaceFrequency(value: string, frequency: SelfReflectFrequencyWithNever): string {
-  if (frequency === 'never') throw new Error('Frequency never is not allowed in replaceFrequency pipe')
-  return value.replace('{frequency}', getFrequency(frequency))
-}
+import { SelfReflectFrequency, SelfReflectFrequencyWithNever, getFrequency, replaceFrequency } from '@strive/model'
 
 @Pipe({ name: 'frequency', standalone: true })
 export class SelfReflectFrequencyPipe implements PipeTransform {
