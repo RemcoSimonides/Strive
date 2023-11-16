@@ -92,18 +92,20 @@
     <small>Add your own questions to reflect on</small>
 
     <ion-list mode="md" lines="full">
-      <ion-item *ngFor="let question of customQuestions$ | async; else loading" button (click)="openCustomQuestion(question)">
-        <ion-label>
-          <section>
-            <span>{{ question.question }}</span>
-            <small>{{ categories[question.category] }} - {{ question.frequency | titlecase }}</small>
-          </section>
-        </ion-label>
-      </ion-item>
-      <ion-item button (click)="openCustomQuestion()" lines="none" class="add-custom-question">
-        <ion-label>Add Question</ion-label>
-        <ion-icon slot="end" name="add-outline"/>
-      </ion-item>
+      <ng-container *ngFor="let question of customQuestions$ | async; else loading">
+        <ion-item button (click)="openCustomQuestion(question)" [ngClass]="{disabled: question.frequency === 'never'}">
+          <ion-label>
+            <section>
+              <span>{{ question.question }}</span>
+              <small>{{ categories[question.category] }} - {{ question.frequency | titlecase }}</small>
+            </section>
+          </ion-label>
+        </ion-item>
+        <ion-item button (click)="openCustomQuestion()" lines="none" class="add-custom-question">
+          <ion-label>Add Question</ion-label>
+          <ion-icon slot="end" name="add-outline"/>
+        </ion-item>
+      </ng-container>
     </ion-list>
 
   </main>
