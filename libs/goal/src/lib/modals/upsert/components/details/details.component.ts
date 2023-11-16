@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { IonicModule, PopoverController } from '@ionic/angular'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { endOfDay } from 'date-fns'
 
 @Component({
   standalone: true,
@@ -36,7 +37,7 @@ export class GoalDetailsComponent {
     })
     popover.onDidDismiss().then(({ data }) => {
       if (data && this.form) {
-        this.form.deadline.setValue(data)
+        this.form.deadline.setValue(endOfDay(data))
         this.form.deadline.markAsDirty()
       }
       this.cdr.markForCheck()
