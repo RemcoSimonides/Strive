@@ -10,9 +10,6 @@
       <li *ngIf="previousEntry.timeManagementFutureMoreTime && previousEntry.timeManagementFutureMoreTime.length">
         ⏱️&nbsp;&nbsp;Spend more time on {{ previousEntry.timeManagementFutureMoreTime | smartJoin:', ':' and '}}
       </li>
-      <li *ngIf="previousEntry.learnFuture && previousEntry.learnFuture.length">
-        📖&nbsp;&nbsp;Learn {{ previousEntry.learnFuture | smartJoin:', ':' and '}}
-      </li>
       <li *ngIf="previousEntry.exploreFuture && previousEntry.exploreFuture.length">
         🌎&nbsp;&nbsp;Explore {{ previousEntry.exploreFuture | smartJoin:', ':' and '}}
       </li>
@@ -36,13 +33,6 @@
     <ion-list mode="md">
       <small>Predictions</small>
       <p>{{ previousEntry.dearFutureSelfPrediction }}</p>
-    </ion-list>
-  </ng-container>
-
-  <ng-container *ngIf="previousEntry.dearFutureSelfAnythingElse">
-    <ion-list mode="md">
-      <small>Message</small>
-      <p>{{ previousEntry.dearFutureSelfAnythingElse }}</p>
     </ion-list>
   </ng-container>
 

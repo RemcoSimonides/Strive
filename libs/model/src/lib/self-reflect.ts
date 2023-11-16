@@ -69,14 +69,6 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     tense: 'future'
   },
   {
-    key: 'dearFutureSelfAnythingElse',
-    question: 'Anything else you would like to mention?',
-    type: 'textarea',
-    frequency: 'yearly',
-    category: 'dearFutureSelf',
-    tense: 'future'
-  },
-  {
     key: 'environmentPast',
     question: 'What did you do past {frequency} to leave the world in a better shape than you found it?',
     type: 'formlist',
@@ -85,16 +77,8 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     tense: 'past'
   },
   {
-    key: 'environmentFuture',
-    question: 'What do you want to explore upcoming {frequency}?',
-    type: 'formlist',
-    frequency: 'monthly',
-    category: 'environment',
-    tense: 'future'
-  },
-  {
     key: 'explorePast',
-    question: 'What did you explore past {frequency}?',
+    question: 'What places did you explore past {frequency}?',
     type: 'formlist',
     frequency: 'quarterly',
     category: 'travelAndAdventures',
@@ -102,7 +86,7 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
   },
   {
     key: 'exploreFuture',
-    question: 'What do you want to explore upcoming {frequency}?',
+    question: 'What places do you want to explore upcoming {frequency}?',
     type: 'formlist',
     frequency: 'quarterly',
     category: 'travelAndAdventures',
@@ -141,36 +125,12 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     tense: 'future'
   },
   {
-    key: 'learnFuture',
-    question: 'What do you want to learn upcoming {frequency}?',
-    type: 'formlist',
-    frequency: 'weekly',
-    category: 'education',
-    tense: 'future'
-  },
-  {
-    key: 'learnPast',
-    question: 'What did you learn past {frequency}?',
-    type: 'formlist',
-    frequency: 'weekly',
-    category: 'education',
-    tense: 'past'
-  },
-  {
     key: 'prioritizeGoals',
     question: 'Order goals by priority',
     type: 'prioritizeGoals',
     frequency: 'monthly',
     category: 'prioritizeGoals',
     tense: 'future'
-  },
-  {
-    key: 'pride',
-    question: 'What are you proud of past {frequency}?',
-    type: 'formlist',
-    frequency: 'weekly',
-    category: 'personalDevelopment',
-    tense: 'past'
   },
   {
     key: 'timeManagementFutureMoreTime',
@@ -196,7 +156,7 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     category: 'personalDevelopment',
     tense: 'past'
   },
-    {
+  {
     key: 'wheelOfLife',
     question: 'Fill in the Wheel of Life',
     type: 'wheelOfLife',
@@ -204,6 +164,70 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     category: 'wheelOfLife',
     tense: 'present'
   },
+  {
+    key: 'financialMoreFuture',
+    question: 'What are you going to spend more money on upcoming {frequency}?',
+    type: 'formlist',
+    frequency: 'quarterly',
+    category: 'financial',
+    tense: 'future'
+  },
+  {
+    key: 'financialLessFuture',
+    question: 'What are you going to spend less money on upcoming {frequency}?',
+    type: 'formlist',
+    frequency: 'quarterly',
+    category: 'financial',
+    tense: 'future'
+  },
+  {
+    key: 'relationshipGainEnergy',
+    question: 'Who of the people you spend time with gave you energy past {frequency}?',
+    type: 'formlist',
+    frequency: 'yearly',
+    category: 'relationships',
+    tense: 'past'
+  },
+  {
+    key: 'relationshipDrainEnergy',
+    question: 'Who of the people you spend time with drained your energy past {frequency}?',
+    type: 'formlist',
+    frequency: 'yearly',
+    category: 'relationships',
+    tense: 'past'
+  },
+  {
+    key: 'relationshipMoreTime',
+    question: 'With who do you want to spend more time upcoming {frequency}?',
+    type: 'formlist',
+    frequency: 'yearly',
+    category: 'relationships',
+    tense: 'future'
+  },
+  {
+    key: 'relaionshipGoals',
+    question: 'What are your relationship goals for the upcoming {frequency}?',
+    type: 'textarea',
+    frequency: 'yearly',
+    category: 'relationships',
+    tense: 'future'
+  },
+  {
+    key: 'healthAndFitnessPast',
+    question: 'How has my overall health been past {frequency}?',
+    type: 'textarea',
+    frequency: 'yearly',
+    category: 'healthAndFitness',
+    tense: 'past'
+  },
+  {
+    key: 'healthAndFitnessExerciseFuture',
+    question: 'What healthy habits are you going to start upcoming {frequency}?',
+    type: 'formlist',
+    frequency: 'yearly',
+    category: 'healthAndFitness',
+    tense: 'future'
+  }
 ]
 
 export const selfReflectKeys = selfReflectQuestions.map(({ key }) => key)
@@ -253,7 +277,6 @@ export interface SelfReflectEntry {
   config: SelfReflectQuestion[],
   dearFutureSelfAdvice?: string
   dearFutureSelfPrediction?: string
-  dearFutureSelfAnythingElse?: string
   environmentPast?: string[]
   environmentFuture?: string[]
   explorePast?: string[]
@@ -263,10 +286,7 @@ export interface SelfReflectEntry {
   imagineFuture?: string
   imagineDie?: string
   frequency: SelfReflectFrequency
-  learnPast?: string[]
-  learnFuture?: string[]
   prioritizeGoals?: string[]
-  proud?: string[]
   timeManagementPast?: string[]
   timeManagementFutureMoreTime?: string[]
   timeManagementFutureLessTime?: string[]

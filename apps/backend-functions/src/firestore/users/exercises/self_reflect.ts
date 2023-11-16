@@ -114,7 +114,7 @@ async function saveWheelOfLife(uid: string, entry: SelfReflectEntry) {
 }
 
 async function saveDearFutureSelf(uid: string, entry: SelfReflectEntry) {
-  if (!entry.dearFutureSelfAdvice && !entry.dearFutureSelfPrediction && !entry.dearFutureSelfAnythingElse) return
+  if (!entry.dearFutureSelfAdvice && !entry.dearFutureSelfPrediction) return
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal) return
@@ -135,11 +135,6 @@ async function saveDearFutureSelf(uid: string, entry: SelfReflectEntry) {
     if (description) description += '<br/><br/>'
     const decrypted = AES.decrypt(entry.dearFutureSelfPrediction, personal.key).toString(enc.Utf8)
     description += `<b>What predictions would you make what will happen upcoming ${frequency}?</b><br/><br/>${decrypted}`
-  }
-  if (entry.dearFutureSelfAnythingElse) {
-    if (description) description += '<br/><br/>'
-    const decrypted = AES.decrypt(entry.dearFutureSelfAnythingElse, personal.key).toString(enc.Utf8)
-    description += `<b>Anything else you would like to mention?</b><br/><br/>${decrypted}`
   }
 
   const encryptedDescription = AES.encrypt(description, personal.key).toString()
