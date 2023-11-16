@@ -14,8 +14,8 @@ export function addGoalEvent(name: EventType, source: GoalSource, id?: string) {
   })
 
   if (id) {
-    db.doc(`GoalEvents/${id}`).set(event)
+    return db.doc(`GoalEvents/${id}`).set(event)
   } else {
-    db.collection('GoalEvents').add(event)
+    return db.collection('GoalEvents').add(event)
   }
 }

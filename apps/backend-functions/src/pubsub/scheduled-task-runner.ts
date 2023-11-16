@@ -1,4 +1,4 @@
-import { db, functions, admin, logger } from '@strive/api/firebase'
+import { db, functions, admin } from '@strive/api/firebase'
 import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 import { getDocument } from '../shared/utils'
@@ -65,9 +65,8 @@ async () => {
       .catch(async () => {
         await snapshot.ref.update({ status: 'error' })
       })
-      jobs.push(job)
+    jobs.push(job)
   }
-
 
   // Execute all jobs concurrently
   return await Promise.all(jobs)
@@ -94,34 +93,30 @@ function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['opti
   return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
-async function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['options']) {
+function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['options']) {
   const source = createGoalSource({ goalId })
-  addGoalEvent('goalDeadlinePassed', source)
+  return addGoalEvent('goalDeadlinePassed', source)
 }
 
-async function milestoneDeadlineHandler({ goalId, milestoneId }: ScheduledTaskMilestoneDeadline['options']) {
+function milestoneDeadlineHandler({ goalId, milestoneId }: ScheduledTaskMilestoneDeadline['options']) {
   const source = createGoalSource({ goalId, milestoneId })
-  addGoalEvent('goalMilestoneDeadlinePassed', source)
+  return addGoalEvent('goalMilestoneDeadlinePassed', source)
 }
 
 async function userExerciseAffirmationsHandler(options: ScheduledTaskUserExerciseAffirmations['options']) {
-  // get affirmation
   const affirmations = await getDocument<Affirmations>(`Users/${options.userId}/Exercises/Affirmations`)
 
-  // reschedule task for tomorrow
-  scheduleNextAffirmation(options.userId, affirmations)
-
-  // send push notification
-  sendAffirmationPushNotification(options.userId, affirmations)
+  return Promise.all([
+    sendAffirmationPushNotification(options.userId, affirmations),
+    scheduleNextAffirmation(options.userId, affirmations)
+  ])
 }
 
-async function userExerciseDailyGratitudeReminderHandler(options: ScheduledTaskUserExerciseDailyGratitude['options']) {
-  // reschedule task for tomorrow
-  logger.log('scheduling for tomorrow userExerciseDailyGratitudeReminderHandler')
-  scheduleNextDailyGratitudeReminder(options.userId)
-
-  // send push notification
-  sendDailyGratitudePushNotification(options.userId)
+function userExerciseDailyGratitudeReminderHandler(options: ScheduledTaskUserExerciseDailyGratitude['options']) {
+  return Promise.all([
+    sendDailyGratitudePushNotification(options.userId),
+    scheduleNextDailyGratitudeReminder(options.userId)
+  ])
 }
 
 async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {
@@ -131,25 +126,26 @@ async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUs
   const personal = await getDocument<Personal>(`Users/${options.userId}/Personal/${options.userId}`)
   const description = AES.decrypt(message.description, personal.key).toString(enc.Utf8)
 
-  sendDearFutureSelfPushNotification(personal, message)
-  sendDearFutureSelfEmail(personal, description)
-
-  updateAggregation({ usersFutureLetterReceived: 1 })
+  return Promise.all([
+    sendDearFutureSelfPushNotification(personal, message),
+    sendDearFutureSelfEmail(personal, description),
+    updateAggregation({ usersFutureLetterReceived: 1 })
+  ])
 }
 
 async function userExerciseWheelOfLifeReminderHandler(options: ScheduledTaskUserExerciseWheelOfLife['options']) {
-  // get wheel of life settings
   const settings = await getDocument<WheelOfLifeSettings>(`Users/${options.userId}/Exercises/WheelOfLife`)
 
-  // send push notification
-  sendWheelOfLifePushNotification(options.userId)
-
-  // reschedule task for next interval
-  scheduleNextReminder(settings, options.userId)
+  return Promise.all([
+    sendWheelOfLifePushNotification(options.userId),
+    scheduleNextReminder(settings, options.userId)
+  ])
 }
 
 async function userExerciseSelfReflectHandler(options: ScheduledTaskUserExerciseSelfReflect['options']) {
   const settings = await getDocument<SelfReflectSettings>(`Users/${options.userId}/Exercises/SelfReflect`)
-  sendSelfReflectPuthNotification(settings, options)
-  scheduleNextSelfReflectReminder(settings, options.userId)
+  return Promise.all([
+    sendSelfReflectPuthNotification(settings, options),
+    scheduleNextSelfReflectReminder(settings, options.userId)
+  ])
 }
