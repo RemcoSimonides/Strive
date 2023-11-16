@@ -53,84 +53,12 @@ export interface SelfReflectQuestion {
 
 export const selfReflectQuestions: SelfReflectQuestion[] = [
   {
-    key: 'dearFutureSelfAdvice',
-    question: 'What advice would you give yourself in one {frequency}?',
-    type: 'textarea',
-    frequency: 'yearly',
-    category: 'dearFutureSelf',
-    tense: 'future'
-  },
-  {
-    key: 'dearFutureSelfPrediction',
-    question: 'What predictions do you make what will happen upcoming {frequency}?',
-    type: 'textarea',
-    frequency: 'yearly',
-    category: 'dearFutureSelf',
-    tense: 'future'
-  },
-  {
-    key: 'environmentPast',
-    question: 'What did you do past {frequency} to leave the world in a better shape than you found it?',
-    type: 'formlist',
-    frequency: 'monthly',
-    category: 'environment',
-    tense: 'past'
-  },
-  {
-    key: 'explorePast',
-    question: 'What places did you explore past {frequency}?',
-    type: 'formlist',
-    frequency: 'quarterly',
-    category: 'travelAndAdventures',
-    tense: 'past'
-  },
-  {
-    key: 'exploreFuture',
-    question: 'What places do you want to explore upcoming {frequency}?',
-    type: 'formlist',
-    frequency: 'quarterly',
-    category: 'travelAndAdventures',
-    tense: 'future'
-  },
-  {
-    key: 'forgive',
-    question: 'Did anything happen during the past {frequency} that needs to be forgiven or let go of?',
-    type: 'formlist',
-    frequency: 'monthly',
-    category: 'relationships',
-    tense: 'past'
-  },
-  {
     key: 'gratitude',
     question: 'What are you grateful for past {frequency}?',
     type: 'formlist',
     frequency: 'weekly',
     category: 'gratitude',
     tense: 'past'
-  },
-  {
-    key: 'imagineFuture',
-    question: 'Imagine yourself 5 years in the future. What would your life look like?',
-    type: 'textarea',
-    frequency: 'yearly',
-    category: 'dearFutureSelf',
-    tense: 'future'
-  },
-  {
-    key: 'imagineDie',
-    question: 'What would you do in the next 5 years if you were to die right after those years?',
-    type: 'textarea',
-    frequency: 'yearly',
-    category: 'dearFutureSelf',
-    tense: 'future'
-  },
-  {
-    key: 'prioritizeGoals',
-    question: 'Order goals by priority',
-    type: 'prioritizeGoals',
-    frequency: 'monthly',
-    category: 'prioritizeGoals',
-    tense: 'future'
   },
   {
     key: 'timeManagementFutureMoreTime',
@@ -157,6 +85,47 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     tense: 'past'
   },
   {
+    key: 'environmentPast',
+    question: 'What did you do past {frequency} to leave the world in a better shape than you found it?',
+    type: 'formlist',
+    frequency: 'monthly',
+    category: 'environment',
+    tense: 'past'
+  },
+  {
+    key: 'forgive',
+    question: 'Did anything happen during the past {frequency} that needs to be forgiven or let go of?',
+    type: 'formlist',
+    frequency: 'monthly',
+    category: 'relationships',
+    tense: 'past'
+  },
+  {
+    key: 'prioritizeGoals',
+    question: 'Order goals by priority',
+    type: 'prioritizeGoals',
+    frequency: 'monthly',
+    category: 'prioritizeGoals',
+    tense: 'future'
+  },
+
+  {
+    key: 'explorePast',
+    question: 'What places did you explore past {frequency}?',
+    type: 'formlist',
+    frequency: 'quarterly',
+    category: 'travelAndAdventures',
+    tense: 'past'
+  },
+  {
+    key: 'exploreFuture',
+    question: 'What places do you want to explore upcoming {frequency}?',
+    type: 'formlist',
+    frequency: 'quarterly',
+    category: 'travelAndAdventures',
+    tense: 'future'
+  },
+  {
     key: 'wheelOfLife',
     question: 'Fill in the Wheel of Life',
     type: 'wheelOfLife',
@@ -178,7 +147,7 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     type: 'formlist',
     frequency: 'quarterly',
     category: 'financial',
-    tense: 'future'
+    tense: 'future',
   },
   {
     key: 'relationshipGainEnergy',
@@ -210,6 +179,38 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     type: 'textarea',
     frequency: 'yearly',
     category: 'relationships',
+    tense: 'future'
+  },
+  {
+    key: 'dearFutureSelfAdvice',
+    question: 'What advice would you give yourself in one {frequency}?',
+    type: 'textarea',
+    frequency: 'yearly',
+    category: 'dearFutureSelf',
+    tense: 'future'
+  },
+  {
+    key: 'dearFutureSelfPrediction',
+    question: 'What predictions do you make what will happen upcoming {frequency}?',
+    type: 'textarea',
+    frequency: 'yearly',
+    category: 'dearFutureSelf',
+    tense: 'future'
+  },
+  {
+    key: 'imagineFuture',
+    question: 'Imagine yourself 5 years in the future. What would your life look like?',
+    type: 'textarea',
+    frequency: 'yearly',
+    category: 'dearFutureSelf',
+    tense: 'future'
+  },
+  {
+    key: 'imagineDie',
+    question: 'What would you do in the next 5 years if you were to die right after those years?',
+    type: 'textarea',
+    frequency: 'yearly',
+    category: 'dearFutureSelf',
     tense: 'future'
   },
   {
