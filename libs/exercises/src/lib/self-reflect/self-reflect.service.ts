@@ -97,11 +97,10 @@ export class SelfReflectEntryService extends FireSubCollection<SelfReflectEntry>
 
 function _decrypt(object: any, decryptKey: string) {
   const decrypt = (value: string) => value ? AES.decrypt(value, decryptKey).toString(enc.Utf8) : ''
-  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'frequency', 'priorities', 'config']
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'frequency', 'prioritizeGoals', 'config']
 
   Object.keys(object).forEach(key => {
     if (excludedProperties.includes(key)) return
-
     if (Array.isArray(object[key])) {
       object[key] = object[key].map(decrypt)
     } else if (typeof object[key] === 'object') {
@@ -116,7 +115,7 @@ function _decrypt(object: any, decryptKey: string) {
 
 function _encrypt(object: any, encryptKey: string) {
   const encrypt = (value: string) => value ? AES.encrypt(value, encryptKey).toString() : ''
-  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'frequency', 'priorities', 'config']
+  const excludedProperties = ['id', 'createdAt', 'updatedAt', 'frequency', 'prioritizeGoals', 'config']
 
   Object.keys(object).forEach(key => {
     if (excludedProperties.includes(key)) return
@@ -127,6 +126,8 @@ function _encrypt(object: any, encryptKey: string) {
       _encrypt(object[key], encryptKey)
     } else if (typeof object[key] === 'string') {
       object[key] = encrypt(object[key])
+    } else if (typeof object[key] === 'number') {
+      object[key] = encrypt(object[key].toString())
     }
   })
 

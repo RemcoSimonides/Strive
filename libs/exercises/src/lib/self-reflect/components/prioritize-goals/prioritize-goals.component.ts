@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { FormArray, FormControl } from '@angular/forms'
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core'
 import { IonicModule, ItemReorderEventDetail } from '@ionic/angular'
-import { map, of, switchMap } from 'rxjs'
+import { BehaviorSubject, combineLatest, map, of, switchMap, tap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
-import { StakeholderWithGoal } from '@strive/model'
+import { SelfReflectEntry, StakeholderWithGoal } from '@strive/model'
 import { ImageModule } from '@strive/media/directives/image.module'
 
 @Component({
@@ -25,12 +25,18 @@ import { ImageModule } from '@strive/media/directives/image.module'
 export class PrioritizeGoalsComponent {
 
   goals$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.goalService.getStakeholderGoals(profile.uid, 'isAchiever', false) : of([])),
-    map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal.status === 'pending')),
-    map(stakeholders => stakeholders.sort((first, second) => {
-      if (this.form && this.form.value.length) {
-        const firstIndex = this.form.value.findIndex(id => id === first.goalId)
-        const secondIndex = this.form.value.findIndex(id => id === second.goalId)
+    switchMap(profile => profile
+      ? combineLatest([
+        this.goalService.getStakeholderGoals(profile.uid, 'isAchiever', false).pipe(
+          map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal.status === 'pending')),
+        ),
+        this._answers$
+      ])
+      : of([], [])),
+    map(([stakeholders, answers]) => stakeholders.sort((first, second) => {
+      if (answers && answers.length) {
+        const firstIndex = answers.findIndex(id => id === first.goalId)
+        const secondIndex = answers.findIndex(id => id === second.goalId)
 
         if (firstIndex !== -1 && secondIndex !== -1) {
           return firstIndex > secondIndex ? 1 : -1
@@ -47,10 +53,29 @@ export class PrioritizeGoalsComponent {
       } else {
         return first.priority > second.priority ? 1 : -1
       }
-    }))
+    })),
+    tap(value => {
+      if (this._form) {
+        this._form.clear()
+        value.forEach(stakeholder => this._form?.push(new FormControl(stakeholder.goalId, { nonNullable: true })))
+      }
+    })
   )
 
-  @Input() form?: FormArray<FormControl<string>>
+  disableReorder = signal<boolean>(false)
+  private _form?: FormArray<FormControl<string>>
+  private _answers$ = new BehaviorSubject<string[]>([])
+
+  @Input() set form(form: FormArray<FormControl<string>>) {
+    if (!form) return
+    this._form = form
+    this._answers$.next(form.value)
+  }
+  @Input() set entry(entry: SelfReflectEntry) {
+    this.disableReorder.set(true)
+    if (!entry?.prioritizeGoals) return
+    this._answers$.next(entry.prioritizeGoals)
+  }
   @Output() step = new EventEmitter<'next' | 'previous'>()
 
   constructor(
@@ -59,7 +84,7 @@ export class PrioritizeGoalsComponent {
   ) {}
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>, stakeholders: StakeholderWithGoal[]) {
-    if (!this.auth.uid || !this.form) return
+    if (!this.auth.uid || !this._form) return
 
     const { from, to } = ev.detail
     const element = stakeholders[from]
@@ -68,9 +93,9 @@ export class PrioritizeGoalsComponent {
 
     const ids = stakeholders.map(stakeholder => stakeholder.goalId)
 
-    this.form.clear()
-    ids.forEach(id => this.form?.push(new FormControl(id, { nonNullable: true })))
-    this.form?.markAsDirty()
+    this._form.clear()
+    ids.forEach(id => this._form?.push(new FormControl(id, { nonNullable: true })))
+    this._form?.markAsDirty()
 
     ev.detail.complete()
   }

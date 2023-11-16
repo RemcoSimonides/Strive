@@ -1,13 +1,12 @@
 <ng-container *ngIf="goals$ | async as stakeholders; else loading">
   <ng-container *ngIf="stakeholders.length > 1; else notEnoughGoals">
     <ion-list mode="md">
-      <ion-reorder-group (ionItemReorder)="doReorder($event, stakeholders)" [disabled]="false">
+      <ion-reorder-group (ionItemReorder)="doReorder($event, stakeholders)" [disabled]="disableReorder()">
         <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'full'">
           <ion-thumbnail>
             <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120" />
           </ion-thumbnail>
           <ion-label>{{ stakeholder.goal.title }}</ion-label>
-          <ion-icon name="reorder-two-outline" slot="end" />
           <ion-reorder slot="end" />
         </ion-item>
       </ion-reorder-group>

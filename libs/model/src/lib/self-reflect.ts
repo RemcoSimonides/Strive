@@ -202,7 +202,7 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     type: 'wheelOfLife',
     frequency: 'quarterly',
     category: 'wheelOfLife',
-    tense: 'future'
+    tense: 'present'
   },
 ]
 
@@ -265,7 +265,7 @@ export interface SelfReflectEntry {
   frequency: SelfReflectFrequency
   learnPast?: string[]
   learnFuture?: string[]
-  priorities?: string[]
+  prioritizeGoals?: string[]
   proud?: string[]
   timeManagementPast?: string[]
   timeManagementFutureMoreTime?: string[]

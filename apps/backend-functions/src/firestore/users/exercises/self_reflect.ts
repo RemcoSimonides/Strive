@@ -86,9 +86,9 @@ async (snapshot, context) => {
 })
 
 async function savePriorities(uid: string, entry: SelfReflectEntry) {
-  const { priorities } = entry
+  const { prioritizeGoals } = entry
 
-  const promises = priorities.map(goalId => getDocument<Stakeholder>(`Goals/${goalId}/GStakeholders/${uid}`))
+  const promises = prioritizeGoals.map(goalId => getDocument<Stakeholder>(`Goals/${goalId}/GStakeholders/${uid}`))
   const stakeholders = await Promise.all(promises)
 
   return stakeholders.map((stakeholder, priority) => {

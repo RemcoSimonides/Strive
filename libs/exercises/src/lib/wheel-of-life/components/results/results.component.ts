@@ -20,6 +20,7 @@ export class WheelOfLifeResultsComponent {
   private _entries: WheelOfLifeEntry<number>[] = []
 
   @Input() set entries(entries: WheelOfLifeEntry<number>[]) {
+    if (!entries) return
     this._entries = entries.filter(entry => !!entry.createdAt)
     this.upsertChart()
   }
