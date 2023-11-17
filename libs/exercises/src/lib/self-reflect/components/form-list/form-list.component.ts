@@ -47,8 +47,9 @@ export class SelfReflectFormListComponent {
     this.inputForm.setValue('')
   }
 
-  blur(index: number) {
+  blur(event: CustomEvent, index: number) {
     if (!this.form) return
+    if (event.defaultPrevented) return // element removed
     const value = this.form.at(index).value
     if (!value) this.removeValue(index)
   }

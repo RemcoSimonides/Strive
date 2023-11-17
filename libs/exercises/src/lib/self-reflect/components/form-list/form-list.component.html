@@ -2,13 +2,14 @@
   <ion-list mode="md">
     <small>{{ question.question | replaceFrequency:question.frequency }}</small>
     <ion-item *ngFor="let control of form.controls; let i = index; let last = last" [lines]="last && !showInput() ? 'none' : 'inset'">
-      <ion-input
-        class="ion-text-wrap primary"
+      <ion-textarea
+        class="primary"
+        autoGrow
+        placeholder="..."
         autocapitalize="sentences"
-        type="text"
         placeholder="..."
         [formControl]="control"
-        (ionBlur)="blur(i)"
+        (ionBlur)="blur($event, i)"
       />
       <ion-icon
         *ngIf="control.value !== ''"
@@ -18,12 +19,13 @@
       />
     </ion-item>
     <ion-item lines="none" *ngIf="showInput()">
-      <ion-input
+      <ion-textarea
         [formControl]="inputForm"
+        autoGrow
         placeholder="..."
-        (keydown.enter)="add()"
         autocapitalize="sentences"
         class="primary"
+        (keydown.enter)="add()"
       />
       <ion-icon name="add-outline" slot="end" (click)="add()" />
     </ion-item>
