@@ -55,3 +55,15 @@ small {
     color: var(--ion-color-primary)
   }
 }
+
+.filter {
+  small {
+    color: var(--ion-color-medium);
+    margin: 8px 16px;
+  }
+
+  ion-select {
+    width: 100%;
+    white-space: wrap;
+  }
+}

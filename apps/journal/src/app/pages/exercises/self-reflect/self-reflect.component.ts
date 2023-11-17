@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import { FormControl, FormGroup } from '@angular/forms'
 import { ModalController } from '@ionic/angular'
 import { orderBy } from 'firebase/firestore'
-import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap } from 'rxjs'
+import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap, startWith } from 'rxjs'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflectQuestion, SelfReflectSettings, createSelfReflectEntry, createSelfReflectQuestion, createSelfReflectSettings, selfReflectKeys, selfReflectSettings } from '@strive/model'
+import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflectFrequencyWithNever, SelfReflectQuestion, SelfReflectSettings, createSelfReflectEntry, createSelfReflectQuestion, selfReflectKeys } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
@@ -104,8 +105,48 @@ export class SelfReflectComponent {
     map(([entries, settings]) => getEntryStatus(entries, settings, 'yearly'))
   )
 
-  customQuestions$ = this.settings$.pipe(
-    map(settings => settings ? settings.questions.filter(({ key }) => !selfReflectKeys.includes(key)) : []),
+  filterForm = new FormGroup({
+    category: new FormControl<(SelfReflectCategory | 'all' | 'exercise')[]>(['all']),
+    frequency: new FormControl<(SelfReflectFrequencyWithNever | 'all')[]>(['all']),
+  })
+
+  questions$ = combineLatest([
+    this.settings$,
+    this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
+  ]).pipe(
+    map(([settings, { category, frequency }]) => {
+      if (!settings || !category || !frequency) return []
+      const questions = settings.questions.filter(({ key }) => selfReflectKeys.includes(key))
+      const exerciseQuestions: SelfReflectCategory[] = ['dearFutureSelf', 'wheelOfLife', 'gratitude', 'prioritizeGoals']
+
+      return questions.filter(question => {
+        if (category.includes('all') && frequency.includes('all')) return true
+        if (category.includes('all') && frequency.includes(question.frequency)) return true
+        if (category.includes('exercise') && frequency.includes('all')) return exerciseQuestions.includes(question.category)
+        if (category.includes('exercise') && frequency.includes(question.frequency)) return exerciseQuestions.includes(question.category)
+        if (category.includes(question.category) && frequency.includes('all')) return true
+        if (category.includes(question.category) && frequency.includes(question.frequency)) return true
+        return false
+      })
+    })
+  )
+
+  customQuestions$ = combineLatest([
+    this.settings$,
+    this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
+  ]).pipe(
+    map(([settings, { category, frequency }]) => {
+      if (!settings || !category || !frequency) return []
+      const questions = settings.questions.filter(({ key }) => !selfReflectKeys.includes(key))
+
+      return questions.filter(question => {
+        if (category.includes('all') && frequency.includes('all')) return true
+        if (category.includes('all') && frequency.includes(question.frequency)) return true
+        if (category.includes(question.category) && frequency.includes('all')) return true
+        if (category.includes(question.category) && frequency.includes(question.frequency)) return true
+        return false
+      })
+    })
   )
 
   categories: Record<SelfReflectCategory, string> = {

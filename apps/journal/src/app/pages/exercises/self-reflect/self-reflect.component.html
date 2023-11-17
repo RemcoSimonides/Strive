@@ -65,11 +65,14 @@
 
     <header>
       <h3>Questions</h3>
+      <ion-button size="small" fill="clear" id="filter-popover">
+        <ion-icon name="filter-outline" slot="icon-only" />
+      </ion-button>
     </header>
     <small>See previous entries or change the frequency of questions</small>
 
-    <ion-list mode="md" lines="full" *ngIf="settings$ | async as settings; else loading">
-      <ng-container *ngFor="let question of settings.questions; let last = last">
+    <ion-list mode="md" lines="full" *ngIf="questions$ | async; let questions; else loading">
+      <ng-container *ngFor="let question of questions; let last = last">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
           <ion-item [lines]="last ? 'none' : 'full'" button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
             <section>
@@ -88,6 +91,9 @@
 
     <header>
       <h3>Custom Questions</h3>
+      <ion-button size="small" fill="clear" id="filter-popover-2">
+        <ion-icon name="filter-outline" slot="icon-only" />
+      </ion-button>
     </header>
     <small>Add your own questions to reflect on</small>
 
@@ -108,31 +114,58 @@
       </ion-item>
     </ion-list>
 
+    <ion-popover trigger="filter-popover" mode="ios" class="datetime-popover">
+      <ng-template>
+        <ng-container *ngTemplateOutlet="filterPopover"></ng-container>
+      </ng-template>
+    </ion-popover>
+
+    <ion-popover trigger="filter-popover-2" mode="ios" class="datetime-popover">
+      <ng-template>
+        <ng-container *ngTemplateOutlet="filterPopover"></ng-container>
+      </ng-template>
+    </ion-popover>
   </main>
 </ion-content>
 
-<ion-popover trigger="filter-popover">
-  <ng-template>
-    <ion-content>
-      <form [formGroup]="filterForm">
-        <ion-list mode="md">
-          <ion-item>
-            <ion-checkbox formControlName="weekly">Weekly</ion-checkbox>
-          </ion-item>
-          <ion-item>
-            <ion-checkbox formControlName="monthly">Monthly</ion-checkbox>
-          </ion-item>
-          <ion-item>
-            <ion-checkbox formControlName="quarterly">Quarterly</ion-checkbox>
-          </ion-item>
-          <ion-item lines="none">
-            <ion-checkbox formControlName="yearly">Yearly</ion-checkbox>
-          </ion-item>
-        </ion-list>
-      </form>
-    </ion-content>
-  </ng-template>
-</ion-popover>
+
+<ng-template #filterPopover>
+  <ion-content>
+    <form [formGroup]="filterForm">
+
+      <ion-list mode="md" class="filter">
+        <ion-item lines="none">
+          <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
+            <ion-select-option value="all">All</ion-select-option>
+            <ion-select-option value="career">Career</ion-select-option>
+            <ion-select-option value="creative">Creative</ion-select-option>
+            <ion-select-option value="education">Education</ion-select-option>
+            <ion-select-option value="environment">Environment</ion-select-option>
+            <ion-select-option value="exercise">Exercise ⭐</ion-select-option>
+            <ion-select-option value="financial">Financial</ion-select-option>
+            <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
+            <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
+            <ion-select-option value="relationships">Relationships</ion-select-option>
+            <ion-select-option value="spiritual">Spiritual</ion-select-option>
+            <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
+            <ion-select-option value="other">Other</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
+            <ion-select-option value="all">All</ion-select-option>
+            <ion-select-option value="weekly">Weekly</ion-select-option>
+            <ion-select-option value="monthly">Monthly</ion-select-option>
+            <ion-select-option value="quarterly">Quarterly</ion-select-option>
+            <ion-select-option value="yearly">Yearly</ion-select-option>
+            <ion-select-option value="never">Turned off</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </form>
+  </ion-content>
+</ng-template>
 
 <ng-template #login>
   <section class="not-logged-in">
