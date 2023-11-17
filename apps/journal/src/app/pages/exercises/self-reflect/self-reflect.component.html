@@ -65,7 +65,7 @@
 
     <header>
       <h3>Questions</h3>
-      <ion-button size="small" fill="clear" id="filter-popover">
+      <ion-button size="small" fill="clear" id="question-filter-popover">
         <ion-icon name="filter-outline" slot="icon-only" />
       </ion-button>
     </header>
@@ -91,7 +91,7 @@
 
     <header>
       <h3>Custom Questions</h3>
-      <ion-button size="small" fill="clear" id="filter-popover-2">
+      <ion-button size="small" fill="clear" id="custom-question-filter-popover">
         <ion-icon name="filter-outline" slot="icon-only" />
       </ion-button>
     </header>
@@ -114,58 +114,86 @@
       </ion-item>
     </ion-list>
 
-    <ion-popover trigger="filter-popover" mode="ios" class="datetime-popover">
+    <ion-popover trigger="question-filter-popover" mode="ios" class="datetime-popover">
       <ng-template>
-        <ng-container *ngTemplateOutlet="filterPopover"></ng-container>
+        <ion-content>
+          <form [formGroup]="questionFilterForm">
+
+            <ion-list mode="md" class="filter">
+              <ion-item lines="none">
+                <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
+                  <ion-select-option value="all">All</ion-select-option>
+                  <ion-select-option value="career">Career</ion-select-option>
+                  <ion-select-option value="creative">Creative</ion-select-option>
+                  <ion-select-option value="education">Education</ion-select-option>
+                  <ion-select-option value="environment">Environment</ion-select-option>
+                  <ion-select-option value="exercise">Exercise ⭐</ion-select-option>
+                  <ion-select-option value="financial">Financial</ion-select-option>
+                  <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
+                  <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
+                  <ion-select-option value="relationships">Relationships</ion-select-option>
+                  <ion-select-option value="spiritual">Spiritual</ion-select-option>
+                  <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
+                  <ion-select-option value="other">Other</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item lines="none">
+                <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
+                  <ion-select-option value="all">All</ion-select-option>
+                  <ion-select-option value="weekly">Weekly</ion-select-option>
+                  <ion-select-option value="monthly">Monthly</ion-select-option>
+                  <ion-select-option value="quarterly">Quarterly</ion-select-option>
+                  <ion-select-option value="yearly">Yearly</ion-select-option>
+                  <ion-select-option value="never">Turned off</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </form>
+        </ion-content>
       </ng-template>
     </ion-popover>
 
-    <ion-popover trigger="filter-popover-2" mode="ios" class="datetime-popover">
+    <ion-popover trigger="custom-question-filter-popover" mode="ios" class="datetime-popover">
       <ng-template>
-        <ng-container *ngTemplateOutlet="filterPopover"></ng-container>
+        <ion-content>
+          <form [formGroup]="customQuestionFilterForm">
+
+            <ion-list mode="md" class="filter">
+              <ion-item lines="none">
+                <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
+                  <ion-select-option value="all">All</ion-select-option>
+                  <ion-select-option value="career">Career</ion-select-option>
+                  <ion-select-option value="creative">Creative</ion-select-option>
+                  <ion-select-option value="education">Education</ion-select-option>
+                  <ion-select-option value="environment">Environment</ion-select-option>
+                  <ion-select-option value="financial">Financial</ion-select-option>
+                  <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
+                  <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
+                  <ion-select-option value="relationships">Relationships</ion-select-option>
+                  <ion-select-option value="spiritual">Spiritual</ion-select-option>
+                  <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
+                  <ion-select-option value="other">Other</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item lines="none">
+                <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
+                  <ion-select-option value="all">All</ion-select-option>
+                  <ion-select-option value="weekly">Weekly</ion-select-option>
+                  <ion-select-option value="monthly">Monthly</ion-select-option>
+                  <ion-select-option value="quarterly">Quarterly</ion-select-option>
+                  <ion-select-option value="yearly">Yearly</ion-select-option>
+                  <ion-select-option value="never">Turned off</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </form>
+        </ion-content>
       </ng-template>
     </ion-popover>
   </main>
 </ion-content>
-
-
-<ng-template #filterPopover>
-  <ion-content>
-    <form [formGroup]="filterForm">
-
-      <ion-list mode="md" class="filter">
-        <ion-item lines="none">
-          <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
-            <ion-select-option value="all">All</ion-select-option>
-            <ion-select-option value="career">Career</ion-select-option>
-            <ion-select-option value="creative">Creative</ion-select-option>
-            <ion-select-option value="education">Education</ion-select-option>
-            <ion-select-option value="environment">Environment</ion-select-option>
-            <ion-select-option value="exercise">Exercise ⭐</ion-select-option>
-            <ion-select-option value="financial">Financial</ion-select-option>
-            <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
-            <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
-            <ion-select-option value="relationships">Relationships</ion-select-option>
-            <ion-select-option value="spiritual">Spiritual</ion-select-option>
-            <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
-            <ion-select-option value="other">Other</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item lines="none">
-          <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
-            <ion-select-option value="all">All</ion-select-option>
-            <ion-select-option value="weekly">Weekly</ion-select-option>
-            <ion-select-option value="monthly">Monthly</ion-select-option>
-            <ion-select-option value="quarterly">Quarterly</ion-select-option>
-            <ion-select-option value="yearly">Yearly</ion-select-option>
-            <ion-select-option value="never">Turned off</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-list>
-    </form>
-  </ion-content>
-</ng-template>
 
 <ng-template #login>
   <section class="not-logged-in">

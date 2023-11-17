@@ -105,14 +105,19 @@ export class SelfReflectComponent {
     map(([entries, settings]) => getEntryStatus(entries, settings, 'yearly'))
   )
 
-  filterForm = new FormGroup({
+  questionFilterForm = new FormGroup({
     category: new FormControl<(SelfReflectCategory | 'all' | 'exercise')[]>(['all']),
+    frequency: new FormControl<(SelfReflectFrequencyWithNever | 'all')[]>(['all']),
+  })
+
+  customQuestionFilterForm = new FormGroup({
+    category: new FormControl<(SelfReflectCategory | 'all')[]>(['all']),
     frequency: new FormControl<(SelfReflectFrequencyWithNever | 'all')[]>(['all']),
   })
 
   questions$ = combineLatest([
     this.settings$,
-    this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
+    this.questionFilterForm.valueChanges.pipe(startWith(this.questionFilterForm.value))
   ]).pipe(
     map(([settings, { category, frequency }]) => {
       if (!settings || !category || !frequency) return []
@@ -133,7 +138,7 @@ export class SelfReflectComponent {
 
   customQuestions$ = combineLatest([
     this.settings$,
-    this.filterForm.valueChanges.pipe(startWith(this.filterForm.value))
+    this.customQuestionFilterForm.valueChanges.pipe(startWith(this.customQuestionFilterForm.value))
   ]).pipe(
     map(([settings, { category, frequency }]) => {
       if (!settings || !category || !frequency) return []
