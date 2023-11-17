@@ -19,6 +19,8 @@ function getTitle({ category, tense }: EntryStep): string {
     case 'intro':
     case 'outro':
       return ''
+    case 'previousIntention':
+      return 'Previous intentions'
     case 'gratitude':
       return 'Gratitude'
     case 'dearFutureSelf':

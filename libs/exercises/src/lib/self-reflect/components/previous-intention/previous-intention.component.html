@@ -1,39 +1,22 @@
 <ng-container *ngIf="previousEntry && frequency">
   <small class="intro">Last {{ frequency | frequency }} you wrote some intentions/predictions about the past {{ frequency | frequency }}. Let's read back and think by yourself what happened or not.</small>
 
-  <ion-list mode="md" *ngIf="hasListItems()">
-    <small>Intentions for last {{ frequency | frequency }}</small>
-    <ul #list>
-      <li *ngIf="previousEntry.timeManagementFutureLessTime && previousEntry.timeManagementFutureLessTime.length">
-        ⏱️&nbsp;&nbsp;Spend less time on {{ previousEntry.timeManagementFutureLessTime | smartJoin:', ':' and '}}
-      </li>
-      <li *ngIf="previousEntry.timeManagementFutureMoreTime && previousEntry.timeManagementFutureMoreTime.length">
-        ⏱️&nbsp;&nbsp;Spend more time on {{ previousEntry.timeManagementFutureMoreTime | smartJoin:', ':' and '}}
-      </li>
-      <li *ngIf="previousEntry.exploreFuture && previousEntry.exploreFuture.length">
-        🌎&nbsp;&nbsp;Explore {{ previousEntry.exploreFuture | smartJoin:', ':' and '}}
-      </li>
-      <li *ngIf="previousEntry.environmentFuture && previousEntry.environmentFuture.length">
-        🌱&nbsp;&nbsp;Contribute to the environment by {{ previousEntry.environmentFuture | smartJoin:', ':' and '}}
-      </li>
-      <li *ngIf="previousEntry.forgive && previousEntry.forgive.length">
-        🙏&nbsp;&nbsp;Forgive or let go of {{ previousEntry.forgive | smartJoin:', ':' and '}}
-      </li>
-    </ul>
-  </ion-list>
+  <ng-container *ngFor="let key of previousEntryKeys">
+    <ion-list mode="md" *ngIf="previousEntry | getConfig: key; let config">
+      <small>{{ previousEntry | getQuestion: key }}</small>
 
-  <ng-container *ngIf="previousEntry.dearFutureSelfAdvice">
-    <ion-list mode="md">
-      <small>Advice</small>
-      <p>{{ previousEntry.dearFutureSelfAdvice }}</p>
+      <ng-container *ngIf="config.type === 'formlist'">
+        <ion-item *ngFor="let item of previousEntry[key]; let last = last" [lines]="last ? 'none' : 'full'">
+          <ion-label>{{item}}</ion-label>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="config.type === 'textarea'">
+        <ion-item>
+          <ion-label>{{ previousEntry[key] }}</ion-label>
+        </ion-item>
+      </ng-container>
     </ion-list>
-  </ng-container>
 
-  <ng-container *ngIf="previousEntry.dearFutureSelfPrediction">
-    <ion-list mode="md">
-      <small>Predictions</small>
-      <p>{{ previousEntry.dearFutureSelfPrediction }}</p>
-    </ion-list>
   </ng-container>
-
 </ng-container>
