@@ -40,7 +40,8 @@ export class SelfReflectFormListComponent {
     }
   }
 
-  add() {
+  add(event?: Event) {
+    event?.preventDefault() // prevent default to avoid adding a new line when pressing enter
     if (!this.form) return
     this.form.push(new FormControl(this.inputForm.value, { nonNullable: true }))
     this.form.markAsDirty()

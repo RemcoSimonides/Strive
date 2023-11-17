@@ -25,7 +25,7 @@
         placeholder="..."
         autocapitalize="sentences"
         class="primary"
-        (keydown.enter)="add()"
+        (keydown.enter)="add($event)"
       />
       <ion-icon name="add-outline" slot="end" (click)="add()" />
     </ion-item>
