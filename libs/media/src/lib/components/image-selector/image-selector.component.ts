@@ -14,6 +14,20 @@ import { isValidHttpUrl } from '@strive/utils/helpers'
 import { Camera, CameraResultType } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
 
+// Remove b64toBlob once https://github.com/ionic-team/capacitor/issues/6126 is fixed
+/** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
+function b64toBlob(data: string) {
+  const [metadata, content] = data.split(',')
+  const byteString = atob(content)
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  const type = metadata.split(';')[0].split(':')[1]
+  return new Blob([ab], { type })
+}
+
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
@@ -30,7 +44,8 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   step$ = this.step.asObservable()
   accept = ['.jpg', '.jpeg', '.png', '.webp']
   file?: File
-  croppedImage?: Blob | null
+  // croppedImage?: Blob | null
+  croppedImage?: string // https://github.com/ionic-team/capacitor/issues/6126
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
   @Input() defaultImage?: 'goal.png' | 'profile.png'
@@ -41,7 +56,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>
 
   constructor(
-    private sanitizer: DomSanitizer,
+    // private sanitizer: DomSanitizer,
     private toast: ToastController
   ) {}
 
@@ -98,9 +113,13 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    if (!event.objectUrl || !event.blob) return
-    this.croppedImage = event.blob
-    this.previewUrl$.next(this.sanitizer.bypassSecurityTrustUrl(event.objectUrl))
+    if (!event.base64) return
+    this.croppedImage = event.base64
+
+    // https://github.com/ionic-team/capacitor/issues/6126
+    // if (!event.objectUrl || !event.blob) return
+    // this.croppedImage = event.blob
+    // this.previewUrl$.next(this.sanitizer.bypassSecurityTrustUrl(event.objectUrl))
   }
 
   async selectImage() {
@@ -172,7 +191,8 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
         throw new Error('No path defined to upload to')
       }
 
-      const blob = this.croppedImage
+      const blob = b64toBlob(this.croppedImage) // https://github.com/ionic-team/capacitor/issues/6126
+      // const blob = this.croppedImage
       const path = `${this.storagePath}/${this.file?.name}`
       uploadBytes(ref(getStorage(), path), blob)
       this.form.setValue(path)

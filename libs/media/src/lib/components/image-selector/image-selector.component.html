@@ -19,7 +19,8 @@
 
   <!-- Crop -->
   <article *ngSwitchCase="'crop'" class="crop">
-    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)" />
+    <!-- <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)" /> -->
+    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)" output="base64" /> <!-- https://github.com/ionic-team/capacitor/issues/6126 -->
     <div>
       <ion-fab-button color="primary" (click)="cropIt()">
         <ion-icon name="checkmark-outline" />
@@ -32,7 +33,8 @@
 
   <!-- Show -->
   <article *ngSwitchCase="'show'" class="show">
-    <img class="croppedImage" [src]="previewUrl$ | async" />
+    <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" /> <!-- https://github.com/ionic-team/capacitor/issues/6126 -->
+    <!-- <img class="croppedImage" [src]="previewUrl$ | async" /> -->
     <div>
       <ion-fab-button color="primary" (click)="remove()">
         <ion-icon name="close-outline" />
