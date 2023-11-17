@@ -51,7 +51,7 @@ async (snapshot, context) => {
   }
 })
 
-export const selfReflectEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/SelfReflect/Entries/{entryId}`, 'abcdef',
+export const selfReflectEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/SelfReflect/Entries/{entryId}`, 'selfReflectCreatedHandler',
 async (snapshot, context) => {
 
   const { uid } = context.params as { uid: string }
@@ -87,6 +87,7 @@ async (snapshot, context) => {
 
 async function savePriorities(uid: string, entry: SelfReflectEntry) {
   const { prioritizeGoals } = entry
+  if (!prioritizeGoals || !prioritizeGoals.length) return
 
   const promises = prioritizeGoals.map(goalId => getDocument<Stakeholder>(`Goals/${goalId}/GStakeholders/${uid}`))
   const stakeholders = await Promise.all(promises)
