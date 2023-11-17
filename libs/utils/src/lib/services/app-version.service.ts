@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core'
 import { AppUpdate } from '@capawesome/capacitor-app-update'
 import { AlertController, ToastController } from '@ionic/angular'
 import { FireDocument } from 'ngfire'
+import { setContext } from '@sentry/angular'
 
 interface Version {
   android: string
@@ -21,6 +22,7 @@ export class AppVersionService extends FireDocument<Version> {
     private toastCtrl: ToastController
   ) {
     super()
+    setContext('version', { app_version: this.version })
   }
 
   async checkForUpdate() {
