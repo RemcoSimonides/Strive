@@ -234,10 +234,10 @@ export class SelfReflectComponent {
     }).then(modal => modal.present())
   }
 
-  async openCustomQuestion(question?: SelfReflectQuestion) {
+  async openCustomQuestion(entries: SelfReflectEntry[], question?: SelfReflectQuestion) {
     const modal = await this.modalCtrl.create({
       component: SelfReflectCustomQuestionModalComponent,
-      componentProps: { question }
+      componentProps: { question, entries }
     })
     modal.onDidDismiss().then(async ({ data }) => {
       if (!data) return

@@ -1,12 +1,11 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
-import { ReactiveFormsModule } from '@angular/forms'
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { AlertController, IonicModule, ModalController } from '@ionic/angular'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
-import { SelfReflectCategory, SelfReflectQuestion, createSelfReflectQuestion } from '@strive/model'
+import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, SelfReflectTense, SelfReflectType, createSelfReflectQuestion } from '@strive/model'
 import { createRandomString } from '@strive/utils/helpers'
-import { SelfReflectQuestionForm } from '../../forms/self-reflect-settings.form'
 
 @Component({
   standalone: true,
@@ -23,9 +22,16 @@ import { SelfReflectQuestionForm } from '../../forms/self-reflect-settings.form'
 })
 export class SelfReflectCustomQuestionModalComponent extends ModalDirective implements OnInit {
 
-  form = new SelfReflectQuestionForm()
+  form = new FormGroup({
+    question: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    type: new FormControl<SelfReflectType | ''>('', { nonNullable: true, validators: [Validators.required] }),
+    frequency: new FormControl<SelfReflectFrequencyWithNever | ''>('', { nonNullable: true , validators: [Validators.required]}),
+    tense: new FormControl<SelfReflectTense | ''>('', { nonNullable: true, validators: [Validators.required] }),
+    category: new FormControl<SelfReflectCategory | ''>('', { nonNullable: true, validators: [Validators.required] })
+  })
 
   @Input() question?: SelfReflectQuestion
+  @Input() entries: SelfReflectEntry[] = []
 
   constructor(
     private alertCtrl: AlertController,
