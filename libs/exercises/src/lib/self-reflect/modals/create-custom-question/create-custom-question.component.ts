@@ -26,7 +26,7 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
 
   form = new FormGroup({
     question: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-    type: new FormControl<SelfReflectType | ''>('', { nonNullable: true, validators: [Validators.required] }),
+    type: new FormControl<SelfReflectType>('formlist', { nonNullable: true, validators: [Validators.required] }),
     frequency: new FormControl<SelfReflectFrequencyWithNever | ''>('', { nonNullable: true , validators: [Validators.required]}),
     tense: new FormControl<SelfReflectTense | ''>('', { nonNullable: true, validators: [Validators.required] }),
     category: new FormControl<SelfReflectCategory | ''>('', { nonNullable: true, validators: [Validators.required] })
