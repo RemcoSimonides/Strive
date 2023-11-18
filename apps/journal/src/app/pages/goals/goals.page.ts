@@ -112,6 +112,8 @@ export class GoalsPageComponent implements OnDestroy {
         componentProps: { dfs }
       }).then(modal => modal.present())
     }
+
+    this.router.navigate(['/goals'])
   })
 
   constructor(
