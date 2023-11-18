@@ -72,7 +72,7 @@
     <small>See previous entries or change the frequency of questions</small>
 
     <ion-list mode="md" lines="full" *ngIf="questions$ | async; let questions; else loading">
-      <ng-container *ngFor="let question of questions; let last = last">
+      <ng-container *ngFor="let question of questions; let last = last; trackBy: trackByFn">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
           <ion-item [lines]="last ? 'none' : 'full'" button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
             <section>
@@ -98,7 +98,7 @@
     <small>Add your own questions to reflect on</small>
 
     <ion-list mode="md" lines="full">
-      <ng-container *ngFor="let question of customQuestions$ | async; else loading">
+      <ng-container *ngFor="let question of customQuestions$ | async; trackBy: trackByFn; else loading">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
           <ion-item button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
             <ion-label>

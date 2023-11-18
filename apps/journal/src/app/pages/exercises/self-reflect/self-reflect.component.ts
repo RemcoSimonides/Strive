@@ -237,4 +237,8 @@ export class SelfReflectComponent {
       component: SelfReflectCustomQuestionModalComponent
     }).then(modal => modal.present())
   }
+
+  trackByFn(_: number, item: SelfReflectQuestion) {
+		return item.key
+  }
 }
