@@ -6,8 +6,8 @@ export type SelfReflectType = 'formlist' | 'textarea' | 'prioritizeGoals' | 'whe
 export type SelfReflectTense = 'future' | 'present' | 'past'
 
 export interface EntryStep {
-  category: SelfReflectCategory
-  tense: SelfReflectTense | ''
+  category: SelfReflectCategory | ''
+  tense: SelfReflectTense | 'previousIntention' | ''
 }
 
 export function getFrequency(value: SelfReflectFrequencyWithNever): string {
@@ -27,7 +27,7 @@ export function replaceFrequency(value: string, frequency: SelfReflectFrequencyW
 }
 
 export const selfReflectCategories = [
-  'intro',
+  'intermediate',
   'previousIntention',
   'career',
   'creative',
@@ -47,6 +47,27 @@ export const selfReflectCategories = [
   'outro'
 ] as const
 export type SelfReflectCategory = typeof selfReflectCategories[number]
+
+export const categoryLabels: Record<SelfReflectCategory, string> = {
+  intermediate: '',
+  previousIntention: 'Previous intentions',
+  career: 'Career',
+  creative: 'Creative',
+  education: 'Education',
+  environment: 'Environment',
+  financial: 'Financial',
+  healthAndFitness: 'Health and Fitness',
+  personalDevelopment: 'Personal Development',
+  relationships: 'Relationships',
+  spiritual: 'Spiritual',
+  travelAndAdventures: 'Travel and Adventures',
+  other: 'Other',
+  dearFutureSelf: 'Dear Future Self',
+  wheelOfLife: 'Wheel of Life',
+  gratitude: 'Gratitude',
+  prioritizeGoals: 'Prioritize Goals',
+  outro: ''
+}
 
 export interface SelfReflectQuestion {
   key: string

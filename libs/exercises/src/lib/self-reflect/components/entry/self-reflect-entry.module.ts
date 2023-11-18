@@ -9,7 +9,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
 import { SelfReflectQuestionActivatedPipe } from '../../pipes/activated.pipe'
 
-import { SelfReflectIntroComponent } from '../intro/intro.component'
+import { SelfReflectIntermediateComponent } from '../intermediate/intermediate.component'
 import { PreviousIntentionComponent } from '../previous-intention/previous-intention.component'
 import { WheelOfLifeComponent } from '../wheel-of-life/wheel-of-life.component'
 import { PrioritizeGoalsComponent } from '../prioritize-goals/prioritize-goals.component'
@@ -27,7 +27,7 @@ import { SelfReflectStepFilterPipe } from '../../pipes/step.pipe'
     PageLoadingModule,
     SelfReflectQuestionActivatedPipe,
 
-    SelfReflectIntroComponent,
+    SelfReflectIntermediateComponent,
     PreviousIntentionComponent,
     WheelOfLifeComponent,
     SelfReflectOutroComponent,

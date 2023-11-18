@@ -7,34 +7,24 @@ import { BehaviorSubject, firstValueFrom, map, of, shareReplay, switchMap} from 
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
-import { SelfReflectEntry, SelfReflectFrequency, EntryStep, createSelfReflectEntry, createSelfReflectQuestion, getFrequency } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, EntryStep, createSelfReflectEntry, createSelfReflectQuestion, getFrequency, categoryLabels } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { SelfReflectForm } from '../../forms/self-reflect.form'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '../../self-reflect.service'
 import { WheelOfLifeForm } from '../wheel-of-life/wheel-of-life.form'
 
-function getTitle({ category, tense }: EntryStep): string {
+function getTitle({ category }: EntryStep): string {
   switch (category) {
-    case 'intro':
+    case '':
     case 'outro':
       return ''
-    case 'previousIntention':
-      return 'Previous intentions'
-    case 'gratitude':
-      return 'Gratitude'
-    case 'dearFutureSelf':
-      return 'Dear Future Self'
     case 'prioritizeGoals':
       return 'Order goals by priority'
     case 'wheelOfLife':
       return 'How do you feel now?'
     default:
-      return tense === 'past'
-        ? 'The past {frequency}'
-        : tense === 'present'
-          ? 'The now'
-          : 'The upcoming {frequency}'
+      return categoryLabels[category]
   }
 }
 
@@ -46,17 +36,22 @@ function getTitle({ category, tense }: EntryStep): string {
 })
 export class SelfReflectEntryComponent extends ModalDirective implements OnInit {
 
-  animatingSection = signal<undefined | 'visible' | 'invisible'>('visible')
-  title = signal<string>('Get Ready')
-  step = signal<EntryStep>({ category: 'intro', tense: '' })
+  animatingSection = signal<undefined | 'visible' | 'invisible'>('invisible')
+  title = signal<string>('')
+  step = signal<EntryStep>({ category: '', tense: '' })
   finishedLoading = signal<boolean>(false)
 
   form = new SelfReflectForm()
 
   steps = signal<EntryStep[]>([])
-  stepIndex = signal<number>(0)
+  stepIndex = signal<number>(-1)
   stepping$ = new BehaviorSubject<boolean>(false)
-  progress = computed(() => this.stepIndex() / (this.steps().length - 1))
+
+  private stepsWithoutIntermediate = computed(() => this.steps().filter(step => step.category !== 'intermediate'))
+  private stepIndexWithoutIntermediate = signal<number>(-1)
+  progress = computed(() => this.stepIndexWithoutIntermediate() / (this.stepsWithoutIntermediate().length))
+
+  next = signal<EntryStep['tense']>('')
 
   private profile$ = this.auth.profile$.pipe(
     shareReplay({ bufferSize: 1, refCount: true })
@@ -101,18 +96,24 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
       previousEntry = await firstValueFrom(this.previousEntry$)
     }
 
-    const activatedSteps: EntryStep[] = [{ category: 'intro', tense: '' }]
-    if (previousEntry) activatedSteps.push({ category: 'previousIntention', tense: '' })
+    const activatedSteps: EntryStep[] = []
+    if (previousEntry) {
+      activatedSteps.push({ category: 'intermediate', tense: '' })
+      activatedSteps.push({ category: 'previousIntention', tense: 'previousIntention' })
+    }
 
     const past = questions.filter(({ tense }) => tense === 'past')
+    if (past.length) activatedSteps.push({ category: 'intermediate', tense: 'past' })
     const pastSteps = past.map(({ category, tense }) => ({ category, tense }))
     activatedSteps.push(...pastSteps)
 
     const present = questions.filter(({ tense }) => tense === 'present')
+    if (present.length) activatedSteps.push({ category: 'intermediate', tense: 'present' })
     const presentSteps = present.map(({ category, tense }) => ({ category, tense }))
     activatedSteps.push(...presentSteps)
 
     const future = questions.filter(({ tense }) => tense === 'future')
+    if (future.length) activatedSteps.push({ category: 'intermediate', tense: 'future' })
     const futureSteps = future.map(({ category, tense }) => ({ category, tense }))
     activatedSteps.push(...futureSteps)
     activatedSteps.push({ category: 'outro', tense: '' })
@@ -139,9 +140,11 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
     }
     this.form.patchValue(this.entry, { emitEvent: false })
     this.finishedLoading.set(true)
+
+    this.doStep('next', false)
   }
 
-  async doStep(direction: 'next' | 'previous') {
+  async doStep(direction: 'next' | 'previous', fade = true) {
     this.stepping$.next(true) // input value is being added to the form
     const steps = this.steps()
 
@@ -150,8 +153,10 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
       return
     }
 
-    this.animatingSection.set('invisible')
-    await delay(1000)
+    if (fade) { // no need to fade when starting modal
+      this.animatingSection.set('invisible')
+      await delay(1000)
+    }
 
     if (direction === 'next' && this.stepIndex() === steps.length - 2) {
       // saving after delay to first add input form to form
@@ -170,9 +175,27 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
 
     this.stepIndex.set(nextIndex)
 
+    if (nextStep.category === 'intermediate') {
+      const nextNextStep = steps[nextIndex + delta]
+      if (nextNextStep) this.next.set(nextNextStep.tense)
+      if (nextNextStep) console.log('nextNextStep: ', nextNextStep)
+    }
+
+    const indexWithoutIntermediate = this.stepsWithoutIntermediate().indexOf(nextStep)
+    if (indexWithoutIntermediate > -1) this.stepIndexWithoutIntermediate.set(indexWithoutIntermediate + 1)
 
     this.animatingSection.set('visible')
     this.stepping$.next(false)
+
+    if (nextStep.category === 'intermediate') {
+      await delay(2000)
+      if (this.step().category !== 'intermediate') return // check if still on intermediate step (could have changed in the meantime)
+      if (direction === 'previous' && this.stepIndex() === 0) {
+        this.doStep('next') // prevent going further back on first page
+      } else {
+        this.doStep(direction)
+      }
+    }
   }
 
   async save() {

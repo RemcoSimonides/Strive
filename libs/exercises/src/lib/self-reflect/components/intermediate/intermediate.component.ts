@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
-import { SelfReflectFrequency } from '@strive/model'
+import { EntryStep, SelfReflectFrequency } from '@strive/model'
 import { GetMonthNamePipe } from '@strive/utils/pipes/date-fns.pipe'
+import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
 
 @Component({
   standalone: true,
-  selector: '[id][frequency] strive-self-reflect-intro',
-  templateUrl: './intro.component.html',
+  selector: '[frequency][next] strive-self-reflect-intermediate',
+  templateUrl: './intermediate.component.html',
   styles: [`
     :host {
       display: flex;
@@ -24,26 +25,11 @@ import { GetMonthNamePipe } from '@strive/utils/pipes/date-fns.pipe'
   imports: [
     CommonModule,
     IonicModule,
-    GetMonthNamePipe
+    GetMonthNamePipe,
+    SelfReflectFrequencyPipe
   ]
 })
-export class SelfReflectIntroComponent {
-
-  day = 0
-  week = 0
-  month = 0
-  quarter = 0
-  year = 0
-
+export class SelfReflectIntermediateComponent {
   @Input() frequency?: SelfReflectFrequency
-  @Input() set id(id: string | undefined) {
-    if (!id) return
-    const [year, quarter, month, week, day] = id.split('-')
-    this.year = parseInt(year)
-    this.quarter = parseInt(quarter)
-    this.month = parseInt(month)
-    this.week = parseInt(week)
-    this.day = parseInt(day)
-  }
-
+  @Input() next?: EntryStep['tense']
 }

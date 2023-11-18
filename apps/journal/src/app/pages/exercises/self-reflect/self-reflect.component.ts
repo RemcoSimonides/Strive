@@ -164,27 +164,6 @@ export class SelfReflectComponent {
     })
   )
 
-  categories: Record<SelfReflectCategory, string> = {
-    intro: '',
-    previousIntention: '',
-    career: 'Career',
-    creative: 'Creative',
-    education: 'Education',
-    environment: 'Environment',
-    financial: 'Financial',
-    healthAndFitness: 'Health and Fitness',
-    personalDevelopment: 'Personal Development',
-    relationships: 'Relationships',
-    spiritual: 'Spiritual',
-    travelAndAdventures: 'Travel and Adventures',
-    other: 'Other',
-    dearFutureSelf: 'Dear Future Self',
-    wheelOfLife: 'Wheel of Life',
-    gratitude: 'Gratitude',
-    prioritizeGoals: 'Prioritize Goals',
-    outro: ''
-  }
-
   constructor(
     private auth: AuthService,
     private modalCtrl: ModalController,

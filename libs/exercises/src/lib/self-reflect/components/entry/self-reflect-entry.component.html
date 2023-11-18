@@ -11,9 +11,8 @@
 
 <ng-container *ngIf="finishedLoading(); else loading">
   <ng-container [ngSwitch]="step().category">
-
-    <ion-content *ngSwitchCase="'intro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-intro [frequency]="frequency" [id]="entry.id" />
+    <ion-content *ngSwitchCase="'intermediate'" class="ion-padding" [ngClass]="animatingSection()">
+      <strive-self-reflect-intermediate [frequency]="frequency" [next]="next()" />
     </ion-content>
 
     <ion-content *ngSwitchCase="'previousIntention'" class="ion-padding" [ngClass]="animatingSection()">
@@ -57,7 +56,7 @@
   <ion-footer>
     <ion-toolbar>
       <ion-progress-bar [value]="progress()" slot="start"></ion-progress-bar>
-      <ion-buttons *ngIf="stepIndex()" slot="start" class="visible">
+      <ion-buttons *ngIf="stepIndex() > 0" slot="start" class="visible">
         <ion-button (click)="doStep('previous')" fill="clear" color="primary">Previous</ion-button>
       </ion-buttons>
 
