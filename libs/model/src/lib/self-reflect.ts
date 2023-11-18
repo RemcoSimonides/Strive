@@ -1,6 +1,6 @@
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
 export type WeekdayWithNever = Weekday | 'never'
-export type SelfReflectFrequency = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
+export type SelfReflectFrequency = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type SelfReflectFrequencyWithNever = SelfReflectFrequency | 'never'
 export type SelfReflectType = 'formlist' | 'textarea' | 'prioritizeGoals' | 'wheelOfLife'
 export type SelfReflectTense = 'future' | 'present' | 'past'
@@ -12,6 +12,7 @@ export interface EntryStep {
 
 export function getFrequency(value: SelfReflectFrequencyWithNever): string {
   switch (value) {
+    case 'daily': return 'day'
     case 'weekly': return 'week'
     case 'monthly': return 'month'
     case 'quarterly': return 'quarter'

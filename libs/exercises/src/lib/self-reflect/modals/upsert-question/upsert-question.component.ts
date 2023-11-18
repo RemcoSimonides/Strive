@@ -127,6 +127,7 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
       const date = this.range[value].date
       const formats: Record<SelfReflectFrequencyWithNever, string> = {
         never: 'dd MMM yyyy',
+        daily: 'dd MMM yyyy',
         weekly: 'dd MMM yyyy',
         monthly: 'MMM yyyy',
         quarterly: 'Qo yyyy',

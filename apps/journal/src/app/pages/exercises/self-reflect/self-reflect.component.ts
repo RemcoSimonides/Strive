@@ -6,11 +6,11 @@ import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap, startWi
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflectFrequencyWithNever, SelfReflectQuestion, SelfReflectSettings, createSelfReflectEntry, createSelfReflectQuestion, selfReflectKeys } from '@strive/model'
+import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflectFrequencyWithNever, SelfReflectQuestion, SelfReflectSettings, createSelfReflectEntry, selfReflectKeys } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
-import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
+import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDay, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@strive/exercises/self-reflect/utils/date.utils'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
@@ -27,6 +27,7 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   const lastEntry = entries[0]
 
   const getFrequency = {
+    daily: getDay,
     weekly: getWeek,
     monthly: getMonth,
     quarterly: getQuarter,
@@ -36,6 +37,7 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   if (frequencyDeltaSinceLastEntry > 0) return { disabled: false, message: `Ready for a new entry!`}
 
   const startOfFrequency = {
+    daily: startOfDay,
     weekly: startOfWeek,
     monthly: startOfMonth,
     quarterly: startOfQuarter,
@@ -43,6 +45,7 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   }
 
   const addFrequency = {
+    daily: (date: Date) => addDays(date, 1),
     weekly: (date: Date) => addWeeks(date, 1),
     monthly: (date: Date) => addMonths(date, 1),
     quarterly: (date: Date) => addQuarters(date, 1),
@@ -75,6 +78,13 @@ export class SelfReflectComponent {
   settings$ = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.settingsService.getSettings$(profile.uid) : of(undefined)),
     shareReplay({ bufferSize: 1, refCount: true })
+  )
+
+  daily$ = combineLatest([
+    this.dbEntries$.pipe(map(entries => entries.filter(entry => entry.frequency === 'daily'))),
+    this.settings$
+  ]).pipe(
+    map(([entries, settings]) => getEntryStatus(entries, settings, 'daily'))
   )
 
   weekly$ = combineLatest([
@@ -190,7 +200,8 @@ export class SelfReflectComponent {
   }
 
   async addEntry(frequency: SelfReflectFrequency) {
-    const [weekly, monthly, quarterly, yearly] = await Promise.all([
+    const [daily, weekly, monthly, quarterly, yearly] = await Promise.all([
+      firstValueFrom(this.daily$),
       firstValueFrom(this.weekly$),
       firstValueFrom(this.monthly$),
       firstValueFrom(this.quarterly$),
@@ -198,6 +209,7 @@ export class SelfReflectComponent {
     ])
 
     const todos = []
+    if (!daily.disabled) todos.push('daily')
     if (!weekly.disabled) todos.push('weekly')
     if (!monthly.disabled) todos.push('monthly')
     if (!quarterly.disabled) todos.push('quarterly')

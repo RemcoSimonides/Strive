@@ -69,6 +69,7 @@ export class GoalsPageComponent implements OnDestroy {
         if (i === 'q') return 'quarterly'
         if (i === 'm') return 'monthly'
         if (i === 'w') return 'weekly'
+        if (i === 'd') return 'daily'
         return undefined
       }).filter((frequency: SelfReflectFrequency | undefined) => !!frequency)
       .sort((a: SelfReflectFrequency, b: SelfReflectFrequency) => {
@@ -81,6 +82,8 @@ export class GoalsPageComponent implements OnDestroy {
         if (a !== 'monthly' && b === 'monthly') return 1
         if (a === 'weekly' && b !== 'weekly') return -1
         if (a !== 'weekly' && b === 'weekly') return 1
+        if (a !== 'daily' && b === 'daily') return -1
+        if (a === 'daily' && b !== 'daily') return 1
         return 0
       })
 

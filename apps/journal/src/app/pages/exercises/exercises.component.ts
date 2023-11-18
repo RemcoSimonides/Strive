@@ -11,6 +11,7 @@ import { smartJoin } from '@strive/utils/helpers'
 export class SelfReflectDescriptionPipe implements PipeTransform {
   transform({ questions }: SelfReflectSettings) {
     const frequencies = []
+    if (questions.some(({ frequency }) => frequency === 'daily')) frequencies.push('daily')
     if (questions.some(({ frequency }) => frequency === 'weekly')) frequencies.push('weekly')
     if (questions.some(({ frequency }) => frequency === 'monthly')) frequencies.push('monthly')
     if (questions.some(({ frequency }) => frequency === 'quarterly')) frequencies.push('quarterly')

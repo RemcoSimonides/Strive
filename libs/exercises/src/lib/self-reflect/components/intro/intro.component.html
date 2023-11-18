@@ -1,4 +1,7 @@
 <ng-container *ngIf="frequency">
+  <ng-container *ngIf="frequency === 'daily'">
+    <p>Bye day {{ day - 1 }}, Hello day {{ day }}.</p>
+  </ng-container>
   <ng-container *ngIf="frequency === 'weekly'">
     <p>Bye week {{ week -1 }}, Hello week {{ week }}.</p>
   </ng-container>

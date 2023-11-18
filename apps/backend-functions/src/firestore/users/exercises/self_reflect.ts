@@ -1,7 +1,7 @@
 import { arrayUnion, db, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
 import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
-import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
+import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { getNextDay, startOfSelfReflectYear } from '@strive/exercises/self-reflect/utils/date.utils'
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { ScheduledTaskUserExerciseSelfReflect, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
@@ -120,7 +120,8 @@ async function saveDearFutureSelf(uid: string, entry: SelfReflectEntry) {
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal) return
 
-  const deliveryDate = entry.frequency === 'weekly' ? addWeeks(entry.createdAt, 1)
+  const deliveryDate = entry.frequency === 'daily' ? addDays(entry.createdAt, 1)
+    : entry.frequency === 'weekly' ? addWeeks(entry.createdAt, 1)
     : entry.frequency === 'monthly' ? addMonths(entry.createdAt, 1)
     : entry.frequency === 'quarterly' ? addQuarters(entry.createdAt, 1)
     : addYears(entry.createdAt, 1)
@@ -212,6 +213,7 @@ export function getNextReminder(settings: SelfReflectSettings) {
   const now = settings.createdAt
 
   const startOfNextFrequency = {
+    daily: (date: Date) => startOfDay(addDays(date, 1)),
     weekly: (date: Date) => startOfWeek(addWeeks(date, 1)),
     monthly: (date: Date) => startOfMonth(addMonths(date, 1)),
     quarterly: (date: Date) => startOfQuarter(addQuarters(date, 1)),
@@ -219,6 +221,7 @@ export function getNextReminder(settings: SelfReflectSettings) {
   }
 
   const startOfNextNextFrequency = {
+    daily: (date: Date) => startOfDay(addDays(date, 2)),
     weekly: (date: Date) => startOfWeek(addWeeks(date, 2)),
     monthly: (date: Date) => startOfMonth(addMonths(date, 2)),
     quarterly: (date: Date) => startOfQuarter(addQuarters(date, 2)),
@@ -226,6 +229,7 @@ export function getNextReminder(settings: SelfReflectSettings) {
   }
 
   const minDays = {
+    daily: 0, // last day
     weekly: 3, // last three days
     monthly: 21, // last three weeks
     quarterly: 60, // last two months

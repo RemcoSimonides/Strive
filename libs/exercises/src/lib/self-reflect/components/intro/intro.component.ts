@@ -29,6 +29,7 @@ import { GetMonthNamePipe } from '@strive/utils/pipes/date-fns.pipe'
 })
 export class SelfReflectIntroComponent {
 
+  day = 0
   week = 0
   month = 0
   quarter = 0
@@ -37,11 +38,12 @@ export class SelfReflectIntroComponent {
   @Input() frequency?: SelfReflectFrequency
   @Input() set id(id: string | undefined) {
     if (!id) return
-    const [year, quarter, month, week] = id.split('-')
+    const [year, quarter, month, week, day] = id.split('-')
     this.year = parseInt(year)
     this.quarter = parseInt(quarter)
     this.month = parseInt(month)
     this.week = parseInt(week)
+    this.day = parseInt(day)
   }
 
 }

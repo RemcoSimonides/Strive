@@ -21,6 +21,16 @@
     <small>Get a grasp on life by looking back and planning ahead</small>
 
     <ion-list mode="md">
+      <ng-container *ngIf="daily$ | async as daily">
+        <ion-item button (click)="addEntry('daily')" [disabled]="daily.disabled">
+          <ion-label>
+            <h2>Daily Self Reflection</h2>
+            <small>{{ daily.message }}</small>
+          </ion-label>
+          <ion-icon name="arrow-forward-outline" slot="end" />
+        </ion-item>
+      </ng-container>
+
       <ng-container *ngIf="weekly$ | async as weekly">
         <ion-item button (click)="addEntry('weekly')" [disabled]="weekly.disabled">
           <ion-label>
@@ -148,6 +158,7 @@
               <ion-item lines="none">
                 <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
                   <ion-select-option value="all">All</ion-select-option>
+                  <ion-select-option value="daily">Daily</ion-select-option>
                   <ion-select-option value="weekly">Weekly</ion-select-option>
                   <ion-select-option value="monthly">Monthly</ion-select-option>
                   <ion-select-option value="quarterly">Quarterly</ion-select-option>
@@ -187,6 +198,7 @@
               <ion-item lines="none">
                 <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
                   <ion-select-option value="all">All</ion-select-option>
+                  <ion-select-option value="daily">Daily</ion-select-option>
                   <ion-select-option value="weekly">Weekly</ion-select-option>
                   <ion-select-option value="monthly">Monthly</ion-select-option>
                   <ion-select-option value="quarterly">Quarterly</ion-select-option>
