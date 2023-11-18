@@ -1,13 +1,8 @@
-<strive-header-modal (dismiss)="dismiss()" color="primary">
-  <ion-title>Custom Question</ion-title>
-  <ion-buttons slot="end">
-    <ion-button (click)="delete()">
-      <ion-icon slot="icon-only" name="trash-outline" />
-    </ion-button>
-  </ion-buttons>
+<strive-header-modal (dismiss)="dismiss()">
+  <ion-title>Create Custom Question</ion-title>
 </strive-header-modal>
 
-<ion-content class="ion-padding">
+<section class="ion-padding">
   <form [formGroup]="form">
 
     <ion-list mode="md">
@@ -68,41 +63,7 @@
       </ion-item>
 
     </ion-list>
-    <ion-button expand="block" class="primary" (click)="submit()">{{ question ? 'Save' : 'Create' }}</ion-button>
   </form>
 
-  <section *ngIf="question">
-    <h5>Entries</h5>
-    <ng-container *ngIf="entries.length else noEntries">
-      <ng-container *ngFor="let entry of entries">
-
-        <ng-container [ngSwitch]="question.key">
-          <ng-container *ngIf="question.type === 'textarea'">
-
-            <ion-list mode="md" lines="none">
-              <b>{{ entry.createdAt | date:'longDate'}}</b>
-              <ion-item>{{ entry[question.key] }}</ion-item>
-            </ion-list>
-
-          </ng-container>
-          <ng-container *ngIf="question.type === 'formlist'">
-
-            <ion-list mode="md">
-              <small>{{ entry.createdAt | date:'longDate'}}</small>
-              <ion-item *ngFor="let item of entry[question.key]; let last = last" [lines]="last ? 'none' : 'full'">
-                {{ item }}
-              </ion-item>
-            </ion-list>
-
-          </ng-container>
-        </ng-container>
-
-      </ng-container>
-    </ng-container>
-  </section>
-
-</ion-content>
-
-<ng-template #noEntries>
-  <small>No entries yet</small>
-</ng-template>
+  <ion-button expand="block" class="primary" (click)="submit()">Create</ion-button>
+</section>

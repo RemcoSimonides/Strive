@@ -29,7 +29,7 @@ export class SelfReflectSettingsService extends FireSubCollection<SelfReflectSet
   }
 
   getSettings(uid: string): Promise<SelfReflectSettings | undefined> {
-    return this.getValue('SelfReflect', { uid })
+    return this.load('SelfReflect', { uid })
   }
 
   getSettings$(uid: string) {

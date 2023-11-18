@@ -13,7 +13,7 @@ import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/compon
 import { addMonths, addQuarters, addWeeks, addYears, differenceInDays, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@strive/exercises/self-reflect/utils/date.utils'
-import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-custom-question/upsert-custom-question.component'
+import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
 import { SelfReflectQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-question/upsert-question.component'
 
 function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettings | undefined, frequency: SelfReflectFrequency) {
@@ -225,41 +225,16 @@ export class SelfReflectComponent {
     }).then(modal => modal.present())
   }
 
-  async openQuestion(question: SelfReflectQuestion, entries: SelfReflectEntry[]) {
-    const settings = await firstValueFrom(this.settings$)
-
+  openQuestion(question: SelfReflectQuestion, entries: SelfReflectEntry[]) {
     this.modalCtrl.create({
       component: SelfReflectQuestionModalComponent,
-      componentProps: { question, settings, entries }
+      componentProps: { question, entries }
     }).then(modal => modal.present())
   }
 
-  async openCustomQuestion(entries: SelfReflectEntry[], question?: SelfReflectQuestion) {
-    const modal = await this.modalCtrl.create({
-      component: SelfReflectCustomQuestionModalComponent,
-      componentProps: { question, entries }
-    })
-    modal.onDidDismiss().then(async ({ data }) => {
-      if (!data) return
-      const question = createSelfReflectQuestion(data)
-      const settings = await firstValueFrom(this.settings$)
-      if (!settings) throw new Error(`Couldn't get settings`)
-      const uid = this.auth.uid
-      if (!uid) throw new Error(`Can't save question without uid`)
-
-      if (data.question === 'delete') {
-        settings.questions = settings.questions.filter(({ key }) => key !== question.key)
-      } else {
-        const index = settings.questions.findIndex(({ key }) => key === question.key)
-        if (index > -1) {
-          settings.questions[index] = question
-        } else {
-          settings.questions.push(question)
-        }
-      }
-
-      this.settingsService.save(uid, settings)
-    })
-    modal.present()
+  createCustomQuestion() {
+    this.modalCtrl.create({
+      component: SelfReflectCustomQuestionModalComponent
+    }).then(modal => modal.present())
   }
 }

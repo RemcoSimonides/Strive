@@ -13,7 +13,7 @@ import { SelfReflectSettingsComponent } from './settings/self-reflect-settings.c
 import { SelfReflectFrequencyPipe, SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 import { SelfReflectFilterEntriesPipe } from '@strive/exercises/self-reflect/pipes/entry.pipe'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
-import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-custom-question/upsert-custom-question.component'
+import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
 
 const routes: Routes = [
   {

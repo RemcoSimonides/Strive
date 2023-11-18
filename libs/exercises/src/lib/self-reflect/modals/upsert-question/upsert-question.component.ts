@@ -1,9 +1,9 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { AlertController, IonicModule, ModalController } from '@ionic/angular'
 import { orderBy } from 'firebase/firestore'
-import { of, switchMap } from 'rxjs'
+import { debounceTime, of, switchMap } from 'rxjs'
 
 import { closestIndexTo, eachDayOfInterval, endOfDay, isBefore, startOfDay } from 'date-fns'
 import format from 'date-fns/format'
@@ -19,7 +19,7 @@ import { WheelOfLifeEntryService } from '@strive/exercises/wheel-of-life/wheel-o
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { SelfReflectQuestionForm } from '../../forms/self-reflect-settings.form'
 import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
-import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, SelfReflectSettings } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, createSelfReflectQuestion, selfReflectQuestions } from '@strive/model'
 
 
 @Component({
@@ -41,6 +41,7 @@ import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, S
 export class SelfReflectQuestionModalComponent extends ModalDirective implements OnInit {
 
   form = new SelfReflectQuestionForm()
+  isCustomQuestion = signal<boolean>(false)
 
   rangeForm = new FormControl()
   range: { date: Date, entry: SelfReflectEntry }[] = []
@@ -52,10 +53,10 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
   )
 
   @Input() question?: SelfReflectQuestion
-  @Input() settings?: SelfReflectSettings
   @Input() entries: SelfReflectEntry[] = []
 
   constructor(
+    private alertCtrl: AlertController,
     private auth: AuthService,
     location: Location,
     modalCtrl: ModalController,
@@ -72,23 +73,34 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
 
   ngOnInit() {
     if (!this.question) return
+
+    const keys = selfReflectQuestions.map(({ key }) => key)
+    const included = keys.includes(this.question.key)
+    this.isCustomQuestion.set(!included)
+
     this.form.patchValue({ ...this.question })
 
-    this.form.frequency.valueChanges.subscribe(frequency => {
-      if (!this.settings) return
-      if (!this.question) return
+    this.form.valueChanges.pipe(debounceTime(500)).subscribe(async value => {
+      if (this.form.invalid) return
       if (!this.auth.uid) return
 
-      const question = this.settings.questions.find(question => question.key === this.question?.key)
-      if (!question) return
+      const question = createSelfReflectQuestion(value)
+      const settings = await this.settingsService.getSettings(this.auth.uid)
+      if (!settings) return
 
-      question.frequency = frequency
-      this.settingsService.save(this.auth.uid, this.settings)
+      const index = settings.questions.findIndex(q => q.key === question.key)
+      if (index === -1) return
+
+      settings.questions[index] = question
+      await this.settingsService.save(this.auth.uid, settings)
     })
 
     if (this.question.key === 'prioritizeGoals') this.initPrioritizeGoals()
   }
 
+  /**
+   * Create a timeline since first entry
+   */
   initPrioritizeGoals() {
     if (!this.entries.length) return
     const first = this.entries.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1)[0]
@@ -122,5 +134,35 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
       }
       return format(date, formats[this.question.frequency])
     }
+  }
+
+  delete() {
+    this.alertCtrl.create({
+      subHeader: 'Are you sure you want to delete this question?',
+      message: 'This action is irreversible. Instead you could set frequency to "Never"',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: async () => {
+            if (!this.auth.uid) return
+
+            const settings = await this.settingsService.getSettings(this.auth.uid)
+            if (!settings) return
+
+            const index = settings.questions.findIndex(q => q.key === this.question?.key)
+            if (index === -1) return
+
+            settings.questions.splice(index, 1)
+            await this.settingsService.save(this.auth.uid, settings)
+
+            this.dismiss()
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
   }
 }

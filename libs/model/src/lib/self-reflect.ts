@@ -82,14 +82,6 @@ export const selfReflectQuestions: SelfReflectQuestion[] = [
     tense: 'future'
   },
   {
-    key: 'timeManagementPast',
-    question: 'What did you spend too much time on past {frequency}?',
-    type: 'formlist',
-    frequency: 'weekly',
-    category: 'personalDevelopment',
-    tense: 'past'
-  },
-  {
     key: 'environmentPast',
     question: 'What did you do past {frequency} to leave the world in a better shape than you found it?',
     type: 'formlist',

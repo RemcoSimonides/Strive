@@ -13,9 +13,23 @@ h3, h5 {
   margin: 0;
 }
 
-ion-select {
-  width: 100%;
-  padding-left: 0;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  ion-item {
+    --highlight-background: var(--ion-color-primary);
+
+    ion-select {
+      width: 100%;
+      padding-left: 0;
+
+      .label-text {
+        color: var(--ion-color-medium);
+      }
+    }
+  }
 }
 
 section {
@@ -32,6 +46,10 @@ section {
       display: block;
       padding-left: 16px;
       padding-top: 8px;
+    }
+
+    ion-label {
+      white-space: pre-line !important;
     }
   }
 
