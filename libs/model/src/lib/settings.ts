@@ -36,6 +36,11 @@ export interface PushNotificationSettings {
   goalChat: boolean
   goalRoadmap: boolean
   goalStory: boolean
+  exerciseAffirmations: boolean
+  exerciseDailyGratitude: boolean
+  exerciseDearFutureSelf: boolean
+  exerciseSelfReflect: boolean
+  exerciseWheelOfLife: boolean
 }
 
 export type PushNotificationSettingKey = keyof PushNotificationSettings
@@ -52,6 +57,11 @@ export function createPushNotificationSettings(params?: Partial<PushNotification
     goalChat: true,
     goalRoadmap: true,
     goalStory: true,
+    exerciseAffirmations: true,
+    exerciseDailyGratitude: true,
+    exerciseDearFutureSelf: true,
+    exerciseSelfReflect: true,
+    exerciseWheelOfLife: true,
     ...params,
   }
 }

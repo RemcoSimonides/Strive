@@ -12,6 +12,8 @@ export async function sendAffirmationPushNotification(uid: string, affirmations:
   if  (affirmations.affirmations.length >= 1) {
 
     const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
+    const { main, exerciseAffirmations } = personal.settings.pushNotification
+    if (!main || !exerciseAffirmations) return
     const random = affirmations.affirmations[Math.floor(Math.random() * affirmations.affirmations.length)]
     const affirmation = AES.decrypt(random, personal.key).toString(enc.Utf8)
 

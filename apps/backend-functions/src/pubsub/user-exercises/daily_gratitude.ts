@@ -39,6 +39,8 @@ export async function sendDailyGratitudePushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
   if (!personal.fcmTokens.length) return
+  const { main, exerciseDailyGratitude } = personal.settings.pushNotification
+  if (!main || !exerciseDailyGratitude) return
 
   const link = 'goals?t=daily-gratitude'
   const messages: Message[] = personal.fcmTokens.map(token => ({

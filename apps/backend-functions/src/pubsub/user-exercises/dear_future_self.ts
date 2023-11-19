@@ -6,6 +6,10 @@ import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { groupIds, templateIds } from '../email/ids'
 
 export function sendDearFutureSelfPushNotification(personal: Personal, message: Message) {
+  if (!personal.fcmTokens.length) return
+  const { main, exerciseDearFutureSelf } = personal.settings.pushNotification
+  if (!main || !exerciseDearFutureSelf) return
+
   const from = format(message.createdAt, 'MMM yyyy')
   const time = message.createdAt.getTime()
 

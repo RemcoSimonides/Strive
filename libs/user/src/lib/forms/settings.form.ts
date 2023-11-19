@@ -53,6 +53,11 @@ function createPushNotificationSettingsFormControl(params?: Partial<PushNotifica
     goalChat: new FormControl(settings.goalChat, { nonNullable: true }),
     goalRoadmap: new FormControl(settings.goalRoadmap, { nonNullable: true }),
     goalStory: new FormControl(settings.goalStory, { nonNullable: true }),
+    exerciseAffirmations: new FormControl(settings.exerciseAffirmations, { nonNullable: true }),
+    exerciseDailyGratitude: new FormControl(settings.exerciseDailyGratitude, { nonNullable: true }),
+    exerciseDearFutureSelf: new FormControl(settings.exerciseDearFutureSelf, { nonNullable: true }),
+    exerciseSelfReflect: new FormControl(settings.exerciseSelfReflect, { nonNullable: true }),
+    exerciseWheelOfLife: new FormControl(settings.exerciseWheelOfLife, { nonNullable: true })
   }
 }
 
@@ -72,6 +77,11 @@ export class PushNotificationSettingsForm extends FormGroup<PushNotificationSett
   get goalChat() { return this.get('goalChat')! }
   get goalRoadmap() { return this.get('goalRoadmap')! }
   get goalStory() { return this.get('goalStory')! }
+  get exerciseAffirmations() { return this.get('exerciseAffirmations')! }
+  get exerciseDailyGratitude() { return this.get('exerciseDailyGratitude')! }
+  get exerciseDearFutureSelf() { return this.get('exerciseDearFutureSelf')! }
+  get exerciseSelfReflect() { return this.get('exerciseSelfReflect')! }
+  get exerciseWheelOfLife() { return this.get('exerciseWheelOfLife')! }
 
   disableControls() {
     this.userSpectatingGeneral.disable({ emitEvent: false })
@@ -82,6 +92,11 @@ export class PushNotificationSettingsForm extends FormGroup<PushNotificationSett
     this.goalChat.disable({ emitEvent: false })
     this.goalRoadmap.disable({ emitEvent: false })
     this.goalStory.disable({ emitEvent: false })
+    this.exerciseAffirmations.disable({ emitEvent: false })
+    this.exerciseDailyGratitude.disable({ emitEvent: false })
+    this.exerciseDearFutureSelf.disable({ emitEvent: false })
+    this.exerciseSelfReflect.disable({ emitEvent: false })
+    this.exerciseWheelOfLife.disable({ emitEvent: false })
   }
 
   enableControls() {
@@ -93,5 +108,9 @@ export class PushNotificationSettingsForm extends FormGroup<PushNotificationSett
     this.goalChat.enable({ emitEvent: false })
     this.goalRoadmap.enable({ emitEvent: false })
     this.goalStory.enable({ emitEvent: false })
+    this.exerciseAffirmations.enable({ emitEvent: false })
+    this.exerciseDailyGratitude.enable({ emitEvent: false })
+    this.exerciseDearFutureSelf.enable({ emitEvent: false })
+    this.exerciseSelfReflect.enable({ emitEvent: false })
   }
 }
