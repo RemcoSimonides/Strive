@@ -39,7 +39,7 @@ export class ThemeService {
   setTheme(mode: Theme) {
     this.renderer.setAttribute(this.document.body, 'data-theme', mode)
     this.theme$.next(mode)
-    
+
     if (Capacitor.getPlatform() !== 'web') {
       const style = mode === 'dark' ? KeyboardStyle.Dark : KeyboardStyle.Light
       Keyboard.setStyle({ style })

@@ -54,6 +54,7 @@ export class GoalsPageComponent implements OnDestroy {
       this.modalCtrl.create({
         component: CardsModalComponent
       }).then(modal => modal.present())
+      this.router.navigate(['/goals']) // remove query params
     }
 
     if (t === 'wheeloflife') {
@@ -61,6 +62,7 @@ export class GoalsPageComponent implements OnDestroy {
         component: EntryModalComponent,
         componentProps: { showResults: true }
       }).then(modal => modal.present())
+      this.router.navigate(['/goals']) // remove query params
     }
 
     if (reflect) {
@@ -100,6 +102,7 @@ export class GoalsPageComponent implements OnDestroy {
         component: SelfReflectEntryComponent,
         componentProps: { entry, todos }
       }).then(modal => modal.present())
+      this.router.navigate(['/goals']) // remove query params
     }
 
     if (affirm) {
@@ -107,6 +110,7 @@ export class GoalsPageComponent implements OnDestroy {
         component: AffirmModalComponent,
         componentProps: { affirmation: decodeURI(affirm) }
       }).then(modal => modal.present())
+      this.router.navigate(['/goals']) // remove query params
     }
 
     if (dfs) {
@@ -114,9 +118,8 @@ export class GoalsPageComponent implements OnDestroy {
         component: MessageModalComponent,
         componentProps: { dfs }
       }).then(modal => modal.present())
+      this.router.navigate(['/goals']) // remove query params
     }
-
-    this.router.navigate(['/goals'])
   })
 
   constructor(
