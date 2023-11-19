@@ -20,7 +20,7 @@
     </header>
     <small>Get a grasp on life by looking back and planning ahead</small>
 
-    <ion-list mode="md">
+    <ion-list mode="md" class="entries">
       <ng-container *ngIf="daily$ | async as daily">
         <ion-item button (click)="addEntry('daily')" [disabled]="daily.disabled">
           <ion-label>

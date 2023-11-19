@@ -23,6 +23,12 @@ small {
   color: var(--ion-color-medium);
 }
 
+.entries {
+  h2 {
+    color: var(--ion-color-primary);
+  }
+}
+
 .question {
   --min-height: 80px;
   --padding-top: 8px;
