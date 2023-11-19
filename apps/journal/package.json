@@ -1,16 +1,16 @@
 {
   "name": "journal",
   "devDependencies": {
-    "@capacitor-community/fcm": "^5.0.1",
-    "@capacitor-firebase/authentication": "^5.0.0",
-    "@capacitor/app": "^5.0.3",
-    "@capacitor/camera": "^5.0.4",
-    "@capacitor/cli": "^5.1.0",
-    "@capacitor/clipboard": "^5.0.4",
-    "@capacitor/keyboard": "^5.0.4",
-    "@capacitor/push-notifications": "^5.0.4",
-    "@capacitor/share": "^5.0.4",
-    "@capacitor/splash-screen": "^5.0.4",
-    "@capawesome/capacitor-app-update": "^5.0.0"
+    "@capacitor-community/fcm": "^5.0.2",
+    "@capacitor-firebase/authentication": "^5.2.0",
+    "@capacitor/app": "^5.0.6",
+    "@capacitor/camera": "^5.0.7",
+    "@capacitor/cli": "^5.5.1",
+    "@capacitor/clipboard": "^5.0.6",
+    "@capacitor/keyboard": "^5.0.6",
+    "@capacitor/push-notifications": "^5.1.0",
+    "@capacitor/share": "^5.0.6",
+    "@capacitor/splash-screen": "^5.0.6",
+    "@capawesome/capacitor-app-update": "^5.0.1"
   }
 }
