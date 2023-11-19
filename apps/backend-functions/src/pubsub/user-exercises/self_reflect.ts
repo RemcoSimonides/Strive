@@ -40,7 +40,7 @@ export async function sendSelfReflectPuthNotification(settings: SelfReflectSetti
 }
 
 export async function scheduleNextSelfReflectReminder(settings: SelfReflectSettings, userId: string) {
-  const { performAt, performFrequencies: frequencies } = getNextReminder(settings)
+  const { performAt, performFrequencies: frequencies } = await getNextReminder(settings, userId)
 
   const task: ScheduledTaskUserExerciseSelfReflect = {
     worker: enumWorkerType.userExerciseSelfReflect,

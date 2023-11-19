@@ -1,5 +1,5 @@
 import { arrayUnion, db, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
-import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency, SelfReflectFrequencyWithNever } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { getNextDay, startOfSelfReflectYear } from '@strive/exercises/self-reflect/utils/date.utils'
@@ -192,8 +192,8 @@ async function addDearFutureSelfMessage(uid: string, message: Message) {
   }
 }
 
-export function upsertReminder(uid: string, settings: SelfReflectSettings) {
-  const { performAt, performFrequencies } = getNextReminder(settings)
+export async function upsertReminder(uid: string, settings: SelfReflectSettings) {
+  const { performAt, performFrequencies } = await getNextReminder(settings, uid)
 
   const id = `${uid}selfreflect`
   const task: ScheduledTaskUserExerciseSelfReflect = {
@@ -206,11 +206,26 @@ export function upsertReminder(uid: string, settings: SelfReflectSettings) {
   return upsertScheduledTask(id, task)
 }
 
-export function getNextReminder(settings: SelfReflectSettings) {
+export async function getNextReminder(settings: SelfReflectSettings, uid: string) {
   if (settings.preferredDay === 'never') throw new Error('Should not set reminders if preferred day is never')
 
+  const ref = db.collection(`Users/${uid}/Exercises/SelfReflect/Entries`)
+  const getLastEntry = async (frequency: SelfReflectFrequency) => {
+    const snap = await ref.where('frequency', '==', frequency).orderBy('createdAt', 'desc').limit(1).get()
+    if (snap.empty) return undefined
+    return createSelfReflectEntry(toDate(snap.docs[0].data()))
+  }
+
+  const [daily, weekly, monthly, quarterly, yearly] = await Promise.all([
+    getLastEntry('daily'),
+    getLastEntry('weekly'),
+    getLastEntry('monthly'),
+    getLastEntry('quarterly'),
+    getLastEntry('yearly')
+  ])
+
   const frequencies = getAvailableFrequencies(settings)
-  const now = settings.createdAt
+  const now = new Date()
 
   const startOfNextFrequency = {
     daily: (date: Date) => startOfDay(addDays(date, 1)),
@@ -241,11 +256,16 @@ export function getNextReminder(settings: SelfReflectSettings) {
 
   for (const frequency of frequencies) {
     const start = startOfNextFrequency[frequency](now)
-    const next = getNextDay(start, settings.preferredDay)
+    const next = frequency === 'daily' ? start : getNextDay(start, settings.preferredDay)
 
     // do not send reminder if the next reminder is too soon - and thus try to set next next reminder
-    const difference = differenceInDays(next, now)
-    if (difference > minDays[frequency]) {
+    const lastEntry = frequency === 'daily' ? daily
+      : frequency === 'weekly' ? weekly
+      : frequency === 'monthly' ? monthly
+      : frequency === 'quarterly' ? quarterly
+      : yearly
+
+    if (!lastEntry || differenceInDays(next, lastEntry.createdAt) > minDays[frequency]) {
 
       if (!performAt || isBefore(next, performAt)) {
         performAt = next
@@ -277,5 +297,9 @@ export function getNextReminder(settings: SelfReflectSettings) {
 }
 
 function getAvailableFrequencies(settings: SelfReflectSettings) {
-  return unique(settings.questions.map(({ frequency }) => frequency).filter(frequency => frequency !== 'never')) as SelfReflectFrequency[]
+  const frequencies = settings.questions.map(({ frequency }) => frequency)
+  const availableFrequencies = frequencies.filter(frequency => frequency !== 'never') as SelfReflectFrequency[]
+  const order: SelfReflectFrequency[] = ['daily', 'weekly', 'monthly', 'quarterly', 'yearly']
+  const orderedFrequencies = availableFrequencies.sort((a, b) => order.indexOf(a) - order.indexOf(b))
+  return unique(orderedFrequencies)
 }

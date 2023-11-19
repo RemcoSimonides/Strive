@@ -1,4 +1,4 @@
-import { db, functions, admin } from '@strive/api/firebase'
+import { db, functions, admin, logger } from '@strive/api/firebase'
 import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 import { getDocument } from '../shared/utils'
@@ -62,8 +62,9 @@ async () => {
         if (reschedulingTasks.some(task => task === worker)) return
         await snapshot.ref.update({ status: 'complete' })
       })
-      .catch(async () => {
+      .catch(async (error) => {
         await snapshot.ref.update({ status: 'error' })
+        throw error
       })
     jobs.push(job)
   }
