@@ -23,7 +23,7 @@ export class ActivatePushNotificationsComponent {
   ) {}
 
   async pushNotifications() {
-    const res = await this.personal.registerFCM(true)
+    const res = await this.personal.registerFCM(true, true)
     if (res) {
       this.toast.create({
         message: 'Push notifications actived',

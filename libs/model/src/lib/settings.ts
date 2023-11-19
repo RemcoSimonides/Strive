@@ -27,7 +27,7 @@ export function createEmailNotificationSettings(params?: Partial<EmailNotificati
 }
 
 export interface PushNotificationSettings {
-  main: boolean
+  main: boolean | null
   userSpectatingGeneral: boolean
   supports: boolean
   goalMain: boolean
@@ -43,7 +43,7 @@ export type PushNotificationSettingKeyExcludeMain = Exclude<PushNotificationSett
 
 export function createPushNotificationSettings(params?: Partial<PushNotificationSettings>): PushNotificationSettings {
   return {
-    main: false, // main toggle to register push notifications on device
+    main: null, // main toggle to register push notifications on device
     userSpectatingGeneral: true,
     supports: true,
     goalMain: true,

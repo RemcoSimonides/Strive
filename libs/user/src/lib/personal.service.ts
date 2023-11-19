@@ -14,7 +14,7 @@ import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } fro
 import * as Sentry from '@sentry/capacitor'
 
 import { user } from 'rxfire/auth'
-import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
+import { Observable, of, switchMap, shareReplay, BehaviorSubject, startWith } from 'rxjs'
 
 import { Personal } from '@strive/model'
 
@@ -63,16 +63,6 @@ export class PersonalService extends FireSubCollection<Personal> {
       if (!this.auth.uid) return
       this.update(this.auth.uid, { settings: this.form.getRawValue() }, { params: { uid: this.auth.uid }})
     })
-
-    const form = this.form.pushNotification as PushNotificationSettingsForm
-    form.main.valueChanges.subscribe(value => {
-      if (value) {
-        this.registerFCM(true)
-        form.enableControls()
-      } else {
-        form.disableControls()
-      }
-    })
   }
 
   protected override toFirestore(personal: Personal, actionType: 'add' | 'update'): Personal {
@@ -106,16 +96,19 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
   }
 
-  private async getPermission(showError: boolean): Promise<string> {
+  /**
+   *
+   * @param showError Show error message if permission is denied
+   * @param force Toggle setting to true if permission is granted despite not being set before
+   * @returns Token
+   */
+  private async getPermission(showError: boolean, force: boolean): Promise<string> {
     try {
       const token = await getToken(getMessaging())
       this.addFCMToken(token)
 
-      if (!localStorage.getItem(this.localStorageName)) {
-        // turn push notifications on in settings if this is the first time
-        const { main } = this.form.pushNotification as PushNotificationSettingsForm
-        main.setValue(true)
-      }
+      const { main } = this.form.pushNotification as PushNotificationSettingsForm
+      if (main.value === null || force) main.setValue(true)
 
       localStorage.setItem(this.localStorageName, token)
       this.fcmIsRegistered.next(true)
@@ -155,11 +148,18 @@ export class PersonalService extends FireSubCollection<Personal> {
       this.fcmIsRegistered.next(false)
     }
   }
-  async registerFCM(showError: boolean): Promise<string | undefined> {
+
+  /**
+   *
+   * @param showError
+   * @param onlyToggleSettingIfNotSet
+   * @returns
+   */
+  async registerFCM(showError: boolean, force: boolean): Promise<string | undefined> {
     if (Capacitor.getPlatform() === 'web') {
       const supported = await isSupported()
       if (supported) {
-        return this.getPermission(showError)
+        return this.getPermission(showError, force)
       } else {
         this.toastController.create({
           message: 'Sorry, this browser does not support push notifications',
@@ -169,7 +169,7 @@ export class PersonalService extends FireSubCollection<Personal> {
         return
       }
     } else {
-      await this.registerCapacitor()
+      await this.registerCapacitor(force)
       return
     }
   }
@@ -191,7 +191,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
   }
 
-  private async registerCapacitor(): Promise<void> {
+  private async registerCapacitor(force: boolean): Promise<void> {
     let permStatus = await PushNotifications.checkPermissions()
 
     if (permStatus.receive === 'prompt') {
@@ -204,6 +204,10 @@ export class PersonalService extends FireSubCollection<Personal> {
 
     // Register with Apple / Google to receive push via APNS/FCM
     await PushNotifications.register()
+
+    // update main setting on push notifications if value is currenlty null or forced via settings
+    const { main } = this.form.pushNotification as PushNotificationSettingsForm
+    if (main.value === null || force) main.setValue(true)
 
     if (Capacitor.getPlatform() === 'ios') {
       const token = await FCM.getToken() // get FCM token instead of APNS
