@@ -14,7 +14,7 @@ import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } fro
 import * as Sentry from '@sentry/capacitor'
 
 import { user } from 'rxfire/auth'
-import { Observable, of, switchMap, shareReplay, BehaviorSubject, startWith } from 'rxjs'
+import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
 
 import { Personal } from '@strive/model'
 

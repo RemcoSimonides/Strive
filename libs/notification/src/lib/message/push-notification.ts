@@ -8,7 +8,12 @@ export const PushNotificationSetting: Record<PushNotificationSettingKeyExcludeMa
   'goalRoadmap': ['main', 'goalMain', 'goalRoadmap'],
   'goalStory': ['main', 'goalMain', 'goalStory'],
   'supports': ['main', 'supports'],
-  'userSpectatingGeneral': ['main', 'userSpectatingGeneral']
+  'userSpectatingGeneral': ['main', 'userSpectatingGeneral'],
+  'exerciseAffirmations': ['main', 'exerciseAffirmations'],
+  'exerciseDailyGratitude': ['main', 'exerciseDailyGratitude'],
+  'exerciseDearFutureSelf': ['main', 'exerciseDearFutureSelf'],
+  'exerciseSelfReflect': ['main', 'exerciseSelfReflect'],
+  'exerciseWheelOfLife': ['main', 'exerciseWheelOfLife']
 }
 
 export type PushNotificationTarget = 'user' | 'stakeholder' | 'spectator'
