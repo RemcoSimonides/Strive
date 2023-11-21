@@ -236,7 +236,8 @@ export class PersonalService extends FireSubCollection<Personal> {
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         const message = notification?.title || notification?.body || ''
-        this.makeToast(message)
+        const { link } = notification.data
+        this.makeToast(message, link)
       }
     )
 
