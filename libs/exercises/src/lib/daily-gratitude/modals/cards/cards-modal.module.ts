@@ -4,14 +4,14 @@ import { IonicModule } from '@ionic/angular'
 import { CardsModalComponent } from './cards-modal.component'
 
 import { CardsModule } from '../../components/cards/cards.module'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { ImageModule } from '@strive/media/directives/image.module'
 
 @NgModule({
   imports: [
     IonicModule,
     CardsModule,
-    HeaderModule,
+    HeaderModalComponent,
     ImageModule
   ],
   declarations: [CardsModalComponent]

@@ -8,5 +8,4 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardsModalComponent extends ModalDirective {
-
 }

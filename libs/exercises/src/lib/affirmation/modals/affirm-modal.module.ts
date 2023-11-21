@@ -4,14 +4,14 @@ import { IonicModule } from '@ionic/angular'
 
 import { AffirmModalComponent } from './affirm-modal.component'
 
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { ImageModule } from '@strive/media/directives/image.module'
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    HeaderModule,
+    HeaderModalComponent,
     ImageModule
   ],
   declarations: [AffirmModalComponent]

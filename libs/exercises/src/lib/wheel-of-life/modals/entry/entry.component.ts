@@ -15,7 +15,7 @@ import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/crea
 
 
 @Component({
-  selector: 'exercise-wheel-of-life-entry-modal',
+  selector: 'strive-exercise-wheel-of-life-entry-modal',
   templateUrl: './entry.component.html',
   styleUrls: ['./entry.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
