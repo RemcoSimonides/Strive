@@ -37,7 +37,7 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
   done$ = new BehaviorSubject<boolean>(false)
   page$ = new BehaviorSubject<number>(1)
 
-  queryFormControl = new FormControl()
+  queryFormControl = new FormControl('', { nonNullable: true })
   querySub = this.queryFormControl.valueChanges.pipe(
     debounceTime(1000)
   ).subscribe(async query => {
@@ -56,10 +56,8 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
 
     if (this.form.image.value) {
       this.showImageSelector = true
-      this.queryFormControl.setValue('')
-    } else {
-      this.queryFormControl.setValue(this.form.title.value)
     }
+    this.search(this.form.title.value).then(images => this.images$.next(images))
   }
 
   ngOnDestroy() {
