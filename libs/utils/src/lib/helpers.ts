@@ -62,6 +62,10 @@ export function isValidHttpUrl(_url: string) {
   return urlConstructorTest(_url) && regExTest(_url)
 }
 
+export function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 /** This is black magic from stack-overflow to detect if the browser is Safari or not.
  * Here we can not rely on `navigator.userAgent` because other Browser like Chromium put "Safari"
  * in there userAgent.

@@ -13,7 +13,7 @@ section {
     display: flex;
     flex-direction: column;
 
-    small {
+    .active {
       color: var(--ion-color-secondary);
     }
   }

@@ -1,13 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core'
 import { DearFutureSelf } from '@strive/model'
-import { compareAsc, isFuture, isPast } from 'date-fns'
+import { compareAsc, isFuture } from 'date-fns'
 
-@Pipe({ name: 'received' })
-export class ReceivedLettersPipe implements PipeTransform {
-    transform(setting: DearFutureSelf) {
-        return setting.messages.filter(message => isPast(message.deliveryDate))
-    }
-}
 
 @Pipe({ name: 'nextLetter' })
 export class NextLetterPipe implements PipeTransform {
@@ -20,7 +14,7 @@ export class NextLetterPipe implements PipeTransform {
 }
 
 @NgModule({
-  exports: [NextLetterPipe, ReceivedLettersPipe],
-  declarations: [NextLetterPipe, ReceivedLettersPipe]
+  exports: [NextLetterPipe],
+  declarations: [NextLetterPipe]
 })
 export class DearFutureSelfPipeModule { }

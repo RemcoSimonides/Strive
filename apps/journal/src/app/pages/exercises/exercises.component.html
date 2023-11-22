@@ -4,72 +4,15 @@
   <main>
     <h1 *ngIf="(isMobile$ | async) === false">Exercises</h1>
 
-    <section *ngIf="exercises$ | async as settings; else loading">
+    <section *ngIf="exercises$ | async as exercises; else loading">
       <ng-container *ngFor="let exercise of exercises">
         <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
-          <ng-container [ngSwitch]="exercise.id">
-
-            <ng-container *ngSwitchCase="'Affirmations'">
-
-              <ng-container *ngIf="settings | get:'Affirmations' as setting; else notSet">
-                <ng-container *ngIf="setting.affirmations?.length; else notSet">
-                  <article>
-                    <small>{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
-                  </article>
-                </ng-container>
-              </ng-container>
-
+          <article>
+            <small [ngClass]="{'active': exercise.isActive}">{{ exercise.description }}</small>
+            <ng-container *ngIf="exercise.id === 'DearFutureSelf'">
+              <small class="active" *ngIf="exercise.setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
             </ng-container>
-            <ng-container *ngSwitchCase="'SelfReflect'">
-                <ng-container *ngIf="settings | get:'SelfReflect' as setting; else notSet">
-                  <ng-container *ngIf="setting?.preferredDay !== 'never'; else notSet">
-                    <article>
-                      <small>Recieving {{ setting | frequencies }} on {{ setting.preferredDay | titlecase }} at {{ setting.preferredTime }}</small>
-                    </article>
-                  </ng-container>
-                </ng-container>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'DearFutureSelf'">
-
-              <ng-container *ngIf="settings | get:'DearFutureSelf' as setting; else notSet">
-                <ng-container *ngIf="setting?.messages?.length; else notSet">
-                  <article>
-                    <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
-                    <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
-                  </article>
-                </ng-container>
-              </ng-container>
-
-            </ng-container>
-            <ng-container *ngSwitchCase="'DailyGratitude'">
-
-              <ng-container *ngIf="settings | get:'DailyGratitude' as setting; else notSet">
-                <ng-container *ngIf="setting.on else notSet">
-                  <article>
-                    <small>Receiving daily at {{ setting.time | date:'shortTime'}}</small>
-                  </article>
-                </ng-container>
-              </ng-container>
-
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'WheelOfLife'">
-
-              <ng-container *ngIf="settings | get:'WheelOfLife' as setting; else notSet">
-                <ng-container *ngIf="setting.interval !== 'never'; else notSet">
-                  <article>
-                    <small>Receiving reminder {{ setting.interval }}</small>
-                  </article>
-                </ng-container>
-              </ng-container>
-
-            </ng-container>
-          </ng-container>
-
-          <ng-template #notSet>
-            <small>{{ exercise.description }}</small>
-          </ng-template>
+          </article>
         </strive-small-thumbnail>
       </ng-container>
     </section>
@@ -77,7 +20,5 @@
     <ng-template #loading>
       <strive-page-loading/>
     </ng-template>
-
   </main>
-
 </ion-content>

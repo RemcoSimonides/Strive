@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
-import { ExercisesPageComponent, GetExercisePipe, SelfReflectDescriptionPipe } from './exercises.component'
+import { ExercisesPageComponent, GetExercisePipe } from './exercises.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
@@ -48,8 +48,7 @@ const routes: Routes = [
     HeaderRootModule,
     DearFutureSelfPipeModule,
     TimeToGoPipeModule,
-    PageLoadingModule,
-    SelfReflectDescriptionPipe
+    PageLoadingModule
   ],
   declarations: [
     ExercisesPageComponent,
