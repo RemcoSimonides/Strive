@@ -8,7 +8,7 @@ function createGoalFormControl(params?: Partial<Goal>) {
     description: new FormControl(goal.description, { nonNullable: true }),
     image: new FormControl(goal.image, { nonNullable: true }),
     deadline: new FormControl(goal.deadline, { nonNullable: true, validators: [Validators.required] }),
-    isSecret: new FormControl(goal.publicity === 'private', { nonNullable: true }),
+    publicity: new FormControl<GoalPublicityType>('private', { nonNullable: true }),
     title: new FormControl(goal.title, { nonNullable: true, validators: [Validators.required]}),
   }
 }
@@ -23,12 +23,11 @@ export class GoalForm extends FormGroup<GoalFormControl> {
   get title() { return this.get('title')! }
   get description() { return this.get('description')! }
   get deadline() { return this.get('deadline')! }
-  get isSecret() { return this.get('isSecret')! }
+  get publicity() { return this.get('publicity')! }
   get image() { return this.get('image')! }
 
   getGoalValue(): Partial<Goal> {
-    const { description, image, deadline, isSecret, title } = this.value
-    const publicity: GoalPublicityType = isSecret ? 'private' : 'public'
+    const { description, image, deadline, publicity, title } = this.value
 
     return {
       description,

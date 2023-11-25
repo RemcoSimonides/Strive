@@ -74,7 +74,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     numberOfSpectators: 0,
     tasksCompleted: 0,
     tasksTotal: 1,
-    publicity: 'public',
+    publicity: 'private',
     collectiveGoalId: '',
     title: '',
     ...params,

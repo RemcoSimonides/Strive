@@ -27,9 +27,9 @@
 
     <ion-item lines="none">
       <ion-label position="stacked" color="primary">Who can see this goal?</ion-label>
-      <ion-select interface="popover" formControlName="isSecret">
-        <ion-select-option [value]="false">Everyone</ion-select-option>
-        <ion-select-option [value]="true">Invited users only</ion-select-option>
+      <ion-select interface="popover" formControlName="publicity">
+        <ion-select-option value="public">Everyone</ion-select-option>
+        <ion-select-option value="private">You or invited users only</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-list>
