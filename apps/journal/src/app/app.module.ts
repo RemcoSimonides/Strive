@@ -50,7 +50,8 @@ Sentry.init(
     RouterModule,
     BrowserModule.withServerTransition({ appId: 'journal' }),
     IonicModule.forRoot({
-      mode: 'md'
+      mode: 'md',
+      swipeBackEnabled: true
     }),
     ServiceWorkerModule.register('sw-master.js', {
       enabled: environment.production,
