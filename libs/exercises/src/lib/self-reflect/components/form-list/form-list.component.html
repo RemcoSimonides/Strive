@@ -25,9 +25,10 @@
         placeholder="..."
         autocapitalize="sentences"
         class="primary"
-        (keydown.enter)="add($event)"
       />
-      <ion-icon name="add-outline" slot="end" (click)="add()" />
     </ion-item>
   </ion-list>
+  <ion-button size="block" (click)="add()">
+    <ion-icon name="add-outline" slot="icon-only" />
+  </ion-button>
 </ng-container>
