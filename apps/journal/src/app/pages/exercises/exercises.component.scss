@@ -1,6 +1,15 @@
 main {
   max-width: var(--page-max-width);
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px
+}
+
+.note {
+  display: flex;
+  gap: 4px;
+  color: var(--ion-color-medium);
 }
 
 section {
