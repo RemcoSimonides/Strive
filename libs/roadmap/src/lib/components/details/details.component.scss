@@ -28,21 +28,11 @@ section {
 }
 
 .main {
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   ion-item {
     --inner-padding-top: 24px;
-    --inner-padding-end: 8px;
+    --inner-padding-bottom: 24px;
     --padding-start: 0;
     border-radius: 12px;
-
-    ion-textarea {
-      --padding-top: 0;
-    }
 
     ion-button {
       margin-inline-start: 8px;
