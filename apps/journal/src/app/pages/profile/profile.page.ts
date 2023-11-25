@@ -24,6 +24,7 @@ import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.c
 import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 @Component({
   selector: 'journal-profile',
@@ -31,6 +32,8 @@ import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePageComponent {
+  isNotMobile$ = this.screensize.isNotMobile$
+
   private profileId$: Observable<string | undefined> = combineLatest([
     this.route.params.pipe(map(params => params['id'])),
     this.auth.profile$
@@ -110,6 +113,7 @@ export class ProfilePageComponent {
     private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
+    private screensize: ScreensizeService,
     private seo: SeoService,
     private spectatorService: SpectatorService
   ) {}

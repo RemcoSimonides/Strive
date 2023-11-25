@@ -2,7 +2,7 @@ import { isPlatformServer } from '@angular/common'
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core'
 
 import { BehaviorSubject } from 'rxjs'
-import { distinctUntilChanged } from 'rxjs/operators'
+import { distinctUntilChanged, map } from 'rxjs/operators'
 
 @Injectable({ providedIn: 'root' })
 export class ScreensizeService {
@@ -21,6 +21,7 @@ export class ScreensizeService {
 
   private isMobile = new BehaviorSubject<boolean>(false)
   public isMobile$ = this.isMobile.asObservable().pipe(distinctUntilChanged())
+  public isNotMobile$ = this.isMobile$.pipe(map(isMobile => !isMobile))
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any

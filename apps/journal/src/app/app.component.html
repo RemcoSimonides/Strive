@@ -17,16 +17,19 @@
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
                 Goals
               </ion-button>
-              <ion-button [ngClass]="{'badge2': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
+              <ion-button [ngClass]="{'badge': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
                 Supports
               </ion-button>
               <ion-button fill="clear" routerLink="/exercise" routerDrouterDirection="root" routerLinkActive="active-link">
                 Exercises
               </ion-button>
               <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
-                <ion-icon name="search" slot="icon-only"></ion-icon>
+                <ion-icon name="search" size="small" slot="icon-only"></ion-icon>
               </ion-button>
-              <ion-avatar [ngClass]="{'badge': unreadNotifications$ | async}" (click)="openUserPopover($event)">
+              <ion-button fill="clear" routerLink="/notifications" routerDirection="root" routerLinkActive="active-link" class="notification-icon" [ngClass]="{'badge': unreadNotifications$ | async}">
+                <ion-icon name="notifications-outline" size="small" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-avatar routerLink="/profile">
                 <img [ref]="user.photoURL" asset="profile.png" [width]="120" [height]="120"/>
               </ion-avatar>
             </ng-container>

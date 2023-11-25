@@ -18,16 +18,15 @@ header {
     }
   }
 
-  .badge:after {
-    right: 0;
-    top: 0;
+  .notification-icon {
+    --ionicon-stroke-width: 44px;
   }
 
-  .badge2 {
+  .badge {
     position: relative;
   }
 
-  .badge2:after {
+  .badge:after {
     position: absolute;
     content: "";
     padding: .2em;

@@ -21,7 +21,6 @@ import { AppVersionService } from '@strive/utils/services/app-version.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { ProfileOptionsBrowserComponent } from './pages/profile/popovers/profile-options-browser/profile-options-browser.page'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
@@ -158,14 +157,6 @@ export class AppComponent implements OnDestroy {
       const goalsRoute = url === '/goals'
       if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
     })
-  }
-
-  openUserPopover(ev: UIEvent) {
-    this.popoverCtrl.create({
-      component: ProfileOptionsBrowserComponent,
-      event: ev,
-      showBackdrop: false
-    }).then(popover => popover.present())
   }
 
   async openAuthModal(authSegment: enumAuthSegment) {

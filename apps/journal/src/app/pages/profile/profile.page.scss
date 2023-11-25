@@ -15,9 +15,10 @@ header {
     gap: 32px;
 
     article.profile {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       gap: 16px;
-      
+
       ion-avatar {
         min-width: clamp(64px, 10vw, 96px);
         min-height: clamp(64px, 10vw, 96px);
@@ -27,16 +28,21 @@ header {
         display: flex;
         flex-direction: column;
         gap: 4px;
+        width: 100%;
 
         h5 {
           color: var(--ion-text-color);
           font-size: clamp(18px, 3vw, 28px);
           margin: 0;
         }
-  
+
         span {
           font-size: small;
         }
+      }
+
+      ion-button {
+        height: fit-content;
       }
     }
 
@@ -63,7 +69,7 @@ header {
     }
   }
 
-  ion-button {
+  ion-button.follow {
     ion-icon {
       font-size: small;
     }
@@ -107,12 +113,12 @@ section.goals {
     flex-direction: column;
     gap: 16px;
     margin: 0;
-  
+
     div {
       display: flex;
       gap: 8px;
       overflow: hidden;
-  
+
       small {
         display: flex;
         gap: 4px;

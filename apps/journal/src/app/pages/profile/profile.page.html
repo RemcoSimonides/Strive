@@ -39,6 +39,9 @@
               <h5>{{ profile.username }}</h5>
               <span>Joined {{ profile.createdAt | date:'longDate' }}</span>
             </div>
+            <ion-button fill="clear" routerLink="/settings" color="primary" *ngIf="isNotMobile$ | async">
+              <ion-icon name="settings-outline" size="small" slot="icon-only"></ion-icon>
+            </ion-button>
           </article>
           <ul>
             <li (click)="openFollowers()" class="clickable">
@@ -58,13 +61,13 @@
 
         <ng-container *ngIf="(isOwner$ | async) === false">
           <ng-container *ngIf="isSpectator$ | async else notSpectator">
-            <ion-button (click)="toggleSpectate(false)" size="block" class="fake-disable">
+            <ion-button (click)="toggleSpectate(false)" size="block" class="follow fake-disable">
               <ion-icon name="star" slot="start" />
               <span>Following</span>
             </ion-button>
           </ng-container>
           <ng-template #notSpectator>
-            <ion-button (click)="toggleSpectate(true)" size="block">
+            <ion-button (click)="toggleSpectate(true)" size="block" class="follow">
               <ion-icon name="star-outline" slot="start" />
               <span>Follow</span>
             </ion-button>
