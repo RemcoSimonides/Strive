@@ -22,7 +22,7 @@
 
         <ng-container *ngIf="view.suggestion.status === 'streaming' || view.suggestion.status === 'completed'">
           <ng-container *ngIf="view.suggestion.answerParsed.length; else noParsed">
-            <ion-list mode="md" class="small">
+            <ion-list class="small">
               <ng-container *ngFor="let milestone of view.suggestion.answerParsed; let index = index; let last = last; trackBy: trackByFn">
                 <ion-item #item (click)="addSuggestion(milestone, index, item)" [lines]="last ? 'none' : 'full'" button [disabled]="view.added.includes(index)" class="fade-out">
                   <ion-label>
@@ -48,7 +48,7 @@
 
           <section *ngIf="questions.length > 0 && view.suggestion.status === 'completed'" class="fade-in">
             <p>Improve the suggestions by answering the following questions</p>
-            <ion-list mode="md">
+            <ion-list>
               <ng-container *ngFor="let question of questions; let last = last; let index = index">
                 <ion-item lines="none" class="fade-in">
                   <ion-label color="secondary">

@@ -41,7 +41,7 @@
         </article>
 
         <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
-          <ion-list mode="md" lines="full">
+          <ion-list lines="full">
             <ion-item>
               <ion-input
                 formControlName="email"
@@ -98,7 +98,7 @@
 
         <form [formGroup]="signupForm" (ngSubmit)="signUpUser()">
 
-          <ion-list mode="md" lines="full">
+          <ion-list lines="full">
             <ion-item>
               <ion-input
                 formControlName="username"
@@ -179,7 +179,7 @@
       <section>
 
         <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
-          <ion-list mode="md">
+          <ion-list>
             <ion-item lines="none">
               <ion-input
                 formControlName="email"

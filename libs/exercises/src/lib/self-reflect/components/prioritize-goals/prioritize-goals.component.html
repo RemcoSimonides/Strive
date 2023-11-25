@@ -1,6 +1,6 @@
 <ng-container *ngIf="goals$ | async as stakeholders; else loading">
   <ng-container *ngIf="stakeholders.length > 1; else notEnoughGoals">
-    <ion-list mode="md">
+    <ion-list>
       <ion-reorder-group (ionItemReorder)="doReorder($event, stakeholders)" [disabled]="disableReorder()">
         <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'full'">
           <ion-thumbnail>

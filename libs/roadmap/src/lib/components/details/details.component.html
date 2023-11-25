@@ -89,7 +89,7 @@
         <h6>Subtasks</h6>
         <small>({{ form.subtasks.value | subtasksCompleted}})</small>
       </header>
-      <ion-list mode="md" lines="full">
+      <ion-list lines="full">
         <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!canEdit">
           <ion-item *ngFor="let control of form.subtasks.controls; let i = index">
             <ion-button fill="clear" (click)="toggleSubtask(i)">

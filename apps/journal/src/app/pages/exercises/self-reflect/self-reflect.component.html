@@ -20,7 +20,7 @@
     </header>
     <small>Get a grasp on life by looking back and planning ahead</small>
 
-    <ion-list mode="md" class="entries">
+    <ion-list class="entries">
       <ng-container *ngIf="daily$ | async as daily">
         <ion-item button (click)="addEntry('daily')" [disabled]="daily.disabled">
           <ion-label>
@@ -81,7 +81,7 @@
     </header>
     <small>See previous entries or change the frequency of questions</small>
 
-    <ion-list mode="md" lines="full" *ngIf="questions$ | async; let questions; else loading">
+    <ion-list lines="full" *ngIf="questions$ | async; let questions; else loading">
       <ng-container *ngFor="let question of questions; let last = last; trackBy: trackByFn">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
           <ion-item [lines]="last ? 'none' : 'full'" button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
@@ -107,7 +107,7 @@
     </header>
     <small>Add your own questions to reflect on</small>
 
-    <ion-list mode="md" lines="full">
+    <ion-list lines="full">
       <ng-container *ngFor="let question of customQuestions$ | async; trackBy: trackByFn; else loading">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
           <ion-item button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
@@ -131,12 +131,12 @@
       </ion-item>
     </ion-list>
 
-    <ion-popover trigger="question-filter-popover" mode="ios" class="datetime-popover">
+    <ion-popover trigger="question-filter-popover" class="datetime-popover">
       <ng-template>
         <ion-content>
           <form [formGroup]="questionFilterForm">
 
-            <ion-list mode="md" class="filter">
+            <ion-list class="filter">
               <ion-item lines="none">
                 <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
                   <ion-select-option value="all">All</ion-select-option>
@@ -172,12 +172,12 @@
       </ng-template>
     </ion-popover>
 
-    <ion-popover trigger="custom-question-filter-popover" mode="ios" class="datetime-popover">
+    <ion-popover trigger="custom-question-filter-popover" class="datetime-popover">
       <ng-template>
         <ion-content>
           <form [formGroup]="customQuestionFilterForm">
 
-            <ion-list mode="md" class="filter">
+            <ion-list class="filter">
               <ion-item lines="none">
                 <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
                   <ion-select-option value="all">All</ion-select-option>

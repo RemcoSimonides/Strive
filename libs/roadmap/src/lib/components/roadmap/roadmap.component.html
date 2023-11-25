@@ -1,6 +1,6 @@
 <ng-container *ngIf="milestones else loading">
   <ng-container *ngIf="milestones.length || canEdit else empty">
-    <ion-list mode="md">
+    <ion-list>
 
       <ion-reorder-group [disabled]="!canEdit" (ionItemReorder)="doReorder($event)">
         <ion-item-sliding *ngFor="let milestone of milestones; let last = last; trackBy: trackByFn">

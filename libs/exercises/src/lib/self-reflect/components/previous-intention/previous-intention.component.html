@@ -2,7 +2,7 @@
   <small class="intro">Last {{ frequency | frequency }} you wrote some intentions/predictions about the past {{ frequency | frequency }}. Let's read back and think by yourself what happened or not.</small>
 
   <ng-container *ngFor="let key of previousEntryKeys">
-    <ion-list mode="md" *ngIf="previousEntry | getConfig: key; let config">
+    <ion-list *ngIf="previousEntry | getConfig: key; let config">
       <small>{{ previousEntry | getQuestion: key }}</small>
 
       <ng-container *ngIf="config.type === 'formlist'">

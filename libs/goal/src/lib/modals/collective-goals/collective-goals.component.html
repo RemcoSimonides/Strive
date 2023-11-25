@@ -3,7 +3,7 @@
 <ion-content class="ion-padding">
   <small>These people are striving for the same goal. Each with their own Roadmap and Story.</small>
 
-  <ion-list mode="md">
+  <ion-list>
     <ng-container *ngFor="let stakeholder of stakeholders; let last = last">
       <ion-item [lines]="last ? 'none' : 'full'" button (click)="navTo(stakeholder.goalId)">
         <ion-avatar slot="start" (click)="navTo(stakeholder.goalId)">

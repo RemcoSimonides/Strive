@@ -1,5 +1,5 @@
 <ng-container *ngIf="form && question">
-  <ion-list mode="md">
+  <ion-list>
     <small>{{ question.question | replaceFrequency:question.frequency }}</small>
     <ion-item *ngFor="let control of form.controls; let i = index; let last = last" [lines]="last && !showInput() ? 'none' : 'inset'">
       <ion-textarea

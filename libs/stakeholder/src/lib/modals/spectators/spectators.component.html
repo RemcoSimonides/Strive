@@ -5,7 +5,7 @@
 <ion-content class="ion-padding">
   <ng-container *ngIf="view$ | async as view">
 
-    <ion-list mode="md">
+    <ion-list>
       <ng-container *ngIf="view.you as you">
         <ng-container *ngIf="view.you.isSpectator">
           <ion-item [lines]="view.others.length ? 'full' : 'none'">

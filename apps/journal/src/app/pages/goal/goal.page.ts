@@ -322,7 +322,9 @@ export class GoalPageComponent implements OnDestroy {
   }
 
   private deleteGoal() {
+    console.log('delete goal')
     this.alertCtrl.create({
+      mode: 'md',
       subHeader: `Are you sure you want to delete this goal?`,
       message: `This action is irreversible`,
       buttons: [
@@ -339,7 +341,7 @@ export class GoalPageComponent implements OnDestroy {
           text: 'No',
           role: 'cancel'
         }
-      ]
+      ],
     }).then(alert => alert.present())
   }
 

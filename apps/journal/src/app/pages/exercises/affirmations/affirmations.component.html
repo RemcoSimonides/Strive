@@ -22,7 +22,7 @@
           <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
         </section>
 
-        <ion-list mode="md">
+        <ion-list>
           <ng-container *ngFor="let time of times; let i = index">
             <ion-item (click)="openDatetime(i)" lines="full">
               <ion-label>Set time {{ i + 1 }}</ion-label>
@@ -43,7 +43,7 @@
 
         <section>
           <h5>Your Affirmations</h5>
-          <ion-list mode="md">
+          <ion-list>
             <ion-item *ngFor="let control of affirmationsForm.controls; let i = index">
               <ion-input
                 class="ion-text-wrap primary"
@@ -81,7 +81,7 @@
             </ion-select>
           </header>
 
-          <ion-list mode="md">
+          <ion-list>
             <ion-item *ngFor="let suggestion of suggestions; let last = last" [lines]="last ? 'none' : 'full'">
               <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
               <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"/>

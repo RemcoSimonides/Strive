@@ -23,8 +23,8 @@
         </article>
         <img asset="theo-notifications.png"/>
         <article>
-          <ion-button (click)="pushNotifications()" mode="ios">Activate Notifications</ion-button>
-          <ion-button (click)="next()" fill="clear" mode="ios">Skip</ion-button>
+          <ion-button (click)="pushNotifications()">Activate Notifications</ion-button>
+          <ion-button (click)="next()" fill="clear">Skip</ion-button>
         </article>
       </section>
     </ng-template>
@@ -35,11 +35,11 @@
       <section class="goal">
         <article class="create">
           <img asset="pointing.png">
-          <ion-button class="create-goal" (click)="createGoal()" mode="ios">Create Goal</ion-button>
+          <ion-button class="create-goal" (click)="createGoal()">Create Goal</ion-button>
         </article>
 
         <article class="explore">
-          <ion-button class="explore" (click)="dismiss('/explore')" mode="ios">Explore Around</ion-button>
+          <ion-button class="explore" (click)="dismiss('/explore')">Explore Around</ion-button>
           <img asset="looking.png" />
         </article>
       </section>
@@ -55,7 +55,7 @@
           Apple is working on this for Safari version 16.
         </p>
         <article>
-          <ion-button (click)="next()" mode="ios">Continue</ion-button>
+          <ion-button (click)="next()">Continue</ion-button>
         </article>
       </section>
     </ng-template>

@@ -49,7 +49,9 @@ Sentry.init(
     AppRoutingModule,
     RouterModule,
     BrowserModule.withServerTransition({ appId: 'journal' }),
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      mode: 'md'
+    }),
     ServiceWorkerModule.register('sw-master.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

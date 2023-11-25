@@ -1,7 +1,7 @@
 <ng-container *ngIf="goal$ | async as goal; else loading">
 <ng-container *ngIf="milestones$ | async as milestones; else loading">
   <ng-container *ngIf="milestones.length else empty">
-    <ion-list mode="md">
+    <ion-list>
       <ion-reorder-group (ionItemReorder)="doReorder($event, milestones)">
 
         <ion-item *ngFor="let milestone of milestones" button>

@@ -5,7 +5,7 @@
 <ion-content class="ion-padding">
   <ng-container *ngIf="results$ | async as profiles; else loading">
     <ng-container *ngIf="profiles.length else empty">
-      <ion-list mode="md">
+      <ion-list>
         <ng-container *ngFor="let profile of results$ | async; let last = last">
           <ion-item [lines]="last ? 'none' : 'full'">
             <ion-avatar slot="start">

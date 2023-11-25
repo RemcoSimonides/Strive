@@ -202,7 +202,7 @@
     <ng-container *ngIf="openRequests$ | async as stakeholders">
       <ng-container *ngIf="stakeholders.length">
         <h3>Open requests to join</h3>
-        <ion-list mode="md">
+        <ion-list>
           <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'full'" (click)="navTo(stakeholder.uid)" button>
             <ion-avatar slot="start">
               <img [ref]="stakeholder.profile.photoURL" asset="profile.png" [width]="120" [height]="120"/>

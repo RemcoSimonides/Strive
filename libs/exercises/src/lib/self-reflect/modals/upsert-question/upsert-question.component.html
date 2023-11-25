@@ -13,7 +13,7 @@
     <ng-container *ngIf="isCustomQuestion(); else striveQuestion">
       <form [formGroup]="form">
 
-        <ion-list mode="md">
+        <ion-list>
           <ion-item lines="none">
             <ion-textarea
               label="Question"
@@ -28,7 +28,7 @@
           </ion-item>
         </ion-list>
 
-        <ion-list mode="md">
+        <ion-list>
           <ion-item lines="full">
             <ion-select formControlName="frequency" interface="popover" label="How often would you like to recieve this question?" labelPlacement="stacked">
               <ion-select-option value="daily">Daily</ion-select-option>
@@ -72,7 +72,7 @@
       <h3>{{ question.question | replaceFrequency: question.frequency }}</h3>
 
       <form [formGroup]="form">
-        <ion-list mode="md">
+        <ion-list>
           <ion-item lines="none">
             <ion-select formControlName="frequency" interface="popover" label="How often would you like to recieve this question?" labelPlacement="stacked">
               <ion-select-option value="daily">Daily</ion-select-option>
@@ -102,7 +102,7 @@
                   <small>Today</small>
                   <small>{{ range[range.length - 1].date | date: 'M/yy' }}</small>
                 </div>
-                <ion-range [formControl]="rangeForm" [max]="range.length - 1" pin [pinFormatter]="pinFormatter()" mode="md"></ion-range>
+                <ion-range [formControl]="rangeForm" [max]="range.length - 1" pin [pinFormatter]="pinFormatter()"></ion-range>
               </ng-container>
               <strive-self-reflect-prioritize-goals [entry]="prioritizeGoalEntry()" />
             </article>
@@ -114,7 +114,7 @@
               <ng-container [ngSwitch]="question.key">
                 <ng-container *ngIf="question.type === 'textarea'">
 
-                  <ion-list mode="md" lines="none">
+                  <ion-list lines="none">
                     <b>{{ entry.createdAt | date:'longDate'}}</b>
                     <ion-item>
                       <ion-label>{{ entry[question.key] }}</ion-label>
@@ -124,7 +124,7 @@
                 </ng-container>
                 <ng-container *ngIf="question.type === 'formlist'">
 
-                  <ion-list mode="md">
+                  <ion-list>
                     <small>{{ entry.createdAt | date:'longDate'}}</small>
                     <ion-item *ngFor="let item of entry[question.key]; let last = last" [lines]="last ? 'none' : 'full'">
                       <ion-label>{{ item }}</ion-label>

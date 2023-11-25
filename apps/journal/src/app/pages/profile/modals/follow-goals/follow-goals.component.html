@@ -9,7 +9,7 @@
     </small>
   </header>
 
-  <ion-list mode="md">
+  <ion-list>
     <ng-container *ngFor="let goal of goals; let last = last">
       <ng-container *ngIf="goal | getStakeholder | async as stakeholder">
 

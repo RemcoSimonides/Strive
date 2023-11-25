@@ -4,7 +4,7 @@
 
 <ion-content class="ion-no-padding">
 
-  <ion-list mode="md">
+  <ion-list>
     <ng-container *ngFor="let spectator of spectating$ | async; let last = last">
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(spectator.profileId)">
         <ion-avatar slot="start">

@@ -1,4 +1,4 @@
-<ion-list *ngIf="goal else empty" mode="md">
+<ion-list *ngIf="goal else empty">
   <ion-item lines="none" *ngIf="goal.supports.length && goalDescription">
     <ion-label>
       <ng-container [ngTemplateOutlet]="goalDescription" [ngTemplateOutletContext]="{ $implicit: goal }" />

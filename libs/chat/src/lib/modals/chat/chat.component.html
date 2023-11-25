@@ -49,7 +49,7 @@
 	<ion-popover trigger="popover-button" [dismissOnSelect]="true">
 		<ng-template>
 			<ion-content>
-				<ion-list mode="md">
+				<ion-list>
 					<ion-item button (click)="toggleAssistant(!goal.enableAssistant)">{{ goal.enableAssistant ? 'Disable' : 'Enable' }} Strive Assistant</ion-item>
 					<ion-item button lines="none" (click)="toggleNotifications(!stakeholder.settings.goalChat)">{{ stakeholder.settings.goalChat ? 'Mute' : 'Unmute' }} notifications</ion-item>
 				</ion-list>

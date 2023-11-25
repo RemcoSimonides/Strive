@@ -11,7 +11,7 @@
     </section>
 
     <ng-container *ngIf="isLoggedIn$ | async else login">
-      <ion-card class="ion-padding" mode="md">
+      <ion-card class="ion-padding">
         <ng-container *ngIf="state !== 'sent'; else sent">
 
           <section>
@@ -53,7 +53,7 @@
 
       <ng-container *ngIf="pendingMessages$ | async as pendingMessages">
         <ng-container *ngIf="pendingMessages.length">
-          <ion-list class="pending-list" mode="md">
+          <ion-list class="pending-list">
             <h5>Pending Messages</h5>
             <ng-container *ngFor="let message of pendingMessages; let last = last">
               <ion-item [lines]="last ? 'none' : 'full'">
@@ -70,7 +70,7 @@
 
       <ng-container *ngIf="deliveredMessages$ | async as deliveredMessages">
         <ng-container *ngIf="deliveredMessages.length">
-          <ion-list mode="md">
+          <ion-list>
             <h5>Delivered Messages</h5>
             <ng-container *ngFor="let message of deliveredMessages; let last = last">
               <ion-item button (click)="openMessage(message)" [lines]="last ? 'none' : 'full'">

@@ -2,7 +2,7 @@
 
 <section *ngIf="possibleNextEntries.length">
   <span>Continue with more questions:</span>
-  <ion-list mode="md">
+  <ion-list>
     <ng-container *ngFor="let nextFrequency of possibleNextEntries; let last = last">
       <ion-item button (click)="next.emit(nextFrequency)" [lines]="last ? 'none' : 'inset'">
         <ion-label>

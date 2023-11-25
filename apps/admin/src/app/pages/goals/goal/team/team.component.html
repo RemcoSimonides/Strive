@@ -1,6 +1,6 @@
 <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
 	<ion-button (click)="add()">Add</ion-button>
-	<ion-list mode="md">
+	<ion-list>
 		<ion-item *ngFor="let stakeholder of stakeholders$ | async" button [routerLink]="['/a/users/', stakeholder.uid]">
 			{{ stakeholder.profile.username }}
 			<ion-icon src="assets/icons/user-tie-solid.svg"
