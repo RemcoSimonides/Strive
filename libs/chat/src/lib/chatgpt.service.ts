@@ -33,7 +33,7 @@ export class ChatGPTService extends FireSubCollection<ChatGPTMessage> {
     const end = format(deadline, 'dd MMMM yyyy')
     const today = format(new Date(), 'dd MMMM yyyy')
     const country = getCountry() ?? 'The Netherlands'
-    return `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Don't suggest a due date for the milestones and don't use numbering for each milestone.`
+    return `I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. Could you break it down into milestones? Take the preparation, execution and celebration of the goal in account. Please don't suggest a due date for the milestones and don't use numbering for each milestone. Also the milestones should be specific and measurable but not longer than once sentence. Cap out at 12 milestones.`
   }
 
 }
