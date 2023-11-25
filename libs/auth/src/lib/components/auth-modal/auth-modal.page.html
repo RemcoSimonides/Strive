@@ -40,7 +40,7 @@
           </ion-button>
         </article>
 
-        <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+        <form [formGroup]="loginForm">
           <ion-list lines="full">
             <ion-item>
               <ion-input
@@ -64,7 +64,7 @@
           </ion-list>
 
           <div class="action">
-            <ion-button class="submit_button" color="primary" type="submit" [disabled]="!loginForm.valid">Log in</ion-button>
+            <ion-button class="submit_button" color="primary" (click)="loginUser()" [disabled]="!loginForm.valid">Log in</ion-button>
           </div>
         </form>
 
@@ -96,7 +96,7 @@
           </ion-button>
         </article>
 
-        <form [formGroup]="signupForm" (ngSubmit)="signUpUser()">
+        <form [formGroup]="signupForm">
 
           <ion-list lines="full">
             <ion-item>
@@ -155,7 +155,7 @@
           </ion-list>
 
           <div class="action">
-            <ion-button class="submit_button" color="primary" type="submit" [disabled]="!signupForm.valid">Register</ion-button>
+            <ion-button class="submit_button" color="primary" (click)="signUpUser()" [disabled]="!signupForm.valid">Register</ion-button>
           </div>
         </form>
 
@@ -178,7 +178,7 @@
 
       <section>
 
-        <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+        <form [formGroup]="resetPasswordForm">
           <ion-list>
             <ion-item lines="none">
               <ion-input
@@ -192,7 +192,7 @@
           </ion-list>
 
           <div class="action">
-            <ion-button color="primary" type="submit" [disabled]="!resetPasswordForm.valid">Reset Password</ion-button>
+            <ion-button color="primary" (click)="resetPassword()" [disabled]="!resetPasswordForm.valid">Reset Password</ion-button>
           </div>
         </form>
 
