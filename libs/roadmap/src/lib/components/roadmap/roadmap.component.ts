@@ -14,6 +14,7 @@ import { AddSupportModalComponent } from '@strive/support/modals/add/add.compone
 import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
+import { GoalService } from '@strive/goal/goal.service'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryItem[] }
 
@@ -44,6 +45,7 @@ export class RoadmapComponent {
     private alertCtrl: AlertController,
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
+    private goalService: GoalService,
     private modalCtrl: ModalController,
     private milestone: MilestoneService
   ) {}
@@ -80,13 +82,63 @@ export class RoadmapComponent {
         }, { params: { goalId: this.goal.id }})
         milestone.status = status
         this.cdr.markForCheck()
-        openPostModal()
+
+        if (this.goal.status === 'pending' && this.milestones.every(milestone => milestone.status !== 'pending')) {
+
+          if (status === 'failed') {
+            this.alertCtrl.create({
+              subHeader: 'All milestones are finished.',
+              message: 'Do you want to mark the goal as failed or succeeded?',
+              buttons: [
+                {
+                  text: 'Succeeded',
+                  handler: () => {
+                    this.goalService.update(this.goal.id, { status: 'succeeded' })
+                    openPostModal()
+                  }
+                },
+                {
+                  text: 'Failed',
+                  handler: () => {
+                    this.goalService.update(this.goal.id, { status: 'failed' })
+                    openPostModal()
+                  }
+                },
+                {
+                  text: 'None',
+                  handler: openPostModal
+                }
+              ]
+            }).then(alert => alert.present())
+
+          } else if (status === 'succeeded') {
+            this.alertCtrl.create({
+              subHeader: 'Congratulations! All milestones are finished.',
+              message: 'Do you want to mark the goal as finished?',
+              buttons: [
+                {
+                  text: 'Yes',
+                  handler: () => {
+                    this.goalService.update(this.goal.id, { status: 'succeeded' })
+                    openPostModal()
+                  }
+                },
+                {
+                  text: 'No',
+                  handler: openPostModal
+                }
+              ]
+            }).then(alert => alert.present())
+          }
+        } else {
+          openPostModal()
+        }
       }
     }
 
     this.alertCtrl.create({
-      header: 'Good job!',
-      subHeader: 'Or didn\'t you?',
+      subHeader: 'Good job!',
+      message: 'Or didn\'t you?',
       buttons: [
         {
           text: 'Succeeded',
