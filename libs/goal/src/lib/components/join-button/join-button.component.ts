@@ -58,7 +58,7 @@ export class JoinButtonComponent {
       return modal.present()
     }
 
-    const { isAchiever, hasOpenRequestToJoin} = this.stakeholder
+    const { isAchiever, hasOpenRequestToJoin } = this.stakeholder
     const goalId = this.goal.id
 
     if (hasOpenRequestToJoin) {
@@ -115,10 +115,10 @@ export class JoinButtonComponent {
   }
 
   joinGoal() {
-    const { isAdmin } = this.stakeholder
+    const { isAdmin, hasInviteToJoin } = this.stakeholder
     const goalId = this.goal.id
 
-    if (isAdmin) {
+    if (isAdmin || hasInviteToJoin) {
       this.stakeholderService.update({
         uid: this.auth.uid,
         isAchiever: true
