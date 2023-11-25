@@ -4,6 +4,10 @@
   display: block;
 }
 
+ion-button {
+  text-transform: none; // also in global.scss but is not applied because of view encapsulation
+}
+
 $header-height: 78px;
 
 h1 {
