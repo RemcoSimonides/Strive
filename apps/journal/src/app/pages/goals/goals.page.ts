@@ -6,7 +6,7 @@ import { orderBy, where } from 'firebase/firestore'
 import { SplashScreen } from '@capacitor/splash-screen'
 
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
-import { switchMap, map, filter } from 'rxjs/operators'
+import { switchMap, map, filter, shareReplay } from 'rxjs/operators'
 
 import { isBefore, min } from 'date-fns'
 import { delay } from '@strive/utils/helpers'
@@ -146,6 +146,7 @@ export class GoalsPageComponent implements OnDestroy {
           )
         }
       }, { shouldAwait: true }),
+      shareReplay({ bufferSize: 1, refCount: true }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
     ) as Observable<StakeholderWithGoalAndEvents[]>
 
@@ -168,6 +169,21 @@ export class GoalsPageComponent implements OnDestroy {
         // Sort finished goals to the end and in progress goals to top
         const a = getProgress(first.goal)
         const b = getProgress(second.goal)
+
+        if (a === 1 || b === 1) {
+          // Progress of 1 means the goal is finished
+          if (a === b) return 0
+          if (a === 1) return 1
+          if (b === 1) return -1
+        }
+
+        // Sort by priority if priority has been set on any goals
+        if (first.priority !== -1 || second.priority !== -1) {
+          if (first.priority === second.priority) return 0
+          if (first.priority === -1) return 1
+          if (second.priority === -1) return -1
+          return first.priority < second.priority ? -1 : 1
+        }
 
         if (a === b) return 0
         if (b === 1) return -1

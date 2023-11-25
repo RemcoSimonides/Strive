@@ -2,6 +2,15 @@ picture.mobile {
   height: 60vw;
 }
 
+picture.desktop {
+  aspect-ratio: 1/1;
+  height: 100%;
+
+  div {
+    border-radius: 12px;
+  }
+}
+
 ion-fab {
   margin-top: constant(safe-area-inset-top);
   margin-top: env(safe-area-inset-top);

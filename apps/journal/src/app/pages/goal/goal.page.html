@@ -78,7 +78,7 @@
     <h1>{{ goal.title }}</h1>
 
     <div class="main">
-      <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false">
+      <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false" class="desktop">
         <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
         <div *ngIf="goal.status !== 'pending'">finished</div>
       </picture>

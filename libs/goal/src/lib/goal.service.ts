@@ -20,7 +20,7 @@ export class GoalService extends FireCollection<Goal> {
   constructor(
     private auth: AuthService,
     private stakeholder: GoalStakeholderService
-  ) { 
+  ) {
     super()
   }
 
@@ -75,6 +75,21 @@ export class GoalService extends FireCollection<Goal> {
         // Sort finished goals to the end and in progress goals to top
         const a = getProgress(first.goal)
         const b = getProgress(second.goal)
+
+        if (a === 1 || b === 1) {
+          // Progress of 1 means the goal is finished
+          if (a === b) return 0
+          if (a === 1) return 1
+          if (b === 1) return -1
+        }
+
+        // Sort by priority if priority has been set on any goals
+        if (first.priority !== -1 || second.priority !== -1) {
+          if (first.priority === second.priority) return 0
+          if (first.priority === -1) return 1
+          if (second.priority === -1) return -1
+          return first.priority < second.priority ? -1 : 1
+        }
 
         if (a === b) return 0
         if (b === 1) return -1

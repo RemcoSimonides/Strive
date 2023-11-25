@@ -29,7 +29,7 @@ export async function sendSelfReflectPuthNotification(settings: SelfReflectSetti
     token,
     notification: {
       title: replaceFrequency(question.question, question.frequency),
-      body: `(Make) time to reflect the ${readable}`
+      body: `Time to reflect the ${readable}`
     },
     data: { link },
     webpush: {
