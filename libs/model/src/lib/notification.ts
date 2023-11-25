@@ -104,7 +104,8 @@ export interface Notification extends NotificationBase {
   user?: User,
   goal?: Goal,
   milestone?: Milestone,
-  support?: SupportBase
+  support?: SupportBase,
+  comment?: string
 }
 
 export function createNotificationBase(params: Partial<NotificationBase> = {}): NotificationBase {

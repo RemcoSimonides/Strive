@@ -22,6 +22,7 @@ export interface PushMessage {
   title: string
   body: string
   link: string
+  tag?: string // groups the notifications together
   setting: keyof typeof PushNotificationSetting
 }
 
@@ -31,7 +32,7 @@ export function getPushMessage(notification: Notification, target: PushNotificat
   if (target === 'spectator') return getSpectatorPushMessage(notification)
 }
 
-function getStakeholderPushMessage({ event, goal, milestone, user }: Notification): PushMessage | void {
+function getStakeholderPushMessage({ event, goal, milestone, user, comment }: Notification): PushMessage | void {
   switch (event) {
     case 'goalDeadlinePassed':
       if (!goal) throw new Error(`${event} push message needs goal defined`)
@@ -155,11 +156,13 @@ function getStakeholderPushMessage({ event, goal, milestone, user }: Notificatio
     case 'goalChatMessageCreated':
       if (!goal) throw new Error(`${event} push message needs goal defined`)
       if (!user) throw new Error(`${event} push message needs user defined`)
+      if (!comment) throw new Error(`${event} push message needs comment defined`)
 
       return {
-        title: goal.title,
-        body: `${user.username} sent a message in chat`,
+        title: `${user.username} in ${goal.title}`,
+        body: comment,
         link: `/goal/${goal.id}`,
+        tag: `goal/${goal.id}/chat`,
         setting: 'goalChat'
       }
 

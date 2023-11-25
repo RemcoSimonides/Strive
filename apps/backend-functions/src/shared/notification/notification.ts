@@ -1,7 +1,7 @@
 import { admin, logger, db, serverTimestamp } from '@strive/api/firebase'
 import type { Message } from 'firebase-admin/messaging'
 // Interfaces
-import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification, SupportBase, GoalStakeholder, Roles, PushNotificationSettingKey } from '@strive/model'
+import { createNotificationBase, NotificationBase, GoalEvent, createGoalStakeholder, createPersonal, Goal, Milestone, Support, User, Notification, SupportBase, GoalStakeholder, Roles, PushNotificationSettingKey, Comment } from '@strive/model'
 import { getPushMessage, PushMessage, PushNotificationSetting, PushNotificationTarget } from '@strive/notification/message/push-notification'
 import { getDocument, toDate, unique } from '../utils'
 
@@ -52,7 +52,7 @@ export async function sendGoalEventNotification(
   options: SendOptions,
   excludeTriggerer: boolean
 ) {
-  const { goalId, userId, milestoneId, supportId } = event
+  const { goalId, userId, milestoneId, supportId, commentId } = event
 
   const notificationBase = createNotificationBase({ ...event, event: event.name })
   const notification: Notification = createNotificationBase(notificationBase)
@@ -78,7 +78,8 @@ export async function sendGoalEventNotification(
     const milestonePromise = milestoneId ? getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`).then(milestone => notification.milestone = milestone) : undefined
     const supportPromise = supportId ? getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`).then(support => notification.support = support) : undefined
     const userPromise = userId ? getDocument<User>(`Users/${userId}`).then(user => notification.user = user) : undefined
-    await Promise.all([goalPromise, milestonePromise, supportPromise, userPromise])
+    const commentPromise = commentId ? getDocument<Comment>(`Goals/${goalId}/Comments/${commentId}`).then(comment => notification.comment = comment.text) : undefined
+    await Promise.all([goalPromise, milestonePromise, supportPromise, userPromise, commentPromise])
   }
 
   if (options.toStakeholder?.notification) {
@@ -170,9 +171,15 @@ function createPushMessage(message: PushMessage, token: string): Message {
       body: message.body
     },
     data: { link },
+    android: {
+      notification: {
+        tag: message.tag
+      }
+    },
     webpush: {
       notification: {
-        icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9'
+        icon: 'https://firebasestorage.googleapis.com/v0/b/strive-journal.appspot.com/o/FCMImages%2Ficon-72x72.png?alt=media&token=19250b44-1aef-4ea6-bbaf-d888150fe4a9',
+        tag: message.tag
       },
       fcmOptions: { link }
     }

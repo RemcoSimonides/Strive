@@ -9,6 +9,7 @@ export function addGoalEvent(name: EventType, source: GoalSource, id?: string) {
     milestoneId: source.milestoneId,
     supportId: source.supportId,
     postId: source.postId,
+    commentId: source.commentId,
     createdAt: serverTimestamp() as any,
     updatedAt: serverTimestamp() as any
   })
