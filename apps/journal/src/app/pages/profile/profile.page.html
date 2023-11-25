@@ -39,7 +39,7 @@
               <h5>{{ profile.username }}</h5>
               <span>Joined {{ profile.createdAt | date:'longDate' }}</span>
             </div>
-            <ion-button fill="clear" routerLink="/settings" color="primary" *ngIf="isNotMobile$ | async">
+            <ion-button fill="clear" routerLink="/settings" color="primary" *ngIf="(isOwner$ | async) && (isNotMobile$ | async)">
               <ion-icon name="settings-outline" size="small" slot="icon-only"></ion-icon>
             </ion-button>
           </article>
