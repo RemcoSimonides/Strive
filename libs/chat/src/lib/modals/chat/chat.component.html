@@ -15,7 +15,7 @@
 					/>
 				</ion-infinite-scroll>
 
-				<li *ngFor="let comment of comments$ | async" [ngClass]="{'my-message': comment.userId === stakeholder.uid}" #item>
+				<li *ngFor="let comment of comments$ | async; else loading" [ngClass]="{'my-message': comment.userId === stakeholder.uid}" #item>
 					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
 					<article>
 						<small class="username"><b>{{ comment.user?.username }}</b></small>
@@ -57,3 +57,7 @@
 		</ng-template>
 	</ion-popover>
 </ng-container>
+
+<ng-template #loading>
+	<strive-page-loading />
+</ng-template>
