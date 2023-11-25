@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, signal } from '@angular/core'
 import { IonicModule, ModalController } from '@ionic/angular'
 import { AuthService } from '@strive/auth/auth.service'
 import { ImageModule } from '@strive/media/directives/image.module'
@@ -43,6 +43,8 @@ class GetStakeholderPipe implements PipeTransform {
   ]
 })
 export class FollowGoalsModalComponent extends ModalDirective {
+  allSpectated = signal(false)
+
   @Input() goals: Goal[] = []
   @Input() username = ''
 
@@ -64,5 +66,20 @@ export class FollowGoalsModalComponent extends ModalDirective {
       goalId,
       isSpectator: !isSpectator
     }, { params: { goalId }})
+  }
+
+  spectateAll() {
+    if (!this.auth.uid) return
+
+    this.allSpectated.set(true)
+    return this.goals.map(goal => {
+      const stakeholder = createGoalStakeholder({
+        uid: this.auth.uid,
+        goalId: goal.id,
+        isSpectator: true
+      })
+
+      return this.stakeholderService.upsert(stakeholder, { params: { goalId: goal.id }})
+    })
   }
 }
