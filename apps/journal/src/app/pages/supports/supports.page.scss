@@ -1,18 +1,22 @@
 main {
   max-width: var(--page-max-width);
   margin: auto;
-
-  h1 {
-    padding-inline: 16px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   section {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
 
     strive-support-list small {
+      color: var(--ion-color-medium);
+    }
+  }
+
+  .empty {
+    small {
       color: var(--ion-color-medium);
     }
   }

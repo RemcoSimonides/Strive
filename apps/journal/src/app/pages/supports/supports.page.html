@@ -12,7 +12,7 @@
   </div>
 </ng-container>
 
-<ion-content class="ion-no-padding" *ngIf="uid$ | async">
+<ion-content class="ion-padding" *ngIf="uid$ | async">
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
     <ion-refresher-content />
   </ion-refresher>
@@ -43,7 +43,10 @@
 </ng-template>
 
 <ng-template #empty>
-  <i>No supports yet</i>
+  <section class="empty">
+    <small>To motivate people to achieve their goals, offer incentives by supporting their goals or milestones. such as giving 5 euro when passing an exam.</small>
+    <i>No supports yet</i>
+  </section>
 </ng-template>
 
 <ng-template #milestoneStatus let-milestone>

@@ -1,13 +1,11 @@
-<ng-container *ngIf="(isLoggedIn$ | async) === false">
-  <strive-header-root/>
-</ng-container>
+<strive-header title="Explore" />
 
 <ion-content class="ion-no-padding">
   <header>
     <form [formGroup]="searchForm">
       <ion-searchbar
         formControlName="query"
-        placeholder='Try "Eat Healthy" or "Remco"'
+        placeholder='Try "Eat Healthy" or "Klaudia"'
         inputmode="search"
         class="ion-no-padding">
       </ion-searchbar>

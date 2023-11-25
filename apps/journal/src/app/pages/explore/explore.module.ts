@@ -13,7 +13,7 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
 import { LargeThumbnailModule } from '@strive/ui/thumbnail/components/large/large-thumbnail.module'
 import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
+import { HeaderModule } from '@strive/ui/header/header.module'
 
 import { FooterModule } from '@strive/ui/footer/footer.module'
 
@@ -37,7 +37,7 @@ const routes: Routes = [
     LargeThumbnailModule,
     RowsPipeModule,
     ImageModule,
-    HeaderRootModule,
+    HeaderModule,
     FooterModule
   ],
   declarations: [

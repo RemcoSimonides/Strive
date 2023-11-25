@@ -10,28 +10,20 @@
 				<ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">Goals</ion-label>
 			</ion-tab-button>
 
-			<ion-tab-button tab="supports">
-				<ion-icon
-					[src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"
-					[color]="(supportActive$ | async) ? 'primary' : 'inherit'"
-				/>
-				<ion-label [color]="(supportActive$ | async) ? 'primary' : 'inherit'">Supports</ion-label>
-			</ion-tab-button>
-
-			<ion-tab-button tab="explore" [routerLink]="['/explore']">
-				<ion-icon
-					name="search-sharp"
-					[color]="(exploreActive$ | async) ? 'primary' : 'inherit'"
-				/>
-				<ion-label [color]="(exploreActive$ | async) ? 'primary' : 'inherit'">Explore</ion-label>
-			</ion-tab-button>
-
 			<ion-tab-button tab="exercise" [routerLink]="['/exercise']">
 				<ion-icon
 					name="barbell-sharp"
 					[color]="(exerciseActive$ | async) ? 'primary' : 'inherit'"
 				/>
 				<ion-label [color]="(exerciseActive$ | async) ? 'primary' : 'inherit'">Exercises</ion-label>
+			</ion-tab-button>
+
+			<ion-tab-button tab="supports">
+				<ion-icon
+					[src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"
+					[color]="(supportActive$ | async) ? 'primary' : 'inherit'"
+				/>
+				<ion-label [color]="(supportActive$ | async) ? 'primary' : 'inherit'">Supports</ion-label>
 			</ion-tab-button>
 
 			<ion-tab-button [tab]="'profile/' + you.uid">

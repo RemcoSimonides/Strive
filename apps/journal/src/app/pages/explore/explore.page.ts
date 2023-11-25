@@ -12,7 +12,6 @@ import { exercises } from '@strive/model'
 import { AlgoliaService  } from '@strive/utils/services/algolia.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
   selector: 'journal-explore',
@@ -24,8 +23,6 @@ export class ExplorePageComponent implements OnDestroy {
   @ViewChild(IonContent) content?: IonContent
 
   segmentChoice: 'overview' | 'search' = 'overview'
-
-  isLoggedIn$ = this.auth.isLoggedIn$
 
   searchForm = new FormGroup({
     query: new FormControl(''),
@@ -104,7 +101,6 @@ export class ExplorePageComponent implements OnDestroy {
 
   constructor(
     private algolia: AlgoliaService,
-    private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     public screensize: ScreensizeService,

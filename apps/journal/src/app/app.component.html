@@ -17,11 +17,11 @@
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
                 Goals
               </ion-button>
-              <ion-button [ngClass]="{'badge': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
-                Supports
-              </ion-button>
               <ion-button fill="clear" routerLink="/exercise" routerDrouterDirection="root" routerLinkActive="active-link">
                 Exercises
+              </ion-button>
+              <ion-button [ngClass]="{'badge': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">
+                Supports
               </ion-button>
               <ion-button fill="clear" routerLink="/explore" routerDirection="root" routerLinkActive="active-link">
                 <ion-icon name="search" size="small" slot="icon-only"></ion-icon>
