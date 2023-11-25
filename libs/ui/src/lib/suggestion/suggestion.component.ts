@@ -10,7 +10,7 @@ import { ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
-import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/model'
+import { ChatGPTMessage, Milestone, createChatGPTMessage, createMilestone } from '@strive/model'
 import { ScrollService } from '@strive/utils/services/scroll.service'
 
 
@@ -30,7 +30,7 @@ import { ScrollService } from '@strive/utils/services/scroll.service'
 })
 export class SuggestionSComponent implements OnInit, OnDestroy {
 
-  added$ = new BehaviorSubject<number[]>([])
+  added$ = new BehaviorSubject<string[]>([])
   suggestions = new BehaviorSubject<ChatGPTMessage>(createChatGPTMessage())
 
   questions: { question: string, answer: string }[] = []
@@ -60,6 +60,14 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     this.fetching$.next(value)
   }
 
+  private _milestones: Milestone[] = []
+  get milestones() { return this._milestones }
+  @Input() set milestones(milestones: Milestone[]) {
+    if (!milestones) return
+    this._milestones = milestones
+    this.updateAdded()
+  }
+
   constructor(
     private cdr: ChangeDetectorRef,
     private chatGPTService: ChatGPTService,
@@ -71,6 +79,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     const sub = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).subscribe(message => {
       if (!message) return
       this.suggestions.next(message)
+      this.updateAdded()
       this.fetching$.next(false)
     })
 
@@ -95,30 +104,58 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     this.subs.forEach(sub => sub.unsubscribe())
   }
 
-  async addAllSuggestions(roadmap: string[]) {
+  async addAllSuggestions(suggestions: string[]) {
     if (!this.goalId) throw new Error('Goal Id is required in order to add milestones')
 
-    this.added$.next(roadmap.map((_, index) => index))
+    this.added$.next(suggestions)
 
-    const current = await this.milestoneService.getValue([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
+    const current = await this.milestoneService.load([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
-    const milestones = roadmap.map((content, index) => createMilestone({ order: max + index, content }))
+    const milestones = suggestions.map((content, index) => createMilestone({ order: max + index, content }))
     this.milestoneService.add(milestones, { params: { goalId: this.goalId }})
   }
 
-  async addSuggestion(content: string, index: number, element: any) {
+  async toggleSuggestion(content: string, index: number, element: any) {
+    if (!this.goalId) throw new Error('Goal Id is required in order to add or remove milestone')
+
+    const current = await this.milestoneService.load([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
+
+    if (this.added$.value.some(addedSuggestion => addedSuggestion === content)) {
+      this.removeSuggestion(content, index, current)
+    } else {
+      this.addSuggestion(content, current)
+    }
+
+    // save element height because added element added to list above this is similar height
+    this.scrolLService.scrollHeight = element.el.clientHeight
+  }
+
+  private async addSuggestion(content: string, milestones: Milestone[]) {
     if (!this.goalId) throw new Error('Goal Id is required in order to add milestones')
 
-    const current = await this.milestoneService.getValue([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
+    const current = milestones.filter(milestone => !milestone.deletedAt)
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
     const milestone = createMilestone({ order: max, content })
     this.milestoneService.add(milestone, { params: { goalId: this.goalId }})
-    this.added$.next([...this.added$.value, index])
+  }
 
-    // save element height because added element added to list above this is similar height
-    this.scrolLService.scrollHeight = element.el.clientHeight
+  private async removeSuggestion(content: string, index: number, milestones: Milestone[]) {
+    if (!this.goalId) throw new Error('Goal Id is required in order to add milestones')
+
+    const milestone = milestones.find(milestone => milestone.content === content)
+    if (!milestone) return
+
+    this.milestoneService.remove(milestone.id, { params: { goalId: this.goalId }})
+    this.added$.next(this.added$.value.filter(index => index !== index))
+  }
+
+  private updateAdded() {
+    const suggestions = this.suggestions.value.answerParsed
+
+    const added = this.milestones.filter(({ content }) => suggestions.includes(content))
+    this.added$.next(added.map(({ content }) => content))
   }
 
   submit() {

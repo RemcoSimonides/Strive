@@ -8,6 +8,6 @@
       [stakeholder]="stakeholder$ | async"
     />
 
-    <strive-suggestion [goalId]="goal.id" [fetch]="fetching$ | async" />
+    <strive-suggestion [goalId]="goal.id" [milestones]="milestones$ | async" [fetch]="fetching$ | async" />
   </ng-container>
 </ion-content>

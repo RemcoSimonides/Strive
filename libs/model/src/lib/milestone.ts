@@ -9,7 +9,7 @@ export interface Subtask {
 }
 
 export interface Milestone {
-  id?: string
+  id: string
   order: number
   content: string
   description: string
