@@ -14,9 +14,11 @@ ion-popover {
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
+    width: 100%;
 
     ion-button {
-      margin-block: 16px;
+      width: fit-content;
+      margin: 16px auto;
     }
 
     small {
