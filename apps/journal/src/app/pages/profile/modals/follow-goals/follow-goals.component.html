@@ -20,6 +20,7 @@
         <ion-item [lines]="last ? 'none' : 'full'">
           <ion-thumbnail slot="start">
             <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120" />
+            <div *ngIf="goal.status !== 'pending'" class="finished-overlay">finished</div>
           </ion-thumbnail>
           <ion-label>{{ goal.title }}</ion-label>
 

@@ -24,6 +24,8 @@ main {
         height: $size;
         width: $size;
         border-radius: 12px;
+        position: relative;
+    		isolation: isolate;
 
         img {
           border-radius: 12px;

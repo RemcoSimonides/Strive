@@ -4,7 +4,7 @@ ion-card {
 		padding: 8px;
 		grid-template-columns: 60px auto 50px;
 		gap: 8px;
-	
+
 		article {
 			display: grid;
 			gap: 4px;
@@ -19,12 +19,12 @@ ion-card {
 				align-items: center;
 			}
 		}
-	
+
 		ion-button {
 			display: block;
 			margin: auto;
 		}
-	
+
 		ul {
 			grid-column: 1 / 4;
 			min-width: 0;
@@ -53,32 +53,17 @@ ion-card {
 }
 
 ion-thumbnail {
-    position: relative;
-    border-radius: 12px;
-    height: 56px;
-    width: 56px;
-		isolation: isolate;
-  
-    img {
-      border-radius: 12px;
-      object-fit: cover;
-		  background-color: var(--ion-card-background);
-    }
-    
-    div {
-      border-radius: 12px;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: var(--ion-color-primary-contrast);;
-      background: rgba(247, 148, 29, .6);
-      font-size: 14px;
-    }
+	position: relative;
+	border-radius: 12px;
+	height: 56px;
+	width: 56px;
+	isolation: isolate;
+
+	img {
+		border-radius: 12px;
+		object-fit: cover;
+		background-color: var(--ion-card-background);
+	}
 }
 
 .gradient-border {
@@ -96,7 +81,7 @@ ion-thumbnail {
 	height: calc(100% + var(--borderWidth) * 2);
 	width: calc(100% + var(--borderWidth) * 2);
 	background: repeating-linear-gradient(
-		60deg, 
+		60deg,
 		var(--ion-color-light),
 		var(--ion-color-primary),
 		var(--ion-color-light),
@@ -115,8 +100,8 @@ ion-thumbnail {
 	animation: animatedgradient 24s linear infinite;
 	background-size: 300% 300%;
 }
-  
-  
+
+
 @keyframes animatedgradient {
 	0% {
 		background-position: 0% 50%;
