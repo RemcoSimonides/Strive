@@ -11,18 +11,27 @@ import { delay } from '../helpers'
 export class ModalDirective {
   private data?: unknown
   private isWeb = Capacitor.getPlatform() === 'web'
+  private isIOS = Capacitor.getPlatform() === 'ios'
 
   @HostBinding() modal?: HTMLIonModalElement
   @HostListener('window:popstate', ['$event'])
   onPopState() {
-    this.modalCtrl.dismiss(this.data)
+    if (this.isIOS) {
+      this.modalCtrl.getTop().then(modal => {
+        if (!modal) return this.modalCtrl.dismiss()
+        modal.animated = false
+        return modal.dismiss()
+      })
+    } else {
+      this.modalCtrl.dismiss(this.data)
+    }
   }
 
   constructor(
     protected location: Location,
     protected modalCtrl: ModalController
   ) {
-    if (this.isWeb) {
+    if (this.isWeb || this.isIOS) {
       window.history.pushState(null, '', window.location.href)
 
       this.modalCtrl.getTop().then(() => {
@@ -50,7 +59,7 @@ export class ModalDirective {
   }
 
   navigateTo(router: Router, path: string[]) {
-    if (this.isWeb) {
+    if (this.isWeb || this.isIOS) {
       this.location.back()
       delay(250).then(() => {
         router.navigate(path)

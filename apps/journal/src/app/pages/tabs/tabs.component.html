@@ -10,7 +10,7 @@
 				<ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">Goals</ion-label>
 			</ion-tab-button>
 
-			<ion-tab-button tab="exercise" [routerLink]="['/exercise']">
+			<ion-tab-button tab="exercise" routerLink="/exercise" routerDirection="root">
 				<ion-icon
 					name="barbell-sharp"
 					[color]="(exerciseActive$ | async) ? 'primary' : 'inherit'"

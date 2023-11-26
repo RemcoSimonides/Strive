@@ -5,12 +5,14 @@
     "@capacitor-firebase/authentication": "^5.2.0",
     "@capacitor/app": "^5.0.6",
     "@capacitor/camera": "^5.0.7",
-    "@capacitor/cli": "^5.5.1",
+    "@capacitor/cli": "^5.0.5",
     "@capacitor/clipboard": "^5.0.6",
+    "@capacitor/ios": "5.5.1",
     "@capacitor/keyboard": "^5.0.6",
     "@capacitor/push-notifications": "^5.1.0",
     "@capacitor/share": "^5.0.6",
     "@capacitor/splash-screen": "^5.0.6",
-    "@capawesome/capacitor-app-update": "^5.0.1"
+    "@capawesome/capacitor-app-update": "^5.0.1",
+    "capacitor-plugin-ios-webview-configurator": "^0.4.0"
   }
 }

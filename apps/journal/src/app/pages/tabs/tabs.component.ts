@@ -28,10 +28,6 @@ export class TabsComponent {
     map(nav => nav.url.startsWith('/supports'))
   )
 
-  exploreActive$ = this.route$.pipe(
-    map(nav => nav.url.startsWith('/explore'))
-  )
-
   exerciseActive$ = this.route$.pipe(
     map(nav => nav.url.startsWith('/exercise'))
   )

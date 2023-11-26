@@ -28,6 +28,8 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import * as Sentry from '@sentry/capacitor'
 import * as SentryAngular from '@sentry/angular'
 
+import { setBackForwardNavigationGestures, setWebviewBounce } from 'capacitor-plugin-ios-webview-configurator'
+
 Sentry.init(
   {
     dsn: 'https://4f1406746eae4c7aa069055270c617d9@o1354459.ingest.sentry.io/6638131',
@@ -73,5 +75,9 @@ Sentry.init(
 export class AppModule {
   constructor(pwa: PWAService) {
     pwa.addEventListeners()
+
+    // console.log('registering webview config')
+    setWebviewBounce(true)
+    setBackForwardNavigationGestures(true)
   }
 }

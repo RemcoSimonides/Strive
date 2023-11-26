@@ -153,15 +153,14 @@ export class AuthModalComponent implements OnInit {
       this.oAuthLogin(credentials.user)
 
     } catch (error: any) {
-      let code = undefined
-      if (error?.code) code = error.code
-      if (error?.error) code = error.error
+      const code = error?.code ?? error?.error ?? error?.message
 
       switch (code) {
         case '12501':
         case 'popup_closed_by_user':
         case 'auth/popup-closed-by-user':
         case 'auth/popup-blocked':
+        case 'The user canceled the sign-in flow.':
           break
         default:
           captureException(error)
@@ -187,10 +186,12 @@ export class AuthModalComponent implements OnInit {
 
     } catch (error: any) {
       if (error == 'Error: The web operation was canceled by the user.') return
+      const code = error?.code ?? error?.error ?? error?.message
 
-      switch (error.code) {
+      switch (code) {
         case 'auth/popup-closed-by-user':
         case 'auth/popup-blocked':
+        case `The operation couldn’t be completed. (com.apple.AuthenticationServices.AuthorizationError error 1001.)`:
           break
         default:
           captureException(error)

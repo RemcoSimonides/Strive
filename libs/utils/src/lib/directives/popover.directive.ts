@@ -10,6 +10,7 @@ export class PopoverDirective {
   private returnData: unknown
   private returnRole?: string
   private isWeb = Capacitor.getPlatform() === 'web'
+  private isIOS = Capacitor.getPlatform() === 'ios'
 
   @HostBinding() popover?: HTMLIonPopoverElement
   @HostListener('window:popstate', ['$event'])
@@ -22,7 +23,7 @@ export class PopoverDirective {
     protected platform: Platform,
     protected popoverCtrl: PopoverController
   ) {
-    if (this.isWeb) {
+    if (this.isWeb || this.isIOS) {
       window.history.pushState(null, '', window.location.href)
 
       this.popoverCtrl.getTop().then(() => {
@@ -34,7 +35,7 @@ export class PopoverDirective {
   }
 
   dismiss(data?: unknown, role?: string) {
-    if (this.isWeb) {
+    if (this.isWeb || this.isIOS) {
       this.returnData = data
       this.returnRole = role
       this.location.back()
