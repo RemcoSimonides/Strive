@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild } from '@angular/core'
 import { IonDatetime, PopoverController } from '@ionic/angular'
 
 @Component({
@@ -8,6 +8,9 @@ import { IonDatetime, PopoverController } from '@ionic/angular'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatetimeComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() { this.popoverCtrl.dismiss() }
+
   @ViewChild('datePicker') datetime?: IonDatetime
 
   _value?: string

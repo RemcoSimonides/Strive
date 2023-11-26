@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input } from '@angular/core'
+import { Component, HostListener, Input } from '@angular/core'
 import { PopoverController } from '@ionic/angular'
 import { ShareModule } from '@strive/ui/share/share.module'
 
@@ -14,6 +14,8 @@ import { ShareModule } from '@strive/ui/share/share.module'
   ]
 })
 export class GoalSharePopoverComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() { this.popoverCtrl.dismiss() }
 
   @Input() url = ''
 

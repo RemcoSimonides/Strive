@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 import { Post, createGoalStakeholder } from '@strive/model'
 import { PostService } from '@strive/post/post.service'
@@ -12,6 +12,8 @@ import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.compon
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostOptionsComponent {
+	@HostListener('window:popstate', ['$event'])
+  	onPopState() { this.popoverCtrl.dismiss() }
 
 	@Input() post!: Post
 	@Input() stakeholder = createGoalStakeholder()

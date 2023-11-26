@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, HostListener } from '@angular/core'
 import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 
 import { GoalService } from '@strive/goal/goal.service'
@@ -23,6 +23,8 @@ export enum enumGoalOptions {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalOptionsPopoverComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() { this.popoverCtrl.dismiss() }
 
   public enumGoalOptions = enumGoalOptions
 
@@ -35,10 +37,10 @@ export class GoalOptionsPopoverComponent {
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
-  ) { }
+  ) {}
 
-  async close(goalOption: enumGoalOptions){
-    this.popoverCtrl.dismiss(goalOption)
+  dismiss(data: enumGoalOptions) {
+    this.popoverCtrl.dismiss(data)
   }
 
   markAsFinished() {

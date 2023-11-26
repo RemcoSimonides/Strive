@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { AlertController, IonicModule, PopoverController } from '@ionic/angular'
 import { GoalStakeholder, User } from '@strive/model'
@@ -17,6 +17,9 @@ import { GoalStakeholderService } from '../../stakeholder.service'
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RolesPopoverComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() { this.popoverCtrl.dismiss() }
+
 	@Input() goalId!: string
 	@Input() stakeholder!: GoalStakeholder & { profile: User }
   @Input() manageRoles = false

@@ -1,7 +1,7 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router'
 import { isPlatformBrowser, isPlatformServer, Location } from '@angular/common'
-import { Platform, ModalController, PopoverController } from '@ionic/angular'
+import { Platform, ModalController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
@@ -90,7 +90,6 @@ export class AppComponent implements OnDestroy {
     private notification: NotificationService,
     private personalService: PersonalService,
     private platform: Platform,
-    private popoverCtrl: PopoverController,
     private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,

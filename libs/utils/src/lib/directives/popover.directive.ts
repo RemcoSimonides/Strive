@@ -1,7 +1,7 @@
 import { Location } from '@angular/common'
 import { Directive, HostBinding, HostListener } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
-import { Platform, PopoverController } from '@ionic/angular'
+import { PopoverController } from '@ionic/angular'
 
 @Directive({
   selector: '[strivePopover]'
@@ -20,7 +20,6 @@ export class PopoverDirective {
 
   constructor(
     protected location: Location,
-    protected platform: Platform,
     protected popoverCtrl: PopoverController
   ) {
     if (this.isWeb || this.isIOS) {

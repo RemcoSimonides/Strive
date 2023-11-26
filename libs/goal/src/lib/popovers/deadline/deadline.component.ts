@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
 import { IonicModule, PopoverController } from '@ionic/angular'
 import { addYears, endOfYear, startOfYear } from 'date-fns'
 
@@ -17,6 +17,8 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
   ]
 })
 export class DeadlinePopoverSComponent {
+  @HostListener('window:popstate', ['$event'])
+  onPopState() { this.popoverCtrl.dismiss() }
 
   @Input() caption?: string
 
