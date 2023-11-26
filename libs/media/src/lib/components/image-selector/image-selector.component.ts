@@ -30,7 +30,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   step$ = this.step.asObservable()
   accept = ['.jpg', '.jpeg', '.png', '.webp']
-  file?: File
+  file?: File | null
   croppedImage?: Blob | null
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
@@ -131,10 +131,10 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   filesSelected(file: FileList | File) {
-    this.file = Array.isArray(file) ? file[0] : file
+    this.file = isFileList(file) ? file.item(0) : file
 
     if (this.file?.type?.split('/')[0] !== 'image') {
-      this.toast.create({ message: 'Unsupported file type', duration: 3000 })
+      this.toast.create({ message: 'Unsupported file type', duration: 3000 }).then(toast => toast.present())
       return
     }
 
@@ -184,6 +184,10 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
       console.error(err)
     }
   }
+}
+
+function isFileList(file: FileList | File): file is FileList {
+  return (file as FileList).item !== undefined
 }
 
 function dataUrlToFile(dataUrl: string, fileName: string) {
