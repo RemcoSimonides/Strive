@@ -27,7 +27,9 @@
 
   <picture (click)="openZoom(goal)" *ngIf="screensize.isMobile$ | async" class="mobile">
     <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
-    <div *ngIf="goal.status !== 'pending'">finished</div>
+    <div *ngIf="goal.status !== 'pending'" class="finished-overlay">
+      <ion-icon name="checkmark-outline"/>
+    </div>
   </picture>
 
   <ng-template #actions>
@@ -80,7 +82,9 @@
     <div class="main">
       <picture (click)="openZoom(goal)" *ngIf="(isMobile$ | async) === false" class="desktop">
         <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
-        <div *ngIf="goal.status !== 'pending'">finished</div>
+        <div *ngIf="goal.status !== 'pending'" class="finished-overlay">
+          <ion-icon name="checkmark-outline"/>
+        </div>
       </picture>
 
       <div class="info">
