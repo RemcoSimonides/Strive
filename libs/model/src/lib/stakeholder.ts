@@ -21,7 +21,6 @@ export interface GoalStakeholder extends Roles {
   hasOpenRequestToJoin: boolean
   hasInviteToJoin: boolean
   priority: number
-  focus: Focus
   goalId: string
   goalPublicity: GoalPublicityType
   collectiveGoalId: string
@@ -31,12 +30,6 @@ export interface GoalStakeholder extends Roles {
   updatedBy?: string
   updatedAt?: Date
   createdAt?: Date
-}
-
-export interface Focus {
-  on: boolean
-  why: string
-  inspiration: string
 }
 
 /** A factory function that creates a GoalStakeholderDocument */
@@ -50,7 +43,6 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     hasOpenRequestToJoin: false,
     hasInviteToJoin: false,
     priority: -1,
-    focus: createFocus(params.focus),
     goalId: '',
     goalPublicity: 'private',
     collectiveGoalId: '',
@@ -58,13 +50,5 @@ export function createGoalStakeholder(params: Partial<GoalStakeholder> = {}): Go
     lastCheckedChat: new Date(),
     settings: createGoalSettings(params.settings),
     ...params
-  }
-}
-
-export function createFocus(focus?: Partial<Focus>): Focus {
-  return {
-    on: focus?.on ?? false,
-    why: focus?.why ?? '',
-    inspiration: focus?.inspiration ?? ''
   }
 }

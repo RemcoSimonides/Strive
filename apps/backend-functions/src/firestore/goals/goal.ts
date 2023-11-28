@@ -134,15 +134,6 @@ async (snapshot, context) => {
     updateGoalStakeholders(goalId, after)
   }
 
-  if (becameFinishedSuccessfully || becameFinishedUnsuccessfully) {
-    const batch = db.batch()
-    const stakeholders = await db.collection(`Goals/${goalId}/GStakeholders`).where('focus.on', '==', true).get()
-    for (const { ref } of stakeholders.docs) {
-      batch.update(ref, { 'focus.on': false })
-    }
-    batch.commit()
-  }
-
   if (deadlineChanged) {
     if (isFuture) {
       upsertScheduledTask(goalId, {

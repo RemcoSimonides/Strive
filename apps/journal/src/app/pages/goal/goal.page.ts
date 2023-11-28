@@ -22,7 +22,6 @@ import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options
 import { GoalUpdateModalComponent } from '@strive/goal/modals/upsert/update/update.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
-import { FocusModalComponent } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
@@ -285,9 +284,6 @@ export class GoalPageComponent implements OnDestroy {
     await popover.present()
     await popover.onDidDismiss().then((data) => {
       switch (data.data) {
-        case enumGoalOptions.openFocusModal:
-          this.openFocusModal()
-          break
         case enumGoalOptions.editNotificationSettings:
           console.warn('not supported yet')
           break
@@ -401,16 +397,6 @@ export class GoalPageComponent implements OnDestroy {
       }
     }).then(modal => modal.present())
   }
-
-  openFocusModal() {
-    this.modalCtrl.create({
-      component: FocusModalComponent,
-      componentProps: {
-        stakeholder: this.stakeholder
-      }
-    }).then(modal => modal.present())
-  }
-
 
   openAddOthersModal() {
     this.modalCtrl.create({

@@ -89,7 +89,6 @@
               <li *ngFor="let stakeholder of achievingStakeholders">
                 <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="(isOwner$ | async) ? stakeholder : undefined" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <div>
-                    <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
                     <small *ngIf="stakeholder.goal.publicity === 'private'">
                       <ion-icon name="lock-closed-outline"></ion-icon>
                       <span>Private</span>

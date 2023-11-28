@@ -1,6 +1,6 @@
 <ion-card button>
 	<section>
-		<ion-thumbnail [ngClass]="{'gradient-border': _stakeholder.focus.on }">
+		<ion-thumbnail>
 			<img [ref]="goal.image" asset="goal.png" [width]="120" [height]="120" />
 			<div *ngIf="goal.status !== 'pending'" class="finished-overlay">
 				<ion-icon name="checkmark-outline"/>

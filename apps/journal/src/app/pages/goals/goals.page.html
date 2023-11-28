@@ -42,7 +42,6 @@
               <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
                 <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <div>
-                    <small *ngIf="stakeholder.focus.on">⚡Current Focus</small>
                     <small *ngIf="stakeholder.goal.publicity === 'private'">
                       <ion-icon name="lock-closed-outline"/>
                       <span>Private</span>

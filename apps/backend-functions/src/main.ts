@@ -1,7 +1,6 @@
 // pubsub
 export { scheduledTasksRunner } from './pubsub/scheduled-task-runner'
 export { scheduledEmailRunner } from './pubsub/email/email'
-export { scheduledFocusEmailRunner } from './pubsub/email/focus'
 
 // firestorage
 export { userSpectatorChangeHandler, userSpectatorCreatedHandler, userSpectatorDeleteHandler } from './firestore/users/user-spectators/user-spectator'

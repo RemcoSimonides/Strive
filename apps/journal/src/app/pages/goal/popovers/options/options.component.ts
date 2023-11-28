@@ -12,8 +12,7 @@ export enum enumGoalOptions {
   editNotificationSettings,
   finishGoal,
   editGoal,
-  deleteGoal,
-  openFocusModal
+  deleteGoal
 }
 
 @Component({

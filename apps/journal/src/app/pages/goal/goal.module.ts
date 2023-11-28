@@ -17,7 +17,6 @@ import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-g
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
 import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
-import { FocusModalModule } from '@strive/stakeholder/modals/upsert-focus/upsert-focus.module'
 import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion-modal.component'
 
 import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
@@ -64,7 +63,6 @@ const routes: Routes = [
     StoryModule,
     DescriptionModule,
     JoinButtonModule,
-    FocusModalModule,
     SupportListModule,
     AddSupportModule,
     ChatModalModule,
