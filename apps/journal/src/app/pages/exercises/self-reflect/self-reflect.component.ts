@@ -10,7 +10,7 @@ import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflec
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
-import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDay, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
+import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDate, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@strive/exercises/self-reflect/utils/date.utils'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
@@ -27,14 +27,14 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   const lastEntry = entries[0]
 
   const getFrequency = {
-    daily: getDay,
+    daily: getDate,
     weekly: getWeek,
     monthly: getMonth,
     quarterly: getQuarter,
     yearly: (date: Date) => getSelfReflectYear(date, 12, 24)
   }
-  const frequencyDeltaSinceLastEntry = getFrequency[frequency](today) - getFrequency[frequency](lastEntry.createdAt)
-  if (frequencyDeltaSinceLastEntry > 0) return { disabled: false, message: `Ready for a new entry!`}
+
+  if (getFrequency[frequency](today) !== getFrequency[frequency](lastEntry.createdAt)) return { disabled: false, message: `Ready for a new entry!`}
 
   const startOfFrequency = {
     daily: startOfDay,
