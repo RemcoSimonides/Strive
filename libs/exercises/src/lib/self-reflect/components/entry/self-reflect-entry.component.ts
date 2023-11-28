@@ -96,8 +96,15 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
       previousEntry = await firstValueFrom(this.previousEntry$)
     }
 
+    const someQuestionHasFutureTenseAnswer = (previousEntry: SelfReflectEntry | undefined) => {
+      if (!previousEntry) return false
+      const futureConfigs = previousEntry.config.filter(({ tense }) => tense === 'future')
+      const futureAnswers = futureConfigs.map(({ key }) => this.entry[key])
+      return futureAnswers.some(answer => Array.isArray(answer) ? answer.length : answer)
+    }
+
     const activatedSteps: EntryStep[] = []
-    if (previousEntry) {
+    if (someQuestionHasFutureTenseAnswer(previousEntry)) {
       activatedSteps.push({ category: 'intermediate', tense: '' })
       activatedSteps.push({ category: 'previousIntention', tense: 'previousIntention' })
     }
