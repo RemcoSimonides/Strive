@@ -1,5 +1,5 @@
 import { arrayUnion, db, onDocumentCreate, onDocumentUpdate } from '@strive/api/firebase'
-import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency, SelfReflectFrequencyWithNever } from '@strive/model'
+import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { getNextDay, startOfSelfReflectYear } from '@strive/exercises/self-reflect/utils/date.utils'

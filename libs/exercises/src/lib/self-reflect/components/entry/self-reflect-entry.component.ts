@@ -152,6 +152,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
   }
 
   async doStep(direction: 'next' | 'previous', fade = true) {
+    if (this.stepping$.value) return
     this.stepping$.next(true) // input value is being added to the form
     const steps = this.steps()
 
@@ -185,7 +186,6 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
     if (nextStep.category === 'intermediate') {
       const nextNextStep = steps[nextIndex + delta]
       if (nextNextStep) this.next.set(nextNextStep.tense)
-      if (nextNextStep) console.log('nextNextStep: ', nextNextStep)
     }
 
     const indexWithoutIntermediate = this.stepsWithoutIntermediate().indexOf(nextStep)

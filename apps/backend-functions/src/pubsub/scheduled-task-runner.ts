@@ -1,4 +1,4 @@
-import { db, functions, admin, logger } from '@strive/api/firebase'
+import { db, functions, admin } from '@strive/api/firebase'
 import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
 import { getDocument } from '../shared/utils'
