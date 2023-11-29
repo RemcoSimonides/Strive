@@ -53,7 +53,7 @@ async () => {
     const { worker, options } = snapshot.data()
 
     if (!workers[worker]) {
-      console.error('WORKER NOT FOUND FOR: ', worker)
+      console.error('WORKER NOT FOUND FOR: ', worker, snapshot.id)
       continue
     }
     const job = workers[worker](options)
