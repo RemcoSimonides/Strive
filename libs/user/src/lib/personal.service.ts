@@ -116,7 +116,7 @@ export class PersonalService extends FireSubCollection<Personal> {
       return token
     } catch(err) {
       const { main } = this.form.pushNotification as PushNotificationSettingsForm
-      main.setValue(false)
+      if (force) main.setValue(false)
 
       if (showError) {
         this.toastController.create({
