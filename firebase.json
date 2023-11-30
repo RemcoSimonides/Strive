@@ -34,6 +34,7 @@
         { "source": "/exercise/daily-gratitude", "destination": "exercise/daily-gratitude/index.html" },
         { "source": "/exercise/dear-future-self", "destination": "exercise/dear-future-self/index.html" },
         { "source": "/exercise/wheel-of-life", "destination": "exercise/wheel-of-life/index.html" },
+        { "source": "/exercise/self-reflect", "destination": "exercise/self-reflect/index.hml"},
         { "source": "/explore", "destination": "explore/index.html" },
         { "source": "/privacy-policy", "destination": "privacy-policy/index.html" },
         { "source": "/terms", "destination": "terms/index.html" },
