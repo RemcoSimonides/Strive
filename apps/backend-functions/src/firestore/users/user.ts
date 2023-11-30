@@ -54,6 +54,9 @@ async (snapshot) => {
   deleteCollection(db, `Users/${uid}/Spectators`, 500)
   deleteCollection(db, `Users/${uid}/Exercises`, 500)
 
+  const scheduledTasksSnap = await db.collection(`ScheduledTasks`).where('options.userId', '==', uid).get()
+  scheduledTasksSnap.docs.forEach(doc => doc.ref.delete())
+
   if (user.photoURL) {
     gcsBucket.file(user.photoURL).delete({ ignoreNotFound: true })
   }

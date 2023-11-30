@@ -49,7 +49,7 @@ export async function scheduleNextAffirmation(userId: string, affirmations: Affi
   return upsertScheduledTask(`${userId}affirmations`, task)
 }
 
-export function getNextAffirmationDate(affirmations: Affirmations): string {
+export function getNextAffirmationDate(affirmations: Affirmations) {
   const now = new Date()
 
   const times = affirmations.times.filter(time => time !== '')
@@ -59,5 +59,5 @@ export function getNextAffirmationDate(affirmations: Affirmations): string {
     // set date to future
     .map(date => isPast(date) ? addDays(date, 1) : date)
 
-  return closestTo(now, dates).toISOString()
+  return closestTo(now, dates)
 }

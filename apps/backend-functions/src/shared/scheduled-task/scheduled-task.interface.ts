@@ -2,7 +2,7 @@ import { SelfReflectFrequencyWithNever } from "@strive/model"
 
 interface ScheduledTaskBase {
   worker: enumWorkerType
-  performAt: FirebaseFirestore.FieldValue | string | Date
+  performAt: FirebaseFirestore.FieldValue | Date
   status: 'scheduled' | 'complete' | 'error'
 }
 
