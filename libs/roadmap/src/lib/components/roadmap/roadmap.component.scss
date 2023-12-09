@@ -5,6 +5,10 @@
 ion-list {
   border-radius: 12px;
 
+  ion-input {
+    font-size: small;
+  }
+
   .status-button {
     margin-inline-end: 12px;
   }
