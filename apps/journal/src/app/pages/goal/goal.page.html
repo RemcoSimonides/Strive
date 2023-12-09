@@ -267,11 +267,6 @@
               <ng-template #milestone let-milestone="milestone">
                 <small>Milestone: {{ milestone.content }}</small>
               </ng-template>
-              <ng-container *ngIf="goal.status === 'pending'">
-                <ng-template #empty>
-                  <i>No supports yet</i>
-                </ng-template>
-              </ng-container>
             </strive-support-list>
           </ng-container>
         </article>

@@ -1,4 +1,4 @@
-<ion-list *ngIf="goal else empty">
+<ion-list *ngIf="goal">
   <ion-item lines="none" *ngIf="goal.supports.length && goalDescription">
     <ion-label>
       <ng-container [ngTemplateOutlet]="goalDescription" [ngTemplateOutletContext]="{ $implicit: goal }" />
@@ -67,15 +67,6 @@
     </ion-button>
   </ion-item>
 </ion-list>
-
-<ng-template #empty>
-  <ng-container *ngIf="emptyDescription; else default">
-    <ng-container [ngTemplateOutlet]="emptyDescription" />
-  </ng-container>
-  <ng-template #default>
-    <i>No supports</i>
-  </ng-template>
-</ng-template>
 
 <ng-template #milestoneStatus let-milestone>
   <small *ngIf="milestone.status === 'succeeded'">(achieved)</small>
