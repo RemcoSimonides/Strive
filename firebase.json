@@ -59,7 +59,7 @@
     },
     {
       "target": "blog",
-      "public": "dist/apps/blog/",
+      "public": "apps/blog/build/",
       "ingore": [
         "firebase.json",
         "**/.*",

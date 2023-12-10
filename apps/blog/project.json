@@ -5,13 +5,13 @@
   "sourceRoot": "apps/blog/src",
   "targets": {
     "build": {
-      "executor": "@nx-plus/docusaurus:browser",
+      "command": "npm run build:blog",
       "options": {
         "outputPath": "dist/apps/blog"
       }
     },
     "serve": {
-      "executor": "@nx-plus/docusaurus:dev-server",
+      "command": "npx nx docusaurus blog:start",
       "options": {
         "port": 3000
       }

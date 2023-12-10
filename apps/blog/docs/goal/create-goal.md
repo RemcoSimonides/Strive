@@ -5,7 +5,7 @@ title: Create a Goal
 
 # How to Create a Goal?
 Click on 'ADD GOAL' and fill in the fields. No need to do it perfect in one go, you can always edit it later.
-Read the [Create the perfect goal](/category/create-the-perfect-goal) guide for all the details and explanation of what to fill in
+Read the [Create the perfect goal](category/create-the-perfect-goal) guide for all the details and explanation of what to fill in
 
 <img src="/gif/create-goal.gif" className="gif"/>
 

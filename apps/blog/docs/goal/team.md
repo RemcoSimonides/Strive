@@ -16,10 +16,10 @@ Each member of the team can have four different roles:
 | Receive notifications about updates                           | ✅ | ✅ | ✅ | ✅
 | Chat                                                          | ✅ | ✅ | ✅ | ❌
 | Update and delete milestones                                  | ✅ | ✅ | ❌ | ❌
-| Update and delete posts                                       | ✅ | only yours | ❌ | ❌
+| Update and delete posts                                       | ✅ | ✅ | ❌ | ❌
 | Receive supports                                              | ❌ | ✅ | ❌ | ❌
+| Invite people to private goal                                 | ✅ | ✅ | ❌ | ❌
 | Change roles of team members or remove them from the team     | ✅ | ❌ | ❌ | ❌
-| Invite people to private goal                                 | ✅ | ❌ | ❌ | ❌
 | Edit title, image and description of the goal                 | ✅ | ❌ | ❌ | ❌
 | Delete goal                                                   | ✅ | ❌ | ❌ | ❌
 
