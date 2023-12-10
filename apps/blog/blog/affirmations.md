@@ -1,7 +1,7 @@
 ---
 slug: affirmations
 title: Affirmations
-description: This is the description
+description: An affirmation is a short, powerful statement. They allow you to conciously be in control of your thoughts. When you say or think them, they become thoughts that shape your reality.
 authors: remco
 tags: [journal]
 image: https://i.imgur.com/mErPwqL.png

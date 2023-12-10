@@ -6,7 +6,7 @@
     "ng": "nx",
     "postinstall": "node ./decorate-angular-cli.js",
     "start": "nx serve",
-    "build": "npm run build:journal && nx build admin && nx build backend-functions && nx build blog",
+    "build": "npm run build:journal && nx build admin && nx build backend-functions && npm run build:blog",
     "build:admin": "nx build admin",
     "build:backend-functions": "nx build backend-functions",
     "build:journal": "npx ng build journal:server && npx ng run journal:prerender",
