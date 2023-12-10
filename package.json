@@ -64,6 +64,7 @@
     "firebase": "^9.22.2",
     "firebase-admin": "^11.9.0",
     "firebase-functions": "^4.5.0",
+    "firebase-tools": "^13.0.1",
     "ng2-charts": "^4.1.1",
     "ngfire": "^0.0.52",
     "ngx-image-cropper": "^7.0.0",
