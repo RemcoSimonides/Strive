@@ -322,7 +322,7 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
 
       return {
         title: 'New follower',
-        body: `${user.username} is following you`,
+        body: `${user.username} is now following you`,
         link: `/profile/${user.uid}`,
         setting: 'userSpectatingGeneral'
       }
