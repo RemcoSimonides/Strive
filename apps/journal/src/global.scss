@@ -259,6 +259,10 @@ button.alert-button.alert-button-delete {
   --max-width: 400px;
 }
 
+.copied-popover {
+  --width: unset;
+}
+
 .not-logged-in {
   display: flex;
   justify-content: center;

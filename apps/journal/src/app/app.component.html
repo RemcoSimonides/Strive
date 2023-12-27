@@ -29,7 +29,7 @@
               <ion-button fill="clear" routerLink="/notifications" routerDirection="root" routerLinkActive="active-link" class="notification-icon" [ngClass]="{'badge': unreadNotifications$ | async}">
                 <ion-icon name="notifications-outline" size="small" slot="icon-only"></ion-icon>
               </ion-button>
-              <ion-avatar routerLink="/profile">
+              <ion-avatar (click)="openPopover($event)">
                 <img [ref]="user.photoURL" asset="profile.png" [width]="120" [height]="120"/>
               </ion-avatar>
             </ng-container>

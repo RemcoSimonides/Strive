@@ -23,6 +23,7 @@ import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edi
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PagenotfoundModule } from '@strive/ui/404/404.module'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
+import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
@@ -54,7 +55,8 @@ const routes: Routes = [
     SupportingModule,
     GoalThumbnailModule,
     PagenotfoundModule,
-    GoalCreateModalComponent
+    GoalCreateModalComponent,
+    CopiedPopoverComponent
   ],
   declarations: [
     ProfilePageComponent

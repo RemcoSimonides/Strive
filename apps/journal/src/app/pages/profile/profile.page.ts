@@ -1,6 +1,9 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { PopoverController, ModalController } from '@ionic/angular'
+import { Share } from '@capacitor/share'
+import { Clipboard }  from '@capacitor/clipboard'
+import { captureException } from '@sentry/angular'
 
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs'
 import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
@@ -15,8 +18,10 @@ import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-
 import { EditProfileImagePopoverComponent } from './popovers/edit-profile-image/edit-profile-image.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { FollowGoalsModalComponent } from './modals/follow-goals/follow-goals.component'
+import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
 import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
+import { delay } from '@strive/utils/helpers'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -221,6 +226,36 @@ export class ProfilePageComponent {
       component: SupportingComponent,
       componentProps: { goals }
     }).then(modal => modal.present())
+  }
+
+  async openShare(event: Event) {
+    const profile = await firstValueFrom(this.profile$)
+    if (!profile) return
+
+    const url = `https://strivejournal.com/profile/${profile.uid}`
+    const canShare = await Share.canShare()
+    if (canShare) {
+      Share.share({
+        title: profile.username,
+        text: `Check out ${profile.username}'s profile on Strive Journal`,
+        url,
+      }).catch(err => {
+        captureException(err)
+      })
+    } else {
+      Clipboard.write({ string: url })
+
+      this.popoverCtrl.create({
+        component: CopiedPopoverComponent,
+        componentProps: { content: 'Link copied!' },
+        event,
+        showBackdrop: false,
+        cssClass: 'copied-popover'
+      }).then(popover => {
+        popover.present()
+        delay(1000).then(() => popover.dismiss())
+      })
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router'
 import { isPlatformBrowser, isPlatformServer, Location } from '@angular/common'
-import { Platform, ModalController } from '@ionic/angular'
+import { Platform, ModalController, PopoverController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
@@ -11,6 +11,7 @@ import { differenceInMilliseconds } from 'date-fns'
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
+import { ProfileOptionsComponent } from './pages/profile/popovers/profile-options/profile-options.component'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
@@ -90,6 +91,7 @@ export class AppComponent implements OnDestroy {
     private notification: NotificationService,
     private personalService: PersonalService,
     private platform: Platform,
+    private popoverCtrl: PopoverController,
     private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,
@@ -164,6 +166,14 @@ export class AppComponent implements OnDestroy {
       componentProps: { authSegment }
     })
     modal.present()
+  }
+
+  openPopover(event: Event) {
+    this.popoverCtrl.create({
+      component: ProfileOptionsComponent,
+      event,
+      showBackdrop: false
+    }).then(popover => popover.present())
   }
 
   @HostListener('window:resize', ['$event'])

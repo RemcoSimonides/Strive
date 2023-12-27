@@ -39,8 +39,8 @@
               <h5>{{ profile.username }}</h5>
               <span>Joined {{ profile.createdAt | date:'longDate' }}</span>
             </div>
-            <ion-button fill="clear" routerLink="/settings" color="primary" *ngIf="(isOwner$ | async) && (isNotMobile$ | async)">
-              <ion-icon name="settings-outline" size="small" slot="icon-only"></ion-icon>
+            <ion-button fill="clear" (click)="openShare($event)" color="primary">
+              <ion-icon name="share-social-outline" size="small" slot="icon-only"></ion-icon>
             </ion-button>
           </article>
           <ul>
