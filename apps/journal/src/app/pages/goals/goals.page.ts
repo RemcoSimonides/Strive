@@ -95,13 +95,7 @@ export class GoalsPageComponent implements OnDestroy {
       }
 
       const frequency = todos[0]
-      const id = getSelfReflectId(frequency)
-      const entry = createSelfReflectEntry({ id, frequency })
-
-      this.modalCtrl.create({
-        component: SelfReflectEntryComponent,
-        componentProps: { entry, todos }
-      }).then(modal => modal.present())
+      this.openSelfReflection(frequency, todos)
       this.router.navigate(['/goals']) // remove query params
     }
 
@@ -242,6 +236,22 @@ export class GoalsPageComponent implements OnDestroy {
 
   trackByFn(_: number, stakeholder: GoalStakeholder) {
     return stakeholder.uid
+  }
+
+  openSelfReflection(frequency: SelfReflectFrequency, _todos: SelfReflectFrequency[]) {
+    const id = getSelfReflectId(frequency)
+    const entry = createSelfReflectEntry({ id, frequency })
+    const todos = _todos.filter(todo => todo !== frequency)
+
+    this.modalCtrl.create({
+      component: SelfReflectEntryComponent,
+      componentProps: { entry, todos }
+    }).then(modal => {
+      modal.present()
+      modal.onDidDismiss().then(({ data: nextFrequency }) => {
+        if (nextFrequency) this.openSelfReflection(nextFrequency, todos)
+      })
+    })
   }
 
   async refresh($event: RefresherCustomEvent) {
