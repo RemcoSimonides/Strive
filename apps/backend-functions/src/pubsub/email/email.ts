@@ -22,6 +22,8 @@ async () => {
     getNewFeatures()
   ])
 
+  const promises = []
+
   for (const doc of personalSnaps.docs) {
     const personal = createPersonal(toDate(doc.data()))
 
@@ -43,7 +45,6 @@ async () => {
     const unreadNotifications = notifications.length
     const newUpdates = events
 
-
     const data: {
       bucketlistGoals: Goal[]
       inProgressGoals: Goal[]
@@ -60,12 +61,15 @@ async () => {
       newFeatures
     }
 
-    await sendMailFromTemplate({
+    const promise = sendMailFromTemplate({
       to: personal.email,
       templateId: templateIds.monthlyGoalReminder,
       data,
     }, groupIds.unsubscribeAll)
+    promises.push(promise)
   }
+
+  return Promise.all(promises)
 }))
 
 async function getStakeholders(uid: string) {
@@ -93,6 +97,12 @@ async function getMotivation(): Promise<Motivation> {
   const motivationsSnap = await ref.get()
   const motivations = motivationsSnap.data() as Motivations
   const index = motivations.quotes.findIndex(quote => !quote.used)
+
+  if (index === -1) { // resetting used setting of all motivations
+    motivations.quotes.forEach(quote => quote.used = false)
+    ref.update({ quotes: motivations.quotes })
+    return getMotivation()
+  }
 
   motivations.quotes[index].used = true
   ref.update({ quotes: motivations.quotes })
