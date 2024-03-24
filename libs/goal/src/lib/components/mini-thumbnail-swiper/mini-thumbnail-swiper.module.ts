@@ -1,8 +1,6 @@
-import { NgModule } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IonicModule } from '@ionic/angular'
-
-import { SwiperModule } from 'swiper/angular'
 
 import { MiniThumbnailSwiperComponent } from './mini-thumbnail-swiper.component'
 import { ImageModule } from '@strive/media/directives/image.module'
@@ -11,10 +9,10 @@ import { ImageModule } from '@strive/media/directives/image.module'
   imports: [
     CommonModule,
     IonicModule,
-    SwiperModule,
     ImageModule
   ],
   declarations: [MiniThumbnailSwiperComponent],
-  exports: [MiniThumbnailSwiperComponent]
+  exports: [MiniThumbnailSwiperComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MiniThumbnailSwiperModule { }

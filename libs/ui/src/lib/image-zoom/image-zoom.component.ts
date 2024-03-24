@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { createAnimation } from '@ionic/core'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import SwiperCore, { Zoom, SwiperOptions } from 'swiper'
-
-SwiperCore.use([Zoom])
 
 export function getEnterAnimation(baseEl: HTMLElement) {
 	const root = baseEl.shadowRoot
@@ -44,7 +41,4 @@ export class ImageZoomModalComponent extends ModalDirective {
 	@Input() ref = ''
 	@Input() asset = ''
 
-	config: SwiperOptions = {
-		zoom: true
-	}
 }

@@ -1,20 +1,11 @@
-<ng-container *ngIf="slidesPerView$ | async as slidesPerView">
+<swiper-container
+  #swiper
+  [spaceBetween]="gap"
+  [width]="width"
+>
   <ng-container *ngIf="thumbs">
-
-    <swiper
-      [spaceBetween]="gap"
-      [width]="width"
-      [navigation]="(isDesktop$ | async) && slidesPerView < thumbs.length"
-      [slidesPerGroup]="slidesPerView - 1"
-      [allowTouchMove]="slidesPerView < thumbs.length"
-    >
-
-      <ng-container *ngFor="let thumb of thumbs">
-        <ng-template swiperSlide>
-          <ng-container *ngTemplateOutlet="thumb" />
-        </ng-template>
-      </ng-container>
-
-    </swiper>
+    <swiper-slide *ngFor="let thumb of thumbs">
+      <ng-container *ngTemplateOutlet="thumb" />
+    </swiper-slide>
   </ng-container>
-</ng-container>
+</swiper-container>

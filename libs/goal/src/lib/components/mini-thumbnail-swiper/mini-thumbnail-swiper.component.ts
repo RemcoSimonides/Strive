@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList, TemplateRef, ViewEncapsulation } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ContentChildren, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { map } from 'rxjs'
-
-import SwiperCore, { Navigation } from 'swiper'
-SwiperCore.use([Navigation])
+import { SwiperContainer } from 'swiper/element';
 
 @Component({
   selector: 'strive-mini-thumbnail-swiper',
@@ -14,6 +12,7 @@ SwiperCore.use([Navigation])
 })
 export class MiniThumbnailSwiperComponent {
 
+  @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
   @ContentChildren('thumb') thumbs?: QueryList<TemplateRef<any>>
   @Input() width = 60
   @Input() gap = 16

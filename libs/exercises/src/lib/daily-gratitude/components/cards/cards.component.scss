@@ -5,14 +5,14 @@
 strive-daily-gratitude-cards {
   display: block;
 
-  .swiper {
+  swiper-container {
     min-width: 240px;
     width: 75%;
     height: 400px;
     overflow: visible;
   }
 
-  .swiper-slide {
+  swiper-slide {
     border-radius: 12px;
     background-color: var(--ion-card-background);
     padding: 16px;

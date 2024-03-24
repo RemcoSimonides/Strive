@@ -1,6 +1,6 @@
-<swiper [effect]="'cards'" [grabCursor]="true" [navigation]="isDesktop$ | async">
+<swiper-container effect="cards" grab-cursor="true" #swiper>
 
-  <ng-template swiperSlide>
+  <swiper-slide>
     <form [formGroup]="form">
       <section>
         <ng-container *ngIf="date | toDate | isToday; else notToday">
@@ -49,21 +49,5 @@
       </footer>
 
     </form>
-  </ng-template>
-
-  <ng-container *ngFor="let entry of entries$ | async">
-    <ng-template swiperSlide>
-      <section class="card">
-        <span class="date">{{ entry.id | toDate | date:'longDate' }}</span>
-
-        <ul>
-          <li *ngFor="let item of entry.items">
-            <span class="disc">•</span>
-            {{ item }}
-          </li>
-        </ul>
-      </section>
-    </ng-template>
-  </ng-container>
-
-</swiper>
+  </swiper-slide>
+</swiper-container>

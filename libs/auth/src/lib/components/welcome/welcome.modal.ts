@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Router } from '@angular/router'
 import { ModalController } from '@ionic/angular'
 import { Capacitor } from '@capacitor/core'
 
-import { SwiperComponent } from 'swiper/angular'
+import { SwiperContainer } from 'swiper/swiper-element'
 import { combineLatest, map, of } from 'rxjs'
 
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -19,7 +19,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WelcomeModalComponent {
-  @ViewChild('swiper') swiper?: SwiperComponent
+  @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
 
   showIOSHeader$ = combineLatest([
     this.screensize.isMobile$,
@@ -47,10 +47,13 @@ export class WelcomeModalComponent {
   }
 
   next() {
-    if (this.swiper?.swiperRef.isEnd) {
+    if (!this.swiper) return
+    const swiper = this.swiper.nativeElement.swiper
+
+    if (swiper.isEnd) {
       this.dismiss()
     } else {
-      this.swiper?.swiperRef.slideNext(100)
+      swiper.slideNext(100)
     }
   }
 

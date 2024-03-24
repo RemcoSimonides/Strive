@@ -1,8 +1,8 @@
 <strive-header title="" />
-<swiper [config]="config">
-	<ng-template swiperSlide>
+<swiper-container zoom="true">
+	<swiper-slide>
 		<section class="swiper-zoom-container">
 			<img [ref]="ref" [asset]="asset" />
 		</section>
-	</ng-template>
-</swiper>
+	</swiper-slide>
+</swiper-container>

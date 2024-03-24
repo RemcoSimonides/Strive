@@ -1,8 +1,6 @@
 import { CommonModule } from "@angular/common"
-import { NgModule } from "@angular/core"
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core"
 import { IonicModule } from '@ionic/angular'
-
-import { SwiperModule } from 'swiper/angular'
 
 import { WelcomeModalComponent } from './welcome.modal'
 
@@ -13,13 +11,13 @@ import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/crea
 @NgModule({
   imports: [
     CommonModule,
-    SwiperModule,
     IonicModule,
     ImageModule,
     GoalCreateModalComponent
   ],
   declarations: [
     WelcomeModalComponent
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class WelcomeModalModule {}

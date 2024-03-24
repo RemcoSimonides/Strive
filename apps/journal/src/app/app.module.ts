@@ -39,9 +39,15 @@ Sentry.init(
   SentryAngular.init
 )
 
+// Swiper
+import { register } from 'swiper/element/bundle'
+import { SwiperDirective } from '@strive/utils/directives/swiper.directive'
+register();
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SwiperDirective
   ],
   imports: [
     //enable offline persistance
@@ -68,7 +74,7 @@ Sentry.init(
     { provide: AUTH_DEPS, useValue: Capacitor.getPlatform() === 'ios' ? { persistence: indexedDBLocalPersistence } : undefined},
     { provide: ErrorHandler, useValue: SentryAngular.createErrorHandler() },
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(pwa: PWAService) {

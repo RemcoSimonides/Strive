@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewEncapsulation } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core'
+import { DatePipe } from '@angular/common'
 import { FormControl, FormGroup } from '@angular/forms'
 import { PopoverController } from '@ionic/angular'
 
@@ -13,9 +14,8 @@ import { DailyGratitudeEntryService } from '../../daily-gratitude.service'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { DailyGratitudeEntry } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
+import { SwiperContainer } from 'swiper/element'
 
-import SwiperCore, { EffectCards, Navigation } from 'swiper'
-SwiperCore.use([EffectCards, Navigation])
 
 @Component({
   selector: 'strive-daily-gratitude-cards',
@@ -25,6 +25,8 @@ SwiperCore.use([EffectCards, Navigation])
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardsComponent implements OnDestroy {
+
+  @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
 
   private startValue = ''
   date = formatISO(new Date(), { representation: 'date' })
@@ -49,6 +51,40 @@ export class CardsComponent implements OnDestroy {
     tap(entries => {
       const today = entries.find(e => isToday(new Date(e.id)))
       this.enteredToday$.next(!!today)
+
+      if (!this.swiper) return
+      const swiper = this.swiper.nativeElement.swiper
+
+      const formattedEntries = entries.map(entry => ({
+        formattedDate: this.datePipe.transform(entry.id, 'longDate'),
+        items: entry.items.map(item => ({ item })) // Assuming items are strings
+      }));
+
+      const indexes = Array.from({ length: formattedEntries.length }, (_, i) => i + 1)
+      swiper.removeSlide(indexes)
+
+      const listItems = formattedEntries.map(entry => {
+        return entry.items.map(item => {
+          return `
+            <li>
+              <span class="disc">•</span>
+              ${item.item}
+            </li>
+          `
+        }).join('')
+      })
+
+      const elements = formattedEntries.map(entry => `
+        <swiper-slide>
+          <section class="card">
+            <span class="date">${entry.formattedDate}</span>
+            <ul>
+              ${listItems}
+            </ul>
+          </section>
+        </swiper-slide.
+      `)
+      swiper.appendSlide(elements)
     })
   )
 
@@ -61,6 +97,7 @@ export class CardsComponent implements OnDestroy {
   constructor(
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
+    private datePipe: DatePipe,
     private entryService: DailyGratitudeEntryService,
     private popoverCtrl: PopoverController,
     private screensize: ScreensizeService
