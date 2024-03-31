@@ -91,6 +91,7 @@ async snapshot => {
   deleteCollection(db, `Goals/${goal.id}/Story`, 500)
   deleteCollection(db, `Goals/${goal.id}/Comments`, 500)
   deleteCollection(db, `Goals/${goal.id}/ChatGPT`, 500)
+  deleteCollection(db, `Goals/${goal.id}/Media`, 500)
 
   if (goal.publicity === 'public') {
     await deleteFromAlgolia('goal', goal.id)

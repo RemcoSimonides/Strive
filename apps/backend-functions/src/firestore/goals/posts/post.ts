@@ -1,4 +1,4 @@
-import { db, gcsBucket, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
+import { db, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { toDate } from '../../../shared/utils'
 import { createGoalSource, createPost } from '@strive/model'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
@@ -38,9 +38,14 @@ async (snapshot, context) => {
   const { goalId, postId } = context.params
   const post = createPost(toDate({ ...snapshot.data(), id: snapshot.id }))
 
-  if (post.mediaURL) {
-    gcsBucket.file(post.mediaURL).delete({ ignoreNotFound: true })
+  const mediaRefs = post.mediaIds.map(mediaId => `Goals/${goalId}/Media/${mediaId}`)
+  const batch = db.batch()
+
+  for (const ref of mediaRefs) {
+    batch.delete(db.doc(ref))
   }
+
+  await batch.commit()
 
   db.doc(`Goals/${goalId}/Story/${postId}`).delete()
 })

@@ -1,16 +1,17 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular'
 
 import { createGoalStakeholder, Post, StoryItem, User } from '@strive/model'
 
 import { PostOptionsComponent } from '@strive/post/popovers/options/options.component'
-import { ImageZoomModalComponent, getEnterAnimation, getLeaveAnimation } from '@strive/ui/image-zoom/image-zoom.component'
+import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 
 @Component({
   selector: '[storyItem] strive-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class PostComponent {
 
@@ -31,10 +32,13 @@ export class PostComponent {
     private popoverCtrl: PopoverController
   ) {}
 
-  openZoom(ref: string) {
+  openZoom(index: number) {
+    const medias = this.post?.medias
+    if (!medias?.length) return
+
     this.modalCtrl.create({
       component: ImageZoomModalComponent,
-      componentProps: { ref },
+      componentProps: { medias, index },
       enterAnimation: getEnterAnimation,
       leaveAnimation: getLeaveAnimation
     }).then(modal => modal.present())

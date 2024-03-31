@@ -6,12 +6,14 @@ import { ImageZoomModalComponent } from './image-zoom.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { HeaderModule } from '../header/header.module'
+import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
 
 @NgModule({
 	imports: [
 		CommonModule,
 		IonicModule,
 		ImageModule,
+		MediaPipeModule,
 		HeaderModule
 	],
 	declarations: [

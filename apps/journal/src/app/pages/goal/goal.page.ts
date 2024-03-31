@@ -44,6 +44,7 @@ import { SupportService } from '@strive/support/support.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
+import { MediaService } from '@strive/media/media.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
 import { CommentService } from '@strive/chat/comment.service'
@@ -119,6 +120,7 @@ export class GoalPageComponent implements OnDestroy {
     private goalService: GoalService,
     private inviteTokenService: InviteTokenService,
     private location: Location,
+    private mediaService: MediaService,
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
@@ -191,7 +193,13 @@ export class GoalPageComponent implements OnDestroy {
       joinWith({
         user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
-        post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
+        post: ({ postId, goalId }) => postId
+          ? this.postService.valueChanges(postId, { goalId }).pipe(
+            joinWith({
+              medias: post => post?.mediaIds ? this.mediaService.valueChanges(post.mediaIds, { goalId }) : of([])
+            })
+          )
+          : of(undefined)
       }),
       shareReplay({ bufferSize: 1, refCount: true })
     )

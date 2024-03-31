@@ -1,0 +1,64 @@
+// @import 'swiper/scss';
+// @import 'swiper/scss/free-mode';
+
+:host {
+  display: flex;
+  gap: 12px;
+  overflow: auto;
+  height: 160px;
+
+  swiper-container {
+    width: 100%;
+
+    swiper-slide {
+      max-width: 100%;
+      width: fit-content;
+    }
+  }
+
+  img {
+    height: 100%;
+    border-radius: 12px;
+  }
+
+  section {
+    height: 100%;
+  }
+
+  article.drop-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+    border: 2px dashed var(--ion-color-primary);
+    border-radius: 12px;
+    width: 180px;
+    box-sizing: border-box;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    p {
+      white-space: nowrap;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1em;
+
+      img {
+        width: 100px;
+      }
+    }
+  }
+
+  article.hover {
+    border: 2px solid var(--ion-color-primary);
+  }
+}
+

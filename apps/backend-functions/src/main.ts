@@ -19,6 +19,7 @@ export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/i
 export { postCreatedHandler, postDeletedHandler, postChangeHandler } from './firestore/goals/posts/post'
 export { commentCreatedHandler } from './firestore/goals/comments/comment'
 export { chatGPTMessageCreatedHandler } from './firestore/goals/chatgpt/chatgpt'
+export { mediaDeletedHandler } from './firestore/goals/media/media'
 
 export { goalEventCreatedHandler } from './firestore/goal-events/goal-events'
 

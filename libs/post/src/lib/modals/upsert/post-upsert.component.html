@@ -31,10 +31,7 @@
     </ng-container>
 
     <ng-template #notYoutube>
-      <strive-image-selector
-        [form]="postForm.get('mediaURL')"
-        [storagePath]="'goals/' + post.goalId + '/posts/' + post.id"
-      />
+      <strive-images-selector [form]="postForm.get('medias')"/>
     </ng-template>
 
     <ion-list lines="full">

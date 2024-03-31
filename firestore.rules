@@ -98,6 +98,13 @@ service cloud.firestore {
         allow delete: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
       }
 
+      match /Media/{mediaId} {
+        allow read;
+        allow create: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
+        allow update: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
+        allow delete: if userIsGoalAdmin(goalId) || userIsGoalAchiever(goalId)
+      }
+
       match /Supports/{supportId} {
         allow read;
         allow create: if isSignedIn()

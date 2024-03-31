@@ -1,8 +1,15 @@
 <strive-header title="" />
-<swiper-container zoom="true">
-	<swiper-slide>
-		<section class="swiper-zoom-container">
-			<img [ref]="ref" [asset]="asset" />
-		</section>
-	</swiper-slide>
+<swiper-container
+	#swiper
+	zoom="true"
+	pagination="true"
+	pagination-clickable="true"
+>
+	<ng-container *ngFor="let media of medias">
+		<swiper-slide>
+			<section class="swiper-zoom-container">
+				<img [ref]="media | mediaRef" [asset]="asset" />
+			</section>
+		</swiper-slide>
+	</ng-container>
 </swiper-container>

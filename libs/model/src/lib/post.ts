@@ -1,7 +1,9 @@
-export interface Post {
+import { Media } from './media'
+
+export interface PostBase {
   id?: string
   description: string
-  mediaURL: string
+  mediaIds: string[]
   url: string
   youtubeId?: string
   goalId: string
@@ -12,11 +14,15 @@ export interface Post {
   createdAt?: Date
 }
 
+export interface Post extends PostBase {
+  medias?: Media[]
+}
+
 /** A factory function that creates a PostDocument. */
 export function createPost(params: Partial<Post> = {}): Post {
   return {
     description: '',
-    mediaURL: '',
+    mediaIds: [],
     url: '',
     goalId: '',
     uid: '',

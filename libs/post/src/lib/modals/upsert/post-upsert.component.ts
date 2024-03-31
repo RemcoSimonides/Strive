@@ -3,7 +3,6 @@ import { Location } from '@angular/common'
 import { ModalController, PopoverController } from '@ionic/angular'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
-import { getStorage, ref, deleteObject } from '@firebase/storage'
 
 import { captureException } from '@sentry/capacitor'
 
@@ -12,6 +11,7 @@ import { addYears } from 'date-fns'
 
 import { PostService } from '@strive/post/post.service'
 import { AuthService } from '@strive/auth/auth.service'
+import { MediaService } from '@strive/media/media.service'
 import { PostForm } from '@strive/post/forms/post.form'
 import { createPost, Post } from '@strive/model'
 import { isValidHttpUrl } from '@strive/utils/helpers'
@@ -29,6 +29,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
   postForm = new PostForm()
+
   scrapingUrl = false
   mode: 'create' | 'update' = 'create'
 
@@ -55,7 +56,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     }
 
     const formValue = this.postForm.getRawValue()
-    if (formValue.description && formValue.mediaURL) return
+    if (formValue.description && formValue.medias.length) return
 
     this.scrapingUrl = true
     this.cdr.markForCheck()
@@ -69,7 +70,9 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     } else {
       const { image, description } = result
       if (!formValue.description) this.postForm.description.setValue(description ?? '')
-      if (!formValue.mediaURL) this.postForm.mediaURL.setValue(image ?? '')
+      // TODO should download the image and upload it to firebase storage
+      // if (!formValue.mediaURL) this.postForm.mediaURL.setValue(image ?? '')
+      // if (!formValue.mediaIds.length) this.postForm.mediaIds.push(new FormControl())
     }
 
     this.scrapingUrl = false
@@ -80,6 +83,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
     protected override location: Location,
+    private mediaService: MediaService,
     protected override modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
     private postService: PostService
@@ -91,14 +95,6 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     this.sub.unsubscribe()
   }
 
-  override async dismiss(saved = false) {
-    if (!saved && this.postForm.mediaURL.value) {
-      const storageRef = ref(getStorage(), this.postForm.mediaURL.value)
-      deleteObject(storageRef)
-    }
-    super.dismiss()
-  }
-
   async submitPost() {
     if (!this.auth.uid) return
 
@@ -107,12 +103,27 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     }
 
     if (!this.postForm.isEmpty) {
-      const { date, description, mediaURL, url, youtubeId } = this.postForm.value
+      const { date, description, medias, url, youtubeId } = this.postForm.getRawValue()
+
+      const promises = []
+      for (const media of medias) {
+        if (media.file) {
+          const storagePath = `goals/${this.post.goalId}/posts/${this.post.id}`
+          const promise = this.mediaService.upload(media.file, storagePath, this.post.goalId).then(id => {
+            media.id = id
+          })
+          promises.push(promise)
+        }
+      }
+      await Promise.all(promises)
+
+      const mediaIds = medias ? medias.map(({ id }) => id) : []
+
       const post = createPost({
         ...this.post,
         date,
         description,
-        mediaURL,
+        mediaIds,
         url,
         youtubeId,
         uid: this.auth.uid

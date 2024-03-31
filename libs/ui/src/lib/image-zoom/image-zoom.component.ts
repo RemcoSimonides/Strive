@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, ViewEncapsulation } from '@angular/core'
 import { createAnimation } from '@ionic/core'
+import { Media } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { SwiperContainer } from 'swiper/element'
 
 export function getEnterAnimation(baseEl: HTMLElement) {
 	const root = baseEl.shadowRoot
@@ -34,11 +36,21 @@ export function getLeaveAnimation(baseEl: HTMLElement) {
 	selector: 'strive-image-zoom',
 	templateUrl: './image-zoom.component.html',
 	styleUrls: ['./image-zoom.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
-export class ImageZoomModalComponent extends ModalDirective {
+export class ImageZoomModalComponent extends ModalDirective implements AfterViewInit {
 
-	@Input() ref = ''
+	@Input() medias: Media[] = []
+	@Input() index?: number
 	@Input() asset = ''
 
+  @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>
+
+	ngAfterViewInit() {
+		if (this.index && this.swiper) {
+			const swiper = this.swiper.nativeElement.swiper
+			swiper.slideTo(this.index)
+		}
+	}
 }

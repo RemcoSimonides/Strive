@@ -14,8 +14,6 @@ import { isValidHttpUrl } from '@strive/utils/helpers'
 import { Camera, CameraResultType } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
 
-
-
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
 @Component({

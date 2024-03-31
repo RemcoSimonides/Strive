@@ -1,0 +1,24 @@
+<swiper-container space-between="16" slides-per-view="auto" #swiper>
+  <ng-container *ngFor="let control of form.controls">
+    <swiper-slide>
+      <img [src]="control.value.preview" />
+    </swiper-slide>
+  </ng-container>
+  <swiper-slide>
+    <section [ngSwitch]="step | async">
+      <!-- Drop -->
+      <article *ngSwitchCase="'drop'" class="drop-zone" (click)="selectImages()">
+        <ion-icon name="images-outline" />
+        <span>Add Photo</span>
+      </article>
+
+      <!-- Hovering -->
+      <article *ngSwitchCase="'hovering'" class="drop-zone hover" (click)="selectImages()">
+        <ion-icon name="images-outline" />
+        <span>Drop your file</span>
+      </article>
+    </section>
+  </swiper-slide>
+</swiper-container>
+
+<input #fileUploader multiple hidden [accept]="accept" type="file" (change)="inputChange($event)" />

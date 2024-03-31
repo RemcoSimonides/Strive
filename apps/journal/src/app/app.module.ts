@@ -41,13 +41,11 @@ Sentry.init(
 
 // Swiper
 import { register } from 'swiper/element/bundle'
-import { SwiperDirective } from '@strive/utils/directives/swiper.directive'
 register();
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SwiperDirective
+    AppComponent
   ],
   imports: [
     //enable offline persistance

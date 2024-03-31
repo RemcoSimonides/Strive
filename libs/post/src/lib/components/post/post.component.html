@@ -24,9 +24,13 @@
   </ng-container>
 
   <ng-template #media>
-    <ng-container *ngIf="post.mediaURL">
-      <img class="post-image" [ref]="post.mediaURL" asset="" (click)="openZoom(post.mediaURL)" [width]="1200" [height]="1200" />
-    </ng-container>
+    <swiper-container pagination="true">
+      <ng-container *ngFor="let media of post.medias; let index = index">
+        <swiper-slide>
+          <img [ref]="media | mediaRef" asset="" (click)="openZoom(index)">
+        </swiper-slide>
+      </ng-container>
+    </swiper-container>
   </ng-template>
 
   <ion-card-content *ngIf="post.description || post.url">
