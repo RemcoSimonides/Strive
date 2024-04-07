@@ -195,6 +195,7 @@ export class GoalPageComponent implements OnDestroy {
         milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         post: ({ postId, goalId }) => postId
           ? this.postService.valueChanges(postId, { goalId }).pipe(
+            map(post => post ? post : createPost()), // fixes bug in ngfire where post is undefined and then crashes on the medias join
             joinWith({
               medias: post => post?.mediaIds ? this.mediaService.valueChanges(post.mediaIds, { goalId }) : of([])
             })
