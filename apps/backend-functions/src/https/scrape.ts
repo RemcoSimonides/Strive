@@ -1,4 +1,4 @@
-import { functions, logger } from '@strive/api/firebase'
+import { functions, gcsBucket, logger } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
 import fetch from 'node-fetch'
 import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
@@ -43,3 +43,67 @@ async (data: { url: string }): Promise<ErrorResultResponse> => {
     result: meta
   }
 }))
+
+export const downloadImageFromURL = functions().https.onCall(wrapHttpsOnCallHandler('downloadImageFromURL',
+async (data: { url: string, storagePath: string }): Promise<ErrorResultResponse> => {
+
+  const { url, storagePath } = data
+  if (!validURL(url)) return {
+    error: 'Not a valid URL',
+    result: ''
+  }
+
+  try {
+    await uploadFileFromUrl(url, `${storagePath}`)
+  } catch (error) {
+    return {
+      error,
+      result: ''
+    }
+  }
+
+  return {
+    error: '',
+    result: 'ok'
+  }
+}))
+
+function validURL(str: string) {
+  const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
+}
+
+async function uploadFileFromUrl(fileUrl: string, storagePath: string) {
+  return new Promise((resolve, reject) => {
+
+    fetch(fileUrl).then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch file from URL');
+      }
+
+      const contentType = response.headers.get('Content-Type');
+
+      response.arrayBuffer().then(buffer => {
+        const data = Buffer.from(buffer);
+        const file = gcsBucket.file(storagePath);
+        const writeStream = file.createWriteStream({ metadata: { contentType }});
+
+        writeStream.write(data)
+        writeStream.end()
+
+        writeStream.on('finish', () => {
+          resolve(undefined)
+        });
+
+        writeStream.on('error', (error) => {
+          reject(error)
+        });
+      })
+    })
+  })
+}

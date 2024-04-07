@@ -25,6 +25,6 @@ export { goalEventCreatedHandler } from './firestore/goal-events/goal-events'
 
 // http
 export { migrate } from './migration'
-export { scrapeMetatags } from './https/scrape'
+export { scrapeMetatags, downloadImageFromURL } from './https/scrape'
 export { ssr } from './https/ssr'
 export { createCollectiveGoal } from './https/create-collective-goal'

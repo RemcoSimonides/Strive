@@ -1,11 +1,11 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormArray } from '@angular/forms'
 import { SafeUrl } from '@angular/platform-browser'
 import { IonicModule, ToastController } from '@ionic/angular'
 import { SwiperContainer } from 'swiper/swiper-element'
 
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Subscription } from 'rxjs'
 
 import { Camera, GalleryPhoto } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
@@ -27,12 +27,14 @@ type CropStep = 'drop' | 'hovering'
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class ImagesSelectorComponent {
+export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
   step = new BehaviorSubject<CropStep>('drop')
 
   accept = ['.jpg', '.jpeg', '.png', '.webp']
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
+
+  sub?: Subscription
 
   @Input() form!: FormArray<EditMediaForm>
 
@@ -43,6 +45,16 @@ export class ImagesSelectorComponent {
     private cdr: ChangeDetectorRef,
     private toast: ToastController
   ) {}
+
+  ngOnInit() {
+    this.sub = this.form.valueChanges.subscribe(() => {
+      this.cdr.markForCheck()
+    })
+  }
+
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe()
+  }
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {

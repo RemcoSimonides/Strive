@@ -5,6 +5,8 @@ import { toDate, FireSubCollection } from 'ngfire'
 
 import { createMedia, Media } from '@strive/model'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { captureException } from '@sentry/capacitor'
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +42,29 @@ export class MediaService extends FireSubCollection<Media> {
     const storageRef = ref(getStorage(), path)
     const metadata = { contentType: file.type, customMetadata: { mediaId }}
     uploadBytes(storageRef, file, metadata)
+    return mediaId
+  }
+
+  async uploadFromURL(url: string, storagePath: string, goalId: string) {
+    const fileName = url.split('/').pop() ?? ''
+    const media = createMedia({
+      fileName,
+      fileType: 'image',
+      storagePath
+    })
+    const mediaId = await this.add(media, { params: { goalId }})
+
+    const path = `${storagePath}/${mediaId}`
+
+    const downloadImageFromURL = httpsCallable(getFunctions(), 'downloadImageFromURL')
+    const response = await downloadImageFromURL({ url, storagePath: path })
+    const { error, result } = response.data as { error: string, result: any }
+
+    if (error) {
+      console.error(result)
+      captureException(result)
+    }
+
     return mediaId
   }
 }

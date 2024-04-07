@@ -18,6 +18,7 @@ import { isValidHttpUrl } from '@strive/utils/helpers'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
+import { EditMediaForm } from '@strive/media/forms/media.form'
 
 @Component({
   selector: '[goalId] strive-post-upsert',
@@ -64,15 +65,18 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     const scrape = httpsCallable(getFunctions(), 'scrapeMetatags')
     const scraped = await scrape({ url })
     const { error, result } = scraped.data as { error: string, result: any }
+    console.log('result: ', result)
     if (error) {
       console.error(result)
       captureException(result)
     } else {
-      const { image, description } = result
+      const { image, description } = result as { image: string, description: string }
       if (!formValue.description) this.postForm.description.setValue(description ?? '')
-      // TODO should download the image and upload it to firebase storage
-      // if (!formValue.mediaURL) this.postForm.mediaURL.setValue(image ?? '')
-      // if (!formValue.mediaIds.length) this.postForm.mediaIds.push(new FormControl())
+
+      if (image) {
+        const editMediaForm = new EditMediaForm({ preview: image })
+        this.postForm.controls.medias.push(editMediaForm)
+      }
     }
 
     this.scrapingUrl = false
@@ -104,14 +108,17 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 
     if (!this.postForm.isEmpty) {
       const { date, description, medias, url, youtubeId } = this.postForm.getRawValue()
+      const { goalId } = this.post
 
       const promises = []
       for (const media of medias) {
+        const storagePath = `goals/${goalId}`
         if (media.file) {
-          const storagePath = `goals/${this.post.goalId}`
-          const promise = this.mediaService.upload(media.file, storagePath, this.post.goalId).then(id => {
-            media.id = id
-          })
+          const promise = this.mediaService.upload(media.file, storagePath, goalId).then(id => media.id = id)
+          promises.push(promise)
+        } else if (media.preview) {
+          // media has preview if it scraped from an URL
+          const promise = this.mediaService.uploadFromURL(media.preview, storagePath, goalId).then(id => media.id = id)
           promises.push(promise)
         }
       }
