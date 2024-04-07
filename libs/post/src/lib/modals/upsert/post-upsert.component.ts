@@ -108,7 +108,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       const promises = []
       for (const media of medias) {
         if (media.file) {
-          const storagePath = `goals/${this.post.goalId}/posts/${this.post.id}`
+          const storagePath = `goals/${this.post.goalId}`
           const promise = this.mediaService.upload(media.file, storagePath, this.post.goalId).then(id => {
             media.id = id
           })
@@ -120,7 +120,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       const mediaIds = medias ? medias.map(({ id }) => id) : []
 
       const post = createPost({
-        ...this.post,
+        goalId: this.post.goalId,
         date,
         description,
         mediaIds,
