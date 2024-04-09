@@ -1,6 +1,6 @@
 <swiper-container space-between="16" slides-per-view="auto" #swiper>
-  <ng-container *ngFor="let control of form.controls">
-    <swiper-slide>
+  <ng-container *ngFor="let control of form.controls; let index = index">
+    <swiper-slide (click)="openPopover($event, index)">
       <img [src]="control.value.preview" />
     </swiper-slide>
   </ng-container>

@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Com
 import { CommonModule } from '@angular/common'
 import { FormArray } from '@angular/forms'
 import { SafeUrl } from '@angular/platform-browser'
-import { IonicModule, ToastController } from '@ionic/angular'
+import { IonicModule, PopoverController, ToastController } from '@ionic/angular'
 import { SwiperContainer } from 'swiper/swiper-element'
 
 import { BehaviorSubject, Subscription } from 'rxjs'
@@ -11,6 +11,7 @@ import { Camera, GalleryPhoto } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
 import { EditMediaForm } from '@strive/media/forms/media.form'
 import { delay } from '@strive/utils/helpers'
+import { ImageOptionsPopoverComponent } from './popover/options.component'
 
 type CropStep = 'drop' | 'hovering'
 
@@ -18,7 +19,8 @@ type CropStep = 'drop' | 'hovering'
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    ImageOptionsPopoverComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: '[form] strive-images-selector',
@@ -43,6 +45,7 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdr: ChangeDetectorRef,
+    private popoverCtrl: PopoverController,
     private toast: ToastController
   ) {}
 
@@ -127,6 +130,24 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
         swiper.slideTo(this.form.length + 1)
       })
     }
+  }
+
+  async openPopover(event: Event, index: number) {
+    const popover = await this.popoverCtrl.create({
+      component: ImageOptionsPopoverComponent,
+      componentProps: { form: this.form, index },
+      event
+    })
+
+    popover.onDidDismiss().then(dismiss => {
+      const { data } = dismiss
+      if (data === 'remove') {
+        this.form.removeAt(index)
+        this.form.markAsDirty()
+      }
+    })
+
+    popover.present()
   }
 }
 

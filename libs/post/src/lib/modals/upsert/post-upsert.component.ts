@@ -6,6 +6,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import { captureException } from '@sentry/capacitor'
 
+import { BehaviorSubject } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'
 import { addYears } from 'date-fns'
 
@@ -30,6 +31,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
   postForm = new PostForm()
+  saving$ = new BehaviorSubject(false)
 
   scrapingUrl = false
   mode: 'create' | 'update' = 'create'
@@ -65,7 +67,6 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
     const scrape = httpsCallable(getFunctions(), 'scrapeMetatags')
     const scraped = await scrape({ url })
     const { error, result } = scraped.data as { error: string, result: any }
-    console.log('result: ', result)
     if (error) {
       console.error(result)
       captureException(result)
@@ -101,6 +102,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 
   async submitPost() {
     if (!this.auth.uid) return
+    this.saving$.next(true)
 
     if (this.imageSelector?.step.value === 'crop') {
       this.imageSelector.cropIt()
@@ -116,7 +118,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
         if (media.file) {
           const promise = this.mediaService.upload(media.file, storagePath, goalId).then(id => media.id = id)
           promises.push(promise)
-        } else if (media.preview) {
+        } else if (media.preview && !media.id) {
           // media has preview if it scraped from an URL
           const promise = this.mediaService.uploadFromURL(media.preview, storagePath, goalId).then(id => media.id = id)
           promises.push(promise)
@@ -127,6 +129,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
       const mediaIds = medias ? medias.map(({ id }) => id) : []
 
       const post = createPost({
+        id: this.post.id,
         goalId: this.post.goalId,
         date,
         description,
@@ -138,7 +141,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 
       await this.postService.upsert(post, { params: { goalId: post.goalId }})
     }
-
+    this.saving$.next(false)
     this.dismiss(true)
   }
 
