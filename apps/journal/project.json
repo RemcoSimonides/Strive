@@ -167,6 +167,7 @@
         "routes": [
           "/",
           "/download",
+          "/edit-profile",
           "/exercise",
           "/exercise/affirmations",
           "/exercise/daily-gratitude",
