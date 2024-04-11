@@ -1,5 +1,5 @@
 import { SelfReflectFrequency, Weekday } from '@strive/model'
-import { addDays, getDay, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
+import { addDays, getDay, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter, startOfWeek, startOfYear } from 'date-fns'
 
 const weekdayMapping: Record<Weekday, Day> = {
   'sunday': 0,
@@ -11,7 +11,34 @@ const weekdayMapping: Record<Weekday, Day> = {
   'saturday': 6
 }
 
-export function getNextDay(date: Date, weekday: Weekday) {
+export function getNextDay(startNextFrequency: Date, weekday: Weekday, frequency: SelfReflectFrequency) {
+  const startMethods = {
+    'daily': startOfDay,
+    'weekly': startOfWeek,
+    'monthly': startOfMonth,
+    'quarterly': startOfQuarter,
+    'yearly': startOfYear
+  }
+
+  const today = startOfDay(new Date())
+  const day = weekdayMapping[weekday]
+
+  if (frequency === 'daily') {
+    // No need to calculate next day because weekday is irrelevant for daily
+    return startNextFrequency
+  }
+
+  const startOfFrequencyDate = startMethods[frequency](startNextFrequency)
+  const firstWeekdayOfFrequency = nextDay(startOfFrequencyDate, day)
+  const before = isBefore(startNextFrequency, firstWeekdayOfFrequency)
+
+  const date = before ? today : startNextFrequency
+
+  const yesterday = addDays(date, -1) // to return today if today is weekday
+  return nextDay(yesterday, weekdayMapping[weekday])
+}
+
+export function getNextNextDay(date: Date, weekday: Weekday) {
   const today = startOfDay(date)
   const yesterday = addDays(today, -1) // to return today if today is weekday
   return nextDay(yesterday, weekdayMapping[weekday])

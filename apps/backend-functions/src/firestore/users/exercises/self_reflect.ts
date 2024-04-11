@@ -2,7 +2,7 @@ import { arrayUnion, db, onDocumentCreate, onDocumentUpdate } from '@strive/api/
 import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, Message, Personal, Stakeholder, createSelfReflectEntry, createSelfReflectSettings, createDearFutureSelf, createMessage, getFrequency } from '@strive/model'
 import { getDocument, getDocumentSnap, toDate, unique } from '../../../shared/utils'
 import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, formatISO, isBefore, isEqual, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
-import { getNextDay, startOfSelfReflectYear } from '@strive/exercises/self-reflect/utils/date.utils'
+import { getNextDay, getNextNextDay, startOfSelfReflectYear } from '@strive/exercises/self-reflect/utils/date.utils'
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { ScheduledTaskUserExerciseSelfReflect, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { AES, enc } from 'crypto-js'
@@ -256,7 +256,7 @@ export async function getNextReminder(settings: SelfReflectSettings, uid: string
 
   for (const frequency of frequencies) {
     const start = startOfNextFrequency[frequency](now)
-    const next = frequency === 'daily' ? start : getNextDay(start, settings.preferredDay)
+    const next = frequency === 'daily' ? start : getNextDay(start, settings.preferredDay, frequency)
 
     // do not send reminder if the next reminder is too soon - and thus try to set next next reminder
     const lastEntry = frequency === 'daily' ? daily
@@ -276,7 +276,7 @@ export async function getNextReminder(settings: SelfReflectSettings, uid: string
 
     } else {
       const startNextNext = startOfNextNextFrequency[frequency](now)
-      const nextNext = getNextDay(startNextNext, settings.preferredDay)
+      const nextNext = getNextNextDay(startNextNext, settings.preferredDay)
 
       if (!performAt || isBefore(nextNext, performAt)) {
         performAt = nextNext
