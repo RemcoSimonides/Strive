@@ -2,7 +2,7 @@ import { db, functions } from '@strive/api/firebase'
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
-import { createPersonal, inBucketlist, inProgress, Personal, storyEvents } from '@strive/model'
+import { createGoal, createPersonal, inBucketlist, inProgress, Personal, storyEvents } from '@strive/model'
 import { getDocument } from '../../shared/utils'
 import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotificationBase, Feature, Features, Motivation, Motivations } from '@strive/model'
 import { groupIds, templateIds } from './ids'
@@ -78,7 +78,7 @@ async function getStakeholders(uid: string) {
 }
 
 async function getGoals(stakeholders: GoalStakeholder[]): Promise<Goal[]> {
-  const promises = stakeholders.map(stakeholder => getDocument<Goal>(`Goals/${stakeholder.goalId}`))
+  const promises = stakeholders.map(stakeholder => getDocument<Goal>(`Goals/${stakeholder.goalId}`).then(createGoal))
   return Promise.all(promises)
 }
 
