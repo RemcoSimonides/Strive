@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-
-import { IonicModule } from '@ionic/angular'
-
 import { PageLoadingComponent } from './page-loading.component'
+import { IonSpinner } from '@ionic/angular/standalone'
 
 @NgModule({
   declarations: [PageLoadingComponent],
   imports: [
     CommonModule,
-    IonicModule
+    IonSpinner
   ],
   exports: [PageLoadingComponent]
 })

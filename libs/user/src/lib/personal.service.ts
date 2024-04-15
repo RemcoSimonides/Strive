@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { ToastController, ToastOptions } from '@ionic/angular'
+import { ToastController, ToastOptions } from '@ionic/angular/standalone'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
@@ -61,7 +61,7 @@ export class PersonalService extends FireSubCollection<Personal> {
 
     this.form.valueChanges.subscribe(() => {
       if (!this.auth.uid) return
-      this.update(this.auth.uid, { settings: this.form.getRawValue() }, { params: { uid: this.auth.uid }})
+      this.update(this.auth.uid, { settings: this.form.getRawValue() }, { params: { uid: this.auth.uid } })
     })
   }
 
@@ -92,7 +92,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     if (this.auth.uid) {
       this.update(this.auth.uid, {
         lastCheckedNotifications: serverTimestamp() as any
-      }, { params: { uid: this.auth.uid }})
+      }, { params: { uid: this.auth.uid } })
     }
   }
 
@@ -114,7 +114,7 @@ export class PersonalService extends FireSubCollection<Personal> {
       this.fcmIsRegistered.next(true)
 
       return token
-    } catch(err) {
+  } catch (err) {
       const { main } = this.form.pushNotification as PushNotificationSettingsForm
       if (force) main.setValue(false)
 
@@ -179,7 +179,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     if (token && user?.uid) {
       this.update(user.uid, {
         fcmTokens: arrayUnion(token) as any
-      }, { params: { uid: user.uid }})
+      }, { params: { uid: user.uid } })
     }
   }
 
@@ -187,7 +187,7 @@ export class PersonalService extends FireSubCollection<Personal> {
     if (token && this.auth.uid) {
       this.update(this.auth.uid, {
         fcmTokens: arrayRemove(token) as any
-      }, { params: { uid: this.auth.uid }})
+      }, { params: { uid: this.auth.uid } })
     }
   }
 

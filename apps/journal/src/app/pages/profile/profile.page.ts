@@ -1,8 +1,12 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { PopoverController, ModalController } from '@ionic/angular'
+
+import { PopoverController, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { shareSocialOutline, star, starOutline, add, lockClosedOutline, flagOutline } from 'ionicons/icons'
+
 import { Share } from '@capacitor/share'
-import { Clipboard }  from '@capacitor/clipboard'
+import { Clipboard } from '@capacitor/clipboard'
 import { captureException } from '@sentry/angular'
 
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs'
@@ -30,6 +34,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+
 
 @Component({
   selector: 'journal-profile',
@@ -121,7 +126,9 @@ export class ProfilePageComponent {
     private screensize: ScreensizeService,
     private seo: SeoService,
     private spectatorService: SpectatorService
-  ) {}
+  ) {
+    addIcons({ shareSocialOutline, star, starOutline, add, lockClosedOutline, flagOutline })
+  }
 
   openAuthModal() {
     this.modalCtrl.create({
@@ -169,7 +176,7 @@ export class ProfilePageComponent {
     }).then(modal => {
       modal.onDidDismiss().then((data) => {
         const navToGoal = data.data?.['navToGoal']
-        if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+        if (navToGoal) this.router.navigate(['/goal', navToGoal])
       })
       modal.present()
     })
@@ -197,7 +204,7 @@ export class ProfilePageComponent {
       uid: this.auth.uid,
       profileId: uid,
       isSpectator
-    }, { params: { uid }})
+    }, { params: { uid } })
 
     if (!isSpectator) return
     const achievingStakeholders = await firstValueFrom(this.achievingStakeholders$)

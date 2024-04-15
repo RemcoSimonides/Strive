@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { Router } from '@angular/router'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { add } from 'ionicons/icons'
 
 import { orderBy } from 'firebase/firestore'
 import { firstValueFrom, map, of, switchMap } from 'rxjs'
@@ -64,6 +66,7 @@ export class WheelOfLifePageComponent implements OnDestroy {
       title: 'Wheel of Life - Strive Journal',
       description: 'Discover in which area in life you need improvement and track results over time'
     })
+    addIcons({ add })
   }
 
   ngOnDestroy() {
@@ -95,7 +98,7 @@ export class WheelOfLifePageComponent implements OnDestroy {
     })
     modal.onDidDismiss().then((data) => {
       const navToGoal = data.data?.['navToGoal']
-      if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+      if (navToGoal) this.router.navigate(['/goal', navToGoal])
     })
     modal.present()
   }

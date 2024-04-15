@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
-import { IonContent, IonicModule, ModalController } from '@ionic/angular'
+import { IonContent, ModalController } from '@ionic/angular/standalone'
 import { orderBy, where } from '@firebase/firestore'
 
 import { isAfter, subMinutes } from 'date-fns'
@@ -26,10 +26,10 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     RoadmapModule,
     SuggestionSComponent,
-    HeaderModalComponent
+    HeaderModalComponent,
+    IonContent
   ],
 })
 export class SuggestionModalComponent extends ModalDirective implements OnInit {
@@ -83,6 +83,6 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
     this.fetching$.next(true)
     const prompt = this.chatGPTService.getInitialPrompt(this.goal) // Adding initial prompt in case it doesn't exist yet
     const message = createChatGPTMessage({ type: 'RoadmapUpdateSuggestion', prompt })
-    this.chatGPTService.add(message, { params: { goalId: this.goal.id }})
+    this.chatGPTService.add(message, { params: { goalId: this.goal.id } })
   }
 }

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { settingsOutline, arrowForwardOutline, filterOutline, addOutline } from 'ionicons/icons'
 import { orderBy } from 'firebase/firestore'
 import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap, startWith } from 'rxjs'
 
@@ -16,12 +18,13 @@ import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
 import { SelfReflectQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-question/upsert-question.component'
 
+
 function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettings | undefined, frequency: SelfReflectFrequency) {
   if (!settings) return { disabled: true, message: 'No settings found' }
   const questions = settings.questions.filter(question => question.frequency === frequency)
 
   if (questions.length === 0) return { disabled: true, message: 'No questions activated - change in settings' }
-  if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!`}
+  if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!` }
 
   const today = startOfDay(new Date())
   const lastEntry = entries[0]
@@ -34,7 +37,7 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
     yearly: (date: Date) => getSelfReflectYear(date, 12, 24)
   }
 
-  if (getFrequency[frequency](today) !== getFrequency[frequency](lastEntry.createdAt)) return { disabled: false, message: `Ready for a new entry!`}
+  if (getFrequency[frequency](today) !== getFrequency[frequency](lastEntry.createdAt)) return { disabled: false, message: `Ready for a new entry!` }
 
   const startOfFrequency = {
     daily: startOfDay,
@@ -54,7 +57,7 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
 
   const startOfNextFrequency = startOfFrequency[frequency](addFrequency[frequency](lastEntry.createdAt))
   const daysLeft = differenceInDays(startOfNextFrequency, today)
-  return { disabled: true, message: `You can't add a new entry yet. You can add a new entry in ${daysLeft} day${daysLeft === 1 ? '' : 's'}`}
+  return { disabled: true, message: `You can't add a new entry yet. You can add a new entry in ${daysLeft} day${daysLeft === 1 ? '' : 's'}` }
 }
 
 @Component({
@@ -176,6 +179,7 @@ export class SelfReflectComponent {
       title: 'Self Reflect - Strive Journal',
       description: 'Get a grasp on life by looking back and planning ahead',
     })
+    addIcons({ settingsOutline, arrowForwardOutline, filterOutline, addOutline })
   }
 
   async addEntry(frequency: SelfReflectFrequency) {
@@ -230,6 +234,6 @@ export class SelfReflectComponent {
   }
 
   trackByFn(_: number, item: SelfReflectQuestion) {
-		return item.key
+  return item.key
   }
 }

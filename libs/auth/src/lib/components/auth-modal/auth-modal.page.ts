@@ -13,7 +13,9 @@ import {
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication'
 import { captureException } from '@sentry/angular'
 
-import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular'
+import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { close, arrowBack, logoGoogle, logoApple } from 'ionicons/icons'
 import { Capacitor } from '@capacitor/core'
 
 import { ProfileService } from '@strive/user/profile.service'
@@ -128,6 +130,7 @@ export class AuthModalComponent implements OnInit {
     private screensize: ScreensizeService
   ) {
     window.history.pushState(null, '', window.location.href)
+    addIcons({ close, arrowBack, logoGoogle, logoApple })
   }
 
   ngOnInit() {
@@ -289,14 +292,14 @@ export class AuthModalComponent implements OnInit {
 
       await Promise.all([
         this.profile.add(profile),
-        this.personal.add(personal, { params: { uid: user.uid }})
+        this.personal.add(personal, { params: { uid: user.uid } })
       ])
 
       this.modalCtrl.dismiss(true)
       this.dismiss(true)
       this.modalCtrl.create({ component: WelcomeModalComponent }).then(modal => modal.present())
 
-    } catch(error: any) {
+    } catch (error: any) {
       let message: string
       switch (error.code) {
         case 'auth/email-already-in-use':
@@ -335,8 +338,8 @@ export class AuthModalComponent implements OnInit {
         this.alertCtrl.create({
           message: 'Check your inbox for a password reset link',
           buttons: [
-            { text: 'Cancel', role: 'cancel'},
-            { text: 'Ok', handler: () => { this.authSegmentChoice = enumAuthSegment.login }}
+            { text: 'Cancel', role: 'cancel' },
+            { text: 'Ok', handler: () => { this.authSegmentChoice = enumAuthSegment.login } }
           ]
         }).then(alert => alert.present())
 
@@ -365,7 +368,7 @@ export class AuthModalComponent implements OnInit {
       const personal = createPersonal({ uid, email: email ?? '', key: createRandomString(32) })
       await Promise.all([
         this.profile.upsert(user),
-        this.personal.add(personal, { params: { uid }})
+        this.personal.add(personal, { params: { uid } })
       ])
       const top = await this.modalCtrl.getTop()
       if (top) {

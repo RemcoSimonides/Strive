@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
 import { FormControl, FormGroup } from '@angular/forms'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { of, switchMap, tap } from 'rxjs'
 import { addDays, isPast, set } from 'date-fns'
@@ -126,7 +126,7 @@ export class DailyGratitudePageComponent implements OnDestroy {
   getDateFromTime() {
     const setting = this.form.value
 
-    const [ hours, minutes ] = (setting.time as string).split(':').map(time => +time)
+    const [hours, minutes] = (setting.time as string).split(':').map(time => +time)
     return set(new Date(), { hours, minutes })
   }
 

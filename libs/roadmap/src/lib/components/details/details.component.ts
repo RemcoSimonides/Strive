@@ -1,7 +1,10 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular'
 import { FormArray } from '@angular/forms'
+
+import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff } from 'ionicons/icons'
 
 import { orderBy, serverTimestamp, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -52,9 +55,9 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   @Input() stakeholder = createGoalStakeholder()
 
   get canEdit(): boolean {
-    if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return false
-    if (!this.goal.id) return false
-    return true
+      if (!this.stakeholder.isAdmin && !this.stakeholder.isAchiever) return false
+      if (!this.goal.id) return false
+      return true
   }
 
   constructor(
@@ -71,7 +74,8 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     private storyService: StoryService,
     private supportService: SupportService
   ) {
-    super (location, modalCtrl)
+    super(location, modalCtrl)
+    addIcons({ checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff })
   }
 
   ngOnInit() {
@@ -97,7 +101,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
           this.supportService.valueChanges([where('recipientId', '==', profile.uid), where('milestoneId', '==', this.milestone.id)], { goalId: this.goal.id })
         ])
       }),
-      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      map(([supporter, recipient]) => [...supporter, ...recipient]),
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: () => this.goal,
@@ -117,7 +121,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       ).subscribe(content => {
         if (!content || !this.canEdit) return
 
-        this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+        this.milestoneService.update({ content, id: this.milestone.id }, { params: { goalId: this.goal.id } })
         this.form.content.markAsPristine()
         this.cdr.markForCheck()
       })
@@ -128,7 +132,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         debounceTime(500)
       ).subscribe(description => {
         if (!this.canEdit || !this.form) return
-        this.milestoneService.update({ description, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+        this.milestoneService.update({ description, id: this.milestone.id }, { params: { goalId: this.goal.id } })
         this.milestone.description = description
         this.form.description.markAsPristine()
         this.cdr.markForCheck()
@@ -141,7 +145,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       ).subscribe(subtasks => {
         if (!this.canEdit || !this.form) return
         if (this.form.subtasks.valid) {
-          this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id }})
+          this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id } })
           this.form?.subtasks.markAsPristine()
           this.cdr.markForCheck()
         }
@@ -177,7 +181,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
           id: this.milestone.id,
           status,
           finishedAt: serverTimestamp() as any
-        }, { params: { goalId: this.goal.id }})
+      }, { params: { goalId: this.goal.id } })
         this.milestone.status = status
         this.cdr.markForCheck()
         openPostModal()
@@ -209,7 +213,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   async deleteMilestone() {
     if (!this.canEdit) return
 
-    const header =  this.milestone.supports?.length ? `Milestone has active supports` : ''
+    const header = this.milestone.supports?.length ? `Milestone has active supports` : ''
 
     const alert = await this.alertCtrl.create({
       header,
@@ -228,7 +232,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     alert.onDidDismiss().then((res) => {
       if (res.role == 'delete') {
         if (!this.milestone?.id) return
-        this.milestoneService.update(this.milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id }})
+        this.milestoneService.update(this.milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id } })
         this.dismiss()
       }
     })
@@ -246,7 +250,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     this.milestoneService.upsert({
       id: this.milestone.id,
       achieverId
-    }, { params: { goalId: this.goal.id }})
+    }, { params: { goalId: this.goal.id } })
   }
 
   async openDatepicker() {
@@ -270,13 +274,13 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         this.milestoneService.update({
           deadline: null,
           id: this.milestone.id
-        }, { params: { goalId: this.goal.id }})
+        }, { params: { goalId: this.goal.id } })
       } else {
         this.milestone.deadline = new Date(data)
         this.milestoneService.update({
           deadline: new Date(data),
           id: this.milestone.id
-        }, { params: { goalId: this.goal.id }})
+        }, { params: { goalId: this.goal.id } })
       }
 
       this.cdr.markForCheck()

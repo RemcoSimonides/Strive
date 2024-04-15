@@ -2,7 +2,9 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Com
 import { CommonModule } from '@angular/common'
 import { FormArray } from '@angular/forms'
 import { SafeUrl } from '@angular/platform-browser'
-import { IonicModule, PopoverController, ToastController } from '@ionic/angular'
+import { IonIcon, PopoverController, ToastController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { imagesOutline } from 'ionicons/icons'
 import { SwiperContainer } from 'swiper/swiper-element'
 
 import { BehaviorSubject, Subscription } from 'rxjs'
@@ -19,8 +21,8 @@ type CropStep = 'drop' | 'hovering'
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule,
-    ImageOptionsPopoverComponent
+    ImageOptionsPopoverComponent,
+    IonIcon
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: '[form] strive-images-selector',
@@ -47,7 +49,9 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private popoverCtrl: PopoverController,
     private toast: ToastController
-  ) {}
+  ) {
+    addIcons({ imagesOutline })
+  }
 
   ngOnInit() {
     this.sub = this.form.valueChanges.subscribe(() => {
@@ -70,7 +74,7 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
   @HostListener('dragover', ['$event'])
   onDragOver($event: DragEvent) {
-    $event.preventDefault()
+      $event.preventDefault()
     this.step.next('hovering')
   }
 
@@ -158,14 +162,14 @@ function isFileList(file: FileList | File): file is FileList {
 
 async function getFileFromGalleryPhoto(photo: GalleryPhoto): Promise<File | undefined> {
   try {
-     const response = await fetch(photo.webPath);
-     const blob = await response.blob();
-     const name = photo.webPath.split('/').pop();
-     const fileName = `${name}.${photo.format}`
-     const file = new File([blob], fileName, { type: blob.type });
-     return file;
+    const response = await fetch(photo.webPath);
+    const blob = await response.blob();
+    const name = photo.webPath.split('/').pop();
+    const fileName = `${name}.${photo.format}`
+    const file = new File([blob], fileName, { type: blob.type });
+    return file;
   } catch (error) {
-     console.error("Error fetching blob data:", error);
-     return;
+    console.error("Error fetching blob data:", error);
+    return;
   }
 }

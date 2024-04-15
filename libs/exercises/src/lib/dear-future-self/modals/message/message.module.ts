@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
-
 import { MessageModalComponent } from './message.component'
 
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
+import { IonTitle, IonContent } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
-    HeaderModalComponent
+    HeaderModalComponent,
+    IonTitle,
+    IonContent
   ],
   declarations: [MessageModalComponent]
 })
-export class MessageModalModule {}
+export class MessageModalModule { }

@@ -75,7 +75,7 @@ export class WheelOfLifeResultsComponent {
       return { x: entry.createdAt.getTime(), y: entry[this._aspectConfig.id] }
     })
     const wishData = this._entries.map(entry => {
-      return { x: entry.createdAt.getTime(), y: entry[`desired_${this._aspectConfig.id}`]}
+      return { x: entry.createdAt.getTime(), y: entry[`desired_${this._aspectConfig.id}`] }
     })
 
     this.chartDatasets.push(

@@ -9,7 +9,7 @@ import { SuggestionSComponent } from '@strive/ui/suggestion/suggestion.component
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { IsFuturePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { ScrollService } from '@strive/utils/services/scroll.service'
-import { IonContent } from '@ionic/angular'
+import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
@@ -35,7 +35,7 @@ export class GoalRoadmapComponent implements OnInit {
     private elRef: ElementRef,
     private milestoneService: MilestoneService,
     private scrollService: ScrollService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (!this.goal) return

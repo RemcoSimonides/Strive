@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common'
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, Pipe, PipeTransform, ViewChild, signal } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
 import { SelfReflectEntry, SelfReflectFrequency, replaceFrequency } from '@strive/model'
 import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
 import { SmartJoinPipe } from '@strive/utils/pipes/smart-join.pipe'
@@ -29,7 +28,6 @@ export class GetQuestionPipe implements PipeTransform {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     SelfReflectFrequencyPipe,
     SmartJoinPipe,
     GetQuestionPipe,

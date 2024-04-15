@@ -23,7 +23,7 @@ export class SupportPageComponent {
       map(params => params['id'] as string)
     )
   ]).pipe(
-    switchMap(([ profile, id ]) => {
+    switchMap(([profile, id]) => {
       if (!profile) return of(createSupportBase())
 
       const { goalId } = this.route.snapshot.queryParams
@@ -36,7 +36,7 @@ export class SupportPageComponent {
           return of(support).pipe(
             joinWith({
               goal: ({ goalId }) => this.goal.valueChanges(goalId),
-              milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
+              milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
               recipient: ({ recipientId }) => this.profile.valueChanges(recipientId),
               supporter: ({ supporterId }) => this.profile.valueChanges(supporterId)
             }, { shouldAwait: true })

@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend-functions/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -30,7 +31,7 @@
       }
     },
     "serve": {
-      "executor": "@nx/node:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "backend-functions:build"
       },
@@ -41,18 +42,14 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/backend-functions/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/backend-functions"],
       "options": {
-        "jestConfig": "apps/backend-functions/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/backend-functions/jest.config.ts"
       }
     },
     "deploy-functions": {
@@ -61,6 +58,5 @@
         "command": "firebase deploy --only functions"
       }
     }
-  },
-  "tags": []
+  }
 }

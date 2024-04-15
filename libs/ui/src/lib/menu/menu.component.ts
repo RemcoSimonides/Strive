@@ -2,7 +2,11 @@ import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
-import { ModalController, Platform } from '@ionic/angular'
+
+import { ModalController, Platform } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { moonOutline, sunnyOutline, close, openOutline } from 'ionicons/icons'
+
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { delay, isSafari } from '@strive/utils/helpers'
@@ -24,7 +28,7 @@ export class MenuComponent extends ModalDirective {
 
 	showPlayStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('ios')
 	showAppStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('android')
-  
+
 	constructor(
 		protected override location: Location,
 		protected override modalCtrl: ModalController,
@@ -32,8 +36,9 @@ export class MenuComponent extends ModalDirective {
 		private pwa: PWAService,
 		private router: Router,
 		private themeService: ThemeService
-	){
+	) {
 		super(location, modalCtrl)
+		addIcons({ moonOutline, sunnyOutline, close, openOutline })
 	}
 
 	openAuthModal(authSegment: enumAuthSegment) {
@@ -49,7 +54,7 @@ export class MenuComponent extends ModalDirective {
 	navTo(path: string[]) {
 		this.navigateTo(this.router, path)
 	}
-    
+
 	install() {
 		this.pwa.showInstallPromotion()
 	}

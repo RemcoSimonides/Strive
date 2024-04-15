@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule, PopoverController } from '@ionic/angular'
+import { PopoverController } from '@ionic/angular/standalone'
+import { IonContent, IonList, IonItem, IonSelect, IonSelectOption, IonLabel, IonText } from '@ionic/angular/standalone'
 
 import { firstValueFrom, of, shareReplay, switchMap } from 'rxjs'
 
@@ -24,11 +25,17 @@ import { SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
     HeaderModule,
     PageLoadingModule,
-    SelfReflectReplaceFrequencyPipe
+    SelfReflectReplaceFrequencyPipe,
+    IonContent,
+    IonList,
+    IonItem,
+    IonSelect,
+    IonSelectOption,
+    IonLabel,
+    IonText
   ]
 })
 export class SelfReflectSettingsComponent implements OnInit {

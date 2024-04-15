@@ -4,24 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/exercises/src",
   "prefix": "exercise",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/exercises"],
       "options": {
-        "jestConfig": "libs/exercises/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/exercises/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/exercises/**/*.ts",
-          "libs/exercises/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }

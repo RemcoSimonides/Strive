@@ -4,13 +4,10 @@
   "projectType": "library",
   "sourceRoot": "libs/model/src",
   "prefix": "strive",
+  "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/model/**/*.ts", "libs/model/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }

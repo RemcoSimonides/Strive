@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+
+import { ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { searchOutline, notificationsOutline, settingsOutline, menuOutline } from 'ionicons/icons'
+
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
@@ -30,7 +34,9 @@ export class HeaderRootComponent {
     private notification: NotificationService,
     private screensize: ScreensizeService,
     private themeService: ThemeService
-  ) { }
+  ) {
+    addIcons({ searchOutline, notificationsOutline, settingsOutline, menuOutline })
+  }
 
   openAuthModal(authSegment: enumAuthSegment) {
     this.modalCtrl.create({

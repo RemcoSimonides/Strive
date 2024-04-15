@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+
+import { ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { chevronDownOutline } from 'ionicons/icons'
+
 import { Milestone, Support, SupportsGroupedByGoal } from '@strive/model'
 import { SupportDetailsModalComponent } from '@strive/support/modals/details/details.component'
 
@@ -18,7 +22,9 @@ export class SupportListComponent {
   @ContentChild('goal') goalDescription?: TemplateRef<unknown>
   @ContentChild('milestone') milestoneDescription?: TemplateRef<unknown>
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(private modalCtrl: ModalController) {
+    addIcons({ chevronDownOutline })
+  }
 
   trackBy(index: number, object: Support | Milestone) {
     return object.id

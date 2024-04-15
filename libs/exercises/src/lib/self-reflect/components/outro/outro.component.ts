@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
 import { SelfReflectFrequency } from '@strive/model'
 import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
+import { addIcons } from 'ionicons'
+import { arrowForwardOutline } from 'ionicons/icons'
+import { IonList, IonItem, IonLabel, IonIcon } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
@@ -12,8 +14,11 @@ import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
-    SelfReflectFrequencyPipe
+    SelfReflectFrequencyPipe,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonIcon
   ]
 })
 export class SelfReflectOutroComponent implements OnInit {
@@ -28,4 +33,7 @@ export class SelfReflectOutroComponent implements OnInit {
     this.possibleNextEntries = this.todos.filter(todo => todo !== this.frequency)
   }
 
+  constructor() {
+    addIcons({ arrowForwardOutline })
+  }
 }

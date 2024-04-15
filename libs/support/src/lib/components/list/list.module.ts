@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-
 import { SupportListComponent } from './list.component'
 
 import { PledgeModule } from '../pledge/pledge.module'
@@ -12,18 +10,23 @@ import { SupportCounterPipeModule } from '../../pipes/count.pipe'
 import { SupportRolePipeModule } from '../../pipes/role.pipe'
 
 import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
+import { IonList, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    IonicModule,
     PledgeModule,
     MilestonePathPipeModule,
     SupportDecisionModule,
     SupportDetailsModalModule,
     SupportCounterPipeModule,
-    SupportRolePipeModule
+    SupportRolePipeModule,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonIcon
   ],
   declarations: [
     SupportListComponent
@@ -32,4 +35,4 @@ import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
     SupportListComponent
   ]
 })
-export class SupportListModule {}
+export class SupportListModule { }

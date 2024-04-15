@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ToastController } from '@ionic/angular'
+import { ToastController } from '@ionic/angular/standalone'
 import { map } from 'rxjs'
 import { PersonalService } from '@strive/user/personal.service'
 
@@ -20,7 +20,7 @@ export class ActivatePushNotificationsComponent {
   constructor(
     private personal: PersonalService,
     private toast: ToastController,
-  ) {}
+  ) { }
 
   async pushNotifications() {
     const res = await this.personal.registerFCM(true, true)

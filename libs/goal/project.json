@@ -4,21 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/goal/src",
   "prefix": "goal",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/goal"],
       "options": {
-        "jestConfig": "libs/goal/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/goal/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/goal/**/*.ts", "libs/goal/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }

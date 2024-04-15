@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/admin/src",
   "prefix": "strive",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -72,10 +73,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "admin:build:production"
+          "buildTarget": "admin:build:production"
         },
         "development": {
-          "browserTarget": "admin:build:development"
+          "buildTarget": "admin:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -83,23 +84,18 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "admin:build"
+        "buildTarget": "admin:build"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/admin/**/*.ts", "apps/admin/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/admin"],
       "options": {
-        "jestConfig": "apps/admin/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/admin/jest.config.ts"
       }
     }
-  },
-  "tags": []
+  }
 }

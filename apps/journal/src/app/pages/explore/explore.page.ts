@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
 import { ActivatedRoute, Params, Router } from '@angular/router'
-import { IonContent } from '@ionic/angular'
+import { IonContent } from '@ionic/angular/standalone'
 
 // Rxjs
 import { BehaviorSubject, combineLatest } from 'rxjs'
@@ -9,7 +9,7 @@ import { debounceTime, map, startWith } from 'rxjs/operators'
 
 import { exercises } from '@strive/model'
 
-import { AlgoliaService  } from '@strive/utils/services/algolia.service'
+import { AlgoliaService } from '@strive/utils/services/algolia.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 

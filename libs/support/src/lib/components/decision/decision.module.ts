@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
-
 import { SupportDecisionComponent } from './decision.component'
+import { IonButton } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
-    IonicModule
+    IonButton
   ],
   declarations: [
     SupportDecisionComponent
@@ -14,4 +13,4 @@ import { SupportDecisionComponent } from './decision.component'
     SupportDecisionComponent
   ]
 })
-export class SupportDecisionModule {}
+export class SupportDecisionModule { }

@@ -2,12 +2,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 
 import { ThumbnailListComponent } from './thumbnail-list.component'
-import { IonicModule } from '@ionic/angular'
 
 @NgModule({
   imports: [
-    CommonModule,
-    IonicModule,
+    CommonModule
   ],
   exports: [ThumbnailListComponent],
   declarations: [ThumbnailListComponent],

@@ -2,9 +2,6 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
-
-import { IonicModule } from '@ionic/angular'
-
 import { SelfReflectComponent } from './self-reflect.component'
 
 import { HeaderModule } from '@strive/ui/header/header.module'
@@ -14,6 +11,7 @@ import { SelfReflectFrequencyPipe, SelfReflectReplaceFrequencyPipe } from '@stri
 import { SelfReflectFilterEntriesPipe } from '@strive/exercises/self-reflect/pipes/entry.pipe'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
+import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, IonPopover, IonSelect, IonSelectOption } from '@ionic/angular/standalone'
 
 const routes: Routes = [
   {
@@ -29,7 +27,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     HeaderModule,
@@ -38,8 +35,18 @@ const routes: Routes = [
     PageLoadingModule,
     SelfReflectReplaceFrequencyPipe,
     SelfReflectCustomQuestionModalComponent,
-    SelfReflectFilterEntriesPipe
+    SelfReflectFilterEntriesPipe,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonPopover,
+    IonSelect,
+    IonSelectOption
   ],
   declarations: [SelfReflectComponent]
 })
-export class SelfReflectModule {}
+export class SelfReflectModule { }

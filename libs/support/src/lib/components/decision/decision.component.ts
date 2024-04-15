@@ -13,23 +13,23 @@ export class SupportDecisionComponent {
   @Input() support?: Support
   @Input() counter = false
 
-  constructor(private supportService: SupportService) {}
+  constructor(private supportService: SupportService) { }
 
   updateStatus(status: SupportStatus) {
     if (!this.support?.id) return
 
     if (this.counter) {
-      this.supportService.update(this.support.id, { 
+      this.supportService.update(this.support.id, {
         counterStatus: status,
         counterNeedsDecision: false
-      }, { params: { goalId: this.support.goalId }})
+      }, { params: { goalId: this.support.goalId } })
       this.support.counterStatus = status
       this.support.counterNeedsDecision = false
     } else {
-      this.supportService.update(this.support.id, { 
+      this.supportService.update(this.support.id, {
         status,
         needsDecision: false
-      }, { params: { goalId: this.support.goalId }})
+      }, { params: { goalId: this.support.goalId } })
       this.support.status = status
       this.support.needsDecision = false
     }

@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-
 import { EmailNotificationSettingsComponent } from './email-notification-settings.component'
 
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { IonButtons, IonButton, IonToggle, IonContent, IonList, IonListHeader, IonItem, IonLabel, IonCheckbox } from '@ionic/angular/standalone'
 
 const routes: Routes = [
   {
@@ -18,12 +17,20 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     RouterModule.forChild(routes),
     HeaderModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    IonButtons,
+    IonButton,
+    IonToggle,
+    IonContent,
+    IonList,
+    IonListHeader,
+    IonItem,
+    IonLabel,
+    IonCheckbox
   ],
   declarations: [EmailNotificationSettingsComponent]
 })
-export class EmailNotificationSettingsModule {}
+export class EmailNotificationSettingsModule { }

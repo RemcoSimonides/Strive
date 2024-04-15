@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { Routes, RouterModule } from '@angular/router'
-
-import { IonicModule } from '@ionic/angular'
+import { IonContent, IonCard, IonAvatar, IonButton, IonIcon } from '@ionic/angular/standalone'
 
 import { ProfilePageComponent } from './profile.page'
 
@@ -39,7 +38,6 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    IonicModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
     ImageModule,
@@ -56,10 +54,15 @@ const routes: Routes = [
     GoalThumbnailModule,
     PagenotfoundModule,
     GoalCreateModalComponent,
-    CopiedPopoverComponent
+    CopiedPopoverComponent,
+    IonContent,
+    IonCard,
+    IonAvatar,
+    IonButton,
+    IonIcon
   ],
   declarations: [
     ProfilePageComponent
   ]
 })
-export class ProfilePageModule {}
+export class ProfilePageModule { }

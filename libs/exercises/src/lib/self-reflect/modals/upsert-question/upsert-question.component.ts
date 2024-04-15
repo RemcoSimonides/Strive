@@ -1,7 +1,11 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { AlertController, IonicModule, ModalController } from '@ionic/angular'
+import { AlertController, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { trashOutline } from 'ionicons/icons'
+import { IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonRange, IonLabel } from '@ionic/angular/standalone'
+
 import { orderBy } from 'firebase/firestore'
 import { debounceTime, of, switchMap } from 'rxjs'
 
@@ -21,7 +25,6 @@ import { SelfReflectQuestionForm } from '../../forms/self-reflect-settings.form'
 import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, createSelfReflectQuestion, selfReflectQuestions } from '@strive/model'
 
-
 @Component({
   standalone: true,
   selector: 'strive-self-reflect-question',
@@ -30,12 +33,23 @@ import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, c
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
     HeaderModalComponent,
     SelfReflectReplaceFrequencyPipe,
     PrioritizeGoalsComponent,
-    WheelOfLifeResultsModule
+    WheelOfLifeResultsModule,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonList,
+    IonItem,
+    IonTextarea,
+    IonSelect,
+    IonSelectOption,
+    IonRange,
+    IonLabel
   ]
 })
 export class SelfReflectQuestionModalComponent extends ModalDirective implements OnInit {
@@ -62,13 +76,14 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
     modalCtrl: ModalController,
     private settingsService: SelfReflectSettingsService,
     private wheelOfLifeEntryService: WheelOfLifeEntryService
-  ) {
+) {
     super(location, modalCtrl)
 
     this.rangeForm.valueChanges.subscribe(index => {
       if (!this.range[index]) return
       this.prioritizeGoalEntry.set(this.range[index].entry)
     })
+    addIcons({ trashOutline })
   }
 
   ngOnInit() {

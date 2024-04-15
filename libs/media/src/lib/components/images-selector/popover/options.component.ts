@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { IonicModule, PopoverController } from '@ionic/angular'
+import { IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule
+    IonList,
+    IonItem
   ],
   selector: 'strive-image-options-popover',
   template: `
@@ -19,7 +20,7 @@ import { IonicModule, PopoverController } from '@ionic/angular'
 export class ImageOptionsPopoverComponent {
   constructor(
     private popoverCtrl: PopoverController
-  ) {}
+  ) { }
 
   remove() {
     this.popoverCtrl.dismiss('remove')

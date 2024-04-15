@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -41,7 +41,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
     this.supports$ = this.auth.profile$.pipe(
       switchMap(user => {
         if (!user) return of([[], []])
-        
+
         const params = { goalId: this.goal.id }
 
         const recipientQuery = this.milestone
@@ -49,7 +49,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
           : this.support.valueChanges([where('recipientId', '==', user.uid)], params)
 
         const supporterQuery = this.milestone
-          ? this.support.valueChanges([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone?.id), ], params)
+          ? this.support.valueChanges([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone?.id),], params)
           : this.support.valueChanges([where('supporterId', '==', user.uid)], params)
 
         return combineLatest([
@@ -57,7 +57,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
           recipientQuery
         ])
       }),
-      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      map(([supporter, recipient]) => [...supporter, ...recipient]),
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: () => this.goal,

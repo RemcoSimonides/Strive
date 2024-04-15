@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-
 import { NotfoundPageComponent } from './404.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
 
@@ -18,7 +16,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     PagenotfoundModule,
     HeaderModule,
     RouterModule.forChild(routes)

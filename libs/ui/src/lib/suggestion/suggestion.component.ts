@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
 import { orderBy, where } from 'firebase/firestore'
 
 import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
@@ -12,7 +11,9 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { ChatGPTMessage, Milestone, createChatGPTMessage, createMilestone } from '@strive/model'
 import { ScrollService } from '@strive/utils/services/scroll.service'
-
+import { addIcons } from 'ionicons'
+import { sparklesOutline, addOutline } from 'ionicons/icons'
+import { IonIcon, IonList, IonItem, IonLabel, IonButton, IonInput } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
@@ -22,10 +23,15 @@ import { ScrollService } from '@strive/utils/services/scroll.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ToDatePipe,
     HTMLPipeModule,
-    FormsModule
+    FormsModule,
+    IonIcon,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonInput
   ]
 })
 export class SuggestionSComponent implements OnInit, OnDestroy {
@@ -73,7 +79,9 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     private chatGPTService: ChatGPTService,
     private milestoneService: MilestoneService,
     private scrolLService: ScrollService
-  ) {}
+  ) {
+    addIcons({ sparklesOutline, addOutline })
+  }
 
   ngOnInit() {
     const sub = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).subscribe(message => {
@@ -113,7 +121,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
     const milestones = suggestions.map((content, index) => createMilestone({ order: max + index, content }))
-    this.milestoneService.add(milestones, { params: { goalId: this.goalId }})
+    this.milestoneService.add(milestones, { params: { goalId: this.goalId } })
   }
 
   async toggleSuggestion(content: string, index: number, element: any) {
@@ -122,9 +130,9 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     const current = await this.milestoneService.load([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
 
     if (this.added$.value.some(addedSuggestion => addedSuggestion === content)) {
-      this.removeSuggestion(content, index, current)
+        this.removeSuggestion(content, index, current)
     } else {
-      this.addSuggestion(content, current)
+        this.addSuggestion(content, current)
     }
 
     // save element height because added element added to list above this is similar height
@@ -138,7 +146,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
     const milestone = createMilestone({ order: max, content })
-    this.milestoneService.add(milestone, { params: { goalId: this.goalId }})
+    this.milestoneService.add(milestone, { params: { goalId: this.goalId } })
   }
 
   private async removeSuggestion(content: string, index: number, milestones: Milestone[]) {
@@ -147,7 +155,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
     const milestone = milestones.find(milestone => milestone.content === content)
     if (!milestone) return
 
-    this.milestoneService.remove(milestone.id, { params: { goalId: this.goalId }})
+    this.milestoneService.remove(milestone.id, { params: { goalId: this.goalId } })
     this.added$.next(this.added$.value.filter(index => index !== index))
   }
 
@@ -168,7 +176,7 @@ export class SuggestionSComponent implements OnInit, OnDestroy {
       type: 'RoadmapMoreInfoAnswers',
       prompt
     })
-    this.chatGPTService.add(message, { params: { goalId: this.goalId }})
+    this.chatGPTService.add(message, { params: { goalId: this.goalId } })
 
     this.questions = []
     this.cdr.markForCheck()

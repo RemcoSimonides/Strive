@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
-
 import { PostOptionsComponent } from './options.component'
 import { UpsertPostModalModule } from '../../modals/upsert/post-upsert.module'
+import { IonList, IonItem } from '@ionic/angular/standalone'
 
 @NgModule({
-	imports: [
-		CommonModule,
-		IonicModule,
-		UpsertPostModalModule
-	],
-	declarations: [
-		PostOptionsComponent
-	]
+  imports: [
+    CommonModule,
+    UpsertPostModalModule,
+    IonList,
+    IonItem
+  ],
+  declarations: [
+    PostOptionsComponent
+  ]
 })
-export class PostOptionsModule {}
+export class PostOptionsModule { }

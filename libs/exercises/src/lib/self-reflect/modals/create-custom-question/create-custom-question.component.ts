@@ -1,7 +1,8 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
+import { IonTitle, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { SelfReflectCategory, SelfReflectFrequencyWithNever, SelfReflectTense, SelfReflectType, createSelfReflectQuestion } from '@strive/model'
@@ -17,9 +18,15 @@ import { AuthService } from '@strive/auth/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
-    HeaderModalComponent
+    HeaderModalComponent,
+    IonTitle,
+    IonList,
+    IonItem,
+    IonTextarea,
+    IonSelect,
+    IonSelectOption,
+    IonButton
   ]
 })
 export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
@@ -27,7 +34,7 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
   form = new FormGroup({
     question: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     type: new FormControl<SelfReflectType>('formlist', { nonNullable: true, validators: [Validators.required] }),
-    frequency: new FormControl<SelfReflectFrequencyWithNever | ''>('', { nonNullable: true , validators: [Validators.required]}),
+    frequency: new FormControl<SelfReflectFrequencyWithNever | ''>('', { nonNullable: true, validators: [Validators.required] }),
     tense: new FormControl<SelfReflectTense | ''>('', { nonNullable: true, validators: [Validators.required] }),
     category: new FormControl<SelfReflectCategory | ''>('', { nonNullable: true, validators: [Validators.required] })
   })
@@ -46,8 +53,8 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
     if (this.form.invalid) return
     if (!this.auth.uid) return
 
-    const { category, frequency, question, tense, type} = this.form.value
-    if (!category || !frequency || !question || !tense || !type ) return
+    const { category, frequency, question, tense, type } = this.form.value
+    if (!category || !frequency || !question || !tense || !type) return
 
     const selfReflectQuestion = createSelfReflectQuestion({
       key: createRandomString(16),

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild } from '@angular/core'
-import { IonDatetime, PopoverController } from '@ionic/angular'
+import { IonDatetime, PopoverController } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'strive-datetime',
@@ -35,7 +35,7 @@ export class DatetimeComponent {
   @Input() caption?: string
   @Input() hideRemove = false
 
-  constructor(private popoverCtrl: PopoverController) {}
+  constructor(private popoverCtrl: PopoverController) { }
 
   confirm() {
     this.popoverCtrl.dismiss(this.datetime?.value, 'dismiss')

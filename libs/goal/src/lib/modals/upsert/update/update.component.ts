@@ -1,6 +1,8 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { close } from 'ionicons/icons'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 import { GoalDetailsComponent } from '../components/details/details.component'
@@ -18,9 +20,16 @@ import { AuthService } from '@strive/auth/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     GoalDetailsComponent,
-    GoalImagesComponent
+    GoalImagesComponent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonTitle,
+    IonContent,
+    IonFooter
   ]
 })
 export class GoalUpdateModalComponent extends ModalDirective implements OnInit {
@@ -37,6 +46,7 @@ export class GoalUpdateModalComponent extends ModalDirective implements OnInit {
     protected override modalCtrl: ModalController
   ) {
     super(location, modalCtrl)
+    addIcons({ close })
   }
 
   ngOnInit() {
@@ -55,7 +65,7 @@ export class GoalUpdateModalComponent extends ModalDirective implements OnInit {
     }
 
     const goal = { ...this.form.getGoalValue(), id: this.goal.id }
-    await this.goalService.upsert(goal, { params: { uid: this.auth.uid }})
+    await this.goalService.upsert(goal, { params: { uid: this.auth.uid } })
     this.dismiss()
   }
 }

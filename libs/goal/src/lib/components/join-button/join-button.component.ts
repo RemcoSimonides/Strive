@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
-import { AlertController, IonPopover, ModalController } from '@ionic/angular'
+
+import { AlertController, IonPopover, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { flagOutline } from 'ionicons/icons'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { BehaviorSubject } from 'rxjs'
 
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { Goal, GoalStakeholder } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { BehaviorSubject } from 'rxjs'
 
 @Pipe({ name: 'joinButtonText', standalone: true })
 export class JoinButtonTextSPipe implements PipeTransform {
@@ -42,7 +45,9 @@ export class JoinButtonComponent {
     private modalCtrl: ModalController,
     private router: Router,
     private stakeholderService: GoalStakeholderService
-  ) {}
+  ) {
+    addIcons({ flagOutline })
+  }
 
   async join() {
     if (!this.auth.uid) {
@@ -71,7 +76,7 @@ export class JoinButtonComponent {
               this.stakeholderService.update({
                 uid: this.auth.uid,
                 hasOpenRequestToJoin: false
-              }, { params: { goalId }})
+              }, { params: { goalId } })
             }
           },
           {
@@ -103,7 +108,7 @@ export class JoinButtonComponent {
             this.stakeholderService.update({
               uid: this.auth.uid,
               isAchiever: false
-            }, { params: { goalId }})
+            }, { params: { goalId } })
           }
         },
         {
@@ -122,7 +127,7 @@ export class JoinButtonComponent {
       this.stakeholderService.update({
         uid: this.auth.uid,
         isAchiever: true
-      }, { params: { goalId }})
+      }, { params: { goalId } })
       this.popover?.dismiss()
     } else {
       this.stakeholderService.upsert({
@@ -130,7 +135,7 @@ export class JoinButtonComponent {
         goalId,
         isSpectator: true,
         hasOpenRequestToJoin: true
-      }, { params: { goalId }})
+      }, { params: { goalId } })
       this.status$.next('requested')
     }
   }

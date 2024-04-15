@@ -8,7 +8,7 @@ export type Theme = 'dark' | 'light'
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  theme$ = new BehaviorSubject<Theme>('light')
+  theme$ = new BehaviorSubject<Theme>('dark')
   light$ = this.theme$.pipe(map(theme => theme === 'light'))
   dark$ = this.theme$.pipe(map(theme => theme === 'dark'))
 

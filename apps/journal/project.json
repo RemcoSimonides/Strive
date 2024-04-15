@@ -4,23 +4,19 @@
   "projectType": "application",
   "sourceRoot": "apps/journal/src",
   "prefix": "journal",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/journal/browser",
         "index": "apps/journal/src/index.html",
-        "main": "apps/journal/src/main.ts",
-        "polyfills": "apps/journal/src/polyfills.ts",
+        "browser": "apps/journal/src/main.ts",
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/journal/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
-          {
-            "glob": "**/*.svg",
-            "input": "node_modules/ionicons/dist/ionicons/svg",
-            "output": "./svg"
-          },
           "apps/journal/src/assets",
           "apps/journal/src/manifest.webmanifest",
           "apps/journal/src/firebase-messaging-sw.js",
@@ -36,8 +32,13 @@
           "apps/journal/src/theme/variables.scss"
         ],
         "scripts": [],
-        "serviceWorker": true,
-        "ngswConfigPath": "apps/journal/ngsw-config.json"
+        "server": "apps/journal/src/main.server.ts",
+        "prerender": {
+          "discoverRoutes": true
+        },
+        "ssr": {
+          "entry": "apps/journal/src/ssr.server.ts"
+        }
       },
       "configurations": {
         "production": {
@@ -59,15 +60,13 @@
               "with": "environments/environment.prod.ts"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "serviceWorker": "apps/journal/ngsw-config.json"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          "sourceMap": true
         }
       },
       "defaultConfiguration": "production"
@@ -76,10 +75,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "journal:build:production"
+          "buildTarget": "journal:build:production"
         },
         "development": {
-          "browserTarget": "journal:build:development"
+          "buildTarget": "journal:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -87,102 +86,17 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "journal:build"
+        "buildTarget": "journal:build"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/journal/**/*.ts", "apps/journal/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/journal"],
       "options": {
-        "jestConfig": "apps/journal/jest.config.ts",
-        "passWithNoTests": true
-      }
-    },
-    "server": {
-      "executor": "@angular-devkit/build-angular:server",
-      "options": {
-        "outputPath": "dist/apps/journal/server",
-        "main": "apps/journal/src/ssr.server.ts",
-        "tsConfig": "apps/journal/tsconfig.server.json",
-        "inlineStyleLanguage": "scss"
-      },
-      "configurations": {
-        "production": {
-          "outputHashing": "media",
-          "fileReplacements": [
-            {
-              "replace": "environments/environment.ts",
-              "with": "environments/environment.prod.ts"
-            }
-          ]
-        },
-        "development": {
-          "optimization": false,
-          "sourceMap": true,
-          "extractLicenses": false,
-          "buildOptimizer": false
-        }
-      },
-      "defaultConfiguration": "production",
-      "production": {
-        "outputHashing": "media",
-        "fileReplacements": [
-          {
-            "replace": "environments/environment.ts",
-            "with": "environments/environment.prod.ts"
-          }
-        ]
-      },
-      "development": {
-        "optimization": false,
-        "sourceMap": true,
-        "extractLicenses": false
-      }
-    },
-    "serve-ssr": {
-      "executor": "@nguniversal/builders:ssr-dev-server",
-      "configurations": {
-        "development": {
-          "browserTarget": "journal:build:development",
-          "serverTarget": "journal:server:development"
-        },
-        "production": {
-          "browserTarget": "journal:build:production",
-          "serverTarget": "journal:server:production"
-        }
-      },
-      "defaultConfiguration": "development"
-    },
-    "prerender": {
-      "executor": "@nguniversal/builders:prerender",
-      "options": {
-        "browserTarget": "journal:build:production",
-        "serverTarget": "journal:server:production",
-        "routes": [
-          "/",
-          "/download",
-          "/edit-profile",
-          "/exercise",
-          "/exercise/affirmations",
-          "/exercise/daily-gratitude",
-          "/exercise/dear-future-self",
-          "/exercise/wheel-of-life",
-          "/exercise/self-reflect",
-          "/explore",
-          "/privacy-policy",
-          "/terms"
-        ],
-        "guessRoutes": false,
-        "routesFile": ""
-      },
-      "configurations": {
-        "production": {}
+        "jestConfig": "apps/journal/jest.config.ts"
       }
     },
     "cap": {
@@ -275,6 +189,5 @@
         }
       }
     }
-  },
-  "tags": []
+  }
 }

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
 import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray } from '@angular/forms'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController, PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { closeCircle, checkmarkOutline, addCircle } from 'ionicons/icons'
 
 import { debounceTime, of, Subscription, switchMap, tap } from 'rxjs'
 import { AES, enc } from 'crypto-js'
@@ -60,6 +62,8 @@ export class AffirmationsPageComponent implements OnDestroy {
       title: 'Affirmations - Strive Journal',
       description: 'Exercise to help you prioritize positive thoughts over negative thoughts'
     })
+    addIcons({ closeCircle, checkmarkOutline, addCircle })
+
     this.shuffle(this.suggestions)
     this.suggestionsCopy = Object.assign([], this.suggestions)
 

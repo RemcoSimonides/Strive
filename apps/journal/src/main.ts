@@ -1,26 +1,17 @@
 import { enableProdMode } from '@angular/core'
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
+import { bootstrapApplication } from '@angular/platform-browser'
 
-import { AppModule } from './app/app.module'
+import { AppComponent } from './app/app.component'
+import { appConfig } from './app/app.config'
 import { environment } from '@env'
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
+
+defineCustomElements(window)
 
 if (environment.production) {
   enableProdMode()
 }
 
-function bootstrap() {
-  platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  // Call the element loader after the platform has been bootstrapped
-  .then(() => defineCustomElements(window))
+bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err))
-}
-
-
- if (document.readyState === 'complete') {
-   bootstrap()
- } else {
-   document.addEventListener('DOMContentLoaded', bootstrap)
- }

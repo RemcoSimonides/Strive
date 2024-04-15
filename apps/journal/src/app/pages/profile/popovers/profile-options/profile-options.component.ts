@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { IonicModule, ModalController, PopoverController } from '@ionic/angular'
+
+import { ModalController, PopoverController, IonList, IonItem, IonLabel, IonIcon } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { downloadOutline } from 'ionicons/icons'
+
 import { getAuth } from 'firebase/auth'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -15,7 +19,10 @@ import { ThemeService } from '@strive/utils/services/theme.service'
   templateUrl: './profile-options.component.html',
   imports: [
     CommonModule,
-    IonicModule
+    IonList,
+    IonItem,
+    IonLabel,
+    IonIcon
   ]
 })
 export class ProfileOptionsComponent {
@@ -27,7 +34,9 @@ export class ProfileOptionsComponent {
     public pwa: PWAService,
     private router: Router,
     private themeService: ThemeService
-  ) {}
+  ) {
+    addIcons({ downloadOutline });
+  }
 
   goTo(url: string) {
     this.router.navigateByUrl(url)

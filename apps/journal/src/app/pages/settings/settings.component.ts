@@ -2,7 +2,7 @@ import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular/standalone'
 import { getAuth } from 'firebase/auth'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { isSafari } from '@strive/utils/helpers'
@@ -10,6 +10,8 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { AppVersionService } from '@strive/utils/services/app-version.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { addIcons } from 'ionicons'
+import { moonOutline, sunnyOutline, downloadOutline, openOutline } from 'ionicons/icons'
 
 @Component({
   selector: 'journal-settings',
@@ -39,7 +41,9 @@ export class SettingsPageComponent {
     private screensize: ScreensizeService,
     private themeService: ThemeService,
     private versionService: AppVersionService
-  ) {}
+  ) {
+    addIcons({ moonOutline, sunnyOutline, downloadOutline, openOutline })
+  }
 
   installPWA() {
     this.pwa.showInstallPromotion()

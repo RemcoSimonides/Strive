@@ -14,6 +14,8 @@ import { PersonalService } from '@strive/user/personal.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 import { delay } from '@strive/utils/helpers'
 import { ThemeService } from '@strive/utils/services/theme.service'
+import { addIcons } from 'ionicons'
+import { checkmark, arrowForwardOutline } from 'ionicons/icons'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const translucentPrimaryRGBA = 'rgba(249, 116, 29, 0.5)'
@@ -189,6 +191,7 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
         this.save$.next('save')
       }
     })
+    addIcons({ checkmark, arrowForwardOutline })
   }
 
   ngOnDestroy() {
@@ -259,7 +262,7 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
 
     this.service.save(entry)
 
-    delay(1500).then(() => { 
+    delay(1500).then(() => {
       this.save$.next('saved')
       this.showForm = false
     })

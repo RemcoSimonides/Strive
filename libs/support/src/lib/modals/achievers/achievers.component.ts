@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
 import { GoalStakeholder, User } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
@@ -55,7 +55,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
 
   selected(event: CustomEvent, achiever: GoalStakeholderWithChecked) {
     const { checked } = event.detail
-    
+
     const stakeholder = this._all.find(a => a.uid === achiever.uid)
     if (!stakeholder) throw new Error('stakeholder not found when selecting')
     stakeholder.checked = checked

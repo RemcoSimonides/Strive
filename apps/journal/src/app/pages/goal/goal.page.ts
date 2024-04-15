@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular'
 import { Location } from '@angular/common'
+
+import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, personAddOutline, shareSocialOutline, ellipsisHorizontalOutline, flag, notifications, link, lockOpenOutline, lockClosedOutline, timerOutline, closeOutline, arrowDownOutline, arrowUpOutline, sparklesOutline } from 'ionicons/icons'
+
 // Firebase
 import { orderBy, OrderByDirection, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -108,7 +112,7 @@ export class GoalPageComponent implements OnDestroy {
     this.screensize.isMobile$,
     of(Capacitor.getPlatform() === 'ios')
   ]).pipe(
-    map(([ isLoggedIn, isMobile, isIOS ]) => isLoggedIn && isMobile && isIOS )
+    map(([isLoggedIn, isMobile, isIOS]) => isLoggedIn && isMobile && isIOS)
   )
 
   private accessSubscription: Subscription
@@ -149,10 +153,10 @@ export class GoalPageComponent implements OnDestroy {
       goalId$,
       this.auth.profile$
     ]).pipe(
-      tap(([ goalId, profile ]) => {
+      tap(([goalId, profile]) => {
         if (profile) this.stakeholderService.updateLastCheckedGoal(goalId, profile.uid)
       }),
-      switchMap(([ goalId, user ]) => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
+      switchMap(([goalId, user]) => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
       distinctUntilChanged((a, b) => !stakeholderChanged(a, b)),
       map(stakeholder => createGoalStakeholder(stakeholder)),
       tap(stakeholder => this.stakeholder = stakeholder),
@@ -209,18 +213,18 @@ export class GoalPageComponent implements OnDestroy {
       this.auth.profile$,
       goalId$
     ]).pipe(
-      switchMap(([ profile, goalId ]) => {
+      switchMap(([profile, goalId]) => {
         if (!profile) return of([[], []])
         return combineLatest([
           this.support.valueChanges([where('supporterId', '==', profile.uid)], { goalId }),
           this.support.valueChanges([where('recipientId', '==', profile.uid)], { goalId })
         ])
       }),
-      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      map(([supporter, recipient]) => [...supporter, ...recipient]),
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: () => this.goal,
-        milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }, { shouldAwait: true }),
@@ -251,11 +255,11 @@ export class GoalPageComponent implements OnDestroy {
       this.goal$,
       this.stakeholder$
     ]).pipe(
-      map(async ([ goal, stakeholder ]) => {
+      map(async ([goal, stakeholder]) => {
         if (!goal) return { access: false, goal }
         if (goal.publicity === 'public') return { access: true, goal }
         const { isAdmin, isAchiever, isSupporter, isSpectator, hasInviteToJoin } = stakeholder
-        if (isAdmin || isAchiever || isSupporter || isSpectator || hasInviteToJoin ) return { access: true, goal }
+        if (isAdmin || isAchiever || isSupporter || isSpectator || hasInviteToJoin) return { access: true, goal }
         const access = await this.inviteTokenService.checkInviteToken(goal.id)
         return { access, goal }
       })
@@ -275,6 +279,7 @@ export class GoalPageComponent implements OnDestroy {
         this.canAccess$.next(false)
       }
     })
+    addIcons({ arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, personAddOutline, shareSocialOutline, ellipsisHorizontalOutline, flag, notifications, link, lockOpenOutline, lockClosedOutline, timerOutline, closeOutline, arrowDownOutline, arrowUpOutline, sparklesOutline });
   }
 
   ngOnDestroy() {
@@ -373,7 +378,7 @@ export class GoalPageComponent implements OnDestroy {
       uid: this.auth.uid,
       goalId,
       isSpectator: !isSpectator
-    }, { params: { goalId }})
+    }, { params: { goalId } })
   }
 
 
@@ -491,7 +496,7 @@ export class GoalPageComponent implements OnDestroy {
       uid: stakeholder.uid,
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false
-    }, { params: { goalId: this.goal.id }})
+    }, { params: { goalId: this.goal.id } })
   }
 
   navTo(uid: string) {
@@ -521,7 +526,7 @@ export class GoalPageComponent implements OnDestroy {
   }
 
   back() {
-    const state = this.location.getState() as { navigationId: number}
+    const state = this.location.getState() as { navigationId: number }
 
     if (state?.navigationId === 1) {
       this.router.navigateByUrl('/')

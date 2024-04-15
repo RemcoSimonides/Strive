@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
 
-import { IonicModule } from '@ionic/angular'
+import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollContent, IonFooter, IonItem, IonTextarea, IonPopover, IonList } from '@ionic/angular/standalone'
 
 import { ChatModalComponent } from './chat.component'
 
@@ -20,7 +20,6 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonicModule,
     ImageModule,
     TimeAgoPipeModule,
     HTMLPipeModule,
@@ -30,7 +29,17 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
     AddSupportModalModule,
     HeaderModalComponent,
     ThinkingPipe,
-    PageLoadingModule
+    PageLoadingModule,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+    IonFooter,
+    IonItem,
+    IonTextarea,
+    IonPopover,
+    IonList
   ],
   declarations: [
     ChatModalComponent
@@ -39,4 +48,4 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
     ChatModalComponent
   ]
 })
-export class ChatModalModule {}
+export class ChatModalModule { }

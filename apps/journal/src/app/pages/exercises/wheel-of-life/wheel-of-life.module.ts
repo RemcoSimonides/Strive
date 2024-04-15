@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-
 import { WheelOfLifePageComponent } from './wheel-of-life.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
@@ -16,6 +14,7 @@ import { WheelOfLifeResultsModule } from '@strive/exercises/wheel-of-life/compon
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 
 import { EntryPipeModule } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
+import { IonContent, IonSelect, IonSelectOption, IonButton, IonIcon, IonCard, IonCardContent } from '@ionic/angular/standalone'
 
 const routes: Routes = [
   {
@@ -27,7 +26,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
@@ -37,8 +35,15 @@ const routes: Routes = [
     EntryModalModule,
     WheelOfLifeResultsModule,
     EntryPipeModule,
-    GoalCreateModalComponent
+    GoalCreateModalComponent,
+    IonContent,
+    IonSelect,
+    IonSelectOption,
+    IonButton,
+    IonIcon,
+    IonCard,
+    IonCardContent
   ],
   declarations: [WheelOfLifePageComponent]
 })
-export class WheelOfLifeModule {}
+export class WheelOfLifeModule { }

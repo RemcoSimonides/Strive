@@ -7,7 +7,7 @@
 </strive-header>
 
 <ion-content class="ion-padding">
-  <main *ngIf="uid$ | async else login">
+  <main *ngIf="uid$ | async; else login">
     <header *ngIf="(isMobile$ | async) === false">
       <h1>Self Reflect</h1>
       <ion-button
@@ -112,7 +112,7 @@
     <small>Add your own questions to reflect on</small>
 
     <ion-list lines="full">
-      <ng-container *ngFor="let question of customQuestions$ | async; trackBy: trackByFn; else loading">
+      <ng-container *ngFor="let question of customQuestions$ | async; trackBy: trackByFn">
         <ng-container *ngIf="dbEntries$ | async | filterEntries: question.key; let entries">
           <ion-item button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
             <ion-label>

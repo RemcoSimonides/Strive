@@ -7,6 +7,8 @@ import { filter, map, shareReplay, startWith } from 'rxjs/operators'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
+import { addIcons } from 'ionicons'
+import { flagSharp, barbellSharp } from 'ionicons/icons'
 
 @Component({
   templateUrl: 'tabs.component.html',
@@ -52,6 +54,8 @@ export class TabsComponent {
     public screenSize: ScreensizeService,
     public router: Router,
     private support: SupportService
-  ) {}
+  ) {
+    addIcons({ flagSharp, barbellSharp })
+  }
 
 }

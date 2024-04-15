@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { Component, HostListener, Input } from '@angular/core'
-import { PopoverController } from '@ionic/angular'
+import { IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'
 import { ShareModule } from '@strive/ui/share/share.module'
+import { addIcons } from 'ionicons'
+import { shareSocialOutline } from 'ionicons/icons'
 
 @Component({
   standalone: true,
@@ -10,7 +12,9 @@ import { ShareModule } from '@strive/ui/share/share.module'
   styleUrls: ['./share.component.scss'],
   imports: [
     CommonModule,
-    ShareModule
+    ShareModule,
+    IonButton,
+    IonIcon
   ]
 })
 export class GoalSharePopoverComponent {
@@ -19,7 +23,9 @@ export class GoalSharePopoverComponent {
 
   @Input() url = ''
 
-  constructor(private popoverCtrl: PopoverController) {}
+  constructor(private popoverCtrl: PopoverController) {
+    addIcons({ shareSocialOutline })
+  }
 
   close() {
     this.popoverCtrl.dismiss()

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { FormArray, FormControl } from '@angular/forms'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core'
-import { IonicModule, ItemReorderEventDetail } from '@ionic/angular'
+import { IonList, IonReorderGroup, IonItem, IonThumbnail, IonLabel, IonReorder, IonButton, ItemReorderEventDetail } from '@ionic/angular/standalone'
 import { BehaviorSubject, combineLatest, map, of, switchMap, tap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalService } from '@strive/goal/goal.service'
@@ -17,9 +17,15 @@ import { ImageModule } from '@strive/media/directives/image.module'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     PageLoadingModule,
-    ImageModule
+    ImageModule,
+    IonList,
+    IonReorderGroup,
+    IonItem,
+    IonThumbnail,
+    IonLabel,
+    IonReorder,
+    IonButton
   ]
 })
 export class PrioritizeGoalsComponent {
@@ -81,7 +87,7 @@ export class PrioritizeGoalsComponent {
   constructor(
     private auth: AuthService,
     private goalService: GoalService
-  ) {}
+  ) { }
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>, stakeholders: StakeholderWithGoal[]) {
     if (!this.auth.uid || !this._form) return

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
+import { IonSegment, IonSegmentButton } from '@ionic/angular/standalone'
 
 import { WheelOfLifeResultsComponent } from './results.component'
 
@@ -10,10 +10,11 @@ import 'chartjs-adapter-date-fns'
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
-    NgChartsModule
+    NgChartsModule,
+    IonSegment,
+    IonSegmentButton
   ],
   declarations: [WheelOfLifeResultsComponent],
   exports: [WheelOfLifeResultsComponent]
 })
-export class WheelOfLifeResultsModule {}
+export class WheelOfLifeResultsModule { }

@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core'
 import { DatePipe } from '@angular/common'
 import { FormControl, FormGroup } from '@angular/forms'
-import { PopoverController } from '@ionic/angular'
+import { PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { calendarOutline, checkmark } from 'ionicons/icons'
 
 import { limit, orderBy } from 'firebase/firestore'
 import { BehaviorSubject, firstValueFrom, of, switchMap, tap } from 'rxjs'
@@ -103,6 +105,7 @@ export class CardsComponent implements OnDestroy {
     private screensize: ScreensizeService
   ) {
     this.getEntry()
+    addIcons({ calendarOutline, checkmark })
   }
 
   ngOnDestroy() {

@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
-
 import { DetailsComponent } from './details.component'
 
 import { MilestoneStatusModule } from '../status/status.module'
@@ -15,11 +13,11 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
+import { IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReorderGroup, IonInput, IonReorder } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
 
     MilestoneStatusModule,
@@ -30,10 +28,19 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
     UpsertPostModalModule,
     AddSupportModule,
     SupportListModule,
-    HeaderModalComponent
+    HeaderModalComponent,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonItem,
+    IonTextarea,
+    IonList,
+    IonReorderGroup,
+    IonInput,
+    IonReorder
   ],
   declarations: [
     DetailsComponent
   ]
 })
-export class DetailsModule {}
+export class DetailsModule { }

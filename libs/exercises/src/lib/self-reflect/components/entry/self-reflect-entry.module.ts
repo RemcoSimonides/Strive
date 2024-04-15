@@ -3,8 +3,6 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { NgModule } from '@angular/core'
 
 import { SelfReflectEntryComponent } from './self-reflect-entry.component'
-import { IonicModule } from '@ionic/angular'
-
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
 import { SelfReflectQuestionActivatedPipe } from '../../pipes/activated.pipe'
@@ -17,11 +15,11 @@ import { SelfReflectOutroComponent } from '../outro/outro.component'
 import { SelfReflectFormListComponent } from '../form-list/form-list.component'
 import { SelfReflectTextareaComponent } from '../textarea/textarea.component'
 import { SelfReflectStepFilterPipe } from '../../pipes/step.pipe'
+import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonFooter, IonProgressBar } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
 
     PageLoadingModule,
@@ -34,9 +32,18 @@ import { SelfReflectStepFilterPipe } from '../../pipes/step.pipe'
     PrioritizeGoalsComponent,
     SelfReflectFormListComponent,
     SelfReflectTextareaComponent,
-    SelfReflectStepFilterPipe
+    SelfReflectStepFilterPipe,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonFooter,
+    IonProgressBar
   ],
   declarations: [SelfReflectEntryComponent],
   exports: [SelfReflectEntryComponent]
 })
-export class SelfReflectEntryModule {}
+export class SelfReflectEntryModule { }

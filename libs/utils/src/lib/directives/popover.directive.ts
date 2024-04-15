@@ -1,7 +1,7 @@
 import { Location } from '@angular/common'
 import { Directive, HostBinding, HostListener } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
-import { PopoverController } from '@ionic/angular'
+import { PopoverController } from '@ionic/angular/standalone'
 
 @Directive({
   selector: '[strivePopover]'

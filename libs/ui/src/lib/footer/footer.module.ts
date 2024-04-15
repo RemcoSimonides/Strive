@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
 import { FooterComponent } from './footer.component'
+import { IonIcon } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
-    RouterModule
+    RouterModule,
+    IonIcon
   ],
   declarations: [
     FooterComponent
@@ -17,4 +17,4 @@ import { FooterComponent } from './footer.component'
     FooterComponent
   ]
 })
-export class FooterModule {}
+export class FooterModule { }

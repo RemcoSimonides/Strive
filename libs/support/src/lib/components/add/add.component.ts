@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 
@@ -33,7 +33,7 @@ export class AddSupportComponent {
     private profileService: ProfileService,
     private stakeholderService: GoalStakeholderService,
     private supportService: SupportService
-  ) {}
+  ) { }
 
   async addSupport() {
     if (this.form.invalid) return
@@ -52,16 +52,16 @@ export class AddSupportComponent {
     if (this.milestone?.achieverId) {
       support.recipientId = this.milestone.achieverId
       this.form.setValue('')
-      return this.supportService.add(support, { params: { goalId }})
+      return this.supportService.add(support, { params: { goalId } })
     }
 
     const stakeholders = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId })
     const profiles = await this.profileService.getValue(stakeholders.map(a => a.uid))
-    const achievers = stakeholders.map(stakeholder => ({ ...stakeholder, profile: profiles.find(profile => profile.uid === stakeholder.uid)}))
+    const achievers = stakeholders.map(stakeholder => ({ ...stakeholder, profile: profiles.find(profile => profile.uid === stakeholder.uid) }))
     if (achievers.length === 1) {
       support.recipientId = achievers[0].uid
       this.form.setValue('')
-      return this.supportService.add(support, { params: { goalId }})
+      return this.supportService.add(support, { params: { goalId } })
     } else {
       const recipients: string[] = []
       const modal = await this.modalCtrl.create({
@@ -71,7 +71,7 @@ export class AddSupportComponent {
       modal.onDidDismiss().then(() => {
         for (const recipientId of recipients) {
           const result = createSupportBase({ ...support, recipientId })
-          this.supportService.add(result, { params: { goalId }})
+          this.supportService.add(result, { params: { goalId } })
         }
       })
       modal.present()

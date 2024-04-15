@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
 import { Routes, RouterModule } from '@angular/router'
-
-import { IonicModule } from '@ionic/angular'
-
 import { ExplorePageComponent } from './explore.page'
 
 // Strive
@@ -16,6 +13,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
 
 import { FooterModule } from '@strive/ui/footer/footer.module'
+import { IonContent, IonSearchbar, IonCard, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
 
 const routes: Routes = [
   {
@@ -28,7 +26,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonicModule,
     RouterModule.forChild(routes),
 
     // Strive
@@ -38,10 +35,16 @@ const routes: Routes = [
     RowsPipeModule,
     ImageModule,
     HeaderModule,
-    FooterModule
+    FooterModule,
+    IonContent,
+    IonSearchbar,
+    IonCard,
+    IonSelect,
+    IonSelectOption,
+    IonButton
   ],
   declarations: [
     ExplorePageComponent
   ]
 })
-export class ExplorePageModule {}
+export class ExplorePageModule { }

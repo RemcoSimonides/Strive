@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from "@ionic/angular"
-
 import { DatetimeComponent } from './datetime.component'
+import { IonDatetime, IonButton } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule
+    IonDatetime,
+    IonButton
   ],
   declarations: [DatetimeComponent],
   exports: [DatetimeComponent]
 })
-export class DatetimeModule {}
+export class DatetimeModule { }

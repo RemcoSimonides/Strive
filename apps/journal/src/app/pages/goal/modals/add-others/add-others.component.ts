@@ -1,6 +1,8 @@
 import { CommonModule, Location } from '@angular/common'
 import { Component, Input, Pipe, PipeTransform } from '@angular/core'
-import { IonicModule, ModalController, PopoverController } from '@ionic/angular'
+import { IonButton, IonContent, IonFooter, IonIcon, IonSearchbar, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { shareSocialOutline } from 'ionicons/icons'
 
 import { Share } from '@capacitor/share'
 import { joinWith } from 'ngfire'
@@ -61,19 +63,23 @@ export class InviteTextPipe implements PipeTransform {
 }
 
 @Component({
-  selector: 'journal-add-others',
-  templateUrl: './add-others.component.html',
-  styleUrls: ['./add-others.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule,
     ImageModule,
     SubtitlePipe,
     InviteTextPipe,
     GoalSharePopoverComponent,
-    HeaderModalComponent
-  ]
+    HeaderModalComponent,
+    IonSearchbar,
+    IonContent,
+    IonFooter,
+    IonButton,
+    IonIcon
+  ],
+  selector: 'journal-add-others',
+  templateUrl: './add-others.component.html',
+  styleUrls: ['./add-others.component.scss']
 })
 export class AddOthersModalComponent extends ModalDirective {
 
@@ -106,7 +112,7 @@ export class AddOthersModalComponent extends ModalDirective {
     joinWith({
       user: spectator => this.profileService.valueChanges(spectator.uid)
     }, { shouldAwait: true }),
-    map(spectators =>  spectators.map(spectator => ({
+    map(spectators => spectators.map(spectator => ({
       uid: spectator.user?.uid ?? '',
       username: spectator.user?.username ?? '',
       photoURL: spectator.user?.photoURL ?? '',
@@ -168,6 +174,7 @@ export class AddOthersModalComponent extends ModalDirective {
     private spectatorService: SpectatorService
   ) {
     super(location, modalCtrl)
+    addIcons({ shareSocialOutline })
   }
 
   search(event: any) {
@@ -185,7 +192,7 @@ export class AddOthersModalComponent extends ModalDirective {
       uid: profile.uid,
       goalId: this.goal.id,
       hasInviteToJoin: true,
-    }, { params: { goalId: this.goal.id }})
+    }, { params: { goalId: this.goal.id } })
   }
 
   async share(ev: UIEvent) {

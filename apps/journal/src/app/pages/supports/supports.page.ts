@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController, RefresherCustomEvent } from '@ionic/angular'
+import { ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -52,11 +52,11 @@ export class SupportsPageComponent {
           this.support.valueChanges([where('recipientId', '==', profile.uid)])
         ])
       }),
-      map(([ supporter, recipient ]) => [...supporter, ...recipient ]),
+      map(([supporter, recipient]) => [...supporter, ...recipient]),
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: ({ goalId }) => this.goalService.valueChanges(goalId),
-        milestone: ({ milestoneId, goalId  }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
         recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
         supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
       }),

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Location } from '@angular/common'
 import { Router } from '@angular/router'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
 
 import { orderBy } from 'firebase/firestore'
 import { of, switchMap } from 'rxjs'
@@ -48,7 +48,7 @@ export class EntryModalComponent extends ModalDirective {
     })
     modal.onDidDismiss().then((data) => {
       const navToGoal = data.data?.['navToGoal']
-      if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+      if (navToGoal) this.router.navigate(['/goal', navToGoal])
     })
     modal.present()
   }

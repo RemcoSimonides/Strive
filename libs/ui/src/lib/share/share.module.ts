@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
-
 import { ShareComponent } from './share.component'
+import { IonButton, IonIcon } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
+    IonButton,
+    IonIcon
   ],
   exports: [ShareComponent],
   declarations: [ShareComponent],

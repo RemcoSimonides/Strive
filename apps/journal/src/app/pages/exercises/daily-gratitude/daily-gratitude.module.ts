@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
 import { RouterModule, Routes } from '@angular/router'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 
@@ -13,6 +12,7 @@ import { HeaderModule } from '@strive/ui/header/header.module'
 
 import { CardsModule } from '@strive/exercises/daily-gratitude/components/cards/cards.module'
 import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { IonContent, IonToggle } from "@ionic/angular/standalone"
 
 const routes: Routes = [
   {
@@ -24,7 +24,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule.forChild(routes),
@@ -33,8 +32,10 @@ const routes: Routes = [
     ActivatePushNotificationsModule,
     HeaderModule,
     CardsModule,
-    DatetimeModule
+    DatetimeModule,
+    IonContent,
+    IonToggle
   ],
   declarations: [DailyGratitudePageComponent]
 })
-export class DailyGratitudeModule {}
+export class DailyGratitudeModule { }

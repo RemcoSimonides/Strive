@@ -1,7 +1,7 @@
 import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
-import { AlertController, ModalController } from '@ionic/angular'
+import { AlertController, ModalController } from '@ionic/angular/standalone'
 
 import { take } from 'rxjs/operators'
 

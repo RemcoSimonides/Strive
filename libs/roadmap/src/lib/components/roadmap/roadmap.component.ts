@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core'
-import { AlertController, ItemReorderEventDetail, ModalController } from '@ionic/angular'
+import { AlertController, ItemReorderEventDetail, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { chatboxOutline, listOutline, alarmOutline, trashOutline } from 'ionicons/icons'
 import { createGoalStakeholder, createPost, Goal, MilestoneStatus, StoryItem, Support } from '@strive/model'
 
 import { serverTimestamp } from 'firebase/firestore'
@@ -48,7 +50,9 @@ export class RoadmapComponent {
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private milestone: MilestoneService
-  ) {}
+  ) {
+    addIcons({ chatboxOutline, listOutline, alarmOutline, trashOutline })
+  }
 
   trackByFn(index: number, milestone: Milestone) {
     return milestone.id
@@ -79,7 +83,7 @@ export class RoadmapComponent {
           id: milestone.id,
           status,
           finishedAt: serverTimestamp() as any
-        }, { params: { goalId: this.goal.id }})
+        }, { params: { goalId: this.goal.id } })
         milestone.status = status
         this.cdr.markForCheck()
 
@@ -171,7 +175,7 @@ export class RoadmapComponent {
     const max = Math.max(from, to)
     const milestonesToUpdate = this.milestones.filter(milestone => milestone.order >= min && milestone.order <= max).map(milestone => ({ id: milestone.id, order: milestone.order }))
 
-    this.milestone.update(milestonesToUpdate, { params: { goalId: this.goal.id }})
+    this.milestone.update(milestonesToUpdate, { params: { goalId: this.goal.id } })
     ev.detail.complete()
   }
 
@@ -182,7 +186,7 @@ export class RoadmapComponent {
         ...this.milestoneForm.getRawValue(),
         status: this.goal.status !== 'pending' && this.createMode ? 'succeeded' : 'pending'
       })
-      this.milestone.add(milestone, { params: { goalId: this.goal.id }})
+      this.milestone.add(milestone, { params: { goalId: this.goal.id } })
       this.milestoneForm.reset(createMilestone())
     }
   }
@@ -202,7 +206,7 @@ export class RoadmapComponent {
   async deleteMilestone(milestone: MilestoneWithSupport) {
     if (!this.canEdit) return
 
-    const header =  milestone.supports?.length ? `Milestone has active supports` : ''
+    const header = milestone.supports?.length ? `Milestone has active supports` : ''
 
     const alert = await this.alertCtrl.create({
       header,
@@ -221,7 +225,7 @@ export class RoadmapComponent {
     alert.onDidDismiss().then((res) => {
       if (res.role == 'delete') {
         if (!milestone.id) return
-        this.milestone.update(milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id }})
+        this.milestone.update(milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id } })
       }
     })
     alert.present()

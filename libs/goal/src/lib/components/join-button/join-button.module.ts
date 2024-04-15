@@ -1,19 +1,23 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
-
 import { JoinButtonComponent, JoinButtonTextSPipe } from './join-button.component'
 
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
+import { IonButton, IonIcon, IonItem, IonList, IonPopover, IonSpinner } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     AuthModalModule,
-    JoinButtonTextSPipe
+    JoinButtonTextSPipe,
+    IonIcon,
+    IonPopover,
+    IonList,
+    IonItem,
+    IonButton,
+    IonSpinner
   ],
   declarations: [JoinButtonComponent],
   exports: [JoinButtonComponent]
 })
-export class JoinButtonModule {}
+export class JoinButtonModule { }

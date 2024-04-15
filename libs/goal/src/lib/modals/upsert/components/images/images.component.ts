@@ -2,7 +2,11 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { environment } from '@env'
-import { InfiniteScrollCustomEvent, IonicModule } from '@ionic/angular'
+
+import { IonCard, IonSearchbar, IonButton, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonSpinner, InfiniteScrollCustomEvent } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { imagesOutline, checkmarkOutline } from 'ionicons/icons'
+
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
@@ -22,9 +26,15 @@ interface Image {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
-    ImageSelectorModule
+    ImageSelectorModule,
+    IonCard,
+    IonSearchbar,
+    IonButton,
+    IonIcon,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+    IonSpinner
   ]
 })
 export class GoalImagesComponent implements OnInit, OnDestroy {
@@ -50,6 +60,10 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
 
   @Input() goalId?: string
   @Input() form?: GoalForm
+
+  constructor() {
+    addIcons({ imagesOutline, checkmarkOutline });
+  }
 
   ngOnInit() {
     if (!this.form) return
@@ -152,7 +166,6 @@ export class GoalImagesComponent implements OnInit, OnDestroy {
       this.imageSelector.cropIt()
     }
   }
-
 }
 
 function isErrorResponse(result: PhotosWithTotalResults | ErrorResponse): result is ErrorResponse {

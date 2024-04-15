@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { addIcons } from 'ionicons'
+import { arrowBack, closeOutline } from 'ionicons/icons'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
@@ -11,7 +13,11 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon
   ]
 })
 export class HeaderModalComponent {
@@ -20,9 +26,11 @@ export class HeaderModalComponent {
   @Input() color = ''
   @Input() transparent = false
 
-  @Output() dismiss =  new EventEmitter()
+  @Output() dismiss = new EventEmitter()
 
   constructor(
     private screensize: ScreensizeService
-  ) {}
+  ) {
+    addIcons({ arrowBack, closeOutline })
+  }
 }

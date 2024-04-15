@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Routes, RouterModule } from '@angular/router'
 import { ReactiveFormsModule } from '@angular/forms'
-
-import { IonicModule } from '@ionic/angular'
-
 import { GoalsPageComponent } from './goals.page'
 
 // Strive
@@ -23,6 +20,7 @@ import { CardsModalModule } from '@strive/exercises/daily-gratitude/modals/cards
 import { AffirmModalModule } from '@strive/exercises/affirmation/modals/affirm-modal.module'
 import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
+import { IonContent, IonRefresher, IonRefresherContent, IonThumbnail, IonIcon, IonBadge, IonButton, IonSkeletonText } from '@ionic/angular/standalone'
 
 const routes: Routes = [
   {
@@ -34,7 +32,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
     HeaderRootModule,
@@ -51,8 +48,16 @@ const routes: Routes = [
     CardsModalModule,
     AffirmModalModule,
     MessageModalModule,
-    EntryModalModule
+    EntryModalModule,
+    IonContent,
+    IonRefresher,
+    IonRefresherContent,
+    IonThumbnail,
+    IonIcon,
+    IonBadge,
+    IonButton,
+    IonSkeletonText
   ],
   declarations: [GoalsPageComponent]
 })
-export class GoalsPageModule {}
+export class GoalsPageModule { }

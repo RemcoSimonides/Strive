@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { FormControl } from '@angular/forms'
-import { AlertController } from '@ionic/angular'
+import { AlertController } from '@ionic/angular/standalone'
 
 import { joinWith } from 'ngfire'
 
@@ -42,7 +42,7 @@ export class SupportDetailsComponent implements OnInit {
     private profileService: ProfileService,
     private storyService: StoryService,
     private supportService: SupportService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (!this.support?.id) return
@@ -74,7 +74,7 @@ export class SupportDetailsComponent implements OnInit {
 
     const give = () => {
       if (!this.support?.id) return
-      this.supportService.update(this.support.id, { status: 'accepted', needsDecision: false }, { params: { goalId: this.support.goalId }})
+      this.supportService.update(this.support.id, { status: 'accepted', needsDecision: false }, { params: { goalId: this.support.goalId } })
       this.support.status = 'accepted'
       this.support.needsDecision = false
     }
@@ -110,7 +110,7 @@ export class SupportDetailsComponent implements OnInit {
           text: 'Yes',
           handler: () => {
             if (!this.support?.id) return
-            this.supportService.remove(this.support.id, { params: { goalId: this.support.goalId }})
+            this.supportService.remove(this.support.id, { params: { goalId: this.support.goalId } })
             this.removed.emit()
           }
         },
@@ -129,7 +129,7 @@ export class SupportDetailsComponent implements OnInit {
     this.supportService.upsert({
       id: this.support.id,
       counterDescription: this.counterForm.value
-    }, { params: { goalId: this.support.goalId }})
+    }, { params: { goalId: this.support.goalId } })
     this.support.counterDescription = this.counterForm.value
     this.cdr.markForCheck()
   }

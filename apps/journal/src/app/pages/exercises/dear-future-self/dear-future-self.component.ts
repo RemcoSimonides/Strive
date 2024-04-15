@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
 import { FormControl } from '@angular/forms'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { checkmarkOutline, mailOutline, mailOpenOutline } from 'ionicons/icons'
 import { Message } from '@strive/model'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
@@ -60,7 +62,7 @@ export class DearFutureSelfPageComponent {
 
   isLoggedIn$ = this.auth.isLoggedIn$
 
-  state: 'writing' | 'sending' | 'sent' = 'writing' 
+  state: 'writing' | 'sending' | 'sent' = 'writing'
 
   constructor(
     private auth: AuthService,
@@ -75,6 +77,7 @@ export class DearFutureSelfPageComponent {
       title: 'Dear Future Self - Strive Journal',
       description: 'Surprise your future self with a letter from the past'
     })
+    addIcons({ checkmarkOutline, mailOutline, mailOpenOutline });
   }
 
   async send() {

@@ -1,5 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core'
-import { ModalController, PopoverController } from '@ionic/angular'
+import { ModalController, PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { ellipsisVerticalOutline } from 'ionicons/icons'
 
 import { createGoalStakeholder, Post, StoryItem, User } from '@strive/model'
 
@@ -30,7 +32,9 @@ export class PostComponent {
   constructor(
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
-  ) {}
+  ) {
+    addIcons({ ellipsisVerticalOutline })
+  }
 
   openZoom(index: number) {
     const medias = this.post?.medias

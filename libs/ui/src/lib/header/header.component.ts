@@ -2,6 +2,8 @@ import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { addIcons } from 'ionicons'
+import { arrowBack } from 'ionicons/icons'
 
 @Component({
   selector: '[title] strive-header',
@@ -19,7 +21,9 @@ export class HeaderComponent {
     private location: Location,
     private router: Router,
     public screensize: ScreensizeService
-  ) { }
+  ) {
+    addIcons({ arrowBack })
+  }
 
   back() {
     const state = this.location.getState() as { navigationId: number }

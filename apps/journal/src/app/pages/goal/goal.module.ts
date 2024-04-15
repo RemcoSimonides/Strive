@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-
 import { GoalPageComponent } from './goal.page'
 
 import { GoalOptionsModule } from './popovers/options/options.module'
@@ -38,6 +36,7 @@ import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'
 
 import { ImageModule } from '@strive/media/directives/image.module'
+import { IonFab, IonFabButton, IonIcon, IonContent, IonButton, IonSelect, IonSelectOption, IonCard, IonList, IonItem, IonAvatar, IonLabel } from "@ionic/angular/standalone";
 
 const routes: Routes = [
   { path: '', component: GoalPageComponent }
@@ -46,7 +45,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     RouterModule.forChild(routes),
 
     // Strive
@@ -73,7 +71,19 @@ const routes: Routes = [
     DeadlinePopoverSComponent,
     UpsertPostModalModule,
     CollectiveGoalsModalSComponent,
-    SuggestionModalComponent
+    SuggestionModalComponent,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    IonContent,
+    IonButton,
+    IonSelect,
+    IonSelectOption,
+    IonCard,
+    IonList,
+    IonItem,
+    IonAvatar,
+    IonLabel
   ],
   declarations: [GoalPageComponent],
 })

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
 import { SelfReflectQuestion } from '@strive/model'
 import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
+import { addIcons } from 'ionicons'
+import { closeOutline, addOutline } from 'ionicons/icons'
+import { IonList, IonItem, IonTextarea, IonIcon, IonButton } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
@@ -13,9 +15,13 @@ import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
-    SelfReflectReplaceFrequencyPipe
+    SelfReflectReplaceFrequencyPipe,
+    IonList,
+    IonItem,
+    IonTextarea,
+    IonIcon,
+    IonButton
   ]
 })
 export class SelfReflectFormListComponent {
@@ -30,6 +36,10 @@ export class SelfReflectFormListComponent {
       this.showInput.set(false)
       this.add()
     }
+  }
+
+  constructor() {
+    addIcons({ closeOutline, addOutline });
   }
 
   patchValue(values: string[]) {

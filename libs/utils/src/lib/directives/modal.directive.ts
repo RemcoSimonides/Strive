@@ -1,6 +1,6 @@
 import { Location } from '@angular/common'
 import { Directive, HostBinding, HostListener } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
 import { Capacitor } from '@capacitor/core'
 import { Router } from '@angular/router'
 import { delay } from '../helpers'

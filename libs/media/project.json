@@ -4,21 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/media/src",
   "prefix": "strive",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/media"],
       "options": {
-        "jestConfig": "libs/media/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/media/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/media/**/*.ts", "libs/media/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }

@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
 import { Location } from '@angular/common'
 import { FormArray, FormControl } from '@angular/forms'
-import { AlertController, ModalController } from '@ionic/angular'
+import { AlertController, ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { close } from 'ionicons/icons'
 
-import { BehaviorSubject, firstValueFrom, map, of, shareReplay, switchMap} from 'rxjs'
+import { BehaviorSubject, firstValueFrom, map, of, shareReplay, switchMap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthService } from '@strive/auth/auth.service'
@@ -83,6 +85,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
     private settingsService: SelfReflectSettingsService
   ) {
     super(location, modalCtrl)
+    addIcons({ close })
   }
 
   async ngOnInit() {

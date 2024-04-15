@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common'
 import { Component, NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { TermsModule } from './terms.module'
+import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'strive-terms-page',
@@ -32,7 +32,7 @@ export class TermsPageComponent {
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
+    IonContent,
     TermsModule,
     HeaderModule,
     RouterModule.forChild([{ path: '', component: TermsPageComponent }])

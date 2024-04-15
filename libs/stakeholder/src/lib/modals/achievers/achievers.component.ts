@@ -1,7 +1,11 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { AlertController, IonicModule, ModalController, PopoverController } from '@ionic/angular'
+
+import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { ellipsisVertical } from 'ionicons/icons'
+
 import { joinWith } from 'ngfire'
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs'
 
@@ -21,10 +25,17 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule,
     ImageModule,
     RolesPopoverComponent,
-    HeaderModalComponent
+    HeaderModalComponent,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonAvatar,
+    IonLabel,
+    IonButton,
+    IonIcon
   ],
   selector: '[goalId] strive-achievers-modal',
   templateUrl: './achievers.component.html',
@@ -53,6 +64,7 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
 
   ) {
     super(location, modalCtrl)
+    addIcons({ ellipsisVertical })
   }
 
   ngOnInit() {
@@ -64,7 +76,7 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
         }, { shouldAwait: true })
       )
     ]).pipe(
-      map(([ user, stakeholders ]) => {
+      map(([user, stakeholders]) => {
         const you = stakeholders.find(stakeholder => stakeholder.uid === user?.uid)
         const others = stakeholders.filter(stakeholder => stakeholder.isAchiever).filter(stakeholder => stakeholder.uid !== user?.uid)
         return {

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
-import { ModalController, RefresherCustomEvent } from '@ionic/angular'
+import { ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { checkmarkOutline, add, lockClosedOutline } from 'ionicons/icons'
 import { ActivatedRoute, Router } from '@angular/router'
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
@@ -195,6 +197,7 @@ export class GoalsPageComponent implements OnDestroy {
         this.achieving$
       ])
     ).then(() => SplashScreen.hide())
+    addIcons({ checkmarkOutline, add, lockClosedOutline })
   }
 
   ngOnDestroy() {
@@ -228,7 +231,7 @@ export class GoalsPageComponent implements OnDestroy {
     }).then(modal => {
       modal.onDidDismiss().then(({ data }) => {
         const navToGoal = data?.['navToGoal']
-        if (navToGoal) this.router.navigate(['/goal', navToGoal ])
+        if (navToGoal) this.router.navigate(['/goal', navToGoal])
       })
       modal.present()
     })

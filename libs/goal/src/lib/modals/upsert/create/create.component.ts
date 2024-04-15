@@ -1,6 +1,8 @@
 import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { addIcons } from 'ionicons'
+import { close } from 'ionicons/icons'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter, ModalController } from '@ionic/angular/standalone'
 import { BehaviorSubject } from 'rxjs'
 import { format, isFuture, isPast } from 'date-fns'
 
@@ -27,11 +29,18 @@ type Steps = 'details' | 'images' | 'roadmap' | 'share'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     GoalDetailsComponent,
     GoalImagesComponent,
     GoalRoadmapComponent,
-    GoalShareComponent
+    GoalShareComponent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonTitle,
+    IonContent,
+    IonFooter
   ]
 })
 export class GoalCreateModalComponent extends ModalDirective implements OnDestroy {
@@ -56,6 +65,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
     protected override modalCtrl: ModalController
   ) {
     super(location, modalCtrl)
+    addIcons({ close })
   }
 
   ngOnDestroy() {
@@ -73,7 +83,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
       if (this.form.dirty) {
         if (isPast(deadline)) this.goal.status = 'succeeded'
 
-        this.goalService.upsert(this.goal, { params: { uid: this.auth.uid }})
+        this.goalService.upsert(this.goal, { params: { uid: this.auth.uid } })
         this.created = true
         this.form.markAsPristine()
 
@@ -98,7 +108,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
   }
 
   close() {
-    this.dismiss({ navToGoal: this.created ?  this.goal.id : false })
+    this.dismiss({ navToGoal: this.created ? this.goal.id : false })
   }
 
   prepareSuggestion() {
@@ -111,7 +121,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
         prompt,
         type: 'RoadmapSuggestion'
       })
-      this.chatGPTService.upsert(message, { params: { goalId: this.goal.id }})
+      this.chatGPTService.upsert(message, { params: { goalId: this.goal.id } })
 
 
       const end = format(deadline, 'dd MMMM yyyy')
@@ -122,7 +132,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
         prompt: `Soon I am going to ask you to break down my goal into milestones. I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. What are 3 questions to ask the user to create a more specific roadmap?`,
         type: 'RoadmapMoreInfoQuestions'
       })
-      this.chatGPTService.upsert(message2, { params: { goalId: this.goal.id }})
+      this.chatGPTService.upsert(message2, { params: { goalId: this.goal.id } })
     }
   }
 }

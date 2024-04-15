@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular'
+import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { Post, createGoalStakeholder } from '@strive/model'
 import { PostService } from '@strive/post/post.service'
 
@@ -13,7 +13,7 @@ import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.compon
 })
 export class PostOptionsComponent {
 	@HostListener('window:popstate', ['$event'])
-  	onPopState() { this.popoverCtrl.dismiss() }
+	onPopState() { this.popoverCtrl.dismiss() }
 
 	@Input() post!: Post
 	@Input() stakeholder = createGoalStakeholder()
@@ -23,7 +23,7 @@ export class PostOptionsComponent {
 		private modalCtrl: ModalController,
 		private popoverCtrl: PopoverController,
 		private postService: PostService
-	) {}
+	) { }
 
 	edit() {
 		this.popoverCtrl.dismiss()
@@ -42,7 +42,7 @@ export class PostOptionsComponent {
 					text: 'Yes',
 					handler: async () => {
 						if (!this.post.id) throw new Error('Post id has to be available when removing post')
-						this.postService.remove(this.post.id, { params: { goalId: this.post.goalId }})
+						this.postService.remove(this.post.id, { params: { goalId: this.post.goalId } })
 					}
 				},
 				{

@@ -1,6 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core'
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { InfiniteScrollCustomEvent, IonContent, ModalController, Platform, ScrollCustomEvent} from '@ionic/angular'
+import { InfiniteScrollCustomEvent, IonContent, ModalController, Platform, ScrollCustomEvent } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { settingsOutline, send } from 'ionicons/icons'
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
 import { joinWith, toDate } from 'ngfire'
 
@@ -20,7 +22,6 @@ import { Location } from '@angular/common'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { GoalService } from '@strive/goal/goal.service'
-
 
 @Component({
   selector: '[goal] strive-chat',
@@ -72,6 +73,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     super(location, modalCtrl)
     const sub = this.platform.keyboardDidShow.subscribe(() => this.content?.scrollToBottom())
     this.subs.push(sub)
+    addIcons({ settingsOutline, send });
   }
 
   async ngOnInit() {
@@ -175,7 +177,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     })
 
     this.form.reset('')
-    this.commentService.add(comment, { params: { goalId: this.goal.id }})
+    this.commentService.add(comment, { params: { goalId: this.goal.id } })
   }
 
   async logScrolling($event: ScrollCustomEvent) {
@@ -226,6 +228,6 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
   }
 
   toggleNotifications(goalChat: boolean) {
-    this.stakeholderService.update({ uid: this.auth.uid, 'settings.goalChat': goalChat }, { params: { goalId: this.goal.id }})
+    this.stakeholderService.update({ uid: this.auth.uid, 'settings.goalChat': goalChat }, { params: { goalId: this.goal.id } })
   }
 }

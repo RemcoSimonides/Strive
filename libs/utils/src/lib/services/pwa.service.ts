@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common'
 import { Injectable, ApplicationRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
-import { ToastController } from '@ionic/angular'
+import { ToastController } from '@ionic/angular/standalone'
 import { ReplaySubject, Subscription, first, switchMap, interval } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
@@ -72,7 +72,7 @@ export class PWAService implements OnDestroy {
         // Update UI notify the user they can install the PWA
         this.showInstallPromotion$.next(true)
       })
-  
+
       window.addEventListener('appinstalled', () => {
         this.showInstallPromotion$.next(false)
         // Clear the deferredPrompt so it can be garbage collected
@@ -89,7 +89,7 @@ export class PWAService implements OnDestroy {
     if (outcome === 'accepted') {
       this.showInstallPromotion$.next(false)
     }
-  
+
     // We've used the prompt, and can't use it again, throw it away
     this.deferredPrompt = null
   }

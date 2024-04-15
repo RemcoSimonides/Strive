@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule, PopoverController } from '@ionic/angular'
+import { IonList, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, PopoverController } from '@ionic/angular/standalone'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { endOfDay } from 'date-fns'
@@ -14,9 +14,14 @@ import { endOfDay } from 'date-fns'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
-    DeadlinePopoverSComponent
+    DeadlinePopoverSComponent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonSelect,
+    IonSelectOption
   ]
 })
 export class GoalDetailsComponent {
@@ -26,7 +31,7 @@ export class GoalDetailsComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private popoverCtrl: PopoverController
-  ) {}
+  ) { }
 
   async openDatePicker() {
     const caption = 'Is the goal already finished? Pick the date when it was'

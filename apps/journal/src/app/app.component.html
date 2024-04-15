@@ -1,4 +1,4 @@
-<ion-app>
+<ion-app ngSkipHydration>
 
   <ng-container *ngIf="(screensize.size$ | async) === 'mobile' else desktop">
     <ion-nav [root]="rootPage" />

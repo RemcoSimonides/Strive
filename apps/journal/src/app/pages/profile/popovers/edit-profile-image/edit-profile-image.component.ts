@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core'
 import { FormControl } from '@angular/forms'
-import { NavParams, PopoverController } from '@ionic/angular'
+import { NavParams, PopoverController } from '@ionic/angular/standalone'
 
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { AuthService } from '@strive/auth/auth.service'
@@ -14,7 +14,7 @@ import { ProfileService } from '@strive/user/profile.service'
 export class EditProfileImagePopoverComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
-  
+
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
   form?: FormControl

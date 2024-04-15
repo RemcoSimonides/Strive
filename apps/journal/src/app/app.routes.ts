@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core'
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
+import { Routes } from '@angular/router'
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', loadChildren: () => import('./pages/goals/goals.module').then(m => m.GoalsPageModule) },
   { path: 'explore', loadChildren: () => import('./pages/explore/explore.module').then(m => m.ExplorePageModule) },
   { path: 'goals', loadChildren: () => import('./pages/goals/goals.module').then(m => m.GoalsPageModule) },
@@ -21,14 +20,3 @@ const routes: Routes = [
   { path: 'download', loadChildren: () => import('./pages/download/download.module').then(m => m.DownloadModule) },
   { path: '**', pathMatch: 'full', loadChildren: () => import('./pages/404/404.module').then(m => m.NotfoundPageModule) },
 ]
-
-@NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-    preloadingStrategy: PreloadAllModules,
-    initialNavigation: 'enabledBlocking'
-})
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }

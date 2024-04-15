@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, HostListener } from '@angular/core'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular'
+import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { GoalService } from '@strive/goal/goal.service'
 import { AuthService } from '@strive/auth/auth.service'
@@ -36,7 +36,7 @@ export class GoalOptionsPopoverComponent {
     private goalService: GoalService,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
-  ) {}
+  ) { }
 
   dismiss(data: enumGoalOptions) {
     this.popoverCtrl.dismiss(data)

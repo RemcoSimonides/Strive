@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-
 import { ExercisesPageComponent, GetExercisePipe } from './exercises.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
@@ -11,6 +9,7 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
 import { TimeToGoPipeModule } from '@strive/utils/pipes/time-to-go.pipe'
+import { IonContent, IonIcon } from '@ionic/angular/standalone'
 
 const routes: Routes = [
   {
@@ -42,13 +41,14 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
     RouterModule.forChild(routes),
     SmallThumbnailModule,
     HeaderRootModule,
     DearFutureSelfPipeModule,
     TimeToGoPipeModule,
-    PageLoadingModule
+    PageLoadingModule,
+    IonContent,
+    IonIcon
   ],
   declarations: [
     ExercisesPageComponent,

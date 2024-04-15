@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { createMilestone, MilestoneStatus } from '@strive/model'
+import { addIcons } from 'ionicons'
+import { radioButtonOff, checkmarkCircle, closeCircle } from 'ionicons/icons'
 
 @Component({
   selector: 'strive-milestone-status',
@@ -9,7 +11,7 @@ import { createMilestone, MilestoneStatus } from '@strive/model'
 })
 export class MilestoneStatusComponent {
 
-  icon: Record<MilestoneStatus, { 
+  icon: Record<MilestoneStatus, {
     name: string,
     color: 'primary' | 'secondary' | 'warning' | 'danger' | 'none'
   }> = {
@@ -28,4 +30,8 @@ export class MilestoneStatusComponent {
   }
 
   @Input() milestone = createMilestone()
+
+  constructor() {
+    addIcons({ radioButtonOff, checkmarkCircle, closeCircle })
+  }
 }

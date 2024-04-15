@@ -1,7 +1,12 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
-import { Router, NavigationEnd } from '@angular/router'
-import { isPlatformBrowser, isPlatformServer, Location } from '@angular/common'
-import { Platform, ModalController, PopoverController } from '@ionic/angular'
+import { RouterModule, Router, NavigationEnd, RouterOutlet } from '@angular/router'
+import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common'
+
+// Ionic
+import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { search, notificationsOutline } from 'ionicons/icons'
+
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
@@ -12,6 +17,7 @@ import { filter, first, firstValueFrom, Subscription } from 'rxjs'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
 import { ProfileOptionsComponent } from './pages/profile/popovers/profile-options/profile-options.component'
+import { ImageModule } from '@strive/media/directives/image.module'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
@@ -23,9 +29,20 @@ import { AuthService } from '@strive/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ThemeService } from '@strive/utils/services/theme.service'
+import { TabsModule } from './pages/tabs/tabs.module'
+import { PWAService } from '@strive/utils/services/pwa.service'
 
 @Component({
   selector: 'journal-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterOutlet,
+    TabsModule,
+    IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
+    ImageModule
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -92,6 +109,7 @@ export class AppComponent implements OnDestroy {
     private personalService: PersonalService,
     private platform: Platform,
     private popoverCtrl: PopoverController,
+    pwa: PWAService,
     private router: Router,
     public screensize: ScreensizeService,
     private seo: SeoService,
@@ -100,6 +118,7 @@ export class AppComponent implements OnDestroy {
     private versionService: AppVersionService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
+    pwa.addEventListeners()
     this.theme.initTheme('dark')
     this.openModalOnStartup()
     if (isPlatformBrowser(this.platformId)) this.versionService.checkForUpdate()
@@ -117,6 +136,7 @@ export class AppComponent implements OnDestroy {
     })
 
     this.seo.setInitial()
+    addIcons({ search, notificationsOutline });
   }
 
   ngOnDestroy() {
@@ -126,6 +146,7 @@ export class AppComponent implements OnDestroy {
   }
 
   async openModalOnStartup() {
+    // TODO put code that should only execute in browser in afterRender and afterNextRender lifecycle hooks (https://angular.io/guide/ssr#authoring-server-compatible-components)
     if (isPlatformServer(this.platformId)) return
 
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {

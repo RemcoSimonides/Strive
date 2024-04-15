@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { PopoverController } from '@ionic/angular'
+
+import { PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { checkmarkOutline, ellipsisVertical, alertOutline, flagOutline, personAddOutline, bookmarkOutline, createOutline, chatboxOutline } from 'ionicons/icons'
+
 import { createGoal, createGoalStakeholder, EventType, GoalEvent, GoalStakeholder } from '@strive/model'
 import { GoalOptionsComponent } from '../goal-options/goal-options.component'
 import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated'
 
 function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number }[] {
   const counter: Partial<Record<EventType, number>> = {}
-    
+
   for (const { name } of events) {
     if (!counter[name]) counter[name] = 0;
     (counter[name] as number)++;
@@ -42,7 +46,9 @@ export class GoalThumbnailComponent {
       }) as any
   }
 
-  constructor(private popoverCtrl: PopoverController) {}
+  constructor(private popoverCtrl: PopoverController) {
+    addIcons({ checkmarkOutline, ellipsisVertical, alertOutline, flagOutline, personAddOutline, bookmarkOutline, createOutline, chatboxOutline })
+  }
 
   openGoalOptions(event: UIEvent) {
     event.stopPropagation()
@@ -53,7 +59,7 @@ export class GoalThumbnailComponent {
       componentProps: {
         goal: this.goal,
         stakeholder: this._stakeholder
-    }, event
+      }, event
     }).then(popover => popover.present())
   }
 }

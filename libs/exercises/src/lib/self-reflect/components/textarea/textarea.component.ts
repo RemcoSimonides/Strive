@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
 import { SelfReflectQuestion } from '@strive/model'
 import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
+import { IonList, IonItem, IonTextarea } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
@@ -13,9 +13,11 @@ import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
     ReactiveFormsModule,
-    SelfReflectReplaceFrequencyPipe
+    SelfReflectReplaceFrequencyPipe,
+    IonList,
+    IonItem,
+    IonTextarea
   ]
 })
 export class SelfReflectTextareaComponent {

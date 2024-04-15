@@ -1,7 +1,9 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
-import { ModalController, Platform } from '@ionic/angular'
+import { ModalController, Platform } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { arrowForwardOutline, moonOutline, sunnyOutline } from 'ionicons/icons'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
@@ -25,7 +27,7 @@ export class HomePageComponent {
 
   theme$ = this.themeService.theme$
 
-  constructor (
+  constructor(
     private aggregationService: AggregationService,
     private modalCtrl: ModalController,
     private platform: Platform,
@@ -49,6 +51,7 @@ export class HomePageComponent {
         elements.forEach(el => observer.observe(el))
       }, 800)
     }
+    addIcons({ arrowForwardOutline, moonOutline, sunnyOutline });
   }
 
   openAuthModal() {

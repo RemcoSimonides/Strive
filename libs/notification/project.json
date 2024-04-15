@@ -4,24 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/notification/src",
   "prefix": "strive",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/notification"],
       "options": {
-        "jestConfig": "libs/notification/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/notification/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/notification/**/*.ts",
-          "libs/notification/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }

@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/blog/src",
+  "tags": [],
   "targets": {
     "build": {
       "command": "npm run build:blog",
@@ -16,6 +17,5 @@
         "port": 3000
       }
     }
-  },
-  "tags": []
+  }
 }

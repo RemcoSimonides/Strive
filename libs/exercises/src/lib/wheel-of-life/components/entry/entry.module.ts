@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
+import { IonRange, IonButton, IonIcon, IonContent } from '@ionic/angular/standalone'
 
 import { WheelOfLifeEntryComponent } from './entry.component'
 
@@ -13,11 +13,14 @@ import { WheelOfLifeResultsModule } from '../results/results.module'
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonicModule,
     NgChartsModule,
-    WheelOfLifeResultsModule
+    WheelOfLifeResultsModule,
+    IonRange,
+    IonButton,
+    IonIcon,
+    IonContent
   ],
   declarations: [WheelOfLifeEntryComponent],
   exports: [WheelOfLifeEntryComponent]
 })
-export class WheelOfLifeEntryModule {}
+export class WheelOfLifeEntryModule { }

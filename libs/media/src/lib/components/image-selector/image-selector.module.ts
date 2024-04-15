@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
 import { ImageCropperModule } from 'ngx-image-cropper'
 import { ImageModule } from '../../directives/image.module'
 
 import { ImageSelectorComponent } from './image-selector.component'
+import { IonFabButton, IonIcon } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
     ImageCropperModule,
     ImageModule,
-    IonicModule
+    IonFabButton,
+    IonIcon
   ],
   exports: [ImageSelectorComponent],
   declarations: [ImageSelectorComponent]

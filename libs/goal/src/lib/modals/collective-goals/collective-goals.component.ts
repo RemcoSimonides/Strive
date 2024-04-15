@@ -1,22 +1,26 @@
 import { CommonModule, Location } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { IonicModule, ModalController } from '@ionic/angular'
+import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonProgressBar, ModalController } from '@ionic/angular/standalone'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { createGoal, Stakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
-
 @Component({
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule,
     ImageModule,
     ProgressPipeModule,
-    HeaderModalComponent
+    HeaderModalComponent,
+    IonContent,
+    IonList,
+    IonItem,
+    IonAvatar,
+    IonLabel,
+    IonProgressBar
   ],
   selector: 'strive-collective-goals-modal',
   templateUrl: './collective-goals.component.html',

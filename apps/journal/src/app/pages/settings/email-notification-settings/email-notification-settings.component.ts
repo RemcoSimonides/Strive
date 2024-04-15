@@ -19,5 +19,5 @@ export class EmailNotificationSettingsComponent {
   constructor(
     private personalService: PersonalService,
     private screensize: ScreensizeService
-  ) {}
+  ) { }
 }

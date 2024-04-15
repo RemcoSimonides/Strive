@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
-import { ModalController } from '@ionic/angular'
+import { ModalController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { chevronUpOutline } from 'ionicons/icons'
 
 import { orderBy } from '@firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -18,6 +20,7 @@ import { SupportService } from '@strive/support/support.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+
 
 @Component({
   selector: 'journal-notifications',
@@ -40,7 +43,9 @@ export class NotificationsPageComponent implements OnInit {
     private supportService: SupportService,
     private personal: PersonalService,
     private profileService: ProfileService
-  ) { }
+  ) {
+    addIcons({ chevronUpOutline });
+  }
 
   ngOnInit() {
     this.seo.generateTags({ title: `Notifications - Strive Journal` })

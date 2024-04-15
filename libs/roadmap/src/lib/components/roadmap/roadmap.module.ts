@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonicModule } from '@ionic/angular'
-
 import { RoadmapComponent } from './roadmap.component'
 
 import { MilestoneStatusModule } from '../status/status.module'
@@ -14,12 +12,12 @@ import { DetailsModule } from '../details/details.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
+import { IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, IonReorder, IonItemOptions, IonItemOption, IonInput, IonSkeletonText } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonicModule,
 
     ImageModule,
     MilestoneStatusModule,
@@ -28,7 +26,18 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
     DetailsModule,
     SubtaskPipeModule,
     MaxLengthModule,
-    UpsertPostModalModule
+    UpsertPostModalModule,
+    IonList,
+    IonReorderGroup,
+    IonItemSliding,
+    IonItem,
+    IonButton,
+    IonIcon,
+    IonReorder,
+    IonItemOptions,
+    IonItemOption,
+    IonInput,
+    IonSkeletonText
   ],
   exports: [
     RoadmapComponent

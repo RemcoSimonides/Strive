@@ -4,21 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/support/src",
   "prefix": "support",
+  "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/support"],
       "options": {
-        "jestConfig": "libs/support/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/support/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/support/**/*.ts", "libs/support/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }

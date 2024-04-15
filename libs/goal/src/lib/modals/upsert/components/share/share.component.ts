@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { IonicModule, PopoverController } from '@ionic/angular'
 import { Share } from '@capacitor/share'
+
+import { IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { shareSocialOutline } from 'ionicons/icons'
 
 import { Goal } from '@strive/model'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
@@ -16,8 +19,9 @@ import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.com
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    IonicModule,
-    GoalSharePopoverComponent
+    GoalSharePopoverComponent,
+    IonButton,
+    IonIcon
   ]
 })
 export class GoalShareComponent {
@@ -27,7 +31,9 @@ export class GoalShareComponent {
   constructor(
     private inviteTokenService: InviteTokenService,
     private popoverCtrl: PopoverController
-  ) {}
+  ) {
+    addIcons({ shareSocialOutline })
+  }
 
   async openSharePopover(ev: UIEvent) {
     if (!this.goal) return
@@ -48,7 +54,7 @@ export class GoalShareComponent {
         }).catch(err => {
           captureException(err)
         })
-      } catch(err: any) {
+      } catch (err: any) {
         captureMessage(err['message'])
       }
 

@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { AbstractControl } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { ToastController } from '@ionic/angular'
+import { ToastController } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { checkmarkOutline, closeOutline } from 'ionicons/icons'
 
 import { BehaviorSubject, Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
@@ -42,7 +44,9 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   constructor(
     private sanitizer: DomSanitizer,
     private toast: ToastController
-  ) {}
+  ) {
+    addIcons({ checkmarkOutline, closeOutline })
+  }
 
   ngOnInit() {
     this.resetState()

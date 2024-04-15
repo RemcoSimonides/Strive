@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 import { AppUpdate } from '@capawesome/capacitor-app-update'
-import { AlertController, ToastController } from '@ionic/angular'
+import { AlertController, ToastController } from '@ionic/angular/standalone'
 import { FireDocument } from 'ngfire'
 import { setContext } from '@sentry/angular'
 
@@ -78,7 +78,7 @@ export class AppVersionService extends FireDocument<Version> {
                 //   })
                 //   await AppUpdate.startFlexibleUpdate()
                 // } else {
-                  await AppUpdate.openAppStore()
+                await AppUpdate.openAppStore()
                 // }
               }
             }

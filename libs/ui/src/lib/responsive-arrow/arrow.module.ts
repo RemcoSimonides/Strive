@@ -1,13 +1,10 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
-
 import { ArrowForwardComponent, ArrowBackComponent } from './arrow.component'
 
 @NgModule({
   imports: [
-    CommonModule,
-    IonicModule
+    CommonModule
   ],
   declarations: [
     ArrowForwardComponent, ArrowBackComponent
@@ -16,4 +13,4 @@ import { ArrowForwardComponent, ArrowBackComponent } from './arrow.component'
     ArrowForwardComponent, ArrowBackComponent
   ]
 })
-export class ArrowModule {}
+export class ArrowModule { }
