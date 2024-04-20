@@ -1,13 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ToastController } from '@ionic/angular/standalone'
+import { IonCard, IonCardContent, IonButton, ToastController } from '@ionic/angular/standalone'
+import { CommonModule } from '@angular/common'
+
 import { map } from 'rxjs'
 import { PersonalService } from '@strive/user/personal.service'
 
 @Component({
+  standalone: true,
   selector: 'strive-exercise-activate-push-notification',
   templateUrl: './activate-push-notifications.component.html',
   styleUrls: ['./activate-push-notifications.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonCard,
+    IonCardContent,
+    IonButton
+  ]
 })
 export class ActivatePushNotificationsComponent {
 
