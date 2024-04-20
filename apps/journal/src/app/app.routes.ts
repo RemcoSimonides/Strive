@@ -18,5 +18,5 @@ export const routes: Routes = [
   { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfilePageModule) },
   { path: 'exercise', loadChildren: () => import('./pages/exercises/exercises.module').then(m => m.ExercisesModule) },
   { path: 'download', loadChildren: () => import('./pages/download/download.module').then(m => m.DownloadModule) },
-  { path: '**', pathMatch: 'full', loadChildren: () => import('./pages/404/404.module').then(m => m.NotfoundPageModule) },
+  { path: '**', pathMatch: 'full', loadComponent: () => import('./pages/404/404.component').then(m => m.NotfoundPageComponent) }
 ]

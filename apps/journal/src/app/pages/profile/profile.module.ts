@@ -20,7 +20,7 @@ import { ImageSelectorModule } from '@strive/media/components/image-selector/ima
 import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module'
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
-import { PagenotfoundModule } from '@strive/ui/404/404.module'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
@@ -52,7 +52,7 @@ const routes: Routes = [
     ProgressPipeModule,
     SupportingModule,
     GoalThumbnailModule,
-    PagenotfoundModule,
+    PagenotfoundComponent,
     GoalCreateModalComponent,
     CopiedPopoverComponent,
     IonContent,

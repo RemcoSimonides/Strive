@@ -5,7 +5,7 @@ import { SupportPageComponent } from './support.page'
 
 import { HeaderModule } from '@strive/ui/header/header.module'
 import { SupportDetailsModule } from '@strive/support/components/details/details.module'
-import { PagenotfoundModule } from '@strive/ui/404/404.module'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { IonContent } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -21,7 +21,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     HeaderModule,
     SupportDetailsModule,
-    PagenotfoundModule,
+    PagenotfoundComponent,
     IonContent
   ],
   declarations: [

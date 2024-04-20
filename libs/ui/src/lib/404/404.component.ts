@@ -1,12 +1,24 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
+import { RouterModule } from '@angular/router'
+import { IonContent, IonButton } from '@ionic/angular/standalone'
+
 import { SeoService } from '@strive/utils/services/seo.service'
+import { HeaderModule } from '../header/header.module'
 
 @Component({
+  standalone: true,
   selector: 'strive-404',
   templateUrl: './404.component.html',
   styleUrls: ['./404.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderModule,
+    IonContent,
+    IonButton
+  ]
 })
 export class PagenotfoundComponent {
   hasBack = false

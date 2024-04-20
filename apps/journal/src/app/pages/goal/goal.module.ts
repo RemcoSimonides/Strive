@@ -27,7 +27,7 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
 
 import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
-import { PagenotfoundModule } from '@strive/ui/404/404.module'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
 import { DescriptionModule } from '@strive/ui/description/description.module'
 import { CompactPipeModule } from '@strive/utils/pipes/compact.pipe'
@@ -65,7 +65,7 @@ const routes: Routes = [
     AddSupportModule,
     ChatModalModule,
     PageLoadingModule,
-    PagenotfoundModule,
+    PagenotfoundComponent,
     HeaderRootModule,
     AddOthersModalComponent,
     DeadlinePopoverSComponent,

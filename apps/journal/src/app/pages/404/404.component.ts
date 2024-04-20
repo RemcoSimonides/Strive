@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 
 @Component({
+  standalone: true,
   selector: 'journal-page-not-found',
-  templateUrl: './404.component.html',
-  styleUrls: ['./404.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: `<strive-404/>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PagenotfoundComponent]
 })
 export class NotfoundPageComponent {}
