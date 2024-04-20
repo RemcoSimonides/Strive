@@ -1,13 +1,28 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+
+import { IonContent, IonButton } from '@ionic/angular/standalone'
+
+import { ImageModule } from '@strive/media/directives/image.module'
+import { HeaderModule } from '@strive/ui/header/header.module'
+
 import { isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 
 @Component({
+  standalone: true,
   selector: 'journal-download',
   templateUrl: './download.component.html',
   styleUrls: ['./download.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ImageModule,
+    HeaderModule,
+    IonContent,
+    IonButton
+  ]
 })
 export class DownloadPageComponent {
 

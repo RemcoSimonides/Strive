@@ -17,6 +17,6 @@ export const routes: Routes = [
   { path: 'privacy-policy', loadChildren: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageModule) },
   { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfilePageModule) },
   { path: 'exercise', loadChildren: () => import('./pages/exercises/exercises.module').then(m => m.ExercisesModule) },
-  { path: 'download', loadChildren: () => import('./pages/download/download.module').then(m => m.DownloadModule) },
+  { path: 'download', loadComponent: () => import('./pages/download/download.component').then(m => m.DownloadPageComponent) },
   { path: '**', pathMatch: 'full', loadComponent: () => import('./pages/404/404.component').then(m => m.NotfoundPageComponent) }
 ]
