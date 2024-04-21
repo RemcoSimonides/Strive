@@ -1,16 +1,28 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
+
+import { IonSegment, IonSegmentButton } from '@ionic/angular/standalone'
+
 import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
 import { ChartConfiguration } from 'chart.js'
-import { BaseChartDirective } from 'ng2-charts'
+import { BaseChartDirective, NgChartsModule } from 'ng2-charts'
+import 'chartjs-adapter-date-fns'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const secondaryRGBA = 'rgba(0,179,163)'
 
 @Component({
+  standalone: true,
   selector: 'strive-wheel-of-life-results',
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    NgChartsModule,
+    IonSegment,
+    IonSegmentButton
+  ]
 })
 export class WheelOfLifeResultsComponent {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective

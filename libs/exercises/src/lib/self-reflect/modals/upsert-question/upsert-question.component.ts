@@ -13,7 +13,7 @@ import { closestIndexTo, eachDayOfInterval, endOfDay, isBefore, startOfDay } fro
 import format from 'date-fns/format'
 
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
-import { WheelOfLifeResultsModule } from '../../../wheel-of-life/components/results/results.module'
+import { WheelOfLifeResultsComponent } from '../../../wheel-of-life/components/results/results.component'
 import { PrioritizeGoalsComponent } from '../../components/prioritize-goals/prioritize-goals.component'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -37,7 +37,7 @@ import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, c
     HeaderModalComponent,
     SelfReflectReplaceFrequencyPipe,
     PrioritizeGoalsComponent,
-    WheelOfLifeResultsModule,
+    WheelOfLifeResultsComponent,
     IonTitle,
     IonButtons,
     IonButton,

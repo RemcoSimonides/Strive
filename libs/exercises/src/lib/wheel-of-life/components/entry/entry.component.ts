@@ -20,7 +20,7 @@ import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 import { delay } from '@strive/utils/helpers'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
-import { WheelOfLifeResultsModule } from '../results/results.module'
+import { WheelOfLifeResultsComponent } from '../results/results.component'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const translucentPrimaryRGBA = 'rgba(249, 116, 29, 0.5)'
@@ -64,7 +64,7 @@ interface DesiredFormType {
     CommonModule,
     ReactiveFormsModule,
     NgChartsModule,
-    WheelOfLifeResultsModule,
+    WheelOfLifeResultsComponent,
     IonRange,
     IonButton,
     IonIcon,
