@@ -12,7 +12,7 @@ import { PledgeComponent } from '../pledge/pledge.component'
 import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
 import { SupportDecisionComponent } from '../decision/decision.component'
 import { SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe } from '@strive/support/pipes/count.pipe'
-import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
+import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pipe'
 
 @Component({
   standalone: true,
@@ -28,7 +28,7 @@ import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
     SupportDecisionComponent,
     SupportDetailsModalComponent,
     SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe,
-    SupportRolePipeModule,
+    IsRecipientPipe, IsSupporterPipe,
     IonList,
     IonItem,
     IonLabel,

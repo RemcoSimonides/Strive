@@ -1,9 +1,9 @@
 
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { Support } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 
-@Pipe({ name: 'isSupporter' })
+@Pipe({ name: 'isSupporter', standalone: true })
 export class IsSupporterPipe implements PipeTransform {
   constructor(private auth: AuthService) {}
 
@@ -12,7 +12,7 @@ export class IsSupporterPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'isRecipient' })
+@Pipe({ name: 'isRecipient', standalone: true })
 export class IsRecipientPipe implements PipeTransform {
   constructor(private auth: AuthService) {}
 
@@ -20,9 +20,3 @@ export class IsRecipientPipe implements PipeTransform {
     return support.recipientId === this.auth.uid
   }
 }
-
-@NgModule({
-  exports: [IsSupporterPipe, IsRecipientPipe],
-  declarations: [IsSupporterPipe, IsRecipientPipe]
-})
-export class SupportRolePipeModule { } 

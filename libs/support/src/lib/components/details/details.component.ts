@@ -18,7 +18,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { PledgeComponent } from '../pledge/pledge.component'
 import { SupportDecisionComponent } from '../decision/decision.component'
 import { PostComponentModule } from '@strive/post/components/post/post.module'
-import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
+import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pipe'
 
 @Component({
   standalone: true,
@@ -33,7 +33,7 @@ import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
     ReactiveFormsModule,
     SupportDecisionComponent,
     PostComponentModule,
-    SupportRolePipeModule,
+    IsRecipientPipe, IsSupporterPipe,
     IonList,
     IonItem,
     IonInput,
