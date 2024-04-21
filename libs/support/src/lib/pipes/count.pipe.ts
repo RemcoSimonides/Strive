@@ -1,9 +1,9 @@
 
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
 import { Support, SupportsGroupedByGoal } from '@strive/model'
 
-@Pipe({ name: 'count' })
+@Pipe({ name: 'count', standalone: true })
 export class SupportCounterPipe implements PipeTransform {
   transform(goal: SupportsGroupedByGoal, id?: string) {
     let counter = 0
@@ -26,7 +26,7 @@ export class SupportCounterPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'needsDecision' })
+@Pipe({ name: 'needsDecision', standalone: true })
 export class NeedsDecisionPipe implements PipeTransform {
 
   constructor(private auth: AuthService) {}
@@ -42,7 +42,7 @@ export class NeedsDecisionPipe implements PipeTransform {
       if (support.counterNeedsDecision && isRecipient) return true
       return false
     }
-    
+
     if (goal.id === id) {
       return goal.supports.some(needsDecision)
     }
@@ -64,7 +64,7 @@ export class NeedsDecisionPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'total' })
+@Pipe({ name: 'total', standalone: true })
 export class SupportTotalPipe implements PipeTransform {
   transform(goal: SupportsGroupedByGoal) {
     let counter = goal.supports.length
@@ -76,9 +76,3 @@ export class SupportTotalPipe implements PipeTransform {
     return counter
   }
 }
-
-@NgModule({
-  exports: [SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe],
-  declarations: [SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe]
-})
-export class SupportCounterPipeModule { } 
