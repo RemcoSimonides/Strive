@@ -7,13 +7,12 @@ import { addIcons } from 'ionicons'
 import { searchOutline, notificationsOutline, settingsOutline, menuOutline } from 'ionicons/icons'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { MenuModule } from '../menu/menu.module'
+import { MenuComponent } from '../menu/menu.component'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { NotificationService } from '@strive/notification/notification.service'
-import { MenuComponent } from '../menu/menu.component'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
@@ -26,7 +25,7 @@ import { AuthService } from '@strive/auth/auth.service'
     CommonModule,
     RouterModule,
     ImageModule,
-    MenuModule,
+    MenuComponent,
     IonHeader,
     IonToolbar,
     IonTitle,

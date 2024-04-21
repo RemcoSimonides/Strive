@@ -1,9 +1,9 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
 
-import { ModalController, Platform } from '@ionic/angular/standalone'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, ModalController, Platform } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { moonOutline, sunnyOutline, close, openOutline } from 'ionicons/icons'
 
@@ -12,12 +12,28 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { delay, isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
+import { ImageModule } from '@strive/media/directives/image.module'
 
 @Component({
+	standalone: true,
 	selector: 'strive-menu',
 	templateUrl: './menu.component.html',
 	styleUrls: ['./menu.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		CommonModule,
+		RouterModule,
+		ImageModule,
+		IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel
+	]
 })
 export class MenuComponent extends ModalDirective {
 	enumAuthSegment = enumAuthSegment
