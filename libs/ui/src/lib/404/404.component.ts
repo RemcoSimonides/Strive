@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router'
 import { IonContent, IonButton } from '@ionic/angular/standalone'
 
 import { SeoService } from '@strive/utils/services/seo.service'
-import { HeaderModule } from '../header/header.module'
+import { HeaderComponent } from '../header/header.component'
 
 @Component({
   standalone: true,
@@ -15,7 +15,7 @@ import { HeaderModule } from '../header/header.module'
   imports: [
     CommonModule,
     RouterModule,
-    HeaderModule,
+    HeaderComponent,
     IonContent,
     IonButton
   ]

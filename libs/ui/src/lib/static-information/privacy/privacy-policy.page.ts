@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common"
 import { Component, NgModule } from "@angular/core"
 import { RouterModule } from "@angular/router"
-import { HeaderModule } from "@strive/ui/header/header.module"
+import { HeaderComponent } from "@strive/ui/header/header.component"
 import { SeoService } from "@strive/utils/services/seo.service"
 import { PrivacyPolicyModule } from "./privacy-policy.module"
 import { IonContent } from "@ionic/angular/standalone"
@@ -34,7 +34,7 @@ export class PrivacyPolicyPageComponent {
       CommonModule,
       IonContent,
       PrivacyPolicyModule,
-      HeaderModule,
+      HeaderComponent,
       RouterModule.forChild([{ path: '', component: PrivacyPolicyPageComponent }])
   ],
   declarations: [PrivacyPolicyPageComponent]

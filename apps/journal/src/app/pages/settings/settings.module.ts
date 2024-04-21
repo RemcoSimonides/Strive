@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { SettingsPageComponent } from './settings.component'
 
 import { AuthGuardService } from '@strive/auth/guard/auth-guard.service'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, IonListHeader } from '@ionic/angular/standalone'
 
@@ -22,7 +22,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
-    HeaderModule,
+    HeaderComponent,
     ImageModule,
     IonButtons,
     IonButton,

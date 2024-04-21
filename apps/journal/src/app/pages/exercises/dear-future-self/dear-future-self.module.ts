@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { DearFutureSelfPageComponent } from './dear-future-self.component'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
@@ -29,7 +29,7 @@ const routes: Routes = [
     TimeAgoPipeModule,
     PageLoadingModule,
     AuthModalModule,
-    HeaderModule,
+    HeaderComponent,
     MessageModalModule,
     IonContent,
     IonCard,

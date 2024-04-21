@@ -7,7 +7,7 @@ import { IonContent, IonList, IonItem, IonSelect, IonSelectOption, IonLabel, Ion
 import { firstValueFrom, of, shareReplay, switchMap } from 'rxjs'
 
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -26,7 +26,7 @@ import { SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HeaderModule,
+    HeaderComponent,
     PageLoadingModule,
     SelfReflectReplaceFrequencyPipe,
     IonContent,

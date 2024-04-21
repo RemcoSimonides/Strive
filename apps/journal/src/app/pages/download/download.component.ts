@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common'
 import { IonContent, IonButton } from '@ionic/angular/standalone'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
@@ -19,7 +19,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
   imports: [
     CommonModule,
     ImageModule,
-    HeaderModule,
+    HeaderComponent,
     IonContent,
     IonButton
   ]

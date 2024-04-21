@@ -1,15 +1,28 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { ScreensizeService } from '@strive/utils/services/screensize.service'
+
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { arrowBack } from 'ionicons/icons'
 
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+
 @Component({
+  standalone: true,
   selector: '[title] strive-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonTitle
+  ]
 })
 export class HeaderComponent {
 

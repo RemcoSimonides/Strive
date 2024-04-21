@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { EditProfilePageComponent } from './edit-profile.component'
 
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 import { IonContent, IonCard, IonCardContent, IonItem, IonInput, IonButton } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -18,7 +18,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ReactiveFormsModule,
     ImageSelectorModule,
-    HeaderModule,
+    HeaderComponent,
     IonContent,
     IonCard,
     IonCardContent,

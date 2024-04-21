@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { PushNotificationsSettingsComponent } from './push-notification-settings.component'
 
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 import { IonButtons, IonButton, IonToggle, IonContent, IonList, IonListHeader, IonItem, IonLabel, IonCheckbox } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -18,7 +18,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    HeaderModule,
+    HeaderComponent,
     FormsModule,
     ReactiveFormsModule,
     IonButtons,

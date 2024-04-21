@@ -6,7 +6,7 @@ import { WheelOfLifePageComponent } from './wheel-of-life.component'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { WheelOfLifeEntryModule } from '@strive/exercises/wheel-of-life/components/entry/entry.module'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
@@ -30,7 +30,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingModule,
     AuthModalModule,
-    HeaderModule,
+    HeaderComponent,
     WheelOfLifeEntryModule,
     EntryModalModule,
     WheelOfLifeResultsModule,

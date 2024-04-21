@@ -8,7 +8,7 @@ import { DailyGratitudePageComponent } from './daily-gratitude.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { CardsModule } from '@strive/exercises/daily-gratitude/components/cards/cards.module'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
@@ -30,7 +30,7 @@ const routes: Routes = [
     PageLoadingModule,
     AuthModalModule,
     ActivatePushNotificationsComponent,
-    HeaderModule,
+    HeaderComponent,
     CardsModule,
     DatetimeComponent,
     IonContent,

@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { ImageZoomModalComponent } from './image-zoom.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { HeaderModule } from '../header/header.module'
+import { HeaderComponent } from '../header/header.component'
 import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
 
 @NgModule({
@@ -11,7 +11,7 @@ import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
 		CommonModule,
 		ImageModule,
 		MediaPipeModule,
-		HeaderModule
+		HeaderComponent
 	],
 	declarations: [
 		ImageZoomModalComponent

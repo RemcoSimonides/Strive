@@ -25,7 +25,7 @@ import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/crea
 import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail.module'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
@@ -48,7 +48,7 @@ const routes: Routes = [
     EditProfileImagePopoverModule,
     ImageZoomModalModule,
     HeaderRootModule,
-    HeaderModule,
+    HeaderComponent,
     ProgressPipeModule,
     SupportingModule,
     GoalThumbnailModule,

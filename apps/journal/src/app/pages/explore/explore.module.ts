@@ -10,7 +10,7 @@ import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/smal
 import { LargeThumbnailModule } from '@strive/ui/thumbnail/components/large/large-thumbnail.module'
 import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { HeaderModule } from '@strive/ui/header/header.module'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { FooterComponent } from '@strive/ui/footer/footer.component'
 import { IonContent, IonSearchbar, IonCard, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
@@ -34,7 +34,7 @@ const routes: Routes = [
     LargeThumbnailModule,
     RowsPipeModule,
     ImageModule,
-    HeaderModule,
+    HeaderComponent,
     FooterComponent,
     IonContent,
     IonSearchbar,
