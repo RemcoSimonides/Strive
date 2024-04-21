@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { AddSupportModalComponent } from './add.component'
 
 import { SupportListModule } from '../../components/list/list.module'
-import { AddSupportModule } from '../../components/add/add.module'
+import { AddSupportComponent } from '../../components/add/add.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { IonContent, IonTitle } from '@ionic/angular/standalone'
 
@@ -12,7 +12,7 @@ import { IonContent, IonTitle } from '@ionic/angular/standalone'
   imports: [
     CommonModule,
     SupportListModule,
-    AddSupportModule,
+    AddSupportComponent,
     HeaderModalComponent,
     IonTitle,
     IonContent,

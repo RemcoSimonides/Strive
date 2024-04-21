@@ -33,7 +33,7 @@ import { DescriptionComponent } from '@strive/ui/description/description.compone
 import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
-import { AddSupportModule } from '@strive/support/components/add/add.module'
+import { AddSupportComponent } from '@strive/support/components/add/add.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { IonFab, IonFabButton, IonIcon, IonContent, IonButton, IonSelect, IonSelectOption, IonCard, IonList, IonItem, IonAvatar, IonLabel } from "@ionic/angular/standalone";
@@ -62,7 +62,7 @@ const routes: Routes = [
     DescriptionComponent,
     JoinButtonModule,
     SupportListModule,
-    AddSupportModule,
+    AddSupportComponent,
     ChatModalModule,
     PageLoadingComponent,
     PagenotfoundComponent,

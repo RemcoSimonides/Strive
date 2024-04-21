@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { FormControl, Validators } from '@angular/forms'
-import { ModalController } from '@ionic/angular/standalone'
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
+import { IonList, IonItem, IonInput, IonButton, IonIcon, IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 
@@ -13,12 +14,26 @@ import { ProfileService } from '@strive/user/profile.service'
 
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
 import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { AchieversModalModule } from '@strive/support/modals/achievers/achievers.module'
 
 @Component({
+  standalone: true,
   selector: '[goal] strive-support-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AchieversModalModule,
+    IonList,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonIcon,
+    IonTitle,
+    IonContent
+  ]
 })
 export class AddSupportComponent {
 

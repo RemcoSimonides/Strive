@@ -11,7 +11,7 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
-import { AddSupportModule } from '@strive/support/components/add/add.module'
+import { AddSupportComponent } from '@strive/support/components/add/add.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReorderGroup, IonInput, IonReorder } from '@ionic/angular/standalone'
 
@@ -26,7 +26,7 @@ import { IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReord
     StoryModule,
     DatetimeComponent,
     UpsertPostModalModule,
-    AddSupportModule,
+    AddSupportComponent,
     SupportListModule,
     HeaderModalComponent,
     IonButton,
