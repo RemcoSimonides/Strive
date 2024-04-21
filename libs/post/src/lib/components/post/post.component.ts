@@ -1,5 +1,9 @@
-import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular/standalone'
+
+import { IonCard, IonAvatar, IonButton, IonIcon, IonCardContent } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { ellipsisVerticalOutline } from 'ionicons/icons'
 
@@ -7,13 +11,35 @@ import { createGoalStakeholder, Post, StoryItem, User } from '@strive/model'
 
 import { PostOptionsComponent } from '@strive/post/popovers/options/options.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { PostOptionsModule } from '@strive/post/popovers/options/options.module'
+import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
+import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
+import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
 
 @Component({
+  standalone: true,
   selector: '[storyItem] strive-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.ShadowDom,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ImageModule,
+    ImageZoomModalComponent,
+    PostOptionsModule,
+    HTMLPipe,
+    SafePipe,
+    MediaPipeModule,
+    IonCard,
+    IonAvatar,
+    IonButton,
+    IonIcon,
+    IonCardContent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PostComponent {
 

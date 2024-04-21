@@ -11,7 +11,7 @@ import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
-import { PostComponentModule } from '@strive/post/components/post/post.module'
+import { PostComponent } from '@strive/post/components/post/post.component'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 @Component({
@@ -25,7 +25,7 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
     RouterModule,
     StoryItemMessagePipe,
     TimeAgoPipe,
-    PostComponentModule,
+    PostComponent,
     UpsertPostModalModule,
     IonButton,
     IonIcon

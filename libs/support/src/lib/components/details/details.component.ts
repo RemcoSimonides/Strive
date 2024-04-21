@@ -17,7 +17,7 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { PledgeComponent } from '../pledge/pledge.component'
 import { SupportDecisionComponent } from '../decision/decision.component'
-import { PostComponentModule } from '@strive/post/components/post/post.module'
+import { PostComponent } from '@strive/post/components/post/post.component'
 import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pipe'
 
 @Component({
@@ -32,7 +32,7 @@ import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pip
     RouterModule,
     ReactiveFormsModule,
     SupportDecisionComponent,
-    PostComponentModule,
+    PostComponent,
     IsRecipientPipe, IsSupporterPipe,
     IonList,
     IonItem,
