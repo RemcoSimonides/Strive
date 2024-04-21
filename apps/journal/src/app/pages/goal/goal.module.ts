@@ -21,7 +21,7 @@ import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.com
 
 import { StoryComponent } from '@strive/story/components/story/story.component'
 
-import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'
+import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
@@ -63,7 +63,7 @@ const routes: Routes = [
     JoinButtonModule,
     SupportListComponent,
     AddSupportComponent,
-    ChatModalModule,
+    ChatModalComponent,
     PageLoadingComponent,
     PagenotfoundComponent,
     HeaderRootComponent,

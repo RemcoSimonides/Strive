@@ -1,8 +1,11 @@
+import { CommonModule, Location } from '@angular/common'
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core'
-import { FormControl, Validators } from '@angular/forms'
-import { InfiniteScrollCustomEvent, IonContent, ModalController, Platform, ScrollCustomEvent } from '@ionic/angular/standalone'
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
+
+import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollContent, IonFooter, IonItem, IonTextarea, IonPopover, IonList, InfiniteScrollCustomEvent, ModalController, Platform, ScrollCustomEvent } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { settingsOutline, send } from 'ionicons/icons'
+
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
 import { joinWith, toDate } from 'ngfire'
 
@@ -18,16 +21,47 @@ import { Goal, Comment, createComment, GoalStakeholder, createGoalStakeholder } 
 
 import { delay } from '@strive/utils/helpers'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { Location } from '@angular/common'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { GoalService } from '@strive/goal/goal.service'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
+import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
+import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
+import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
+import { ThinkingPipe } from '@strive/chat/pipes/thinking.pipe'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 @Component({
+  standalone: true,
   selector: '[goal] strive-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ImageModule,
+    TimeAgoPipe,
+    HTMLPipe,
+    JoinButtonModule,
+    AuthModalModule,
+    AddSupportModalComponent,
+    HeaderModalComponent,
+    ThinkingPipe,
+    PageLoadingComponent,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+    IonFooter,
+    IonItem,
+    IonTextarea,
+    IonPopover,
+    IonList
+  ]
 })
 export class ChatModalComponent extends ModalDirective implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(IonContent) content?: IonContent
