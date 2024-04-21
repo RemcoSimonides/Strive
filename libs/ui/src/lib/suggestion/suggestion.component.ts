@@ -6,7 +6,7 @@ import { orderBy, where } from 'firebase/firestore'
 import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
 
 import { ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
-import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
+import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { ChatGPTMessage, Milestone, createChatGPTMessage, createMilestone } from '@strive/model'
@@ -24,7 +24,7 @@ import { IonIcon, IonList, IonItem, IonLabel, IonButton, IonInput } from '@ionic
   imports: [
     CommonModule,
     ToDatePipe,
-    HTMLPipeModule,
+    HTMLPipe,
     FormsModule,
     IonIcon,
     IonList,

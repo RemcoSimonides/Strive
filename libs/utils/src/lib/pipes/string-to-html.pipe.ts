@@ -1,5 +1,3 @@
-import { CommonModule } from '@angular/common'
-import { NgModule } from '@angular/core'
 import { Pipe, PipeTransform } from '@angular/core'
 
 function replaceURLs(value: string) {
@@ -15,16 +13,9 @@ function replaceURLs(value: string) {
   })
 }
 
-@Pipe({ name: 'toHTML' })
+@Pipe({ name: 'toHTML', standalone: true })
 export class HTMLPipe implements PipeTransform {
   transform(value: string) {
     return replaceURLs(value)
   }
 }
-
-@NgModule({
-  declarations: [HTMLPipe],
-  imports: [CommonModule],
-  exports: [HTMLPipe]
-})
-export class HTMLPipeModule { }

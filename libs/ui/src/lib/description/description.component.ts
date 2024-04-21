@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 
 import { IonItem, IonTextarea, IonButton } from '@ionic/angular/standalone'
 
-import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
+import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 
 @Component({
 	standalone: true,
@@ -15,7 +15,7 @@ import { HTMLPipeModule } from '@strive/utils/pipes/string-to-html.pipe'
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
-		HTMLPipeModule,
+		HTMLPipe,
 		IonItem,
 		IonTextarea,
 		IonButton
