@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { RoadmapComponent } from './roadmap.component'
 
 import { MilestoneStatusModule } from '../status/status.module'
-import { AssigneeModule } from '../assignee/assignee.module'
+import { AssigneeComponent } from '../assignee/assignee.component'
 
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { ImageModule } from '@strive/media/directives/image.module'
@@ -21,7 +21,7 @@ import { IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, 
 
     ImageModule,
     MilestoneStatusModule,
-    AssigneeModule,
+    AssigneeComponent,
     AddSupportModalComponent,
     DetailsModule,
     SubtaskPipeModule,

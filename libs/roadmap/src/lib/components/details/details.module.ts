@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { DetailsComponent } from './details.component'
 
 import { MilestoneStatusModule } from '../status/status.module'
-import { AssigneeModule } from '../assignee/assignee.module'
+import { AssigneeComponent } from '../assignee/assignee.component'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { StoryComponent } from '@strive/story/components/story/story.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
@@ -21,7 +21,7 @@ import { IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReord
     ReactiveFormsModule,
 
     MilestoneStatusModule,
-    AssigneeModule,
+    AssigneeComponent,
     SubtaskPipeModule,
     StoryComponent,
     DatetimeComponent,

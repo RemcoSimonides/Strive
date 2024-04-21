@@ -7,7 +7,7 @@ import { AdminRoadmapComponent } from './roadmap.component'
 
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SubtaskPipeModule } from '@strive/roadmap/pipes/subtask.pipe'
-import { AssigneeModule } from '@strive/roadmap/components/assignee/assignee.module'
+import { AssigneeComponent } from '@strive/roadmap/components/assignee/assignee.component'
 
 @NgModule({
   imports: [
@@ -16,7 +16,7 @@ import { AssigneeModule } from '@strive/roadmap/components/assignee/assignee.mod
     RouterModule,
     PageLoadingComponent,
     SubtaskPipeModule,
-    AssigneeModule,
+    AssigneeComponent,
   ],
   declarations: [AdminRoadmapComponent],
   exports: [AdminRoadmapComponent]
