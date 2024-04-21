@@ -15,7 +15,7 @@ import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail
 import { GoalUpdatesModalModule } from '@strive/goal/modals/goal-updates/goal-updates.module'
 import { MiniThumbnailSwiperModule } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.module'
 
-import { CardsModalModule } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.module'
+import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
@@ -43,7 +43,7 @@ const routes: Routes = [
     GoalUpdatesModalModule,
     MiniThumbnailSwiperModule,
 
-    CardsModalModule,
+    CardsModalComponent,
     AffirmModalComponent,
     MessageModalModule,
     EntryModalModule,
