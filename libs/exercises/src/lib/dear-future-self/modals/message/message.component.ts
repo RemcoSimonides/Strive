@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
-import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular/standalone'
+import { CommonModule, Location } from '@angular/common'
+import { IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { Message } from '@strive/model'
@@ -9,12 +9,20 @@ import { AES, enc } from 'crypto-js'
 import { DearFutureSelfService } from '../../dear-future-self.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal.service'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
+  standalone: true,
   selector: '[message] strive-dear-future-self-message-modal',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    HeaderModalComponent,
+    IonTitle,
+    IonContent
+  ]
 })
 export class MessageModalComponent extends ModalDirective implements OnInit {
 

@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { DearFutureSelfPageComponent } from './dear-future-self.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
-import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
+import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals/message/message.component'
 
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
@@ -30,7 +30,7 @@ const routes: Routes = [
     PageLoadingComponent,
     AuthModalModule,
     HeaderComponent,
-    MessageModalModule,
+    MessageModalComponent,
     IonContent,
     IonCard,
     IonItem,
