@@ -1,17 +1,47 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
-import { FormControl } from '@angular/forms'
-import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular/standalone'
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { CommonModule, Location } from '@angular/common'
+
+import { IonSearchbar, IonContent, IonList, IonItem, IonButton, IonAvatar, IonLabel, IonText, IonCheckbox, ModalController } from '@ionic/angular/standalone'
+
 import { GoalStakeholder, User } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile: User }
 
 @Component({
+  standalone: true,
   selector: '[support] strive-support-achievers',
   templateUrl: './achievers.component.html',
   styleUrls: ['./achievers.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ImageModule,
+    HeaderModalComponent,
+    IonSearchbar,
+    IonContent,
+    IonList,
+    IonItem,
+    IonButton,
+    IonAvatar,
+    IonLabel,
+    IonText,
+    IonCheckbox,
+    IonSearchbar,
+    IonContent,
+    IonList,
+    IonItem,
+    IonButton,
+    IonAvatar,
+    IonLabel,
+    IonText,
+    IonCheckbox
+  ]
 })
 export class AchieversModalComponent extends ModalDirective implements OnDestroy {
 

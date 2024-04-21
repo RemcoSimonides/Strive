@@ -14,7 +14,6 @@ import { ProfileService } from '@strive/user/profile.service'
 
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
 import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { AchieversModalModule } from '@strive/support/modals/achievers/achievers.module'
 
 @Component({
   standalone: true,
@@ -25,7 +24,7 @@ import { AchieversModalModule } from '@strive/support/modals/achievers/achievers
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AchieversModalModule,
+    AchieversModalComponent,
     IonList,
     IonItem,
     IonInput,
