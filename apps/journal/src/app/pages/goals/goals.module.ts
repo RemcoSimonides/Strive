@@ -17,7 +17,7 @@ import { GoalUpdatesModalModule } from '@strive/goal/modals/goal-updates/goal-up
 import { MiniThumbnailSwiperModule } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.module'
 
 import { CardsModalModule } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.module'
-import { AffirmModalModule } from '@strive/exercises/affirmation/modals/affirm-modal.module'
+import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
 import { MessageModalModule } from '@strive/exercises/dear-future-self/modals/message/message.module'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
 import { IonContent, IonRefresher, IonRefresherContent, IonThumbnail, IonIcon, IonBadge, IonButton, IonSkeletonText } from '@ionic/angular/standalone'
@@ -46,7 +46,7 @@ const routes: Routes = [
     MiniThumbnailSwiperModule,
 
     CardsModalModule,
-    AffirmModalModule,
+    AffirmModalComponent,
     MessageModalModule,
     EntryModalModule,
     IonContent,
