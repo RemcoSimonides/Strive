@@ -8,7 +8,7 @@ import { ProfilePageComponent } from './profile.page'
 
 // Followers / Followings
 import { FollowingModule } from '@strive/spectator/components/following/following.module'
-import { FollowersModule } from '@strive/spectator/components/followers/followers.module'
+import { FollowersComponent } from '@strive/spectator/components/followers/followers.component'
 import { SupportingModule } from '@strive/goal/modals/supporting/supporting.module'
 
 // Strive
@@ -43,7 +43,7 @@ const routes: Routes = [
     ImageModule,
     ImageSelectorModule,
     FollowingModule,
-    FollowersModule,
+    FollowersComponent,
     GoalOptionsModule,
     EditProfileImagePopoverModule,
     ImageZoomModalComponent,
