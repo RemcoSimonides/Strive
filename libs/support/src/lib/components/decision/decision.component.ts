@@ -1,12 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Support, SupportStatus } from '@strive/model'
 import { SupportService } from '../..//support.service'
+import { IonButton } from '@ionic/angular/standalone'
 
 @Component({
+  standalone: true,
   selector: '[support] strive-support-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    IonButton
+  ]
 })
 export class SupportDecisionComponent {
 

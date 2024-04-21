@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router'
 import { SupportListComponent } from './list.component'
 
 import { PledgeModule } from '../pledge/pledge.module'
-import { SupportDecisionModule } from '../decision/decision.module'
+import { SupportDecisionComponent } from '../decision/decision.component'
 import { SupportDetailsModalModule } from '../../modals/details/details.module'
 import { SupportCounterPipeModule } from '../../pipes/count.pipe'
 import { SupportRolePipeModule } from '../../pipes/role.pipe'
@@ -18,7 +18,7 @@ import { IonList, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular/s
     RouterModule,
     PledgeModule,
     MilestonePathPipeModule,
-    SupportDecisionModule,
+    SupportDecisionComponent,
     SupportDetailsModalModule,
     SupportCounterPipeModule,
     SupportRolePipeModule,

@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { SupportDetailsComponent } from './details.component'
 
 import { PledgeModule } from '../../components/pledge/pledge.module'
-import { SupportDecisionModule } from '../../components/decision/decision.module'
+import { SupportDecisionComponent } from '../../components/decision/decision.component'
 import { SupportRolePipeModule } from '../../pipes/role.pipe'
 
 import { PostComponentModule } from '@strive/post/components/post/post.module'
@@ -17,7 +17,7 @@ import { IonList, IonItem, IonInput, IonButton, IonContent } from '@ionic/angula
     PledgeModule,
     RouterModule,
     ReactiveFormsModule,
-    SupportDecisionModule,
+    SupportDecisionComponent,
     PostComponentModule,
     SupportRolePipeModule,
     IonList,
