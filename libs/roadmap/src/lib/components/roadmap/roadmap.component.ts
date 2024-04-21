@@ -22,7 +22,7 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { GoalService } from '@strive/goal/goal.service'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { MilestoneStatusModule } from '../status/status.module'
+import { MilestoneStatusComponent } from '../status/status.component'
 import { AssigneeComponent } from '../assignee/assignee.component'
 import { SubtaskPipeModule } from '@strive/roadmap/pipes/subtask.pipe'
 import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
@@ -40,7 +40,7 @@ type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryIte
     CommonModule,
     ReactiveFormsModule,
     ImageModule,
-    MilestoneStatusModule,
+    MilestoneStatusComponent,
     AssigneeComponent,
     AddSupportModalComponent,
     DetailsComponent,
