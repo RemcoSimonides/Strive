@@ -29,7 +29,7 @@ import { ImageZoomModalModule } from '@strive/ui/image-zoom/image-zoom.module'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
-import { DescriptionModule } from '@strive/ui/description/description.module'
+import { DescriptionComponent } from '@strive/ui/description/description.component'
 import { CompactPipeModule } from '@strive/utils/pipes/compact.pipe'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
@@ -59,7 +59,7 @@ const routes: Routes = [
     CompactPipeModule,
     RoadmapModule,
     StoryModule,
-    DescriptionModule,
+    DescriptionComponent,
     JoinButtonModule,
     SupportListModule,
     AddSupportModule,
