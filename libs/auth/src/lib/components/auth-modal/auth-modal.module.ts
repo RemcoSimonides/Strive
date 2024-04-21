@@ -5,7 +5,7 @@ import { AuthModalComponent } from './auth-modal.page'
 
 import { IonButton, IonIcon, IonHeader, IonToolbar, IonButtons, IonContent, IonList, IonItem, IonInput } from '@ionic/angular/standalone'
 
-import { TermsModule } from '@strive/ui/static-information/terms/terms.module'
+import { TermsComponent } from '@strive/ui/static-information/terms/terms.component'
 import { PrivacyPolicyComponent } from '@strive/ui/static-information/privacy/privacy-policy.component'
 import { WelcomeModalModule } from '../welcome/welcome.module'
 
@@ -13,7 +13,7 @@ import { WelcomeModalModule } from '../welcome/welcome.module'
   imports: [
     CommonModule,
     FormsModule,
-    TermsModule,
+    TermsComponent,
     ReactiveFormsModule,
     PrivacyPolicyComponent,
     WelcomeModalModule,

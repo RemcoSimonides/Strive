@@ -1,14 +1,22 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation, AfterContentInit, ChangeDetectorRef, OnDestroy } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChildren, QueryList, ViewEncapsulation, AfterContentInit, ChangeDetectorRef, OnDestroy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { Subscription } from 'rxjs'
 
 @Component({
+  standalone: true,
   selector: 'strive-thumbnail-list',
   templateUrl: 'thumbnail-list.component.html',
   styleUrls: ['./thumbnail-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.ShadowDom,
+  imports: [
+    CommonModule
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class ThumbnailListComponent implements AfterContentInit, OnDestroy {
   @Input() width = 160

@@ -5,8 +5,8 @@ import { Routes, RouterModule } from '@angular/router'
 import { ExplorePageComponent } from './explore.page'
 
 // Strive
-import { ThumbnailListModule } from '@strive/ui/thumbnail/layout/list/thumbnail-list.module'
-import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
+import { ThumbnailListComponent } from '@strive/ui/thumbnail/layout/list/thumbnail-list.component'
+import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
 import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { HeaderComponent } from '@strive/ui/header/header.component'
@@ -28,8 +28,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
 
     // Strive
-    ThumbnailListModule,
-    SmallThumbnailModule,
+    ThumbnailListComponent,
+    SmallThumbnailComponent,
     RowsPipeModule,
     ImageModule,
     HeaderComponent,
