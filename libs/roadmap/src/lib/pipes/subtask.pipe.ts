@@ -1,7 +1,7 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { Subtask } from '@strive/model'
 
-@Pipe({ name: 'subtasksCompleted' })
+@Pipe({ name: 'subtasksCompleted', standalone: true })
 export class SubtasksCompletedPipe implements PipeTransform {
 
   transform(subtasks: Subtask[]): string {
@@ -9,9 +9,3 @@ export class SubtasksCompletedPipe implements PipeTransform {
     return `${completed}/${subtasks.length}`
   }
 }
-
-@NgModule({
-  exports: [SubtasksCompletedPipe],
-  declarations: [SubtasksCompletedPipe]
-})
-export class SubtaskPipeModule { } 

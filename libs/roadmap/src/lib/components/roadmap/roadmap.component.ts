@@ -24,7 +24,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { MilestoneStatusComponent } from '../status/status.component'
 import { AssigneeComponent } from '../assignee/assignee.component'
-import { SubtaskPipeModule } from '@strive/roadmap/pipes/subtask.pipe'
+import { SubtasksCompletedPipe } from '@strive/roadmap/pipes/subtask.pipe'
 import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
@@ -44,7 +44,7 @@ type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryIte
     AssigneeComponent,
     AddSupportModalComponent,
     DetailsComponent,
-    SubtaskPipeModule,
+    SubtasksCompletedPipe,
     MaxLengthPipe,
     UpsertPostModalModule,
     IonList,
