@@ -1,4 +1,4 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { captureException } from '@sentry/capacitor'
 import { NotificationIcons, NotificationMessageText, StoryItem } from '@strive/model'
 
@@ -9,7 +9,7 @@ export interface StoryItemMessage {
 
 const empty: StoryItemMessage = {
   icon: 'alert-outline',
-  message: [] 
+  message: []
 }
 function throwError(item: StoryItem) {
   captureException(`Story Item doesn't have required information for message ${JSON.stringify(item)}`)
@@ -86,20 +86,14 @@ export function getStoryItemMessage(item: StoryItem): StoryItemMessage {
     default:
       return {
         icon: 'alert-outline',
-        message: [] 
+        message: []
       }
   }
 }
 
-@Pipe({ name: 'storyMessage'})
+@Pipe({ name: 'storyMessage', standalone: true })
 export class StoryItemMessagePipe implements PipeTransform {
   transform(item: StoryItem): StoryItemMessage {
     return getStoryItemMessage(item)
   }
 }
-
-@NgModule({
-  exports: [StoryItemMessagePipe],
-  declarations: [StoryItemMessagePipe]
-})
-export class StoryItemMessagePipeModule { } 

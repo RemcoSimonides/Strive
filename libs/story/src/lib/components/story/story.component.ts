@@ -9,7 +9,7 @@ import { pencilOutline, flagOutline, checkmarkOutline, personAddOutline, bookmar
 import { GoalService } from '@strive/goal/goal.service'
 import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
-import { StoryItemMessagePipeModule } from '@strive/story/pipes/story-message'
+import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { PostComponentModule } from '@strive/post/components/post/post.module'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
@@ -23,7 +23,7 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
   imports: [
     CommonModule,
     RouterModule,
-    StoryItemMessagePipeModule,
+    StoryItemMessagePipe,
     TimeAgoPipe,
     PostComponentModule,
     UpsertPostModalModule,

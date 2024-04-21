@@ -11,7 +11,7 @@ import { ProfileService } from '@strive/user/profile.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { PostService } from '@strive/post/post.service'
 import { createGoalStakeholder, StoryItem } from '@strive/model'
-import { StoryItemMessagePipeModule } from '@strive/story/pipes/story-message'
+import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
 
 @Component({
   standalone: true,
@@ -22,7 +22,7 @@ import { StoryItemMessagePipeModule } from '@strive/story/pipes/story-message'
   imports: [
     CommonModule,
     RouterModule,
-    StoryItemMessagePipeModule,
+    StoryItemMessagePipe,
   ]
 })
 export class StoryComponent {
