@@ -15,7 +15,7 @@ import { ProfileService } from '@strive/user/profile.service'
 import { StoryService } from '@strive/story/story.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/auth/auth.service'
-import { PledgeModule } from '../pledge/pledge.module'
+import { PledgeComponent } from '../pledge/pledge.component'
 import { SupportDecisionComponent } from '../decision/decision.component'
 import { PostComponentModule } from '@strive/post/components/post/post.module'
 import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
@@ -28,7 +28,7 @@ import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    PledgeModule,
+    PledgeComponent,
     RouterModule,
     ReactiveFormsModule,
     SupportDecisionComponent,

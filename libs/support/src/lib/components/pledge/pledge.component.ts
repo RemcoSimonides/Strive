@@ -1,14 +1,29 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
 import { Component, Input } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, RouterModule } from '@angular/router'
+
 import { Capacitor } from '@capacitor/core'
-import { ModalController } from '@ionic/angular/standalone'
+import { IonAvatar, ModalController } from '@ionic/angular/standalone'
+
+import { ImageModule } from '@strive/media/directives/image.module'
 import { createSupportBase, Support } from '@strive/model'
+import { ArrowBackComponent, ArrowForwardComponent } from '@strive/ui/responsive-arrow/arrow.component'
+import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
 
 @Component({
+  standalone: true,
   selector: 'strive-support-pledge',
   templateUrl: './pledge.component.html',
-  styleUrls: ['./pledge.component.scss']
+  styleUrls: ['./pledge.component.scss'],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ArrowBackComponent,
+    ArrowForwardComponent,
+    ImageModule,
+    MaxLengthPipe,
+    IonAvatar
+  ]
 })
 export class PledgeComponent {
   @Input() support: Support = createSupportBase()
