@@ -3,7 +3,6 @@ import { IonContent, IonList, IonItem, PopoverController } from '@ionic/angular/
 import { addYears, endOfYear, startOfYear } from 'date-fns'
 
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
 
 @Component({
   selector: 'strive-goal-deadline-popover',
@@ -12,7 +11,7 @@ import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    DatetimeModule,
+    DatetimeComponent,
     IonContent,
     IonList,
     IonItem

@@ -7,7 +7,7 @@ import { AffirmationsPageComponent } from './affirmations.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
 import { HeaderModule } from '@strive/ui/header/header.module'
-import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { IonContent, IonList, IonItem, IonLabel, IonText, IonIcon, IonButton, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -25,7 +25,7 @@ const routes: Routes = [
     PageLoadingModule,
     ActivatePushNotificationsComponent,
     HeaderModule,
-    DatetimeModule,
+    DatetimeComponent,
     IonContent,
     IonList,
     IonItem,

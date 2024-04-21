@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
 import { UpsertPostModalComponent } from './post-upsert.component'
 
-import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 import { ImagesSelectorComponent } from '@strive/media/components/images-selector/images-selector.component'
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonItem, IonTextarea, IonInput, IonSpinner, IonFooter } from '@ionic/angular/standalone'
@@ -13,7 +13,7 @@ import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonCon
 		CommonModule,
 		ReactiveFormsModule,
 		ImagesSelectorComponent,
-		DatetimeModule,
+		DatetimeComponent,
 		SafePipe,
 		IonHeader,
 		IonToolbar,

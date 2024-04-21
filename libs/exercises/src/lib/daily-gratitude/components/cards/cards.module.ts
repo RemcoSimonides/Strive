@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { CardsComponent } from './cards.component'
 
-import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { IsTodayPipe, ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { DatePipe } from '@angular/common'
 import { IonItem, IonTextarea, IonButton, IonIcon } from '@ionic/angular/standalone'
@@ -12,7 +12,7 @@ import { IonItem, IonTextarea, IonButton, IonIcon } from '@ionic/angular/standal
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DatetimeModule,
+    DatetimeComponent,
     IsTodayPipe,
     ToDatePipe,
     IonItem,

@@ -11,7 +11,7 @@ import { ActivatePushNotificationsComponent } from '@strive/exercises/components
 import { HeaderModule } from '@strive/ui/header/header.module'
 
 import { CardsModule } from '@strive/exercises/daily-gratitude/components/cards/cards.module'
-import { DatetimeModule } from '@strive/ui/datetime/datetime.module'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { IonContent, IonToggle } from "@ionic/angular/standalone"
 
 const routes: Routes = [
@@ -32,7 +32,7 @@ const routes: Routes = [
     ActivatePushNotificationsComponent,
     HeaderModule,
     CardsModule,
-    DatetimeModule,
+    DatetimeComponent,
     IonContent,
     IonToggle
   ],

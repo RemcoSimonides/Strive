@@ -1,11 +1,18 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild } from '@angular/core'
-import { IonDatetime, PopoverController } from '@ionic/angular/standalone'
+import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standalone'
 
 @Component({
+  standalone: true,
   selector: 'strive-datetime',
   templateUrl: './datetime.component.html',
   styleUrls: ['./datetime.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonDatetime,
+    IonButton
+  ]
 })
 export class DatetimeComponent {
   @HostListener('window:popstate', ['$event'])
