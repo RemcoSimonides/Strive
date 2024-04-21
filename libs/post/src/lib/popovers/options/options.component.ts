@@ -1,15 +1,25 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+
+import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
+
 import { Post, createGoalStakeholder } from '@strive/model'
 import { PostService } from '@strive/post/post.service'
 
 import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.component'
 
 @Component({
+	standalone: true,
 	selector: '[post] strive-post-options',
 	templateUrl: './options.component.html',
 	styleUrls: ['./options.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		CommonModule,
+		UpsertPostModalComponent,
+		IonList,
+		IonItem
+	]
 })
 export class PostOptionsComponent {
 	@HostListener('window:popstate', ['$event'])

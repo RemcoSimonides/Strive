@@ -12,7 +12,6 @@ import { createGoalStakeholder, Post, StoryItem, User } from '@strive/model'
 import { PostOptionsComponent } from '@strive/post/popovers/options/options.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { PostOptionsModule } from '@strive/post/popovers/options/options.module'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
@@ -29,7 +28,7 @@ import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
     RouterModule,
     ImageModule,
     ImageZoomModalComponent,
-    PostOptionsModule,
+    PostOptionsComponent,
     HTMLPipe,
     SafePipe,
     MediaPipeModule,
