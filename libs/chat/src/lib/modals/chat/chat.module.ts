@@ -7,7 +7,7 @@ import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollCon
 import { ChatModalComponent } from './chat.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { ThinkingPipe } from '@strive/chat/pipes/thinking.pipe'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
@@ -21,7 +21,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
     CommonModule,
     ReactiveFormsModule,
     ImageModule,
-    TimeAgoPipeModule,
+    TimeAgoPipe,
     HTMLPipe,
 
     JoinButtonModule,

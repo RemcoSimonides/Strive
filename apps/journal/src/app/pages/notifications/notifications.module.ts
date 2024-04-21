@@ -6,7 +6,7 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { MessagePipeModule } from '@strive/notification/pipes/message.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 
 import { NotificationsPageComponent } from './notifications.component'
 
@@ -25,7 +25,7 @@ const routes: Routes = [
     PageLoadingComponent,
     MessagePipeModule,
     ImageModule,
-    TimeAgoPipeModule,
+    TimeAgoPipe,
     IonContent,
     IonIcon
   ],

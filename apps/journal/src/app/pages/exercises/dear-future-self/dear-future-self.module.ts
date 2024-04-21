@@ -10,7 +10,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 
 import { TimeToGoPipeModule } from '@strive/utils/pipes/time-to-go.pipe'
-import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { IonContent, IonCard, IonItem, IonTextarea, IonButton, IonDatetime, IonIcon, IonList } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -26,7 +26,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     TimeToGoPipeModule,
-    TimeAgoPipeModule,
+    TimeAgoPipe,
     PageLoadingComponent,
     AuthModalModule,
     HeaderComponent,
