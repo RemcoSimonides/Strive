@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
 import { IonAvatar, ModalController } from '@ionic/angular/standalone'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { createSupportBase, Support } from '@strive/model'
 import { ArrowBackComponent, ArrowForwardComponent } from '@strive/ui/responsive-arrow/arrow.component'
 import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
@@ -20,7 +20,7 @@ import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
     RouterModule,
     ArrowBackComponent,
     ArrowForwardComponent,
-    ImageModule,
+    ImageDirective,
     MaxLengthPipe,
     IonAvatar
   ]

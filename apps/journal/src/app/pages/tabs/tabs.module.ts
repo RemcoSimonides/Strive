@@ -3,13 +3,13 @@ import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { TabsComponent } from './tabs.component'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonAvatar } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    ImageModule,
+    ImageDirective,
     RouterModule,
     IonTabs,
     IonTabBar,

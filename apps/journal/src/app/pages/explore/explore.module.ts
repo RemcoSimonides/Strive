@@ -8,7 +8,7 @@ import { ExplorePageComponent } from './explore.page'
 import { ThumbnailListComponent } from '@strive/ui/thumbnail/layout/list/thumbnail-list.component'
 import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
 import { RowsPipe } from '@strive/ui/thumbnail/pipes/rows.pipe'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { FooterComponent } from '@strive/ui/footer/footer.component'
@@ -31,7 +31,7 @@ const routes: Routes = [
     ThumbnailListComponent,
     SmallThumbnailComponent,
     RowsPipe,
-    ImageModule,
+    ImageDirective,
     HeaderComponent,
     FooterComponent,
     IonContent,

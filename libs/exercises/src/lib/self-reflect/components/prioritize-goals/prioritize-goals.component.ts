@@ -7,7 +7,7 @@ import { AuthService } from '@strive/auth/auth.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SelfReflectEntry, StakeholderWithGoal } from '@strive/model'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
   standalone: true,
@@ -18,7 +18,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
   imports: [
     CommonModule,
     PageLoadingComponent,
-    ImageModule,
+    ImageDirective,
     IonList,
     IonReorderGroup,
     IonItem,

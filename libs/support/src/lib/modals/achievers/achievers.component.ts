@@ -6,7 +6,7 @@ import { IonSearchbar, IonContent, IonList, IonItem, IonButton, IonAvatar, IonLa
 
 import { GoalStakeholder, User } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile: User }
@@ -21,7 +21,7 @@ type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile:
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageModule,
+    ImageDirective,
     HeaderModalComponent,
     IonSearchbar,
     IonContent,

@@ -21,7 +21,7 @@ import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { GoalService } from '@strive/goal/goal.service'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { MilestoneStatusComponent } from '../status/status.component'
 import { AssigneeComponent } from '../assignee/assignee.component'
 import { SubtasksCompletedPipe } from '@strive/roadmap/pipes/subtask.pipe'
@@ -38,7 +38,7 @@ type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryIte
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ImageModule,
+    ImageDirective,
     MilestoneStatusComponent,
     AssigneeComponent,
     AddSupportModalComponent,

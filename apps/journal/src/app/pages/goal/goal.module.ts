@@ -35,7 +35,7 @@ import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 import { SupportListComponent } from '@strive/support/components/list/list.component'
 import { AddSupportComponent } from '@strive/support/components/add/add.component'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { IonFab, IonFabButton, IonIcon, IonContent, IonButton, IonSelect, IonSelectOption, IonCard, IonList, IonItem, IonAvatar, IonLabel } from "@ionic/angular/standalone";
 
 const routes: Routes = [
@@ -54,7 +54,7 @@ const routes: Routes = [
     AchieversModalComponent,
     SpectatorsModalComponent,
     SupportersModalComponent,
-    ImageModule,
+    ImageDirective,
     ImageZoomModalComponent,
     CompactPipe,
     RoadmapComponent,

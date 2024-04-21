@@ -6,7 +6,7 @@ import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, ModalC
 import { addIcons } from 'ionicons'
 import { searchOutline, notificationsOutline, settingsOutline, menuOutline } from 'ionicons/icons'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { MenuComponent } from '../menu/menu.component'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
@@ -24,7 +24,7 @@ import { AuthService } from '@strive/auth/auth.service'
   imports: [
     CommonModule,
     RouterModule,
-    ImageModule,
+    ImageDirective,
     MenuComponent,
     IonHeader,
     IonToolbar,

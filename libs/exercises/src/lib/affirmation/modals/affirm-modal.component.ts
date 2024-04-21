@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { IonContent } from '@ionic/angular/standalone'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
@@ -16,7 +16,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   imports: [
     CommonModule,
     HeaderModalComponent,
-    ImageModule,
+    ImageDirective,
     IonContent
   ]
 })

@@ -12,7 +12,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { delay, isSafari } from '@strive/utils/helpers'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
 	standalone: true,
@@ -23,7 +23,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
 	imports: [
 		CommonModule,
 		RouterModule,
-		ImageModule,
+		ImageDirective,
 		IonHeader,
     IonToolbar,
     IonButtons,

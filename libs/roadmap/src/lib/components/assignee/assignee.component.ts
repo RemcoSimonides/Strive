@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { User } from '@strive/model'
 
 @Component({
@@ -11,7 +11,7 @@ import { User } from '@strive/model'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    ImageModule
+    ImageDirective
   ]
 })
 export class AssigneeComponent {

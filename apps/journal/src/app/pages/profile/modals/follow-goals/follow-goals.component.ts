@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, signal 
 import { IonContent, IonButton, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
 
 import { AuthService } from '@strive/auth/auth.service'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { Goal, GoalStakeholder, createGoalStakeholder } from '@strive/model'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
@@ -40,7 +40,7 @@ class GetStakeholderPipe implements PipeTransform {
     CommonModule,
     HeaderModalComponent,
     GetStakeholderPipe,
-    ImageModule,
+    ImageDirective,
     IonContent,
     IonButton,
     IonList,

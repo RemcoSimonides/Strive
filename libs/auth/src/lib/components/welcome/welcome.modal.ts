@@ -14,7 +14,7 @@ import { combineLatest, map, of } from 'rxjs'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
   standalone: true,
@@ -25,7 +25,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [
     CommonModule,
-    ImageModule,
+    ImageDirective,
     GoalCreateModalComponent,
     IonHeader,
     IonToolbar,

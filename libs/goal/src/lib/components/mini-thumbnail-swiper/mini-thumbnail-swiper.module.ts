@@ -1,12 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MiniThumbnailSwiperComponent } from './mini-thumbnail-swiper.component'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @NgModule({
   imports: [
     CommonModule,
-    ImageModule
+    ImageDirective
   ],
   declarations: [MiniThumbnailSwiperComponent],
   exports: [MiniThumbnailSwiperComponent],

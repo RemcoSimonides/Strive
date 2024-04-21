@@ -9,7 +9,8 @@ function getAssetPath(asset: string, theme: Theme) {
 }
 
 @Directive({
-  selector: 'img[ref][asset], img[asset]'
+  selector: 'img[ref][asset], img[asset]',
+  standalone: true
 })
 export class ImageDirective implements OnInit, OnDestroy {
   private sub?: Subscription

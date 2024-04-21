@@ -14,7 +14,7 @@ import { SupportingModule } from '@strive/goal/modals/supporting/supporting.modu
 // Strive
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
 import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
@@ -39,7 +39,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     PageLoadingComponent,
-    ImageModule,
+    ImageDirective,
     ImageSelectorComponent,
     FollowingComponent,
     FollowersComponent,

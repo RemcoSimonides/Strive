@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 
 import { IonContent, IonButton } from '@ionic/angular/standalone'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { isSafari } from '@strive/utils/helpers'
@@ -18,7 +18,7 @@ import { SeoService } from '@strive/utils/services/seo.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    ImageModule,
+    ImageDirective,
     HeaderComponent,
     IonContent,
     IonButton

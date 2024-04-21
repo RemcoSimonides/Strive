@@ -17,7 +17,7 @@ import { isValidHttpUrl } from '@strive/utils/helpers'
 
 import { Camera, CameraResultType } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
@@ -30,7 +30,7 @@ type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
   imports: [
     CommonModule,
     ImageCropperModule,
-    ImageModule,
+    ImageDirective,
     IonFabButton,
     IonIcon
   ]

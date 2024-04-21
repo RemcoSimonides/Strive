@@ -21,7 +21,7 @@ import { ProfileService } from '@strive/user/profile.service'
 
 // Directives
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { AlgoliaUser, createGoal, Goal, GoalStakeholder } from '@strive/model'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -66,7 +66,7 @@ export class InviteTextPipe implements PipeTransform {
   standalone: true,
   imports: [
     CommonModule,
-    ImageModule,
+    ImageDirective,
     SubtitlePipe,
     InviteTextPipe,
     GoalSharePopoverComponent,

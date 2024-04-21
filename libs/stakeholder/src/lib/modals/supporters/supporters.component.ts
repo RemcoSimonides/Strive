@@ -9,7 +9,7 @@ import { ellipsisVertical } from 'ionicons/icons'
 import { joinWith } from 'ngfire'
 import { combineLatest, map, Observable } from 'rxjs'
 
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { RolesPopoverComponent } from '@strive/stakeholder/popovers/roles/roles.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
@@ -27,7 +27,7 @@ import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/mod
   standalone: true,
   imports: [
     CommonModule,
-    ImageModule,
+    ImageDirective,
     RolesPopoverComponent,
     HeaderModalComponent,
     IonTitle,

@@ -24,7 +24,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { GoalService } from '@strive/goal/goal.service'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
@@ -41,7 +41,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ImageModule,
+    ImageDirective,
     TimeAgoPipe,
     HTMLPipe,
     JoinButtonModule,

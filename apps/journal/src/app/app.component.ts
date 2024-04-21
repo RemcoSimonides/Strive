@@ -17,7 +17,7 @@ import { filter, first, firstValueFrom, Subscription } from 'rxjs'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
 import { ProfileOptionsComponent } from './pages/profile/popovers/profile-options/profile-options.component'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
@@ -42,7 +42,7 @@ import { PWAService } from '@strive/utils/services/pwa.service'
     RouterOutlet,
     TabsModule,
     IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
-    ImageModule
+    ImageDirective
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

@@ -5,7 +5,7 @@ import { IonContent } from '@ionic/angular/standalone'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { CardsComponent } from '../../components/cards/cards.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
   standalone: true,
@@ -16,7 +16,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
   imports: [
     CardsComponent,
     HeaderModalComponent,
-    ImageModule,
+    ImageDirective,
     IonContent
   ]
 })

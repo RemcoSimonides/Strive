@@ -11,7 +11,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { SpectatorService } from '../../spectator.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
-import { ImageModule } from '@strive/media/directives/image.module'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
@@ -22,7 +22,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    ImageModule,
+    ImageDirective,
     HeaderModalComponent,
     IonTitle,
     IonContent,
