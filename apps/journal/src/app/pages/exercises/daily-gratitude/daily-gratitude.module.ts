@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 
 import { DailyGratitudePageComponent } from './daily-gratitude.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
@@ -27,7 +27,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     RouterModule.forChild(routes),
-    PageLoadingModule,
+    PageLoadingComponent,
     AuthModalModule,
     ActivatePushNotificationsComponent,
     HeaderComponent,

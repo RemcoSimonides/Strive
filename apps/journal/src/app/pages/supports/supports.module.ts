@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { Routes, RouterModule } from '@angular/router'
 import { SupportsPageComponent } from './supports.page'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
@@ -21,7 +21,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    PageLoadingModule,
+    PageLoadingComponent,
     HeaderRootComponent,
     SupportListModule,
     MilestonePathPipeModule,

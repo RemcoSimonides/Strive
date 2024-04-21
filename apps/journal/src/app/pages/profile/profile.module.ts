@@ -12,7 +12,7 @@ import { FollowersModule } from '@strive/spectator/components/followers/follower
 import { SupportingModule } from '@strive/goal/modals/supporting/supporting.module'
 
 // Strive
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
@@ -39,7 +39,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    PageLoadingModule,
+    PageLoadingComponent,
     ImageModule,
     ImageSelectorModule,
     FollowingModule,

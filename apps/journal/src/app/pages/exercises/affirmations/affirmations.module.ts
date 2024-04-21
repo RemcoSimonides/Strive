@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { ReactiveFormsModule } from '@angular/forms'
 import { AffirmationsPageComponent } from './affirmations.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
@@ -22,7 +22,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     ActivatePushNotificationsComponent,
     HeaderComponent,
     DatetimeComponent,

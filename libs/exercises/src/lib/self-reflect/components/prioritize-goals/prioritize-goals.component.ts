@@ -5,7 +5,7 @@ import { IonList, IonReorderGroup, IonItem, IonThumbnail, IonLabel, IonReorder, 
 import { BehaviorSubject, combineLatest, map, of, switchMap, tap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalService } from '@strive/goal/goal.service'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SelfReflectEntry, StakeholderWithGoal } from '@strive/model'
 import { ImageModule } from '@strive/media/directives/image.module'
 
@@ -17,7 +17,7 @@ import { ImageModule } from '@strive/media/directives/image.module'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     ImageModule,
     IonList,
     IonReorderGroup,

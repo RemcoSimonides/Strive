@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
 import { HeaderComponent } from '@strive/ui/header/header.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { MessagePipeModule } from '@strive/notification/pipes/message.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { TimeAgoPipeModule } from '@strive/utils/pipes/time-ago.pipe'
@@ -22,7 +22,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     HeaderComponent,
-    PageLoadingModule,
+    PageLoadingComponent,
     MessagePipeModule,
     ImageModule,
     TimeAgoPipeModule,

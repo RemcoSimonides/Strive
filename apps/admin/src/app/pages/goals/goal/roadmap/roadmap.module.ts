@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { AdminRoadmapComponent } from './roadmap.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SubtaskPipeModule } from '@strive/roadmap/pipes/subtask.pipe'
 import { AssigneeModule } from '@strive/roadmap/components/assignee/assignee.module'
 
@@ -14,7 +14,7 @@ import { AssigneeModule } from '@strive/roadmap/components/assignee/assignee.mod
     CommonModule,
     IonicModule,
     RouterModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     SubtaskPipeModule,
     AssigneeModule,
   ],

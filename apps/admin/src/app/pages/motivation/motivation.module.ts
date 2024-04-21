@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { MotivationComponent } from './motivation.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 const routes: Routes = [
   {
@@ -22,7 +22,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    PageLoadingModule
+    PageLoadingComponent
   ],
   declarations: [MotivationComponent],
   exports: [MotivationComponent]

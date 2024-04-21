@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { UserPage } from './user.page'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
 import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
@@ -28,7 +28,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    PageLoadingModule,
+    PageLoadingComponent,
     ImageSelectorModule,
     SmallThumbnailModule,
     DearFutureSelfPipeModule,

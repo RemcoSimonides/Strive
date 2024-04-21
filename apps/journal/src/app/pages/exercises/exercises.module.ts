@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
 import { ExercisesPageComponent, GetExercisePipe } from './exercises.component'
 
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 import { SmallThumbnailModule } from '@strive/ui/thumbnail/components/small/small-thumbnail.module'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
@@ -46,7 +46,7 @@ const routes: Routes = [
     HeaderRootComponent,
     DearFutureSelfPipeModule,
     TimeToGoPipeModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     IonContent,
     IonIcon
   ],

@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { NgModule } from '@angular/core'
 
 import { SelfReflectEntryComponent } from './self-reflect-entry.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 import { SelfReflectQuestionActivatedPipe } from '../../pipes/activated.pipe'
 
@@ -22,7 +22,7 @@ import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonCon
     CommonModule,
     ReactiveFormsModule,
 
-    PageLoadingModule,
+    PageLoadingComponent,
     SelfReflectQuestionActivatedPipe,
 
     SelfReflectIntermediateComponent,

@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { GoalsComponent } from './goals.page'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
 
 
@@ -27,7 +27,7 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    PageLoadingModule,
+    PageLoadingComponent,
     SelectUserModule
   ],
   declarations: [GoalsComponent]

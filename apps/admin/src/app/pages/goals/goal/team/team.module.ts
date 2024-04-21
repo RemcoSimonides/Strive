@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { TeamComponent } from './team.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
 
 @NgModule({
@@ -13,7 +13,7 @@ import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
     CommonModule,
     IonicModule,
     RouterModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     SelectUserModule
   ],
   declarations: [TeamComponent],

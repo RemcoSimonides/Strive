@@ -26,7 +26,7 @@ import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 import { ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { DescriptionComponent } from '@strive/ui/description/description.component'
@@ -64,7 +64,7 @@ const routes: Routes = [
     SupportListModule,
     AddSupportModule,
     ChatModalModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     PagenotfoundComponent,
     HeaderRootComponent,
     AddOthersModalComponent,

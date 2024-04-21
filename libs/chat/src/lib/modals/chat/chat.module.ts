@@ -14,7 +14,7 @@ import { JoinButtonModule } from '@strive/goal/components/join-button/join-butto
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 @NgModule({
   imports: [
@@ -29,7 +29,7 @@ import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
     AddSupportModalModule,
     HeaderModalComponent,
     ThinkingPipe,
-    PageLoadingModule,
+    PageLoadingComponent,
     IonButton,
     IonIcon,
     IonContent,

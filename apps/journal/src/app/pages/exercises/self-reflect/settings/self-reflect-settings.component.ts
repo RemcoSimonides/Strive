@@ -8,7 +8,7 @@ import { firstValueFrom, of, shareReplay, switchMap } from 'rxjs'
 
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
@@ -27,7 +27,7 @@ import { SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/
     CommonModule,
     ReactiveFormsModule,
     HeaderComponent,
-    PageLoadingModule,
+    PageLoadingComponent,
     SelfReflectReplaceFrequencyPipe,
     IonContent,
     IonList,

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
 import { StoryComponent } from './story.component'
-import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 import { StoryModule as GoalStoryModule } from '@strive/story/components/story/story.module'
 
@@ -14,7 +14,7 @@ import { StoryModule as GoalStoryModule } from '@strive/story/components/story/s
     CommonModule,
     IonicModule,
     RouterModule,
-    PageLoadingModule,
+    PageLoadingComponent,
     GoalStoryModule
   ],
   declarations: [StoryComponent],
