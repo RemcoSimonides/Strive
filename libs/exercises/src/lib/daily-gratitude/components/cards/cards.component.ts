@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core'
-import { DatePipe } from '@angular/common'
-import { FormControl, FormGroup } from '@angular/forms'
-import { PopoverController } from '@ionic/angular/standalone'
+import { CommonModule, DatePipe } from '@angular/common'
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+
+import { IonItem, IonTextarea, IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { calendarOutline, checkmark } from 'ionicons/icons'
 
 import { limit, orderBy } from 'firebase/firestore'
 import { BehaviorSubject, firstValueFrom, of, switchMap, tap } from 'rxjs'
 import { formatISO, isToday, startOfDay } from 'date-fns'
+import { SwiperContainer } from 'swiper/element'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
@@ -16,15 +18,27 @@ import { DailyGratitudeEntryService } from '../../daily-gratitude.service'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { DailyGratitudeEntry } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
-import { SwiperContainer } from 'swiper/element'
+import { IsTodayPipe, ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 
 
 @Component({
+  standalone: true,
   selector: 'strive-daily-gratitude-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DatetimeComponent,
+    IsTodayPipe,
+    ToDatePipe,
+    IonItem,
+    IonTextarea,
+    IonButton,
+    IonIcon
+  ]
 })
 export class CardsComponent implements OnDestroy {
 

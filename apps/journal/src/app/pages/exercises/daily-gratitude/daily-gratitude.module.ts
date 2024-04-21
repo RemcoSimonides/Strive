@@ -10,7 +10,7 @@ import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.m
 import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
-import { CardsModule } from '@strive/exercises/daily-gratitude/components/cards/cards.module'
+import { CardsComponent } from '@strive/exercises/daily-gratitude/components/cards/cards.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { IonContent, IonToggle } from "@ionic/angular/standalone"
 
@@ -31,7 +31,7 @@ const routes: Routes = [
     AuthModalModule,
     ActivatePushNotificationsComponent,
     HeaderComponent,
-    CardsModule,
+    CardsComponent,
     DatetimeComponent,
     IonContent,
     IonToggle
