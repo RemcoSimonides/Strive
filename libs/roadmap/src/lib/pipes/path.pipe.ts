@@ -1,8 +1,9 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 
 @Pipe({
   name: 'mSlice',
-  pure: false
+  pure: false,
+  standalone: true
 })
 export class MilestonePathPipe implements PipeTransform {
 
@@ -25,9 +26,3 @@ export class MilestonePathPipe implements PipeTransform {
     }
   }
 }
-
-@NgModule({
-  exports: [MilestonePathPipe],
-  declarations: [MilestonePathPipe]
-})
-export class MilestonePathPipeModule { } 

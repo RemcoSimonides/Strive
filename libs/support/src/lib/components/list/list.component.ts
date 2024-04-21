@@ -9,7 +9,7 @@ import { chevronDownOutline } from 'ionicons/icons'
 import { Milestone, Support, SupportsGroupedByGoal } from '@strive/model'
 import { SupportDetailsModalComponent } from '@strive/support/modals/details/details.component'
 import { PledgeComponent } from '../pledge/pledge.component'
-import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
+import { MilestonePathPipe } from '@strive/roadmap/pipes/path.pipe'
 import { SupportDecisionComponent } from '../decision/decision.component'
 import { SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe } from '@strive/support/pipes/count.pipe'
 import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pipe'
@@ -24,7 +24,7 @@ import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pip
     CommonModule,
     RouterModule,
     PledgeComponent,
-    MilestonePathPipeModule,
+    MilestonePathPipe,
     SupportDecisionComponent,
     SupportDetailsModalComponent,
     SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe,
