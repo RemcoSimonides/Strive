@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
-import { Component, NgModule } from '@angular/core'
-import { RouterModule } from '@angular/router'
+import { Component } from '@angular/core'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { TermsModule } from './terms.module'
+import { TermsComponent } from './terms.component'
 import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
+  standalone: true,
   selector: 'strive-terms-page',
   template: `
     <strive-header title="Terms of Service"></strive-header>
@@ -21,6 +21,12 @@ import { IonContent } from '@ionic/angular/standalone'
       margin: auto;
       padding: 0 16px;
     }`
+  ],
+  imports: [
+    CommonModule,
+    IonContent,
+    TermsComponent,
+    HeaderComponent
   ]
 })
 export class TermsPageComponent {
@@ -28,15 +34,3 @@ export class TermsPageComponent {
     seo.generateTags({ title: `Terms - Strive Journal` })
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    IonContent,
-    TermsModule,
-    HeaderComponent,
-    RouterModule.forChild([{ path: '', component: TermsPageComponent }])
-  ],
-  declarations: [TermsPageComponent]
-})
-export class TermsPageModule { }
