@@ -15,7 +15,7 @@ import { SupportingModule } from '@strive/goal/modals/supporting/supporting.modu
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
-import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
 import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module'
@@ -41,7 +41,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingComponent,
     ImageModule,
-    ImageSelectorModule,
+    ImageSelectorComponent,
     FollowingComponent,
     FollowersComponent,
     GoalOptionsModule,

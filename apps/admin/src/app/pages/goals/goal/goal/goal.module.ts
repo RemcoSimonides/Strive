@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { GoalComponent } from './goal.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
-import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
 import { DescriptionComponent } from '@strive/ui/description/description.component'
 
@@ -17,7 +17,7 @@ import { DescriptionComponent } from '@strive/ui/description/description.compone
     ReactiveFormsModule,
     IonicModule,
     PageLoadingComponent,
-    ImageSelectorModule,
+    ImageSelectorComponent,
     SelectUserModalComponent,
     DescriptionComponent
   ],

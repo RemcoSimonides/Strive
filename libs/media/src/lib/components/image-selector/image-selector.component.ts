@@ -1,28 +1,39 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { AbstractControl } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
-import { ToastController } from '@ionic/angular/standalone'
+
+import { IonFabButton, IonIcon, ToastController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { checkmarkOutline, closeOutline } from 'ionicons/icons'
 
 import { BehaviorSubject, Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
 
-import { ImageCroppedEvent } from 'ngx-image-cropper'
+import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper'
 import { deleteObject, getStorage, ref, StorageError, uploadBytes } from 'firebase/storage'
 import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers'
 import { isValidHttpUrl } from '@strive/utils/helpers'
 
 import { Camera, CameraResultType } from '@capacitor/camera'
 import { captureException, captureMessage } from '@sentry/capacitor'
+import { ImageModule } from '@strive/media/directives/image.module'
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
 @Component({
+  standalone: true,
   selector: '[form][storagePath] strive-image-selector',
   templateUrl: 'image-selector.component.html',
   styleUrls: ['./image-selector.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ImageCropperModule,
+    ImageModule,
+    IonFabButton,
+    IonIcon
+  ]
 })
 export class ImageSelectorComponent implements OnInit, OnDestroy {
   step = new BehaviorSubject<CropStep>('drop')

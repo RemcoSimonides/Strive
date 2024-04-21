@@ -9,7 +9,6 @@ import { imagesOutline, checkmarkOutline } from 'ionicons/icons'
 
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
-import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { ErrorResponse, PhotosWithTotalResults, createClient } from 'pexels'
 import { BehaviorSubject, debounceTime, delay } from 'rxjs'
 
@@ -27,7 +26,7 @@ interface Image {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ImageSelectorModule,
+    ImageSelectorComponent,
     IonCard,
     IonSearchbar,
     IonButton,

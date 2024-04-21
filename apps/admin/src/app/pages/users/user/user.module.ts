@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { UserPage } from './user.page'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
-import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
 import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
 import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
@@ -29,7 +29,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     PageLoadingComponent,
-    ImageSelectorModule,
+    ImageSelectorComponent,
     SmallThumbnailComponent,
     DearFutureSelfPipeModule,
     TimeToGoPipe,
