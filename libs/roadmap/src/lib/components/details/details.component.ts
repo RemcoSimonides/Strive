@@ -1,8 +1,8 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { FormArray } from '@angular/forms'
+import { FormArray, ReactiveFormsModule } from '@angular/forms'
 
-import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReorderGroup, IonInput, IonReorder, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff } from 'ionicons/icons'
 
@@ -27,14 +27,45 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
+import { MilestoneStatusModule } from '../status/status.module'
+import { AssigneeComponent } from '../assignee/assignee.component'
+import { SubtaskPipeModule } from '@strive/roadmap/pipes/subtask.pipe'
+import { StoryComponent } from '@strive/story/components/story/story.component'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
+import { AddSupportComponent } from '@strive/support/components/add/add.component'
+import { SupportListComponent } from '@strive/support/components/list/list.component'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
 @Component({
+  standalone: true,
   selector: '[goal][milestone][stakeholder] strive-milestone-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MilestoneStatusModule,
+    AssigneeComponent,
+    SubtaskPipeModule,
+    StoryComponent,
+    DatetimeComponent,
+    UpsertPostModalModule,
+    AddSupportComponent,
+    SupportListComponent,
+    HeaderModalComponent,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonItem,
+    IonTextarea,
+    IonList,
+    IonReorderGroup,
+    IonInput,
+    IonReorder
+  ]
 })
 export class DetailsComponent extends ModalDirective implements OnInit, OnDestroy {
   private subs: Subscription[] = []

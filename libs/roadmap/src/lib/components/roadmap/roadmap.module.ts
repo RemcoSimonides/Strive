@@ -8,7 +8,7 @@ import { AssigneeComponent } from '../assignee/assignee.component'
 
 import { AddSupportModalComponent } from '@strive/support/modals/add/add.component'
 import { ImageModule } from '@strive/media/directives/image.module'
-import { DetailsModule } from '../details/details.module'
+import { DetailsComponent} from '../details/details.component'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
 import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
@@ -23,7 +23,7 @@ import { IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, 
     MilestoneStatusModule,
     AssigneeComponent,
     AddSupportModalComponent,
-    DetailsModule,
+    DetailsComponent,
     SubtaskPipeModule,
     MaxLengthPipe,
     UpsertPostModalModule,
