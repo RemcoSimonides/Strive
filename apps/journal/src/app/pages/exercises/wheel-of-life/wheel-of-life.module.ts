@@ -8,7 +8,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
-import { WheelOfLifeEntryModule } from '@strive/exercises/wheel-of-life/components/entry/entry.module'
+import { WheelOfLifeEntryComponent } from '@strive/exercises/wheel-of-life/components/entry/entry.component'
 import { EntryModalModule } from '@strive/exercises/wheel-of-life/modals/entry/entry.module'
 import { WheelOfLifeResultsModule } from '@strive/exercises/wheel-of-life/components/results/results.module'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -31,7 +31,7 @@ const routes: Routes = [
     PageLoadingComponent,
     AuthModalModule,
     HeaderComponent,
-    WheelOfLifeEntryModule,
+    WheelOfLifeEntryComponent,
     EntryModalModule,
     WheelOfLifeResultsModule,
     EntryPipeModule,

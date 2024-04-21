@@ -1,11 +1,16 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core'
-import { FormControl, FormGroup } from '@angular/forms'
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+
+import { IonRange, IonButton, IonIcon, IonContent } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { checkmark, arrowForwardOutline } from 'ionicons/icons'
 
 import { BehaviorSubject, combineLatest, map, Subscription } from 'rxjs'
 import { ChartConfiguration } from 'chart.js'
 import { AES } from 'crypto-js'
 import { formatISO } from 'date-fns'
-import { BaseChartDirective } from 'ng2-charts'
+import { BaseChartDirective, NgChartsModule } from 'ng2-charts'
 
 import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
 
@@ -14,8 +19,8 @@ import { PersonalService } from '@strive/user/personal.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 import { delay } from '@strive/utils/helpers'
 import { ThemeService } from '@strive/utils/services/theme.service'
-import { addIcons } from 'ionicons'
-import { checkmark, arrowForwardOutline } from 'ionicons/icons'
+
+import { WheelOfLifeResultsModule } from '../results/results.module'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const translucentPrimaryRGBA = 'rgba(249, 116, 29, 0.5)'
@@ -50,10 +55,21 @@ interface DesiredFormType {
 }
 
 @Component({
+  standalone: true,
   selector: 'strive-wheel-of-life-entry',
   templateUrl: './entry.component.html',
   styleUrls: ['./entry.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgChartsModule,
+    WheelOfLifeResultsModule,
+    IonRange,
+    IonButton,
+    IonIcon,
+    IonContent
+  ]
 })
 export class WheelOfLifeEntryComponent implements OnDestroy {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective
