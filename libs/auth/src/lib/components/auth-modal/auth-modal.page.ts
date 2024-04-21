@@ -1,6 +1,6 @@
 import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Location } from '@angular/common'
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import { CommonModule, Location } from '@angular/common'
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -12,10 +12,12 @@ import {
 } from 'firebase/auth'
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication'
 import { captureException } from '@sentry/angular'
+import { combineLatest, map, of } from 'rxjs'
 
-import { NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular/standalone'
+import { IonButton, IonIcon, IonHeader, IonToolbar, IonButtons, IonContent, IonList, IonItem, IonInput, NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { close, arrowBack, logoGoogle, logoApple } from 'ionicons/icons'
+
 import { Capacitor } from '@capacitor/core'
 
 import { ProfileService } from '@strive/user/profile.service'
@@ -25,7 +27,10 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { createPersonal, createUser } from '@strive/model'
 import { createRandomString } from '@strive/utils/helpers'
 
-import { combineLatest, map, of } from 'rxjs'
+import { TermsComponent } from '@strive/ui/static-information/terms/terms.component'
+import { PrivacyPolicyComponent } from '@strive/ui/static-information/privacy/privacy-policy.component'
+import { WelcomeModalModule } from '../welcome/welcome.module'
+
 
 import { WelcomeModalComponent } from '../welcome/welcome.modal'
 
@@ -38,9 +43,36 @@ export enum enumAuthSegment {
 }
 
 @Component({
+  standalone: true,
   selector: 'strive-auth-modal',
   templateUrl: './auth-modal.page.html',
   styleUrls: ['./auth-modal.page.scss'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TermsComponent,
+    ReactiveFormsModule,
+    PrivacyPolicyComponent,
+    WelcomeModalModule,
+    IonButton,
+    IonIcon,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonContent,
+    IonList,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonIcon,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonContent,
+    IonList,
+    IonItem,
+    IonInput
+  ]
 })
 export class AuthModalComponent implements OnInit {
   @HostBinding() modal?: HTMLIonModalElement

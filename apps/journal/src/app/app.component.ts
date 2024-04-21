@@ -31,13 +31,12 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { ThemeService } from '@strive/utils/services/theme.service'
 import { TabsModule } from './pages/tabs/tabs.module'
 import { PWAService } from '@strive/utils/services/pwa.service'
-import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 
 @Component({
   selector: 'journal-root',
   standalone: true,
   imports: [
-    AuthModalModule,
+    AuthModalComponent,
     CommonModule,
     RouterModule,
     RouterOutlet,

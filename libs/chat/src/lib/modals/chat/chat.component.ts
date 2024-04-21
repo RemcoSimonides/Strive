@@ -28,7 +28,6 @@ import { ImageModule } from '@strive/media/directives/image.module'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
-import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { ThinkingPipe } from '@strive/chat/pipes/thinking.pipe'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
@@ -46,7 +45,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
     TimeAgoPipe,
     HTMLPipe,
     JoinButtonModule,
-    AuthModalModule,
+    AuthModalComponent,
     AddSupportModalComponent,
     HeaderModalComponent,
     ThinkingPipe,

@@ -7,7 +7,7 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
 import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals/message/message.component'
 
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
-import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
+import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
@@ -28,7 +28,7 @@ const routes: Routes = [
     TimeToGoPipe,
     TimeAgoPipe,
     PageLoadingComponent,
-    AuthModalModule,
+    AuthModalComponent,
     HeaderComponent,
     MessageModalComponent,
     IonContent,

@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { JoinButtonComponent, JoinButtonTextSPipe } from './join-button.component'
 
-import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
+import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { IonButton, IonIcon, IonItem, IonList, IonPopover, IonSpinner } from '@ionic/angular/standalone'
 
 @NgModule({
   imports: [
     CommonModule,
-    AuthModalModule,
+    AuthModalComponent,
     JoinButtonTextSPipe,
     IonIcon,
     IonPopover,

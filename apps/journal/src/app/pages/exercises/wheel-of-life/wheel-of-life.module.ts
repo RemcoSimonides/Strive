@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { WheelOfLifePageComponent } from './wheel-of-life.component'
 
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
-import { AuthModalModule } from '@strive/auth/components/auth-modal/auth-modal.module'
+import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
 import { WheelOfLifeEntryComponent } from '@strive/exercises/wheel-of-life/components/entry/entry.component'
@@ -29,7 +29,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     PageLoadingComponent,
-    AuthModalModule,
+    AuthModalComponent,
     HeaderComponent,
     WheelOfLifeEntryComponent,
     EntryModalComponent,
