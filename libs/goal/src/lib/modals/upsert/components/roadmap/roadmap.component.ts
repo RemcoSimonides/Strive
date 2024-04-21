@@ -4,7 +4,7 @@ import { orderBy, where } from 'firebase/firestore'
 import { Observable, tap } from 'rxjs'
 
 import { Goal, Milestone, createGoalStakeholder } from '@strive/model'
-import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
+import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
 import { SuggestionSComponent } from '@strive/ui/suggestion/suggestion.component'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { IsFuturePipe } from '@strive/utils/pipes/date-fns.pipe'
@@ -19,7 +19,7 @@ import { IonContent } from '@ionic/angular/standalone'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    RoadmapModule,
+    RoadmapComponent,
     IsFuturePipe,
     SuggestionSComponent
   ]

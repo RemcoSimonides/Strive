@@ -17,7 +17,7 @@ import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
 import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion-modal.component'
 
-import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
+import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
 
 import { StoryComponent } from '@strive/story/components/story/story.component'
 
@@ -57,7 +57,7 @@ const routes: Routes = [
     ImageModule,
     ImageZoomModalComponent,
     CompactPipe,
-    RoadmapModule,
+    RoadmapComponent,
     StoryComponent,
     DescriptionComponent,
     JoinButtonModule,

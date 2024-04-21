@@ -14,7 +14,7 @@ import { ScrollService } from '@strive/utils/services/scroll.service'
 
 import { Goal, GoalStakeholder, Milestone, createChatGPTMessage, createGoalStakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
+import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
 import { SuggestionSComponent } from '../suggestion.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
@@ -26,7 +26,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    RoadmapModule,
+    RoadmapComponent,
     SuggestionSComponent,
     HeaderModalComponent,
     IonContent

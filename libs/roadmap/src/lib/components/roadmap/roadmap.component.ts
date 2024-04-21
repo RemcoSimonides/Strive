@@ -1,10 +1,14 @@
+import { CommonModule } from '@angular/common'
+import { ReactiveFormsModule } from '@angular/forms'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core'
-import { AlertController, ItemReorderEventDetail, ModalController } from '@ionic/angular/standalone'
+
+import { AlertController, IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, IonReorder, IonItemOptions, IonItemOption, IonInput, IonSkeletonText, ItemReorderEventDetail, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { chatboxOutline, listOutline, alarmOutline, trashOutline } from 'ionicons/icons'
-import { createGoalStakeholder, createPost, Goal, MilestoneStatus, StoryItem, Support } from '@strive/model'
 
 import { serverTimestamp } from 'firebase/firestore'
+
+import { createGoalStakeholder, createPost, Goal, MilestoneStatus, StoryItem, Support } from '@strive/model'
 
 import { createMilestone, Milestone } from '@strive/model'
 import { MilestoneForm } from '@strive/roadmap/forms/milestone.form'
@@ -17,14 +21,44 @@ import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { GoalService } from '@strive/goal/goal.service'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { MilestoneStatusModule } from '../status/status.module'
+import { AssigneeComponent } from '../assignee/assignee.component'
+import { SubtaskPipeModule } from '@strive/roadmap/pipes/subtask.pipe'
+import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryItem[] }
 
 @Component({
+  standalone: true,
   selector: '[goal][milestones][stakeholder] strive-roadmap',
   templateUrl: 'roadmap.component.html',
   styleUrls: ['./roadmap.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ImageModule,
+    MilestoneStatusModule,
+    AssigneeComponent,
+    AddSupportModalComponent,
+    DetailsComponent,
+    SubtaskPipeModule,
+    MaxLengthPipe,
+    UpsertPostModalModule,
+    IonList,
+    IonReorderGroup,
+    IonItemSliding,
+    IonItem,
+    IonButton,
+    IonIcon,
+    IonReorder,
+    IonItemOptions,
+    IonItemOption,
+    IonInput,
+    IonSkeletonText
+  ]
 })
 export class RoadmapComponent {
 
