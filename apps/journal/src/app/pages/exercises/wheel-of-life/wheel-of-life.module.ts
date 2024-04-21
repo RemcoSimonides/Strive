@@ -13,7 +13,7 @@ import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entr
 import { WheelOfLifeResultsComponent } from '@strive/exercises/wheel-of-life/components/results/results.component'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 
-import { EntryPipeModule } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
+import { TodayEntryPipe, PreviousEntryPipe } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
 import { IonContent, IonSelect, IonSelectOption, IonButton, IonIcon, IonCard, IonCardContent } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -34,7 +34,7 @@ const routes: Routes = [
     WheelOfLifeEntryComponent,
     EntryModalComponent,
     WheelOfLifeResultsComponent,
-    EntryPipeModule,
+    TodayEntryPipe, PreviousEntryPipe,
     GoalCreateModalComponent,
     IonContent,
     IonSelect,

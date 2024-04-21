@@ -1,4 +1,4 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { WheelOfLifeEntry } from '@strive/model'
 import { formatISO } from 'date-fns'
 
@@ -8,7 +8,8 @@ export function getPreviousEntry(entries: WheelOfLifeEntry<number>[]): WheelOfLi
 }
 
 @Pipe({
-  name: 'today'
+  name: 'today',
+  standalone: true
 })
 export class TodayEntryPipe implements PipeTransform {
   transform(entries: WheelOfLifeEntry<number>[]): WheelOfLifeEntry<number> | undefined {
@@ -18,16 +19,11 @@ export class TodayEntryPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'previous'  
+  name: 'previous',
+  standalone: true
 })
 export class PreviousEntryPipe implements PipeTransform {
   transform(entries: WheelOfLifeEntry<number>[]): WheelOfLifeEntry<number> | undefined {
     return getPreviousEntry(entries)
   }
 }
-
-@NgModule({
-  declarations: [TodayEntryPipe, PreviousEntryPipe],
-  exports: [TodayEntryPipe, PreviousEntryPipe]
-})
-export class EntryPipeModule {}
