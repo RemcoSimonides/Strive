@@ -6,7 +6,7 @@ import { HomePageComponent } from './home.page'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { CompactPipeModule } from '@strive/utils/pipes/compact.pipe'
 
-import { FooterModule } from '@strive/ui/footer/footer.module'
+import { FooterComponent } from '@strive/ui/footer/footer.component'
 import { IonContent, IonButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText } from '@ionic/angular/standalone'
 
 @NgModule({
@@ -15,7 +15,7 @@ import { IonContent, IonButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, I
     RouterModule,
     ImageModule,
     CompactPipeModule,
-    FooterModule,
+    FooterComponent,
     IonContent,
     IonButton,
     IonIcon,

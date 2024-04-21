@@ -12,7 +12,7 @@ import { RowsPipeModule } from '@strive/ui/thumbnail/pipes/rows.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { HeaderModule } from '@strive/ui/header/header.module'
 
-import { FooterModule } from '@strive/ui/footer/footer.module'
+import { FooterComponent } from '@strive/ui/footer/footer.component'
 import { IonContent, IonSearchbar, IonCard, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
 
 const routes: Routes = [
@@ -35,7 +35,7 @@ const routes: Routes = [
     RowsPipeModule,
     ImageModule,
     HeaderModule,
-    FooterModule,
+    FooterComponent,
     IonContent,
     IonSearchbar,
     IonCard,
