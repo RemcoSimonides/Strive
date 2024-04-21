@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router'
 import { SupportsPageComponent } from './supports.page'
 
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
-import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
@@ -22,7 +22,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
-    HeaderRootModule,
+    HeaderRootComponent,
     SupportListModule,
     MilestonePathPipeModule,
     IonContent,

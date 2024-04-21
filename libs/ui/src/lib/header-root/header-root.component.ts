@@ -1,8 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 
-import { ModalController } from '@ionic/angular/standalone'
+import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { searchOutline, notificationsOutline, settingsOutline, menuOutline } from 'ionicons/icons'
+
+import { ImageModule } from '@strive/media/directives/image.module'
+import { MenuModule } from '../menu/menu.module'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
@@ -12,10 +17,23 @@ import { MenuComponent } from '../menu/menu.component'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
+  standalone: true,
   selector: 'strive-header-root',
   templateUrl: './header-root.component.html',
   styleUrls: ['./header-root.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ImageModule,
+    MenuModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon
+  ]
 })
 export class HeaderRootComponent {
 

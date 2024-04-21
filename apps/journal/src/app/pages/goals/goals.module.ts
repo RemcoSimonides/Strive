@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { GoalsPageComponent } from './goals.page'
 
 // Strive
-import { HeaderRootModule } from '@strive/ui/header-root/header-root.module'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PageLoadingModule } from '@strive/ui/page-loading/page-loading.module'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
@@ -34,7 +34,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     PageLoadingModule,
-    HeaderRootModule,
+    HeaderRootComponent,
     GoalCreateModalComponent,
     ImageModule,
     GoalOptionsModule,
