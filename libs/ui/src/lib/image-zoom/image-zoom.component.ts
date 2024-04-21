@@ -1,7 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { AfterViewInit, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, ViewChild, ViewEncapsulation } from '@angular/core'
+
 import { createAnimation } from '@ionic/core'
+
 import { Media } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
+import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
+import { ImageModule } from '@strive/media/directives/image.module'
+import { HeaderComponent } from '../header/header.component'
 import { SwiperContainer } from 'swiper/element'
 
 export function getEnterAnimation(baseEl: HTMLElement) {
@@ -33,11 +39,19 @@ export function getLeaveAnimation(baseEl: HTMLElement) {
 }
 
 @Component({
+	standalone: true,
 	selector: 'strive-image-zoom',
 	templateUrl: './image-zoom.component.html',
 	styleUrls: ['./image-zoom.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+	imports: [
+		CommonModule,
+		ImageModule,
+		MediaPipeModule,
+		HeaderComponent
+	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ImageZoomModalComponent extends ModalDirective implements AfterViewInit {
 
