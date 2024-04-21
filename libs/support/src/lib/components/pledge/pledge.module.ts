@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
-import { ArrowModule } from '@strive/ui/responsive-arrow/arrow.module'
+import { ArrowBackComponent, ArrowForwardComponent } from '@strive/ui/responsive-arrow/arrow.component'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
 
@@ -12,7 +12,8 @@ import { IonAvatar } from '@ionic/angular/standalone'
   imports: [
     CommonModule,
     RouterModule,
-    ArrowModule,
+    ArrowBackComponent,
+    ArrowForwardComponent,
     ImageModule,
     MaxLengthModule,
     IonAvatar,
