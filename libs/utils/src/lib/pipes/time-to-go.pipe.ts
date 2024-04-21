@@ -1,8 +1,9 @@
-import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy, NgModule} from '@angular/core'
+import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core'
 
 @Pipe({
 	name: 'timeToGo',
-	pure: false
+	pure: false,
+	standalone: true
 })
 export class TimeToGoPipe implements PipeTransform, OnDestroy {
 	private timer?: number | null
@@ -76,9 +77,3 @@ export class TimeToGoPipe implements PipeTransform, OnDestroy {
 		}
 	}
 }
-
-@NgModule({
-  exports: [TimeToGoPipe],
-  declarations: [TimeToGoPipe]
-})
-export class TimeToGoPipeModule { } 

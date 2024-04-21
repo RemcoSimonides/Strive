@@ -10,7 +10,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
 import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
 import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
-import { TimeToGoPipeModule } from '@strive/utils/pipes/time-to-go.pipe'
+import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
@@ -32,7 +32,7 @@ const routes: Routes = [
     ImageSelectorModule,
     SmallThumbnailComponent,
     DearFutureSelfPipeModule,
-    TimeToGoPipeModule,
+    TimeToGoPipe,
     ImageModule,
     ProgressPipeModule
   ],
