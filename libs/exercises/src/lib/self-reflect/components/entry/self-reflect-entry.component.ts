@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
-import { Location } from '@angular/common'
-import { FormArray, FormControl } from '@angular/forms'
-import { AlertController, ModalController } from '@ionic/angular/standalone'
+import { CommonModule, Location } from '@angular/common'
+import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
+
+import { AlertController, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonFooter, IonProgressBar, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'
 
@@ -15,6 +16,16 @@ import { delay } from '@strive/utils/helpers'
 import { SelfReflectForm } from '../../forms/self-reflect.form'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '../../self-reflect.service'
 import { WheelOfLifeForm } from '../wheel-of-life/wheel-of-life.form'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { SelfReflectQuestionActivatedPipe } from '../../pipes/activated.pipe'
+import { PreviousIntentionComponent } from '../previous-intention/previous-intention.component'
+import { WheelOfLifeComponent } from '../wheel-of-life/wheel-of-life.component'
+import { SelfReflectOutroComponent } from '../outro/outro.component'
+import { PrioritizeGoalsComponent } from '../prioritize-goals/prioritize-goals.component'
+import { SelfReflectTextareaComponent } from '../textarea/textarea.component'
+import { SelfReflectStepFilterPipe } from '../../pipes/step.pipe'
+import { SelfReflectFormListComponent } from '../form-list/form-list.component'
+import { SelfReflectIntermediateComponent } from '../intermediate/intermediate.component'
 
 function getTitle({ category }: EntryStep): string {
   switch (category) {
@@ -31,10 +42,34 @@ function getTitle({ category }: EntryStep): string {
 }
 
 @Component({
+  standalone: true,
   selector: '[entry] strive-self-reflect-entry',
   templateUrl: './self-reflect-entry.component.html',
   styleUrls: ['./self-reflect-entry.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    PageLoadingComponent,
+    SelfReflectQuestionActivatedPipe,
+    PreviousIntentionComponent,
+    WheelOfLifeComponent,
+    SelfReflectOutroComponent,
+    SelfReflectIntermediateComponent,
+    PrioritizeGoalsComponent,
+    SelfReflectFormListComponent,
+    SelfReflectTextareaComponent,
+    SelfReflectStepFilterPipe,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonFooter,
+    IonProgressBar
+  ]
 })
 export class SelfReflectEntryComponent extends ModalDirective implements OnInit {
 

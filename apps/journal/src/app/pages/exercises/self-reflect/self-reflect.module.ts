@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { SelfReflectComponent } from './self-reflect.component'
 
 import { HeaderComponent } from '@strive/ui/header/header.component'
-import { SelfReflectEntryModule } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.module'
+import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
 import { SelfReflectSettingsComponent } from './settings/self-reflect-settings.component'
 import { SelfReflectFrequencyPipe, SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 import { SelfReflectFilterEntriesPipe } from '@strive/exercises/self-reflect/pipes/entry.pipe'
@@ -30,7 +30,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     HeaderComponent,
-    SelfReflectEntryModule,
+    SelfReflectEntryComponent,
     SelfReflectFrequencyPipe,
     PageLoadingComponent,
     SelfReflectReplaceFrequencyPipe,
