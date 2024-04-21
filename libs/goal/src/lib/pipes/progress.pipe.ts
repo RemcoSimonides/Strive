@@ -1,4 +1,4 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { Goal, inProgress, isFinished } from '@strive/model'
 
 export function getProgress(goal: Goal): number {
@@ -6,7 +6,7 @@ export function getProgress(goal: Goal): number {
   return goal.tasksCompleted / goal.tasksTotal
 }
 
-@Pipe({ name: 'progress' })
+@Pipe({ name: 'progress', standalone: true })
 export class ProgressPipe implements PipeTransform {
   transform(goal: Goal) {
     return getProgress(goal)
@@ -14,7 +14,7 @@ export class ProgressPipe implements PipeTransform {
 }
 
 
-@Pipe({ name: 'toProgressLabel' })
+@Pipe({ name: 'toProgressLabel', standalone: true })
 export class ProgressLabelPipe implements PipeTransform {
   transform(goal: Goal) {
     if (isFinished(goal)) return 'Finished'
@@ -22,9 +22,3 @@ export class ProgressLabelPipe implements PipeTransform {
     return 'To Start'
   }
 }
-
-@NgModule({
-  exports: [ProgressLabelPipe, ProgressPipe],
-  declarations: [ProgressLabelPipe, ProgressPipe]
-})
-export class ProgressPipeModule { }

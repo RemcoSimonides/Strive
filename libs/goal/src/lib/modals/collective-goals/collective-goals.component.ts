@@ -5,7 +5,7 @@ import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonProgressBar, Moda
 import { ImageModule } from '@strive/media/directives/image.module'
 import { createGoal, Stakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
+import { ProgressPipe } from '@strive/goal/pipes/progress.pipe'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
@@ -13,7 +13,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   imports: [
     CommonModule,
     ImageModule,
-    ProgressPipeModule,
+    ProgressPipe,
     HeaderModalComponent,
     IonContent,
     IonList,

@@ -27,7 +27,6 @@ import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail.module'
-import { ProgressPipeModule } from '@strive/goal/pipes/progress.pipe'
 
 const routes: Routes = [
   { path: '', component: ProfilePageComponent },
@@ -49,7 +48,6 @@ const routes: Routes = [
     ImageZoomModalComponent,
     HeaderRootComponent,
     HeaderComponent,
-    ProgressPipeModule,
     SupportingModule,
     GoalThumbnailModule,
     PagenotfoundComponent,
