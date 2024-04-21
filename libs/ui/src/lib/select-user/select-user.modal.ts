@@ -1,12 +1,23 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController } from '@ionic/angular/standalone'
+import { IonHeader, IonToolbar, IonSearchbar, IonContent, IonList, IonItem, ModalController } from '@ionic/angular/standalone'
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
 
 @Component({
+  standalone: true,
   selector: 'strive-select-user',
   templateUrl: './select-user.modal.html',
   styleUrls: ['./select-user.modal.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonHeader,
+    IonToolbar,
+    IonSearchbar,
+    IonContent,
+    IonList,
+    IonItem
+  ]
 })
 export class SelectUserModalComponent {
 

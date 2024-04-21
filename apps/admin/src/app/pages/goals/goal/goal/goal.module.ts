@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular'
 import { GoalComponent } from './goal.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { ImageSelectorModule } from '@strive/media/components/image-selector/image-selector.module'
-import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
+import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
 import { DescriptionComponent } from '@strive/ui/description/description.component'
 
 @NgModule({
@@ -18,7 +18,7 @@ import { DescriptionComponent } from '@strive/ui/description/description.compone
     IonicModule,
     PageLoadingComponent,
     ImageSelectorModule,
-    SelectUserModule,
+    SelectUserModalComponent,
     DescriptionComponent
   ],
   declarations: [GoalComponent],

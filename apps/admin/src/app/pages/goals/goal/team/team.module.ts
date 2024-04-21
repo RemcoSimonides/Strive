@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular'
 
 import { TeamComponent } from './team.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
-import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
+import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
 
 @NgModule({
   imports: [
@@ -14,7 +14,7 @@ import { SelectUserModule } from '@strive/ui/select-user/select-user.module'
     IonicModule,
     RouterModule,
     PageLoadingComponent,
-    SelectUserModule
+    SelectUserModalComponent
   ],
   declarations: [TeamComponent],
   exports: [TeamComponent]
