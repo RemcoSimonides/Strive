@@ -1,9 +1,9 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { DearFutureSelf } from '@strive/model'
 import { compareAsc, isFuture } from 'date-fns'
 
 
-@Pipe({ name: 'nextLetter' })
+@Pipe({ name: 'nextLetter', standalone: true })
 export class NextLetterPipe implements PipeTransform {
   transform(setting: DearFutureSelf) {
     if (!setting) return
@@ -13,9 +13,3 @@ export class NextLetterPipe implements PipeTransform {
     return asc[0]
   }
 }
-
-@NgModule({
-  exports: [NextLetterPipe],
-  declarations: [NextLetterPipe]
-})
-export class DearFutureSelfPipeModule { }

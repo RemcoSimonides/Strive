@@ -7,7 +7,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 
 import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
-import { DearFutureSelfPipeModule } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
+import { NextLetterPipe } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
 import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
 
@@ -44,7 +44,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SmallThumbnailComponent,
     HeaderRootComponent,
-    DearFutureSelfPipeModule,
+    NextLetterPipe,
     TimeToGoPipe,
     PageLoadingComponent,
     IonContent,
