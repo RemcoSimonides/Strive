@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
-import { Location } from '@angular/common'
-import { ModalController } from '@ionic/angular/standalone'
+import { CommonModule, Location } from '@angular/common'
+import { IonContent, IonTitle, ModalController } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -13,12 +13,24 @@ import { Goal, groupByObjective, Milestone, sortGroupedSupports, SupportsGrouped
 import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
 import { ProfileService } from '@strive/user/profile.service'
+import { SupportListComponent } from '@strive/support/components/list/list.component'
+import { AddSupportComponent } from '@strive/support/components/add/add.component'
+import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
+  standalone: true,
   selector: '[goal] strive-support-modal',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    SupportListComponent,
+    AddSupportComponent,
+    HeaderModalComponent,
+    IonTitle,
+    IonContent,
+  ]
 })
 export class AddSupportModalComponent extends ModalDirective implements OnInit {
 
