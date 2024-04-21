@@ -10,7 +10,7 @@ import { AddSupportModalModule } from '@strive/support/modals/add/add.module'
 import { ImageModule } from '@strive/media/directives/image.module'
 import { DetailsModule } from '../details/details.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
-import { MaxLengthModule } from '@strive/utils/pipes/max-length.pipe'
+import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 import { IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, IonReorder, IonItemOptions, IonItemOption, IonInput, IonSkeletonText } from '@ionic/angular/standalone'
 
@@ -25,7 +25,7 @@ import { IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, 
     AddSupportModalModule,
     DetailsModule,
     SubtaskPipeModule,
-    MaxLengthModule,
+    MaxLengthPipe,
     UpsertPostModalModule,
     IonList,
     IonReorderGroup,
