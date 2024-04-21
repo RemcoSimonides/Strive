@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { FormControl } from '@angular/forms'
-import { AlertController } from '@ionic/angular/standalone'
+import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { RouterModule } from '@angular/router'
+import { AlertController, IonList, IonItem, IonInput, IonButton, IonContent } from '@ionic/angular/standalone'
 
 import { joinWith } from 'ngfire'
 
@@ -13,12 +15,31 @@ import { ProfileService } from '@strive/user/profile.service'
 import { StoryService } from '@strive/story/story.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { AuthService } from '@strive/auth/auth.service'
+import { PledgeModule } from '../pledge/pledge.module'
+import { SupportDecisionComponent } from '../decision/decision.component'
+import { PostComponentModule } from '@strive/post/components/post/post.module'
+import { SupportRolePipeModule } from '@strive/support/pipes/role.pipe'
 
 @Component({
+  standalone: true,
   selector: 'strive-support-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    PledgeModule,
+    RouterModule,
+    ReactiveFormsModule,
+    SupportDecisionComponent,
+    PostComponentModule,
+    SupportRolePipeModule,
+    IonList,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonContent
+  ]
 })
 export class SupportDetailsComponent implements OnInit {
 
