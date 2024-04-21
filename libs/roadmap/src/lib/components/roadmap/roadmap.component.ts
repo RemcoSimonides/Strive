@@ -26,7 +26,6 @@ import { MilestoneStatusComponent } from '../status/status.component'
 import { AssigneeComponent } from '../assignee/assignee.component'
 import { SubtasksCompletedPipe } from '@strive/roadmap/pipes/subtask.pipe'
 import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryItem[] }
 
@@ -46,7 +45,7 @@ type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryIte
     DetailsComponent,
     SubtasksCompletedPipe,
     MaxLengthPipe,
-    UpsertPostModalModule,
+    UpsertPostModalComponent,
     IonList,
     IonReorderGroup,
     IonItemSliding,

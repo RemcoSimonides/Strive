@@ -23,7 +23,7 @@ import { StoryComponent } from '@strive/story/components/story/story.component'
 
 import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'
 
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
 import { ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
@@ -69,7 +69,7 @@ const routes: Routes = [
     HeaderRootComponent,
     AddOthersModalComponent,
     DeadlinePopoverSComponent,
-    UpsertPostModalModule,
+    UpsertPostModalComponent,
     CollectiveGoalsModalSComponent,
     SuggestionModalComponent,
     IonFab,

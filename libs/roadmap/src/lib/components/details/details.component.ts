@@ -31,7 +31,6 @@ import { MilestoneStatusComponent } from '../status/status.component'
 import { AssigneeComponent } from '../assignee/assignee.component'
 import { SubtasksCompletedPipe } from '@strive/roadmap/pipes/subtask.pipe'
 import { StoryComponent } from '@strive/story/components/story/story.component'
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 import { AddSupportComponent } from '@strive/support/components/add/add.component'
 import { SupportListComponent } from '@strive/support/components/list/list.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
@@ -52,7 +51,7 @@ type MilestoneWithSupport = Milestone & { supports?: Support[] }
     SubtasksCompletedPipe,
     StoryComponent,
     DatetimeComponent,
-    UpsertPostModalModule,
+    UpsertPostModalComponent,
     AddSupportComponent,
     SupportListComponent,
     HeaderModalComponent,

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core'
-import { Location } from '@angular/common'
-import { ModalController, PopoverController } from '@ionic/angular/standalone'
+import { CommonModule, Location } from '@angular/common'
+import { ReactiveFormsModule } from '@angular/forms'
+
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonItem, IonTextarea, IonInput, IonSpinner, IonFooter, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { close, calendarOutline, linkOutline } from 'ionicons/icons'
 
@@ -22,12 +24,35 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { EditMediaForm } from '@strive/media/forms/media.form'
+import { ImagesSelectorComponent } from '@strive/media/components/images-selector/images-selector.component'
+import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 
 @Component({
+	standalone: true,
 	selector: '[goalId] strive-post-upsert',
 	templateUrl: './post-upsert.component.html',
 	styleUrls: ['./post-upsert.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		ImagesSelectorComponent,
+		DatetimeComponent,
+		SafePipe,
+		IonHeader,
+		IonToolbar,
+		IonButtons,
+		IonButton,
+		IonIcon,
+		IonTitle,
+		IonContent,
+		IonList,
+		IonItem,
+		IonTextarea,
+		IonInput,
+		IonSpinner,
+		IonFooter
+	]
 })
 export class UpsertPostModalComponent extends ModalDirective implements OnDestroy {
 	@ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent

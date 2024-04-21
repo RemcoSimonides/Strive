@@ -12,7 +12,6 @@ import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert
 import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { PostComponent } from '@strive/post/components/post/post.component'
-import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 @Component({
   standalone: true,
@@ -26,7 +25,7 @@ import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.mo
     StoryItemMessagePipe,
     TimeAgoPipe,
     PostComponent,
-    UpsertPostModalModule,
+    UpsertPostModalComponent,
     IonButton,
     IonIcon
   ]
