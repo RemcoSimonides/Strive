@@ -32,7 +32,7 @@ import { HeaderRootComponent } from '@strive/ui/header-root/header-root.componen
 import { DescriptionComponent } from '@strive/ui/description/description.component'
 import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 
-import { SupportListModule } from '@strive/support/components/list/list.module'
+import { SupportListComponent } from '@strive/support/components/list/list.component'
 import { AddSupportComponent } from '@strive/support/components/add/add.component'
 
 import { ImageModule } from '@strive/media/directives/image.module'
@@ -61,7 +61,7 @@ const routes: Routes = [
     StoryModule,
     DescriptionComponent,
     JoinButtonModule,
-    SupportListModule,
+    SupportListComponent,
     AddSupportComponent,
     ChatModalModule,
     PageLoadingComponent,

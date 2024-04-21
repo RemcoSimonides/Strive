@@ -6,7 +6,7 @@ import { SupportsPageComponent } from './supports.page'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 
-import { SupportListModule } from '@strive/support/components/list/list.module'
+import { SupportListComponent } from '@strive/support/components/list/list.component'
 import { MilestonePathPipeModule } from '@strive/roadmap/pipes/path.pipe'
 import { IonContent, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone'
 
@@ -23,7 +23,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PageLoadingComponent,
     HeaderRootComponent,
-    SupportListModule,
+    SupportListComponent,
     MilestonePathPipeModule,
     IonContent,
     IonRefresher,
