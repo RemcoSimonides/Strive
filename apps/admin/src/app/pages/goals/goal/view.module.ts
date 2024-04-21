@@ -9,7 +9,7 @@ import { GoalViewPage } from './view.page'
 import { GoalPageModule } from './goal/goal.module'
 import { TeamModule } from './team/team.module'
 import { AdminRoadmapModule } from './roadmap/roadmap.module'
-import { StoryModule } from './story/story.module'
+import { StoryComponent } from './story/story.component'
 
 const routes: Routes = [
   {
@@ -28,7 +28,7 @@ const routes: Routes = [
     GoalPageModule,
     TeamModule,
     AdminRoadmapModule,
-    StoryModule
+    StoryComponent
   ],
   declarations: [GoalViewPage]
 })

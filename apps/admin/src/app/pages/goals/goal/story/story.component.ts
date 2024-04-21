@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, RouterModule } from '@angular/router'
 
 import { joinWith } from 'ngfire'
 import { orderBy } from 'firebase/firestore'
@@ -10,12 +11,19 @@ import { ProfileService } from '@strive/user/profile.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { PostService } from '@strive/post/post.service'
 import { createGoalStakeholder, StoryItem } from '@strive/model'
+import { StoryItemMessagePipeModule } from '@strive/story/pipes/story-message'
 
 @Component({
+  standalone: true,
   selector: '[id] strive-story',
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    StoryItemMessagePipeModule,
+  ]
 })
 export class StoryComponent {
 

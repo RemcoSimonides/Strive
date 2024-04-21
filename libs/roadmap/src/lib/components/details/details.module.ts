@@ -6,7 +6,7 @@ import { DetailsComponent } from './details.component'
 import { MilestoneStatusModule } from '../status/status.module'
 import { AssigneeModule } from '../assignee/assignee.module'
 import { SubtaskPipeModule } from '../../pipes/subtask.pipe'
-import { StoryModule } from '@strive/story/components/story/story.module'
+import { StoryComponent } from '@strive/story/components/story/story.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
@@ -23,7 +23,7 @@ import { IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReord
     MilestoneStatusModule,
     AssigneeModule,
     SubtaskPipeModule,
-    StoryModule,
+    StoryComponent,
     DatetimeComponent,
     UpsertPostModalModule,
     AddSupportComponent,

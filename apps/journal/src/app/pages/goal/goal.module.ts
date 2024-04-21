@@ -19,7 +19,7 @@ import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion
 
 import { RoadmapModule } from '@strive/roadmap/components/roadmap/roadmap.module'
 
-import { StoryModule } from '@strive/story/components/story/story.module'
+import { StoryComponent } from '@strive/story/components/story/story.component'
 
 import { ChatModalModule } from '@strive/chat/modals/chat/chat.module'
 
@@ -58,7 +58,7 @@ const routes: Routes = [
     ImageZoomModalComponent,
     CompactPipe,
     RoadmapModule,
-    StoryModule,
+    StoryComponent,
     DescriptionComponent,
     JoinButtonModule,
     SupportListComponent,

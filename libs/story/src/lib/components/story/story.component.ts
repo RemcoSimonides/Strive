@@ -1,16 +1,35 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { ModalController } from '@ionic/angular/standalone'
+
+import { ModalController, IonButton, IonIcon } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { pencilOutline, flagOutline, checkmarkOutline, personAddOutline, bookmarkOutline, alertOutline } from 'ionicons/icons'
+
 import { GoalService } from '@strive/goal/goal.service'
 import { createGoalStakeholder, createPost, StoryItem } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
+import { StoryItemMessagePipeModule } from '@strive/story/pipes/story-message'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
+import { PostComponentModule } from '@strive/post/components/post/post.module'
+import { UpsertPostModalModule } from '@strive/post/modals/upsert/post-upsert.module'
 
 @Component({
+  standalone: true,
   selector: '[story][goalId] strive-story',
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    StoryItemMessagePipeModule,
+    TimeAgoPipe,
+    PostComponentModule,
+    UpsertPostModalModule,
+    IonButton,
+    IonIcon
+  ]
 })
 export class StoryComponent {
 
