@@ -7,7 +7,7 @@ import { IonContent, IonCard, IonAvatar, IonButton, IonIcon } from '@ionic/angul
 import { ProfilePageComponent } from './profile.page'
 
 // Followers / Followings
-import { FollowingModule } from '@strive/spectator/components/following/following.module'
+import { FollowingComponent } from '@strive/spectator/components/following/following.component'
 import { FollowersComponent } from '@strive/spectator/components/followers/followers.component'
 import { SupportingModule } from '@strive/goal/modals/supporting/supporting.module'
 
@@ -42,7 +42,7 @@ const routes: Routes = [
     PageLoadingComponent,
     ImageModule,
     ImageSelectorModule,
-    FollowingModule,
+    FollowingComponent,
     FollowersComponent,
     GoalOptionsModule,
     EditProfileImagePopoverModule,
