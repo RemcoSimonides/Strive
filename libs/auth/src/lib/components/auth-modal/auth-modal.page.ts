@@ -29,9 +29,6 @@ import { createRandomString } from '@strive/utils/helpers'
 
 import { TermsComponent } from '@strive/ui/static-information/terms/terms.component'
 import { PrivacyPolicyComponent } from '@strive/ui/static-information/privacy/privacy-policy.component'
-import { WelcomeModalModule } from '../welcome/welcome.module'
-
-
 import { WelcomeModalComponent } from '../welcome/welcome.modal'
 
 export enum enumAuthSegment {
@@ -53,7 +50,7 @@ export enum enumAuthSegment {
     TermsComponent,
     ReactiveFormsModule,
     PrivacyPolicyComponent,
-    WelcomeModalModule,
+    WelcomeModalComponent,
     IonButton,
     IonIcon,
     IonHeader,

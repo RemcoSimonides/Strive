@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core'
 import { Router } from '@angular/router'
-import { ModalController } from '@ionic/angular/standalone'
+
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { closeOutline } from 'ionicons/icons'
+
 import { Capacitor } from '@capacitor/core'
 
 import { SwiperContainer } from 'swiper/swiper-element'
@@ -11,13 +14,26 @@ import { combineLatest, map, of } from 'rxjs'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { ImageModule } from '@strive/media/directives/image.module'
 
 @Component({
+  standalone: true,
   selector: 'strive-welcome-modal',
   templateUrl: './welcome.modal.html',
   styleUrls: ['./welcome.modal.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.ShadowDom,
+  imports: [
+    CommonModule,
+    ImageModule,
+    GoalCreateModalComponent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class WelcomeModalComponent {
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
