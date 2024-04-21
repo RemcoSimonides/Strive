@@ -30,7 +30,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { DescriptionComponent } from '@strive/ui/description/description.component'
-import { CompactPipeModule } from '@strive/utils/pipes/compact.pipe'
+import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 
 import { SupportListModule } from '@strive/support/components/list/list.module'
 import { AddSupportModule } from '@strive/support/components/add/add.module'
@@ -56,7 +56,7 @@ const routes: Routes = [
     SupportersModalComponent,
     ImageModule,
     ImageZoomModalComponent,
-    CompactPipeModule,
+    CompactPipe,
     RoadmapModule,
     StoryModule,
     DescriptionComponent,
