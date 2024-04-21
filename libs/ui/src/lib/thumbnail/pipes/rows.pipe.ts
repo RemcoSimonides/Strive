@@ -1,6 +1,9 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 
-@Pipe({ name: 'rows' })
+@Pipe({
+  standalone: true,
+  name: 'rows'
+})
 export class RowsPipe implements PipeTransform {
   transform(array: any | null, rows: number) {
     if (array === null) return []
@@ -17,9 +20,3 @@ export class RowsPipe implements PipeTransform {
     return result
   }
 }
-
-@NgModule({
-  exports: [RowsPipe],
-  declarations: [RowsPipe]
-})
-export class RowsPipeModule { }
