@@ -5,7 +5,7 @@ import { createAnimation } from '@ionic/core'
 
 import { Media } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
+import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderComponent } from '../header/header.component'
 import { SwiperContainer } from 'swiper/element'
@@ -48,7 +48,7 @@ export function getLeaveAnimation(baseEl: HTMLElement) {
 	imports: [
 		CommonModule,
 		ImageDirective,
-		MediaPipeModule,
+		MediaRefPipe,
 		HeaderComponent
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]

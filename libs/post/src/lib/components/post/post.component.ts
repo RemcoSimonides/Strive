@@ -14,7 +14,7 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
-import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
+import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
 
 @Component({
   standalone: true,
@@ -31,7 +31,7 @@ import { MediaPipeModule } from '@strive/media/pipes/media.pipe'
     PostOptionsComponent,
     HTMLPipe,
     SafePipe,
-    MediaPipeModule,
+    MediaRefPipe,
     IonCard,
     IonAvatar,
     IonButton,

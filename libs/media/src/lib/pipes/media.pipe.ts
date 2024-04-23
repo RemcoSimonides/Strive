@@ -1,17 +1,11 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core'
 import { Media } from '@strive/model'
 
 
-@Pipe({ name: 'mediaRef' })
+@Pipe({ name: 'mediaRef', standalone: true })
 export class MediaRefPipe implements PipeTransform {
   transform(media: Media) {
     if (!media) return ''
     return `${media.storagePath}/${media.id}`
   }
 }
-
-@NgModule({
-  exports: [MediaRefPipe],
-  declarations: [MediaRefPipe]
-})
-export class MediaPipeModule { }
