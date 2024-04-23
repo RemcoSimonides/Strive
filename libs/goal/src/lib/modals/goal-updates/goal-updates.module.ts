@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { GoalUpdatesModalComponent } from './goal-updates.component'
 
 import { ImageDirective } from '@strive/media/directives/image.directive'
-import { GoalThumbnailModule } from '../../components/thumbnail/thumbnail.module'
+import { GoalThumbnailComponent } from '../../components/thumbnail/thumbnail.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
 
@@ -11,7 +11,7 @@ import { IonContent, IonIcon } from '@ionic/angular/standalone'
   imports: [
     CommonModule,
     ImageDirective,
-    GoalThumbnailModule,
+    GoalThumbnailComponent,
     HeaderModalComponent,
     IonContent,
     IonIcon

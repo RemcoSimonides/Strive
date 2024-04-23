@@ -1,12 +1,16 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 
-import { PopoverController } from '@ionic/angular/standalone'
+import { IonCard, IonThumbnail, IonIcon, IonProgressBar, IonButton, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { checkmarkOutline, ellipsisVertical, alertOutline, flagOutline, personAddOutline, bookmarkOutline, createOutline, chatboxOutline } from 'ionicons/icons'
 
 import { createGoal, createGoalStakeholder, EventType, GoalEvent, GoalStakeholder } from '@strive/model'
 import { GoalOptionsComponent } from '../goal-options/goal-options.component'
 import { AggregatedMessage, getAggregatedMessage } from '@strive/notification/message/aggregated'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+import { ProgressPipe } from '@strive/goal/pipes/progress.pipe'
 
 function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number }[] {
   const counter: Partial<Record<EventType, number>> = {}
@@ -20,10 +24,23 @@ function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number
 }
 
 @Component({
+  standalone: true,
   selector: '[goal] strive-goal-thumbnail',
   templateUrl: './thumbnail.component.html',
   styleUrls: ['./thumbnail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ImageDirective,
+    GoalOptionsComponent,
+    ProgressPipe,
+    IonCard,
+    IonThumbnail,
+    IonIcon,
+    IonProgressBar,
+    IonButton
+  ]
 })
 export class GoalThumbnailComponent {
 

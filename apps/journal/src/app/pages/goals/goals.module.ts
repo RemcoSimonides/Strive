@@ -11,7 +11,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
 import { HomePageModule } from '../home/home.module'
-import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail.module'
+import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
 import { GoalUpdatesModalModule } from '@strive/goal/modals/goal-updates/goal-updates.module'
 import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.component'
 
@@ -39,7 +39,7 @@ const routes: Routes = [
     GoalOptionsComponent,
     HomePageModule,
     ReactiveFormsModule,
-    GoalThumbnailModule,
+    GoalThumbnailComponent,
     GoalUpdatesModalModule,
     MiniThumbnailSwiperComponent,
 
