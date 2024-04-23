@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 
 import { IonIcon } from '@ionic/angular/standalone'
@@ -14,7 +13,6 @@ import { createMilestone, MilestoneStatus } from '@strive/model'
   styleUrls: ['./status.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default, // Default because when updating status, icon wasn't updated (despite markForCheck())
   imports: [
-    CommonModule,
     IonIcon
   ]
 })

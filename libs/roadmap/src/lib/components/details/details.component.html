@@ -1,15 +1,16 @@
 <strive-header-modal (dismiss)="dismiss()">
-  <header class="header" *ngIf="canEdit && form?.touched">
-    <ion-button fill="clear" disabled color="primary">
-      <ng-container *ngIf="form?.dirty && form?.valid; else saved">
-        <span>Saving changes...</span>
-      </ng-container>
-      <ng-template #saved>
-        <span>Saved</span>
-        <ion-icon name="checkmark-outline" slot="end" />
-      </ng-template>
-    </ion-button>
-  </header>
+  @if (canEdit && form?.touched) {
+    <header class="header">
+      <ion-button fill="clear" disabled color="primary">
+        @if (form?.dirty && form?.valid) {
+          <span>Saving changes...</span>
+        } @else {
+          <span>Saved</span>
+          <ion-icon name="checkmark-outline" slot="end" />
+        }
+      </ion-button>
+    </header>
+  }
 </strive-header-modal>
 
 <ion-content class="ion-padding">
@@ -25,116 +26,124 @@
       </form>
     </section>
 
-    <section *ngIf="milestone.deadline">
-      <div (click)="openDatepicker()" class="deadline" [ngClass]="{'clickable': canEdit}">
-        <ion-icon name="alarm-outline" />
-        <small>{{ milestone.deadline | date: 'MMM d, y' }}</small>
-      </div>
-    </section>
+    @if (milestone.deadline) {
+      <section>
+        <div (click)="openDatepicker()" class="deadline" [ngClass]="{'clickable': canEdit}">
+          <ion-icon name="alarm-outline" />
+          <small>{{ milestone.deadline | date: 'MMM d, y' }}</small>
+        </div>
+      </section>
+    }
 
-    <section *ngIf="milestone.achiever?.uid">
-      <small class="assignee">
-        <ion-icon name="person-outline"></ion-icon>
-        <ion-button class="contrast" size="small" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
-          <strive-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()" />
+    @if (milestone.achiever?.uid) {
+      <section>
+        <small class="assignee">
+          <ion-icon name="person-outline"></ion-icon>
+          <ion-button class="contrast" size="small" [disabled]="!canEdit" [ngClass]="{'fake-enable': !canEdit}">
+            <strive-milestone-assignee [achiever]="milestone.achiever!" (click)="toggleAssignMe()" />
+          </ion-button>
+        </small>
+      </section>
+    }
+
+    @if (milestone.description || showDescription) {
+      <section class="description">
+        <small>
+          <ion-icon name="reorder-four-outline" />
+          <ion-textarea
+            [formControl]="form.description"
+            placeholder="Description"
+            autocapitalize="sentences"
+            [maxlength]="200"
+            autoGrow
+            [readonly]="!canEdit"
+          />
+        </small>
+      </section>
+    }
+
+    @if (canEdit) {
+      <section class="details">
+        <ion-button (click)="deleteMilestone()" class="danger" size="small">
+          <ion-icon slot="icon-only" name="trash-outline" size="small" />
         </ion-button>
-      </small>
-    </section>
+        @if (!milestone.deadline) {
+          <ion-button (click)="openDatepicker()" class="primary" size="small">
+            <ion-icon name="alarm-outline" slot="start" />
+            <span>Deadline</span>
+          </ion-button>
+        }
+        @if (goal.numberOfAchievers > 1 && !milestone.achiever?.uid) {
+          <ion-button (click)="toggleAssignMe()" class="primary" size="small">
+            <ion-icon name="person-outline" slot="start" />
+            <span>Assign me</span>
+          </ion-button>
+        }
+        @if (!showDescription && !milestone.description) {
+          <ion-button (click)="showDescription = true" class="primary" size="small">
+            <ion-icon name="reorder-four-outline" slot="start" />
+            <span>Description</span>
+          </ion-button>
+        }
+      </section>
+    }
 
-    <section *ngIf="milestone.description || showDescription" class="description">
-      <small>
-        <ion-icon name="reorder-four-outline" />
-        <ion-textarea
-          [formControl]="form.description"
-          placeholder="Description"
-          autocapitalize="sentences"
-          [maxlength]="200"
-          autoGrow
-          [readonly]="!canEdit"
-        />
-      </small>
-    </section>
+    @if (canEdit || milestone.subtasks?.length) {
+      <section class="subtasks">
+        <header>
+          <h6>Subtasks</h6>
+          <small>({{ form.subtasks.value | subtasksCompleted}})</small>
+        </header>
+        <ion-list>
+          <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!canEdit">
+            @for (control of form.subtasks.controls; track control; let i = $index; let last = $last) {
+              <ion-item [lines]="!canEdit && last ? 'none' : 'full'">
+                <ion-button fill="clear" (click)="toggleSubtask(i)">
+                  <ion-icon  slot="icon-only"
+                    [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
+                    color="primary"
+                  />
+                </ion-button>
+                <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)" class="primary" />
+                <ion-reorder slot="end" />
+              </ion-item>
+            }
+          </ion-reorder-group>
+          @if (canEdit) {
+            <form [formGroup]="subtaskForm">
+              <ion-item lines="none">
+                <ion-icon class="icon" name="radio-button-off" color="primary" />
+                <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences" class="primary" />
+                <ion-button color="primary" (click)="addSubtask()">Add</ion-button>
+              </ion-item>
+            </form>
+          }
+        </ion-list>
+      </section>
+    }
 
-    <section class="details" *ngIf="canEdit">
-
-      <ion-button (click)="deleteMilestone()" class="danger" size="small">
-        <ion-icon slot="icon-only" name="trash-outline" size="small" />
-      </ion-button>
-
-      <ng-container *ngIf="!milestone.deadline">
-        <ion-button (click)="openDatepicker()" class="primary" size="small">
-          <ion-icon name="alarm-outline" slot="start" />
-          <span>Deadline</span>
-        </ion-button>
-      </ng-container>
-
-      <ng-container *ngIf="goal.numberOfAchievers > 1 && !milestone.achiever?.uid">
-        <ion-button (click)="toggleAssignMe()" class="primary" size="small">
-          <ion-icon name="person-outline" slot="start" />
-          <span>Assign me</span>
-        </ion-button>
-      </ng-container>
-
-      <ng-container *ngIf="!showDescription && !milestone.description">
-        <ion-button (click)="showDescription = true" class="primary" size="small">
-          <ion-icon name="reorder-four-outline" slot="start" />
-          <span>Description</span>
-        </ion-button>
-      </ng-container>
-
-    </section>
-
-    <section *ngIf="canEdit || milestone.subtasks?.length" class="subtasks">
-      <header>
-        <h6>Subtasks</h6>
-        <small>({{ form.subtasks.value | subtasksCompleted}})</small>
-      </header>
-      <ion-list>
-        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!canEdit">
-          <ion-item *ngFor="let control of form.subtasks.controls; let i = index; let last = last" [lines]="!canEdit && last ? 'none' : 'full'">
-            <ion-button fill="clear" (click)="toggleSubtask(i)">
-              <ion-icon  slot="icon-only"
-                [name]="control.completed.value ? 'checkmark-circle' : 'radio-button-off'"
-                color="primary"
-              />
-            </ion-button>
-            <ion-input [readonly]="!canEdit" [formControl]="control.content" autocapitalize="sentences" (ionBlur)="subtaskBlur(i)" class="primary" />
-            <ion-reorder slot="end" />
-          </ion-item>
-        </ion-reorder-group>
-
-        <form [formGroup]="subtaskForm" *ngIf="canEdit">
-          <ion-item lines="none">
-            <ion-icon class="icon" name="radio-button-off" color="primary" />
-            <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences" class="primary" />
-            <ion-button color="primary" (click)="addSubtask()">Add</ion-button>
-          </ion-item>
-        </form>
-      </ion-list>
-    </section>
-
-    <ng-container *ngIf="isLoggedIn$ | async">
-      <ng-container *ngIf="supports$ | async as supports">
-        <ng-container *ngIf="supports.length || milestone.status === 'pending'">
+    @if (isLoggedIn$ | async) {
+      @if (supports$ | async; as supports) {
+        @if (supports.length || milestone.status === 'pending') {
           <section class="supports">
             <h6>Supports</h6>
-
-            <ng-container *ngIf="milestone.status === 'pending'">
+            @if (milestone.status === 'pending') {
               <strive-support-add [goal]="goal" [milestone]="milestone" />
-            </ng-container>
-
+            }
             <strive-support-list [goal]="supports[0]" />
           </section>
-        </ng-container>
-      </ng-container>
-    </ng-container>
+        }
+      }
+    }
 
-    <ng-container *ngIf="story$ | async as story">
-      <section *ngIf="canEdit || story.length">
-        <h6>Story</h6>
-        <strive-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id" />
-      </section>
-    </ng-container>
+    @if (story$ | async; as story) {
+      @if (canEdit || story.length) {
+        <section>
+          <h6>Story</h6>
+          <strive-story [story]="story" [stakeholder]="stakeholder" [goalId]="goal.id" [milestoneId]="milestone.id" />
+        </section>
+      }
+    }
 
     <!-- <small><b>Created at:</b> {{ milestone.createdAt | date:'longDate' }}</small>
     <small *ngIf="milestone.finishedAt">
