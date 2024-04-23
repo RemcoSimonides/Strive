@@ -3,10 +3,10 @@
 </strive-header-modal>
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="results$ | async as profiles; else loading">
-    <ng-container *ngIf="profiles.length else empty">
+  @if (results$ | async; as profiles) {
+    @if (profiles.length) {
       <ion-list>
-        <ng-container *ngFor="let profile of results$ | async; let last = last">
+        @for (profile of results$ | async; track profile; let last = $last) {
           <ion-item [lines]="last ? 'none' : 'full'">
             <ion-avatar slot="start">
               <img asset="profile.png" [ref]="profile.photoURL" [width]="120" [height]="120">
@@ -21,10 +21,23 @@
               {{ profile | inviteText }}
             </ion-button>
           </ion-item>
-        </ng-container>
+        }
       </ion-list>
-    </ng-container>
-  </ng-container>
+    } @else {
+      <section>
+        @if (query === '') {
+          <i>Search to find Strive users</i>
+        }
+        @if (query !== '') {
+          <i>No results found</i>
+        }
+      </section>
+    }
+  } @else {
+    <section>
+      <ion-spinner name="lines" color="primary"/>
+    </section>
+  }
 </ion-content>
 <ion-footer class="ion-no-border">
   <small>Invite someone without Strive Journal account?</small>
@@ -33,16 +46,3 @@
     <span>Share link</span>
   </ion-button>
 </ion-footer>
-
-<ng-template #loading>
-  <section>
-    <ion-spinner name="lines" color="primary"/>
-  </section>
-</ng-template>
-
-<ng-template #empty>
-  <section>
-    <i *ngIf="query === ''">Search to find Strive users</i>
-    <i *ngIf="query !== ''">No results found</i>
-  </section>
-</ng-template>

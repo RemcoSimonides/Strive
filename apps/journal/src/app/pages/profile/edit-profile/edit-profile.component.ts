@@ -30,6 +30,7 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
     ReactiveFormsModule,
     ImagesSelectorComponent,
     HeaderComponent,
+    ImageSelectorComponent,
     IonContent,
     IonCard,
     IonCardContent,

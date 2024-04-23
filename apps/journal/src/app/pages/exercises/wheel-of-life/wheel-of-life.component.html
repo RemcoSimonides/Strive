@@ -3,16 +3,17 @@
 <ion-content class="ion-padding">
   <main>
     <section>
-      <h1 *ngIf="(isMobile$ | async) === false">Wheel of Life</h1>
+      @if ((isMobile$ | async) === false) {
+        <h1>Wheel of Life</h1>
+      }
       <small class="explanation">
         Get insight in which areas in your life needs more attention and track results over the long term.
         <a href="https://blog.strivejournal.com/blog/wheel-of-life" target="_blank">Learn more...</a>
       </small>
     </section>
 
-    <ng-container *ngIf="finishedLoading$ | async else loading">
-      <ng-container *ngIf="uid$ | async else login">
-
+    @if (finishedLoading$ | async) {
+      @if (uid$ | async) {
         <section class="reminder">
           <span>Receive reminder</span>
           <ion-select interface="popover" [formControl]="form">
@@ -23,43 +24,36 @@
             <ion-select-option value="yearly">Yearly</ion-select-option>
           </ion-select>
         </section>
-
-        <ng-container *ngIf="entries$ | async as entries">
-
-          <ng-container *ngIf="hasEntries$ | async">
+        @if (entries$ | async; as entries) {
+          @if (hasEntries$ | async) {
             <ion-button class="primary" (click)="addEntry()">
               <ion-icon name="add" slot="start"/>
               <span>Add entry</span>
             </ion-button>
-          </ng-container>
-
-          <ng-container *ngIf="(hasEntries$ | async) === false">
+          }
+          @if ((hasEntries$ | async) === false) {
             <ion-card>
               <ion-card-content>
                 <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"/>
               </ion-card-content>
             </ion-card>
-          </ng-container>
-
-          <ng-container *ngIf="entries.length">
+          }
+          @if (entries.length) {
             <strive-wheel-of-life-results [entries]="entries"/>
-          </ng-container>
-        </ng-container>
-
-      </ng-container>
-    </ng-container>
-
-    <ng-template #loading>
+          }
+        }
+      } @else {
+        <div class="not-logged-in">
+          <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with the Wheel of Life
+          </p>
+        </div>
+      }
+    } @else {
       <strive-page-loading/>
-    </ng-template>
+    }
 
-    <ng-template #login>
-      <div class="not-logged-in">
-        <p>
-          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with the Wheel of Life
-        </p>
-      </div>
-    </ng-template>
+
 
   </main>
 </ion-content>

@@ -6,13 +6,13 @@
     <section class="main">
       <img class="main-image" asset="download.png"/>
 
-      <ng-container *ngIf="showInstallPromotion$ | async;">
+      @if (showInstallPromotion$ | async) {
         <h1>Install Strive Journal</h1>
         <ion-button color="primary" (click)="install()">
           <b>INSTALL</b>
         </ion-button>
         <hr/>
-      </ng-container>
+      }
 
 
       <h5>Journal on your phone or tablet</h5>

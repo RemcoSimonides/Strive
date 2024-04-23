@@ -1,13 +1,13 @@
 <strive-header title="Notifications" />
 
-<ng-container *ngIf="(uid$ | async) !== undefined else loading">
-  <ng-container *ngIf="uid$ | async else notLoggedIn">
+@if ((uid$ | async) !== undefined) {
+  @if (uid$ | async) {
     <ion-content>
       <main>
-        <ng-container *ngIf="notifications$ | async as notifications; else loading">
-          <ng-container *ngIf="notifications.length; else empty">
-            <ng-container *ngFor="let notification of notifications; let isLast = last; let index = index">
-              <ng-container *ngIf="notification | message as _message">
+        @if (notifications$ | async; as notifications) {
+          @if (notifications.length) {
+            @for (notification of notifications; track notification; let isLast = $last; let index = $index) {
+              @if (notification | message; as _message) {
                 <article class="clickable" [routerLink]="_message.link" [queryParams]="_message.params">
                   <img
                     [ref]="_message.image"
@@ -20,37 +20,36 @@
                     <small class="time">{{ notification.createdAt | timeAgo }}</small>
                   </div>
                 </article>
-
-                <ng-container *ngIf="index === lastUnreadIndex">
-                  <span *ngIf="!isLast" class="divider"></span>
+                <!-- @if (index === lastUnreadIndex) {
+                  @if (!isLast) {
+                    <span class="divider"></span>
+                  }
                   <div class="unread">
                     <ion-icon name="chevron-up-outline"></ion-icon>
                     <small>unread notifications</small>
                     <ion-icon name="chevron-up-outline"></ion-icon>
                   </div>
-                </ng-container>
-                <span *ngIf="!isLast" class="divider"></span>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-        </ng-container>
-
-        <ng-template #empty>
-          No notifications
-        </ng-template>
+                } -->
+                @if (!isLast) {
+                  <span class="divider"></span>
+                }
+              }
+            }
+          } @else {
+            No notifications
+          }
+        } @else {
+          <strive-page-loading />
+        }
       </main>
     </ion-content>
-  </ng-container>
-</ng-container>
-
-<ng-template #notLoggedIn>
-  <div class="not-logged-in">
-    <p>
-      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your notifications
-    </p>
-  </div>
-</ng-template>
-
-<ng-template #loading>
+  } @else {
+    <div class="not-logged-in">
+      <p>
+        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your notifications
+      </p>
+    </div>
+  }
+} @else {
   <strive-page-loading />
-</ng-template>
+}

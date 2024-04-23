@@ -1,6 +1,6 @@
 <strive-header title="Edit Profile" />
 
-<ng-container *ngIf="isLoggedIn$ | async else login">
+@if (isLoggedIn$ | async) {
   <ion-content class="ion-no-padding">
     <main>
       <ion-card>
@@ -17,26 +17,20 @@
               class="primary"
             />
           </ion-item>
-
           <strive-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid" />
-
           <ion-button color="primary" [disabled]="form.invalid" (click)="update()">Save</ion-button>
         </ion-card-content>
       </ion-card>
-
       <hr/>
-
       <ion-button color="danger" fill="outline" (click)="deleteAccount()">
         <span>Delete Account</span>
       </ion-button>
     </main>
   </ion-content>
-</ng-container>
-
-<ng-template #login>
+} @else {
   <section class="not-logged-in">
     <p>
-        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to edit your profile
+      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to edit your profile
     </p>
   </section>
-</ng-template>
+}

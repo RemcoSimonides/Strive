@@ -1,11 +1,11 @@
 <ion-list lines="full">
-  <ng-container *ngIf="goal?.status === 'pending' && (stakeholder.isAchiever || stakeholder.isAdmin)">
+  @if (goal?.status === 'pending' && (stakeholder.isAchiever || stakeholder.isAdmin)) {
     <ion-item (click)="markAsFinished()" button>Mark as Finished</ion-item>
-  </ng-container>
-  <ng-container *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
+  }
+  @if (stakeholder.isAdmin || stakeholder.isAchiever) {
     <ion-item (click)="dismiss(enumGoalOptions.editGoal)" button>Edit Goal</ion-item>
-  </ng-container>
-  <ng-container *ngIf="stakeholder.isAdmin">
+  }
+  @if (stakeholder.isAdmin) {
     <ion-item lines="none" (click)="dismiss(enumGoalOptions.deleteGoal)" button>Delete Goal</ion-item>
-  </ng-container>
+  }
 </ion-list>

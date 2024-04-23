@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, HostListener } from '@angular/core'
 import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
 
@@ -23,7 +22,6 @@ export enum enumGoalOptions {
   styleUrls: ['./options.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     IonList,
     IonItem
   ]

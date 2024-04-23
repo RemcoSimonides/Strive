@@ -1,31 +1,43 @@
 <strive-header title="Settings" defaultHref="/profile">
-  <ng-container *ngIf="theme$ | async as theme">
+  @if (theme$ | async; as theme) {
     <ion-buttons slot="end">
       <ion-button (click)="toggleTheme()" fill="clear">
-        <ion-icon *ngIf="theme === 'light'" name="moon-outline" />
-        <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" />
+        @if (theme === 'light') {
+          <ion-icon name="moon-outline" />
+        }
+        @if (theme === 'dark') {
+          <ion-icon name="sunny-outline" />
+        }
       </ion-button>
     </ion-buttons>
-  </ng-container>
+  }
 </strive-header>
 <ion-content [ngClass]="(isMobile$ | async) ? 'ion-no-padding' : 'ion-padding'">
   <main>
 
-    <header *ngIf="(isMobile$ | async) === false">
-      <h1>Settings</h1>
-      <ng-container *ngIf="theme$ | async as theme">
-        <ion-button (click)="toggleTheme()" fill="clear">
-          <ion-icon *ngIf="theme === 'light'" name="moon-outline" />
-          <ion-icon *ngIf="theme === 'dark'" name="sunny-outline" />
-        </ion-button>
-      </ng-container>
-    </header>
+    @if ((isMobile$ | async) === false) {
+      <header>
+        <h1>Settings</h1>
+        @if (theme$ | async; as theme) {
+          <ion-button (click)="toggleTheme()" fill="clear">
+            @if (theme === 'light') {
+              <ion-icon name="moon-outline" />
+            }
+            @if (theme === 'dark') {
+              <ion-icon name="sunny-outline" />
+            }
+          </ion-button>
+        }
+      </header>
+    }
 
     <ion-list lines="full">
-      <ion-item *ngIf="showInstallPromotion$ | async" (click)="installPWA()" lines="none" button>
-        <ion-label>Install App</ion-label>
-        <ion-icon size="small" name="download-outline" />
-      </ion-item>
+      @if (showInstallPromotion$ | async) {
+        <ion-item (click)="installPWA()" lines="none" button>
+          <ion-label>Install App</ion-label>
+          <ion-icon size="small" name="download-outline" />
+        </ion-item>
+      }
       <ion-list-header>Account</ion-list-header>
       <ion-item button routerLink="/edit-profile">
         <ion-label>Edit Profile</ion-label>
@@ -72,17 +84,17 @@
     <span class="version">Version {{ version }}</span>
 
     <article class="download">
-      <ng-container *ngIf="showPlayStore">
+      @if (showPlayStore) {
         <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
           <img class="download" asset="google_play.png"/>
         </a>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="showAppStore">
+      @if (showAppStore) {
         <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
           <img class="download" asset="app_store.png"/>
         </a>
-      </ng-container>
+      }
     </article>
   </main>
 </ion-content>

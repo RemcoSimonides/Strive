@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 
@@ -14,7 +13,6 @@ import { ProfileService } from '@strive/user/profile.service'
   templateUrl: './edit-profile-image.component.html',
   styleUrls: ['./edit-profile-image.component.scss'],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     ImageSelectorComponent,
     IonButton

@@ -1,18 +1,14 @@
-<ng-template #noAccess>
-  <strive-404 />
-</ng-template>
 
-<ng-container *ngIf="support$ | async as support">
-  <ng-container *ngIf="support.description; else noAccess">
 
+@if (support$ | async; as support) {
+  @if (support.description) {
     <strive-header title="Support" defaultBack="/supports" />
-
     <ion-content class="ion-padding">
       <main>
-
         <strive-support-details [support]="support" (removed)="supportRemoved()" [showGoalLink]="true" />
-
       </main>
     </ion-content>
-  </ng-container>
-</ng-container>
+  } @else {
+    <strive-404 />
+  }
+}

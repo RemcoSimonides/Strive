@@ -1,26 +1,14 @@
-<ng-container *ngIf="title$ | async as title">
-
-  <ng-container *ngIf="isOwner$ | async else notOwner">
+@if (title$ | async; as title) {
+  @if (isOwner$ | async) {
     <strive-header-root [title]="title" />
-  </ng-container>
-  <ng-template #notOwner>
+  } @else {
     <strive-header [title]="title" />
-  </ng-template>
-
-</ng-container>
+  }
+}
 
 <ion-content class="ion-no-padding">
 
-  <ng-template #noProfile>
-    <ng-container *ngIf="loading$ | async; else notFound">
-      <strive-page-loading />
-    </ng-container>
-    <ng-template #notFound>
-      <strive-404 />
-    </ng-template>
-  </ng-template>
-
-  <ng-container *ngIf="profile$ | async as profile; else noProfile">
+  @if (profile$ | async; as profile) {
     <main>
       <header>
         <ion-card class="ion-padding">
@@ -58,57 +46,63 @@
             </li>
           </ul>
         </ion-card>
-
-        <ng-container *ngIf="(isOwner$ | async) === false">
-          <ng-container *ngIf="isSpectator$ | async else notSpectator">
+        @if ((isOwner$ | async) === false) {
+          @if (isSpectator$ | async) {
             <ion-button (click)="toggleSpectate(false)" size="block" class="follow fake-disable">
               <ion-icon name="star" slot="start" />
               <span>Following</span>
             </ion-button>
-          </ng-container>
-          <ng-template #notSpectator>
+          } @else {
             <ion-button (click)="toggleSpectate(true)" size="block" class="follow">
               <ion-icon name="star-outline" slot="start" />
               <span>Follow</span>
             </ion-button>
-          </ng-template>
-        </ng-container>
+          }
+        }
       </header>
-
       <section class="goals">
         <article>
           <h2>Goals</h2>
-          <ion-button *ngIf="isOwner$ | async" fill="clear" (click)="createGoal()">
-            <ion-icon name="add" slot="start" />
-            <span>Create Goal</span>
-          </ion-button>
+          @if (isOwner$ | async) {
+            <ion-button fill="clear" (click)="createGoal()">
+              <ion-icon name="add" slot="start" />
+              <span>Create Goal</span>
+            </ion-button>
+          }
         </article>
-        <ng-container *ngIf="achievingStakeholders$ | async as achievingStakeholders">
-          <ng-container *ngIf="achievingStakeholders.length > 0 else noBucketList">
+        @if (achievingStakeholders$ | async; as achievingStakeholders) {
+          @if (achievingStakeholders.length > 0) {
             <ul>
-              <li *ngFor="let stakeholder of achievingStakeholders">
-                <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="(isOwner$ | async) ? stakeholder : undefined" [routerLink]="['/goal/', stakeholder.goal.id]">
-                  <div>
-                    <small *ngIf="stakeholder.goal.publicity === 'private'">
-                      <ion-icon name="lock-closed-outline"></ion-icon>
-                      <span>Private</span>
-                    </small>
-                    <small>
-                      <ion-icon name="flag-outline"></ion-icon>
-                      <span>{{ stakeholder.goal.numberOfAchievers }} Achiever{stakeholder.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
-                    </small>
-                  </div>
-                </strive-goal-thumbnail>
-              </li>
+              @for (stakeholder of achievingStakeholders; track stakeholder) {
+                <li>
+                  <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="(isOwner$ | async) ? stakeholder : undefined" [routerLink]="['/goal/', stakeholder.goal.id]">
+                    <div>
+                      @if (stakeholder.goal.publicity === 'private') {
+                        <small>
+                          <ion-icon name="lock-closed-outline"></ion-icon>
+                          <span>Private</span>
+                        </small>
+                      }
+                      <small>
+                        <ion-icon name="flag-outline"></ion-icon>
+                        <span>{{ stakeholder.goal.numberOfAchievers }} Achiever{stakeholder.goal.numberOfAchievers, plural, =1 {} other {s}}</span>
+                      </small>
+                    </div>
+                  </strive-goal-thumbnail>
+                </li>
+              }
             </ul>
-
-          </ng-container>
-          <ng-template #noBucketList>
+          } @else {
             <span>Not achieving any goals</span>
-          </ng-template>
-        </ng-container>
+          }
+        }
       </section>
-
     </main>
-  </ng-container>
+  } @else {
+    @if (loading$ | async) {
+      <strive-page-loading />
+    } @else {
+      <strive-404 />
+    }
+  }
 </ion-content>

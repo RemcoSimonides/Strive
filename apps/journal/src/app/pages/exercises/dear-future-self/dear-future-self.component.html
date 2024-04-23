@@ -3,59 +3,61 @@
 <ion-content class="ion-padding">
   <main>
     <section>
-      <h1 *ngIf="(screensize.isMobile$ | async) === false">Dear Future Self</h1>
+      @if ((screensize.isMobile$ | async) === false) {
+        <h1>Dear Future Self</h1>
+      }
       <small class="explanation">
         Write a message to yourself and receive it (far) in the future. You'll be amazed with how much came true.
         <a href="https://blog.strivejournal.com/blog/dear-future-self" target="_blank">Learn more...</a>
       </small>
     </section>
 
-    <ng-container *ngIf="isLoggedIn$ | async else login">
+    @if (isLoggedIn$ | async) {
       <ion-card class="ion-padding">
-        <ng-container *ngIf="state !== 'sent'; else sent">
-
+        @if (state !== 'sent') {
           <section>
             <h5>Your message</h5>
             <ion-item>
               <ion-textarea [formControl]="description" autoGrow autocapitalize="sentences"/>
             </ion-item>
           </section>
-
-          <section *ngIf="mode === 'duration'">
-            <h5>Deliver in</h5>
-            <article>
-              <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 2">2 Years</ion-button>
-              <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 5">5 Years</ion-button>
-              <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 10">10 Years</ion-button>
-              <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
-            </article>
-          </section>
-
-          <section *ngIf="mode === 'date'">
-            <h5>Deliver on</h5>
-            <ion-datetime presentation="date" [formControl]="date" [min]="min" [max]="max"></ion-datetime>
-            <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
-          </section>
-
+          @if (mode === 'duration') {
+            <section>
+              <h5>Deliver in</h5>
+              <article>
+                <ion-button [fill]="duration === 2 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 2">2 Years</ion-button>
+                <ion-button [fill]="duration === 5 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 5">5 Years</ion-button>
+                <ion-button [fill]="duration === 10 ? 'solid' : 'outline'" size="small" color="primary" (click)="duration = 10">10 Years</ion-button>
+                <ion-button fill="clear" size="small" (click)="mode = 'date'">Choose date</ion-button>
+              </article>
+            </section>
+          }
+          @if (mode === 'date') {
+            <section>
+              <h5>Deliver on</h5>
+              <ion-datetime presentation="date" [formControl]="date" [min]="min" [max]="max"></ion-datetime>
+              <ion-button fill="clear" size="small" (click)="mode = 'duration'">Choose duration</ion-button>
+            </section>
+          }
           <ion-button expand="block" color="primary" (click)="send()">Send Message</ion-button>
-
-        </ng-container>
-
+        } @else {
+          <section class="sent">
+            <h5>Message sent <ion-icon name="checkmark-outline"/></h5>
+            <ion-button fill="outline" color="primary" (click)="another()">Write another</ion-button>
+          </section>
+        }
         <ng-template #sent>
           <section class="sent">
             <h5>Message sent <ion-icon name="checkmark-outline"/></h5>
-
             <ion-button fill="outline" color="primary" (click)="another()">Write another</ion-button>
           </section>
         </ng-template>
-
       </ion-card>
-
-      <ng-container *ngIf="pendingMessages$ | async as pendingMessages">
-        <ng-container *ngIf="pendingMessages.length">
+      @if (pendingMessages$ | async; as pendingMessages) {
+        @if (pendingMessages.length) {
           <ion-list class="pending-list">
             <h5>Pending Messages</h5>
-            <ng-container *ngFor="let message of pendingMessages; let last = last">
+            @for (message of pendingMessages; track message; let last = $last) {
               <ion-item [lines]="last ? 'none' : 'full'">
                 <ion-icon name="mail-outline"/>
                 <article>
@@ -63,16 +65,15 @@
                   <small>Sent {{ message.createdAt | timeAgo }}</small>
                 </article>
               </ion-item>
-            </ng-container>
+            }
           </ion-list>
-        </ng-container>
-      </ng-container>
-
-      <ng-container *ngIf="deliveredMessages$ | async as deliveredMessages">
-        <ng-container *ngIf="deliveredMessages.length">
+        }
+      }
+      @if (deliveredMessages$ | async; as deliveredMessages) {
+        @if (deliveredMessages.length) {
           <ion-list>
             <h5>Delivered Messages</h5>
-            <ng-container *ngFor="let message of deliveredMessages; let last = last">
+            @for (message of deliveredMessages; track message; let last = $last) {
               <ion-item button (click)="openMessage(message)" [lines]="last ? 'none' : 'full'">
                 <ion-icon name="mail-open-outline"/>
                 <article>
@@ -80,19 +81,18 @@
                   <small>Sent on {{ message.createdAt | date }}</small>
                 </article>
               </ion-item>
-            </ng-container>
+            }
           </ion-list>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-
-    <ng-template #login>
+        }
+      }
+    } @else {
       <section class="not-logged-in">
         <p>
-            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to write a message to your future self
+          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to write a message to your future self
         </p>
       </section>
-    </ng-template>
+    }
+
 
   </main>
 </ion-content>

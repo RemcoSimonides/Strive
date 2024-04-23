@@ -14,30 +14,27 @@
   </ion-button>
 
   <ion-list>
-    <ng-container *ngFor="let goal of goals; let last = last">
-      <ng-container *ngIf="goal | getStakeholder | async as stakeholder">
-
+    @for (goal of goals; track goal; let last = $last) {
+      @if (goal | getStakeholder | async; as stakeholder) {
         <ion-item [lines]="last ? 'none' : 'full'">
           <ion-thumbnail slot="start">
             <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120" />
-            <div *ngIf="goal.status !== 'pending'" class="finished-overlay">finished</div>
+            @if (goal.status !== 'pending') {
+              <div class="finished-overlay">finished</div>
+            }
           </ion-thumbnail>
           <ion-label>{{ goal.title }}</ion-label>
-
-          <ng-container *ngIf="stakeholder.isSpectator; else notSpectator">
+          @if (stakeholder.isSpectator) {
             <ion-button (click)="spectate(goal.id, stakeholder)" color="primary" class="fake-disable">
               <span>Following</span>
             </ion-button>
-          </ng-container>
-
-          <ng-template #notSpectator>
+          } @else {
             <ion-button (click)="spectate(goal.id, stakeholder)" color="primary">
               <span>Follow</span>
             </ion-button>
-          </ng-template>
+          }
         </ion-item>
-
-      </ng-container>
-    </ng-container>
+      }
+    }
   </ion-list>
 </ion-content>

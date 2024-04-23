@@ -1,59 +1,68 @@
 <strive-header-root [title]="(uid$ | async) ? 'Goals' : ''"/>
 
-<ng-container *ngIf="(uid$ | async) !== undefined">
-  <ng-container *ngIf="uid$ | async else notLoggedIn">
+@if ((uid$ | async) !== undefined) {
+  @if (uid$ | async) {
     <ion-content class="ion-padding">
-
       <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
         <ion-refresher-content/>
       </ion-refresher>
-
       <main>
-        <ng-container *ngIf="achieving$ | async as stakeholders; else loadingSpectating">
-          <ng-container *ngIf="stakeholders.length">
+        @if (achieving$ | async; as stakeholders) {
+          @if (stakeholders.length) {
             <strive-mini-thumbnail-swiper>
-              <ng-container *ngFor="let stakeholder of stakeholders">
+              @for (stakeholder of stakeholders; track stakeholder) {
                 <ng-template #thumb>
                   <article (click)="openFollowedGoal(stakeholder)" class="thumb">
                     <ion-thumbnail>
                       <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
-                      <div *ngIf="stakeholder.goal.status !== 'pending'" class="finished-overlay">
-                        <ion-icon name="checkmark-outline"/>
-                      </div>
+                      @if (stakeholder.goal.status !== 'pending') {
+                        <div class="finished-overlay">
+                          <ion-icon name="checkmark-outline"/>
+                        </div>
+                      }
                     </ion-thumbnail>
                     <small>{{ stakeholder.goal.title }}</small>
-                    <ion-badge color="primary" *ngIf="stakeholder.events.length">{{ stakeholder.events.length }}</ion-badge>
+                    @if (stakeholder.events.length) {
+                      <ion-badge color="primary">{{ stakeholder.events.length }}</ion-badge>
+                    }
                   </article>
                 </ng-template>
-              </ng-container>
+              }
             </strive-mini-thumbnail-swiper>
-          </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="stakeholders$ | async as stakeholders; else loading">
-          <ng-container *ngIf="stakeholders.length else noGoals">
-
+          }
+        } @else {
+          <section class="skeleton-spectating">
+            @for (i of [].constructor(5); track i) {
+              <article>
+                <ion-thumbnail>
+                  <ion-skeleton-text [animated]="true"/>
+                </ion-thumbnail>
+                <ion-skeleton-text [animated]="true"/>
+              </article>
+            }
+          </section>
+        }
+        @if (stakeholders$ | async; as stakeholders) {
+          @if (stakeholders.length) {
             <ion-button expand="block" fill="clear" (click)="createGoal()">
               <ion-icon name="add" slot="start"/>
               <span>Create Goal</span>
             </ion-button>
-
             <section class="cards">
-              <ng-container *ngFor="let stakeholder of stakeholders; trackBy: trackByFn">
+              @for (stakeholder of stakeholders; track trackByFn($index, stakeholder)) {
                 <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
                   <div>
-                    <small *ngIf="stakeholder.goal.publicity === 'private'">
-                      <ion-icon name="lock-closed-outline"/>
-                      <span>Private</span>
-                    </small>
+                    @if (stakeholder.goal.publicity === 'private') {
+                      <small>
+                        <ion-icon name="lock-closed-outline"/>
+                        <span>Private</span>
+                      </small>
+                    }
                   </div>
                 </strive-goal-thumbnail>
-              </ng-container>
+              }
             </section>
-
-          </ng-container>
-
-          <ng-template #noGoals>
+          } @else {
             <section class="no_goals">
               <ion-button class="primary" (click)="createGoal()">
                 <ion-icon name="add" slot="start"/>
@@ -61,34 +70,11 @@
               </ion-button>
               <span class="subtitle">No goals yet. Create your first.</span>
             </section>
-          </ng-template>
-        </ng-container>
-
+          }
+        }
       </main>
     </ion-content>
-  </ng-container>
-</ng-container>
-
-<ng-template #notLoggedIn>
-  <journal-home/>
-</ng-template>
-
-<ng-template #loadingGoals>
-  <ion-button expand="block" fill="clear" (click)="createGoal()">
-    <ion-icon name="add" slot="start"/>
-    <span>Create GOal</span>
-  </ion-button>
-</ng-template>
-
-<ng-template #loadingSpectating>
-  <section class="skeleton-spectating">
-    <ng-container *ngFor="let i of [].constructor(5)">
-      <article>
-        <ion-thumbnail>
-          <ion-skeleton-text [animated]="true"/>
-        </ion-thumbnail>
-        <ion-skeleton-text [animated]="true"/>
-      </article>
-    </ng-container>
-  </section>
-</ng-template>
+  } @else {
+    <journal-home/>
+  }
+}

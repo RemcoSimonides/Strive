@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common'
 import { Component, Input, Pipe, PipeTransform } from '@angular/core'
-import { IonButton, IonContent, IonFooter, IonIcon, IonSearchbar, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { IonAvatar, IonLabel, IonButton, IonContent, IonItem, IonList, IonSpinner, IonFooter, IonIcon, IonSearchbar, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { shareSocialOutline } from 'ionicons/icons'
 
@@ -71,11 +71,16 @@ export class InviteTextPipe implements PipeTransform {
     InviteTextPipe,
     GoalSharePopoverComponent,
     HeaderModalComponent,
+    IonAvatar,
+    IonLabel,
     IonSearchbar,
+    IonSpinner,
     IonContent,
     IonFooter,
     IonButton,
-    IonIcon
+    IonIcon,
+    IonList,
+    IonItem
   ],
   selector: 'journal-add-others',
   templateUrl: './add-others.component.html',
@@ -160,7 +165,7 @@ export class AddOthersModalComponent extends ModalDirective {
     })
   )
 
-  private query = ''
+  query = ''
 
   constructor(
     private auth: AuthService,

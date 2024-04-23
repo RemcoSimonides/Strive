@@ -189,7 +189,7 @@ export class GoalPageComponent implements OnDestroy {
     private stakeholderService: GoalStakeholderService,
     private storyService: StoryService,
     private support: SupportService,
-    private screensize: ScreensizeService,
+    public screensize: ScreensizeService,
     private seo: SeoService
   ) {
     const goalId$ = this.route.params.pipe(

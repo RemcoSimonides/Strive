@@ -3,7 +3,9 @@
 <ion-content class="ion-padding">
   <main>
     <section>
-      <h1 *ngIf="(screensize.isMobile$ | async) === false">Daily Gratitude</h1>
+      @if ((screensize.isMobile$ | async) === false) {
+        <h1>Daily Gratitude</h1>
+      }
       <small>
         Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative.
         Receive a daily push notification to remind you to think of three things you are grateful for that day.
@@ -11,34 +13,26 @@
       </small>
     </section>
 
-    <ng-container *ngIf="!isLoading else loading">
-      <ng-container *ngIf="uid$ | async else login">
-
+    @if (!isLoading) {
+      @if (uid$ | async) {
         <strive-exercise-activate-push-notification/>
-
         <section class="toggle">
           <article>
             <ion-toggle [formControl]="form.get('on')"/>
             <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</span>
           </article>
         </section>
-
         <strive-daily-gratitude-cards/>
-
-      </ng-container>
-    </ng-container>
-
-    <ng-template #loading>
+      } @else {
+        <div class="not-logged-in">
+          <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratitude
+          </p>
+        </div>
+      }
+    } @else {
       <strive-page-loading/>
-    </ng-template>
-
-    <ng-template #login>
-      <div class="not-logged-in">
-        <p>
-          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratitude
-        </p>
-      </div>
-    </ng-template>
+    }
 
   </main>
 </ion-content>
