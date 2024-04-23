@@ -19,17 +19,17 @@ type CropStep = 'drop' | 'hovering'
 
 @Component({
   standalone: true,
+  selector: '[form] strive-images-selector',
+  templateUrl: 'images-selector.component.html',
+  styleUrls: ['./images-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.ShadowDom,
   imports: [
     CommonModule,
     ImageOptionsPopoverComponent,
     IonIcon
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  selector: '[form] strive-images-selector',
-  templateUrl: 'images-selector.component.html',
-  styleUrls: ['./images-selector.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
