@@ -1,45 +1,43 @@
 <ng-template #backButton>
-  <ng-container *ngIf="authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register || authSegmentChoice === enumAuthSegment.forgot_password; else previous">
+  @if (authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register || authSegmentChoice === enumAuthSegment.forgot_password) {
     <ion-button fill="clear" (click)="dismiss(false)">
       <ion-icon name="close" slot="icon-only" />
     </ion-button>
-  </ng-container>
-  <ng-template #previous>
+  } @else {
     <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.register">
       <ion-icon name="arrow-back" slot="icon-only" />
     </ion-button>
-  </ng-template>
+  }
 </ng-template>
 
-<ion-header *ngIf="showIOSHeader$ | async">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ng-container *ngTemplateOutlet="backButton" />
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+@if (showIOSHeader$ | async) {
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ng-container *ngTemplateOutlet="backButton" />
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+}
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="(showIOSHeader$ | async) === false">
+  @if ((showIOSHeader$ | async) === false) {
     <ng-container *ngTemplateOutlet="backButton" />
-  </ng-container>
+  }
 
-  <ng-container [ngSwitch]="authSegmentChoice">
-    <ng-container *ngSwitchCase="enumAuthSegment.login">
-
+  @switch (authSegmentChoice) {
+    @case (enumAuthSegment.login) {
       <section>
         <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start" />
             Continue with Google
           </ion-button>
-
           <ion-button fill="outline" (click)="loginWithApple()">
             <ion-icon name="logo-apple" slot="start" />
             Continue with Apple
           </ion-button>
         </article>
-
         <form [formGroup]="loginForm">
           <ion-list lines="full">
             <ion-item>
@@ -50,7 +48,6 @@
                 labelPlacement="floating"
               />
             </ion-item>
-
             <ion-item lines="none">
               <ion-input
                 formControlName="password"
@@ -62,16 +59,12 @@
               <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
           </ion-list>
-
           <div class="action">
             <ion-button class="submit_button" color="primary" (click)="loginUser()" [disabled]="!loginForm.valid">Log in</ion-button>
           </div>
         </form>
-
         <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.forgot_password">I forgot my password</span>
-
         <hr />
-
         <article class="action">
           <span>Don't have an account?</span>
           <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.register">
@@ -79,25 +72,20 @@
           </ion-button>
         </article>
       </section>
-
-    </ng-container>
-    <ng-container *ngSwitchCase="enumAuthSegment.register">
-
+    }
+    @case (enumAuthSegment.register) {
       <section>
         <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start" />
             Continue with Google
           </ion-button>
-
           <ion-button fill="outline" (click)="loginWithApple()">
             <ion-icon name="logo-apple" slot="start" />
             Continue with Apple
           </ion-button>
         </article>
-
         <form [formGroup]="signupForm">
-
           <ion-list lines="full">
             <ion-item>
               <ion-input
@@ -108,15 +96,13 @@
                 autocapitalize="sentences"
               />
             </ion-item>
-
-            <ng-container *ngFor="let validation of validation_messages.username">
-              <ng-container *ngIf="signupForm.get('username')?.hasError(validation.type) && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
+            @for (validation of validation_messages.username; track validation) {
+              @if (signupForm.get('username')?.hasError(validation.type) && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)) {
                 <div class="error-message">
                   {{ validation.message }}
                 </div>
-              </ng-container>
-            </ng-container>
-
+              }
+            }
             <ion-item>
               <ion-input
                 formControlName="email"
@@ -125,15 +111,13 @@
                 labelPlacement="floating"
               />
             </ion-item>
-
-            <ng-container *ngFor="let validation of validation_messages.email">
-              <ng-container *ngIf="signupForm.get('email')?.hasError(validation.type) && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
+            @for (validation of validation_messages.email; track validation) {
+              @if (signupForm.get('email')?.hasError(validation.type) && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)) {
                 <div class="error-message">
                   {{ validation.message }}
                 </div>
-              </ng-container>
-            </ng-container>
-
+              }
+            }
             <ion-item lines="none">
               <ion-input
                 formControlName="password"
@@ -144,27 +128,22 @@
               />
               <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
-
-            <ng-container *ngFor="let validation of validation_messages.password">
-              <ng-container *ngIf="signupForm.get('password')?.hasError(validation.type) && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
+            @for (validation of validation_messages.password; track validation) {
+              @if (signupForm.get('password')?.hasError(validation.type) && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)) {
                 <div class="error-message">
                   {{ validation.message }}
                 </div>
-              </ng-container>
-            </ng-container>
+              }
+            }
           </ion-list>
-
           <div class="action">
             <ion-button class="submit_button" color="primary" (click)="signUpUser()" [disabled]="!signupForm.valid">Register</ion-button>
           </div>
         </form>
-
         <p class="terms">By signing up, you agree with the
           <b (click)="this.authSegmentChoice = enumAuthSegment.terms">Terms of Service</b>, <b (click)="this.authSegmentChoice = enumAuthSegment.privacy_policy">Privacy Policy</b>, as well as to receive occasional emails from us.
         </p>
-
         <hr />
-
         <article class="action">
           <span>Already a member?</span>
           <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.login">
@@ -172,12 +151,9 @@
           </ion-button>
         </article>
       </section>
-
-    </ng-container>
-    <ng-container *ngSwitchCase="enumAuthSegment.forgot_password">
-
+    }
+    @case (enumAuthSegment.forgot_password) {
       <section>
-
         <form [formGroup]="resetPasswordForm">
           <ion-list>
             <ion-item lines="none">
@@ -190,24 +166,19 @@
               />
             </ion-item>
           </ion-list>
-
           <div class="action">
             <ion-button color="primary" (click)="resetPassword()" [disabled]="!resetPasswordForm.valid">Reset Password</ion-button>
           </div>
         </form>
-
         <hr />
-
         <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.login">Back to login</ion-button>
       </section>
-    </ng-container>
-
-    <ng-container *ngSwitchCase="enumAuthSegment.terms">
+    }
+    @case (enumAuthSegment.terms) {
       <strive-terms />
-    </ng-container>
-
-    <ng-container *ngSwitchCase="enumAuthSegment.privacy_policy">
+    }
+    @case (enumAuthSegment.privacy_policy) {
       <strive-privacy-policy />
-    </ng-container>
-  </ng-container>
+    }
+  }
 </ion-content>

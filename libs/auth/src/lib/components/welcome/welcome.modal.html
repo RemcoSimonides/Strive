@@ -1,4 +1,4 @@
-<ng-container *ngIf="showIOSHeader$ | async">
+@if (showIOSHeader$ | async) {
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -8,12 +8,12 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-</ng-container>
+}
 
 <h1>Welcome to Strive Journal</h1>
 
 <swiper-container #swiper>
-  <ng-container *ngIf="showStep1$ | async">
+  @if (showStep1$ | async) {
     <swiper-slide>
       <section class="notification">
         <article>
@@ -29,25 +29,22 @@
         </article>
       </section>
     </swiper-slide>
-  </ng-container>
-  <ng-container *ngIf="showStep2">
+  }
+  @if (showStep2) {
     <swiper-slide>
-
       <section class="goal">
         <article class="create">
           <img asset="pointing.png">
           <ion-button class="create-goal" (click)="createGoal()">Create Goal</ion-button>
         </article>
-
         <article class="explore">
           <ion-button class="explore" (click)="dismiss('/explore')">Explore Around</ion-button>
           <img asset="looking.png" />
         </article>
       </section>
-
     </swiper-slide>
-  </ng-container>
-  <ng-container *ngIf="(showStep1$ | async) === false && !showStep2">
+  }
+  @if ((showStep1$ | async) === false && !showStep2) {
     <swiper-slide>
       <section class="extra">
         <p>Let's achieve great things together.</p>
@@ -60,5 +57,5 @@
         </article>
       </section>
     </swiper-slide>
-  </ng-container>
+  }
 </swiper-container>
