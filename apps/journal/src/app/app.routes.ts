@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
   { path: 'supports/:id', loadChildren: () => import('./pages/supports/support/support.module').then(m => m.SupportPageModule) },
   { path: 'settings', loadChildren: () => import('./pages//settings/settings.module').then(m => m.SettingsPageModule)},
-  { path: 'settings/email-notifications', loadChildren: () => import('./pages/settings/email-notification-settings/email-notification-settings.module').then(m => m.EmailNotificationSettingsModule) },
+  { path: 'settings/email-notifications', loadComponent: () => import('./pages/settings/email-notification-settings/email-notification-settings.component').then(m => m.EmailNotificationSettingsComponent) },
   { path: 'settings/push-notifications', loadChildren: () => import('./pages/settings/push-notification-settings/push-notification-settings.module').then(m => m.PushNotificationsSettingsModule) },
   { path: 'terms', loadComponent: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageComponent) },
   { path: '**', pathMatch: 'full', loadComponent: () => import('./pages/404/404.component').then(m => m.NotfoundPageComponent) }
