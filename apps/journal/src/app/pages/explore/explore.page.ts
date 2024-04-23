@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
-import { ActivatedRoute, Params, Router } from '@angular/router'
-import { IonContent } from '@ionic/angular/standalone'
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router'
 
-// Rxjs
+import { IonContent, IonSearchbar, IonCard, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
+
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { debounceTime, map, startWith } from 'rxjs/operators'
 
@@ -13,11 +14,37 @@ import { AlgoliaService } from '@strive/utils/services/algolia.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
+import { ThumbnailListComponent } from '@strive/ui/thumbnail/layout/list/thumbnail-list.component'
+import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
+import { RowsPipe } from '@strive/ui/thumbnail/pipes/rows.pipe'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { FooterComponent } from '@strive/ui/footer/footer.component'
+
+
 @Component({
+  standalone: true,
   selector: 'journal-explore',
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    ThumbnailListComponent,
+    SmallThumbnailComponent,
+    RowsPipe,
+    ImageDirective,
+    HeaderComponent,
+    FooterComponent,
+    IonContent,
+    IonSearchbar,
+    IonCard,
+    IonSelect,
+    IonSelectOption,
+    IonButton
+  ]
 })
 export class ExplorePageComponent implements OnDestroy {
   @ViewChild(IonContent) content?: IonContent
