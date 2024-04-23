@@ -5,7 +5,7 @@ import { Observable, tap } from 'rxjs'
 
 import { Goal, Milestone, createGoalStakeholder } from '@strive/model'
 import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
-import { SuggestionSComponent } from '@strive/ui/suggestion/suggestion.component'
+import { SuggestionComponent } from '@strive/ui/suggestion/suggestion.component'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { IsFuturePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { ScrollService } from '@strive/utils/services/scroll.service'
@@ -21,7 +21,7 @@ import { IonContent } from '@ionic/angular/standalone'
     CommonModule,
     RoadmapComponent,
     IsFuturePipe,
-    SuggestionSComponent
+    SuggestionComponent
   ]
 })
 export class GoalRoadmapComponent implements OnInit {

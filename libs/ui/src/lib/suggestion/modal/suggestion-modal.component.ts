@@ -15,7 +15,7 @@ import { ScrollService } from '@strive/utils/services/scroll.service'
 import { Goal, GoalStakeholder, Milestone, createChatGPTMessage, createGoalStakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
-import { SuggestionSComponent } from '../suggestion.component'
+import { SuggestionComponent } from '../suggestion.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
@@ -27,7 +27,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   imports: [
     CommonModule,
     RoadmapComponent,
-    SuggestionSComponent,
+    SuggestionComponent,
     HeaderModalComponent,
     IonContent
   ],

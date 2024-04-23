@@ -32,9 +32,9 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
-import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
-import { CollectiveGoalsModalSComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
+import { CollectiveGoalsModalComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
 import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
@@ -115,9 +115,9 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     PagenotfoundComponent,
     HeaderRootComponent,
     AddOthersModalComponent,
-    DeadlinePopoverSComponent,
+    DeadlinePopoverComponent,
     UpsertPostModalComponent,
-    CollectiveGoalsModalSComponent,
+    CollectiveGoalsModalComponent,
     SuggestionModalComponent,
     IonFab,
     IonFabButton,
@@ -458,7 +458,7 @@ export class GoalPageComponent implements OnDestroy {
     if (!this.goal?.id) return
 
     this.modalCtrl.create({
-      component: CollectiveGoalsModalSComponent,
+      component: CollectiveGoalsModalComponent,
       componentProps: {
         goal: this.goal,
         stakeholders
@@ -515,7 +515,7 @@ export class GoalPageComponent implements OnDestroy {
     event.stopPropagation()
 
     const popover = await this.popoverCtrl.create({
-      component: DeadlinePopoverSComponent,
+      component: DeadlinePopoverComponent,
       event
     })
     popover.onDidDismiss().then(({ data }) => {

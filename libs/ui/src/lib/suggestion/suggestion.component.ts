@@ -34,7 +34,7 @@ import { IonIcon, IonList, IonItem, IonLabel, IonButton, IonInput } from '@ionic
     IonInput
   ]
 })
-export class SuggestionSComponent implements OnInit, OnDestroy {
+export class SuggestionComponent implements OnInit, OnDestroy {
 
   added$ = new BehaviorSubject<string[]>([])
   suggestions = new BehaviorSubject<ChatGPTMessage>(createChatGPTMessage())

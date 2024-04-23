@@ -15,7 +15,7 @@ import { Goal, GoalStakeholder } from '@strive/model'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 @Pipe({ name: 'joinButtonText', standalone: true })
-export class JoinButtonTextSPipe implements PipeTransform {
+export class JoinButtonTextPipe implements PipeTransform {
   transform(stakeholder: GoalStakeholder, collectiveGoalStakeholder?: GoalStakeholder) {
     if (stakeholder.isAchiever) return 'Joined'
     if (stakeholder.hasOpenRequestToJoin) return 'Cancel request'
@@ -33,7 +33,7 @@ export class JoinButtonTextSPipe implements PipeTransform {
   imports: [
     CommonModule,
     AuthModalComponent,
-    JoinButtonTextSPipe,
+    JoinButtonTextPipe,
     IonIcon,
     IonPopover,
     IonList,

@@ -17,7 +17,7 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
     IonItem
   ]
 })
-export class DeadlinePopoverSComponent {
+export class DeadlinePopoverComponent {
     @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 

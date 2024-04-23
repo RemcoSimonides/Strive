@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonList, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, PopoverController } from '@ionic/angular/standalone'
 import { GoalForm } from '@strive/goal/forms/goal.form'
-import { DeadlinePopoverSComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { endOfDay } from 'date-fns'
 
 @Component({
@@ -15,7 +15,7 @@ import { endOfDay } from 'date-fns'
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DeadlinePopoverSComponent,
+    DeadlinePopoverComponent,
     IonList,
     IonItem,
     IonLabel,
@@ -37,7 +37,7 @@ export class GoalDetailsComponent {
     const caption = 'Is the goal already finished? Pick the date when it was'
 
     const popover = await this.popoverCtrl.create({
-      component: DeadlinePopoverSComponent,
+      component: DeadlinePopoverComponent,
       componentProps: { caption }
     })
     popover.onDidDismiss().then(({ data }) => {

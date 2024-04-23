@@ -26,7 +26,7 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   templateUrl: './collective-goals.component.html',
   styleUrls: ['./collective-goals.component.scss']
 })
-export class CollectiveGoalsModalSComponent extends ModalDirective {
+export class CollectiveGoalsModalComponent extends ModalDirective {
 
   @Input() goal = createGoal()
   @Input() stakeholders: Stakeholder[] = []
