@@ -1,22 +1,27 @@
 <swiper-container space-between="16" slides-per-view="auto" #swiper>
-  <ng-container *ngFor="let control of form.controls; let index = index">
+  @for (control of form.controls; track control; let index = $index) {
     <swiper-slide (click)="openPopover($event, index)">
       <img [src]="control.value.preview" />
     </swiper-slide>
-  </ng-container>
+  }
   <swiper-slide>
-    <section [ngSwitch]="step | async">
-      <!-- Drop -->
-      <article *ngSwitchCase="'drop'" class="drop-zone" (click)="selectImages()">
-        <ion-icon name="images-outline" />
-        <span>Add Photo</span>
-      </article>
-
-      <!-- Hovering -->
-      <article *ngSwitchCase="'hovering'" class="drop-zone hover" (click)="selectImages()">
-        <ion-icon name="images-outline" />
-        <span>Drop your file</span>
-      </article>
+    <section>
+      @switch (step | async) {
+        <!-- Drop -->
+        @case ('drop') {
+          <article class="drop-zone" (click)="selectImages()">
+            <ion-icon name="images-outline" />
+            <span>Add Photo</span>
+          </article>
+        }
+        <!-- Hovering -->
+        @case ('hovering') {
+          <article class="drop-zone hover" (click)="selectImages()">
+            <ion-icon name="images-outline" />
+            <span>Drop your file</span>
+          </article>
+        }
+      }
     </section>
   </swiper-slide>
 </swiper-container>

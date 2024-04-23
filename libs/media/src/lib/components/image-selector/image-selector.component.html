@@ -1,42 +1,50 @@
 <input #fileUploader multiple hidden [accept]="accept" type="file" (change)="inputChange($event)" />
-<section [ngSwitch]="step$ | async">
-
-  <!-- Drop -->
-  <article *ngSwitchCase="'drop'" class="drop-zone">
-    <p>Drag 'n drop an Image</p>
-    <p>or <a (click)="selectImage()">choose a file</a></p>
-    <div *ngIf="defaultImage">
-      <span class="caption">Image used if not customized:</span>
-      <img [asset]="defaultImage" />
-    </div>
-  </article>
-
-  <!-- Hovering -->
-  <article *ngSwitchCase="'hovering'" class="drop-zone">
-    <img asset="goal.png" alt="upload image" class="picture-hover" />
-    <h3>Drop your file here</h3>
-  </article>
-
-  <!-- Crop -->
-  <article *ngSwitchCase="'crop'" class="crop">
-    <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)" />
-    <div>
-      <ion-fab-button color="primary" (click)="cropIt()">
-        <ion-icon name="checkmark-outline" />
-      </ion-fab-button>
-      <ion-fab-button color="primary" (click)="step.next('drop')">
-        <ion-icon name="close-outline" />
-      </ion-fab-button>
-    </div>
-  </article>
-
-  <!-- Show -->
-  <article *ngSwitchCase="'show'" class="show">
-    <img class="croppedImage" [src]="previewUrl$ | async" />
-    <div>
-      <ion-fab-button color="primary" (click)="remove()">
-        <ion-icon name="close-outline" />
-      </ion-fab-button>
-    </div>
-  </article>
+<section>
+  @switch (step$ | async) {
+    <!-- Drop -->
+    @case ('drop') {
+      <article class="drop-zone">
+        <p>Drag 'n drop an Image</p>
+        <p>or <a (click)="selectImage()">choose a file</a></p>
+        @if (defaultImage) {
+          <div>
+            <span class="caption">Image used if not customized:</span>
+            <img [asset]="defaultImage" />
+          </div>
+        }
+      </article>
+    }
+    <!-- Hovering -->
+    @case ('hovering') {
+      <article class="drop-zone">
+        <img asset="goal.png" alt="upload image" class="picture-hover" />
+        <h3>Drop your file here</h3>
+      </article>
+    }
+    <!-- Crop -->
+    @case ('crop') {
+      <article class="crop">
+        <image-cropper [imageFile]="file" [aspectRatio]="1" format="webp" [containWithinAspectRatio]="false" (imageCropped)="imageCropped($event)" />
+        <div>
+          <ion-fab-button color="primary" (click)="cropIt()">
+            <ion-icon name="checkmark-outline" />
+          </ion-fab-button>
+          <ion-fab-button color="primary" (click)="step.next('drop')">
+            <ion-icon name="close-outline" />
+          </ion-fab-button>
+        </div>
+      </article>
+    }
+    <!-- Show -->
+    @case ('show') {
+      <article class="show">
+        <img class="croppedImage" [src]="previewUrl$ | async" />
+        <div>
+          <ion-fab-button color="primary" (click)="remove()">
+            <ion-icon name="close-outline" />
+          </ion-fab-button>
+        </div>
+      </article>
+    }
+  }
 </section>

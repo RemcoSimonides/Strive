@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
 
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
     IonList,
     IonItem
   ],
