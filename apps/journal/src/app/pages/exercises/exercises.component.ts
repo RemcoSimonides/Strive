@@ -1,12 +1,24 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, Pipe, PipeTransform } from '@angular/core'
+
+import { IonContent, IonIcon } from '@ionic/angular/standalone'
+
+import { Observable, map, of, switchMap } from 'rxjs'
+import { format, isPast } from 'date-fns'
+
 import { SelfReflectSettings, exercises, ExerciseType, Affirmations, DearFutureSelf, DailyGratitude, WheelOfLifeSettings } from '@strive/model'
+import { smartJoin, capitalizeFirstLetter } from '@strive/utils/helpers'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
-import { Observable, map, of, switchMap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
 import { ExerciseService, ExerciseSettings } from '@strive/exercises/exercise.service'
-import { smartJoin, capitalizeFirstLetter } from '@strive/utils/helpers'
-import { format, isPast } from 'date-fns'
+
+import { SmallThumbnailComponent } from '@strive/ui/thumbnail/components/small/small-thumbnail.component'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
+import { NextLetterPipe } from '@strive/exercises/dear-future-self/pipes/dear-future-self.pipe'
+import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 function getFrequencies({ questions }: SelfReflectSettings) {
   const frequencies = []
@@ -36,10 +48,23 @@ interface Exercise {
 }
 
 @Component({
+  standalone: true,
   selector: 'journal-exercises',
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    SmallThumbnailComponent,
+    HeaderRootComponent,
+    NextLetterPipe,
+    TimeToGoPipe,
+    PageLoadingComponent,
+    IonContent,
+    IonIcon
+  ],
+  providers: [GetExercisePipe]
 })
 export class ExercisesPageComponent {
   exercises$: Observable<Exercise[]> = this.auth.profile$.pipe(
