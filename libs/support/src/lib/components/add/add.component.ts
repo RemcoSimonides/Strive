@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { IonList, IonItem, IonInput, IonButton, IonIcon, IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
@@ -22,7 +21,6 @@ import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-moda
   styleUrls: ['./add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     AchieversModalComponent,
     IonList,

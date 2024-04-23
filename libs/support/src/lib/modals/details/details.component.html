@@ -1,5 +1,7 @@
 <strive-header-modal (dismiss)="dismiss()" />
 
-<ion-content *ngIf="support" class="ion-padding">
-  <strive-support-details [support]="support" (removed)="dismiss()" />
-</ion-content>
+@if (support) {
+  <ion-content class="ion-padding">
+    <strive-support-details [support]="support" (removed)="dismiss()" />
+  </ion-content>
+}

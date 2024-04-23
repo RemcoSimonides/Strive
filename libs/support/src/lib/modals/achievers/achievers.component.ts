@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 
 import { IonSearchbar, IonContent, IonList, IonItem, IonButton, IonAvatar, IonLabel, IonText, IonCheckbox, ModalController } from '@ionic/angular/standalone'
 
@@ -18,7 +18,6 @@ type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile:
   styleUrls: ['./achievers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     ImageDirective,

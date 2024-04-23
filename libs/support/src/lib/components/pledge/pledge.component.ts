@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
 
@@ -16,7 +16,6 @@ import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
   templateUrl: './pledge.component.html',
   styleUrls: ['./pledge.component.scss'],
   imports: [
-    CommonModule,
     RouterModule,
     ArrowBackComponent,
     ArrowForwardComponent,

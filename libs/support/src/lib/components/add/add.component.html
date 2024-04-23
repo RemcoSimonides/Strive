@@ -1,21 +1,23 @@
 <ion-list>
-  <ion-item *ngIf="goal" lines="none">
-    <ion-input
-      [formControl]="form"
-      type="text"
-      placeholder="e.g. chocolate or €20"
-      autocapitalize="sentences"
-      maxlength="60"
-      (keydown.enter)="addSupport()"
-      class="secondary"
-    />
-    <ion-button
-      slot="end"
-      (click)="addSupport()"
-      color="secondary"
-    >
-      <span>ADD</span>
-      <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
-    </ion-button>
-  </ion-item>
+  @if (goal) {
+    <ion-item lines="none">
+      <ion-input
+        [formControl]="form"
+        type="text"
+        placeholder="e.g. chocolate or €20"
+        autocapitalize="sentences"
+        maxlength="60"
+        (keydown.enter)="addSupport()"
+        class="secondary"
+      />
+      <ion-button
+        slot="end"
+        (click)="addSupport()"
+        color="secondary"
+      >
+        <span>ADD</span>
+        <ion-icon src="assets/icons/hand-holding-heart-solid.svg" slot="end" />
+      </ion-button>
+    </ion-item>
+  }
 </ion-list>

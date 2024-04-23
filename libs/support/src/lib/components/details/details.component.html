@@ -1,87 +1,96 @@
-<ng-container *ngIf="support">
-  <article *ngIf="support.counterNeedsDecision && (support | isRecipient)" class="decision">
-    <small>{{ support.milestone ? 'Milestone' : 'Goal'}} completed unsuccessfully. Decide to give '{{ support.counterDescription }}' or not</small>
-    <strive-support-decision [support]="support" [counter]="true" />
-  </article>
-  <article *ngIf="support.needsDecision && (support | isSupporter)" class="decision">
-    <ng-container *ngIf="support.milestone else goal">
-      <small>Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
-    </ng-container>
-    <ng-template #goal>
-      <small>Goal has been completed {{ support.goal?.status === 'succeeded' ? 'successfully' : 'unsuccessfully' }}. Decide to give '{{ support.description }}' or not.</small>
-    </ng-template>
-    <strive-support-decision [support]="support" />
-  </article>
-
-  <ng-container *ngIf="post$ | async as post">
+@if (support) {
+  @if (support.counterNeedsDecision && (support | isRecipient)) {
+    <article class="decision">
+      <small>{{ support.milestone ? 'Milestone' : 'Goal'}} completed unsuccessfully. Decide to give '{{ support.counterDescription }}' or not</small>
+      <strive-support-decision [support]="support" [counter]="true" />
+    </article>
+  }
+  @if (support.needsDecision && (support | isSupporter)) {
+    <article class="decision">
+      @if (support.milestone) {
+        <small>Milestone has been completed {{ support.milestone.status === 'succeeded' ? 'successfully' : 'unsuccessfully'}}. Decide to give '{{ support.description }}' or not.</small>
+      } @else {
+        <small>Goal has been completed {{ support.goal?.status === 'succeeded' ? 'successfully' : 'unsuccessfully' }}. Decide to give '{{ support.description }}' or not.</small>
+      }
+      <strive-support-decision [support]="support" />
+    </article>
+  }
+  @if (post$ | async; as post) {
     <strive-post [storyItem]="post" />
-  </ng-container>
-
+  }
   <strive-support-pledge [support]="support" />
-
-  <ng-container *ngIf="(support | isRecipient) && support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
-      <ion-list lines="full" class="counter-form">
-        <ion-item *ngIf="!support.counterDescription">
+  @if ((support | isRecipient) && support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision) {
+    <ion-list lines="full" class="counter-form">
+      @if (!support.counterDescription) {
+        <ion-item>
           <small>
             Create extra accountability for yourself by giving something to {{ support.supporter?.username }} in case you dont succeed to "{{ support.milestoneId ? support.milestone?.content : support.goal?.title }}"
           </small>
         </ion-item>
-        <ion-item lines="none">
-          <ion-input [formControl]="counterForm" placeholder="e.g. 'Wash your car'" />
-          <ion-button size="small" slot="end" (click)="counter()" color="primary">
-            <span>Save</span>
-          </ion-button>
-        </ion-item>
-      </ion-list>
-  </ng-container>
-
+      }
+      <ion-item lines="none">
+        <ion-input [formControl]="counterForm" placeholder="e.g. 'Wash your car'" />
+        <ion-button size="small" slot="end" (click)="counter()" color="primary">
+          <span>Save</span>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  }
   <section class="details">
-
     <small class="status">
       <span class="gray">Status: </span>
-      <ng-container *ngIf="support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision">
-        <span *ngIf="!support.milestone">Waiting for goal '{{ support.goal?.title }}' to be finished</span>
-        <span *ngIf="support.milestone">Waiting for milestone '{{ support.milestone.content }}' of goal '{{ support.goal?.title }}' to be completed</span>
-      </ng-container>
-
-      <ng-container *ngIf="support.needsDecision && support.status === 'open'">
-        <span *ngIf="support | isSupporter">Decide whether to give the support or not</span>
-        <span *ngIf="support | isRecipient">{{ support.supporter?.username }} decides whether to '{{ support.description }}' or not</span>
-      </ng-container>
-
-      <ng-container *ngIf="support.counterNeedsDecision && support.counterStatus === 'open'">
-        <span *ngIf="support | isRecipient">Decide whether to give the counter support or not</span>
-        <span *ngIf="support | isSupporter">{{ support.recipient?.username }} decides whether to give '{{ support.counterDescription }}' or not</span>
-      </ng-container>
-
-      <ng-container *ngIf="support.status === 'accepted'">
+      @if (support.status === 'open' && !support.needsDecision && support.counterStatus === 'open' && !support.counterNeedsDecision) {
+        @if (!support.milestone) {
+          <span>Waiting for goal '{{ support.goal?.title }}' to be finished</span>
+        }
+        @if (support.milestone) {
+          <span>Waiting for milestone '{{ support.milestone.content }}' of goal '{{ support.goal?.title }}' to be completed</span>
+        }
+      }
+      @if (support.needsDecision && support.status === 'open') {
+        @if (support | isSupporter) {
+          <span>Decide whether to give the support or not</span>
+        }
+        @if (support | isRecipient) {
+          <span>{{ support.supporter?.username }} decides whether to '{{ support.description }}' or not</span>
+        }
+      }
+      @if (support.counterNeedsDecision && support.counterStatus === 'open') {
+        @if (support | isRecipient) {
+          <span>Decide whether to give the counter support or not</span>
+        }
+        @if (support | isSupporter) {
+          <span>{{ support.recipient?.username }} decides whether to give '{{ support.counterDescription }}' or not</span>
+        }
+      }
+      @if (support.status === 'accepted') {
         <span>{{ support.description }} should have been given to '{{ support.recipient?.username }}'</span>
-      </ng-container>
-
-      <ng-container *ngIf="support.counterStatus === 'accepted'">
+      }
+      @if (support.counterStatus === 'accepted') {
         <span>'{{ support.counterDescription }}'' support should have been given to '{{ support.supporter?.username }}'</span>
-      </ng-container>
-
-      <ng-container *ngIf="support.status === 'rejected'">
+      }
+      @if (support.status === 'rejected') {
         <span>Supporter decided not to give the support</span>
-      </ng-container>
-
+      }
     </small>
-    <small class="gray" *ngIf="showGoalLink">Goal: <a [routerLink]="['/goal', support.goal?.id]">{{ support.goal?.title }}</a></small>
-    <small class="gray" *ngIf="support.milestone?.content">Milestone: {{ support.milestone?.content }}</small>
+    @if (showGoalLink) {
+      <small class="gray">Goal: <a [routerLink]="['/goal', support.goal?.id]">{{ support.goal?.title }}</a></small>
+    }
+    @if (support.milestone?.content) {
+      <small class="gray">Milestone: {{ support.milestone?.content }}</small>
+    }
     <small class="gray">Created: {{ support.createdAt | date: 'longDate' }}</small>
   </section>
-
   <section class="actions">
-    <ng-container *ngIf="support.status === 'open'">
-      <ng-container *ngIf="support | isSupporter">
+    @if (support.status === 'open') {
+      @if (support | isSupporter) {
         <ion-button (click)="give()" class="secondary" expand="block">
           <span>Give to {{ support.recipient?.username }}</span>
         </ion-button>
         <ion-button (click)="remove()" class="danger" expand="block">
           Remove Support
         </ion-button>
-      </ng-container>
-    </ng-container>
+      }
+    }
   </section>
-</ng-container>
+}

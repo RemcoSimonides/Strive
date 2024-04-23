@@ -1,24 +1,24 @@
-<ng-container *ngIf="support.supporter as supporter">
+@if (support.supporter; as supporter) {
   <section (click)="navTo(['/profile', supporter.uid])">
     <ion-avatar slot="start">
       <img [ref]="supporter.photoURL" asset="profile.png" [width]="120" [height]="120"/>
     </ion-avatar>
     <small>{{ supporter.username! | maxLength: 8 }}</small>
   </section>
-</ng-container>
+}
 <article>
   <span>{{ support.description }}</span>
   <strive-arrow-forward color="var(--ion-color-secondary)" />
-  <ng-container *ngIf="support.counterDescription">
+  @if (support.counterDescription) {
     <strive-arrow-back color="var(--ion-color-danger)" />
     <span>{{ support.counterDescription }}</span>
-  </ng-container>
+  }
 </article>
-<ng-container *ngIf="support.recipient as recipient">
+@if (support.recipient; as recipient) {
   <section (click)="navTo(['/profile', recipient.uid])">
     <ion-avatar slot="start">
       <img [ref]="recipient.photoURL" asset="profile.png" [width]="120" [height]="120"/>
     </ion-avatar>
     <small>{{ recipient.username! | maxLength: 8 }}</small>
   </section>
-</ng-container>
+}

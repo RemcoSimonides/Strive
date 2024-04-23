@@ -1,20 +1,24 @@
 <strive-header-modal (dismiss)="dismiss()" color="primary">
-  <ion-title *ngIf="milestone">Support milestone '{{ milestone.content }}'</ion-title>
-  <ion-title *ngIf="!milestone">Support goal '{{ goal.title }}'</ion-title>
+  @if (milestone) {
+    <ion-title>Support milestone '{{ milestone.content }}'</ion-title>
+  }
+  @else {
+    <ion-title>Support goal '{{ goal.title }}'</ion-title>
+  }
 </strive-header-modal>
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="goal.status === 'pending' || milestone?.status === 'pending'">
+  @if (goal.status === 'pending' || milestone?.status === 'pending') {
     <strive-support-add [goal]="goal" [milestone]="milestone" />
-  </ng-container>
+  }
 
-  <ng-container *ngIf="supports$ | async as supports">
+  @if (supports$ | async; as supports) {
     <strive-support-list [goal]="supports[0]">
-      <ng-container *ngIf="!milestone">
+      @if (!milestone) {
         <ng-template #milestone let-milestone="milestone">
           <small>Milestone: {{ milestone.content }}</small>
         </ng-template>
-      </ng-container>
+      }
     </strive-support-list>
-  </ng-container>
+  }
 </ion-content>

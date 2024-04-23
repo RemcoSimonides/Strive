@@ -1,6 +1,6 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { ModalController } from '@ionic/angular/standalone'
+import { IonContent, ModalController } from '@ionic/angular/standalone'
 
 import { Support } from '@strive/model'
 import { SupportDetailsComponent } from '@strive/support/components/details/details.component'
@@ -15,10 +15,10 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     SupportDetailsComponent,
-    HeaderModalComponent
-  ]
+    HeaderModalComponent,
+    IonContent
+]
 })
 export class SupportDetailsModalComponent extends ModalDirective {
 
