@@ -1,6 +1,9 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
-import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray } from '@angular/forms'
-import { ModalController, PopoverController } from '@ionic/angular/standalone'
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, UntypedFormArray } from '@angular/forms'
+
+import { IonContent, IonList, IonItem, IonLabel, IonText, IonIcon, IonButton, IonInput, IonSelect, IonSelectOption, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { closeCircle, checkmarkOutline, addCircle } from 'ionicons/icons'
 
@@ -17,16 +20,39 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal.service'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 function timeFormControls() {
   return [new FormControl(''), new FormControl(''), new FormControl('')]
 }
 
 @Component({
+  standalone: true,
   selector: 'journal-affirmations',
   templateUrl: './affirmations.component.html',
   styleUrls: ['./affirmations.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    PageLoadingComponent,
+    ActivatePushNotificationsComponent,
+    HeaderComponent,
+    DatetimeComponent,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonText,
+    IonIcon,
+    IonButton,
+    IonInput,
+    IonSelect,
+    IonSelectOption
+  ]
 })
 export class AffirmationsPageComponent implements OnDestroy {
   isLoading = true

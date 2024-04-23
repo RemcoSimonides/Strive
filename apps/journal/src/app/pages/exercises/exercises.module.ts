@@ -18,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'affirmations',
-    loadChildren: () => import('./affirmations/affirmations.module').then(m => m.AffirmationsModule)
+    loadComponent: () => import('./affirmations/affirmations.component').then(m => m.AffirmationsPageComponent)
   },
   {
     path: 'daily-gratitude',
