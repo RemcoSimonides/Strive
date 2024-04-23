@@ -1,15 +1,24 @@
+import { CommonModule } from '@angular/common'
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core'
-import { FormControl } from '@angular/forms'
-import { NavParams, PopoverController } from '@ionic/angular/standalone'
+import { FormControl, ReactiveFormsModule } from '@angular/forms'
+
+import { IonButton, NavParams, PopoverController } from '@ionic/angular/standalone'
 
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
+  standalone: true,
   selector: 'journal-edit-profile-image-popover',
   templateUrl: './edit-profile-image.component.html',
-  styleUrls: ['./edit-profile-image.component.scss']
+  styleUrls: ['./edit-profile-image.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ImageSelectorComponent,
+    IonButton
+  ]
 })
 export class EditProfileImagePopoverComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])
