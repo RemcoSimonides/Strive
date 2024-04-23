@@ -1,15 +1,25 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+
+import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
+
 import { createPost, Goal, GoalStakeholder } from '@strive/model'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { GoalService } from '../../goal.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
+  standalone: true,
   selector: '[goal][stakeholder] strive-goal-options',
   templateUrl: './goal-options.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    UpsertPostModalComponent,
+    IonList,
+    IonItem
+  ]
 })
 export class GoalOptionsComponent {
 

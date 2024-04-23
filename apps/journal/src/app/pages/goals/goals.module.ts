@@ -9,7 +9,7 @@ import { HeaderRootComponent } from '@strive/ui/header-root/header-root.componen
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
-import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
+import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
 import { HomePageModule } from '../home/home.module'
 import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail.module'
 import { GoalUpdatesModalModule } from '@strive/goal/modals/goal-updates/goal-updates.module'
@@ -36,7 +36,7 @@ const routes: Routes = [
     HeaderRootComponent,
     GoalCreateModalComponent,
     ImageDirective,
-    GoalOptionsModule,
+    GoalOptionsComponent,
     HomePageModule,
     ReactiveFormsModule,
     GoalThumbnailModule,

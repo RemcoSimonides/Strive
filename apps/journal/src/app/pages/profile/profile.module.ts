@@ -17,7 +17,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 
-import { GoalOptionsModule } from '@strive/goal/components/goal-options/goal-options.module'
+import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
 import { EditProfileImagePopoverModule } from './popovers/edit-profile-image/edit-profile-image.module'
 import { ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
@@ -43,7 +43,7 @@ const routes: Routes = [
     ImageSelectorComponent,
     FollowingComponent,
     FollowersComponent,
-    GoalOptionsModule,
+    GoalOptionsComponent,
     EditProfileImagePopoverModule,
     ImageZoomModalComponent,
     HeaderRootComponent,

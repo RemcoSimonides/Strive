@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router'
 import { GoalThumbnailComponent } from './thumbnail.component'
 
 import { ImageDirective } from '@strive/media/directives/image.directive'
-import { GoalOptionsModule } from '../goal-options/goal-options.module'
+import { GoalOptionsComponent } from '../goal-options/goal-options.component'
 import { ProgressPipe } from '../../pipes/progress.pipe'
 import { IonCard, IonThumbnail, IonIcon, IonProgressBar, IonButton } from '@ionic/angular/standalone'
 
@@ -13,7 +13,7 @@ import { IonCard, IonThumbnail, IonIcon, IonProgressBar, IonButton } from '@ioni
     CommonModule,
     RouterModule,
     ImageDirective,
-    GoalOptionsModule,
+    GoalOptionsComponent,
     ProgressPipe,
     IonCard,
     IonThumbnail,
