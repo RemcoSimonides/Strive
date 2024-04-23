@@ -3,7 +3,7 @@ import { Routes } from '@angular/router'
 export const routes: Routes = [
   { path: '', loadComponent: () => import('./pages/goals/goals.page').then(m => m.GoalsPageComponent) },
   { path: 'download', loadComponent: () => import('./pages/download/download.component').then(m => m.DownloadPageComponent) },
-  { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfilePageModule) },
+  { path: 'edit-profile', loadComponent: () => import('./pages/profile/edit-profile/edit-profile.component').then(m => m.EditProfilePageComponent) },
   { path: 'exercise', loadComponent: () => import('./pages/exercises/exercises.component').then(m => m.ExercisesPageComponent) },
   { path: 'exercise/affirmations', loadComponent: () => import('./pages/exercises/affirmations/affirmations.component').then(m => m.AffirmationsPageComponent)},
   { path: 'exercise/dear-future-self', loadComponent: () => import('./pages/exercises/dear-future-self/dear-future-self.component').then(m => m.DearFutureSelfPageComponent)},

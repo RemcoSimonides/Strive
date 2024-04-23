@@ -1,7 +1,9 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
+import { ReactiveFormsModule } from '@angular/forms'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core'
-import { Router } from '@angular/router'
-import { AlertController, ModalController } from '@ionic/angular/standalone'
+import { Router, RouterModule } from '@angular/router'
+
+import { AlertController, IonContent, IonCard, IonCardContent, IonItem, IonInput, IonButton, ModalController } from '@ionic/angular/standalone'
 
 import { take } from 'rxjs/operators'
 
@@ -13,12 +15,28 @@ import { ProfileService } from '@strive/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
+import { ImagesSelectorComponent } from '@strive/media/components/images-selector/images-selector.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 @Component({
+  standalone: true,
   selector: 'journal-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    ImagesSelectorComponent,
+    HeaderComponent,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonItem,
+    IonInput,
+    IonButton
+  ]
 })
 export class EditProfilePageComponent {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
