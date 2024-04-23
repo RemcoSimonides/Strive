@@ -1,25 +1,17 @@
 <!-- Mobile -->
-<ng-container *ngIf="(screensize.isDesktop$ | async) === false else browser">
-
+@if ((screensize.isDesktop$ | async) === false) {
   <swiper-container [spaceBetween]="28" [width]="width">
-
-    <ng-container *ngFor="let thumb of thumbs">
+    @for (thumb of thumbs; track thumb) {
       <swiper-slide>
         <ng-container *ngTemplateOutlet="thumb" />
       </swiper-slide>
-    </ng-container>
-
+    }
   </swiper-container>
-
-</ng-container>
-
-<!-- Browser -->
-<ng-template #browser>
+} @else {
+  <!-- Browser -->
   <section class="browser">
-
-    <ng-container *ngFor="let thumb of thumbs">
+    @for (thumb of thumbs; track thumb) {
       <ng-container *ngTemplateOutlet="thumb" />
-    </ng-container>
-
+    }
   </section>
-</ng-template>
+}

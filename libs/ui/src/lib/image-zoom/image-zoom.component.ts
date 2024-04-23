@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { AfterViewInit, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, ViewChild, ViewEncapsulation } from '@angular/core'
 
 import { createAnimation } from '@ionic/core'
@@ -46,10 +45,9 @@ export function getLeaveAnimation(baseEl: HTMLElement) {
 	changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 	imports: [
-		CommonModule,
-		ImageDirective,
-		MediaRefPipe,
-		HeaderComponent
+    ImageDirective,
+    MediaRefPipe,
+    HeaderComponent
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -5,8 +5,10 @@
 </ion-header>
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let profile of algolia.profiles$ | async; let last = last" button (click)="select(profile.uid)" [lines]="last ? 'none' : 'full'">
-      {{ profile.username }}
-    </ion-item>
+    @for (profile of algolia.profiles$ | async; track profile; let last = $last) {
+      <ion-item button (click)="select(profile.uid)" [lines]="last ? 'none' : 'full'">
+        {{ profile.username }}
+      </ion-item>
+    }
   </ion-list>
 </ion-content>

@@ -1,19 +1,22 @@
 <ion-header [ngClass]="{'ion-no-border': transparent}">
   <ion-toolbar [color]="color" [ngStyle]="{'--background': transparent ? 'transparent' : ''}">
-    <ng-template #noDesktop>
+
+    @if (isNotDesktop$ | async) {
       <ion-buttons slot="start">
         <ion-button (click)="dismiss.emit()" [color]="color ? '' : 'primary'">
           <ion-icon slot="icon-only" name="arrow-back" />
         </ion-button>
       </ion-buttons>
-    </ng-template>
+    }
 
     <ng-content />
 
-    <ion-buttons slot="end" *ngIf="isDesktop$ | async; else noDesktop">
-      <ion-button (click)="dismiss.emit()" [color]="color ? '' : 'primary'">
-        <ion-icon slot="icon-only" name="close-outline" />
-      </ion-button>
-    </ion-buttons>
+    @if (isDesktop$ | async) {
+      <ion-buttons slot="end">
+        <ion-button (click)="dismiss.emit()" [color]="color ? '' : 'primary'">
+          <ion-icon slot="icon-only" name="close-outline" />
+        </ion-button>
+      </ion-buttons>
+    }
   </ion-toolbar>
 </ion-header>

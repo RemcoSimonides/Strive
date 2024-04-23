@@ -1,6 +1,8 @@
 <picture [ngStyle]="{ 'border-radius': borderRadius }">
   <img [ref]="image" [asset]="asset" [width]="120" [height]="120"/>
-  <div *ngIf="isFinished">finished</div>
+  @if (isFinished) {
+    <div>finished</div>
+  }
 </picture>
 <section>
   <span>{{ title }}</span>

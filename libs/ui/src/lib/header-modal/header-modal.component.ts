@@ -4,6 +4,7 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { addIcons } from 'ionicons'
 import { arrowBack, closeOutline } from 'ionicons/icons'
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon } from '@ionic/angular/standalone'
+import { map } from 'rxjs'
 
 @Component({
   standalone: true,
@@ -23,6 +24,9 @@ import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon } from '@ionic/an
 export class HeaderModalComponent {
 
   isDesktop$ = this.screensize.isDesktop$
+  isNotDesktop$ = this.screensize.isDesktop$.pipe(
+    map(isDesktop => !isDesktop)
+  )
   @Input() color = ''
   @Input() transparent = false
 

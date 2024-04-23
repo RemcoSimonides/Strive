@@ -1,13 +1,12 @@
 <strive-header-modal (dismiss)="dismiss()" />
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="goal">
+  @if (goal) {
     <strive-roadmap
       [goal]="goal"
       [milestones]="milestones$ | async"
       [stakeholder]="stakeholder$ | async"
     />
-
-    <strive-suggestion [goalId]="goal.id" [milestones]="milestones$ | async" [fetch]="fetching$ | async" />
-  </ng-container>
-</ion-content>
+      <strive-suggestion [goalId]="goal.id" [milestones]="milestones$ | async" [fetch]="fetching$ | async" />
+    }
+  </ion-content>

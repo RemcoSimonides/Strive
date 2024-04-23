@@ -1,16 +1,15 @@
-<ng-container *ngIf="isMobile$ | async">
+@if (isMobile$ | async) {
   <ion-header>
     <ion-toolbar>
-      <ng-container *ngIf="title; else noTitle">
+      @if (title) {
         <ion-title> {{ title }} </ion-title>
-      </ng-container>
-      <ng-template #noTitle>
+      } @else {
         <a routerLink="/">
           <img asset="strivejournal-without-margin.png" class="logo">
         </a>
-      </ng-template>
+      }
       <ion-buttons slot="end">
-        <ng-container *ngIf="isLoggedIn$ | async else notLoggedIn">
+        @if (isLoggedIn$ | async) {
           <ion-button routerLink="/explore">
             <ion-icon slot="icon-only" name="search-outline"/>
           </ion-button>
@@ -20,8 +19,7 @@
           <ion-button routerLink="/settings">
             <ion-icon slot="icon-only" name="settings-outline" />
           </ion-button>
-        </ng-container>
-        <ng-template #notLoggedIn>
+        } @else {
           <ion-button routerLink="/explore">
             <ion-icon slot="icon-only" name="search-outline" />
           </ion-button>
@@ -31,8 +29,8 @@
           <ion-button (click)="openMenu()">
             <ion-icon slot="icon-only" name="menu-outline" />
           </ion-button>
-        </ng-template>
+        }
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-</ng-container>
+}

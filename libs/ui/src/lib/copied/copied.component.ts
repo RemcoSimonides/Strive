@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 
 @Component({
@@ -10,8 +9,7 @@ import { Component, Input } from '@angular/core'
       display: block;
       padding: 12px;
     }
-  `],
-  imports: [ CommonModule ]
+  `]
 })
 export class CopiedPopoverComponent {
   @Input() content = ''

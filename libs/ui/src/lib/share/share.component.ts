@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 
 import { Clipboard } from '@capacitor/clipboard'
@@ -13,7 +12,6 @@ import { clipboard } from 'ionicons/icons'
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
   imports: [
-    CommonModule,
     IonButton,
     IonIcon
   ]

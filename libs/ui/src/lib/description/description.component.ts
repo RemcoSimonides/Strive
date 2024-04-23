@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 
@@ -13,12 +12,11 @@ import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 	styleUrls: ['./description.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		HTMLPipe,
-		IonItem,
-		IonTextarea,
-		IonButton
+    ReactiveFormsModule,
+    HTMLPipe,
+    IonItem,
+    IonTextarea,
+    IonButton
 	]
 })
 export class DescriptionComponent implements OnInit {

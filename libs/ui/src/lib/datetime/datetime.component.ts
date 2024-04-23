@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild } from '@angular/core'
 import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standalone'
 
@@ -9,7 +8,6 @@ import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standa
   styleUrls: ['./datetime.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     IonDatetime,
     IonButton
   ]

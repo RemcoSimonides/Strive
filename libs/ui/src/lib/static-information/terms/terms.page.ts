@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component } from '@angular/core'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { SeoService } from '@strive/utils/services/seo.service'
@@ -23,7 +22,6 @@ import { IonContent } from '@ionic/angular/standalone'
     }`
   ],
   imports: [
-    CommonModule,
     IonContent,
     TermsComponent,
     HeaderComponent

@@ -1,21 +1,23 @@
-<ng-container *ngIf="value; else noValue">
-	<ng-container *ngIf="!editMode else edit">
-		<article [innerHTML]="value | toHTML" (click)="canEdit ? editMode = true : undefined"></article>
-	</ng-container>
-</ng-container>
-<ng-template #noValue>
-	<ng-container *ngIf="canEdit">
-		<ng-container *ngIf="!editMode else edit">
-			<i (click)="editMode = true">
-				Add short description...
-			</i>
-		</ng-container>
-	</ng-container>
-</ng-template>
-
-<ng-template #edit>
-	<ion-item>
-		<ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow autocapitalize="sentences" placeholder="..." autofocus="true" />
-		<ion-button (click)="update()" color="primary" slot="end" fill="clear">Save</ion-button>
-	</ion-item>
-</ng-template>
+@if (value) {
+  @if (!editMode) {
+    <article [innerHTML]="value | toHTML" (click)="canEdit ? editMode = true : undefined"></article>
+  } @else {
+    <ion-item>
+      <ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow autocapitalize="sentences" placeholder="..." autofocus="true" />
+      <ion-button (click)="update()" color="primary" slot="end" fill="clear">Save</ion-button>
+    </ion-item>
+  }
+} @else {
+  @if (canEdit) {
+    @if (!editMode) {
+      <i (click)="editMode = true">
+        Add short description...
+      </i>
+    } @else {
+      <ion-item>
+        <ion-textarea [formControl]="description" [maxlength]="maxlength" autoGrow autocapitalize="sentences" placeholder="..." autofocus="true" />
+        <ion-button (click)="update()" color="primary" slot="end" fill="clear">Save</ion-button>
+      </ion-item>
+    }
+  }
+}

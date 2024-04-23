@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 @Component({
@@ -6,9 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
   selector: 'strive-terms',
   styleUrls: ['./terms.component.scss'],
   templateUrl: './terms.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule
-  ]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TermsComponent { }

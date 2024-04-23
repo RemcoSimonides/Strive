@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { IonContent, IonButton } from '@ionic/angular/standalone'
 
@@ -13,7 +13,6 @@ import { HeaderComponent } from '../header/header.component'
   styleUrls: ['./404.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     HeaderComponent,
     IonContent,

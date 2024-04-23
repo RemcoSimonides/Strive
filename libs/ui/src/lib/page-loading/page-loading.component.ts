@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { IonSpinner } from '@ionic/angular/standalone'
 
@@ -9,7 +8,6 @@ import { IonSpinner } from '@ionic/angular/standalone'
   styleUrls: ['./page-loading.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     IonSpinner
   ]
 })
