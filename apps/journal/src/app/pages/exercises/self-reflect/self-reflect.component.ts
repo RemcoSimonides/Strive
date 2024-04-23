@@ -1,22 +1,31 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
-import { FormControl, FormGroup } from '@angular/forms'
-import { ModalController } from '@ionic/angular/standalone'
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+
+import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, IonPopover, IonSelect, IonSelectOption, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { settingsOutline, arrowForwardOutline, filterOutline, addOutline } from 'ionicons/icons'
+
 import { orderBy } from 'firebase/firestore'
 import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap, startWith } from 'rxjs'
+import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDate, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { SelfReflectCategory, SelfReflectEntry, SelfReflectFrequency, SelfReflectFrequencyWithNever, SelfReflectQuestion, SelfReflectSettings, createSelfReflectEntry, selfReflectKeys } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntryService, SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-reflect.service'
+
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
-import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDate, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@strive/exercises/self-reflect/utils/date.utils'
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
 import { SelfReflectQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-question/upsert-question.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { SelfReflectFrequencyPipe, SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { SelfReflectFilterEntriesPipe } from '@strive/exercises/self-reflect/pipes/entry.pipe'
 
 
 function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettings | undefined, frequency: SelfReflectFrequency) {
@@ -61,10 +70,33 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
 }
 
 @Component({
+  standalone: true,
   selector: 'journal-self-reflect',
   templateUrl: './self-reflect.component.html',
   styleUrls: ['./self-reflect.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    HeaderComponent,
+    SelfReflectEntryComponent,
+    SelfReflectFrequencyPipe,
+    PageLoadingComponent,
+    SelfReflectReplaceFrequencyPipe,
+    SelfReflectCustomQuestionModalComponent,
+    SelfReflectFilterEntriesPipe,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonPopover,
+    IonSelect,
+    IonSelectOption
+  ]
 })
 export class SelfReflectComponent {
 

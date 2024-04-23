@@ -34,7 +34,7 @@ const routes: Routes = [
   },
   {
     path: 'self-reflect',
-    loadChildren: () => import('./self-reflect/self-reflect.module').then(m => m.SelfReflectModule)
+    loadComponent: () => import('./self-reflect/self-reflect.component').then(m => m.SelfReflectComponent)
   }
 ]
 
