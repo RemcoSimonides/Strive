@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Location } from '@angular/common'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+import { CommonModule, Location } from '@angular/common'
 
-import { AlertController, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular/standalone'
+import { AlertController, IonFab, IonFabButton, IonIcon, IonContent, IonButton, IonSelect, IonSelectOption, IonCard, IonList, IonItem, IonAvatar, IonLabel, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, personAddOutline, shareSocialOutline, ellipsisHorizontalOutline, flag, notifications, link, lockOpenOutline, lockClosedOutline, timerOutline, closeOutline, arrowDownOutline, arrowUpOutline, sparklesOutline } from 'ionicons/icons'
 
@@ -21,6 +21,10 @@ import { captureException } from '@sentry/angular'
 import { isEqual, isPast } from 'date-fns'
 // Strive Utils
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
+// Strive Directives
+import { ImageDirective } from '@strive/media/directives/image.directive'
+// Strive Pipes
+import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 // Strive Components
 import { GoalOptionsPopoverComponent, enumGoalOptions } from './popovers/options/options.component'
 import { GoalUpdateModalComponent } from '@strive/goal/modals/upsert/update/update.component'
@@ -36,6 +40,15 @@ import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/
 import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
 import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion-modal.component'
+import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
+import { StoryComponent } from '@strive/story/components/story/story.component'
+import { DescriptionComponent } from '@strive/ui/description/description.component'
+import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
+import { SupportListComponent } from '@strive/support/components/list/list.component'
+import { AddSupportComponent } from '@strive/support/components/add/add.component'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -49,9 +62,9 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 import { MediaService } from '@strive/media/media.service'
+import { CommentService } from '@strive/chat/comment.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
-import { CommentService } from '@strive/chat/comment.service'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -74,10 +87,51 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
 }
 
 @Component({
+  standalone: true,
   selector: 'journal-goal',
   templateUrl: 'goal.page.html',
   styleUrls: ['./goal.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    GoalOptionsPopoverComponent,
+    GoalSharePopoverComponent,
+    GoalUpdateModalComponent,
+    AchieversModalComponent,
+    SpectatorsModalComponent,
+    SupportersModalComponent,
+    ImageDirective,
+    ImageZoomModalComponent,
+    CompactPipe,
+    RoadmapComponent,
+    StoryComponent,
+    DescriptionComponent,
+    JoinButtonModule,
+    SupportListComponent,
+    AddSupportComponent,
+    ChatModalComponent,
+    PageLoadingComponent,
+    PagenotfoundComponent,
+    HeaderRootComponent,
+    AddOthersModalComponent,
+    DeadlinePopoverSComponent,
+    UpsertPostModalComponent,
+    CollectiveGoalsModalSComponent,
+    SuggestionModalComponent,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    IonContent,
+    IonButton,
+    IonSelect,
+    IonSelectOption,
+    IonCard,
+    IonList,
+    IonItem,
+    IonAvatar,
+    IonLabel
+  ]
 })
 export class GoalPageComponent implements OnDestroy {
 
