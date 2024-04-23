@@ -39,6 +39,7 @@ import { IsTodayPipe, ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
     IonButton,
     IonIcon
   ],
+  providers: [DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CardsComponent implements OnDestroy {
