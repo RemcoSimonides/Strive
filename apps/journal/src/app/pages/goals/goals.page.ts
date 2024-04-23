@@ -39,7 +39,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
-import { HomePageModule } from '../home/home.module'
+import { HomePageComponent } from '../home/home.page'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
 import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.component'
 
@@ -58,7 +58,7 @@ import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumb
     GoalCreateModalComponent,
     ImageDirective,
     GoalOptionsComponent,
-    HomePageModule,
+    HomePageComponent,
     GoalThumbnailComponent,
     GoalUpdatesModalComponent,
     MiniThumbnailSwiperComponent,

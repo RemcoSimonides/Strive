@@ -1,7 +1,9 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common'
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
-import { ModalController, Platform } from '@ionic/angular/standalone'
+
+import { IonContent, IonButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText, ModalController, Platform } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { arrowForwardOutline, moonOutline, sunnyOutline } from 'ionicons/icons'
 
@@ -9,12 +11,31 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { AggregationService } from '@strive/utils/services/aggregation.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
+import { FooterComponent } from '@strive/ui/footer/footer.component'
 
 @Component({
+  standalone: true,
   selector: 'journal-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ImageDirective,
+    CompactPipe,
+    FooterComponent,
+    IonContent,
+    IonButton,
+    IonIcon,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonText
+  ]
 })
 export class HomePageComponent {
 
