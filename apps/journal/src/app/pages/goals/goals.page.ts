@@ -1,16 +1,20 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
-import { ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
-import { addIcons } from 'ionicons'
+import { ReactiveFormsModule } from '@angular/forms'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+
+import { IonContent, IonRefresher, IonRefresherContent, IonThumbnail, IonIcon, IonBadge, IonButton, IonSkeletonText, ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
 import { checkmarkOutline, add, lockClosedOutline } from 'ionicons/icons'
-import { ActivatedRoute, Router } from '@angular/router'
+import { addIcons } from 'ionicons'
+
 import { joinWith } from 'ngfire'
 import { orderBy, where } from 'firebase/firestore'
 import { SplashScreen } from '@capacitor/splash-screen'
+import { isBefore, min } from 'date-fns'
 
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { switchMap, map, filter, shareReplay } from 'rxjs/operators'
 
-import { isBefore, min } from 'date-fns'
 import { delay } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/pipes/progress.pipe'
 
@@ -31,12 +35,46 @@ import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
 import { getSelfReflectId } from '@strive/exercises/self-reflect/utils/date.utils'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
+import { HomePageModule } from '../home/home.module'
+import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
+import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.component'
 
 @Component({
+  standalone: true,
   selector: 'journal-goals',
   templateUrl: './goals.page.html',
   styleUrls: ['./goals.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    PageLoadingComponent,
+    HeaderRootComponent,
+    GoalCreateModalComponent,
+    ImageDirective,
+    GoalOptionsComponent,
+    HomePageModule,
+    GoalThumbnailComponent,
+    GoalUpdatesModalComponent,
+    MiniThumbnailSwiperComponent,
+    CardsModalComponent,
+    AffirmModalComponent,
+    MessageModalComponent,
+    EntryModalComponent,
+    IonContent,
+    IonRefresher,
+    IonRefresherContent,
+    IonThumbnail,
+    IonIcon,
+    IonBadge,
+    IonButton,
+    IonSkeletonText
+  ]
 })
 export class GoalsPageComponent implements OnDestroy {
 

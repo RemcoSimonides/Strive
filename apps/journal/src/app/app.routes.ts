@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router'
 
 export const routes: Routes = [
-  { path: '', loadChildren: () => import('./pages/goals/goals.module').then(m => m.GoalsPageModule) },
+  { path: '', loadComponent: () => import('./pages/goals/goals.page').then(m => m.GoalsPageComponent) },
   { path: 'download', loadComponent: () => import('./pages/download/download.component').then(m => m.DownloadPageComponent) },
   { path: 'edit-profile', loadChildren: () => import('./pages/profile/edit-profile/edit-profile.module').then(m => m.EditProfilePageModule) },
   { path: 'exercise', loadComponent: () => import('./pages/exercises/exercises.component').then(m => m.ExercisesPageComponent) },
@@ -11,7 +11,7 @@ export const routes: Routes = [
   { path: 'exercise/self-reflect', loadComponent: () => import('./pages/exercises/self-reflect/self-reflect.component').then(m => m.SelfReflectComponent)},
   { path: 'exercise/wheel-of-life', loadComponent: () => import('./pages/exercises/wheel-of-life/wheel-of-life.component').then(m => m.WheelOfLifePageComponent)},
   { path: 'explore', loadComponent: () => import('./pages/explore/explore.page').then(m => m.ExplorePageComponent) },
-  { path: 'goals', loadChildren: () => import('./pages/goals/goals.module').then(m => m.GoalsPageModule) },
+  { path: 'goals', loadComponent: () => import('./pages/goals/goals.page').then(m => m.GoalsPageComponent) },
   { path: 'goal/:id', loadComponent: () => import('./pages/goal/goal.page').then(m => m.GoalPageComponent) },
   { path: 'notifications', loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsPageModule) },
   { path: 'privacy-policy', loadComponent: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageComponent) },
