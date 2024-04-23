@@ -1,20 +1,36 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+
+import { IonContent } from '@ionic/angular/standalone'
+
+import { joinWith } from 'ngfire'
 import { combineLatest, map, of, switchMap } from 'rxjs'
 
 import { SupportService } from '@strive/support/support.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { createSupportBase } from '@strive/model'
-import { joinWith } from 'ngfire'
 import { GoalService } from '@strive/goal/goal.service'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ProfileService } from '@strive/user/profile.service'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { SupportDetailsComponent } from '@strive/support/components/details/details.component'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 
 @Component({
+  standalone: true,
   selector: 'journal-support',
   templateUrl: './support.page.html',
   styleUrls: ['./support.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    SupportDetailsComponent,
+    PagenotfoundComponent,
+    IonContent
+  ]
 })
 export class SupportPageComponent {
   support$ = combineLatest([

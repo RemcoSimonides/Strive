@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'profile', loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePageComponent) },
   { path: 'profile/:id', loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePageComponent) },
   { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
-  { path: 'supports/:id', loadChildren: () => import('./pages/supports/support/support.module').then(m => m.SupportPageModule) },
+  { path: 'supports/:id', loadComponent: () => import('./pages/supports/support/support.page').then(m => m.SupportPageComponent) },
   { path: 'settings', loadComponent: () => import('./pages//settings/settings.component').then(m => m.SettingsPageComponent)},
   { path: 'settings/email-notifications', loadComponent: () => import('./pages/settings/email-notification-settings/email-notification-settings.component').then(m => m.EmailNotificationSettingsComponent) },
   { path: 'settings/push-notifications', loadComponent: () => import('./pages/settings/push-notification-settings/push-notification-settings.component').then(m => m.PushNotificationsSettingsComponent) },
