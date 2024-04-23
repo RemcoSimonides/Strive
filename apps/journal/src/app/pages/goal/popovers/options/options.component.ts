@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, HostListener } from '@angular/core'
-import { AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { GoalService } from '@strive/goal/goal.service'
 import { AuthService } from '@strive/auth/auth.service'
@@ -16,10 +17,16 @@ export enum enumGoalOptions {
 }
 
 @Component({
+  standalone: true,
   selector: 'journal-goal-options-popover',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonList,
+    IonItem
+  ]
 })
 export class GoalOptionsPopoverComponent {
   @HostListener('window:popstate', ['$event'])

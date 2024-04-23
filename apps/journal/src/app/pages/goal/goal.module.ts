@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { RouterModule, Routes } from '@angular/router'
 import { GoalPageComponent } from './goal.page'
 
-import { GoalOptionsModule } from './popovers/options/options.module'
+import { GoalOptionsPopoverComponent } from './popovers/options/options.component'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 
 import { GoalUpdateModalComponent } from '@strive/goal/modals/upsert/update/update.component'
@@ -48,7 +48,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
 
     // Strive
-    GoalOptionsModule,
+    GoalOptionsPopoverComponent,
     GoalSharePopoverComponent,
     GoalUpdateModalComponent,
     AchieversModalComponent,
