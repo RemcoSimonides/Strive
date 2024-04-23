@@ -1,23 +1,46 @@
-import { Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { Router } from '@angular/router'
+import { FormsModule } from '@angular/forms'
+import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
-import { ModalController, Platform } from '@ionic/angular/standalone'
-import { getAuth } from 'firebase/auth'
-import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { isSafari } from '@strive/utils/helpers'
-import { PWAService } from '@strive/utils/services/pwa.service'
-import { AppVersionService } from '@strive/utils/services/app-version.service'
-import { ThemeService } from '@strive/utils/services/theme.service'
-import { ScreensizeService } from '@strive/utils/services/screensize.service'
+
+import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, IonListHeader, ModalController, Platform } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { moonOutline, sunnyOutline, downloadOutline, openOutline } from 'ionicons/icons'
 
+import { getAuth } from 'firebase/auth'
+
+import { PWAService } from '@strive/utils/services/pwa.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
+import { AppVersionService } from '@strive/utils/services/app-version.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { isSafari } from '@strive/utils/helpers'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+
 @Component({
+  standalone: true,
   selector: 'journal-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    HeaderComponent,
+    ImageDirective,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonListHeader
+  ]
 })
 export class SettingsPageComponent {
 
