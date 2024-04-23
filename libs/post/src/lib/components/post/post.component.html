@@ -1,40 +1,43 @@
-<ion-card *ngIf="post && author">
-  <header>
-    <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
-      <img [ref]="author.photoURL" asset="profile.png" [width]="120" [height]="120" />
-    </ion-avatar>
-    <article>
-      <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
-      <small>{{ post.date | date:'longDate' }}</small>
-    </article>
-    <ion-button fill="clear" size="small" *ngIf="stakeholder.isAdmin || (stakeholder.isAchiever && stakeholder.uid === author.uid)" (click)="openPostOptions($event)">
-      <ion-icon slot="icon-only" name="ellipsis-vertical-outline" />
-    </ion-button>
-  </header>
+@if (post && author) {
+  <ion-card>
+    <header>
+      <ion-avatar class="clickable" item-start routerDirection="root" [routerLink]="['/profile/', author.uid]">
+        <img [ref]="author.photoURL" asset="profile.png" [width]="120" [height]="120" />
+      </ion-avatar>
+      <article>
+        <span routerDirection="root" [routerLink]="['/profile/', author.uid]" class="username clickable">{{ author.username }}</span>
+        <small>{{ post.date | date:'longDate' }}</small>
+      </article>
+      @if (stakeholder.isAdmin || (stakeholder.isAchiever && stakeholder.uid === author.uid)) {
+        <ion-button fill="clear" size="small" (click)="openPostOptions($event)">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-outline" />
+        </ion-button>
+      }
+    </header>
+    @if (post.youtubeId; as id) {
+      <iframe
+        height="500"
+        [src]="('https://www.youtube-nocookie.com/embed/'+ id) | safe:'resourceUrl'"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    } @else {
+      <swiper-container pagination="true">
+        @for (media of post.medias; track media; let index = $index) {
+          <swiper-slide>
+            <img [ref]="media | mediaRef" asset="" (click)="openZoom(index)">
+          </swiper-slide>
+        }
+      </swiper-container>
+    }
 
-  <ng-container *ngIf="post.youtubeId as id; else media">
-    <iframe
-      height="500"
-      [src]="('https://www.youtube-nocookie.com/embed/'+ id) | safe:'resourceUrl'"
-      title="YouTube video player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-    ></iframe>
-  </ng-container>
-
-  <ng-template #media>
-    <swiper-container pagination="true">
-      <ng-container *ngFor="let media of post.medias; let index = index">
-        <swiper-slide>
-          <img [ref]="media | mediaRef" asset="" (click)="openZoom(index)">
-        </swiper-slide>
-      </ng-container>
-    </swiper-container>
-  </ng-template>
-
-  <ion-card-content *ngIf="post.description || post.url">
-    <p [innerHTML]="post.description | toHTML"></p>
-    <a [href]="post.url" target="_blank" rel="noreferrer noopener">{{ post.url }}</a>
-  </ion-card-content>
-</ion-card>
+    @if (post.description || post.url) {
+      <ion-card-content>
+        <p [innerHTML]="post.description | toHTML"></p>
+        <a [href]="post.url" target="_blank" rel="noreferrer noopener">{{ post.url }}</a>
+      </ion-card-content>
+    }
+  </ion-card>
+}

@@ -13,13 +13,13 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="mode === 'create'">
+  @if (mode === 'create') {
     <p><small>Create a memory for a lifetime. Someday you'll look back at your goals and see this post.</small></p>
-  </ng-container>
+  }
 
   <form [formGroup]="postForm">
 
-    <ng-container *ngIf="postForm.youtubeId.valueChanges | async as id; else notYoutube">
+    @if (postForm.youtubeId.valueChanges | async; as id) {
       <iframe
         height="300"
         [src]="('https://www.youtube-nocookie.com/embed/' + id) | safe:'resourceUrl'"
@@ -28,11 +28,9 @@
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
       ></iframe>
-    </ng-container>
-
-    <ng-template #notYoutube>
+    } @else {
       <strive-images-selector [form]="postForm.get('medias')"/>
-    </ng-template>
+    }
 
     <ion-list lines="full">
       <ion-item>
@@ -65,7 +63,9 @@
           placeholder="Link (youtube, strava, etc..)"
           class="primary"
         />
-        <ion-spinner *ngIf="scrapingUrl" slot="end" name="bubbles" color="primary"/>
+        @if (scrapingUrl) {
+          <ion-spinner slot="end" name="bubbles" color="primary"/>
+        }
       </ion-item>
     </ion-list>
   </form>
@@ -76,7 +76,9 @@
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button [disabled]="postForm.pristine || postForm.isEmpty || (saving$ | async)" (click)="submitPost()" fill="clear" color="primary">
-        <ion-spinner *ngIf="saving$ | async" slot="end" name="bubbles" color="primary" slot="start"/>
+        @if (saving$ | async) {
+          <ion-spinner slot="end" name="bubbles" color="primary" slot="start"/>
+        }
         <span>{{ mode === 'create' ? 'Submit to Story' : 'Save changes' }}</span>
       </ion-button>
     </ion-buttons>

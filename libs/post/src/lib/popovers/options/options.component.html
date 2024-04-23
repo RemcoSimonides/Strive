@@ -1,4 +1,6 @@
 <ion-list lines="full">
-	<ion-item button (click)="edit()" *ngIf="stakeholder.uid === post.uid">Edit</ion-item>
-	<ion-item button (click)="remove()" lines="none">Remove</ion-item>
+  @if (stakeholder.uid === post.uid) {
+    <ion-item button (click)="edit()">Edit</ion-item>
+  }
+  <ion-item button (click)="remove()" lines="none">Remove</ion-item>
 </ion-list>

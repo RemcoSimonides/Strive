@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
 
 import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
@@ -15,10 +14,9 @@ import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.compon
 	styleUrls: ['./options.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [
-		CommonModule,
-		UpsertPostModalComponent,
-		IonList,
-		IonItem
+    UpsertPostModalComponent,
+    IonList,
+    IonItem
 	]
 })
 export class PostOptionsComponent {
