@@ -26,11 +26,10 @@ import { PersonalService } from '@strive/user/personal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AppVersionService } from '@strive/utils/services/app-version.service'
 import { AuthService } from '@strive/auth/auth.service'
+import { PWAService } from '@strive/utils/services/pwa.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-import { ThemeService } from '@strive/utils/services/theme.service'
-import { TabsModule } from './pages/tabs/tabs.module'
-import { PWAService } from '@strive/utils/services/pwa.service'
 
 @Component({
   selector: 'journal-root',
@@ -40,7 +39,7 @@ import { PWAService } from '@strive/utils/services/pwa.service'
     CommonModule,
     RouterModule,
     RouterOutlet,
-    TabsModule,
+    TabsComponent,
     IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
     ImageDirective
   ],

@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { NavigationEnd, Router } from '@angular/router'
+import { NavigationEnd, Router, RouterModule } from '@angular/router'
+
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonAvatar } from '@ionic/angular/standalone'
 
 import { combineLatest } from 'rxjs'
 import { filter, map, shareReplay, startWith } from 'rxjs/operators'
@@ -9,11 +12,24 @@ import { AuthService } from '@strive/auth/auth.service'
 import { SupportService } from '@strive/support/support.service'
 import { addIcons } from 'ionicons'
 import { flagSharp, barbellSharp } from 'ionicons/icons'
+import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
+  standalone: true,
   templateUrl: 'tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ImageDirective,
+    RouterModule,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel,
+    IonAvatar
+  ]
 })
 export class TabsComponent {
 
