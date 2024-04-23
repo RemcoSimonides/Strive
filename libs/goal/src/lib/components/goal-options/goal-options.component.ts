@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 
@@ -15,7 +14,6 @@ import { AuthService } from '@strive/auth/auth.service'
   templateUrl: './goal-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     UpsertPostModalComponent,
     IonList,
     IonItem

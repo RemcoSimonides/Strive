@@ -1,12 +1,11 @@
-<ng-container *ngIf="goal">
+@if (goal) {
   <strive-roadmap
     [goal]="goal"
     [milestones]="milestones$ | async"
     [stakeholder]="stakeholder"
     [createMode]="true"
   />
-
-  <ng-container *ngIf="goal.title.length > 4 && (goal.deadline | isFuture)">
+  @if (goal.title.length > 4 && (goal.deadline | isFuture)) {
     <strive-suggestion [goalId]="goal.id" [milestones]="milestones$ | async" />
-  </ng-container>
-</ng-container>
+  }
+}

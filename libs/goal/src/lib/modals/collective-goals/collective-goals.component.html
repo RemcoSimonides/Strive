@@ -4,7 +4,7 @@
   <small>These people are striving for the same goal. Each with their own Roadmap and Story.</small>
 
   <ion-list>
-    <ng-container *ngFor="let stakeholder of stakeholders; let last = last">
+    @for (stakeholder of stakeholders; track stakeholder; let last = $last) {
       <ion-item [lines]="last ? 'none' : 'full'" button (click)="navTo(stakeholder.goalId)">
         <ion-avatar slot="start" (click)="navTo(stakeholder.goalId)">
           <img [ref]="stakeholder.profile?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
@@ -16,7 +16,7 @@
           </article>
         </ion-label>
       </ion-item>
-    </ng-container>
+    }
   </ion-list>
 
 </ion-content>

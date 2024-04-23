@@ -1,37 +1,36 @@
-<form *ngIf="form" [formGroup]="form">
-  <ion-list lines="full">
-    <ion-item lines="none">
-      <ion-label color="primary">What do you want to achieve?</ion-label>
-    </ion-item>
-    <ion-item class="what">
-      <ion-input
-        formControlName="title"
-        type="text"
-        placeholder="I want to ..."
-        maxlength="60"
-        autocapitalize="sentences"
-        [autofocus]="true"
-      />
-    </ion-item>
-
-    <ion-item>
-      <ion-input
-        [value]="form.deadline.value | date:'longDate'"
-        (ionFocus)="openDatePicker()"
-        placeholder="dd/mm/yyyy"
-        label="When should the goal be finished?"
-        labelPlacement="stacked"
-        class="primary"
-      />
-    </ion-item>
-
-    <ion-item lines="none">
-      <ion-label position="stacked" color="primary">Who can see this goal?</ion-label>
-      <ion-select interface="popover" formControlName="publicity">
-        <ion-select-option value="public">Everyone</ion-select-option>
-        <ion-select-option value="private">You or invited users only</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-
-</form>
+@if (form) {
+  <form [formGroup]="form">
+    <ion-list lines="full">
+      <ion-item lines="none">
+        <ion-label color="primary">What do you want to achieve?</ion-label>
+      </ion-item>
+      <ion-item class="what">
+        <ion-input
+          formControlName="title"
+          type="text"
+          placeholder="I want to ..."
+          maxlength="60"
+          autocapitalize="sentences"
+          [autofocus]="true"
+        />
+      </ion-item>
+      <ion-item>
+        <ion-input
+          [value]="form.deadline.value | date:'longDate'"
+          (ionFocus)="openDatePicker()"
+          placeholder="dd/mm/yyyy"
+          label="When should the goal be finished?"
+          labelPlacement="stacked"
+          class="primary"
+        />
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label position="stacked" color="primary">Who can see this goal?</ion-label>
+        <ion-select interface="popover" formControlName="publicity">
+          <ion-select-option value="public">Everyone</ion-select-option>
+          <ion-select-option value="private">You or invited users only</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </form>
+}

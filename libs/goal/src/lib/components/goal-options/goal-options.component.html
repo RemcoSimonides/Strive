@@ -1,10 +1,12 @@
 <ion-list lines="full">
-  <ng-container *ngIf="stakeholder.isAchiever">
-    <ion-item *ngIf="goal.status === 'pending'" button (click)="markFinished()">Mark as Finished</ion-item>
-  </ng-container>
+  @if (stakeholder.isAchiever) {
+    @if (goal.status === 'pending') {
+      <ion-item button (click)="markFinished()">Mark as Finished</ion-item>
+    }
+  }
   <!-- Remove View goal if there is an action for 'finished' goals -->
   <ion-item button (click)="goTo()">View goal</ion-item>
-  <ng-container *ngIf="stakeholder.isAdmin">
+  @if (stakeholder.isAdmin) {
     <ion-item button lines="none" (click)="deleteGoal()">Delete goal</ion-item>
-  </ng-container>
+  }
 </ion-list>

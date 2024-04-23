@@ -1,24 +1,32 @@
 <ion-card button>
-	<section>
-		<ion-thumbnail>
-			<img [ref]="goal.image" asset="goal.png" [width]="120" [height]="120" />
-			<div *ngIf="goal.status !== 'pending'" class="finished-overlay">
-				<ion-icon name="checkmark-outline"/>
-			</div>
-		</ion-thumbnail>
-		<article>
-			<span>{{ goal.title }}</span>
-			<ng-content />
-			<ion-progress-bar color="primary" [value]="goal | progress" />
-		</article>
-		<ion-button *ngIf="_stakeholder.isAdmin || _stakeholder.isAchiever" fill="clear" size="small" (click)="openGoalOptions($event)">
-			<ion-icon slot="icon-only" name="ellipsis-vertical" />
-		</ion-button>
-		<ul *ngIf="messages.length">
-			<li *ngFor="let event of messages">
-				<ion-icon [name]="event.icon" />
-				<span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
-			</li>
-		</ul>
-	</section>
+  <section>
+    <ion-thumbnail>
+      <img [ref]="goal.image" asset="goal.png" [width]="120" [height]="120" />
+      @if (goal.status !== 'pending') {
+        <div class="finished-overlay">
+          <ion-icon name="checkmark-outline"/>
+        </div>
+      }
+    </ion-thumbnail>
+    <article>
+      <span>{{ goal.title }}</span>
+      <ng-content />
+      <ion-progress-bar color="primary" [value]="goal | progress" />
+    </article>
+    @if (_stakeholder.isAdmin || _stakeholder.isAchiever) {
+      <ion-button fill="clear" size="small" (click)="openGoalOptions($event)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical" />
+      </ion-button>
+    }
+    @if (messages.length) {
+      <ul>
+        @for (event of messages; track event) {
+          <li>
+            <ion-icon [name]="event.icon" />
+            <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </section>
 </ion-card>

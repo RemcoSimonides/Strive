@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonProgressBar, ModalController } from '@ionic/angular/standalone'
@@ -11,7 +11,6 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
     ImageDirective,
     ProgressPipe,
     HeaderModalComponent,

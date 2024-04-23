@@ -3,9 +3,11 @@
   [spaceBetween]="gap"
   [width]="width"
 >
-  <ng-container *ngIf="thumbs">
-    <swiper-slide *ngFor="let thumb of thumbs">
-      <ng-container *ngTemplateOutlet="thumb" />
-    </swiper-slide>
-  </ng-container>
+  @if (thumbs) {
+    @for (thumb of thumbs; track thumb) {
+      <swiper-slide>
+        <ng-container *ngTemplateOutlet="thumb" />
+      </swiper-slide>
+    }
+  }
 </swiper-container>

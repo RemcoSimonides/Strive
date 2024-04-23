@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Share } from '@capacitor/share'
 
@@ -18,7 +17,6 @@ import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.com
   styleUrls: ['./share.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GoalSharePopoverComponent,
     IonButton,
     IonIcon

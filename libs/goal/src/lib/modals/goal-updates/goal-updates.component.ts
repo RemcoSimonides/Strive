@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 
 import { IonContent, IonIcon, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -18,7 +18,6 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
   templateUrl: 'goal-updates.component.html',
   styleUrls: ['./goal-updates.component.scss'],
   imports: [
-    CommonModule,
     ImageDirective,
     GoalThumbnailComponent,
     HeaderModalComponent,

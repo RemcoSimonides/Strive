@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -19,7 +19,6 @@ import { AuthService } from '@strive/auth/auth.service'
   styleUrls: ['./update.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GoalDetailsComponent,
     GoalImagesComponent,
     IonHeader,

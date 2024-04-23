@@ -1,42 +1,46 @@
-<ng-container *ngIf="stepper$ | async as step">
+@if (stepper$ | async; as step) {
   <ion-header>
     <ion-toolbar color="primary">
-
       <ion-buttons slot="end">
         <ion-button (click)="close()">
           <ion-icon slot="icon-only" name="close" />
         </ion-button>
       </ion-buttons>
-
       <ion-title>Create Goal</ion-title>
-
     </ion-toolbar>
   </ion-header>
-
-  <ng-container [ngSwitch]="step">
-    <ion-content *ngSwitchCase="'details'" class="ion-padding">
-      <small>Without a clear target, you'll never hit your mark. That's why it's crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you've lost one kilo? Five? Forty?</small>
-      <strive-goal-details [form]="form" />
-    </ion-content>
-    <ion-content *ngSwitchCase="'images'" class="ion-padding">
-      <small>Visualizing what the end result looks like will help filter out distractions and increase the chance of you reaching your goal. What does your end result look like?</small>
-      <strive-goal-images [goalId]="goal.id" [form]="form" />
-    </ion-content>
-    <ion-content *ngSwitchCase="'roadmap'" class="ion-padding">
-      <small>Break your goal up in smaller steps (milestones). Start with the end goal in mind, then think backwards which steps need to be taken in order to get to the end.</small>
-      <strive-goal-roadmap [goal]="goal" />
-    </ion-content>
-    <ion-content *ngSwitchCase="'share'" class="ion-padding">
-      <strive-goal-share [goal]="goal" />
-    </ion-content>
-  </ng-container>
-
+  @switch (step) {
+    @case ('details') {
+      <ion-content class="ion-padding">
+        <small>Without a clear target, you'll never hit your mark. That's why it's crucial to learn how to set goals that are clear, measurable and actionable. If your goal is to “lose weight,” how will you know when that goal is complete? When you've lost one kilo? Five? Forty?</small>
+        <strive-goal-details [form]="form" />
+      </ion-content>
+    }
+    @case ('images') {
+      <ion-content class="ion-padding">
+        <small>Visualizing what the end result looks like will help filter out distractions and increase the chance of you reaching your goal. What does your end result look like?</small>
+        <strive-goal-images [goalId]="goal.id" [form]="form" />
+      </ion-content>
+    }
+    @case ('roadmap') {
+      <ion-content class="ion-padding">
+        <small>Break your goal up in smaller steps (milestones). Start with the end goal in mind, then think backwards which steps need to be taken in order to get to the end.</small>
+        <strive-goal-roadmap [goal]="goal" />
+      </ion-content>
+    }
+    @case ('share') {
+      <ion-content class="ion-padding">
+        <strive-goal-share [goal]="goal" />
+      </ion-content>
+    }
+  }
   <ion-footer>
     <ion-toolbar>
-      <ion-buttons *ngIf="step !== 'details'" slot="start">
-        <ion-button (click)="stepper('previous')" fill="clear" color="primary">Previous</ion-button>
-      </ion-buttons>
-
+      @if (step !== 'details') {
+        <ion-buttons slot="start">
+          <ion-button (click)="stepper('previous')" fill="clear" color="primary">Previous</ion-button>
+        </ion-buttons>
+      }
       <ion-buttons slot="end">
         <ion-button (click)="stepper('next')" [disabled]="form.invalid" color="primary" fill="solid">
           {{ step === 'share' ? 'Finish' : 'Next' }}
@@ -44,4 +48,4 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-footer>
-</ng-container>
+}

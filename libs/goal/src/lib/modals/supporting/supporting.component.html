@@ -5,14 +5,14 @@
 <ion-content class="ion-no-padding">
 
   <ion-list>
-    <ng-container *ngFor="let goal of goals; let last = last">
+    @for (goal of goals; track goal; let last = $last) {
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(goal.id)">
         <ion-thumbnail slot="start">
           <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120" />
         </ion-thumbnail>
         <ion-label>{{ goal.title }}</ion-label>
       </ion-item>
-    </ng-container>
+    }
   </ion-list>
 
 </ion-content>

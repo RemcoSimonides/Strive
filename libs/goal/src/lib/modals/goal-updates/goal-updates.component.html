@@ -2,29 +2,39 @@
 
 <ion-content class="ion-padding">
 
-	<strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" (click)="navTo(stakeholder.goal.id)">
-		<article>
-			<small *ngIf="stakeholder.goal.publicity === 'private'">
-				<ion-icon name="lock-closed-outline" />
-				<span>Private</span>
-			</small>
-			<small *ngIf="stakeholder.isAdmin">
-				<ion-icon name="shield" />
-				<span>Admin</span>
-			</small>
-			<small *ngIf="stakeholder.isAchiever">
-				<ion-icon name="flag" />
-				<span>Achiever</span>
-			</small>
-			<small *ngIf="stakeholder.isSupporter">
-				<ion-icon src="assets/icons/hand-holding-heart-solid.svg" />
-				<span>Supporter</span>
-			</small>
-			<small *ngIf="stakeholder.isSpectator">
-				<ion-icon name="star" />
-				<span>Follower</span>
-			</small>
-		</article>
-	</strive-goal-thumbnail>
+  <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" (click)="navTo(stakeholder.goal.id)">
+    <article>
+      @if (stakeholder.goal.publicity === 'private') {
+        <small>
+          <ion-icon name="lock-closed-outline" />
+          <span>Private</span>
+        </small>
+      }
+      @if (stakeholder.isAdmin) {
+        <small>
+          <ion-icon name="shield" />
+          <span>Admin</span>
+        </small>
+      }
+      @if (stakeholder.isAchiever) {
+        <small>
+          <ion-icon name="flag" />
+          <span>Achiever</span>
+        </small>
+      }
+      @if (stakeholder.isSupporter) {
+        <small>
+          <ion-icon src="assets/icons/hand-holding-heart-solid.svg" />
+          <span>Supporter</span>
+        </small>
+      }
+      @if (stakeholder.isSpectator) {
+        <small>
+          <ion-icon name="star" />
+          <span>Follower</span>
+        </small>
+      }
+    </article>
+  </strive-goal-thumbnail>
 
 </ion-content>

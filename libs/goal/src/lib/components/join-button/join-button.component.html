@@ -6,8 +6,8 @@
 <ion-popover #popover>
   <ng-template>
 
-    <ng-container [ngSwitch]="status$ | async">
-      <ng-container *ngSwitchCase="'choose'">
+    @switch (status$ | async) {
+      @case ('choose') {
         <ion-list lines="full">
           <ion-item (click)="joinGoal()" button>
             <section>
@@ -39,32 +39,28 @@
             </section>
           </ion-item>
         </ion-list>
-      </ng-container>
-
-      <ng-container *ngSwitchCase="'creating'">
+      }
+      @case ('creating') {
         <article class="creating">
           <span>Creating separate goal...</span>
           <ion-spinner name="lines" color="primary" />
           <small>This usually takes around 10 seconds</small>
         </article>
-      </ng-container>
-
-      <ng-container *ngSwitchCase="'created'">
+      }
+      @case ('created') {
         <article class="creating">
           <span>Your goal is ready</span>
           <small>We wish you the best of luck achieving.</small>
           <ion-button (click)="dismiss()" color="primary" fill="clear">Ok</ion-button>
         </article>
-      </ng-container>
-
-      <ng-container *ngSwitchCase="'requested'">
+      }
+      @case ('requested') {
         <article class="creating">
           <span>Request Sent</span>
           <small>You'll be an achiever in this goal once your request has been accepted</small>
           <ion-button (click)="dismiss()" color="primary" fill="clear">Ok</ion-button>
         </article>
-      </ng-container>
-
-    </ng-container>
+      }
+    }
   </ng-template>
 </ion-popover>

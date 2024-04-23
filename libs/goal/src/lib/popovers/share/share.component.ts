@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component, HostListener, Input } from '@angular/core'
 import { IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'
 import { ShareComponent } from '@strive/ui/share/share.component'
@@ -11,7 +10,6 @@ import { shareSocialOutline } from 'ionicons/icons'
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
   imports: [
-    CommonModule,
     ShareComponent,
     IonButton,
     IonIcon

@@ -1,10 +1,12 @@
-<ion-card [ngStyle]="{'display': showImageSelector ? 'block' : 'none'}" *ngIf="form">
-  <strive-image-selector
-    [form]="form.image"
-    [storagePath]="'goals/' + goalId"
-    defaultImage="goal.png"
-  />
-</ion-card>
+@if (form) {
+  <ion-card [ngStyle]="{'display': showImageSelector ? 'block' : 'none'}">
+    <strive-image-selector
+      [form]="form.image"
+      [storagePath]="'goals/' + goalId"
+      defaultImage="goal.png"
+    />
+  </ion-card>
+}
 
 <header>
   <article>
@@ -21,21 +23,21 @@
   <small class="poweredby">Powered by Pexels&#8482;</small>
 </header>
 
-<ng-container *ngIf="images$ | async as images; else loading">
-  <ng-container *ngIf="images; else loading">
-
-    <ng-container *ngIf="images.length; else empty">
+@if (images$ | async; as images) {
+  @if (images) {
+    @if (images.length) {
       <ul>
-        <ng-container *ngFor="let image of images">
+        @for (image of images; track image) {
           <li (click)="selectImage(image.src)">
             <img [src]="image.src">
-            <div *ngIf="image.selected">
-              <ion-icon name="checkmark-outline" />
-              <span>SELECTED</span>
-            </div>
+            @if (image.selected) {
+              <div>
+                <ion-icon name="checkmark-outline" />
+                <span>SELECTED</span>
+              </div>
+            }
           </li>
-        </ng-container>
-
+        }
         <ion-infinite-scroll position="bottom" threshold="100px" (ionInfinite)="more($event)" [disabled]="done$ | async">
           <ion-infinite-scroll-content
             loadingSpinner="bubbles"
@@ -43,20 +45,23 @@
           />
         </ion-infinite-scroll>
       </ul>
-    </ng-container>
-
-  </ng-container>
-</ng-container>
-
-<ng-template #loading>
+    } @else {
+      <section>
+        @if (queryFormControl.dirty) {
+          <p>Couldn't find any image</p>
+        }
+        @if (queryFormControl.pristine) {
+          <p>Search to find an image</p>
+        }
+      </section>
+    }
+  } @else {
+    <section>
+      <ion-spinner name="lines" color="primary"></ion-spinner>
+    </section>
+  }
+} @else {
   <section>
     <ion-spinner name="lines" color="primary"></ion-spinner>
   </section>
-</ng-template>
-
-<ng-template #empty>
-  <section>
-    <p *ngIf="queryFormControl.dirty">Couldn't find any image</p>
-    <p *ngIf="queryFormControl.pristine">Search to find an image</p>
-  </section>
-</ng-template>
+}

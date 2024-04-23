@@ -12,10 +12,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" *ngIf="form && goal">
-  <strive-goal-details [form]="form" />
-  <strive-goal-images [goalId]="goal.id" [form]="form" />
-</ion-content>
+@if (form && goal) {
+  <ion-content class="ion-padding">
+    <strive-goal-details [form]="form" />
+    <strive-goal-images [goalId]="goal.id" [form]="form" />
+  </ion-content>
+}
 
 <ion-footer>
   <ion-toolbar>

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 
 import { IonTitle, IonContent, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
 
@@ -16,7 +16,6 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   styleUrls: ['./supporting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ImageDirective,
     HeaderModalComponent,
     IonTitle,
