@@ -13,7 +13,7 @@ import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-
 import { HomePageModule } from '../home/home.module'
 import { GoalThumbnailModule } from '@strive/goal/components/thumbnail/thumbnail.module'
 import { GoalUpdatesModalModule } from '@strive/goal/modals/goal-updates/goal-updates.module'
-import { MiniThumbnailSwiperModule } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.module'
+import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.component'
 
 import { CardsModalComponent } from '@strive/exercises/daily-gratitude/modals/cards/cards-modal.component'
 import { AffirmModalComponent } from '@strive/exercises/affirmation/modals/affirm-modal.component'
@@ -41,7 +41,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     GoalThumbnailModule,
     GoalUpdatesModalModule,
-    MiniThumbnailSwiperModule,
+    MiniThumbnailSwiperComponent,
 
     CardsModalComponent,
     AffirmModalComponent,
