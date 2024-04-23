@@ -9,7 +9,7 @@ import { ProfilePageComponent } from './profile.page'
 // Followers / Followings
 import { FollowingComponent } from '@strive/spectator/components/following/following.component'
 import { FollowersComponent } from '@strive/spectator/components/followers/followers.component'
-import { SupportingModule } from '@strive/goal/modals/supporting/supporting.module'
+import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.component'
 
 // Strive
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
@@ -48,7 +48,7 @@ const routes: Routes = [
     ImageZoomModalComponent,
     HeaderRootComponent,
     HeaderComponent,
-    SupportingModule,
+    SupportingComponent,
     GoalThumbnailComponent,
     PagenotfoundComponent,
     GoalCreateModalComponent,
