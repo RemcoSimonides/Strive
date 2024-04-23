@@ -4,8 +4,8 @@
 	</ion-button>
 </strive-header-modal>
 
-<ng-container *ngIf="stakeholder$ | async as stakeholder">
-	<ng-container *ngIf="stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter else noAccess">
+@if (stakeholder$ | async; as stakeholder) {
+	@if (stakeholder.isAdmin || stakeholder.isAchiever || stakeholder.isSupporter) {
 		<ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
 			<ul>
 				<ion-infinite-scroll position="top" threshold="100px" (ionInfinite)="more($event)" [disabled]="done$ | async">
@@ -15,14 +15,16 @@
 					/>
 				</ion-infinite-scroll>
 
-				<li *ngFor="let comment of comments$ | async; else loading" [ngClass]="{'my-message': comment.userId === stakeholder.uid}" #item>
-					<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
-					<article>
-						<small class="username"><b>{{ comment.user?.username }}</b></small>
-						<div class="comment" [innerHTML]="comment.text | toHTML | toThinking: comment | async"></div>
-						<small class="date">{{ comment.createdAt | timeAgo }}</small>
-					</article>
-				</li>
+				@for (comment of comments$ | async; track comment) {
+					<li [ngClass]="{'my-message': comment.userId === stakeholder.uid}" #item>
+						<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
+						<article>
+							<small class="username"><b>{{ comment.user?.username }}</b></small>
+							<div class="comment" [innerHTML]="comment.text | toHTML | toThinking: comment | async"></div>
+							<small class="date">{{ comment.createdAt | timeAgo }}</small>
+						</article>
+					</li>
+				}
 			</ul>
 		</ion-content>
 
@@ -32,9 +34,8 @@
 				<ion-icon name="send" (click)="addReply()" />
 			</ion-item>
 		</ion-footer>
-	</ng-container>
+	} @else {
 
-	<ng-template #noAccess>
 		<section>
 			<p>In order to chat, you need to</p>
 			<strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder" />
@@ -44,7 +45,7 @@
 				<span>Support</span>
 			</ion-button>
 		</section>
-	</ng-template>
+	}
 
 	<ion-popover trigger="popover-button" [dismissOnSelect]="true">
 		<ng-template>
@@ -56,7 +57,7 @@
 			</ion-content>
 		</ng-template>
 	</ion-popover>
-</ng-container>
+}
 
 <ng-template #loading>
 	<strive-page-loading />
