@@ -1,13 +1,13 @@
 <ion-list lines="full">
-	<ng-container *ngIf="manageRoles">
-		<ion-item (click)="toggleAchiever()" button>
-			<ion-label>{{ stakeholder.isAchiever ? 'Revoke Achiever role' : 'Make Achiever' }}</ion-label>
-		</ion-item>
-		<ion-item (click)="toggleAdmin()" button>
-			<ion-label>{{ stakeholder.isAdmin ? 'Revoke Admin role' : 'Give Admin role' }}</ion-label>
-		</ion-item>
-	</ng-container>
-	<ion-item (click)="remove()" button lines="none">
-		<ion-label>Remove from goal</ion-label>
-	</ion-item>
+  @if (manageRoles) {
+    <ion-item (click)="toggleAchiever()" button>
+      <ion-label>{{ stakeholder.isAchiever ? 'Revoke Achiever role' : 'Make Achiever' }}</ion-label>
+    </ion-item>
+    <ion-item (click)="toggleAdmin()" button>
+      <ion-label>{{ stakeholder.isAdmin ? 'Revoke Admin role' : 'Give Admin role' }}</ion-label>
+    </ion-item>
+  }
+  <ion-item (click)="remove()" button lines="none">
+    <ion-label>Remove from goal</ion-label>
+  </ion-item>
 </ion-list>

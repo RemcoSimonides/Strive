@@ -8,12 +8,12 @@ import { GoalStakeholderService } from '../../stakeholder.service'
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
-		ReactiveFormsModule,
-		IonList,
-		IonItem,
-		IonLabel
-  ],
+		CommonModule,
+    ReactiveFormsModule,
+    IonList,
+    IonItem,
+    IonLabel
+],
 	selector: '[goalId][stakeholder] strive-stakeholder-roles',
 	templateUrl: './roles.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
