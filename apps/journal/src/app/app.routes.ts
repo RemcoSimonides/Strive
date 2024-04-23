@@ -17,7 +17,7 @@ export const routes: Routes = [
   { path: 'privacy-policy', loadComponent: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageComponent) },
   { path: 'profile', loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePageComponent) },
   { path: 'profile/:id', loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePageComponent) },
-  { path: 'supports', loadChildren: () => import('./pages/supports/supports.module').then(m => m.SupportsPageModule) },
+  { path: 'supports', loadComponent: () => import('./pages/supports/supports.page').then(m => m.SupportsPageComponent) },
   { path: 'supports/:id', loadComponent: () => import('./pages/supports/support/support.page').then(m => m.SupportPageComponent) },
   { path: 'settings', loadComponent: () => import('./pages//settings/settings.component').then(m => m.SettingsPageComponent)},
   { path: 'settings/email-notifications', loadComponent: () => import('./pages/settings/email-notification-settings/email-notification-settings.component').then(m => m.EmailNotificationSettingsComponent) },

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
+
+import { IonContent, IonRefresher, IonRefresherContent, ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -19,12 +20,30 @@ import { ProfileService } from '@strive/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
+import { SupportListComponent } from '@strive/support/components/list/list.component'
+import { MilestonePathPipe } from '@strive/roadmap/pipes/path.pipe'
 
 @Component({
+  standalone: true,
   selector: 'journal-supports',
   templateUrl: './supports.page.html',
   styleUrls: ['./supports.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    PageLoadingComponent,
+    HeaderRootComponent,
+    SupportListComponent,
+    MilestonePathPipe,
+    IonContent,
+    IonRefresher,
+    IonRefresherContent
+  ]
 })
 export class SupportsPageComponent {
 
