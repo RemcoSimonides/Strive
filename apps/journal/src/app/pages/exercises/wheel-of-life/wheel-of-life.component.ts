@@ -1,7 +1,9 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
-import { FormControl } from '@angular/forms'
-import { Router } from '@angular/router'
-import { ModalController } from '@ionic/angular/standalone'
+import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { Router, RouterModule } from '@angular/router'
+
+import { IonContent, IonSelect, IonSelectOption, IonButton, IonIcon, IonCard, IonCardContent, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { add } from 'ionicons/icons'
 
@@ -17,14 +19,39 @@ import { AuthService } from '@strive/auth/auth.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { WheelOfLifeEntryService, WheelOfLifeService } from '@strive/exercises/wheel-of-life/wheel-of-life.service'
-import { getPreviousEntry } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
+import { PreviousEntryPipe, TodayEntryPipe, getPreviousEntry } from '@strive/exercises/wheel-of-life/pipes/entry.pipe'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { WheelOfLifeEntryComponent } from '@strive/exercises/wheel-of-life/components/entry/entry.component'
+import { WheelOfLifeResultsComponent } from '@strive/exercises/wheel-of-life/components/results/results.component'
 
 
 @Component({
+  standalone: true,
   selector: 'journal-wheel-of-life',
   templateUrl: './wheel-of-life.component.html',
   styleUrls: ['./wheel-of-life.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    PageLoadingComponent,
+    AuthModalComponent,
+    HeaderComponent,
+    WheelOfLifeEntryComponent,
+    EntryModalComponent,
+    WheelOfLifeResultsComponent,
+    TodayEntryPipe, PreviousEntryPipe,
+    GoalCreateModalComponent,
+    IonContent,
+    IonSelect,
+    IonSelectOption,
+    IonButton,
+    IonIcon,
+    IonCard,
+    IonCardContent
+  ]
 })
 export class WheelOfLifePageComponent implements OnDestroy {
   uid$ = this.auth.uid$

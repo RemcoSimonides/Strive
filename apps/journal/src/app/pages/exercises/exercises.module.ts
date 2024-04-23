@@ -26,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'wheel-of-life',
-    loadChildren: () => import('./wheel-of-life/wheel-of-life.module').then(m => m.WheelOfLifeModule)
+    loadComponent: () => import('./wheel-of-life/wheel-of-life.component').then(m => m.WheelOfLifePageComponent)
   },
   {
     path: 'dear-future-self',
