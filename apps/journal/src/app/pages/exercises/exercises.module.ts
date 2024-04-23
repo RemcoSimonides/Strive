@@ -30,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'dear-future-self',
-    loadChildren: () => import('./dear-future-self/dear-future-self.module').then(m => m.DearFutureSelfModule)
+    loadComponent: () => import('./dear-future-self/dear-future-self.component').then(m => m.DearFutureSelfPageComponent)
   },
   {
     path: 'self-reflect',

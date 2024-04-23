@@ -1,8 +1,16 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
-import { FormControl } from '@angular/forms'
-import { ModalController } from '@ionic/angular/standalone'
+import { FormControl, ReactiveFormsModule } from '@angular/forms'
+
+import { IonContent, IonCard, IonItem, IonTextarea, IonButton, IonDatetime, IonIcon, IonList, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { checkmarkOutline, mailOutline, mailOpenOutline } from 'ionicons/icons'
+
+import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
+import { AES, enc } from 'crypto-js'
+import { addDays, addYears, endOfYear, format, isFuture, isPast } from 'date-fns'
+
 import { Message } from '@strive/model'
 import { DearFutureSelfService } from '@strive/exercises/dear-future-self/dear-future-self.service'
 
@@ -13,10 +21,10 @@ import { AuthService } from '@strive/auth/auth.service'
 import { PersonalService } from '@strive/user/personal.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
-
-import { addDays, addYears, endOfYear, format, isFuture, isPast } from 'date-fns'
-import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
-import { AES, enc } from 'crypto-js'
+import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
 
 const initial = `Dear Future Self,
 
@@ -24,10 +32,30 @@ const initial = `Dear Future Self,
 `
 
 @Component({
+  standalone: true,
   selector: 'journal-dear-future-self',
   templateUrl: './dear-future-self.component.html',
   styleUrls: ['./dear-future-self.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TimeToGoPipe,
+    TimeAgoPipe,
+    PageLoadingComponent,
+    AuthModalComponent,
+    HeaderComponent,
+    MessageModalComponent,
+    IonContent,
+    IonCard,
+    IonItem,
+    IonTextarea,
+    IonButton,
+    IonDatetime,
+    IonIcon,
+    IonList
+  ]
 })
 export class DearFutureSelfPageComponent {
   description = new FormControl(initial)
