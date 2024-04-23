@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: 'explore', loadComponent: () => import('./pages/explore/explore.page').then(m => m.ExplorePageComponent) },
   { path: 'goals', loadComponent: () => import('./pages/goals/goals.page').then(m => m.GoalsPageComponent) },
   { path: 'goal/:id', loadComponent: () => import('./pages/goal/goal.page').then(m => m.GoalPageComponent) },
-  { path: 'notifications', loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsPageModule) },
+  { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsPageComponent) },
   { path: 'privacy-policy', loadComponent: () => import('@strive/ui/static-information/privacy/privacy-policy.page').then(m => m.PrivacyPolicyPageComponent) },
   { path: 'profile', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },
   { path: 'profile/:id', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule) },

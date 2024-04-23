@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
-import { ModalController } from '@ionic/angular/standalone'
+
+import { IonContent, IonIcon, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { chevronUpOutline } from 'ionicons/icons'
 
@@ -19,14 +22,32 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { SupportService } from '@strive/support/support.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
+
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { MessagePipe } from '@strive/notification/pipes/message.pipe'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 
 
 @Component({
+  standalone: true,
   selector: 'journal-notifications',
   templateUrl: 'notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    PageLoadingComponent,
+    MessagePipe,
+    ImageDirective,
+    TimeAgoPipe,
+    IonContent,
+    IonIcon
+  ]
 })
 export class NotificationsPageComponent implements OnInit {
 
