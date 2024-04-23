@@ -27,7 +27,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
-import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
+import { JoinButtonComponent } from '@strive/goal/components/join-button/join-button.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { ThinkingPipe } from '@strive/chat/pipes/thinking.pipe'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
@@ -44,7 +44,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
     ImageDirective,
     TimeAgoPipe,
     HTMLPipe,
-    JoinButtonModule,
+    JoinButtonComponent,
     AuthModalComponent,
     AddSupportModalComponent,
     HeaderModalComponent,

@@ -1,16 +1,17 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 
-import { AlertController, IonPopover, ModalController } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonIcon, IonItem, IonList, IonPopover, IonSpinner, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { flagOutline } from 'ionicons/icons'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { BehaviorSubject } from 'rxjs'
 
+import { AuthService } from '@strive/auth/auth.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { Goal, GoalStakeholder } from '@strive/model'
-import { AuthService } from '@strive/auth/auth.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 @Pipe({ name: 'joinButtonText', standalone: true })
@@ -24,10 +25,22 @@ export class JoinButtonTextSPipe implements PipeTransform {
 }
 
 @Component({
+  standalone: true,
   selector: '[goal][stakeholder] strive-goal-join-button',
   templateUrl: './join-button.component.html',
   styleUrls: ['./join-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    AuthModalComponent,
+    JoinButtonTextSPipe,
+    IonIcon,
+    IonPopover,
+    IonList,
+    IonItem,
+    IonButton,
+    IonSpinner
+  ]
 })
 export class JoinButtonComponent {
 

@@ -43,7 +43,7 @@ import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion
 import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
 import { StoryComponent } from '@strive/story/components/story/story.component'
 import { DescriptionComponent } from '@strive/ui/description/description.component'
-import { JoinButtonModule } from '@strive/goal/components/join-button/join-button.module'
+import { JoinButtonComponent } from '@strive/goal/components/join-button/join-button.component'
 import { SupportListComponent } from '@strive/support/components/list/list.component'
 import { AddSupportComponent } from '@strive/support/components/add/add.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
@@ -107,7 +107,7 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     RoadmapComponent,
     StoryComponent,
     DescriptionComponent,
-    JoinButtonModule,
+    JoinButtonComponent,
     SupportListComponent,
     AddSupportComponent,
     ChatModalComponent,
