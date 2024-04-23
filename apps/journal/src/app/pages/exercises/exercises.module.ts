@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'daily-gratitude',
-    loadChildren: () => import('./daily-gratitude/daily-gratitude.module').then(m => m.DailyGratitudeModule)
+    loadComponent: () => import('./daily-gratitude/daily-gratitude.component').then(m => m.DailyGratitudePageComponent)
   },
   {
     path: 'wheel-of-life',

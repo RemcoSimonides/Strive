@@ -1,6 +1,9 @@
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
-import { FormControl, FormGroup } from '@angular/forms'
-import { ModalController, PopoverController } from '@ionic/angular/standalone'
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
+
+import { IonContent, IonToggle, ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { of, switchMap, tap } from 'rxjs'
 import { addDays, isPast, set } from 'date-fns'
@@ -12,6 +15,10 @@ import { AuthService } from '@strive/auth/auth.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { ActivatePushNotificationsComponent } from '@strive/exercises/components/activate-push-notifications/activate-push-notifications.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { CardsComponent } from '@strive/exercises/daily-gratitude/components/cards/cards.component'
 
 interface DailyGratitudeSetting {
   on: boolean
@@ -19,10 +26,25 @@ interface DailyGratitudeSetting {
 }
 
 @Component({
+  standalone: true,
   selector: 'journal-daily-gratitude',
   templateUrl: './daily-gratitude.component.html',
   styleUrls: ['./daily-gratitude.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    RouterModule,
+    PageLoadingComponent,
+    AuthModalComponent,
+    ActivatePushNotificationsComponent,
+    HeaderComponent,
+    CardsComponent,
+    DatetimeComponent,
+    IonContent,
+    IonToggle
+  ]
 })
 export class DailyGratitudePageComponent implements OnDestroy {
   isLoading = true
