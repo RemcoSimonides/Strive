@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 
@@ -20,7 +19,6 @@ import { PostComponent } from '@strive/post/components/post/post.component'
   styleUrls: ['./story.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     StoryItemMessagePipe,
     TimeAgoPipe,

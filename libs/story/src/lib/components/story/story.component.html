@@ -1,45 +1,47 @@
 <ul>
-	<article class="add-button" *ngIf="stakeholder.isAdmin || stakeholder.isAchiever">
-		<div></div>
-		<div>
-			<ion-button (click)="createCustomPost()" fill="clear" size="small">
-				<ion-icon name="pencil-outline" slot="start" />
-				<span>Add to story...</span>
-			</ion-button>
-		</div>
-	</article>
+  @if (stakeholder.isAdmin || stakeholder.isAchiever) {
+    <article class="add-button">
+      <div></div>
+      <div>
+        <ion-button (click)="createCustomPost()" fill="clear" size="small">
+          <ion-icon name="pencil-outline" slot="start" />
+          <span>Add to story...</span>
+        </ion-button>
+      </div>
+    </article>
+  }
 
-	<ng-container *ngFor="let item of story; trackBy: trackByFn; let last = last">
-
-		<li *ngIf="item | storyMessage as message">
-
-			<article *ngIf="message.message.length">
-				<div class="emblem">
-					<ion-icon [name]="message.icon" />
-				</div>
-
-				<div class="timelineContent">
-					<span>
-						<ng-container *ngFor="let text of message.message">
-							<ng-container *ngIf="text.link; else noLink">
-								<a [routerLink]="'/' + text.link">{{ text.text }}</a>
-							</ng-container>
-							<ng-template #noLink>
-								{{ text.text }}
-							</ng-template>
-						</ng-container>
-						{{ item.createdAt | timeAgo }}
-					</span>
-				</div>
-			</article>
-		</li>
-
-		<article *ngIf="item.name === 'goalStoryPostCreated'" class="extra">
-			<div></div>
-			<div>
-				<strive-post [storyItem]="item" [stakeholder]="stakeholder" />
-			</div>
-		</article>
-
-	</ng-container>
+  @for (item of story; track trackByFn($index, item); let last = $last) {
+    @if (item | storyMessage; as message) {
+      <li>
+        @if (message.message.length) {
+          <article>
+            <div class="emblem">
+              <ion-icon [name]="message.icon" />
+            </div>
+            <div class="timelineContent">
+              <span>
+                @for (text of message.message; track text) {
+                  @if (text.link) {
+                    <a [routerLink]="'/' + text.link">{{ text.text }}</a>
+                  } @else {
+                    {{ text.text }}
+                  }
+                }
+                {{ item.createdAt | timeAgo }}
+              </span>
+            </div>
+          </article>
+        }
+      </li>
+    }
+    @if (item.name === 'goalStoryPostCreated') {
+      <article class="extra">
+        <div></div>
+        <div>
+          <strive-post [storyItem]="item" [stakeholder]="stakeholder" />
+        </div>
+      </article>
+    }
+  }
 </ul>
