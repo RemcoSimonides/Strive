@@ -5,14 +5,14 @@
 <ion-content class="ion-no-padding">
 
   <ion-list>
-    <ng-container *ngFor="let spectator of spectators$ | async; let last = last">
+    @for (spectator of spectators$ | async; track spectator; let last = $last) {
       <ion-item button [lines]="last ? 'none' : 'full'" (click)="navTo(spectator.uid)">
         <ion-avatar slot="start">
           <img asset="profile.png" [ref]="spectator.profile?.photoURL" [width]="120" [height]="120" />
         </ion-avatar>
         <ion-label>{{ spectator.profile?.username }}</ion-label>
       </ion-item>
-    </ng-container>
+    }
   </ion-list>
 
 </ion-content>
