@@ -1,7 +1,9 @@
+import { CommonModule } from '@angular/common'
 import { Component } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 
-import { PopoverController, ModalController } from '@ionic/angular/standalone'
+import { IonContent, IonCard, IonAvatar, IonButton, IonIcon, PopoverController, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { shareSocialOutline, star, starOutline, add, lockClosedOutline, flagOutline } from 'ionicons/icons'
 
@@ -15,6 +17,9 @@ import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/ope
 import { SpectatorService } from '@strive/spectator/spectator.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
+import { AuthService } from '@strive/auth/auth.service'
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { ProfileService } from '@strive/user/profile.service'
 
 import { FollowingComponent } from '@strive/spectator/components/following/following.component'
 import { FollowersComponent } from '@strive/spectator/components/followers/followers.component'
@@ -30,16 +35,47 @@ import { delay } from '@strive/utils/helpers'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.component'
-import { AuthService } from '@strive/auth/auth.service'
-import { ProfileService } from '@strive/user/profile.service'
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
-import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
+import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
+import { HeaderComponent } from '@strive/ui/header/header.component'
+import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
+import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 
 
 @Component({
+  standalone: true,
   selector: 'journal-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    PageLoadingComponent,
+    ImageDirective,
+    ImageSelectorComponent,
+    FollowingComponent,
+    FollowersComponent,
+    GoalOptionsComponent,
+    EditProfileImagePopoverComponent,
+    ImageZoomModalComponent,
+    HeaderRootComponent,
+    HeaderComponent,
+    SupportingComponent,
+    GoalThumbnailComponent,
+    PagenotfoundComponent,
+    GoalCreateModalComponent,
+    CopiedPopoverComponent,
+    IonContent,
+    IonCard,
+    IonAvatar,
+    IonButton,
+    IonIcon
+  ]
 })
 export class ProfilePageComponent {
   isNotMobile$ = this.screensize.isNotMobile$
