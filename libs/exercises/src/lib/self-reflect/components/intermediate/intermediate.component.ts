@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { EntryStep, SelfReflectFrequency } from '@strive/model'
 import { GetMonthNamePipe } from '@strive/utils/pipes/date-fns.pipe'
@@ -22,7 +21,6 @@ import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GetMonthNamePipe,
     SelfReflectFrequencyPipe
   ]

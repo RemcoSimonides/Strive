@@ -1,33 +1,31 @@
-<ng-container *ngIf="goals$ | async as stakeholders; else loading">
-  <ng-container *ngIf="stakeholders.length > 1; else notEnoughGoals">
+@if (goals$ | async; as stakeholders) {
+  @if (stakeholders.length > 1) {
     <ion-list>
       <ion-reorder-group (ionItemReorder)="doReorder($event, stakeholders)" [disabled]="disableReorder()">
-        <ion-item *ngFor="let stakeholder of stakeholders; let last = last" [lines]="last ? 'none' : 'full'">
-          <ion-thumbnail>
-            <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120" />
-          </ion-thumbnail>
-          <ion-label>{{ stakeholder.goal.title }}</ion-label>
-          <ion-reorder slot="end" />
-        </ion-item>
+        @for (stakeholder of stakeholders; track stakeholder; let last = $last) {
+          <ion-item [lines]="last ? 'none' : 'full'">
+            <ion-thumbnail>
+              <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120" />
+            </ion-thumbnail>
+            <ion-label>{{ stakeholder.goal.title }}</ion-label>
+            <ion-reorder slot="end" />
+          </ion-item>
+        }
       </ion-reorder-group>
     </ion-list>
-  </ng-container>
-
-  <ng-template #notEnoughGoals>
+  } @else {
     <section>
-      <ng-container *ngIf="stakeholders.length; else noGoals">
+      @if (stakeholders.length) {
         <span>Perfect Focus!</span>
         <small>No need to prioritize if you have one goal.</small>
-      </ng-container>
-      <ng-template #noGoals>
+      } @else {
         <span>No goals yet</span>
         <small>You need to have at least 2 goals to prioritize them.</small>
-      </ng-template>
+      }
       <ion-button (click)="step.emit('next')">Next</ion-button>
     </section>
-  </ng-template>
-</ng-container>
+  }
+} @else {
+  <strive-page-loading/>
+}
 
-<ng-template #loading>
-  <strive-page-loading></strive-page-loading>
-</ng-template>

@@ -3,8 +3,8 @@
 </strive-header-modal>
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="message">
+  @if (message) {
     <small>This message was sent on {{ message.createdAt | date }} and delivered on {{ message.deliveryDate | date }}.</small>
     <p [innerHTML]="message.description"></p>
-  </ng-container>
+  }
 </ion-content>

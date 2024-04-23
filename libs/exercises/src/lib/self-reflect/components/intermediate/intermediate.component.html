@@ -1,17 +1,14 @@
-<ng-container *ngIf="frequency && next">
-  <ng-container *ngIf="next === 'previousIntention'">
+@if (frequency && next) {
+  @if (next === 'previousIntention') {
     <p>Reflect back on your previous intentions</p>
-  </ng-container>
-
-  <ng-container *ngIf="next === 'past'">
+  }
+  @if (next === 'past') {
     <p>The past {{ frequency | frequency }}</p>
-  </ng-container>
-
-  <ng-container *ngIf="next === 'present'">
+  }
+  @if (next === 'present') {
     <p>The present</p>
-  </ng-container>
-
-  <ng-container *ngIf="next === 'future'">
+  }
+  @if (next === 'future') {
     <p>The upcoming {{ frequency | frequency }}</p>
-  </ng-container>
-</ng-container>
+  }
+}

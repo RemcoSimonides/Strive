@@ -1,13 +1,12 @@
 <strive-header-modal title="Wheel of Life" (dismiss)="dismiss()" />
 
 <ion-content class="ion-padding">
-  <ng-container *ngIf="entries$ | async as entries">
+  @if (entries$ | async; as entries) {
     <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="previousEntry" (closeNavTo)="createGoal()" />
-
-    <ng-container *ngIf="showResults && entries.length">
+    @if (showResults && entries.length) {
       <h2>All time results</h2>
       <strive-wheel-of-life-results [entries]="entries" />
-    </ng-container>
-  </ng-container>
+    }
+  }
 
 </ion-content>

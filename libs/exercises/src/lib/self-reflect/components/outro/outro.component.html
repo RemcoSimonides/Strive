@@ -1,15 +1,17 @@
 <p>Encrypted and saved.</p>
 
-<section *ngIf="possibleNextEntries.length">
-  <span>Continue with more questions:</span>
-  <ion-list>
-    <ng-container *ngFor="let nextFrequency of possibleNextEntries; let last = last">
-      <ion-item button (click)="next.emit(nextFrequency)" [lines]="last ? 'none' : 'inset'">
-        <ion-label>
-          <h2>{{ nextFrequency | titlecase }} Entry</h2>
-        </ion-label>
-        <ion-icon name="arrow-forward-outline" slot="end" />
-      </ion-item>
-    </ng-container>
-  </ion-list>
-</section>
+@if (possibleNextEntries.length) {
+  <section>
+    <span>Continue with more questions:</span>
+    <ion-list>
+      @for (nextFrequency of possibleNextEntries; track nextFrequency; let last = $last) {
+        <ion-item button (click)="next.emit(nextFrequency)" [lines]="last ? 'none' : 'inset'">
+          <ion-label>
+            <h2>{{ nextFrequency | titlecase }} Entry</h2>
+          </ion-label>
+          <ion-icon name="arrow-forward-outline" slot="end" />
+        </ion-item>
+      }
+    </ion-list>
+  </section>
+}

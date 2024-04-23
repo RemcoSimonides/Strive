@@ -1,4 +1,4 @@
-<ng-container *ngIf="form && question">
+@if (form && question) {
   <ion-list>
     <small>{{ question.question | replaceFrequency:question.frequency }}</small>
     <ion-item lines="none">
@@ -12,4 +12,4 @@
       />
     </ion-item>
   </ion-list>
-</ng-container>
+}

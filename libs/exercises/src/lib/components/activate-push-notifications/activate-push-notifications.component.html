@@ -1,15 +1,14 @@
-<ng-container *ngIf="(fcmNotSupported$ | async) || (noFcmToken$ | async)">
+@if ((fcmNotSupported$ | async) || (noFcmToken$ | async)) {
   <ion-card>
     <h5>This exercise is only useful with Push Notifications enabled</h5>
     <ion-card-content>
-      <ng-container *ngIf="fcmNotSupported$ | async else noTokens">
+      @if (fcmNotSupported$ | async) {
         <p>Sad to tell, but your browser does not support Push Notifications.</p>
         <br/>
         <p>If you're on macOS/iOS/Safari, try again later because Apple is working on this.</p>
-      </ng-container>
-      <ng-template #noTokens>
+      } @else {
         <ion-button color="danger" (click)="pushNotifications()">Activate Push Notifications</ion-button>
-      </ng-template>
+      }
     </ion-card-content>
   </ion-card>
-</ng-container>
+}

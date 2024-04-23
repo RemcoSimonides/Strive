@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 import { SelfReflectQuestion } from '@strive/model'
@@ -14,7 +13,6 @@ import { IonList, IonItem, IonTextarea, IonIcon, IonButton } from '@ionic/angula
   styleUrls: ['./form-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     SelfReflectReplaceFrequencyPipe,
     IonList,

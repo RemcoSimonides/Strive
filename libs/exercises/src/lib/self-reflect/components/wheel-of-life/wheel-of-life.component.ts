@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { WheelOfLifeForm } from './wheel-of-life.form'
@@ -12,7 +11,6 @@ import { IonRange } from '@ionic/angular/standalone'
   styleUrls: ['./wheel-of-life.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     IonRange
   ]

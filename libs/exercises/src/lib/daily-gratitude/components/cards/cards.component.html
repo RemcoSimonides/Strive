@@ -3,12 +3,11 @@
   <swiper-slide>
     <form [formGroup]="form">
       <section>
-        <ng-container *ngIf="date | toDate | isToday; else notToday">
+        @if (date | toDate | isToday) {
           <span class="question" (click)="selectDate()">What are three things you are grateful for today?</span>
-        </ng-container>
-        <ng-template #notToday>
+        } @else {
           <span class="question" (click)="selectDate()">What were three things you are grateful for on {{ date | toDate | date:'longDate' }}?</span>
-        </ng-template>
+        }
         <ion-item>
           <span class="disc">•</span>
           <ion-textarea rows="3" formControlName="item1" autoGrow class="secondary" />
@@ -24,27 +23,25 @@
       </section>
 
       <footer>
-        <ion-button fill="clear" color="secondary" (click)="selectDate()" *ngIf="enteredToday$ | async">
-          <ion-icon slot="icon-only" name="calendar-outline" />
-        </ion-button>
+        @if (enteredToday$ | async) {
+          <ion-button fill="clear" color="secondary" (click)="selectDate()">
+            <ion-icon slot="icon-only" name="calendar-outline" />
+          </ion-button>
+        }
 
         <ion-button (click)="save()" [disabled]="form.pristine" color="primary" fill="clear" class="save">
-          <ng-container *ngIf="save$ | async as status">
-
-            <ng-container *ngIf="status === 'saved'">
+          @if (save$ | async; as status) {
+            @if (status === 'saved') {
               <span>Saved</span>
               <ion-icon name="checkmark" slot="end" />
-            </ng-container>
-
-            <ng-container *ngIf="status === 'saving'">
+            }
+            @if (status === 'saving') {
               <span>Encrypting...</span>
-            </ng-container>
-
-            <ng-container *ngIf="status === 'save'">
+            }
+            @if (status === 'save') {
               <span>Save</span>
-            </ng-container>
-
-          </ng-container>
+            }
+          }
         </ion-button>
       </footer>
 

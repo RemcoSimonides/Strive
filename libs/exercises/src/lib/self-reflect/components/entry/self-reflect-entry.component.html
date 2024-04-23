@@ -9,66 +9,70 @@
   </ion-toolbar>
 </ion-header>
 
-<ng-container *ngIf="finishedLoading(); else loading">
-  <ng-container [ngSwitch]="step().category">
-    <ion-content *ngSwitchCase="'intermediate'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-intermediate [frequency]="frequency" [next]="next()" />
-    </ion-content>
-
-    <ion-content *ngSwitchCase="'previousIntention'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-previous-intention [frequency]="frequency" [previousEntry]="previousEntry$ | async" />
-    </ion-content>
-
-    <ion-content *ngSwitchCase="'wheelOfLife'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-wheel-of-life [form]="form.get('wheelOfLife')" />
-    </ion-content>
-
-    <ion-content *ngSwitchCase="'prioritizeGoals'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-prioritize-goals [form]="form.get('prioritizeGoals')" (step)="doStep($event)" />
-    </ion-content>
-
-    <ion-content *ngSwitchCase="'outro'" class="ion-padding" [ngClass]="animatingSection()">
-      <strive-self-reflect-outro [frequency]="frequency" [todos]="todos" (next)="dismiss($event)" />
-    </ion-content>
-
-    <ion-content *ngSwitchDefault class="ion-padding" [ngClass]="animatingSection()">
-      <section>
-        <ng-container *ngFor="let question of entry.config | stepFilter: step()">
-          <ng-container *ngIf="question.type === 'textarea'">
-            <strive-self-reflect-textarea
-              [form]="form.get(question.key)"
-              [question]="question"
-            />
-          </ng-container>
-
-          <ng-container *ngIf="question.type === 'formlist'">
-            <strive-self-reflect-form-list
-              [form]="form.get(question.key)"
-              [question]="question"
-              [stepping]="stepping$ | async"
-            />
-          </ng-container>
-        </ng-container>
-      </section>
-    </ion-content>
-  </ng-container>
-
-  <ion-footer>
-    <ion-toolbar>
-      <ion-progress-bar [value]="progress()" slot="start"></ion-progress-bar>
-      <ion-buttons *ngIf="stepIndex() > 0" slot="start" class="visible">
-        <ion-button (click)="doStep('previous')" fill="clear" color="primary">Previous</ion-button>
-      </ion-buttons>
-
-      <ion-buttons slot="end">
-        <ion-button (click)="doStep('next')" color="primary" fill="solid">
-          {{ stepIndex() === steps().length - 1 ? 'Finish' : 'Next' }}
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-footer>
-</ng-container>
-
-<ng-template #loading>
-  <strive-page-loading></strive-page-loading>
-</ng-template>
+@if (finishedLoading()) {
+  @switch (step().category) {
+    @case ('intermediate') {
+      <ion-content class="ion-padding" [ngClass]="animatingSection()">
+        <strive-self-reflect-intermediate [frequency]="frequency" [next]="next()" />
+      </ion-content>
+    }
+    @case ('previousIntention') {
+      <ion-content class="ion-padding" [ngClass]="animatingSection()">
+        <strive-self-reflect-previous-intention [frequency]="frequency" [previousEntry]="previousEntry$ | async" />
+      </ion-content>
+    }
+    @case ('wheelOfLife') {
+      <ion-content class="ion-padding" [ngClass]="animatingSection()">
+        <strive-self-reflect-wheel-of-life [form]="form.get('wheelOfLife')" />
+      </ion-content>
+    }
+    @case ('prioritizeGoals') {
+      <ion-content class="ion-padding" [ngClass]="animatingSection()">
+        <strive-self-reflect-prioritize-goals [form]="form.get('prioritizeGoals')" (step)="doStep($event)" />
+      </ion-content>
+    }
+    @case ('outro') {
+      <ion-content class="ion-padding" [ngClass]="animatingSection()">
+        <strive-self-reflect-outro [frequency]="frequency" [todos]="todos" (next)="dismiss($event)" />
+      </ion-content>
+    }
+    @default {
+      <ion-content class="ion-padding" [ngClass]="animatingSection()">
+        <section>
+          @for (question of entry.config | stepFilter: step(); track question) {
+            @if (question.type === 'textarea') {
+              <strive-self-reflect-textarea
+                [form]="form.get(question.key)"
+                [question]="question"
+              />
+            }
+            @if (question.type === 'formlist') {
+              <strive-self-reflect-form-list
+                [form]="form.get(question.key)"
+                [question]="question"
+                [stepping]="stepping$ | async"
+              />
+            }
+          }
+          </section>
+        </ion-content>
+      }
+    }
+    <ion-footer>
+      <ion-toolbar>
+        <ion-progress-bar [value]="progress()" slot="start"></ion-progress-bar>
+        @if (stepIndex() > 0) {
+          <ion-buttons slot="start" class="visible">
+            <ion-button (click)="doStep('previous')" fill="clear" color="primary">Previous</ion-button>
+          </ion-buttons>
+        }
+        <ion-buttons slot="end">
+          <ion-button (click)="doStep('next')" color="primary" fill="solid">
+            {{ stepIndex() === steps().length - 1 ? 'Finish' : 'Next' }}
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+  } @else {
+    <strive-page-loading/>
+  }

@@ -14,7 +14,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { WheelOfLifeEntryComponent } from '../../components/entry/entry.component'
-import { PreviousEntryPipe } from '../../pipes/entry.pipe'
+import { TodayEntryPipe } from '../../pipes/entry.pipe'
 import { WheelOfLifeResultsComponent } from '../../components/results/results.component'
 
 
@@ -28,7 +28,7 @@ import { WheelOfLifeResultsComponent } from '../../components/results/results.co
     CommonModule,
     HeaderModalComponent,
     WheelOfLifeEntryComponent,
-    PreviousEntryPipe,
+    TodayEntryPipe,
     WheelOfLifeResultsComponent,
     GoalCreateModalComponent,
     IonContent

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 
 import { IonContent } from '@ionic/angular/standalone'
@@ -14,7 +13,6 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
   styleUrls: ['./affirm-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     HeaderModalComponent,
     ImageDirective,
     IonContent

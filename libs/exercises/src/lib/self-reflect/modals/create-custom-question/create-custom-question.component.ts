@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ModalController } from '@ionic/angular/standalone'
@@ -17,7 +17,6 @@ import { AuthService } from '@strive/auth/auth.service'
   styleUrls: ['./create-custom-question.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     HeaderModalComponent,
     IonTitle,

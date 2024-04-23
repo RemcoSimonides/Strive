@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { SelfReflectQuestion } from '@strive/model'
@@ -12,7 +11,6 @@ import { IonList, IonItem, IonTextarea } from '@ionic/angular/standalone'
   styleUrls: ['./textarea.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     SelfReflectReplaceFrequencyPipe,
     IonList,

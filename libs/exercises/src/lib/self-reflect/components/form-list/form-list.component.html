@@ -1,24 +1,28 @@
-<ng-container *ngIf="form && question">
+@if (form && question) {
   <ion-list>
     <small>{{ question.question | replaceFrequency:question.frequency }}</small>
-    <ion-item *ngFor="let control of form.controls; let i = index; let last = last" [lines]="last && !showInput() ? 'none' : 'inset'">
-      <ion-textarea
-        class="primary"
-        autoGrow
-        placeholder="..."
-        autocapitalize="sentences"
-        placeholder="..."
-        [formControl]="control"
-        (ionBlur)="blur($event, i)"
-      />
-      <ion-icon
-        *ngIf="control.value !== ''"
-        class="remove-item-icon"
-        (click)="removeValue(i)"
-        name="close-outline"
-      />
-    </ion-item>
-    <ion-item lines="none" *ngIf="showInput()">
+    @for (control of form.controls; track control; let i = $index; let last = $last) {
+      <ion-item [lines]="last && !showInput() ? 'none' : 'inset'">
+        <ion-textarea
+          class="primary"
+          autoGrow
+          placeholder="..."
+          autocapitalize="sentences"
+          placeholder="..."
+          [formControl]="control"
+          (ionBlur)="blur($event, i)"
+        />
+        @if (control.value !== '') {
+          <ion-icon
+            class="remove-item-icon"
+            (click)="removeValue(i)"
+            name="close-outline"
+          />
+        }
+      </ion-item>
+    }
+  @if (showInput()) {
+    <ion-item lines="none">
       <ion-textarea
         [formControl]="inputForm"
         autoGrow
@@ -27,8 +31,9 @@
         class="primary"
       />
     </ion-item>
+  }
   </ion-list>
   <ion-button size="block" (click)="add()">
     <ion-icon name="add-outline" slot="icon-only" />
   </ion-button>
-</ng-container>
+}

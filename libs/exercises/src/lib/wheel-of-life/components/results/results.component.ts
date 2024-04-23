@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core'
 
 import { IonSegment, IonSegmentButton } from '@ionic/angular/standalone'
@@ -18,7 +17,6 @@ const secondaryRGBA = 'rgba(0,179,163)'
   styleUrls: ['./results.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     NgChartsModule,
     IonSegment,
     IonSegmentButton
