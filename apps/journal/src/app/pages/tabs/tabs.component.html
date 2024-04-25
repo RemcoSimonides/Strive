@@ -1,7 +1,7 @@
 @if (screenSize.isMobile$ | async) {
   <ion-tabs>
     @if (profile$ | async; as you) {
-      <ion-tab-bar slot="bottom" [scrollable]="true">
+      <ion-tab-bar slot="bottom">
         <ion-tab-button tab="goals">
           <ion-icon
             name="flag-sharp"

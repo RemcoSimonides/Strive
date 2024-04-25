@@ -25,10 +25,10 @@ export class MilestoneForm extends FormGroup<MilestoneFormControl> {
   get content() { return this.get('content')! }
   get description() { return this.get('description')! }
   get deadline() { return this.get('deadline')! }
-  get subtasks() { return this.get('subtasks')! }
+  get subtasks() { return this.get('subtasks')! as FormArray<SubtaskForm> }
 }
 
-function createSubtaskFormControl(params?: Subtask) {
+function createSubtaskFormControl(params?: Partial<Subtask>) {
   const subtask = createSubtask(params)
   return {
     content: new FormControl(subtask.content, { nonNullable: true, validators: [Validators.required] }),
@@ -38,10 +38,10 @@ function createSubtaskFormControl(params?: Subtask) {
 
 type SubtaskFormControl = ReturnType<typeof createSubtaskFormControl>
 export class SubtaskForm extends FormGroup<SubtaskFormControl> {
-  constructor(subtask?: Subtask) {
+  constructor(subtask?: Partial<Subtask>) {
     super(createSubtaskFormControl(subtask))
   }
 
-  get content() { return this.get('content')! }
-  get completed() { return this.get('completed')! }
+  get content() { return this.get('content')! as FormControl<string> }
+  get completed() { return this.get('completed')! as FormControl<boolean> }
 }

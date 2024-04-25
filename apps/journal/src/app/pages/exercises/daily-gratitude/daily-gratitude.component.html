@@ -19,7 +19,7 @@
         <section class="toggle">
           <article>
             <ion-toggle [formControl]="form.get('on')"/>
-            <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time').value : 'Reminder turned off'}}</span>
+            <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time')?.value : 'Reminder turned off'}}</span>
           </article>
         </section>
         <strive-daily-gratitude-cards/>

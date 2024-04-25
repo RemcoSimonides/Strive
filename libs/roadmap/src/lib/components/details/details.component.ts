@@ -172,9 +172,10 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
         filter(() => this.form.content.valid),
         tap(() => this.form.markAsTouched()),
         debounceTime(500)
-      ).subscribe(subtasks => {
+      ).subscribe(value => {
         if (!this.canEdit || !this.form) return
         if (this.form.subtasks.valid) {
+          const subtasks = value.map(createSubtask)
           this.milestoneService.update({ subtasks, id: this.milestone.id }, { params: { goalId: this.goal.id } })
           this.form?.subtasks.markAsPristine()
           this.cdr.markForCheck()
@@ -346,7 +347,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
     if (!this.form) return
     const { from, to } = ev.detail
 
-    const subtasks = this.form.subtasks.value
+    const subtasks = this.form.subtasks.value.map(createSubtask)
     const element = subtasks[from]
     subtasks.splice(from, 1)
     subtasks.splice(to, 0, element)
