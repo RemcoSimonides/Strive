@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
-import { IonList, IonItem, IonInput, IonButton, IonIcon, IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
+import { IonList, IonItem, IonInput, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 
@@ -12,7 +12,6 @@ import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
-import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-modal.page'
 
 @Component({
   standalone: true,
@@ -28,8 +27,6 @@ import { AuthModalComponent } from '@strive/auth/components/auth-modal/auth-moda
     IonInput,
     IonButton,
     IonIcon,
-    IonTitle,
-    IonContent
   ]
 })
 export class AddSupportComponent {
@@ -92,9 +89,4 @@ export class AddSupportComponent {
     return
   }
 
-  openAuthModal() {
-    this.modalCtrl.create({
-      component: AuthModalComponent
-    }).then(modal => modal.present())
-  }
 }
