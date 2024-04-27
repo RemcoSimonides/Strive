@@ -9,6 +9,7 @@ export const routes: Routes = [
   { path: 'exercise/dear-future-self', loadComponent: () => import('./pages/exercises/dear-future-self/dear-future-self.component').then(m => m.DearFutureSelfPageComponent)},
   { path: 'exercise/daily-gratitude', loadComponent: () => import('./pages/exercises/daily-gratitude/daily-gratitude.component').then(m => m.DailyGratitudePageComponent)},
   { path: 'exercise/self-reflect', loadComponent: () => import('./pages/exercises/self-reflect/self-reflect.component').then(m => m.SelfReflectComponent)},
+  { path: 'exercise/self-reflect/settings', loadComponent: () => import('./pages/exercises/self-reflect/settings/self-reflect-settings.component').then(m => m.SelfReflectSettingsComponent) },
   { path: 'exercise/wheel-of-life', loadComponent: () => import('./pages/exercises/wheel-of-life/wheel-of-life.component').then(m => m.WheelOfLifePageComponent)},
   { path: 'explore', loadComponent: () => import('./pages/explore/explore.page').then(m => m.ExplorePageComponent) },
   { path: 'goals', loadComponent: () => import('./pages/goals/goals.page').then(m => m.GoalsPageComponent) },

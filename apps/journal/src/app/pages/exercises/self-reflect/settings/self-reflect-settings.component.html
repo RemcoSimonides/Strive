@@ -26,7 +26,7 @@
           </ion-item>
           <ion-item lines="none" button (click)="openTimePicker()">
             <ion-label>Time</ion-label>
-            <ion-text>{{ form.get('preferredDay').value === 'never' ? '-' : form.get('preferredTime').value }}</ion-text>
+            <ion-text>{{ form.get('preferredDay')?.value === 'never' ? '-' : form.get('preferredTime')?.value }}</ion-text>
           </ion-item>
         </ion-list>
       </form>
