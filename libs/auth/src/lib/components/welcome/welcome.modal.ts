@@ -81,15 +81,7 @@ export class WelcomeModalComponent {
   }
 
   createGoal() {
-    this.modalCtrl.dismiss()
-    this.modalCtrl.create({
-      component: GoalCreateModalComponent
-    }).then(modal => {
-      modal.onDidDismiss().then((data) => {
-        const navToGoal = data.data?.['navToGoal']
-        if (navToGoal) this.router.navigate(['/goal', navToGoal])
-      })
-      modal.present()
-    })
+    // Navigating to goals page instead of directly opening create goal modal to not have an infinite loop AuthModal > WelcomeModal > CreateGoal > Roadmap > ... > AuthModal
+    this.router.navigate(['/goals'], { queryParams: { t: 'create' }})
   }
 }

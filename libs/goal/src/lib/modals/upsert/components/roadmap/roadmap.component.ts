@@ -19,9 +19,9 @@ import { IonContent } from '@ionic/angular/standalone'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    SuggestionComponent,
     RoadmapComponent,
-    IsFuturePipe,
-    SuggestionComponent
+    IsFuturePipe
   ]
 })
 export class GoalRoadmapComponent implements OnInit {

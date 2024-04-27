@@ -36,7 +36,6 @@ export function createEditMedia(params: Partial<EditMedia> = {}): EditMedia {
 
 function createEditMediaFormControl(params: Partial<EditMedia> = {}) {
   const editMedia = createEditMedia(params)
-  console.log('edit media created: ', editMedia)
 
   return {
     delete: new FormControl<boolean>(editMedia.delete ?? false, { nonNullable: true }),

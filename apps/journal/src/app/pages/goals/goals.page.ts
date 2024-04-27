@@ -105,6 +105,10 @@ export class GoalsPageComponent implements OnDestroy {
       this.router.navigate(['/goals']) // remove query params
     }
 
+    if (t === 'create') {
+      this.createGoal()
+    }
+
     if (reflect) {
       const todos: SelfReflectFrequency[] = reflect.split('').map((i: string) => {
         if (i === 'y') return 'yearly'
