@@ -2,6 +2,10 @@ h5 {
   color: var(--ion-color-primary);
 }
 
+ion-list {
+  border-radius: 0;
+}
+
 .submit {
   display: table;
   margin: 16px 16px 16px auto;
