@@ -1,5 +1,5 @@
 import { SelfReflectFrequency, Weekday } from '@strive/model'
-import { addDays, getDay, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter, startOfWeek, startOfYear } from 'date-fns'
+import { Day, addDays, getDay, getMonth, getQuarter, getWeek, getYear, isBefore, nextDay, startOfDay, startOfMonth, startOfQuarter, startOfWeek, startOfYear } from 'date-fns'
 
 const weekdayMapping: Record<Weekday, Day> = {
   'sunday': 0,

@@ -10,7 +10,7 @@ import { orderBy } from 'firebase/firestore'
 import { debounceTime, of, switchMap } from 'rxjs'
 
 import { closestIndexTo, eachDayOfInterval, endOfDay, isBefore, startOfDay } from 'date-fns'
-import format from 'date-fns/format'
+import { format } from 'date-fns/format'
 
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { WheelOfLifeResultsComponent } from '../../../wheel-of-life/components/results/results.component'
