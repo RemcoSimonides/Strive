@@ -12,7 +12,9 @@ export const gcsBucket = gcs.bucket(environment.firebase.options.storageBucket)
 export { logger } from 'firebase-functions'
 export type { RuntimeOptions } from 'firebase-functions'
 
-admin.initializeApp()
+if (admin.apps.length === 0) {
+	admin.initializeApp()
+}
 export const db = admin.firestore()
 export const auth = admin.auth()
 
