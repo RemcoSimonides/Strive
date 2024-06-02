@@ -14,7 +14,8 @@
         "tsConfig": "apps/backend-functions/tsconfig.app.json",
         "assets": ["apps/backend-functions/src/package.json"],
         "compiler": "tsc",
-        "target": "node"
+        "target": "node",
+        "isolatedConfig": false
       },
       "configurations": {
         "production": {
