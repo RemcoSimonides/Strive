@@ -33,9 +33,16 @@
         { "source": "/exercise/wheel-of-life", "destination": "exercise/wheel-of-life/index.html" },
         { "source": "/exercise/self-reflect", "destination": "exercise/self-reflect/index.hml"},
         { "source": "/explore", "destination": "explore/index.html" },
+        { "source": "/goals", "destination": "goals/index.html" },
+        { "source": "/notifications", "destination": "notifications/index.html" },
         { "source": "/privacy-policy", "destination": "privacy-policy/index.html" },
+        { "source": "/profile", "destination": "profile/index.html" },
+        { "source": "/settings", "destination": "settings/index.html" },
+        { "source": "/settings/email-notifications", "destination": "settings/email-notifications/index.html" },
+        { "source": "/settings/push-notifications", "destination": "settings/push-notifications/index.html" },
+        { "source": "/supports", "destination": "supports/index.html" },
         { "source": "/terms", "destination": "terms/index.html" },
-        { "source": "**", "destination": "index.html" }
+        { "source": "**", "destination": "/index.html" }
       ]
     },
     {
