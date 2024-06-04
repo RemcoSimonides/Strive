@@ -120,17 +120,6 @@ function getStakeholderPushMessage({ event, goal, milestone, user, comment }: No
         setting: 'goalTeam'
       }
 
-    case 'goalStakeholderInvitedToJoin':
-      if (!goal) throw new Error(`${event} push message needs goal defined`)
-      if (!user) throw new Error(`${event} push message needs user defined`)
-
-      return {
-        title: goal.title,
-        body: `${user.username} invited you to join their goal`,
-        link: `goal/${goal.id}`,
-        setting: 'goalTeam'
-      }
-
     case 'goalStakeholderRequestedToJoin':
       if (!goal) throw new Error(`${event} push message needs goal defined`)
       if (!user) throw new Error(`${event} push message needs user defined`)
@@ -252,6 +241,17 @@ function getSpectatorPushMessage({ event, goal, user  }: Notification): PushMess
 
 function getUserPushMessage({ event, goal, milestone, user, support }: Notification): PushMessage | undefined {
   switch (event) {
+    case 'goalStakeholderInvitedToJoin':
+      if (!goal) throw new Error(`${event} push message needs goal defined`)
+      if (!user) throw new Error(`${event} push message needs user defined`)
+
+      return {
+        title: goal.title,
+        body: `${user.username} invited you to join their goal`,
+        link: `goal/${goal.id}`,
+        setting: 'goalTeam'
+      }
+
     case 'goalStakeholderRequestToJoinAccepted':
       if (!goal) throw new Error(`${event} spectator push message needs goal defined`)
 
