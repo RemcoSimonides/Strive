@@ -9,7 +9,7 @@ import { getDocument } from '../../shared/utils'
 export async function sendWheelOfLifePushNotification(uid: string) {
 
   const personal = await getDocument<Personal>(`Users/${uid}/Personal/${uid}`)
-  if (!personal.fcmTokens.length) return
+  if (!personal?.fcmTokens.length) return
   const { main, exerciseWheelOfLife } = personal.settings.pushNotification
   if (!main || !exerciseWheelOfLife) return
 

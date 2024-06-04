@@ -20,7 +20,7 @@ export async function sendSelfReflectPuthNotification(settings: SelfReflectSetti
   const firstLetters = frequencies.map(frequency => frequency[0]).join('')
 
   const personal = await getDocument<Personal>(`Users/${userId}/Personal/${userId}`)
-  if (!personal.fcmTokens.length) return
+  if (!personal?.fcmTokens.length) return
   const { main, exerciseSelfReflect } = personal.settings.pushNotification
   if (!main || !exerciseSelfReflect) return
 

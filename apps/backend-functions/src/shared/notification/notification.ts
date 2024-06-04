@@ -123,7 +123,7 @@ async function sendPushNotificationToUsers(message: PushMessage, recipient: stri
 
   for (const snap of snaps) {
     const personal = createPersonal(toDate({ ...snap.data(), id: snap.id }))
-    if (!personal.fcmTokens.length) continue
+    if (!personal?.fcmTokens.length) continue
 
     // check settings and stop sending push notification if any setting is turned off
     const { pushNotification } = personal.settings
