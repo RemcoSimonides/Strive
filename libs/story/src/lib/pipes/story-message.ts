@@ -12,7 +12,7 @@ const empty: StoryItemMessage = {
   message: []
 }
 function throwError(item: StoryItem) {
-  captureException(`Story Item doesn't have required information for message ${JSON.stringify(item)}`)
+  captureException(`Story Item doesn't have required information. Id: ${item.id}, Name: ${item.name}, GoalId: ${item.goalId}, MilestoneId: ${item.milestoneId}, PostId: ${item.postId}, UserId: ${item.userId}`)
   return empty
 }
 
