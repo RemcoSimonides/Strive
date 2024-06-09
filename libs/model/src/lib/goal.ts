@@ -1,6 +1,7 @@
 import { GoalStakeholder } from './stakeholder'
 import { GoalEvent } from './goal-event'
 import { addYears, endOfYear, getMonth } from 'date-fns'
+import { Category } from './categories'
 
 export type StakeholderWithGoalAndEvents = GoalStakeholder & { goal: Goal, events: GoalEvent[] }
 export type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
@@ -22,6 +23,7 @@ export interface Goal {
   description: string
   image: string
   status: 'pending' | 'succeeded' | 'failed'
+  categories: Category[]
   publicity: GoalPublicityType
   collectiveGoalId: string
   enableAssistant: boolean
@@ -40,6 +42,7 @@ export interface AlgoliaGoal {
   id: string
   title: string
   image: string
+  categories: string[]
   numberOfAchievers: number
   numberOfSupporters: number
 }
@@ -68,6 +71,7 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
     image: '',
     deadline,
     status: 'pending',
+    categories: [],
     enableAssistant: true,
     numberOfAchievers: 0,
     numberOfSupporters: 0,
@@ -87,6 +91,7 @@ export function createAlgoliaGoal(params: AlgoliaGoal | Goal): AlgoliaGoal {
     id: params.id,
     title: params.title,
     image: params.image,
+    categories: params.categories,
     numberOfAchievers: params.numberOfAchievers,
     numberOfSupporters: params.numberOfSupporters
   }

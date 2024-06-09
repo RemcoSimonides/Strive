@@ -8,7 +8,8 @@ import { askOpenAI, AskOpenAIConfig } from '../../../shared/ask-open-ai/ask-open
 import { format } from 'date-fns'
 
 const askOpenAIConfig: AskOpenAIConfig = {
-  model: 'gpt-4',
+  model: 'gpt-4o',
+  response_format: { type: 'text' },
   parse: false
 }
 

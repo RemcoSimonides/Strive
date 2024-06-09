@@ -12,6 +12,7 @@
       <ion-card>
         <ion-select placeholder="Type" interface="popover" formControlName="type" legacy>
           <ion-select-option value="all">All</ion-select-option>
+          <ion-select-option value="categories">Categories</ion-select-option>
           <ion-select-option value="goals">Goals</ion-select-option>
           <ion-select-option value="users">Users</ion-select-option>
           <ion-select-option value="exercises">Exercises</ion-select-option>
@@ -22,6 +23,22 @@
 
   <main [ngSwitch]="segmentChoice">
     <ng-container *ngSwitchCase="'overview'">
+      <section>
+        <h5>Categories</h5>
+        <ion-button fill="clear" size="small" (click)="setType('categories')">view more</ion-button>
+      </section>
+      <strive-thumbnail-list [width]="250">
+        <ng-container *ngFor="let rows of categories$ | async | rows:2">
+          <ng-template #thumb>
+            <article class="small-thumbnail-column">
+              <ng-container *ngFor="let category of rows">
+                <strive-small-thumbnail [title]="category.title" [asset]="category.image" (click)="filterCategory(category.id)" />
+              </ng-container>
+            </article>
+          </ng-template>
+        </ng-container>
+      </strive-thumbnail-list>
+
       <section>
         <h5>Goals</h5>
         <ion-button fill="clear" size="small" (click)="setType('goals')">view more</ion-button>
@@ -41,7 +58,7 @@
         </ng-container>
       </strive-thumbnail-list>
 
-      <section>
+      <!-- <section>
         <h5>Users</h5>
         <ion-button fill="clear" size="small" (click)="setType('users')">view more</ion-button>
       </section>
@@ -55,7 +72,7 @@
             </article>
           </ng-template>
         </ng-container>
-      </strive-thumbnail-list>
+      </strive-thumbnail-list> -->
 
       <section>
         <h5>Exercises</h5>
@@ -75,6 +92,14 @@
     </ng-container>
 
     <ul *ngSwitchCase="'search'" class="search">
+      <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'categories'">
+        <li *ngFor="let category of categories$ | async">
+          <strive-small-thumbnail [title]="category.title" [asset]="category.image" (click)="filterCategory(category.id)">
+            <small *ngIf="searchForm.value.type === 'all'">Type: Category</small>
+          </strive-small-thumbnail>
+        </li>
+      </ng-container>
+
       <ng-container *ngIf="searchForm.value.type === 'all' || searchForm.value.type === 'goals'">
         <li *ngFor="let goal of goals$ | async">
           <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">

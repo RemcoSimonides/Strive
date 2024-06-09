@@ -21,6 +21,7 @@ import { deleteCollection, toDate } from '../../shared/utils'
 import { addGoalEvent } from '../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../shared/goal-story/story'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
+import { categorizeGoal } from '../../shared/ask-open-ai/categorize'
 
 
 export const goalCreatedHandler = onDocumentCreate(`Goals/{goalId}`, 'goalCreatedHandler',
@@ -34,6 +35,7 @@ async snapshot => {
   const event = goal.status === 'pending' ?  'goalCreated' : 'goalCreatedFinished'
   addGoalEvent(event, source)
   addStoryItem(event, source)
+  categorizeGoal(goal).then(categories => snapshot.ref.update({ categories }))
 
   // aggregation
   handleAggregation(undefined, goal)

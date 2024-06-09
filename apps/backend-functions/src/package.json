@@ -15,7 +15,7 @@
     "firebase-functions": "^4.5.0",
     "nodemailer": "^6.4.2",
     "node-fetch": "^2.6.7",
-    "openai": "^4.17.4"
+    "openai": "^4.49.1"
   },
   "devDependencies": {
     "tslint": "^5.12.0",

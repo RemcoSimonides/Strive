@@ -1,0 +1,6 @@
+<ion-list>
+  <ion-item lines="full" button (click)="all()">All categories</ion-item>
+    @for (category of _categoryBlocks; track category.id; let last = $last) {
+    <ion-item [lines]="last ? 'none' : 'full'" button (click)="select(category.id)">{{ category.title }}</ion-item>
+  }
+</ion-list>

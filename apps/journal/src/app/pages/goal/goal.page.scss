@@ -127,10 +127,7 @@ picture {
 ion-select {
   font-weight: bold;
   padding: 0;
-
-  label {
-    display: block;
-  }
+  min-height: 0;
 }
 
 ion-card.finish {

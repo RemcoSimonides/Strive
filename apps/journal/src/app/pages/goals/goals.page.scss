@@ -1,3 +1,13 @@
+header {
+  display: flex;
+  justify-content: space-between;
+
+  .create-goal {
+    display: flex;
+    flex: 1;
+  }
+}
+
 h4 {
   color: var(--ion-color-primary);
 }

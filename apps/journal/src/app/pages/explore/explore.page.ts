@@ -8,7 +8,7 @@ import { IonContent, IonSearchbar, IonCard, IonSelect, IonSelectOption, IonButto
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { debounceTime, map, startWith } from 'rxjs/operators'
 
-import { exercises } from '@strive/model'
+import { exercises, categories, Category } from '@strive/model'
 
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
 import { SeoService } from '@strive/utils/services/seo.service'
@@ -53,17 +53,19 @@ export class ExplorePageComponent implements OnDestroy {
 
   searchForm = new FormGroup({
     query: new FormControl(''),
+    category: new FormControl<Category | ''>(''),
     type: new FormControl('all')
   })
 
+  categories$ = new BehaviorSubject(categories)
   exercises$ = new BehaviorSubject(exercises)
   goals$ = this.algolia.goals$
   profiles$ = this.algolia.profiles$
 
   noResults$ = combineLatest([
-    this.exercises$, this.goals$, this.profiles$
+    this.exercises$, this.goals$, this.profiles$, this.categories$
   ]).pipe(
-    map(([exercises, goals, profiles]) => !exercises.length && !goals.length && !profiles.length)
+    map(([exercises, goals, profiles, categories]) => !exercises.length && !goals.length && !profiles.length && !categories.length)
   )
 
   private searchSubscription = combineLatest([
@@ -76,7 +78,8 @@ export class ExplorePageComponent implements OnDestroy {
 
     switch (type) {
       case 'goals':
-        this.algolia.searchGoals(query, undefined)
+        const category = this.searchForm.get('category')?.value || undefined
+        this.algolia.searchGoals(query, category, undefined)
         break
 
       case 'users':
@@ -84,12 +87,17 @@ export class ExplorePageComponent implements OnDestroy {
         break
 
       case 'exercises':
+      case 'categories':
       default: {
         const hpp = query ? undefined : { goals: 8, profiles: 8 }
         this.algolia.search(query, hpp)
 
         const filteredExercises = exercises.filter(exercise => exercise.title.toLowerCase().includes(query.toLowerCase()))
         this.exercises$.next(filteredExercises)
+
+        const filteredCategories = categories.filter(category => category.title.toLowerCase().includes(query.toLowerCase()))
+        this.categories$.next(filteredCategories)
+
         break
       }
     }
@@ -113,13 +121,18 @@ export class ExplorePageComponent implements OnDestroy {
     })
   })
 
-  private paramsSub = this.route.queryParams.subscribe(({ t, q }) => {
+  private paramsSub = this.route.queryParams.subscribe(({ t, q, c }) => {
+    if (c) {
+      const categoryControl = this.searchForm.get('category') as AbstractControl<string>
+      if (c !== categoryControl.value) categoryControl.setValue(c)
+    }
+
     const queryControl = this.searchForm.get('query') as AbstractControl<string>
     const query = q ? q : ''
     if (query !== queryControl.value) queryControl.setValue(query)
 
     const typeControl = this.searchForm.get('type') as AbstractControl<string>
-    const types = ['goals', 'users', 'exercises']
+    const types = ['goals', 'users', 'exercises', 'categories']
     const type = types.includes(t) ? t : 'all'
     if (type !== typeControl.value) typeControl.setValue(type)
 
@@ -151,5 +164,12 @@ export class ExplorePageComponent implements OnDestroy {
     })
     const control = this.searchForm.get('type') as AbstractControl<string>
     control.setValue(type)
+  }
+
+  filterCategory(category: Category) {
+    this.router.navigate(['.'], {
+      queryParams: { c: category, t: 'goals' },
+      relativeTo: this.route
+    })
   }
 }

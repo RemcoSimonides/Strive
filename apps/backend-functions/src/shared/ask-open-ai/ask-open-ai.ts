@@ -3,10 +3,12 @@ import { ChatGPTMessage } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsStreaming, ChatCompletionMessageParam } from 'openai/resources'
+import { parseRaw } from './parse'
 
 export interface AskOpenAIConfig {
   model: ChatCompletionCreateParamsStreaming['model']
-  parse: boolean
+  parse: boolean,
+  response_format: ChatCompletionCreateParamsStreaming['response_format']
 }
 
 type ChatGPTDoc = Pick<ChatGPTMessage, 'answerParsed'|'answerRaw'|'status'>
@@ -64,19 +66,3 @@ export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: Doc
   }
 }
 
-function parseRaw(answer: string): string[] | undefined {
-  let value = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
-
-  if (value.split('"').length % 2 === 0) value = value + '"'
-  if (value.startsWith('[') && !value.endsWith(']')) value = value + ']'
-
-  try {
-    const parsed = JSON.parse(value)
-    if (!Array.isArray(parsed)) return
-    if (parsed.some(item => typeof item !== 'string')) return
-
-    return parsed
-  } catch (e) {
-    return
-  }
-}

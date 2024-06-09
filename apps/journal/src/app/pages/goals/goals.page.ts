@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 
-import { IonContent, IonRefresher, IonRefresherContent, IonThumbnail, IonIcon, IonBadge, IonButton, IonSkeletonText, ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
-import { checkmarkOutline, add, lockClosedOutline } from 'ionicons/icons'
+import { IonContent, IonRefresher, IonRefresherContent, IonThumbnail, IonIcon, IonBadge, IonButton, IonSkeletonText, ModalController, PopoverController, RefresherCustomEvent } from '@ionic/angular/standalone'
+import { checkmarkOutline, add, lockClosedOutline, filterOutline } from 'ionicons/icons'
 import { addIcons } from 'ionicons'
 
 import { joinWith } from 'ngfire'
@@ -13,9 +13,9 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import { isBefore, min } from 'date-fns'
 
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
-import { switchMap, map, filter, shareReplay } from 'rxjs/operators'
+import { switchMap, map, filter, shareReplay, tap } from 'rxjs/operators'
 
-import { delay } from '@strive/utils/helpers'
+import { delay, unique } from '@strive/utils/helpers'
 import { getProgress } from '@strive/goal/pipes/progress.pipe'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -24,7 +24,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
-import { SelfReflectFrequency, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents } from '@strive/model'
+import { SelfReflectFrequency, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents, Category } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -39,6 +39,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
+import { CategoryFilterComponent } from '@strive/goal/components/category-filter/category-filter.component'
 import { HomePageComponent } from '../home/home.page'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
 import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.component'
@@ -58,6 +59,7 @@ import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumb
     GoalCreateModalComponent,
     ImageDirective,
     GoalOptionsComponent,
+    CategoryFilterComponent,
     HomePageComponent,
     GoalThumbnailComponent,
     GoalUpdatesModalComponent,
@@ -79,6 +81,8 @@ import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumb
 export class GoalsPageComponent implements OnDestroy {
 
   seeAll = new BehaviorSubject(false)
+  categoryFilter$ = new BehaviorSubject<(Category)[]>([])
+  categoriesUsed = signal<(Category | undefined)[]>([])
 
   achieving$: Observable<StakeholderWithGoalAndEvents[]>
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
@@ -89,7 +93,14 @@ export class GoalsPageComponent implements OnDestroy {
     const uid = await this.auth.getUID()
     if (!uid) return
 
-    const { t, affirm, dfs, reflect } = params
+    const { c, t, affirm, dfs, reflect } = params
+    if (c) {
+      const categories = c.split(',').map((i: string) => i.trim())
+      this.categoryFilter$.next(categories)
+    } else {
+      this.categoryFilter$.next([])
+    }
+
     if (t === 'daily-gratitude') {
       this.modalCtrl.create({
         component: CardsModalComponent
@@ -164,6 +175,7 @@ export class GoalsPageComponent implements OnDestroy {
     private auth: AuthService,
     private goal: GoalService,
     private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
     private route: ActivatedRoute,
     private router: Router,
     seo: SeoService,
@@ -185,6 +197,10 @@ export class GoalsPageComponent implements OnDestroy {
         }
       }, { shouldAwait: true }),
       shareReplay({ bufferSize: 1, refCount: true }),
+      tap(stakeholders => {
+        const uniqueCategories = unique(stakeholders.flatMap(s => s.goal?.categories)).filter(c => !!c)
+        this.categoriesUsed.set(uniqueCategories)
+      }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
     ) as Observable<StakeholderWithGoalAndEvents[]>
 
@@ -201,7 +217,18 @@ export class GoalsPageComponent implements OnDestroy {
       }))
     )
 
-    this.stakeholders$ = stakeholders$.pipe(
+    this.stakeholders$ = combineLatest([
+      stakeholders$,
+      this.categoryFilter$
+    ]).pipe(
+      map(([stakeholders, categoryFilter]) => {
+        if (!categoryFilter?.length) return stakeholders
+
+        return stakeholders.filter(stakeholder => {
+          if (!stakeholder.goal.categories?.length) return false
+          return stakeholder.goal.categories.some(category => categoryFilter.includes(category))
+        })
+      }),
       map(stakeholders => stakeholders.filter(stakeholder => stakeholder.isAchiever)),
       map(stakeholders => stakeholders.sort((first, second) => {
         // Sort finished goals to the end and in progress goals to top
@@ -239,7 +266,7 @@ export class GoalsPageComponent implements OnDestroy {
         this.achieving$
       ])
     ).then(() => SplashScreen.hide())
-    addIcons({ checkmarkOutline, add, lockClosedOutline })
+    addIcons({ checkmarkOutline, add, lockClosedOutline, filterOutline })
   }
 
   ngOnDestroy() {
@@ -302,5 +329,14 @@ export class GoalsPageComponent implements OnDestroy {
   async refresh($event: RefresherCustomEvent) {
     await delay(500)
     $event?.target.complete()
+  }
+
+  openFilter(event: UIEvent) {
+    const categories = this.categoriesUsed()
+    this.popoverCtrl.create({
+      component: CategoryFilterComponent,
+      componentProps: { categories },
+      event
+    }).then(popover => popover.present())
   }
 }

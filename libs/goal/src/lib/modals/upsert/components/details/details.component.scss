@@ -10,3 +10,12 @@ small {
 ion-item {
   --highlight-background: var(--ion-color-primary);
 }
+
+ion-select {
+  padding: 0;
+
+  label {
+    display: block;
+    min-height: 0;
+  }
+}

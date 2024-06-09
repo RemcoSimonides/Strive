@@ -10,8 +10,9 @@ const config: RuntimeOptions = {
 }
 
 const askOpenAIConfig: AskOpenAIConfig = {
-  model: 'gpt-4',
-  parse: true
+  model: 'gpt-4o',
+  parse: true,
+  response_format: { type: 'json_object' } // https://platform.openai.com/docs/guides/text-generation/json-mode
 }
 
 const parsablePrompt = `The format of your response has to be a JSON parsable array of strings.`

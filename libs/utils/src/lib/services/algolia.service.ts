@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { AlgoliaGoal, AlgoliaUser, createAlgoliaGoal, createAlgoliaUser } from '@strive/model'
+import { AlgoliaGoal, AlgoliaUser, Category, createAlgoliaGoal, createAlgoliaUser } from '@strive/model'
 
 import * as algoliasearch from 'algoliasearch'
 
@@ -21,12 +21,13 @@ export class AlgoliaService {
   profiles$: Observable<AlgoliaUser[]> = this._profiles.asObservable()
 
   search(query: string, hitsPerPage?: number | { goals?: number, profiles?: number}) {
-    this.searchGoals(query, typeof hitsPerPage === 'object' ? hitsPerPage?.goals : hitsPerPage)
+    this.searchGoals(query, undefined, typeof hitsPerPage === 'object' ? hitsPerPage?.goals : hitsPerPage)
     this.searchProfiles(query, typeof hitsPerPage === 'object' ? hitsPerPage?.profiles : hitsPerPage)
   }
 
-  searchGoals(query: string, hitsPerPage: number | undefined): void {
+  searchGoals(query: string, category?: Category, hitsPerPage?: number | undefined): void {
     this.goalsIndex.search<AlgoliaGoal>(query, {
+      filters: `${category ? `categories:${category}` : ''}`,
       hitsPerPage,
     }).then(data => {
       const goals = data.hits.map(hit => createAlgoliaGoal(hit))
@@ -42,5 +43,4 @@ export class AlgoliaService {
       this._profiles.next(users)
     })
   }
-  
 }

@@ -44,10 +44,15 @@
         }
         @if (stakeholders$ | async; as stakeholders) {
           @if (stakeholders.length) {
-            <ion-button expand="block" fill="clear" (click)="createGoal()">
-              <ion-icon name="add" slot="start"/>
-              <span>Create Goal</span>
-            </ion-button>
+            <header>
+              <ion-button expand="block" fill="clear" (click)="createGoal()" class="create-goal">
+                <ion-icon name="add" slot="start"/>
+                <span>Create Goal</span>
+              </ion-button>
+              <ion-button fill="clear" (click)="openFilter($event)">
+                <ion-icon name="filter-outline" slot="icon-only"/>
+              </ion-button>
+            </header>
             <section class="cards">
               @for (stakeholder of stakeholders; track trackByFn($index, stakeholder)) {
                 <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">

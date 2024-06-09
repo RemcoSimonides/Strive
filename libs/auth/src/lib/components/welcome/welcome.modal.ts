@@ -11,7 +11,6 @@ import { Capacitor } from '@capacitor/core'
 import { SwiperContainer } from 'swiper/swiper-element'
 import { combineLatest, map, of } from 'rxjs'
 
-import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { PersonalService } from '@strive/user/personal.service'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
@@ -26,7 +25,6 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
   imports: [
     CommonModule,
     ImageDirective,
-    GoalCreateModalComponent,
     IonHeader,
     IonToolbar,
     IonButtons,
