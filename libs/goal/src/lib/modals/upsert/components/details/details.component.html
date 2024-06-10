@@ -24,13 +24,23 @@
           class="primary"
         />
       </ion-item>
-      <ion-item lines="none">
+      <ion-item [lines]="mode === 'update' ? 'full' : 'none'">
         <ion-label position="stacked" color="primary">Who can see this goal?</ion-label>
         <ion-select interface="popover" formControlName="publicity">
           <ion-select-option value="public">Everyone</ion-select-option>
           <ion-select-option value="private">You or invited users only</ion-select-option>
         </ion-select>
       </ion-item>
+      @if (mode === 'update') {
+        <ion-item lines="none">
+          <ion-label position="stacked" color="primary">Categories</ion-label>
+          <ion-select interface="popover" formControlName="categories" multiple>
+            @for (category of categories; track category) {
+              <ion-select-option value="{{category.id}}">{{category.title}}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+      }
     </ion-list>
   </form>
 }

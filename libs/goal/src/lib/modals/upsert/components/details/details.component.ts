@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { IonList, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, PopoverController } from '@ionic/angular/standalone'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { categories } from '@strive/model'
 import { endOfDay } from 'date-fns'
 
 @Component({
@@ -27,6 +28,9 @@ import { endOfDay } from 'date-fns'
 export class GoalDetailsComponent {
 
   @Input() form?: GoalForm
+  @Input() mode?: 'create' | 'update'
+
+  categories = categories
 
   constructor(
     private cdr: ChangeDetectorRef,

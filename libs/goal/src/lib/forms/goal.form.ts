@@ -10,6 +10,7 @@ function createGoalFormControl(params?: Partial<Goal>) {
     deadline: new FormControl(goal.deadline, { nonNullable: true, validators: [Validators.required] }),
     publicity: new FormControl<GoalPublicityType>('private', { nonNullable: true }),
     title: new FormControl(goal.title, { nonNullable: true, validators: [Validators.required]}),
+    categories: new FormControl(goal.categories, { nonNullable: true })
   }
 }
 
@@ -25,16 +26,18 @@ export class GoalForm extends FormGroup<GoalFormControl> {
   get deadline() { return this.get('deadline')! }
   get publicity() { return this.get('publicity')! }
   get image() { return this.get('image')! }
+  get categories() { return this.get('categories')! }
 
   getGoalValue(): Partial<Goal> {
-    const { description, image, deadline, publicity, title } = this.value
+    const { description, image, deadline, publicity, title, categories } = this.value
 
     return {
       description,
       title,
       image,
       deadline,
-      publicity
+      publicity,
+      categories
     }
   }
 }

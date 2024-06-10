@@ -157,7 +157,7 @@ async (snapshot, context) => {
       await deleteFromAlgolia('goal', goalId)
     }
 
-  } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters) {
+  } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters || !arraysAreEqual(before.categories, after.categories)) {
     await updateAlgoliaObject('goal', goalId, createAlgoliaGoal(after))
   }
 })
@@ -238,4 +238,9 @@ export async function supportsNeedDecision(goal: Goal, successful: boolean) {
     batch.update(snap.ref, result)
   }
   batch.commit()
+}
+
+function arraysAreEqual<T>(a: T[], b: T[]): boolean {
+  if (a.length!== b.length) return false;
+  return !a.some((element, index) => element!== b[index]);
 }

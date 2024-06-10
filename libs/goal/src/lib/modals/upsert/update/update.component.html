@@ -14,7 +14,7 @@
 
 @if (form && goal) {
   <ion-content class="ion-padding">
-    <strive-goal-details [form]="form" />
+    <strive-goal-details [form]="form" mode="update" />
     <strive-goal-images [goalId]="goal.id" [form]="form" />
   </ion-content>
 }
