@@ -256,7 +256,7 @@ export async function getNextReminder(settings: SelfReflectSettings, uid: string
 
   for (const frequency of frequencies) {
     const start = startOfNextFrequency[frequency](now)
-    const next = frequency === 'daily' ? start : getNextDay(start, settings.preferredDay, frequency)
+    const next = getNextDay(start, settings.preferredDay, frequency)
 
     // do not send reminder if the next reminder is too soon - and thus try to set next next reminder
     const lastEntry = frequency === 'daily' ? daily

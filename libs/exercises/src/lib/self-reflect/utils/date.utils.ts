@@ -12,29 +12,31 @@ const weekdayMapping: Record<Weekday, Day> = {
 }
 
 export function getNextDay(startNextFrequency: Date, weekday: Weekday, frequency: SelfReflectFrequency) {
-  const startMethods = {
-    'daily': startOfDay,
-    'weekly': startOfWeek,
-    'monthly': startOfMonth,
-    'quarterly': startOfQuarter,
-    'yearly': startOfYear
-  }
+  // const startMethods = {
+  //   'daily': startOfDay,
+  //   'weekly': startOfWeek,
+  //   'monthly': startOfMonth,
+  //   'quarterly': startOfQuarter,
+  //   'yearly': startOfYear
+  // }
 
-  const today = startOfDay(new Date())
-  const day = weekdayMapping[weekday]
+  // const today = startOfDay(new Date())
+  // const day = weekdayMapping[weekday]
 
   if (frequency === 'daily') {
     // No need to calculate next day because weekday is irrelevant for daily
     return startNextFrequency
   }
 
-  const startOfFrequencyDate = startMethods[frequency](startNextFrequency)
-  const firstWeekdayOfFrequency = nextDay(startOfFrequencyDate, day)
-  const before = isBefore(startNextFrequency, firstWeekdayOfFrequency)
+  // const startOfFrequencyDate = startMethods[frequency](startNextFrequency)
 
-  const date = before ? today : startNextFrequency
+  // const dayOfStartOfFrequencyDate = getDay(startOfFrequencyDate)
+  // const firstWeekdayOfFrequency =  startOfFrequencyDate : nextDay(startOfFrequencyDate, day)
+  // const before = isBefore(startNextFrequency, firstWeekdayOfFrequency)
 
-  const yesterday = addDays(date, -1) // to return today if today is weekday
+  // const date = before ? today : startNextFrequency // this is odd. Why today?
+
+  const yesterday = addDays(startNextFrequency, -1) // to return today if today is weekday
   return nextDay(yesterday, weekdayMapping[weekday])
 }
 
