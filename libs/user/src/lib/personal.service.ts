@@ -7,7 +7,7 @@ import { FCM } from '@capacitor-community/fcm'
 
 import { arrayRemove, arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
-import { FireSubCollection } from 'ngfire'
+import { FireSubCollection, toDate } from 'ngfire'
 import { getAuth } from 'firebase/auth'
 
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
@@ -16,7 +16,7 @@ import * as Sentry from '@sentry/capacitor'
 import { user } from 'rxfire/auth'
 import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
 
-import { Personal } from '@strive/model'
+import { createPersonal, Personal } from '@strive/model'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { PushNotificationSettingsForm, SettingsForm } from './forms/settings.form'
@@ -76,7 +76,7 @@ export class PersonalService extends FireSubCollection<Personal> {
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Personal>) {
     return snapshot.exists()
-      ? { ...snapshot.data(), uid: snapshot.id }
+      ? createPersonal(toDate({ ...snapshot.data(), uid: snapshot.id }))
       : undefined
   }
 

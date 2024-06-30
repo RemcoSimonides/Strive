@@ -58,6 +58,8 @@ const secrets = [
 	'SENTRY_DSN',
 	'SENTRY_USE_ENVIRONMENT',
 	'OPENAI_APIKEY',
+	'STRAVA_CLIENT_ID',
+	'STRAVA_CLIENT_SECRET'
 ]
 
 export const defaultConfig: RuntimeOptions = {

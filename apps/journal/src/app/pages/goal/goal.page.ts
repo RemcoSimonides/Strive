@@ -10,11 +10,12 @@ import { arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, 
 import { orderBy, OrderByDirection, where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 // Rxjs
-import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs'
-import { distinctUntilChanged, map, shareReplay, switchMap, tap } from 'rxjs/operators'
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs'
+import { distinctUntilChanged, filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'
 // Capacitor
 import { Capacitor } from '@capacitor/core'
 import { Share } from '@capacitor/share'
+import { Browser } from '@capacitor/browser'
 // Sentry
 import { captureException } from '@sentry/angular'
 // Date fns
@@ -49,6 +50,7 @@ import { AddSupportComponent } from '@strive/support/components/add/add.componen
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
+import { StravaActivityTypesComponent } from '@strive/goal/components/strava-activity-types/strava-activity-types.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -63,8 +65,11 @@ import { StoryService } from '@strive/story/story.service'
 import { PostService } from '@strive/post/post.service'
 import { MediaService } from '@strive/media/media.service'
 import { CommentService } from '@strive/chat/comment.service'
+import { PersonalService } from '@strive/user/personal.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
+import { createStravaAuthParams, StravaAuthParams } from 'libs/model/src/lib/strava'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -169,6 +174,14 @@ export class GoalPageComponent implements OnDestroy {
     map(([isLoggedIn, isMobile, isIOS]) => isLoggedIn && isMobile && isIOS)
   )
 
+  stravaParams$ = this.route.queryParams.pipe(
+    map(params => createStravaAuthParams(params)),
+    filter(params => !!params.code),
+    shareReplay({ bufferSize: 1, refCount: true })
+  ).subscribe(params => {
+    this.integrateStrava(params)
+  })
+
   private accessSubscription: Subscription
 
   constructor(
@@ -181,6 +194,7 @@ export class GoalPageComponent implements OnDestroy {
     private mediaService: MediaService,
     private milestoneService: MilestoneService,
     private modalCtrl: ModalController,
+    private personalService: PersonalService,
     private popoverCtrl: PopoverController,
     private postService: PostService,
     private profileService: ProfileService,
@@ -360,6 +374,10 @@ export class GoalPageComponent implements OnDestroy {
           break
         case enumGoalOptions.deleteGoal:
           this.deleteGoal()
+          break
+        case enumGoalOptions.integrateStrava:
+          this.integrateStrava()
+          break
       }
     })
   }
@@ -604,5 +622,67 @@ export class GoalPageComponent implements OnDestroy {
       component: SuggestionModalComponent,
       componentProps: { goal: this.goal }
     }).then(modal => modal.present())
+  }
+
+  async integrateStrava(stravaAuthParams?: StravaAuthParams) {
+    if (!this.goal?.id) {
+      await firstValueFrom(this.goal$)
+      if (!this.goal?.id) return
+    }
+
+    let authorizationCode = ''
+    let refreshToken = ''
+    if (stravaAuthParams) {
+      authorizationCode = stravaAuthParams.code
+      this.router.navigate([], {
+        queryParams: {
+          code: null,
+          state: null,
+          scope: null
+        },
+        queryParamsHandling: 'merge'
+      })
+    } else {
+      const uid = await this.auth.getUID()
+      if (!uid) return
+      const personal = await this.personalService.load(uid, { uid })
+      console.log('personal: ', personal)
+      if (personal?.stravaRefreshToken) {
+        refreshToken = personal.stravaRefreshToken
+      } else {
+        const client_id = 102223
+        const redirect_uri = `https://strivejournal.com/goal/${this.goal.id}`
+        const response_type = 'code'
+        const approval_prompt = 'auto'
+        const scope = 'activity:read'
+        const url = `https://www.strava.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=${response_type}&approval_prompt=${approval_prompt}&scope=${scope}`
+
+        Browser.open({ url })
+        return
+      }
+    }
+
+    const popover = await this.popoverCtrl.create({
+      component: StravaActivityTypesComponent
+    })
+    popover.onDidDismiss().then(async ({ data }) => {
+      if (!data) return
+      if (!authorizationCode && !refreshToken) return
+
+      const { types, after } = data
+
+      const goalId = this.goal?.id
+
+      const func = httpsCallable(getFunctions(), 'initialiseStrava')
+      const stravaInitialised = await func({ goalId, authorizationCode, refreshToken, activityTypes: types, after })
+      const { error, result } = stravaInitialised.data as { error: string, result: any }
+      if (error) {
+      	console.error(result)
+      	captureException(result)
+      }
+    })
+    popover.present()
+
+
   }
 }

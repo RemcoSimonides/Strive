@@ -25,6 +25,14 @@
       ></iframe>
     } @else {
       <swiper-container pagination="true">
+        @if (post.stravaActivityId) {
+          <swiper-slide class="strava-slide">
+            <section class="strava-wrapper">
+              <div class="strava-embed-placeholder" data-embed-type="activity" [attr.data-embed-id]="post.stravaActivityId" data-style="standard"></div>
+              <div class="iframe-overlay"></div>
+            </section>
+          </swiper-slide>
+        }
         @for (media of post.medias; track media; let index = $index) {
           <swiper-slide>
             <img [ref]="media | mediaRef" asset="" (click)="openZoom(index)">

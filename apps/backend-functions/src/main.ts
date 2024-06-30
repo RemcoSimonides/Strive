@@ -29,3 +29,4 @@ export { scrapeMetatags, downloadImageFromURL } from './https/scrape'
 // TODO fix SSR when it works with firebase again https://www.notion.so/To-Do-s-971f9e467aaa4e959eb6304fb36d25cd?p=96ed188602b44cb2bce0a7b2be1021d8&pm=c
 // export { ssr } from './https/ssr'
 export { createCollectiveGoal } from './https/create-collective-goal'
+export { initialiseStrava, listenToStrava } from './https/strava'

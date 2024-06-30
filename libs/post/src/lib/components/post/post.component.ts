@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common'
+import { CommonModule, DOCUMENT } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, Inject, Renderer2 } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { IonCard, IonAvatar, IonButton, IonIcon, IonCardContent } from '@ionic/angular/standalone'
@@ -22,7 +22,7 @@ import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom,
+  encapsulation: ViewEncapsulation.None, // Strava embed
   imports: [
     CommonModule,
     RouterModule,
@@ -40,7 +40,7 @@ import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PostComponent {
+export class PostComponent implements AfterViewInit {
 
   @Input() set storyItem(storyItem: StoryItem) {
     if (!storyItem) return
@@ -55,10 +55,22 @@ export class PostComponent {
   post?: Post
 
   constructor(
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
   ) {
     addIcons({ ellipsisVerticalOutline })
+  }
+
+  ngAfterViewInit() {
+    if (this.post?.stravaActivityId) {
+      const script = this.renderer.createElement('script')
+      script.type = 'text/javascript'
+      script.src = 'https://strava-embeds.com/embed.js'
+      script.async = true
+      this.renderer.appendChild(this.document.body, script)
+    }
   }
 
   openZoom(index: number) {

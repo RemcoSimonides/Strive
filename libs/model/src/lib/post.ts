@@ -10,6 +10,7 @@ export interface PostBase {
   uid: string
   milestoneId?: string // link to milestone
   date: Date
+  stravaActivityId?: number
   updatedAt?: Date
   createdAt?: Date
 }
@@ -27,7 +28,10 @@ export function createPost(params: Partial<Post> = {}): Post {
     goalId: '',
     uid: '',
     youtubeId: '',
+    stravaActivityId: 0,
     date: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     ...params
   }
 }

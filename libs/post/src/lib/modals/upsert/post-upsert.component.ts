@@ -164,7 +164,8 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 				mediaIds,
 				url,
 				youtubeId,
-				uid: this.auth.uid
+				stravaActivityId: this.post.stravaActivityId,
+				uid: this.auth.uid,
 			})
 
 			await this.postService.upsert(post, { params: { goalId: post.goalId } })

@@ -253,6 +253,10 @@ button.alert-button.alert-button-delete {
   margin-bottom: 8px;
 }
 
+.alert-checkbox-group .alert-checkbox-label {
+  color: var(--ion-color-dark);
+}
+
 .wide-popover {
   --width: 80vw;
   --max-width: 400px;

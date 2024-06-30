@@ -36,6 +36,7 @@
     "@capacitor-community/fcm": "^5.0.3",
     "@capacitor-firebase/authentication": "^6.0.0",
     "@capacitor/app": "^6.0.0",
+    "@capacitor/browser": "^6.0.1",
     "@capacitor/camera": "^6.0.0",
     "@capacitor/clipboard": "^6.0.0",
     "@capacitor/core": "^6.0.0",
