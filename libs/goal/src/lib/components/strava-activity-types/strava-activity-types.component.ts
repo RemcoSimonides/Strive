@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 
 import { IonButton, IonCheckbox, IonList, IonItem, IonSelect, IonSelectOption, IonInput, PopoverController } from '@ionic/angular/standalone'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { addYears, startOfDay } from 'date-fns'
 
-import { ActivityType } from 'libs/model/src/lib/strava'
+import { ActivityType, StravaIntegration } from 'libs/model/src/lib/strava'
 
 interface Activity {
   id: ActivityType
@@ -75,6 +75,14 @@ export class StravaActivityTypesComponent {
     activities: new FormControl<string[] | undefined>(undefined, { validators: [Validators.required]}),
     date: new FormControl<Date | undefined>(undefined),
   })
+  integrationActive = signal(false)
+
+  @Input() set integration(value: StravaIntegration | undefined) {
+    if (!value) return
+    const activities = value.activityTypes.map((id) => this.activities.find(({ id: _id }) => _id === id) ?? { name: '' }).map((a) => a?.name).filter(a => !!a)
+    this.form.patchValue({ activities })
+    this.integrationActive.set(true)
+  }
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -114,5 +122,9 @@ export class StravaActivityTypesComponent {
     const _date = date ? startOfDay(new Date(date)).getTime() / 1000 : undefined
 
     this.popoverCtrl.dismiss({ types: _activities, after: _date })
+  }
+
+  disable() {
+    console.log('canceld')
   }
 }

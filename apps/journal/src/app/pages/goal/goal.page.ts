@@ -51,6 +51,7 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { StravaActivityTypesComponent } from '@strive/goal/components/strava-activity-types/strava-activity-types.component'
+import { StravaCardComponent } from '@strive/strava/components/strava-card/strava-card.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -66,9 +67,10 @@ import { PostService } from '@strive/post/post.service'
 import { MediaService } from '@strive/media/media.service'
 import { CommentService } from '@strive/chat/comment.service'
 import { PersonalService } from '@strive/user/personal.service'
+import { StravaService } from '@strive/strava/strava.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
-import { createStravaAuthParams, StravaAuthParams } from 'libs/model/src/lib/strava'
+import { createStravaAuthParams, StravaAuthParams, StravaIntegration } from 'libs/model/src/lib/strava'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
@@ -124,6 +126,7 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     UpsertPostModalComponent,
     CollectiveGoalsModalComponent,
     SuggestionModalComponent,
+    StravaCardComponent,
     IonFab,
     IonFabButton,
     IonIcon,
@@ -151,6 +154,7 @@ export class GoalPageComponent implements OnDestroy {
 
   storyOrder$ = new BehaviorSubject<OrderByDirection>('desc')
   story$: Observable<StoryItem[]>
+  stravaIntegrations$?: Observable<StravaIntegration[]>
 
   roadmapOrder$ = new BehaviorSubject<OrderByDirection>('asc')
   milestones$?: Observable<Milestone[]>
@@ -201,6 +205,7 @@ export class GoalPageComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private stakeholderService: GoalStakeholderService,
+    private stravaService: StravaService,
     private storyService: StoryService,
     private support: SupportService,
     public screensize: ScreensizeService,
@@ -348,6 +353,19 @@ export class GoalPageComponent implements OnDestroy {
       }
     })
     addIcons({ arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, personAddOutline, shareSocialOutline, ellipsisHorizontalOutline, flag, notifications, link, lockOpenOutline, lockClosedOutline, timerOutline, closeOutline, arrowDownOutline, arrowUpOutline, sparklesOutline });
+
+    this.stravaIntegrations$ = goalId$.pipe(
+      switchMap(goalId => {
+        if (!goalId) return of([])
+
+        return this.stravaService.valueChanges([where('goalId', '==', goalId)]).pipe(
+          map(s => s.sort((a, b) => b.totalActivities - a.totalActivities))
+        )
+      }),
+      joinWith({
+        profile: ({ userId }) => this.profileService.valueChanges(userId)
+      })
+    )
   }
 
   ngOnDestroy() {
@@ -630,59 +648,77 @@ export class GoalPageComponent implements OnDestroy {
       if (!this.goal?.id) return
     }
 
-    let authorizationCode = ''
-    let refreshToken = ''
-    if (stravaAuthParams) {
-      authorizationCode = stravaAuthParams.code
-      this.router.navigate([], {
-        queryParams: {
-          code: null,
-          state: null,
-          scope: null
-        },
-        queryParamsHandling: 'merge'
+    const stravaIntegrations = this.stravaIntegrations$ ? await firstValueFrom(this.stravaIntegrations$) : []
+    const integration = stravaIntegrations.find(i => i.userId === this.auth.uid)
+
+    if (integration) {
+      // already has integration
+      const popover = await this.popoverCtrl.create({
+        component: StravaActivityTypesComponent,
+        componentProps: { integration }
       })
+      popover.onDidDismiss().then(async ({ data }) => {
+        if (!data) return
+
+        const { types } = data
+        this.stravaService.update(integration.id, { activityTypes: types })
+      })
+      popover.present()
+
     } else {
-      const uid = await this.auth.getUID()
-      if (!uid) return
-      const personal = await this.personalService.load(uid, { uid })
-      console.log('personal: ', personal)
-      if (personal?.stravaRefreshToken) {
-        refreshToken = personal.stravaRefreshToken
+      // initialise integration
+      let authorizationCode = ''
+      let refreshToken = ''
+      if (stravaAuthParams) {
+        authorizationCode = stravaAuthParams.code
+        this.router.navigate([], {
+          queryParams: {
+            code: null,
+            state: null,
+            scope: null
+          },
+          queryParamsHandling: 'merge'
+        })
       } else {
-        const client_id = 102223
-        const redirect_uri = `https://strivejournal.com/goal/${this.goal.id}`
-        const response_type = 'code'
-        const approval_prompt = 'auto'
-        const scope = 'activity:read'
-        const url = `https://www.strava.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=${response_type}&approval_prompt=${approval_prompt}&scope=${scope}`
+        const uid = await this.auth.getUID()
+        if (!uid) return
+        const personal = await this.personalService.load(uid, { uid })
+        console.log('personal: ', personal)
+        if (personal?.stravaRefreshToken) {
+          refreshToken = personal.stravaRefreshToken
+        } else {
+          const client_id = 102223
+          const redirect_uri = `https://strivejournal.com/goal/${this.goal.id}`
+          const response_type = 'code'
+          const approval_prompt = 'auto'
+          const scope = 'activity:read'
+          const url = `https://www.strava.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=${response_type}&approval_prompt=${approval_prompt}&scope=${scope}`
 
-        Browser.open({ url })
-        return
+          Browser.open({ url })
+          return
+        }
       }
+
+      const popover = await this.popoverCtrl.create({
+        component: StravaActivityTypesComponent
+      })
+      popover.onDidDismiss().then(async ({ data }) => {
+        if (!data) return
+        if (!authorizationCode && !refreshToken) return
+
+        const { types, after } = data
+
+        const goalId = this.goal?.id
+
+        const func = httpsCallable(getFunctions(), 'initialiseStrava')
+        const stravaInitialised = await func({ goalId, authorizationCode, refreshToken, activityTypes: types, after })
+        const { error, result } = stravaInitialised.data as { error: string, result: any }
+        if (error) {
+          console.error(result)
+          captureException(result)
+        }
+      })
+      popover.present()
     }
-
-    const popover = await this.popoverCtrl.create({
-      component: StravaActivityTypesComponent
-    })
-    popover.onDidDismiss().then(async ({ data }) => {
-      if (!data) return
-      if (!authorizationCode && !refreshToken) return
-
-      const { types, after } = data
-
-      const goalId = this.goal?.id
-
-      const func = httpsCallable(getFunctions(), 'initialiseStrava')
-      const stravaInitialised = await func({ goalId, authorizationCode, refreshToken, activityTypes: types, after })
-      const { error, result } = stravaInitialised.data as { error: string, result: any }
-      if (error) {
-      	console.error(result)
-      	captureException(result)
-      }
-    })
-    popover.present()
-
-
   }
 }

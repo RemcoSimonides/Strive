@@ -1,0 +1,30 @@
+ion-card-content {
+  display: flex;
+  gap: 16px;
+
+  ion-avatar {
+    margin: auto 0;
+    height: 32px;
+    width: 32px;
+  }
+
+  section {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    article {
+      min-width: 200px;
+      display: flex;
+      flex: 1;
+
+      div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 export interface StravaIntegration {
   id: string
   athleteId: string
-  uid: string
+  userId: string
   goalId: string
   activityTypes: ActivityType[]
   totalActivities: number
@@ -16,7 +16,7 @@ export function createStravaIntegration(params?: Partial<StravaIntegration>): St
   return {
     id: '',
     athleteId: '',
-    uid: '',
+    userId: '',
     goalId: '',
     activityTypes: [],
     totalActivities: 0,

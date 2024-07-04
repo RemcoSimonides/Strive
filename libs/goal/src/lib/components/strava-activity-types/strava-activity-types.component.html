@@ -1,23 +1,32 @@
-<form [formGroup]="form">
-  <ion-list>
-    <ion-item lines="full">
-      <ion-select label="Select activitites" labelPlacement="stacked" placeholder="Select activity types" multiple color="primary" formControlName="activities">
-        @for (activity of activities; track activity.id; let last = $last) {
-          <ion-select-option>{{ activity.name }}</ion-select-option>
-        }
-      </ion-select>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-input
-        (ionFocus)="openDatePicker()"
-        label="Import activities from date"
-        labelPlacement="stacked"
-        [value]="form.get('date')?.value | date:'longDate'"
-        placeholder="now"
-      />
-    </ion-item>
-  </ion-list>
-</form>
-<ion-button color="primary" [disabled]="form.invalid" (click)="submit()">
-  NEXT
-</ion-button>
+<section>
+  <form [formGroup]="form">
+    <ion-list>
+      <ion-item [lines]="integrationActive() ? 'none' : 'full'">
+        <ion-select label="Select activitites" labelPlacement="stacked" placeholder="Select activity types" multiple color="primary" formControlName="activities">
+          @for (activity of activities; track activity.id; let last = $last) {
+            <ion-select-option>{{ activity.name }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      @if (!integrationActive()) {
+        <ion-item lines="none">
+          <ion-input
+            (ionFocus)="openDatePicker()"
+            label="Import activities from date"
+            labelPlacement="stacked"
+            [value]="form.get('date')?.value | date:'longDate'"
+            placeholder="now"
+          />
+        </ion-item>
+      }
+    </ion-list>
+  </form>
+  <ion-button color="primary" [disabled]="form.invalid" (click)="submit()">
+    {{ integrationActive() ? 'SAVE' : 'NEXT' }}
+  </ion-button>
+  @if (integrationActive()) {
+    <ion-button class="danger" (click)="disable()">
+      disable integration
+    </ion-button>
+  }
+</section>

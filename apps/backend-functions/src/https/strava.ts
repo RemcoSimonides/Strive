@@ -1,5 +1,5 @@
 import { db, functions, logger } from '@strive/api/firebase'
-import { ErrorResultResponse, getDocument, toDate } from '../shared/utils'
+import { ErrorResultResponse, toDate } from '../shared/utils'
 import { wrapHttpsOnCallHandler, wrapHttpsOnRequestHandler } from '@strive/api/sentry'
 import fetch from 'node-fetch'
 import { ActivityResponse, ActivityType, createStravaIntegration } from 'libs/model/src/lib/strava'
@@ -40,12 +40,12 @@ export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHand
   const stravaSnap = await db.collection('Strava').where('athleteId', '==', body.owner_id).get()
   for (const doc of stravaSnap.docs) {
     const strava = createStravaIntegration(toDate({ ...doc.data(), id: doc.id }))
-    const { uid, goalId, activityTypes } = strava
+    const { userId, goalId, activityTypes } = strava
 
-    const personalSnap = await db.doc(`Users/${uid}/Personal/${uid}`).get()
+    const personalSnap = await db.doc(`Users/${userId}/Personal/${userId}`).get()
     const personal = createPersonal(toDate({ ...personalSnap.data(), id: personalSnap.id }))
     if (!personal.stravaRefreshToken) {
-      logger.error('No strava refresh token for person', uid)
+      logger.error('No strava refresh token for person', userId)
       continue
     }
 
@@ -63,7 +63,7 @@ export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHand
 
     // create post
     const post = createPost({
-      uid,
+      uid: userId,
       goalId,
       description: activity.name,
       date: new Date(activity.start_date),
@@ -95,8 +95,8 @@ async (data: { authorizationCode: string, refreshToken: string, goalId: string, 
 
   logger.log('parameters: ', data)
 
-  const uid = context.auth?.uid
-  if (!uid) {
+  const userId = context.auth?.uid
+  if (!userId) {
     return {
       error: 'Unauthorized',
       result: null
@@ -126,7 +126,7 @@ async (data: { authorizationCode: string, refreshToken: string, goalId: string, 
       accessToken = access_token
     }
 
-    const personalRef = db.doc(`Users/${uid}/Personal/${uid}`)
+    const personalRef = db.doc(`Users/${userId}/Personal/${userId}`)
     await personalRef.update({ stravaRefreshToken: newRefreshToken })
 
     if (after) {
@@ -142,7 +142,7 @@ async (data: { authorizationCode: string, refreshToken: string, goalId: string, 
 
       const stravaIntegration = createStravaIntegration({
         athleteId,
-        uid,
+        userId,
         goalId,
         activityTypes,
         totalActivities,
@@ -156,7 +156,7 @@ async (data: { authorizationCode: string, refreshToken: string, goalId: string, 
       const batch = db.batch()
       for (const activity of filtered) {
         const post = createPost({
-          uid,
+          uid: userId,
           goalId,
           description: activity.name,
           date: new Date(activity.start_date),
@@ -170,11 +170,11 @@ async (data: { authorizationCode: string, refreshToken: string, goalId: string, 
     } else {
       const stravaIntegration = createStravaIntegration({
         athleteId,
-        uid,
+        userId,
         goalId,
         activityTypes
       })
-      db.doc(`Strava/${goalId}${uid}`).set(stravaIntegration)
+      db.doc(`Strava/${goalId}${userId}`).set(stravaIntegration)
     }
 
     return {

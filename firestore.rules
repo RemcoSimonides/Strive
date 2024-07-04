@@ -133,6 +133,12 @@ service cloud.firestore {
       allow read;
     }
 
+    // ===== INTEGRATIONS ====
+    match /Strava/{stravaId} {
+      allow read;
+      allow update: if isIntegrationOwner(stravaId);
+    }
+
 
     // FUNCTIONS
     function isSignedIn() {
@@ -145,6 +151,10 @@ service cloud.firestore {
 
     function isOwner(userId) {
       return request.auth.uid == userId;
+    }
+
+    function isIntegrationOwner(stravaId) {
+      return getStravaIntegration(stravaId).userId == request.auth.uid
     }
 
     function existingData() {
@@ -161,6 +171,10 @@ service cloud.firestore {
 
     function userIsGoalAchiever(goalId) {
       return getGoalStakeholder(goalId).isAchiever == true;
+    }
+
+    function getStravaIntegration(stravaId) {
+      return get(/databases/$(database)/documents/Strava/$(stravaId)).data
     }
 
     function getGoalStakeholder(goalId) {

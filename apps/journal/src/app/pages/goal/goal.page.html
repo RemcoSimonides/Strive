@@ -261,6 +261,7 @@
                 </article>
               </section>
             }
+
             <section class="story">
               <header>
                 <h5>Story</h5>
@@ -270,6 +271,18 @@
                   </ion-button>
                 }
               </header>
+              <!-- Strava totals -->
+              @if (stravaIntegrations$ | async; as stravaIntegrations) {
+                @if (stravaIntegrations.length) {
+                  <section class="strava">
+                    @for (stravaIntegration of stravaIntegrations; track stravaIntegration) {
+                      <strive-strava-card [strava-integration]="stravaIntegration"></strive-strava-card>
+                    }
+                  </section>
+                }
+              }
+
+              <!-- Story -->
               <strive-story [story]="story$ | async" [stakeholder]="stakeholder" [goalId]="goal.id"></strive-story>
             </section>
           </main>

@@ -1,0 +1,31 @@
+@if (strava) {
+  <ion-card>
+    <ion-card-content>
+      <ion-avatar slot="start">
+        <img [ref]="strava.profile.photoURL" asset="profile.png" [width]="120" [height]="120"/>
+      </ion-avatar>
+      <section>
+        <article>
+          <div>
+            <h5>Activities</h5>
+            <span>{{ strava.totalActivities | compact }}</span>
+          </div>
+          <div>
+            <h5>Distance</h5>
+            <span>{{ strava.totalDistance / 1000 | compactDistance}} km</span>
+          </div>
+        </article>
+        <article>
+          <div>
+            <h5>Time</h5>
+            <span>{{ strava.totalMovingTime / 60 / 60 | compactTime }} hours</span>
+          </div>
+          <div>
+            <h5>Elevation gain</h5>
+            <span>{{ strava.totalElevationGain / 1000 | compactDistance }} km</span>
+          </div>
+        </article>
+      </section>
+    </ion-card-content>
+  </ion-card>
+}

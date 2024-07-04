@@ -34,7 +34,8 @@
       "@strive/support/*": ["libs/support/src/lib/*"],
       "@strive/ui/*": ["libs/ui/src/lib/*"],
       "@strive/user/*": ["libs/user/src/lib/*"],
-      "@strive/utils/*": ["libs/utils/src/lib/*"]
+      "@strive/utils/*": ["libs/utils/src/lib/*"],
+      "@strive/strava/*": ["libs/strava/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
