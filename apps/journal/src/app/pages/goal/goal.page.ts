@@ -659,6 +659,10 @@ export class GoalPageComponent implements OnDestroy {
       })
       popover.onDidDismiss().then(async ({ data }) => {
         if (!data) return
+        if (data === 'disable') {
+          this.stravaService.update(integration.id, { enabled: false })
+          return
+        }
 
         const { types } = data
         this.stravaService.update(integration.id, { activityTypes: types })

@@ -37,7 +37,7 @@ export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHand
     return
   }
 
-  const stravaSnap = await db.collection('Strava').where('athleteId', '==', body.owner_id).get()
+  const stravaSnap = await db.collection('Strava').where('athleteId', '==', body.owner_id).where('enabled', '==', true).get()
   for (const doc of stravaSnap.docs) {
     const strava = createStravaIntegration(toDate({ ...doc.data(), id: doc.id }))
     const { userId, goalId, activityTypes } = strava

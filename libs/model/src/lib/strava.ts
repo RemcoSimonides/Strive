@@ -1,5 +1,6 @@
 export interface StravaIntegration {
   id: string
+  enabled: boolean
   athleteId: string
   userId: string
   goalId: string
@@ -15,6 +16,7 @@ export interface StravaIntegration {
 export function createStravaIntegration(params?: Partial<StravaIntegration>): StravaIntegration {
   return {
     id: '',
+    enabled: true,
     athleteId: '',
     userId: '',
     goalId: '',

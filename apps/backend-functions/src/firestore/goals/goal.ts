@@ -80,6 +80,9 @@ async snapshot => {
   const notificationsSnap = await db.collectionGroup('Notifications').where('goalId', '==', goal.id).get()
   notificationsSnap.docs.forEach(doc => doc.ref.delete())
 
+  const stravaIntegrationsSnap = await db.collectionGroup('Strava').where('goalId', '==', goal.id).get()
+  stravaIntegrationsSnap.docs.forEach(doc => doc.ref.delete())
+
   if (goal.image) {
     gcsBucket.file(goal.image).delete({ ignoreNotFound: true })
   }
@@ -124,6 +127,8 @@ async (snapshot, context) => {
     const name: EventType = becameFinishedSuccessfully ? 'goalFinishedSuccessfully' : 'goalFinishedUnsuccessfully'
     addGoalEvent(name, source)
     addStoryItem(name, source)
+
+    disableStravaIntegration(goalId)
 
     supportsNeedDecision(after, becameFinishedSuccessfully)
 
@@ -238,6 +243,11 @@ export async function supportsNeedDecision(goal: Goal, successful: boolean) {
     batch.update(snap.ref, result)
   }
   batch.commit()
+}
+
+async function disableStravaIntegration(goalId: string) {
+  const stravaIntegrationsSnap = await db.collectionGroup('Strava').where('goalId', '==', goalId).get()
+  stravaIntegrationsSnap.docs.forEach(doc => doc.ref.update({ enabled: false }))
 }
 
 function arraysAreEqual<T>(a: T[], b: T[]): boolean {

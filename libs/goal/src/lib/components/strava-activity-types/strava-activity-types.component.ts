@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 
-import { IonButton, IonCheckbox, IonList, IonItem, IonSelect, IonSelectOption, IonInput, PopoverController } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonCheckbox, IonList, IonItem, IonSelect, IonSelectOption, IonInput, PopoverController } from '@ionic/angular/standalone'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { addYears, startOfDay } from 'date-fns'
 
@@ -85,6 +85,7 @@ export class StravaActivityTypesComponent {
   }
 
   constructor(
+    private alertCtrl: AlertController,
     private cdr: ChangeDetectorRef,
     private popoverCtrl: PopoverController
   ) {}
@@ -125,6 +126,18 @@ export class StravaActivityTypesComponent {
   }
 
   disable() {
-    console.log('canceld')
+    this.alertCtrl.create({
+      header: 'Are you sure you want to disable strava integration?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => this.popoverCtrl.dismiss('disable')
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).then(alert => alert.present())
   }
 }
