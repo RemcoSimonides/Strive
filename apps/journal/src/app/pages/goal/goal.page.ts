@@ -665,7 +665,7 @@ export class GoalPageComponent implements OnDestroy {
         }
 
         const { types } = data
-        this.stravaService.update(integration.id, { activityTypes: types })
+        this.stravaService.update(integration.id, { activityTypes: types, enabled: true })
       })
       popover.present()
 

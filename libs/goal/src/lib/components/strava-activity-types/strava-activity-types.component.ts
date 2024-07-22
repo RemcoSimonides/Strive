@@ -127,7 +127,7 @@ export class StravaActivityTypesComponent {
 
   disable() {
     this.alertCtrl.create({
-      header: 'Are you sure you want to disable strava integration?',
+      subHeader: 'Are you sure you want to disable the strava integration?',
       buttons: [
         {
           text: 'Yes',

@@ -30,14 +30,21 @@ export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHand
   const body: StravaEvent = req.body
   logger.log('Request body', body)
   if (body.object_type !== 'activity') {
+    logger.log('Not an activity event')
     return
   }
 
   if (body.aspect_type !== 'create') {
+    logger.log('Not a create event')
     return
   }
 
   const stravaSnap = await db.collection('Strava').where('athleteId', '==', body.owner_id).where('enabled', '==', true).get()
+
+  if (!stravaSnap.size) {
+    logger.log('No enabled strava integrations found for athlete', body.owner_id)
+  }
+
   for (const doc of stravaSnap.docs) {
     const strava = createStravaIntegration(toDate({ ...doc.data(), id: doc.id }))
     const { userId, goalId, activityTypes } = strava
@@ -82,8 +89,6 @@ export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHand
     })
     doc.ref.update({ ...updatedStravaIntegration })
   }
-
-  res.sendStatus(200)
 }))
 
 /**
