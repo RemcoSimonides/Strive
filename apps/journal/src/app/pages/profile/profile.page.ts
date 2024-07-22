@@ -29,7 +29,7 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { FollowGoalsModalComponent } from './modals/follow-goals/follow-goals.component'
 import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
-import { Goal, GoalStakeholder, User, createSpectator } from '@strive/model'
+import { Goal, GoalStakeholder, User, createMedia, createSpectator } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
@@ -178,11 +178,20 @@ export class ProfilePageComponent {
   async editProfileImage(profile: User, ev: UIEvent) {
     const isOwner = await firstValueFrom(this.isOwner$)
     if (!isOwner) {
-
+      const split = profile.photoURL.split('/')
+      const fileName = split.pop()
+      const storagePath = split.join('/')
+      const media = createMedia({
+        storagePath,
+        fileName,
+        id: fileName,
+        fileType: 'image',
+        status: 'uploaded'
+      })
       this.modalCtrl.create({
         component: ImageZoomModalComponent,
         componentProps: {
-          ref: profile.photoURL,
+          medias: [media],
           asset: 'profile.png'
         },
         enterAnimation: getEnterAnimation,

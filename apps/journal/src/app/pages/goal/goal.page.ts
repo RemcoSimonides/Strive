@@ -69,7 +69,7 @@ import { CommentService } from '@strive/chat/comment.service'
 import { PersonalService } from '@strive/user/personal.service'
 import { StravaService } from '@strive/strava/strava.service'
 // Strive Interfaces
-import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder } from '@strive/model'
+import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder, createMedia } from '@strive/model'
 import { createStravaAuthParams, StravaAuthParams, StravaIntegration } from 'libs/model/src/lib/strava'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
@@ -594,10 +594,21 @@ export class GoalPageComponent implements OnDestroy {
   }
 
   openZoom(goal: Goal) {
+    const split = goal.image.split('/')
+    const fileName = split.pop()
+    const storagePath = split.join('/')
+    const media = createMedia({
+      storagePath,
+      fileName,
+      id: fileName,
+      fileType: 'image',
+      status: 'uploaded'
+    })
+
     this.modalCtrl.create({
       component: ImageZoomModalComponent,
       componentProps: {
-        ref: goal.image,
+        medias: [media],
         asset: 'goal.png'
       },
       enterAnimation: getEnterAnimation,
