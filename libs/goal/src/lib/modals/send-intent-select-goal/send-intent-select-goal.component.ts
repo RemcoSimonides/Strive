@@ -3,11 +3,12 @@ import { CommonModule, Location } from '@angular/common'
 
 import { IonTitle, IonContent, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
 import { Filesystem } from '@capacitor/filesystem'
+import { Intent } from 'send-intent'
 
 import { Observable, of, shareReplay, switchMap } from 'rxjs'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { createPost, SendIntentPost, StakeholderWithGoal } from '@strive/model'
+import { createPost, StakeholderWithGoal } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { GoalService } from '@strive/goal/goal.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
@@ -34,7 +35,7 @@ import { isValidHttpUrl } from '@strive/utils/helpers'
 })
 export class SendIntentSelectGoalComponent extends ModalDirective {
 
-  @Input() sendIntentData: SendIntentPost = {}
+  @Input() sendIntentData: Intent = {}
 
   stakeholders$: Observable<StakeholderWithGoal[]>
 

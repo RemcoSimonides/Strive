@@ -35,10 +35,3 @@ export function createPost(params: Partial<Post> = {}): Post {
     ...params
   }
 }
-
-export interface SendIntentPost {
-  title?: string
-  type?: string
-  url?: string
-  [key: string]: any
-}
