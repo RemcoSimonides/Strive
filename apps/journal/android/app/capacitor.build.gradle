@@ -19,6 +19,8 @@ dependencies {
     implementation project(':capacitor-share')
     implementation project(':capacitor-splash-screen')
     implementation project(':capawesome-capacitor-app-update')
+    implementation project(':capacitor-filesystem')
+    implementation project(':send-intent')
 
 }
 

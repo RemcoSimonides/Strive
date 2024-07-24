@@ -40,6 +40,7 @@
     "@capacitor/camera": "^6.0.0",
     "@capacitor/clipboard": "^6.0.0",
     "@capacitor/core": "^6.0.0",
+    "@capacitor/filesystem": "^6.0.0",
     "@capacitor/keyboard": "^6.0.0",
     "@capacitor/push-notifications": "^6.0.0",
     "@capacitor/share": "^6.0.0",
@@ -70,6 +71,7 @@
     "pexels": "^1.4.0",
     "rxfire": "^6.0.5",
     "rxjs": "7.8.1",
+    "send-intent": "^6.0.0",
     "swiper": "^11.1.1",
     "tslib": "^2.6.2",
     "zone.js": "0.14.4"

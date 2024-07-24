@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core'
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core'
 import { CommonModule, Location } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
 
@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons'
 import { close, calendarOutline, linkOutline } from 'ionicons/icons'
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { SendIntent } from 'send-intent'
 
 import { captureException } from '@sentry/capacitor'
 
@@ -22,7 +23,6 @@ import { createPost, Post } from '@strive/model'
 import { isValidHttpUrl } from '@strive/utils/helpers'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
-import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { EditMediaForm } from '@strive/media/forms/media.form'
 import { ImagesSelectorComponent } from '@strive/media/components/images-selector/images-selector.component'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
@@ -54,8 +54,8 @@ import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 		IonFooter
 	]
 })
-export class UpsertPostModalComponent extends ModalDirective implements OnDestroy {
-	@ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
+export class UpsertPostModalComponent extends ModalDirective implements AfterViewInit, OnDestroy {
+	@ViewChild(ImagesSelectorComponent) imageSelector?: ImagesSelectorComponent
 
 	postForm = new PostForm()
 	saving$ = new BehaviorSubject(false)
@@ -73,6 +73,7 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 		this.mode = post.createdAt ? 'update' : 'create'
 		this.postForm.patchValue(post)
 	}
+	@Input() private image?: File
 
 	private sub = this.postForm.url.valueChanges.pipe(
 		debounceTime(1000),
@@ -124,6 +125,12 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 		addIcons({ close, calendarOutline, linkOutline });
 	}
 
+	ngAfterViewInit() {
+		if (this.image) {
+			this.imageSelector?.filesSelected(this.image)
+		}
+	}
+
 	ngOnDestroy() {
 		this.sub.unsubscribe()
 	}
@@ -131,10 +138,6 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 	async submitPost() {
 		if (!this.auth.uid) return
 		this.saving$.next(true)
-
-		if (this.imageSelector?.step.value === 'crop') {
-			this.imageSelector.cropIt()
-		}
 
 		if (!this.postForm.isEmpty) {
 			const { date, description, medias, url, youtubeId } = this.postForm.getRawValue()
@@ -172,6 +175,9 @@ export class UpsertPostModalComponent extends ModalDirective implements OnDestro
 		}
 		this.saving$.next(false)
 		this.dismiss(true)
+		if (this.image) { // image should only be present if SendIntent is used
+			SendIntent.finish()
+		}
 	}
 
 	async openDatePicker() {

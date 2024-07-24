@@ -14,6 +14,7 @@ import { Unsubscribe } from 'firebase/firestore'
 import { differenceInMilliseconds } from 'date-fns'
 
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
+import { SendIntent } from 'send-intent'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
 import { ProfileOptionsComponent } from './pages/profile/popovers/profile-options/profile-options.component'
@@ -30,12 +31,15 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { SendIntentSelectGoalComponent } from '@strive/goal/modals/send-intent-select-goal/send-intent-select-goal.component'
+import { SendIntentPost } from '@strive/model'
 
 @Component({
   selector: 'journal-root',
   standalone: true,
   imports: [
     AuthModalComponent,
+    SendIntentSelectGoalComponent,
     CommonModule,
     RouterModule,
     RouterOutlet,
@@ -133,6 +137,18 @@ export class AppComponent implements OnDestroy {
       } else {
         this.personalService.addListenersCapacitor()
       }
+
+      if (isPlatformBrowser(this.platformId)) {
+        window.addEventListener('sendIntentReceived', () => {
+          console.log('SendIntent received 2') // test if this works in browser
+        })
+      }
+      SendIntent.checkSendIntentReceived().then((sendIntentData: SendIntentPost) => {
+        this.modalCtrl.create({
+          component: SendIntentSelectGoalComponent,
+          componentProps: { sendIntentData }
+        }).then(modal => modal.present())
+      })
     })
 
     this.seo.setInitial()

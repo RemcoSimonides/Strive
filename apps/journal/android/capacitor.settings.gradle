@@ -31,3 +31,9 @@ project(':capacitor-splash-screen').projectDir = new File('../../../node_modules
 
 include ':capawesome-capacitor-app-update'
 project(':capawesome-capacitor-app-update').projectDir = new File('../../../node_modules/@capawesome/capacitor-app-update/android')
+
+include ':capacitor-filesystem'
+project(':capacitor-filesystem').projectDir = new File('../../../node_modules/@capacitor/filesystem/android')
+
+include ':send-intent'
+project(':send-intent').projectDir = new File('../../../node_modules/send-intent/android')

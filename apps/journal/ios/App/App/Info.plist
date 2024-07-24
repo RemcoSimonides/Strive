@@ -72,5 +72,9 @@
 	<string>To select an image for your profile photo, a goal, or for posts in the story of a goal</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To select an image for your profile photo, a goal, or for posts in the story of a goal</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 </dict>
 </plist>
