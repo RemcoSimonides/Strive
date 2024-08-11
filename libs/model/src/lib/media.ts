@@ -3,7 +3,7 @@ const mediaTypes = [
   'video',
   'youtube'
 ] as const;
-type MediaType = typeof mediaTypes[number];
+export type MediaType = typeof mediaTypes[number];
 
 type MediaUploadStatus = 'uploading' | 'uploaded' | 'error';
 

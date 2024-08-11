@@ -31,9 +31,12 @@ export class MediaService extends FireSubCollection<Media> {
   }
 
   async upload(file: File, storagePath: string, goalId: string) {
+    const start = file.type.split('/')[0]
+    const fileType = start === 'image' ? 'image' : 'video'
+
     const media = createMedia({
       fileName: file.name,
-      fileType: 'image',
+      fileType,
       storagePath
     })
     const mediaId = await this.add(media, { params: { goalId }})

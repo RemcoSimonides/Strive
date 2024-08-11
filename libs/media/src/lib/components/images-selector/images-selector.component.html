@@ -1,7 +1,11 @@
 <swiper-container space-between="16" slides-per-view="auto" #swiper>
   @for (control of form.controls; track control; let index = $index) {
     <swiper-slide (click)="openPopover($event, index)">
-      <img [src]="control.value.preview" />
+      @if (control.value.type === 'video') {
+        <video [src]="control.value.preview" (loadedmetadata)="checkDuration($event, index)"></video>
+      } @else {
+        <img [src]="control.value.preview" />
+      }
     </swiper-slide>
   }
   <swiper-slide>
@@ -11,7 +15,7 @@
         @case ('drop') {
           <article class="drop-zone" (click)="selectImages()">
             <ion-icon name="images-outline" />
-            <span>Add Photo</span>
+            <span>Add Photo or Video</span>
           </article>
         }
         <!-- Hovering -->

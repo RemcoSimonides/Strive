@@ -2,18 +2,20 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Com
 import { CommonModule } from '@angular/common'
 import { FormArray } from '@angular/forms'
 import { SafeUrl } from '@angular/platform-browser'
-import { IonIcon, PopoverController, ToastController } from '@ionic/angular/standalone'
+import { AlertController, IonIcon, PopoverController, ToastController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { imagesOutline } from 'ionicons/icons'
 import { SwiperContainer } from 'swiper/swiper-element'
 
 import { BehaviorSubject, Subscription } from 'rxjs'
 
-import { Camera, GalleryPhoto } from '@capacitor/camera'
+import { FilePicker } from '@capawesome/capacitor-file-picker'
+
 import { captureException, captureMessage } from '@sentry/capacitor'
 import { EditMediaForm } from '@strive/media/forms/media.form'
 import { delay } from '@strive/utils/helpers'
 import { ImageOptionsPopoverComponent } from './popover/options.component'
+import { VideoPlayerComponent } from '../video-player/video-player.component'
 
 type CropStep = 'drop' | 'hovering'
 
@@ -27,7 +29,8 @@ type CropStep = 'drop' | 'hovering'
   imports: [
     CommonModule,
     ImageOptionsPopoverComponent,
-    IonIcon
+    IonIcon,
+    VideoPlayerComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -35,7 +38,8 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
   step = new BehaviorSubject<CropStep>('drop')
 
-  accept = ['.jpg', '.jpeg', '.png', '.webp']
+  accept = ['image/*','video/*']
+  maxVideoLength = 10
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
   sub?: Subscription
@@ -46,6 +50,7 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
 
   constructor(
+    private alertCtrl: AlertController,
     private cdr: ChangeDetectorRef,
     private popoverCtrl: PopoverController,
     private toast: ToastController
@@ -86,15 +91,15 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
   async selectImages() {
     try {
-      const images = await Camera.pickImages({ quality: 100 })
-      for (const image of images.photos) {
-        const file = await getFileFromGalleryPhoto(image)
-        if (file) {
-          this.filesSelected(file)
+      const { files } = await FilePicker.pickMedia()
+
+      for (const file of files) {
+        if (file.blob instanceof File) {
+          this.filesSelected(file.blob)
         } else {
           this.toast.create({ message: 'Something went wrong', duration: 3000 })
           captureMessage('Unsupported file type chosen')
-          captureException(image)
+          captureException(file)
         }
       }
     } catch (err) {
@@ -111,13 +116,14 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
     const files = isFileList(file) ? Array.from(file) : [file]
 
     for (const file of files) {
-      if (file.type?.split('/')[0] !== 'image') {
+      const type = file.type?.split('/')[0]
+      if (type !== 'image' && type !== 'video') {
         this.toast.create({ message: 'Unsupported file type', duration: 3000 }).then(toast => toast.present())
         return
       }
 
       const preview = URL.createObjectURL(file)
-      const mediaForm = new EditMediaForm({ id: '', preview, file })
+      const mediaForm = new EditMediaForm({ id: '', preview, file, type })
       this.form.push(mediaForm)
       this.form.markAsDirty()
     }
@@ -137,9 +143,11 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
   }
 
   async openPopover(event: Event, index: number) {
+    const ctrl = this.form.at(index)
+    const type = ctrl.type.value
     const popover = await this.popoverCtrl.create({
       component: ImageOptionsPopoverComponent,
-      componentProps: { form: this.form, index },
+      componentProps: { type },
       event
     })
 
@@ -153,23 +161,19 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
     popover.present()
   }
+
+  checkDuration(event: any, index: number) {
+    const duration = event.target.duration
+    if (duration > this.maxVideoLength) {
+      this.form.removeAt(index)
+      this.alertCtrl.create({
+        subHeader: `Video cannot be longer than ${this.maxVideoLength} seconds`,
+        buttons: [{ text: 'Ok', role: 'cancel' }]
+      }).then(alert => alert.present())
+    }
+  }
 }
 
 function isFileList(file: FileList | File): file is FileList {
   return (file as FileList).item !== undefined
-}
-
-
-async function getFileFromGalleryPhoto(photo: GalleryPhoto): Promise<File | undefined> {
-  try {
-    const response = await fetch(photo.webPath);
-    const blob = await response.blob();
-    const name = photo.webPath.split('/').pop();
-    const fileName = `${name}.${photo.format}`
-    const file = new File([blob], fileName, { type: blob.type });
-    return file;
-  } catch (error) {
-    console.error("Error fetching blob data:", error);
-    return;
-  }
 }

@@ -42,16 +42,35 @@ ion-card {
   }
 
   swiper-slide {
+    position: relative;
     max-height: 600px;
     height: auto;
     max-width: 100%;
     width: initial;
+    cursor: pointer;
 
-    img {
+    img, video {
       max-width: 100%;
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,.1);
+
+      ion-icon {
+        font-size: 64px;
+        color: var(--ion-color-primary);
+      }
     }
   }
 

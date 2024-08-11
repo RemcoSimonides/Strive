@@ -75,7 +75,7 @@
 <ion-footer class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-button [disabled]="postForm.pristine || postForm.isEmpty || (saving$ | async)" (click)="submitPost()" fill="clear" color="primary">
+      <ion-button [disabled]="postForm.pristine || postForm.isEmpty || postForm.invalid || (saving$ | async)" (click)="submitPost()" fill="clear" color="primary">
         @if (saving$ | async) {
           <ion-spinner slot="end" name="bubbles" color="primary" slot="start"/>
         }

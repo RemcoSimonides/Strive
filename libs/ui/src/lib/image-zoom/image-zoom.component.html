@@ -8,7 +8,12 @@
   @for (media of medias; track media) {
     <swiper-slide>
       <section class="swiper-zoom-container">
-        <img [ref]="media | mediaRef" [asset]="asset" />
+        @if (media.fileType === 'video') {
+          <media-video-player [storagePath]="media | mediaRef"></media-video-player>
+        } @else {
+          <img [ref]="media | mediaRef" [asset]="asset" />
+        }
+
       </section>
     </swiper-slide>
   }

@@ -1,12 +1,13 @@
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
-import { Media } from '@strive/model'
+import { Media, MediaType } from '@strive/model'
 import { getImgIxResourceUrl } from '../directives/imgix-helpers'
 
-interface EditMedia {
+export interface EditMedia {
   id: string
   preview: string
   delete?: boolean
   file?: File
+  type?: MediaType
 }
 
 export function mediaToEditMedia(media: Media): EditMedia {
@@ -21,6 +22,7 @@ export function mediaToEditMedia(media: Media): EditMedia {
   return {
     id: media.id ?? '',
     preview: getPreview(),
+    type: media.fileType,
     delete: false
   }
 }
@@ -30,6 +32,7 @@ export function createEditMedia(params: Partial<EditMedia> = {}): EditMedia {
     id: params.id ?? '',
     preview: params.preview ?? '',
     file: params.file ?? undefined,
+    type: params.type ?? undefined,
     delete: params.delete ?? false
   }
 }
@@ -41,6 +44,7 @@ function createEditMediaFormControl(params: Partial<EditMedia> = {}) {
     delete: new FormControl<boolean>(editMedia.delete ?? false, { nonNullable: true }),
     preview: new FormControl<string>(editMedia.preview, { nonNullable: true }),
     file: new FormControl<File | undefined>(editMedia.file, { nonNullable: true }),
+    type: new FormControl<MediaType | undefined>(editMedia.type, { nonNullable: true }),
     id: new FormControl<string>(editMedia.id ?? '', { nonNullable: true })
   }
 }
@@ -55,5 +59,6 @@ export class EditMediaForm extends FormGroup<MediaFormControl> {
   get delete() { return this.get('delete') as AbstractControl<boolean> }
   get preview() { return this.get('preview') as AbstractControl<string> }
   get file() { return this.get('file') as AbstractControl<File | undefined> }
+  get type() { return this.get('type') as AbstractControl<MediaType | undefined> }
   get id() { return this.get('id') as AbstractControl<string> }
 }

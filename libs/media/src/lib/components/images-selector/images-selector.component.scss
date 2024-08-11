@@ -17,7 +17,7 @@
     }
   }
 
-  img {
+  img, video {
     height: 100%;
     border-radius: 12px;
   }
@@ -52,7 +52,7 @@
       align-items: center;
       margin-bottom: 1em;
 
-      img {
+      img, video {
         width: 100px;
       }
     }

@@ -103,7 +103,7 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 			if (!formValue.description) this.postForm.description.setValue(description ?? '')
 
 			if (image) {
-				const editMediaForm = new EditMediaForm({ preview: image })
+				const editMediaForm = new EditMediaForm({ preview: image, type: 'image' })
 				this.postForm.controls.medias.push(editMediaForm)
 			}
 		}
@@ -137,6 +137,7 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 
 	async submitPost() {
 		if (!this.auth.uid) return
+		if (this.postForm.invalid) return
 		this.saving$.next(true)
 
 		if (!this.postForm.isEmpty) {

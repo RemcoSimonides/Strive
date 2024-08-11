@@ -5,7 +5,7 @@ import { ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { IonCard, IonAvatar, IonButton, IonIcon, IonCardContent } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
-import { ellipsisVerticalOutline } from 'ionicons/icons'
+import { ellipsisVerticalOutline, play } from 'ionicons/icons'
 
 import { createGoalStakeholder, Post, StoryItem, User } from '@strive/model'
 
@@ -14,7 +14,8 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
-import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
+import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
+import { VideoPlayerComponent } from '@strive/media/components/video-player/video-player.component'
 
 @Component({
   standalone: true,
@@ -29,9 +30,11 @@ import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
     ImageDirective,
     ImageZoomModalComponent,
     PostOptionsComponent,
+    VideoPlayerComponent,
     HTMLPipe,
     SafePipe,
     MediaRefPipe,
+    VideoUrlPipe,
     IonCard,
     IonAvatar,
     IonButton,
@@ -60,7 +63,7 @@ export class PostComponent implements AfterViewInit {
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController
   ) {
-    addIcons({ ellipsisVerticalOutline })
+    addIcons({ ellipsisVerticalOutline, play })
   }
 
   ngAfterViewInit() {

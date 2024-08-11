@@ -34,8 +34,15 @@
           </swiper-slide>
         }
         @for (media of post.medias; track media; let index = $index) {
-          <swiper-slide>
-            <img [ref]="media | mediaRef" asset="" (click)="openZoom(index)">
+          <swiper-slide (click)="openZoom(index)">
+            @if (media.fileType === 'video') {
+              <video [src]="media | mediaRef | videoUrl" crossorigin="anonymous" preload="auto"></video>
+              <section class="video-overlay">
+                <ion-icon name="play"></ion-icon>
+              </section>
+            } @else {
+              <img [ref]="media | mediaRef" asset="" (click)="openZoom(index)">
+            }
           </swiper-slide>
         }
       </swiper-container>
