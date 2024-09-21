@@ -3,16 +3,35 @@ swiper-container {
     width: 100%;
     display: flex;
     align-items: center;
+    overflow: auto;
 
     section {
-        display: flex;
-        align-items: center;
+        overflow: auto;
         height: 100%;
+        margin-block: -10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-        img, video {
-            min-width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: contain;
+        article {
+            display: flex;
+            align-items: center;
+            height: 100%;
+
+            img, video {
+                min-width: 100%;
+                aspect-ratio: 1/1;
+                object-fit: contain;
+            }
+        }
+
+        p {
+            padding: 16px;
+            color: var(--ion-color-medium);
+            white-space: pre-line;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
         }
     }
 }

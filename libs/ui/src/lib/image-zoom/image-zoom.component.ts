@@ -9,6 +9,7 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
 import { VideoPlayerComponent } from '@strive/media/components/video-player/video-player.component'
 import { HeaderComponent } from '../header/header.component'
 import { SwiperContainer } from 'swiper/element'
+import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 
 export function getEnterAnimation(baseEl: HTMLElement) {
 	const root = baseEl.shadowRoot
@@ -50,7 +51,8 @@ export function getLeaveAnimation(baseEl: HTMLElement) {
     MediaRefPipe,
 		VideoUrlPipe,
     HeaderComponent,
-		VideoPlayerComponent
+		VideoPlayerComponent,
+		HTMLPipe
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

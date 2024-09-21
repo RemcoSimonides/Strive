@@ -13,6 +13,7 @@ export interface Media {
   fileType: MediaType
   status: MediaUploadStatus
   storagePath: string
+  description: string
   updatedAt?: Date
   createdAt?: Date
 }
@@ -25,6 +26,7 @@ export function createMedia(params: Partial<Media> = {}): Media {
     fileType: 'image',
     status: 'uploading',
     storagePath: '',
+    description: '',
     ...params
   }
 }

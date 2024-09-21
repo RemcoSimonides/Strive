@@ -7,13 +7,17 @@
 >
   @for (media of medias; track media) {
     <swiper-slide>
-      <section class="swiper-zoom-container">
-        @if (media.fileType === 'video') {
-          <media-video-player [storagePath]="media | mediaRef"></media-video-player>
-        } @else {
-          <img [ref]="media | mediaRef" [asset]="asset" />
+      <section class="container">
+        <article class="swiper-zoom-container">
+          @if (media.fileType === 'video') {
+            <media-video-player [storagePath]="media | mediaRef"></media-video-player>
+          } @else {
+            <img [ref]="media | mediaRef" [asset]="asset" />
+          }
+        </article>
+        @if (media.description) {
+          <p [innerHTML]="media.description | toHTML" class="description"></p>
         }
-
       </section>
     </swiper-slide>
   }

@@ -593,7 +593,7 @@ export class GoalPageComponent implements OnDestroy {
     this.router.navigate(['/profile/', uid])
   }
 
-  openZoom(goal: Goal) {
+  async openZoom(goal: Goal) {
     const split = goal.image.split('/')
     const fileName = split.pop()
     const storagePath = split.join('/')
@@ -602,13 +602,27 @@ export class GoalPageComponent implements OnDestroy {
       fileName,
       id: fileName,
       fileType: 'image',
-      status: 'uploaded'
+      status: 'uploaded',
+      description: goal.description
     })
+
+    const story = await firstValueFrom(this.story$)
+    const posts = story
+      .map(item => item.post)
+      .filter(item => !!item)
+      .filter(item => !item?.youtubeId) // removing youtube for ease
+    const postMedias = posts.map(post => {
+      if (!post || !post.medias) return []
+      return post.medias?.map(media => createMedia({
+        ...media,
+        description: post.description
+      }))
+    }).flat()
 
     this.modalCtrl.create({
       component: ImageZoomModalComponent,
       componentProps: {
-        medias: [media],
+        medias: [media, ...postMedias],
         asset: 'goal.png'
       },
       enterAnimation: getEnterAnimation,
