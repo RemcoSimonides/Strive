@@ -87,7 +87,7 @@ export class GoalsPageComponent implements OnDestroy {
   achieving$: Observable<StakeholderWithGoalAndEvents[]>
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
 
-  uid$ = this.auth.uid$
+  isLoggedIn$ = this.auth.isLoggedIn$
 
   sub = this.route.queryParams.subscribe(async params => {
     const uid = await this.auth.getUID()

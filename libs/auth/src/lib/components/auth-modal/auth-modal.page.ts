@@ -288,6 +288,10 @@ export class AuthModalComponent implements OnInit {
             message = 'User not found'
             break
 
+          case 'auth/network-request-failed':
+            message = 'Something went wrong. Please try again later.'
+            break
+
           default:
             captureException(error)
             message = error.message
