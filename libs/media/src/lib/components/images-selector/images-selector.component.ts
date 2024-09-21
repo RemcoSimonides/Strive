@@ -91,13 +91,16 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
   async selectImages() {
     try {
-      const { files } = await FilePicker.pickMedia()
+      const { files } = await FilePicker.pickMedia({ readData: true })
 
       for (const file of files) {
-        if (file.blob instanceof File) {
-          this.filesSelected(file.blob)
+        if (file.data) {
+          const converted = base64ToFile(file.data, file.name, file.mimeType)
+          if (!converted) throw new Error('Something went wrong convert Blob to File')
+
+          this.filesSelected(converted)
         } else {
-          this.toast.create({ message: 'Something went wrong', duration: 3000 })
+          this.toast.create({ message: 'Something went wrong', duration: 3000 }).then(toast => toast.present())
           captureMessage('Unsupported file type chosen')
           captureException(file)
         }
@@ -176,4 +179,22 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
 
 function isFileList(file: FileList | File): file is FileList {
   return (file as FileList).item !== undefined
+}
+
+function base64ToFile(base64String: string, fileName: string, mimeType?: string): File | null {
+  try {
+    const binaryData = atob(base64String);
+    const arrayBuffer = new ArrayBuffer(binaryData.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < binaryData.length; i++) {
+      uint8Array[i] = binaryData.charCodeAt(i);
+    }
+
+    const blob = new Blob([arrayBuffer], { type: mimeType });
+    return new File([blob], fileName, { type: mimeType });
+  } catch (error) {
+    console.error('Error converting base64 to File:', error);
+    return null;
+  }
 }

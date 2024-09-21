@@ -129,7 +129,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
         const file = dataUrlToFile(image.dataUrl, Date.now().toString())
         this.filesSelected(file)
       } else {
-        this.toast.create({ message: 'Unsupported file type', duration: 3000 })
+        this.toast.create({ message: 'Unsupported file type', duration: 3000 }).then(toast => toast.present())
         captureMessage('Unsupported file type chosen')
         captureException(image)
       }
