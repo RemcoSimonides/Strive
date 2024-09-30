@@ -10,7 +10,7 @@ function createMilestoneFormControl(params: Partial<Milestone> = {}) {
     description: new FormControl(milestone.description, { nonNullable: true, validators: [Validators.maxLength(200)] }),
     status: new FormControl(milestone.status, { nonNullable: true }),
     deadline: new FormControl(milestone.deadline, { nonNullable: true }),
-    subtasks: new FormArray(subtaskControls ?? [])
+    subtasks: new FormArray<SubtaskForm>(subtaskControls ?? [])
   }
 }
 

@@ -1,0 +1,153 @@
+<strive-header-modal (dismiss)="dismiss()">
+  <ion-title>{{ isEditMode ? 'Edit' : 'Create' }} reminders</ion-title>
+</strive-header-modal>
+
+<ion-content class="ion-padding">
+
+  <ion-list>
+    <form [formGroup]="form">
+      <ion-item>
+        <section>
+          <span>Description</span>
+          <ion-textarea formControlName="description" autoGrow rows="2" placeholder="e.g. what did you do this week for your goal?" autocapitalize="sentences" class="primary" />
+        </section>
+      </ion-item>
+
+      <ion-item>
+        <section>
+          <span>Repeating reminder?</span>
+          <ion-radio-group formControlName="isRepeating">
+            <ion-radio labelPlacement="end" justify="start" [value]="true">Yes</ion-radio>
+            <ion-radio labelPlacement="end" justify="start" [value]="false">No</ion-radio>
+          </ion-radio-group>
+        </section>
+      </ion-item>
+
+      @if (form.isRepeating.value) {
+        <ion-item lines="none">
+          <section>
+            <article class="row">
+              <span>Repeat every</span>
+              <ion-select interface="popover" formControlName="interval">
+                <ion-select-option value="yearly">Year</ion-select-option>
+                <ion-select-option value="quarterly">Quarter</ion-select-option>
+                <ion-select-option value="monthly">Month</ion-select-option>
+                <ion-select-option value="weekly">Week</ion-select-option>
+                <ion-select-option value="daily">Day</ion-select-option>
+              </ion-select>
+            </article>
+
+            @if (form.interval.value === 'quarterly') {
+              <article class="row">
+                <span>On the</span>
+                <ion-select interface="popover" formControlName="numberOfWeek">
+                  <ion-select-option [value]="0">1st week, 1st month</ion-select-option>
+                  <ion-select-option [value]="1">2nd week, 1st month</ion-select-option>
+                  <ion-select-option [value]="2">3rd week, 1st month</ion-select-option>
+                  <ion-select-option [value]="3">4th week, 1st month</ion-select-option>
+                  <ion-select-option [value]="4">1st week, 2nd month</ion-select-option>
+                  <ion-select-option [value]="5">2nd week, 2nd month</ion-select-option>
+                  <ion-select-option [value]="6">3rd week, 2nd month</ion-select-option>
+                  <ion-select-option [value]="7">4th week, 2nd month</ion-select-option>
+                  <ion-select-option [value]="8">1st week, 3rd month</ion-select-option>
+                  <ion-select-option [value]="9">2nd week, 3rd month</ion-select-option>
+                  <ion-select-option [value]="10">3rd week, 3rd month</ion-select-option>
+                  <ion-select-option [value]="11">4h week, 3rd month</ion-select-option>
+                </ion-select>
+              </article>
+            }
+
+            @if (form.interval.value === 'monthly') {
+              <article class="row">
+                <span>On the</span>
+                <ion-select interface="popover" formControlName="numberOfWeek">
+                  <ion-select-option [value]="0">1st week of month</ion-select-option>
+                  <ion-select-option [value]="1">2nd week of month</ion-select-option>
+                  <ion-select-option [value]="2">3rd week of month</ion-select-option>
+                  <ion-select-option [value]="3">4th week of month</ion-select-option>
+                </ion-select>
+              </article>
+            }
+
+            @if (['weekly', 'monthly', 'quarterly'].includes(form.interval.value)) {
+              <article class="row">
+                <span>on a</span>
+                <div>
+                  <ion-button [color]="form.dayOfWeek.value === 'monday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('monday')">Mo</ion-button>
+                  <ion-button [color]="form.dayOfWeek.value === 'tuesday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('tuesday')">Tu</ion-button>
+                  <ion-button [color]="form.dayOfWeek.value === 'wednesday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('wednesday')">We</ion-button>
+                  <ion-button [color]="form.dayOfWeek.value === 'thursday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('thursday')">Tu</ion-button>
+                  <ion-button [color]="form.dayOfWeek.value === 'friday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('friday')">Fr</ion-button>
+                  <ion-button [color]="form.dayOfWeek.value === 'saturday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('saturday')">Sa</ion-button>
+                  <ion-button [color]="form.dayOfWeek.value === 'sunday' ? 'primary' : 'medium'" (click)="selectDayOfWeek('sunday')">Su</ion-button>
+                </div>
+              </article>
+            }
+
+            @if (form.interval.value === 'yearly') {
+              <article class="row">
+                <span>on</span>
+                <div class="medium date">
+                  <ion-input
+                    [value]="form.date.value | date:'MMMM d'"
+                    (ionFocus)="openDatePicker(true)"
+                    placeholder="date"
+                    class="primary"
+                  />
+                </div>
+              </article>
+            }
+
+            <article class="row">
+              <span>at</span>
+              <div class="medium time">
+                <ion-input
+                  [value]="form.date.value | date:'shortTime'"
+                  placeholder="time"
+                  (ionFocus)="openTimePicker()"
+                  class="primary"
+                />
+              </div>
+            </article>
+          </section>
+        </ion-item>
+      } @else if (form.isRepeating.value !== null) {
+        <ion-item lines="none">
+
+          <section>
+            <article class="row">
+              <span>Remind at</span>
+              <div class="medium date">
+                <ion-input
+                  [value]="form.date.value | date:'MMMM d'"
+                  (ionFocus)="openDatePicker(false)"
+                  placeholder="date"
+                  class="primary"
+                />
+              </div>
+            </article>
+            <article class="row">
+              <span>at</span>
+              <div class="medium time">
+                <ion-input
+                  [value]="form.date.value | date:'shortTime'"
+                  placeholder="time"
+                  (ionFocus)="openTimePicker()"
+                  class="primary"
+                />
+              </div>
+            </article>
+
+          </section>
+        </ion-item>
+      }
+    </form>
+  </ion-list>
+
+  <footer>
+    @if (isEditMode) {
+      <ion-button fill="clear" (click)="remove()">Delete</ion-button>
+    }
+    <ion-button color="primary" (click)="save()" [disabled]="!form.isValid">Save</ion-button>
+  </footer>
+</ion-content>

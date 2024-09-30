@@ -13,7 +13,8 @@ export enum enumGoalOptions {
   finishGoal,
   editGoal,
   deleteGoal,
-  integrateStrava
+  integrateStrava,
+  editReminders
 }
 
 @Component({

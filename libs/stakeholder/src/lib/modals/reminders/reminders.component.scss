@@ -1,0 +1,52 @@
+section {
+  display: flex;
+  flex-direction: column;
+  margin-block: 16px;
+  gap: 8px;
+  width: 100%;
+}
+
+ion-button {
+  width: 100%;
+}
+
+ion-select {
+  background-color: var(--ion-color-medium);
+  padding-right: 12px;
+  border-radius: 12px;
+}
+
+article.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  span {
+    white-space: nowrap;
+  }
+
+  ion-select {
+    max-width: fit-content;
+  }
+
+  div.medium {
+    background-color: var(--ion-color-medium);
+    padding-inline: 16px;
+    border-radius: 12px;
+  }
+
+  div.date {
+    width: 150px;
+  }
+
+  div.time {
+    width: 104px;
+  }
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+

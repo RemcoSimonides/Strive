@@ -13,6 +13,7 @@ export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './fir
 
 export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal'
 export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeholderDeletedHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder'
+export { goalReminderChangeHandler, goalReminderCreatedHandler, goalReminderDeleteHandler } from './firestore/goals/goal-stakeholder/reminders/reminder'
 export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandler } from './firestore/goals/milestones/milestone'
 export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } from './firestore/goals/supports/support'
 export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token'

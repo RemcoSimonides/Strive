@@ -2,6 +2,9 @@
   @if (goal?.status === 'pending' && (stakeholder.isAchiever || stakeholder.isAdmin)) {
     <ion-item (click)="markAsFinished()" button>Mark as Finished</ion-item>
   }
+  @if (stakeholder.isAchiever) {
+    <ion-item (click)="dismiss(enumGoalOptions.editReminders)" button>Edit Reminders</ion-item>
+  }
   @if (stakeholder.isAdmin) {
     <ion-item (click)="dismiss(enumGoalOptions.integrateStrava)" button>Strava integration</ion-item>
   }

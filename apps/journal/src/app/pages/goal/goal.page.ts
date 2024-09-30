@@ -39,6 +39,7 @@ import { CollectiveGoalsModalComponent } from '@strive/goal/modals/collective-go
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
 import { SpectatorsModalComponent } from '@strive/stakeholder/modals/spectators/spectators.component'
 import { SupportersModalComponent } from '@strive/stakeholder/modals/supporters/supporters.component'
+import { RemindersModalComponent } from '@strive/stakeholder/modals/reminders/reminders.component'
 import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 import { SuggestionModalComponent } from '@strive/ui/suggestion/modal/suggestion-modal.component'
 import { RoadmapComponent } from '@strive/roadmap/components/roadmap/roadmap.component'
@@ -396,6 +397,9 @@ export class GoalPageComponent implements OnDestroy {
         case enumGoalOptions.integrateStrava:
           this.integrateStrava()
           break
+        case enumGoalOptions.editReminders:
+          this.editReminders()
+          break
       }
     })
   }
@@ -749,5 +753,14 @@ export class GoalPageComponent implements OnDestroy {
       })
       popover.present()
     }
+  }
+
+  async editReminders() {
+    if (!this.goal) return
+
+    this.modalCtrl.create({
+      component: RemindersModalComponent,
+      componentProps: { goalId: this.goal.id, stakeholderId: this.stakeholder.uid }
+    }).then(modal => modal.present())
   }
 }

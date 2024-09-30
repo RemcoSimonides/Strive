@@ -18,7 +18,7 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
   ]
 })
 export class DeadlinePopoverComponent {
-    @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 
   @Input() caption?: string

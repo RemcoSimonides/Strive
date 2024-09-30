@@ -12,7 +12,8 @@ import {
   ScheduledTaskUserExerciseSelfReflect,
   ScheduledTaskUserExerciseDailyGratitude,
   ScheduledTaskUserExerciseDearFutureSelfMessage,
-  ScheduledTaskUserExerciseWheelOfLife
+  ScheduledTaskUserExerciseWheelOfLife,
+  ScheduledTaskGoalReminder
 } from '../shared/scheduled-task/scheduled-task.interface'
 import { updateAggregation } from '../shared/aggregation/aggregation'
 
@@ -21,9 +22,10 @@ import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user
 import { scheduleNextReminder, sendWheelOfLifePushNotification } from './user-exercises/wheel_of_life'
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
 
-import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource, SelfReflectSettings } from '@strive/model'
+import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource, SelfReflectSettings, Reminder } from '@strive/model'
 import { AES, enc } from 'crypto-js'
 import { scheduleNextSelfReflectReminder, sendSelfReflectPuthNotification } from './user-exercises/self_reflect'
+import { scheduleNextGoalReminder, sendReminderPushNotification } from './user-exercises/reminder'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -82,6 +84,7 @@ interface IWorkers {
 const workers: IWorkers = {
   deleteInviteLinkGoal: (options) => deleteInviteLinkGoal(options),
   goalDeadline: (options) => goalDeadlineHandler(options),
+  goalReminder: goalReminderHandler,
   milestoneDeadline: (options) => milestoneDeadlineHandler(options),
   userExerciseAffirmation: (options) => userExerciseAffirmationsHandler(options),
   userExerciseDailyGratitudeReminder: (options) => userExerciseDailyGratitudeReminderHandler(options),
@@ -97,6 +100,15 @@ function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['opti
 function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['options']) {
   const source = createGoalSource({ goalId })
   return addGoalEvent('goalDeadlinePassed', source)
+}
+
+async function goalReminderHandler({ goalId, userId, reminderId }: ScheduledTaskGoalReminder['options']) {
+  const reminder = await getDocument<Reminder>(`Goals/${goalId}/GStakeholders/${userId}/Reminders/${reminderId}`)
+
+  return Promise.all([
+    sendReminderPushNotification(goalId, userId, reminder),
+    scheduleNextGoalReminder(goalId, userId, reminderId, reminder)
+  ])
 }
 
 function milestoneDeadlineHandler({ goalId, milestoneId }: ScheduledTaskMilestoneDeadline['options']) {

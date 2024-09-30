@@ -24,7 +24,7 @@ import { GoalService } from '@strive/goal/goal.service'
 import { GoalEventService } from '@strive/goal/goal-event.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 
-import { SelfReflectFrequency, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents, Category } from '@strive/model'
+import { SelfReflectFrequency, createSelfReflectEntry, filterGoalEvents, GoalStakeholder, StakeholderWithGoalAndEvents, Category, createPost } from '@strive/model'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -43,6 +43,7 @@ import { CategoryFilterComponent } from '@strive/goal/components/category-filter
 import { HomePageComponent } from '../home/home.page'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
 import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumbnail-swiper/mini-thumbnail-swiper.component'
+import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
 @Component({
   standalone: true,
@@ -93,12 +94,25 @@ export class GoalsPageComponent implements OnDestroy {
     const uid = await this.auth.getUID()
     if (!uid) return
 
-    const { c, t, affirm, dfs, reflect } = params
+    const { c, t, affirm, dfs, reflect, reminder } = params
     if (c) {
       const categories = c.split(',').map((i: string) => i.trim())
       this.categoryFilter$.next(categories)
     } else {
       this.categoryFilter$.next([])
+    }
+
+    if (reminder) {
+      const post = createPost({
+        id: reminder,
+        goalId: reminder
+      })
+
+      await this.router.navigate(['/goal', reminder]) // remove query params
+      this.modalCtrl.create({
+        component: UpsertPostModalComponent,
+        componentProps: { post }
+      }).then(modal => modal.present())
     }
 
     if (t === 'daily-gratitude') {
