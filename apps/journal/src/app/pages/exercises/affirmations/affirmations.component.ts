@@ -161,7 +161,7 @@ export class AffirmationsPageComponent implements OnDestroy {
     popover.onDidDismiss().then(({ data, role }) => {
       const control = this.timesForm.get(`${index}`) as AbstractControl
       if (role === 'dismiss') {
-        const value = data ? data : new Date().toISOString()
+        const value = data ? data : new Date().toLocaleString()
         control.setValue(value)
       }
       if (role === 'remove') {

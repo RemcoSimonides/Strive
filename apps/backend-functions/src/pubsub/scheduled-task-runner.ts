@@ -25,7 +25,7 @@ import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './u
 import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource, SelfReflectSettings, Reminder } from '@strive/model'
 import { AES, enc } from 'crypto-js'
 import { scheduleNextSelfReflectReminder, sendSelfReflectPuthNotification } from './user-exercises/self_reflect'
-import { scheduleNextGoalReminder, sendReminderPushNotification } from './user-exercises/reminder'
+import { scheduleNextGoalReminder, sendReminderPushNotification } from './goal/reminder'
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
@@ -47,7 +47,8 @@ async () => {
     enumWorkerType.userExerciseAffirmation,
     enumWorkerType.userExerciseDailyGratitudeReminder,
     enumWorkerType.userExerciseWheelOfLifeReminder,
-    enumWorkerType.userExerciseSelfReflect
+    enumWorkerType.userExerciseSelfReflect,
+    enumWorkerType.goalReminder
   ]
 
   // Loop over documents and push job.

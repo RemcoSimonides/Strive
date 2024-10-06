@@ -1,5 +1,5 @@
 import type { Message } from 'firebase-admin/messaging'
-import { admin } from '@strive/api/firebase'
+import { admin, logger } from '@strive/api/firebase'
 import { Personal, Reminder } from '@strive/model'
 import { nextReminder } from '../../firestore/goals/goal-stakeholder/reminders/reminder'
 import { enumWorkerType, ScheduledTaskGoalReminder } from '../../shared/scheduled-task/scheduled-task.interface'
