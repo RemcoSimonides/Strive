@@ -21,19 +21,19 @@ export class DatetimeComponent {
   _value?: string
   @Input() set value(value: string | Date) {
     if (!value) return
-    this._value = typeof value === 'string' ? value : value.toISOString()
+    this._value = typeof value === 'string' ? value : value.toLocaleString()
   }
 
   _minDate?: string
   @Input() set minDate(value: string | Date) {
     if (!value) return
-    this._minDate = typeof value === 'string' ? value : value.toISOString()
+    this._minDate = typeof value === 'string' ? value : value.toLocaleString()
   }
 
   _maxDate?: string
   @Input() set maxDate(value: string | Date) {
     if (!value) return
-    this._maxDate = typeof value === 'string' ? value : value.toISOString()
+    this._maxDate = typeof value === 'string' ? value : value.toLocaleString()
   }
   @Input() presentation: 'date' | 'date-time' | 'month' | 'month-year' | 'time' | 'time-date' | 'year' = 'date'
   @Input() label?: string
