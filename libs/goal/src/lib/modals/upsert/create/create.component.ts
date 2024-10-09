@@ -18,8 +18,9 @@ import { GoalDetailsComponent } from '../components/details/details.component'
 import { GoalImagesComponent } from '../components/images/images.component'
 import { GoalRoadmapComponent } from '../components/roadmap/roadmap.component'
 import { GoalShareComponent } from '../components/share/share.component'
+import { RemindersComponent } from '@strive/stakeholder/components/reminders/reminders.component'
 
-type Steps = 'details' | 'images' | 'roadmap' | 'share'
+type Steps = 'details' | 'images' | 'roadmap' | 'reminders' | 'share'
 
 @Component({
   standalone: true,
@@ -33,6 +34,7 @@ type Steps = 'details' | 'images' | 'roadmap' | 'share'
     GoalImagesComponent,
     GoalRoadmapComponent,
     GoalShareComponent,
+    RemindersComponent,
     IonHeader,
     IonToolbar,
     IonButtons,
@@ -56,6 +58,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
       ...this.form.getGoalValue()
     })
   })
+  uid = this.auth.uid
 
   constructor(
     private auth: AuthService,
@@ -100,9 +103,11 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
 
       next = direction === 'next' ? 'roadmap' : 'details'
     } else if (step === 'roadmap') {
-      next = direction === 'next' ? 'share' : 'images'
+      next = direction === 'next' ? 'reminders' : 'images'
+    } else if (step === 'reminders') {
+      next = direction === 'next' ? 'share' : 'roadmap'
     } else if (step === 'share') {
-      direction === 'next' ? this.close() : next = 'roadmap'
+      direction === 'next' ? this.close() : next = 'reminders'
     }
     this.stepper$.next(next)
   }

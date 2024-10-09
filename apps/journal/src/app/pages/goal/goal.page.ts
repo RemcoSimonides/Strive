@@ -426,7 +426,6 @@ export class GoalPageComponent implements OnDestroy {
   }
 
   private deleteGoal() {
-    console.log('delete goal')
     this.alertCtrl.create({
       mode: 'md',
       subHeader: `Are you sure you want to delete this goal?`,

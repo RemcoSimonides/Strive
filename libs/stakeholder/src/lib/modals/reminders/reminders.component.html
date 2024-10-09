@@ -3,43 +3,5 @@
 </strive-header-modal>
 
 <ion-content class="ion-padding">
-  @if (reminders$ | async; as reminders) {
-    @if (reminders.length) {
-      <ion-list>
-        @for (reminder of reminders; track reminder; let last = $last) {
-          <ion-item button (click)="upsertReminder(reminder)" [lines]="last ? 'none' : 'full'">
-            <section>
-              <span>{{ reminder.description }}</span>
-              @if (reminder.isRepeating) {
-                @switch (reminder.interval) {
-                  @case ('yearly') {
-                    <small>Yearly reminder on {{ reminder.date | date: 'MMMM d' }} at {{ reminder.date | date:'shortTime' }}</small>
-                  }
-                  @case ('quarterly') {
-                    <small>Quarterly reminder in week {{ reminder.numberOfWeek }} on a {{ reminder.dayOfWeek }} at {{ reminder.date | date:'shortTime' }}</small>
-                  }
-                  @case ('monthly') {
-                    <small>Monthly reminder in week {{ reminder.numberOfWeek }} on a {{ reminder.dayOfWeek }} at {{ reminder.date | date:'shortTime' }}</small>
-                  }
-                  @case ('weekly') {
-                    <small>Weekly reminder on a {{ reminder.dayOfWeek }} at {{ reminder.date | date:'shortTime' }}</small>
-                  }
-                  @case ('daily') {
-                    <small>Daily reminder at {{ reminder.date | date:'shortTime' }}</small>
-                  }
-                }
-              } @else {
-                <small>One time reminder on {{ reminder.date | date: 'MMMM d' }} at {{ reminder.date | date:'shortTime' }}</small>
-              }
-            </section>
-          </ion-item>
-        }
-      </ion-list>
-    }
-
-    <ion-button class="primary" (click)="upsertReminder()">Create a Reminder</ion-button>
-
-  } @else {
-    <strive-page-loading/>
-  }
+  <strive-reminders [goalId]="goalId" [stakeholderId]="stakeholderId"/>
 </ion-content>

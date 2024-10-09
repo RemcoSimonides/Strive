@@ -28,6 +28,14 @@
         <strive-goal-roadmap [goal]="goal" />
       </ion-content>
     }
+    @case ('reminders') {
+      <ion-content class="ion-padding">
+        <small>Schedule reminders to get you on track.</small>
+        @if (uid) {
+          <strive-reminders [goalId]="goal.id" [stakeholderId]="uid" />
+        }
+      </ion-content>
+    }
     @case ('share') {
       <ion-content class="ion-padding">
         <strive-goal-share [goal]="goal" />

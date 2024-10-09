@@ -38,11 +38,11 @@ export class ReminderForm extends FormGroup<ReminderFormControl> {
       if (interval === 'yearly' && !date) return false
 
       if (interval === 'quarterly') {
-        if (!dayOfWeek || !numberOfWeek) return false
+        if (!dayOfWeek || numberOfWeek === null || numberOfWeek === undefined) return false
       }
 
       if (interval === 'monthly') {
-        if (!dayOfWeek || !numberOfWeek || numberOfWeek > 4) return false
+        if (!dayOfWeek || numberOfWeek === null || numberOfWeek === undefined || numberOfWeek > 4) return false
       }
 
       if (interval === 'weekly') {
