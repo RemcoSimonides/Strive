@@ -15,7 +15,6 @@ import { captureException, captureMessage } from '@sentry/capacitor'
 import { EditMediaForm } from '@strive/media/forms/media.form'
 import { delay } from '@strive/utils/helpers'
 import { ImageOptionsPopoverComponent } from './popover/options.component'
-import { VideoPlayerComponent } from '../video-player/video-player.component'
 
 type CropStep = 'drop' | 'hovering'
 
@@ -28,9 +27,7 @@ type CropStep = 'drop' | 'hovering'
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [
     CommonModule,
-    ImageOptionsPopoverComponent,
-    IonIcon,
-    VideoPlayerComponent
+    IonIcon
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -146,16 +143,32 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
   }
 
   async openPopover(event: Event, index: number) {
+    const canMoveLeft = index > 0
+    const canMoveRight = index < this.form.length - 1
     const ctrl = this.form.at(index)
     const type = ctrl.type.value
     const popover = await this.popoverCtrl.create({
       component: ImageOptionsPopoverComponent,
-      componentProps: { type },
+      componentProps: { type, canMoveLeft, canMoveRight },
       event
     })
 
     popover.onDidDismiss().then(dismiss => {
       const { data } = dismiss
+      if (data == 'right') {
+        const next = this.form.at(index + 1)
+        this.form.setControl(index, next)
+        this.form.setControl(index + 1, ctrl)
+        this.form.markAsDirty()
+      }
+
+      if (data == 'left') {
+        const prev = this.form.at(index - 1)
+        this.form.setControl(index, prev)
+        this.form.setControl(index - 1, ctrl)
+        this.form.markAsDirty()
+      }
+
       if (data === 'remove') {
         this.form.removeAt(index)
         this.form.markAsDirty()
