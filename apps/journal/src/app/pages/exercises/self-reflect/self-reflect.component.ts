@@ -32,7 +32,7 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
   if (!settings) return { disabled: true, message: 'No settings found' }
   const questions = settings.questions.filter(question => question.frequency === frequency)
 
-  if (questions.length === 0) return { disabled: true, message: 'No questions activated - change in settings' }
+  if (questions.length === 0) return { disabled: true, message: 'No questions activated. Change frequency of a question' }
   if (entries.length === 0) return { disabled: false, message: `Ready for a new entry!` }
 
   const today = startOfDay(new Date())
@@ -45,6 +45,17 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
     quarterly: getQuarter,
     yearly: (date: Date) => getSelfReflectYear(date, 12, 24)
   }
+
+  const timeAgo = differenceInDays(today, lastEntry.createdAt)
+  const timeMap = {
+    daily: 1,
+    weekly: 7,
+    monthly: 30,
+    quarterly: 90,
+    yearly: 365
+  }
+
+  if (timeAgo > timeMap[frequency]) return { disabled: false, message: `Ready for a new entry!` } // This should fix that if the bug where getFrequency[frequency](today) !== getFrequency[frequency](lastEntry.createdAt) is both on the same date
 
   if (getFrequency[frequency](today) !== getFrequency[frequency](lastEntry.createdAt)) return { disabled: false, message: `Ready for a new entry!` }
 
@@ -80,11 +91,8 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
     ReactiveFormsModule,
     RouterModule,
     HeaderComponent,
-    SelfReflectEntryComponent,
-    SelfReflectFrequencyPipe,
     PageLoadingComponent,
     SelfReflectReplaceFrequencyPipe,
-    SelfReflectCustomQuestionModalComponent,
     SelfReflectFilterEntriesPipe,
     IonButtons,
     IonButton,
