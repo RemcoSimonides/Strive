@@ -13,7 +13,7 @@ export enum enumGoalOptions {
   finishGoal,
   editGoal,
   deleteGoal,
-  integrateStrava,
+  integrations,
   editReminders
 }
 

@@ -6,7 +6,7 @@
     <ion-item (click)="dismiss(enumGoalOptions.editReminders)" button>Edit Reminders</ion-item>
   }
   @if (stakeholder.isAdmin) {
-    <ion-item (click)="dismiss(enumGoalOptions.integrateStrava)" button>Strava integration</ion-item>
+    <ion-item (click)="dismiss(enumGoalOptions.integrations)" button>Integrations</ion-item>
   }
   @if (stakeholder.isAdmin || stakeholder.isAchiever) {
     <ion-item (click)="dismiss(enumGoalOptions.editGoal)" button>Edit Goal</ion-item>

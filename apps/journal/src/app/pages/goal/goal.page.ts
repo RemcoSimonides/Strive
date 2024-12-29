@@ -53,6 +53,7 @@ import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { StravaActivityTypesComponent } from '@strive/goal/components/strava-activity-types/strava-activity-types.component'
 import { StravaCardComponent } from '@strive/strava/components/strava-card/strava-card.component'
+import { IntegrationsComponent } from '@strive/goal/modals/integrations/integrations.component'
 // Strive Services
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -103,14 +104,7 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
   imports: [
     CommonModule,
     RouterModule,
-    GoalOptionsPopoverComponent,
-    GoalSharePopoverComponent,
-    GoalUpdateModalComponent,
-    AchieversModalComponent,
-    SpectatorsModalComponent,
-    SupportersModalComponent,
     ImageDirective,
-    ImageZoomModalComponent,
     CompactPipe,
     RoadmapComponent,
     StoryComponent,
@@ -118,15 +112,9 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     JoinButtonComponent,
     SupportListComponent,
     AddSupportComponent,
-    ChatModalComponent,
     PageLoadingComponent,
     PagenotfoundComponent,
     HeaderRootComponent,
-    AddOthersModalComponent,
-    DeadlinePopoverComponent,
-    UpsertPostModalComponent,
-    CollectiveGoalsModalComponent,
-    SuggestionModalComponent,
     StravaCardComponent,
     IonFab,
     IonFabButton,
@@ -394,8 +382,8 @@ export class GoalPageComponent implements OnDestroy {
         case enumGoalOptions.deleteGoal:
           this.deleteGoal()
           break
-        case enumGoalOptions.integrateStrava:
-          this.integrateStrava()
+        case enumGoalOptions.integrations:
+          this.openIntegrations()
           break
         case enumGoalOptions.editReminders:
           this.editReminders()
@@ -668,6 +656,19 @@ export class GoalPageComponent implements OnDestroy {
       component: SuggestionModalComponent,
       componentProps: { goal: this.goal }
     }).then(modal => modal.present())
+  }
+
+  async openIntegrations() {
+    const modal = await this.modalCtrl.create({
+      component: IntegrationsComponent,
+      componentProps: { goalId: this.goal?.id }
+    })
+    modal.present()
+    modal.onDidDismiss().then(({ data }) => {
+      if (data === 'strava') {
+        this.integrateStrava()
+      }
+    })
   }
 
   async integrateStrava(stravaAuthParams?: StravaAuthParams) {
