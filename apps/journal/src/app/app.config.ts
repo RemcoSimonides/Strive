@@ -15,7 +15,7 @@ import { environment } from '@env';
 
 // Sentry
 import * as Sentry from '@sentry/capacitor'
-import * as SentryAngular from '@sentry/angular';
+import { init, createErrorHandler } from '@sentry/angular'
 
 Sentry.init(
   {
@@ -25,7 +25,7 @@ Sentry.init(
     tracesSampleRate: 1.0,
     enableNative: false
   },
-  SentryAngular.init
+  init
 )
 
 // Swiper
@@ -46,6 +46,6 @@ export const appConfig: ApplicationConfig = {
     { provide: 'APP_NAME', useValue: 'journal' },
     { provide: FIREBASE_CONFIG, useValue: environment.firebase },
     { provide: AUTH_DEPS, useValue: Capacitor.getPlatform() === 'ios' ? { persistence: indexedDBLocalPersistence } : undefined},
-    { provide: ErrorHandler, useValue: SentryAngular.createErrorHandler() },
+    { provide: ErrorHandler, useValue: createErrorHandler() },
   ]
 };

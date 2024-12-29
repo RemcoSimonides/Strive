@@ -8,7 +8,9 @@
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/support"],
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/support"
+      ],
       "options": {
         "jestConfig": "libs/support/jest.config.ts"
       }

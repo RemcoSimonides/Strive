@@ -8,7 +8,9 @@
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/notification"],
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/notification"
+      ],
       "options": {
         "jestConfig": "libs/notification/jest.config.ts"
       }

@@ -10,33 +10,81 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2021", "dom"],
+    "lib": [
+      "es2021",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@env": ["environments/environment.ts"],
-      "@strive/api": ["libs/api/src/index.ts"],
-      "@strive/api/firebase": ["libs/api/src/lib/utils/firebase.ts"],
-      "@strive/api/sentry": ["libs/api/src/lib/utils/sentry.ts"],
-      "@strive/auth/*": ["libs/auth/src/lib/*"],
-      "@strive/chat/*": ["libs/chat/src/lib/*"],
-      "@strive/exercises/*": ["libs/exercises/src/lib/*"],
-      "@strive/goal/*": ["libs/goal/src/lib/*"],
-      "@strive/media/*": ["libs/media/src/lib/*"],
-      "@strive/model": ["libs/model/src/index.ts"],
-      "@strive/notification/*": ["libs/notification/src/lib/*"],
-      "@strive/post/*": ["libs/post/src/lib/*"],
-      "@strive/roadmap/*": ["libs/roadmap/src/lib/*"],
-      "@strive/spectator/*": ["libs/spectator/src/lib/*"],
-      "@strive/stakeholder/*": ["libs/stakeholder/src/lib/*"],
-      "@strive/story/*": ["libs/story/src/lib/*"],
-      "@strive/support/*": ["libs/support/src/lib/*"],
-      "@strive/ui/*": ["libs/ui/src/lib/*"],
-      "@strive/user/*": ["libs/user/src/lib/*"],
-      "@strive/utils/*": ["libs/utils/src/lib/*"],
-      "@strive/strava/*": ["libs/strava/src/lib/*"]
+      "@env": [
+        "environments/environment.ts"
+      ],
+      "@strive/api": [
+        "libs/api/src/index.ts"
+      ],
+      "@strive/api/firebase": [
+        "libs/api/src/lib/utils/firebase.ts"
+      ],
+      "@strive/api/sentry": [
+        "libs/api/src/lib/utils/sentry.ts"
+      ],
+      "@strive/auth/*": [
+        "libs/auth/src/lib/*"
+      ],
+      "@strive/chat/*": [
+        "libs/chat/src/lib/*"
+      ],
+      "@strive/exercises/*": [
+        "libs/exercises/src/lib/*"
+      ],
+      "@strive/goal/*": [
+        "libs/goal/src/lib/*"
+      ],
+      "@strive/media/*": [
+        "libs/media/src/lib/*"
+      ],
+      "@strive/model": [
+        "libs/model/src/index.ts"
+      ],
+      "@strive/notification/*": [
+        "libs/notification/src/lib/*"
+      ],
+      "@strive/post/*": [
+        "libs/post/src/lib/*"
+      ],
+      "@strive/roadmap/*": [
+        "libs/roadmap/src/lib/*"
+      ],
+      "@strive/spectator/*": [
+        "libs/spectator/src/lib/*"
+      ],
+      "@strive/stakeholder/*": [
+        "libs/stakeholder/src/lib/*"
+      ],
+      "@strive/story/*": [
+        "libs/story/src/lib/*"
+      ],
+      "@strive/strava/*": [
+        "libs/strava/src/lib/*"
+      ],
+      "@strive/support/*": [
+        "libs/support/src/lib/*"
+      ],
+      "@strive/ui/*": [
+        "libs/ui/src/lib/*"
+      ],
+      "@strive/user/*": [
+        "libs/user/src/lib/*"
+      ],
+      "@strive/utils/*": [
+        "libs/utils/src/lib/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
