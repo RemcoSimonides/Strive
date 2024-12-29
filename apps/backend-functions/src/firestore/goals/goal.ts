@@ -80,7 +80,7 @@ async snapshot => {
   const notificationsSnap = await db.collectionGroup('Notifications').where('goalId', '==', goal.id).get()
   notificationsSnap.docs.forEach(doc => doc.ref.delete())
 
-  const stravaIntegrationsSnap = await db.collectionGroup('Strava').where('goalId', '==', goal.id).get()
+  const stravaIntegrationsSnap = await db.collection('Strava').where('goalId', '==', goal.id).get()
   stravaIntegrationsSnap.docs.forEach(doc => doc.ref.delete())
 
   if (goal.image) {
