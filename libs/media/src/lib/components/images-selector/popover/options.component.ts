@@ -3,13 +3,12 @@ import { IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
 import { MediaType } from '@strive/model'
 
 @Component({
-  standalone: true,
-  imports: [
-    IonList,
-    IonItem
-  ],
-  selector: 'strive-image-options-popover',
-  template: `
+    imports: [
+        IonList,
+        IonItem
+    ],
+    selector: 'strive-image-options-popover',
+    template: `
     <ion-list>
       @if (canMoveLeft) {
         <ion-item button (click)="dismiss('left')">Move left</ion-item>
@@ -20,7 +19,7 @@ import { MediaType } from '@strive/model'
       <ion-item lines="none" button (click)="dismiss('remove')">Remove {{ type }}</ion-item>
     </ion-list>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageOptionsPopoverComponent {
 

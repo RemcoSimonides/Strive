@@ -28,31 +28,29 @@ import { ImagesSelectorComponent } from '@strive/media/components/images-selecto
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 
 @Component({
-	standalone: true,
-	selector: '[goalId] strive-post-upsert',
-	templateUrl: './post-upsert.component.html',
-	styleUrls: ['./post-upsert.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		ImagesSelectorComponent,
-		DatetimeComponent,
-		SafePipe,
-		IonHeader,
-		IonToolbar,
-		IonButtons,
-		IonButton,
-		IonIcon,
-		IonTitle,
-		IonContent,
-		IonList,
-		IonItem,
-		IonTextarea,
-		IonInput,
-		IonSpinner,
-		IonFooter
-	]
+    selector: '[goalId] strive-post-upsert',
+    templateUrl: './post-upsert.component.html',
+    styleUrls: ['./post-upsert.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ImagesSelectorComponent,
+        SafePipe,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonItem,
+        IonTextarea,
+        IonInput,
+        IonSpinner,
+        IonFooter
+    ]
 })
 export class UpsertPostModalComponent extends ModalDirective implements AfterViewInit, OnDestroy {
 	@ViewChild(ImagesSelectorComponent) imageSelector?: ImagesSelectorComponent

@@ -12,35 +12,34 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile: User }
 
 @Component({
-  standalone: true,
-  selector: '[support] strive-support-achievers',
-  templateUrl: './achievers.component.html',
-  styleUrls: ['./achievers.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    ImageDirective,
-    HeaderModalComponent,
-    IonSearchbar,
-    IonContent,
-    IonList,
-    IonItem,
-    IonButton,
-    IonAvatar,
-    IonLabel,
-    IonText,
-    IonCheckbox,
-    IonSearchbar,
-    IonContent,
-    IonList,
-    IonItem,
-    IonButton,
-    IonAvatar,
-    IonLabel,
-    IonText,
-    IonCheckbox
-  ]
+    selector: '[support] strive-support-achievers',
+    templateUrl: './achievers.component.html',
+    styleUrls: ['./achievers.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        ImageDirective,
+        HeaderModalComponent,
+        IonSearchbar,
+        IonContent,
+        IonList,
+        IonItem,
+        IonButton,
+        IonAvatar,
+        IonLabel,
+        IonText,
+        IonCheckbox,
+        IonSearchbar,
+        IonContent,
+        IonList,
+        IonItem,
+        IonButton,
+        IonAvatar,
+        IonLabel,
+        IonText,
+        IonCheckbox
+    ]
 })
 export class AchieversModalComponent extends ModalDirective implements OnDestroy {
 

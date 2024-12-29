@@ -5,18 +5,17 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { Subscription } from 'rxjs'
 
 @Component({
-  standalone: true,
-  selector: 'strive-thumbnail-list',
-  templateUrl: 'thumbnail-list.component.html',
-  styleUrls: ['./thumbnail-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom,
-  imports: [
-    CommonModule
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ]
+    selector: 'strive-thumbnail-list',
+    templateUrl: 'thumbnail-list.component.html',
+    styleUrls: ['./thumbnail-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.ShadowDom,
+    imports: [
+        CommonModule
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ]
 })
 export class ThumbnailListComponent implements AfterContentInit, OnDestroy {
   @Input() width = 160

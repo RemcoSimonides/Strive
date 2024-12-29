@@ -5,27 +5,26 @@ import { PrivacyPolicyComponent } from './privacy-policy.component'
 import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: 'strive-privacy-policy-page',
-  template: `
+    selector: 'strive-privacy-policy-page',
+    template: `
     <strive-header title="Privacy Policy"></strive-header>
     <ion-content>
       <strive-privacy-policy></strive-privacy-policy>
     </ion-content>
   `,
-  styles: [
-    `strive-privacy-policy {
+    styles: [
+        `strive-privacy-policy {
       display: block;
       max-width: var(--page-max-width);
       margin: auto;
       padding: 0 16px;
     }`
-  ],
-  imports: [
-    IonContent,
-    PrivacyPolicyComponent,
-    HeaderComponent
-  ]
+    ],
+    imports: [
+        IonContent,
+        PrivacyPolicyComponent,
+        HeaderComponent
+    ]
 })
 export class PrivacyPolicyPageComponent {
   constructor(seo: SeoService) {

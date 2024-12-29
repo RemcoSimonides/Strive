@@ -6,14 +6,13 @@ import { IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
 import { Category, CategoryBlock, categories as categoryBlocks } from '@strive/model'
 
 @Component({
-  standalone: true,
-  selector: '[goal][stakeholder] strive-category-filter',
-  templateUrl: './category-filter.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonList,
-    IonItem
-  ]
+    selector: '[goal][stakeholder] strive-category-filter',
+    templateUrl: './category-filter.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonList,
+        IonItem
+    ]
 })
 export class CategoryFilterComponent {
 

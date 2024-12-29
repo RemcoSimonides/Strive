@@ -1,6 +1,6 @@
-const { FlatCompat } = require("@eslint/eslintrc");
-const js = require("@eslint/js");
-const baseConfig = require("../../eslint.config.cjs");
+const { FlatCompat } = require('@eslint/eslintrc');
+const js = require('@eslint/js');
+const baseConfig = require('../../eslint.config.cjs');
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -8,53 +8,55 @@ const compat = new FlatCompat({
 });
 
 module.exports = [
-    {
-        ignores: [
-            "**/dist"
-        ]
-    },
-    ...baseConfig,
-    ...compat.config({
-        extends: [
-            "plugin:@nx/angular",
-            "plugin:@angular-eslint/template/process-inline-templates"
-        ]
-    }).map(config => ({
-        ...config,
-        files: [
-            "**/*.ts"
+  {
+    ignores: ['**/dist'],
+  },
+  ...baseConfig,
+  ...compat
+    .config({
+      extends: [
+        'plugin:@nx/angular',
+        'plugin:@angular-eslint/template/process-inline-templates',
+      ],
+    })
+    .map((config) => ({
+      ...config,
+      files: ['**/*.ts'],
+      rules: {
+        ...config.rules,
+        '@angular-eslint/directive-selector': [
+          'error',
+          {
+            type: 'attribute',
+            prefix: 'lib',
+            style: 'camelCase',
+          },
         ],
-        rules: {
-            ...config.rules,
-            "@angular-eslint/directive-selector": [
-                "error",
-                {
-                    type: "attribute",
-                    prefix: "lib",
-                    style: "camelCase"
-                }
-            ],
-            "@angular-eslint/component-selector": [
-                "error",
-                {
-                    type: "element",
-                    prefix: "lib",
-                    style: "kebab-case"
-                }
-            ]
-        }
+        '@angular-eslint/component-selector': [
+          'error',
+          {
+            type: 'element',
+            prefix: 'lib',
+            style: 'kebab-case',
+          },
+        ],
+      },
     })),
-    ...compat.config({
-        extends: [
-            "plugin:@nx/angular-template"
-        ]
-    }).map(config => ({
-        ...config,
-        files: [
-            "**/*.html"
-        ],
-        rules: {
-            ...config.rules
-        }
-    }))
+  ...compat
+    .config({
+      extends: ['plugin:@nx/angular-template'],
+    })
+    .map((config) => ({
+      ...config,
+      files: ['**/*.html'],
+      rules: {
+        ...config.rules,
+      },
+    })),
+  {
+    files: ['**/*.ts'],
+    rules: {
+      '@angular-eslint/prefer-standalone': 'off',
+    },
+  },
 ];

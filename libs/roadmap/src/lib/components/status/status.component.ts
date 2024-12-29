@@ -7,14 +7,13 @@ import { radioButtonOff, checkmarkCircle, closeCircle } from 'ionicons/icons'
 import { createMilestone, MilestoneStatus } from '@strive/model'
 
 @Component({
-  standalone: true,
-  selector: 'strive-milestone-status',
-  templateUrl: 'status.component.html',
-  styleUrls: ['./status.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default, // Default because when updating status, icon wasn't updated (despite markForCheck())
-  imports: [
-    IonIcon
-  ]
+    selector: 'strive-milestone-status',
+    templateUrl: 'status.component.html',
+    styleUrls: ['./status.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Default, // Default because when updating status, icon wasn't updated (despite markForCheck())
+    imports: [
+        IonIcon
+    ]
 })
 export class MilestoneStatusComponent {
 

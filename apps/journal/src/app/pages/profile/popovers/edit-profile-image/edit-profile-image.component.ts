@@ -8,15 +8,14 @@ import { AuthService } from '@strive/auth/auth.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
-  standalone: true,
-  selector: 'journal-edit-profile-image-popover',
-  templateUrl: './edit-profile-image.component.html',
-  styleUrls: ['./edit-profile-image.component.scss'],
-  imports: [
-    ReactiveFormsModule,
-    ImageSelectorComponent,
-    IonButton
-  ]
+    selector: 'journal-edit-profile-image-popover',
+    templateUrl: './edit-profile-image.component.html',
+    styleUrls: ['./edit-profile-image.component.scss'],
+    imports: [
+        ReactiveFormsModule,
+        ImageSelectorComponent,
+        IonButton
+    ]
 })
 export class EditProfileImagePopoverComponent implements OnInit {
   @HostListener('window:popstate', ['$event'])

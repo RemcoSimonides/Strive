@@ -32,30 +32,26 @@ const initial = `Dear Future Self,
 `
 
 @Component({
-  standalone: true,
-  selector: 'journal-dear-future-self',
-  templateUrl: './dear-future-self.component.html',
-  styleUrls: ['./dear-future-self.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    TimeToGoPipe,
-    TimeAgoPipe,
-    PageLoadingComponent,
-    AuthModalComponent,
-    HeaderComponent,
-    MessageModalComponent,
-    IonContent,
-    IonCard,
-    IonItem,
-    IonTextarea,
-    IonButton,
-    IonDatetime,
-    IonIcon,
-    IonList
-  ]
+    selector: 'journal-dear-future-self',
+    templateUrl: './dear-future-self.component.html',
+    styleUrls: ['./dear-future-self.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        TimeToGoPipe,
+        TimeAgoPipe,
+        HeaderComponent,
+        IonContent,
+        IonCard,
+        IonItem,
+        IonTextarea,
+        IonButton,
+        IonDatetime,
+        IonIcon,
+        IonList
+    ]
 })
 export class DearFutureSelfPageComponent {
   description = new FormControl(initial)

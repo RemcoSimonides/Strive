@@ -11,22 +11,21 @@ import { SelfReflectSettingsService } from '../../self-reflect.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  standalone: true,
-  selector: 'strive-self-reflect-custom-question',
-  templateUrl: './create-custom-question.component.html',
-  styleUrls: ['./create-custom-question.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    HeaderModalComponent,
-    IonTitle,
-    IonList,
-    IonItem,
-    IonTextarea,
-    IonSelect,
-    IonSelectOption,
-    IonButton
-  ]
+    selector: 'strive-self-reflect-custom-question',
+    templateUrl: './create-custom-question.component.html',
+    styleUrls: ['./create-custom-question.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        HeaderModalComponent,
+        IonTitle,
+        IonList,
+        IonItem,
+        IonTextarea,
+        IonSelect,
+        IonSelectOption,
+        IonButton
+    ]
 })
 export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
 

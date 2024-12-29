@@ -8,17 +8,16 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 import { RemindersComponent } from '../../components/reminders/reminders.component'
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    HeaderModalComponent,
-    RemindersComponent,
-    IonContent,
-    IonTitle
-  ],
-  selector: '[goal, stakeholder] strive-reminders-modal',
-  templateUrl: './reminders.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule,
+        HeaderModalComponent,
+        RemindersComponent,
+        IonContent,
+        IonTitle
+    ],
+    selector: '[goal, stakeholder] strive-reminders-modal',
+    templateUrl: './reminders.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RemindersModalComponent extends ModalDirective {
 

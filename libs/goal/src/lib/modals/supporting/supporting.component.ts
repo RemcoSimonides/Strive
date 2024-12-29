@@ -10,21 +10,20 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  selector: 'strive-goal-supporting',
-  templateUrl: 'supporting.component.html',
-  styleUrls: ['./supporting.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ImageDirective,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonLabel
-  ]
+    selector: 'strive-goal-supporting',
+    templateUrl: 'supporting.component.html',
+    styleUrls: ['./supporting.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ImageDirective,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonItem,
+        IonThumbnail,
+        IonLabel
+    ]
 })
 export class SupportingComponent extends ModalDirective {
 

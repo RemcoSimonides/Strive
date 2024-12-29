@@ -9,20 +9,19 @@ import { arrowBack } from 'ionicons/icons'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 @Component({
-  standalone: true,
-  selector: '[title] strive-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonTitle
-  ]
+    selector: '[title] strive-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonTitle
+    ]
 })
 export class HeaderComponent {
 

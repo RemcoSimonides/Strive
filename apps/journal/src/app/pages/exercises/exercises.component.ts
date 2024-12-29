@@ -31,7 +31,10 @@ function getFrequencies({ questions }: SelfReflectSettings) {
   return smartJoin(frequencies, ', ', ' and ')
 }
 
-@Pipe({ name: 'get' })
+@Pipe({
+    name: 'get',
+    standalone: false
+})
 export class GetExercisePipe implements PipeTransform {
   transform(settings: ExerciseSettings[], exercise: ExerciseType) {
     return settings.find(s => s.id === exercise)
@@ -48,23 +51,22 @@ interface Exercise {
 }
 
 @Component({
-  standalone: true,
-  selector: 'journal-exercises',
-  templateUrl: './exercises.component.html',
-  styleUrls: ['./exercises.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    SmallThumbnailComponent,
-    HeaderRootComponent,
-    NextLetterPipe,
-    TimeToGoPipe,
-    PageLoadingComponent,
-    IonContent,
-    IonIcon
-  ],
-  providers: [GetExercisePipe]
+    selector: 'journal-exercises',
+    templateUrl: './exercises.component.html',
+    styleUrls: ['./exercises.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        SmallThumbnailComponent,
+        HeaderRootComponent,
+        NextLetterPipe,
+        TimeToGoPipe,
+        PageLoadingComponent,
+        IonContent,
+        IonIcon
+    ],
+    providers: [GetExercisePipe]
 })
 export class ExercisesPageComponent {
   exercises$: Observable<Exercise[]> = this.auth.profile$.pipe(

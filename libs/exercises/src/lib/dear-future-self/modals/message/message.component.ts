@@ -12,17 +12,16 @@ import { PersonalService } from '@strive/user/personal.service'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  selector: '[message] strive-dear-future-self-message-modal',
-  templateUrl: './message.component.html',
-  styleUrls: ['./message.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent
-  ]
+    selector: '[message] strive-dear-future-self-message-modal',
+    templateUrl: './message.component.html',
+    styleUrls: ['./message.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent
+    ]
 })
 export class MessageModalComponent extends ModalDirective implements OnInit {
 

@@ -13,27 +13,26 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
 @Component({
-  standalone: true,
-  selector: 'journal-push-notification-settings',
-  templateUrl: './push-notification-settings.component.html',
-  styleUrls: ['./push-notification-settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HeaderComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    IonButtons,
-    IonButton,
-    IonToggle,
-    IonContent,
-    IonList,
-    IonListHeader,
-    IonItem,
-    IonLabel,
-    IonCheckbox
-  ]
+    selector: 'journal-push-notification-settings',
+    templateUrl: './push-notification-settings.component.html',
+    styleUrls: ['./push-notification-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        HeaderComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        IonButtons,
+        IonButton,
+        IonToggle,
+        IonContent,
+        IonList,
+        IonListHeader,
+        IonItem,
+        IonLabel,
+        IonCheckbox
+    ]
 })
 export class PushNotificationsSettingsComponent implements OnDestroy {
 

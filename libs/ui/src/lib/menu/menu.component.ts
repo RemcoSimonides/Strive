@@ -15,25 +15,24 @@ import { ThemeService } from '@strive/utils/services/theme.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
-	standalone: true,
-	selector: 'strive-menu',
-	templateUrl: './menu.component.html',
-	styleUrls: ['./menu.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		CommonModule,
-		RouterModule,
-		ImageDirective,
-		IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonList,
-    IonItem,
-    IonLabel
-	]
+    selector: 'strive-menu',
+    templateUrl: './menu.component.html',
+    styleUrls: ['./menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ImageDirective,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonList,
+        IonItem,
+        IonLabel
+    ]
 })
 export class MenuComponent extends ModalDirective {
 	enumAuthSegment = enumAuthSegment

@@ -18,15 +18,14 @@ export enum enumGoalOptions {
 }
 
 @Component({
-  standalone: true,
-  selector: 'journal-goal-options-popover',
-  templateUrl: './options.component.html',
-  styleUrls: ['./options.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonList,
-    IonItem
-  ]
+    selector: 'journal-goal-options-popover',
+    templateUrl: './options.component.html',
+    styleUrls: ['./options.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonList,
+        IonItem
+    ]
 })
 export class GoalOptionsPopoverComponent {
   @HostListener('window:popstate', ['$event'])

@@ -15,29 +15,26 @@ import { ProfileService } from '@strive/user/profile.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
-import { ImagesSelectorComponent } from '@strive/media/components/images-selector/images-selector.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
 @Component({
-  standalone: true,
-  selector: 'journal-edit-profile',
-  templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    ImagesSelectorComponent,
-    HeaderComponent,
-    ImageSelectorComponent,
-    IonContent,
-    IonCard,
-    IonCardContent,
-    IonItem,
-    IonInput,
-    IonButton
-  ]
+    selector: 'journal-edit-profile',
+    templateUrl: './edit-profile.component.html',
+    styleUrls: ['./edit-profile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        HeaderComponent,
+        ImageSelectorComponent,
+        IonContent,
+        IonCard,
+        IonCardContent,
+        IonItem,
+        IonInput,
+        IonButton
+    ]
 })
 export class EditProfilePageComponent {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent

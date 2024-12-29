@@ -11,16 +11,15 @@ const primaryRGBA = 'rgba(249, 116, 29)'
 const secondaryRGBA = 'rgba(0,179,163)'
 
 @Component({
-  standalone: true,
-  selector: 'strive-wheel-of-life-results',
-  templateUrl: './results.component.html',
-  styleUrls: ['./results.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgChartsModule,
-    IonSegment,
-    IonSegmentButton
-  ]
+    selector: 'strive-wheel-of-life-results',
+    templateUrl: './results.component.html',
+    styleUrls: ['./results.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgChartsModule,
+        IonSegment,
+        IonSegmentButton
+    ]
 })
 export class WheelOfLifeResultsComponent {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective

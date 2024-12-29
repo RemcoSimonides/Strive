@@ -25,42 +25,60 @@ function publicGoalsPercentage(aggregation: Aggregation) {
 	return Math.round((aggregation.goalsPublic / totalGoals(aggregation)) * 100)
 }
 
-@Pipe({ name: 'totalGoals' })
+@Pipe({
+    name: 'totalGoals',
+    standalone: false
+})
 export class TotalGoalsPipe implements PipeTransform {
 	transform(aggregation: Aggregation) {
 		return totalGoals(aggregation)
 	}
 }
 
-@Pipe({ name: 'activeGoalsPercentage' })
+@Pipe({
+    name: 'activeGoalsPercentage',
+    standalone: false
+})
 export class ActiveGoalsPercentagePipe implements PipeTransform {
 	transform(aggregation: Aggregation) {
 		return activeGoalsPercentage(aggregation)
 	}
 }
 
-@Pipe({ name: 'bucketlistGoalsPercentage' })
+@Pipe({
+    name: 'bucketlistGoalsPercentage',
+    standalone: false
+})
 export class BucketListGoalsPercentagePipe implements PipeTransform {
 	transform(aggregation: Aggregation) {
 		return bucketlistGoalsPercentage(aggregation)
 	}
 }
 
-@Pipe({ name: 'finishedGoalsPercentage' })
+@Pipe({
+    name: 'finishedGoalsPercentage',
+    standalone: false
+})
 export class FinishedGoalsPercentagePipe implements PipeTransform {
 	transform(aggregation: Aggregation) {
 		return finishedGoalsPercentage(aggregation)
 	}
 }
 
-@Pipe({ name: 'privateGoalsPercentage' })
+@Pipe({
+    name: 'privateGoalsPercentage',
+    standalone: false
+})
 export class PrivateGoalsPercentagePipe implements PipeTransform {
 	transform(aggregation: Aggregation) {
 		return privateGoalsPercentage(aggregation)
 	}
 }
 
-@Pipe({ name: 'publicGoalsPercentage' })
+@Pipe({
+    name: 'publicGoalsPercentage',
+    standalone: false
+})
 export class PublicGoalsPercentagePipe implements PipeTransform {
 	transform(aggregation: Aggregation) {
 		return  publicGoalsPercentage(aggregation)

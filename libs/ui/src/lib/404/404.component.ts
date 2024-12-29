@@ -7,17 +7,16 @@ import { SeoService } from '@strive/utils/services/seo.service'
 import { HeaderComponent } from '../header/header.component'
 
 @Component({
-  standalone: true,
-  selector: 'strive-404',
-  templateUrl: './404.component.html',
-  styleUrls: ['./404.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    RouterModule,
-    HeaderComponent,
-    IonContent,
-    IonButton
-  ]
+    selector: 'strive-404',
+    templateUrl: './404.component.html',
+    styleUrls: ['./404.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        RouterModule,
+        HeaderComponent,
+        IonContent,
+        IonButton
+    ]
 })
 export class PagenotfoundComponent {
   hasBack = false

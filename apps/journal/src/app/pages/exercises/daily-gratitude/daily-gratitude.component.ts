@@ -26,25 +26,22 @@ interface DailyGratitudeSetting {
 }
 
 @Component({
-  standalone: true,
-  selector: 'journal-daily-gratitude',
-  templateUrl: './daily-gratitude.component.html',
-  styleUrls: ['./daily-gratitude.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    RouterModule,
-    PageLoadingComponent,
-    AuthModalComponent,
-    ActivatePushNotificationsComponent,
-    HeaderComponent,
-    CardsComponent,
-    DatetimeComponent,
-    IonContent,
-    IonToggle
-  ]
+    selector: 'journal-daily-gratitude',
+    templateUrl: './daily-gratitude.component.html',
+    styleUrls: ['./daily-gratitude.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        RouterModule,
+        PageLoadingComponent,
+        ActivatePushNotificationsComponent,
+        HeaderComponent,
+        CardsComponent,
+        IonContent,
+        IonToggle
+    ]
 })
 export class DailyGratitudePageComponent implements OnDestroy {
   isLoading = true

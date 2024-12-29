@@ -6,17 +6,16 @@ import { GoalStakeholder, User } from '@strive/model'
 import { GoalStakeholderService } from '../../stakeholder.service'
 
 @Component({
-  standalone: true,
-  imports: [
-		CommonModule,
-    ReactiveFormsModule,
-    IonList,
-    IonItem,
-    IonLabel
-],
-	selector: '[goalId][stakeholder] strive-stakeholder-roles',
-	templateUrl: './roles.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        IonList,
+        IonItem,
+        IonLabel
+    ],
+    selector: '[goalId][stakeholder] strive-stakeholder-roles',
+    templateUrl: './roles.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RolesPopoverComponent {
 	@HostListener('window:popstate', ['$event'])

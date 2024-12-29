@@ -32,22 +32,20 @@ import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 
 
 @Component({
-  standalone: true,
-  selector: 'journal-notifications',
-  templateUrl: 'notifications.component.html',
-  styleUrls: ['./notifications.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HeaderComponent,
-    PageLoadingComponent,
-    MessagePipe,
-    ImageDirective,
-    TimeAgoPipe,
-    IonContent,
-    IonIcon
-  ]
+    selector: 'journal-notifications',
+    templateUrl: 'notifications.component.html',
+    styleUrls: ['./notifications.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        HeaderComponent,
+        PageLoadingComponent,
+        MessagePipe,
+        ImageDirective,
+        TimeAgoPipe,
+        IonContent
+    ]
 })
 export class NotificationsPageComponent implements OnInit {
 

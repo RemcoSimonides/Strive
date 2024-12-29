@@ -12,27 +12,26 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 
 @Component({
-  standalone: true,
-  selector: 'journal-email-notification-settings',
-  templateUrl: './email-notification-settings.component.html',
-  styleUrls: ['./email-notification-settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HeaderComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    IonButtons,
-    IonButton,
-    IonToggle,
-    IonContent,
-    IonList,
-    IonListHeader,
-    IonItem,
-    IonLabel,
-    IonCheckbox
-  ]
+    selector: 'journal-email-notification-settings',
+    templateUrl: './email-notification-settings.component.html',
+    styleUrls: ['./email-notification-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        HeaderComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        IonButtons,
+        IonButton,
+        IonToggle,
+        IonContent,
+        IonList,
+        IonListHeader,
+        IonItem,
+        IonLabel,
+        IonCheckbox
+    ]
 })
 export class EmailNotificationSettingsComponent {
 

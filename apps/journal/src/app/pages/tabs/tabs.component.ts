@@ -15,21 +15,20 @@ import { flagSharp, barbellSharp } from 'ionicons/icons'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
-  standalone: true,
-  templateUrl: 'tabs.component.html',
-  styleUrls: ['./tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    RouterModule,
-    IonTabs,
-    IonTabBar,
-    IonTabButton,
-    IonIcon,
-    IonLabel,
-    IonAvatar
-  ]
+    templateUrl: 'tabs.component.html',
+    styleUrls: ['./tabs.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ImageDirective,
+        RouterModule,
+        IonTabs,
+        IonTabBar,
+        IonTabButton,
+        IonIcon,
+        IonLabel,
+        IonAvatar
+    ]
 })
 export class TabsComponent {
 

@@ -6,10 +6,11 @@ import { docData } from 'rxfire/firestore'
 import { Motivation, Motivations } from '@strive/model'
 
 @Component({
-  selector: 'strive-motivation',
-  templateUrl: './motivation.component.html',
-  styleUrls: ['./motivation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-motivation',
+    templateUrl: './motivation.component.html',
+    styleUrls: ['./motivation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MotivationComponent {
 

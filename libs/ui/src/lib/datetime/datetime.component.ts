@@ -2,15 +2,14 @@ import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild } fr
 import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: 'strive-datetime',
-  templateUrl: './datetime.component.html',
-  styleUrls: ['./datetime.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonDatetime,
-    IonButton
-  ]
+    selector: 'strive-datetime',
+    templateUrl: './datetime.component.html',
+    styleUrls: ['./datetime.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonDatetime,
+        IonButton
+    ]
 })
 export class DatetimeComponent {
   @HostListener('window:popstate', ['$event'])

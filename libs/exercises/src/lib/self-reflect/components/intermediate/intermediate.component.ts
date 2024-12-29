@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { EntryStep, SelfReflectFrequency } from '@strive/model'
-import { GetMonthNamePipe } from '@strive/utils/pipes/date-fns.pipe'
 import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
 
 @Component({
-  standalone: true,
-  selector: '[frequency][next] strive-self-reflect-intermediate',
-  templateUrl: './intermediate.component.html',
-  styles: [`
+    selector: '[frequency][next] strive-self-reflect-intermediate',
+    templateUrl: './intermediate.component.html',
+    styles: [`
     :host {
       display: flex;
       flex-direction: column;
@@ -18,12 +16,11 @@ import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
       height: 100%;
       text-align: center;
     }`
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    GetMonthNamePipe,
-    SelfReflectFrequencyPipe
-  ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        SelfReflectFrequencyPipe
+    ]
 })
 export class SelfReflectIntermediateComponent {
   @Input() frequency?: SelfReflectFrequency

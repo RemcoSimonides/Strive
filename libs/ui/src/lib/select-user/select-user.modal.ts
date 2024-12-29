@@ -4,20 +4,19 @@ import { IonHeader, IonToolbar, IonSearchbar, IonContent, IonList, IonItem, Moda
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
 
 @Component({
-  standalone: true,
-  selector: 'strive-select-user',
-  templateUrl: './select-user.modal.html',
-  styleUrls: ['./select-user.modal.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    IonHeader,
-    IonToolbar,
-    IonSearchbar,
-    IonContent,
-    IonList,
-    IonItem
-  ]
+    selector: 'strive-select-user',
+    templateUrl: './select-user.modal.html',
+    styleUrls: ['./select-user.modal.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        IonHeader,
+        IonToolbar,
+        IonSearchbar,
+        IonContent,
+        IonList,
+        IonItem
+    ]
 })
 export class SelectUserModalComponent {
 

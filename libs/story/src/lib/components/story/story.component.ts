@@ -13,20 +13,18 @@ import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
 import { PostComponent } from '@strive/post/components/post/post.component'
 
 @Component({
-  standalone: true,
-  selector: '[story][goalId] strive-story',
-  templateUrl: './story.component.html',
-  styleUrls: ['./story.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    RouterModule,
-    StoryItemMessagePipe,
-    TimeAgoPipe,
-    PostComponent,
-    UpsertPostModalComponent,
-    IonButton,
-    IonIcon
-  ]
+    selector: '[story][goalId] strive-story',
+    templateUrl: './story.component.html',
+    styleUrls: ['./story.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        RouterModule,
+        StoryItemMessagePipe,
+        TimeAgoPipe,
+        PostComponent,
+        IonButton,
+        IonIcon
+    ]
 })
 export class StoryComponent {
 

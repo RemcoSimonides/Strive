@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router'
 import { map } from 'rxjs/operators'
 
 @Component({
-  selector: 'strive-goal-view',
-  templateUrl: './view.page.html',
-  styleUrls: ['./view.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-goal-view',
+    templateUrl: './view.page.html',
+    styleUrls: ['./view.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GoalViewPage {
   segmentChoice: 'goal' | 'roadmap' | 'team' | 'story' = 'goal'

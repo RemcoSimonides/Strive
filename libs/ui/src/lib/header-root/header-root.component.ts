@@ -16,23 +16,21 @@ import { NotificationService } from '@strive/notification/notification.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  standalone: true,
-  selector: 'strive-header-root',
-  templateUrl: './header-root.component.html',
-  styleUrls: ['./header-root.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ImageDirective,
-    MenuComponent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonButton,
-    IonIcon
-  ]
+    selector: 'strive-header-root',
+    templateUrl: './header-root.component.html',
+    styleUrls: ['./header-root.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ImageDirective,
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonButtons,
+        IonButton,
+        IonIcon
+    ]
 })
 export class HeaderRootComponent {
 

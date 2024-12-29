@@ -31,23 +31,22 @@ class GetStakeholderPipe implements PipeTransform {
 }
 
 @Component({
-  standalone: true,
-  selector: 'journal-follow-goals-modal',
-  templateUrl: './follow-goals.component.html',
-  styleUrls: ['./follow-goals.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    HeaderModalComponent,
-    GetStakeholderPipe,
-    ImageDirective,
-    IonContent,
-    IonButton,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonLabel
-  ]
+    selector: 'journal-follow-goals-modal',
+    templateUrl: './follow-goals.component.html',
+    styleUrls: ['./follow-goals.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        HeaderModalComponent,
+        GetStakeholderPipe,
+        ImageDirective,
+        IonContent,
+        IonButton,
+        IonList,
+        IonItem,
+        IonThumbnail,
+        IonLabel
+    ]
 })
 export class FollowGoalsModalComponent extends ModalDirective {
   allSpectated = signal(false)

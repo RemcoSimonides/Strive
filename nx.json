@@ -6,13 +6,8 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ],
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
       "cache": true
     },
     "e2e": {
@@ -20,21 +15,12 @@
     },
     "@angular-devkit/build-angular:application": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "@nx/jest:jest": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        "{workspaceRoot}/jest.preset.js"
-      ],
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
       "options": {
         "passWithNoTests": true
       },
@@ -73,10 +59,7 @@
   },
   "defaultProject": "journal",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "sharedGlobals": [],
     "production": [
       "default",
@@ -92,5 +75,6 @@
   },
   "nxCloudAccessToken": "NjJhZTNmYmQtYTQxOC00NmJmLWFlNTYtYzViNGVhYzJjNWMxfHJlYWQtd3JpdGU=",
   "useInferencePlugins": false,
-  "defaultBase": "master"
+  "defaultBase": "master",
+  "useLegacyCache": true
 }

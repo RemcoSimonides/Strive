@@ -5,18 +5,17 @@ import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 import { IonList, IonItem, IonTextarea } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: 'strive-self-reflect-textarea',
-  templateUrl: './textarea.component.html',
-  styleUrls: ['./textarea.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    SelfReflectReplaceFrequencyPipe,
-    IonList,
-    IonItem,
-    IonTextarea
-  ]
+    selector: 'strive-self-reflect-textarea',
+    templateUrl: './textarea.component.html',
+    styleUrls: ['./textarea.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        SelfReflectReplaceFrequencyPipe,
+        IonList,
+        IonItem,
+        IonTextarea
+    ]
 })
 export class SelfReflectTextareaComponent {
 

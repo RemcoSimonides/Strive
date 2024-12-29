@@ -4,21 +4,18 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ContentChil
 import { map } from 'rxjs'
 import { SwiperContainer } from 'swiper/element';
 
-import { ImageDirective } from '@strive/media/directives/image.directive';
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
 @Component({
-  standalone: true,
-  selector: 'strive-mini-thumbnail-swiper',
-  templateUrl: 'mini-thumbnail-swiper.component.html',
-  styleUrls: ['./mini-thumbnail-swiper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    CommonModule,
-    ImageDirective
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: 'strive-mini-thumbnail-swiper',
+    templateUrl: 'mini-thumbnail-swiper.component.html',
+    styleUrls: ['./mini-thumbnail-swiper.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MiniThumbnailSwiperComponent {
 

@@ -7,10 +7,11 @@ import { GoalForm } from '@strive/goal/forms/goal.form'
 import { Observable } from 'rxjs'
 
 @Component({
-  selector: '[id] strive-goal',
-  templateUrl: './goal.component.html',
-  styleUrls: ['./goal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: '[id] strive-goal',
+    templateUrl: './goal.component.html',
+    styleUrls: ['./goal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GoalComponent implements OnInit {
 

@@ -24,23 +24,21 @@ function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number
 }
 
 @Component({
-  standalone: true,
-  selector: '[goal] strive-goal-thumbnail',
-  templateUrl: './thumbnail.component.html',
-  styleUrls: ['./thumbnail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ImageDirective,
-    GoalOptionsComponent,
-    ProgressPipe,
-    IonCard,
-    IonThumbnail,
-    IonIcon,
-    IonProgressBar,
-    IonButton
-  ]
+    selector: '[goal] strive-goal-thumbnail',
+    templateUrl: './thumbnail.component.html',
+    styleUrls: ['./thumbnail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ImageDirective,
+        ProgressPipe,
+        IonCard,
+        IonThumbnail,
+        IonIcon,
+        IonProgressBar,
+        IonButton
+    ]
 })
 export class GoalThumbnailComponent {
 

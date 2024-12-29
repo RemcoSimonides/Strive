@@ -9,32 +9,28 @@ import { chevronDownOutline } from 'ionicons/icons'
 import { Milestone, Support, SupportsGroupedByGoal } from '@strive/model'
 import { SupportDetailsModalComponent } from '@strive/support/modals/details/details.component'
 import { PledgeComponent } from '../pledge/pledge.component'
-import { MilestonePathPipe } from '@strive/roadmap/pipes/path.pipe'
 import { SupportDecisionComponent } from '../decision/decision.component'
 import { SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe } from '@strive/support/pipes/count.pipe'
 import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pipe'
 
 @Component({
-  standalone: true,
-  selector: 'strive-support-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    PledgeComponent,
-    MilestonePathPipe,
-    SupportDecisionComponent,
-    SupportDetailsModalComponent,
-    SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe,
-    IsRecipientPipe, IsSupporterPipe,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonButton,
-    IonIcon
-  ]
+    selector: 'strive-support-list',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        PledgeComponent,
+        SupportDecisionComponent,
+        SupportCounterPipe, SupportTotalPipe, NeedsDecisionPipe,
+        IsRecipientPipe, IsSupporterPipe,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonButton,
+        IonIcon
+    ]
 })
 export class SupportListComponent {
   @Input() goal?: SupportsGroupedByGoal

@@ -29,30 +29,28 @@ function timeFormControls() {
 }
 
 @Component({
-  standalone: true,
-  selector: 'journal-affirmations',
-  templateUrl: './affirmations.component.html',
-  styleUrls: ['./affirmations.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    PageLoadingComponent,
-    ActivatePushNotificationsComponent,
-    HeaderComponent,
-    DatetimeComponent,
-    IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonText,
-    IonIcon,
-    IonButton,
-    IonInput,
-    IonSelect,
-    IonSelectOption
-  ]
+    selector: 'journal-affirmations',
+    templateUrl: './affirmations.component.html',
+    styleUrls: ['./affirmations.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        PageLoadingComponent,
+        ActivatePushNotificationsComponent,
+        HeaderComponent,
+        IonContent,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonText,
+        IonIcon,
+        IonButton,
+        IonInput,
+        IonSelect,
+        IonSelectOption
+    ]
 })
 export class AffirmationsPageComponent implements OnDestroy {
   isLoading = true

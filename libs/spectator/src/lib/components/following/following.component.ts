@@ -14,22 +14,21 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  selector: 'strive-user-following',
-  templateUrl: 'following.component.html',
-  styleUrls: ['./following.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonItem,
-    IonAvatar,
-    IonLabel
-  ]
+    selector: 'strive-user-following',
+    templateUrl: 'following.component.html',
+    styleUrls: ['./following.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ImageDirective,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonItem,
+        IonAvatar,
+        IonLabel
+    ]
 })
 export class FollowingComponent extends ModalDirective {
   spectating$ = this.auth.user$.pipe(

@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
-  selector: 'strive-users',
-  templateUrl: './users.page.html',
-  styleUrls: ['./users.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-users',
+    templateUrl: './users.page.html',
+    styleUrls: ['./users.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UsersComponent {
 

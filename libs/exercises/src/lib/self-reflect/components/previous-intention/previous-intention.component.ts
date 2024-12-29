@@ -24,21 +24,19 @@ export class GetQuestionPipe implements PipeTransform {
 }
 
 @Component({
-  standalone: true,
-  selector: '[frequency][previousEntry] strive-self-reflect-previous-intention',
-  templateUrl: './previous-intention.component.html',
-  styleUrls: ['./previous-intention.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    SelfReflectFrequencyPipe,
-    SmartJoinPipe,
-    GetQuestionPipe,
-    GetConfigPipe,
-    IonItem,
-    IonLabel,
-    IonList
-  ]
+    selector: '[frequency][previousEntry] strive-self-reflect-previous-intention',
+    templateUrl: './previous-intention.component.html',
+    styleUrls: ['./previous-intention.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        SelfReflectFrequencyPipe,
+        GetQuestionPipe,
+        GetConfigPipe,
+        IonItem,
+        IonLabel,
+        IonList
+    ]
 })
 export class PreviousIntentionComponent implements AfterViewInit {
 

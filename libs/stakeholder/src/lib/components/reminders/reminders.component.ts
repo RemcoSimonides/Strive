@@ -12,19 +12,18 @@ import { UpsertReminderModalComponent } from '../../modals/upsert-reminder/upser
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    PageLoadingComponent,
-    IonItem,
-    IonList,
-    IonButton,
-  ],
-  selector: '[goalId][stakeholderId] strive-reminders',
-  templateUrl: './reminders.component.html',
-  styleUrls: ['./reminders.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        PageLoadingComponent,
+        IonItem,
+        IonList,
+        IonButton,
+    ],
+    selector: '[goalId][stakeholderId] strive-reminders',
+    templateUrl: './reminders.component.html',
+    styleUrls: ['./reminders.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RemindersComponent implements OnInit {
 

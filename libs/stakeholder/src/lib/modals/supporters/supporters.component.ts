@@ -24,25 +24,23 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/model'
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    RolesPopoverComponent,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonItem,
-    IonAvatar,
-    IonLabel,
-    IonButton,
-    IonIcon
-  ],
-  selector: '[goalId] strive-supporters-modal',
-  templateUrl: './supporters.component.html',
-  styleUrls: ['./supporters.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule,
+        ImageDirective,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonItem,
+        IonAvatar,
+        IonLabel,
+        IonButton,
+        IonIcon
+    ],
+    selector: '[goalId] strive-supporters-modal',
+    templateUrl: './supporters.component.html',
+    styleUrls: ['./supporters.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SupportersModalComponent extends ModalDirective implements OnInit {
 

@@ -14,16 +14,15 @@ import { createGoalStakeholder, StoryItem } from '@strive/model'
 import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
 
 @Component({
-  standalone: true,
-  selector: '[id] strive-story',
-  templateUrl: './story.component.html',
-  styleUrls: ['./story.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    StoryItemMessagePipe,
-  ]
+    selector: '[id] strive-story',
+    templateUrl: './story.component.html',
+    styleUrls: ['./story.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        StoryItemMessagePipe,
+    ]
 })
 export class StoryComponent {
 

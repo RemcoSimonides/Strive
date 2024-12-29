@@ -5,10 +5,11 @@ import { GoalService } from '@strive/goal/goal.service'
 import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.modal'
 
 @Component({
-  selector: 'strive-goals',
-  templateUrl: './goals.page.html',
-  styleUrls: ['./goals.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-goals',
+    templateUrl: './goals.page.html',
+    styleUrls: ['./goals.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GoalsComponent {
 

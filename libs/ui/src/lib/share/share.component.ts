@@ -7,14 +7,13 @@ import { addIcons } from 'ionicons'
 import { clipboard } from 'ionicons/icons'
 
 @Component({
-  standalone: true,
-  selector: '[url] strive-share',
-  templateUrl: './share.component.html',
-  styleUrls: ['./share.component.scss'],
-  imports: [
-    IonButton,
-    IonIcon
-  ]
+    selector: '[url] strive-share',
+    templateUrl: './share.component.html',
+    styleUrls: ['./share.component.scss'],
+    imports: [
+        IonButton,
+        IonIcon
+    ]
 })
 export class ShareComponent {
 

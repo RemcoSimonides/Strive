@@ -9,16 +9,15 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 @Component({
-  standalone: true,
-  selector: 'strive-support-details-modal',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    SupportDetailsComponent,
-    HeaderModalComponent,
-    IonContent
-]
+    selector: 'strive-support-details-modal',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        SupportDetailsComponent,
+        HeaderModalComponent,
+        IonContent
+    ]
 })
 export class SupportDetailsModalComponent extends ModalDirective {
 

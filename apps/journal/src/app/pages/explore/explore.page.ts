@@ -23,28 +23,27 @@ import { FooterComponent } from '@strive/ui/footer/footer.component'
 
 
 @Component({
-  standalone: true,
-  selector: 'journal-explore',
-  templateUrl: './explore.page.html',
-  styleUrls: ['./explore.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    ThumbnailListComponent,
-    SmallThumbnailComponent,
-    RowsPipe,
-    ImageDirective,
-    HeaderComponent,
-    FooterComponent,
-    IonContent,
-    IonSearchbar,
-    IonCard,
-    IonSelect,
-    IonSelectOption,
-    IonButton
-  ]
+    selector: 'journal-explore',
+    templateUrl: './explore.page.html',
+    styleUrls: ['./explore.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        ThumbnailListComponent,
+        SmallThumbnailComponent,
+        RowsPipe,
+        ImageDirective,
+        HeaderComponent,
+        FooterComponent,
+        IonContent,
+        IonSearchbar,
+        IonCard,
+        IonSelect,
+        IonSelectOption,
+        IonButton
+    ]
 })
 export class ExplorePageComponent implements OnDestroy {
   @ViewChild(IonContent) content?: IonContent

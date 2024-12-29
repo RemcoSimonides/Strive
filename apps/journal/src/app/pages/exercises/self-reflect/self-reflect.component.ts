@@ -81,30 +81,29 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
 }
 
 @Component({
-  standalone: true,
-  selector: 'journal-self-reflect',
-  templateUrl: './self-reflect.component.html',
-  styleUrls: ['./self-reflect.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    HeaderComponent,
-    PageLoadingComponent,
-    SelfReflectReplaceFrequencyPipe,
-    SelfReflectFilterEntriesPipe,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonPopover,
-    IonSelect,
-    IonSelectOption
-  ]
+    selector: 'journal-self-reflect',
+    templateUrl: './self-reflect.component.html',
+    styleUrls: ['./self-reflect.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        HeaderComponent,
+        PageLoadingComponent,
+        SelfReflectReplaceFrequencyPipe,
+        SelfReflectFilterEntriesPipe,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonPopover,
+        IonSelect,
+        IonSelectOption
+    ]
 })
 export class SelfReflectComponent {
 

@@ -46,36 +46,26 @@ import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 
 
 @Component({
-  standalone: true,
-  selector: 'journal-profile',
-  templateUrl: './profile.page.html',
-  styleUrls: ['./profile.page.scss'],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    PageLoadingComponent,
-    ImageDirective,
-    ImageSelectorComponent,
-    FollowingComponent,
-    FollowersComponent,
-    GoalOptionsComponent,
-    EditProfileImagePopoverComponent,
-    ImageZoomModalComponent,
-    HeaderRootComponent,
-    HeaderComponent,
-    SupportingComponent,
-    GoalThumbnailComponent,
-    PagenotfoundComponent,
-    GoalCreateModalComponent,
-    CopiedPopoverComponent,
-    IonContent,
-    IonCard,
-    IonAvatar,
-    IonButton,
-    IonIcon
-  ]
+    selector: 'journal-profile',
+    templateUrl: './profile.page.html',
+    styleUrls: ['./profile.page.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        PageLoadingComponent,
+        ImageDirective,
+        HeaderRootComponent,
+        HeaderComponent,
+        GoalThumbnailComponent,
+        PagenotfoundComponent,
+        IonContent,
+        IonCard,
+        IonAvatar,
+        IonButton,
+        IonIcon
+    ]
 })
 export class ProfilePageComponent {
   isNotMobile$ = this.screensize.isNotMobile$

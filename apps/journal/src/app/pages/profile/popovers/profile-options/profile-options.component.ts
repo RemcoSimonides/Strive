@@ -14,16 +14,15 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
 @Component({
-  standalone: true,
-  selector: 'journal-profile-options-popover',
-  templateUrl: './profile-options.component.html',
-  imports: [
-    CommonModule,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonIcon
-  ]
+    selector: 'journal-profile-options-popover',
+    templateUrl: './profile-options.component.html',
+    imports: [
+        CommonModule,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonIcon
+    ]
 })
 export class ProfileOptionsComponent {
 

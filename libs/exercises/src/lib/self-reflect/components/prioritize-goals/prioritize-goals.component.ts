@@ -10,23 +10,22 @@ import { SelfReflectEntry, StakeholderWithGoal } from '@strive/model'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
-  standalone: true,
-  selector: 'strive-self-reflect-prioritize-goals',
-  templateUrl: './prioritize-goals.component.html',
-  styleUrls: ['./prioritize-goals.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    PageLoadingComponent,
-    ImageDirective,
-    IonList,
-    IonReorderGroup,
-    IonItem,
-    IonThumbnail,
-    IonLabel,
-    IonReorder,
-    IonButton
-  ]
+    selector: 'strive-self-reflect-prioritize-goals',
+    templateUrl: './prioritize-goals.component.html',
+    styleUrls: ['./prioritize-goals.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        PageLoadingComponent,
+        ImageDirective,
+        IonList,
+        IonReorderGroup,
+        IonItem,
+        IonThumbnail,
+        IonLabel,
+        IonReorder,
+        IonButton
+    ]
 })
 export class PrioritizeGoalsComponent {
 

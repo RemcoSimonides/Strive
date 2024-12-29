@@ -7,19 +7,18 @@ import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon } from '@ionic/an
 import { map } from 'rxjs'
 
 @Component({
-  standalone: true,
-  selector: 'strive-header-modal',
-  templateUrl: './header-modal.component.html',
-  styleUrls: ['./header-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon
-  ]
+    selector: 'strive-header-modal',
+    templateUrl: './header-modal.component.html',
+    styleUrls: ['./header-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon
+    ]
 })
 export class HeaderModalComponent {
 

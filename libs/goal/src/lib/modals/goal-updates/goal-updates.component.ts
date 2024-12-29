@@ -10,20 +10,17 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { StakeholderWithGoalAndEvents } from '@strive/model'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
-import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
-  standalone: true,
-  selector: '[stakeholder] strive-goal-updates',
-  templateUrl: 'goal-updates.component.html',
-  styleUrls: ['./goal-updates.component.scss'],
-  imports: [
-    ImageDirective,
-    GoalThumbnailComponent,
-    HeaderModalComponent,
-    IonContent,
-    IonIcon
-  ]
+    selector: '[stakeholder] strive-goal-updates',
+    templateUrl: 'goal-updates.component.html',
+    styleUrls: ['./goal-updates.component.scss'],
+    imports: [
+        GoalThumbnailComponent,
+        HeaderModalComponent,
+        IonContent,
+        IonIcon
+    ]
 })
 export class GoalUpdatesModalComponent extends ModalDirective {
 

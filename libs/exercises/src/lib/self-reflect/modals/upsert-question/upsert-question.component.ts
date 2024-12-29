@@ -26,31 +26,30 @@ import { SelfReflectReplaceFrequencyPipe } from '../../pipes/frequency.pipe'
 import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, createSelfReflectQuestion, selfReflectQuestions } from '@strive/model'
 
 @Component({
-  standalone: true,
-  selector: 'strive-self-reflect-question',
-  templateUrl: './upsert-question.component.html',
-  styleUrls: ['./upsert-question.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    HeaderModalComponent,
-    SelfReflectReplaceFrequencyPipe,
-    PrioritizeGoalsComponent,
-    WheelOfLifeResultsComponent,
-    IonTitle,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonList,
-    IonItem,
-    IonTextarea,
-    IonSelect,
-    IonSelectOption,
-    IonRange,
-    IonLabel
-  ]
+    selector: 'strive-self-reflect-question',
+    templateUrl: './upsert-question.component.html',
+    styleUrls: ['./upsert-question.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        HeaderModalComponent,
+        SelfReflectReplaceFrequencyPipe,
+        PrioritizeGoalsComponent,
+        WheelOfLifeResultsComponent,
+        IonTitle,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonList,
+        IonItem,
+        IonTextarea,
+        IonSelect,
+        IonSelectOption,
+        IonRange,
+        IonLabel
+    ]
 })
 export class SelfReflectQuestionModalComponent extends ModalDirective implements OnInit {
 

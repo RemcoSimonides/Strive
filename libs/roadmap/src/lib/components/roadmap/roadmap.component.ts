@@ -21,7 +21,6 @@ import { DetailsComponent } from '../details/details.component'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { GoalService } from '@strive/goal/goal.service'
-import { ImageDirective } from '@strive/media/directives/image.directive'
 import { MilestoneStatusComponent } from '../status/status.component'
 import { AssigneeComponent } from '../assignee/assignee.component'
 import { SubtasksCompletedPipe } from '@strive/roadmap/pipes/subtask.pipe'
@@ -30,34 +29,29 @@ import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
 type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryItem[] }
 
 @Component({
-  standalone: true,
-  selector: '[goal][milestones][stakeholder] strive-roadmap',
-  templateUrl: 'roadmap.component.html',
-  styleUrls: ['./roadmap.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ImageDirective,
-    MilestoneStatusComponent,
-    AssigneeComponent,
-    AddSupportModalComponent,
-    DetailsComponent,
-    SubtasksCompletedPipe,
-    MaxLengthPipe,
-    UpsertPostModalComponent,
-    IonList,
-    IonReorderGroup,
-    IonItemSliding,
-    IonItem,
-    IonButton,
-    IonIcon,
-    IonReorder,
-    IonItemOptions,
-    IonItemOption,
-    IonInput,
-    IonSkeletonText
-  ]
+    selector: '[goal][milestones][stakeholder] strive-roadmap',
+    templateUrl: 'roadmap.component.html',
+    styleUrls: ['./roadmap.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MilestoneStatusComponent,
+        AssigneeComponent,
+        SubtasksCompletedPipe,
+        MaxLengthPipe,
+        IonList,
+        IonReorderGroup,
+        IonItemSliding,
+        IonItem,
+        IonButton,
+        IonIcon,
+        IonReorder,
+        IonItemOptions,
+        IonItemOption,
+        IonInput,
+        IonSkeletonText
+    ]
 })
 export class RoadmapComponent {
 

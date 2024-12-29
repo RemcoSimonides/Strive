@@ -63,28 +63,26 @@ export class InviteTextPipe implements PipeTransform {
 }
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    SubtitlePipe,
-    InviteTextPipe,
-    GoalSharePopoverComponent,
-    HeaderModalComponent,
-    IonAvatar,
-    IonLabel,
-    IonSearchbar,
-    IonSpinner,
-    IonContent,
-    IonFooter,
-    IonButton,
-    IonIcon,
-    IonList,
-    IonItem
-  ],
-  selector: 'journal-add-others',
-  templateUrl: './add-others.component.html',
-  styleUrls: ['./add-others.component.scss']
+    imports: [
+        CommonModule,
+        ImageDirective,
+        SubtitlePipe,
+        InviteTextPipe,
+        HeaderModalComponent,
+        IonAvatar,
+        IonLabel,
+        IonSearchbar,
+        IonSpinner,
+        IonContent,
+        IonFooter,
+        IonButton,
+        IonIcon,
+        IonList,
+        IonItem
+    ],
+    selector: 'journal-add-others',
+    templateUrl: './add-others.component.html',
+    styleUrls: ['./add-others.component.scss']
 })
 export class AddOthersModalComponent extends ModalDirective {
 

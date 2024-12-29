@@ -21,26 +21,25 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
-  standalone: true,
-  selector: 'journal-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    HeaderComponent,
-    ImageDirective,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonListHeader
-  ]
+    selector: 'journal-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        HeaderComponent,
+        ImageDirective,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonListHeader
+    ]
 })
 export class SettingsPageComponent {
 

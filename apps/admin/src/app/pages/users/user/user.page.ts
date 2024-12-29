@@ -21,10 +21,11 @@ import { ProfileService } from '@strive/user/profile.service'
 type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
 
 @Component({
-  selector: 'strive-user',
-  templateUrl: './user.page.html',
-  styleUrls: ['./user.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-user',
+    templateUrl: './user.page.html',
+    styleUrls: ['./user.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserPage {
   exercises = exercises

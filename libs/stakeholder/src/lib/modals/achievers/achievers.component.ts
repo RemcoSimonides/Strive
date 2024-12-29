@@ -22,25 +22,23 @@ import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/mod
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    RolesPopoverComponent,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonItem,
-    IonAvatar,
-    IonLabel,
-    IonButton,
-    IonIcon
-  ],
-  selector: '[goalId] strive-achievers-modal',
-  templateUrl: './achievers.component.html',
-  styleUrls: ['./achievers.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule,
+        ImageDirective,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonItem,
+        IonAvatar,
+        IonLabel,
+        IonButton,
+        IonIcon
+    ],
+    selector: '[goalId] strive-achievers-modal',
+    templateUrl: './achievers.component.html',
+    styleUrls: ['./achievers.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AchieversModalComponent extends ModalDirective implements OnInit {
 

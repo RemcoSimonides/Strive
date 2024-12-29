@@ -8,22 +8,20 @@ import { categories } from '@strive/model'
 import { endOfDay } from 'date-fns'
 
 @Component({
-  standalone: true,
-  selector: '[form] strive-goal-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    DeadlinePopoverComponent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonSelect,
-    IonSelectOption
-  ]
+    selector: '[form] strive-goal-details',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonInput,
+        IonSelect,
+        IonSelectOption
+    ]
 })
 export class GoalDetailsComponent {
 

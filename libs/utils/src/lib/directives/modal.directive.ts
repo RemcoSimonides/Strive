@@ -6,7 +6,8 @@ import { Router } from '@angular/router'
 import { delay } from '../helpers'
 
 @Directive({
-  selector: '[striveModal]'
+    selector: '[striveModal]',
+    standalone: false
 })
 export class ModalDirective {
   private data?: unknown

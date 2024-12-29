@@ -5,27 +5,26 @@ import { TermsComponent } from './terms.component'
 import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: 'strive-terms-page',
-  template: `
+    selector: 'strive-terms-page',
+    template: `
     <strive-header title="Terms of Service"></strive-header>
     <ion-content>
       <strive-terms></strive-terms>
     </ion-content>
   `,
-  styles: [
-    `strive-terms {
+    styles: [
+        `strive-terms {
       display: block;
       max-width: var(--page-max-width);
       margin: auto;
       padding: 0 16px;
     }`
-  ],
-  imports: [
-    IonContent,
-    TermsComponent,
-    HeaderComponent
-  ]
+    ],
+    imports: [
+        IonContent,
+        TermsComponent,
+        HeaderComponent
+    ]
 })
 export class TermsPageComponent {
   constructor(seo: SeoService) {

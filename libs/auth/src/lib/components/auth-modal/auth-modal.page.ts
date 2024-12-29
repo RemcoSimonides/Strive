@@ -40,36 +40,34 @@ export enum enumAuthSegment {
 }
 
 @Component({
-  standalone: true,
-  selector: 'strive-auth-modal',
-  templateUrl: './auth-modal.page.html',
-  styleUrls: ['./auth-modal.page.scss'],
-  imports: [
-    CommonModule,
-    FormsModule,
-    TermsComponent,
-    ReactiveFormsModule,
-    PrivacyPolicyComponent,
-    WelcomeModalComponent,
-    IonButton,
-    IonIcon,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonContent,
-    IonList,
-    IonItem,
-    IonInput,
-    IonButton,
-    IonIcon,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonContent,
-    IonList,
-    IonItem,
-    IonInput
-  ]
+    selector: 'strive-auth-modal',
+    templateUrl: './auth-modal.page.html',
+    styleUrls: ['./auth-modal.page.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TermsComponent,
+        ReactiveFormsModule,
+        PrivacyPolicyComponent,
+        IonButton,
+        IonIcon,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonContent,
+        IonList,
+        IonItem,
+        IonInput,
+        IonButton,
+        IonIcon,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonContent,
+        IonList,
+        IonItem,
+        IonInput
+    ]
 })
 export class AuthModalComponent implements OnInit {
   @HostBinding() modal?: HTMLIonModalElement

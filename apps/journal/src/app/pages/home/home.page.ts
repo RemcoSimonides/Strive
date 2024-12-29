@@ -16,26 +16,25 @@ import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 import { FooterComponent } from '@strive/ui/footer/footer.component'
 
 @Component({
-  standalone: true,
-  selector: 'journal-home',
-  templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ImageDirective,
-    CompactPipe,
-    FooterComponent,
-    IonContent,
-    IonButton,
-    IonIcon,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonText
-  ]
+    selector: 'journal-home',
+    templateUrl: './home.page.html',
+    styleUrls: ['./home.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ImageDirective,
+        CompactPipe,
+        FooterComponent,
+        IonContent,
+        IonButton,
+        IonIcon,
+        IonCard,
+        IonCardHeader,
+        IonCardTitle,
+        IonCardContent,
+        IonText
+    ]
 })
 export class HomePageComponent {
 

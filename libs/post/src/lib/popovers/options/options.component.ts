@@ -8,16 +8,14 @@ import { PostService } from '@strive/post/post.service'
 import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.component'
 
 @Component({
-	standalone: true,
-	selector: '[post] strive-post-options',
-	templateUrl: './options.component.html',
-	styleUrls: ['./options.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-    UpsertPostModalComponent,
-    IonList,
-    IonItem
-	]
+    selector: '[post] strive-post-options',
+    templateUrl: './options.component.html',
+    styleUrls: ['./options.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonList,
+        IonItem
+    ]
 })
 export class PostOptionsComponent {
 	@HostListener('window:popstate', ['$event'])

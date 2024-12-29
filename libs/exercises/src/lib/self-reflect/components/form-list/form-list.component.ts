@@ -7,20 +7,19 @@ import { closeOutline, addOutline } from 'ionicons/icons'
 import { IonList, IonItem, IonTextarea, IonIcon, IonButton } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: 'strive-self-reflect-form-list',
-  templateUrl: './form-list.component.html',
-  styleUrls: ['./form-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    SelfReflectReplaceFrequencyPipe,
-    IonList,
-    IonItem,
-    IonTextarea,
-    IonIcon,
-    IonButton
-  ]
+    selector: 'strive-self-reflect-form-list',
+    templateUrl: './form-list.component.html',
+    styleUrls: ['./form-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        SelfReflectReplaceFrequencyPipe,
+        IonList,
+        IonItem,
+        IonTextarea,
+        IonIcon,
+        IonButton
+    ]
 })
 export class SelfReflectFormListComponent {
 

@@ -3,9 +3,10 @@ import { Router } from '@angular/router'
 import { getAuth } from 'firebase/auth'
 
 @Component({
-  selector: 'strive-shell',
-  templateUrl: './shell.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-shell',
+    templateUrl: './shell.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ShellComponent {
 

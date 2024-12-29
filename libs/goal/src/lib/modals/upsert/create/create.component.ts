@@ -23,27 +23,26 @@ import { RemindersComponent } from '@strive/stakeholder/components/reminders/rem
 type Steps = 'details' | 'images' | 'roadmap' | 'reminders' | 'share'
 
 @Component({
-  standalone: true,
-  selector: 'strive-goal-create',
-  templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    GoalDetailsComponent,
-    GoalImagesComponent,
-    GoalRoadmapComponent,
-    GoalShareComponent,
-    RemindersComponent,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonTitle,
-    IonContent,
-    IonFooter
-  ]
+    selector: 'strive-goal-create',
+    templateUrl: './create.component.html',
+    styleUrls: ['./create.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        GoalDetailsComponent,
+        GoalImagesComponent,
+        GoalRoadmapComponent,
+        GoalShareComponent,
+        RemindersComponent,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonTitle,
+        IonContent,
+        IonFooter
+    ]
 })
 export class GoalCreateModalComponent extends ModalDirective implements OnDestroy {
   @ViewChild(GoalImagesComponent) imagesComponent?: GoalImagesComponent

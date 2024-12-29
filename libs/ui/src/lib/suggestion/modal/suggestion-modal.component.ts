@@ -19,18 +19,17 @@ import { SuggestionComponent } from '../suggestion.component'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  selector: '[goalId] strive-suggestion-modal',
-  templateUrl: './suggestion-modal.component.html',
-  styleUrls: ['./suggestion-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RoadmapComponent,
-    SuggestionComponent,
-    HeaderModalComponent,
-    IonContent
-  ],
+    selector: '[goalId] strive-suggestion-modal',
+    templateUrl: './suggestion-modal.component.html',
+    styleUrls: ['./suggestion-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RoadmapComponent,
+        SuggestionComponent,
+        HeaderModalComponent,
+        IonContent
+    ]
 })
 export class SuggestionModalComponent extends ModalDirective implements OnInit {
   @ViewChild(IonContent) content?: IonContent

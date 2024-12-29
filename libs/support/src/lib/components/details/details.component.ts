@@ -21,25 +21,23 @@ import { PostComponent } from '@strive/post/components/post/post.component'
 import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pipe'
 
 @Component({
-  standalone: true,
-  selector: 'strive-support-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    PledgeComponent,
-    RouterModule,
-    ReactiveFormsModule,
-    SupportDecisionComponent,
-    PostComponent,
-    IsRecipientPipe, IsSupporterPipe,
-    IonList,
-    IonItem,
-    IonInput,
-    IonButton,
-    IonContent
-  ]
+    selector: 'strive-support-details',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        PledgeComponent,
+        RouterModule,
+        ReactiveFormsModule,
+        SupportDecisionComponent,
+        PostComponent,
+        IsRecipientPipe, IsSupporterPipe,
+        IonList,
+        IonItem,
+        IonInput,
+        IonButton
+    ]
 })
 export class SupportDetailsComponent implements OnInit {
 

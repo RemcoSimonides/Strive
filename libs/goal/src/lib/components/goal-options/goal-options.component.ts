@@ -9,15 +9,13 @@ import { GoalService } from '../../goal.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  standalone: true,
-  selector: '[goal][stakeholder] strive-goal-options',
-  templateUrl: './goal-options.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    UpsertPostModalComponent,
-    IonList,
-    IonItem
-  ]
+    selector: '[goal][stakeholder] strive-goal-options',
+    templateUrl: './goal-options.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonList,
+        IonItem
+    ]
 })
 export class GoalOptionsComponent {
 

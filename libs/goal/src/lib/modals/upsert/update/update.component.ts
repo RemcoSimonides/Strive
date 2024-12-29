@@ -13,23 +13,22 @@ import { GoalService } from '@strive/goal/goal.service'
 import { AuthService } from '@strive/auth/auth.service'
 
 @Component({
-  standalone: true,
-  selector: 'strive-goal-update',
-  templateUrl: './update.component.html',
-  styleUrls: ['./update.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    GoalDetailsComponent,
-    GoalImagesComponent,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonTitle,
-    IonContent,
-    IonFooter
-  ]
+    selector: 'strive-goal-update',
+    templateUrl: './update.component.html',
+    styleUrls: ['./update.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        GoalDetailsComponent,
+        GoalImagesComponent,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonTitle,
+        IonContent,
+        IonFooter
+    ]
 })
 export class GoalUpdateModalComponent extends ModalDirective implements OnInit {
   @ViewChild(GoalImagesComponent) imagesComponent?: GoalImagesComponent

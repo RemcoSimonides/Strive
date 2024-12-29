@@ -9,21 +9,20 @@ import { ProgressPipe } from '@strive/goal/pipes/progress.pipe'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  imports: [
-    ImageDirective,
-    ProgressPipe,
-    HeaderModalComponent,
-    IonContent,
-    IonList,
-    IonItem,
-    IonAvatar,
-    IonLabel,
-    IonProgressBar
-  ],
-  selector: 'strive-collective-goals-modal',
-  templateUrl: './collective-goals.component.html',
-  styleUrls: ['./collective-goals.component.scss']
+    imports: [
+        ImageDirective,
+        ProgressPipe,
+        HeaderModalComponent,
+        IonContent,
+        IonList,
+        IonItem,
+        IonAvatar,
+        IonLabel,
+        IonProgressBar
+    ],
+    selector: 'strive-collective-goals-modal',
+    templateUrl: './collective-goals.component.html',
+    styleUrls: ['./collective-goals.component.scss']
 })
 export class CollectiveGoalsModalComponent extends ModalDirective {
 

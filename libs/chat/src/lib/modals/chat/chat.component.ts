@@ -33,34 +33,31 @@ import { ThinkingPipe } from '@strive/chat/pipes/thinking.pipe'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 
 @Component({
-  standalone: true,
-  selector: '[goal] strive-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ImageDirective,
-    TimeAgoPipe,
-    HTMLPipe,
-    JoinButtonComponent,
-    AuthModalComponent,
-    AddSupportModalComponent,
-    HeaderModalComponent,
-    ThinkingPipe,
-    PageLoadingComponent,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonFooter,
-    IonItem,
-    IonTextarea,
-    IonPopover,
-    IonList
-  ]
+    selector: '[goal] strive-chat',
+    templateUrl: './chat.component.html',
+    styleUrls: ['./chat.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ImageDirective,
+        TimeAgoPipe,
+        HTMLPipe,
+        JoinButtonComponent,
+        HeaderModalComponent,
+        ThinkingPipe,
+        PageLoadingComponent,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonInfiniteScroll,
+        IonInfiniteScrollContent,
+        IonFooter,
+        IonItem,
+        IonTextarea,
+        IonPopover,
+        IonList
+    ]
 })
 export class ChatModalComponent extends ModalDirective implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(IonContent) content?: IonContent

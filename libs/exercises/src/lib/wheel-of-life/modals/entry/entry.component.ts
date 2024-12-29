@@ -19,20 +19,18 @@ import { WheelOfLifeResultsComponent } from '../../components/results/results.co
 
 
 @Component({
-  standalone: true,
-  selector: 'strive-exercise-wheel-of-life-entry-modal',
-  templateUrl: './entry.component.html',
-  styleUrls: ['./entry.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    HeaderModalComponent,
-    WheelOfLifeEntryComponent,
-    TodayEntryPipe,
-    WheelOfLifeResultsComponent,
-    GoalCreateModalComponent,
-    IonContent
-  ]
+    selector: 'strive-exercise-wheel-of-life-entry-modal',
+    templateUrl: './entry.component.html',
+    styleUrls: ['./entry.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        HeaderModalComponent,
+        WheelOfLifeEntryComponent,
+        TodayEntryPipe,
+        WheelOfLifeResultsComponent,
+        IonContent
+    ]
 })
 export class EntryModalComponent extends ModalDirective {
 

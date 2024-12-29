@@ -22,18 +22,17 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
 
 @Component({
-  standalone: true,
-  selector: '[form][storagePath] strive-image-selector',
-  templateUrl: 'image-selector.component.html',
-  styleUrls: ['./image-selector.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ImageCropperModule,
-    ImageDirective,
-    IonFabButton,
-    IonIcon
-  ]
+    selector: '[form][storagePath] strive-image-selector',
+    templateUrl: 'image-selector.component.html',
+    styleUrls: ['./image-selector.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ImageCropperModule,
+        ImageDirective,
+        IonFabButton,
+        IonIcon
+    ]
 })
 export class ImageSelectorComponent implements OnInit, OnDestroy {
   step = new BehaviorSubject<CropStep>('drop')

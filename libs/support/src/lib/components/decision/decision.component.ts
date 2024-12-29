@@ -4,14 +4,13 @@ import { SupportService } from '../..//support.service'
 import { IonButton } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: '[support] strive-support-decision',
-  templateUrl: './decision.component.html',
-  styleUrls: ['./decision.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonButton
-  ]
+    selector: '[support] strive-support-decision',
+    templateUrl: './decision.component.html',
+    styleUrls: ['./decision.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonButton
+    ]
 })
 export class SupportDecisionComponent {
 

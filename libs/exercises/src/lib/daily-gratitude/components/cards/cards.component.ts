@@ -22,25 +22,23 @@ import { IsTodayPipe, ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
 
 
 @Component({
-  standalone: true,
-  selector: 'strive-daily-gratitude-cards',
-  templateUrl: './cards.component.html',
-  styleUrls: ['./cards.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    DatetimeComponent,
-    IsTodayPipe,
-    ToDatePipe,
-    IonItem,
-    IonTextarea,
-    IonButton,
-    IonIcon
-  ],
-  providers: [DatePipe],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: 'strive-daily-gratitude-cards',
+    templateUrl: './cards.component.html',
+    styleUrls: ['./cards.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        IsTodayPipe,
+        ToDatePipe,
+        IonItem,
+        IonTextarea,
+        IonButton,
+        IonIcon
+    ],
+    providers: [DatePipe],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CardsComponent implements OnDestroy {
 

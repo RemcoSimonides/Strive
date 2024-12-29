@@ -13,20 +13,18 @@ import { ProfileService } from '@strive/user/profile.service'
 import { AchieversModalComponent } from '@strive/support/modals/achievers/achievers.component'
 
 @Component({
-  standalone: true,
-  selector: '[goal] strive-support-add',
-  templateUrl: './add.component.html',
-  styleUrls: ['./add.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    AchieversModalComponent,
-    IonList,
-    IonItem,
-    IonInput,
-    IonButton,
-    IonIcon,
-  ]
+    selector: '[goal] strive-support-add',
+    templateUrl: './add.component.html',
+    styleUrls: ['./add.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        IonList,
+        IonItem,
+        IonInput,
+        IonButton,
+        IonIcon,
+    ]
 })
 export class AddSupportComponent {
 

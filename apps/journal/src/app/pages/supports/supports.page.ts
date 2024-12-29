@@ -28,22 +28,21 @@ import { SupportListComponent } from '@strive/support/components/list/list.compo
 import { MilestonePathPipe } from '@strive/roadmap/pipes/path.pipe'
 
 @Component({
-  standalone: true,
-  selector: 'journal-supports',
-  templateUrl: './supports.page.html',
-  styleUrls: ['./supports.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    PageLoadingComponent,
-    HeaderRootComponent,
-    SupportListComponent,
-    MilestonePathPipe,
-    IonContent,
-    IonRefresher,
-    IonRefresherContent
-  ]
+    selector: 'journal-supports',
+    templateUrl: './supports.page.html',
+    styleUrls: ['./supports.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        PageLoadingComponent,
+        HeaderRootComponent,
+        SupportListComponent,
+        MilestonePathPipe,
+        IonContent,
+        IonRefresher,
+        IonRefresherContent
+    ]
 })
 export class SupportsPageComponent {
 

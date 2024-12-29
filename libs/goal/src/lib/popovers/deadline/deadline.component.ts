@@ -5,17 +5,15 @@ import { addYears, endOfYear, startOfYear } from 'date-fns'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 
 @Component({
-  selector: 'strive-goal-deadline-popover',
-  templateUrl: './deadline.component.html',
-  styleUrls: ['./deadline.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    DatetimeComponent,
-    IonContent,
-    IonList,
-    IonItem
-  ]
+    selector: 'strive-goal-deadline-popover',
+    templateUrl: './deadline.component.html',
+    styleUrls: ['./deadline.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonContent,
+        IonList,
+        IonItem
+    ]
 })
 export class DeadlinePopoverComponent {
   @HostListener('window:popstate', ['$event'])

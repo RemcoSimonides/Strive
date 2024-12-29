@@ -46,38 +46,28 @@ import { MiniThumbnailSwiperComponent } from '@strive/goal/components/mini-thumb
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 
 @Component({
-  standalone: true,
-  selector: 'journal-goals',
-  templateUrl: './goals.page.html',
-  styleUrls: ['./goals.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    PageLoadingComponent,
-    HeaderRootComponent,
-    GoalCreateModalComponent,
-    ImageDirective,
-    GoalOptionsComponent,
-    CategoryFilterComponent,
-    HomePageComponent,
-    GoalThumbnailComponent,
-    GoalUpdatesModalComponent,
-    MiniThumbnailSwiperComponent,
-    CardsModalComponent,
-    AffirmModalComponent,
-    MessageModalComponent,
-    EntryModalComponent,
-    IonContent,
-    IonRefresher,
-    IonRefresherContent,
-    IonThumbnail,
-    IonIcon,
-    IonBadge,
-    IonButton,
-    IonSkeletonText
-  ]
+    selector: 'journal-goals',
+    templateUrl: './goals.page.html',
+    styleUrls: ['./goals.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        HeaderRootComponent,
+        ImageDirective,
+        HomePageComponent,
+        GoalThumbnailComponent,
+        MiniThumbnailSwiperComponent,
+        IonContent,
+        IonRefresher,
+        IonRefresherContent,
+        IonThumbnail,
+        IonIcon,
+        IonBadge,
+        IonButton,
+        IonSkeletonText
+    ]
 })
 export class GoalsPageComponent implements OnDestroy {
 

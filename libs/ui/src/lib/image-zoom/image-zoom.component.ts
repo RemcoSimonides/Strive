@@ -4,7 +4,7 @@ import { createAnimation } from '@ionic/core'
 
 import { Media } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
-import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
+import { MediaRefPipe } from '@strive/media/pipes/media.pipe'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { VideoPlayerComponent } from '@strive/media/components/video-player/video-player.component'
 import { HeaderComponent } from '../header/header.component'
@@ -40,21 +40,19 @@ export function getLeaveAnimation(baseEl: HTMLElement) {
 }
 
 @Component({
-	standalone: true,
-	selector: 'strive-image-zoom',
-	templateUrl: './image-zoom.component.html',
-	styleUrls: ['./image-zoom.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-	imports: [
-    ImageDirective,
-    MediaRefPipe,
-		VideoUrlPipe,
-    HeaderComponent,
-		VideoPlayerComponent,
-		HTMLPipe
-	],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: 'strive-image-zoom',
+    templateUrl: './image-zoom.component.html',
+    styleUrls: ['./image-zoom.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        ImageDirective,
+        MediaRefPipe,
+        HeaderComponent,
+        VideoPlayerComponent,
+        HTMLPipe
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ImageZoomModalComponent extends ModalDirective implements AfterViewInit {
 

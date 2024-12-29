@@ -27,31 +27,27 @@ import { WheelOfLifeResultsComponent } from '@strive/exercises/wheel-of-life/com
 
 
 @Component({
-  standalone: true,
-  selector: 'journal-wheel-of-life',
-  templateUrl: './wheel-of-life.component.html',
-  styleUrls: ['./wheel-of-life.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    PageLoadingComponent,
-    AuthModalComponent,
-    HeaderComponent,
-    WheelOfLifeEntryComponent,
-    EntryModalComponent,
-    WheelOfLifeResultsComponent,
-    TodayEntryPipe, PreviousEntryPipe,
-    GoalCreateModalComponent,
-    IonContent,
-    IonSelect,
-    IonSelectOption,
-    IonButton,
-    IonIcon,
-    IonCard,
-    IonCardContent
-  ]
+    selector: 'journal-wheel-of-life',
+    templateUrl: './wheel-of-life.component.html',
+    styleUrls: ['./wheel-of-life.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        PageLoadingComponent,
+        HeaderComponent,
+        WheelOfLifeEntryComponent,
+        WheelOfLifeResultsComponent,
+        TodayEntryPipe, PreviousEntryPipe,
+        IonContent,
+        IonSelect,
+        IonSelectOption,
+        IonButton,
+        IonIcon,
+        IonCard,
+        IonCardContent
+    ]
 })
 export class WheelOfLifePageComponent implements OnDestroy {
   uid$ = this.auth.uid$

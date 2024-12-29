@@ -18,23 +18,22 @@ interface Image {
 }
 
 @Component({
-  standalone: true,
-  selector: '[goalId][form] strive-goal-images',
-  templateUrl: './images.component.html',
-  styleUrls: ['./images.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ImageSelectorComponent,
-    IonCard,
-    IonSearchbar,
-    IonButton,
-    IonIcon,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonSpinner
-  ]
+    selector: '[goalId][form] strive-goal-images',
+    templateUrl: './images.component.html',
+    styleUrls: ['./images.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ImageSelectorComponent,
+        IonCard,
+        IonSearchbar,
+        IonButton,
+        IonIcon,
+        IonInfiniteScroll,
+        IonInfiniteScrollContent,
+        IonSpinner
+    ]
 })
 export class GoalImagesComponent implements OnInit, OnDestroy {
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent

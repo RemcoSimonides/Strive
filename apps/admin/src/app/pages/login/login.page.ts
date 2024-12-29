@@ -8,10 +8,11 @@ import { ProfileService } from '@strive/user/profile.service'
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 
 @Component({
-  selector: 'strive-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'strive-login',
+    templateUrl: './login.page.html',
+    styleUrls: ['./login.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LoginComponent {
 

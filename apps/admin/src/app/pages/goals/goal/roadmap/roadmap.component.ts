@@ -8,10 +8,11 @@ import { GoalService } from '@strive/goal/goal.service'
 import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
-  selector: '[id] strive-roadmap',
-  templateUrl: './roadmap.component.html',
-  styleUrls: ['./roadmap.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: '[id] strive-roadmap',
+    templateUrl: './roadmap.component.html',
+    styleUrls: ['./roadmap.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AdminRoadmapComponent implements OnInit {
 

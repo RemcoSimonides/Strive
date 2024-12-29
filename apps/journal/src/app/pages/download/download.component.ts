@@ -11,18 +11,17 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 
 @Component({
-  standalone: true,
-  selector: 'journal-download',
-  templateUrl: './download.component.html',
-  styleUrls: ['./download.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    HeaderComponent,
-    IonContent,
-    IonButton
-  ]
+    selector: 'journal-download',
+    templateUrl: './download.component.html',
+    styleUrls: ['./download.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ImageDirective,
+        HeaderComponent,
+        IonContent,
+        IonButton
+    ]
 })
 export class DownloadPageComponent {
 

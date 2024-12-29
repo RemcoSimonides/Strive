@@ -17,21 +17,20 @@ import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert
 import { isValidHttpUrl } from '@strive/utils/helpers'
 
 @Component({
-  standalone: true,
-  selector: 'strive-send-intent-select-goal',
-  templateUrl: 'send-intent-select-goal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonLabel
-  ]
+    selector: 'strive-send-intent-select-goal',
+    templateUrl: 'send-intent-select-goal.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ImageDirective,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent,
+        IonList,
+        IonItem,
+        IonThumbnail,
+        IonLabel
+    ]
 })
 export class SendIntentSelectGoalComponent extends ModalDirective {
 

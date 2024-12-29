@@ -25,22 +25,20 @@ export class JoinButtonTextPipe implements PipeTransform {
 }
 
 @Component({
-  standalone: true,
-  selector: '[goal][stakeholder] strive-goal-join-button',
-  templateUrl: './join-button.component.html',
-  styleUrls: ['./join-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    AuthModalComponent,
-    JoinButtonTextPipe,
-    IonIcon,
-    IonPopover,
-    IonList,
-    IonItem,
-    IonButton,
-    IonSpinner
-  ]
+    selector: '[goal][stakeholder] strive-goal-join-button',
+    templateUrl: './join-button.component.html',
+    styleUrls: ['./join-button.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        JoinButtonTextPipe,
+        IonIcon,
+        IonPopover,
+        IonList,
+        IonItem,
+        IonButton,
+        IonSpinner
+    ]
 })
 export class JoinButtonComponent {
 

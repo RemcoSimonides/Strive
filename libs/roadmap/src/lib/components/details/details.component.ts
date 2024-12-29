@@ -38,33 +38,30 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 type MilestoneWithSupport = Milestone & { supports?: Support[] }
 
 @Component({
-  standalone: true,
-  selector: '[goal][milestone][stakeholder] strive-milestone-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MilestoneStatusComponent,
-    AssigneeComponent,
-    SubtasksCompletedPipe,
-    StoryComponent,
-    DatetimeComponent,
-    UpsertPostModalComponent,
-    AddSupportComponent,
-    SupportListComponent,
-    HeaderModalComponent,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonItem,
-    IonTextarea,
-    IonList,
-    IonReorderGroup,
-    IonInput,
-    IonReorder
-  ]
+    selector: '[goal][milestone][stakeholder] strive-milestone-details',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MilestoneStatusComponent,
+        AssigneeComponent,
+        SubtasksCompletedPipe,
+        StoryComponent,
+        AddSupportComponent,
+        SupportListComponent,
+        HeaderModalComponent,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonItem,
+        IonTextarea,
+        IonList,
+        IonReorderGroup,
+        IonInput,
+        IonReorder
+    ]
 })
 export class DetailsComponent extends ModalDirective implements OnInit, OnDestroy {
   private subs: Subscription[] = []

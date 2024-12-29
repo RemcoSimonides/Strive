@@ -14,27 +14,26 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { ReminderService } from '@strive/stakeholder/reminder.service'
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    HeaderModalComponent,
-    IonButton,
-    IonContent,
-    IonInput,
-    IonItem,
-    IonList,
-    IonRadio,
-    IonRadioGroup,
-    IonSelect,
-    IonSelectOption,
-    IonTitle,
-    IonTextarea
-  ],
-  selector: '[goal, stakeholder] strive-upsert-reminder-modal',
-  templateUrl: './upsert-reminder.component.html',
-  styleUrls: ['./upsert-reminder.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        HeaderModalComponent,
+        IonButton,
+        IonContent,
+        IonInput,
+        IonItem,
+        IonList,
+        IonRadio,
+        IonRadioGroup,
+        IonSelect,
+        IonSelectOption,
+        IonTitle,
+        IonTextarea
+    ],
+    selector: '[goal, stakeholder] strive-upsert-reminder-modal',
+    templateUrl: './upsert-reminder.component.html',
+    styleUrls: ['./upsert-reminder.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpsertReminderModalComponent extends ModalDirective implements OnInit {
 

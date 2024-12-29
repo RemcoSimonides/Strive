@@ -15,28 +15,25 @@ import { SelfReflectSettingsService } from '@strive/exercises/self-reflect/self-
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { selfReflectSettings, createSelfReflectSettings } from '@strive/model'
 import { SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/self-reflect-settings.form'
-import { SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 
 @Component({
-  standalone: true,
-  selector: 'journal-self-reflect-settings',
-  templateUrl: './self-reflect-settings.component.html',
-  styleUrls: ['./self-reflect-settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    HeaderComponent,
-    PageLoadingComponent,
-    SelfReflectReplaceFrequencyPipe,
-    IonContent,
-    IonList,
-    IonItem,
-    IonSelect,
-    IonSelectOption,
-    IonLabel,
-    IonText
-  ]
+    selector: 'journal-self-reflect-settings',
+    templateUrl: './self-reflect-settings.component.html',
+    styleUrls: ['./self-reflect-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        HeaderComponent,
+        PageLoadingComponent,
+        IonContent,
+        IonList,
+        IonItem,
+        IonSelect,
+        IonSelectOption,
+        IonLabel,
+        IonText
+    ]
 })
 export class SelfReflectSettingsComponent implements OnInit {
 

@@ -15,33 +15,28 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
-import { VideoPlayerComponent } from '@strive/media/components/video-player/video-player.component'
 
 @Component({
-  standalone: true,
-  selector: '[storyItem] strive-post',
-  templateUrl: './post.component.html',
-  styleUrls: ['./post.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None, // Strava embed
-  imports: [
-    CommonModule,
-    RouterModule,
-    ImageDirective,
-    ImageZoomModalComponent,
-    PostOptionsComponent,
-    VideoPlayerComponent,
-    HTMLPipe,
-    SafePipe,
-    MediaRefPipe,
-    VideoUrlPipe,
-    IonCard,
-    IonAvatar,
-    IonButton,
-    IonIcon,
-    IonCardContent
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: '[storyItem] strive-post',
+    templateUrl: './post.component.html',
+    styleUrls: ['./post.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None, // Strava embed
+    imports: [
+        CommonModule,
+        RouterModule,
+        ImageDirective,
+        HTMLPipe,
+        SafePipe,
+        MediaRefPipe,
+        VideoUrlPipe,
+        IonCard,
+        IonAvatar,
+        IonButton,
+        IonIcon,
+        IonCardContent
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PostComponent implements AfterViewInit {
 

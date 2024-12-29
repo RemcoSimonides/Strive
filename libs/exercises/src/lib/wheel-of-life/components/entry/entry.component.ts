@@ -55,21 +55,18 @@ interface DesiredFormType {
 }
 
 @Component({
-  standalone: true,
-  selector: 'strive-wheel-of-life-entry',
-  templateUrl: './entry.component.html',
-  styleUrls: ['./entry.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    NgChartsModule,
-    WheelOfLifeResultsComponent,
-    IonRange,
-    IonButton,
-    IonIcon,
-    IonContent
-  ]
+    selector: 'strive-wheel-of-life-entry',
+    templateUrl: './entry.component.html',
+    styleUrls: ['./entry.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        NgChartsModule,
+        IonRange,
+        IonButton,
+        IonIcon
+    ]
 })
 export class WheelOfLifeEntryComponent implements OnDestroy {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective

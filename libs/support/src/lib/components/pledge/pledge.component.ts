@@ -11,18 +11,17 @@ import { ArrowBackComponent, ArrowForwardComponent } from '@strive/ui/responsive
 import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
 
 @Component({
-  standalone: true,
-  selector: 'strive-support-pledge',
-  templateUrl: './pledge.component.html',
-  styleUrls: ['./pledge.component.scss'],
-  imports: [
-    RouterModule,
-    ArrowBackComponent,
-    ArrowForwardComponent,
-    ImageDirective,
-    MaxLengthPipe,
-    IonAvatar
-  ]
+    selector: 'strive-support-pledge',
+    templateUrl: './pledge.component.html',
+    styleUrls: ['./pledge.component.scss'],
+    imports: [
+        RouterModule,
+        ArrowBackComponent,
+        ArrowForwardComponent,
+        ImageDirective,
+        MaxLengthPipe,
+        IonAvatar
+    ]
 })
 export class PledgeComponent {
   @Input() support: Support = createSupportBase()

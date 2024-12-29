@@ -18,19 +18,18 @@ import { AddSupportComponent } from '@strive/support/components/add/add.componen
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 
 @Component({
-  standalone: true,
-  selector: '[goal] strive-support-modal',
-  templateUrl: './add.component.html',
-  styleUrls: ['./add.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    SupportListComponent,
-    AddSupportComponent,
-    HeaderModalComponent,
-    IonTitle,
-    IonContent,
-  ]
+    selector: '[goal] strive-support-modal',
+    templateUrl: './add.component.html',
+    styleUrls: ['./add.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        SupportListComponent,
+        AddSupportComponent,
+        HeaderModalComponent,
+        IonTitle,
+        IonContent,
+    ]
 })
 export class AddSupportModalComponent extends ModalDirective implements OnInit {
 

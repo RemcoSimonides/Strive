@@ -16,22 +16,21 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 
 @Component({
-  standalone: true,
-  selector: 'strive-welcome-modal',
-  templateUrl: './welcome.modal.html',
-  styleUrls: ['./welcome.modal.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom,
-  imports: [
-    CommonModule,
-    ImageDirective,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: 'strive-welcome-modal',
+    templateUrl: './welcome.modal.html',
+    styleUrls: ['./welcome.modal.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.ShadowDom,
+    imports: [
+        CommonModule,
+        ImageDirective,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class WelcomeModalComponent {
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;

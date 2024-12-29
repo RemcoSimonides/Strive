@@ -18,19 +18,18 @@ import { SupportDetailsComponent } from '@strive/support/components/details/deta
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
 
 @Component({
-  standalone: true,
-  selector: 'journal-support',
-  templateUrl: './support.page.html',
-  styleUrls: ['./support.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HeaderComponent,
-    SupportDetailsComponent,
-    PagenotfoundComponent,
-    IonContent
-  ]
+    selector: 'journal-support',
+    templateUrl: './support.page.html',
+    styleUrls: ['./support.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        RouterModule,
+        HeaderComponent,
+        SupportDetailsComponent,
+        PagenotfoundComponent,
+        IonContent
+    ]
 })
 export class SupportPageComponent {
   support$ = combineLatest([

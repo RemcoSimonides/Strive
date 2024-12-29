@@ -9,9 +9,10 @@ import { ProfileService } from '@strive/user/profile.service'
 
 
 @Component({
-  selector: '[id] strive-team',
-  templateUrl: './team.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: '[id] strive-team',
+    templateUrl: './team.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TeamComponent implements OnInit {
 

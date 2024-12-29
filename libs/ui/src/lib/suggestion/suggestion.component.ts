@@ -5,8 +5,6 @@ import { orderBy, where } from 'firebase/firestore'
 
 import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
 
-import { ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
-import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { ChatGPTMessage, Milestone, createChatGPTMessage, createMilestone } from '@strive/model'
@@ -16,23 +14,20 @@ import { sparklesOutline, addOutline } from 'ionicons/icons'
 import { IonIcon, IonList, IonItem, IonLabel, IonButton, IonInput } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: '[goalId] strive-suggestion',
-  templateUrl: './suggestion.component.html',
-  styleUrls: ['./suggestion.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ToDatePipe,
-    HTMLPipe,
-    FormsModule,
-    IonIcon,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonButton,
-    IonInput
-  ]
+    selector: '[goalId] strive-suggestion',
+    templateUrl: './suggestion.component.html',
+    styleUrls: ['./suggestion.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonIcon,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonButton,
+        IonInput
+    ]
 })
 export class SuggestionComponent implements OnInit, OnDestroy {
 

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 
-import { AlertController, IonButton, IonCheckbox, IonList, IonItem, IonSelect, IonSelectOption, IonInput, PopoverController } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonList, IonItem, IonSelect, IonSelectOption, IonInput, PopoverController } from '@ionic/angular/standalone'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { addYears, startOfDay } from 'date-fns'
 
@@ -14,22 +14,20 @@ interface Activity {
 }
 
 @Component({
-  standalone: true,
-  selector: 'strive-strava-activity-types',
-  templateUrl: './strava-activity-types.component.html',
-  styleUrls: ['./strava-activity-types.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    IonCheckbox,
-    IonSelectOption,
-    IonButton,
-    IonList,
-    IonItem,
-    IonSelect,
-    IonInput
-  ]
+    selector: 'strive-strava-activity-types',
+    templateUrl: './strava-activity-types.component.html',
+    styleUrls: ['./strava-activity-types.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        IonSelectOption,
+        IonButton,
+        IonList,
+        IonItem,
+        IonSelect,
+        IonInput
+    ]
 })
 export class StravaActivityTypesComponent {
   activities: Activity[] = [

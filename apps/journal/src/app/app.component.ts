@@ -34,20 +34,15 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { SendIntentSelectGoalComponent } from '@strive/goal/modals/send-intent-select-goal/send-intent-select-goal.component'
 
 @Component({
-  selector: 'journal-root',
-  standalone: true,
-  imports: [
-    AuthModalComponent,
-    SendIntentSelectGoalComponent,
-    CommonModule,
-    RouterModule,
-    RouterOutlet,
-    TabsComponent,
-    IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
-    ImageDirective
-  ],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'journal-root',
+    imports: [
+        CommonModule,
+        RouterModule,
+        IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
+        ImageDirective
+    ],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
   rootPage: typeof TabsComponent = TabsComponent

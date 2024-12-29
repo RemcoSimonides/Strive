@@ -8,19 +8,16 @@ import { shareSocialOutline } from 'ionicons/icons'
 import { Goal } from '@strive/model'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
 import { captureException, captureMessage } from '@sentry/capacitor'
-import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 
 @Component({
-  standalone: true,
-  selector: '[goal] strive-goal-share',
-  templateUrl: './share.component.html',
-  styleUrls: ['./share.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    GoalSharePopoverComponent,
-    IonButton,
-    IonIcon
-  ]
+    selector: '[goal] strive-goal-share',
+    templateUrl: './share.component.html',
+    styleUrls: ['./share.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IonButton,
+        IonIcon
+    ]
 })
 export class GoalShareComponent {
 

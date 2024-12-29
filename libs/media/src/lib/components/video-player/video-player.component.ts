@@ -1,17 +1,15 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild, ViewEncapsulation } from '@angular/core'
-import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe';
+import { VideoUrlPipe } from '@strive/media/pipes/media.pipe';
 // import Hls from 'hls.js'
 
 @Component({
-  standalone: true,
-  selector: 'media-video-player',
-  templateUrl: './video-player.component.html',
-  styleUrls: ['./video-player.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    MediaRefPipe,
-    VideoUrlPipe
-  ]
+    selector: 'media-video-player',
+    templateUrl: './video-player.component.html',
+    styleUrls: ['./video-player.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        VideoUrlPipe
+    ]
 })
 export class VideoPlayerComponent implements AfterViewInit {
 	@ViewChild('player', { static: true }) player: ElementRef<HTMLVideoElement> = {} as ElementRef<HTMLVideoElement>;

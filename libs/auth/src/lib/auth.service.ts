@@ -24,7 +24,11 @@ export class AuthService extends FireAuth<User> implements OnDestroy {
     this.profile = createUser(profile)
     this.uid = profile ? profile.uid : ''
     this._uid$.next(this.uid)
-    profile ? setUser({ id: profile.uid, username: profile.username }) : setUser(null)
+    if (profile) {
+      setUser({ id: profile.uid, username: profile.username })
+    } else {
+      setUser(null)
+    }
   })
 
   ngOnDestroy() {

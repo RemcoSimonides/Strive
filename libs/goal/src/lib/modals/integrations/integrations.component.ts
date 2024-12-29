@@ -28,20 +28,19 @@ export class StravaActivitiesPipe implements PipeTransform {
 }
 
 @Component({
-  standalone: true,
-  selector: 'strive-integrations',
-  templateUrl: './integrations.component.html',
-  styleUrls: ['./integrations.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    StravaActivitiesPipe,
-    HeaderModalComponent,
-    PageLoadingComponent,
-    ImageDirective,
-    IonContent,
-    IonTitle
-  ]
+    selector: 'strive-integrations',
+    templateUrl: './integrations.component.html',
+    styleUrls: ['./integrations.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        StravaActivitiesPipe,
+        HeaderModalComponent,
+        PageLoadingComponent,
+        ImageDirective,
+        IonContent,
+        IonTitle
+    ]
 })
 export class IntegrationsComponent extends ModalDirective implements OnInit {
 

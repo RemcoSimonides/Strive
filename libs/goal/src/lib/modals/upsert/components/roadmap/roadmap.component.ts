@@ -12,17 +12,16 @@ import { ScrollService } from '@strive/utils/services/scroll.service'
 import { IonContent } from '@ionic/angular/standalone'
 
 @Component({
-  standalone: true,
-  selector: '[goal] strive-goal-roadmap',
-  templateUrl: './roadmap.component.html',
-  styleUrls: ['./roadmap.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    SuggestionComponent,
-    RoadmapComponent,
-    IsFuturePipe
-  ]
+    selector: '[goal] strive-goal-roadmap',
+    templateUrl: './roadmap.component.html',
+    styleUrls: ['./roadmap.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        SuggestionComponent,
+        RoadmapComponent,
+        IsFuturePipe
+    ]
 })
 export class GoalRoadmapComponent implements OnInit {
 

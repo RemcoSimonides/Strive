@@ -6,18 +6,17 @@ import { IonItem, IonTextarea, IonButton } from '@ionic/angular/standalone'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 
 @Component({
-	standalone: true,
-	selector: 'strive-description',
-	templateUrl: './description.component.html',
-	styleUrls: ['./description.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-    ReactiveFormsModule,
-    HTMLPipe,
-    IonItem,
-    IonTextarea,
-    IonButton
-	]
+    selector: 'strive-description',
+    templateUrl: './description.component.html',
+    styleUrls: ['./description.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ReactiveFormsModule,
+        HTMLPipe,
+        IonItem,
+        IonTextarea,
+        IonButton
+    ]
 })
 export class DescriptionComponent implements OnInit {
 
