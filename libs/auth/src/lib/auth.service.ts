@@ -47,7 +47,7 @@ export class AuthService extends FireAuth<User> implements OnDestroy {
   protected override fromFirestore(snapshot: DocumentSnapshot<User>) {
     return snapshot.exists()
       ? createUser(toDate({ ...snapshot.data(), [this.idKey]: snapshot.id }))
-      : undefined
+      : createUser()
   }
 
   async getUID(): Promise<string> {
