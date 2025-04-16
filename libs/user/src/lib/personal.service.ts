@@ -11,7 +11,7 @@ import { FireSubCollection, toDate } from 'ngfire'
 import { getAuth } from 'firebase/auth'
 
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
-import * as Sentry from '@sentry/capacitor'
+import { captureException } from '@sentry/angular'
 
 import { user } from 'rxfire/auth'
 import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
@@ -126,7 +126,7 @@ export class PersonalService extends FireSubCollection<Personal> {
         }).then(toast => toast.present())
       }
 
-      Sentry.captureException(err)
+      captureException(err)
       return ''
     }
   }
@@ -248,7 +248,7 @@ export class PersonalService extends FireSubCollection<Personal> {
           const link: string = notification.notification.data.link
           this.router.navigateByUrl(link).then(() => SplashScreen.hide())
         } catch (err) {
-          Sentry.captureException(err)
+          captureException(err)
         }
       }
     )

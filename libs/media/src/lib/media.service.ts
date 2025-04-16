@@ -6,7 +6,7 @@ import { toDate, FireSubCollection } from 'ngfire'
 import { createMedia, Media } from '@strive/model'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
 import { getFunctions, httpsCallable } from 'firebase/functions'
-import { captureException } from '@sentry/capacitor'
+import { captureException } from '@sentry/angular'
 
 @Injectable({
   providedIn: 'root'

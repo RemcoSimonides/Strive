@@ -9,7 +9,7 @@ import { close, calendarOutline, linkOutline } from 'ionicons/icons'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { SendIntent } from 'send-intent'
 
-import { captureException } from '@sentry/capacitor'
+import { captureException } from '@sentry/angular'
 
 import { BehaviorSubject } from 'rxjs'
 import { debounceTime, filter } from 'rxjs/operators'

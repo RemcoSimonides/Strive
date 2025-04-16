@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 
-import { IonRange, IonButton, IonIcon, IonContent } from '@ionic/angular/standalone'
+import { IonRange, IonButton, IonIcon } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { checkmark, arrowForwardOutline } from 'ionicons/icons'
 
@@ -10,7 +10,7 @@ import { BehaviorSubject, combineLatest, map, Subscription } from 'rxjs'
 import { ChartConfiguration } from 'chart.js'
 import { AES } from 'crypto-js'
 import { formatISO } from 'date-fns'
-import { BaseChartDirective, NgChartsModule } from 'ng2-charts'
+import { BaseChartDirective } from 'ng2-charts'
 
 import { aspectsConfig, WheelOfLifeEntry } from '@strive/model'
 
@@ -19,8 +19,6 @@ import { PersonalService } from '@strive/user/personal.service'
 import { WheelOfLifeEntryService } from '../../wheel-of-life.service'
 import { delay } from '@strive/utils/helpers'
 import { ThemeService } from '@strive/utils/services/theme.service'
-
-import { WheelOfLifeResultsComponent } from '../results/results.component'
 
 const primaryRGBA = 'rgba(249, 116, 29)'
 const translucentPrimaryRGBA = 'rgba(249, 116, 29, 0.5)'
@@ -62,7 +60,7 @@ interface DesiredFormType {
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        NgChartsModule,
+        BaseChartDirective,
         IonRange,
         IonButton,
         IonIcon

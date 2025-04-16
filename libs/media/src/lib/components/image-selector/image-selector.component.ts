@@ -10,13 +10,13 @@ import { checkmarkOutline, closeOutline } from 'ionicons/icons'
 import { BehaviorSubject, Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
 
-import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper'
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper'
 import { deleteObject, getStorage, ref, StorageError, uploadBytes } from 'firebase/storage'
 import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers'
 import { isValidHttpUrl } from '@strive/utils/helpers'
 
 import { Camera, CameraResultType } from '@capacitor/camera'
-import { captureException, captureMessage } from '@sentry/capacitor'
+import { captureException, captureMessage } from '@sentry/angular'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
@@ -28,8 +28,8 @@ type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
-        ImageCropperModule,
         ImageDirective,
+        ImageCropperComponent,
         IonFabButton,
         IonIcon
     ]

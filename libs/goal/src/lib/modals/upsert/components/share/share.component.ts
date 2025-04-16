@@ -7,7 +7,7 @@ import { shareSocialOutline } from 'ionicons/icons'
 
 import { Goal } from '@strive/model'
 import { InviteTokenService } from '@strive/utils/services/invite-token.service'
-import { captureException, captureMessage } from '@sentry/capacitor'
+import { captureException, captureMessage } from '@sentry/angular'
 import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.component'
 
 @Component({

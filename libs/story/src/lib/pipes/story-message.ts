@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { captureException } from '@sentry/capacitor'
+import { captureException } from '@sentry/angular'
 import { NotificationIcons, NotificationMessageText, StoryItem } from '@strive/model'
 
 export interface StoryItemMessage {

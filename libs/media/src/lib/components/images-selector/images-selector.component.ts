@@ -11,7 +11,7 @@ import { BehaviorSubject, Subscription } from 'rxjs'
 
 import { FilePicker } from '@capawesome/capacitor-file-picker'
 
-import { captureException, captureMessage } from '@sentry/capacitor'
+import { captureException, captureMessage } from '@sentry/angular'
 import { EditMediaForm } from '@strive/media/forms/media.form'
 import { delay } from '@strive/utils/helpers'
 import { ImageOptionsPopoverComponent } from './popover/options.component'
