@@ -6,6 +6,7 @@ import { appConfig } from './app/app.config'
 import { environment } from '@env'
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
+import '@angular/localize/init';
 
 defineCustomElements(window)
 
