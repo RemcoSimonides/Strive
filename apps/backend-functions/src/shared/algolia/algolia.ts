@@ -1,26 +1,12 @@
-import * as algoliasearch from 'algoliasearch'
+import { algoliasearch } from 'algoliasearch'
 import { environment } from '@env'
 import { logger } from '@strive/api/firebase'
 
-const client: algoliasearch.SearchClient = algoliasearch.default(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY)
-let idx: algoliasearch.SearchIndex
+const client = algoliasearch(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY)
 
-const initAlgoliaIndex = (index: AlgoliaIndex) => {
-
-  switch (index) {
-    case 'goal':
-      idx = client.initIndex(environment.algolia.indexNameGoals)
-      break
-    case 'user':
-      idx = client.initIndex(environment.algolia.indexNameUsers)
-      break
-  }
-}
-
-export const addToAlgolia = async (index: AlgoliaIndex, objectID: string, data): Promise<void> => {
-  initAlgoliaIndex(index)
-
-  await idx.saveObject({
+export const addToAlgolia = async (indexName: AlgoliaIndex, objectID: string, data): Promise<void> => {
+  await client.saveObject({
+    indexName,
     objectID,
     ...data
   }).catch((err) => {
@@ -29,10 +15,9 @@ export const addToAlgolia = async (index: AlgoliaIndex, objectID: string, data):
 
 }
 
-export const updateAlgoliaObject = async (index: AlgoliaIndex, objectID: string, data): Promise<void> => {
-  initAlgoliaIndex(index)
-
-  idx.partialUpdateObject({
+export const updateAlgoliaObject = async (indexName: AlgoliaIndex, objectID: string, data): Promise<void> => {
+  client.partialUpdateObject({
+    indexName,
     objectID,
     ...data
   }).catch((err) => {
@@ -41,9 +26,8 @@ export const updateAlgoliaObject = async (index: AlgoliaIndex, objectID: string,
 
 }
 
-export const deleteFromAlgolia = async (index: AlgoliaIndex, objectID: string): Promise<void> => {
-  initAlgoliaIndex(index)
-  await idx.deleteObject(objectID).catch((err) => {
+export const deleteFromAlgolia = async (indexName: AlgoliaIndex, objectID: string): Promise<void> => {
+  await client.deleteObject({ indexName, objectID }).catch((err) => {
     if (err) logger.error('error deleting algolia object', err)
   })
 }
