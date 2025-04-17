@@ -1,8 +1,8 @@
-import { RuntimeOptions, runWith } from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
 import { environment } from '@env'
 import { wrapFirestoreOnCreateHandler, wrapFirestoreOnDeleteHandler, wrapFirestoreOnUpdateHandler } from './sentry'
+import { RuntimeOptions, runWith } from 'firebase-functions/v1'
 
 
 export type DocumentReference = admin.firestore.DocumentReference
@@ -10,7 +10,7 @@ export const gcs = new Storage.Storage
 export const gcsBucket = gcs.bucket(environment.firebase.options.storageBucket)
 
 export { logger } from 'firebase-functions'
-export type { RuntimeOptions } from 'firebase-functions'
+export type { RuntimeOptions } from 'firebase-functions/v1'
 
 if (admin.apps.length === 0) {
 	admin.initializeApp()
