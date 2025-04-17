@@ -76,10 +76,11 @@ export class ExplorePageComponent implements OnDestroy {
     this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
 
     switch (type) {
-      case 'goals':
+      case 'goals': {
         const category = this.searchForm.get('category')?.value || undefined
         this.algolia.searchGoals(query, category, undefined)
         break
+      }
 
       case 'users':
         this.algolia.searchProfiles(query, undefined)

@@ -19,30 +19,14 @@ export class AlgoliaService {
   profiles$: Observable<AlgoliaUser[]> = this._profiles.asObservable()
 
   search(query: string, hitsPerPage?: number | { goals?: number, profiles?: number}) {
-    this.client.search({
-      requests: [
-        {
-          indexName: environment.algolia.indexNameGoals,
-          query,
-          hitsPerPage: typeof hitsPerPage === 'object' ? hitsPerPage?.goals : hitsPerPage
-        },
-        {
-          indexName: environment.algolia.indexNameUsers,
-          query,
-          hitsPerPage: typeof hitsPerPage === 'object' ? hitsPerPage?.profiles : hitsPerPage
-        }
-      ]
-    }).then(({ results }) => {
-      const goals = results[0].facetHits.map((hit: AlgoliaGoal) => createAlgoliaGoal(hit))
-      const users = results[1].facetHits.map((hit: AlgoliaUser) => createAlgoliaUser(hit))
-
-      this._goals.next(goals)
-      this._profiles.next(users)
-    })
+    const goalsHitsPerPage = typeof hitsPerPage === 'object' ? hitsPerPage?.goals : hitsPerPage
+    const profilesHitsPerPage = typeof hitsPerPage === 'object' ? hitsPerPage?.profiles : hitsPerPage
+    this.searchGoals(query, undefined, goalsHitsPerPage)
+    this.searchProfiles(query, profilesHitsPerPage)
   }
 
   searchGoals(query: string, category?: Category, hitsPerPage?: number | undefined): void {
-    this.client.search({
+    this.client.searchForHits<AlgoliaGoal>({
       requests: [
         {
           indexName: environment.algolia.indexNameGoals,
@@ -52,13 +36,13 @@ export class AlgoliaService {
         }
       ]
     }).then(({ results }) => {
-      const goals = results[0].facetHits.maps((hit: AlgoliaGoal) => createAlgoliaGoal(hit))
+      const goals = results[0].hits.map((hit: AlgoliaGoal) => createAlgoliaGoal(hit))
       this._goals.next(goals)
     })
   }
 
   searchProfiles(query: string, hitsPerPage: number | undefined): void {
-    this.client.search({
+    this.client.searchForHits<AlgoliaUser>({
       requests: [
         {
           indexName: environment.algolia.indexNameUsers,
@@ -67,7 +51,7 @@ export class AlgoliaService {
         }
       ]
     }).then(({ results }) => {
-      const users = results[0].facetHits.map((hit: AlgoliaUser) => createAlgoliaUser(hit))
+      const users = results[0].hits.map((hit: AlgoliaUser) => createAlgoliaUser(hit))
       this._profiles.next(users)
     })
   }
