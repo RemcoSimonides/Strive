@@ -1,4 +1,4 @@
-import { db, functions } from '@strive/api/firebase'
+import { db, onSchedule } from '@strive/api/firebase'
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
@@ -8,12 +8,8 @@ import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNo
 import { groupIds, templateIds } from './ids'
 import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
 import { toDate } from '../../shared/utils'
-import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
 
-
-// // crontab.guru to determine schedule value
-// export const scheduledEmailRunner = functions().pubsub.schedule('*/5 * * * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner',
-export const scheduledEmailRunner = functions().pubsub.schedule('0 0 1 * *').onRun(wrapPubsubOnRunHandler('scheduledEmailRunner',
+export const scheduledEmailRunner = onSchedule('0 0 1 * *',
 async () => {
 
   const [ personalSnaps, motivation, newFeatures ] = await Promise.all([
@@ -70,7 +66,7 @@ async () => {
   }
 
   return Promise.all(promises)
-}))
+})
 
 async function getStakeholders(uid: string) {
   const stakeholderSnaps = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('isAchiever', '==', true).orderBy('createdAt', 'desc').get()

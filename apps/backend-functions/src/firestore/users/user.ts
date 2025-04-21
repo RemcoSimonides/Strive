@@ -1,15 +1,16 @@
 import { db, logger, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
+import { defineString } from 'firebase-functions/params'
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
 import { createUser, createAlgoliaUser, createSelfReflectSettings, selfReflectQuestions } from '@strive/model'
 import { updateAggregation } from '../../shared/aggregation/aggregation'
 import { deleteCollection, toDate } from '../../shared/utils'
 
-export const userCreatedHandler = onDocumentCreate(`Users/{uid}`, 'userCreatedHandler',
+export const userCreatedHandler = onDocumentCreate(`Users/{uid}`,
 async (snapshot) => {
 
   const uid = snapshot.id
-  const user = createUser({ ...snapshot.data(), uid: snapshot.id })
+  const user = createUser({ ...snapshot.data, uid: snapshot.id })
 
   // aggregation
   updateAggregation({ usersCreated: 1 })
@@ -20,11 +21,11 @@ async (snapshot) => {
   await addToAlgolia('user', uid, createAlgoliaUser(user))
 })
 
-export const userDeletedHandler = onDocumentDelete(`Users/{uid}`, 'userDeletedHandler',
+export const userDeletedHandler = onDocumentDelete(`Users/{uid}`,
 async (snapshot) => {
 
   const uid = snapshot.id
-  const user = createUser(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const user = createUser(toDate({ ...snapshot.data, id: snapshot.id }))
   await deleteFromAlgolia('user', uid)
 
   // aggregation
@@ -64,12 +65,13 @@ async (snapshot) => {
   auth.deleteUser(uid)
 })
 
-export const userChangeHandler = onDocumentUpdate(`Users/{uid}`, 'userChangeHandler',
-async (snapshot, context) => {
+export const userChangeHandler = onDocumentUpdate(`Users/{uid}`,
+async (snapshot) => {
 
-  const uid = context.params.uid
-  const before = createUser({ ...snapshot.before.data(), uid: snapshot.before.id })
-  const after = createUser({ ...snapshot.after.data(), uid: snapshot.after.id })
+  const uid = defineString('uid').value()
+
+  const before = createUser({ ...snapshot.data.before, uid: snapshot.data.before.id })
+  const after = createUser({ ...snapshot.data.after, uid: snapshot.data.after.id })
 
 
   if (before.username !== after.username || before.photoURL !== after.photoURL) {

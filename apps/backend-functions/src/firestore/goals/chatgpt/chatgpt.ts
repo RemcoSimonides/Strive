@@ -1,12 +1,13 @@
-import { RuntimeOptions, db, onDocumentCreate } from '@strive/api/firebase'
+import { db, getRef, onDocumentCreate } from '@strive/api/firebase'
 import { createChatGPTMessage, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { ChatCompletionMessageParam } from 'openai/resources'
 import { AskOpenAIConfig, askOpenAI } from '../../../shared/ask-open-ai/ask-open-ai'
+import { GlobalOptions } from 'firebase-functions/v2'
 
-const config: RuntimeOptions = {
+const config: GlobalOptions = {
   timeoutSeconds: 540,
-  memory: '1GB',
+  memory: '1GiB',
 }
 
 const askOpenAIConfig: AskOpenAIConfig = {
@@ -17,11 +18,12 @@ const askOpenAIConfig: AskOpenAIConfig = {
 
 const parsablePrompt = `The format of your response has to be a JSON parsable array of strings.`
 
-export const chatGPTMessageCreatedHandler = onDocumentCreate(`Goals/{goalId}/ChatGPT/{messageId}`, 'chatGPTMessageCreatedHandler',
-async (snapshot, context) => {
+export const chatGPTMessageCreatedHandler = onDocumentCreate(`Goals/{goalId}/ChatGPT/{messageId}`,
+async (snapshot) => {
 
-  const message = createChatGPTMessage(toDate({ ...snapshot.data(), id: snapshot.id }))
-  const goalId = context.params.goalId
+  const message = createChatGPTMessage(toDate({ ...snapshot.data, id: snapshot.id }))
+  const { goalId, messageId } = snapshot.params
+  const ref = getRef(`Goals/${goalId}/ChatGPT/${messageId}`);
 
   // doc is created in function of another trigger already
   if (message.status === 'no-trigger') return
@@ -35,14 +37,14 @@ async (snapshot, context) => {
       role: 'user',
       content: `${message.prompt} ${parsablePrompt}`
     })
-    await askOpenAI(messages, snapshot.ref, askOpenAIConfig)
+    await askOpenAI(messages, ref, askOpenAIConfig)
     return
   }
 
   if (message.type === 'RoadmapMoreInfoQuestions') {
     const content = `${message.prompt} ${parsablePrompt}`
     messages.push({ role: 'user', content })
-    await askOpenAI(messages, snapshot.ref, askOpenAIConfig)
+    await askOpenAI(messages, ref, askOpenAIConfig)
     return
   }
 

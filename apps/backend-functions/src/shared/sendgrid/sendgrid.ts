@@ -2,7 +2,7 @@ import * as SendGrid from '@sendgrid/mail'
 import { MailDataRequired } from '@sendgrid/mail'
 import { groupIds } from "../../pubsub/email/ids"
 
-import { logger } from 'firebase-functions'
+import { logger } from 'firebase-functions/v2'
 
 // Substitutions used in Sendgrid templates
 const substitutions = {
@@ -41,7 +41,7 @@ export function sendMailFromTemplate({ to, templateId, data, attachments  }: Ema
 }
 
 async function send(msg: MailDataRequired) {
-  const { SENDGRID_APIKEY } = process.env 
+  const { SENDGRID_APIKEY } = process.env
   if (!SENDGRID_APIKEY) throw new Error('sendgrid api key missing')
 
   SendGrid.setApiKey(SENDGRID_APIKEY)

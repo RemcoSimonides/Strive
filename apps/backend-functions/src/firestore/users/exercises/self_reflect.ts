@@ -7,23 +7,23 @@ import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/schedu
 import { ScheduledTaskUserExerciseSelfReflect, enumWorkerType } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { AES, enc } from 'crypto-js'
 
-export const selfReflectSettingsCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/SelfReflect`, 'selfReflectSettingsCreatedHandler',
-async (snapshot, context) => {
+export const selfReflectSettingsCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/SelfReflect`,
+async (snapshot) => {
 
-  const { uid } = context.params as { uid: string }
-  const settings = createSelfReflectSettings(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { uid } = snapshot.params
+  const settings = createSelfReflectSettings(toDate({ ...snapshot.data, id: snapshot.id }))
 
   if (settings.preferredDay === 'never') return
 
   return upsertReminder(uid, settings)
 })
 
-export const selfReflectSettingsChangeHandler = onDocumentUpdate(`Users/{uid}/Exercises/SelfReflect`, 'selfReflectChangeHandler',
-async (snapshot, context) => {
+export const selfReflectSettingsChangeHandler = onDocumentUpdate(`Users/{uid}/Exercises/SelfReflect`,
+async (snapshot) => {
 
-  const { uid } = context.params as { uid: string }
-  const before = createSelfReflectSettings(toDate({ ...snapshot.before.data(), id: snapshot.id }))
-  const after = createSelfReflectSettings(toDate({ ...snapshot.after.data(), id: snapshot.id }))
+  const { uid } = snapshot.params
+  const before = createSelfReflectSettings(toDate({ ...snapshot.data.before, id: snapshot.id }))
+  const after = createSelfReflectSettings(toDate({ ...snapshot.data.after, id: snapshot.id }))
 
   const preferredDayChanged = before.preferredDay !== after.preferredDay
   const preferredTimeChanged = before.preferredTime !== after.preferredTime
@@ -51,11 +51,11 @@ async (snapshot, context) => {
   }
 })
 
-export const selfReflectEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/SelfReflect/Entries/{entryId}`, 'selfReflectCreatedHandler',
-async (snapshot, context) => {
+export const selfReflectEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/SelfReflect/Entries/{entryId}`,
+async (snapshot) => {
 
-  const { uid } = context.params as { uid: string }
-  const entry = createSelfReflectEntry(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { uid } = snapshot.params
+  const entry = createSelfReflectEntry(toDate({ ...snapshot.data, id: snapshot.id }))
 
   const promises = Promise.all([
     saveGratitude(uid, entry),
@@ -68,11 +68,11 @@ async (snapshot, context) => {
   return promises
 })
 
-export const selfReflectEntryChangeHandler = onDocumentUpdate(`Users/{uid}/Exercises/SelfReflect/Entries/{entryId}`, 'selfReflectChangeHandler',
-async (snapshot, context) => {
+export const selfReflectEntryChangeHandler = onDocumentUpdate(`Users/{uid}/Exercises/SelfReflect/Entries/{entryId}`,
+async (snapshot) => {
 
-  const { uid } = context.params as { uid: string }
-  const after = createSelfReflectEntry(toDate({ ...snapshot.after.data(), id: snapshot.id }))
+  const { uid } = snapshot.params as { uid: string }
+  const after = createSelfReflectEntry(toDate({ ...snapshot.data.after, id: snapshot.id }))
 
   const promises = Promise.all([
     // saveGratitude(uid, after)  // unable to update gratitudes as I don't know which gratitude has been updated and just adding them isn't the solution

@@ -1,9 +1,8 @@
-import { db, functions, serverTimestamp, gcsBucket } from '@strive/api/firebase'
+import { db, serverTimestamp, gcsBucket, onCall } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
-import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
 import { createGoal, createGoalStakeholder, Goal } from '@strive/model'
 
-export const createCollectiveGoal = functions().https.onCall(wrapHttpsOnCallHandler('createCollectiveGoal',
+export const createCollectiveGoal = onCall(
 async (data: { goal: Goal, uid: string }): Promise<ErrorResultResponse> => {
 
   const { goal, uid } = data
@@ -66,4 +65,4 @@ async (data: { goal: Goal, uid: string }): Promise<ErrorResultResponse> => {
     error: '',
     result: goalId
   }
-}))
+})

@@ -1,5 +1,4 @@
-import { db, functions, admin } from '@strive/api/firebase'
-import { wrapPubsubOnRunHandler } from '@strive/api/sentry'
+import { db, admin, onSchedule } from '@strive/api/firebase'
 
 import { getDocument } from '../shared/utils'
 import { addGoalEvent } from '../shared/goal-event/goal.events'
@@ -29,8 +28,7 @@ import { scheduleNextGoalReminder, sendReminderPushNotification } from './goal/r
 
 // https://fireship.io/lessons/cloud-functions-scheduled-time-trigger/
 // crontab.guru to determine schedule value
-export const scheduledTasksRunner = functions({ memory: '2GB' }).pubsub.schedule('* * * * *').onRun(wrapPubsubOnRunHandler('scheduledTasksRunner',
-async () => {
+export const scheduledTasksRunner = onSchedule('every 1 minutes', async () => {
 
   // Consistent timestamp
   const now = admin.firestore.Timestamp.now()
@@ -74,7 +72,7 @@ async () => {
 
   // Execute all jobs concurrently
   return await Promise.all(jobs)
-}))
+}, { memory: '2GiB' } );
 
 // Optional interface, all worker functions should return Promise.
 interface IWorkers {

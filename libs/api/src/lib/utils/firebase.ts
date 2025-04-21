@@ -1,16 +1,20 @@
 import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
 import { environment } from '@env'
-import { wrapFirestoreOnCreateHandler, wrapFirestoreOnDeleteHandler, wrapFirestoreOnUpdateHandler } from './sentry'
-import { RuntimeOptions, runWith } from 'firebase-functions/v1'
+
+import { GlobalOptions, setGlobalOptions } from 'firebase-functions/v2'
+import { onDocumentCreated, onDocumentDeleted, onDocumentUpdated } from 'firebase-functions/v2/firestore'
+import { onRequest as _onRequest, onCall as _onCall } from 'firebase-functions/v2/https'
+import { onSchedule as _onSchedule } from 'firebase-functions/v2/scheduler'
+import { defineSecret } from 'firebase-functions/params'
 
 
 export type DocumentReference = admin.firestore.DocumentReference
+export const getRef = (path: string) => db.doc(path)
 export const gcs = new Storage.Storage
 export const gcsBucket = gcs.bucket(environment.firebase.options.storageBucket)
 
-export { logger } from 'firebase-functions'
-export type { RuntimeOptions } from 'firebase-functions/v1'
+export { logger } from 'firebase-functions/v2'
 
 if (admin.apps.length === 0) {
 	admin.initializeApp()
@@ -23,45 +27,71 @@ export const increment = admin.firestore.FieldValue.increment
 export const arrayUnion = admin.firestore.FieldValue.arrayUnion
 
 export { admin, Storage }
-export const functions = (config = defaultConfig) => runWith({ ...config, ...defaultConfig} )
+
+const secrets = [
+	defineSecret('URLMETA_APIKEY'),
+	defineSecret('URLMETA_USERNAME'),
+	defineSecret('ALGOLIA_APIKEY'),
+	defineSecret('ALGOLIA_APPID'),
+	defineSecret('SENDGRID_APIKEY'),
+	defineSecret('SENTRY_DSN'),
+	defineSecret('SENTRY_USE_ENVIRONMENT'),
+	defineSecret('OPENAI_APIKEY'),
+	defineSecret('STRAVA_CLIENT_ID'),
+	defineSecret('STRAVA_CLIENT_SECRET')
+]
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FunctionType = (...args: any[]) => any
+type FirestoreOnCreateHandler = Parameters<typeof onDocumentCreated>[1]
+type FirestoreOnUpdateHandler = Parameters<typeof onDocumentUpdated>[1]
+type FirestoreOnDeleteHandler = Parameters<typeof onDocumentDeleted>[1]
 
-export function onDocumentCreate(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
-	return functions(config)
-		.firestore
-		.document(docPath)
-		.onCreate(wrapFirestoreOnCreateHandler(name, fn))
+export function onRequest(fn: FunctionType, options?: GlobalOptions) {
+	setGlobalOptions({ secrets, ...options });
+	return _onRequest({ secrets }, wrap(fn))
 }
 
-export function onDocumentUpdate(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
-	return functions(config)
-		.firestore
-		.document(docPath)
-		.onUpdate(wrapFirestoreOnUpdateHandler(name, fn))
+export function onCall(fn: FunctionType, options?: GlobalOptions) {
+	setGlobalOptions({ secrets, ...options });
+	return _onCall({ secrets }, wrap(fn))
 }
 
-export function onDocumentDelete(docPath: string, name: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
-	return functions(config)
-		.firestore
-		.document(docPath)
-		.onDelete(wrapFirestoreOnDeleteHandler(name, fn))
+export function onSchedule(schedule: string, fn: FunctionType, options?: GlobalOptions) {
+	setGlobalOptions({ secrets, ...options });
+	return _onSchedule(schedule, wrap(fn))
 }
 
-const secrets = [
-	'URLMETA_APIKEY',
-	'URLMETA_USERNAME',
-	'ALGOLIA_APIKEY',
-	'ALGOLIA_APPID',
-	'SENDGRID_APIKEY',
-	'SENTRY_DSN',
-	'SENTRY_USE_ENVIRONMENT',
-	'OPENAI_APIKEY',
-	'STRAVA_CLIENT_ID',
-	'STRAVA_CLIENT_SECRET'
-]
+export function onDocumentCreate(docPath: string, fn: FirestoreOnCreateHandler, options?: GlobalOptions) {
+	setGlobalOptions({ secrets, ...options });
+	return onDocumentCreated(docPath, wrap<FirestoreOnCreateHandler>(fn))
+}
 
-export const defaultConfig: RuntimeOptions = {
-	secrets
+export function onDocumentUpdate(docPath: string, fn: FirestoreOnUpdateHandler, options?: GlobalOptions) {
+	setGlobalOptions({ secrets, ...options });
+	return onDocumentUpdated(docPath, wrap<FirestoreOnUpdateHandler>(fn))
+}
+
+export function onDocumentDelete(docPath: string, fn: FirestoreOnDeleteHandler, options?: GlobalOptions) {
+	setGlobalOptions({ secrets, ...options });
+	return onDocumentDeleted(docPath, wrap<FirestoreOnDeleteHandler>(fn))
+}
+
+function wrap<T extends FunctionType>(fn: T): T {
+  return (async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    const {captureException, flush, init} = await import('@sentry/node')
+
+    init({
+      dsn: process.env['SENTRY_DSN']
+    })
+
+    return Promise.resolve(fn(...args))
+      .catch(err => {
+        captureException(err, {tags: {handled: false}})
+        throw err
+      })
+      .finally(() => {
+        flush(2000);
+      })
+  }) as T
 }

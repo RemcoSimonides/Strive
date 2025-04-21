@@ -13,11 +13,11 @@ const askOpenAIConfig: AskOpenAIConfig = {
   parse: false
 }
 
-export const commentCreatedHandler = onDocumentCreate(`Goals/{goalId}/Comments/{commentId}`, 'commentCreatedHandler',
-async (snapshot, context) =>{
+export const commentCreatedHandler = onDocumentCreate(`Goals/{goalId}/Comments/{commentId}`,
+async (snapshot) =>{
 
-  const comment = createComment(toDate({ ...snapshot.data(), id: snapshot.id }))
-  const goalId: string = context.params.goalId
+  const comment = createComment(toDate({ ...snapshot.data, id: snapshot.id }))
+  const { goalId } = snapshot.params
   const { userId } = comment
 
   if (comment.id === 'initial') return // no need to send notification of the initial message

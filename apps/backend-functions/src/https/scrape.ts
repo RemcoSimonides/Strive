@@ -1,14 +1,12 @@
-import { functions, gcsBucket, logger } from '@strive/api/firebase'
+import { gcsBucket, logger, onCall } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
 import fetch from 'node-fetch'
-import { wrapHttpsOnCallHandler } from '@strive/api/sentry'
 
 /**
  * This function is accessible to anyone, go here to change it
  * https://console.cloud.google.com/functions
  */
-export const scrapeMetatags = functions().https.onCall(wrapHttpsOnCallHandler('scrapeMetatags',
-async (data: { url: string }): Promise<ErrorResultResponse> => {
+export const scrapeMetatags = onCall(async (data: { url: string }): Promise<ErrorResultResponse> => {
   const { url } = data
   const { URLMETA_APIKEY, URLMETA_USERNAME } = process.env
 
@@ -42,11 +40,9 @@ async (data: { url: string }): Promise<ErrorResultResponse> => {
     error: '',
     result: meta
   }
-}))
+})
 
-export const downloadImageFromURL = functions().https.onCall(wrapHttpsOnCallHandler('downloadImageFromURL',
-async (data: { url: string, storagePath: string }): Promise<ErrorResultResponse> => {
-
+export const downloadImageFromURL = onCall(async (data: { url: string, storagePath: string }): Promise<ErrorResultResponse> => {
   const { url, storagePath } = data
   if (!validURL(url)) return {
     error: 'Not a valid URL',
@@ -66,7 +62,7 @@ async (data: { url: string, storagePath: string }): Promise<ErrorResultResponse>
     error: '',
     result: 'ok'
   }
-}))
+})
 
 function validURL(str: string) {
   const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol

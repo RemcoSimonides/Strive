@@ -3,10 +3,10 @@ import { onDocumentCreate, logger } from '@strive/api/firebase'
 import { sendGoalEventNotification, sendNotificationToUsers, SendOptions } from '../../shared/notification/notification'
 import { getDocument, toDate } from '../../shared/utils'
 
-export const goalEventCreatedHandler = onDocumentCreate(`GoalEvents/{eventId}`, 'goalEventCreatedHandler',
+export const goalEventCreatedHandler = onDocumentCreate(`GoalEvents/{eventId}`,
 async snapshot => {
 
-  const event = toDate<GoalEvent>({ ...snapshot.data(), id: snapshot.id })
+  const event = toDate<GoalEvent>({ ...snapshot.data, id: snapshot.id })
   const notification = createNotificationBase({ ...event, event: event.name })
   const { goalId, userId, supportId } = event
 

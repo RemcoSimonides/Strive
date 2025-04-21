@@ -6,6 +6,16 @@ export interface Affirmations {
   updatedAt?: Date
 }
 
+export function createAffirmation(data: Partial<Affirmations> = {}): Affirmations {
+  return {
+    id: data.id,
+    times: data.times || [],
+    affirmations: data.affirmations || [],
+    createdAt: data.createdAt || new Date(),
+    updatedAt: data.updatedAt || new Date()
+  }
+}
+
 export interface AffirmationSuggestion {
   affirmation: string,
   category: enumAffirmationCategory

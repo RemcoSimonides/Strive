@@ -7,6 +7,15 @@ export interface WheelOfLifeSettings {
   updatedAt: Date
 }
 
+export function createWheelOfLifeSettings(settings: Partial<WheelOfLifeSettings> = {}): WheelOfLifeSettings {
+  return {
+    id: settings.id,
+    interval: settings.interval || 'never',
+    createdAt: settings.createdAt || new Date(),
+    updatedAt: settings.updatedAt || new Date()
+  }
+}
+
 export const aspects = [
   'career',
   'development',

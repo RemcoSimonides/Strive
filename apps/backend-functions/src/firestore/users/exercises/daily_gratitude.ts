@@ -1,14 +1,14 @@
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
-import { DailyGratitude } from '@strive/model'
+import { createDailyGratitude, DailyGratitude } from '@strive/model'
 import { enumWorkerType, ScheduledTaskUserExerciseDailyGratitude } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { upsertScheduledTask, deleteScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
-export const dailyGratitudeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/DailyGratitude`, 'dailyGratitudeCreatedHandler',
-async (snapshot, context) => {
+export const dailyGratitudeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/DailyGratitude`,
+async (snapshot) => {
 
-  const uid = context.params.uid
-  const dailyGratitudeSettings = snapshot.data() as DailyGratitude
+  const uid = snapshot.params.uid
+  const dailyGratitudeSettings = createDailyGratitude(snapshot.data)
   if (!dailyGratitudeSettings?.on) return
 
   // aggregation
@@ -17,12 +17,12 @@ async (snapshot, context) => {
   scheduleScheduledTask(uid, dailyGratitudeSettings)
 })
 
-export const dailyGratitudeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/DailyGratitude`, 'dailyGratitudeChangedHandler',
-async (snapshot, context) => {
+export const dailyGratitudeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/DailyGratitude`,
+async (snapshot) => {
 
-  const uid = context.params.uid
-  const before = snapshot.before.data() as DailyGratitude
-  const after = snapshot.after.data() as DailyGratitude
+  const uid = snapshot.params.uid
+  const before = createDailyGratitude(snapshot.data.before)
+  const after = createDailyGratitude(snapshot.data.after)
 
   if (before.on !== after.on) {
     updateAggregation({ usersGratitudeOn: after.on ? 1 : -1 })
@@ -39,10 +39,10 @@ async (snapshot, context) => {
   }
 })
 
-export const dailyGratitudeDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/DailyGratitude`, 'dailyGratitudeDeleteHandler',
-async (snapshot, context) => {
+export const dailyGratitudeDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/DailyGratitude`,
+async (snapshot) => {
 
-  const { uid } = context.params
+  const { uid } = snapshot.params
 
   deleteScheduledTask(`${uid}dailygratitude`)
 

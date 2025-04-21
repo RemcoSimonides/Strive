@@ -1,12 +1,13 @@
-import { functions, admin, RuntimeOptions } from '@strive/api/firebase'
+import { admin, onRequest } from '@strive/api/firebase'
 import { BigBatch } from './shared/bigbatch'
+import { GlobalOptions } from 'firebase-functions/v2'
 
-const config: RuntimeOptions = {
+const config: GlobalOptions = {
   timeoutSeconds: 540,
-  memory: '1GB',
+  memory: '1GiB',
 }
 
-export const migrate = functions(config).https.onRequest(async (req, res) => {
+export const migrate = onRequest(async (req, res) => {
 
   try {
     const firestore = admin.firestore()
@@ -19,4 +20,4 @@ export const migrate = functions(config).https.onRequest(async (req, res) => {
     console.error(err)
     res.status(400).send('Oh no! ABORT!')
   }
-})
+}, config)

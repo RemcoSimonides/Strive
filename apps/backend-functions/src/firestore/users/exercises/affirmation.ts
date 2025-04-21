@@ -1,15 +1,16 @@
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { enumWorkerType, ScheduledTaskUserExerciseAffirmations } from '../../../shared/scheduled-task/scheduled-task.interface'
-import { Affirmations } from '@strive/model'
+import { createAffirmation } from '@strive/model'
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
+import { toDate } from 'apps/backend-functions/src/shared/utils'
 
-export const affirmationsCreatedHandler = onDocumentCreate(`Users/{userId}/Exercises/Affirmations`, 'affirmationsCreatedHandler',
-async (snapshot, context) => {
+export const affirmationsCreatedHandler = onDocumentCreate(`Users/{userId}/Exercises/Affirmations`,
+async (snapshot) => {
 
-  const uid = context.params.userId
-  const affirmations = snapshot.data() as Affirmations
+  const uid = snapshot.params.userId
+  const affirmations = createAffirmation(toDate({ ...snapshot.data }))
   if (!affirmations) return
   if (affirmations.times.every(time => time === '')) return
 
@@ -28,12 +29,12 @@ async (snapshot, context) => {
 })
 
 
-export const affirmationsChangeHandler = onDocumentUpdate(`Users/{userId}/Exercises/Affirmations`, 'affirmationsChangeHandler',
-async (snapshot, context) => {
+export const affirmationsChangeHandler = onDocumentUpdate(`Users/{userId}/Exercises/Affirmations`,
+async (snapshot) => {
 
-  const before = snapshot.before.data() as Affirmations
-  const after = snapshot.after.data() as Affirmations
-  const uid = context.params.userId
+  const before = createAffirmation(toDate(snapshot.data.before))
+  const after = createAffirmation(toDate(snapshot.data.after))
+  const uid = snapshot.params.userId
 
   const timesBefore = before.times.filter(time => !!time)
   const timesAfter = after.times.filter(time => !!time)
@@ -53,11 +54,11 @@ async (snapshot, context) => {
   updateAggregation({ usersAffirmationsSet: delta })
 })
 
-export const affirmationsDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/Affirmations`, 'affirmationsDeleteHandler',
-async (snapshot, context) => {
+export const affirmationsDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/Affirmations`,
+async (snapshot) => {
 
-  const { uid } = context.params
-  const setting = snapshot.data() as Affirmations
+  const { uid } = snapshot.params
+  const setting = createAffirmation(toDate(snapshot.data))
 
   deleteScheduledTask(`${uid}affirmations`)
 

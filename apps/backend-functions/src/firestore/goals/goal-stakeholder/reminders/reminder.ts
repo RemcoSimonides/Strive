@@ -5,29 +5,29 @@ import { enumWorkerType, ScheduledTaskGoalReminder } from 'apps/backend-function
 import { toDate } from 'apps/backend-functions/src/shared/utils'
 import { addDays, addMonths, addWeeks, Day, nextDay, startOfMonth, addQuarters, startOfQuarter, addYears } from 'date-fns'
 
-export const goalReminderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`, 'reminderCreatedHandler',
-async (snapshot, context) => {
+export const goalReminderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`,
+async (snapshot) => {
 
-  const { goalId, stakeholderId, reminderId } = context.params as { goalId: string, stakeholderId: string, reminderId: string }
-  const reminder = createReminder(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { goalId, stakeholderId, reminderId } = snapshot.params
+  const reminder = createReminder(toDate({ ...snapshot.data, id: snapshot.id }))
 
   await upsertNextReminder(goalId, stakeholderId, reminderId, reminder)
 
 })
 
-export const goalReminderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`, 'reminderChangeHandler',
-async (snapshot, context) => {
+export const goalReminderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`,
+async (snapshot) => {
 
-  const { goalId, stakeholderId, reminderId } = context.params as { goalId: string, stakeholderId: string, reminderId: string }
-  const reminder = createReminder(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
+  const { goalId, stakeholderId, reminderId } = snapshot.params
+  const reminder = createReminder(toDate({ ...snapshot.data.after, id: snapshot.data.after.id }))
 
   await upsertNextReminder(goalId, stakeholderId, reminderId, reminder)
 })
 
-export const goalReminderDeleteHandler = onDocumentDelete(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`, 'reminderDeleteHandler',
-async (snapshot, context) => {
+export const goalReminderDeleteHandler = onDocumentDelete(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`,
+async (snapshot) => {
 
-  const { goalId, reminderId } = context.params as { goalId: string, stakeholderId: string, reminderId: string }
+  const { goalId, reminderId } = snapshot.params
   const id = `${goalId}${reminderId}`
   return deleteScheduledTask(id)
 })

@@ -1,15 +1,15 @@
 import { onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
-import { DearFutureSelf } from '@strive/model'
+import { createDearFutureSelf, DearFutureSelf } from '@strive/model'
 
 import { enumWorkerType, ScheduledTaskUserExerciseDearFutureSelfMessage } from '../../../shared/scheduled-task/scheduled-task.interface'
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
 
-export const dearFutureSelfCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/DearFutureSelf`, 'dearFutureSelfCreatedHandler',
-async (snapshot, context) => {
+export const dearFutureSelfCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/DearFutureSelf`,
+async (snapshot) => {
 
-  const uid = context.params.uid
-  const setting = snapshot.data() as DearFutureSelf
+  const uid = snapshot.params.uid
+  const setting = createDearFutureSelf(snapshot.data)
   if (!setting.messages?.length) return
 
   updateAggregation({ usersFutureLetterSent: 1 })
@@ -17,12 +17,12 @@ async (snapshot, context) => {
   scheduleScheduledTask(uid, setting, 0)
 })
 
-export const dearFutureSelfChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/DearFutureSelf`, 'dearFutureSelfChangedHandler',
-async (snapshot, context) => {
+export const dearFutureSelfChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/DearFutureSelf`,
+async (snapshot) => {
 
-  const uid = context.params.uid
-  const before = snapshot.before.data() as DearFutureSelf
-  const after = snapshot.after.data() as DearFutureSelf
+  const uid = snapshot.params.uid
+  const before = createDearFutureSelf(snapshot.data.before)
+  const after = createDearFutureSelf(snapshot.data.after)
 
   updateAggregation({ usersFutureLetterSent: after.messages.length - before.messages.length })
   if (before.messages.length >= after.messages.length) return
@@ -31,11 +31,11 @@ async (snapshot, context) => {
   scheduleScheduledTask(uid, after, index)
 })
 
-export const dearFutureSelfDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/DearFutureSelf`, 'dearFutureSelfDeleteHandler',
-async (snapshot, context) => {
+export const dearFutureSelfDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/DearFutureSelf`,
+async (snapshot) => {
 
-  const setting = snapshot.data() as DearFutureSelf
-  const { uid } = context.params
+  const setting = createDearFutureSelf(snapshot.data)
+  const { uid } = snapshot.params
 
   setting.messages.forEach((message, index) => {
     deleteScheduledTask(`${uid}dearfutureself${index}`)

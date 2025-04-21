@@ -1,4 +1,4 @@
-import { db, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
+import { db, getRef, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 
 import { Goal, createGoalStakeholder, GoalStakeholder, createGoalSource, createAggregation, createNotificationBase } from '@strive/model'
 import { toDate } from '../../../shared/utils'
@@ -9,11 +9,11 @@ import { updateAggregation } from '../../../shared/aggregation/aggregation'
 import { sendNotificationToUsers } from 'apps/backend-functions/src/shared/notification/notification'
 
 
-export const goalStakeholderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderCreatedHandler',
-async (snapshot, context) => {
+export const goalStakeholderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}`,
+async (snapshot) => {
 
-  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
-  const { goalId } = context.params
+  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data, id: snapshot.id }))
+  const { goalId } = snapshot.params
 
   const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
@@ -36,12 +36,12 @@ async (snapshot, context) => {
   handleAggregation(undefined, stakeholder)
 })
 
-export const goalStakeholderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderChangeHandler',
-async (snapshot, context) => {
+export const goalStakeholderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStakeholders/{stakeholderId}`,
+async (snapshot) => {
 
-  const before = createGoalStakeholder(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
-  const after = createGoalStakeholder(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
-  const { goalId } = context.params
+  const before = createGoalStakeholder(toDate({ ...snapshot.data.before, id: snapshot.id }))
+  const after = createGoalStakeholder(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const { goalId, stakeholderId } = snapshot.params
 
   const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
@@ -66,15 +66,16 @@ async (snapshot, context) => {
   }
 
   if (!after.isAdmin && !after.isAchiever && !after.isSupporter && !after.isSpectator && !after.hasOpenRequestToJoin && !after.hasInviteToJoin) {
-    snapshot.after.ref.delete()
+    const ref = getRef(`Goals/${goalId}/GStakeholders/${stakeholderId}`)
+    ref.delete()
   }
 })
 
-export const goalStakeholderDeletedHandler = onDocumentDelete(`Goals/{goalId}/GStakeholders/{stakeholderId}`, 'goalStakeholderDeletedHandler',
-async (snapshot, context) => {
+export const goalStakeholderDeletedHandler = onDocumentDelete(`Goals/{goalId}/GStakeholders/{stakeholderId}`,
+async (snapshot) => {
 
-  const { goalId } = context.params
-  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { goalId } = snapshot.params
+  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data, id: snapshot.id }))
 
   // aggregation
   handleAggregation(stakeholder, undefined)

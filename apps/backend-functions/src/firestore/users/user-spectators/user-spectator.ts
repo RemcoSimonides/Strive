@@ -4,11 +4,11 @@ import { toDate } from '../../../shared/utils'
 import { sendNotificationToUsers } from '../../../shared/notification/notification'
 import { createNotificationBase, createSpectator, Spectator } from '@strive/model'
 
-export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorCreatedHandler',
-  async (snapshot, context) => {
+export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`,
+  async (snapshot) => {
 
-    const spectator = createSpectator(toDate({ ...snapshot.data(), id: snapshot.id }))
-    const { uidToBeSpectated, uidSpectator } = context.params
+    const spectator = createSpectator(toDate({ ...snapshot.data, id: snapshot.id }))
+    const { uidToBeSpectated, uidSpectator } = snapshot.params
 
     handleSpectatorNotifications(createSpectator(), spectator)
 
@@ -19,12 +19,12 @@ export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpect
   }
 )
 
-export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorChangeHandler',
-  async (snapshot, context) => {
+export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`,
+  async (snapshot) => {
 
-    const before = createSpectator(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
-    const after = createSpectator(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
-    const { uidToBeSpectated, uidSpectator } = context.params
+    const before = createSpectator(toDate({ ...snapshot.data.before, id: snapshot.id }))
+    const after = createSpectator(toDate({ ...snapshot.data.after, id: snapshot.id }))
+    const { uidToBeSpectated, uidSpectator } = snapshot.params
 
     if (before.isSpectator !== after.isSpectator) {
       const delta = after.isSpectator ? 1 : -1
@@ -34,11 +34,11 @@ export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpecta
   }
 )
 
-export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`, 'userSpectatorDeleteHandler',
-  async (snapshot, context) => {
+export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`,
+  async (snapshot) => {
 
-    const { uidToBeSpectated, uidSpectator} = context.params
-    const spectator = createSpectator(toDate({ ...snapshot.data(), id: snapshot.id }))
+    const { uidToBeSpectated, uidSpectator} = snapshot.params
+    const spectator = createSpectator(toDate({ ...snapshot.data, id: snapshot.id }))
 
     if (!spectator.isSpectator) return
 

@@ -1,9 +1,8 @@
-import { db, functions, logger } from '@strive/api/firebase'
+import { db, logger, onCall, onRequest } from '@strive/api/firebase'
 import { ErrorResultResponse, toDate } from '../shared/utils'
-import { wrapHttpsOnCallHandler, wrapHttpsOnRequestHandler } from '@strive/api/sentry'
 import fetch from 'node-fetch'
 import { ActivityResponse, ActivityType, createStravaIntegration } from 'libs/model/src/lib/strava'
-import { Personal, createPersonal, createPost } from '@strive/model'
+import { createPersonal, createPost } from '@strive/model'
 
 // https://developers.strava.com/docs/webhooks/
 interface StravaEvent {
@@ -16,7 +15,7 @@ interface StravaEvent {
   updates: unknown
 }
 
-export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHandler('listenToStrava', async (req, res) => {
+export const listenToStrava = onRequest(async (req, res) => {
   const challenge = req.query['hub.challenge']
 
   if (challenge) {
@@ -89,13 +88,13 @@ export const listenToStrava = functions().https.onRequest(wrapHttpsOnRequestHand
     })
     doc.ref.update({ ...updatedStravaIntegration })
   }
-}))
+})
 
 /**
  * This function is accessible to anyone, go here to change it
  * https://console.cloud.google.com/functions
  */
-export const initialiseStrava = functions().https.onCall(wrapHttpsOnCallHandler('initialiseStrava',
+export const initialiseStrava = onCall(
 async (data: { authorizationCode: string, refreshToken: string, goalId: string, activityTypes: ActivityType[], after: number | undefined }, context): Promise<ErrorResultResponse> => {
 
   logger.log('parameters: ', data)
@@ -195,7 +194,7 @@ async (data: { authorizationCode: string, refreshToken: string, goalId: string, 
     }
   }
 
-}))
+})
 
 async function fetchToken(code: string): Promise<{ access_token: string, refresh_token: string, athlete: { id: string }}> {
   const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = process.env

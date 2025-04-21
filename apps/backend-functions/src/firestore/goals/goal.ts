@@ -1,4 +1,4 @@
-import { db, logger, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp } from '@strive/api/firebase'
+import { db, logger, gcsBucket, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, serverTimestamp, getRef } from '@strive/api/firebase'
 import { isEqual, isFuture } from 'date-fns'
 
 import {
@@ -24,18 +24,20 @@ import { updateAggregation } from '../../shared/aggregation/aggregation'
 import { categorizeGoal } from '../../shared/ask-open-ai/categorize'
 
 
-export const goalCreatedHandler = onDocumentCreate(`Goals/{goalId}`, 'goalCreatedHandler',
+export const goalCreatedHandler = onDocumentCreate(`Goals/{goalId}`,
 async snapshot => {
 
-  const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const goal = createGoal(toDate({ ...snapshot.data, id: snapshot.id }))
   const goalId = snapshot.id
 
   // event
   const source = createGoalSource({ goalId, userId: goal.updatedBy })
   const event = goal.status === 'pending' ?  'goalCreated' : 'goalCreatedFinished'
+  const ref = getRef(`Goals/${goalId}`)
+
   addGoalEvent(event, source)
   addStoryItem(event, source)
-  categorizeGoal(goal).then(categories => snapshot.ref.update({ categories }))
+  categorizeGoal(goal).then(categories => ref.update({ categories }))
 
   // aggregation
   handleAggregation(undefined, goal)
@@ -63,10 +65,10 @@ async snapshot => {
   }
 })
 
-export const goalDeletedHandler = onDocumentDelete(`Goals/{goalId}`, 'goalDeletedHandler',
+export const goalDeletedHandler = onDocumentDelete(`Goals/{goalId}`,
 async snapshot => {
 
-  const goal = createGoal(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const goal = createGoal(toDate({ ...snapshot.data, id: snapshot.id }))
 
   // aggregation
   handleAggregation(goal, undefined)
@@ -103,12 +105,13 @@ async snapshot => {
   }
 })
 
-export const goalChangeHandler = onDocumentUpdate(`Goals/{goalId}`, 'goalChangeHandler',
-async (snapshot, context) => {
+export const goalChangeHandler = onDocumentUpdate(`Goals/{goalId}`,
+async (snapshot) => {
 
-  const goalId = context.params.goalId
-  const before = createGoal(toDate({ ...snapshot.before.data(), id: goalId }))
-  const after = createGoal(toDate({ ...snapshot.after.data(), id: goalId }))
+  const goalId = snapshot.params.goalId
+  const before = createGoal(toDate({ ...snapshot.data.before, id: goalId }))
+  const after = createGoal(toDate({ ...snapshot.data.after, id: goalId }))
+  const ref = getRef(`Goals/${goalId}`)
 
   const publicityChanged = before.publicity !== after.publicity
   const becamePublic = before.publicity !== 'public' && after.publicity === 'public'
@@ -132,7 +135,7 @@ async (snapshot, context) => {
 
     supportsNeedDecision(after, becameFinishedSuccessfully)
 
-    snapshot.after.ref.update({
+    ref.update({
       tasksCompleted: increment(1)
     })
   }

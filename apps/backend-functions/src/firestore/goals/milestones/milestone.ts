@@ -9,11 +9,11 @@ import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { addStoryItem } from '../../../shared/goal-story/story'
 import { isEqual } from 'date-fns'
 
-export const milestoneCreatedhandler = onDocumentCreate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneCreatedhandler',
-async (snapshot, context) => {
+export const milestoneCreatedhandler = onDocumentCreate(`Goals/{goalId}/Milestones/{milestoneId}`,
+async (snapshot) => {
 
-  const milestone = createMilestone(toDate({ ...snapshot.data(), id: snapshot.id }))
-  const { goalId, milestoneId } = context.params
+  const milestone = createMilestone(toDate({ ...snapshot.data, id: snapshot.id }))
+  const { goalId, milestoneId } = snapshot.params
 
   // events
   const source = createGoalSource({ goalId, userId: milestone.updatedBy })
@@ -35,21 +35,21 @@ async (snapshot, context) => {
   }
 })
 
-export const milestoneDeletedHandler = onDocumentDelete(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneDeletedHandler',
-async (snapshot, context) => {
+export const milestoneDeletedHandler = onDocumentDelete(`Goals/{goalId}/Milestones/{milestoneId}`,
+async (snapshot) => {
 
-  const { goalId, milestoneId } = context.params
-  const milestone = createMilestone(toDate({ ...snapshot.data(), id: snapshot.id }))
+  const { goalId, milestoneId } = snapshot.params
+  const milestone = createMilestone(toDate({ ...snapshot.data, id: snapshot.id }))
 
   milestoneDeleted(goalId, milestoneId, milestone)
 })
 
-export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`, 'milestoneChangeHandler',
-async (snapshot, context) => {
+export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`,
+async (snapshot) => {
 
-  const before = createMilestone(toDate({ ...snapshot.before.data(), id: snapshot.before.id }))
-  const after = createMilestone(toDate({ ...snapshot.after.data(), id: snapshot.after.id }))
-  const { goalId, milestoneId } = context.params
+  const before = createMilestone(toDate({ ...snapshot.data.before, id: snapshot.id }))
+  const after = createMilestone(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const { goalId, milestoneId } = snapshot.params
 
   // events
   await handleMilestoneEvents(before, after, goalId)

@@ -1,4 +1,4 @@
-import { WheelOfLifeSettings } from '@strive/model'
+import { createWheelOfLifeSettings, WheelOfLifeSettings } from '@strive/model'
 import { logger, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
 import { deleteScheduledTask, upsertScheduledTask } from '../../../shared/scheduled-task/scheduled-task'
@@ -6,30 +6,30 @@ import { enumWorkerType, ScheduledTaskUserExerciseWheelOfLife } from '../../../s
 import { addMonths, addQuarters, addWeeks, addYears } from 'date-fns'
 
 
-export const wheelOfLifeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/WheelOfLife`, 'wheelOfLifeCreatedHandler',
-async (snapshot, context) => {
+export const wheelOfLifeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/WheelOfLife`,
+async (snapshot) => {
 
-  const { uid } = context.params
-  const wheelOfLifeSettings = snapshot.data() as WheelOfLifeSettings
+  const { uid } = snapshot.params
+  const wheelOfLifeSettings = createWheelOfLifeSettings(snapshot.data)
 
   if (wheelOfLifeSettings.interval === 'never') return
 
   scheduleScheduledTask(uid, wheelOfLifeSettings)
 })
 
-export const wheelOfLifeEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/WheelOfLife/Entries/{entryId}`, 'wheelOfLifeEntryCreatedHandler',
+export const wheelOfLifeEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises/WheelOfLife/Entries/{entryId}`,
 async () => {
 
   updateAggregation({ usersWheelOfLifeEntryAdded: 1 })
 
 })
 
-export const wheelOfLifeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/WheelOfLife`, 'wheelOfLifeChangedHandler',
-async (snapshot, context) => {
+export const wheelOfLifeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises/WheelOfLife`,
+async (snapshot) => {
 
-  const { uid } = context.params
-  const before = snapshot.before.data() as WheelOfLifeSettings
-  const after = snapshot.after.data() as WheelOfLifeSettings
+  const { uid } = snapshot.params
+  const before = createWheelOfLifeSettings(snapshot.data.before)
+  const after = createWheelOfLifeSettings(snapshot.data.after)
 
   if (before.interval === after.interval) return
 
@@ -41,10 +41,10 @@ async (snapshot, context) => {
   scheduleScheduledTask(uid, after)
 })
 
-export const wheelOfLifeDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/WheelOfLife`, 'wheelOfLifeDeleteHandler',
-async (snapshot, context) => {
+export const wheelOfLifeDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/WheelOfLife`,
+async (snapshot) => {
 
-  const { uid } = context.params
+  const { uid } = snapshot.params
 
   deleteScheduledTask(`${uid}wheeloflife`)
 })
