@@ -1,8 +1,16 @@
 import { algoliasearch } from 'algoliasearch'
 import { environment } from '@env'
 import { logger } from '@strive/api/firebase'
+import { defineSecret } from 'firebase-functions/params'
+import { onInit } from 'firebase-functions/core'
 
-const client = algoliasearch(process.env.ALGOLIA_APPID, process.env.ALGOLIA_APIKEY)
+const algoliaAppId = defineSecret('ALGOLIA_APPID')
+const algoliaApiKey = defineSecret('ALGOLIA_APIKEY')
+let client = undefined
+
+onInit(() => {
+  client = algoliasearch(algoliaAppId.value(), algoliaApiKey.value())
+})
 
 export const addToAlgolia = async (indexName: AlgoliaIndex, objectID: string, data): Promise<void> => {
   await client.saveObject({
