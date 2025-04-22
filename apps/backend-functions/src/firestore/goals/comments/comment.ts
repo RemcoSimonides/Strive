@@ -16,7 +16,7 @@ const askOpenAIConfig: AskOpenAIConfig = {
 export const commentCreatedHandler = onDocumentCreate(`Goals/{goalId}/Comments/{commentId}`,
 async (snapshot) =>{
 
-  const comment = createComment(toDate({ ...snapshot.data, id: snapshot.id }))
+  const comment = createComment(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const { goalId } = snapshot.params
   const { userId } = comment
 

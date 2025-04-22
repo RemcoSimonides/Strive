@@ -10,7 +10,7 @@ export const userCreatedHandler = onDocumentCreate(`Users/{uid}`,
 async (snapshot) => {
 
   const uid = snapshot.id
-  const user = createUser({ ...snapshot.data, uid: snapshot.id })
+  const user = createUser({ ...snapshot.data.data(), uid: snapshot.id })
 
   // aggregation
   updateAggregation({ usersCreated: 1 })
@@ -25,7 +25,7 @@ export const userDeletedHandler = onDocumentDelete(`Users/{uid}`,
 async (snapshot) => {
 
   const uid = snapshot.id
-  const user = createUser(toDate({ ...snapshot.data, id: snapshot.id }))
+  const user = createUser(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   await deleteFromAlgolia('user', uid)
 
   // aggregation
@@ -70,8 +70,8 @@ async (snapshot) => {
 
   const uid = defineString('uid').value()
 
-  const before = createUser({ ...snapshot.data.before, uid: snapshot.data.before.id })
-  const after = createUser({ ...snapshot.data.after, uid: snapshot.data.after.id })
+  const before = createUser({ ...snapshot.data.before.data(), uid: snapshot.id })
+  const after = createUser({ ...snapshot.data.after.data(), uid: snapshot.id })
 
 
   if (before.username !== after.username || before.photoURL !== after.photoURL) {

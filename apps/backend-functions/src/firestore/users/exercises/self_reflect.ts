@@ -11,7 +11,7 @@ export const selfReflectSettingsCreatedHandler = onDocumentCreate(`Users/{uid}/E
 async (snapshot) => {
 
   const { uid } = snapshot.params
-  const settings = createSelfReflectSettings(toDate({ ...snapshot.data, id: snapshot.id }))
+  const settings = createSelfReflectSettings(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   if (settings.preferredDay === 'never') return
 
@@ -22,8 +22,8 @@ export const selfReflectSettingsChangeHandler = onDocumentUpdate(`Users/{uid}/Ex
 async (snapshot) => {
 
   const { uid } = snapshot.params
-  const before = createSelfReflectSettings(toDate({ ...snapshot.data.before, id: snapshot.id }))
-  const after = createSelfReflectSettings(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const before = createSelfReflectSettings(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
+  const after = createSelfReflectSettings(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
 
   const preferredDayChanged = before.preferredDay !== after.preferredDay
   const preferredTimeChanged = before.preferredTime !== after.preferredTime
@@ -55,7 +55,7 @@ export const selfReflectEntryCreatedHandler = onDocumentCreate(`Users/{uid}/Exer
 async (snapshot) => {
 
   const { uid } = snapshot.params
-  const entry = createSelfReflectEntry(toDate({ ...snapshot.data, id: snapshot.id }))
+  const entry = createSelfReflectEntry(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   const promises = Promise.all([
     saveGratitude(uid, entry),
@@ -72,7 +72,7 @@ export const selfReflectEntryChangeHandler = onDocumentUpdate(`Users/{uid}/Exerc
 async (snapshot) => {
 
   const { uid } = snapshot.params as { uid: string }
-  const after = createSelfReflectEntry(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const after = createSelfReflectEntry(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
 
   const promises = Promise.all([
     // saveGratitude(uid, after)  // unable to update gratitudes as I don't know which gratitude has been updated and just adding them isn't the solution

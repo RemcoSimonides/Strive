@@ -9,7 +9,7 @@ export const dearFutureSelfCreatedHandler = onDocumentCreate(`Users/{uid}/Exerci
 async (snapshot) => {
 
   const uid = snapshot.params.uid
-  const setting = createDearFutureSelf(snapshot.data)
+  const setting = createDearFutureSelf(snapshot.data.data())
   if (!setting.messages?.length) return
 
   updateAggregation({ usersFutureLetterSent: 1 })
@@ -21,8 +21,8 @@ export const dearFutureSelfChangedHandler = onDocumentUpdate(`Users/{uid}/Exerci
 async (snapshot) => {
 
   const uid = snapshot.params.uid
-  const before = createDearFutureSelf(snapshot.data.before)
-  const after = createDearFutureSelf(snapshot.data.after)
+  const before = createDearFutureSelf(snapshot.data.before.data())
+  const after = createDearFutureSelf(snapshot.data.after.data())
 
   updateAggregation({ usersFutureLetterSent: after.messages.length - before.messages.length })
   if (before.messages.length >= after.messages.length) return
@@ -34,7 +34,7 @@ async (snapshot) => {
 export const dearFutureSelfDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises/DearFutureSelf`,
 async (snapshot) => {
 
-  const setting = createDearFutureSelf(snapshot.data)
+  const setting = createDearFutureSelf(snapshot.data.data())
   const { uid } = snapshot.params
 
   setting.messages.forEach((message, index) => {

@@ -7,7 +7,7 @@ import { createNotificationBase, createSpectator, Spectator } from '@strive/mode
 export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`,
   async (snapshot) => {
 
-    const spectator = createSpectator(toDate({ ...snapshot.data, id: snapshot.id }))
+    const spectator = createSpectator(toDate({ ...snapshot.data.data(), id: snapshot.id }))
     const { uidToBeSpectated, uidSpectator } = snapshot.params
 
     handleSpectatorNotifications(createSpectator(), spectator)
@@ -22,8 +22,8 @@ export const userSpectatorCreatedHandler = onDocumentCreate(`Users/{uidToBeSpect
 export const userSpectatorChangeHandler = onDocumentUpdate(`Users/{uidToBeSpectated}/Spectators/{uidSpectator}`,
   async (snapshot) => {
 
-    const before = createSpectator(toDate({ ...snapshot.data.before, id: snapshot.id }))
-    const after = createSpectator(toDate({ ...snapshot.data.after, id: snapshot.id }))
+    const before = createSpectator(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
+    const after = createSpectator(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
     const { uidToBeSpectated, uidSpectator } = snapshot.params
 
     if (before.isSpectator !== after.isSpectator) {
@@ -38,7 +38,7 @@ export const userSpectatorDeleteHandler = onDocumentDelete(`Users/{uidToBeSpecta
   async (snapshot) => {
 
     const { uidToBeSpectated, uidSpectator} = snapshot.params
-    const spectator = createSpectator(toDate({ ...snapshot.data, id: snapshot.id }))
+    const spectator = createSpectator(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
     if (!spectator.isSpectator) return
 

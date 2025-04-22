@@ -1,4 +1,4 @@
-import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
+import { db, serverTimestamp, increment, onDocumentCreate, onDocumentDelete, onDocumentUpdate, logger } from '@strive/api/firebase'
 
 import { Goal, createMilestone, Milestone, createGoalSource, SupportBase, createSupportBase } from '@strive/model'
 
@@ -12,7 +12,7 @@ import { isEqual } from 'date-fns'
 export const milestoneCreatedhandler = onDocumentCreate(`Goals/{goalId}/Milestones/{milestoneId}`,
 async (snapshot) => {
 
-  const milestone = createMilestone(toDate({ ...snapshot.data, id: snapshot.id }))
+  const milestone = createMilestone(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const { goalId, milestoneId } = snapshot.params
 
   // events
@@ -39,7 +39,7 @@ export const milestoneDeletedHandler = onDocumentDelete(`Goals/{goalId}/Mileston
 async (snapshot) => {
 
   const { goalId, milestoneId } = snapshot.params
-  const milestone = createMilestone(toDate({ ...snapshot.data, id: snapshot.id }))
+  const milestone = createMilestone(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   milestoneDeleted(goalId, milestoneId, milestone)
 })
@@ -47,8 +47,8 @@ async (snapshot) => {
 export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`,
 async (snapshot) => {
 
-  const before = createMilestone(toDate({ ...snapshot.data.before, id: snapshot.id }))
-  const after = createMilestone(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const before = createMilestone(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
+  const after = createMilestone(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
   const { goalId, milestoneId } = snapshot.params
 
   // events

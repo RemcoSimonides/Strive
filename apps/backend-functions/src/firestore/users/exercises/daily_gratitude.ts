@@ -8,7 +8,7 @@ export const dailyGratitudeCreatedHandler = onDocumentCreate(`Users/{uid}/Exerci
 async (snapshot) => {
 
   const uid = snapshot.params.uid
-  const dailyGratitudeSettings = createDailyGratitude(snapshot.data)
+  const dailyGratitudeSettings = createDailyGratitude(snapshot.data.data())
   if (!dailyGratitudeSettings?.on) return
 
   // aggregation
@@ -21,8 +21,8 @@ export const dailyGratitudeChangedHandler = onDocumentUpdate(`Users/{uid}/Exerci
 async (snapshot) => {
 
   const uid = snapshot.params.uid
-  const before = createDailyGratitude(snapshot.data.before)
-  const after = createDailyGratitude(snapshot.data.after)
+  const before = createDailyGratitude(snapshot.data.before.data())
+  const after = createDailyGratitude(snapshot.data.after.data())
 
   if (before.on !== after.on) {
     updateAggregation({ usersGratitudeOn: after.on ? 1 : -1 })

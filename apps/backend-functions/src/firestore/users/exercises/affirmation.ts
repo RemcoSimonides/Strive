@@ -4,13 +4,13 @@ import { enumWorkerType, ScheduledTaskUserExerciseAffirmations } from '../../../
 import { createAffirmation } from '@strive/model'
 import { scheduleNextAffirmation, getNextAffirmationDate } from '../../../pubsub/user-exercises/affirmations'
 import { updateAggregation } from '../../../shared/aggregation/aggregation'
-import { toDate } from 'apps/backend-functions/src/shared/utils'
+import { toDate } from '../../../shared/utils'
 
 export const affirmationsCreatedHandler = onDocumentCreate(`Users/{userId}/Exercises/Affirmations`,
 async (snapshot) => {
 
   const uid = snapshot.params.userId
-  const affirmations = createAffirmation(toDate({ ...snapshot.data }))
+  const affirmations = createAffirmation(toDate({ ...snapshot.data.data() }))
   if (!affirmations) return
   if (affirmations.times.every(time => time === '')) return
 
@@ -32,8 +32,8 @@ async (snapshot) => {
 export const affirmationsChangeHandler = onDocumentUpdate(`Users/{userId}/Exercises/Affirmations`,
 async (snapshot) => {
 
-  const before = createAffirmation(toDate(snapshot.data.before))
-  const after = createAffirmation(toDate(snapshot.data.after))
+  const before = createAffirmation(toDate(snapshot.data.before.data()))
+  const after = createAffirmation(toDate(snapshot.data.after.data()))
   const uid = snapshot.params.userId
 
   const timesBefore = before.times.filter(time => !!time)
@@ -58,7 +58,7 @@ export const affirmationsDeleteHandler = onDocumentDelete(`Users/{uid}/Exercises
 async (snapshot) => {
 
   const { uid } = snapshot.params
-  const setting = createAffirmation(toDate(snapshot.data))
+  const setting = createAffirmation(toDate(snapshot.data.data()))
 
   deleteScheduledTask(`${uid}affirmations`)
 

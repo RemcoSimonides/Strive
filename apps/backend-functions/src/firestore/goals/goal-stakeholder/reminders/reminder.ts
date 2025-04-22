@@ -1,15 +1,15 @@
 import { logger, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
 import { createReminder, DayTypes, Reminder } from '@strive/model'
-import { deleteScheduledTask, upsertScheduledTask } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task'
-import { enumWorkerType, ScheduledTaskGoalReminder } from 'apps/backend-functions/src/shared/scheduled-task/scheduled-task.interface'
-import { toDate } from 'apps/backend-functions/src/shared/utils'
+import { deleteScheduledTask, upsertScheduledTask } from '../../../../shared/scheduled-task/scheduled-task'
+import { enumWorkerType, ScheduledTaskGoalReminder } from '../../../../shared/scheduled-task/scheduled-task.interface'
+import { toDate } from '../../../../shared/utils'
 import { addDays, addMonths, addWeeks, Day, nextDay, startOfMonth, addQuarters, startOfQuarter, addYears } from 'date-fns'
 
 export const goalReminderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}/Reminders/{reminderId}`,
 async (snapshot) => {
 
   const { goalId, stakeholderId, reminderId } = snapshot.params
-  const reminder = createReminder(toDate({ ...snapshot.data, id: snapshot.id }))
+  const reminder = createReminder(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   await upsertNextReminder(goalId, stakeholderId, reminderId, reminder)
 
@@ -19,7 +19,7 @@ export const goalReminderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStake
 async (snapshot) => {
 
   const { goalId, stakeholderId, reminderId } = snapshot.params
-  const reminder = createReminder(toDate({ ...snapshot.data.after, id: snapshot.data.after.id }))
+  const reminder = createReminder(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
 
   await upsertNextReminder(goalId, stakeholderId, reminderId, reminder)
 })

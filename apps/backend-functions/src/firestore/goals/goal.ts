@@ -27,7 +27,7 @@ import { categorizeGoal } from '../../shared/ask-open-ai/categorize'
 export const goalCreatedHandler = onDocumentCreate(`Goals/{goalId}`,
 async snapshot => {
 
-  const goal = createGoal(toDate({ ...snapshot.data, id: snapshot.id }))
+  const goal = createGoal(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const goalId = snapshot.id
 
   // event
@@ -68,7 +68,7 @@ async snapshot => {
 export const goalDeletedHandler = onDocumentDelete(`Goals/{goalId}`,
 async snapshot => {
 
-  const goal = createGoal(toDate({ ...snapshot.data, id: snapshot.id }))
+  const goal = createGoal(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   // aggregation
   handleAggregation(goal, undefined)
@@ -109,8 +109,8 @@ export const goalChangeHandler = onDocumentUpdate(`Goals/{goalId}`,
 async (snapshot) => {
 
   const goalId = snapshot.params.goalId
-  const before = createGoal(toDate({ ...snapshot.data.before, id: goalId }))
-  const after = createGoal(toDate({ ...snapshot.data.after, id: goalId }))
+  const before = createGoal(toDate({ ...snapshot.data.before.data(), id: goalId }))
+  const after = createGoal(toDate({ ...snapshot.data.after.data(), id: goalId }))
   const ref = getRef(`Goals/${goalId}`)
 
   const publicityChanged = before.publicity !== after.publicity

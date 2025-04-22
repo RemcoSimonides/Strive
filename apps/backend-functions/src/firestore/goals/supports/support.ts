@@ -21,7 +21,7 @@ const { serverTimestamp } = admin.firestore.FieldValue
 export const supportCreatedHandler = onDocumentCreate(`Goals/{goalId}/Supports/{supportId}`,
 async (snapshot) => {
 
-  const support = createSupportBase(toDate({ ...snapshot.data, id: snapshot.id }))
+  const support = createSupportBase(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const goalId = snapshot.params.goalId
 
   // events
@@ -69,8 +69,8 @@ async (snapshot) => {
 export const supportChangeHandler = onDocumentUpdate(`Goals/{goalId}/Supports/{supportId}`,
 async snapshot =>  {
 
-  const before = createSupportBase(toDate({ ...snapshot.data.before, id: snapshot.id }))
-  const after = createSupportBase(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const before = createSupportBase(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
+  const after = createSupportBase(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
 
   // aggregation
   handleAggregation(before, after)
@@ -139,7 +139,7 @@ async snapshot =>  {
 export const supportDeletedHandler = onDocumentDelete(`Goals/{goalId}/Supports/{supportId}`,
 async (snapshot) => {
 
-  const support = createSupportBase(toDate({ ...snapshot.data, id: snapshot.id }))
+  const support = createSupportBase(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   // aggregation
   handleAggregation(support, undefined)

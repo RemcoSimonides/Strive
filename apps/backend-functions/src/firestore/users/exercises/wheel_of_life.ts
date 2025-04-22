@@ -10,7 +10,7 @@ export const wheelOfLifeCreatedHandler = onDocumentCreate(`Users/{uid}/Exercises
 async (snapshot) => {
 
   const { uid } = snapshot.params
-  const wheelOfLifeSettings = createWheelOfLifeSettings(snapshot.data)
+  const wheelOfLifeSettings = createWheelOfLifeSettings(snapshot.data.data())
 
   if (wheelOfLifeSettings.interval === 'never') return
 
@@ -28,8 +28,8 @@ export const wheelOfLifeChangedHandler = onDocumentUpdate(`Users/{uid}/Exercises
 async (snapshot) => {
 
   const { uid } = snapshot.params
-  const before = createWheelOfLifeSettings(snapshot.data.before)
-  const after = createWheelOfLifeSettings(snapshot.data.after)
+  const before = createWheelOfLifeSettings(snapshot.data.before.data())
+  const after = createWheelOfLifeSettings(snapshot.data.after.data())
 
   if (before.interval === after.interval) return
 

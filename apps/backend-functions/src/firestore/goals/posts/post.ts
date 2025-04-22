@@ -8,7 +8,7 @@ import { isEqual } from 'date-fns'
 export const postCreatedHandler = onDocumentCreate(`Goals/{goalId}/Posts/{postId}`,
 async (snapshot) => {
 
-  const post = createPost(toDate({ ...snapshot.data, id: snapshot.id }))
+  const post = createPost(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const { postId } = snapshot.params
 
   const source = createGoalSource({
@@ -25,8 +25,8 @@ export const postChangeHandler = onDocumentUpdate(`Goals/{goalId}/Posts/{postId}
 async (snapshot) => {
 
   const { goalId } = snapshot.params
-  const before = createPost(toDate({ ...snapshot.data.before, id: snapshot.id }))
-  const after = createPost(toDate({ ...snapshot.data.after, id: snapshot.id }))
+  const before = createPost(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
+  const after = createPost(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
 
   if (!isEqual(before.date, after.date)) {
     db.doc(`Goals/${goalId}/Story/${after.id}`).update({ date: after.date })
@@ -36,7 +36,7 @@ async (snapshot) => {
 export const postDeletedHandler = onDocumentDelete(`Goals/{goalId}/Posts/{postId}`,
 async (snapshot) => {
   const { goalId, postId } = snapshot.params
-  const post = createPost(toDate({ ...snapshot.data, id: snapshot.id }))
+  const post = createPost(toDate({ ...snapshot.data.data(), id: snapshot.id }))
 
   const mediaRefs = post.mediaIds.map(mediaId => `Goals/${goalId}/Media/${mediaId}`)
   const batch = db.batch()
