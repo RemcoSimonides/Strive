@@ -1,4 +1,4 @@
-import { algoliasearch } from 'algoliasearch'
+import { Algoliasearch, algoliasearch } from 'algoliasearch'
 import { environment } from '@env'
 import { logger } from '@strive/api/firebase'
 import { defineSecret } from 'firebase-functions/params'
@@ -6,28 +6,24 @@ import { onInit } from 'firebase-functions/core'
 
 const algoliaAppId = defineSecret('ALGOLIA_APPID')
 const algoliaApiKey = defineSecret('ALGOLIA_APIKEY')
-let client = undefined
+let client: Algoliasearch = undefined
 
 onInit(() => {
   client = algoliasearch(algoliaAppId.value(), algoliaApiKey.value())
 })
 
 export const addToAlgolia = async (indexName: AlgoliaIndex, objectID: string, data): Promise<void> => {
-  await client.saveObject({
-    indexName,
-    objectID,
-    ...data
-  }).catch((err) => {
+  const body = { objectID, ...data }
+  await client.saveObject({indexName, body}).catch((err) => {
     if (err) logger.error('error adding algolia object: ', err)
   })
-
 }
 
-export const updateAlgoliaObject = async (indexName: AlgoliaIndex, objectID: string, data): Promise<void> => {
+export const updateAlgoliaObject = async (indexName: AlgoliaIndex, objectID: string, attributesToUpdate): Promise<void> => {
   client.partialUpdateObject({
     indexName,
     objectID,
-    ...data
+    attributesToUpdate
   }).catch((err) => {
     if (err) logger.error('error updating algolia object', err)
   })
