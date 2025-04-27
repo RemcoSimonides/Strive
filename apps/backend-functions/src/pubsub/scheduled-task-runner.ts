@@ -72,7 +72,7 @@ export const scheduledTasksRunner = onSchedule('every 1 minutes', async () => {
 
   // Execute all jobs concurrently
   return await Promise.all(jobs)
-}, { memory: '2GiB' } );
+}, { memory: '2GiB', region: 'europe-west1' } );
 
 // Optional interface, all worker functions should return Promise.
 interface IWorkers {

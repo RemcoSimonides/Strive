@@ -66,7 +66,7 @@ async () => {
   }
 
   return Promise.all(promises)
-})
+}, { region: 'europe-west1' })
 
 async function getStakeholders(uid: string) {
   const stakeholderSnaps = await db.collectionGroup(`GStakeholders`).where(`uid`, `==`, uid).where('isAchiever', '==', true).orderBy('createdAt', 'desc').get()

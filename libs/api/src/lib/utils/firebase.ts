@@ -41,6 +41,11 @@ const secrets = [
 	defineSecret('STRAVA_CLIENT_SECRET')
 ]
 
+const defaultOptions: GlobalOptions = {
+	secrets,
+	region: 'europe-west4',
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FunctionType = (...args: any[]) => any
 type FirestoreOnCreateHandler = Parameters<typeof onDocumentCreated>[1]
@@ -48,32 +53,32 @@ type FirestoreOnUpdateHandler = Parameters<typeof onDocumentUpdated>[1]
 type FirestoreOnDeleteHandler = Parameters<typeof onDocumentDeleted>[1]
 
 export function onRequest(fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({ secrets, ...options });
+	setGlobalOptions({ ...defaultOptions, ...options });
 	return _onRequest({ secrets }, wrap(fn))
 }
 
 export function onCall(fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({ secrets, ...options });
+	setGlobalOptions({ ...defaultOptions, ...options });
 	return _onCall({ secrets }, wrap(fn))
 }
 
 export function onSchedule(schedule: string, fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({ secrets, ...options });
+	setGlobalOptions({ ...defaultOptions, ...options });
 	return _onSchedule(schedule, wrap(fn))
 }
 
 export function onDocumentCreate(docPath: string, fn: FirestoreOnCreateHandler, options?: GlobalOptions) {
-	setGlobalOptions({ secrets, ...options });
+	setGlobalOptions({ ...defaultOptions, ...options });
 	return onDocumentCreated(docPath, wrap<FirestoreOnCreateHandler>(fn))
 }
 
 export function onDocumentUpdate(docPath: string, fn: FirestoreOnUpdateHandler, options?: GlobalOptions) {
-	setGlobalOptions({ secrets, ...options });
+	setGlobalOptions({ ...defaultOptions, ...options });
 	return onDocumentUpdated(docPath, wrap<FirestoreOnUpdateHandler>(fn))
 }
 
 export function onDocumentDelete(docPath: string, fn: FirestoreOnDeleteHandler, options?: GlobalOptions) {
-	setGlobalOptions({ secrets, ...options });
+	setGlobalOptions({ ...defaultOptions, ...options });
 	return onDocumentDeleted(docPath, wrap<FirestoreOnDeleteHandler>(fn))
 }
 
