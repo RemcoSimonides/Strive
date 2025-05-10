@@ -134,16 +134,10 @@ export class AppComponent implements OnDestroy {
 
       if (isPlatformBrowser(this.platformId)) {
         window.addEventListener('sendIntentReceived', () => {
-          console.log('SendIntent received 2') // test if this works in browser
+          SendIntent.checkSendIntentReceived().then(this.sendIntent)
         })
       }
-      SendIntent.checkSendIntentReceived().then(sendIntentData => {
-        if (!sendIntentData || !sendIntentData.title) return
-        this.modalCtrl.create({
-          component: SendIntentSelectGoalComponent,
-          componentProps: { sendIntentData }
-        }).then(modal => modal.present())
-      })
+      SendIntent.checkSendIntentReceived().then(this.sendIntent)
     })
 
     this.seo.setInitial()
@@ -206,6 +200,14 @@ export class AppComponent implements OnDestroy {
       event,
       showBackdrop: false
     }).then(popover => popover.present())
+  }
+
+  sendIntent(sendIntentData: Intent) {
+    if (!sendIntentData || !sendIntentData.title) return
+    this.modalCtrl.create({
+      component: SendIntentSelectGoalComponent,
+      componentProps: { sendIntentData }
+    }).then(modal => modal.present())
   }
 
   @HostListener('window:resize', ['$event'])
