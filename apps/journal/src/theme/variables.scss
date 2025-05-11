@@ -68,12 +68,12 @@
   --ion-color-medium-tint: #9d9fa6;
 
   /** light **/
-  --ion-color-light: #f4f5f8;
-  --ion-color-light-rgb: 244, 245, 248;
-  --ion-color-light-contrast: #000000;
-  --ion-color-light-contrast-rgb: 0, 0, 0;
-  --ion-color-light-shade: #d7d8da;
-  --ion-color-light-tint: #f5f6f9;
+  --ion-color-light: #FFF8DC;
+  --ion-color-light-rgb: 255, 248, 220;
+  --ion-color-light-contrast: #3E2723;
+  --ion-color-light-contrast-rgb: 62, 39, 35;
+  --ion-color-light-shade: #e0dac0;
+  --ion-color-light-tint: #fff9dd;
 
 
   // EXTRA
@@ -97,19 +97,19 @@
   --ion-color-step-900: #e7e7e7;
   --ion-color-step-950: #f3f3f3;
 
-  --ion-background-color: #fafafa;
-  --ion-background-color-rgb: 250,250,250;
+  --ion-background-color: #FDF5EC;
+  --ion-background-color-rgb: 253, 245, 236;
 
-  --ion-text-color: black;
-  --ion-text-color-rgb: 0,0,0;
+  --ion-text-color: #3E2723;
+  --ion-text-color-rgb: 62, 39, 35;
 
-  --ion-border-color: var(--ion-color-step-900);
+  --ion-border-color: #D2B48C;
 
-  --ion-item-background: white;
-  --ion-toolbar-background: white;
-  --ion-tab-bar-color: var(--ion-color-step-400);
-  --ion-tab-bar-background: white;
-  --ion-card-background: white;
+  --ion-item-background: #FFFBF5;
+  --ion-toolbar-background: #FFFBF5;
+  --ion-tab-bar-color: #3E2723; // SaddleBrown, a warmer accent for tab bar text
+  --ion-tab-bar-background: #FFFBF5;
+  --ion-card-background: #FFFBF5;
   --ion-loading-background: var(--ion-color-step-50);
   --ion-loading-color: var(--ion-color-step-850);
 }

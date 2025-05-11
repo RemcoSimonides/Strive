@@ -14,7 +14,7 @@ header {
     display: flex;
 
     ion-button {
-      font-weight: bold;
+      --color: --var(--ion-text-color);
     }
   }
 
