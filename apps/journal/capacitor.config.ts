@@ -5,7 +5,6 @@ const config: CapacitorConfig = {
   appId: 'com.strive.journal',
   appName: 'Strive Journal',
   webDir: '../../dist/apps/journal/browser',
-  bundledWebRuntime: false,
   plugins: {
     Keyboard: {
       resize: KeyboardResize.Ionic,
