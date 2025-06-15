@@ -1,65 +1,65 @@
-ion-router-outlet {
-  margin-top: 65px;
-}
+// ion-router-outlet {
+//   margin-top: 65px;
+// }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: auto;
-  max-width: 1200px;
-  padding-right: 16px;
+// header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin: auto;
+//   max-width: 1200px;
+//   padding-right: 16px;
 
-  section {
-    display: flex;
+//   section {
+//     display: flex;
 
-    ion-button {
-      --color: --var(--ion-text-color);
-    }
-  }
+//     ion-button {
+//       --color: --var(--ion-text-color);
+//     }
+//   }
 
-  .notification-icon {
-    --ionicon-stroke-width: 44px;
-  }
+//   .notification-icon {
+//     --ionicon-stroke-width: 44px;
+//   }
 
-  .badge {
-    position: relative;
-  }
+//   .badge {
+//     position: relative;
+//   }
 
-  .badge:after {
-    position: absolute;
-    content: "";
-    padding: .2em;
-    right: 8px;
-    top: 4px;
-    border-radius: 50%;
-    background: var(--ion-color-primary);
-  }
-}
+//   .badge:after {
+//     position: absolute;
+//     content: "";
+//     padding: .2em;
+//     right: 8px;
+//     top: 4px;
+//     border-radius: 50%;
+//     background: var(--ion-color-primary);
+//   }
+// }
 
-.logo {
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  min-height: 40px;
-  max-height: 40px;
-  margin: 12px;
-  cursor: pointer;
-  display: block;
-}
+// .logo {
+//   -webkit-user-select: none;
+//   -khtml-user-select: none;
+//   -moz-user-select: none;
+//   -o-user-select: none;
+//   user-select: none;
+//   min-height: 40px;
+//   max-height: 40px;
+//   margin: 12px;
+//   cursor: pointer;
+//   display: block;
+// }
 
-ion-avatar {
-  position: relative;
-  height: 40px;
-  width: 40px;
-  cursor: pointer;
-  margin: auto 0 auto 8px;
-  img {
-    border-radius: 50%;
-    object-fit: cover;
-    height: 40px;
-    width: 40px;
-  }
-}
+// ion-avatar {
+//   position: relative;
+//   height: 40px;
+//   width: 40px;
+//   cursor: pointer;
+//   margin: auto 0 auto 8px;
+//   img {
+//     border-radius: 50%;
+//     object-fit: cover;
+//     height: 40px;
+//     width: 40px;
+//   }
+// }

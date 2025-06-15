@@ -1,16 +1,16 @@
-import { ApplicationConfig } from '@angular/core'
-// import { provideRouter } from '@angular/router'
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
+import { provideRouter } from '@angular/router'
 // import { provideServiceWorker } from '@angular/service-worker'
 
-// import { provideIonicAngular } from '@ionic/angular/standalone'
+import { provideIonicAngular } from '@ionic/angular/standalone'
 // import { Capacitor } from '@capacitor/core'
 
 // // Firebase
 // import { AUTH_DEPS, FIREBASE_CONFIG } from 'ngfire'
 // import { indexedDBLocalPersistence } from 'firebase/auth'
 
-// import { routes } from './app.routes';
-// import { provideClientHydration } from '@angular/platform-browser'
+import { routes } from './app.routes';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser'
 // import { environment } from '@env';
 
 // Sentry
@@ -29,9 +29,10 @@ import { ApplicationConfig } from '@angular/core'
 
 export const appConfig: ApplicationConfig = {
   providers: [
-  //   provideRouter(routes),
-  //   provideClientHydration(),
-  //   provideIonicAngular({ mode: 'md' }),
+    provideRouter(routes),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideClientHydration(withEventReplay()),
+    provideIonicAngular({ mode: 'md' }),
   //   provideServiceWorker('sw-master.js', {
   //     enabled: !isDevMode(),
   //     // Register the ServiceWorker as soon as the application is stable

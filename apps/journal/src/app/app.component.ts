@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterModule } from '@angular/router'
+// import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 
 // Ionic
@@ -37,7 +37,7 @@ import { IonApp } from '@ionic/angular/standalone'
     selector: 'journal-root',
     imports: [
         CommonModule,
-        RouterModule,
+        // RouterModule,
         IonApp, IonApp
     ],
     templateUrl: './app.component.html',

@@ -23,8 +23,6 @@
         "assets": [
           "apps/journal/src/assets",
           "apps/journal/src/manifest.webmanifest",
-          "apps/journal/src/firebase-messaging-sw.js",
-          "apps/journal/src/sw-master.js",
           {
             "glob": "**/*",
             "input": "./assets",
@@ -36,13 +34,7 @@
           "apps/journal/src/theme/variables.scss"
         ],
         "scripts": [],
-        "server": "apps/journal/src/main.server.ts",
-        "prerender": {
-          "discoverRoutes": true
-        },
-        "ssr": {
-          "entry": "apps/journal/src/ssr.server.ts"
-        }
+        "externalDependencies": ["@ionic/core/hydrate", "stream", "path", "fs", "util"]
       },
       "configurations": {
         "production": {
@@ -87,6 +79,14 @@
       },
       "defaultConfiguration": "development"
     },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "journal:build",
+        "staticFilePath": "dist/apps/journal/browser",
+        "spa": true
+      }
+    }
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
