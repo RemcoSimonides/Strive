@@ -3,7 +3,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 
 // Ionic
-import { IonApp } from '@ionic/angular/standalone'
+// import { IonApp } from '@ionic/angular/standalone'
 // import { addIcons } from 'ionicons'
 // import { search, notificationsOutline } from 'ionicons/icons'
 
@@ -38,7 +38,6 @@ import { IonApp } from '@ionic/angular/standalone'
     imports: [
         CommonModule,
         // RouterModule,
-        IonApp, IonApp
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
