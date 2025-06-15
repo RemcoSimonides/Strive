@@ -9,88 +9,8 @@
   "functions": {
     "predeploy": [
       "npx nx run backend-functions:lint",
-      "npx nx run backend-functions:build",
-      "node apps/backend-functions/cp-angular.js"
+      "npx nx run backend-functions:build"
     ],
     "source": "dist/apps/backend-functions"
-  },
-  "hosting": [
-    {
-      "target": "journal",
-      "public": "dist/apps/journal/browser/",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        { "source": "/download", "destination": "download/index.html" },
-        { "source": "/edit-profile", "destination": "edit-profile/index.html" },
-        { "source": "/exercise", "destination": "exercise/index.html" },
-        { "source": "/exercise/affirmations", "destination": "exercise/affirmations/index.html" },
-        { "source": "/exercise/daily-gratitude", "destination": "exercise/daily-gratitude/index.html" },
-        { "source": "/exercise/dear-future-self", "destination": "exercise/dear-future-self/index.html" },
-        { "source": "/exercise/wheel-of-life", "destination": "exercise/wheel-of-life/index.html" },
-        { "source": "/exercise/self-reflect", "destination": "exercise/self-reflect/index.hml"},
-        { "source": "/explore", "destination": "explore/index.html" },
-        { "source": "/goals", "destination": "goals/index.html" },
-        { "source": "/notifications", "destination": "notifications/index.html" },
-        { "source": "/privacy-policy", "destination": "privacy-policy/index.html" },
-        { "source": "/profile", "destination": "profile/index.html" },
-        { "source": "/settings", "destination": "settings/index.html" },
-        { "source": "/settings/email-notifications", "destination": "settings/email-notifications/index.html" },
-        { "source": "/settings/push-notifications", "destination": "settings/push-notifications/index.html" },
-        { "source": "/supports", "destination": "supports/index.html" },
-        { "source": "/terms", "destination": "terms/index.html" },
-        { "source": "**", "destination": "/index.html" }
-      ]
-    },
-    {
-      "target": "admin",
-      "public": "dist/apps/admin/",
-      "ingore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "blog",
-      "public": "apps/blog/build/",
-      "ingore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
-    }
-  ],
-  "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "functions": {
-      "port": 5001
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "hosting": {
-      "port": 5000
-    },
-    "pubsub": {
-      "port": 8085
-    },
-    "storage": {
-      "port": 9199
-    },
-    "ui": {
-      "enabled": true
-    }
   }
 }
