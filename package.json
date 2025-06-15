@@ -4,7 +4,6 @@
   "license": "MIT",
   "scripts": {
     "ng": "nx",
-    "postinstall": "node ./decorate-angular-cli.js",
     "build": "npm run build:journal",
     "build:admin": "nx build admin",
     "build:backend-functions": "nx build backend-functions",
