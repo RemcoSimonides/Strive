@@ -12,5 +12,16 @@
       "npx nx run backend-functions:build"
     ],
     "source": "dist/apps/backend-functions"
+  },
+  "apphosting": {
+    "backendId": "journal",
+    "rootDir": "apps/journal",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log",
+      "functions"
+    ]
   }
 }
