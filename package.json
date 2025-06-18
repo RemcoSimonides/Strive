@@ -9,6 +9,7 @@
     "build:backend-functions": "nx build backend-functions",
     "build:journal": "npx nx build journal",
     "build:blog": "cd apps/blog && npm run build && cd ../..",
+    "build:apphosting": "npx nx build apphosting",
     "test": "nx test",
     "serve:ssr": "node dist/apps/journal/server/main.js",
     "serve:blog": "nx start blog",
