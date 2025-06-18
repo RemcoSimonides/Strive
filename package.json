@@ -60,7 +60,6 @@
     "firebase-admin": "^13.2.0",
     "firebase-functions": "^6.3.2",
     "firebase-tools": "^14.1.0",
-    "ng2-charts": "^8.0.0",
     "ngfire": "^0.1.0-beta",
     "ngx-image-cropper": "^9.1.5",
     "openai": "^4.94.0",
