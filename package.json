@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "nx",
-    "build": "npm run build:journal",
+    "build": "npm run build:apphosting",
     "build:admin": "nx build admin",
     "build:backend-functions": "nx build backend-functions",
     "build:journal": "npx nx build journal",
