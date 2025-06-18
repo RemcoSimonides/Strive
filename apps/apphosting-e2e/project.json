@@ -1,0 +1,26 @@
+{
+  "name": "apphosting-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/apphosting-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["apphosting"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/apphosting-e2e/cypress.config.ts",
+        "testingType": "e2e",
+        "devServerTarget": "apphosting:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "apphosting:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
