@@ -8,8 +8,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="ssr-check">
+      <span *ngIf="isBrowser">Browser</span>
+      <span *ngIf="!isBrowser">Server</span>
       <h3>SSR Check</h3>
-      <p>Server-side timestamp (constructor): {{ serverTimestamp }}</p>
+      <!-- <p>Server-side timestamp (constructor): {{ serverTimestamp }}</p> -->
       <p>Server-side timestamp (ngOnInit): {{ serverNgOnInitTimestamp }}</p>
       <p>Client-side timestamp (ngOnInit): {{ clientTimestamp }}</p>
       <p>Is running in browser: {{ isBrowser }}</p>
@@ -33,7 +35,7 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class SsrCheckComponent implements OnInit {
-  serverTimestamp: string;
+  // serverTimestamp: string;
   serverNgOnInitTimestamp = '';
   clientTimestamp = '';
   isBrowser: boolean;
@@ -41,7 +43,7 @@ export class SsrCheckComponent implements OnInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     // This will be executed on both server and client
-    this.serverTimestamp = new Date().toISOString();
+    // this.serverTimestamp = new Date().toISOString();
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -53,7 +55,7 @@ export class SsrCheckComponent implements OnInit {
     } else {
       // Client-side execution
       this.clientTimestamp = new Date().toISOString();
-      this.isSSRWorking = this.serverTimestamp !== this.clientTimestamp;
+      this.isSSRWorking = !!this.serverNgOnInitTimestamp && (this.serverNgOnInitTimestamp !== this.clientTimestamp);
     }
   }
 }
