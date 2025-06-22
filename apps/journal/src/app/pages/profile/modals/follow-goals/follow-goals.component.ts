@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, signal } from '@angular/core'
 
 import { IonContent, IonButton, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'

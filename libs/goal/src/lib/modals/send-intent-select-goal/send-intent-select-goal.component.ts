@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 
 import { IonTitle, IonContent, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
 import { Filesystem } from '@capacitor/filesystem'

@@ -8,23 +8,24 @@
 </ion-header>
 
 <ion-content>
-	<ion-button (click)="add()">Add</ion-button>
-  <ng-container *ngIf="goals$ | async as goals; else loading">
+  <ion-button (click)="add()">Add</ion-button>
+  @if (goals$ | async; as goals) {
     <table>
       <tr>
         <th>id</th>
         <th>title</th>
         <th>created at</th>
       </tr>
-      <tr *ngFor="let goal of goals" [routerLink]="['/a/goals/', goal.id]">
-        <td>{{ goal.id }}</td>
-        <td>{{ goal.title }}</td>
-        <td>{{ goal.createdAt | date:'fullDate' }}</td>
-      </tr>
+      @for (goal of goals; track goal) {
+        <tr [routerLink]="['/a/goals/', goal.id]">
+          <td>{{ goal.id }}</td>
+          <td>{{ goal.title }}</td>
+          <td>{{ goal.createdAt | date:'fullDate' }}</td>
+        </tr>
+      }
     </table>
-  </ng-container>
-
-  <ng-template #loading>
+  } @else {
     <strive-page-loading></strive-page-loading>
-  </ng-template>
+  }
+
 </ion-content>

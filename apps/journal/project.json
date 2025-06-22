@@ -8,16 +8,12 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/journal",
         "index": "apps/journal/src/index.html",
         "browser": "apps/journal/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/journal/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -85,7 +81,8 @@
           "buildTarget": "journal:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -98,9 +95,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/apps/journal"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/apps/journal"],
       "options": {
         "jestConfig": "apps/journal/jest.config.ts"
       }

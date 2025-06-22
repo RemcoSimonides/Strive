@@ -1,6 +1,6 @@
 import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,

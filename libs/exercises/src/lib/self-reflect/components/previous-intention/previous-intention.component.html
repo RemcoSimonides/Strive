@@ -5,9 +5,11 @@
       <ion-list>
         <small>{{ previousEntry | getQuestion: key }}</small>
         @if (config.type === 'formlist') {
-          <ion-item *ngFor="let item of previousEntry[key]; let last = last" [lines]="last ? 'none' : 'full'">
-            <ion-label>{{item}}</ion-label>
-          </ion-item>
+          @for (item of previousEntry[key]; track item; let last = $last) {
+            <ion-item [lines]="last ? 'none' : 'full'">
+              <ion-label>{{item}}</ion-label>
+            </ion-item>
+          }
         }
         @if (config.type === 'textarea') {
           <ion-item>

@@ -1,5 +1,5 @@
-import { Injectable, Inject, Renderer2, RendererFactory2 } from '@angular/core'
-import { DOCUMENT } from '@angular/common'
+import { Injectable, Inject, Renderer2, RendererFactory2, DOCUMENT } from '@angular/core'
+
 import { BehaviorSubject, map } from 'rxjs'
 import { KeyboardStyle, Keyboard } from '@capacitor/keyboard'
 import { Capacitor } from '@capacitor/core'

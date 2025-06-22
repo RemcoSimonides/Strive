@@ -1,6 +1,6 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common'
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID, DOCUMENT } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 
 import { IonContent, IonButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText, ModalController, Platform } from '@ionic/angular/standalone'

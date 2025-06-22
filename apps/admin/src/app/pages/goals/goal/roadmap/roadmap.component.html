@@ -1,44 +1,44 @@
-<ng-container *ngIf="goal$ | async as goal; else loading">
-<ng-container *ngIf="milestones$ | async as milestones; else loading">
-  <ng-container *ngIf="milestones.length else empty">
-    <ion-list>
-      <ion-reorder-group (ionItemReorder)="doReorder($event, milestones)">
-
-        <ion-item *ngFor="let milestone of milestones" button>
-          <section>
-            {{ milestone.content }}
-            <article>
-              <ng-container *ngIf="milestone.subtasks?.length">
-                <div class="subtasks">
-                  <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="milestone.deadline">
-                <div class="deadline">
-                  <ion-icon name="alarm-outline"></ion-icon>
-                  <small>{{ milestone.deadline | date:'MMM d, y' }}</small>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="milestone.achiever?.uid">
-                <strive-milestone-assignee [achiever]="milestone.achiever!"></strive-milestone-assignee>
-              </ng-container>
-            </article>
-          </section>
-          <ion-reorder slot="end"/>
-        </ion-item>
-
-      </ion-reorder-group>
-    </ion-list>
-  </ng-container>
-</ng-container>
-</ng-container>
-
-<ng-template #empty>
-  <section>
-    <h3>Roadmap is not defined</h3>
-  </section>
-</ng-template>
-
-<ng-template #loading>
+@if (goal$ | async; as goal) {
+  @if (milestones$ | async; as milestones) {
+    @if (milestones.length) {
+      <ion-list>
+        <ion-reorder-group (ionItemReorder)="doReorder($event, milestones)">
+          @for (milestone of milestones; track milestone) {
+            <ion-item button>
+              <section>
+                {{ milestone.content }}
+                <article>
+                  @if (milestone.subtasks?.length) {
+                    <div class="subtasks">
+                      <ion-icon name="list-outline"></ion-icon><small>{{ milestone.subtasks | subtasksCompleted }}</small>
+                    </div>
+                  }
+                  @if (milestone.deadline) {
+                    <div class="deadline">
+                      <ion-icon name="alarm-outline"></ion-icon>
+                      <small>{{ milestone.deadline | date:'MMM d, y' }}</small>
+                    </div>
+                  }
+                  @if (milestone.achiever?.uid) {
+                    <strive-milestone-assignee [achiever]="milestone.achiever!"></strive-milestone-assignee>
+                  }
+                </article>
+              </section>
+              <ion-reorder slot="end"/>
+            </ion-item>
+          }
+        </ion-reorder-group>
+      </ion-list>
+    } @else {
+      <section>
+        <h3>Roadmap is not defined</h3>
+      </section>
+    }
+  } @else {
+    <strive-page-loading></strive-page-loading>
+  }
+} @else {
   <strive-page-loading></strive-page-loading>
-</ng-template>
+}
+
+

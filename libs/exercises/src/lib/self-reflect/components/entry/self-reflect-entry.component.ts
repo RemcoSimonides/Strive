@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 
 import { AlertController, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonFooter, IonProgressBar, ModalController } from '@ionic/angular/standalone'

@@ -1,37 +1,32 @@
-<ng-container *ngIf="goal$ | async as goal">
-	<ion-card>
-		<ion-card-content>
-			<p>Created at: {{ goal.createdAt | date:'medium' }}</p>
-			<p>Updated at: {{ goal.updatedAt | date:'medium' }}</p>
-
-			<form [formGroup]="goalForm" (ngSubmit)="update()">
-				<ion-item>
-					<ion-input
-						formControlName="title"
-						label="Title"
-						labelPlacement="floating"
-						class="primary"
-					/>
-				</ion-item>
-
-				<ion-item>
-					<ion-label position="stacked">Secret</ion-label>
-					<ion-toggle formControlName="publicity"></ion-toggle>
-				</ion-item>
-
-				<!-- <strive-image-selector
-					[form]="goalForm.image"
-					[storagePath]="'goals/' + goal.id"
-				></strive-image-selector> -->
-
-				<div>
-					<ion-button class="submit_button" type="submit" [disabled]="!goalForm.valid">Update</ion-button>
-					<!-- <ion-button (click)="duplicate()" color="tertiary">Duplicate</ion-button> -->
-					<ion-button (click)="delete()" color="warning">Delete</ion-button>
-				</div>
-
-				<strive-description [value]="goal.description" [canEdit]="true" (updated)="updateDescription($event)"></strive-description>
-			</form>
-		</ion-card-content>
-	</ion-card>
-</ng-container>
+@if (goal$ | async; as goal) {
+  <ion-card>
+    <ion-card-content>
+      <p>Created at: {{ goal.createdAt | date:'medium' }}</p>
+      <p>Updated at: {{ goal.updatedAt | date:'medium' }}</p>
+      <form [formGroup]="goalForm" (ngSubmit)="update()">
+        <ion-item>
+          <ion-input
+            formControlName="title"
+            label="Title"
+            labelPlacement="floating"
+            class="primary"
+            />
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Secret</ion-label>
+            <ion-toggle formControlName="publicity"></ion-toggle>
+          </ion-item>
+          <!-- <strive-image-selector
+          [form]="goalForm.image"
+          [storagePath]="'goals/' + goal.id"
+        ></strive-image-selector> -->
+        <div>
+          <ion-button class="submit_button" type="submit" [disabled]="!goalForm.valid">Update</ion-button>
+          <!-- <ion-button (click)="duplicate()" color="tertiary">Duplicate</ion-button> -->
+          <ion-button (click)="delete()" color="warning">Delete</ion-button>
+        </div>
+        <strive-description [value]="goal.description" [canEdit]="true" (updated)="updateDescription($event)"></strive-description>
+      </form>
+    </ion-card-content>
+  </ion-card>
+}

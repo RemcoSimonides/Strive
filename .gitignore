@@ -52,3 +52,5 @@ ui-debug.log
 # Generated Docusaurus files
 .docusaurus/
 .cache-loader/
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md

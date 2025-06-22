@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 

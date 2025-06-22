@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, ModalController } from '@ionic/angular/standalone'
 
 import { joinWith } from 'ngfire'

@@ -1,9 +1,9 @@
-<ng-container *ngIf="goalId$ | async as goalId">
-<ng-container *ngIf="story$ | async as story">
-  <strive-story
-    [story]="story"
-    [stakeholder]="stakeholder"
-    [goalId]="goalId"
-  ></strive-story>
-</ng-container>
-</ng-container>
+@if (goalId$ | async; as goalId) {
+  @if (story$ | async; as story) {
+    <strive-story
+      [story]="story"
+      [stakeholder]="stakeholder"
+      [goalId]="goalId"
+    ></strive-story>
+  }
+}

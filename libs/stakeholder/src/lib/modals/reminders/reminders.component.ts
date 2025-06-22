@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 
 import { IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
@@ -9,12 +9,11 @@ import { RemindersComponent } from '../../components/reminders/reminders.compone
 
 @Component({
     imports: [
-        CommonModule,
-        HeaderModalComponent,
-        RemindersComponent,
-        IonContent,
-        IonTitle
-    ],
+    HeaderModalComponent,
+    RemindersComponent,
+    IonContent,
+    IonTitle
+],
     selector: '[goal, stakeholder] strive-reminders-modal',
     templateUrl: './reminders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush

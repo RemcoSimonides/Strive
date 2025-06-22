@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router'
 import { IonContent, ModalController } from '@ionic/angular/standalone'
 

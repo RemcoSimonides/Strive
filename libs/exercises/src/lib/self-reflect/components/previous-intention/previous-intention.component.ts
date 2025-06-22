@@ -5,7 +5,7 @@ import { IonItem, IonLabel, IonList } from '@ionic/angular/standalone'
 import { SelfReflectEntry, SelfReflectFrequency, replaceFrequency } from '@strive/model'
 import { SelfReflectFrequencyPipe } from '../../pipes/frequency.pipe'
 import { SmartJoinPipe } from '@strive/utils/pipes/smart-join.pipe'
-import { CommonModule } from '@angular/common'
+
 
 @Pipe({ name: 'getConfig', standalone: true })
 export class GetConfigPipe implements PipeTransform {
@@ -29,14 +29,13 @@ export class GetQuestionPipe implements PipeTransform {
     styleUrls: ['./previous-intention.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
-        SelfReflectFrequencyPipe,
-        GetQuestionPipe,
-        GetConfigPipe,
-        IonItem,
-        IonLabel,
-        IonList
-    ]
+    SelfReflectFrequencyPipe,
+    GetQuestionPipe,
+    GetConfigPipe,
+    IonItem,
+    IonLabel,
+    IonList
+]
 })
 export class PreviousIntentionComponent implements AfterViewInit {
 

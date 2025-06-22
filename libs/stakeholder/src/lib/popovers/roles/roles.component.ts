@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+
 import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonList, IonItem, IonLabel, AlertController, PopoverController } from '@ionic/angular/standalone'
@@ -7,12 +7,11 @@ import { GoalStakeholderService } from '../../stakeholder.service'
 
 @Component({
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        IonList,
-        IonItem,
-        IonLabel
-    ],
+    ReactiveFormsModule,
+    IonList,
+    IonItem,
+    IonLabel
+],
     selector: '[goalId][stakeholder] strive-stakeholder-roles',
     templateUrl: './roles.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush

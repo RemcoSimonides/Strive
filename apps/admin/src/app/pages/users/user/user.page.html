@@ -1,13 +1,11 @@
 <ion-content class="ion-padding">
-  <ng-container *ngIf="user$ | async as user">
-
+  @if (user$ | async; as user) {
     <ion-card>
       <ion-card-content>
         <p>Created at: {{ user.createdAt | date:'medium' }}</p>
         <p>Updated at: {{ user.updatedAt | date:'medium' }}</p>
         <p>Spectators: {{ user.numberOfSpectators }}</p>
         <p>Spectating: {{ user.numberOfSpectating }}</p>
-
         <form [formGroup]="userForm" (ngSubmit)="update()">
           <ion-item>
             <ion-input
@@ -16,85 +14,98 @@
               labelPlacement="floating"
               [disabled]="true"
               class="primary"
-            />
-          </ion-item>
-
-          <!-- <strive-image-selector
+              />
+            </ion-item>
+            <!-- <strive-image-selector
             [form]="userForm.photoURL"
             [storagePath]="'profiles/' + user.uid"
           ></strive-image-selector> -->
-
           <ion-button class="submit_button" type="submit" [disabled]="!userForm.valid">Update</ion-button>
         </form>
       </ion-card-content>
     </ion-card>
-
     <h3>Exercises</h3>
     <ion-list>
-      <ng-container *ngFor="let exercise of exercises">
+      @for (exercise of exercises; track exercise) {
         <strive-small-thumbnail [title]="exercise.title" [asset]="exercise.image" [routerLink]="exercise.link">
-          <ng-container [ngSwitch]="exercise.id">
-            <ng-container *ngSwitchCase="'Affirmations'">
-              <article *ngIf="affirmations$ | async as setting">
-                <small *ngIf="setting.affirmations?.length">{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
-              </article>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'DearFutureSelf'">
-              <article *ngIf="dearFutureSelf$ | async as setting">
-                <ng-container *ngIf="setting?.messages?.length">
-                  <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
-                  <small *ngIf="setting | nextLetter as next">Next letter in {{ next.deliveryDate | timeToGo }}</small>
-                </ng-container>
-              </article>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'DailyGratitude'">
-              <article *ngIf="dailyGratitude$ | async as setting">
-                <small *ngIf="setting.on">Receiving daily at {{ setting.time | date:'shortTime'}}</small>
-              </article>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'WheelOfLife'">
+          @switch (exercise.id) {
+            @case ('Affirmations') {
+              @if (affirmations$ | async; as setting) {
+                <article>
+                  @if (setting.affirmations?.length) {
+                    <small>{{ setting.affirmations.length }} {{ setting.affirmations.length === 1 ? 'Affirmation' : 'Affirmations' }} set</small>
+                  }
+                </article>
+              }
+            }
+            @case ('DearFutureSelf') {
+              @if (dearFutureSelf$ | async; as setting) {
+                <article>
+                  @if (setting?.messages?.length) {
+                    <small>{{ (setting | received)?.length }}/{{ setting.messages.length }} Letters received</small>
+                    @if (setting | nextLetter; as next) {
+                      <small>Next letter in {{ next.deliveryDate | timeToGo }}</small>
+                    }
+                  }
+                </article>
+              }
+            }
+            @case ('DailyGratitude') {
+              @if (dailyGratitude$ | async; as setting) {
+                <article>
+                  @if (setting.on) {
+                    <small>Receiving daily at {{ setting.time | date:'shortTime'}}</small>
+                  }
+                </article>
+              }
+            }
+            @case ('WheelOfLife') {
               <article>
                 <small>Coming Soon</small>
               </article>
-            </ng-container>
-          </ng-container>
+            }
+          }
         </strive-small-thumbnail>
-      </ng-container>
+      }
     </ion-list>
-
     <h3>Goals</h3>
     <ion-button (click)="createGoal(user.uid)">Create Goal</ion-button>
-    <ng-container *ngIf="stakeholders$ | async as stakeholders">
-
-      <ion-card *ngFor="let stakeholder of stakeholders">
-        <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
-          <ion-thumbnail slot="start">
-            <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
-            <div *ngIf="stakeholder.goal.status !== 'pending'">finished</div>
-          </ion-thumbnail>
-          <article>
-            <ion-text>
-              <b>{{ stakeholder.goal.title }}</b>
-              <small *ngIf="stakeholder.isAchiever && !stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }}</small>
-              <small *ngIf="stakeholder.isAchiever && stakeholder.isSupporter">{{ stakeholder.goal | toProgressLabel }} & Supporting</small>
-              <small *ngIf="!stakeholder.isAchiever && stakeholder.isSupporter">Supporting</small>
-            </ion-text>
-            <!-- <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
+    @if (stakeholders$ | async; as stakeholders) {
+      @for (stakeholder of stakeholders; track stakeholder) {
+        <ion-card>
+          <ion-item lines="none" [routerLink]="['/goal/', stakeholder.goal.id]">
+            <ion-thumbnail slot="start">
+              <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
+              @if (stakeholder.goal.status !== 'pending') {
+                <div>finished</div>
+              }
+            </ion-thumbnail>
+            <article>
+              <ion-text>
+                <b>{{ stakeholder.goal.title }}</b>
+                @if (stakeholder.isAchiever && !stakeholder.isSupporter) {
+                  <small>{{ stakeholder.goal | toProgressLabel }}</small>
+                }
+                @if (stakeholder.isAchiever && stakeholder.isSupporter) {
+                  <small>{{ stakeholder.goal | toProgressLabel }} & Supporting</small>
+                }
+                @if (!stakeholder.isAchiever && stakeholder.isSupporter) {
+                  <small>Supporting</small>
+                }
+              </ion-text>
+              <!-- <ion-button fill="clear" (click)="openGoalOptions(stakeholder.goal, stakeholder, $event)">
               <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
             </ion-button> -->
           </article>
         </ion-item>
         <!-- <ul *ngIf="stakeholder.story.length" [routerLink]="['/goal/', stakeholder.goal.id]" [queryParams]="{t:'story'}">
-          <li *ngFor="let event of stakeholder.story">
-            <ion-icon [name]="event.icon"></ion-icon>
-            <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
-          </li>
-        </ul> -->
-      </ion-card>
-    </ng-container>
-
-  </ng-container>
+        <li *ngFor="let event of stakeholder.story">
+          <ion-icon [name]="event.icon"></ion-icon>
+          <span [ngClass]="{'important': event.importance <= 2}">{{ event.message }}</span>
+        </li>
+      </ul> -->
+    </ion-card>
+  }
+}
+}
 </ion-content>

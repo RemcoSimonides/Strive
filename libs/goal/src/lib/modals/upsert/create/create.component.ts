@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
 import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { IonContent, IonTitle, ModalController } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'

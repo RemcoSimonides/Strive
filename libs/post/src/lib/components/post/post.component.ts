@@ -1,6 +1,6 @@
-import { CommonModule, DOCUMENT } from '@angular/common'
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'
-import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, Inject, Renderer2 } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, Inject, Renderer2, DOCUMENT } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { IonCard, IonAvatar, IonButton, IonIcon, IonCardContent } from '@ionic/angular/standalone'

@@ -1,31 +1,25 @@
 <ion-header>
-	<ion-toolbar>
+  <ion-toolbar>
     <ion-buttons slot="start">
-  	  <ion-menu-button></ion-menu-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Dashboard</ion-title>
-	</ion-toolbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-	<ng-container *ngIf="aggregation$ | async as aggregation; else loading">
-
-		<h2>Goals</h2>
-
-		<p>Total: {{ aggregation | totalGoals }}</p>
-		<p>Active: {{ aggregation.goalsActive }} ({{ aggregation | activeGoalsPercentage }}%)</p>
-		<p>Bucketlist: {{ aggregation.goalsBucketlist }} ({{ aggregation | bucketlistGoalsPercentage }}%)</p>
-		<p>Finished: {{ aggregation.goalsFinished }} ({{ aggregation | finishedGoalsPercentage }}%)</p>
-		<p>Private: {{ aggregation.goalsPrivate }} ({{ aggregation | privateGoalsPercentage }}%)</p>
-		<p>Public: {{ aggregation.goalsPublic }} ({{ aggregation | publicGoalsPercentage }}%)</p>
-
-
-		<h2>Users</h2>
-		<p>Total: {{ aggregation.usersCreated - aggregation.usersDeleted }}</p>
-
-	</ng-container>
+  @if (aggregation$ | async; as aggregation) {
+    <h2>Goals</h2>
+    <p>Total: {{ aggregation | totalGoals }}</p>
+    <p>Active: {{ aggregation.goalsActive }} ({{ aggregation | activeGoalsPercentage }}%)</p>
+    <p>Bucketlist: {{ aggregation.goalsBucketlist }} ({{ aggregation | bucketlistGoalsPercentage }}%)</p>
+    <p>Finished: {{ aggregation.goalsFinished }} ({{ aggregation | finishedGoalsPercentage }}%)</p>
+    <p>Private: {{ aggregation.goalsPrivate }} ({{ aggregation | privateGoalsPercentage }}%)</p>
+    <p>Public: {{ aggregation.goalsPublic }} ({{ aggregation | publicGoalsPercentage }}%)</p>
+    <h2>Users</h2>
+    <p>Total: {{ aggregation.usersCreated - aggregation.usersDeleted }}</p>
+  } @else {
+    <strive-page-loading></strive-page-loading>
+  }
 </ion-content>
 
-<ng-template #loading>
-	<strive-page-loading></strive-page-loading>
-</ng-template>

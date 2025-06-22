@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'

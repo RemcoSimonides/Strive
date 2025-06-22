@@ -4,26 +4,21 @@
 </header>
 
 <main>
-  <ng-container *ngIf="view$ | async as view">
-    <ng-container *ngIf="view.fetching; else suggestion">
+  @if (view$ | async; as view) {
+    @if (view.fetching) {
       <p>Generating suggestion{{ thinking$ | async }}</p>
-    </ng-container>
-
-    <ng-template #suggestion>
-      <ng-container *ngIf="view.suggestion">
-
-        <ng-container *ngIf="view.suggestion.status === 'waiting'">
+    } @else {
+      @if (view.suggestion) {
+        @if (view.suggestion.status === 'waiting') {
           <p>Generating suggestion{{ thinking$ | async }}</p>
-        </ng-container>
-
-        <ng-container *ngIf="view.suggestion.status === 'error'">
+        }
+        @if (view.suggestion.status === 'error') {
           <p>Something went wrong while generating a suggestion.</p>
-        </ng-container>
-
-        <ng-container *ngIf="view.suggestion.status === 'streaming' || view.suggestion.status === 'completed'">
-          <ng-container *ngIf="view.suggestion.answerParsed.length; else noParsed">
+        }
+        @if (view.suggestion.status === 'streaming' || view.suggestion.status === 'completed') {
+          @if (view.suggestion.answerParsed.length) {
             <ion-list class="small">
-              <ng-container *ngFor="let milestone of view.suggestion.answerParsed; let index = index; let last = last; trackBy: trackByFn">
+              @for (milestone of view.suggestion.answerParsed; track trackByFn(index, milestone); let index = $index; let last = $last) {
                 <ion-item #item (click)="toggleSuggestion(milestone, index, item)" [lines]="last ? 'none' : 'full'" button [ngClass]="{'fake-disable': view.added.includes(milestone)}" class="fade-out">
                   <ion-label>
                     <small class="number">{{ index + 1 }}.</small>
@@ -31,45 +26,41 @@
                   </ion-label>
                   <ion-icon slot="end" name="add-outline" color="secondary" size="small" />
                 </ion-item>
-              </ng-container>
+              }
             </ion-list>
-
-            <ng-container *ngIf="view.suggestion.status === 'completed'">
+            @if (view.suggestion.status === 'completed') {
               <ion-button class="secondary" (click)="addAllSuggestions(view.suggestion.answerParsed)" [disabled]="view.added.length === view.suggestion.answerParsed.length" class="fade-in">
                 <ion-icon name="sparkles-outline" slot="start" color="secondary" />
                 <span>Add suggestions</span>
               </ion-button>
-            </ng-container>
-          </ng-container>
-
-          <ng-template #noParsed>
+            }
+          } @else {
             <article>{{ view.suggestion.answerRaw }}</article>
-          </ng-template>
-
-          <section *ngIf="questions.length > 0 && view.suggestion.status === 'completed'" class="fade-in">
-            <p>Improve the suggestions by answering the following questions</p>
-            <ion-list>
-              <ng-container *ngFor="let question of questions; let last = last; let index = index">
-                <ion-item lines="none" class="fade-in">
-                  <ion-label color="secondary">
-                    <small>{{ question.question }}</small>
-                  </ion-label>
-                </ion-item>
-                <ion-item [lines]="last ? 'none' : 'full'" class="fade-in">
-                  <ion-input
-                    [(ngModel)]="questions[index].answer"
-                    type="text"
-                    maxlength="222"
-                  ></ion-input>
-                </ion-item>
-              </ng-container>
-            </ion-list>
-            <ion-button class="secondary" (click)="submit()">Submit answers</ion-button>
-          </section>
-
-        </ng-container>
-      </ng-container>
-    </ng-template>
-
-  </ng-container>
+          }
+          @if (questions.length > 0 && view.suggestion.status === 'completed') {
+            <section class="fade-in">
+              <p>Improve the suggestions by answering the following questions</p>
+              <ion-list>
+                @for (question of questions; track question; let last = $last; let index = $index) {
+                  <ion-item lines="none" class="fade-in">
+                    <ion-label color="secondary">
+                      <small>{{ question.question }}</small>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item [lines]="last ? 'none' : 'full'" class="fade-in">
+                    <ion-input
+                      [(ngModel)]="questions[index].answer"
+                      type="text"
+                      maxlength="222"
+                    ></ion-input>
+                  </ion-item>
+                }
+              </ion-list>
+              <ion-button class="secondary" (click)="submit()">Submit answers</ion-button>
+            </section>
+          }
+        }
+      }
+    }
+  }
 </main>

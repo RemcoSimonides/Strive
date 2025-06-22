@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 
 import { AlertController, IonFab, IonFabButton, IonIcon, IonContent, IonButton, IonSelect, IonSelectOption, IonCard, IonList, IonItem, IonAvatar, IonLabel, ModalController, PopoverController, SelectCustomEvent } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'

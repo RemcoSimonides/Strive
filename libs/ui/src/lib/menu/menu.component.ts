@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'

@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
 import { IonContent, ModalController } from '@ionic/angular/standalone'
 import { orderBy, where } from '@firebase/firestore'

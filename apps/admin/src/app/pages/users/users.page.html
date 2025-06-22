@@ -8,22 +8,23 @@
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="users$ | async as users; else loading">
+  @if (users$ | async; as users) {
     <table>
       <tr>
         <th>uid</th>
         <th>username</th>
         <th>created at</th>
       </tr>
-      <tr *ngFor="let user of users" [routerLink]="['/a/users/', user.uid]">
-        <td>{{ user.uid }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.createdAt | date:'fullDate' }}</td>
-      </tr>
+      @for (user of users; track user) {
+        <tr [routerLink]="['/a/users/', user.uid]">
+          <td>{{ user.uid }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.createdAt | date:'fullDate' }}</td>
+        </tr>
+      }
     </table>
-  </ng-container>
-
-  <ng-template #loading>
+  } @else {
     <strive-page-loading></strive-page-loading>
-  </ng-template>
+  }
+
 </ion-content>

@@ -17,37 +17,38 @@
           label="Quote"
           labelPlacement="floating"
           class="primary"
-        />
-      </ion-item>
+          />
+        </ion-item>
 
-      <ion-item>
-        <ion-input
-          formControlName="from"
-          label="From"
-          labelPlacement="floating"
-          class="primary"
-        />
-      </ion-item>
+        <ion-item>
+          <ion-input
+            formControlName="from"
+            label="From"
+            labelPlacement="floating"
+            class="primary"
+            />
+          </ion-item>
 
-      <ion-button type="submit" [disabled]="form.invalid">add</ion-button>
-    </form>
-  </ion-card>
-
-  <ng-container *ngIf="motivations$ | async as motivations; else loading">
-    total: {{ motivations?.['quotes']?.length }} - unused: {{ getUnused(motivations['quotes']) }}
-    <ng-container *ngFor="let motivation of motivations?.['quotes']; let index = index">
-      <ion-card>
-        <ion-card-content [ngStyle]="{'color': motivation.used ? 'inherit' : 'white'}">
-          <span><i>"{{ motivation.quote }}"</i> - <b>{{ motivation.from }}</b></span>
-          <ion-button fill="clear" (click)="remove(index)" *ngIf="!motivation.used">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-card-content>
+          <ion-button type="submit" [disabled]="form.invalid">add</ion-button>
+        </form>
       </ion-card>
-    </ng-container>
-  </ng-container>
 
-  <ng-template #loading>
-    <strive-page-loading></strive-page-loading>
-  </ng-template>
-</ion-content>
+      @if (motivations$ | async; as motivations) {
+        total: {{ motivations?.['quotes']?.length }} - unused: {{ getUnused(motivations['quotes']) }}
+        @for (motivation of motivations?.['quotes']; track motivation; let index = $index) {
+          <ion-card>
+            <ion-card-content [ngStyle]="{'color': motivation.used ? 'inherit' : 'white'}">
+              <span><i>"{{ motivation.quote }}"</i> - <b>{{ motivation.from }}</b></span>
+              @if (!motivation.used) {
+                <ion-button fill="clear" (click)="remove(index)">
+                  <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                </ion-button>
+              }
+            </ion-card-content>
+          </ion-card>
+        }
+      } @else {
+        <strive-page-loading></strive-page-loading>
+      }
+
+    </ion-content>

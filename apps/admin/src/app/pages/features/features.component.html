@@ -18,37 +18,36 @@
           label="Header"
           labelPlacement="floating"
           class="primary"
-        />
-      </ion-item>
+          />
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Description</ion-label>
-        <ion-textarea formControlName="description" minlength="60" autoGrow></ion-textarea>
-      </ion-item>
+        <ion-item>
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea formControlName="description" minlength="60" autoGrow></ion-textarea>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">url</ion-label>
-        <ion-input formControlName="url"></ion-input>
-      </ion-item>
+        <ion-item>
+          <ion-label position="floating">url</ion-label>
+          <ion-input formControlName="url"></ion-input>
+        </ion-item>
 
-      <ion-button type="submit" [disabled]="form.invalid">add</ion-button>
-    </form>
-  </ion-card>
+        <ion-button type="submit" [disabled]="form.invalid">add</ion-button>
+      </form>
+    </ion-card>
 
-  <ng-container *ngIf="features$ | async as features; else loading">
-    <ng-container *ngFor="let feature of features?.['features']; let index = index">
-      <ion-card>
-        <ion-card-title>{{ feature.header }}</ion-card-title>
-        <ion-card-content>
-          <p>{{ feature.description }}</p>
-          <a [href]="feature.url">{{ feature.url }}</a>
-          <p>{{ feature.createdAt }}</p>
-        </ion-card-content>
-      </ion-card>
-    </ng-container>
-  </ng-container>
+    @if (features$ | async; as features) {
+      @for (feature of features?.['features']; track feature; let index = $index) {
+        <ion-card>
+          <ion-card-title>{{ feature.header }}</ion-card-title>
+          <ion-card-content>
+            <p>{{ feature.description }}</p>
+            <a [href]="feature.url">{{ feature.url }}</a>
+            <p>{{ feature.createdAt }}</p>
+          </ion-card-content>
+        </ion-card>
+      }
+    } @else {
+      <strive-page-loading></strive-page-loading>
+    }
 
-  <ng-template #loading>
-    <strive-page-loading></strive-page-loading>
-  </ng-template>
-</ion-content>
+  </ion-content>

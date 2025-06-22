@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core'
-import { CommonModule, DatePipe } from '@angular/common'
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 
 import { IonItem, IonTextarea, IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'

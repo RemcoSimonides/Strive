@@ -1,6 +1,6 @@
 import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
 import { RouterModule, Router, NavigationEnd, RouterOutlet } from '@angular/router'
-import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common'
+import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
 
 // Ionic
 import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
