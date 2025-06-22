@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit, Pipe, PipeTransform } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, Pipe, PipeTransform, inject } from '@angular/core'
 
 import { IonContent, IonTitle, ModalController } from '@ionic/angular/standalone'
 import { BehaviorSubject, combineLatest, filter, map, switchMap, tap } from 'rxjs'
@@ -43,6 +43,11 @@ export class StravaActivitiesPipe implements PipeTransform {
     ]
 })
 export class IntegrationsComponent extends ModalDirective implements OnInit {
+  private auth = inject(AuthService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private stravaService = inject(StravaService);
+
 
   @Input() goalId?: string
 
@@ -78,13 +83,14 @@ export class IntegrationsComponent extends ModalDirective implements OnInit {
     map(([strava]) => ({ strava }))
   )
 
-  constructor(
-    private auth: AuthService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private stravaService: StravaService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 
   ngOnInit() {

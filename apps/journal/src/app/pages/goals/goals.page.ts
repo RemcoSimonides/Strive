@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnDestroy, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, signal, inject } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 
@@ -70,6 +70,15 @@ import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert
     ]
 })
 export class GoalsPageComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private goal = inject(GoalService);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private stakeholder = inject(GoalStakeholderService);
+  private goalEvent = inject(GoalEventService);
+
 
   seeAll = new BehaviorSubject(false)
   categoryFilter$ = new BehaviorSubject<(Category)[]>([])
@@ -175,17 +184,9 @@ export class GoalsPageComponent implements OnDestroy {
     }
   })
 
-  constructor(
-    private auth: AuthService,
-    private goal: GoalService,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private route: ActivatedRoute,
-    private router: Router,
-    seo: SeoService,
-    private stakeholder: GoalStakeholderService,
-    private goalEvent: GoalEventService
-  ) {
+  constructor() {
+    const seo = inject(SeoService);
+
     seo.generateTags({ title: `Goals - Strive Journal` })
 
     const stakeholders$ = this.auth.user$.pipe(

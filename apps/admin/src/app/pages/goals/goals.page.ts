@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { orderBy } from 'firebase/firestore'
 import { ModalController } from '@ionic/angular'
 import { GoalService } from '@strive/goal/goal.service'
@@ -12,13 +12,12 @@ import { SelectUserModalComponent } from '@strive/ui/select-user/select-user.mod
     standalone: false
 })
 export class GoalsComponent {
+  private goal = inject(GoalService);
+  private modalCtrl = inject(ModalController);
+
 
   goals$ = this.goal.valueChanges([orderBy('createdAt', 'desc')])
 
-  constructor(
-    private goal: GoalService,
-    private modalCtrl: ModalController
-  ) {}
 
   async add() {
     const selectUserModal = await this.modalCtrl.create({ component: SelectUserModalComponent })

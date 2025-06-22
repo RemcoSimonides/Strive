@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { FormArray, ReactiveFormsModule } from '@angular/forms'
 
 import { IonList, IonItem, IonButton, ModalController } from '@ionic/angular/standalone'
@@ -26,6 +26,9 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RemindersComponent implements OnInit {
+  private modalCtrl = inject(ModalController);
+  private reminderService = inject(ReminderService);
+
 
   form = new FormArray<ReminderForm>([])
   newReminderForm = new ReminderForm()
@@ -34,11 +37,6 @@ export class RemindersComponent implements OnInit {
 
   @Input() goalId = ''
   @Input() stakeholderId = ''
-
-  constructor(
-    private modalCtrl: ModalController,
-    private reminderService: ReminderService
-  ) {}
 
   ngOnInit() {
     if (this.goalId && this.stakeholderId) {

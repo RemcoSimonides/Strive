@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 
 import { IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
 
@@ -19,14 +19,20 @@ import { RemindersComponent } from '../../components/reminders/reminders.compone
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RemindersModalComponent extends ModalDirective {
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+
 
   @Input() goalId = ''
   @Input() stakeholderId = ''
 
-  constructor(
-    protected override location: Location,
-    protected override modalCtrl: ModalController
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 }

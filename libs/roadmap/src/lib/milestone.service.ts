@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
@@ -9,10 +9,12 @@ import { endOfDay } from 'date-fns'
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneService extends FireSubCollection<Milestone> {
-  readonly path = 'Goals/:goalId/Milestones'
-  override readonly memorize = false // no memorize for changing story order
+  private auth = inject(AuthService);
 
-  constructor(private auth: AuthService) {
+  readonly path = 'Goals/:goalId/Milestones'
+  override readonly memorize = false
+
+  constructor() {
     super()
   }
 

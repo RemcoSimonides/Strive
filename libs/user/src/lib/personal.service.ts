@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular/standalone'
 import { SplashScreen } from '@capacitor/splash-screen'
@@ -24,6 +24,10 @@ import { PushNotificationSettingsForm, SettingsForm } from './forms/settings.for
 
 @Injectable({ providedIn: 'root' })
 export class PersonalService extends FireSubCollection<Personal> {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  private toastController = inject(ToastController);
+
   readonly path = 'Users/:uid/Personal'
   override readonly idKey = 'uid'
   override readonly memorize = true
@@ -39,11 +43,7 @@ export class PersonalService extends FireSubCollection<Personal> {
 
   form = new SettingsForm()
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    private toastController: ToastController
-  ) {
+  constructor() {
     super()
     this.personal$.subscribe(personal => {
       if (personal) {

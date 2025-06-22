@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
 import { AlertController, IonList, IonItem, IonInput, IonButton, IonContent } from '@ionic/angular/standalone'
@@ -40,6 +40,15 @@ import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pip
     ]
 })
 export class SupportDetailsComponent implements OnInit {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private milestoneService = inject(MilestoneService);
+  private postService = inject(PostService);
+  private profileService = inject(ProfileService);
+  private storyService = inject(StoryService);
+  private supportService = inject(SupportService);
+
 
   @Input() support?: Support
   @Input() showGoalLink = false
@@ -51,17 +60,6 @@ export class SupportDetailsComponent implements OnInit {
   isRecipient$?: Observable<boolean>
 
   counterForm = new FormControl('', { nonNullable: true })
-
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private milestoneService: MilestoneService,
-    private postService: PostService,
-    private profileService: ProfileService,
-    private storyService: StoryService,
-    private supportService: SupportService
-  ) { }
 
   ngOnInit() {
     if (!this.support?.id) return

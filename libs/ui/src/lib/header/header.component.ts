@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle } from '@ionic/angular/standalone'
@@ -24,16 +24,16 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
     ]
 })
 export class HeaderComponent {
+  private location = inject(Location);
+  private router = inject(Router);
+  screensize = inject(ScreensizeService);
+
 
   @Input() title?: string
   @Input() color = ''
   @Input() defaultBack = '/'
 
-  constructor(
-    private location: Location,
-    private router: Router,
-    public screensize: ScreensizeService
-  ) {
+  constructor() {
     addIcons({ arrowBack })
   }
 

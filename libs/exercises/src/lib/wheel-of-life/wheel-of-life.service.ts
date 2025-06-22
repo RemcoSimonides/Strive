@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 import { Observable } from 'rxjs'
@@ -23,7 +23,7 @@ export class WheelOfLifeService extends FireSubCollection<WheelOfLifeSettings> {
 
     if (actionType === 'add') settings.createdAt = timestamp
     settings.updatedAt = timestamp
-    
+
     return settings
   }
 
@@ -49,12 +49,12 @@ export class WheelOfLifeService extends FireSubCollection<WheelOfLifeSettings> {
   providedIn: 'root'
 })
 export class WheelOfLifeEntryService extends FireSubCollection<WheelOfLifeEntry<string>> {
+  private auth = inject(AuthService);
+  private personalService = inject(PersonalService);
+
   readonly path = 'Users/:uid/Exercises/WheelOfLife/Entries'
 
-  constructor(
-    private auth: AuthService,
-    private personalService: PersonalService
-  ) {
+  constructor() {
     super()
   }
 
@@ -63,7 +63,7 @@ export class WheelOfLifeEntryService extends FireSubCollection<WheelOfLifeEntry<
 
     if (actionType === 'add') item.createdAt = timestamp
     item.updatedAt = timestamp
-    
+
     return item
   }
 
@@ -102,7 +102,7 @@ export class WheelOfLifeEntryService extends FireSubCollection<WheelOfLifeEntry<
 
       return result
     })
- 
+
     return results
   }
 

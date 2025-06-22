@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, ViewChild, inject } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 
 import { IonRange, IonButton, IonIcon } from '@ionic/angular/standalone'
@@ -67,6 +67,11 @@ interface DesiredFormType {
     ]
 })
 export class WheelOfLifeEntryComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private personalService = inject(PersonalService);
+  private service = inject(WheelOfLifeEntryService);
+  private themeServive = inject(ThemeService);
+
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective
   @Input() set entry(entry: WheelOfLifeEntry<number> | undefined) {
     if (entry) {
@@ -178,13 +183,7 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
     })
   )
 
-  constructor(
-    private auth: AuthService,
-    private personalService: PersonalService,
-    private service: WheelOfLifeEntryService,
-    private themeServive: ThemeService
-  ) {
-
+  constructor() {
     this.sub = this.form.valueChanges.subscribe(value => {
       this._formValue.next(value)
       this.upsertChart()

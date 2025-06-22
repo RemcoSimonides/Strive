@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { ModalController, PopoverController, IonList, IonItem, IonLabel, IonIcon } from '@ionic/angular/standalone'
@@ -25,15 +25,14 @@ import { ThemeService } from '@strive/utils/services/theme.service'
     ]
 })
 export class ProfileOptionsComponent {
+  private auth = inject(AuthService);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+  pwa = inject(PWAService);
+  private router = inject(Router);
+  private themeService = inject(ThemeService);
 
-  constructor(
-    private auth: AuthService,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    public pwa: PWAService,
-    private router: Router,
-    private themeService: ThemeService
-  ) {
+  constructor() {
     addIcons({ downloadOutline });
   }
 

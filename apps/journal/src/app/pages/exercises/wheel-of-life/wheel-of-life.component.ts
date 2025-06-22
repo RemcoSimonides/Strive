@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 
@@ -50,6 +50,14 @@ import { WheelOfLifeResultsComponent } from '@strive/exercises/wheel-of-life/com
     ]
 })
 export class WheelOfLifePageComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private modalCtrl = inject(ModalController);
+  private router = inject(Router);
+  private screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+  private wheelOfLifeSettingsService = inject(WheelOfLifeService);
+  private service = inject(WheelOfLifeEntryService);
+
   uid$ = this.auth.uid$
 
   isMobile$ = this.screensize.isMobile$
@@ -76,15 +84,7 @@ export class WheelOfLifePageComponent implements OnDestroy {
     this.wheelOfLifeSettingsService.save(this.auth.uid, { interval })
   })
 
-  constructor(
-    private auth: AuthService,
-    private modalCtrl: ModalController,
-    private router: Router,
-    private screensize: ScreensizeService,
-    private seo: SeoService,
-    private wheelOfLifeSettingsService: WheelOfLifeService,
-    private service: WheelOfLifeEntryService
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: 'Wheel of Life - Strive Journal',
       description: 'Discover in which area in life you need improvement and track results over time'

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { ModalController } from '@ionic/angular'
 import { createGoalStakeholder, GoalStakeholder, User } from '@strive/model'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
@@ -15,16 +15,15 @@ import { ProfileService } from '@strive/user/profile.service'
     standalone: false
 })
 export class TeamComponent implements OnInit {
+	private modalCtrl = inject(ModalController);
+	private profileService = inject(ProfileService);
+	private stakeholder = inject(GoalStakeholderService);
+
 
 	stakeholders$?: Observable<(GoalStakeholder & { profile: User })[]>
 
 	@Input() id!: string
 
-  constructor(
-    private modalCtrl: ModalController,
-    private profileService: ProfileService,
-		private stakeholder: GoalStakeholderService
-  ) {}
 
 	ngOnInit() {
 		this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.id }).pipe(

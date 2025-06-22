@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, orderBy, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
 import { toDate, FireCollection, WriteOptions, joinWith } from 'ngfire'
 
@@ -14,13 +14,13 @@ import { endOfDay } from 'date-fns'
 
 @Injectable({ providedIn: 'root' })
 export class GoalService extends FireCollection<Goal> {
+  private auth = inject(AuthService);
+  private stakeholder = inject(GoalStakeholderService);
+
   readonly path = `Goals`
   override readonly memorize = true
 
-  constructor(
-    private auth: AuthService,
-    private stakeholder: GoalStakeholderService
-  ) {
+  constructor() {
     super()
   }
 

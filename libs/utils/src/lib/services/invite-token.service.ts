@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { doc, DocumentSnapshot, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 
@@ -12,8 +12,7 @@ export interface InviteToken {
   providedIn: 'root'
 })
 export class InviteTokenService {
-
-  constructor(private route: ActivatedRoute) { }
+  private route = inject(ActivatedRoute);
 
   public async checkInviteToken(id: string): Promise<boolean> {
     const { invite_token } = this.route.snapshot.queryParams
@@ -54,7 +53,7 @@ export class InviteTokenService {
     const data: InviteToken = { token, deadline }
 
     const ref = `Goals/${id}/InviteTokens/${token}`
-    await setDoc(doc(getFirestore(), ref), data) 
+    await setDoc(doc(getFirestore(), ref), data)
 
     return token
   }

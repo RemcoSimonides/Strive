@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild, inject } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router'
 
@@ -46,6 +46,12 @@ import { FooterComponent } from '@strive/ui/footer/footer.component'
     ]
 })
 export class ExplorePageComponent implements OnDestroy {
+  private algolia = inject(AlgoliaService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+
   @ViewChild(IonContent) content?: IonContent
 
   segmentChoice: 'overview' | 'search' = 'overview'
@@ -139,13 +145,7 @@ export class ExplorePageComponent implements OnDestroy {
     this.content?.scrollToTop()
   })
 
-  constructor(
-    private algolia: AlgoliaService,
-    private route: ActivatedRoute,
-    private router: Router,
-    public screensize: ScreensizeService,
-    private seo: SeoService
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: `Explore - Strive Journal`,
       description: 'Get inspired by searching goal of other users, and discover exercises which help to increase your chance of succeeding'

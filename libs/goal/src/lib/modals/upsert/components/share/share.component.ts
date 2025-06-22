@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { Share } from '@capacitor/share'
 
 import { IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'
@@ -21,13 +21,13 @@ import { GoalSharePopoverComponent } from '@strive/goal/popovers/share/share.com
     ]
 })
 export class GoalShareComponent {
+  private inviteTokenService = inject(InviteTokenService);
+  private popoverCtrl = inject(PopoverController);
+
 
   @Input() goal?: Goal
 
-  constructor(
-    private inviteTokenService: InviteTokenService,
-    private popoverCtrl: PopoverController
-  ) {
+  constructor() {
     addIcons({ shareSocialOutline })
   }
 

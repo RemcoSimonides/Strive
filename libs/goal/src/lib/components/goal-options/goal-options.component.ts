@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
@@ -18,18 +18,16 @@ import { AuthService } from '@strive/auth/auth.service'
     ]
 })
 export class GoalOptionsComponent {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+  private router = inject(Router);
+
 
   @Input() goal!: Goal
   @Input() stakeholder!: GoalStakeholder
-
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private goalService: GoalService,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private router: Router
-  ) { }
 
   markFinished() {
     if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')

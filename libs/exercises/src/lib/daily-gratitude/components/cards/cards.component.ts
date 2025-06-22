@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation, inject } from '@angular/core'
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 
@@ -41,6 +41,13 @@ import { IsTodayPipe, ToDatePipe } from '@strive/utils/pipes/date-fns.pipe'
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CardsComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private datePipe = inject(DatePipe);
+  private entryService = inject(DailyGratitudeEntryService);
+  private popoverCtrl = inject(PopoverController);
+  private screensize = inject(ScreensizeService);
+
 
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
 
@@ -110,14 +117,7 @@ export class CardsComponent implements OnDestroy {
     }
   })
 
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private datePipe: DatePipe,
-    private entryService: DailyGratitudeEntryService,
-    private popoverCtrl: PopoverController,
-    private screensize: ScreensizeService
-  ) {
+  constructor() {
     this.getEntry()
     addIcons({ calendarOutline, checkmark })
   }

@@ -1,11 +1,13 @@
 import { isPlatformBrowser } from '@angular/common'
-import { Injectable, ApplicationRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core'
+import { Injectable, ApplicationRef, OnDestroy, PLATFORM_ID, inject } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
 import { ToastController } from '@ionic/angular/standalone'
 import { ReplaySubject, Subscription, first, switchMap, interval } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class PWAService implements OnDestroy {
+  private platformId = inject(PLATFORM_ID);
+
 
   // https://web.dev/customize-install/
   private deferredPrompt: any
@@ -14,12 +16,11 @@ export class PWAService implements OnDestroy {
 
   private subs: Subscription[] = []
 
-  constructor(
-    appRef: ApplicationRef,
-    sw: SwUpdate,
-    toastCtrl: ToastController,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {
+  constructor() {
+    const appRef = inject(ApplicationRef);
+    const sw = inject(SwUpdate);
+    const toastCtrl = inject(ToastController);
+
     if (isPlatformBrowser(this.platformId)) {
       const everyHourOnceAppIsStable$ = appRef.isStable.pipe(
         first(isStable => isStable),

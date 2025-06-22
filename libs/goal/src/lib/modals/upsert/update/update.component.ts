@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, inject } from '@angular/core'
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'
@@ -31,19 +31,25 @@ import { AuthService } from '@strive/auth/auth.service'
     ]
 })
 export class GoalUpdateModalComponent extends ModalDirective implements OnInit {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+
   @ViewChild(GoalImagesComponent) imagesComponent?: GoalImagesComponent
 
   form?: GoalForm
 
   @Input() goal?: Goal
 
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     addIcons({ close })
   }
 

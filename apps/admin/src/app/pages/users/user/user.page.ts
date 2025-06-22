@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 
 import { orderBy, where } from 'firebase/firestore'
@@ -28,6 +28,14 @@ type StakeholderWithGoal = GoalStakeholder & { goal: Goal }
     standalone: false
 })
 export class UserPage {
+  private affirmationService = inject(AffirmationService);
+  private dailyGratitudeService = inject(DailyGratitudeService);
+  private dearFutureSelfService = inject(DearFutureSelfService);
+  private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute);
+  private goal = inject(GoalService);
+  private stakeholder = inject(GoalStakeholderService);
+
   exercises = exercises
 
   user$?: Observable<User | undefined>
@@ -40,15 +48,7 @@ export class UserPage {
 
   userForm = new UserForm()
 
-  constructor(
-    private affirmationService: AffirmationService,
-    private dailyGratitudeService: DailyGratitudeService,
-    private dearFutureSelfService: DearFutureSelfService,
-    private profileService: ProfileService,
-    private route: ActivatedRoute,
-    private goal: GoalService,
-    private stakeholder: GoalStakeholderService,
-  ) {
+  constructor() {
     this.route.params.subscribe(params => {
       const uid = params['uid'] as string
 
@@ -60,11 +60,11 @@ export class UserPage {
       this.affirmations$ = this.user$.pipe(
         switchMap(user => user?.uid ? this.affirmationService.getAffirmations$(user.uid) : of(undefined))
       )
-  
+
       this.dailyGratitude$ = this.user$.pipe(
         switchMap(user => user?.uid ? this.dailyGratitudeService.getSettings$(user.uid) : of(undefined))
       )
-  
+
       this.dearFutureSelf$ = this.user$.pipe(
         switchMap(user => user?.uid ? this.dearFutureSelfService.getSettings$(user.uid) : of(undefined))
       )
@@ -85,7 +85,7 @@ export class UserPage {
           if (a === b) return 0
           if (b === 1) return -1
           if (a === 1) return 1
-  
+
           if (a > b) return -1
           if (a < b) return 1
           return 0

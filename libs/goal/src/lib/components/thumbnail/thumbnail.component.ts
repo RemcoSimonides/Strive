@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 
 import { IonCard, IonThumbnail, IonIcon, IonProgressBar, IonButton, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -41,6 +41,8 @@ function aggregateEvents(events: GoalEvent[]): { event: EventType, count: number
     ]
 })
 export class GoalThumbnailComponent {
+  private popoverCtrl = inject(PopoverController);
+
 
   @Input() goal = createGoal()
 
@@ -61,7 +63,7 @@ export class GoalThumbnailComponent {
       }) as any
   }
 
-  constructor(private popoverCtrl: PopoverController) {
+  constructor() {
     addIcons({ checkmarkOutline, ellipsisVertical, alertOutline, flagOutline, personAddOutline, bookmarkOutline, createOutline, chatboxOutline })
   }
 

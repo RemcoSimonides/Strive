@@ -1,5 +1,5 @@
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 
 import { ModalController, IonButton, IonIcon } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -27,16 +27,16 @@ import { PostComponent } from '@strive/post/components/post/post.component'
     ]
 })
 export class StoryComponent {
+  private modalCtrl = inject(ModalController);
+  private goalService = inject(GoalService);
+
 
   @Input() story: StoryItem[] = []
   @Input() stakeholder = createGoalStakeholder()
   @Input() goalId!: string
   @Input() milestoneId?: string
 
-  constructor(
-    private modalCtrl: ModalController,
-    private goalService: GoalService
-  ) {
+  constructor() {
     addIcons({ pencilOutline, flagOutline, checkmarkOutline, personAddOutline, bookmarkOutline, alertOutline })
   }
 

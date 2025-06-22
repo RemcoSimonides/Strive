@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { getAuth } from 'firebase/auth'
 
@@ -9,6 +9,8 @@ import { getAuth } from 'firebase/auth'
     standalone: false
 })
 export class ShellComponent {
+  private router = inject(Router);
+
 
   public appPages = [
     { title: 'Dashboard', url: '/a/', icon: 'home' },
@@ -18,7 +20,6 @@ export class ShellComponent {
     { title: 'New Features', url: '/a/features', icon: 'boat' }
   ]
 
-  constructor(private router: Router) {}
 
   logout() {
     getAuth().signOut()

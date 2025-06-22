@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { orderBy } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
 import { Observable, of } from 'rxjs'
@@ -15,6 +15,10 @@ import { ProfileService } from '@strive/user/profile.service'
     standalone: false
 })
 export class AdminRoadmapComponent implements OnInit {
+  private goal = inject(GoalService);
+  private milestone = inject(MilestoneService);
+  private profileService = inject(ProfileService);
+
 
   milestones$?: Observable<Milestone[]>
   goal$?: Observable<Goal | undefined>
@@ -22,11 +26,6 @@ export class AdminRoadmapComponent implements OnInit {
 
 	@Input() id!: string
 
-  constructor(
-    private goal: GoalService,
-    private milestone: MilestoneService,
-    private profileService: ProfileService
-  ) {}
 
 	ngOnInit() {
     this.goal$ = this.goal.valueChanges(this.id)

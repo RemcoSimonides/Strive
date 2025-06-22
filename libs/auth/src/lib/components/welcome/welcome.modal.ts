@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewEncapsulation, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
@@ -33,6 +33,11 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class WelcomeModalComponent {
+  private modalCtrl = inject(ModalController);
+  private personalService = inject(PersonalService);
+  private router = inject(Router);
+  private screensize = inject(ScreensizeService);
+
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
 
   showIOSHeader$ = combineLatest([
@@ -45,12 +50,7 @@ export class WelcomeModalComponent {
   showStep1$ = this.personalService.fcmIsSupported
   showStep2 = false
 
-  constructor(
-    private modalCtrl: ModalController,
-    private personalService: PersonalService,
-    private router: Router,
-    private screensize: ScreensizeService
-  ) {
+  constructor() {
     const pages = ['/goal/', '/profile', '/exercise']
     this.showStep2 = !pages.some(value => this.router.url.includes(value))
     addIcons({ closeOutline });

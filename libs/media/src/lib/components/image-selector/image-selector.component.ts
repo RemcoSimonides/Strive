@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core'
 import { AbstractControl } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 
@@ -35,6 +35,9 @@ type CropStep = 'drop' | 'crop' | 'hovering' | 'show'
     ]
 })
 export class ImageSelectorComponent implements OnInit, OnDestroy {
+  private sanitizer = inject(DomSanitizer);
+  private toast = inject(ToastController);
+
   step = new BehaviorSubject<CropStep>('drop')
   private sub?: Subscription
 
@@ -51,10 +54,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>
 
-  constructor(
-    private sanitizer: DomSanitizer,
-    private toast: ToastController
-  ) {
+  constructor() {
     addIcons({ checkmarkOutline, closeOutline })
   }
 

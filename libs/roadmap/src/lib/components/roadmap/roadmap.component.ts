@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ReactiveFormsModule } from '@angular/forms'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, inject } from '@angular/core'
 
 import { AlertController, IonList, IonReorderGroup, IonItemSliding, IonItem, IonButton, IonIcon, IonReorder, IonItemOptions, IonItemOption, IonInput, IonSkeletonText, ItemReorderEventDetail, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -54,6 +54,13 @@ type MilestoneWithSupport = Milestone & { supports?: Support[], story?: StoryIte
     ]
 })
 export class RoadmapComponent {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private goalService = inject(GoalService);
+  private modalCtrl = inject(ModalController);
+  private milestone = inject(MilestoneService);
+
 
   @Input() goal!: Goal
   @Input() milestones!: MilestoneWithSupport[]
@@ -70,14 +77,7 @@ export class RoadmapComponent {
     return this.stakeholder.isAdmin || this.stakeholder.isAchiever
   }
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private goalService: GoalService,
-    private modalCtrl: ModalController,
-    private milestone: MilestoneService
-  ) {
+  constructor() {
     addIcons({ chatboxOutline, listOutline, alarmOutline, trashOutline })
   }
 

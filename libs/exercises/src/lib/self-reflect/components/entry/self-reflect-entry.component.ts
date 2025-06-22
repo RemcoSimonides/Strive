@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal, inject } from '@angular/core'
 import { CommonModule, Location } from '@angular/common';
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 
@@ -69,6 +69,11 @@ function getTitle({ category }: EntryStep): string {
     ]
 })
 export class SelfReflectEntryComponent extends ModalDirective implements OnInit {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private service = inject(SelfReflectEntryService);
+  private settingsService = inject(SelfReflectSettingsService);
+
 
   animatingSection = signal<undefined | 'visible' | 'invisible'>('invisible')
   title = signal<string>('')
@@ -108,14 +113,10 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
 
   get frequency() { return this.entry.frequency }
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    location: Location,
-    modalCtrl: ModalController,
-    private service: SelfReflectEntryService,
-    private settingsService: SelfReflectSettingsService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
     addIcons({ close })
   }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core'
 import { orderBy, where } from 'firebase/firestore'
 
 import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
@@ -30,6 +30,11 @@ import { IonIcon, IonList, IonItem, IonLabel, IonButton, IonInput } from '@ionic
     ]
 })
 export class SuggestionComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private chatGPTService = inject(ChatGPTService);
+  private milestoneService = inject(MilestoneService);
+  private scrolLService = inject(ScrollService);
+
 
   added$ = new BehaviorSubject<string[]>([])
   suggestions = new BehaviorSubject<ChatGPTMessage>(createChatGPTMessage())
@@ -69,12 +74,7 @@ export class SuggestionComponent implements OnInit, OnDestroy {
     this.updateAdded()
   }
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private chatGPTService: ChatGPTService,
-    private milestoneService: MilestoneService,
-    private scrolLService: ScrollService
-  ) {
+  constructor() {
     addIcons({ sparklesOutline, addOutline })
   }
 

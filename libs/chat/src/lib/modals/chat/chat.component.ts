@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core'
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 
 import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollContent, IonFooter, IonItem, IonTextarea, IonPopover, IonList, InfiniteScrollCustomEvent, ModalController, Platform, ScrollCustomEvent } from '@ionic/angular/standalone'
@@ -60,6 +60,15 @@ import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.compo
     ]
 })
 export class ChatModalComponent extends ModalDirective implements OnInit, AfterViewInit, OnDestroy {
+  private auth = inject(AuthService);
+  private commentService = inject(CommentService);
+  private goalService = inject(GoalService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private platform = inject(Platform);
+  private profileService = inject(ProfileService);
+  private stakeholderService = inject(GoalStakeholderService);
+
   @ViewChild(IonContent) content?: IonContent
   @ViewChildren('item') list?: QueryList<ElementRef>
   @Input() goal!: Goal
@@ -90,17 +99,14 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
 
   private subs: Subscription[] = []
 
-  constructor(
-    private auth: AuthService,
-    private commentService: CommentService,
-    private goalService: GoalService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private platform: Platform,
-    private profileService: ProfileService,
-    private stakeholderService: GoalStakeholderService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     const sub = this.platform.keyboardDidShow.subscribe(() => this.content?.scrollToBottom())
     this.subs.push(sub)
     addIcons({ settingsOutline, send });

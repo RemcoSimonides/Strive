@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { Location } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { IonContent, IonButton } from '@ionic/angular/standalone'
@@ -19,12 +19,13 @@ import { HeaderComponent } from '../header/header.component'
     ]
 })
 export class PagenotfoundComponent {
+  private location = inject(Location);
+
   hasBack = false
 
-  constructor(
-    private location: Location,
-    seo: SeoService
-  ) {
+  constructor() {
+    const seo = inject(SeoService);
+
     seo.generateTags({ title: `Page not found - Strive Journal` })
 
     const state = this.location.getState() as { navigationId: number }

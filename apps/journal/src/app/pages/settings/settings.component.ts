@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
@@ -42,6 +42,15 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
     ]
 })
 export class SettingsPageComponent {
+  private location = inject(Location);
+  private modalCtrl = inject(ModalController);
+  private platform = inject(Platform);
+  private pwa = inject(PWAService);
+  private router = inject(Router);
+  private screensize = inject(ScreensizeService);
+  private themeService = inject(ThemeService);
+  private versionService = inject(AppVersionService);
+
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
   isSafari = isSafari() && matchMedia('(display-mode: browser)').matches
@@ -54,16 +63,7 @@ export class SettingsPageComponent {
 
   version = this.versionService.version
 
-  constructor(
-    private location: Location,
-    private modalCtrl: ModalController,
-    private platform: Platform,
-    private pwa: PWAService,
-    private router: Router,
-    private screensize: ScreensizeService,
-    private themeService: ThemeService,
-    private versionService: AppVersionService
-  ) {
+  constructor() {
     addIcons({ moonOutline, sunnyOutline, downloadOutline, openOutline })
   }
 

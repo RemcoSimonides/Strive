@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { Location } from '@angular/common'
 
@@ -23,15 +23,21 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
     ]
 })
 export class GoalUpdatesModalComponent extends ModalDirective {
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private router = inject(Router);
+
 
   @Input() stakeholder!: StakeholderWithGoalAndEvents
 
-  constructor(
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private router: Router,
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     addIcons({ lockClosedOutline, shield, flag, star })
   }
 

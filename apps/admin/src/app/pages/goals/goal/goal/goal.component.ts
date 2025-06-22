@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController } from '@ionic/angular'
 import { Goal } from '@strive/model'
@@ -14,17 +14,16 @@ import { Observable } from 'rxjs'
     standalone: false
 })
 export class GoalComponent implements OnInit {
+  private alertCtrl = inject(AlertController);
+  private goal = inject(GoalService);
+  private router = inject(Router);
+
 
   goal$?: Observable<Goal | undefined>
   goalForm = new GoalForm()
 
   @Input() id!: string
 
-  constructor(
-    private alertCtrl: AlertController,
-    private goal: GoalService,
-    private router: Router
-  ) {}
 
   ngOnInit() {
     this.goal$ = this.goal.valueChanges(this.id)
@@ -76,10 +75,10 @@ export class GoalComponent implements OnInit {
     //       spinner: 'lines'
     //     })
     //     loading.present()
-    
+
     //     const duplicateGoalFn = httpsCallable(this.functions, 'duplicateGoal')
     //     const { error, result } = await duplicateGoalFn({ goalId: this.id, uid }).then(res => res.data) as { error: string, result: string }
-    
+
     //     if (!!error) {
     //       loading.dismiss()
     //       throw new Error(result)

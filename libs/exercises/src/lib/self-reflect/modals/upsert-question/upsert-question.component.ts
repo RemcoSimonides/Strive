@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, signal, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { AlertController, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -52,6 +52,11 @@ import { SelfReflectEntry, SelfReflectFrequencyWithNever, SelfReflectQuestion, c
     ]
 })
 export class SelfReflectQuestionModalComponent extends ModalDirective implements OnInit {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private settingsService = inject(SelfReflectSettingsService);
+  private wheelOfLifeEntryService = inject(WheelOfLifeEntryService);
+
 
   form = new SelfReflectQuestionForm()
   isCustomQuestion = signal<boolean>(false)
@@ -68,14 +73,10 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
   @Input() question?: SelfReflectQuestion
   @Input() entries: SelfReflectEntry[] = []
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    location: Location,
-    modalCtrl: ModalController,
-    private settingsService: SelfReflectSettingsService,
-    private wheelOfLifeEntryService: WheelOfLifeEntryService
-) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
 
     this.rangeForm.valueChanges.subscribe(index => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input, inject } from '@angular/core'
 import { IonContent, IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
 import { addYears, endOfYear, startOfYear } from 'date-fns'
 
@@ -16,12 +16,12 @@ import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
     ]
 })
 export class DeadlinePopoverComponent {
+  private popoverCtrl = inject(PopoverController);
+
   @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 
   @Input() caption?: string
-
-  constructor(private popoverCtrl: PopoverController) { }
 
   async deadlineSelect(value: '1' | 'end0' | 'end1' | '3' | '10' | 'custom') {
     const now = new Date()

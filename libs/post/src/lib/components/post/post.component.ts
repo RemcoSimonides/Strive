@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'
-import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, Inject, Renderer2, DOCUMENT } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, Renderer2, DOCUMENT, inject } from '@angular/core'
 import { ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { IonCard, IonAvatar, IonButton, IonIcon, IonCardContent } from '@ionic/angular/standalone'
@@ -39,6 +39,11 @@ import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PostComponent implements AfterViewInit {
+  private renderer = inject(Renderer2);
+  private document = inject<Document>(DOCUMENT);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+
 
   @Input() set storyItem(storyItem: StoryItem) {
     if (!storyItem) return
@@ -52,12 +57,7 @@ export class PostComponent implements AfterViewInit {
   author?: User
   post?: Post
 
-  constructor(
-    private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController
-  ) {
+  constructor() {
     addIcons({ ellipsisVerticalOutline, play })
   }
 

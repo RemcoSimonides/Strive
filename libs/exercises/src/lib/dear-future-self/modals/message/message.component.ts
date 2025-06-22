@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core'
 import { CommonModule, Location } from '@angular/common';
 import { IonTitle, IonContent, ModalController } from '@ionic/angular/standalone'
 
@@ -24,19 +24,25 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
     ]
 })
 export class MessageModalComponent extends ModalDirective implements OnInit {
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private dfsService = inject(DearFutureSelfService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private personalService = inject(PersonalService);
+
 
   @Input() dfs?: string
   @Input() message!: Message
 
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private dfsService: DearFutureSelfService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private personalService: PersonalService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 
   async ngOnInit() {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { AggregationService } from '@strive/utils/services/aggregation.service'
 
 @Component({
@@ -9,8 +9,9 @@ import { AggregationService } from '@strive/utils/services/aggregation.service'
     standalone: false
 })
 export class DashboardComponent {
+	private aggregation = inject(AggregationService);
+
 
 	aggregation$ = this.aggregation.valueChanges()
 
-	constructor(private aggregation: AggregationService) {}
 }

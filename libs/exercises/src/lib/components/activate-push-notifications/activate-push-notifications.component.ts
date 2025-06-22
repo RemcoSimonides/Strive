@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { IonCard, IonCardContent, IonButton, ToastController } from '@ionic/angular/standalone'
 import { CommonModule } from '@angular/common'
 
@@ -18,17 +18,15 @@ import { PersonalService } from '@strive/user/personal.service'
     ]
 })
 export class ActivatePushNotificationsComponent {
+  private personal = inject(PersonalService);
+  private toast = inject(ToastController);
+
 
   noFcmToken$ = this.personal.personal$.pipe(
     map(personal => !personal?.fcmTokens?.length)
   )
 
   fcmNotSupported$ = this.personal.fcmIsSupported.then(isSupported => !isSupported)
-
-  constructor(
-    private personal: PersonalService,
-    private toast: ToastController,
-  ) { }
 
   async pushNotifications() {
     const res = await this.personal.registerFCM(true, true)

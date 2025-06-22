@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
@@ -10,10 +10,12 @@ import { Reminder, createReminder } from '@strive/model'
   providedIn: 'root'
 })
 export class ReminderService extends FireSubCollection<Reminder> {
+  private auth = inject(AuthService);
+
   readonly path = 'Goals/:goalId/GStakeholders/:uid/Reminders'
   override readonly memorize = true
 
-  constructor(private auth: AuthService) {
+  constructor() {
     super()
   }
 

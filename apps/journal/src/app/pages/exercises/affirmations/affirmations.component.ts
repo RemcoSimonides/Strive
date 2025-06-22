@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, inject } from '@angular/core'
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, UntypedFormArray } from '@angular/forms'
 
 import { IonContent, IonList, IonItem, IonLabel, IonText, IonIcon, IonButton, IonInput, IonSelect, IonSelectOption, ModalController, PopoverController } from '@ionic/angular/standalone'
@@ -53,6 +53,15 @@ function timeFormControls() {
     ]
 })
 export class AffirmationsPageComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private modalCtrl = inject(ModalController);
+  private personalService = inject(PersonalService);
+  private popoverCtrl = inject(PopoverController);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+  private service = inject(AffirmationService);
+
   isLoading = true
 
   enumAffirmationCategory = enumAffirmationCategory
@@ -72,16 +81,7 @@ export class AffirmationsPageComponent implements OnDestroy {
   private subs: Subscription[] = []
   uid$ = this.auth.uid$
 
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private modalCtrl: ModalController,
-    private personalService: PersonalService,
-    private popoverCtrl: PopoverController,
-    public screensize: ScreensizeService,
-    private seo: SeoService,
-    private service: AffirmationService
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: 'Affirmations - Strive Journal',
       description: 'Exercise to help you prioritize positive thoughts over negative thoughts'

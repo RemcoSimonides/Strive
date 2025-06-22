@@ -1,11 +1,13 @@
 import { isPlatformServer } from '@angular/common'
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core'
+import { Injectable, PLATFORM_ID, inject } from '@angular/core'
 
 import { BehaviorSubject } from 'rxjs'
 import { distinctUntilChanged, map } from 'rxjs/operators'
 
 @Injectable({ providedIn: 'root' })
 export class ScreensizeService {
+  private platformId = inject(PLATFORM_ID);
+
 
   private size = new BehaviorSubject<'desktop' | 'tablet' | 'mobile'>('mobile')
   public size$ = this.size.asObservable().pipe(distinctUntilChanged())
@@ -22,10 +24,6 @@ export class ScreensizeService {
   private isMobile = new BehaviorSubject<boolean>(false)
   public isMobile$ = this.isMobile.asObservable().pipe(distinctUntilChanged())
   public isNotMobile$ = this.isMobile$.pipe(map(isMobile => !isMobile))
-
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {}
 
   onResize(size: number) {
     this.width.next(size)

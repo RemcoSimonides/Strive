@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { CommonModule, Location } from '@angular/common';
 import { IonContent, IonTitle, ModalController } from '@ionic/angular/standalone'
 
@@ -32,20 +32,26 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
     ]
 })
 export class AddSupportModalComponent extends ModalDirective implements OnInit {
+  private auth = inject(AuthService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private profileService = inject(ProfileService);
+  private support = inject(SupportService);
+
 
   @Input() goal!: Goal
   @Input() milestone?: Milestone
 
   supports$?: Observable<SupportsGroupedByGoal[]>
 
-  constructor(
-    private auth: AuthService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private profileService: ProfileService,
-    private support: SupportService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { CommonModule, Location } from '@angular/common';
 
@@ -130,6 +130,28 @@ function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStak
     ]
 })
 export class GoalPageComponent implements OnDestroy {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private commentService = inject(CommentService);
+  private goalService = inject(GoalService);
+  private inviteTokenService = inject(InviteTokenService);
+  private location = inject(Location);
+  private mediaService = inject(MediaService);
+  private milestoneService = inject(MilestoneService);
+  private modalCtrl = inject(ModalController);
+  private personalService = inject(PersonalService);
+  private popoverCtrl = inject(PopoverController);
+  private postService = inject(PostService);
+  private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private stakeholderService = inject(GoalStakeholderService);
+  private stravaService = inject(StravaService);
+  private storyService = inject(StoryService);
+  private support = inject(SupportService);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+
 
   goal: Goal | undefined
   goal$: Observable<Goal | undefined>
@@ -176,29 +198,7 @@ export class GoalPageComponent implements OnDestroy {
 
   private accessSubscription: Subscription
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private commentService: CommentService,
-    private goalService: GoalService,
-    private inviteTokenService: InviteTokenService,
-    private location: Location,
-    private mediaService: MediaService,
-    private milestoneService: MilestoneService,
-    private modalCtrl: ModalController,
-    private personalService: PersonalService,
-    private popoverCtrl: PopoverController,
-    private postService: PostService,
-    private profileService: ProfileService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private stakeholderService: GoalStakeholderService,
-    private stravaService: StravaService,
-    private storyService: StoryService,
-    private support: SupportService,
-    public screensize: ScreensizeService,
-    private seo: SeoService
-  ) {
+  constructor() {
     const goalId$ = this.route.params.pipe(
       map(params => params['id'] as string),
       shareReplay({ bufferSize: 1, refCount: true })

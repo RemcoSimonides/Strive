@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core'
+import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener, inject } from '@angular/core'
 import { isValidHttpUrl } from '@strive/utils/helpers'
 import { Theme, ThemeService } from '@strive/utils/services/theme.service'
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs'
@@ -13,6 +13,9 @@ function getAssetPath(asset: string, theme: Theme) {
   standalone: true
 })
 export class ImageDirective implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private themeService = inject(ThemeService);
+
   private sub?: Subscription
 
   private parameters = new BehaviorSubject<ImageParameters>({
@@ -66,11 +69,6 @@ export class ImageDirective implements OnInit, OnDestroy {
   @Input() set asset(asset: string) {
     this.asset$.next(asset)
   }
-
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private themeService: ThemeService
-  ) { }
 
   @HostListener('error')
   error() {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, limit, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
@@ -11,6 +11,8 @@ import { PersonalService } from '@strive/user/personal.service'
   providedIn: 'root'
 })
 export class NotificationService extends FireSubCollection<NotificationBase> {
+  private personal = inject(PersonalService);
+
   readonly path = `Users/:uid/Notifications`
   override readonly memorize = true
 
@@ -27,8 +29,8 @@ export class NotificationService extends FireSubCollection<NotificationBase> {
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   )
-  
-  constructor(private personal: PersonalService) { 
+
+  constructor() {
     super()
   }
 

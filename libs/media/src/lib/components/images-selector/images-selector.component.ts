@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormArray } from '@angular/forms'
 import { SafeUrl } from '@angular/platform-browser'
@@ -31,6 +31,11 @@ type CropStep = 'drop' | 'hovering'
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ImagesSelectorComponent implements OnInit, OnDestroy {
+  private alertCtrl = inject(AlertController);
+  private cdr = inject(ChangeDetectorRef);
+  private popoverCtrl = inject(PopoverController);
+  private toast = inject(ToastController);
+
 
   step = new BehaviorSubject<CropStep>('drop')
 
@@ -45,12 +50,7 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
 
-  constructor(
-    private alertCtrl: AlertController,
-    private cdr: ChangeDetectorRef,
-    private popoverCtrl: PopoverController,
-    private toast: ToastController
-  ) {
+  constructor() {
     addIcons({ imagesOutline })
   }
 

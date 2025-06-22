@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core'
 
-import { IonContent, IonIcon, ModalController } from '@ionic/angular/standalone'
+import { IonContent, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { chevronUpOutline } from 'ionicons/icons'
 
@@ -48,21 +48,21 @@ import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
     ]
 })
 export class NotificationsPageComponent implements OnInit {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  private milestoneService = inject(MilestoneService);
+  private modalCtrl = inject(ModalController);
+  private notification = inject(NotificationService);
+  private seo = inject(SeoService);
+  private supportService = inject(SupportService);
+  private personal = inject(PersonalService);
+  private profileService = inject(ProfileService);
+
 
   notifications$?: Observable<Notification[]>
   uid$ = this.auth.uid$
 
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService,
-    private milestoneService: MilestoneService,
-    private modalCtrl: ModalController,
-    private notification: NotificationService,
-    private seo: SeoService,
-    private supportService: SupportService,
-    private personal: PersonalService,
-    private profileService: ProfileService
-  ) {
+  constructor() {
     addIcons({ chevronUpOutline });
   }
 

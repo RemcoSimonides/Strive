@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { map } from 'rxjs/operators'
 
@@ -10,11 +10,12 @@ import { map } from 'rxjs/operators'
     standalone: false
 })
 export class GoalViewPage {
+  private route = inject(ActivatedRoute);
+
   segmentChoice: 'goal' | 'roadmap' | 'team' | 'story' = 'goal'
 
   id$ = this.route.params.pipe(map(params => params['id']))
 
-  constructor(private route: ActivatedRoute) {}
 
   segmentChanged(ev: any) {
     this.segmentChoice = ev.detail.value

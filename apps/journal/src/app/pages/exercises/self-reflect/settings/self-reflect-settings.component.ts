@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal, inject } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { PopoverController } from '@ionic/angular/standalone'
 import { IonContent, IonList, IonItem, IonSelect, IonSelectOption, IonLabel, IonText } from '@ionic/angular/standalone'
@@ -36,6 +36,12 @@ import { SelfReflectSettingsForm } from '@strive/exercises/self-reflect/forms/se
     ]
 })
 export class SelfReflectSettingsComponent implements OnInit {
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private popoverCtrl = inject(PopoverController);
+  private screensize = inject(ScreensizeService);
+  private service = inject(SelfReflectSettingsService);
+
 
   isMobile$ = this.screensize.isMobile$
   loading = signal<boolean>(true)
@@ -47,13 +53,7 @@ export class SelfReflectSettingsComponent implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private popoverCtrl: PopoverController,
-    private screensize: ScreensizeService,
-    private service: SelfReflectSettingsService
-  ) {
+  constructor() {
 
     this.form.valueChanges.subscribe(() => {
       if (!this.auth.uid) return

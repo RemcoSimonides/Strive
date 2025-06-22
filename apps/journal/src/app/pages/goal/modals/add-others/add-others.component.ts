@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, Input, Pipe, PipeTransform } from '@angular/core'
+import { Component, Input, Pipe, PipeTransform, inject } from '@angular/core'
 import { IonAvatar, IonLabel, IonButton, IonContent, IonItem, IonList, IonSpinner, IonFooter, IonIcon, IonSearchbar, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { shareSocialOutline } from 'ionicons/icons'
@@ -85,6 +85,16 @@ export class InviteTextPipe implements PipeTransform {
     styleUrls: ['./add-others.component.scss']
 })
 export class AddOthersModalComponent extends ModalDirective {
+  private auth = inject(AuthService);
+  private algoliaService = inject(AlgoliaService);
+  private stakeholderService = inject(GoalStakeholderService);
+  private inviteTokenService = inject(InviteTokenService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private popoverCtrl = inject(PopoverController);
+  private profileService = inject(ProfileService);
+  private spectatorService = inject(SpectatorService);
+
 
   private goalId$ = new ReplaySubject<string>(1)
   isLoading$ = new BehaviorSubject(true)
@@ -165,18 +175,14 @@ export class AddOthersModalComponent extends ModalDirective {
 
   query = ''
 
-  constructor(
-    private auth: AuthService,
-    private algoliaService: AlgoliaService,
-    private stakeholderService: GoalStakeholderService,
-    private inviteTokenService: InviteTokenService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private profileService: ProfileService,
-    private spectatorService: SpectatorService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     addIcons({ shareSocialOutline })
   }
 

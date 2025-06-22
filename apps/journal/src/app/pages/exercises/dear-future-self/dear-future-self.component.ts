@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 
 import { IonContent, IonCard, IonItem, IonTextarea, IonButton, IonDatetime, IonIcon, IonList, ModalController } from '@ionic/angular/standalone'
@@ -54,6 +54,14 @@ const initial = `Dear Future Self,
     ]
 })
 export class DearFutureSelfPageComponent {
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private dearFutureSelfService = inject(DearFutureSelfService);
+  private modalCtrl = inject(ModalController);
+  private personalService = inject(PersonalService);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+
   description = new FormControl(initial)
   date = new FormControl()
   duration?: 2 | 5 | 10
@@ -88,15 +96,7 @@ export class DearFutureSelfPageComponent {
 
   state: 'writing' | 'sending' | 'sent' = 'writing'
 
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private dearFutureSelfService: DearFutureSelfService,
-    private modalCtrl: ModalController,
-    private personalService: PersonalService,
-    public screensize: ScreensizeService,
-    private seo: SeoService
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: 'Dear Future Self - Strive Journal',
       description: 'Surprise your future self with a letter from the past'

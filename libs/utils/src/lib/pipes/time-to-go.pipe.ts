@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core'
+import { Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy, inject } from '@angular/core'
 
 @Pipe({
 	name: 'timeToGo',
@@ -6,8 +6,11 @@ import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy } from '@angul
 	standalone: true
 })
 export class TimeToGoPipe implements PipeTransform, OnDestroy {
+	private changeDetectorRef = inject(ChangeDetectorRef);
+	private ngZone = inject(NgZone);
+
 	private timer?: number | null
-	constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) {}
+
 	transform(value:Date) {
 		this.removeTimer()
 		const d = new Date(value)

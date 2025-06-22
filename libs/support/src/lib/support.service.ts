@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp, where } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
@@ -10,6 +10,8 @@ import { createSupportBase, SupportBase } from '@strive/model'
 
 @Injectable({ providedIn: 'root' })
 export class SupportService extends FireSubCollection<SupportBase> {
+  private auth = inject(AuthService);
+
   readonly path = 'Goals/:goalId/Supports'
   override readonly memorize = true
 
@@ -25,7 +27,7 @@ export class SupportService extends FireSubCollection<SupportBase> {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  constructor(private auth: AuthService) {
+  constructor() {
     super()
   }
 

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { IonContent, ModalController } from '@ionic/angular/standalone'
 
 import { Support } from '@strive/model'
@@ -20,13 +20,19 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
     ]
 })
 export class SupportDetailsModalComponent extends ModalDirective {
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+
 
   @Input() support?: Support
 
-  constructor(
-    protected override location: Location,
-    protected override modalCtrl: ModalController
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 }

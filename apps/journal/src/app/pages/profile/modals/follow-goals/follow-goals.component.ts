@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, signal, inject } from '@angular/core'
 
 import { IonContent, IonButton, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
 
@@ -16,11 +16,9 @@ import { map, of, switchMap } from 'rxjs'
   name: 'getStakeholder'
 })
 class GetStakeholderPipe implements PipeTransform {
+  private auth = inject(AuthService);
+  private stakeholder = inject(GoalStakeholderService);
 
-  constructor(
-    private auth: AuthService,
-    private stakeholder: GoalStakeholderService
-  ) { }
 
   transform(goal: Goal) {
     return this.auth.uid$.pipe(
@@ -49,17 +47,18 @@ class GetStakeholderPipe implements PipeTransform {
     ]
 })
 export class FollowGoalsModalComponent extends ModalDirective {
+  private auth = inject(AuthService);
+  private stakeholderService = inject(GoalStakeholderService);
+
   allSpectated = signal(false)
 
   @Input() goals: Goal[] = []
   @Input() username = ''
 
-  constructor(
-    private auth: AuthService,
-    location: Location,
-    modalCtrl: ModalController,
-    private stakeholderService: GoalStakeholderService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
   }
 

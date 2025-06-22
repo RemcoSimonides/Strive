@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { Observable } from 'rxjs'
@@ -11,12 +11,9 @@ import { AuthService } from '../auth.service'
   providedIn: 'root'
 })
 export class AuthGuardService  {
-
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    @Inject('APP_NAME') private appName: 'journal' | 'admin'
-  ) { }
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  private appName = inject<'journal' | 'admin'>('APP_NAME' as any);
 
   canActivate(): Observable<boolean> {
     return this.auth.user$.pipe(

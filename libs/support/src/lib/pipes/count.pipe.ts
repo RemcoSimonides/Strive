@@ -1,5 +1,5 @@
 
-import { Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform, inject } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
 import { Support, SupportsGroupedByGoal } from '@strive/model'
 
@@ -28,8 +28,7 @@ export class SupportCounterPipe implements PipeTransform {
 
 @Pipe({ name: 'needsDecision', standalone: true })
 export class NeedsDecisionPipe implements PipeTransform {
-
-  constructor(private auth: AuthService) {}
+  private auth = inject(AuthService);
 
   transform(goal: SupportsGroupedByGoal, id?: string) {
     if (!this.auth.uid) return false

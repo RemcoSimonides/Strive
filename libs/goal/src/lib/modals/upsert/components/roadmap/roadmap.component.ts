@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, inject } from '@angular/core'
 import { orderBy, where } from 'firebase/firestore'
 import { Observable, tap } from 'rxjs'
 
@@ -24,17 +24,15 @@ import { IonContent } from '@ionic/angular/standalone'
     ]
 })
 export class GoalRoadmapComponent implements OnInit {
+  private elRef = inject(ElementRef);
+  private milestoneService = inject(MilestoneService);
+  private scrollService = inject(ScrollService);
+
 
   milestones$?: Observable<Milestone[]>
   stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true })
 
   @Input() goal?: Goal
-
-  constructor(
-    private elRef: ElementRef,
-    private milestoneService: MilestoneService,
-    private scrollService: ScrollService
-  ) { }
 
   ngOnInit() {
     if (!this.goal) return

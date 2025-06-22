@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 
 import { IonContent, IonButton } from '@ionic/angular/standalone'
@@ -24,6 +24,8 @@ import { SeoService } from '@strive/utils/services/seo.service'
     ]
 })
 export class DownloadPageComponent {
+  private pwa = inject(PWAService);
+
 
   isStandalone = typeof matchMedia !== 'undefined' ? matchMedia('(display-mode: standalone)').matches : false
   isBrowser = typeof matchMedia !== 'undefined' ? matchMedia('(display-mode: browser)').matches : false
@@ -31,10 +33,10 @@ export class DownloadPageComponent {
 
   showInstallPromotion$ = this.pwa.showInstallPromotion$
 
-  constructor(
-    private pwa: PWAService,
-    seo: SeoService
-  ) {
+
+  constructor() {
+    const seo = inject(SeoService);
+
     seo.generateTags({
       title: 'Download - Strive Journal',
       description: 'Journaling, Affirmations, Dear Future Self, Daily Gratitude and more to increase your chance of succeeding'

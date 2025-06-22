@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { Directive, HostBinding, HostListener } from '@angular/core'
+import { Directive, HostBinding, HostListener, inject } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 import { PopoverController } from '@ionic/angular/standalone'
 
@@ -7,6 +7,9 @@ import { PopoverController } from '@ionic/angular/standalone'
   selector: '[strivePopover]'
 })
 export class PopoverDirective {
+  protected location = inject(Location);
+  protected popoverCtrl = inject(PopoverController);
+
   private returnData: unknown
   private returnRole?: string
   private isWeb = Capacitor.getPlatform() === 'web'
@@ -18,10 +21,7 @@ export class PopoverDirective {
     this.popoverCtrl.dismiss(this.returnData, this.returnRole)
   }
 
-  constructor(
-    protected location: Location,
-    protected popoverCtrl: PopoverController
-  ) {
+  constructor() {
     if (this.isWeb || this.isIOS) {
       window.history.pushState(null, '', window.location.href)
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 
@@ -33,6 +33,12 @@ import { AuthService } from '@strive/auth/auth.service'
     ]
 })
 export class HeaderRootComponent {
+  private auth = inject(AuthService);
+  private modalCtrl = inject(ModalController);
+  private notification = inject(NotificationService);
+  private screensize = inject(ScreensizeService);
+  private themeService = inject(ThemeService);
+
 
   @Input() title?: string
 
@@ -43,13 +49,7 @@ export class HeaderRootComponent {
   isMobile$ = this.screensize.isMobile$
   lightTheme$ = this.themeService.light$
 
-  constructor(
-    private auth: AuthService,
-    private modalCtrl: ModalController,
-    private notification: NotificationService,
-    private screensize: ScreensizeService,
-    private themeService: ThemeService
-  ) {
+  constructor() {
     addIcons({ searchOutline, notificationsOutline, settingsOutline, menuOutline })
   }
 

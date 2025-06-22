@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { addIcons } from 'ionicons'
 import { arrowBack, closeOutline } from 'ionicons/icons'
@@ -21,6 +21,8 @@ import { map } from 'rxjs'
     ]
 })
 export class HeaderModalComponent {
+  private screensize = inject(ScreensizeService);
+
 
   isDesktop$ = this.screensize.isDesktop$
   isNotDesktop$ = this.screensize.isDesktop$.pipe(
@@ -31,9 +33,7 @@ export class HeaderModalComponent {
 
   @Output() dismiss = new EventEmitter()
 
-  constructor(
-    private screensize: ScreensizeService
-  ) {
+  constructor() {
     addIcons({ arrowBack, closeOutline })
   }
 }

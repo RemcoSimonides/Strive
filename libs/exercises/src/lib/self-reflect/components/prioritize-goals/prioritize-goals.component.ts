@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { FormArray, FormControl } from '@angular/forms'
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal, inject } from '@angular/core'
 import { IonList, IonReorderGroup, IonItem, IonThumbnail, IonLabel, IonReorder, IonButton, ItemReorderEventDetail } from '@ionic/angular/standalone'
 import { BehaviorSubject, combineLatest, map, of, switchMap, tap } from 'rxjs'
 import { AuthService } from '@strive/auth/auth.service'
@@ -28,6 +28,9 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
     ]
 })
 export class PrioritizeGoalsComponent {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+
 
   goals$ = this.auth.profile$.pipe(
     switchMap(profile => profile
@@ -82,11 +85,6 @@ export class PrioritizeGoalsComponent {
     this._answers$.next(entry.prioritizeGoals)
   }
   @Output() step = new EventEmitter<'next' | 'previous'>()
-
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService
-  ) { }
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>, stakeholders: StakeholderWithGoal[]) {
     if (!this.auth.uid || !this._form) return

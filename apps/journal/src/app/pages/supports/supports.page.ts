@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 
 import { IonContent, IonRefresher, IonRefresherContent, ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
 
@@ -45,21 +45,22 @@ import { MilestonePathPipe } from '@strive/roadmap/pipes/path.pipe'
     ]
 })
 export class SupportsPageComponent {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  private milestoneService = inject(MilestoneService);
+  private modalCtrl = inject(ModalController);
+  private profileService = inject(ProfileService);
+  private screensize = inject(ScreensizeService);
+  private support = inject(SupportService);
+
 
   objectivesWithSupports$: Observable<SupportsGroupedByGoal[]>
   uid$ = this.auth.uid$
   isMobile$ = this.screensize.isMobile$
 
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService,
-    private milestoneService: MilestoneService,
-    private modalCtrl: ModalController,
-    private profileService: ProfileService,
-    private screensize: ScreensizeService,
-    seo: SeoService,
-    private support: SupportService
-  ) {
+  constructor() {
+    const seo = inject(SeoService);
+
     seo.generateTags({ title: `Supports - Strive Journal` })
 
     this.objectivesWithSupports$ = this.auth.profile$.pipe(

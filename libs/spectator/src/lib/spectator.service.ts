@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp, where } from 'firebase/firestore'
 import { FireSubCollection } from 'ngfire'
 import { map } from 'rxjs'
@@ -11,11 +11,13 @@ import { AuthService } from '@strive/auth/auth.service'
   providedIn: 'root'
 })
 export class SpectatorService extends FireSubCollection<Spectator> {
+  private auth = inject(AuthService);
+
   readonly path = `Users/:uid/Spectators`
   override readonly idKey = 'uid'
   override readonly memorize = true
 
-  constructor(private auth: AuthService) {
+  constructor() {
     super()
   }
 
@@ -24,7 +26,7 @@ export class SpectatorService extends FireSubCollection<Spectator> {
 
     if (actionType === 'add') spectator.createdAt = timestamp
     spectator.updatedAt = timestamp
-    
+
     return spectator
   }
 

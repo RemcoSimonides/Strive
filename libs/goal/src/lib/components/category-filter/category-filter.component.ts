@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 
 import { IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
@@ -15,17 +15,15 @@ import { Category, CategoryBlock, categories as categoryBlocks } from '@strive/m
     ]
 })
 export class CategoryFilterComponent {
+  private popoverCtrl = inject(PopoverController);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
 
   _categoryBlocks: CategoryBlock[] = []
   @Input() set categories(categories: Category[]) {
     this._categoryBlocks = categoryBlocks.filter(b => categories.includes(b.id))
   }
-
-  constructor(
-    private popoverCtrl: PopoverController,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
 
   all() {
     this.router.navigate(['.'], {

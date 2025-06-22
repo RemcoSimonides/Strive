@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, Pipe, PipeTransform } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Pipe, PipeTransform, inject } from '@angular/core'
 
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
 
@@ -69,6 +69,11 @@ interface Exercise {
     providers: [GetExercisePipe]
 })
 export class ExercisesPageComponent {
+  private auth = inject(AuthService);
+  private exerciseService = inject(ExerciseService);
+  private screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+
   exercises$: Observable<Exercise[]> = this.auth.profile$.pipe(
     switchMap(profile => profile ? this.exerciseService.valueChanges({ uid: profile.uid }) : of([])),
     map(exerciseSettings => exercises.map(exercise => {
@@ -114,12 +119,7 @@ export class ExercisesPageComponent {
 
   isMobile$ = this.screensize.isMobile$
 
-  constructor(
-    private auth: AuthService,
-    private exerciseService: ExerciseService,
-    private screensize: ScreensizeService,
-    private seo: SeoService
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: 'Exercises - Strive Journal',
       description: 'Dear Future Self, Affirmations, Daily Gratitude and more'

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 
@@ -68,6 +68,17 @@ import { PagenotfoundComponent } from '@strive/ui/404/404.component'
     ]
 })
 export class ProfilePageComponent {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+  private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+  private spectatorService = inject(SpectatorService);
+
   isNotMobile$ = this.screensize.isNotMobile$
 
   private profileId$: Observable<string | undefined> = combineLatest([
@@ -141,18 +152,7 @@ export class ProfilePageComponent {
 
   loading$ = new BehaviorSubject<boolean>(true)
 
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private profileService: ProfileService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private screensize: ScreensizeService,
-    private seo: SeoService,
-    private spectatorService: SpectatorService
-  ) {
+  constructor() {
     addIcons({ shareSocialOutline, star, starOutline, add, lockClosedOutline, flagOutline })
   }
 

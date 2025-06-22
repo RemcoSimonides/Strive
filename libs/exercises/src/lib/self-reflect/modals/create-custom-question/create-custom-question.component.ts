@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ModalController } from '@ionic/angular/standalone'
 import { IonTitle, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
@@ -28,6 +28,9 @@ import { AuthService } from '@strive/auth/auth.service'
     ]
 })
 export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
+  private auth = inject(AuthService);
+  private settingsService = inject(SelfReflectSettingsService);
+
 
   form = new FormGroup({
     question: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -37,12 +40,10 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
     category: new FormControl<SelfReflectCategory | ''>('', { nonNullable: true, validators: [Validators.required] })
   })
 
-  constructor(
-    private auth: AuthService,
-    location: Location,
-    modalCtrl: ModalController,
-    private settingsService: SelfReflectSettingsService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
   }
 

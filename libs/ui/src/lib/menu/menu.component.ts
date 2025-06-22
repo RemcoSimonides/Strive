@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
 
@@ -35,6 +35,13 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
     ]
 })
 export class MenuComponent extends ModalDirective {
+	protected override location: Location;
+	protected override modalCtrl: ModalController;
+	private platform = inject(Platform);
+	private pwa = inject(PWAService);
+	private router = inject(Router);
+	private themeService = inject(ThemeService);
+
 	enumAuthSegment = enumAuthSegment
 
 	isInstallable$ = this.pwa.showInstallPromotion$
@@ -44,15 +51,14 @@ export class MenuComponent extends ModalDirective {
 	showPlayStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('ios')
 	showAppStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('android')
 
-	constructor(
-		protected override location: Location,
-		protected override modalCtrl: ModalController,
-		private platform: Platform,
-		private pwa: PWAService,
-		private router: Router,
-		private themeService: ThemeService
-	) {
+	constructor() {
+		const location = inject(Location);
+		const modalCtrl = inject(ModalController);
+
 		super(location, modalCtrl)
+		this.location = location;
+		this.modalCtrl = modalCtrl;
+
 		addIcons({ moonOutline, sunnyOutline, close, openOutline })
 	}
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Title, Meta, MetaDefinition } from '@angular/platform-browser'
 import { Router } from '@angular/router'
 
@@ -16,12 +16,9 @@ function getInitial(name: string) {
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
-
-  constructor(
-    private title: Title,
-    private meta: Meta,
-    private router: Router
-  ) { }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private router = inject(Router);
 
   generateTags({ title = getInitial('og:title'), description = getInitial('og:description'), image = getInitial('og:image') }) {
     this.title.setTitle(title)

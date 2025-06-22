@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input, inject } from '@angular/core'
 
 import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
 
@@ -18,18 +18,16 @@ import { UpsertPostModalComponent } from '../../modals/upsert/post-upsert.compon
     ]
 })
 export class PostOptionsComponent {
+	private alertCtrl = inject(AlertController);
+	private modalCtrl = inject(ModalController);
+	private popoverCtrl = inject(PopoverController);
+	private postService = inject(PostService);
+
 	@HostListener('window:popstate', ['$event'])
 	onPopState() { this.popoverCtrl.dismiss() }
 
 	@Input() post!: Post
 	@Input() stakeholder = createGoalStakeholder()
-
-	constructor(
-		private alertCtrl: AlertController,
-		private modalCtrl: ModalController,
-		private popoverCtrl: PopoverController,
-		private postService: PostService
-	) { }
 
 	edit() {
 		this.popoverCtrl.dismiss()

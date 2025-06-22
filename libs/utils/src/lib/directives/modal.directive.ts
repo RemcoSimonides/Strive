@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { Directive, HostBinding, HostListener } from '@angular/core'
+import { Directive, HostBinding, HostListener, inject } from '@angular/core'
 import { ModalController } from '@ionic/angular/standalone'
 import { Capacitor } from '@capacitor/core'
 import { Router } from '@angular/router'
@@ -10,6 +10,9 @@ import { delay } from '../helpers'
     standalone: false
 })
 export class ModalDirective {
+  protected location = inject(Location);
+  protected modalCtrl = inject(ModalController);
+
   private data?: unknown
   private isWeb = Capacitor.getPlatform() === 'web'
   private isIOS = Capacitor.getPlatform() === 'ios'
@@ -28,10 +31,7 @@ export class ModalDirective {
     }
   }
 
-  constructor(
-    protected location: Location,
-    protected modalCtrl: ModalController
-  ) {
+  constructor() {
     if (this.isWeb || this.isIOS) {
       window.history.pushState(null, '', window.location.href)
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { of } from 'rxjs'
@@ -8,10 +8,8 @@ import { AuthService } from '@strive/auth/auth.service'
 
 @Injectable({ providedIn: 'root' })
 export class StriveAdminGuard  {
-  constructor(
-    private auth: AuthService,
-    private router: Router
-  ) { }
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
   canActivate() {
     return this.auth.user$.pipe(

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
 import { MediaType } from '@strive/model'
 
@@ -22,14 +22,12 @@ import { MediaType } from '@strive/model'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageOptionsPopoverComponent {
+  private popoverCtrl = inject(PopoverController);
+
 
   @Input() type: MediaType = 'image'
   @Input() canMoveLeft = false
   @Input() canMoveRight = false
-
-  constructor(
-    private popoverCtrl: PopoverController
-  ) { }
 
   dismiss(value: string) {
     this.popoverCtrl.dismiss(value)

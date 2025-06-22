@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 
 import { addYears, endOfYear, startOfYear } from 'date-fns'
@@ -36,6 +36,13 @@ import { ReminderService } from '@strive/stakeholder/reminder.service'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpsertReminderModalComponent extends ModalDirective implements OnInit {
+  private alertCtrl = inject(AlertController);
+  private cdr = inject(ChangeDetectorRef);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private popoverCtrl = inject(PopoverController);
+  private reminderService = inject(ReminderService);
+
 
   form = new ReminderForm()
   isEditMode = false
@@ -44,15 +51,14 @@ export class UpsertReminderModalComponent extends ModalDirective implements OnIn
   @Input() goalId = ''
   @Input() stakeholderId = ''
 
-  constructor(
-    private alertCtrl: AlertController,
-    private cdr: ChangeDetectorRef,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private reminderService: ReminderService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 
   ngOnInit() {

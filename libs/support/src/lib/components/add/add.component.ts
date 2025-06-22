@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { IonList, IonItem, IonInput, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 
@@ -27,19 +27,17 @@ import { AchieversModalComponent } from '@strive/support/modals/achievers/achiev
     ]
 })
 export class AddSupportComponent {
+  private auth = inject(AuthService);
+  private modalCtrl = inject(ModalController);
+  private profileService = inject(ProfileService);
+  private stakeholderService = inject(GoalStakeholderService);
+  private supportService = inject(SupportService);
+
 
   @Input() goal?: Goal
   @Input() milestone?: Milestone
 
   form = new FormControl('', { validators: [Validators.required, Validators.maxLength(60)], nonNullable: true })
-
-  constructor(
-    private auth: AuthService,
-    private modalCtrl: ModalController,
-    private profileService: ProfileService,
-    private stakeholderService: GoalStakeholderService,
-    private supportService: SupportService
-  ) { }
 
   async addSupport() {
     if (this.form.invalid) return

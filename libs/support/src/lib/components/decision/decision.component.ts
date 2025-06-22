@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { Support, SupportStatus } from '@strive/model'
 import { SupportService } from '../..//support.service'
 import { IonButton } from '@ionic/angular/standalone'
@@ -13,11 +13,11 @@ import { IonButton } from '@ionic/angular/standalone'
     ]
 })
 export class SupportDecisionComponent {
+  private supportService = inject(SupportService);
+
 
   @Input() support?: Support
   @Input() counter = false
-
-  constructor(private supportService: SupportService) { }
 
   updateStatus(status: SupportStatus) {
     if (!this.support?.id) return

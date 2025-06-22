@@ -1,4 +1,4 @@
-import { Injectable, Inject, Renderer2, RendererFactory2, DOCUMENT } from '@angular/core'
+import { Injectable, Renderer2, RendererFactory2, DOCUMENT, inject } from '@angular/core'
 
 import { BehaviorSubject, map } from 'rxjs'
 import { KeyboardStyle, Keyboard } from '@capacitor/keyboard'
@@ -8,16 +8,17 @@ export type Theme = 'dark' | 'light'
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
+  private document = inject<Document>(DOCUMENT);
+
   theme$ = new BehaviorSubject<Theme>('dark')
   light$ = this.theme$.pipe(map(theme => theme === 'light'))
   dark$ = this.theme$.pipe(map(theme => theme === 'dark'))
 
   private renderer: Renderer2
 
-  constructor(
-    rendererFactory: RendererFactory2,
-    @Inject(DOCUMENT) private document: Document,
-  ) {
+  constructor() {
+    const rendererFactory = inject(RendererFactory2);
+
     this.renderer = rendererFactory.createRenderer(null, null)
   }
 

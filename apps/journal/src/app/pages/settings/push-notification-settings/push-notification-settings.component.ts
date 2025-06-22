@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core'
 
 import { IonButtons, IonButton, IonToggle, IonContent, IonList, IonListHeader, IonItem, IonLabel, IonCheckbox } from '@ionic/angular/standalone'
 
@@ -35,6 +35,9 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
     ]
 })
 export class PushNotificationsSettingsComponent implements OnDestroy {
+  private personalService = inject(PersonalService);
+  private screensize = inject(ScreensizeService);
+
 
   fcmActive = false
   isMobile$ = this.screensize.isMobile$
@@ -46,10 +49,7 @@ export class PushNotificationsSettingsComponent implements OnDestroy {
 
   private sub: Subscription
 
-  constructor(
-    private personalService: PersonalService,
-    private screensize: ScreensizeService
-  ) {
+  constructor() {
     this.mainForm.setValue(this.form.main.value)
     if (!this.form.main.value) this.form.disableControls()
 

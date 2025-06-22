@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core'
+import { Component, OnInit, ViewChild, HostListener, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 
 import { IonButton, NavParams, PopoverController } from '@ionic/angular/standalone'
@@ -18,6 +18,11 @@ import { ProfileService } from '@strive/user/profile.service'
     ]
 })
 export class EditProfileImagePopoverComponent implements OnInit {
+  private auth = inject(AuthService);
+  private navParams = inject(NavParams);
+  private popoverCtrl = inject(PopoverController);
+  private profileService = inject(ProfileService);
+
   @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 
@@ -27,12 +32,6 @@ export class EditProfileImagePopoverComponent implements OnInit {
 
   uid = this.auth.uid
 
-  constructor(
-    private auth: AuthService,
-    private navParams: NavParams,
-    private popoverCtrl: PopoverController,
-    private profileService: ProfileService
-  ) { }
 
   ngOnInit() {
     this.form = new FormControl(this.navParams.data['storagePath'])

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 
 import { joinWith } from 'ngfire'
@@ -25,6 +25,12 @@ import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
     ]
 })
 export class StoryComponent {
+  private route = inject(ActivatedRoute);
+  private milestoneService = inject(MilestoneService);
+  private postService = inject(PostService);
+  private profileService = inject(ProfileService);
+  private storyService = inject(StoryService);
+
 
   goalId$ = this.route.params.pipe(
     map(params => params['id'] as string),
@@ -42,11 +48,4 @@ export class StoryComponent {
 
   stakeholder = createGoalStakeholder({ isAdmin: true, isAchiever: true, isSupporter: true, isSpectator: true })
 
-  constructor(
-    private route: ActivatedRoute,
-    private milestoneService: MilestoneService,
-    private postService: PostService,
-    private profileService: ProfileService,
-    private storyService: StoryService
-  ) {}
 }

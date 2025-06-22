@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, inject } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { IonContent, IonToggle, ModalController, PopoverController } from '@ionic/angular/standalone'
@@ -44,6 +44,14 @@ interface DailyGratitudeSetting {
     ]
 })
 export class DailyGratitudePageComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+  private service = inject(DailyGratitudeService);
+
   isLoading = true
 
   form = new FormGroup({
@@ -86,15 +94,7 @@ export class DailyGratitudePageComponent implements OnDestroy {
 
   uid$ = this.auth.uid$
 
-  constructor(
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    public screensize: ScreensizeService,
-    private seo: SeoService,
-    private service: DailyGratitudeService
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: 'Daily Gratitude - Strive Journal',
       description: 'Focus on the positive and take a minute to be grateful'

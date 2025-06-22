@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, inject } from '@angular/core'
 import { IonContent, ModalController } from '@ionic/angular/standalone'
 import { orderBy, where } from '@firebase/firestore'
 
@@ -32,6 +32,12 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
     ]
 })
 export class SuggestionModalComponent extends ModalDirective implements OnInit {
+  private auth = inject(AuthService);
+  private chatGPTService = inject(ChatGPTService);
+  private milestoneService = inject(MilestoneService);
+  private scrollService = inject(ScrollService);
+  private stakeholderService = inject(GoalStakeholderService);
+
   @ViewChild(IonContent) content?: IonContent
 
   milestones$?: Observable<Milestone[]>
@@ -40,15 +46,10 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
 
   @Input() goal?: Goal
 
-  constructor(
-    private auth: AuthService,
-    private chatGPTService: ChatGPTService,
-    location: Location,
-    modalCtrl: ModalController,
-    private milestoneService: MilestoneService,
-    private scrollService: ScrollService,
-    private stakeholderService: GoalStakeholderService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
   }
 

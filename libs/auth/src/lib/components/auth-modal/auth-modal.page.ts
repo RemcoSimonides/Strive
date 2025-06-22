@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core'
+import { Component, HostBinding, HostListener, Input, OnInit, inject } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { CommonModule, Location } from '@angular/common';
 import {
@@ -70,6 +70,15 @@ export enum enumAuthSegment {
     ]
 })
 export class AuthModalComponent implements OnInit {
+  private alertCtrl = inject(AlertController);
+  private loadingCtrl = inject(LoadingController);
+  private location = inject(Location);
+  private modalCtrl = inject(ModalController);
+  private navParams = inject(NavParams);
+  private personal = inject(PersonalService);
+  private profile = inject(ProfileService);
+  private screensize = inject(ScreensizeService);
+
   @HostBinding() modal?: HTMLIonModalElement
 
   private success = false
@@ -146,16 +155,7 @@ export class AuthModalComponent implements OnInit {
     }
   }
 
-  constructor(
-    private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController,
-    private location: Location,
-    private modalCtrl: ModalController,
-    private navParams: NavParams,
-    private personal: PersonalService,
-    private profile: ProfileService,
-    private screensize: ScreensizeService
-  ) {
+  constructor() {
     window.history.pushState(null, '', window.location.href)
     addIcons({ close, arrowBack, logoGoogle, logoApple, eyeOffOutline, eyeOutline })
   }

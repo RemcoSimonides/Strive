@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core'
 import { FormArray, ReactiveFormsModule } from '@angular/forms'
 
 import { AlertController, IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReorderGroup, IonInput, IonReorder, ModalController, PopoverController } from '@ionic/angular/standalone'
@@ -64,6 +64,19 @@ type MilestoneWithSupport = Milestone & { supports?: Support[] }
     ]
 })
 export class DetailsComponent extends ModalDirective implements OnInit, OnDestroy {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  protected override location: Location;
+  private milestoneService = inject(MilestoneService);
+  protected override modalCtrl: ModalController;
+  private popoverCtrl = inject(PopoverController);
+  private postService = inject(PostService);
+  private profileService = inject(ProfileService);
+  private screensize = inject(ScreensizeService);
+  private storyService = inject(StoryService);
+  private supportService = inject(SupportService);
+
   private subs: Subscription[] = []
 
   form!: MilestoneForm
@@ -87,21 +100,14 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
       return true
   }
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    protected override location: Location,
-    private milestoneService: MilestoneService,
-    protected override modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private postService: PostService,
-    private profileService: ProfileService,
-    private screensize: ScreensizeService,
-    private storyService: StoryService,
-    private supportService: SupportService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     addIcons({ checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff })
   }
 

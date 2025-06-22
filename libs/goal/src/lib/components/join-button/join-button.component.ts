@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, ViewChild, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { AlertController, IonButton, IonIcon, IonItem, IonList, IonPopover, IonSpinner, ModalController } from '@ionic/angular/standalone'
@@ -41,6 +41,12 @@ export class JoinButtonTextPipe implements PipeTransform {
     ]
 })
 export class JoinButtonComponent {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private modalCtrl = inject(ModalController);
+  private router = inject(Router);
+  private stakeholderService = inject(GoalStakeholderService);
+
 
   status$ = new BehaviorSubject<'choose' | 'creating' | 'created' | 'requested'>('choose')
 
@@ -50,13 +56,7 @@ export class JoinButtonComponent {
 
   @ViewChild(IonPopover) popover?: IonPopover
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private modalCtrl: ModalController,
-    private router: Router,
-    private stakeholderService: GoalStakeholderService
-  ) {
+  constructor() {
     addIcons({ flagOutline })
   }
 

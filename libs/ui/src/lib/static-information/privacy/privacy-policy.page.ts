@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { PrivacyPolicyComponent } from './privacy-policy.component'
@@ -27,7 +27,10 @@ import { IonContent } from '@ionic/angular/standalone'
     ]
 })
 export class PrivacyPolicyPageComponent {
-  constructor(seo: SeoService) {
+
+  constructor() {
+    const seo = inject(SeoService);
+
     seo.generateTags({ title: `Privacy Policy - Strive Journal` })
   }
 }

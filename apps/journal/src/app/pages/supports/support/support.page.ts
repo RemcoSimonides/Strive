@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 
 import { IonContent } from '@ionic/angular/standalone'
@@ -32,6 +32,14 @@ import { PagenotfoundComponent } from '@strive/ui/404/404.component'
     ]
 })
 export class SupportPageComponent {
+  private auth = inject(AuthService);
+  private goal = inject(GoalService);
+  private milestone = inject(MilestoneService);
+  private profile = inject(ProfileService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private support = inject(SupportService);
+
   support$ = combineLatest([
     this.auth.profile$,
     this.route.params.pipe(
@@ -60,16 +68,6 @@ export class SupportPageComponent {
       )
     })
   )
-
-  constructor(
-    private auth: AuthService,
-    private goal: GoalService,
-    private milestone: MilestoneService,
-    private profile: ProfileService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private support: SupportService
-  ) {}
 
   supportRemoved() {
     this.router.navigate(['/supports'])

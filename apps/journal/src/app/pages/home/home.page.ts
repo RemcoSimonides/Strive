@@ -1,6 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, Inject, PLATFORM_ID, DOCUMENT } from '@angular/core'
+import { ChangeDetectionStrategy, Component, PLATFORM_ID, DOCUMENT, inject } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 
 import { IonContent, IonButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText, ModalController, Platform } from '@ionic/angular/standalone'
@@ -37,6 +37,11 @@ import { FooterComponent } from '@strive/ui/footer/footer.component'
     ]
 })
 export class HomePageComponent {
+  private aggregationService = inject(AggregationService);
+  private modalCtrl = inject(ModalController);
+  private platform = inject(Platform);
+  private themeService = inject(ThemeService);
+
 
   enumAuthSegment = enumAuthSegment
 
@@ -47,15 +52,11 @@ export class HomePageComponent {
 
   theme$ = this.themeService.theme$
 
-  constructor(
-    private aggregationService: AggregationService,
-    private modalCtrl: ModalController,
-    private platform: Platform,
-    seo: SeoService,
-    private themeService: ThemeService,
-    @Inject(PLATFORM_ID) platformId: any,
-    @Inject(DOCUMENT) document: Document
-  ) {
+  constructor() {
+    const seo = inject(SeoService);
+    const platformId = inject(PLATFORM_ID);
+    const document = inject<Document>(DOCUMENT);
+
     seo.generateTags({})
     if (isPlatformBrowser(platformId)) {
       const observer = new IntersectionObserver(entries => {

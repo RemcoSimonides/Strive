@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild, inject } from '@angular/core'
 import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter, ModalController } from '@ionic/angular/standalone'
@@ -45,6 +45,12 @@ type Steps = 'details' | 'images' | 'roadmap' | 'reminders' | 'share'
     ]
 })
 export class GoalCreateModalComponent extends ModalDirective implements OnDestroy {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  private chatGPTService = inject(ChatGPTService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+
   @ViewChild(GoalImagesComponent) imagesComponent?: GoalImagesComponent
 
   form = new GoalForm()
@@ -59,14 +65,14 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
   })
   uid = this.auth.uid
 
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService,
-    private chatGPTService: ChatGPTService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     addIcons({ close })
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { NavigationEnd, Router, RouterModule } from '@angular/router'
 
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonAvatar } from '@ionic/angular/standalone'
@@ -31,6 +31,11 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
     ]
 })
 export class TabsComponent {
+  private auth = inject(AuthService);
+  screenSize = inject(ScreensizeService);
+  router = inject(Router);
+  private support = inject(SupportService);
+
 
   private route$ = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd), startWith({ url: this.router.url }),
@@ -64,12 +69,7 @@ export class TabsComponent {
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
   profile$ = this.auth.profile$
 
-  constructor(
-    private auth: AuthService,
-    public screenSize: ScreensizeService,
-    public router: Router,
-    private support: SupportService
-  ) {
+  constructor() {
     addIcons({ flagSharp, barbellSharp })
   }
 

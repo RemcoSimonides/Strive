@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 
 import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, IonPopover, IonSelect, IonSelectOption, ModalController } from '@ionic/angular/standalone'
@@ -23,7 +23,7 @@ import { getSelfReflectId, getSelfReflectYear, startOfSelfReflectYear, } from '@
 import { SelfReflectCustomQuestionModalComponent } from '@strive/exercises/self-reflect/modals/create-custom-question/create-custom-question.component'
 import { SelfReflectQuestionModalComponent } from '@strive/exercises/self-reflect/modals/upsert-question/upsert-question.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
-import { SelfReflectFrequencyPipe, SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
+import { SelfReflectReplaceFrequencyPipe } from '@strive/exercises/self-reflect/pipes/frequency.pipe'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { SelfReflectFilterEntriesPipe } from '@strive/exercises/self-reflect/pipes/entry.pipe'
 
@@ -106,6 +106,13 @@ function getEntryStatus(entries: SelfReflectEntry[], settings: SelfReflectSettin
     ]
 })
 export class SelfReflectComponent {
+  private auth = inject(AuthService);
+  private modalCtrl = inject(ModalController);
+  private screensize = inject(ScreensizeService);
+  private service = inject(SelfReflectEntryService);
+  private settingsService = inject(SelfReflectSettingsService);
+  private seo = inject(SeoService);
+
 
   isMobile$ = this.screensize.isMobile$
   uid$ = this.auth.uid$
@@ -206,14 +213,7 @@ export class SelfReflectComponent {
     })
   )
 
-  constructor(
-    private auth: AuthService,
-    private modalCtrl: ModalController,
-    private screensize: ScreensizeService,
-    private service: SelfReflectEntryService,
-    private settingsService: SelfReflectSettingsService,
-    private seo: SeoService,
-  ) {
+  constructor() {
     this.seo.generateTags({
       title: 'Self Reflect - Strive Journal',
       description: 'Get a grasp on life by looking back and planning ahead',

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { IonHeader, IonToolbar, IonSearchbar, IonContent, IonList, IonItem, ModalController } from '@ionic/angular/standalone'
 import { AlgoliaService } from '@strive/utils/services/algolia.service'
 
@@ -19,11 +19,10 @@ import { AlgoliaService } from '@strive/utils/services/algolia.service'
     ]
 })
 export class SelectUserModalComponent {
+  algolia = inject(AlgoliaService);
+  private modalCtrl = inject(ModalController);
 
-  constructor(
-    public algolia: AlgoliaService,
-    private modalCtrl: ModalController
-  ) {
+  constructor() {
     this.search('')
   }
 

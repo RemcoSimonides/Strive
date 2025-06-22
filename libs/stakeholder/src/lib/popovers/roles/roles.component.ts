@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input, inject } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { IonList, IonItem, IonLabel, AlertController, PopoverController } from '@ionic/angular/standalone'
 import { GoalStakeholder, User } from '@strive/model'
@@ -17,18 +17,16 @@ import { GoalStakeholderService } from '../../stakeholder.service'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RolesPopoverComponent {
+	private alertCtrl = inject(AlertController);
+	private popoverCtrl = inject(PopoverController);
+	private stakeholderService = inject(GoalStakeholderService);
+
 	@HostListener('window:popstate', ['$event'])
 	onPopState() { this.popoverCtrl.dismiss() }
 
 	@Input() goalId!: string
 	@Input() stakeholder!: GoalStakeholder & { profile: User }
 	@Input() manageRoles = false
-
-	constructor(
-		private alertCtrl: AlertController,
-		private popoverCtrl: PopoverController,
-		private stakeholderService: GoalStakeholderService
-	) { }
 
 	toggleAdmin() {
 		this.popoverCtrl.dismiss()

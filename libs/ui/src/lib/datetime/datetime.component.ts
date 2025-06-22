@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, Input, ViewChild, inject } from '@angular/core'
 import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standalone'
 
 @Component({
@@ -12,6 +12,8 @@ import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standa
     ]
 })
 export class DatetimeComponent {
+  private popoverCtrl = inject(PopoverController);
+
   @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 
@@ -38,8 +40,6 @@ export class DatetimeComponent {
   @Input() label?: string
   @Input() caption?: string
   @Input() hideRemove = false
-
-  constructor(private popoverCtrl: PopoverController) { }
 
   confirm() {
     this.popoverCtrl.dismiss(this.datetime?.value, 'dismiss')

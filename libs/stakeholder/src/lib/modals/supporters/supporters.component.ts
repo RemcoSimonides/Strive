@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, ModalController, PopoverController } from '@ionic/angular/standalone'
@@ -43,6 +43,15 @@ import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/mod
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SupportersModalComponent extends ModalDirective implements OnInit {
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private popoverCtrl = inject(PopoverController);
+  private profileService = inject(ProfileService);
+  private router = inject(Router);
+  private stakeholderService = inject(GoalStakeholderService);
+
 
   @Input() goalId = ''
 
@@ -51,17 +60,14 @@ export class SupportersModalComponent extends ModalDirective implements OnInit {
     others: Stakeholder[]
   }>
 
-  constructor(
-    private auth: AuthService,
-    private goalService: GoalService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private popoverCtrl: PopoverController,
-    private profileService: ProfileService,
-    private router: Router,
-    private stakeholderService: GoalStakeholderService,
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+    this.location = location;
+    this.modalCtrl = modalCtrl;
+
     addIcons({ ellipsisVertical })
   }
 

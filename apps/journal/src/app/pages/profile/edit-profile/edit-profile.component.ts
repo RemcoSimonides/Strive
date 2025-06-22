@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
 
 import { AlertController, IonContent, IonCard, IonCardContent, IonItem, IonInput, IonButton, ModalController } from '@ionic/angular/standalone'
@@ -37,6 +37,15 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
     ]
 })
 export class EditProfilePageComponent {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+  private location = inject(Location);
+  private modalCtrl = inject(ModalController);
+  private profileService = inject(ProfileService);
+  private router = inject(Router);
+  screensize = inject(ScreensizeService);
+
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
   form = new UserForm(this.auth.profile)
@@ -44,16 +53,7 @@ export class EditProfilePageComponent {
   isLoggedIn$ = this.auth.isLoggedIn$
   uid = this.auth.uid
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private cdr: ChangeDetectorRef,
-    private location: Location,
-    private modalCtrl: ModalController,
-    private profileService: ProfileService,
-    private router: Router,
-    public screensize: ScreensizeService
-  ) {
+  constructor() {
     this.auth.profile$.pipe(take(1)).subscribe(profile => {
       this.form.patchValue(createUser(profile))
       this.cdr.markForCheck()

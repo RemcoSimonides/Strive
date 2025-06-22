@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, signal } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, signal, inject } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 
 import { AlertController, IonButton, IonList, IonItem, IonSelect, IonSelectOption, IonInput, PopoverController } from '@ionic/angular/standalone'
@@ -30,6 +30,10 @@ interface Activity {
     ]
 })
 export class StravaActivityTypesComponent {
+  private alertCtrl = inject(AlertController);
+  private cdr = inject(ChangeDetectorRef);
+  private popoverCtrl = inject(PopoverController);
+
   activities: Activity[] = [
     { id: "AlpineSki", name: "Alpine Ski" },
     { id: "BackcountrySki", name: "Backcountry Ski" },
@@ -81,12 +85,6 @@ export class StravaActivityTypesComponent {
     this.form.patchValue({ activities })
     this.integrationActive.set(true)
   }
-
-  constructor(
-    private alertCtrl: AlertController,
-    private cdr: ChangeDetectorRef,
-    private popoverCtrl: PopoverController
-  ) {}
 
   async openDatePicker() {
 		const maxDate = startOfDay(new Date())

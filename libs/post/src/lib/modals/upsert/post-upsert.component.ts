@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core'
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild, inject } from '@angular/core'
 import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'
 
@@ -53,6 +53,14 @@ import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
     ]
 })
 export class UpsertPostModalComponent extends ModalDirective implements AfterViewInit, OnDestroy {
+	private auth = inject(AuthService);
+	private cdr = inject(ChangeDetectorRef);
+	protected override location: Location;
+	private mediaService = inject(MediaService);
+	protected override modalCtrl: ModalController;
+	private popoverCtrl = inject(PopoverController);
+	private postService = inject(PostService);
+
 	@ViewChild(ImagesSelectorComponent) imageSelector?: ImagesSelectorComponent
 
 	postForm = new PostForm()
@@ -110,16 +118,14 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 		this.cdr.markForCheck()
 	})
 
-	constructor(
-		private auth: AuthService,
-		private cdr: ChangeDetectorRef,
-		protected override location: Location,
-		private mediaService: MediaService,
-		protected override modalCtrl: ModalController,
-		private popoverCtrl: PopoverController,
-		private postService: PostService
-	) {
+	constructor() {
+		const location = inject(Location);
+		const modalCtrl = inject(ModalController);
+
 		super(location, modalCtrl)
+		this.location = location;
+		this.modalCtrl = modalCtrl;
+
 		addIcons({ close, calendarOutline, linkOutline });
 	}
 

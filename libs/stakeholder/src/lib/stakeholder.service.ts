@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, getDoc, serverTimestamp, doc } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 
@@ -18,11 +18,13 @@ export interface roleArgs {
   providedIn: 'root'
 })
 export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
+  private auth = inject(AuthService);
+
   readonly path = 'Goals/:goalId/GStakeholders'
   override readonly idKey = 'uid'
   override readonly memorize = true
 
-  constructor(private auth: AuthService) {
+  constructor() {
     super()
   }
 

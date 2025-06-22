@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, inject } from '@angular/core'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { Location } from '@angular/common'
 
@@ -42,6 +42,9 @@ type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile:
     ]
 })
 export class AchieversModalComponent extends ModalDirective implements OnDestroy {
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+
 
   _achievers: GoalStakeholderWithChecked[] = []
   private _all: GoalStakeholderWithChecked[] = []
@@ -62,11 +65,14 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
     this.showEveryoneOption = !filter || 'everyone'.includes(filter) || 'goal'.includes(filter)
   })
 
-  constructor(
-    protected override location: Location,
-    protected override modalCtrl: ModalController
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 
   ngOnDestroy() {

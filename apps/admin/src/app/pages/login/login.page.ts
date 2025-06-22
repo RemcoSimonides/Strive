@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AlertController, LoadingController } from '@ionic/angular'
@@ -15,6 +15,12 @@ import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopu
     standalone: false
 })
 export class LoginComponent {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private loadingCtrl = inject(LoadingController);
+  private profileService = inject(ProfileService);
+  private router = inject(Router);
+
 
   passwordType = 'password'
   passwordIcon = 'eye-off-outline'
@@ -24,13 +30,6 @@ export class LoginComponent {
     password: new FormControl('', { nonNullable: true, validators: [Validators.required]})
   })
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private loadingCtrl: LoadingController,
-    private profileService: ProfileService,
-    private router: Router
-  ) {}
 
   async loginUser() {
 
@@ -89,7 +88,7 @@ export class LoginComponent {
         }).then(alert => alert.present())
         return
       }
-      
+
       const isAdmin = await this.auth.isStriveAdmin(user.uid)
       if (!isAdmin) {
         getAuth().signOut()
@@ -101,7 +100,7 @@ export class LoginComponent {
       }
 
       this.router.navigate(['/a'])
-  
+
     } catch (error: any) {
       this.alertCtrl.create({
         message: error.message,

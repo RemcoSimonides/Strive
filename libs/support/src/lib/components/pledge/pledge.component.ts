@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { Component, Input } from '@angular/core'
+import { Component, Input, inject } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
 
 import { Capacitor } from '@capacitor/core'
@@ -24,13 +24,11 @@ import { MaxLengthPipe } from '@strive/utils/pipes/max-length.pipe'
     ]
 })
 export class PledgeComponent {
-  @Input() support: Support = createSupportBase()
+  private location = inject(Location);
+  private modalCtrl = inject(ModalController);
+  private router = inject(Router);
 
-  constructor(
-    private location: Location,
-    private modalCtrl: ModalController,
-    private router: Router
-  ) { }
+  @Input() support: Support = createSupportBase()
 
   async navTo(urlTree: string[]) {
     const modal = await this.modalCtrl.getTop()

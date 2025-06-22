@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core'
+import { Component, HostListener, Input, inject } from '@angular/core'
 import { PopoverController } from '@ionic/angular/standalone'
 import { ShareComponent } from '@strive/ui/share/share.component'
 import { addIcons } from 'ionicons'
@@ -13,12 +13,14 @@ import { shareSocialOutline } from 'ionicons/icons'
     ]
 })
 export class GoalSharePopoverComponent {
+  private popoverCtrl = inject(PopoverController);
+
   @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 
   @Input() url = ''
 
-  constructor(private popoverCtrl: PopoverController) {
+  constructor() {
     addIcons({ shareSocialOutline })
   }
 

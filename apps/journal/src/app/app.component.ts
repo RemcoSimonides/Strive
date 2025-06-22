@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnDestroy, PLATFORM_ID } from '@angular/core'
+import { Component, HostListener, OnDestroy, PLATFORM_ID, inject } from '@angular/core'
 import { RouterModule, Router, NavigationEnd, RouterOutlet } from '@angular/router'
 import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
 
@@ -45,6 +45,21 @@ import { SendIntentSelectGoalComponent } from '@strive/goal/modals/send-intent-s
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
+  private auth = inject(AuthService);
+  private location = inject(Location);
+  private modalCtrl = inject(ModalController);
+  private notification = inject(NotificationService);
+  private personalService = inject(PersonalService);
+  private platform = inject(Platform);
+  private popoverCtrl = inject(PopoverController);
+  private router = inject(Router);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+  private support = inject(SupportService);
+  private theme = inject(ThemeService);
+  private versionService = inject(AppVersionService);
+  private platformId = inject(PLATFORM_ID);
+
   rootPage: typeof TabsComponent = TabsComponent
 
   enumAuthSegment = enumAuthSegment
@@ -99,23 +114,10 @@ export class AppComponent implements OnDestroy {
     return this.location.back()
   })
 
-  constructor(
-    private auth: AuthService,
-    private location: Location,
-    private modalCtrl: ModalController,
-    private notification: NotificationService,
-    private personalService: PersonalService,
-    private platform: Platform,
-    private popoverCtrl: PopoverController,
-    pwa: PWAService,
-    private router: Router,
-    public screensize: ScreensizeService,
-    private seo: SeoService,
-    private support: SupportService,
-    private theme: ThemeService,
-    private versionService: AppVersionService,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {
+  constructor() {
+    const platform = this.platform;
+    const pwa = inject(PWAService);
+
     pwa.addEventListeners()
     this.theme.initTheme('dark')
     this.openModalOnStartup()

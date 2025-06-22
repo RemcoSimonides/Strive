@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router'
 import { IonContent, ModalController } from '@ionic/angular/standalone'
@@ -33,6 +33,12 @@ import { WheelOfLifeResultsComponent } from '../../components/results/results.co
     ]
 })
 export class EntryModalComponent extends ModalDirective {
+  private auth = inject(AuthService);
+  protected override location: Location;
+  protected override modalCtrl: ModalController;
+  private router = inject(Router);
+  private service = inject(WheelOfLifeEntryService);
+
 
   @Input() showResults = false
   @Input() previousEntry: WheelOfLifeEntry<number> | undefined
@@ -42,14 +48,14 @@ export class EntryModalComponent extends ModalDirective {
     switchMap(entries => this.service.decrypt(entries))
   )
 
-  constructor(
-    private auth: AuthService,
-    protected override location: Location,
-    protected override modalCtrl: ModalController,
-    private router: Router,
-    private service: WheelOfLifeEntryService
-  ) {
+  constructor() {
+    const location = inject(Location);
+    const modalCtrl = inject(ModalController);
+
     super(location, modalCtrl)
+
+    this.location = location;
+    this.modalCtrl = modalCtrl;
   }
 
   async createGoal() {

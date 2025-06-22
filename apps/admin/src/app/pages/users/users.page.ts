@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ProfileService } from '@strive/user/profile.service'
 
 @Component({
@@ -9,8 +9,9 @@ import { ProfileService } from '@strive/user/profile.service'
     standalone: false
 })
 export class UsersComponent {
+  private profileService = inject(ProfileService);
+
 
   users$ = this.profileService.valueChanges()
 
-  constructor(private profileService: ProfileService) {}
 }

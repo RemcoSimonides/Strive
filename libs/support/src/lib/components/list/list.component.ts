@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef, inject } from '@angular/core'
 
 import { IonList, IonItem, IonLabel, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -33,6 +33,8 @@ import { IsRecipientPipe, IsSupporterPipe } from '@strive/support/pipes/role.pip
     ]
 })
 export class SupportListComponent {
+  private modalCtrl = inject(ModalController);
+
   @Input() goal?: SupportsGroupedByGoal
 
   @Input() showAll = false
@@ -41,7 +43,7 @@ export class SupportListComponent {
   @ContentChild('goal') goalDescription?: TemplateRef<unknown>
   @ContentChild('milestone') milestoneDescription?: TemplateRef<unknown>
 
-  constructor(private modalCtrl: ModalController) {
+  constructor() {
     addIcons({ chevronDownOutline })
   }
 

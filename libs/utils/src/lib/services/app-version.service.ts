@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 import { AppUpdate } from '@capawesome/capacitor-app-update'
 import { AlertController, ToastController } from '@ionic/angular/standalone'
@@ -13,14 +13,14 @@ interface Version {
 
 @Injectable({ providedIn: 'root' })
 export class AppVersionService extends FireDocument<Version> {
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
+
   override path = `meta/version`
 
   version = "1.16.0"
 
-  constructor(
-    private alertCtrl: AlertController,
-    private toastCtrl: ToastController
-  ) {
+  constructor() {
     super()
     setContext('version', { app_version: this.version })
   }

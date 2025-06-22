@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { toDate, FireSubCollection } from 'ngfire'
 import { Observable } from 'rxjs'
@@ -23,7 +23,7 @@ export class DailyGratitudeService extends FireSubCollection<DailyGratitude> {
 
     if (actionType === 'add') settings.createdAt = timestamp
     settings.updatedAt = timestamp
-    
+
     return settings
   }
 
@@ -49,12 +49,12 @@ export class DailyGratitudeService extends FireSubCollection<DailyGratitude> {
   providedIn: 'root'
 })
 export class DailyGratitudeEntryService extends FireSubCollection<DailyGratitudeEntry> {
+  private auth = inject(AuthService);
+  private personalService = inject(PersonalService);
+
   readonly path = 'Users/:uid/Exercises/DailyGratitude/Entries'
 
-  constructor(
-    private auth: AuthService,
-    private personalService: PersonalService
-  ) {
+  constructor() {
     super()
   }
 
@@ -63,7 +63,7 @@ export class DailyGratitudeEntryService extends FireSubCollection<DailyGratitude
 
     if (actionType === 'add') item.createdAt = timestamp
     item.updatedAt = timestamp
-    
+
     return item
   }
 
@@ -80,7 +80,7 @@ export class DailyGratitudeEntryService extends FireSubCollection<DailyGratitude
         return AES.decrypt(item, key).toString(enc.Utf8)
       })
     }
- 
+
     return cards
   }
 

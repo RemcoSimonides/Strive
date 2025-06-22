@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewEncapsulation, inject } from '@angular/core'
 
 import { map } from 'rxjs'
 import { SwiperContainer } from 'swiper/element';
@@ -18,6 +18,8 @@ import { ScreensizeService } from '@strive/utils/services/screensize.service'
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MiniThumbnailSwiperComponent {
+  private screensize = inject(ScreensizeService);
+
 
   @ViewChild('swiper') swiper?: ElementRef<SwiperContainer>;
   @ContentChildren('thumb') thumbs?: QueryList<TemplateRef<any>>
@@ -36,7 +38,5 @@ export class MiniThumbnailSwiperComponent {
     return Math.floor(available / itemWidth)
   }))
   isDesktop$ = this.screensize.isDesktop$
-
-  constructor(private screensize: ScreensizeService) {}
 
 }

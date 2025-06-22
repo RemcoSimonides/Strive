@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry, createSelfReflectSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
@@ -45,12 +45,12 @@ export class SelfReflectSettingsService extends FireSubCollection<SelfReflectSet
   providedIn: 'root'
 })
 export class SelfReflectEntryService extends FireSubCollection<SelfReflectEntry> {
+  private auth = inject(AuthService);
+  private personalService = inject(PersonalService);
+
   readonly path = 'Users/:uid/Exercises/SelfReflect/Entries'
 
-  constructor(
-    private auth: AuthService,
-    private personalService: PersonalService
-  ) {
+  constructor() {
     super()
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, HostListener } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, HostListener, inject } from '@angular/core'
 import { AlertController, IonList, IonItem, ModalController, PopoverController } from '@ionic/angular/standalone'
 
 import { GoalService } from '@strive/goal/goal.service'
@@ -28,6 +28,12 @@ export enum enumGoalOptions {
     ]
 })
 export class GoalOptionsPopoverComponent {
+  private alertCtrl = inject(AlertController);
+  private auth = inject(AuthService);
+  private goalService = inject(GoalService);
+  private modalCtrl = inject(ModalController);
+  private popoverCtrl = inject(PopoverController);
+
   @HostListener('window:popstate', ['$event'])
   onPopState() { this.popoverCtrl.dismiss() }
 
@@ -36,13 +42,6 @@ export class GoalOptionsPopoverComponent {
   @Input() stakeholder = createGoalStakeholder()
   @Input() goal?: Goal
 
-  constructor(
-    private alertCtrl: AlertController,
-    private auth: AuthService,
-    private goalService: GoalService,
-    private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController
-  ) { }
 
   dismiss(data: enumGoalOptions) {
     this.popoverCtrl.dismiss(data)
