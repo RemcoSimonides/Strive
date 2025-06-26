@@ -1,7 +1,7 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, signal, inject } from '@angular/core'
 
-import { IonContent, IonButton, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
+import { IonContent, IonButton, IonList, IonItem, IonThumbnail, IonLabel } from '@ionic/angular/standalone'
 
 import { AuthService } from '@strive/auth/auth.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
@@ -56,10 +56,7 @@ export class FollowGoalsModalComponent extends ModalDirective {
   @Input() username = ''
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
+    super()
   }
 
   spectate(goalId: string, stakeholder: GoalStakeholder) {

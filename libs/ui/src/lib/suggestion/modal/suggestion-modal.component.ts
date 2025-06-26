@@ -1,6 +1,6 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, inject } from '@angular/core'
-import { IonContent, ModalController } from '@ionic/angular/standalone'
+import { IonContent } from '@ionic/angular/standalone'
 import { orderBy, where } from '@firebase/firestore'
 
 import { isAfter, subMinutes } from 'date-fns'
@@ -47,10 +47,7 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
   @Input() goal?: Goal
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
+    super()
   }
 
   async ngOnInit() {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
-import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, ModalController } from '@ionic/angular/standalone'
+import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel } from '@ionic/angular/standalone'
 
 import { joinWith } from 'ngfire'
 
@@ -33,8 +33,6 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 })
 export class FollowersComponent extends ModalDirective {
   private auth = inject(AuthService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private profileService = inject(ProfileService);
   private service = inject(SpectatorService);
   private router = inject(Router);
@@ -52,13 +50,7 @@ export class FollowersComponent extends ModalDirective {
   )
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
   }
 
   navTo(uid: string) {

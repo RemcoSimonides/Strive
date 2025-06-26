@@ -1,10 +1,10 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 
 import { addYears, endOfYear, startOfYear } from 'date-fns'
 
-import { AlertController, IonButton, IonContent, IonInput, IonList, IonItem,  IonRadio, IonRadioGroup, IonSelect, IonSelectOption, IonTitle, IonTextarea, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonContent, IonInput, IonList, IonItem,  IonRadio, IonRadioGroup, IonSelect, IonSelectOption, IonTitle, IonTextarea, PopoverController } from '@ionic/angular/standalone'
 
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { createReminder, DayTypes, Reminder } from '@strive/model'
@@ -38,8 +38,6 @@ import { ReminderService } from '@strive/stakeholder/reminder.service'
 export class UpsertReminderModalComponent extends ModalDirective implements OnInit {
   private alertCtrl = inject(AlertController);
   private cdr = inject(ChangeDetectorRef);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private popoverCtrl = inject(PopoverController);
   private reminderService = inject(ReminderService);
 
@@ -52,13 +50,7 @@ export class UpsertReminderModalComponent extends ModalDirective implements OnIn
   @Input() stakeholderId = ''
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
   }
 
   ngOnInit() {

@@ -1,8 +1,8 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
-import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, AlertController, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, AlertController, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { ellipsisVertical } from 'ionicons/icons'
 
@@ -44,8 +44,6 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
   private alertCtrl = inject(AlertController);
   private auth = inject(AuthService);
   private goalService = inject(GoalService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private popoverCtrl = inject(PopoverController);
   private profileService = inject(ProfileService);
   private stakeholderService = inject(GoalStakeholderService);
@@ -60,12 +58,7 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
   }>
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
 
     addIcons({ ellipsisVertical })
   }

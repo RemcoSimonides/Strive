@@ -1,8 +1,8 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core'
 import { FormArray, ReactiveFormsModule } from '@angular/forms'
 
-import { AlertController, IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReorderGroup, IonInput, IonReorder, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonIcon, IonContent, IonItem, IonTextarea, IonList, IonReorderGroup, IonInput, IonReorder, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff } from 'ionicons/icons'
 
@@ -67,9 +67,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   private alertCtrl = inject(AlertController);
   private auth = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
-  protected override location: Location;
   private milestoneService = inject(MilestoneService);
-  protected override modalCtrl: ModalController;
   private popoverCtrl = inject(PopoverController);
   private postService = inject(PostService);
   private profileService = inject(ProfileService);
@@ -101,12 +99,7 @@ export class DetailsComponent extends ModalDirective implements OnInit, OnDestro
   }
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
 
     addIcons({ checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff })
   }

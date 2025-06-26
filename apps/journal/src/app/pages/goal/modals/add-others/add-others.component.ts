@@ -1,6 +1,6 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, Pipe, PipeTransform, inject } from '@angular/core'
-import { IonAvatar, IonLabel, IonButton, IonContent, IonItem, IonList, IonSpinner, IonFooter, IonIcon, IonSearchbar, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { IonAvatar, IonLabel, IonButton, IonContent, IonItem, IonList, IonSpinner, IonFooter, IonIcon, IonSearchbar, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { shareSocialOutline } from 'ionicons/icons'
 
@@ -89,8 +89,6 @@ export class AddOthersModalComponent extends ModalDirective {
   private algoliaService = inject(AlgoliaService);
   private stakeholderService = inject(GoalStakeholderService);
   private inviteTokenService = inject(InviteTokenService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private popoverCtrl = inject(PopoverController);
   private profileService = inject(ProfileService);
   private spectatorService = inject(SpectatorService);
@@ -176,12 +174,7 @@ export class AddOthersModalComponent extends ModalDirective {
   query = ''
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
 
     addIcons({ shareSocialOutline })
   }

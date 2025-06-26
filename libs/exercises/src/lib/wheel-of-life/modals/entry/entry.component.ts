@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
-import { IonContent, ModalController } from '@ionic/angular/standalone'
+import { IonContent } from '@ionic/angular/standalone'
 
 import { orderBy } from 'firebase/firestore'
 import { of, switchMap } from 'rxjs'
@@ -34,8 +34,6 @@ import { WheelOfLifeResultsComponent } from '../../components/results/results.co
 })
 export class EntryModalComponent extends ModalDirective {
   private auth = inject(AuthService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private router = inject(Router);
   private service = inject(WheelOfLifeEntryService);
 
@@ -49,13 +47,7 @@ export class EntryModalComponent extends ModalDirective {
   )
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
   }
 
   async createGoal() {

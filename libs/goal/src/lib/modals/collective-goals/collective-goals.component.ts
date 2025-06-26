@@ -25,8 +25,6 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
     styleUrls: ['./collective-goals.component.scss']
 })
 export class CollectiveGoalsModalComponent extends ModalDirective {
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private router = inject(Router);
 
 
@@ -34,13 +32,7 @@ export class CollectiveGoalsModalComponent extends ModalDirective {
   @Input() stakeholders: Stakeholder[] = []
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
   }
 
   navTo(goalId: string) {

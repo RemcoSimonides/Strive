@@ -74,10 +74,7 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
   @Input() entries: SelfReflectEntry[] = []
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
+    super()
 
     this.rangeForm.valueChanges.subscribe(index => {
       if (!this.range[index]) return

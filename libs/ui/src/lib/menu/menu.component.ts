@@ -1,9 +1,9 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
 import { Capacitor } from '@capacitor/core'
 
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, ModalController, Platform } from '@ionic/angular/standalone'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel, Platform } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { moonOutline, sunnyOutline, close, openOutline } from 'ionicons/icons'
 
@@ -35,8 +35,6 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
     ]
 })
 export class MenuComponent extends ModalDirective {
-	protected override location: Location;
-	protected override modalCtrl: ModalController;
 	private platform = inject(Platform);
 	private pwa = inject(PWAService);
 	private router = inject(Router);
@@ -52,13 +50,7 @@ export class MenuComponent extends ModalDirective {
 	showAppStore = Capacitor.getPlatform() === 'web' && !this.platform.platforms().includes('android')
 
 	constructor() {
-		const location = inject(Location);
-		const modalCtrl = inject(ModalController);
-
-		super(location, modalCtrl)
-		this.location = location;
-		this.modalCtrl = modalCtrl;
-
+		super()
 		addIcons({ moonOutline, sunnyOutline, close, openOutline })
 	}
 

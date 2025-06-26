@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
-import { IonTitle, IonContent, IonList, IonItem, IonThumbnail, IonLabel, ModalController } from '@ionic/angular/standalone'
+import { IonTitle, IonContent, IonList, IonItem, IonThumbnail, IonLabel } from '@ionic/angular/standalone'
 import { Filesystem } from '@capacitor/filesystem'
 import { Intent } from 'send-intent'
 
@@ -35,22 +35,13 @@ import { isValidHttpUrl } from '@strive/utils/helpers'
 export class SendIntentSelectGoalComponent extends ModalDirective {
   private auth = inject(AuthService);
   private goal = inject(GoalService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
-
 
   @Input() sendIntentData: Intent = {}
 
   stakeholders$: Observable<StakeholderWithGoal[]>
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
-
+    super()
 
     this.stakeholders$ = this.auth.user$.pipe(
       switchMap(profile => profile ? this.goal.getStakeholderGoals(profile.uid, 'isAchiever', false) : of([])),

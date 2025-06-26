@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, computed, signal, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms'
 
-import { AlertController, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonFooter, IonProgressBar, ModalController } from '@ionic/angular/standalone'
+import { AlertController, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonFooter, IonProgressBar } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'
 
@@ -114,10 +114,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
   get frequency() { return this.entry.frequency }
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
+    super()
     addIcons({ close })
   }
 

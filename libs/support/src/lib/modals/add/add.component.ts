@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common';
-import { IonContent, IonTitle, ModalController } from '@ionic/angular/standalone'
+import { CommonModule } from '@angular/common';
+import { IonContent, IonTitle } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
 import { joinWith } from 'ngfire'
@@ -33,8 +33,6 @@ import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.compo
 })
 export class AddSupportModalComponent extends ModalDirective implements OnInit {
   private auth = inject(AuthService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private profileService = inject(ProfileService);
   private support = inject(SupportService);
 
@@ -45,13 +43,7 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
   supports$?: Observable<SupportsGroupedByGoal[]>
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
   }
 
   ngOnInit() {

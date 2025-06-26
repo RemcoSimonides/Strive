@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { Location } from '@angular/common'
 
-import { IonSearchbar, IonContent, IonList, IonItem, IonButton, IonAvatar, IonLabel, IonText, IonCheckbox, ModalController } from '@ionic/angular/standalone'
+import { IonSearchbar, IonContent, IonList, IonItem, IonButton, IonAvatar, IonLabel, IonText, IonCheckbox } from '@ionic/angular/standalone'
 
 import { GoalStakeholder, User } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
@@ -42,10 +41,6 @@ type GoalStakeholderWithChecked = GoalStakeholder & { checked: boolean, profile:
     ]
 })
 export class AchieversModalComponent extends ModalDirective implements OnDestroy {
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
-
-
   _achievers: GoalStakeholderWithChecked[] = []
   private _all: GoalStakeholderWithChecked[] = []
   @Input() set achievers(achievers: (GoalStakeholder & { profile: User })[]) {
@@ -66,13 +61,7 @@ export class AchieversModalComponent extends ModalDirective implements OnDestroy
   })
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
   }
 
   ngOnDestroy() {

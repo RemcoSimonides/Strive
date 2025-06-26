@@ -1,8 +1,8 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
-import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton, IonIcon, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { ellipsisVertical } from 'ionicons/icons'
 
@@ -40,8 +40,6 @@ import { createGoalStakeholder, GoalStakeholder, Stakeholder } from '@strive/mod
 })
 export class SpectatorsModalComponent extends ModalDirective implements OnInit {
   private auth = inject(AuthService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private popoverCtrl = inject(PopoverController);
   private profileService = inject(ProfileService);
   private stakeholderService = inject(GoalStakeholderService);
@@ -56,12 +54,7 @@ export class SpectatorsModalComponent extends ModalDirective implements OnInit {
   }>
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
 
     addIcons({ ellipsisVertical })
   }

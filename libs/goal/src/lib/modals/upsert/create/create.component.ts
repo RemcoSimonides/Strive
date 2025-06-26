@@ -1,8 +1,8 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild, inject } from '@angular/core'
 import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter, ModalController } from '@ionic/angular/standalone'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter } from '@ionic/angular/standalone'
 import { BehaviorSubject } from 'rxjs'
 import { format, isFuture, isPast } from 'date-fns'
 
@@ -48,8 +48,6 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
   private auth = inject(AuthService);
   private goalService = inject(GoalService);
   private chatGPTService = inject(ChatGPTService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
 
   @ViewChild(GoalImagesComponent) imagesComponent?: GoalImagesComponent
 
@@ -66,12 +64,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
   uid = this.auth.uid
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
 
     addIcons({ close })
   }

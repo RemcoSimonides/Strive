@@ -1,8 +1,8 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 
-import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollContent, IonFooter, IonItem, IonTextarea, IonPopover, IonList, InfiniteScrollCustomEvent, ModalController, Platform, ScrollCustomEvent } from '@ionic/angular/standalone'
+import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollContent, IonFooter, IonItem, IonTextarea, IonPopover, IonList, InfiniteScrollCustomEvent, Platform, ScrollCustomEvent } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { settingsOutline, send } from 'ionicons/icons'
 
@@ -63,8 +63,6 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
   private auth = inject(AuthService);
   private commentService = inject(CommentService);
   private goalService = inject(GoalService);
-  protected override location: Location;
-  protected override modalCtrl: ModalController;
   private platform = inject(Platform);
   private profileService = inject(ProfileService);
   private stakeholderService = inject(GoalStakeholderService);
@@ -100,12 +98,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
   private subs: Subscription[] = []
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
-    this.location = location;
-    this.modalCtrl = modalCtrl;
+    super()
 
     const sub = this.platform.keyboardDidShow.subscribe(() => this.content?.scrollToBottom())
     this.subs.push(sub)

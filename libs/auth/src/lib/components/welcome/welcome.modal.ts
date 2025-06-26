@@ -8,7 +8,9 @@ import { closeOutline } from 'ionicons/icons'
 
 import { Capacitor } from '@capacitor/core'
 
-import { SwiperContainer } from 'swiper/swiper-element'
+import type { SwiperContainer } from 'swiper/element';
+import 'swiper/element/bundle';
+
 import { combineLatest, map, of } from 'rxjs'
 
 import { PersonalService } from '@strive/user/personal.service'

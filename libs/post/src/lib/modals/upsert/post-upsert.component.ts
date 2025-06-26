@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'
 
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonItem, IonTextarea, IonInput, IonSpinner, IonFooter, ModalController, PopoverController } from '@ionic/angular/standalone'
+import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonItem, IonTextarea, IonInput, IonSpinner, IonFooter, PopoverController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { close, calendarOutline, linkOutline } from 'ionicons/icons'
 
@@ -55,9 +55,7 @@ import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
 export class UpsertPostModalComponent extends ModalDirective implements AfterViewInit, OnDestroy {
 	private auth = inject(AuthService);
 	private cdr = inject(ChangeDetectorRef);
-	protected override location: Location;
 	private mediaService = inject(MediaService);
-	protected override modalCtrl: ModalController;
 	private popoverCtrl = inject(PopoverController);
 	private postService = inject(PostService);
 
@@ -119,12 +117,7 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 	})
 
 	constructor() {
-		const location = inject(Location);
-		const modalCtrl = inject(ModalController);
-
-		super(location, modalCtrl)
-		this.location = location;
-		this.modalCtrl = modalCtrl;
+		super()
 
 		addIcons({ close, calendarOutline, linkOutline });
 	}

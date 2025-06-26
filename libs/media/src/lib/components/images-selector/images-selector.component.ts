@@ -5,7 +5,8 @@ import { SafeUrl } from '@angular/platform-browser'
 import { AlertController, IonIcon, PopoverController, ToastController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { imagesOutline } from 'ionicons/icons'
-import { SwiperContainer } from 'swiper/swiper-element'
+import type { SwiperContainer } from 'swiper/element'
+import 'swiper/element/bundle'
 
 import { BehaviorSubject, Subscription } from 'rxjs'
 

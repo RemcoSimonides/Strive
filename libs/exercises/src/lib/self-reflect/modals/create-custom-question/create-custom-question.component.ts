@@ -1,7 +1,5 @@
-import { Location } from '@angular/common'
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { ModalController } from '@ionic/angular/standalone'
 import { IonTitle, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonButton } from '@ionic/angular/standalone'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
@@ -41,10 +39,7 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
   })
 
   constructor() {
-    const location = inject(Location);
-    const modalCtrl = inject(ModalController);
-
-    super(location, modalCtrl)
+    super()
   }
 
   async submit() {
