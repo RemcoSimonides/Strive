@@ -3,7 +3,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
 
 // Ionic
-import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
+import { IonTitle, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons';
 import { search, notificationsOutline } from 'ionicons/icons'
 
@@ -19,6 +19,10 @@ import { differenceInMilliseconds } from 'date-fns'
 
 import { Intent, SendIntent } from 'send-intent'
 
+import { TabsComponent } from './pages/tabs/tabs.component'
+import { ProfileOptionsComponent } from './pages/profile/popovers/profile-options/profile-options.component'
+import { ImageDirective } from '@strive/media/directives/image.directive'
+
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
@@ -33,8 +37,8 @@ import { ThemeService } from '@strive/utils/services/theme.service'
   imports: [
     CommonModule,
     RouterModule,
-    IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
-    // ImageDirective
+    IonTitle, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
+    ImageDirective
   ],
   selector: 'journal-root',
   templateUrl: './app.component.html',
@@ -58,12 +62,12 @@ export class AppComponent implements OnDestroy {
 
   isBrowser: boolean
 
-  // rootPage: typeof TabsComponent = TabsComponent
+  rootPage: typeof TabsComponent = TabsComponent
 
   // enumAuthSegment = enumAuthSegment
 
-  // unreadNotifications$ = this.notification.hasUnreadNotification$
-  // hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
+  unreadNotifications$ = this.notification.hasUnreadNotification$
+  hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
 
   private fcmUnsubscribe?: Unsubscribe | undefined
   private sub?: Subscription
@@ -101,12 +105,12 @@ export class AppComponent implements OnDestroy {
     }
 
     if (segments[0] === 'profile') {
-      // const isOwner = segments[1] === this.auth.uid
-      // if (isOwner) {
-      //   return this.router.navigate(['goals'])
-      // } else {
-      //   return this.location.back()
-      // }
+      const isOwner = segments[1] === this.auth.uid
+      if (isOwner) {
+        return this.router.navigate(['goals'])
+      } else {
+        return this.location.back()
+      }
     }
 
     return this.location.back()
@@ -117,20 +121,20 @@ export class AppComponent implements OnDestroy {
     const platform = this.platform;
     const pwa = inject(PWAService);
 
-    // pwa.addEventListeners()
-    // this.theme.initTheme('dark')
+    pwa.addEventListeners()
+    this.theme.initTheme('dark')
     this.openModalOnStartup()
-    // if (isPlatformBrowser(this.platformId)) this.versionService.checkForUpdate()
+    if (isPlatformBrowser(this.platformId)) this.versionService.checkForUpdate()
 
     platform.ready().then(() => {
-      // this.screensize.onResize(platform.width())
+      this.screensize.onResize(platform.width())
 
       if (Capacitor.getPlatform() === 'web') {
-        // this.personalService.showMessages().then(res => {
-        //   this.fcmUnsubscribe = res
-        // })
+        this.personalService.showMessages().then(res => {
+          this.fcmUnsubscribe = res
+        })
       } else {
-        // this.personalService.addListenersCapacitor()
+        this.personalService.addListenersCapacitor()
       }
 
       if (isPlatformBrowser(this.platformId)) {
@@ -141,7 +145,7 @@ export class AppComponent implements OnDestroy {
       // SendIntent.checkSendIntentReceived().then(this.sendIntent)
     })
 
-    // this.seo.setInitial()
+    this.seo.setInitial()
     addIcons({ search, notificationsOutline });
   }
 
@@ -156,10 +160,10 @@ export class AppComponent implements OnDestroy {
     if (isPlatformServer(this.platformId)) return
 
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
-      // const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
+      const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
       const { url } = event
 
-      // if (!isLoggedIn) {
+      if (!isLoggedIn) {
         if (Capacitor.getPlatform() === 'web') {
           const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/download', '/']
           const doNotShowPartial = ['/goal/', '/profile/']
@@ -179,11 +183,11 @@ export class AppComponent implements OnDestroy {
         } else {
           // await this.openAuthModal(enumAuthSegment.register)
         }
-      // }
+      }
 
-      // const reroutesToGoals = isLoggedIn && url === '/'
+      const reroutesToGoals = isLoggedIn && url === '/'
       const goalsRoute = url === '/goals'
-      // if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
+      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
     })
   }
 
@@ -195,13 +199,13 @@ export class AppComponent implements OnDestroy {
   //   modal.present()
   // }
 
-  // openPopover(event: Event) {
-  //   this.popoverCtrl.create({
-  //     component: ProfileOptionsComponent,
-  //     event,
-  //     showBackdrop: false
-  //   }).then(popover => popover.present())
-  // }
+  openPopover(event: Event) {
+    this.popoverCtrl.create({
+      component: ProfileOptionsComponent,
+      event,
+      showBackdrop: false
+    }).then(popover => popover.present())
+  }
 
   // sendIntent(sendIntentData: Intent) {
   //   if (!sendIntentData || !sendIntentData.title) return
@@ -213,7 +217,7 @@ export class AppComponent implements OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   private onResize(event: any) {
-    // this.screensize.onResize(event.target.innerWidth)
+    this.screensize.onResize(event.target.innerWidth)
   }
 }
 
