@@ -1,12 +1,206 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, HostListener, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
+
+// Ionic
+import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons';
+import { search, notificationsOutline } from 'ionicons/icons'
+
+import { Capacitor } from '@capacitor/core';
+import { App } from '@capacitor/app'
+import { SplashScreen } from '@capacitor/splash-screen'
+
+import { Unsubscribe } from 'firebase/firestore';
+
+import { filter, first, firstValueFrom, Subscription } from 'rxjs'
+
+import { differenceInMilliseconds } from 'date-fns'
+
+import { Intent, SendIntent } from 'send-intent'
 
 @Component({
-  imports: [RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
+    // ImageDirective
+  ],
   selector: 'journal-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'randomname';
+export class AppComponent implements OnDestroy {
+  // private auth = inject(AuthService);
+  private location = inject(Location);
+  private modalCtrl = inject(ModalController);
+  // private notification = inject(NotificationService);
+  // private personalService = inject(PersonalService);
+  private platform = inject(Platform);
+  private popoverCtrl = inject(PopoverController);
+  private router = inject(Router);
+  // screensize = inject(ScreensizeService);
+  // private seo = inject(SeoService);
+  // private support = inject(SupportService);
+  // private theme = inject(ThemeService);
+  // private versionService = inject(AppVersionService);
+  private platformId = inject(PLATFORM_ID);
+
+  // rootPage: typeof TabsComponent = TabsComponent
+
+  // enumAuthSegment = enumAuthSegment
+
+  // unreadNotifications$ = this.notification.hasUnreadNotification$
+  // hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
+
+  private fcmUnsubscribe?: Unsubscribe | undefined
+  private sub?: Subscription
+
+  // profile$ = this.auth.profile$
+
+  private lastBack = new Date()
+  backButtonSub = this.platform.backButton.subscribeWithPriority(0, async () => {
+    // prevent double trigger when going back (doesn't happen in debug mode, only in live action)
+    const now = new Date()
+    if (differenceInMilliseconds(new Date(), this.lastBack) <= 100) return
+    this.lastBack = now
+
+    const segments = this.router.url.split('/').slice(1)
+
+    if (!segments[0] || segments[0] === 'goals') {
+      return App.exitApp()
+    }
+
+    if (segments[0] === 'supports') {
+      return this.router.navigate(['goals'])
+    }
+
+    if (segments[0] === 'explore') {
+      return this.router.navigate(['goals'])
+    }
+
+    if (segments[0] === 'exercise') {
+      const id = segments[1]
+      if (id) {
+        return this.location.back()
+      } else {
+        return this.router.navigate(['goals'])
+      }
+    }
+
+    if (segments[0] === 'profile') {
+      // const isOwner = segments[1] === this.auth.uid
+      // if (isOwner) {
+      //   return this.router.navigate(['goals'])
+      // } else {
+      //   return this.location.back()
+      // }
+    }
+
+    return this.location.back()
+  })
+
+  constructor() {
+    const platform = this.platform;
+    // const pwa = inject(PWAService);
+
+    // pwa.addEventListeners()
+    // this.theme.initTheme('dark')
+    this.openModalOnStartup()
+    // if (isPlatformBrowser(this.platformId)) this.versionService.checkForUpdate()
+
+    platform.ready().then(() => {
+      // this.screensize.onResize(platform.width())
+
+      if (Capacitor.getPlatform() === 'web') {
+        // this.personalService.showMessages().then(res => {
+        //   this.fcmUnsubscribe = res
+        // })
+      } else {
+        // this.personalService.addListenersCapacitor()
+      }
+
+      if (isPlatformBrowser(this.platformId)) {
+        window.addEventListener('sendIntentReceived', () => {
+          // SendIntent.checkSendIntentReceived().then(this.sendIntent)
+        })
+      }
+      // SendIntent.checkSendIntentReceived().then(this.sendIntent)
+    })
+
+    // this.seo.setInitial()
+    addIcons({ search, notificationsOutline });
+  }
+
+  ngOnDestroy() {
+    if (this.fcmUnsubscribe) this.fcmUnsubscribe()
+    this.sub?.unsubscribe()
+    this.backButtonSub.unsubscribe()
+  }
+
+  async openModalOnStartup() {
+    // TODO put code that should only execute in browser in afterRender and afterNextRender lifecycle hooks (https://angular.io/guide/ssr#authoring-server-compatible-components)
+    if (isPlatformServer(this.platformId)) return
+
+    this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
+      // const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
+      const { url } = event
+
+      // if (!isLoggedIn) {
+        if (Capacitor.getPlatform() === 'web') {
+          const doNotShowExact = ['/terms', '/privacy-policy', '/goals', '/download', '/']
+          const doNotShowPartial = ['/goal/', '/profile/']
+          const showRegisterModalPages = ['/explore']
+
+          const dontShow = doNotShowExact.some(page => page === url) || doNotShowPartial.some(part => url.includes(part))
+          const showRegister = showRegisterModalPages.some(page => page === url)
+
+          if (!dontShow) {
+            if (showRegister) {
+              // await this.openAuthModal(enumAuthSegment.register)
+            } else {
+              // await this.openAuthModal(enumAuthSegment.login)
+            }
+          }
+
+        } else {
+          // await this.openAuthModal(enumAuthSegment.register)
+        }
+      // }
+
+      // const reroutesToGoals = isLoggedIn && url === '/'
+      const goalsRoute = url === '/goals'
+      // if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
+    })
+  }
+
+  // async openAuthModal(authSegment: enumAuthSegment) {
+  //   const modal = await this.modalCtrl.create({
+  //     component: AuthModalComponent,
+  //     componentProps: { authSegment }
+  //   })
+  //   modal.present()
+  // }
+
+  // openPopover(event: Event) {
+  //   this.popoverCtrl.create({
+  //     component: ProfileOptionsComponent,
+  //     event,
+  //     showBackdrop: false
+  //   }).then(popover => popover.present())
+  // }
+
+  // sendIntent(sendIntentData: Intent) {
+  //   if (!sendIntentData || !sendIntentData.title) return
+  //   this.modalCtrl.create({
+  //     component: SendIntentSelectGoalComponent,
+  //     componentProps: { sendIntentData }
+  //   }).then(modal => modal.present())
+  // }
+
+  @HostListener('window:resize', ['$event'])
+  private onResize(event: any) {
+    // this.screensize.onResize(event.target.innerWidth)
+  }
 }
+
