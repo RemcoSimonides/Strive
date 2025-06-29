@@ -2,13 +2,19 @@ import { ApplicationConfig, provideZoneChangeDetection, isDevMode, ErrorHandler 
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker'
-
-import { provideIonicAngular } from '@ionic/angular/standalone'
-
 import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
+
+import { environment } from '@env';
+
+import { provideIonicAngular } from '@ionic/angular/standalone'
+import { Capacitor } from '@capacitor/core'
+
+
+import { AUTH_DEPS, FIREBASE_CONFIG } from 'ngfire'
+import { indexedDBLocalPersistence } from 'firebase/auth'
 
 // Sentry
 import { init, createErrorHandler } from '@sentry/angular'
@@ -38,5 +44,13 @@ export const appConfig: ApplicationConfig = {
     }),
     { provide: 'APP_NAME', useValue: 'journal' },
     { provide: ErrorHandler, useValue: createErrorHandler() },
+    { provide: FIREBASE_CONFIG, useValue: environment.firebase },
+    {
+      provide: AUTH_DEPS,
+      useValue:
+        Capacitor.getPlatform() === 'ios'
+          ? { persistence: indexedDBLocalPersistence }
+          : undefined,
+    },
   ],
 };
