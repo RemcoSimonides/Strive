@@ -1,0 +1,25 @@
+main {
+  max-width: var(--page-max-width);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.explanation {
+  color: var(--ion-color-medium);
+}
+
+section.reminder {
+  display: flex;
+  align-items: center;
+}
+
+ion-button {
+  width: fit-content;
+}
+
+ion-segment {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}

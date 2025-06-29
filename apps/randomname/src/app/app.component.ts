@@ -19,6 +19,16 @@ import { differenceInMilliseconds } from 'date-fns'
 
 import { Intent, SendIntent } from 'send-intent'
 
+import { ScreensizeService } from '@strive/utils/services/screensize.service'
+import { SupportService } from '@strive/support/support.service'
+import { NotificationService } from '@strive/notification/notification.service'
+import { PersonalService } from '@strive/user/personal.service'
+import { SeoService } from '@strive/utils/services/seo.service'
+import { AppVersionService } from '@strive/utils/services/app-version.service'
+import { AuthService } from '@strive/auth/auth.service'
+import { PWAService } from '@strive/utils/services/pwa.service'
+import { ThemeService } from '@strive/utils/services/theme.service'
+
 @Component({
   imports: [
     CommonModule,
@@ -31,19 +41,19 @@ import { Intent, SendIntent } from 'send-intent'
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnDestroy {
-  // private auth = inject(AuthService);
+  private auth = inject(AuthService);
   private location = inject(Location);
   private modalCtrl = inject(ModalController);
-  // private notification = inject(NotificationService);
-  // private personalService = inject(PersonalService);
+  private notification = inject(NotificationService);
+  private personalService = inject(PersonalService);
   private platform = inject(Platform);
   private popoverCtrl = inject(PopoverController);
   private router = inject(Router);
-  // screensize = inject(ScreensizeService);
-  // private seo = inject(SeoService);
-  // private support = inject(SupportService);
-  // private theme = inject(ThemeService);
-  // private versionService = inject(AppVersionService);
+  screensize = inject(ScreensizeService);
+  private seo = inject(SeoService);
+  private support = inject(SupportService);
+  private theme = inject(ThemeService);
+  private versionService = inject(AppVersionService);
   private platformId = inject(PLATFORM_ID);
 
   isBrowser: boolean
@@ -105,7 +115,7 @@ export class AppComponent implements OnDestroy {
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
     const platform = this.platform;
-    // const pwa = inject(PWAService);
+    const pwa = inject(PWAService);
 
     // pwa.addEventListeners()
     // this.theme.initTheme('dark')

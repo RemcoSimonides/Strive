@@ -1,0 +1,111 @@
+header {
+  display: flex;
+  justify-content: space-between;
+
+  .create-goal {
+    display: flex;
+    flex: 1;
+  }
+}
+
+h4 {
+  color: var(--ion-color-primary);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--page-max-width);
+  margin: auto;
+
+  strive-mini-thumbnail-swiper {
+    margin-bottom: 16px;
+
+    .thumb {
+      $size: 60px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      cursor: pointer;
+
+      ion-thumbnail {
+        height: $size;
+        width: $size;
+        border-radius: 12px;
+        position: relative;
+    		isolation: isolate;
+
+        img {
+          border-radius: 12px;
+          background-color: var(--ion-card-background);
+        }
+      }
+
+      small {
+        display: block;
+        max-width: $size;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: auto;
+        color: var(--ion-color-medium);
+      }
+
+      ion-badge {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    div {
+      display: flex;
+      overflow: hidden;
+      gap: 8px;
+
+      small {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .no_goals {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    span.subtitle {
+      text-align: center;
+      color: var(--ion-color-medium);
+    }
+  }
+
+  .skeleton-spectating {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    article {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      ion-thumbnail {
+        border-radius: 12px;
+        overflow: hidden;
+        width: 60px;
+        height: 60px;
+      }
+    }
+  }
+}

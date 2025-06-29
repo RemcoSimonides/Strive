@@ -1,0 +1,72 @@
+<strive-header-root title="Supports" />
+
+@if ((uid$ | async) === undefined) {
+  <strive-page-loading />
+}
+
+@if ((uid$ | async) === '') {
+  <div class="not-logged-in">
+    <p>
+      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
+    </p>
+  </div>
+}
+
+@if (uid$ | async) {
+  <ion-content class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+      <ion-refresher-content />
+    </ion-refresher>
+    <main>
+      @if ((isMobile$ | async) === false) {
+        <h1>Supports</h1>
+      }
+      @if (objectivesWithSupports$ | async; as goals) {
+        <section>
+          @if (goals.length) {
+            @for (goal of goals; track goal) {
+              <strive-support-list [goal]="goal">
+                <ng-template #goal let-goal>
+                  <small><a [routerLink]="'../goal/' + goal.id">{{ goal.title }}</a></small>
+                </ng-template>
+                <ng-template #milestone let-goal let-milestone="milestone">
+                  <small><a [routerLink]="'../goal/' + goal.id">{{ goal.title | mSlice}}</a>&nbsp;<span>&#8702;</span> {{ milestone.content | mSlice }}</small>
+                </ng-template>
+              </strive-support-list>
+            }
+          } @else {
+            <section class="empty">
+              <small>To motivate people to achieve their goals, offer incentives by supporting their goals or milestones. such as giving 5 euro when passing an exam.</small>
+              <i>No supports yet</i>
+            </section>
+          }
+        </section>
+      } @else {
+        <strive-page-loading />
+      }
+    </main>
+  </ion-content>
+}
+
+
+<ng-template #empty>
+  <section class="empty">
+    <small>To motivate people to achieve their goals, offer incentives by supporting their goals or milestones. such as giving 5 euro when passing an exam.</small>
+    <i>No supports yet</i>
+  </section>
+</ng-template>
+
+<ng-template #milestoneStatus let-milestone>
+  @if (milestone.status === 'succeeded') {
+    <small>(achieved)</small>
+  }
+  @if (milestone.status === 'failed') {
+    <small>(not achieved)</small>
+  }
+</ng-template>
+
+<ng-template #goalStatus let-goal>
+  @if (goal.status !== 'pending') {
+    <small>(finished)</small>
+  }
+</ng-template>

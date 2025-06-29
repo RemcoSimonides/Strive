@@ -1,0 +1,55 @@
+<strive-header title="Notifications" />
+
+@if ((uid$ | async) !== undefined) {
+  @if (uid$ | async) {
+    <ion-content>
+      <main>
+        @if (notifications$ | async; as notifications) {
+          @if (notifications.length) {
+            @for (notification of notifications; track notification; let isLast = $last; let index = $index) {
+              @if (notification | message; as _message) {
+                <article class="clickable" [routerLink]="_message.link" [queryParams]="_message.params">
+                  <img
+                    [ref]="_message.image"
+                    [asset]="_message.type === 'profile' ? 'profile.png' : 'goal.png'"
+                    [ngStyle]="{'border-radius': _message.type === 'profile' ? '50%' : '12px'}"
+                    [width]="120" [height]="120"
+                  />
+                  <div>
+                    <span>{{ _message.message }}</span>
+                    <small class="time">{{ notification.createdAt | timeAgo }}</small>
+                  </div>
+                </article>
+                <!-- @if (index === lastUnreadIndex) {
+                  @if (!isLast) {
+                    <span class="divider"></span>
+                  }
+                  <div class="unread">
+                    <ion-icon name="chevron-up-outline"></ion-icon>
+                    <small>unread notifications</small>
+                    <ion-icon name="chevron-up-outline"></ion-icon>
+                  </div>
+                } -->
+                @if (!isLast) {
+                  <span class="divider"></span>
+                }
+              }
+            }
+          } @else {
+            No notifications
+          }
+        } @else {
+          <strive-page-loading />
+        }
+      </main>
+    </ion-content>
+  } @else {
+    <div class="not-logged-in">
+      <p>
+        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your notifications
+      </p>
+    </div>
+  }
+} @else {
+  <strive-page-loading />
+}

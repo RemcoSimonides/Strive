@@ -1,0 +1,83 @@
+<strive-header-root [title]="(isLoggedIn$ | async) ? 'Goals' : ''"/>
+
+@if (isLoggedIn$ | async) {
+  <ion-content class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+      <ion-refresher-content/>
+    </ion-refresher>
+    <main>
+      @if (achieving$ | async; as stakeholders) {
+        @if (stakeholders.length) {
+          <strive-mini-thumbnail-swiper>
+            @for (stakeholder of stakeholders; track stakeholder) {
+              <ng-template #thumb>
+                <article (click)="openFollowedGoal(stakeholder)" class="thumb">
+                  <ion-thumbnail>
+                    <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
+                    @if (stakeholder.goal.status !== 'pending') {
+                      <div class="finished-overlay">
+                        <ion-icon name="checkmark-outline"/>
+                      </div>
+                    }
+                  </ion-thumbnail>
+                  <small>{{ stakeholder.goal.title }}</small>
+                  @if (stakeholder.events.length) {
+                    <ion-badge color="primary">{{ stakeholder.events.length }}</ion-badge>
+                  }
+                </article>
+              </ng-template>
+            }
+          </strive-mini-thumbnail-swiper>
+        }
+      } @else {
+        <section class="skeleton-spectating">
+          @for (i of [].constructor(5); track i) {
+            <article>
+              <ion-thumbnail>
+                <ion-skeleton-text [animated]="true"/>
+              </ion-thumbnail>
+              <ion-skeleton-text [animated]="true"/>
+            </article>
+          }
+        </section>
+      }
+      @if (stakeholders$ | async; as stakeholders) {
+        @if (stakeholders.length) {
+          <header>
+            <ion-button expand="block" fill="clear" (click)="createGoal()" class="create-goal">
+              <ion-icon name="add" slot="start"/>
+              <span>Create Goal</span>
+            </ion-button>
+            <ion-button fill="clear" (click)="openFilter($event)">
+              <ion-icon name="filter-outline" slot="icon-only"/>
+            </ion-button>
+          </header>
+          <section class="cards">
+            @for (stakeholder of stakeholders; track trackByFn($index, stakeholder)) {
+              <strive-goal-thumbnail [goal]="stakeholder.goal" [stakeholder]="stakeholder" [events]="stakeholder.events" [routerLink]="['/goal/', stakeholder.goal.id]">
+                <div>
+                  @if (stakeholder.goal.publicity === 'private') {
+                    <small>
+                      <ion-icon name="lock-closed-outline"/>
+                      <span>Private</span>
+                    </small>
+                  }
+                </div>
+              </strive-goal-thumbnail>
+            }
+          </section>
+        } @else {
+          <section class="no_goals">
+            <ion-button class="primary" (click)="createGoal()">
+              <ion-icon name="add" slot="start"/>
+              <span>Create Goal</span>
+            </ion-button>
+            <span class="subtitle">No goals yet. Create your first.</span>
+          </section>
+        }
+      }
+    </main>
+  </ion-content>
+} @else {
+  <journal-home/>
+}

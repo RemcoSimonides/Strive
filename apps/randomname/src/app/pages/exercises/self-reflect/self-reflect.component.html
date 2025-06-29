@@ -1,0 +1,218 @@
+<strive-header title="Self Reflect" defaultBack="/exercise">
+  <ion-buttons slot="end">
+    <ion-button fill="clear" size="small" routerLink="settings">
+      <ion-icon slot="icon-only" name="settings-outline" />
+    </ion-button>
+  </ion-buttons>
+</strive-header>
+
+<ion-content class="ion-padding">
+  @if (uid$ | async) {
+    <main>
+      @if ((isMobile$ | async) === false) {
+        <header>
+          <h1>Self Reflect</h1>
+          <ion-button
+            size="small"
+            fill="clear"
+            routerLink="settings"
+            >
+            <ion-icon slot="icon-only" name="settings-outline" />
+          </ion-button>
+        </header>
+      }
+      <small
+        >Get a grasp on life by looking back and planning ahead
+        <a href="https://blog.strivejournal.com/exercises/self-reflect" target="_blank">Learn more...</a>
+      </small>
+      <ion-list class="entries">
+        @if (daily$ | async; as daily) {
+          <ion-item button (click)="addEntry('daily')" [disabled]="daily.disabled">
+            <ion-label>
+              <h2>Daily Self Reflection</h2>
+              <small>{{ daily.message }}</small>
+            </ion-label>
+            <ion-icon name="arrow-forward-outline" slot="end" />
+          </ion-item>
+        }
+        @if (weekly$ | async; as weekly) {
+          <ion-item button (click)="addEntry('weekly')" [disabled]="weekly.disabled">
+            <ion-label>
+              <h2>Weekly Self Reflection</h2>
+              <small>{{ weekly.message }}</small>
+            </ion-label>
+            <ion-icon name="arrow-forward-outline" slot="end" />
+          </ion-item>
+        }
+        @if (monthly$ | async; as monthly) {
+          <ion-item button (click)="addEntry('monthly')" [disabled]="monthly.disabled">
+            <ion-label>
+              <h2>Monthly Self Reflection</h2>
+              <small>{{ monthly.message }}</small>
+            </ion-label>
+            <ion-icon name="arrow-forward-outline" slot="end" />
+          </ion-item>
+        }
+        @if (quarterly$ | async; as quarterly) {
+          <ion-item button (click)="addEntry('quarterly')" [disabled]="quarterly.disabled">
+            <ion-label>
+              <h2>Quarterly Self Reflection</h2>
+              <small>{{ quarterly.message }}</small>
+            </ion-label>
+            <ion-icon name="arrow-forward-outline" slot="end" />
+          </ion-item>
+        }
+        @if (yearly$ | async; as yearly) {
+          <ion-item button (click)="addEntry('yearly')" [disabled]="yearly.disabled" lines="none">
+            <ion-label>
+              <h2>Yearly Self Reflection</h2>
+              <small>{{ yearly.message }}</small>
+            </ion-label>
+            <ion-icon name="arrow-forward-outline" slot="end" />
+          </ion-item>
+        }
+      </ion-list>
+      <header>
+        <h3>Questions</h3>
+        <ion-button size="small" fill="clear" id="question-filter-popover">
+          <ion-icon name="filter-outline" slot="icon-only" />
+        </ion-button>
+      </header>
+      <small>See previous entries or change the frequency of questions</small>
+      @if (questions$ | async; as questions) {
+        <ion-list lines="full">
+          @for (question of questions; track trackByFn($index, question); let last = $last) {
+            @if (dbEntries$ | async | filterEntries: question.key; as entries) {
+              <ion-item [lines]="last ? 'none' : 'full'" button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
+                <section>
+                  <span>{{ question.question | replaceFrequency: question.frequency }}</span>
+                  <small>
+                    <span>Entries:</span>
+                    <span>{{ entries.length }}</span>
+                    <span>Frequency:</span>
+                    <span>{{ question.frequency | titlecase }}</span>
+                  </small>
+                </section>
+              </ion-item>
+            }
+          }
+        </ion-list>
+      } @else {
+        <strive-page-loading/>
+      }
+      <header>
+        <h3>Custom Questions</h3>
+        <ion-button size="small" fill="clear" id="custom-question-filter-popover">
+          <ion-icon name="filter-outline" slot="icon-only" />
+        </ion-button>
+      </header>
+      <small>Add your own questions to reflect on</small>
+      <ion-list lines="full">
+        @for (question of customQuestions$ | async; track trackByFn($index, question)) {
+          @if (dbEntries$ | async | filterEntries: question.key; as entries) {
+            <ion-item button (click)="openQuestion(question, entries)" class="question" [ngClass]="{disabled: question.frequency === 'never'}">
+              <ion-label>
+                <section>
+                  <span>{{ question.question | replaceFrequency: question.frequency }}</span>
+                  <small>
+                    <span>Entries:</span>
+                    <span>{{ entries.length }}</span>
+                    <span>Frequency:</span>
+                    <span>{{ question.frequency | titlecase }}</span>
+                  </small>
+                </section>
+              </ion-label>
+            </ion-item>
+          }
+        }
+        <ion-item button (click)="createCustomQuestion()" lines="none" class="add-custom-question">
+          <ion-label>Add Question</ion-label>
+          <ion-icon slot="end" name="add-outline"/>
+        </ion-item>
+      </ion-list>
+      <ion-popover trigger="question-filter-popover" class="datetime-popover">
+        <ng-template>
+          <ion-content>
+            <form [formGroup]="questionFilterForm">
+              <ion-list class="filter">
+                <ion-item lines="none">
+                  <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
+                    <ion-select-option value="all">All</ion-select-option>
+                    <ion-select-option value="career">Career</ion-select-option>
+                    <ion-select-option value="creative">Creative</ion-select-option>
+                    <ion-select-option value="education">Education</ion-select-option>
+                    <ion-select-option value="environment">Environment</ion-select-option>
+                    <ion-select-option value="exercise">Exercise ⭐</ion-select-option>
+                    <ion-select-option value="financial">Financial</ion-select-option>
+                    <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
+                    <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
+                    <ion-select-option value="relationships">Relationships</ion-select-option>
+                    <ion-select-option value="spiritual">Spiritual</ion-select-option>
+                    <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
+                    <ion-select-option value="other">Other</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
+                    <ion-select-option value="all">All</ion-select-option>
+                    <ion-select-option value="daily">Daily</ion-select-option>
+                    <ion-select-option value="weekly">Weekly</ion-select-option>
+                    <ion-select-option value="monthly">Monthly</ion-select-option>
+                    <ion-select-option value="quarterly">Quarterly</ion-select-option>
+                    <ion-select-option value="yearly">Yearly</ion-select-option>
+                    <ion-select-option value="never">Turned off</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+            </form>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+      <ion-popover trigger="custom-question-filter-popover" class="datetime-popover">
+        <ng-template>
+          <ion-content>
+            <form [formGroup]="customQuestionFilterForm">
+              <ion-list class="filter">
+                <ion-item lines="none">
+                  <ion-select label="Category" labelPlacement="stacked" formControlName="category" [multiple]="true" interface="popover">
+                    <ion-select-option value="all">All</ion-select-option>
+                    <ion-select-option value="career">Career</ion-select-option>
+                    <ion-select-option value="creative">Creative</ion-select-option>
+                    <ion-select-option value="education">Education</ion-select-option>
+                    <ion-select-option value="environment">Environment</ion-select-option>
+                    <ion-select-option value="financial">Financial</ion-select-option>
+                    <ion-select-option value="healthAndFitness">Health and Fitness</ion-select-option>
+                    <ion-select-option value="personalDevelopment">Personal Development</ion-select-option>
+                    <ion-select-option value="relationships">Relationships</ion-select-option>
+                    <ion-select-option value="spiritual">Spiritual</ion-select-option>
+                    <ion-select-option value="travelAndAdventures">Travel and Adventures</ion-select-option>
+                    <ion-select-option value="other">Other</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-select label="Frequency" labelPlacement="stacked" formControlName="frequency" [multiple]="true" interface="popover">
+                    <ion-select-option value="all">All</ion-select-option>
+                    <ion-select-option value="daily">Daily</ion-select-option>
+                    <ion-select-option value="weekly">Weekly</ion-select-option>
+                    <ion-select-option value="monthly">Monthly</ion-select-option>
+                    <ion-select-option value="quarterly">Quarterly</ion-select-option>
+                    <ion-select-option value="yearly">Yearly</ion-select-option>
+                    <ion-select-option value="never">Turned off</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+            </form>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </main>
+  } @else {
+    <section class="not-logged-in">
+      <p>
+        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to self reflect
+      </p>
+    </section>
+  }
+</ion-content>
+
+
