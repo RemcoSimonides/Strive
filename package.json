@@ -63,7 +63,7 @@
     "firebase-functions": "^6.3.2",
     "firebase-tools": "^14.8.0",
     "ng2-charts": "^8.0.0",
-    "ngfire": "file:../ngfire/dist/libs/ngfire",
+    "ngfire": "file:./packages/ngfire",
     "ngx-image-cropper": "^9.1.5",
     "openai": "^5.6.0",
     "pexels": "^1.4.0",
