@@ -2,8 +2,8 @@
   "name": "journal",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/journal/src",
   "prefix": "journal",
+  "sourceRoot": "apps/journal/src",
   "tags": [],
   "targets": {
     "build": {
@@ -25,6 +25,10 @@
             "glob": "**/*",
             "input": "./assets",
             "output": "./assets"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/journal/public"
           }
         ],
         "styles": [
@@ -33,12 +37,10 @@
         ],
         "scripts": [],
         "server": "apps/journal/src/main.server.ts",
-        "prerender": {
-          "discoverRoutes": true
-        },
         "ssr": {
-          "entry": "apps/journal/src/ssr.server.ts"
-        }
+          "entry": "apps/journal/src/server.ts"
+        },
+        "outputMode": "server"
       },
       "configurations": {
         "production": {
@@ -95,9 +97,18 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/journal"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/journal/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "journal:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/journal/browser",
+        "spa": true
       }
     },
     "cap": {

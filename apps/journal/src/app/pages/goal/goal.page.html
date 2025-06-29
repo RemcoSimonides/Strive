@@ -87,42 +87,42 @@
                     <ion-icon name="flag"/>
                     @if (stakeholder.isAchiever) {
                       @if (goal.numberOfAchievers > 1) {
-                        <span><b>You</b> and <b>{{ goal.numberOfAchievers - 1 ?? 0 }}</b> other {{ goal.numberOfAchievers === 2 ? 'achiever' : 'achievers' }}</span>
+                        <span><b>You</b> and <b>{{ goal.numberOfAchievers - 1 }}</b> other {{ goal.numberOfAchievers === 2 ? 'achiever' : 'achievers' }}</span>
                       }
                       @if (goal.numberOfAchievers === 1) {
                         <span><b>You</b> achieve</span>
                       }
                     }
                     @if (!stakeholder.isAchiever) {
-                      <span><b>{{ goal.numberOfAchievers ?? 0 }}</b> {{ goal.numberOfAchievers === 1 ? 'achiever' : 'achievers' }}</span>
+                      <span><b>{{ goal.numberOfAchievers }}</b> {{ goal.numberOfAchievers === 1 ? 'achiever' : 'achievers' }}</span>
                     }
                   </li>
                   <li (click)="openTeamModal('isSupporter')" class="clickable">
                     <ion-icon src="assets/icons/hand-holding-heart-solid.svg"/>
                     @if (stakeholder.isSupporter) {
                       @if (goal.numberOfSupporters > 1) {
-                        <span><b>You</b> and <b>{{ goal.numberOfSupporters - 1 ?? 0 }}</b> other {{ goal.numberOfSupporters === 2 ? 'supporter' : 'supporters' }}</span>
+                        <span><b>You</b> and <b>{{ goal.numberOfSupporters - 1 }}</b> other {{ goal.numberOfSupporters === 2 ? 'supporter' : 'supporters' }}</span>
                       }
                       @if (goal.numberOfSupporters === 1) {
                         <span><b>You</b> support</span>
                       }
                     }
                     @if (!stakeholder.isSupporter) {
-                      <span><b>{{ goal.numberOfSupporters ?? 0 }}</b> {{ goal.numberOfSupporters === 1 ? 'supporter' : 'supporters' }}</span>
+                      <span><b>{{ goal.numberOfSupporters }}</b> {{ goal.numberOfSupporters === 1 ? 'supporter' : 'supporters' }}</span>
                     }
                   </li>
                   <li (click)="openTeamModal('isSpectator')" class="clickable">
                     <ion-icon name="notifications"/>
                     @if (stakeholder.isSpectator) {
                       @if (goal.numberOfSpectators > 1) {
-                        <span><b>You</b> and <b>{{ goal.numberOfSpectators - 1 ?? 0 }}</b> other {{ goal.numberOfSpectators === 2 ? 'follower' : 'followers' }}</span>
+                        <span><b>You</b> and <b>{{ goal.numberOfSpectators - 1 }}</b> other {{ goal.numberOfSpectators === 2 ? 'follower' : 'followers' }}</span>
                       }
                       @if (goal.numberOfSpectators === 1) {
                         <span><b>You</b> follow</span>
                       }
                     }
                     @if (!stakeholder.isSpectator) {
-                      <span><b>{{ goal.numberOfSpectators ?? 0 }}</b> {{ goal.numberOfSpectators === 1 ? 'follower' : 'followers' }}</span>
+                      <span><b>{{ goal.numberOfSpectators }}</b> {{ goal.numberOfSpectators === 1 ? 'follower' : 'followers' }}</span>
                     }
                   </li>
                   @if (collectiveStakeholders$ | async; as stakeholders) {
@@ -197,9 +197,9 @@
                     @for (stakeholder of stakeholders; track stakeholder; let last = $last) {
                       <ion-item [lines]="last ? 'none' : 'full'" (click)="navTo(stakeholder.uid)" button>
                         <ion-avatar slot="start">
-                          <img [ref]="stakeholder.profile.photoURL" asset="profile.png" [width]="120" [height]="120"/>
+                          <img [ref]="stakeholder.profile?.photoURL" asset="profile.png" [width]="120" [height]="120" alt="Profile image"/>
                         </ion-avatar>
-                        <ion-label>{{ stakeholder.profile.username }}</ion-label>
+                        <ion-label>{{ stakeholder.profile?.username }}</ion-label>
                         <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">
                           @if ((isMobile$ | async) === false) {
                             <span>Accept</span>
@@ -232,7 +232,7 @@
               </header>
               <strive-roadmap
                 [goal]="goal"
-                [milestones]="milestones$ | async"
+                [milestones]="(milestones$ | async) ?? []"
                 [stakeholder]="stakeholder">
               </strive-roadmap>
               @if (stakeholder.isAdmin || stakeholder.isAchiever) {

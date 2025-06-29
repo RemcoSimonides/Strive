@@ -1,19 +1,22 @@
-import { Component, HostListener, OnDestroy, PLATFORM_ID, inject } from '@angular/core'
-import { RouterModule, Router, NavigationEnd, RouterOutlet } from '@angular/router'
+import { Component, HostListener, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
 
 // Ionic
 import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
-import { addIcons } from 'ionicons'
+import { addIcons } from 'ionicons';
 import { search, notificationsOutline } from 'ionicons/icons'
 
-import { Capacitor } from '@capacitor/core'
+import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
-import { Unsubscribe } from 'firebase/firestore'
-import { differenceInMilliseconds } from 'date-fns'
+
+import { Unsubscribe } from 'firebase/firestore';
 
 import { filter, first, firstValueFrom, Subscription } from 'rxjs'
+
+import { differenceInMilliseconds } from 'date-fns'
+
 import { Intent, SendIntent } from 'send-intent'
 
 import { TabsComponent } from './pages/tabs/tabs.component'
@@ -34,15 +37,15 @@ import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/aut
 import { SendIntentSelectGoalComponent } from '@strive/goal/modals/send-intent-select-goal/send-intent-select-goal.component'
 
 @Component({
-    selector: 'journal-root',
-    imports: [
-        CommonModule,
-        RouterModule,
-        IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
-        ImageDirective
-    ],
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  imports: [
+    CommonModule,
+    RouterModule,
+    IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
+    ImageDirective
+  ],
+  selector: 'journal-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnDestroy {
   private auth = inject(AuthService);
@@ -59,6 +62,8 @@ export class AppComponent implements OnDestroy {
   private theme = inject(ThemeService);
   private versionService = inject(AppVersionService);
   private platformId = inject(PLATFORM_ID);
+
+  isBrowser: boolean
 
   rootPage: typeof TabsComponent = TabsComponent
 
@@ -115,6 +120,7 @@ export class AppComponent implements OnDestroy {
   })
 
   constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
     const platform = this.platform;
     const pwa = inject(PWAService);
 
@@ -217,3 +223,4 @@ export class AppComponent implements OnDestroy {
     this.screensize.onResize(event.target.innerWidth)
   }
 }
+

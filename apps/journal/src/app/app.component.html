@@ -1,4 +1,4 @@
-<ion-app ngSkipHydration>
+<ion-app>
 
   @if ((screensize.size$ | async) === 'mobile') {
     <ion-nav [root]="rootPage" />
@@ -7,7 +7,7 @@
       <ion-toolbar>
         <header>
           <a routerLink="/">
-            <img asset="strivejournal-without-margin.png" class="logo" />
+            <img asset="strivejournal-without-margin.png" class="logo" alt="strive journal logo" />
           </a>
           <section>
             @if (profile$ | async; as user) {
@@ -27,7 +27,7 @@
                 <ion-icon name="notifications-outline" size="small" slot="icon-only"></ion-icon>
               </ion-button>
               <ion-avatar (click)="openPopover($event)">
-                <img [ref]="user.photoURL" asset="profile.png" [width]="120" [height]="120"/>
+                <img [ref]="user.photoURL" asset="profile.png" [width]="120" [height]="120" alt="profile image"/>
               </ion-avatar>
             } @else {
               <ion-button fill="clear" (click)="openAuthModal(enumAuthSegment.login)">
@@ -46,5 +46,8 @@
     </ion-header>
     <ion-router-outlet id="main" />
   }
+  <p>Is running in browser: {{ isBrowser === null ? 'null' : isBrowser }}</p>
+
+  <router-outlet></router-outlet>
 
 </ion-app>

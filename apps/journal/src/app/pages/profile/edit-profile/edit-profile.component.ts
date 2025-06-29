@@ -65,13 +65,15 @@ export class EditProfilePageComponent {
       this.imageSelector.cropIt()
     }
 
-    this.form.username.setValue(this.form.username.value.trim())
+    const username = this.form.username.value ?? ''
+
+    this.form.username.setValue(username.trim())
 
     if (this.form.valid) {
       this.profileService.update({
         uid: this.auth.uid,
-        photoURL: this.form.photoURL.value,
-        username: this.form.username.value
+        photoURL: this.form.photoURL.value ?? '',
+        username
       })
       this.location.back()
     }

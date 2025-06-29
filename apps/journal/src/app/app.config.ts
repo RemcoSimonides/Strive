@@ -1,17 +1,20 @@
-import { ApplicationConfig, ErrorHandler, isDevMode } from '@angular/core'
-import { provideRouter } from '@angular/router'
+import { ApplicationConfig, provideZoneChangeDetection, isDevMode, ErrorHandler } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker'
+import {
+  provideClientHydration,
+  withEventReplay,
+} from '@angular/platform-browser';
+
+import { environment } from '@env';
 
 import { provideIonicAngular } from '@ionic/angular/standalone'
 import { Capacitor } from '@capacitor/core'
 
-// Firebase
+
 import { AUTH_DEPS, FIREBASE_CONFIG } from 'ngfire'
 import { indexedDBLocalPersistence } from 'firebase/auth'
-
-import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser'
-import { environment } from '@env';
 
 // Sentry
 import { init, createErrorHandler } from '@sentry/angular'
@@ -29,8 +32,9 @@ register()
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
-    provideClientHydration(),
+    provideClientHydration(withEventReplay()),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(appRoutes),
     provideIonicAngular({ mode: 'md' }),
     provideServiceWorker('sw-master.js', {
       enabled: !isDevMode(),
@@ -39,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     { provide: 'APP_NAME', useValue: 'journal' },
+    { provide: ErrorHandler, useValue: createErrorHandler() },
     { provide: FIREBASE_CONFIG, useValue: environment.firebase },
     {
       provide: AUTH_DEPS,
@@ -47,6 +52,5 @@ export const appConfig: ApplicationConfig = {
           ? { persistence: indexedDBLocalPersistence }
           : undefined,
     },
-    { provide: ErrorHandler, useValue: createErrorHandler() },
   ],
-}
+};

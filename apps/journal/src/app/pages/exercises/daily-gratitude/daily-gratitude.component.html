@@ -18,7 +18,7 @@
         <strive-exercise-activate-push-notification/>
         <section class="toggle">
           <article>
-            <ion-toggle [formControl]="form.get('on')"/>
+            <ion-toggle [formControl]="form.controls.on"/>
             <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time')?.value : 'Reminder turned off'}}</span>
           </article>
         </section>

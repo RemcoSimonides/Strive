@@ -1,5 +1,7 @@
+/// <reference types="cypress" />
+
 // ***********************************************
-// This example commands.js shows you how to
+// This example commands.ts shows you how to
 // create various custom commands and overwrite
 // existing commands.
 //
@@ -8,14 +10,16 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare namespace Cypress {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface Chainable<Subject> {
-    login(email: string, password: string): void;
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Cypress {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface Chainable<Subject> {
+      login(email: string, password: string): void;
+    }
   }
 }
-//
+
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
