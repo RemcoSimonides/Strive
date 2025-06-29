@@ -33,6 +33,8 @@ import { AuthService } from '@strive/auth/auth.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
+import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+
 @Component({
   imports: [
     CommonModule,
@@ -64,7 +66,7 @@ export class AppComponent implements OnDestroy {
 
   rootPage: typeof TabsComponent = TabsComponent
 
-  // enumAuthSegment = enumAuthSegment
+  enumAuthSegment = enumAuthSegment
 
   unreadNotifications$ = this.notification.hasUnreadNotification$
   hasSupportNeedingDecision$ = this.support.hasSupportNeedingDecision$
@@ -72,7 +74,7 @@ export class AppComponent implements OnDestroy {
   private fcmUnsubscribe?: Unsubscribe | undefined
   private sub?: Subscription
 
-  // profile$ = this.auth.profile$
+  profile$ = this.auth.profile$
 
   private lastBack = new Date()
   backButtonSub = this.platform.backButton.subscribeWithPriority(0, async () => {
@@ -191,13 +193,13 @@ export class AppComponent implements OnDestroy {
     })
   }
 
-  // async openAuthModal(authSegment: enumAuthSegment) {
-  //   const modal = await this.modalCtrl.create({
-  //     component: AuthModalComponent,
-  //     componentProps: { authSegment }
-  //   })
-  //   modal.present()
-  // }
+  async openAuthModal(authSegment: enumAuthSegment) {
+    const modal = await this.modalCtrl.create({
+      component: AuthModalComponent,
+      componentProps: { authSegment }
+    })
+    modal.present()
+  }
 
   openPopover(event: Event) {
     this.popoverCtrl.create({
