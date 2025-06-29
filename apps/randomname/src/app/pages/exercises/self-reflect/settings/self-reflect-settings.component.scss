@@ -1,0 +1,32 @@
+main {
+  max-width: var(--page-max-width);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  .reminder {
+    display: block;
+    margin: 8px 16px;
+    color: var(--ion-color-medium);
+  }
+
+  ion-item {
+    --highlight-background: var(--ion-color-primary);
+
+    ion-text {
+      margin-right: 16px;
+    }
+  }
+
+  ion-select {
+    width: 100%;
+    padding-left: 0;
+  }
+}

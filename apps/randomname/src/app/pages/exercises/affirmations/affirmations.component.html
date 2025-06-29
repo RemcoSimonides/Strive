@@ -1,0 +1,106 @@
+<strive-header title="Affirmations" defaultBack="/exercise"/>
+
+<ion-content class="ion-padding">
+  <main>
+    <section>
+      <h1 *ngIf="(screensize.isMobile$ | async) === false">Affirmations</h1>
+      <small class="explanation">
+        An affirmation is a short, powerful statement.
+        They allow you to conciously be in control of your thoughts.
+        When you say or think them, they become thoughts that shape your reality.
+        <a href="https://blog.strivejournal.com/blog/affirmations" target="_blank">Learn more...</a>
+      </small>
+    </section>
+
+    <ng-container *ngIf="!isLoading else loading">
+      <ng-container *ngIf="uid$ | async else login">
+
+        <strive-exercise-activate-push-notification/>
+
+        <section>
+          <h5>Set Affirmation Time</h5>
+          <small>Choose up to 3 times during the day, at which you would like to receive a random affirmation.</small>
+        </section>
+
+        <ion-list>
+          <ng-container *ngFor="let time of times; let i = index">
+            <ion-item (click)="openDatetime(i)" lines="full">
+              <ion-label>Set time {{ i + 1 }}</ion-label>
+              <ion-text>{{ time ? (time | date:'HH:mm') : '--:--'}}</ion-text>
+              <ion-icon class="remove-item-icon remove-set-time-icon" (click)="removeSetTime(i)" name="close-circle"/>
+            </ion-item>
+          </ng-container>
+          <ion-button disabled color="primary" fill="clear">
+            <ng-container *ngIf="timesForm.dirty; else saved">
+              <span>Saving...</span>
+            </ng-container>
+            <ng-template #saved>
+              <span>Saved</span>
+              <ion-icon slot="end" name="checkmark-outline"/>
+            </ng-template>
+          </ion-button>
+        </ion-list>
+
+        <section>
+          <h5>Your Affirmations</h5>
+          <ion-list>
+            <ion-item *ngFor="let control of affirmationsForm.controls; let i = index">
+              <ion-input
+                class="ion-text-wrap primary"
+                autocapitalize="sentences"
+                type="text"
+                placeholder="Enter affirmation"
+                [formControl]="control"
+              />
+              <ion-icon *ngIf="control.value !== ''" class="remove-item-icon" (click)="removeAffirmation(i)" name="close-circle"/>
+            </ion-item>
+            <ion-button disabled color="primary" fill="clear">
+              <ng-container *ngIf="affirmationsForm.dirty; else saved">
+                <span>Saving...</span>
+              </ng-container>
+              <ng-template #saved>
+                <span>Saved</span>
+                <ion-icon slot="end" name="checkmark-outline"/>
+              </ng-template>
+            </ion-button>
+          </ion-list>
+          <p class="warning" *ngIf="affirmationsButNoTime()"><small>Please don't forget to set a time so you receive your affirmations</small></p>
+        </section>
+
+        <section class="suggestions">
+          <header>
+            <h5>Suggestions</h5>
+            <ion-select [value]="enumAffirmationCategory.all" interface="popover" (ionChange)="filterSuggestions($event.detail.value)">
+              <ion-select-option [value]="enumAffirmationCategory.all">All</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.health">Health</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.personal_development">Personal Development</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.motivation">Motivation</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.positive_mindset">Positive Mindset</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.money">Money</ion-select-option>
+              <ion-select-option [value]="enumAffirmationCategory.love">Love</ion-select-option>
+            </ion-select>
+          </header>
+
+          <ion-list>
+            <ion-item *ngFor="let suggestion of suggestions; let last = last" [lines]="last ? 'none' : 'full'">
+              <ion-label class="ion-text-wrap">{{ suggestion.affirmation }}</ion-label>
+              <ion-icon (click)="addSuggestion(suggestion)" name="add-circle"/>
+            </ion-item>
+          </ion-list>
+        </section>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #loading>
+      <strive-page-loading/>
+    </ng-template>
+
+    <ng-template #login>
+      <section class="not-logged-in">
+        <p>
+          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
+        </p>
+      </section>
+    </ng-template>
+  </main>
+</ion-content>

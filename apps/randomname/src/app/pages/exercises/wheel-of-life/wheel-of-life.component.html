@@ -1,0 +1,59 @@
+<strive-header title="Wheel of Life" defaultBack="/exercise"></strive-header>
+
+<ion-content class="ion-padding">
+  <main>
+    <section>
+      @if ((isMobile$ | async) === false) {
+        <h1>Wheel of Life</h1>
+      }
+      <small class="explanation">
+        Get insight in which areas in your life needs more attention and track results over the long term.
+        <a href="https://blog.strivejournal.com/blog/wheel-of-life" target="_blank">Learn more...</a>
+      </small>
+    </section>
+
+    @if (finishedLoading$ | async) {
+      @if (uid$ | async) {
+        <section class="reminder">
+          <span>Receive reminder</span>
+          <ion-select interface="popover" [formControl]="form">
+            <ion-select-option value="never">Never</ion-select-option>
+            <ion-select-option value="weekly">Weekly</ion-select-option>
+            <ion-select-option value="monthly">Monthly</ion-select-option>
+            <ion-select-option value="quarterly">Quarterly</ion-select-option>
+            <ion-select-option value="yearly">Yearly</ion-select-option>
+          </ion-select>
+        </section>
+        @if (entries$ | async; as entries) {
+          @if (hasEntries$ | async) {
+            <ion-button class="primary" (click)="addEntry()">
+              <ion-icon name="add" slot="start"/>
+              <span>Add entry</span>
+            </ion-button>
+          }
+          @if ((hasEntries$ | async) === false) {
+            <ion-card>
+              <ion-card-content>
+                <strive-wheel-of-life-entry [entry]="entries | today" [previousEntry]="entries | previous" (closeNavTo)="createGoal()"/>
+              </ion-card-content>
+            </ion-card>
+          }
+          @if (entries.length) {
+            <strive-wheel-of-life-results [entries]="entries"/>
+          }
+        }
+      } @else {
+        <div class="not-logged-in">
+          <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with the Wheel of Life
+          </p>
+        </div>
+      }
+    } @else {
+      <strive-page-loading/>
+    }
+
+
+
+  </main>
+</ion-content>

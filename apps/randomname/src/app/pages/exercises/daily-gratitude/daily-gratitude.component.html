@@ -1,0 +1,38 @@
+<strive-header title="Daily Gratitude" defaultBack="/exercise"></strive-header>
+
+<ion-content class="ion-padding">
+  <main>
+    <section>
+      @if ((screensize.isMobile$ | async) === false) {
+        <h1>Daily Gratitude</h1>
+      }
+      <small>
+        Reminding the things you are grateful for trains your mind to focus on the positive instead of the negative.
+        Receive a daily push notification to remind you to think of three things you are grateful for that day.
+        <a href="https://blog.strivejournal.com/blog/daily-gratitude" target="_blank">Learn more...</a>
+      </small>
+    </section>
+
+    @if (!isLoading) {
+      @if (uid$ | async) {
+        <strive-exercise-activate-push-notification/>
+        <section class="toggle">
+          <article>
+            <ion-toggle [formControl]="form.controls.on"/>
+            <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time')?.value : 'Reminder turned off'}}</span>
+          </article>
+        </section>
+        <strive-daily-gratitude-cards/>
+      } @else {
+        <div class="not-logged-in">
+          <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratitude
+          </p>
+        </div>
+      }
+    } @else {
+      <strive-page-loading/>
+    }
+
+  </main>
+</ion-content>

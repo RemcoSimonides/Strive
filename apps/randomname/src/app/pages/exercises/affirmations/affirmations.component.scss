@@ -1,0 +1,46 @@
+main {
+  max-width: var(--page-max-width);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.explanation {
+  color: var(--ion-color-medium);
+}
+
+ion-list {
+  overflow: hidden;
+
+  ion-item {
+    --highlight-background: var(--ion-color-primary);
+  }
+
+  ion-button {
+    display: block;
+  }
+}
+
+.warning {
+  color: var(--ion-color-danger);
+  text-align: center;
+}
+
+.suggestions {
+  margin-top: 16px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+
+    ion-select {
+      width: fit-content;
+      margin-top: 8px;
+    }
+
+    ion-icon:hover {
+      color: var(--ion-color-primary)
+    }
+  }
+}

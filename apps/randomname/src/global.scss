@@ -1,0 +1,328 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "../../../node_modules/@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "../../../node_modules/@ionic/angular/css/normalize.css";
+@import "../../../node_modules/@ionic/angular/css/structure.css";
+@import "../../../node_modules/@ionic/angular/css/typography.css";
+@import "../../../node_modules/@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "../../../node_modules/@ionic/angular/css/padding.css";
+@import "../../../node_modules/@ionic/angular/css/float-elements.css";
+@import "../../../node_modules/@ionic/angular/css/text-alignment.css";
+@import "../../../node_modules/@ionic/angular/css/text-transformation.css";
+@import "../../../node_modules/@ionic/angular/css/flex-utils.css";
+
+/* Variables */
+body {
+  --page-max-width: 800px;
+  --swiper-pagination-color: var(--ion-color-primary);
+  scrollbar-color: light;
+}
+
+/* Elements */
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+body[data-theme="dark"] {
+  scrollbar-color: dark;
+
+  h1, h2, h3, h4, h5 {
+    color: var(--ion-color-primary);
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+hr {
+  border-top: 1px solid var(--ion-color-primary);
+  max-width: 400px;
+  width: 50%;
+}
+
+img {
+  display: block;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+image-cropper img {
+  margin: auto;
+}
+
+
+/* Ionic */
+ion-popover::part(content) {
+  border-radius: 12px;
+}
+
+.datetime-popover {
+  --width: 300px;
+}
+
+@media only screen and (min-width: 768px) {
+  ion-modal {
+    --border-radius: 12px;
+  }
+}
+
+ion-modal.high-modal {
+  --height: 100%;
+}
+
+ion-alert {
+  --background: var(--ion-card-background) !important;
+
+  .alert-wrapper {
+    border-radius: 12px !important;
+  }
+
+  .alert-message {
+    color: var(--ion-color-medium) !important;
+  }
+}
+
+ion-loading {
+  --background: var(--ion-loading-background) !important;
+  color: var(--ion-loading-color) !important;
+
+  .loading-wrapper {
+    border-radius: 12px !important;
+  }
+}
+
+ion-searchbar {
+  --border-radius: 12px !important;
+  --background: var(--ion-item-background) !important;
+  --color: var(--ion-text-color) !important;
+}
+
+ion-card {
+  border-radius: 12px;
+  margin: 0;
+
+  ion-card-title {
+    --color: var(--ion-text-color);
+  }
+}
+
+ion-progress-bar {
+  border-radius: 2px;
+}
+
+ion-list {
+  border-radius: 12px;
+
+  ion-list-header {
+    color: var(--ion-color-primary);
+  }
+}
+
+ion-datetime {
+  --background: var(--ion-card-background);
+}
+
+ion-toggle {
+  --background: var(--ion-color-medium);
+}
+
+// To not have height: 0 in case of autoGrow used
+ion-textarea {
+  min-height: 40px;
+  textarea {
+      min-height: 40px;
+  }
+}
+
+ion-button {
+  text-transform: none;
+
+  &.fake-disable {
+    opacity: 0.5;
+  }
+
+  &.fake-enable {
+    opacity: 1;
+  }
+
+  &.button-solid, &.button-outline {
+    --background: var(--ion-card-background);
+  }
+
+  &.primary {
+    --color: var(--ion-color-primary);
+  }
+
+  &.secondary {
+    --color: var(--ion-color-secondary);
+  }
+
+  &.danger {
+    --color: var(--ion-color-danger);
+  }
+
+  &.contrast {
+    --color: var(--ion-color-primary-contrast);
+  }
+}
+
+ion-item {
+  &.fake-disable {
+    opacity: 0.5;
+  }
+}
+
+ion-input.primary {
+  --highlight-color-focused: var(--ion-color-primary) !important;
+  --highlight-color-valid: var(--ion-color-primary) !important;
+
+  .label-text {
+    color: var(--ion-color-primary);
+  }
+}
+
+ion-input.secondary {
+  --highlight-color-focused: var(--ion-color-secondary) !important;
+  --highlight-color-valid: var(--ion-color-secondary) !important;
+
+  .label-text {
+    color: var(--ion-color-secondary);
+  }
+}
+
+.ion-valid {
+  --highlight-color: var(--ion-color-primary) !important;
+}
+
+ion-textarea.primary {
+  --highlight-color-focused: var(--ion-color-primary) !important;
+  --highlight-color-valid: var(--ion-color-primary) !important;
+
+  .label-text {
+    color: var(--ion-color-primary);
+  }
+}
+
+ion-textarea.secondary {
+  --highlight-color-focused: var(--ion-color-secondary) !important;
+  --highlight-color-valid: var(--ion-color-secondary) !important;
+
+  .label-text {
+    color: var(--ion-color-secondary);
+  }
+}
+
+ion-select:not(.legacy-select) {
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-primary);
+  width: fit-content;
+  padding-left: 16px;
+}
+
+/* Classes */
+button.alert-button.alert-button-delete {
+  color: var(--ion-color-danger);
+  margin-bottom: 8px;
+}
+
+.alert-checkbox-group .alert-checkbox-label {
+  color: var(--ion-color-dark);
+}
+
+.wide-popover {
+  --width: 80vw;
+  --max-width: 400px;
+}
+
+.copied-popover {
+  --width: unset;
+}
+
+.not-logged-in {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--ion-text-color);
+}
+
+.fat-text-button {
+  margin-right: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--ion-color-primary);
+}
+
+.badge:after {
+  position: absolute;
+  content: "";
+  padding: .2em;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+}
+
+.finished-overlay {
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--ion-color-primary-contrast);
+  background: rgba(247, 148, 29, .4);
+
+  ion-icon {
+    font-size: 24px;
+    --ionicon-stroke-width: 50px;
+  }
+}
+
+
+/* Animation */
+@-webkit-keyframes fadeInEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+@keyframes fadeInEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@-webkit-keyframes fadeOutEffect {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
+@keyframes fadeOutEffect {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}

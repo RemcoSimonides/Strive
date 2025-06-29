@@ -1,0 +1,11 @@
+<ion-list lines="full" mode="md">
+  <ion-item button (click)="goToProfile()">Profile</ion-item>
+  @if (pwa.showInstallPromotion$ | async) {
+    <ion-item button (click)="pwa.showInstallPromotion()">
+      <ion-label>Install App</ion-label>
+      <ion-icon size="small" name="download-outline" />
+    </ion-item>
+  }
+  <ion-item button (click)="goTo('/settings')">Settings</ion-item>
+  <ion-item button (click)="signOut()" lines="none">Log out</ion-item>
+</ion-list>

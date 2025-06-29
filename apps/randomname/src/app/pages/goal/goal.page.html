@@ -1,0 +1,297 @@
+@if ((isLoggedIn$ | async) === false) {
+  <strive-header-root/>
+}
+
+@if (showIOSHeader$ | async) {
+  <ion-fab slot="fixed" vertical="top" horizontal="start">
+    <ion-fab-button (click)="back()" color="light" size="small">
+      <ion-icon name="arrow-back"/>
+    </ion-fab-button>
+  </ion-fab>
+}
+
+@if ((pageIsLoading$ | async) === false) {
+  @if (canAccess$ | async) {
+    @if (goal$ | async; as goal) {
+      @if (stakeholder$ | async; as stakeholder) {
+        <ion-content>
+          @if (screensize.isMobile$ | async) {
+            <picture (click)="openZoom(goal)" class="mobile">
+              <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
+              @if (goal.status !== 'pending') {
+                <div class="finished-overlay">
+                  <ion-icon name="checkmark-outline"/>
+                </div>
+              }
+            </picture>
+          }
+          <ng-template #actions>
+            <section class="actions">
+              <article>
+                <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"/>
+                <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
+                  <ion-icon name="notifications-outline" size="small" slot="start"/>
+                  <span>{{ stakeholder.isSpectator ? 'Following' : 'Follow' }}</span>
+                </ion-button>
+              </article>
+              <article>
+                <ion-button (click)="openChat()" size="block" class="secondary">
+                  <ion-icon name="chatbubbles-outline" slot="start" size="small"/>
+                  <span>Chat</span>
+                  @if (missedMessages$ | async; as missedMessages) {
+                    <span>&nbsp;({{ missedMessages | compact }})</span>
+                  }
+                </ion-button>
+                @if (stakeholder.isAdmin) {
+                  <ion-button (click)="openAddOthersModal()" class="secondary">
+                    <ion-icon slot="icon-only" size="small" name="person-add-outline"/>
+                  </ion-button>
+                } @else {
+                  @if (goal.publicity === 'public') {
+                    <ion-button (click)="openShare($event)" class="secondary">
+                      <ion-icon slot="icon-only" size="small" name="share-social-outline"/>
+                    </ion-button>
+                  }
+                }
+                <ng-template #share>
+                  @if (goal.publicity === 'public') {
+                    <ion-button (click)="openShare($event)" class="secondary">
+                      <ion-icon slot="icon-only" size="small" name="share-social-outline"/>
+                    </ion-button>
+                  }
+                </ng-template>
+                @if (stakeholder.isAdmin || stakeholder.isAchiever) {
+                  <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="secondary">
+                    <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"/>
+                  </ion-button>
+                }
+              </article>
+            </section>
+          </ng-template>
+          <main>
+            <h1>{{ goal.title }}</h1>
+            <div class="main">
+              @if ((isMobile$ | async) === false) {
+                <picture (click)="openZoom(goal)" class="desktop">
+                  <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
+                  @if (goal.status !== 'pending') {
+                    <div class="finished-overlay">
+                      <ion-icon name="checkmark-outline"/>
+                    </div>
+                  }
+                </picture>
+              }
+              <div class="info">
+                <ul class="properties">
+                  <li (click)="openTeamModal('isAchiever')" class="clickable">
+                    <ion-icon name="flag"/>
+                    @if (stakeholder.isAchiever) {
+                      @if (goal.numberOfAchievers > 1) {
+                        <span><b>You</b> and <b>{{ goal.numberOfAchievers - 1 }}</b> other {{ goal.numberOfAchievers === 2 ? 'achiever' : 'achievers' }}</span>
+                      }
+                      @if (goal.numberOfAchievers === 1) {
+                        <span><b>You</b> achieve</span>
+                      }
+                    }
+                    @if (!stakeholder.isAchiever) {
+                      <span><b>{{ goal.numberOfAchievers }}</b> {{ goal.numberOfAchievers === 1 ? 'achiever' : 'achievers' }}</span>
+                    }
+                  </li>
+                  <li (click)="openTeamModal('isSupporter')" class="clickable">
+                    <ion-icon src="assets/icons/hand-holding-heart-solid.svg"/>
+                    @if (stakeholder.isSupporter) {
+                      @if (goal.numberOfSupporters > 1) {
+                        <span><b>You</b> and <b>{{ goal.numberOfSupporters - 1 }}</b> other {{ goal.numberOfSupporters === 2 ? 'supporter' : 'supporters' }}</span>
+                      }
+                      @if (goal.numberOfSupporters === 1) {
+                        <span><b>You</b> support</span>
+                      }
+                    }
+                    @if (!stakeholder.isSupporter) {
+                      <span><b>{{ goal.numberOfSupporters }}</b> {{ goal.numberOfSupporters === 1 ? 'supporter' : 'supporters' }}</span>
+                    }
+                  </li>
+                  <li (click)="openTeamModal('isSpectator')" class="clickable">
+                    <ion-icon name="notifications"/>
+                    @if (stakeholder.isSpectator) {
+                      @if (goal.numberOfSpectators > 1) {
+                        <span><b>You</b> and <b>{{ goal.numberOfSpectators - 1 }}</b> other {{ goal.numberOfSpectators === 2 ? 'follower' : 'followers' }}</span>
+                      }
+                      @if (goal.numberOfSpectators === 1) {
+                        <span><b>You</b> follow</span>
+                      }
+                    }
+                    @if (!stakeholder.isSpectator) {
+                      <span><b>{{ goal.numberOfSpectators }}</b> {{ goal.numberOfSpectators === 1 ? 'follower' : 'followers' }}</span>
+                    }
+                  </li>
+                  @if (collectiveStakeholders$ | async; as stakeholders) {
+                    @if (stakeholders.length) {
+                      <li (click)="openCollectiveGoals(stakeholders)" class="clickable">
+                        <ion-icon name="link"/>
+                        <span><b>{{ stakeholders.length }}</b> connected {{ stakeholders.length === 1 ? 'goal' : 'goals' }} </span>
+                      </li>
+                    }
+                  }
+                  <!-- Privacy -->
+                  <li>
+                    <ion-icon [name]="goal.publicity === 'public' ? 'lock-open-outline' : 'lock-closed-outline'"/>
+                    <span>Access:</span>
+                    @if (stakeholder.isAdmin) {
+                      <ion-select
+                        placeholder="Select Privacy"
+                        interface="popover"
+                        [value]="goal.publicity"
+                        (ionChange)="updatePrivacy($event, goal)"
+                        class="clickable"
+                        legacy
+                        >
+                        <ion-select-option value="public">Everyone can access</ion-select-option>
+                        <ion-select-option value="private">Only invited users</ion-select-option>
+                      </ion-select>
+                    } @else {
+                      <span><b>{{ goal.publicity === 'public' ? 'Everyone can access' : 'Invites only' }}</b></span>
+                    }
+                  </li>
+                  <!-- Deadline -->
+                  @if (goal.deadline) {
+                    <li
+                      [ngStyle]="{
+                        'color': isOverdue(goal.deadline) && goal.status === 'pending' ? 'var(--ion-color-danger-tint)' : '',
+                        'clickable': stakeholder.isAchiever
+                      }"
+                      (click)="openDatePicker($event)"
+                      >
+                      <ion-icon name="timer-outline"/>
+                      <span>End date: </span>
+                      <b>{{ goal.deadline | date:'fullDate' }}</b>
+                    </li>
+                  }
+                </ul>
+                @if ((isMobile$ | async) === false) {
+                  <ng-container *ngTemplateOutlet="actions"/>
+                }
+              </div>
+            </div>
+            @if (isMobile$ | async) {
+              <ng-container *ngTemplateOutlet="actions"/>
+            }
+            @if (isOverdue(goal.deadline) && goal.status === 'pending' && (stakeholder.isAdmin || stakeholder.isAchiever)) {
+              <ion-card class="finish">
+                <h3>Did you finish the goal?</h3>
+                <article>
+                  <ion-button (click)="finishGoal('succeeded')" color="primary">Yes!</ion-button>
+                  <ion-button (click)="openDatePicker($event)" fill="clear" color="primary">Set new end date</ion-button>
+                  <ion-button (click)="finishGoal('failed')" fill="clear" color="danger">No, I give up</ion-button>
+                </article>
+              </ion-card>
+            }
+            <!-- Request to join -->
+            @if (openRequests$ | async; as stakeholders) {
+              @if (stakeholders.length) {
+                <section class="requests">
+                  <header>
+                    <h5>Pending requests to join</h5>
+                  </header>
+                  <ion-list>
+                    @for (stakeholder of stakeholders; track stakeholder; let last = $last) {
+                      <ion-item [lines]="last ? 'none' : 'full'" (click)="navTo(stakeholder.uid)" button>
+                        <ion-avatar slot="start">
+                          <img [ref]="stakeholder.profile?.photoURL" asset="profile.png" [width]="120" [height]="120" alt="Profile image"/>
+                        </ion-avatar>
+                        <ion-label>{{ stakeholder.profile?.username }}</ion-label>
+                        <ion-button (click)="handleRequestDecision(stakeholder, true, $event)" color="primary" size="default">
+                          @if ((isMobile$ | async) === false) {
+                            <span>Accept</span>
+                          }
+                          <ion-icon name="checkmark-outline" slot="end"/>
+                        </ion-button>
+                        <ion-button (click)="handleRequestDecision(stakeholder, false, $event)" size="default" fill="outline">
+                          @if ((isMobile$ | async) === false) {
+                            <span>Reject</span>
+                          }
+                          <ion-icon name="close-outline" slot="end"/>
+                        </ion-button>
+                      </ion-item>
+                    }
+                  </ion-list>
+                </section>
+              }
+            }
+            @if (goal.description || stakeholder.isAdmin) {
+              <strive-description [value]="goal.description" [canEdit]="stakeholder.isAdmin" (updated)="updateDescription($event)"></strive-description>
+            }
+            <section class="roadmap">
+              <header>
+                <h5>Roadmap</h5>
+                @if (roadmapOrder$ | async; as order) {
+                  <ion-button fill="clear" (click)="toggleRoadmapOrder()">
+                    <ion-icon [name]="order === 'asc' ? 'arrow-down-outline' : 'arrow-up-outline'" size="small" />
+                  </ion-button>
+                }
+              </header>
+              <strive-roadmap
+                [goal]="goal"
+                [milestones]="(milestones$ | async) ?? []"
+                [stakeholder]="stakeholder">
+              </strive-roadmap>
+              @if (stakeholder.isAdmin || stakeholder.isAchiever) {
+                <article class="ai">
+                  <ion-button size="small" fill="clear" color="secondary" (click)="openSuggestion()">
+                    <span>Suggestion</span>
+                    <ion-icon name="sparkles-outline" size="small" slot="end" />
+                  </ion-button>
+                </article>
+              }
+            </section>
+            @if (isLoggedIn$ | async) {
+              <section class="supports">
+                <h5>Supports</h5>
+                <article>
+                  @if (goal.status === 'pending') {
+                    <strive-support-add [goal]="goal"></strive-support-add>
+                  }
+                  @if (supports$ | async; as supports) {
+                    <strive-support-list [goal]="supports[0]">
+                      <ng-template #milestone let-milestone="milestone">
+                        <small>Milestone: {{ milestone.content }}</small>
+                      </ng-template>
+                    </strive-support-list>
+                  }
+                </article>
+              </section>
+            }
+
+            <section class="story">
+              <header>
+                <h5>Story</h5>
+                @if (storyOrder$ | async; as order) {
+                  <ion-button fill="clear" (click)="toggleStoryOrder()" size="small">
+                    <ion-icon [name]="order === 'asc' ? 'arrow-down-outline' : 'arrow-up-outline'" size="small" />
+                  </ion-button>
+                }
+              </header>
+              <!-- Strava totals -->
+              @if (stravaIntegrations$ | async; as stravaIntegrations) {
+                @if (stravaIntegrations.length) {
+                  <section class="strava">
+                    @for (stravaIntegration of stravaIntegrations; track stravaIntegration) {
+                      <strive-strava-card [strava-integration]="stravaIntegration"></strive-strava-card>
+                    }
+                  </section>
+                }
+              }
+
+              <!-- Story -->
+              <strive-story [story]="story$ | async" [stakeholder]="stakeholder" [goalId]="goal.id"></strive-story>
+            </section>
+          </main>
+        </ion-content>
+      }
+    }
+  } @else {
+    <strive-404/>
+  }
+} @else {
+  <strive-page-loading/>
+}

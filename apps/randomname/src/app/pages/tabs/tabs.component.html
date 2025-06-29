@@ -1,0 +1,35 @@
+@if (screenSize.isMobile$ | async) {
+  <ion-tabs>
+    @if (profile$ | async; as you) {
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="goals">
+          <ion-icon
+            name="flag-sharp"
+            [color]="(homeActive$ | async) ? 'primary' : 'inherit'"
+          />
+          <ion-label [color]="(homeActive$ | async) ? 'primary' : 'inherit'">Goals</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="exercise" routerLink="/exercise" routerDirection="root">
+          <ion-icon
+            name="barbell-sharp"
+            [color]="(exerciseActive$ | async) ? 'primary' : 'inherit'"
+          />
+          <ion-label [color]="(exerciseActive$ | async) ? 'primary' : 'inherit'">Exercises</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="supports">
+          <ion-icon
+            [src]="(hasSupportNeedingDecision$ | async) ? 'assets/icons/hand-holding-primary-heart-outline.svg' : 'assets/icons/hand-holding-heart-outline.svg'"
+            [color]="(supportActive$ | async) ? 'primary' : 'inherit'"
+          />
+          <ion-label [color]="(supportActive$ | async) ? 'primary' : 'inherit'">Supports</ion-label>
+        </ion-tab-button>
+        <ion-tab-button [tab]="'profile/' + you.uid">
+          <ion-avatar>
+            <img [ref]="you.photoURL" asset="profile.png" [width]="120" [height]="120" />
+          </ion-avatar>
+          <ion-label [color]="(profileActive$ | async) ? 'primary' : 'inherit'">You</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    }
+  </ion-tabs>
+}

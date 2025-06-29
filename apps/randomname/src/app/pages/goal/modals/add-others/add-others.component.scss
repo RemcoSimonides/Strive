@@ -1,0 +1,35 @@
+ion-toolbar {
+  --background: transparent;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}
+
+section {
+  display: flex;
+  justify-content: center;
+
+  i {
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}
