@@ -92,7 +92,7 @@
       <ng-container *ngIf="entries.length else noEntries">
         <ng-container [ngSwitch]="question.key">
           <ng-container *ngSwitchCase="'wheelOfLife'">
-            <strive-wheel-of-life-results [entries]="wheelOfLifeEntries$ | async" />
+            <strive-wheel-of-life-results [entries]="(wheelOfLifeEntries$ | async) ?? []" />
           </ng-container>
 
           <ng-container *ngSwitchCase="'prioritizeGoals'">
@@ -126,7 +126,7 @@
 
                   <ion-list>
                     <small>{{ entry.createdAt | date:'longDate'}}</small>
-                    <ion-item *ngFor="let item of entry[question.key]; let last = last" [lines]="last ? 'none' : 'full'">
+                    <ion-item *ngFor="let item of asArray(entry[question.key]); let last = last" [lines]="last ? 'none' : 'full'">
                       <ion-label>{{ item }}</ion-label>
                     </ion-item>
                   </ion-list>

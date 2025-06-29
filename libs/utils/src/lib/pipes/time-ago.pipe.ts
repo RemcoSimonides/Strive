@@ -11,7 +11,11 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 
 	private timer?: number | null
 
-	transform(value:Date) {
+	transform(value?:Date) {
+		if (!value) {
+			this.removeTimer()
+			return ''
+		}
 		this.removeTimer()
 		const d = new Date(value)
 		const now = new Date()

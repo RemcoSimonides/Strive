@@ -18,7 +18,7 @@
         @if (view.suggestion.status === 'streaming' || view.suggestion.status === 'completed') {
           @if (view.suggestion.answerParsed.length) {
             <ion-list class="small">
-              @for (milestone of view.suggestion.answerParsed; track trackByFn(index, milestone); let index = $index; let last = $last) {
+              @for (milestone of view.suggestion.answerParsed; track trackByFn(index); let index = $index; let last = $last) {
                 <ion-item #item (click)="toggleSuggestion(milestone, index, item)" [lines]="last ? 'none' : 'full'" button [ngClass]="{'fake-disable': view.added.includes(milestone)}" class="fade-out">
                   <ion-label>
                     <small class="number">{{ index + 1 }}.</small>

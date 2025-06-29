@@ -79,7 +79,8 @@ export class PrioritizeGoalsComponent {
     this._form = form
     this._answers$.next(form.value)
   }
-  @Input() set entry(entry: SelfReflectEntry) {
+  @Input() set entry(entry: SelfReflectEntry | undefined) {
+    if (!entry) return
     this.disableReorder.set(true)
     if (!entry?.prioritizeGoals) return
     this._answers$.next(entry.prioritizeGoals)

@@ -1,11 +1,11 @@
 @if (goal) {
   <strive-roadmap
     [goal]="goal"
-    [milestones]="milestones$ | async"
+    [milestones]="(milestones$ | async) ?? []"
     [stakeholder]="stakeholder"
     [createMode]="true"
   />
   @if (goal.title.length > 4 && (goal.deadline | isFuture)) {
-    <strive-suggestion [goalId]="goal.id" [milestones]="milestones$ | async" />
+    <strive-suggestion [goalId]="goal.id" [milestones]="(milestones$ | async) ?? []" />
   }
 }

@@ -23,12 +23,12 @@
     }
     @case ('wheelOfLife') {
       <ion-content class="ion-padding" [ngClass]="animatingSection()">
-        <strive-self-reflect-wheel-of-life [form]="form.get('wheelOfLife')" />
+        <strive-self-reflect-wheel-of-life [form]="form.wheelOfLife" />
       </ion-content>
     }
     @case ('prioritizeGoals') {
       <ion-content class="ion-padding" [ngClass]="animatingSection()">
-        <strive-self-reflect-prioritize-goals [form]="form.get('prioritizeGoals')" (step)="doStep($event)" />
+        <strive-self-reflect-prioritize-goals [form]="form.prioritizeGoals" (step)="doStep($event)" />
       </ion-content>
     }
     @case ('outro') {
@@ -42,13 +42,13 @@
           @for (question of entry.config | stepFilter: step(); track question) {
             @if (question.type === 'textarea') {
               <strive-self-reflect-textarea
-                [form]="form.get(question.key)"
+                [form]="form.getFormControl(question.key)"
                 [question]="question"
               />
             }
             @if (question.type === 'formlist') {
               <strive-self-reflect-form-list
-                [form]="form.get(question.key)"
+                [form]="form.getFormArray(question.key)"
                 [question]="question"
                 [stepping]="stepping$ | async"
               />

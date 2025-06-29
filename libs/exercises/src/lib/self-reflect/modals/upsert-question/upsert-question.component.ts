@@ -1,7 +1,7 @@
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { AlertController, ModalController } from '@ionic/angular/standalone'
+import { AlertController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { trashOutline } from 'ionicons/icons'
 import { IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonRange, IonLabel } from '@ionic/angular/standalone'
@@ -81,6 +81,11 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
       this.prioritizeGoalEntry.set(this.range[index].entry)
     })
     addIcons({ trashOutline })
+  }
+
+  asArray(value: any): string[] {
+    if (Array.isArray(value)) return value
+    return []
   }
 
   ngOnInit() {

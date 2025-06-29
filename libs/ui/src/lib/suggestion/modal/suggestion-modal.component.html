@@ -4,9 +4,9 @@
   @if (goal) {
     <strive-roadmap
       [goal]="goal"
-      [milestones]="milestones$ | async"
+      [milestones]="(milestones$ | async) ?? []"
       [stakeholder]="stakeholder$ | async"
     />
-      <strive-suggestion [goalId]="goal.id" [milestones]="milestones$ | async" [fetch]="fetching$ | async" />
+      <strive-suggestion [goalId]="goal.id" [milestones]="(milestones$ | async) ?? []" [fetch]="fetching$ | async" />
     }
   </ion-content>

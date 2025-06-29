@@ -1,4 +1,4 @@
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms'
+import { FormArray, FormControl, FormGroup } from '@angular/forms'
 import { createPost, Post } from '@strive/model'
 import { EditMediaForm, mediaToEditMedia } from '@strive/media/forms/media.form'
 
@@ -26,11 +26,11 @@ export class PostForm extends FormGroup<PostFormControl> {
     super(createPostFormControl(post))
   }
 
-  get url() { return this.get('url') as AbstractControl<string> }
-  get medias() { return this.get('medias')! as any as FormArray<EditMediaForm>}
-  get youtubeId() { return this.get('youtubeId') as AbstractControl<string> }
-  get description() { return this.get('description') as AbstractControl<string> }
-  get date() { return this.get('date') as AbstractControl<Date> }
+  get url() { return this.controls.url }
+  get medias() { return this.controls.medias}
+  get youtubeId() { return this.controls.youtubeId }
+  get description() { return this.controls.description }
+  get date() { return this.controls.date }
 
   get isEmpty() {
     return !this.url.value && !this.medias.value.length && !this.description.value && !this.youtubeId.value

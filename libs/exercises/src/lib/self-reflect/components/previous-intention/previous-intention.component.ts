@@ -42,7 +42,7 @@ export class PreviousIntentionComponent implements AfterViewInit {
   hasListItems = signal<boolean>(true)
 
   @Input() frequency?: SelfReflectFrequency
-  @Input() previousEntry?: SelfReflectEntry
+  @Input() previousEntry?: SelfReflectEntry | null
 
   @ViewChild('list') list?: ElementRef<HTMLElement>
 
@@ -61,5 +61,10 @@ export class PreviousIntentionComponent implements AfterViewInit {
         this.hasListItems.set(false)
       }, 0)
     }
+  }
+
+  asArray(value: any): string[] {
+    if (Array.isArray(value)) return value
+    return []
   }
 }

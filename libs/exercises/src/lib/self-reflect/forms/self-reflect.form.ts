@@ -1,5 +1,6 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms'
 import { SelfReflectEntry, createSelfReflectEntry } from '@strive/model'
+import { WheelOfLifeForm } from '../components/wheel-of-life/wheel-of-life.form'
 
 function createSelfReflectFormControl(params?: Partial<SelfReflectEntry>) {
   const selfReflect = createSelfReflectEntry(params)
@@ -16,7 +17,17 @@ export class SelfReflectForm extends FormGroup<SelfReflectFormControl> {
     super(createSelfReflectFormControl(selfReflect))
   }
 
-  get id() { return this.get('id')! as FormControl }
+  get id() { return this.controls.id }
+  get wheelOfLife() {
+    const control = this.get('wheelOfLife') as FormGroup | null
+    if (!control) throw new Error('Could not find wheelOfLife form group control')
+    return control as WheelOfLifeForm
+  }
+  get prioritizeGoals() {
+    const control = this.get('prioritizeGoals') as FormArray | null
+    if (!control) throw new Error('Could not find prioritizeGoals form array control')
+    return control as FormArray<FormControl<string>>
+  }
 
   override patchValue(entry: SelfReflectEntry, options?: { onlySelf?: boolean, emitEvent?: boolean }) {
     const excludedKeys = ['updatedAt', 'createdAt', 'frequency', 'config']
@@ -39,5 +50,20 @@ export class SelfReflectForm extends FormGroup<SelfReflectFormControl> {
         control.patchValue(value, options)
       }
     })
+  }
+
+  // return control with type FormControl instead of AbstractControl
+  getFormControl(key: string): FormControl<string> {
+    const control = this.get(key)
+    if (!control) throw new Error('Could not find form control with key ' + key)
+    if (!(control instanceof FormControl)) throw new Error('Control with key ' + key + ' is not a FormControl')
+    return control as FormControl<string>
+  }
+
+  getFormArray(key: string): FormArray<FormControl<string>> {
+    const control = this.get(key)
+    if (!control) throw new Error('Could not find form array with key ' + key)
+    if (!(control instanceof FormArray)) throw new Error('Control with key ' + key + ' is not a FormArray')
+    return control as FormArray<FormControl<string>>
   }
 }

@@ -14,7 +14,7 @@
           <small class="wished">How would you like to feel</small>
           <div>
             <span>😭</span>
-            <ion-range [formControl]="desiredForm.get('desired_' + aspect.id)" color="secondary" />
+            <ion-range [formControl]="desiredForm.getControl('desired_' + aspect.id)" color="secondary" />
             <span>😁</span>
           </div>
         </article>

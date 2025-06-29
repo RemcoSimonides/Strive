@@ -1,5 +1,6 @@
 import { Goal, Notification, User } from '@strive/model'
 import { captureException } from '@sentry/angular'
+import { Params } from '@angular/router'
 
 type NotificationSourceType = 'goal' | 'profile'
 
@@ -32,7 +33,7 @@ export interface NotificationMessage {
   image: string
   type: NotificationSourceType
   link: string
-  params?: unknown
+  params?: Params
   message: string
 }
 
@@ -154,7 +155,7 @@ export function getNotificationMessage(notification: Notification): Notification
         message
       }
     }
-    
+
     case 'goalSupportStatusPendingUnsuccessful':
     case 'goalSupportStatusPendingSuccessful': {
       if (!goal || !support) return throwError(notification)
@@ -209,7 +210,7 @@ export function getNotificationMessage(notification: Notification): Notification
         message: `${user.username} decided to give you "${support.description}"${suffix}`
       }
     }
-    
+
     case 'goalSupportStatusRejected': {
       if (!goal || !user || !support) return throwError(notification)
 

@@ -17,5 +17,5 @@ import { IonRange } from '@ionic/angular/standalone'
 export class WheelOfLifeComponent {
   aspectsConfig = aspectsConfig
 
-  @Input() form?: WheelOfLifeForm
+  @Input() form!: WheelOfLifeForm
 }

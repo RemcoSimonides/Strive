@@ -61,8 +61,8 @@ export class SuggestionComponent implements OnInit, OnDestroy {
 
   subs: Subscription[] = []
   @Input() goalId = ''
-  @Input() set fetch(value: boolean | undefined) {
-    if (value === undefined) return
+  @Input() set fetch(value: boolean | undefined | null) {
+    if (value === undefined || value === null) return
     this.fetching$.next(value)
   }
 

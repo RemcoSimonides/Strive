@@ -105,18 +105,7 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
   })
 
   // order in formgroup should be same as aspectsConfig
-  desiredForm = new FormGroup({
-    desired_health: new FormControl(5, { nonNullable: true }),
-    desired_family: new FormControl(5, { nonNullable: true }),
-    desired_friends: new FormControl(5, { nonNullable: true }),
-    desired_love: new FormControl(5, { nonNullable: true }),
-    desired_career: new FormControl(5, { nonNullable: true }),
-    desired_money: new FormControl(5, { nonNullable: true }),
-    desired_fun: new FormControl(5, { nonNullable: true }),
-    desired_development: new FormControl(5, { nonNullable: true }),
-    desired_environment: new FormControl(5, { nonNullable: true }),
-    desired_spirituality: new FormControl(5, { nonNullable: true })
-  })
+  desiredForm = new DesiredForm()
 
   radarChartOptions: ChartConfiguration<'radar'>['options'] = {
     responsive: true,
@@ -280,5 +269,26 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
 
   createGoal() {
     this.closeNavTo.emit('')
+  }
+}
+
+export class DesiredForm extends FormGroup {
+  constructor() {
+    super({
+      desired_health: new FormControl(5, { nonNullable: true }),
+      desired_family: new FormControl(5, { nonNullable: true }),
+      desired_friends: new FormControl(5, { nonNullable: true }),
+      desired_love: new FormControl(5, { nonNullable: true }),
+      desired_career: new FormControl(5, { nonNullable: true }),
+      desired_money: new FormControl(5, { nonNullable: true }),
+      desired_fun: new FormControl(5, { nonNullable: true }),
+      desired_development: new FormControl(5, { nonNullable: true }),
+      desired_environment: new FormControl(5, { nonNullable: true }),
+      desired_spirituality: new FormControl(5, { nonNullable: true })
+    })
+  }
+
+  getControl(key: string): FormControl<number> {
+    return this.controls[key] as FormControl<number>
   }
 }

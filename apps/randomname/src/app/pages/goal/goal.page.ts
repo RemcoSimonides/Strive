@@ -71,7 +71,7 @@ import { CommentService } from '@strive/chat/comment.service'
 import { PersonalService } from '@strive/user/personal.service'
 import { StravaService } from '@strive/strava/strava.service'
 // Strive Interfaces
-import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder, createMedia } from '@strive/model'
+import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder, createMedia, User } from '@strive/model'
 import { createStravaAuthParams, StravaAuthParams, StravaIntegration } from 'libs/model/src/lib/strava'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
@@ -164,12 +164,12 @@ export class GoalPageComponent implements OnDestroy {
 
   storyOrder$ = new BehaviorSubject<OrderByDirection>('desc')
   story$: Observable<StoryItem[]>
-  stravaIntegrations$?: Observable<StravaIntegration[]>
+  stravaIntegrations$?: Observable<(StravaIntegration & { profile: User })[]>
 
   roadmapOrder$ = new BehaviorSubject<OrderByDirection>('asc')
   milestones$?: Observable<Milestone[]>
 
-  openRequests$?: Observable<GoalStakeholder[]>
+  openRequests$?: Observable<Stakeholder[]>
 
   supports$: Observable<SupportsGroupedByGoal[]>
 
@@ -353,7 +353,7 @@ export class GoalPageComponent implements OnDestroy {
       joinWith({
         profile: ({ userId }) => this.profileService.valueChanges(userId)
       })
-    )
+    ) as Observable<(StravaIntegration & { profile: User })[]>
   }
 
   ngOnDestroy() {

@@ -19,9 +19,9 @@ export class SelfReflectSettingsForm extends FormGroup<SelfReflectSettingsFormCo
     super(createSelfReflectSettingsFormControl(settings))
   }
 
-  get preferredDay() { return this.get('preferredDay')! as FormControl }
-  get preferredTime() { return this.get('preferredTime')! as FormControl }
-  get questions() { return this.get('questions')! as FormArray<SelfReflectQuestionForm>}
+  get preferredDay() { return this.controls.preferredDay }
+  get preferredTime() { return this.controls.preferredTime }
+  get questions() { return this.controls.questions }
 
   override patchValue(settings: SelfReflectSettings, options?: { onlySelf?: boolean, emitEvent?: boolean }) {
     for (const question of settings.questions) {
@@ -56,10 +56,10 @@ export class SelfReflectQuestionForm extends FormGroup<SelfReflectQuestionFormCo
     super(createSelfReflectQuestionFormControl(question))
   }
 
-  get key() { return this.get('key')! as FormControl }
-  get category() { return this.get('category')! as FormControl }
-  get question() { return this.get('question')! as FormControl }
-  get type() { return this.get('type')! as FormControl }
-  get frequency() { return this.get('frequency')! as FormControl }
-  get tense() { return this.get('tense')! as FormControl }
+  get key() { return this.controls.key }
+  get category() { return this.controls.category }
+  get question() { return this.controls.question }
+  get type() { return this.controls.type }
+  get frequency() { return this.controls.frequency }
+  get tense() { return this.controls.tense }
 }

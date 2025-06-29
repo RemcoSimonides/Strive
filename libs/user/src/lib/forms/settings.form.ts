@@ -16,8 +16,8 @@ export class SettingsForm extends FormGroup<SettingsFormControl> {
     super(createSettingsFormControl(settings))
   }
 
-  get emailNotification() { return this.get('emailNotification')! }
-  get pushNotification() { return this.get('pushNotification')! }
+  get emailNotification() { return this.controls.emailNotification }
+  get pushNotification() { return this.controls.pushNotification }
 }
 
 function createEmailNotificationSettingsFormControl(params?: Partial<EmailNotificationSettings>) {
@@ -36,8 +36,8 @@ export class EmailNotificationSettingsForm extends FormGroup<EmailNotificationSe
     super(createEmailNotificationSettingsFormControl(settings))
   }
 
-  get main() { return this.get('main')! }
-  get monthlyGoalReminder() { return this.get('monthlyGoalReminder')! }
+  get main() { return this.controls.main }
+  get monthlyGoalReminder() { return this.controls.monthlyGoalReminder }
 }
 
 function createPushNotificationSettingsFormControl(params?: Partial<PushNotificationSettings>) {
@@ -68,20 +68,20 @@ export class PushNotificationSettingsForm extends FormGroup<PushNotificationSett
     super(createPushNotificationSettingsFormControl(settings))
   }
 
-  get main() { return this.get('main')! }
-  get userSpectatingGeneral() { return this.get('userSpectatingGeneral')! }
-  get supports() { return this.get('supports')! }
-  get goalMain() { return this.get('goalMain')! }
-  get goalGeneral() { return this.get('goalGeneral')! }
-  get goalTeam() { return this.get('goalTeam')! }
-  get goalChat() { return this.get('goalChat')! }
-  get goalRoadmap() { return this.get('goalRoadmap')! }
-  get goalStory() { return this.get('goalStory')! }
-  get exerciseAffirmations() { return this.get('exerciseAffirmations')! }
-  get exerciseDailyGratitude() { return this.get('exerciseDailyGratitude')! }
-  get exerciseDearFutureSelf() { return this.get('exerciseDearFutureSelf')! }
-  get exerciseSelfReflect() { return this.get('exerciseSelfReflect')! }
-  get exerciseWheelOfLife() { return this.get('exerciseWheelOfLife')! }
+  get main() { return this.controls.main }
+  get userSpectatingGeneral() { return this.controls.userSpectatingGeneral }
+  get supports() { return this.controls.supports }
+  get goalMain() { return this.controls.goalMain }
+  get goalGeneral() { return this.controls.goalGeneral }
+  get goalTeam() { return this.controls.goalTeam }
+  get goalChat() { return this.controls.goalChat }
+  get goalRoadmap() { return this.controls.goalRoadmap }
+  get goalStory() { return this.controls.goalStory }
+  get exerciseAffirmations() { return this.controls.exerciseAffirmations }
+  get exerciseDailyGratitude() { return this.controls.exerciseDailyGratitude }
+  get exerciseDearFutureSelf() { return this.controls.exerciseDearFutureSelf }
+  get exerciseSelfReflect() { return this.controls.exerciseSelfReflect }
+  get exerciseWheelOfLife() { return this.controls.exerciseWheelOfLife }
 
   disableControls() {
     this.userSpectatingGeneral.disable({ emitEvent: false })

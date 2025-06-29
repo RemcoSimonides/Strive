@@ -25,14 +25,14 @@ export class WheelOfLifeForm extends FormGroup<WheelOfLifeFormControl> {
     super(createWheelOfLifeFormControl(timeManagement))
   }
 
-  get career() { return this.get('career')! as FormControl }
-  get development() { return this.get('development')! as FormControl }
-  get environment() { return this.get('environment')! as FormControl }
-  get family() { return this.get('family')! as FormControl }
-  get friends() { return this.get('friends')! as FormControl }
-  get fun() { return this.get('fun')! as FormControl }
-  get health() { return this.get('health')! as FormControl }
-  get love() { return this.get('love')! as FormControl }
-  get money() { return this.get('money')! as FormControl }
-  get spirituality() { return this.get('spirituality')! as FormControl }
+  get career() { return this.controls.career }
+  get development() { return this.controls.development }
+  get environment() { return this.controls.environment }
+  get family() { return this.controls.family }
+  get friends() { return this.controls.friends }
+  get fun() { return this.controls.fun }
+  get health() { return this.controls.health }
+  get love() { return this.controls.love }
+  get money() { return this.controls.money }
+  get spirituality() { return this.controls.spirituality }
 }

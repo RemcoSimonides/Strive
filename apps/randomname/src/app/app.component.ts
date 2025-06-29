@@ -3,7 +3,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
 
 // Ionic
-import { IonTitle, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
+import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons';
 import { search, notificationsOutline } from 'ionicons/icons'
 
@@ -34,12 +34,13 @@ import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
+import { SendIntentSelectGoalComponent } from '@strive/goal/modals/send-intent-select-goal/send-intent-select-goal.component'
 
 @Component({
   imports: [
     CommonModule,
     RouterModule,
-    IonTitle, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
+    IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, IonRouterLink, IonRouterLinkWithHref, IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonAvatar, IonRouterOutlet,
     ImageDirective
   ],
   selector: 'journal-root',
@@ -141,10 +142,10 @@ export class AppComponent implements OnDestroy {
 
       if (isPlatformBrowser(this.platformId)) {
         window.addEventListener('sendIntentReceived', () => {
-          // SendIntent.checkSendIntentReceived().then(this.sendIntent)
+          SendIntent.checkSendIntentReceived().then(this.sendIntent)
         })
       }
-      // SendIntent.checkSendIntentReceived().then(this.sendIntent)
+      SendIntent.checkSendIntentReceived().then(this.sendIntent)
     })
 
     this.seo.setInitial()
@@ -176,14 +177,14 @@ export class AppComponent implements OnDestroy {
 
           if (!dontShow) {
             if (showRegister) {
-              // await this.openAuthModal(enumAuthSegment.register)
+              await this.openAuthModal(enumAuthSegment.register)
             } else {
-              // await this.openAuthModal(enumAuthSegment.login)
+              await this.openAuthModal(enumAuthSegment.login)
             }
           }
 
         } else {
-          // await this.openAuthModal(enumAuthSegment.register)
+          await this.openAuthModal(enumAuthSegment.register)
         }
       }
 
@@ -209,13 +210,13 @@ export class AppComponent implements OnDestroy {
     }).then(popover => popover.present())
   }
 
-  // sendIntent(sendIntentData: Intent) {
-  //   if (!sendIntentData || !sendIntentData.title) return
-  //   this.modalCtrl.create({
-  //     component: SendIntentSelectGoalComponent,
-  //     componentProps: { sendIntentData }
-  //   }).then(modal => modal.present())
-  // }
+  sendIntent(sendIntentData: Intent) {
+    if (!sendIntentData || !sendIntentData.title) return
+    this.modalCtrl.create({
+      component: SendIntentSelectGoalComponent,
+      componentProps: { sendIntentData }
+    }).then(modal => modal.present())
+  }
 
   @HostListener('window:resize', ['$event'])
   private onResize(event: any) {

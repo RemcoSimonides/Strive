@@ -1,4 +1,4 @@
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { createUser, User } from '@strive/model'
 
 function createUserFormControl(params: Partial<User> = {}) {
@@ -10,7 +10,7 @@ function createUserFormControl(params: Partial<User> = {}) {
       Validators.minLength(1),
       Validators.maxLength(16)
     ]),
-    photoURL: new FormControl(user.photoURL),
+    photoURL: new FormControl(user.photoURL, { nonNullable: true }),
   }
 }
 
@@ -21,7 +21,7 @@ export class UserForm extends FormGroup<UserFormControl> {
     super(createUserFormControl(user))
   }
 
-  get uid() { return this.get('uid') as AbstractControl<string> }
-  get username() { return this.get('username') as AbstractControl<string> }
-  get photoURL() { return this.get('photoURL') as AbstractControl<string> }
+  get uid() { return this.controls.uid }
+  get username() { return this.controls.username }
+  get photoURL() { return this.controls.photoURL }
 }

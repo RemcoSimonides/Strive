@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core'
-import { AbstractControl } from '@angular/forms'
+import { FormControl } from '@angular/forms'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
 
 import { IonFabButton, IonIcon, ToastController } from '@ionic/angular/standalone'
@@ -43,13 +43,13 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
 
   step$ = this.step.asObservable()
   accept = ['.jpg', '.jpeg', '.png', '.webp']
-  file?: File | null
+  file?: File
   croppedImage?: Blob | null
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('')
 
   @Input() defaultImage?: 'goal.png' | 'profile.png'
 
-  @Input() form!: AbstractControl<string> | null
+  @Input() form?: FormControl<string> | null
   @Input() storagePath!: string
 
   @ViewChild('fileUploader') fileUploader?: ElementRef<HTMLInputElement>
@@ -143,7 +143,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
   }
 
   filesSelected(file: FileList | File) {
-    this.file = isFileList(file) ? file.item(0) : file
+    this.file = isFileList(file) ? file.item(0) ?? undefined : file
 
     if (this.file?.type?.split('/')[0] !== 'image') {
       this.toast.create({ message: 'Unsupported file type', duration: 3000 }).then(toast => toast.present())

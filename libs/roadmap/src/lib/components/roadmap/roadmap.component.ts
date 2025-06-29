@@ -8,7 +8,7 @@ import { chatboxOutline, listOutline, alarmOutline, trashOutline } from 'ionicon
 
 import { serverTimestamp } from 'firebase/firestore'
 
-import { createGoalStakeholder, createPost, Goal, MilestoneStatus, StoryItem, Support } from '@strive/model'
+import { createGoalStakeholder, createPost, Goal, GoalStakeholder, MilestoneStatus, StoryItem, Support } from '@strive/model'
 
 import { createMilestone, Milestone } from '@strive/model'
 import { MilestoneForm } from '@strive/roadmap/forms/milestone.form'
@@ -65,7 +65,7 @@ export class RoadmapComponent {
   @Input() goal!: Goal
   @Input() milestones!: MilestoneWithSupport[]
 
-  @Input() stakeholder = createGoalStakeholder()
+  @Input() stakeholder: GoalStakeholder | null = createGoalStakeholder()
 
   @Input() createMode = false
 
@@ -74,6 +74,7 @@ export class RoadmapComponent {
   milestoneForm = new MilestoneForm()
 
   get canEdit(): boolean {
+    if (!this.stakeholder) return false
     return this.stakeholder.isAdmin || this.stakeholder.isAchiever
   }
 

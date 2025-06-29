@@ -21,12 +21,12 @@ export class GoalForm extends FormGroup<GoalFormControl> {
     super(createGoalFormControl(goal))
   }
 
-  get title() { return this.get('title')! }
-  get description() { return this.get('description')! }
-  get deadline() { return this.get('deadline')! }
-  get publicity() { return this.get('publicity')! }
-  get image() { return this.get('image')! }
-  get categories() { return this.get('categories')! }
+  get title() { return this.controls.title }
+  get description() { return this.controls.description }
+  get deadline() { return this.controls.deadline }
+  get publicity() { return this.controls.publicity }
+  get image() { return this.controls.image }
+  get categories() { return this.controls.categories }
 
   getGoalValue(): Partial<Goal> {
     const { description, image, deadline, publicity, title, categories } = this.value

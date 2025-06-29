@@ -1,4 +1,4 @@
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms'
+import { FormControl, FormGroup } from '@angular/forms'
 import { Media, MediaType } from '@strive/model'
 import { getImgIxResourceUrl } from '../directives/imgix-helpers'
 
@@ -56,9 +56,9 @@ export class EditMediaForm extends FormGroup<MediaFormControl> {
     super(createEditMediaFormControl(editMedia))
   }
 
-  get delete() { return this.get('delete') as AbstractControl<boolean> }
-  get preview() { return this.get('preview') as AbstractControl<string> }
-  get file() { return this.get('file') as AbstractControl<File | undefined> }
-  get type() { return this.get('type') as AbstractControl<MediaType | undefined> }
-  get id() { return this.get('id') as AbstractControl<string> }
+  get delete() { return this.controls.delete }
+  get preview() { return this.controls.preview }
+  get file() { return this.controls.file }
+  get type() { return this.controls.type }
+  get id() { return this.controls.id }
 }

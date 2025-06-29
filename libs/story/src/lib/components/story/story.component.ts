@@ -31,7 +31,7 @@ export class StoryComponent {
   private goalService = inject(GoalService);
 
 
-  @Input() story: StoryItem[] = []
+  @Input() story: StoryItem[] | null = []
   @Input() stakeholder = createGoalStakeholder()
   @Input() goalId!: string
   @Input() milestoneId?: string

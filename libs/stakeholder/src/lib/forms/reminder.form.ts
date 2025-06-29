@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { createReminder, DayTypes, Reminder } from '@strive/model'
+import { createReminder, Reminder } from '@strive/model'
 
 function createReminderFormControl(params?: Partial<Reminder>) {
   const reminder = createReminder(params)
@@ -20,13 +20,13 @@ export class ReminderForm extends FormGroup<ReminderFormControl> {
     super(createReminderFormControl(reminder))
   }
 
-  get id() { return this.get('id')! as FormControl<string> }
-  get description() { return this.get('description')! as FormControl<string> }
-  get isRepeating() { return this.get('isRepeating')! as FormControl<boolean> }
-  get interval() { return this.get('interval')! as FormControl<string> }
-  get date() { return this.get('date')! as FormControl<Date> }
-  get dayOfWeek() { return this.get('dayOfWeek')! as FormControl<DayTypes> }
-  get numberOfWeek() { return this.get('numberOfWeek')! as FormControl<number> }
+  get id() { return this.controls.id }
+  get description() { return this.controls.description }
+  get isRepeating() { return this.controls.isRepeating }
+  get interval() { return this.controls.interval }
+  get date() { return this.controls.date }
+  get dayOfWeek() { return this.controls.dayOfWeek }
+  get numberOfWeek() { return this.controls.numberOfWeek }
 
   get isValid() {
     const { description, date, dayOfWeek, isRepeating, interval, numberOfWeek} = this.value

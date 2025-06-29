@@ -21,11 +21,11 @@ export class MilestoneForm extends FormGroup<MilestoneFormControl> {
     super(createMilestoneFormControl(milestone))
   }
 
-  get order() { return this.get('order')! }
-  get content() { return this.get('content')! }
-  get description() { return this.get('description')! }
-  get deadline() { return this.get('deadline')! }
-  get subtasks() { return this.get('subtasks')! as FormArray<SubtaskForm> }
+  get order() { return this.controls.order }
+  get content() { return this.controls.content }
+  get description() { return this.controls.description }
+  get deadline() { return this.controls.deadline }
+  get subtasks() { return this.controls.subtasks }
 }
 
 function createSubtaskFormControl(params?: Partial<Subtask>) {
@@ -42,6 +42,6 @@ export class SubtaskForm extends FormGroup<SubtaskFormControl> {
     super(createSubtaskFormControl(subtask))
   }
 
-  get content() { return this.get('content')! as FormControl<string> }
-  get completed() { return this.get('completed')! as FormControl<boolean> }
+  get content() { return this.controls.content }
+  get completed() { return this.controls.completed }
 }
