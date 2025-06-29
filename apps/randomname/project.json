@@ -2,7 +2,7 @@
   "name": "randomname",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "app",
+  "prefix": "journal",
   "sourceRoot": "apps/randomname/src",
   "tags": [],
   "targets": {
@@ -22,7 +22,10 @@
             "input": "apps/randomname/public"
           }
         ],
-        "styles": ["apps/randomname/src/styles.scss"],
+        "styles": [
+          "apps/randomname/src/global.scss",
+          "apps/randomname/src/theme/variables.scss"
+        ],
         "scripts": [],
         "server": "apps/randomname/src/main.server.ts",
         "ssr": {
