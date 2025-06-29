@@ -46,6 +46,8 @@ export class AppComponent implements OnDestroy {
   // private versionService = inject(AppVersionService);
   private platformId = inject(PLATFORM_ID);
 
+  isBrowser: boolean
+
   // rootPage: typeof TabsComponent = TabsComponent
 
   // enumAuthSegment = enumAuthSegment
@@ -101,6 +103,7 @@ export class AppComponent implements OnDestroy {
   })
 
   constructor() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
     const platform = this.platform;
     // const pwa = inject(PWAService);
 
