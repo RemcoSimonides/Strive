@@ -5,11 +5,10 @@
   "scripts": {
     "ng": "nx",
     "postinstall": "node ./decorate-angular-cli.js",
-    "build": "npm run build:randomname",
+    "build": "npm run build:journal",
     "build:admin": "nx build admin",
     "build:backend-functions": "nx build backend-functions",
     "build:journal": "npx nx build journal",
-    "build:randomname": "npx nx build randomname",
     "build:blog": "cd apps/blog && npm run build && cd ../..",
     "test": "nx test",
     "serve:ssr": "node dist/apps/journal/server/main.js",
