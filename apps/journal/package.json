@@ -2,7 +2,7 @@
   "name": "journal",
   "devDependencies": {
     "@capacitor-community/fcm": "^7.1.1",
-    "@capacitor-firebase/authentication": "^7.2.0",
+    "@capacitor-firebase/authentication": "^7.1.0",
     "@capacitor/app": "^7.0.1",
     "@capacitor/camera": "^7.0.1",
     "@capacitor/cli": "^7.2.0",
