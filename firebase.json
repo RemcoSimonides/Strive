@@ -9,8 +9,7 @@
   "functions": {
     "predeploy": [
       "npx nx run backend-functions:lint",
-      "npx nx run backend-functions:build",
-      "node apps/backend-functions/cp-angular.js"
+      "npx nx run backend-functions:build"
     ],
     "source": "dist/apps/backend-functions"
   },

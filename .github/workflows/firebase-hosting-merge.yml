@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm ci && npm run build
-      - run: node apps/backend-functions/cp-angular.js
       - name: Create SA key
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STRIVE_JOURNAL }}' > $HOME/gcloud.json
       - name: Deploy SSR Cloud Function
