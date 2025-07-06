@@ -69,13 +69,13 @@ export class AffirmationsPageComponent implements OnDestroy {
   private suggestionsCopy: AffirmationSuggestion[]
 
   form = new FormGroup({
-    affirmations: new FormArray([]),
+    affirmations: new FormArray<FormControl>([]),
     times: new UntypedFormArray(timeFormControls())
   })
 
-  get affirmationsForm() { return this.form.get('affirmations') as FormArray }
+  get affirmationsForm() { return this.form.get('affirmations') as FormArray<FormControl> }
   get affirmations(): string[] { return this.affirmationsForm.value }
-  get timesForm() { return this.form.get('times') as FormArray }
+  get timesForm() { return this.form.get('times') as FormArray<FormControl> }
   get times(): string[] { return this.timesForm.value }
 
   private subs: Subscription[] = []

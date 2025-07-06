@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router'
+import { Route } from '@angular/router';
 
-export const routes: Routes = [
+export const appRoutes: Route[] = [
   { path: '', loadComponent: () => import('./pages/goals/goals.page').then(m => m.GoalsPageComponent) },
   { path: 'download', loadComponent: () => import('./pages/download/download.component').then(m => m.DownloadPageComponent) },
   { path: 'edit-profile', loadComponent: () => import('./pages/profile/edit-profile/edit-profile.component').then(m => m.EditProfilePageComponent) },
@@ -25,4 +25,4 @@ export const routes: Routes = [
   { path: 'settings/push-notifications', loadComponent: () => import('./pages/settings/push-notification-settings/push-notification-settings.component').then(m => m.PushNotificationsSettingsComponent) },
   { path: 'terms', loadComponent: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageComponent) },
   { path: '**', pathMatch: 'full', loadComponent: () => import('./pages/404/404.component').then(m => m.NotfoundPageComponent) }
-]
+];

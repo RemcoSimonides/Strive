@@ -1,9 +1,7 @@
-/* eslint-disable */
 export default {
   displayName: 'journal',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  globals: {},
   coverageDirectory: '../../coverage/apps/journal',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [

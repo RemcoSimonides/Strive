@@ -33,7 +33,6 @@ function getFrequencies({ questions }: SelfReflectSettings) {
 
 @Pipe({
     name: 'get',
-    standalone: false
 })
 export class GetExercisePipe implements PipeTransform {
   transform(settings: ExerciseSettings[], exercise: ExerciseType) {
@@ -42,6 +41,7 @@ export class GetExercisePipe implements PipeTransform {
 }
 
 interface Exercise {
+  id: string
   title: string
   image: string
   link: string
