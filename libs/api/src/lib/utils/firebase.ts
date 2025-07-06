@@ -54,7 +54,7 @@ type FirestoreOnDeleteHandler = Parameters<typeof onDocumentDeleted>[1]
 
 export function onRequest(fn: FunctionType, options?: GlobalOptions) {
 	setGlobalOptions({ ...defaultOptions, ...options });
-	return _onRequest({ secrets }, wrap(fn))
+	return _onRequest({ secrets, cors: true }, wrap(fn))
 }
 
 export function onCall(fn: FunctionType, options?: GlobalOptions) {
