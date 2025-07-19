@@ -8,10 +8,11 @@
   },
   "functions": {
     "predeploy": [
-      "npx nx run backend-functions:lint",
-      "npx nx run backend-functions:build"
+      "npx nx run functions:lint",
+      "npx nx run functions:build"
     ],
-    "source": "dist/apps/backend-functions"
+    "source": "dist/apps/functions",
+    "runtime": "nodejs22"
   },
   "hosting": [
     {

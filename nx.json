@@ -40,6 +40,11 @@
         "{workspaceRoot}/eslint.config.js",
         "{workspaceRoot}/eslint.config.cjs"
       ]
+    },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "generators": {
