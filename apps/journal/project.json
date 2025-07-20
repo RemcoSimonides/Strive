@@ -13,7 +13,7 @@
         "outputPath": "dist/apps/journal",
         "index": "apps/journal/src/index.html",
         "browser": "apps/journal/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": ["zone.js", "@angular/localize/init"],
         "tsConfig": "apps/journal/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -33,7 +33,10 @@
         ],
         "styles": [
           "apps/journal/src/global.scss",
-          "apps/journal/src/theme/variables.scss"
+          "apps/journal/src/theme/variables.scss",
+          "node_modules/swiper/swiper.min.css",
+          "node_modules/swiper/modules/effect-cards.min.css",
+          "node_modules/swiper/modules/navigation.min.css"
         ],
         "scripts": [],
         "server": "apps/journal/src/main.server.ts",

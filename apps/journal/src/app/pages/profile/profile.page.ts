@@ -38,7 +38,6 @@ import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.c
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
-import { ImageSelectorComponent } from '@strive/media/components/image-selector/image-selector.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'

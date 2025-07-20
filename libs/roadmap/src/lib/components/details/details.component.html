@@ -1,8 +1,8 @@
 <strive-header-modal (dismiss)="dismiss()">
-  @if (canEdit && form?.touched) {
+  @if (canEdit && form.touched) {
     <header class="header">
       <ion-button fill="clear" disabled color="primary">
-        @if (form?.dirty && form?.valid) {
+        @if (form.dirty && form.valid) {
           <span>Saving changes...</span>
         } @else {
           <span>Saved</span>
@@ -88,7 +88,7 @@
       </section>
     }
 
-    @if (canEdit || milestone.subtasks?.length) {
+    @if (canEdit || milestone.subtasks.length) {
       <section class="subtasks">
         <header>
           <h6>Subtasks</h6>
