@@ -12,8 +12,8 @@ import { sendNotificationToUsers } from '../../../shared/notification/notificati
 export const goalStakeholderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStakeholders/{stakeholderId}`,
 async (snapshot) => {
 
-  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data.data(), id: snapshot.id }))
-  const { goalId } = snapshot.params
+  const { goalId, stakeholderId } = snapshot.params
+  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data.data(), id: stakeholderId }))
 
   const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
@@ -39,9 +39,9 @@ async (snapshot) => {
 export const goalStakeholderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStakeholders/{stakeholderId}`,
 async (snapshot) => {
 
-  const before = createGoalStakeholder(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
-  const after = createGoalStakeholder(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
   const { goalId, stakeholderId } = snapshot.params
+  const before = createGoalStakeholder(toDate({ ...snapshot.data.before.data(), id: stakeholderId }))
+  const after = createGoalStakeholder(toDate({ ...snapshot.data.after.data(), id: stakeholderId }))
 
   const goal = await getDocument<Goal>(`Goals/${goalId}`)
 
@@ -74,8 +74,8 @@ async (snapshot) => {
 export const goalStakeholderDeletedHandler = onDocumentDelete(`Goals/{goalId}/GStakeholders/{stakeholderId}`,
 async (snapshot) => {
 
-  const { goalId } = snapshot.params
-  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data.data(), id: snapshot.id }))
+  const { goalId, stakeholderId } = snapshot.params
+  const stakeholder = createGoalStakeholder(toDate({ ...snapshot.data.data(), id: stakeholderId }))
 
   // aggregation
   handleAggregation(stakeholder, undefined)

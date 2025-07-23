@@ -6,7 +6,8 @@ import fetch from 'node-fetch'
  * This function is accessible to anyone, go here to change it
  * https://console.cloud.google.com/functions
  */
-export const scrapeMetatags = onCall(async (data: { url: string }): Promise<ErrorResultResponse> => {
+export const scrapeMetatags = onCall(async (request): Promise<ErrorResultResponse> => {
+  const data: { url: string } = request.data
   const { url } = data
   const { URLMETA_APIKEY, URLMETA_USERNAME } = process.env
 

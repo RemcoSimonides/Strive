@@ -1,11 +1,15 @@
-import { db, serverTimestamp, gcsBucket, onCall } from '@strive/api/firebase'
+import { db, serverTimestamp, gcsBucket, onCall, logger } from '@strive/api/firebase'
 import { ErrorResultResponse } from '../shared/utils'
 import { createGoal, createGoalStakeholder, Goal } from '@strive/model'
 
 export const createCollectiveGoal = onCall(
-async (data: { goal: Goal, uid: string }): Promise<ErrorResultResponse> => {
+async (request): Promise<ErrorResultResponse> => {
 
+  logger.log('request: ', request);
+
+  const data: { goal: Goal, uid: string } = request.data
   const { goal, uid } = data
+
   const collectiveGoalId = goal.collectiveGoalId ? goal.collectiveGoalId : goal.id
   const batch = db.batch()
 

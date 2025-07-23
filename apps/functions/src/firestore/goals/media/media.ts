@@ -4,7 +4,7 @@ import { toDate } from '../../../shared/utils'
 
 export const mediaDeletedHandler = onDocumentDelete(`Goals/{goalId}/Media/{mediaId}`,
 async (snapshot) => {
-  const media = createMedia(toDate({ ...snapshot.data.data(), id: snapshot.id }))
+  const media = createMedia(toDate({ ...snapshot.data.data(), id: snapshot.params.mediaId }))
 
   const fileRef = `${media.storagePath}/${media.id}`
   gcsBucket.file(fileRef).delete({ ignoreNotFound: true })

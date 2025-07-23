@@ -9,7 +9,7 @@ export const goalReminderCreatedHandler = onDocumentCreate(`Goals/{goalId}/GStak
 async (snapshot) => {
 
   const { goalId, stakeholderId, reminderId } = snapshot.params
-  const reminder = createReminder(toDate({ ...snapshot.data.data(), id: snapshot.id }))
+  const reminder = createReminder(toDate({ ...snapshot.data.data(), id: reminderId }))
 
   await upsertNextReminder(goalId, stakeholderId, reminderId, reminder)
 
@@ -19,7 +19,7 @@ export const goalReminderChangeHandler = onDocumentUpdate(`Goals/{goalId}/GStake
 async (snapshot) => {
 
   const { goalId, stakeholderId, reminderId } = snapshot.params
-  const reminder = createReminder(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
+  const reminder = createReminder(toDate({ ...snapshot.data.after.data(), id: reminderId }))
 
   await upsertNextReminder(goalId, stakeholderId, reminderId, reminder)
 })

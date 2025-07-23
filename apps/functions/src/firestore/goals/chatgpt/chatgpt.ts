@@ -21,8 +21,8 @@ const parsablePrompt = `The format of your response has to be a JSON parsable ar
 export const chatGPTMessageCreatedHandler = onDocumentCreate(`Goals/{goalId}/ChatGPT/{messageId}`,
 async (snapshot) => {
 
-  const message = createChatGPTMessage(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const { goalId, messageId } = snapshot.params
+  const message = createChatGPTMessage(toDate({ ...snapshot.data.data(), id: messageId }))
   const ref = getRef(`Goals/${goalId}/ChatGPT/${messageId}`);
 
   // doc is created in function of another trigger already

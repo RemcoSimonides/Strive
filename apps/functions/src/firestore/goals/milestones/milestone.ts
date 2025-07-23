@@ -12,8 +12,8 @@ import { isEqual } from 'date-fns'
 export const milestoneCreatedhandler = onDocumentCreate(`Goals/{goalId}/Milestones/{milestoneId}`,
 async (snapshot) => {
 
-  const milestone = createMilestone(toDate({ ...snapshot.data.data(), id: snapshot.id }))
   const { goalId, milestoneId } = snapshot.params
+  const milestone = createMilestone(toDate({ ...snapshot.data.data(), id: milestoneId }))
 
   // events
   const source = createGoalSource({ goalId, userId: milestone.updatedBy })
@@ -39,7 +39,7 @@ export const milestoneDeletedHandler = onDocumentDelete(`Goals/{goalId}/Mileston
 async (snapshot) => {
 
   const { goalId, milestoneId } = snapshot.params
-  const milestone = createMilestone(toDate({ ...snapshot.data.data(), id: snapshot.id }))
+  const milestone = createMilestone(toDate({ ...snapshot.data.data(), id: milestoneId }))
 
   milestoneDeleted(goalId, milestoneId, milestone)
 })
@@ -47,9 +47,9 @@ async (snapshot) => {
 export const milestoneChangeHandler = onDocumentUpdate(`Goals/{goalId}/Milestones/{milestoneId}`,
 async (snapshot) => {
 
-  const before = createMilestone(toDate({ ...snapshot.data.before.data(), id: snapshot.id }))
-  const after = createMilestone(toDate({ ...snapshot.data.after.data(), id: snapshot.id }))
   const { goalId, milestoneId } = snapshot.params
+  const before = createMilestone(toDate({ ...snapshot.data.before.data(), id: milestoneId }))
+  const after = createMilestone(toDate({ ...snapshot.data.after.data(), id: milestoneId }))
 
   // events
   await handleMilestoneEvents(before, after, goalId)

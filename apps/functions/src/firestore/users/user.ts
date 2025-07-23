@@ -1,5 +1,4 @@
 import { db, logger, gcsBucket, auth, onDocumentCreate, onDocumentDelete, onDocumentUpdate } from '@strive/api/firebase'
-import { defineString } from 'firebase-functions/params'
 
 import { addToAlgolia, deleteFromAlgolia, updateAlgoliaObject } from '../../shared/algolia/algolia'
 import { createUser, createAlgoliaUser, createSelfReflectSettings, selfReflectQuestions } from '@strive/model'
@@ -9,8 +8,8 @@ import { deleteCollection, toDate } from '../../shared/utils'
 export const userCreatedHandler = onDocumentCreate(`Users/{uid}`,
 async (snapshot) => {
 
-  const uid = snapshot.id
-  const user = createUser({ ...snapshot.data.data(), uid: snapshot.id })
+  const { uid } = snapshot.params
+  const user = createUser({ ...snapshot.data.data(), uid })
 
   // aggregation
   updateAggregation({ usersCreated: 1 })
@@ -24,8 +23,8 @@ async (snapshot) => {
 export const userDeletedHandler = onDocumentDelete(`Users/{uid}`,
 async (snapshot) => {
 
-  const uid = snapshot.id
-  const user = createUser(toDate({ ...snapshot.data.data(), id: snapshot.id }))
+  const { uid } = snapshot.params
+  const user = createUser(toDate({ ...snapshot.data.data(), uid }))
   await deleteFromAlgolia('user', uid)
 
   // aggregation
@@ -68,10 +67,9 @@ async (snapshot) => {
 export const userChangeHandler = onDocumentUpdate(`Users/{uid}`,
 async (snapshot) => {
 
-  const uid = defineString('uid').value()
-
-  const before = createUser({ ...snapshot.data.before.data(), uid: snapshot.id })
-  const after = createUser({ ...snapshot.data.after.data(), uid: snapshot.id })
+  const { uid } = snapshot.params
+  const before = createUser({ ...snapshot.data.before.data(), uid })
+  const after = createUser({ ...snapshot.data.after.data(), uid })
 
 
   if (before.username !== after.username || before.photoURL !== after.photoURL) {
