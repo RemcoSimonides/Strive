@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin'
 import * as Storage from '@google-cloud/storage'
-import { environment } from '@env'
 
 import { GlobalOptions, setGlobalOptions } from 'firebase-functions/v2'
 import { onDocumentCreated, onDocumentDeleted, onDocumentUpdated } from 'firebase-functions/v2/firestore'
@@ -12,7 +11,7 @@ import { defineSecret } from 'firebase-functions/params'
 export type DocumentReference = admin.firestore.DocumentReference
 export const getRef = (path: string) => db.doc(path)
 export const gcs = new Storage.Storage
-export const gcsBucket = gcs.bucket(environment.firebase.options.storageBucket)
+export const gcsBucket = gcs.bucket('strive-journal.appspot.com')
 
 export { logger } from 'firebase-functions/v2'
 
@@ -43,7 +42,7 @@ const secrets = [
 
 const defaultOptions: GlobalOptions = {
 	secrets,
-	region: 'europe-west4',
+	region: 'us-central1',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,8 +57,11 @@ export function onRequest(fn: FunctionType, options?: GlobalOptions) {
 }
 
 export function onCall(fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({ ...defaultOptions, ...options });
-	return _onCall({ secrets }, wrap(fn))
+	setGlobalOptions({
+		...defaultOptions,
+		region: 'us-central1', // eu west will give CORS error
+		...options });
+	return _onCall({ secrets, cors: true }, wrap(fn))
 }
 
 export function onSchedule(schedule: string, fn: FunctionType, options?: GlobalOptions) {
