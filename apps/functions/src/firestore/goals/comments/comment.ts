@@ -22,7 +22,7 @@ async (snapshot) =>{
 
   if (comment.id === 'initial') return // no need to send notification of the initial message
 
-  addGoalEvent('goalChatMessageCreated', { goalId, userId, commentId: comment.id })
+  addGoalEvent('goalChatMessageCreated', { goalId, userId, commentId })
 
   if (comment.userId === 'chatgpt') return
 
