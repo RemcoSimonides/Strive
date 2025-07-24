@@ -18,7 +18,7 @@ export class AppVersionService extends FireDocument<Version> {
 
   override path = `meta/version`
 
-  version = "1.16.0"
+  version = "1.16.1"
 
   constructor() {
     super()
