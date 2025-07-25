@@ -143,3 +143,50 @@ export interface ActivityResponse {
   total_photo_count: number
   has_kudoed: boolean
 }
+
+interface Bike {
+  id: string;
+  primary: boolean;
+  name: string;
+  resource_state: number;
+  distance: number;
+}
+
+interface Shoe {
+  id: string;
+  primary: boolean;
+  name: string;
+  resource_state: number;
+  distance: number;
+}
+
+export interface AthleteResponse {
+  id: number;
+  username: string;
+  resource_state: number;
+  firstname: string;
+  lastname: string;
+  city: string;
+  state: string;
+  country: string;
+  sex: 'F' | 'M' | null; // More specific type, or just string
+  premium: boolean;
+  created_at: string; // Can also be typed as Date
+  updated_at: string; // Can also be typed as Date
+  badge_type_id: number;
+  profile_medium: string;
+  profile: string;
+  friend: any; // Type can be refined if the object structure is known
+  follower: any; // Type can be refined if the object structure is known
+  follower_count: number;
+  friend_count: number;
+  mutual_friend_count: number;
+  athlete_type: number;
+  date_preference: string;
+  measurement_preference: string;
+  clubs: any[]; // Type can be refined if the club object structure is known
+  ftp: number | null;
+  weight: number;
+  bikes: Bike[];
+  shoes: Shoe[];
+}

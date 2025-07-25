@@ -67,6 +67,9 @@ export class IntegrationsComponent extends ModalDirective implements OnInit {
         image: 'strava.png'
       }
 
+      this.activeIntegrations = []
+      this.availableIntegrations = []
+
       if (strava) {
         this.activeIntegrations.push(integration)
       } else {
