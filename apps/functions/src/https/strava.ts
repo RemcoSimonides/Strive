@@ -1,8 +1,8 @@
 import { db, logger, onCall, onRequest } from '@strive/api/firebase'
 import { ErrorResultResponse, toDate } from '../shared/utils'
-import fetch from 'node-fetch'
-import { ActivityResponse, ActivityType, AthleteResponse, createStravaIntegration } from '@strive/model'
+import { ActivityType, createStravaIntegration } from '@strive/model'
 import { createPersonal, createPost } from '@strive/model'
+import { fetchActivities, fetchActivity, fetchAthlete, fetchRefreshToken, fetchToken } from '../shared/strava/strava.shared'
 
 // https://developers.strava.com/docs/webhooks/
 interface StravaEvent {
@@ -202,72 +202,3 @@ async (request): Promise<ErrorResultResponse> => {
 
 })
 
-async function fetchToken(code: string): Promise<{ access_token: string, refresh_token: string, athlete: AthleteResponse}> {
-  const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = process.env
-  const url = `https://www.strava.com/api/v3/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`
-  const options = {
-    method: 'POST'
-  }
-
-  return _fetch<{ access_token: string, refresh_token: string, athlete: AthleteResponse }>(url, options)
-}
-
-async function fetchRefreshToken(refresh_token: string): Promise<{ access_token: string, refresh_token: string}> {
-  const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = process.env
-  const url = `https://www.strava.com/api/v3/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&refresh_token=${refresh_token}&grant_type=refresh_token`
-  const options = {
-    method: 'POST'
-  }
-
-  return _fetch<{ access_token: string, refresh_token: string }>(url, options)
-}
-
-function fetchActivities(access_token: string, after: number ): Promise<ActivityResponse[]> {
-  const url = `https://www.strava.com/api/v3/athlete/activities?after=${after}`
-  const options = {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`
-    }
-  }
-
-  return _fetch<ActivityResponse[]>(url, options)
-}
-
-function fetchActivity(access_token: string, activityId: number): Promise<ActivityResponse> {
-  const url = `https://www.strava.com/api/v3/activities/${activityId}`
-  const options = {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`
-    }
-  }
-
-  return _fetch<ActivityResponse>(url, options)
-}
-
-function fetchAthlete(access_token: string): Promise<AthleteResponse> {
-  const url = `https://www.strava.com/api/v3/athlete`
-  const options = {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`
-    }
-  }
-
-  return _fetch<AthleteResponse>(url, options)
-}
-
-async function _fetch<T>(url: fetch.RequestInfo, options: fetch.RequestInit): Promise<T> {
-  logger.log('fetching from url: ', url)
-  logger.log('with options: ', options)
-  const response = await fetch(url, options)
-  if (!response.ok) {
-    const error = await response.text()
-    throw new Error(error)
-  }
-  const result = await response.json()
-  logger.log('response: ', result)
-  return result
-  // return await response.json()
-}
