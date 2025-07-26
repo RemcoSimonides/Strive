@@ -16,8 +16,8 @@
       @if (stakeholder$ | async; as stakeholder) {
         <ion-content>
           @if (screensize.isMobile$ | async) {
-            <picture (click)="openZoom(goal)" class="mobile">
-              <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
+            <picture tabindex="0" (click)="openZoom(goal)" (keyup.enter)="openZoom(goal)" class="mobile">
+              <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200" alt="goal image" />
               @if (goal.status !== 'pending') {
                 <div class="finished-overlay">
                   <ion-icon name="checkmark-outline"/>
@@ -29,13 +29,13 @@
             <section class="actions">
               <article>
                 <strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder"/>
-                <ion-button (click)="spectate()" size="block" class="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
+                <ion-button (click)="spectate()" size="block" fill="outline" color="primary" [ngClass]="{'fake-disable': stakeholder.isSpectator}">
                   <ion-icon name="notifications-outline" size="small" slot="start"/>
                   <span>{{ stakeholder.isSpectator ? 'Following' : 'Follow' }}</span>
                 </ion-button>
               </article>
               <article>
-                <ion-button (click)="openChat()" size="block" class="secondary">
+                <ion-button fill="outline" (click)="openChat()" size="block" color="secondary">
                   <ion-icon name="chatbubbles-outline" slot="start" size="small"/>
                   <span>Chat</span>
                   @if (missedMessages$ | async; as missedMessages) {
@@ -43,25 +43,25 @@
                   }
                 </ion-button>
                 @if (stakeholder.isAdmin) {
-                  <ion-button (click)="openAddOthersModal()" class="secondary">
+                  <ion-button (click)="openAddOthersModal()" fill="outline" color="secondary">
                     <ion-icon slot="icon-only" size="small" name="person-add-outline"/>
                   </ion-button>
                 } @else {
                   @if (goal.publicity === 'public') {
-                    <ion-button (click)="openShare($event)" class="secondary">
+                    <ion-button (click)="openShare($event)" fill="outline" color="secondary">
                       <ion-icon slot="icon-only" size="small" name="share-social-outline"/>
                     </ion-button>
                   }
                 }
                 <ng-template #share>
                   @if (goal.publicity === 'public') {
-                    <ion-button (click)="openShare($event)" class="secondary">
+                    <ion-button (click)="openShare($event)" fill="outline" color="secondary">
                       <ion-icon slot="icon-only" size="small" name="share-social-outline"/>
                     </ion-button>
                   }
                 </ng-template>
                 @if (stakeholder.isAdmin || stakeholder.isAchiever) {
-                  <ion-button (click)="presentGoalOptionsPopover($event, goal)" class="secondary">
+                  <ion-button (click)="presentGoalOptionsPopover($event, goal)" fill="outline" color="secondary">
                     <ion-icon slot="icon-only" size="small" name="ellipsis-horizontal-outline"/>
                   </ion-button>
                 }
@@ -72,8 +72,8 @@
             <h1>{{ goal.title }}</h1>
             <div class="main">
               @if ((isMobile$ | async) === false) {
-                <picture (click)="openZoom(goal)" class="desktop">
-                  <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200"/>
+                <picture tabindex="0" (click)="openZoom(goal)" (keyup.enter)="openZoom(goal)" class="desktop">
+                  <img [ref]="goal.image" asset="goal.png" [width]="1200" [height]="1200" alt="goal image"/>
                   @if (goal.status !== 'pending') {
                     <div class="finished-overlay">
                       <ion-icon name="checkmark-outline"/>
@@ -83,7 +83,7 @@
               }
               <div class="info">
                 <ul class="properties">
-                  <li (click)="openTeamModal('isAchiever')" class="clickable">
+                  <li tabindex="0" (click)="openTeamModal('isAchiever')" (keyup.enter)="openTeamModal('isAchiever')" class="clickable">
                     <ion-icon name="flag"/>
                     @if (stakeholder.isAchiever) {
                       @if (goal.numberOfAchievers > 1) {
@@ -97,7 +97,7 @@
                       <span><b>{{ goal.numberOfAchievers }}</b> {{ goal.numberOfAchievers === 1 ? 'achiever' : 'achievers' }}</span>
                     }
                   </li>
-                  <li (click)="openTeamModal('isSupporter')" class="clickable">
+                  <li tabindex="0" (click)="openTeamModal('isSupporter')" (keyup.enter)="openTeamModal('isSupporter')" class="clickable">
                     <ion-icon src="assets/icons/hand-holding-heart-solid.svg"/>
                     @if (stakeholder.isSupporter) {
                       @if (goal.numberOfSupporters > 1) {
@@ -111,7 +111,7 @@
                       <span><b>{{ goal.numberOfSupporters }}</b> {{ goal.numberOfSupporters === 1 ? 'supporter' : 'supporters' }}</span>
                     }
                   </li>
-                  <li (click)="openTeamModal('isSpectator')" class="clickable">
+                  <li tabindex="0" (click)="openTeamModal('isSpectator')" (keyup.enter)="openTeamModal('isSpectator')" class="clickable">
                     <ion-icon name="notifications"/>
                     @if (stakeholder.isSpectator) {
                       @if (goal.numberOfSpectators > 1) {
@@ -127,7 +127,7 @@
                   </li>
                   @if (collectiveStakeholders$ | async; as stakeholders) {
                     @if (stakeholders.length) {
-                      <li (click)="openCollectiveGoals(stakeholders)" class="clickable">
+                      <li tabindex="0" (click)="openCollectiveGoals(stakeholders)" (keyup.enter)="openCollectiveGoals(stakeholders)" class="clickable">
                         <ion-icon name="link"/>
                         <span><b>{{ stakeholders.length }}</b> connected {{ stakeholders.length === 1 ? 'goal' : 'goals' }} </span>
                       </li>
@@ -156,11 +156,13 @@
                   <!-- Deadline -->
                   @if (goal.deadline) {
                     <li
+                      tabindex="0"
                       [ngStyle]="{
                         'color': isOverdue(goal.deadline) && goal.status === 'pending' ? 'var(--ion-color-danger-tint)' : '',
                         'clickable': stakeholder.isAchiever
                       }"
                       (click)="openDatePicker($event)"
+                      (keyup.enter)="openDatePicker($event)"
                       >
                       <ion-icon name="timer-outline"/>
                       <span>End date: </span>
@@ -181,8 +183,8 @@
                 <h3>Did you finish the goal?</h3>
                 <article>
                   <ion-button (click)="finishGoal('succeeded')" color="primary">Yes!</ion-button>
-                  <ion-button (click)="openDatePicker($event)" fill="clear" color="primary">Set new end date</ion-button>
-                  <ion-button (click)="finishGoal('failed')" fill="clear" color="danger">No, I give up</ion-button>
+                  <ion-button (click)="openDatePicker($event)" fill="outline" color="primary">Set new end date</ion-button>
+                  <ion-button (click)="finishGoal('failed')" fill="outline" color="danger">No, I give up</ion-button>
                 </article>
               </ion-card>
             }

@@ -3,6 +3,8 @@ import { RouterModule } from '@angular/router'
 import { ChangeDetectionStrategy, Component, Pipe, PipeTransform, inject } from '@angular/core'
 
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
+import { addIcons } from 'ionicons'
+import { lockClosedOutline } from 'ionicons/icons'
 
 import { Observable, map, of, switchMap } from 'rxjs'
 import { format, isPast } from 'date-fns'
@@ -124,5 +126,6 @@ export class ExercisesPageComponent {
       title: 'Exercises - Strive Journal',
       description: 'Dear Future Self, Affirmations, Daily Gratitude and more'
     })
+    addIcons({ lockClosedOutline })
   }
 }

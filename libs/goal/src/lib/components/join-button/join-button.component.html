@@ -1,4 +1,4 @@
-<ion-button (click)="join()" class="primary" [ngClass]="{'fake-disable': stakeholder.isAchiever || stakeholder.hasOpenRequestToJoin || collectiveStakeholder?.isAchiever }">
+<ion-button (click)="join()" fill="outline" [ngClass]="{'fake-disable': stakeholder.isAchiever || stakeholder.hasOpenRequestToJoin || collectiveStakeholder?.isAchiever }">
   <ion-icon slot="start" name="flag-outline" size="small" />
   <span>{{ stakeholder | joinButtonText: collectiveStakeholder }}</span>
 </ion-button>

@@ -84,6 +84,7 @@ ion-footer {
     border-radius: 12px;
     --border-style: none;
     --highlight-background: var(--ion-color-primary);
+    box-shadow: var(--strive-box-shadow);
 
     ion-icon {
       align-self: center;

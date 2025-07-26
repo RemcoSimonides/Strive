@@ -1,5 +1,5 @@
-<strive-header-modal (dismiss)="dismiss()">
-	<ion-button fill="clear" slot="end" size="small" id="popover-button">
+<strive-header-modal (dismiss)="dismiss()" [transparent]="true">
+	<ion-button fill="clear" slot="end" id="popover-button">
 		<ion-icon slot="icon-only" name="settings-outline" />
 	</ion-button>
 </strive-header-modal>
@@ -40,7 +40,7 @@
 			<p>In order to chat, you need to</p>
 			<strive-goal-join-button [goal]="goal" [stakeholder]="stakeholder" [collectiveStakeholder]="collectiveStakeholder" />
 			<p>or</p>
-			<ion-button (click)="support()" class="secondary">
+			<ion-button (click)="support()" fill="outline" color="secondary">
 				<ion-icon slot="start" src="assets/icons/hand-holding-heart-solid.svg" />
 				<span>Support</span>
 			</ion-button>

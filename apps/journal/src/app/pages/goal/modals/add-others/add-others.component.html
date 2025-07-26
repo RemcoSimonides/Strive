@@ -9,7 +9,7 @@
         @for (profile of results$ | async; track profile; let last = $last) {
           <ion-item [lines]="last ? 'none' : 'full'">
             <ion-avatar slot="start">
-              <img asset="profile.png" [ref]="profile.photoURL" [width]="120" [height]="120">
+              <img asset="profile.png" [ref]="profile.photoURL" [width]="120" [height]="120" alt="profile image">
             </ion-avatar>
             <ion-label>
               <article>
@@ -41,7 +41,7 @@
 </ion-content>
 <ion-footer class="ion-no-border">
   <small>Invite someone without Strive Journal account?</small>
-  <ion-button (click)="share($event)" color="primary" size="small">
+  <ion-button (click)="share($event)" fill="outline" color="primary">
     <ion-icon slot="start" name="share-social-outline"/>
     <span>Share link</span>
   </ion-button>

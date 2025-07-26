@@ -2,6 +2,10 @@ ion-router-outlet {
   margin-top: 65px;
 }
 
+ion-toolbar {
+  --background: var(--ion-background-color);
+}
+
 header {
   display: flex;
   justify-content: space-between;

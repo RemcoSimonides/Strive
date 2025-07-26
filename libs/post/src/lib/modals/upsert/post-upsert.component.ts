@@ -74,7 +74,7 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 		if (!post.goalId) throw new Error('Upsert post modal needs goalId')
 		this._post = post
 
-		this.mode = post.createdAt ? 'update' : 'create'
+		this.mode = post.uid ? 'update' : 'create'
 		this.postForm.patchValue(post)
 	}
 	@Input() private image?: File

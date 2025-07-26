@@ -11,9 +11,9 @@
           <strive-mini-thumbnail-swiper>
             @for (stakeholder of stakeholders; track stakeholder) {
               <ng-template #thumb>
-                <article (click)="openFollowedGoal(stakeholder)" class="thumb">
+                <article tabindex="0" (click)="openFollowedGoal(stakeholder)" (keyup.enter)="openFollowedGoal(stakeholder)" class="thumb">
                   <ion-thumbnail>
-                    <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120"/>
+                    <img [ref]="stakeholder.goal.image" asset="goal.png" [width]="120" [height]="120" alt="goal image"/>
                     @if (stakeholder.goal.status !== 'pending') {
                       <div class="finished-overlay">
                         <ion-icon name="checkmark-outline"/>

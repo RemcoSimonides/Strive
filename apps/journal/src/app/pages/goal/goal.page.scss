@@ -76,6 +76,10 @@ main {
           &.clickable {
             cursor: pointer;
           }
+
+          span, ion-select, b {
+            font-size: small;
+          }
         }
       }
     }

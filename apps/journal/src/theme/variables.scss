@@ -103,7 +103,8 @@
   --ion-text-color: #3E2723;
   --ion-text-color-rgb: 62, 39, 35;
 
-  --ion-border-color: #D2B48C;
+  --ion-border-color: #f7941d4d;
+  --ion-border-color-rgba: rgba(247, 148, 29, 0.3);
 
   --ion-item-background: #FFFBF5;
   --ion-toolbar-background: #FFFBF5;
@@ -112,6 +113,8 @@
   --ion-card-background: #FFFBF5;
   --ion-loading-background: var(--ion-color-step-50);
   --ion-loading-color: var(--ion-color-step-850);
+
+  --strive-box-shadow: var(--ion-border-color-rgba) 0px 0px 0px 1px;
 }
 
 /*

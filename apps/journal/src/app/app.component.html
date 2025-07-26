@@ -3,7 +3,7 @@
   @if ((screensize.size$ | async) === 'mobile') {
     <ion-nav [root]="rootPage" />
   } @else {
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar>
         <header>
           <a routerLink="/">

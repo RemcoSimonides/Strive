@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar color="primary">
 
     <ion-buttons slot="end">
@@ -14,7 +14,7 @@
 
 <ion-content class="ion-padding">
   @if (mode === 'create') {
-    <p><small>Create a memory for a lifetime. Someday you'll look back at your goals and see this post.</small></p>
+    <small>Create a memory for a lifetime. Someday you'll look back at your goals and see this post.</small>
   }
 
   <form [formGroup]="postForm">

@@ -127,6 +127,7 @@ ion-searchbar {
 
 ion-card {
   border-radius: 12px;
+  box-shadow: none;
   margin: 0;
 
   ion-card-title {
@@ -140,6 +141,7 @@ ion-progress-bar {
 
 ion-list {
   border-radius: 12px;
+  box-shadow: none;
 
   ion-list-header {
     color: var(--ion-color-primary);
@@ -173,8 +175,14 @@ ion-button {
     opacity: 1;
   }
 
-  &.button-solid, &.button-outline {
+  &.button-solid {
     --background: var(--ion-card-background);
+    --box-shadow: none;
+  }
+
+  &.button-outline {
+    --border-width: 1px;
+    background: var(--ion-card-background);
   }
 
   &.primary {
@@ -195,6 +203,8 @@ ion-button {
 }
 
 ion-item {
+  --border-color: var(--ion-border-color);
+
   &.fake-disable {
     opacity: 0.5;
   }
