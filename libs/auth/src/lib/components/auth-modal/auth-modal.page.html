@@ -31,13 +31,28 @@
         <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start" />
-            Continue with Google
+            Log in with Google
           </ion-button>
           <ion-button fill="outline" (click)="loginWithApple()">
             <ion-icon name="logo-apple" slot="start" />
-            Continue with Apple
+            Log in with Apple
+          </ion-button>
+          <ion-button fill="outline" (click)="this.authSegmentChoice = enumAuthSegment.login_email">
+            <ion-icon name="mail" slot="start" />
+            Log in with Email
           </ion-button>
         </article>
+        <hr />
+        <article class="action">
+          <span>Don't have an account?</span>
+          <ion-button fill="outline" (click)="this.authSegmentChoice = enumAuthSegment.register">
+            <b>Sign up</b>
+          </ion-button>
+        </article>
+      </section>
+    }
+    @case (enumAuthSegment.login_email) {
+      <section>
         <form [formGroup]="loginForm">
           <ion-list lines="full">
             <ion-item>
@@ -59,15 +74,15 @@
               <ion-icon slot="end" [name]="passwordIcon" class="passwordIcon" (click)="hideShowPassword()" />
             </ion-item>
           </ion-list>
-          <div class="action">
-            <ion-button class="submit_button" color="primary" (click)="loginUser()" [disabled]="!loginForm.valid">Log in</ion-button>
-          </div>
+          <ion-button expand="block" color="primary" (click)="loginUser()" [disabled]="!loginForm.valid" class="main-action">Log in</ion-button>
         </form>
-        <span class="fat-text-button" (click)="this.authSegmentChoice = enumAuthSegment.forgot_password">I forgot my password</span>
+        <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.forgot_password">
+          I forgot my password
+        </ion-button>
         <hr />
         <article class="action">
           <span>Don't have an account?</span>
-          <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.register">
+          <ion-button fill="outline" (click)="this.authSegmentChoice = enumAuthSegment.register">
             <b>Sign up</b>
           </ion-button>
         </article>
@@ -78,13 +93,28 @@
         <article class="oauth">
           <ion-button fill="outline" (click)="loginWithGoogle()">
             <ion-icon name="logo-google" slot="start" />
-            Continue with Google
+            Sing up with Google
           </ion-button>
           <ion-button fill="outline" (click)="loginWithApple()">
             <ion-icon name="logo-apple" slot="start" />
-            Continue with Apple
+            Sing up with Apple
+          </ion-button>
+          <ion-button fill="outline" (click)="this.authSegmentChoice = enumAuthSegment.register_email">
+            <ion-icon name="mail" slot="start" />
+            Sing up with Email
           </ion-button>
         </article>
+        <hr />
+        <article class="action">
+          <span>Already a member?</span>
+          <ion-button fill="outline" color="primary" (click)="this.authSegmentChoice = enumAuthSegment.login">
+            <b>Log in</b>
+          </ion-button>
+        </article>
+      </section>
+    }
+    @case (enumAuthSegment.register_email) {
+      <section>
         <form [formGroup]="signupForm">
           <ion-list lines="full">
             <ion-item>
@@ -136,9 +166,7 @@
               }
             }
           </ion-list>
-          <div class="action">
-            <ion-button class="submit_button" color="primary" (click)="signUpUser()" [disabled]="!signupForm.valid">Register</ion-button>
-          </div>
+          <ion-button color="primary" (click)="signUpUser()" [disabled]="!signupForm.valid" class="main-action">Register</ion-button>
         </form>
         <p class="terms">By signing up, you agree with the
           <b (click)="this.authSegmentChoice = enumAuthSegment.terms">Terms of Service</b>, <b (click)="this.authSegmentChoice = enumAuthSegment.privacy_policy">Privacy Policy</b>, as well as to receive occasional emails from us.
@@ -146,7 +174,7 @@
         <hr />
         <article class="action">
           <span>Already a member?</span>
-          <ion-button fill="clear" (click)="this.authSegmentChoice = enumAuthSegment.login">
+          <ion-button fill="outline" color="primary" (click)="this.authSegmentChoice = enumAuthSegment.login">
             <b>Log in</b>
           </ion-button>
         </article>

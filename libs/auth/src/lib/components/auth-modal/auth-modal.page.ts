@@ -16,7 +16,7 @@ import { combineLatest, map, of } from 'rxjs'
 
 import { IonButton, IonIcon, IonHeader, IonToolbar, IonButtons, IonContent, IonList, IonItem, IonInput, NavParams, LoadingController, AlertController, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
-import { close, arrowBack, logoGoogle, logoApple, eyeOffOutline, eyeOutline } from 'ionicons/icons'
+import { close, arrowBack, logoGoogle, logoApple, eyeOffOutline, eyeOutline, mail } from 'ionicons/icons'
 
 import { Capacitor } from '@capacitor/core'
 
@@ -33,7 +33,9 @@ import { WelcomeModalComponent } from '../welcome/welcome.modal'
 
 export enum enumAuthSegment {
   login,
+  login_email,
   register,
+  register_email,
   forgot_password,
   terms,
   privacy_policy
@@ -157,7 +159,7 @@ export class AuthModalComponent implements OnInit {
 
   constructor() {
     window.history.pushState(null, '', window.location.href)
-    addIcons({ close, arrowBack, logoGoogle, logoApple, eyeOffOutline, eyeOutline })
+    addIcons({ close, arrowBack, logoGoogle, logoApple, eyeOffOutline, eyeOutline, mail })
   }
 
   ngOnInit() {
