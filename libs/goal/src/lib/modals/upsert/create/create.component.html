@@ -1,6 +1,6 @@
 @if (stepper$ | async; as step) {
   <ion-header class="ion-no-border">
-    <ion-toolbar color="primary">
+    <ion-toolbar>
       <ion-buttons slot="end">
         <ion-button (click)="close()">
           <ion-icon slot="icon-only" name="close" />
@@ -42,7 +42,7 @@
       </ion-content>
     }
   }
-  <ion-footer>
+  <ion-footer class="ion-no-border">
     <ion-toolbar>
       @if (step !== 'details') {
         <ion-buttons slot="start">

@@ -258,6 +258,10 @@ ion-select:not(.legacy-select) {
   padding-left: 16px;
 }
 
+ion-toolbar {
+  --background: var(--ion-background-color);
+}
+
 /* Classes */
 button.alert-button.alert-button-delete {
   color: var(--ion-color-danger);
