@@ -1,4 +1,4 @@
-<strive-header-modal (dismiss)="dismiss()">
+<strive-header-modal (dismiss)="dismiss()" [transparent]="true">
   @if (canEdit && form.touched) {
     <header class="header">
       <ion-button fill="clear" disabled color="primary">
@@ -28,7 +28,7 @@
 
     @if (milestone.deadline) {
       <section>
-        <div (click)="openDatepicker()" class="deadline" [ngClass]="{'clickable': canEdit}">
+        <div (click)="openDatepicker()" class="deadline" [ngClass]="{'clickable': canEdit && milestone.status !== 'failed' && milestone.status !== 'succeeded'}">
           <ion-icon name="alarm-outline" />
           <small>{{ milestone.deadline | date: 'MMM d, y' }}</small>
         </div>
@@ -67,22 +67,22 @@
         <ion-button (click)="deleteMilestone()" class="danger" size="small">
           <ion-icon slot="icon-only" name="trash-outline" size="small" />
         </ion-button>
+        @if (!showDescription && !milestone.description) {
+          <ion-button (click)="showDescription = true" class="primary" size="small">
+            <ion-icon name="reorder-four-outline" slot="start" />
+            <span>Description</span>
+          </ion-button>
+        }
         @if (!milestone.deadline) {
-          <ion-button (click)="openDatepicker()" class="primary" size="small">
+          <ion-button (click)="openDatepicker()" class="primary" size="small" [disabled]="milestone.status === 'failed' || milestone.status === 'succeeded'">
             <ion-icon name="alarm-outline" slot="start" />
             <span>Deadline</span>
           </ion-button>
         }
         @if (goal.numberOfAchievers > 1 && !milestone.achiever?.uid) {
-          <ion-button (click)="toggleAssignMe()" class="primary" size="small">
+          <ion-button (click)="toggleAssignMe()" class="primary" size="small" [disabled]="milestone.status === 'failed' || milestone.status === 'succeeded'">
             <ion-icon name="person-outline" slot="start" />
             <span>Assign me</span>
-          </ion-button>
-        }
-        @if (!showDescription && !milestone.description) {
-          <ion-button (click)="showDescription = true" class="primary" size="small">
-            <ion-icon name="reorder-four-outline" slot="start" />
-            <span>Description</span>
           </ion-button>
         }
       </section>

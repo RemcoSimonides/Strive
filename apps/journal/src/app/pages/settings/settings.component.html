@@ -38,6 +38,8 @@
           <ion-icon size="small" name="download-outline" />
         </ion-item>
       }
+    </ion-list>
+    <ion-list lines="full">
       <ion-list-header>Account</ion-list-header>
       <ion-item button routerLink="/edit-profile">
         <ion-label>Edit Profile</ion-label>
@@ -45,7 +47,9 @@
       <ion-item button (click)="signOut()" lines="none">
         <ion-label>Log out</ion-label>
       </ion-item>
+    </ion-list>
 
+    <ion-list>
       <ion-list-header>Notifications</ion-list-header>
       <ion-item button routerLink="email-notifications">
         <ion-label>Email Notifications</ion-label>
@@ -53,8 +57,8 @@
       <ion-item button routerLink="push-notifications" lines="none">
         <ion-label>Push Notifications</ion-label>
       </ion-item>
-
-
+    </ion-list>
+    <ion-list>
       <ion-list-header>Support</ion-list-header>
       <ion-item button href="https://blog.strivejournal.com/intro" target="_blank">
         <ion-label>Guides</ion-label>
@@ -70,7 +74,8 @@
         <ion-label>Questions or Feedback</ion-label>
         <ion-icon size="small" name="open-outline" />
       </ion-item>
-
+    </ion-list>
+    <ion-list>
       <ion-list-header>Legal</ion-list-header>
       <ion-item button routerLink="/terms">
         <ion-label>Terms of Use</ion-label>
