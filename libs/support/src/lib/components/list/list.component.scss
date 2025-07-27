@@ -1,7 +1,7 @@
 ion-list {
   ion-item {
-    --inner-padding-bottom: 4px;
-    --inner-padding-top: 4px;
+    --inner-padding-bottom: 8px;
+    --inner-padding-top: 8px;
 
     small {
       color: var(--ion-color-medium);
@@ -10,7 +10,7 @@ ion-list {
     ion-label {
       display: flex;
       gap: 4px;
-    } 
+    }
   }
 
   article {

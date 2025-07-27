@@ -19,6 +19,7 @@
                 asset="profile.png"
                 alt="profile picture"
                 (click)="editProfileImage(profile, $event)"
+                tabindex="0"
                 [width]="600"
                 [height]="600"
               />
@@ -32,15 +33,15 @@
             </ion-button>
           </article>
           <ul>
-            <li (click)="openFollowers()" class="clickable">
+            <li (click)="openFollowers()" class="clickable" (keyup.enter)="openFollowers()" tabindex="0">
               <span class="number">{{ profile.numberOfSpectators }}</span>
               <span>Followers</span>
             </li>
-            <li (click)="openFollowing()" class="clickable">
+            <li (click)="openFollowing()" class="clickable" (keyup.enter)="openFollowing()" tabindex="0">
               <span class="number">{{ profile.numberOfSpectating }}</span>
               <span>Following</span>
             </li>
-            <li (click)="openSupporting()" class="clickable">
+            <li (click)="openSupporting()" class="clickable" (keyup.enter)="openSupporting()" tabindex="0">
               <span class="number">{{ (supportingGoals$ | async)?.length ?? 0 }}</span>
               <span>Goals supported</span>
             </li>
