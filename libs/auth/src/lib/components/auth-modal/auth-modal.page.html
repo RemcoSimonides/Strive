@@ -1,5 +1,5 @@
 <ng-template #backButton>
-  @if (authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register || authSegmentChoice === enumAuthSegment.forgot_password) {
+  @if (authSegmentChoice === enumAuthSegment.login || authSegmentChoice === enumAuthSegment.register) {
     <ion-button fill="clear" (click)="dismiss(false)">
       <ion-icon name="close" slot="icon-only" />
     </ion-button>
