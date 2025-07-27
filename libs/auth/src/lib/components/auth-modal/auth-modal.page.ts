@@ -237,10 +237,10 @@ export class AuthModalComponent implements OnInit {
 
   onEnter() {
     switch (this.authSegmentChoice) {
-      case enumAuthSegment.login:
+      case enumAuthSegment.login_email:
         this.loginUser()
         break
-      case enumAuthSegment.register:
+      case enumAuthSegment.register_email:
         this.signUpUser()
         break
       case enumAuthSegment.forgot_password:

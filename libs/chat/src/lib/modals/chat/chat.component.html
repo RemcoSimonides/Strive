@@ -20,7 +20,7 @@
 						<img [ref]="comment.user?.photoURL" asset="profile.png" [width]="120" [height]="120"/>
 						<article>
 							<small class="username"><b>{{ comment.user?.username }}</b></small>
-							<div class="comment" [innerHTML]="comment.text | toHTML | toThinking: comment | async"></div>
+							<div class="comment" [innerHTML]="(comment.text || comment.answerRaw) | toHTML | toThinking: comment | async"></div>
 							<small class="date">{{ comment.createdAt | timeAgo }}</small>
 						</article>
 					</li>

@@ -5,6 +5,8 @@ export interface Comment {
   text: string
   userId: string
   status?: MessageStatus // only for chatgpt
+  answerParsed?: string // only for chatgpt
+  answerRaw?: string // only for chatgpt
   createdAt: Date
   updatedAt: Date
 }
