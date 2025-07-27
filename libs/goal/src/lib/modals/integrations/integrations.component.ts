@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, Pipe, PipeTransform, inject } from '@angular/core'
 
-import { IonContent, IonTitle } from '@ionic/angular/standalone'
+import { IonContent } from '@ionic/angular/standalone'
 import { BehaviorSubject, combineLatest, filter, map, switchMap, tap } from 'rxjs'
 import { where } from 'firebase/firestore'
 
@@ -38,8 +38,7 @@ export class StravaActivitiesPipe implements PipeTransform {
         HeaderModalComponent,
         PageLoadingComponent,
         ImageDirective,
-        IonContent,
-        IonTitle
+        IonContent
     ]
 })
 export class IntegrationsComponent extends ModalDirective implements OnInit {

@@ -15,7 +15,8 @@ function replaceURLs(value: string) {
 
 @Pipe({ name: 'toHTML', standalone: true })
 export class HTMLPipe implements PipeTransform {
-  transform(value: string) {
+  transform(value?: string) {
+    if (!value) return ''
     return replaceURLs(value)
   }
 }
