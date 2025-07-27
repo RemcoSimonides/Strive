@@ -1,20 +1,23 @@
-<strive-header-modal (dismiss)="dismiss()">
-  <ion-title>Integrations</ion-title>
+<strive-header-modal (dismiss)="dismiss()" [transparent]="true">
 </strive-header-modal>
 
 <ion-content class="ion-padding">
   @if (view$ | async; as view) {
 
     <h5>Active Integrations</h5>
-    <ul>
-      @for (integration of activeIntegrations; track integration) {
-        <li (click)="dismiss(integration.id)">
-          <img [asset]="integration.image" [alt]="integration.name" />
-          <span>{{ integration.name }}</span>
-          <small>{{ view.strava | activities }}</small>
-        </li>
-      }
-    </ul>
+    @if (activeIntegrations.length === 0) {
+      <small>No active integrations</small>
+    } @else {
+      <ul>
+        @for (integration of activeIntegrations; track integration) {
+          <li (click)="dismiss(integration.id)">
+            <img [asset]="integration.image" [alt]="integration.name" />
+            <span>{{ integration.name }}</span>
+            <small>{{ view.strava | activities }}</small>
+          </li>
+        }
+      </ul>
+    }
 
     @if (availableIntegrations.length) {
       <h5>Available Integrations</h5>
