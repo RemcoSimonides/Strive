@@ -35,22 +35,10 @@ header {
   position: relative;
 
   h1 {
-    margin-block: 64px;
+    margin-block: 128px;
     text-align: center;
     font-size: clamp(3rem, 10vw, 4rem);
-    background: -webkit-linear-gradient(#fbb35a, #a36213);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  svg {
-    position: absolute;
-    bottom: -1px;
-    width: 100%;
-    height: auto;
-    vertical-align: middle;
-    color: var(--ion-background-color);
+    color: var(--ion-color-dark);
   }
 }
 

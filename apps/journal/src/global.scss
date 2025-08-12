@@ -43,6 +43,13 @@ body[data-theme="dark"] {
   h1, h2, h3, h4, h5 {
     color: var(--ion-color-primary);
   }
+
+  h1#homepage-title {
+    background: -webkit-linear-gradient(#fbb35a, #a36213);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 a {

@@ -1,31 +1,26 @@
 <ion-content class="ion-no-padding">
   @if (theme$ | async; as theme) {
-    <header [ngStyle]="{'background': theme === 'light' ? 'var(--ion-color-dark)' : ''}" class="fade">
+    <header class="fade">
       <section>
         <article class="download">
           @if (showPlayStore) {
             <a href="https://play.google.com/store/apps/details?id=com.strive.journal" target="_blank">
-              <img class="download" asset="google_play.png"/>
+              <img class="download" asset="google_play.png" alt="download Android app"/>
             </a>
           }
           @if (showAppStore) {
             <a href="https://apps.apple.com/nl/app/strive-journal/id6444203026" target="_blank">
-              <img class="download" asset="app_store.png"/>
+              <img class="download" asset="app_store.png" alt="download iOS app"/>
             </a>
           }
         </article>
-        <h1><b>Stay focused on your goals</b> and help others achieve theirs</h1>
+        <h1 id="homepage-title"><b>Stay focused on your goals</b> and help others achieve theirs</h1>
       </section>
-      @if (theme === 'light') {
-        <svg width="1600" height="72.78" viewBox="0 0 1600 72.78" fill="none" xmlns="http://www.w3.org/2000/svg" id="wave">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M1600 5.01752V67V67.5V73H0V67.5V67V5.01752C168.421 51.3416 288.087 66.9763 399.587 67C399.757 67 399.926 67 400.096 67C492.191 66.9804 578.755 56.3217 682.673 43.5261C877.365 19.5532 1132.97 -11.9202 1600 5.01752Z" fill="currentColor"/>
-        </svg>
-      }
     </header>
     <section class="overview">
       <ul>
         <li class="main">
-          <img asset="home_demo.gif" class="demo fade left"/>
+          <img asset="home_demo.gif" class="demo fade left" alt="demo"/>
           <article class="fade right">
             <div>
               <h3>Set Goals</h3>
@@ -39,7 +34,7 @@
               <h3>Journal</h3>
               <p>Do you remember all you have achieved in life? You'll be surprised how much you've done in the last 5 years. Keep a Journal and be able to read back on all your accomplishments and failures.</p>
             </div>
-            <ion-button color="primary" (click)="openAuthModal()">
+            <ion-button fill="outline" color="primary" (click)="openAuthModal()">
               <span>Create goal</span>
               <ion-icon name="arrow-forward-outline" slot="end"/>
             </ion-button>
@@ -59,18 +54,12 @@
                 <ion-icon name="sunny-outline" slot="end"/>
               </ion-button>
             }
-            <ng-template #dark>
-              <ion-button (click)="toggleTheme()" color="dark">
-                <span>Switch to Light Mode</span>
-                <ion-icon name="sunny-outline" slot="end"/>
-              </ion-button>
-            </ng-template>
           </article>
-          <img asset="darklight.png" class="demo fade right small" />
+          <img asset="darklight.png" class="demo fade right small" alt="dark or light mode example" />
         </li>
         <hr class="fade" />
         <li routerLink="/exercise/self-reflect">
-          <img asset="home_self_reflect.png" class="fade left" />
+          <img asset="home_self_reflect.png" class="fade left" alt="self reflection exercise example"/>
           <article class="fade right">
             <h3>Self Reflect</h3>
             <p>What should you ask yourself every once in a while? Customize the questions to fullfil your needs.</p>
@@ -82,7 +71,7 @@
         </li>
         <hr class="fade" />
         <li routerLink="/exercise/dear-future-self" class="dear-future-self">
-          <img asset="home_dear_future_self.png" class="fade left" />
+          <img asset="home_dear_future_self.png" class="fade left" alt="dear future self exercise example"/>
           <article class="fade right">
             <h3>Dear Future Self</h3>
             <p>Write a letter to your future self. What does your live look like in 5 years? You'll be surprised how much of it will come true.</p>
@@ -94,7 +83,7 @@
         </li>
         <hr class="fade"/>
         <li routerLink="/exercise/wheel-of-life">
-          <img asset="home_wheel_of_life.png" class="fade left" />
+          <img asset="home_wheel_of_life.png" class="fade left" alt="wheel of life exercise example"/>
           <article class="fade right">
             <h3>Wheel of Life</h3>
             <p>Get insight in which areas in your life needs more attention and track results over the long term.</p>
@@ -106,7 +95,7 @@
         </li>
         <hr class="fade" />
         <li routerLink="/exercise/affirmations">
-          <img asset="home_affirmations.png" class="fade left" />
+          <img asset="home_affirmations.png" class="fade left" alt="affirmations exercise example"/>
           <article class="fade right">
             <h3>Affirmations</h3>
             <p>Set your own affirmations and receive them at set times. Affirmations will help your mind to prioritize positive thoughts over negative thoughts.</p>
@@ -118,7 +107,7 @@
         </li>
         <hr class="fade"/>
         <li routerLink="/exercise/daily-gratitude">
-          <img asset="home_daily_gratitude.png" class="fade left" />
+          <img asset="home_daily_gratitude.png" class="fade left" alt="daily gratitude exercise example"/>
           <article class="fade right">
             <h3>Daily Gratitude</h3>
             <p>What 3 things were you grateful for today? Receive a daily reminder and write down 3 things you were grateful for. Whatever you write down will be encrypted and saved.</p>
@@ -163,7 +152,7 @@
       <h3 class="fade">Guides</h3>
       <article>
         <ion-card href="https://blog.strivejournal.com/category/create-the-perfect-goal" target="_blank" class="fade left">
-          <img asset="home_goal_setting.png" loading='eager' />
+          <img asset="home_goal_setting.png" loading='eager' alt="goal setting blog"/>
           <ion-card-header>
             <ion-card-title>The Ultime Guide to Achieving Goals</ion-card-title>
           </ion-card-header>
@@ -173,13 +162,13 @@
               This guide walks you through important steps you have to think about before embarking on the journey...
             </ion-text>
             <ion-button fill="clear">
-              <span>Ccontinue reading</span>
+              <span>Continue reading</span>
               <ion-icon name="arrow-forward-outline" slot="end" />
             </ion-button>
           </ion-card-content>
         </ion-card>
         <ion-card href="https://blog.strivejournal.com/blog/dear-future-self" target="_blank" class="fade right">
-          <img asset="home_future_self_letter.png" loading='eager' />
+          <img asset="home_future_self_letter.png" loading='eager' alt="future self letter blog"/>
           <ion-card-header>
             <ion-card-title>Writing to your Future Self</ion-card-title>
           </ion-card-header>
