@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core'
 import { Affirmations, DailyGratitude, DearFutureSelf, SelfReflectSettings, WheelOfLifeSettings } from '@strive/model'
 import { DocumentSnapshot } from 'firebase/firestore'
-import { toDate, FireSubCollection } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 
 export type ExerciseSettings = Affirmations | DailyGratitude | WheelOfLifeSettings | DearFutureSelf | SelfReflectSettings
 

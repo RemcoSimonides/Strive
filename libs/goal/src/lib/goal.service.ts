@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, orderBy, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
-import { toDate, FireCollection, WriteOptions } from 'ngfire'
-import { joinWith } from '@strive/utils/firebase'
+import { FireCollection, WriteOptions } from 'ngfire'
+import { joinWith, toDate } from '@strive/utils/firebase'
 
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'

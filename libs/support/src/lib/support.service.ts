@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp, where } from 'firebase/firestore'
-import { toDate, FireSubCollection } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 
 import { of, switchMap, map, shareReplay } from 'rxjs'
 

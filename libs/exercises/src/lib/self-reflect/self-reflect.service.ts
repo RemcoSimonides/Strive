@@ -4,7 +4,8 @@ import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelf
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
 import { DocumentSnapshot, limit, orderBy, serverTimestamp, where } from 'firebase/firestore'
-import { FireSubCollection, toDate } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 import { firstValueFrom, map, switchMap, take } from 'rxjs'
 
 @Injectable({

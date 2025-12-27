@@ -7,7 +7,8 @@ import { FCM } from '@capacitor-community/fcm'
 
 import { arrayRemove, arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
-import { FireSubCollection, toDate } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 import { getAuth } from 'firebase/auth'
 
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'

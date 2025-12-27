@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { DocumentSnapshot, QueryDocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { toDate, FireSubCollection } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 
 import { Comment, createComment } from '@strive/model'
 

@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core'
 import { DocumentSnapshot, getDoc, getFirestore, doc, serverTimestamp } from 'firebase/firestore'
-import { FireAuth, toDate } from 'ngfire'
+import { FireAuth } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 import { setUser } from '@sentry/angular'
 
 import { createUser, User } from '@strive/model'

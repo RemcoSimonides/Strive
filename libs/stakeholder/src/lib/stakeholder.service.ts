@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, getDoc, serverTimestamp, doc } from 'firebase/firestore'
-import { toDate, FireSubCollection } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 
 import { AuthService } from '@strive/auth/auth.service'
 

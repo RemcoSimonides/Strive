@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { toDate, FireSubCollection } from 'ngfire'
+import { FireSubCollection } from 'ngfire'
+import { toDate } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { AES, enc } from 'crypto-js'
