@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 
 import { orderBy, where } from 'firebase/firestore'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 
 import { Observable, of } from 'rxjs'
 import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'

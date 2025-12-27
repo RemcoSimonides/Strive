@@ -7,7 +7,7 @@ import { addIcons } from 'ionicons'
 import { checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff } from 'ionicons/icons'
 
 import { orderBy, serverTimestamp, where } from 'firebase/firestore'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 
 import { combineLatest, Observable, of, Subscription } from 'rxjs'
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators'

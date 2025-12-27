@@ -6,7 +6,7 @@ import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel, IonButton,
 import { addIcons } from 'ionicons'
 import { ellipsisVertical } from 'ionicons/icons'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs'
 
 import { ImageDirective } from '@strive/media/directives/image.directive'

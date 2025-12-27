@@ -3,7 +3,7 @@ import { Router } from '@angular/router'
 import { CommonModule } from '@angular/common';
 import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel } from '@ionic/angular/standalone'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { map, switchMap, of } from 'rxjs'
 
 import { SpectatorService } from '../../spectator.service'

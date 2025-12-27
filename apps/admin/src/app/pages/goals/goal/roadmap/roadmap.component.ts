@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { orderBy } from 'firebase/firestore'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { Observable, of } from 'rxjs'
 import { createGoalStakeholder, Goal, Milestone } from '@strive/model'
 import { MilestoneService } from '@strive/roadmap/milestone.service'

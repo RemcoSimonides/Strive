@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { orderBy } from 'firebase/firestore'
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs'
 

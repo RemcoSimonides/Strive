@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 import { IonTitle, IonContent, IonList, IonItem, IonAvatar, IonLabel } from '@ionic/angular/standalone'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 
 import { map, of, switchMap } from 'rxjs'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'

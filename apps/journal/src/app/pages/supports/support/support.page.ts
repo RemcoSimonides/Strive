@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 
 import { IonContent } from '@ionic/angular/standalone'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { combineLatest, map, of, switchMap } from 'rxjs'
 
 import { SupportService } from '@strive/support/support.service'

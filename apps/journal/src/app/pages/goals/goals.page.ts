@@ -7,7 +7,7 @@ import { IonContent, IonRefresher, IonRefresherContent, IonThumbnail, IonIcon, I
 import { checkmarkOutline, add, lockClosedOutline, filterOutline } from 'ionicons/icons'
 import { addIcons } from 'ionicons'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { orderBy, where } from 'firebase/firestore'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { isBefore, min } from 'date-fns'

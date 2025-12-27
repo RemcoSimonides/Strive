@@ -8,7 +8,7 @@ import { arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, 
 
 // Firebase
 import { orderBy, OrderByDirection, where } from 'firebase/firestore'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 // Rxjs
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs'
 import { distinctUntilChanged, filter, map, shareReplay, switchMap, tap } from 'rxjs/operators'

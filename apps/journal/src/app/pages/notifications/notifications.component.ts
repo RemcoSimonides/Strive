@@ -7,7 +7,7 @@ import { addIcons } from 'ionicons'
 import { chevronUpOutline } from 'ionicons/icons'
 
 import { orderBy } from '@firebase/firestore'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 
 import { switchMap, tap, map } from 'rxjs/operators'
 import { Observable, of } from 'rxjs'

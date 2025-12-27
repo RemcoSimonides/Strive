@@ -5,7 +5,7 @@ import { addIcons } from 'ionicons'
 import { shareSocialOutline } from 'ionicons/icons'
 
 import { Share } from '@capacitor/share'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 import { captureException } from '@sentry/angular'
 import { BehaviorSubject, combineLatest, map, Observable, of, ReplaySubject, startWith, switchMap } from 'rxjs'
 

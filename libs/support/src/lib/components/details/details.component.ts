@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
-import { AlertController, IonList, IonItem, IonInput, IonButton, IonContent } from '@ionic/angular/standalone'
+import { AlertController, IonList, IonItem, IonInput, IonButton } from '@ionic/angular/standalone'
 
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 
 import { filter, map, Observable, of, shareReplay } from 'rxjs'
 

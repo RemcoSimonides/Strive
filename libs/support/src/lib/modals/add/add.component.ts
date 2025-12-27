@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonContent, IonTitle } from '@ionic/angular/standalone'
 
 import { where } from 'firebase/firestore'
-import { joinWith } from 'ngfire'
+import { joinWith } from '@strive/utils/firebase'
 
 import { combineLatest, map, Observable, of, switchMap } from 'rxjs'
 

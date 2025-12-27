@@ -7,7 +7,7 @@ import { addIcons } from 'ionicons'
 import { settingsOutline, send } from 'ionicons/icons'
 
 import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
-import { joinWith, toDate } from 'ngfire'
+import { joinWith, toDate } from '@strive/utils/firebase'
 
 import { BehaviorSubject, firstValueFrom, Observable, of, Subscription } from 'rxjs'
 import { distinctUntilChanged, filter, map, shareReplay, skip, switchMap } from 'rxjs/operators'
