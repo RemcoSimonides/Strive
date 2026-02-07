@@ -1,30 +1,34 @@
-import { Injectable } from '@angular/core'
-import { DocumentSnapshot, QueryDocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { inject, Injectable } from '@angular/core'
+import { addDoc, collection, collectionData, doc, Firestore, query, QueryConstraint, setDoc } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
 
 import { Comment, createComment } from '@strive/model'
+import { Observable } from 'rxjs'
+
+const converter = createConverter<Comment>(createComment)
 
 @Injectable({
   providedIn: 'root'
 })
-export class CommentService extends FireSubCollection<Comment> {
-  readonly path = `Goals/:goalId/Comments`
-  override readonly memorize = true
+export class CommentService {
+  private firestore = inject(Firestore)
 
-  protected override toFirestore(comment: Comment, actionType: 'add' | 'update'): Comment {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') comment.createdAt = timestamp
-    comment.updatedAt = timestamp
-
-    return comment
+  collectionData(queryConstraints: QueryConstraint[], options: { goalId: string }): Observable<Comment[]> {
+    const colPath = `Goals/${options.goalId}/ChatGPT`
+    const colRef = collection(this.firestore, colPath).withConverter(converter)
+    const q = query(colRef, ...queryConstraints)
+    return collectionData(q, { idField: 'id' })
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Comment> | QueryDocumentSnapshot<Comment>): Comment | undefined {
-    return snapshot.exists()
-      ? createComment(toDate({ ...snapshot.data(), id: snapshot.id }))
-      : undefined
-  }
+  upsert(payload: Comment, options: { goalId: string }) {
+      const colPath = `Goals/${options.goalId}/ChatGPT`
 
+      if (payload.id) {
+        const docRef = doc(this.firestore, `${colPath}/${payload.id}`).withConverter(converter)
+        return setDoc(docRef, payload, { merge: true })
+      } else {
+        const colRef = collection(this.firestore, colPath).withConverter(converter)
+        return addDoc(colRef, payload)
+      }
+    }
 }

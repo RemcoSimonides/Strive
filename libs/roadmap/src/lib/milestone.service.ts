@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
+import { addDoc, collectionData as _collectionData, collection, deleteDoc, doc, docData as _docData, DocumentData, Firestore, FirestoreDataConverter, getDocs, query, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, setDoc, SnapshotOptions } from '@angular/fire/firestore'
 import { toDate } from '@strive/utils/firebase'
+import { Observable } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'
 
@@ -9,30 +9,95 @@ import { createMilestone, Milestone } from '@strive/model'
 import { endOfDay } from 'date-fns'
 
 @Injectable({ providedIn: 'root' })
-export class MilestoneService extends FireSubCollection<Milestone> {
-  private auth = inject(AuthService);
+export class MilestoneService {
+  private firestore = inject(Firestore)
+  private auth = inject(AuthService)
 
-  readonly path = 'Goals/:goalId/Milestones'
-  override readonly memorize = false
+  private converter: FirestoreDataConverter<Milestone | undefined> = {
+    toFirestore: (milestone: Milestone) => {
+      if (milestone.deadline) milestone.deadline = endOfDay(milestone.deadline)
 
-  constructor() {
-    super()
+      const isUpdate = !!milestone['id']
+      const timestamp = serverTimestamp()
+      const data = { ...milestone } as DocumentData
+
+      if (!isUpdate) {
+        data['createdAt'] = timestamp
+      }
+      data['updatedBy'] = this.auth.uid()
+      data['updatedAt'] = timestamp
+
+      delete data['id']
+      return data
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data(options)
+        return createMilestone(toDate({ ...data, id: snapshot.id, path: snapshot.ref.path }))
+      } else {
+        return undefined
+      }
+    }
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Milestone>) {
-    return snapshot.exists()
-      ? createMilestone(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
-      : undefined
+  docData(milestoneId: string, options: { goalId: string }): Observable<Milestone | undefined> {
+    const docRef = doc(this.firestore, `Goals/${options.goalId}/Milestones/${milestoneId}`).withConverter(this.converter)
+    return _docData(docRef)
   }
 
-  protected override toFirestore(milestone: Milestone, actionType: 'add' | 'update'): Milestone {
-    const timestamp = serverTimestamp() as any
-    if (milestone.deadline) milestone.deadline = endOfDay(milestone.deadline)
-    if (actionType === 'add') milestone.createdAt = timestamp
+  collectionData(constraints: QueryConstraint[], options: { goalId: string }): Observable<Milestone[]> {
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/Milestones`).withConverter(this.converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q, { idField: 'id' })
+  }
 
-    milestone.updatedBy = this.auth.uid
-    milestone.updatedAt = timestamp
+  async getDocs(constraints: QueryConstraint[], options: { goalId: string }): Promise<Milestone[]> {
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/Milestones`).withConverter(this.converter)
+    const q = query(colRef, ...constraints)
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map(d => d.data()).filter((m): m is Milestone => !!m)
+  }
 
-    return milestone
+  async add(milestone: Milestone | Milestone[], options: { goalId: string }): Promise<string | string[]> {
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/Milestones`).withConverter(this.converter)
+    if (Array.isArray(milestone)) {
+      const ids: string[] = []
+      for (const m of milestone) {
+        const docRef = await addDoc(colRef, m)
+        ids.push(docRef.id)
+      }
+      return ids
+    }
+    const docRef = await addDoc(colRef, milestone)
+    return docRef.id
+  }
+
+  upsert(milestone: Partial<Milestone> & { id: string }, options: { goalId: string }) {
+    const docRef = doc(this.firestore, `Goals/${options.goalId}/Milestones/${milestone.id}`).withConverter(this.converter)
+    return setDoc(docRef, milestone as Milestone, { merge: true })
+  }
+
+  update(milestone: Partial<Milestone> & { id: string }, options: { goalId: string }): Promise<void>
+  update(milestoneId: string, data: Partial<Milestone>, options: { goalId: string }): Promise<void>
+  update(milestoneOrId: (Partial<Milestone> & { id: string }) | string, dataOrOptions: Partial<Milestone> | { goalId: string }, maybeOptions?: { goalId: string }): Promise<void> {
+    let id: string
+    let data: Partial<Milestone>
+    let goalId: string
+    if (typeof milestoneOrId === 'string') {
+      id = milestoneOrId
+      data = dataOrOptions as Partial<Milestone>
+      goalId = maybeOptions!.goalId
+    } else {
+      id = milestoneOrId.id
+      data = milestoneOrId
+      goalId = (dataOrOptions as { goalId: string }).goalId
+    }
+    const docRef = doc(this.firestore, `Goals/${goalId}/Milestones/${id}`).withConverter(this.converter)
+    return setDoc(docRef, data as Milestone, { merge: true })
+  }
+
+  remove(milestoneId: string, options: { goalId: string }) {
+    const ref = doc(this.firestore, `Goals/${options.goalId}/Milestones/${milestoneId}`)
+    return deleteDoc(ref)
   }
 }

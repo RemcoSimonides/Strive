@@ -1,6 +1,6 @@
 <strive-header title="Edit Profile" />
 
-@if (isLoggedIn$ | async) {
+@if (isLoggedIn()) {
   <ion-content class="ion-no-padding">
     <main>
       <ion-card>
@@ -17,7 +17,7 @@
               class="primary"
             />
           </ion-item>
-          <strive-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid" />
+          <strive-image-selector [form]="form.photoURL" [storagePath]="'profiles/' + uid()" />
           <ion-button color="primary" [disabled]="form.invalid" (click)="update()">Save</ion-button>
         </ion-card-content>
       </ion-card>

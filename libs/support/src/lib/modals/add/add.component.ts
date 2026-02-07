@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angu
 import { CommonModule } from '@angular/common';
 import { IonContent, IonTitle } from '@ionic/angular/standalone'
 
-import { where } from 'firebase/firestore'
+import { where } from '@angular/fire/firestore'
 import { joinWith } from '@strive/utils/firebase'
 
 import { combineLatest, map, Observable, of, switchMap } from 'rxjs'
@@ -54,12 +54,12 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
         const params = { goalId: this.goal.id }
 
         const recipientQuery = this.milestone
-          ? this.support.valueChanges([where('recipientId', '==', user.uid), where('milestoneId', '==', this.milestone.id)], params)
-          : this.support.valueChanges([where('recipientId', '==', user.uid)], params)
+          ? this.support.collectionData([where('recipientId', '==', user.uid), where('milestoneId', '==', this.milestone.id)], params)
+          : this.support.collectionData([where('recipientId', '==', user.uid)], params)
 
         const supporterQuery = this.milestone
-          ? this.support.valueChanges([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone?.id),], params)
-          : this.support.valueChanges([where('supporterId', '==', user.uid)], params)
+          ? this.support.collectionData([where('supporterId', '==', user.uid), where('milestoneId', '==', this.milestone?.id),], params)
+          : this.support.collectionData([where('supporterId', '==', user.uid)], params)
 
         return combineLatest([
           supporterQuery,
@@ -71,8 +71,8 @@ export class AddSupportModalComponent extends ModalDirective implements OnInit {
       joinWith({
         goal: () => this.goal,
         milestone: () => this.milestone,
-        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
-        supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
+        recipient: ({ recipientId }) => this.profileService.docData(recipientId),
+        supporter: ({ supporterId }) => this.profileService.docData(supporterId)
       }, { shouldAwait: true }),
       map(groupByObjective),
       map(sortGroupedSupports)

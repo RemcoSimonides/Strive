@@ -1,4 +1,4 @@
-@if ((isLoggedIn$ | async) === false) {
+@if ((isLoggedIn()) === false) {
   <strive-header-root/>
 }
 
@@ -246,7 +246,7 @@
                 </article>
               }
             </section>
-            @if (isLoggedIn$ | async) {
+            @if (isLoggedIn()) {
               <section class="supports">
                 <h5>Supports</h5>
                 <article>

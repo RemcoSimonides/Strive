@@ -49,18 +49,19 @@ export class SelfReflectSettingsComponent implements OnInit {
   form = new SelfReflectSettingsForm()
 
   private settings$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.valueChanges('SelfReflect', { uid: profile.uid }) : of(undefined)),
+    switchMap(profile => profile ? this.service.docData(profile.uid) : of(undefined)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
   constructor() {
 
     this.form.valueChanges.subscribe(() => {
-      if (!this.auth.uid) return
+      const uid = this.auth.uid()
+      if (!uid) return
 
       const raw = this.form.getRawValue()
       const settings = createSelfReflectSettings(raw)
-      this.service.save(this.auth.uid, settings)
+      this.service.save(uid, settings)
     })
   }
 

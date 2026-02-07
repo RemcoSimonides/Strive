@@ -30,16 +30,15 @@ export class GoalOptionsComponent {
   @Input() stakeholder!: GoalStakeholder
 
   markFinished() {
-    if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')
+    if (!this.auth.uid() || !this.goal?.id) throw new Error('uid or goal not provided')
     this.alertCtrl.create({
       header: `Are you sure its finished?`,
       buttons: [
         {
           text: 'Yes',
           handler: async () => {
-            if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')
-            this.goalService.update({
-              id: this.goal.id,
+            if (!this.auth.uid() || !this.goal?.id) throw new Error('uid or goal not provided')
+            this.goalService.update(this.goal.id, {
               status: 'succeeded'
             })
             this.modalCtrl.create({

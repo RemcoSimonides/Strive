@@ -87,12 +87,13 @@ export class DailyGratitudePageComponent implements OnDestroy {
     if (on) {
       this.openDatetime()
     } else {
-      if (!this.auth.uid) return
-      this.service.save(this.auth.uid, { on: false })
+      const uid = this.auth.uid()
+      if (!uid) return
+      this.service.save(uid, { on: false })
     }
   })
 
-  uid$ = this.auth.uid$
+  uid = this.auth.uid
 
   constructor() {
     this.seo.generateTags({
@@ -128,12 +129,12 @@ export class DailyGratitudePageComponent implements OnDestroy {
 
         const toDate = set(new Date(), { hours, minutes: date.getMinutes() })
         const performAt = isPast(toDate) ? addDays(toDate, 1) : toDate
-        this.service.save(this.auth.uid, { on: true, time: performAt })
+        this.service.save(this.auth.uid() ?? '', { on: true, time: performAt })
       }
 
       if (role === 'remove') {
         this.form.get('on')?.setValue(false)
-        this.service.save(this.auth.uid, { on: false })
+        this.service.save(this.auth.uid() ?? '', { on: false })
       }
 
       this.cdr.markForCheck()

@@ -12,9 +12,8 @@
       </small>
     </section>
 
-    <ng-container *ngIf="!isLoading else loading">
-      <ng-container *ngIf="uid$ | async else login">
-
+    @if (!isLoading) {
+      @if (uid()) {
         <strive-exercise-activate-push-notification/>
 
         <section>
@@ -88,19 +87,15 @@
             </ion-item>
           </ion-list>
         </section>
-      </ng-container>
-    </ng-container>
-
-    <ng-template #loading>
+      } @else {
+        <section class="not-logged-in">
+          <p>
+            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
+          </p>
+        </section>
+      }
+    } @else {
       <strive-page-loading/>
-    </ng-template>
-
-    <ng-template #login>
-      <section class="not-logged-in">
-        <p>
-          <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
-        </p>
-      </section>
-    </ng-template>
+    }
   </main>
 </ion-content>

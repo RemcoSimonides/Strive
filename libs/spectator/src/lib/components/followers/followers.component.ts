@@ -45,7 +45,7 @@ export class FollowersComponent extends ModalDirective {
     }),
     switchMap(uid => uid ? this.service.getSpectators(uid) : of([])),
     joinWith({
-      profile: spectator => this.profileService.valueChanges(spectator.uid)
+      profile: spectator => this.profileService.docData(spectator.uid)
     }, { shouldAwait: true })
   )
 

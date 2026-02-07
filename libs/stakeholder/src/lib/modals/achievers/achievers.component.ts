@@ -66,9 +66,9 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     this.view$ = combineLatest([
       this.auth.user$,
-      this.stakeholderService.valueChanges({ goalId: this.goalId }).pipe(
+      this.stakeholderService.collectionData([], { goalId: this.goalId }).pipe(
         joinWith({
-          profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+          profile: stakeholder => this.profileService.docData(stakeholder.uid)
         }, { shouldAwait: true })
       )
     ]).pipe(
@@ -102,7 +102,7 @@ export class AchieversModalComponent extends ModalDirective implements OnInit {
           {
             text: 'Yes',
             handler: () => {
-              this.stakeholderService.remove(you.uid, { params: { goalId: this.goalId } })
+              this.stakeholderService.remove(you.uid, { goalId: this.goalId })
               this.dismiss()
             }
           },

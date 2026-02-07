@@ -52,7 +52,7 @@ export class UserPage {
     this.route.params.subscribe(params => {
       const uid = params['uid'] as string
 
-      this.user$ = this.profileService.valueChanges(uid).pipe(
+      this.user$ = this.profileService.docData(uid).pipe(
         tap(user => this.userForm.patchValue(createUser(user))),
         shareReplay({ bufferSize: 1, refCount: true })
       )

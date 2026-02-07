@@ -23,7 +23,6 @@ import { PersonalService } from '@strive/user/personal.service'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { TimeToGoPipe } from '@strive/utils/pipes/time-to-go.pipe'
 import { TimeAgoPipe } from '@strive/utils/pipes/time-ago.pipe'
-import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 
 const initial = `Dear Future Self,
@@ -92,7 +91,7 @@ export class DearFutureSelfPageComponent {
     map(messages => messages.filter(message => isPast(message.deliveryDate as Date)))
   )
 
-  isLoggedIn$ = this.auth.isLoggedIn$
+  isLoggedIn = this.auth.isLoggedIn
 
   state: 'writing' | 'sending' | 'sent' = 'writing'
 
@@ -105,7 +104,8 @@ export class DearFutureSelfPageComponent {
   }
 
   async send() {
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
     if (!this.description.dirty || !this.description.value) return
 
     let deliveryDate: Date
@@ -132,7 +132,7 @@ export class DearFutureSelfPageComponent {
       createdAt: new Date()
     }
 
-    await this.dearFutureSelfService.addMessage(this.auth.uid, message)
+    await this.dearFutureSelfService.addMessage(uid, message)
 
     this.description.reset(initial)
     this.date.reset()

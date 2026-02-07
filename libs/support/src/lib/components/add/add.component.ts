@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { IonList, IonItem, IonInput, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 
-import { where } from 'firebase/firestore'
+import { where } from '@angular/fire/firestore'
 
 import { createSupportBase, Goal, Milestone } from '@strive/model'
 
@@ -41,7 +41,8 @@ export class AddSupportComponent {
 
   async addSupport() {
     if (this.form.invalid) return
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
     if (!this.goal) return
 
     const goalId = this.goal.id
@@ -50,22 +51,22 @@ export class AddSupportComponent {
       description: this.form.value,
       goalId: this.goal.id,
       milestoneId: this.milestone?.id,
-      supporterId: this.auth.uid
+      supporterId: uid
     })
 
     if (this.milestone?.achieverId) {
       support.recipientId = this.milestone.achieverId
       this.form.setValue('')
-      return this.supportService.add(support, { params: { goalId } })
+      return this.supportService.upsert(support, { goalId })
     }
 
-    const stakeholders = await this.stakeholderService.getValue([where('isAchiever', '==', true)], { goalId })
-    const profiles = await this.profileService.getValue(stakeholders.map(a => a.uid))
+    const stakeholders = await this.stakeholderService.getDocs([where('isAchiever', '==', true)], { goalId })
+    const profiles = await this.profileService.getDocs(stakeholders.map(s => s.uid))
     const achievers = stakeholders.map(stakeholder => ({ ...stakeholder, profile: profiles.find(profile => profile.uid === stakeholder.uid) }))
     if (achievers.length === 1) {
       support.recipientId = achievers[0].uid
       this.form.setValue('')
-      return this.supportService.add(support, { params: { goalId } })
+      return this.supportService.upsert(support, { goalId })
     } else {
       const recipients: string[] = []
       const modal = await this.modalCtrl.create({
@@ -75,7 +76,7 @@ export class AddSupportComponent {
       modal.onDidDismiss().then(() => {
         for (const recipientId of recipients) {
           const result = createSupportBase({ ...support, recipientId })
-          this.supportService.add(result, { params: { goalId } })
+          this.supportService.upsert(result, { goalId })
         }
       })
       modal.present()

@@ -12,7 +12,7 @@
       </small>
     </section>
 
-    @if (isLoggedIn$ | async) {
+    @if (isLoggedIn()) {
       <ion-card class="ion-padding">
         @if (state !== 'sent') {
           <section>

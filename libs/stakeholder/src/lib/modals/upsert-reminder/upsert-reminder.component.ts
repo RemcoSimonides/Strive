@@ -65,9 +65,9 @@ export class UpsertReminderModalComponent extends ModalDirective implements OnIn
 
     const reminder = createReminder(this.form.value)
     if (reminder.id) {
-      this.reminderService.upsert(reminder, { params: { goalId: this.goalId, uid: this.stakeholderId } })
+      this.reminderService.upsert(reminder, { goalId: this.goalId, uid: this.stakeholderId })
     } else {
-      this.reminderService.add(reminder, { params: { goalId: this.goalId, uid: this.stakeholderId } })
+      this.reminderService.add(reminder, { goalId: this.goalId, uid: this.stakeholderId })
     }
     this.dismiss()
   }
@@ -81,7 +81,7 @@ export class UpsertReminderModalComponent extends ModalDirective implements OnIn
           text: 'Yes',
           handler: () => {
             if (!this.reminder?.id) return
-            this.reminderService.remove(this.reminder.id, { params: { goalId: this.goalId, uid: this.stakeholderId } })
+            this.reminderService.remove(this.reminder.id, { goalId: this.goalId, uid: this.stakeholderId })
             this.dismiss()
           }
         },

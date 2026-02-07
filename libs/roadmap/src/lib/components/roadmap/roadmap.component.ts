@@ -6,7 +6,7 @@ import { AlertController, IonList, IonReorderGroup, IonItemSliding, IonItem, Ion
 import { addIcons } from 'ionicons'
 import { chatboxOutline, listOutline, alarmOutline, trashOutline } from 'ionicons/icons'
 
-import { serverTimestamp } from 'firebase/firestore'
+import { serverTimestamp } from '@angular/fire/firestore'
 
 import { createGoalStakeholder, createPost, Goal, GoalStakeholder, MilestoneStatus, StoryItem, Support } from '@strive/model'
 
@@ -111,7 +111,7 @@ export class RoadmapComponent {
           id: milestone.id,
           status,
           finishedAt: serverTimestamp() as any
-        }, { params: { goalId: this.goal.id } })
+        }, { goalId: this.goal.id })
         milestone.status = status
         this.cdr.markForCheck()
 
@@ -203,7 +203,9 @@ export class RoadmapComponent {
     const max = Math.max(from, to)
     const milestonesToUpdate = this.milestones.filter(milestone => milestone.order >= min && milestone.order <= max).map(milestone => ({ id: milestone.id, order: milestone.order }))
 
-    this.milestone.update(milestonesToUpdate, { params: { goalId: this.goal.id } })
+    for (const m of milestonesToUpdate) {
+      this.milestone.update(m as Partial<Milestone> & { id: string }, { goalId: this.goal.id })
+    }
     ev.detail.complete()
   }
 
@@ -214,7 +216,7 @@ export class RoadmapComponent {
         ...this.milestoneForm.getRawValue(),
         status: this.goal.status !== 'pending' && this.createMode ? 'succeeded' : 'pending'
       })
-      this.milestone.add(milestone, { params: { goalId: this.goal.id } })
+      this.milestone.add(milestone, { goalId: this.goal.id })
       this.milestoneForm.reset(createMilestone())
     }
   }
@@ -253,7 +255,7 @@ export class RoadmapComponent {
     alert.onDidDismiss().then((res) => {
       if (res.role == 'delete') {
         if (!milestone.id) return
-        this.milestone.update(milestone.id, { deletedAt: serverTimestamp() }, { params: { goalId: this.goal.id } })
+        this.milestone.update(milestone.id, { deletedAt: serverTimestamp() as any }, { goalId: this.goal.id })
       }
     })
     alert.present()
@@ -263,7 +265,7 @@ export class RoadmapComponent {
     if (milestone.status !== 'pending') return
     event.stopPropagation()
 
-    if (!this.auth.uid) {
+    if (!this.auth.uid()) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {

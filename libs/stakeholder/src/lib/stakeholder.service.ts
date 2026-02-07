@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core'
-import { DocumentSnapshot, getDoc, serverTimestamp, doc } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
+import { getDoc, getDocs, serverTimestamp, collectionData as _collectionData, collectionGroup, doc, docData as _docData, deleteDoc, FirestoreDataConverter, DocumentData, QueryDocumentSnapshot, SnapshotOptions, collection, Firestore, addDoc, setDoc, QueryConstraint, query, UpdateData } from '@angular/fire/firestore'
 import { toDate } from '@strive/utils/firebase'
 
 import { AuthService } from '@strive/auth/auth.service'
 
 import { GoalStakeholder, createGoalStakeholder, createGoal } from '@strive/model'
+import { Observable } from 'rxjs'
 
 export interface roleArgs {
   isAdmin?: boolean
@@ -18,61 +18,115 @@ export interface roleArgs {
 @Injectable({
   providedIn: 'root'
 })
-export class GoalStakeholderService extends FireSubCollection<GoalStakeholder> {
+export class GoalStakeholderService {
+  private firestore = inject(Firestore)
   private auth = inject(AuthService);
 
-  readonly path = 'Goals/:goalId/GStakeholders'
-  override readonly idKey = 'uid'
-  override readonly memorize = true
+  converter: FirestoreDataConverter<GoalStakeholder | undefined> = {
+    toFirestore: (payload: GoalStakeholder) => {
+      const isUpdate = !!payload['uid'];
+      const timestamp = serverTimestamp();
+      const data = { ...payload } as DocumentData;
 
-  constructor() {
-    super()
-  }
+      if (!isUpdate) {
+        data['createdAt'] = timestamp;
+      }
+      data['updatedAt'] = timestamp;
+      data['updatedBy'] = this.auth.uid()
 
-  override fromFirestore(snapshot: DocumentSnapshot<GoalStakeholder>) {
-    return snapshot.exists()
-      ? createGoalStakeholder(toDate({ ...snapshot.data(), uid: snapshot.id, path: snapshot.ref.path }))
-      : undefined
-  }
+      return payload
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data(options);
 
-  override async toFirestore(stakeholder: GoalStakeholder, actionType: 'add' | 'update'): Promise<GoalStakeholder> {
-    const timestamp = serverTimestamp() as any
+        const dataWithId = {
+          ...data,
+          uid: snapshot.id,
+        };
 
-    if (actionType === 'add') {
-      if (!stakeholder.goalId) { throw new Error('Goal id needs to be defined when creating goal stakeholder') }
-
-      // 👇 goal is empty goal object in case this stakeholder is created when goal is created. All stakeholders that join after, should have goal defined
-      const goal = await getDoc(doc(this.db, `Goals/${stakeholder.goalId}`)).then(snap => createGoal(snap.data()))
-
-      stakeholder = createGoalStakeholder({
-        ...stakeholder,
-        createdAt: timestamp,
-        goalPublicity: goal.publicity ? goal.publicity : stakeholder.goalPublicity,
-        collectiveGoalId: goal.collectiveGoalId ? goal.collectiveGoalId : ''
-      })
+        return createGoalStakeholder(toDate(dataWithId))
+      } else {
+        return undefined
+      }
     }
+  }
 
-    stakeholder.updatedAt = timestamp
-    stakeholder.updatedBy = this.auth.uid
+  docData(stakeholderId: string, options: { goalId: string }) {
+    const path = `Goals/${options.goalId}/GStakeholders/${stakeholderId}`
+    const ref = doc(this.firestore, path).withConverter(this.converter)
+    return _docData(ref)
+  }
 
-    return stakeholder
+  collectionData(constraints: QueryConstraint[], options?: { goalId: string }): Observable<GoalStakeholder[]> {
+    const path = `Goals/${options?.goalId}/GStakeholders`
+    const ref = options?.goalId
+      ? collection(this.firestore, path).withConverter(this.converter)
+      : collectionGroup(this.firestore, 'GStakeholders').withConverter(this.converter)
+    const q = query(ref, ...constraints)
+    return _collectionData(q, { idField: 'uid' })
+  }
+
+  getDoc(stakeholderId: string, params: { goalId: string }) {
+    const docPath = `Goals/${params.goalId}/GStakeholders/${stakeholderId}`
+    const docRef = doc(this.firestore, docPath).withConverter(this.converter)
+    return getDoc(docRef).then(snapshot => snapshot.data())
+  }
+
+  async getDocs(constraints: QueryConstraint[], options: { goalId: string }): Promise<GoalStakeholder[]> {
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/GStakeholders`).withConverter(this.converter)
+    const q = query(colRef, ...constraints)
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map(d => d.data()).filter((s): s is GoalStakeholder => !!s)
+  }
+
+  async create(stakeholder: GoalStakeholder, params: { goalId: string }) {
+
+    // 👇 goal is empty goal object in case this stakeholder is created when goal is created. All stakeholders that join after, should have goal defined
+    const goal = await getDoc(doc(this.firestore, `Goals/${stakeholder.goalId}`)).then(snap => createGoal(snap.data()))
+
+    stakeholder = createGoalStakeholder({
+      ...stakeholder,
+      goalPublicity: goal.publicity ? goal.publicity : stakeholder.goalPublicity,
+      collectiveGoalId: goal.collectiveGoalId ?? ''
+    })
+
+    const colRef = collection(this.firestore, `Goals/${params.goalId}/GStakeholders`).withConverter(this.converter)
+    return addDoc(colRef, stakeholder)
+  }
+
+  upsert(stakeholder: Partial<GoalStakeholder> & { uid: string }, options: { goalId: string }) {
+    const docRef = doc(this.firestore, `Goals/${options.goalId}/GStakeholders/${stakeholder.uid}`).withConverter(this.converter)
+    return setDoc(docRef, stakeholder as GoalStakeholder, { merge: true })
+  }
+
+  update(stakeholder: Partial<GoalStakeholder> & { uid: string }, options: { goalId: string }) {
+    const docRef = doc(this.firestore, `Goals/${options.goalId}/GStakeholders/${stakeholder.uid}`).withConverter(this.converter)
+    return setDoc(docRef, stakeholder as GoalStakeholder, { merge: true })
+  }
+
+  remove(uid: string, options: { goalId: string }) {
+    const ref = doc(this.firestore, `Goals/${options.goalId}/GStakeholders/${uid}`)
+    return deleteDoc(ref)
   }
 
   async updateLastCheckedGoal(goalId: string, uid: string) {
-    const stakeholder = await this.load(uid, { goalId })
+    const stakeholder = await this.getDoc(uid, { goalId })
     if (stakeholder) {
-      this.update(uid, {
+      this.update({
+        uid,
         lastCheckedGoal: serverTimestamp() as any
-      }, { params: { goalId } })
+      }, { goalId })
     }
   }
 
   async updateLastCheckedChat(goalId: string, uid: string) {
-    const stakeholder = await this.getValue(uid, { goalId })
+    const stakeholder = await this.getDoc(uid, { goalId })
     if (stakeholder) {
-      this.update(uid, {
+      this.update({
+        uid,
         lastCheckedChat: serverTimestamp() as any
-      }, { params: { goalId }})
+      }, { goalId })
     }
   }
 }

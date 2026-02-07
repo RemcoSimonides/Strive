@@ -22,7 +22,7 @@ class GetStakeholderPipe implements PipeTransform {
 
   transform(goal: Goal) {
     return this.auth.uid$.pipe(
-      switchMap(uid => uid ? this.stakeholder.valueChanges(uid, { goalId: goal.id }) : of(undefined)),
+      switchMap(uid => uid ? this.stakeholder.docData(uid, { goalId: goal.id }) : of(undefined)),
       map(stakeholder => createGoalStakeholder(stakeholder))
     )
   }
@@ -60,28 +60,30 @@ export class FollowGoalsModalComponent extends ModalDirective {
   }
 
   spectate(goalId: string, stakeholder: GoalStakeholder) {
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
 
     const { isSpectator } = stakeholder
     return this.stakeholderService.upsert({
-      uid: this.auth.uid,
+      uid,
       goalId,
       isSpectator: !isSpectator
-    }, { params: { goalId } })
+    }, { goalId })
   }
 
   spectateAll() {
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
 
     this.allSpectated.set(true)
     return this.goals.map(goal => {
       const stakeholder = createGoalStakeholder({
-        uid: this.auth.uid,
+        uid,
         goalId: goal.id,
         isSpectator: true
       })
 
-      return this.stakeholderService.upsert(stakeholder, { params: { goalId: goal.id } })
+      return this.stakeholderService.upsert(stakeholder, { goalId: goal.id })
     })
   }
 }

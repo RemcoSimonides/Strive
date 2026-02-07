@@ -3,81 +3,87 @@ import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry, createSelfReflectSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
-import { DocumentSnapshot, limit, orderBy, serverTimestamp, where } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
+import { collectionData as _collectionData, collection, doc, docData as _docData, Firestore, getDoc, query, QueryConstraint, setDoc, limit, orderBy, where } from '@angular/fire/firestore'
 import { toDate } from '@strive/utils/firebase'
-import { firstValueFrom, map, switchMap, take } from 'rxjs'
+import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore'
+import { firstValueFrom, map, Observable, switchMap, take } from 'rxjs'
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SelfReflectSettingsService extends FireSubCollection<SelfReflectSettings> {
-  readonly path = 'Users/:uid/Exercises'
-  override readonly memorize = true
-
-  protected override toFirestore(settings: SelfReflectSettings, actionType: 'add' | 'update'): SelfReflectSettings {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') settings.createdAt = timestamp
-    settings.updatedAt = timestamp
-
-    return settings
-  }
-
-  protected override fromFirestore(snapshot: DocumentSnapshot<SelfReflectSettings>): SelfReflectSettings | undefined {
+const settingsConverter: FirestoreDataConverter<SelfReflectSettings | undefined> = {
+  toFirestore: (payload: SelfReflectSettings) => {
+    const data = { ...payload } as DocumentData
+    delete data['id']
+    return data
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) => {
     if (!snapshot.exists()) return createSelfReflectSettings()
-    return createSelfReflectSettings(toDate({ ...snapshot.data(), id: snapshot.id }))
+    return createSelfReflectSettings(toDate({ ...snapshot.data(options), id: snapshot.id }))
   }
+}
 
-  getSettings(uid: string): Promise<SelfReflectSettings | undefined> {
-    return this.load('SelfReflect', { uid })
-  }
-
-  getSettings$(uid: string) {
-    return this.valueChanges('SelfReflect', { uid })
-  }
-
-  save(uid: string, settings: Partial<SelfReflectSettings>) {
-    return this.upsert({ ...settings, id: 'SelfReflect' }, { params: { uid }})
+const entryConverter: FirestoreDataConverter<SelfReflectEntry | undefined> = {
+  toFirestore: (payload: SelfReflectEntry) => {
+    const data = { ...payload } as DocumentData
+    delete data['id']
+    return data
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) => {
+    if (!snapshot.exists()) return undefined
+    return createSelfReflectEntry(toDate({ ...snapshot.data(options), id: snapshot.id }))
   }
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class SelfReflectEntryService extends FireSubCollection<SelfReflectEntry> {
-  private auth = inject(AuthService);
-  private personalService = inject(PersonalService);
+export class SelfReflectSettingsService {
+  private firestore = inject(Firestore)
 
-  readonly path = 'Users/:uid/Exercises/SelfReflect/Entries'
-
-  constructor() {
-    super()
+  docData(uid: string): Observable<SelfReflectSettings | undefined> {
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/SelfReflect`).withConverter(settingsConverter)
+    return _docData(docRef)
   }
 
-  protected override toFirestore(item: SelfReflectEntry, actionType: 'add' | 'update'): SelfReflectEntry {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') item.createdAt = timestamp
-    item.updatedAt = timestamp
-
-    return item
+  getSettings(uid: string): Promise<SelfReflectSettings | undefined> {
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/SelfReflect`).withConverter(settingsConverter)
+    return getDoc(docRef).then(snapshot => snapshot.data())
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<SelfReflectEntry>): SelfReflectEntry | undefined {
-    if (!snapshot.exists()) return
-    return createSelfReflectEntry(toDate({ ...snapshot.data(), id: snapshot.id }))
+  getSettings$(uid: string): Observable<SelfReflectSettings | undefined> {
+    return this.docData(uid)
+  }
+
+  save(uid: string, settings: Partial<SelfReflectSettings>) {
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/SelfReflect`).withConverter(settingsConverter)
+    return setDoc(docRef, settings as SelfReflectSettings, { merge: true })
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SelfReflectEntryService {
+  private firestore = inject(Firestore)
+  private auth = inject(AuthService)
+  private personalService = inject(PersonalService)
+
+  collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<SelfReflectEntry[]> {
+    const colRef = collection(this.firestore, `Users/${options.uid}/Exercises/SelfReflect/Entries`).withConverter(entryConverter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q, { idField: 'id' })
   }
 
   async save(entry: SelfReflectEntry) {
-    if (!this.auth.uid) throw new Error('uid should be defined when saving wheel of life entries')
+    const uid = this.auth.uid()
+    if (!uid) throw new Error('uid should be defined when saving wheel of life entries')
     const encryptedEntry = await this.encrypt(entry)
-    return this.upsert(encryptedEntry, { params: { uid: this.auth.uid }})
+
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/SelfReflect/Entries/${encryptedEntry.id}`).withConverter(entryConverter)
+    return setDoc(docRef, encryptedEntry, { merge: true })
   }
 
   getPreviousEntry(uid: string, frequency: SelfReflectFrequency): Promise<SelfReflectEntry | undefined> {
-    const query = [where('frequency', '==', frequency), orderBy('createdAt', 'desc'), limit(1)]
-    const obs = this.valueChanges(query, { uid }).pipe(
+    const constraints = [where('frequency', '==', frequency), orderBy('createdAt', 'desc'), limit(1)]
+    const obs = this.collectionData(constraints, { uid }).pipe(
       take(1),
       switchMap(entries => this.decrypt(entries)),
       map(entries => entries.length ? entries[0] : undefined),

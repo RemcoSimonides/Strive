@@ -6,7 +6,7 @@ import { IonItem, IonTextarea, IonButton, IonIcon, PopoverController } from '@io
 import { addIcons } from 'ionicons'
 import { calendarOutline, checkmark } from 'ionicons/icons'
 
-import { limit, orderBy } from 'firebase/firestore'
+import { limit, orderBy } from '@angular/fire/firestore'
 import { BehaviorSubject, firstValueFrom, of, switchMap, tap } from 'rxjs'
 import { formatISO, isToday, startOfDay } from 'date-fns'
 import { SwiperContainer } from 'swiper/element'
@@ -67,7 +67,7 @@ export class CardsComponent implements OnDestroy {
   entries$ = this.auth.profile$.pipe(
     switchMap(profile => {
       if (!profile) return of([])
-      return this.entryService.valueChanges([orderBy('id', 'desc'), limit(500)], { uid: profile.uid }).pipe(
+      return this.entryService.collectionData([orderBy('id', 'desc'), limit(500)], { uid: profile.uid }).pipe(
         switchMap(cards => this.entryService.decrypt(cards))
       )
     }),
@@ -127,7 +127,7 @@ export class CardsComponent implements OnDestroy {
   }
 
   save() {
-    if (!this.auth.uid) return
+    if (!this.auth.isLoggedIn()) return
     this.save$.next('saving')
 
     const { item1, item2, item3 } = this.form.value

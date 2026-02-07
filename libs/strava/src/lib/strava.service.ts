@@ -1,27 +1,24 @@
-import { Injectable } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, inject } from '@angular/core'
+import { collectionData as _collectionData, collection, doc, Firestore, query, QueryConstraint, setDoc } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
+import { Observable } from 'rxjs'
 
 import { StravaIntegration, createStravaIntegration } from '@strive/model'
 
+const converter = createConverter<StravaIntegration>(createStravaIntegration)
+
 @Injectable({ providedIn: 'root' })
-export class StravaService extends FireCollection<StravaIntegration> {
-  readonly path = 'Strava'
-  override readonly memorize = true
+export class StravaService {
+  private firestore = inject(Firestore)
 
-  protected override toFirestore(item: StravaIntegration, actionType: 'add' | 'update'): StravaIntegration {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') item.createdAt = timestamp
-    item.updatedAt = timestamp
-
-    return item
+  collectionData(constraints: QueryConstraint[]): Observable<StravaIntegration[]> {
+    const colRef = collection(this.firestore, 'Strava').withConverter(converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q, { idField: 'id' })
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<StravaIntegration>) {
-    return snapshot.exists()
-      ? createStravaIntegration(toDate<StravaIntegration>({ ...snapshot.data(), [this.idKey]: snapshot.id }))
-      : undefined
+  update(id: string, data: Partial<StravaIntegration>) {
+    const docRef = doc(this.firestore, `Strava/${id}`).withConverter(converter)
+    return setDoc(docRef, data, { merge: true })
   }
 }

@@ -28,7 +28,7 @@ export class TeamComponent implements OnInit {
 	ngOnInit() {
 		this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.id }).pipe(
       joinWith({
-        profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+        profile: stakeholder => this.profileService.docData(stakeholder.uid)
       }, { shouldAwait: true })
     ) as Observable<any[]>
 	}

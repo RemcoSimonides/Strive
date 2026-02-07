@@ -227,7 +227,7 @@ export class WheelOfLifeEntryComponent implements OnDestroy {
   }
 
   async save() {
-    if (!this.auth.uid) return
+    if (!this.auth.uid()) return
     this.save$.next('saving')
     const key = await this.personalService.getEncryptionKey()
     const values = this.form.value

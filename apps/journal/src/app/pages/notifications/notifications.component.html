@@ -1,7 +1,7 @@
 <strive-header title="Notifications" />
 
-@if ((uid$ | async) !== undefined) {
-  @if (uid$ | async) {
+@if ((uid()) !== undefined) {
+  @if (uid()) {
     <ion-content>
       <main>
         @if (notifications$ | async; as notifications) {

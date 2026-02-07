@@ -42,7 +42,7 @@ export class ProfileOptionsComponent {
   }
 
   goToProfile() {
-    this.router.navigateByUrl(`/profile/${this.auth.uid}`)
+    this.router.navigateByUrl(`/profile/${this.auth.uid()}`)
     this.popoverCtrl.dismiss()
   }
 

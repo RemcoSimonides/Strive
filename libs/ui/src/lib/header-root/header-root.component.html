@@ -9,7 +9,7 @@
         </a>
       }
       <ion-buttons slot="end">
-        @if (isLoggedIn$ | async) {
+        @if (isLoggedIn()) {
           <ion-button routerLink="/explore">
             <ion-icon slot="icon-only" name="search-outline"/>
           </ion-button>

@@ -62,9 +62,9 @@ export class SpectatorsModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     this.view$ = combineLatest([
       this.auth.user$,
-      this.stakeholderService.valueChanges({ goalId: this.goalId }).pipe(
+      this.stakeholderService.collectionData([], { goalId: this.goalId }).pipe(
         joinWith({
-          profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+          profile: stakeholder => this.profileService.docData(stakeholder.uid)
         }, { shouldAwait: true })
       )
     ]).pipe(
@@ -85,11 +85,13 @@ export class SpectatorsModalComponent extends ModalDirective implements OnInit {
   }
 
   stopFollowing() {
+    const uid = this.auth.uid()
+    if (!uid) return
     return this.stakeholderService.upsert({
-      uid: this.auth.uid,
+      uid,
       goalId: this.goalId,
       isSpectator: false
-    }, { params: { goalId: this.goalId } })
+    }, { goalId: this.goalId })
   }
 
   openRoles(stakeholder: GoalStakeholder, event: UIEvent) {

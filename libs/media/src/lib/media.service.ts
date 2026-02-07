@@ -1,34 +1,32 @@
-import { Injectable } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, inject } from '@angular/core'
+import { collectionData as _collectionData, collection, doc, addDoc, Firestore, query, where } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
+import { Observable, of } from 'rxjs'
 
 import { createMedia, Media } from '@strive/model'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { captureException } from '@sentry/angular'
 
+const converter = createConverter<Media>(createMedia)
+
 @Injectable({
   providedIn: 'root'
 })
-export class MediaService extends FireSubCollection<Media> {
-  readonly path = 'Goals/:goalId/Media'
-  override readonly memorize = true
+export class MediaService {
+  private firestore = inject(Firestore)
 
-  protected override toFirestore(media: Media, actionType: 'add' | 'update'): Media {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') media.createdAt = timestamp
-    media.updatedAt = timestamp
-
-    return media
+  collectionData(mediaIds: string[], options: { goalId: string }): Observable<Media[]> {
+    if (!mediaIds.length) return of([])
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/Media`).withConverter(converter)
+    const q = query(colRef, where('__name__', 'in', mediaIds))
+    return _collectionData(q, { idField: 'id' })
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Media>) {
-    return snapshot.exists()
-      ? createMedia(toDate({ ...snapshot.data(), [this.idKey]: snapshot.id }))
-      : undefined
+  private async add(media: Media, options: { goalId: string }): Promise<string> {
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/Media`).withConverter(converter)
+    const docRef = await addDoc(colRef, media)
+    return docRef.id
   }
 
   async upload(file: File, storagePath: string, goalId: string) {
@@ -40,7 +38,7 @@ export class MediaService extends FireSubCollection<Media> {
       fileType,
       storagePath
     })
-    const mediaId = await this.add(media, { params: { goalId }})
+    const mediaId = await this.add(media, { goalId })
 
     const path = `${storagePath}/${mediaId}`
     const storageRef = ref(getStorage(), path)
@@ -56,7 +54,7 @@ export class MediaService extends FireSubCollection<Media> {
       fileType: 'image',
       storagePath
     })
-    const mediaId = await this.add(media, { params: { goalId }})
+    const mediaId = await this.add(media, { goalId })
 
     const path = `${storagePath}/${mediaId}`
 

@@ -1,5 +1,4 @@
 <ion-app>
-
   @if ((screensize.size$ | async) === 'mobile') {
     <ion-nav [root]="rootPage" />
   } @else {
@@ -14,7 +13,7 @@
               <ion-button fill="clear" routerLink="/goals" routerDirection="root" routerLinkActive="active-link">
                 Goals
               </ion-button>
-              <ion-button fill="clear" routerLink="/exercise" routerDrouterDirection="root" routerLinkActive="active-link">
+              <ion-button fill="clear" routerLink="/exercise" routerDirection="root" routerLinkActive="active-link">
                 Exercises
               </ion-button>
               <ion-button [ngClass]="{'badge': hasSupportNeedingDecision$ | async}" fill="clear" routerLink="/supports" routerDirection="root" routerLinkActive="active-link">

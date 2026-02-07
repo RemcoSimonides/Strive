@@ -61,7 +61,7 @@ export class JoinButtonComponent {
   }
 
   async join() {
-    if (!this.auth.uid) {
+    if (!this.auth.uid()) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -85,9 +85,9 @@ export class JoinButtonComponent {
             text: 'Yes',
             handler: () => {
               this.stakeholderService.update({
-                uid: this.auth.uid,
+                uid: this.auth.uid() ?? '',
                 hasOpenRequestToJoin: false
-              }, { params: { goalId } })
+              }, { goalId })
             }
           },
           {
@@ -117,9 +117,9 @@ export class JoinButtonComponent {
           text: 'Yes',
           handler: () => {
             this.stakeholderService.update({
-              uid: this.auth.uid,
+              uid: this.auth.uid()!,
               isAchiever: false
-            }, { params: { goalId } })
+            }, { goalId })
           }
         },
         {
@@ -136,17 +136,17 @@ export class JoinButtonComponent {
 
     if (isAdmin || hasInviteToJoin) {
       this.stakeholderService.update({
-        uid: this.auth.uid,
+        uid: this.auth.uid()!,
         isAchiever: true
-      }, { params: { goalId } })
+      }, { goalId })
       this.popover?.dismiss()
     } else {
       this.stakeholderService.upsert({
-        uid: this.auth.uid,
+        uid: this.auth.uid()!,
         goalId,
         isSpectator: true,
         hasOpenRequestToJoin: true
-      }, { params: { goalId } })
+      }, { goalId })
       this.status$.next('requested')
     }
   }
@@ -157,7 +157,7 @@ export class JoinButtonComponent {
     const createCollectiveGoalFn = httpsCallable(getFunctions(), 'createCollectiveGoal')
     const collectiveGoal = await createCollectiveGoalFn({
       goal: this.goal,
-      uid: this.auth.uid
+      uid: this.auth.uid()
     })
 
     this.status$.next('created')

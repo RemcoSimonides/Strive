@@ -1,49 +1,45 @@
-import { Injectable } from '@angular/core'
-import { arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, inject } from '@angular/core'
+import { arrayUnion, doc, docData as _docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
 
 import { Observable } from 'rxjs'
 
 import { DearFutureSelf, Message } from '@strive/model'
 
+const factory = (data: any): DearFutureSelf => ({
+  id: data.id ?? '',
+  messages: data.messages ?? [],
+  createdAt: data.createdAt ?? new Date(),
+  updatedAt: data.updatedAt ?? new Date()
+})
+
+const converter = createConverter<DearFutureSelf>(factory)
+
 @Injectable({
   providedIn: 'root'
 })
-export class DearFutureSelfService extends FireSubCollection<DearFutureSelf> {
-  readonly path = 'Users/:uid/Exercises'
-  override readonly memorize = true
-
-  protected override toFirestore(settings: DearFutureSelf, actionType: 'add' | 'update'): DearFutureSelf {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') settings.createdAt = timestamp
-    settings.updatedAt = timestamp
-
-    return settings
-  }
-
-  protected override fromFirestore(snapshot: DocumentSnapshot<DearFutureSelf>): DearFutureSelf | undefined {
-    if (!snapshot.exists()) return
-    return toDate<DearFutureSelf>({ ...snapshot.data(), id: snapshot.id })
-  }
+export class DearFutureSelfService {
+  private firestore = inject(Firestore)
 
   getSettings$(uid: string): Observable<DearFutureSelf | undefined> {
-    return this.valueChanges('DearFutureSelf', { uid })
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/DearFutureSelf`).withConverter(converter)
+    return _docData(docRef)
   }
 
   getSettings(uid: string): Promise<DearFutureSelf | undefined> {
-    return this.getValue('DearFutureSelf', { uid })
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/DearFutureSelf`).withConverter(converter)
+    return getDoc(docRef).then(snapshot => snapshot.data())
   }
 
   addMessage(uid: string, message: Message) {
-    return this.upsert({
-      id: 'DearFutureSelf',
-      messages: arrayUnion(message) as any
-    }, { params: { uid }})
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/DearFutureSelf`)
+    return setDoc(docRef, {
+      messages: arrayUnion(message)
+    }, { merge: true })
   }
 
   save(uid: string, settings: Partial<DearFutureSelf>) {
-    return this.upsert({ ...settings, id: 'DearFutureSelf' }, { params: { uid }})
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/DearFutureSelf`).withConverter(converter)
+    return setDoc(docRef, settings as DearFutureSelf, { merge: true })
   }
 }

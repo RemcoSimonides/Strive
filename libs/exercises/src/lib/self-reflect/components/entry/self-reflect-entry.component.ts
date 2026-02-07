@@ -239,7 +239,7 @@ export class SelfReflectEntryComponent extends ModalDirective implements OnInit 
   }
 
   async save() {
-    if (!this.auth.uid) return
+    if (!this.auth.uid()) return
 
     const entry = createSelfReflectEntry({
       ...this.entry,

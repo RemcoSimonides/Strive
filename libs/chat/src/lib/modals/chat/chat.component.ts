@@ -6,7 +6,7 @@ import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollCon
 import { addIcons } from 'ionicons'
 import { settingsOutline, send } from 'ionicons/icons'
 
-import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
+import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from '@angular/fire/firestore'
 import { joinWith } from '@strive/utils/firebase'
 import { toDate } from '@strive/utils/firebase'
 
@@ -85,7 +85,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages)
     map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i)),
     joinWith({
-      user: comment => this.profileService.valueChanges(comment.userId)
+      user: comment => this.profileService.docData(comment.userId)
     }),
     map(comments => comments.filter(comment => comment.user))
   )
@@ -110,20 +110,21 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     if (!this.goal) return
 
     this.stakeholder$ = this.auth.profile$.pipe(
-      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId: this.goal.id }) : of(undefined)),
+      switchMap(user => user ? this.stakeholderService.docData(user.uid, { goalId: this.goal.id }) : of(undefined)),
       map(value => createGoalStakeholder(value)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
       shareReplay({ bufferSize: 1, refCount: true })
     )
 
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
 
     const stakeholder = await firstValueFrom(this.stakeholder$)
     const { isAdmin, isAchiever, isSupporter } = stakeholder
 
     if (!isAdmin && !isAchiever && !isSupporter) return
 
-    this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid)
+    this.stakeholderService.updateLastCheckedChat(this.goal.id, uid)
 
     const ref = collection(getFirestore(), `Goals/${this.goal.id}/Comments`)
     const constraints = [
@@ -133,13 +134,13 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     ]
     this.query = query(ref, ...constraints)
 
-    const sub = this.commentService.valueChanges([orderBy('createdAt', 'desc'), limit(1)], { goalId: this.goal.id }).pipe(
+    const sub = this.commentService.collectionData([orderBy('createdAt', 'desc'), limit(1)], { goalId: this.goal.id }).pipe(
       skip(1),
       map(comments => comments[0]),
       filter(comment => !!comment?.createdAt)
     ).subscribe(comment => {
-      if (this.auth.uid) {
-        this.stakeholderService.updateLastCheckedChat(this.goal.id, this.auth.uid) // update last check chat everytime a comment is added
+      if (uid) {
+        this.stakeholderService.updateLastCheckedChat(this.goal.id, uid) // update last check chat everytime a comment is added
       }
       const existing = this._comments.value.find(c => c.id === comment.id)
       if (existing) {
@@ -199,15 +200,16 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     if (event) event.preventDefault()
     const text = this.form.value.trim()
     if (!this.form.valid || !text) return
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
 
     const comment = createComment({
       text,
-      userId: this.auth.uid
+      userId: uid
     })
 
     this.form.reset('')
-    this.commentService.add(comment, { params: { goalId: this.goal.id } })
+    // this.commentService.add(comment, { params: { goalId: this.goal.id } })
   }
 
   async logScrolling($event: ScrollCustomEvent) {
@@ -231,7 +233,8 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
   }
 
   async support() {
-    if (!this.auth.uid) {
+    const isLoggedIn = this.auth.isLoggedIn()
+    if (!isLoggedIn) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -253,11 +256,13 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
   }
 
   toggleAssistant(enableAssistant: boolean) {
-    this.goalService.update({ id: this.goal.id, enableAssistant })
+    this.goalService.update(this.goal.id, { enableAssistant })
     this.goal.enableAssistant = enableAssistant
   }
 
   toggleNotifications(goalChat: boolean) {
-    this.stakeholderService.update({ uid: this.auth.uid, 'settings.goalChat': goalChat }, { params: { goalId: this.goal.id } })
+    const uid = this.auth.uid()
+    if (!uid) return
+    this.stakeholderService.update({ uid, 'settings.goalChat': goalChat } as any, { goalId: this.goal.id })
   }
 }

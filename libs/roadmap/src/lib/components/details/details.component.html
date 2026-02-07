@@ -122,7 +122,7 @@
       </section>
     }
 
-    @if (isLoggedIn$ | async) {
+    @if (isLoggedIn()) {
       @if (supports$ | async; as supports) {
         @if (supports.length || milestone.status === 'pending') {
           <section class="supports">

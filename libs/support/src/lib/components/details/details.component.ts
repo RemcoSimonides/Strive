@@ -75,12 +75,12 @@ export class SupportDetailsComponent implements OnInit {
     this.counterForm.setValue(this.support.counterDescription)
 
     const id = this.support.milestone ? this.support.milestone.id : this.support.goalId
-    this.post$ = this.storyService.valueChanges(id, { goalId: this.support.goalId }).pipe(
+    this.post$ = this.storyService.docData(id, { goalId: this.support.goalId }).pipe(
       filter(storyItem => !!storyItem),
       joinWith({
-        user: (i) => i?.userId ? this.profileService.valueChanges(i.userId) : of(undefined),
-        milestone: (i) => i?.milestoneId ? this.milestoneService.valueChanges(i.milestoneId, { goalId: i.goalId }) : of(undefined),
-        post: (i) => i?.postId ? this.postService.valueChanges(i.postId, { goalId: i.goalId }) : of(undefined)
+        user: (i) => i?.userId ? this.profileService.docData(i.userId) : of(undefined),
+        milestone: (i) => i?.milestoneId ? this.milestoneService.docData(i.milestoneId, { goalId: i.goalId }) : of(undefined),
+        post: (i) => i?.postId ? this.postService.docData(i.postId, { goalId: i.goalId }) : of(undefined)
       }, { shouldAwait: true }),
       shareReplay({ bufferSize: 1, refCount: true }),
     )
@@ -91,7 +91,7 @@ export class SupportDetailsComponent implements OnInit {
 
     const give = () => {
       if (!this.support?.id) return
-      this.supportService.update(this.support.id, { status: 'accepted', needsDecision: false }, { params: { goalId: this.support.goalId } })
+      this.supportService.upsert({ id: this.support.id, status: 'accepted', needsDecision: false }, { goalId: this.support.goalId })
       this.support.status = 'accepted'
       this.support.needsDecision = false
     }
@@ -127,7 +127,7 @@ export class SupportDetailsComponent implements OnInit {
           text: 'Yes',
           handler: () => {
             if (!this.support?.id) return
-            this.supportService.remove(this.support.id, { params: { goalId: this.support.goalId } })
+            this.supportService.remove(this.support.id, { goalId: this.support.goalId })
             this.removed.emit()
           }
         },
@@ -146,7 +146,7 @@ export class SupportDetailsComponent implements OnInit {
     this.supportService.upsert({
       id: this.support.id,
       counterDescription: this.counterForm.value
-    }, { params: { goalId: this.support.goalId } })
+    }, { goalId: this.support.goalId })
     this.support.counterDescription = this.counterForm.value
     this.cdr.markForCheck()
   }

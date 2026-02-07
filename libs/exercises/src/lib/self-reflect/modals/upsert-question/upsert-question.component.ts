@@ -6,7 +6,7 @@ import { addIcons } from 'ionicons'
 import { trashOutline } from 'ionicons/icons'
 import { IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonRange, IonLabel } from '@ionic/angular/standalone'
 
-import { orderBy } from 'firebase/firestore'
+import { orderBy } from '@angular/fire/firestore'
 import { debounceTime, of, switchMap } from 'rxjs'
 
 import { closestIndexTo, eachDayOfInterval, endOfDay, isBefore, startOfDay } from 'date-fns'
@@ -66,7 +66,7 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
   prioritizeGoalEntry = signal<SelfReflectEntry | undefined>(undefined)
 
   wheelOfLifeEntries$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.wheelOfLifeEntryService.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
+    switchMap(profile => profile ? this.wheelOfLifeEntryService.collectionData([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.wheelOfLifeEntryService.decrypt(entries) : of([]))
   )
 
@@ -99,17 +99,18 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
 
     this.form.valueChanges.pipe(debounceTime(500)).subscribe(async value => {
       if (this.form.invalid) return
-      if (!this.auth.uid) return
+      const uid = this.auth.uid()
+      if (!uid) return
 
       const question = createSelfReflectQuestion(value)
-      const settings = await this.settingsService.getSettings(this.auth.uid)
+      const settings = await this.settingsService.getSettings(uid)
       if (!settings) return
 
       const index = settings.questions.findIndex(q => q.key === question.key)
       if (index === -1) return
 
       settings.questions[index] = question
-      await this.settingsService.save(this.auth.uid, settings)
+      await this.settingsService.save(uid, settings)
     })
 
     if (this.question.key === 'prioritizeGoals') this.initPrioritizeGoals()
@@ -162,16 +163,17 @@ export class SelfReflectQuestionModalComponent extends ModalDirective implements
         {
           text: 'Yes',
           handler: async () => {
-            if (!this.auth.uid) return
+            const uid = this.auth.uid()
+            if (!uid) return
 
-            const settings = await this.settingsService.getSettings(this.auth.uid)
+            const settings = await this.settingsService.getSettings(uid)
             if (!settings) return
 
             const index = settings.questions.findIndex(q => q.key === this.question?.key)
             if (index === -1) return
 
             settings.questions.splice(index, 1)
-            await this.settingsService.save(this.auth.uid, settings)
+            await this.settingsService.save(uid, settings)
 
             this.dismiss()
           }

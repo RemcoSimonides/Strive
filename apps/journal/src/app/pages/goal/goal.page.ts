@@ -7,7 +7,7 @@ import { addIcons } from 'ionicons'
 import { arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, personAddOutline, shareSocialOutline, ellipsisHorizontalOutline, flag, notifications, link, lockOpenOutline, lockClosedOutline, timerOutline, closeOutline, arrowDownOutline, arrowUpOutline, sparklesOutline } from 'ionicons/icons'
 
 // Firebase
-import { orderBy, OrderByDirection, where } from 'firebase/firestore'
+import { orderBy, OrderByDirection, where } from '@angular/fire/firestore'
 import { joinWith } from '@strive/utils/firebase'
 // Rxjs
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs'
@@ -74,6 +74,7 @@ import { StravaService } from '@strive/strava/strava.service'
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder, createMedia, User } from '@strive/model'
 import { createStravaAuthParams, StravaAuthParams, StravaIntegration } from 'libs/model/src/lib/strava'
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { toObservable } from '@angular/core/rxjs-interop';
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
   if (!before || !after) return true
@@ -177,11 +178,11 @@ export class GoalPageComponent implements OnDestroy {
 
   isMobile$ = this.screensize.isMobile$
 
-  isLoggedIn$ = this.auth.isLoggedIn$
+  isLoggedIn = this.auth.isLoggedIn
   canAccess$ = new BehaviorSubject(false)
   pageIsLoading$ = new BehaviorSubject(true)
   showIOSHeader$ = combineLatest([
-    this.auth.isLoggedIn$,
+    toObservable(this.auth.isLoggedIn),
     this.screensize.isMobile$,
     of(Capacitor.getPlatform() === 'ios')
   ]).pipe(
@@ -205,7 +206,7 @@ export class GoalPageComponent implements OnDestroy {
     )
 
     this.goal$ = goalId$.pipe(
-      switchMap(goalId => this.goalService.valueChanges(goalId)),
+      switchMap(goalId => this.goalService.docData(goalId)),
       tap(goal => this.goal = goal),
       shareReplay({ bufferSize: 1, refCount: true })
     )
@@ -217,7 +218,7 @@ export class GoalPageComponent implements OnDestroy {
       tap(([goalId, profile]) => {
         if (profile) this.stakeholderService.updateLastCheckedGoal(goalId, profile.uid)
       }),
-      switchMap(([goalId, user]) => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
+      switchMap(([goalId, user]) => user ? this.stakeholderService.docData(user.uid, { goalId }) : of(undefined)),
       distinctUntilChanged((a, b) => !stakeholderChanged(a, b)),
       map(stakeholder => createGoalStakeholder(stakeholder)),
       tap(stakeholder => this.stakeholder = stakeholder),
@@ -227,9 +228,9 @@ export class GoalPageComponent implements OnDestroy {
     this.openRequests$ = this.stakeholder$.pipe(
       switchMap(stakeholder => {
         if (!stakeholder.isAdmin) return of([])
-        return this.stakeholderService.valueChanges([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId }).pipe(
+        return this.stakeholderService.collectionData([where('hasOpenRequestToJoin', '==', true)], { goalId: stakeholder.goalId }).pipe(
           joinWith({
-            profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+            profile: stakeholder => this.profileService.docData(stakeholder.uid)
           }, { shouldAwait: true })
         )
       })
@@ -242,27 +243,27 @@ export class GoalPageComponent implements OnDestroy {
           where('collectiveGoalId', '==', goal.collectiveGoalId),
           where('isAchiever', '==', true)
         ]
-        return this.stakeholderService.valueChanges(query).pipe(
+        return this.stakeholderService.collectionData(query).pipe(
           map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goalId !== goal.id)),
-          tap(stakeholders => this.collectiveStakeholder = stakeholders.find(stakeholder => stakeholder.uid === this.auth.uid)),
+          tap(stakeholders => this.collectiveStakeholder = stakeholders.find(stakeholder => stakeholder.uid === this.auth.uid())),
           joinWith({
-            profile: stakeholder => this.profileService.valueChanges(stakeholder.uid),
-            goal: stakeholder => this.goalService.valueChanges(stakeholder.goalId)
+            profile: stakeholder => this.profileService.docData(stakeholder.uid),
+            goal: stakeholder => this.goalService.docData(stakeholder.goalId)
           }, { shouldAwait: true })
         )
       })
     )
 
     this.story$ = combineLatest([goalId$, this.storyOrder$]).pipe(
-      switchMap(([goalId, order]) => goalId ? this.storyService.valueChanges([orderBy('date', order)], { goalId }) : of([])),
+      switchMap(([goalId, order]) => goalId ? this.storyService.collectionData([orderBy('date', order)], { goalId }) : of([])),
       joinWith({
-        user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
-        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
+        user: ({ userId }) => userId ? this.profileService.docData(userId) : of(undefined),
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.docData(milestoneId, { goalId }) : of(undefined),
         post: ({ postId, goalId }) => postId
-          ? this.postService.valueChanges(postId, { goalId }).pipe(
+          ? this.postService.docData(postId, { goalId }).pipe(
             map(post => post ? post : createPost()), // fixes bug in ngfire where post is undefined and then crashes on the medias join
             joinWith({
-              medias: post => post?.mediaIds ? this.mediaService.valueChanges(post.mediaIds, { goalId }) : of([])
+              medias: post => post?.mediaIds ? this.mediaService.collectionData(post.mediaIds, { goalId }) : of([])
             })
           )
           : of(undefined)
@@ -277,17 +278,17 @@ export class GoalPageComponent implements OnDestroy {
       switchMap(([profile, goalId]) => {
         if (!profile) return of([[], []])
         return combineLatest([
-          this.support.valueChanges([where('supporterId', '==', profile.uid)], { goalId }),
-          this.support.valueChanges([where('recipientId', '==', profile.uid)], { goalId })
+          this.support.collectionData([where('supporterId', '==', profile.uid)], { goalId }),
+          this.support.collectionData([where('recipientId', '==', profile.uid)], { goalId })
         ])
       }),
       map(([supporter, recipient]) => [...supporter, ...recipient]),
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
         goal: () => this.goal,
-        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
-        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
-        supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.docData(milestoneId, { goalId }) : of(undefined),
+        recipient: ({ recipientId }) => this.profileService.docData(recipientId),
+        supporter: ({ supporterId }) => this.profileService.docData(supporterId)
       }, { shouldAwait: true }),
       shareReplay({ bufferSize: 1, refCount: true })
     )
@@ -295,9 +296,9 @@ export class GoalPageComponent implements OnDestroy {
     this.supports$ = supports$.pipe(map(groupByObjective), map(sortGroupedSupports))
 
     this.milestones$ = combineLatest([goalId$, this.roadmapOrder$]).pipe(
-      switchMap(([goalId, order]) => goalId ? this.milestoneService.valueChanges([where('deletedAt', '==', null), orderBy('order', order)], { goalId }) : of([])),
+      switchMap(([goalId, order]) => goalId ? this.milestoneService.collectionData([where('deletedAt', '==', null), orderBy('order', order)], { goalId }) : of([])),
       joinWith({
-        achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : undefined,
+        achiever: ({ achieverId }) => achieverId ? this.profileService.docData(achieverId) : undefined,
         supports: milestone => supports$.pipe(
           map(supports => supports.filter(support => support.milestoneId === milestone.id))
         ),
@@ -308,7 +309,7 @@ export class GoalPageComponent implements OnDestroy {
     )
 
     this.missedMessages$ = this.stakeholder$.pipe(
-      switchMap(stakeholder => stakeholder.uid ? this.commentService.valueChanges([where('createdAt', '>', stakeholder.lastCheckedChat)], { goalId: stakeholder.goalId }) : of([])),
+      switchMap(stakeholder => stakeholder.uid ? this.commentService.collectionData([where('createdAt', '>', stakeholder.lastCheckedChat)], { goalId: stakeholder.goalId }) : of([])),
       map(comments => comments.length)
     )
 
@@ -346,12 +347,12 @@ export class GoalPageComponent implements OnDestroy {
       switchMap(goalId => {
         if (!goalId) return of([])
 
-        return this.stravaService.valueChanges([where('goalId', '==', goalId)]).pipe(
+        return this.stravaService.collectionData([where('goalId', '==', goalId)]).pipe(
           map(s => s.sort((a, b) => b.totalActivities - a.totalActivities))
         )
       }),
       joinWith({
-        profile: ({ userId }) => this.profileService.valueChanges(userId)
+        profile: ({ userId }) => this.profileService.docData(userId)
       })
     ) as Observable<(StravaIntegration & { profile: User })[]>
   }
@@ -402,7 +403,7 @@ export class GoalPageComponent implements OnDestroy {
 
     const publicity = $event.detail.value
     if (publicity === goal.publicity) return
-    this.goalService.update({ id: this.goal.id, publicity })
+    this.goalService.update(this.goal.id, { publicity })
   }
 
   private editGoal(goal: Goal) {
@@ -437,8 +438,9 @@ export class GoalPageComponent implements OnDestroy {
 
   async spectate() {
     if (!this.goal?.id) return
+    const uid = this.auth.uid()
 
-    if (!this.auth.uid) {
+    if (!uid) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -455,10 +457,10 @@ export class GoalPageComponent implements OnDestroy {
     const goalId = this.goal.id
 
     return this.stakeholderService.upsert({
-      uid: this.auth.uid,
+      uid,
       goalId,
       isSpectator: !isSpectator
-    }, { params: { goalId } })
+    }, { goalId })
   }
 
 
@@ -576,7 +578,7 @@ export class GoalPageComponent implements OnDestroy {
       uid: stakeholder.uid,
       isAchiever: isAccepted,
       hasOpenRequestToJoin: false
-    }, { params: { goalId: this.goal.id } })
+    }, { goalId: this.goal.id })
   }
 
   navTo(uid: string) {
@@ -677,7 +679,7 @@ export class GoalPageComponent implements OnDestroy {
     }
 
     const stravaIntegrations = this.stravaIntegrations$ ? await firstValueFrom(this.stravaIntegrations$) : []
-    const integration = stravaIntegrations.find(i => i.userId === this.auth.uid)
+    const integration = stravaIntegrations.find(i => i.userId === this.auth.uid())
 
     if (integration) {
       // already has integration
@@ -712,9 +714,9 @@ export class GoalPageComponent implements OnDestroy {
           queryParamsHandling: 'merge'
         })
       } else {
-        const uid = await this.auth.getUID()
+        const uid = this.auth.uid()
         if (!uid) return
-        const personal = await this.personalService.load(uid, { uid })
+        const personal = await this.personalService.getDoc(uid)
         console.log('personal: ', personal)
         if (personal?.stravaRefreshToken) {
           refreshToken = personal.stravaRefreshToken

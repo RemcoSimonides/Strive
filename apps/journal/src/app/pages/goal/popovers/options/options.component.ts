@@ -48,7 +48,8 @@ export class GoalOptionsPopoverComponent {
   }
 
   markAsFinished() {
-    if (!this.auth.uid || !this.goal) throw new Error('uid or goal not provided')
+    const uid = this.auth.uid()
+    if (!uid || !this.goal) throw new Error('uid or goal not provided')
     this.popoverCtrl.dismiss()
     this.alertCtrl.create({
       header: `Are you sure its finished?`,
@@ -56,8 +57,8 @@ export class GoalOptionsPopoverComponent {
         {
           text: 'Yes',
           handler: async () => {
-            if (!this.auth.uid || !this.goal?.id) throw new Error('uid or goal not provided')
-            this.goalService.update({
+            if (!uid || !this.goal?.id) throw new Error('uid or goal not provided')
+            this.goalService.update(this.goal.id, {
               id: this.goal.id,
               status: 'succeeded'
             })

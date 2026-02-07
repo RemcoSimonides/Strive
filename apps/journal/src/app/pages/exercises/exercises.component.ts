@@ -77,7 +77,7 @@ export class ExercisesPageComponent {
   private seo = inject(SeoService);
 
   exercises$: Observable<Exercise[]> = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.exerciseService.valueChanges({ uid: profile.uid }) : of([])),
+    switchMap(profile => profile ? this.exerciseService.collectionData({ uid: profile.uid }) : of([])),
     map(exerciseSettings => exercises.map(exercise => {
       const setting = exerciseSettings.find(s => s.id === exercise.id)
       if (!setting) return { ...exercise, isActive: false } as Exercise

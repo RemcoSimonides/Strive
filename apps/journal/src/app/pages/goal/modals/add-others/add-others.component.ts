@@ -108,7 +108,7 @@ export class AddOthersModalComponent extends ModalDirective {
   spectating$: Observable<MinimumProfile[]> = this.auth.profile$.pipe(
     switchMap(user => user ? this.spectatorService.getSpectating$(user.uid) : of([])),
     joinWith({
-      user: spectator => this.profileService.valueChanges(spectator.profileId)
+      user: spectator => this.profileService.docData(spectator.profileId)
     }, { shouldAwait: true }),
     map(spectators => spectators.map(spectator => ({
       uid: spectator.user?.uid ?? '',
@@ -121,7 +121,7 @@ export class AddOthersModalComponent extends ModalDirective {
   spectators$: Observable<MinimumProfile[]> = this.auth.profile$.pipe(
     switchMap(user => user ? this.spectatorService.getSpectators$(user.uid) : of([])),
     joinWith({
-      user: spectator => this.profileService.valueChanges(spectator.uid)
+      user: spectator => this.profileService.docData(spectator.uid)
     }, { shouldAwait: true }),
     map(spectators => spectators.map(spectator => ({
       uid: spectator.user?.uid ?? '',
@@ -132,7 +132,7 @@ export class AddOthersModalComponent extends ModalDirective {
   )
 
   stakeholders$: Observable<GoalStakeholder[]> = this.goalId$.pipe(
-    switchMap(goalId => this.stakeholderService.valueChanges({ goalId }))
+    switchMap(goalId => this.stakeholderService.collectionData([], { goalId }))
   )
 
   results$ = combineLatest([
@@ -186,7 +186,8 @@ export class AddOthersModalComponent extends ModalDirective {
   }
 
   invite(profile: MinimumProfile) {
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
     if (!this.goal) return
     if (!this.stakeholder?.isAdmin) return
 
@@ -194,7 +195,7 @@ export class AddOthersModalComponent extends ModalDirective {
       uid: profile.uid,
       goalId: this.goal.id,
       hasInviteToJoin: true,
-    }, { params: { goalId: this.goal.id } })
+    }, { goalId: this.goal.id })
   }
 
   async share(ev: UIEvent) {

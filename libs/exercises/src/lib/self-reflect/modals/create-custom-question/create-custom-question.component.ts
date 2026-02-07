@@ -45,7 +45,8 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
   async submit() {
     this.form.markAllAsTouched()
     if (this.form.invalid) return
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
 
     const { category, frequency, question, tense, type } = this.form.value
     if (!category || !frequency || !question || !tense || !type) return
@@ -59,11 +60,11 @@ export class SelfReflectCustomQuestionModalComponent extends ModalDirective {
       type
     })
 
-    const settings = await this.settingsService.getSettings(this.auth.uid)
+    const settings = await this.settingsService.getSettings(uid)
     if (!settings) return
 
     settings.questions.push(selfReflectQuestion)
-    await this.settingsService.save(this.auth.uid, settings)
+    await this.settingsService.save(uid, settings)
 
     this.dismiss(selfReflectQuestion)
   }

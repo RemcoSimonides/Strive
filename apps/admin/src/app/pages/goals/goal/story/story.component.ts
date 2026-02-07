@@ -38,11 +38,11 @@ export class StoryComponent {
   )
 
   story$: Observable<StoryItem[]> = this.goalId$.pipe(
-    switchMap(goalId => goalId ? this.storyService.valueChanges([orderBy('date', 'desc')], { goalId }) : of([])),
+    switchMap(goalId => goalId ? this.storyService.collectionData([orderBy('date', 'desc')], { goalId }) : of([])),
     joinWith({
-      user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined),
-      milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
-      post: ({ postId, goalId }) => postId ? this.postService.valueChanges(postId, { goalId }) : of(undefined)
+      user: ({ userId }) => userId ? this.profileService.docData(userId) : of(undefined),
+      milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.docData(milestoneId, { goalId }) : of(undefined),
+      post: ({ postId, goalId }) => postId ? this.postService.docData(postId, { goalId }) : of(undefined)
     })
   )
 

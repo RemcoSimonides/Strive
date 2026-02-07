@@ -45,7 +45,7 @@ export class HeaderRootComponent {
   enumAuthSegment = enumAuthSegment
   unreadNotifications$ = this.notification.hasUnreadNotification$
 
-  isLoggedIn$ = this.auth.isLoggedIn$
+  isLoggedIn = this.auth.isLoggedIn
   isMobile$ = this.screensize.isMobile$
   lightTheme$ = this.themeService.light$
 

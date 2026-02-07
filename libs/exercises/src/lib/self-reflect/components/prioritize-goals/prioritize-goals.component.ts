@@ -88,7 +88,7 @@ export class PrioritizeGoalsComponent {
   @Output() step = new EventEmitter<'next' | 'previous'>()
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>, stakeholders: StakeholderWithGoal[]) {
-    if (!this.auth.uid || !this._form) return
+    if (!this.auth.uid() || !this._form) return
 
     const { from, to } = ev.detail
     const element = stakeholders[from]

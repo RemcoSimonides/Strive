@@ -1,6 +1,6 @@
-<strive-header-root [title]="(isLoggedIn$ | async) ? 'Goals' : ''"/>
+<strive-header-root [title]="isLoggedIn() ? 'Goals' : ''"/>
 
-@if (isLoggedIn$ | async) {
+@if (isLoggedIn()) {
   <ion-content class="ion-padding">
     <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
       <ion-refresher-content/>

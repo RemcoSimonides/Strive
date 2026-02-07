@@ -48,9 +48,9 @@ export class EditProfilePageComponent {
 
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent
 
-  form = new UserForm(this.auth.profile)
+  form = new UserForm(this.auth.profile())
 
-  isLoggedIn$ = this.auth.isLoggedIn$
+  isLoggedIn = this.auth.isLoggedIn
   uid = this.auth.uid
 
   constructor() {
@@ -71,7 +71,7 @@ export class EditProfilePageComponent {
 
     if (this.form.valid) {
       this.profileService.update({
-        uid: this.auth.uid,
+        uid: this.auth.uid() ?? '',
         photoURL: this.form.photoURL.value ?? '',
         username
       })
@@ -106,8 +106,9 @@ export class EditProfilePageComponent {
           text: 'Yes, delete',
           cssClass: 'alert-button-delete',
           handler: async () => {
-            if (!this.auth.uid) return
-            await this.profileService.remove(this.auth.uid)
+            const uid = this.auth.uid()
+            if (!uid) return
+            await this.profileService.remove(uid)
             await this.auth.signout()
             this.router.navigate(['/'])
           }

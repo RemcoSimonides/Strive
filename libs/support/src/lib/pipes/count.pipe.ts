@@ -31,11 +31,12 @@ export class NeedsDecisionPipe implements PipeTransform {
   private auth = inject(AuthService);
 
   transform(goal: SupportsGroupedByGoal, id?: string) {
-    if (!this.auth.uid) return false
+    const uid = this.auth.uid()
+    if (!uid) return false
 
     const needsDecision = (support: Support) => {
-      const isSupporter = support.supporterId === this.auth.uid
-      const isRecipient = support.recipientId === this.auth.uid
+      const isSupporter = support.supporterId === uid
+      const isRecipient = support.recipientId === uid
 
       if (support.needsDecision && isSupporter) return true
       if (support.counterNeedsDecision && isRecipient) return true

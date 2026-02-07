@@ -8,7 +8,7 @@ import { checkmarkOutline, add, lockClosedOutline, filterOutline } from 'ionicon
 import { addIcons } from 'ionicons'
 
 import { joinWith } from '@strive/utils/firebase'
-import { orderBy, where } from 'firebase/firestore'
+import { orderBy, where } from '@angular/fire/firestore'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { isBefore, min } from 'date-fns'
 
@@ -35,10 +35,8 @@ import { MessageModalComponent } from '@strive/exercises/dear-future-self/modals
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
 import { SelfReflectEntryComponent } from '@strive/exercises/self-reflect/components/entry/self-reflect-entry.component'
 import { getSelfReflectId } from '@strive/exercises/self-reflect/utils/date.utils'
-import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
-import { GoalOptionsComponent } from '@strive/goal/components/goal-options/goal-options.component'
 import { CategoryFilterComponent } from '@strive/goal/components/category-filter/category-filter.component'
 import { HomePageComponent } from '../home/home.page'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
@@ -87,10 +85,10 @@ export class GoalsPageComponent implements OnDestroy {
   achieving$: Observable<StakeholderWithGoalAndEvents[]>
   stakeholders$: Observable<StakeholderWithGoalAndEvents[]>
 
-  isLoggedIn$ = this.auth.isLoggedIn$
+  isLoggedIn = this.auth.isLoggedIn
 
   sub = this.route.queryParams.subscribe(async params => {
-    const uid = await this.auth.getUID()
+    const uid = this.auth.uid()
     if (!uid) return
 
     const { c, t, affirm, dfs, reflect, reminder } = params
@@ -191,12 +189,12 @@ export class GoalsPageComponent implements OnDestroy {
 
     const stakeholders$ = this.auth.user$.pipe(
       filter(profile => !!profile),
-      switchMap(profile => this.stakeholder.valueChanges([where('uid', '==', profile?.uid), orderBy('createdAt', 'desc')])),
+      switchMap(profile => this.stakeholder.collectionData([where('uid', '==', profile?.uid), orderBy('createdAt', 'desc')])),
       joinWith({
-        goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId),
+        goal: (stakeholder: GoalStakeholder) => this.goal.docData(stakeholder.goalId),
         events: (stakeholder: GoalStakeholder) => {
           const query = [where('goalId', '==', stakeholder.goalId), where('createdAt', '>', stakeholder.lastCheckedGoal)]
-          return this.goalEvent.valueChanges(query).pipe(
+          return this.goalEvent.collectionData(query).pipe(
             map(events => filterGoalEvents(events, stakeholder))
           )
         }

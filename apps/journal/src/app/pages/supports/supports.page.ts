@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 
 import { IonContent, IonRefresher, IonRefresherContent, ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
 
-import { where } from 'firebase/firestore'
+import { where } from '@angular/fire/firestore'
 import { joinWith } from '@strive/utils/firebase'
 
 import { combineLatest, Observable, of } from 'rxjs'
@@ -55,7 +55,7 @@ export class SupportsPageComponent {
 
 
   objectivesWithSupports$: Observable<SupportsGroupedByGoal[]>
-  uid$ = this.auth.uid$
+  uid = this.auth.uid
   isMobile$ = this.screensize.isMobile$
 
   constructor() {
@@ -67,17 +67,17 @@ export class SupportsPageComponent {
       switchMap(profile => {
         if (!profile) return of([[], []])
         return combineLatest([
-          this.support.valueChanges([where('supporterId', '==', profile.uid)]),
-          this.support.valueChanges([where('recipientId', '==', profile.uid)])
+          this.support.collectionData([where('supporterId', '==', profile.uid)]),
+          this.support.collectionData([where('recipientId', '==', profile.uid)])
         ])
       }),
       map(([supporter, recipient]) => [...supporter, ...recipient]),
       map(supports => supports.filter((support, index) => supports.findIndex(s => s.id === support.id) === index)), // remove duplicates (when user is both supporter and recipient)
       joinWith({
-        goal: ({ goalId }) => this.goalService.valueChanges(goalId),
-        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
-        recipient: ({ recipientId }) => this.profileService.valueChanges(recipientId),
-        supporter: ({ supporterId }) => this.profileService.valueChanges(supporterId)
+        goal: ({ goalId }) => this.goalService.docData(goalId),
+        milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestoneService.docData(milestoneId, { goalId }) : of(undefined),
+        recipient: ({ recipientId }) => this.profileService.docData(recipientId),
+        supporter: ({ supporterId }) => this.profileService.docData(supporterId)
       }),
       map(groupByObjective),
       map(sortGroupedSupports)

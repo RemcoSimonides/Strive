@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core'
-import { orderBy, where } from 'firebase/firestore'
+import { orderBy, where } from '@angular/fire/firestore'
 
 import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
 
@@ -79,14 +79,14 @@ export class SuggestionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const sub = this.chatGPTService.valueChanges('RoadmapSuggestion', { goalId: this.goalId }).subscribe(message => {
+    const sub = this.chatGPTService.docData('RoadmapSuggestion', { goalId: this.goalId }).subscribe(message => {
       if (!message) return
       this.suggestions.next(message)
       this.updateAdded()
       this.fetching$.next(false)
     })
 
-    const sub2 = this.chatGPTService.valueChanges('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
+    const sub2 = this.chatGPTService.docData('RoadmapMoreInfoQuestions', { goalId: this.goalId }).subscribe(message => {
       if (!message) return
       this.fetching$.next(false)
       message.answerParsed.forEach((question, index) => {
@@ -112,17 +112,17 @@ export class SuggestionComponent implements OnInit, OnDestroy {
 
     this.added$.next(suggestions)
 
-    const current = await this.milestoneService.load([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
+    const current = await this.milestoneService.getDocs([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
     const milestones = suggestions.map((content, index) => createMilestone({ order: max + index, content }))
-    this.milestoneService.add(milestones, { params: { goalId: this.goalId } })
+    this.milestoneService.add(milestones, { goalId: this.goalId })
   }
 
   async toggleSuggestion(content: string, index: number, element: any) {
     if (!this.goalId) throw new Error('Goal Id is required in order to add or remove milestone')
 
-    const current = await this.milestoneService.load([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
+    const current = await this.milestoneService.getDocs([where('deletedAt', '==', null), orderBy('order', 'asc')], { goalId: this.goalId })
 
     if (this.added$.value.some(addedSuggestion => addedSuggestion === content)) {
         this.removeSuggestion(content, index, current)
@@ -141,7 +141,7 @@ export class SuggestionComponent implements OnInit, OnDestroy {
     const max = current.length ? Math.max(...current.map(milestone => milestone.order)) + 1 : 0
 
     const milestone = createMilestone({ order: max, content })
-    this.milestoneService.add(milestone, { params: { goalId: this.goalId } })
+    this.milestoneService.add(milestone, { goalId: this.goalId })
   }
 
   private async removeSuggestion(content: string, index: number, milestones: Milestone[]) {
@@ -150,7 +150,7 @@ export class SuggestionComponent implements OnInit, OnDestroy {
     const milestone = milestones.find(milestone => milestone.content === content)
     if (!milestone) return
 
-    this.milestoneService.remove(milestone.id, { params: { goalId: this.goalId } })
+    this.milestoneService.remove(milestone.id, { goalId: this.goalId })
     this.added$.next(this.added$.value.filter(index => index !== index))
   }
 
@@ -171,7 +171,7 @@ export class SuggestionComponent implements OnInit, OnDestroy {
       type: 'RoadmapMoreInfoAnswers',
       prompt
     })
-    this.chatGPTService.add(message, { params: { goalId: this.goalId } })
+    this.chatGPTService.upsert(message, { goalId: this.goalId })
 
     this.questions = []
     this.cdr.markForCheck()

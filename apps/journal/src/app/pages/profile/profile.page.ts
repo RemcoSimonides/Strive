@@ -90,7 +90,7 @@ export class ProfilePageComponent {
   )
 
   profile$ = this.profileId$.pipe(
-    switchMap(profileId => profileId ? this.profileService.valueChanges(profileId) : of(undefined)),
+    switchMap(profileId => profileId ? this.profileService.docData(profileId) : of(undefined)),
     tap(() => this.loading$.next(false)),
     shareReplay({ bufferSize: 1, refCount: true })
   )
@@ -108,7 +108,7 @@ export class ProfilePageComponent {
     this.auth.user$,
     this.profileId$
   ]).pipe(
-    switchMap(([user, profileId]) => user?.uid && profileId ? this.spectatorService.valueChanges(user.uid, { uid: profileId }) : of(createSpectator())),
+    switchMap(([user, profileId]) => user?.uid && profileId ? this.spectatorService.docData(user.uid, { uid: profileId }) : of(createSpectator())),
     map(spectator => spectator?.isSpectator ?? false)
   )
 
@@ -228,17 +228,18 @@ export class ProfilePageComponent {
   }
 
   async toggleSpectate(isSpectator: boolean) {
-    if (!this.auth.uid) return this.openAuthModal()
+    const uid = this.auth.uid()
+    if (!uid) return this.openAuthModal()
 
     const profile = await firstValueFrom(this.profile$)
     if (!profile) return
-    const { uid, username } = profile
+    const { uid: profileId, username } = profile
 
     this.spectatorService.upsert({
-      uid: this.auth.uid,
-      profileId: uid,
+      uid: uid,
+      profileId,
       isSpectator
-    }, { params: { uid } })
+    }, { uid })
 
     if (!isSpectator) return
     const achievingStakeholders = await firstValueFrom(this.achievingStakeholders$)

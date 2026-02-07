@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, inject } from '@angular/core'
 import { IonContent } from '@ionic/angular/standalone'
-import { orderBy, where } from '@firebase/firestore'
+import { orderBy, where } from '@angular/fire/firestore'
 
 import { isAfter, subMinutes } from 'date-fns'
 import { BehaviorSubject, Observable, map, of, switchMap, tap } from 'rxjs'
@@ -54,7 +54,7 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
     if (!this.goal) return
     const goalId = this.goal.id
     const query = [where('deletedAt', '==', null), orderBy('order', 'asc')]
-    this.milestones$ = this.milestoneService.valueChanges(query, { goalId }).pipe(
+    this.milestones$ = this.milestoneService.collectionData(query, { goalId }).pipe(
       tap(async () => {
         const scrollHeight = this.scrollService.scrollHeight
         if (!this.content || !scrollHeight) return
@@ -65,13 +65,13 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
       })
     )
     this.stakeholder$ = this.auth.profile$.pipe(
-      switchMap(user => user ? this.stakeholderService.valueChanges(user.uid, { goalId }) : of(undefined)),
+      switchMap(user => user ? this.stakeholderService.docData(user.uid, { goalId }) : of(undefined)),
       map(createGoalStakeholder)
     )
 
     const date = subMinutes(new Date(), 15)
     if (this.goal.createdAt && isAfter(this.goal.createdAt, date)) return
-    const messages = await this.chatGPTService.getValue([where('type', '==', 'RoadmapUpdateSuggestion'), where('createdAt', '>', date)], { goalId })
+    const messages = await this.chatGPTService.getDocs([where('type', '==', 'RoadmapUpdateSuggestion'), where('createdAt', '>', date)], { goalId })
     if (!messages.length) this.regenerateSuggestion()
   }
 
@@ -80,6 +80,6 @@ export class SuggestionModalComponent extends ModalDirective implements OnInit {
     this.fetching$.next(true)
     const prompt = this.chatGPTService.getInitialPrompt(this.goal) // Adding initial prompt in case it doesn't exist yet
     const message = createChatGPTMessage({ type: 'RoadmapUpdateSuggestion', prompt })
-    this.chatGPTService.add(message, { params: { goalId: this.goal.id } })
+    this.chatGPTService.upsert(message, { goalId: this.goal.id })
   }
 }

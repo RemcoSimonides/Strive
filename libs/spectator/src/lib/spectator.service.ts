@@ -1,68 +1,89 @@
 import { Injectable, inject } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp, where } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
-import { map } from 'rxjs'
+import { collectionData as _collectionData, collectionGroup, collection, doc, docData as _docData, Firestore, getDoc, getDocs, query, setDoc, where, QueryConstraint } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
+import { map, Observable } from 'rxjs'
 
 import { Spectator, createSpectator } from '@strive/model'
 
 import { AuthService } from '@strive/auth/auth.service'
 
+const converter = createConverter<Spectator>(createSpectator, 'uid')
+
 @Injectable({
   providedIn: 'root'
 })
-export class SpectatorService extends FireSubCollection<Spectator> {
-  private auth = inject(AuthService);
+export class SpectatorService {
+  private firestore = inject(Firestore)
+  private auth = inject(AuthService)
 
-  readonly path = `Users/:uid/Spectators`
-  override readonly idKey = 'uid'
-  override readonly memorize = true
-
-  constructor() {
-    super()
+  docData(spectatorUid: string, options: { uid: string }): Observable<Spectator | undefined> {
+    const docRef = doc(this.firestore, `Users/${options.uid}/Spectators/${spectatorUid}`).withConverter(converter)
+    return _docData(docRef)
   }
 
-  protected override toFirestore(spectator: Spectator, actionType: 'add' | 'update'): Spectator {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') spectator.createdAt = timestamp
-    spectator.updatedAt = timestamp
-
-    return spectator
+  private collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<Spectator[]> {
+    const colRef = collection(this.firestore, `Users/${options.uid}/Spectators`).withConverter(converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q, { idField: 'uid' })
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Spectator>) {
-    return snapshot.exists()
-      ? createSpectator({ ...snapshot.data(), uid: snapshot.id })
-      : undefined
+  private collectionGroupData(constraints: QueryConstraint[]): Observable<Spectator[]> {
+    const ref = collectionGroup(this.firestore, 'Spectators').withConverter(converter)
+    const q = query(ref, ...constraints)
+    return _collectionData(q, { idField: 'uid' })
+  }
+
+  private getDoc(spectatorUid: string, options: { uid: string }): Promise<Spectator | undefined> {
+    const docRef = doc(this.firestore, `Users/${options.uid}/Spectators/${spectatorUid}`).withConverter(converter)
+    return getDoc(docRef).then(snapshot => snapshot.data())
+  }
+
+  private async getDocs(constraints: QueryConstraint[], options: { uid: string }): Promise<Spectator[]> {
+    const colRef = collection(this.firestore, `Users/${options.uid}/Spectators`).withConverter(converter)
+    const q = query(colRef, ...constraints)
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map(d => d.data()).filter((s): s is Spectator => !!s)
+  }
+
+  private async getDocsGroup(constraints: QueryConstraint[]): Promise<Spectator[]> {
+    const ref = collectionGroup(this.firestore, 'Spectators').withConverter(converter)
+    const q = query(ref, ...constraints)
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map(d => d.data()).filter((s): s is Spectator => !!s)
+  }
+
+  upsert(spectator: Partial<Spectator> & { uid: string }, options: { uid: string }) {
+    const docRef = doc(this.firestore, `Users/${options.uid}/Spectators/${spectator.uid}`).withConverter(converter)
+    return setDoc(docRef, spectator as Spectator, { merge: true })
   }
 
   getCurrentSpectator(uidToBeSpectated: string) {
-    if (!this.auth.uid) throw new Error('')
-    return this.getSpectator(this.auth.uid, uidToBeSpectated)
+    const uid = this.auth.uid()
+    if (!uid) throw new Error('')
+    return this.getSpectator(uid, uidToBeSpectated)
   }
 
   getSpectator(uidSpectator: string, uidToBeSpectated: string) {
-    return this.load(uidSpectator, { uid: uidToBeSpectated })
+    return this.getDoc(uidSpectator, { uid: uidToBeSpectated })
   }
 
   getSpectators(uid: string) {
-    return this.load([where('isSpectator', '==', true)], { uid })
+    return this.getDocs([where('isSpectator', '==', true)], { uid })
   }
 
   getSpectators$(uid: string) {
-    return this.valueChanges([where('isSpectator', '==', true)], { uid })
+    return this.collectionData([where('isSpectator', '==', true)], { uid })
   }
 
   getSpectating(uid: string) {
-    return this.load([where('uid', '==', uid)]).then(
+    return this.getDocsGroup([where('uid', '==', uid)]).then(
       spectators => spectators.filter(spectator => spectator.isSpectator)
     )
   }
 
   getSpectating$(uid: string) {
-    return this.valueChanges([where('uid', '==', uid)]).pipe(
+    return this.collectionGroupData([where('uid', '==', uid)]).pipe(
       map(spectators => spectators.filter(spectator => spectator.isSpectator))
     )
   }
-
 }

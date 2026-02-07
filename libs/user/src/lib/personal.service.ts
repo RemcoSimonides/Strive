@@ -5,47 +5,55 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
 
-import { arrayRemove, arrayUnion, DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
+import {
+  Firestore,
+  doc,
+  docData as _docData,
+  collectionData as _collectionData,
+  setDoc,
+  getDoc,
+  arrayUnion,
+  arrayRemove,
+  serverTimestamp,
+  QueryConstraint,
+  collection,
+  query,
+} from '@angular/fire/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
-import { getAuth } from 'firebase/auth'
 
+import { createConverter } from '@strive/utils/firebase'
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
 import { captureException } from '@sentry/angular'
-
-import { user } from 'rxfire/auth'
 import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
 
 import { createPersonal, Personal } from '@strive/model'
-
 import { AuthService } from '@strive/auth/auth.service'
 import { PushNotificationSettingsForm, SettingsForm } from './forms/settings.form'
 
+const converter = createConverter<Personal>(createPersonal, 'uid')
 
 @Injectable({ providedIn: 'root' })
-export class PersonalService extends FireSubCollection<Personal> {
-  private auth = inject(AuthService);
-  private router = inject(Router);
-  private toastController = inject(ToastController);
-
-  readonly path = 'Users/:uid/Personal'
-  override readonly idKey = 'uid'
-  override readonly memorize = true
-
-  personal$: Observable<Personal | undefined> = user(getAuth()).pipe(
-    switchMap(user => user ? this.valueChanges(user.uid, { uid: user.uid }) : of(undefined)),
-    shareReplay({ bufferSize: 1, refCount: true })
-  )
+export class PersonalService {
+  private firestore = inject(Firestore)
+  private auth = inject(AuthService)
+  private router = inject(Router)
+  private toastController = inject(ToastController)
 
   fcmIsSupported = Capacitor.getPlatform() === 'web' ? isSupported() : Promise.resolve(true)
-  private get localStorageName() { return `pushNotifications${this.auth.uid}` }
+  private get localStorageName() { return `pushNotifications${this.auth.uid()}` }
   fcmIsRegistered = new BehaviorSubject(false)
 
   form = new SettingsForm()
 
+  personal$: Observable<Personal | undefined> = this.auth.uid$.pipe(
+    switchMap(uid => {
+      if (!uid) return of(undefined)
+      return _docData(this.getDocRef(uid))
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
   constructor() {
-    super()
     this.personal$.subscribe(personal => {
       if (personal) {
         // check if FCM is registered
@@ -61,44 +69,90 @@ export class PersonalService extends FireSubCollection<Personal> {
     })
 
     this.form.valueChanges.subscribe(() => {
-      if (!this.auth.uid) return
-      this.update(this.auth.uid, { settings: this.form.getRawValue() }, { params: { uid: this.auth.uid } })
+      const uid = this.auth.uid()
+      if (!uid) return
+      this.updateSettings(uid, this.form.getRawValue())
     })
   }
 
-  protected override toFirestore(personal: Personal, actionType: 'add' | 'update'): Personal {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') personal.createdAt = timestamp
-    personal.updatedAt = timestamp
-
-    return personal
+  private getDocRef(uid: string) {
+    return doc(this.firestore, `Users/${uid}/Personal/${uid}`).withConverter(converter)
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Personal>) {
-    return snapshot.exists()
-      ? createPersonal(toDate({ ...snapshot.data(), uid: snapshot.id }))
-      : undefined
+  docData(uid: string): Observable<Personal | undefined> {
+    const docPath = `Users/${uid}/Personal/${uid}`
+    const docRef = doc(this.firestore, docPath).withConverter(converter)
+    return _docData(docRef)
+  }
+
+  collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<Personal[]> {
+    const colPath = `Users/${options.uid}/Personal`
+    const colRef = collection(this.firestore, colPath).withConverter(converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q)
+  }
+
+  getDoc(uid: string): Promise<Personal | undefined> {
+    const docPath = `Users/${uid}/Personal/${uid}`
+    const docRef = doc(this.firestore, docPath).withConverter(converter)
+    return getDoc(docRef).then(snapshot => snapshot.data())
+  }
+
+  upsert(personal: Partial<Personal>, options: { uid: string }) {
+    const docPath = `Users/${options.uid}/Personal/${options.uid}`
+    const docRef = doc(this.firestore, docPath).withConverter(converter)
+    return setDoc(docRef, personal as any, { merge: true })
+  }
+
+  private async updateSettings(uid: string, settings: any) {
+    const ref = this.getDocRef(uid)
+    return setDoc(ref, { settings } as any, { merge: true })
+  }
+
+  private async updateFields(uid: string, data: Partial<Personal>) {
+    const ref = this.getDocRef(uid)
+    return setDoc(ref, data, { merge: true })
   }
 
   async getEncryptionKey(): Promise<string> {
     const uid = await this.auth.getUID()
     if (!uid) throw new Error('Should always have uid defined when getting decrypt key')
-    const personal = await this.load(uid, { uid })
+
+    const snapshot = await getDoc(this.getDocRef(uid))
+    const personal = snapshot.data()
+
     if (!personal) throw new Error('Should always have personal defined when getting decrypt key')
     return personal.key
   }
 
   updateLastCheckedNotification() {
-    if (this.auth.uid) {
-      this.update(this.auth.uid, {
+    const uid = this.auth.uid()
+    if (uid) {
+      this.updateFields(uid, {
         lastCheckedNotifications: serverTimestamp() as any
-      }, { params: { uid: this.auth.uid } })
+      })
+    }
+  }
+
+  async addFCMToken(token: string) {
+    const user = await this.auth.getUser()
+    if (token && user?.uid) {
+      this.updateFields(user.uid, {
+        fcmTokens: arrayUnion(token) as any
+      })
+    }
+  }
+
+  removeFCMToken(token: string | undefined) {
+    const uid = this.auth.uid()
+    if (token && uid) {
+      this.updateFields(uid, {
+        fcmTokens: arrayRemove(token) as any
+      })
     }
   }
 
   /**
-   *
    * @param showError Show error message if permission is denied
    * @param force Toggle setting to true if permission is granted despite not being set before
    * @returns Token
@@ -115,7 +169,7 @@ export class PersonalService extends FireSubCollection<Personal> {
       this.fcmIsRegistered.next(true)
 
       return token
-  } catch (err) {
+    } catch (err) {
       const { main } = this.form.pushNotification as PushNotificationSettingsForm
       if (force) main.setValue(false)
 
@@ -140,7 +194,7 @@ export class PersonalService extends FireSubCollection<Personal> {
         token = await getToken(getMessaging())
       }
     } else {
-      //  cant get token on Android or iOS
+      // cant get token on Android or iOS
     }
 
     if (token) {
@@ -150,12 +204,6 @@ export class PersonalService extends FireSubCollection<Personal> {
     }
   }
 
-  /**
-   *
-   * @param showError
-   * @param onlyToggleSettingIfNotSet
-   * @returns
-   */
   async registerFCM(showError: boolean, force: boolean): Promise<string | undefined> {
     if (Capacitor.getPlatform() === 'web') {
       const supported = await isSupported()
@@ -172,23 +220,6 @@ export class PersonalService extends FireSubCollection<Personal> {
     } else {
       await this.registerCapacitor(force)
       return
-    }
-  }
-
-  async addFCMToken(token: string) {
-    const user = await this.auth.awaitUser()
-    if (token && user?.uid) {
-      this.update(user.uid, {
-        fcmTokens: arrayUnion(token) as any
-      }, { params: { uid: user.uid } })
-    }
-  }
-
-  removeFCMToken(token: string | undefined) {
-    if (token && this.auth.uid) {
-      this.update(this.auth.uid, {
-        fcmTokens: arrayRemove(token) as any
-      }, { params: { uid: this.auth.uid } })
     }
   }
 
@@ -217,7 +248,6 @@ export class PersonalService extends FireSubCollection<Personal> {
   }
 
   async addListenersCapacitor(): Promise<void> {
-
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
       (token: Token) => {
@@ -253,7 +283,6 @@ export class PersonalService extends FireSubCollection<Personal> {
         }
       }
     )
-
   }
 
   async showMessages(): Promise<Unsubscribe | undefined> {

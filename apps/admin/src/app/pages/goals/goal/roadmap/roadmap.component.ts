@@ -29,9 +29,9 @@ export class AdminRoadmapComponent implements OnInit {
 
 	ngOnInit() {
     this.goal$ = this.goal.valueChanges(this.id)
-    this.milestones$ = this.milestone.valueChanges([orderBy('order', 'asc')], { goalId: this.id }).pipe(
+    this.milestones$ = this.milestone.collectionData([orderBy('order', 'asc')], { goalId: this.id }).pipe(
       joinWith({
-        achiever: ({ achieverId }) => achieverId ? this.profileService.valueChanges(achieverId) : of(undefined)
+        achiever: ({ achieverId }) => achieverId ? this.profileService.docData(achieverId) : of(undefined)
       })
     )
 	}

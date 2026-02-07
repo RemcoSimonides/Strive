@@ -44,7 +44,7 @@ export class EditProfileImagePopoverComponent implements OnInit {
 
     if (!this.form?.value) return
 
-    this.profileService.update({ uid: this.auth.uid, photoURL: this.form.value })
+    this.profileService.update({ uid: this.auth.uid() ?? '', photoURL: this.form.value })
     this.popoverCtrl.dismiss(this.form.value)
   }
 }

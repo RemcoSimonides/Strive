@@ -1,21 +1,20 @@
 import { Injectable, inject } from '@angular/core'
-import { DocumentSnapshot, limit, QueryConstraint, serverTimestamp, where } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { collectionData as _collectionData, collection, Firestore, limit, query, QueryConstraint, where } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
 
-import { of, switchMap, shareReplay, map } from 'rxjs'
+import { of, switchMap, shareReplay, map, Observable } from 'rxjs'
 
 import { createNotificationBase, NotificationBase, notificationEvents } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 
+const converter = createConverter<NotificationBase>(createNotificationBase)
+
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService extends FireSubCollection<NotificationBase> {
+export class NotificationService {
+  private firestore = inject(Firestore);
   private personal = inject(PersonalService);
-
-  readonly path = `Users/:uid/Notifications`
-  override readonly memorize = true
 
   hasUnreadNotification$ = this.personal.personal$.pipe(
     switchMap(personal => {
@@ -23,7 +22,7 @@ export class NotificationService extends FireSubCollection<NotificationBase> {
 
       const query: QueryConstraint[] = [limit(1)]
       if (personal.lastCheckedNotifications) query.push(where('createdAt', '>', personal.lastCheckedNotifications))
-      return this.valueChanges(query, { uid: personal.uid }).pipe(
+      return this.collectionData(query, { uid: personal.uid }).pipe(
         map(notifications => notifications.filter(n => notificationEvents.includes(n.event))),
         map(notifications => !!notifications.length)
       )
@@ -31,22 +30,10 @@ export class NotificationService extends FireSubCollection<NotificationBase> {
     shareReplay({ bufferSize: 1, refCount: true })
   )
 
-  constructor() {
-    super()
-  }
-
-  protected override toFirestore(notification: NotificationBase, actionType: 'add' | 'update'): NotificationBase {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') notification.createdAt = timestamp
-    notification.updatedAt = timestamp
-
-    return notification
-  }
-
-  protected override fromFirestore(snapshot: DocumentSnapshot<NotificationBase>) {
-    return snapshot.exists()
-      ? createNotificationBase(toDate({ ...snapshot.data(), id: snapshot.id, path: snapshot.ref.path }))
-      : undefined
+  collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<NotificationBase[]> {
+    const colPath = `Users/${options.uid}/Notifications`
+    const colRef = collection(this.firestore, colPath).withConverter(converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q, { idField: 'id' })
   }
 }

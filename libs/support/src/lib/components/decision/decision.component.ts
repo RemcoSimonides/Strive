@@ -23,17 +23,19 @@ export class SupportDecisionComponent {
     if (!this.support?.id) return
 
     if (this.counter) {
-      this.supportService.update(this.support.id, {
+      this.supportService.upsert({
+        id: this.support.id,
         counterStatus: status,
         counterNeedsDecision: false
-      }, { params: { goalId: this.support.goalId } })
+      }, { goalId: this.support.goalId })
       this.support.counterStatus = status
       this.support.counterNeedsDecision = false
     } else {
-      this.supportService.update(this.support.id, {
+      this.supportService.upsert({
+        id: this.support.id,
         status,
         needsDecision: false
-      }, { params: { goalId: this.support.goalId } })
+      }, { goalId: this.support.goalId })
       this.support.status = status
       this.support.needsDecision = false
     }

@@ -8,7 +8,7 @@ export class IsSupporterPipe implements PipeTransform {
   private auth = inject(AuthService);
 
   transform(support: Support) {
-    return support.supporterId === this.auth.uid
+    return support.supporterId === this.auth.uid()
   }
 }
 
@@ -17,6 +17,6 @@ export class IsRecipientPipe implements PipeTransform {
   private auth = inject(AuthService);
 
   transform(support: Support) {
-    return support.recipientId === this.auth.uid
+    return support.recipientId === this.auth.uid()
   }
 }

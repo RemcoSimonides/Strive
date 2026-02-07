@@ -1,27 +1,19 @@
-import { Injectable } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, inject } from '@angular/core'
+import { collectionData as _collectionData, collection, Firestore, query, QueryConstraint } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
+import { Observable } from 'rxjs'
 
 import { createGoalEvent, GoalEvent } from '@strive/model'
 
+const converter = createConverter<GoalEvent>(createGoalEvent as (data: any) => GoalEvent)
+
 @Injectable({ providedIn: 'root' })
-export class GoalEventService extends FireCollection<GoalEvent> {
-  readonly path = `GoalEvents`
-  override readonly memorize = true
+export class GoalEventService {
+  private firestore = inject(Firestore)
 
-  protected override toFirestore(event: GoalEvent, actionType: 'add' | 'update'): GoalEvent {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') event.createdAt = timestamp
-    event.updatedAt = timestamp
-
-    return event
-  }
-
-  protected override fromFirestore(snapshot: DocumentSnapshot<GoalEvent>) {
-    return snapshot.exists()
-      ? createGoalEvent(toDate({ ...snapshot.data(), id: snapshot.id }))
-      : undefined
+  collectionData(constraints: QueryConstraint[]): Observable<GoalEvent[]> {
+    const colRef = collection(this.firestore, 'GoalEvents').withConverter(converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q)
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 import { IonContent } from '@ionic/angular/standalone'
 
-import { orderBy } from 'firebase/firestore'
+import { orderBy } from '@angular/fire/firestore'
 import { of, switchMap } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -42,7 +42,7 @@ export class EntryModalComponent extends ModalDirective {
   @Input() previousEntry: WheelOfLifeEntry<number> | undefined
 
   entries$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
+    switchMap(profile => profile ? this.service.collectionData([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => this.service.decrypt(entries))
   )
 

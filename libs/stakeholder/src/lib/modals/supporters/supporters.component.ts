@@ -67,9 +67,9 @@ export class SupportersModalComponent extends ModalDirective implements OnInit {
   ngOnInit() {
     this.view$ = combineLatest([
       this.auth.user$,
-      this.stakeholderService.valueChanges({ goalId: this.goalId }).pipe(
+      this.stakeholderService.collectionData([], { goalId: this.goalId }).pipe(
         joinWith({
-          profile: stakeholder => this.profileService.valueChanges(stakeholder.uid)
+          profile: stakeholder => this.profileService.docData(stakeholder.uid)
         }, { shouldAwait: true })
       )
     ]).pipe(
@@ -101,7 +101,7 @@ export class SupportersModalComponent extends ModalDirective implements OnInit {
   }
 
   async support() {
-    if (!this.auth.uid) {
+    if (!this.auth.uid()) {
       const modal = await this.modalCtrl.create({
         component: AuthModalComponent,
         componentProps: {
@@ -114,7 +114,7 @@ export class SupportersModalComponent extends ModalDirective implements OnInit {
       return modal.present()
     }
 
-    const goal = await this.goalService.getValue(this.goalId)
+    const goal = await this.goalService.getDoc(this.goalId)
     this.modalCtrl.create({
       component: AddSupportModalComponent,
       componentProps: { goal }

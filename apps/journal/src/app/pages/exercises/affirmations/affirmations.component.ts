@@ -79,7 +79,7 @@ export class AffirmationsPageComponent implements OnDestroy {
   get times(): string[] { return this.timesForm.value }
 
   private subs: Subscription[] = []
-  uid$ = this.auth.uid$
+  uid = this.auth.uid
 
   constructor() {
     this.seo.generateTags({
@@ -128,7 +128,8 @@ export class AffirmationsPageComponent implements OnDestroy {
     const formSub = this.form.valueChanges.pipe(
       debounceTime(2000)
     ).subscribe(async value => {
-      if (!this.auth.uid) return
+      const uid = this.auth.uid()
+      if (!uid) return
       if (!value?.affirmations) return
       if (!value?.times) return
       const { times } = value
@@ -138,7 +139,7 @@ export class AffirmationsPageComponent implements OnDestroy {
         .filter(a => a !== '')
         .map((a: string) => AES.encrypt(a, key).toString())
 
-      this.service.saveAffirmations(this.auth.uid, { affirmations, times })
+      this.service.saveAffirmations(uid, { affirmations, times })
       this.form.markAsPristine()
       this.cdr.markForCheck()
     })

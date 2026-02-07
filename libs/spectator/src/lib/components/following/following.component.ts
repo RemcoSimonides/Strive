@@ -43,7 +43,7 @@ export class FollowingComponent extends ModalDirective {
     }),
     switchMap(uid => uid ? this.service.getSpectating(uid) : of([])),
     joinWith({
-      profile: spectator => this.profileService.valueChanges(spectator.profileId)
+      profile: spectator => this.profileService.docData(spectator.profileId)
     }, { shouldAwait: true })
   )
 

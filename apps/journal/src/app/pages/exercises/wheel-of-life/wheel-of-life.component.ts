@@ -7,7 +7,7 @@ import { IonContent, IonSelect, IonSelectOption, IonButton, IonIcon, IonCard, Io
 import { addIcons } from 'ionicons'
 import { add } from 'ionicons/icons'
 
-import { orderBy } from 'firebase/firestore'
+import { orderBy } from '@angular/fire/firestore'
 import { firstValueFrom, map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'
@@ -58,12 +58,12 @@ export class WheelOfLifePageComponent implements OnDestroy {
   private wheelOfLifeSettingsService = inject(WheelOfLifeService);
   private service = inject(WheelOfLifeEntryService);
 
-  uid$ = this.auth.uid$
+  uid = this.auth.uid
 
   isMobile$ = this.screensize.isMobile$
 
   entries$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
+    switchMap(profile => profile ? this.service.collectionData([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
   )
   hasEntries$ = firstValueFrom(this.entries$).then(entries => !!entries.length)
@@ -80,8 +80,9 @@ export class WheelOfLifePageComponent implements OnDestroy {
   form = new FormControl<Interval>('never')
 
   private sub = this.form.valueChanges.subscribe(interval => {
-    if (!this.auth.uid || !interval) return
-    this.wheelOfLifeSettingsService.save(this.auth.uid, { interval })
+    const uid = this.auth.uid()
+    if (!uid || !interval) return
+    this.wheelOfLifeSettingsService.save(uid, { interval })
   })
 
   constructor() {

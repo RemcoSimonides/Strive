@@ -46,7 +46,7 @@ export class PostOptionsComponent {
 					text: 'Yes',
 					handler: async () => {
 						if (!this.post.id) throw new Error('Post id has to be available when removing post')
-						this.postService.remove(this.post.id, { params: { goalId: this.post.goalId } })
+						this.postService.remove(this.post.id, { goalId: this.post.goalId })
 					}
 				},
 				{

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, Pipe, PipeTransform,
 
 import { IonContent } from '@ionic/angular/standalone'
 import { BehaviorSubject, combineLatest, filter, map, switchMap, tap } from 'rxjs'
-import { where } from 'firebase/firestore'
+import { where } from '@angular/fire/firestore'
 
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
@@ -54,9 +54,9 @@ export class IntegrationsComponent extends ModalDirective implements OnInit {
   private goalId$ = new BehaviorSubject(this.goalId)
   private strava$ = this.goalId$.pipe(
     filter(goalId => !!goalId),
-    switchMap(goalId => this.stravaService.valueChanges([
+    switchMap(goalId => this.stravaService.collectionData([
       where('goalId', '==', goalId),
-      where('userId', '==', this.auth.uid)]
+      where('userId', '==', this.auth.uid())]
     )),
     map(integrations => integrations.length ? integrations[0] : undefined),
     tap(strava => {

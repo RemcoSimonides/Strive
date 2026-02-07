@@ -1,8 +1,10 @@
 import { Injectable, inject } from '@angular/core'
+
+import { doc, DocumentReference, docData, Firestore } from '@angular/fire/firestore'
+
 import { Capacitor } from '@capacitor/core'
 import { AppUpdate } from '@capawesome/capacitor-app-update'
 import { AlertController, ToastController } from '@ionic/angular/standalone'
-import { FireDocument } from 'ngfire'
 import { setContext } from '@sentry/angular'
 
 interface Version {
@@ -12,21 +14,21 @@ interface Version {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AppVersionService extends FireDocument<Version> {
+export class AppVersionService {
+  private firestore = inject(Firestore);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
-
-  override path = `meta/version`
 
   version = "1.16.2"
 
   constructor() {
-    super()
     setContext('version', { app_version: this.version })
   }
 
-  async checkForUpdate() {
-    this.valueChanges().subscribe(version => {
+  checkForUpdate() {
+    const docPath = `meta/version`
+    const docRef = doc(this.firestore, docPath) as DocumentReference<Version>
+    docData(docRef).subscribe(version => {
       if (!version) return
 
       if (version.maintenance) {

@@ -1,6 +1,7 @@
 import { Component, HostListener, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
+import { Unsubscribe } from '@angular/fire/firestore'
 
 // Ionic
 import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
@@ -11,9 +12,7 @@ import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
 
-import { Unsubscribe } from 'firebase/firestore';
-
-import { filter, first, firstValueFrom, Subscription } from 'rxjs'
+import { filter, first, Subscription } from 'rxjs'
 
 import { differenceInMilliseconds } from 'date-fns'
 
@@ -26,12 +25,12 @@ import { ImageDirective } from '@strive/media/directives/image.directive'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 import { SupportService } from '@strive/support/support.service'
 import { NotificationService } from '@strive/notification/notification.service'
-import { PersonalService } from '@strive/user/personal.service'
 import { SeoService } from '@strive/utils/services/seo.service'
 import { AppVersionService } from '@strive/utils/services/app-version.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { PWAService } from '@strive/utils/services/pwa.service'
 import { ThemeService } from '@strive/utils/services/theme.service'
+import { PersonalService } from '@strive/user/personal.service';
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { SendIntentSelectGoalComponent } from '@strive/goal/modals/send-intent-select-goal/send-intent-select-goal.component'
@@ -106,7 +105,7 @@ export class AppComponent implements OnDestroy {
     }
 
     if (segments[0] === 'profile') {
-      const isOwner = segments[1] === this.auth.uid
+      const isOwner = segments[1] === this.auth.uid()
       if (isOwner) {
         return this.router.navigate(['goals'])
       } else {
@@ -160,7 +159,7 @@ export class AppComponent implements OnDestroy {
     if (isPlatformServer(this.platformId)) return
 
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
-      const isLoggedIn = await firstValueFrom(this.auth.isLoggedIn$)
+      const isLoggedIn = this.auth.isLoggedIn()
       const { url } = event
 
       if (!isLoggedIn) {
@@ -216,7 +215,7 @@ export class AppComponent implements OnDestroy {
   }
 
   @HostListener('window:resize', ['$event'])
-  private onResize(event: any) {
+  _onResize(event: any) {
     this.screensize.onResize(event.target.innerWidth)
   }
 }

@@ -1,27 +1,24 @@
-import { Injectable } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, inject } from '@angular/core'
+import { collectionData as _collectionData, collection, doc, docData as _docData, Firestore, query, QueryConstraint } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
+import { Observable } from 'rxjs'
 
-import { StoryItem } from '@strive/model'
+import { createStoryItemBase, StoryItem } from '@strive/model'
+
+const converter = createConverter<StoryItem>(createStoryItemBase as (data: any) => StoryItem)
 
 @Injectable({ providedIn: 'root' })
-export class StoryService extends FireSubCollection<StoryItem> {
-  readonly path = 'Goals/:goalId/Story'
-  override readonly memorize = false // no memorize for changing story order
+export class StoryService {
+  private firestore = inject(Firestore)
 
-  protected override toFirestore(item: StoryItem, actionType: 'add' | 'update'): StoryItem {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') item.createdAt = timestamp
-    item.updatedAt = timestamp
-
-    return item
+  docData(id: string, options: { goalId: string }): Observable<StoryItem | undefined> {
+    const docRef = doc(this.firestore, `Goals/${options.goalId}/Story/${id}`).withConverter(converter)
+    return _docData(docRef)
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<StoryItem>) {
-    return snapshot.exists()
-      ? toDate<StoryItem>({ ...snapshot.data(), [this.idKey]: snapshot.id })
-      : undefined
+  collectionData(constraints: QueryConstraint[], options: { goalId: string }): Observable<StoryItem[]> {
+    const colRef = collection(this.firestore, `Goals/${options.goalId}/Story`).withConverter(converter)
+    const q = query(colRef, ...constraints)
+    return _collectionData(q, { idField: 'id' })
   }
 }

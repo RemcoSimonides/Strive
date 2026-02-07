@@ -74,7 +74,8 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
   }
 
   stepper(direction: 'next' | 'previous') {
-    if (!this.auth.uid) throw new Error('User needs to be logged in in order to create goal')
+    const uid = this.auth.uid()
+    if (!uid) throw new Error('User needs to be logged in in order to create goal')
 
     const step = this.stepper$.value
     const { deadline } = this.goal
@@ -84,7 +85,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
       if (this.form.dirty) {
         if (isPast(deadline)) this.goal.status = 'succeeded'
 
-        this.goalService.upsert(this.goal, { params: { uid: this.auth.uid } })
+        this.goalService.update(this.goal.id, this.goal)
         this.created = true
         this.form.markAsPristine()
 
@@ -95,7 +96,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
     } else if (step === 'images') {
       if (this.form.image.dirty) {
         this.imagesComponent?.cropImage()
-        this.goalService.upsert({ id: this.goal.id, image: this.goal.image })
+        this.goalService.update(this.goal.id, { image: this.goal.image })
         this.form.image.markAsPristine()
       }
 
@@ -124,7 +125,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
         prompt,
         type: 'RoadmapSuggestion'
       })
-      this.chatGPTService.upsert(message, { params: { goalId: this.goal.id } })
+      this.chatGPTService.upsert(message, { goalId: this.goal.id })
 
 
       const end = format(deadline, 'dd MMMM yyyy')
@@ -135,7 +136,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
         prompt: `Soon I am going to ask you to break down my goal into milestones. I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. What are 3 questions to ask the user to create a more specific roadmap?`,
         type: 'RoadmapMoreInfoQuestions'
       })
-      this.chatGPTService.upsert(message2, { params: { goalId: this.goal.id } })
+      this.chatGPTService.upsert(message2, { goalId: this.goal.id })
     }
   }
 }

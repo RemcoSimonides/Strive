@@ -79,7 +79,7 @@ export class LoginComponent {
       const credentials = await signInWithPopup(getAuth(), new GoogleAuthProvider())
       const { uid } = credentials.user
 
-      const user = await this.profileService.getValue(uid)
+      const user = await this.profileService.getDoc(uid)
       if (!user) {
         getAuth().signOut()
         this.alertCtrl.create({

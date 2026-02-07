@@ -7,7 +7,7 @@
 </strive-header>
 
 <ion-content class="ion-padding">
-  @if (uid$ | async) {
+  @if (uid()) {
     <main>
       @if ((isMobile$ | async) === false) {
         <header>

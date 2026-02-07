@@ -12,6 +12,6 @@ export class UsersComponent {
   private profileService = inject(ProfileService);
 
 
-  users$ = this.profileService.valueChanges()
+  users$ = this.profileService.collectionData()
 
 }

@@ -52,16 +52,16 @@ export class SupportPageComponent {
       const { goalId } = this.route.snapshot.queryParams
       if (!goalId) return of(createSupportBase())
 
-      return this.support.valueChanges(id, { goalId }).pipe(
+      return this.support.docData(id, { goalId }).pipe(
         switchMap(support => {
           if (!support) return of(createSupportBase())
           if (support.supporterId !== profile.uid && support.recipientId !== profile.uid) return of(createSupportBase())
           return of(support).pipe(
             joinWith({
-              goal: ({ goalId }) => this.goal.valueChanges(goalId),
-              milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestone.valueChanges(milestoneId, { goalId }) : of(undefined),
-              recipient: ({ recipientId }) => this.profile.valueChanges(recipientId),
-              supporter: ({ supporterId }) => this.profile.valueChanges(supporterId)
+              goal: ({ goalId }) => this.goal.docData(goalId),
+              milestone: ({ milestoneId, goalId }) => milestoneId ? this.milestone.docData(milestoneId, { goalId }) : of(undefined),
+              recipient: ({ recipientId }) => this.profile.docData(recipientId),
+              supporter: ({ supporterId }) => this.profile.docData(supporterId)
             }, { shouldAwait: true })
           )
         })

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, inject } from '@angular/core'
-import { orderBy, where } from 'firebase/firestore'
+import { orderBy, where } from '@angular/fire/firestore'
 import { Observable, tap } from 'rxjs'
 
 import { Goal, Milestone, createGoalStakeholder } from '@strive/model'
@@ -37,7 +37,7 @@ export class GoalRoadmapComponent implements OnInit {
   ngOnInit() {
     if (!this.goal) return
     const query = [where('deletedAt', '==', null), orderBy('order', 'asc')]
-    this.milestones$ = this.milestoneService.valueChanges(query, { goalId: this.goal.id }).pipe(
+    this.milestones$ = this.milestoneService.collectionData(query, { goalId: this.goal.id }).pipe(
       tap(async () => {
         const scrollHeight = this.scrollService.scrollHeight
         if (!scrollHeight) return

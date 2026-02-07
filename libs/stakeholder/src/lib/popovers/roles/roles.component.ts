@@ -34,7 +34,7 @@ export class RolesPopoverComponent {
 		this.stakeholderService.upsert({
 			uid: this.stakeholder.uid,
 			isAdmin: !this.stakeholder.isAdmin
-		}, { params: { goalId: this.goalId } })
+		}, { goalId: this.goalId })
 	}
 
 	toggleAchiever() {
@@ -43,7 +43,7 @@ export class RolesPopoverComponent {
 		this.stakeholderService.upsert({
 			uid: this.stakeholder.uid,
 			isAchiever: !this.stakeholder.isAchiever
-		}, { params: { goalId: this.goalId } })
+		}, { goalId: this.goalId })
 	}
 
 	async remove() {
@@ -57,7 +57,7 @@ export class RolesPopoverComponent {
 				{
 					text: 'Yes',
 					handler: async () => {
-						this.stakeholderService.remove(this.stakeholder.uid, { params: { goalId: this.goalId } })
+						this.stakeholderService.remove(this.stakeholder.uid, { goalId: this.goalId })
 					}
 				},
 				{

@@ -133,7 +133,8 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 	}
 
 	async submitPost() {
-		if (!this.auth.uid) return
+		const uid = this.auth.uid()
+		if (!uid) return
 		if (this.postForm.invalid) return
 		this.saving$.next(true)
 
@@ -166,10 +167,10 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 				url,
 				youtubeId,
 				stravaActivityId: this.post.stravaActivityId,
-				uid: this.auth.uid,
+				uid,
 			})
 
-			await this.postService.upsert(post, { params: { goalId: post.goalId } })
+			await this.postService.upsert(post, { goalId: post.goalId })
 		}
 		this.saving$.next(false)
 		this.dismiss(true)

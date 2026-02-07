@@ -324,8 +324,8 @@ export class AuthModalComponent implements OnInit {
       const personal = createPersonal({ uid: user.uid, email, key: createRandomString(32) })
 
       await Promise.all([
-        this.profile.add(profile),
-        this.personal.add(personal, { params: { uid: user.uid } })
+        this.profile.update(profile),
+        this.personal.upsert(personal, { uid: user.uid })
       ])
 
       this.modalCtrl.dismiss(true)
@@ -395,13 +395,13 @@ export class AuthModalComponent implements OnInit {
   private async oAuthLogin(user: User) {
     const { displayName, uid, email } = user
 
-    const profile = await this.profile.getValue(uid)
+    const profile = await this.profile.getDoc(uid)
     if (!profile) {
       const user = createUser({ username: displayName ?? '', uid })
       const personal = createPersonal({ uid, email: email ?? '', key: createRandomString(32) })
       await Promise.all([
-        this.profile.upsert(user),
-        this.personal.add(personal, { params: { uid } })
+        this.profile.update(user),
+        this.personal.upsert(personal, { uid })
       ])
       const top = await this.modalCtrl.getTop()
       if (top) {

@@ -1,38 +1,36 @@
-import { Injectable } from '@angular/core'
-import { DocumentSnapshot, serverTimestamp } from 'firebase/firestore'
-import { FireSubCollection } from 'ngfire'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, inject } from '@angular/core'
+import { doc, docData as _docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore'
+import { createConverter } from '@strive/utils/firebase'
+import { Observable } from 'rxjs'
 
 import { Affirmations } from '@strive/model'
 
+const factory = (data: any): Affirmations => ({
+  id: data.id ?? '',
+  affirmations: data.affirmations ?? [],
+  times: data.times ?? [],
+  createdAt: data.createdAt ?? new Date(),
+  updatedAt: data.updatedAt ?? new Date()
+})
+
+const converter = createConverter<Affirmations>(factory)
+
 @Injectable({providedIn: 'root'})
-export class AffirmationService extends FireSubCollection<Affirmations> {
-  readonly path = 'Users/:uid/Exercises'
-  override readonly memorize = true
+export class AffirmationService {
+  private firestore = inject(Firestore)
 
-  protected override async toFirestore(settings: Affirmations, actionType: 'add' | 'update'): Promise<Affirmations> {
-    const timestamp = serverTimestamp() as any
-
-    if (actionType === 'add') settings.createdAt = timestamp
-    settings.updatedAt = timestamp
-
-    return settings
+  getAffirmations$(uid: string): Observable<Affirmations | undefined> {
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/Affirmations`).withConverter(converter)
+    return _docData(docRef)
   }
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Affirmations>) {
-    if (!snapshot.exists()) return
-    return toDate<Affirmations>({ ...snapshot.data(), id: snapshot.id })
+  getAffirmations(uid: string): Promise<Affirmations | undefined> {
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/Affirmations`).withConverter(converter)
+    return getDoc(docRef).then(snapshot => snapshot.data())
   }
 
-  getAffirmations$(uid: string) {
-    return this.valueChanges('Affirmations', { uid })
-  }
-
-  getAffirmations(uid: string) {
-    return this.getValue('Affirmations', { uid })
-  }
-
-  saveAffirmations(uid: string, affirmations: Affirmations) {
-    return this.upsert({ ...affirmations, id: 'Affirmations' }, { params: { uid }})
+  saveAffirmations(uid: string, affirmations: Partial<Affirmations>) {
+    const docRef = doc(this.firestore, `Users/${uid}/Exercises/Affirmations`).withConverter(converter)
+    return setDoc(docRef, affirmations as Affirmations, { merge: true })
   }
 }

@@ -6,7 +6,7 @@ import { IonContent, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { chevronUpOutline } from 'ionicons/icons'
 
-import { orderBy } from '@firebase/firestore'
+import { orderBy } from '@angular/fire/firestore'
 import { joinWith } from '@strive/utils/firebase'
 
 import { switchMap, tap, map } from 'rxjs/operators'
@@ -60,7 +60,7 @@ export class NotificationsPageComponent implements OnInit {
 
 
   notifications$?: Observable<Notification[]>
-  uid$ = this.auth.uid$
+  uid = this.auth.uid
 
   constructor() {
     addIcons({ chevronUpOutline });
@@ -73,15 +73,15 @@ export class NotificationsPageComponent implements OnInit {
       tap(_ => this.personal.updateLastCheckedNotification()),
       switchMap(profile => {
         if (!profile) return of([])
-        return this.notification.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }).pipe(
+        return this.notification.collectionData([orderBy('createdAt', 'desc')], { uid: profile.uid }).pipe(
           map(notifications => notifications.filter(n => notificationEvents.includes(n.event)))
         )
       }),
       joinWith({
-        goal: ({ goalId }) => goalId ? this.goalService.valueChanges(goalId) : of(undefined),
-        milestone: ({ milestoneId, goalId }) => milestoneId && goalId ? this.milestoneService.valueChanges(milestoneId, { goalId }) : of(undefined),
-        support: ({ supportId, goalId }) => supportId && goalId ? this.supportService.valueChanges(supportId, { goalId }) : of(undefined),
-        user: ({ userId }) => userId ? this.profileService.valueChanges(userId) : of(undefined)
+        goal: ({ goalId }) => goalId ? this.goalService.docData(goalId) : of(undefined),
+        milestone: ({ milestoneId, goalId }) => milestoneId && goalId ? this.milestoneService.docData(milestoneId, { goalId }) : of(undefined),
+        support: ({ supportId, goalId }) => supportId && goalId ? this.supportService.docData(supportId, { goalId }) : of(undefined),
+        user: ({ userId }) => userId ? this.profileService.docData(userId) : of(undefined)
       }, { shouldAwait: true })
     )
   }

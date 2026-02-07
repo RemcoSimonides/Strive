@@ -1,5 +1,44 @@
-import { Timestamp } from "firebase/firestore";
-import { Observable, OperatorFunction, from, of, tap, startWith, combineLatest, map, switchMap, debounceTime } from "rxjs";
+import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, Timestamp } from '@angular/fire/firestore'
+import { Observable, OperatorFunction, from, of, tap, startWith, combineLatest, map, switchMap, debounceTime } from 'rxjs'
+
+export const createConverter = <T extends Record<string, any>>(
+  factory: (data: DocumentData) => T,
+  idField: keyof T = 'id'
+): FirestoreDataConverter<T | undefined> => {
+  return {
+    toFirestore: (payload: T): DocumentData => {
+      const isUpdate = !!payload[idField];
+      const timestamp = serverTimestamp();
+      const data = { ...payload } as DocumentData;
+
+      if (!isUpdate) {
+        data['createdAt'] = timestamp;
+      }
+      data['updatedAt'] = timestamp;
+
+      delete data[idField as string];
+      return data;
+    },
+
+    fromFirestore: (
+      snapshot: QueryDocumentSnapshot,
+      options: SnapshotOptions
+    ): T | undefined => {
+      if (snapshot.exists()) {
+        const data = snapshot.data(options);
+
+        const dataWithId = {
+          ...data,
+          [idField]: snapshot.id,
+        };
+
+        return factory(toDate(dataWithId));
+      } else {
+        return undefined
+      }
+    },
+  };
+}
 
 export function toDate<D>(target: D): D {
   if (typeof target !== 'object') return target;

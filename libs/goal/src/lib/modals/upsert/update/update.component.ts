@@ -54,14 +54,15 @@ export class GoalUpdateModalComponent extends ModalDirective implements OnInit {
   async save() {
     if (!this.form || this.form.invalid) return
     if (!this.goal) return
-    if (!this.auth.uid) return
+    const uid = this.auth.uid()
+    if (!uid) return
 
     if (this.form.image.dirty) {
       this.imagesComponent?.cropImage()
     }
 
     const goal = { ...this.form.getGoalValue(), id: this.goal.id }
-    await this.goalService.upsert(goal, { params: { uid: this.auth.uid } })
+    await this.goalService.update(goal.id, goal)
     this.dismiss()
   }
 }

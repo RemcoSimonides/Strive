@@ -40,7 +40,7 @@ export class RemindersComponent implements OnInit {
 
   ngOnInit() {
     if (this.goalId && this.stakeholderId) {
-      this.reminders$ = this.reminderService.valueChanges({ goalId: this.goalId, uid: this.stakeholderId })
+      this.reminders$ = this.reminderService.collectionData({ goalId: this.goalId, uid: this.stakeholderId })
     }
   }
 

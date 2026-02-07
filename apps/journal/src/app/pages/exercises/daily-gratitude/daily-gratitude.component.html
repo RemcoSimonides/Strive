@@ -14,7 +14,7 @@
     </section>
 
     @if (!isLoading) {
-      @if (uid$ | async) {
+      @if (uid()) {
         <strive-exercise-activate-push-notification/>
         <section class="toggle">
           <article>

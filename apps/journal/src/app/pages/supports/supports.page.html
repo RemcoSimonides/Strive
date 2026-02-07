@@ -1,10 +1,10 @@
 <strive-header-root title="Supports" />
 
-@if ((uid$ | async) === undefined) {
+@if ((uid()) === undefined) {
   <strive-page-loading />
 }
 
-@if ((uid$ | async) === '') {
+@if ((uid()) === '') {
   <div class="not-logged-in">
     <p>
       <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your supports
@@ -12,7 +12,7 @@
   </div>
 }
 
-@if (uid$ | async) {
+@if (uid()) {
   <ion-content class="ion-padding">
     <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
       <ion-refresher-content />

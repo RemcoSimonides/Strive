@@ -13,7 +13,7 @@
     </section>
 
     @if (finishedLoading$ | async) {
-      @if (uid$ | async) {
+      @if (uid()) {
         <section class="reminder">
           <span>Receive reminder</span>
           <ion-select interface="popover" [formControl]="form">

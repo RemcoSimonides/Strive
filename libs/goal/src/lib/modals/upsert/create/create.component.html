@@ -31,7 +31,7 @@
     @case ('reminders') {
       <ion-content class="ion-padding">
         <small>Schedule reminders to get you on track.</small>
-        @if (uid) {
+        @if (uid(); as uid) {
           <strive-reminders [goalId]="goal.id" [stakeholderId]="uid" />
         }
       </ion-content>

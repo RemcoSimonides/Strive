@@ -7,7 +7,7 @@ import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel,
 import { addIcons } from 'ionicons'
 import { settingsOutline, arrowForwardOutline, filterOutline, addOutline } from 'ionicons/icons'
 
-import { orderBy } from 'firebase/firestore'
+import { orderBy } from '@angular/fire/firestore'
 import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap, startWith } from 'rxjs'
 import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDate, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 
@@ -115,11 +115,11 @@ export class SelfReflectComponent {
 
 
   isMobile$ = this.screensize.isMobile$
-  uid$ = this.auth.uid$
+  uid = this.auth.uid
   loadingQuestions = signal<boolean>(true)
 
   dbEntries$ = this.auth.profile$.pipe(
-    switchMap(profile => profile ? this.service.valueChanges([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
+    switchMap(profile => profile ? this.service.collectionData([orderBy('createdAt', 'desc')], { uid: profile.uid }) : of([])),
     switchMap(entries => entries.length ? this.service.decrypt(entries) : of([])),
     shareReplay({ bufferSize: 1, refCount: true })
   )
