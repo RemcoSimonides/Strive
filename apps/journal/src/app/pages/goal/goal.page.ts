@@ -7,7 +7,8 @@ import { addIcons } from 'ionicons'
 import { arrowBack, checkmarkOutline, notificationsOutline, chatbubblesOutline, personAddOutline, shareSocialOutline, ellipsisHorizontalOutline, flag, notifications, link, lockOpenOutline, lockClosedOutline, timerOutline, closeOutline, arrowDownOutline, arrowUpOutline, sparklesOutline } from 'ionicons/icons'
 
 // Firebase
-import { orderBy, OrderByDirection, where } from '@angular/fire/firestore'
+import { OrderByDirection } from '@angular/fire/firestore'
+import { orderBy, where } from 'firebase/firestore'
 import { joinWith } from '@strive/utils/firebase'
 // Rxjs
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs'
