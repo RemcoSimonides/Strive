@@ -85,7 +85,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     // need to make comments unique because of bug in Collection Service and two listeners to last message (lastCheckedChat and new messages)
     map(comments => comments.filter((item, i) => comments.findIndex(c => c.id === item.id) === i)),
     joinWith({
-      user: comment => this.profileService.docData(comment.userId)
+      user: comment => comment.userId ? this.profileService.docData(comment.userId) : of(undefined)
     }),
     map(comments => comments.filter(comment => comment.user))
   )
