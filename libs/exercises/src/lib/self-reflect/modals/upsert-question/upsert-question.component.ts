@@ -6,7 +6,7 @@ import { addIcons } from 'ionicons'
 import { trashOutline } from 'ionicons/icons'
 import { IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonTextarea, IonSelect, IonSelectOption, IonRange, IonLabel } from '@ionic/angular/standalone'
 
-import { orderBy } from '@angular/fire/firestore'
+import { orderBy } from 'firebase/firestore'
 import { debounceTime, of, switchMap } from 'rxjs'
 
 import { closestIndexTo, eachDayOfInterval, endOfDay, isBefore, startOfDay } from 'date-fns'

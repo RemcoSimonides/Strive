@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core'
-import { addDoc, collection, collectionData, doc, Firestore, query, QueryConstraint, setDoc } from '@angular/fire/firestore'
+import { Firestore, addDoc, setDoc, collectionData } from '@angular/fire/firestore'
+import { collection, doc, query, QueryConstraint } from 'firebase/firestore'
 import { createConverter } from '@strive/utils/firebase'
 
 import { Comment, createComment } from '@strive/model'

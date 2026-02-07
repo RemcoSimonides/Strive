@@ -5,20 +5,8 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
 
-import {
-  Firestore,
-  doc,
-  docData as _docData,
-  collectionData as _collectionData,
-  setDoc,
-  getDoc,
-  arrayUnion,
-  arrayRemove,
-  serverTimestamp,
-  QueryConstraint,
-  collection,
-  query,
-} from '@angular/fire/firestore'
+import { Firestore, setDoc, getDoc, docData as _docData, collectionData as _collectionData } from '@angular/fire/firestore'
+import { doc, arrayUnion, arrayRemove, serverTimestamp, QueryConstraint, collection, query } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
 
 import { createConverter } from '@strive/utils/firebase'

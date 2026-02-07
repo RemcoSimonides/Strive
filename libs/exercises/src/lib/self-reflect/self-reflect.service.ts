@@ -3,9 +3,9 @@ import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry, createSelfReflectSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
-import { collectionData as _collectionData, collection, doc, docData as _docData, Firestore, getDoc, query, QueryConstraint, setDoc, limit, orderBy, where } from '@angular/fire/firestore'
+import { Firestore, getDoc, setDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
+import { collection, doc, query, QueryConstraint, limit, orderBy, where, DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore'
 import { toDate } from '@strive/utils/firebase'
-import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore'
 import { firstValueFrom, map, Observable, switchMap, take } from 'rxjs'
 
 const settingsConverter: FirestoreDataConverter<SelfReflectSettings | undefined> = {

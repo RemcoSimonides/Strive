@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core'
-import { orderBy, where } from '@angular/fire/firestore'
+import { orderBy, where } from 'firebase/firestore'
 
 import { BehaviorSubject, Subscription, combineLatest, map, timer } from 'rxjs'
 

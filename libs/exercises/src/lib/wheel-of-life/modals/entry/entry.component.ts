@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 import { IonContent } from '@ionic/angular/standalone'
 
-import { orderBy } from '@angular/fire/firestore'
+import { orderBy } from 'firebase/firestore'
 import { of, switchMap } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'

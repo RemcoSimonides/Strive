@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core'
-import { addDoc, collection, collectionData as _collectionData, docData as _docData, doc, Firestore, getDocs, QueryConstraint, setDoc, query } from '@angular/fire/firestore'
+import { Firestore, addDoc, getDocs, setDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
+import { collection, doc, QueryConstraint, query } from 'firebase/firestore'
 import { createConverter } from '@strive/utils/firebase'
 
 import { ChatGPTMessage, Goal, createChatGPTMessage } from '@strive/model'

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core'
-import { addDoc, collection, doc, docData as _docData, getDoc, DocumentData, Firestore, FirestoreDataConverter, orderBy, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, setDoc, SnapshotOptions, where, deleteDoc } from '@angular/fire/firestore'
+import { Firestore, addDoc, getDoc, setDoc, deleteDoc, docData as _docData } from '@angular/fire/firestore'
+import { collection, doc, DocumentData, FirestoreDataConverter, orderBy, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, where } from 'firebase/firestore'
 import { joinWith, toDate } from '@strive/utils/firebase'
 
 import { Observable } from 'rxjs'

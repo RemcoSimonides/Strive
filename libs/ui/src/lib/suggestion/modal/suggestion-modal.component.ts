@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, inject } from '@angular/core'
 import { IonContent } from '@ionic/angular/standalone'
-import { orderBy, where } from '@angular/fire/firestore'
+import { orderBy, where } from 'firebase/firestore'
 
 import { isAfter, subMinutes } from 'date-fns'
 import { BehaviorSubject, Observable, map, of, switchMap, tap } from 'rxjs'

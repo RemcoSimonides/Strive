@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { doc, DocumentSnapshot, getDoc, getFirestore, setDoc } from '@angular/fire/firestore'
+import { getDoc, setDoc } from '@angular/fire/firestore'
+import { doc, DocumentSnapshot, getFirestore } from 'firebase/firestore'
 
 
 export interface InviteToken {

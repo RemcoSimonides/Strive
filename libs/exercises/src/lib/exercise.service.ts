@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core'
 import { Affirmations, DailyGratitude, DearFutureSelf, SelfReflectSettings, WheelOfLifeSettings } from '@strive/model'
-import { collectionData as _collectionData, collection, Firestore } from '@angular/fire/firestore'
+import { Firestore, collectionData as _collectionData } from '@angular/fire/firestore'
+import { collection, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore'
 import { toDate } from '@strive/utils/firebase'
-import { FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 
 export type ExerciseSettings = Affirmations | DailyGratitude | WheelOfLifeSettings | DearFutureSelf | SelfReflectSettings

@@ -1,4 +1,4 @@
-import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, Timestamp } from '@angular/fire/firestore'
+import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, Timestamp } from 'firebase/firestore'
 import { Observable, OperatorFunction, from, of, tap, startWith, combineLatest, map, switchMap, debounceTime } from 'rxjs'
 
 export const createConverter = <T extends Record<string, any>>(

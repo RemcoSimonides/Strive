@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core'
-import { getDoc, getDocs, serverTimestamp, collectionData as _collectionData, collectionGroup, doc, docData as _docData, deleteDoc, FirestoreDataConverter, DocumentData, QueryDocumentSnapshot, SnapshotOptions, collection, Firestore, addDoc, setDoc, QueryConstraint, query, UpdateData } from '@angular/fire/firestore'
+import { Firestore, getDoc, getDocs, setDoc, addDoc, deleteDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
+import { serverTimestamp, collectionGroup, doc, FirestoreDataConverter, DocumentData, QueryDocumentSnapshot, SnapshotOptions, collection, QueryConstraint, query, UpdateData } from 'firebase/firestore'
 import { toDate } from '@strive/utils/firebase'
 
 import { AuthService } from '@strive/auth/auth.service'

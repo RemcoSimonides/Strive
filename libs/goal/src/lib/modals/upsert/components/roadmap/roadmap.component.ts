@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, inject } from '@angular/core'
-import { orderBy, where } from '@angular/fire/firestore'
+import { orderBy, where } from 'firebase/firestore'
 import { Observable, tap } from 'rxjs'
 
 import { Goal, Milestone, createGoalStakeholder } from '@strive/model'

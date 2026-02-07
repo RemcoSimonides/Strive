@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core'
-import { collectionData as _collectionData, collection, Firestore, limit, query, QueryConstraint, where } from '@angular/fire/firestore'
+import { Firestore, collectionData as _collectionData } from '@angular/fire/firestore'
+import { collection, limit, query, QueryConstraint, where } from 'firebase/firestore'
 import { createConverter } from '@strive/utils/firebase'
 
 import { of, switchMap, shareReplay, map, Observable } from 'rxjs'

@@ -6,7 +6,7 @@ import { IonItem, IonTextarea, IonButton, IonIcon, PopoverController } from '@io
 import { addIcons } from 'ionicons'
 import { calendarOutline, checkmark } from 'ionicons/icons'
 
-import { limit, orderBy } from '@angular/fire/firestore'
+import { limit, orderBy } from 'firebase/firestore'
 import { BehaviorSubject, firstValueFrom, of, switchMap, tap } from 'rxjs'
 import { formatISO, isToday, startOfDay } from 'date-fns'
 import { SwiperContainer } from 'swiper/element'

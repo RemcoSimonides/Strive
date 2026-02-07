@@ -6,7 +6,7 @@ import { AlertController, IonButton, IonIcon, IonContent, IonItem, IonTextarea, 
 import { addIcons } from 'ionicons'
 import { checkmarkOutline, alarmOutline, personOutline, reorderFourOutline, trashOutline, checkmarkCircle, radioButtonOff } from 'ionicons/icons'
 
-import { orderBy, serverTimestamp, where } from '@angular/fire/firestore'
+import { orderBy, serverTimestamp, where } from 'firebase/firestore'
 import { joinWith } from '@strive/utils/firebase'
 
 import { combineLatest, Observable, of, Subscription } from 'rxjs'

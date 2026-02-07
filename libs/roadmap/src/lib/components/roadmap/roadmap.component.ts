@@ -6,7 +6,7 @@ import { AlertController, IonList, IonReorderGroup, IonItemSliding, IonItem, Ion
 import { addIcons } from 'ionicons'
 import { chatboxOutline, listOutline, alarmOutline, trashOutline } from 'ionicons/icons'
 
-import { serverTimestamp } from '@angular/fire/firestore'
+import { serverTimestamp } from 'firebase/firestore'
 
 import { createGoalStakeholder, createPost, Goal, GoalStakeholder, MilestoneStatus, StoryItem, Support } from '@strive/model'
 

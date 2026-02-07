@@ -6,7 +6,8 @@ import { IonButton, IonIcon, IonContent, IonInfiniteScroll, IonInfiniteScrollCon
 import { addIcons } from 'ionicons'
 import { settingsOutline, send } from 'ionicons/icons'
 
-import { collection, DocumentData, getDocs, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from '@angular/fire/firestore'
+import { getDocs } from '@angular/fire/firestore'
+import { collection, DocumentData, getFirestore, limit, orderBy, Query, query, QueryConstraint, startAfter, where } from 'firebase/firestore'
 import { joinWith } from '@strive/utils/firebase'
 import { toDate } from '@strive/utils/firebase'
 

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 
-import { doc, DocumentReference, docData, Firestore } from '@angular/fire/firestore'
+import { Firestore, docData } from '@angular/fire/firestore'
+import { doc, DocumentReference } from 'firebase/firestore'
 
 import { Capacitor } from '@capacitor/core'
 import { AppUpdate } from '@capawesome/capacitor-app-update'

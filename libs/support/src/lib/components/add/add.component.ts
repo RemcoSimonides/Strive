@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { IonList, IonItem, IonInput, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone'
 
-import { where } from '@angular/fire/firestore'
+import { where } from 'firebase/firestore'
 
 import { createSupportBase, Goal, Milestone } from '@strive/model'
 

@@ -1,5 +1,6 @@
 import { inject, Injectable, OnDestroy, signal } from '@angular/core'
-import { getDoc, getFirestore, doc, serverTimestamp, WithFieldValue } from '@angular/fire/firestore'
+import { getDoc, docSnapshots } from '@angular/fire/firestore'
+import { getFirestore, doc, serverTimestamp, WithFieldValue, FirestoreDataConverter, DocumentData, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore'
 import { toDate } from '@strive/utils/firebase'
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -7,13 +8,6 @@ import { createUser, User as StriveUser } from '@strive/model'
 
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators'
 import { Auth, User } from '@angular/fire/auth'
-import {
-  FirestoreDataConverter,
-  DocumentData,
-  QueryDocumentSnapshot,
-  SnapshotOptions,
-  docSnapshots
-} from '@angular/fire/firestore';
 
 const converter: FirestoreDataConverter<StriveUser> = {
   toFirestore: (profile: WithFieldValue<StriveUser>) => {

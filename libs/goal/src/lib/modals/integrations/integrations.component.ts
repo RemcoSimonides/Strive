@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, Pipe, PipeTransform,
 
 import { IonContent } from '@ionic/angular/standalone'
 import { BehaviorSubject, combineLatest, filter, map, switchMap, tap } from 'rxjs'
-import { where } from '@angular/fire/firestore'
+import { where } from 'firebase/firestore'
 
 import { HeaderModalComponent } from '@strive/ui/header-modal/header-modal.component'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
