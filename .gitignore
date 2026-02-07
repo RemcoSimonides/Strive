@@ -17,7 +17,6 @@ node_modules
 *.launch
 .settings/
 *.sublime-workspace
-.mcp.json
 
 # IDE - VSCode
 .vscode/*
@@ -41,7 +40,10 @@ testem.log
 Thumbs.db
 
 .angular
+.mcp.json
+.claude
 .env
+
 
 # Firebase
 firebase-debug.log
