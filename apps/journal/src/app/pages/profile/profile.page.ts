@@ -164,7 +164,7 @@ export class ProfilePageComponent {
     }).then(modal => modal.present())
   }
 
-  async editProfileImage(profile: User, ev: UIEvent) {
+  async editProfileImage(profile: User, ev: Event) {
     const isOwner = await firstValueFrom(this.isOwner$)
     if (!isOwner) {
       const split = profile.photoURL.split('/')
