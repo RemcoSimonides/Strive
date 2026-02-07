@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, getDoc, getDocs, setDoc, addDoc, deleteDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
-import { serverTimestamp, collectionGroup, doc, FirestoreDataConverter, DocumentData, QueryDocumentSnapshot, SnapshotOptions, collection, QueryConstraint, query, UpdateData } from 'firebase/firestore'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, setDoc, addDoc, deleteDoc } from '@angular/fire/firestore'
+import { getDoc, getDocs, serverTimestamp, collectionGroup, doc, FirestoreDataConverter, DocumentData, QueryDocumentSnapshot, SnapshotOptions, collection, QueryConstraint, query, UpdateData } from 'firebase/firestore'
+import { collectionData, docData, toDate } from '@strive/utils/firebase'
 
 import { AuthService } from '@strive/auth/auth.service'
 
@@ -21,6 +21,7 @@ export interface roleArgs {
 })
 export class GoalStakeholderService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService);
 
   converter: FirestoreDataConverter<GoalStakeholder | undefined> = {
@@ -56,7 +57,7 @@ export class GoalStakeholderService {
   docData(stakeholderId: string, options: { goalId: string }) {
     const path = `Goals/${options.goalId}/GStakeholders/${stakeholderId}`
     const ref = doc(this.firestore, path).withConverter(this.converter)
-    return _docData(ref)
+    return docData(this.injector, ref)
   }
 
   collectionData(constraints: QueryConstraint[], options?: { goalId: string }): Observable<GoalStakeholder[]> {
@@ -65,7 +66,7 @@ export class GoalStakeholderService {
       ? collection(this.firestore, path).withConverter(this.converter)
       : collectionGroup(this.firestore, 'GStakeholders').withConverter(this.converter)
     const q = query(ref, ...constraints)
-    return _collectionData(q, { idField: 'uid' })
+    return collectionData(this.injector, q, { idField: 'uid' }) as Observable<GoalStakeholder[]>
   }
 
   getDoc(stakeholderId: string, params: { goalId: string }) {

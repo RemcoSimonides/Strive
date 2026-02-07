@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, getDoc, setDoc, docData as _docData } from '@angular/fire/firestore'
-import { arrayUnion, doc } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, setDoc } from '@angular/fire/firestore'
+import { arrayUnion, doc, getDoc } from 'firebase/firestore'
+import { createConverter, docData } from '@strive/utils/firebase'
 
 import { Observable } from 'rxjs'
 
@@ -21,10 +21,11 @@ const converter = createConverter<DearFutureSelf>(factory)
 })
 export class DearFutureSelfService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   getSettings$(uid: string): Observable<DearFutureSelf | undefined> {
     const docRef = doc(this.firestore, `Users/${uid}/Exercises/DearFutureSelf`).withConverter(converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   getSettings(uid: string): Promise<DearFutureSelf | undefined> {

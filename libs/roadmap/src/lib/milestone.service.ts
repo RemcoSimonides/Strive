@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, addDoc, getDocs, setDoc, deleteDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
-import { collection, doc, DocumentData, FirestoreDataConverter, query, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions } from 'firebase/firestore'
-import { toDate } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, addDoc, setDoc, deleteDoc } from '@angular/fire/firestore'
+import { collection, doc, DocumentData, FirestoreDataConverter, getDocs, query, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions } from 'firebase/firestore'
+import { collectionData, docData, toDate } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -12,6 +12,7 @@ import { endOfDay } from 'date-fns'
 @Injectable({ providedIn: 'root' })
 export class MilestoneService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService)
 
   private converter: FirestoreDataConverter<Milestone | undefined> = {
@@ -43,13 +44,13 @@ export class MilestoneService {
 
   docData(milestoneId: string, options: { goalId: string }): Observable<Milestone | undefined> {
     const docRef = doc(this.firestore, `Goals/${options.goalId}/Milestones/${milestoneId}`).withConverter(this.converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   collectionData(constraints: QueryConstraint[], options: { goalId: string }): Observable<Milestone[]> {
     const colRef = collection(this.firestore, `Goals/${options.goalId}/Milestones`).withConverter(this.converter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q, { idField: 'id' })
+    return collectionData(this.injector, q, { idField: 'id' }) as Observable<Milestone[]>
   }
 
   async getDocs(constraints: QueryConstraint[], options: { goalId: string }): Promise<Milestone[]> {

@@ -1,11 +1,11 @@
-import { Injectable, inject } from '@angular/core'
+import { Injectable, Injector, inject } from '@angular/core'
 import { AuthService } from '@strive/auth/auth.service'
 import { SelfReflectEntry, SelfReflectFrequency, SelfReflectSettings, createSelfReflectEntry, createSelfReflectSettings } from '@strive/model'
 import { PersonalService } from '@strive/user/personal.service'
 import { AES, enc } from 'crypto-js'
-import { Firestore, getDoc, setDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
-import { collection, doc, query, QueryConstraint, limit, orderBy, where, DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore'
-import { toDate } from '@strive/utils/firebase'
+import { Firestore, setDoc } from '@angular/fire/firestore'
+import { collection, doc, getDoc, query, QueryConstraint, limit, orderBy, where, DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore'
+import { toDate, collectionData, docData } from '@strive/utils/firebase'
 import { firstValueFrom, map, Observable, switchMap, take } from 'rxjs'
 
 const settingsConverter: FirestoreDataConverter<SelfReflectSettings | undefined> = {
@@ -37,10 +37,11 @@ const entryConverter: FirestoreDataConverter<SelfReflectEntry | undefined> = {
 })
 export class SelfReflectSettingsService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   docData(uid: string): Observable<SelfReflectSettings | undefined> {
     const docRef = doc(this.firestore, `Users/${uid}/Exercises/SelfReflect`).withConverter(settingsConverter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   getSettings(uid: string): Promise<SelfReflectSettings | undefined> {
@@ -63,13 +64,14 @@ export class SelfReflectSettingsService {
 })
 export class SelfReflectEntryService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService)
   private personalService = inject(PersonalService)
 
   collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<SelfReflectEntry[]> {
     const colRef = collection(this.firestore, `Users/${options.uid}/Exercises/SelfReflect/Entries`).withConverter(entryConverter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q, { idField: 'id' })
+    return collectionData(this.injector, q, { idField: 'id' })
   }
 
   async save(entry: SelfReflectEntry) {

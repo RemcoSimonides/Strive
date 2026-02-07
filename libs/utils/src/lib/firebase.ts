@@ -1,5 +1,15 @@
-import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, Timestamp } from 'firebase/firestore'
+import { Injector, runInInjectionContext } from '@angular/core'
+import { docData as afDocData, collectionData as afCollectionData } from '@angular/fire/firestore'
+import { DocumentData, DocumentReference, FirestoreDataConverter, Query, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, Timestamp } from 'firebase/firestore'
 import { Observable, OperatorFunction, from, of, tap, startWith, combineLatest, map, switchMap, debounceTime } from 'rxjs'
+
+export function docData<T>(injector: Injector, ref: DocumentReference<T>): Observable<T | undefined> {
+  return runInInjectionContext(injector, () => afDocData(ref))
+}
+
+export function collectionData<T>(injector: Injector, ref: Query<T>, options?: { idField?: string }): Observable<NonNullable<T>[]> {
+  return runInInjectionContext(injector, () => afCollectionData(ref, options as any)) as Observable<NonNullable<T>[]>
+}
 
 export const createConverter = <T extends Record<string, any>>(
   factory: (data: DocumentData) => T,

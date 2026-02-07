@@ -1,15 +1,15 @@
-import { Injectable, inject } from '@angular/core'
+import { Injectable, Injector, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular/standalone'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
 
-import { Firestore, setDoc, getDoc, docData as _docData, collectionData as _collectionData } from '@angular/fire/firestore'
-import { doc, arrayUnion, arrayRemove, serverTimestamp, QueryConstraint, collection, query } from 'firebase/firestore'
+import { Firestore, setDoc } from '@angular/fire/firestore'
+import { doc, arrayUnion, arrayRemove, getDoc, serverTimestamp, QueryConstraint, collection, query } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
 
-import { createConverter } from '@strive/utils/firebase'
+import { createConverter, docData, collectionData } from '@strive/utils/firebase'
 import { PushNotifications, PushNotificationSchema, Token, ActionPerformed } from '@capacitor/push-notifications'
 import { captureException } from '@sentry/angular'
 import { Observable, of, switchMap, shareReplay, BehaviorSubject } from 'rxjs'
@@ -23,6 +23,7 @@ const converter = createConverter<Personal>(createPersonal, 'uid')
 @Injectable({ providedIn: 'root' })
 export class PersonalService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService)
   private router = inject(Router)
   private toastController = inject(ToastController)
@@ -36,7 +37,7 @@ export class PersonalService {
   personal$: Observable<Personal | undefined> = this.auth.uid$.pipe(
     switchMap(uid => {
       if (!uid) return of(undefined)
-      return _docData(this.getDocRef(uid))
+      return docData(this.injector, this.getDocRef(uid))
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   )
@@ -70,14 +71,14 @@ export class PersonalService {
   docData(uid: string): Observable<Personal | undefined> {
     const docPath = `Users/${uid}/Personal/${uid}`
     const docRef = doc(this.firestore, docPath).withConverter(converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<Personal[]> {
     const colPath = `Users/${options.uid}/Personal`
     const colRef = collection(this.firestore, colPath).withConverter(converter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q)
+    return collectionData(this.injector, q)
   }
 
   getDoc(uid: string): Promise<Personal | undefined> {

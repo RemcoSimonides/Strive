@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, addDoc, getDoc, setDoc, deleteDoc, docData as _docData } from '@angular/fire/firestore'
-import { collection, doc, DocumentData, FirestoreDataConverter, orderBy, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, where } from 'firebase/firestore'
-import { joinWith, toDate } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, addDoc, setDoc, deleteDoc } from '@angular/fire/firestore'
+import { collection, doc, DocumentData, FirestoreDataConverter, getDoc, orderBy, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, where } from 'firebase/firestore'
+import { docData, joinWith, toDate } from '@strive/utils/firebase'
 
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -16,6 +16,7 @@ import { endOfDay } from 'date-fns'
 @Injectable({ providedIn: 'root' })
 export class GoalService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService);
   private stakeholder = inject(GoalStakeholderService);
 
@@ -89,7 +90,7 @@ export class GoalService {
   docData(id: string): Observable<Goal | undefined>  {
     const docPath = `Goals/${id}`
     const docRef = doc(this.firestore, docPath).withConverter(this.converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   async getDoc(id: string): Promise<Goal | undefined> {

@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, getDoc, setDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
-import { collection, doc, query, QueryConstraint } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, setDoc } from '@angular/fire/firestore'
+import { collection, doc, getDoc, query, QueryConstraint } from 'firebase/firestore'
+import { createConverter, collectionData, docData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { AES, enc } from 'crypto-js'
@@ -54,10 +54,11 @@ const entryConverter = createConverter<WheelOfLifeEntry<string>>(entryFactory)
 })
 export class WheelOfLifeService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   getSettings$(uid: string): Observable<WheelOfLifeSettings | undefined> {
     const docRef = doc(this.firestore, `Users/${uid}/Exercises/WheelOfLife`).withConverter(settingsConverter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   getSettings(uid: string): Promise<WheelOfLifeSettings | undefined> {
@@ -76,13 +77,14 @@ export class WheelOfLifeService {
 })
 export class WheelOfLifeEntryService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService)
   private personalService = inject(PersonalService)
 
   collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<WheelOfLifeEntry<string>[]> {
     const colRef = collection(this.firestore, `Users/${options.uid}/Exercises/WheelOfLife/Entries`).withConverter(entryConverter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q, { idField: 'id' })
+    return collectionData(this.injector, q, { idField: 'id' })
   }
 
   async decrypt(entries: WheelOfLifeEntry<string>[]): Promise<WheelOfLifeEntry<number>[]> {

@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, setDoc, collectionData as _collectionData } from '@angular/fire/firestore'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, setDoc } from '@angular/fire/firestore'
 import { collection, doc, query, QueryConstraint } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { createConverter, collectionData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { StravaIntegration, createStravaIntegration } from '@strive/model'
@@ -11,11 +11,12 @@ const converter = createConverter<StravaIntegration>(createStravaIntegration)
 @Injectable({ providedIn: 'root' })
 export class StravaService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   collectionData(constraints: QueryConstraint[]): Observable<StravaIntegration[]> {
     const colRef = collection(this.firestore, 'Strava').withConverter(converter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q, { idField: 'id' })
+    return collectionData(this.injector, q, { idField: 'id' })
   }
 
   update(id: string, data: Partial<StravaIntegration>) {

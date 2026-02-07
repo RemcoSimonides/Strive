@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, getDoc, getDocs, setDoc, collectionData as _collectionData, docData as _docData } from '@angular/fire/firestore'
-import { collectionGroup, collection, doc, query, where, QueryConstraint } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, setDoc } from '@angular/fire/firestore'
+import { collectionGroup, collection, doc, getDoc, getDocs, query, where, QueryConstraint } from 'firebase/firestore'
+import { createConverter, docData, collectionData } from '@strive/utils/firebase'
 import { map, Observable } from 'rxjs'
 
 import { Spectator, createSpectator } from '@strive/model'
@@ -15,23 +15,24 @@ const converter = createConverter<Spectator>(createSpectator, 'uid')
 })
 export class SpectatorService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
   private auth = inject(AuthService)
 
   docData(spectatorUid: string, options: { uid: string }): Observable<Spectator | undefined> {
     const docRef = doc(this.firestore, `Users/${options.uid}/Spectators/${spectatorUid}`).withConverter(converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   private collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<Spectator[]> {
     const colRef = collection(this.firestore, `Users/${options.uid}/Spectators`).withConverter(converter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q, { idField: 'uid' })
+    return collectionData(this.injector, q, { idField: 'uid' })
   }
 
   private collectionGroupData(constraints: QueryConstraint[]): Observable<Spectator[]> {
     const ref = collectionGroup(this.firestore, 'Spectators').withConverter(converter)
     const q = query(ref, ...constraints)
-    return _collectionData(q, { idField: 'uid' })
+    return collectionData(this.injector, q, { idField: 'uid' })
   }
 
   private getDoc(spectatorUid: string, options: { uid: string }): Promise<Spectator | undefined> {

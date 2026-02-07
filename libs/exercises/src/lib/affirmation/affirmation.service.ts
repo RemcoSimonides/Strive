@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, getDoc, setDoc, docData as _docData } from '@angular/fire/firestore'
-import { doc } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, setDoc } from '@angular/fire/firestore'
+import { doc, getDoc } from 'firebase/firestore'
+import { createConverter, docData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { Affirmations } from '@strive/model'
@@ -19,10 +19,11 @@ const converter = createConverter<Affirmations>(factory)
 @Injectable({providedIn: 'root'})
 export class AffirmationService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   getAffirmations$(uid: string): Observable<Affirmations | undefined> {
     const docRef = doc(this.firestore, `Users/${uid}/Exercises/Affirmations`).withConverter(converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   getAffirmations(uid: string): Promise<Affirmations | undefined> {

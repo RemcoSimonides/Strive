@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, collectionData as _collectionData } from '@angular/fire/firestore'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore } from '@angular/fire/firestore'
 import { collection, query, QueryConstraint } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { collectionData, createConverter } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { createGoalEvent, GoalEvent } from '@strive/model'
@@ -11,10 +11,11 @@ const converter = createConverter<GoalEvent>(createGoalEvent as (data: any) => G
 @Injectable({ providedIn: 'root' })
 export class GoalEventService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   collectionData(constraints: QueryConstraint[]): Observable<GoalEvent[]> {
     const colRef = collection(this.firestore, 'GoalEvents').withConverter(converter)
     const q = query(colRef, ...constraints)
-    return _collectionData(q)
+    return collectionData(this.injector, q)
   }
 }

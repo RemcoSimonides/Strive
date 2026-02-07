@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core'
-import { Firestore, addDoc, setDoc, deleteDoc, docData as _docData } from '@angular/fire/firestore'
+import { Injectable, Injector, inject } from '@angular/core'
+import { Firestore, addDoc, setDoc, deleteDoc } from '@angular/fire/firestore'
 import { doc, collection } from 'firebase/firestore'
-import { createConverter } from '@strive/utils/firebase'
+import { createConverter, docData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
 import { createPost, Post } from '@strive/model'
@@ -13,10 +13,11 @@ const converter = createConverter<Post>(createPost)
 })
 export class PostService {
   private firestore = inject(Firestore)
+  private injector = inject(Injector)
 
   docData(postId: string, options: { goalId: string }): Observable<Post | undefined> {
     const docRef = doc(this.firestore, `Goals/${options.goalId}/Posts/${postId}`).withConverter(converter)
-    return _docData(docRef)
+    return docData(this.injector, docRef)
   }
 
   upsert(post: Post, options: { goalId: string }) {
