@@ -10,7 +10,8 @@ const compat = new FlatCompat({
 module.exports = [
     {
         ignores: [
-            "**/dist"
+            "**/dist",
+            "**/android"
         ]
     },
     { plugins: { "@nx": nxEslintPlugin } },

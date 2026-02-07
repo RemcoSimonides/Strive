@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'roadmap',
   preset: '../../jest.preset.js',

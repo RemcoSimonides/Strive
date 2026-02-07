@@ -63,11 +63,11 @@ export class LoginComponent {
         loading.dismiss()
         // this.router.navigate(['/a/users'])
 
-      } catch (error: any) {
+      } catch (error: unknown) {
 
         loading.dismiss()
         this.alertCtrl.create({
-          message: error.message,
+          message: error instanceof Error ? error.message : 'An error occurred',
           buttons: [{ text: 'Ok', role: 'cancel' }]
         }).then(alert => alert.present())
       }
@@ -101,9 +101,9 @@ export class LoginComponent {
 
       this.router.navigate(['/a'])
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.alertCtrl.create({
-        message: error.message,
+        message: error instanceof Error ? error.message : 'An error occurred',
         buttons: [{ text: 'Ok', role: 'cancel' }]
       }).then(alert => alert.present())
     }

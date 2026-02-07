@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'exercises',
   preset: '../../jest.preset.js',

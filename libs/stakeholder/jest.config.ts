@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'stakeholder',
   preset: '../../jest.preset.js',

@@ -10,7 +10,7 @@
       <section class="container">
         <article class="swiper-zoom-container">
           @if (media.fileType === 'video') {
-            <media-video-player [storagePath]="media | mediaRef"></media-video-player>
+            <strive-video-player [storagePath]="media | mediaRef"></strive-video-player>
           } @else {
             <img [ref]="media | mediaRef" [asset]="asset" />
           }

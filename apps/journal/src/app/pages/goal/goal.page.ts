@@ -746,7 +746,7 @@ export class GoalPageComponent implements OnDestroy {
 
         const func = httpsCallable(getFunctions(), 'initialiseStrava')
         const stravaInitialised = await func({ goalId, authorizationCode, refreshToken, activityTypes: types, after })
-        const { error, result } = stravaInitialised.data as { error: string, result: any }
+        const { error, result } = stravaInitialised.data as { error: string, result: unknown }
         if (error) {
           console.error(result)
           captureException(result)

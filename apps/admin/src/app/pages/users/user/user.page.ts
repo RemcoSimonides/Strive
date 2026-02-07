@@ -90,7 +90,7 @@ export class UserPage {
           if (a < b) return 1
           return 0
         })),
-      ) as any
+      ) as Observable<StakeholderWithGoal[]>
     })
   }
 
@@ -104,6 +104,7 @@ export class UserPage {
     // this.user.update(this.userForm.value, { params: { uid: this.userForm.uid.value }})
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createGoal(uid: string) {
     // should create new upsert goal modal for admin
     // this.modalCtrl.create({

@@ -70,7 +70,7 @@ export class NotificationsPageComponent implements OnInit {
     this.seo.generateTags({ title: `Notifications - Strive Journal` })
 
     this.notifications$ = this.auth.profile$.pipe(
-      tap(_ => this.personal.updateLastCheckedNotification()),
+      tap(() => this.personal.updateLastCheckedNotification()),
       switchMap(profile => {
         if (!profile) return of([])
         return this.notification.collectionData([orderBy('createdAt', 'desc')], { uid: profile.uid }).pipe(

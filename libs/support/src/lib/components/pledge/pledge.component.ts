@@ -33,7 +33,7 @@ export class PledgeComponent {
   async navTo(urlTree: string[]) {
     const modal = await this.modalCtrl.getTop()
     if (modal) {
-      Capacitor.getPlatform() === 'web' ? this.location.back() : modal.dismiss()
+      if (Capacitor.getPlatform() === 'web') { this.location.back() } else { modal.dismiss() }
       await modal.onDidDismiss()
       this.router.navigate(urlTree)
     } else {

@@ -19,14 +19,14 @@
         <section class="toggle">
           <article>
             <ion-toggle [formControl]="form.controls.on"/>
-            <span (click)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time')?.value : 'Reminder turned off'}}</span>
+            <span role="button" tabindex="0" (click)="openDatetime()" (keyup.enter)="openDatetime()">{{ dailyGratitude.on ? 'Reminded daily at ' + form.get('time')?.value : 'Reminder turned off'}}</span>
           </article>
         </section>
         <strive-daily-gratitude-cards/>
       } @else {
         <div class="not-logged-in">
           <p>
-            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to start with Daily Gratitude
+            <span class="fat-text-button" role="button" tabindex="0" (click)="openAuthModal()" (keyup.enter)="openAuthModal()">Log in</span>to start with Daily Gratitude
           </p>
         </div>
       }

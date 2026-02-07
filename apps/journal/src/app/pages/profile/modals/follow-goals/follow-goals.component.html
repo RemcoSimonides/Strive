@@ -18,7 +18,7 @@
       @if (goal | getStakeholder | async; as stakeholder) {
         <ion-item [lines]="last ? 'none' : 'full'">
           <ion-thumbnail slot="start">
-            <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120" />
+            <img asset="goal.png" [ref]="goal.image" [width]="120" [height]="120" [alt]="goal.title" />
             @if (goal.status !== 'pending') {
               <div class="finished-overlay">finished</div>
             }

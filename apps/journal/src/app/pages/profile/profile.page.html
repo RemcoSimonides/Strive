@@ -19,6 +19,7 @@
                 asset="profile.png"
                 alt="profile picture"
                 (click)="editProfileImage(profile, $event)"
+                (keyup.enter)="editProfileImage(profile, $event)"
                 tabindex="0"
                 [width]="600"
                 [height]="600"

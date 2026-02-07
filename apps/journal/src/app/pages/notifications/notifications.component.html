@@ -47,7 +47,7 @@
   } @else {
     <div class="not-logged-in">
       <p>
-        <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to view your notifications
+        <span class="fat-text-button" role="button" tabindex="0" (click)="openAuthModal()" (keyup.enter)="openAuthModal()">Log in</span>to view your notifications
       </p>
     </div>
   }

@@ -28,7 +28,7 @@ module.exports = [
           'error',
           {
             type: 'attribute',
-            prefix: 'lib',
+            prefix: 'strive',
             style: 'camelCase',
           },
         ],
@@ -36,7 +36,7 @@ module.exports = [
           'error',
           {
             type: 'element',
-            prefix: 'lib',
+            prefix: 'strive',
             style: 'kebab-case',
           },
         ],

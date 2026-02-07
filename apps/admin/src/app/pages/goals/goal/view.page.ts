@@ -17,7 +17,7 @@ export class GoalViewPage {
   id$ = this.route.params.pipe(map(params => params['id']))
 
 
-  segmentChanged(ev: any) {
+  segmentChanged(ev: CustomEvent) {
     this.segmentChoice = ev.detail.value
   }
 }

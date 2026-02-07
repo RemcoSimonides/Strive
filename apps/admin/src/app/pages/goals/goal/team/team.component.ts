@@ -30,7 +30,7 @@ export class TeamComponent implements OnInit {
       joinWith({
         profile: stakeholder => this.profileService.docData(stakeholder.uid)
       }, { shouldAwait: true })
-    ) as Observable<any[]>
+    ) as Observable<(GoalStakeholder & { profile: User })[]>
 	}
 
   async add() {

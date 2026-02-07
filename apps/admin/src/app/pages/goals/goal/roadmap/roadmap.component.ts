@@ -36,7 +36,7 @@ export class AdminRoadmapComponent implements OnInit {
     )
 	}
 
-  doReorder(ev: any, milestones: Milestone[]) {
+  doReorder(ev: CustomEvent, milestones: Milestone[]) {
     const { from, to } = ev.detail
 
     const element = milestones[from]

@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'spectator',
   preset: '../../jest.preset.js',

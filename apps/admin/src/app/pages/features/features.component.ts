@@ -5,7 +5,7 @@ import { doc, getDoc, updateDoc, getFirestore } from 'firebase/firestore'
 import { Features, Feature } from '@strive/model'
 
 @Component({
-    selector: 'admin-features',
+    selector: 'strive-features',
     templateUrl: './features.component.html',
     styleUrls: ['./features.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

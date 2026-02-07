@@ -90,7 +90,7 @@
       } @else {
         <section class="not-logged-in">
           <p>
-            <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to set your Affirmations
+            <span class="fat-text-button" role="button" tabindex="0" (click)="openAuthModal()" (keyup.enter)="openAuthModal()">Log in</span>to set your Affirmations
           </p>
         </section>
       }

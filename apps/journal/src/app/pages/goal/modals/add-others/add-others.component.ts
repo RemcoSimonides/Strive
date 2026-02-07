@@ -179,8 +179,8 @@ export class AddOthersModalComponent extends ModalDirective {
     addIcons({ shareSocialOutline })
   }
 
-  search(event: any) {
-    const query = typeof event === 'string' ? event : event.target.value
+  search(event: Event | string) {
+    const query = typeof event === 'string' ? event : (event.target as HTMLInputElement).value
     this.query = query
     this.algoliaService.search(query, 1000)
   }

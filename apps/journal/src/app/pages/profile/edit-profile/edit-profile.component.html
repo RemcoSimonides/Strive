@@ -30,7 +30,7 @@
 } @else {
   <section class="not-logged-in">
     <p>
-      <span class="fat-text-button" (click)="openAuthModal()">Log in</span>to edit your profile
+      <span class="fat-text-button" role="button" tabindex="0" (click)="openAuthModal()" (keyup.enter)="openAuthModal()">Log in</span>to edit your profile
     </p>
   </section>
 }

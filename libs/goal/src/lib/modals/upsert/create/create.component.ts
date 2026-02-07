@@ -106,7 +106,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
     } else if (step === 'reminders') {
       next = direction === 'next' ? 'share' : 'roadmap'
     } else if (step === 'share') {
-      direction === 'next' ? this.close() : next = 'reminders'
+      if (direction === 'next') { this.close() } else { next = 'reminders' }
     }
     this.stepper$.next(next)
   }

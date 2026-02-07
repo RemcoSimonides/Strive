@@ -9,7 +9,7 @@ function getAssetPath(asset: string, theme: Theme) {
 }
 
 @Directive({
-  selector: 'img[ref][asset], img[asset]',
+  selector: 'img[ref][asset], img[asset]', // eslint-disable-line @angular-eslint/directive-selector
   standalone: true
 })
 export class ImageDirective implements OnInit, OnDestroy {

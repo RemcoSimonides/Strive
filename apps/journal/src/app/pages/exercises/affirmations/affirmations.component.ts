@@ -204,7 +204,7 @@ export class AffirmationsPageComponent implements OnDestroy {
     this.suggestionsCopy = this.suggestionsCopy.filter(s => s.affirmation !== suggestion.affirmation)
   }
 
-  private shuffle(array: any[]) {
+  private shuffle<T>(array: T[]) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];

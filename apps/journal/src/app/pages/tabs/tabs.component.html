@@ -25,7 +25,7 @@
         </ion-tab-button>
         <ion-tab-button [tab]="'profile/' + you.uid">
           <ion-avatar>
-            <img [ref]="you.photoURL" asset="profile.png" [width]="120" [height]="120" />
+            <img [ref]="you.photoURL" asset="profile.png" [width]="120" [height]="120" alt="Your profile" />
           </ion-avatar>
           <ion-label [color]="(profileActive$ | async) ? 'primary' : 'inherit'">You</ion-label>
         </ion-tab-button>

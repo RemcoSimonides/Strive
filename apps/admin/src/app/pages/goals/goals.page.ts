@@ -21,9 +21,9 @@ export class GoalsComponent {
 
   async add() {
     const selectUserModal = await this.modalCtrl.create({ component: SelectUserModalComponent })
-    selectUserModal.onDidDismiss().then(res => {
-      const uid = res.data as string
+    selectUserModal.onDidDismiss().then(() => {
       // create goal upsert page for admin only
+    //   const uid = res.data as string
     //   this.modalCtrl.create({
     //     component: UpsertGoalModalComponent,
     //     componentProps: { uid }
