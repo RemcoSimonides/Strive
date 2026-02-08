@@ -170,7 +170,9 @@ export class PersonalService {
         }).then(toast => toast.present())
       }
 
-      captureException(err)
+      if (err instanceof Error && !err.message?.includes('permission-blocked')) {
+        captureException(err)
+      }
       return ''
     }
   }
@@ -180,7 +182,11 @@ export class PersonalService {
     if (Capacitor.getPlatform() === 'web') {
       const supported = await isSupported()
       if (supported) {
-        token = await getToken(getMessaging())
+        try {
+          token = await getToken(getMessaging())
+        } catch {
+          // permission may be blocked - nothing to unregister
+        }
       }
     } else {
       // cant get token on Android or iOS
