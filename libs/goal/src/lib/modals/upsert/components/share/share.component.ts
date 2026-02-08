@@ -38,28 +38,31 @@ export class GoalShareComponent {
     const isSecret = publicity !== 'public'
     const url = await this.inviteTokenService.getShareLink(id, isSecret, true)
 
-    const canShare = await Share.canShare()
-    if (canShare.value) {
-
-      try {
-        await Share.share({
-          title,
-          text: 'Check out this goal',
-          url,
-          dialogTitle: 'Together we achieve!'
-        }).catch(err => {
-          captureException(err)
-        })
-      } catch (err: any) {
-        captureMessage(err['message'])
+    try {
+      const canShare = await Share.canShare()
+      if (canShare.value) {
+        try {
+          await Share.share({
+            title,
+            text: 'Check out this goal',
+            url,
+            dialogTitle: 'Together we achieve!'
+          }).catch(err => {
+            captureException(err)
+          })
+        } catch (err: any) {
+          captureMessage(err['message'])
+        }
+        return
       }
-
-    } else {
-      this.popoverCtrl.create({
-        component: GoalSharePopoverComponent,
-        event: ev,
-        componentProps: { url }
-      }).then(popover => popover.present())
+    } catch (err) {
+      captureException(err)
     }
+
+    this.popoverCtrl.create({
+      component: GoalSharePopoverComponent,
+      event: ev,
+      componentProps: { url }
+    }).then(popover => popover.present())
   }
 }

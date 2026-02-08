@@ -275,29 +275,38 @@ export class ProfilePageComponent {
     if (!profile) return
 
     const url = `https://strivejournal.com/profile/${profile.uid}`
-    const canShare = await Share.canShare()
-    if (canShare) {
-      Share.share({
-        title: profile.username,
-        text: `Check out ${profile.username}'s profile on Strive Journal`,
-        url,
-      }).catch(err => {
-        captureException(err)
-      })
-    } else {
-      Clipboard.write({ string: url })
-
-      this.popoverCtrl.create({
-        component: CopiedPopoverComponent,
-        componentProps: { content: 'Link copied!' },
-        event,
-        showBackdrop: false,
-        cssClass: 'copied-popover'
-      }).then(popover => {
-        popover.present()
-        delay(1000).then(() => popover.dismiss())
-      })
+    try {
+      const canShare = await Share.canShare()
+      if (canShare.value) {
+        Share.share({
+          title: profile.username,
+          text: `Check out ${profile.username}'s profile on Strive Journal`,
+          url,
+        }).catch(err => {
+          captureException(err)
+        })
+        return
+      }
+    } catch (err) {
+      captureException(err)
     }
+
+    try {
+      await Clipboard.write({ string: url })
+    } catch (err) {
+      captureException(err)
+    }
+
+    this.popoverCtrl.create({
+      component: CopiedPopoverComponent,
+      componentProps: { content: 'Link copied!' },
+      event,
+      showBackdrop: false,
+      cssClass: 'copied-popover'
+    }).then(popover => {
+      popover.present()
+      delay(1000).then(() => popover.dismiss())
+    })
   }
 }
 

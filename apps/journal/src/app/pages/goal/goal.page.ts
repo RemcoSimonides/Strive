@@ -511,23 +511,28 @@ export class GoalPageComponent implements OnDestroy {
     const isSecret = this.goal.publicity !== 'public'
     const url = await this.inviteTokenService.getShareLink(this.goal.id, isSecret, this.stakeholder.isAdmin)
 
-    const canShare = await Share.canShare()
-    if (canShare.value) {
-      Share.share({
-        title: this.goal.title,
-        text: 'Check out this goal',
-        url,
-        dialogTitle: 'Together we achieve!'
-      }).catch(err => {
-        captureException(err)
-      })
-    } else {
-      this.popoverCtrl.create({
-        component: GoalSharePopoverComponent,
-        event,
-        componentProps: { url }
-      }).then(popover => popover.present())
+    try {
+      const canShare = await Share.canShare()
+      if (canShare.value) {
+        Share.share({
+          title: this.goal.title,
+          text: 'Check out this goal',
+          url,
+          dialogTitle: 'Together we achieve!'
+        }).catch(err => {
+          captureException(err)
+        })
+        return
+      }
+    } catch (err) {
+      captureException(err)
     }
+
+    this.popoverCtrl.create({
+      component: GoalSharePopoverComponent,
+      event,
+      componentProps: { url }
+    }).then(popover => popover.present())
   }
 
   saveDescription(description: string) {
@@ -729,7 +734,11 @@ export class GoalPageComponent implements OnDestroy {
           const scope = 'activity:read'
           const url = `https://www.strava.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=${response_type}&approval_prompt=${approval_prompt}&scope=${scope}`
 
-          Browser.open({ url })
+          try {
+            await Browser.open({ url })
+          } catch (err) {
+            captureException(err)
+          }
           return
         }
       }

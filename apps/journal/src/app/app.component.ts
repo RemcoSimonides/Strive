@@ -14,6 +14,7 @@ import { SplashScreen } from '@capacitor/splash-screen'
 
 import { filter, first, Subscription } from 'rxjs'
 
+import { captureException } from '@sentry/angular'
 import { differenceInMilliseconds } from 'date-fns'
 
 import { Intent, SendIntent } from 'send-intent'
@@ -84,7 +85,12 @@ export class AppComponent implements OnDestroy {
     const segments = this.router.url.split('/').slice(1)
 
     if (!segments[0] || segments[0] === 'goals') {
-      return App.exitApp()
+      try {
+        return App.exitApp()
+      } catch (err) {
+        captureException(err)
+        return
+      }
     }
 
     if (segments[0] === 'supports') {
@@ -186,7 +192,7 @@ export class AppComponent implements OnDestroy {
 
       const reroutesToGoals = isLoggedIn && url === '/'
       const goalsRoute = url === '/goals'
-      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide()
+      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide().catch(err => captureException(err))
     })
   }
 

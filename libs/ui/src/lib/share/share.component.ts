@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core'
 
 import { Clipboard } from '@capacitor/clipboard'
+import { captureException } from '@sentry/angular'
 
 import { IonButton, IonIcon } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
@@ -25,8 +26,12 @@ export class ShareComponent {
     addIcons({ clipboard })
   }
 
-  copyUrl() {
-    Clipboard.write({ string: this.url })
+  async copyUrl() {
+    try {
+      await Clipboard.write({ string: this.url })
+    } catch (err) {
+      captureException(err)
+    }
     this.isCopied = true
   }
 }

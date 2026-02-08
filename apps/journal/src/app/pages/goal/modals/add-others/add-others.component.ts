@@ -204,22 +204,27 @@ export class AddOthersModalComponent extends ModalDirective {
     const isSecret = this.goal.publicity !== 'public'
     const url = await this.inviteTokenService.getShareLink(this.goal.id, isSecret, this.stakeholder.isAdmin)
 
-    const canShare = await Share.canShare()
-    if (canShare.value) {
-      Share.share({
-        title: this.goal.title,
-        text: 'Check out this goal',
-        url,
-        dialogTitle: 'Together we achieve!'
-      }).catch(err => {
-        captureException(err)
-      })
-    } else {
-      this.popoverCtrl.create({
-        component: GoalSharePopoverComponent,
-        event: ev,
-        componentProps: { url }
-      }).then(popover => popover.present())
+    try {
+      const canShare = await Share.canShare()
+      if (canShare.value) {
+        Share.share({
+          title: this.goal.title,
+          text: 'Check out this goal',
+          url,
+          dialogTitle: 'Together we achieve!'
+        }).catch(err => {
+          captureException(err)
+        })
+        return
+      }
+    } catch (err) {
+      captureException(err)
     }
+
+    this.popoverCtrl.create({
+      component: GoalSharePopoverComponent,
+      event: ev,
+      componentProps: { url }
+    }).then(popover => popover.present())
   }
 }
