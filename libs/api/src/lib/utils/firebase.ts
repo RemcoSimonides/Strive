@@ -40,10 +40,10 @@ const secrets = [
 	defineSecret('STRAVA_CLIENT_SECRET')
 ]
 
-const defaultOptions: GlobalOptions = {
+setGlobalOptions({
 	secrets,
 	region: 'us-central1',
-}
+})
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FunctionType = (...args: any[]) => any
@@ -52,36 +52,27 @@ type FirestoreOnUpdateHandler = Parameters<typeof onDocumentUpdated>[1]
 type FirestoreOnDeleteHandler = Parameters<typeof onDocumentDeleted>[1]
 
 export function onRequest(fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({ ...defaultOptions, ...options });
-	return _onRequest({ secrets, cors: true }, wrap(fn))
+	return _onRequest({ secrets, cors: true, ...options }, wrap(fn))
 }
 
 export function onCall(fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({
-		...defaultOptions,
-		region: 'us-central1', // eu west will give CORS error
-		...options });
-	return _onCall({ secrets, cors: true }, wrap(fn))
+	return _onCall({ secrets, cors: true, ...options }, wrap(fn))
 }
 
 export function onSchedule(schedule: string, fn: FunctionType, options?: GlobalOptions) {
-	setGlobalOptions({ ...defaultOptions, ...options });
-	return _onSchedule(schedule, wrap(fn))
+	return _onSchedule({ schedule, ...options }, wrap(fn))
 }
 
 export function onDocumentCreate(docPath: string, fn: FirestoreOnCreateHandler, options?: GlobalOptions) {
-	setGlobalOptions({ ...defaultOptions, ...options });
-	return onDocumentCreated(docPath, wrap<FirestoreOnCreateHandler>(fn))
+	return onDocumentCreated({ document: docPath, ...options }, wrap<FirestoreOnCreateHandler>(fn))
 }
 
 export function onDocumentUpdate(docPath: string, fn: FirestoreOnUpdateHandler, options?: GlobalOptions) {
-	setGlobalOptions({ ...defaultOptions, ...options });
-	return onDocumentUpdated(docPath, wrap<FirestoreOnUpdateHandler>(fn))
+	return onDocumentUpdated({ document: docPath, ...options }, wrap<FirestoreOnUpdateHandler>(fn))
 }
 
 export function onDocumentDelete(docPath: string, fn: FirestoreOnDeleteHandler, options?: GlobalOptions) {
-	setGlobalOptions({ ...defaultOptions, ...options });
-	return onDocumentDeleted(docPath, wrap<FirestoreOnDeleteHandler>(fn))
+	return onDocumentDeleted({ document: docPath, ...options }, wrap<FirestoreOnDeleteHandler>(fn))
 }
 
 function wrap<T extends FunctionType>(fn: T): T {
