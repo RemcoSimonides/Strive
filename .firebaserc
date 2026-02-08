@@ -15,6 +15,9 @@
         ],
         "blog": [
           "strive-blogg"
+        ],
+        "api": [
+          "strive-api"
         ]
       }
     },

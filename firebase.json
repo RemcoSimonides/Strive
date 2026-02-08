@@ -48,7 +48,7 @@
     {
       "target": "admin",
       "public": "dist/apps/admin/",
-      "ingore": [
+      "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
@@ -63,10 +63,17 @@
     {
       "target": "blog",
       "public": "apps/blog/build/",
-      "ingore": [
+      "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "api",
+      "public": "dist/apps/api-placeholder",
+      "rewrites": [
+        { "source": "**", "function": "api" }
       ]
     }
   ],

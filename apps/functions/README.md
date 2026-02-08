@@ -14,6 +14,7 @@ The emulator runs on port **5001**. The URL pattern is:
 
 ```
 http://localhost:5001/<project-id>/us-central1/<function-name>
+http://localhost:5001/strive-journal/us-central1/api/status
 ```
 
 The project ID depends on which Firebase project is active (`firebase use`):
