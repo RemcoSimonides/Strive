@@ -2,7 +2,7 @@ import { Injectable, Injector, inject } from '@angular/core'
 import { Firestore, addDoc } from '@angular/fire/firestore'
 import { collection, doc, query, where } from 'firebase/firestore'
 import { createConverter, collectionData } from '@strive/utils/firebase'
-import { Observable, of } from 'rxjs'
+import { Observable, of, map } from 'rxjs'
 
 import { createMedia, Media } from '@strive/model'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
@@ -22,7 +22,12 @@ export class MediaService {
     if (!mediaIds.length) return of([])
     const colRef = collection(this.firestore, `Goals/${options.goalId}/Media`).withConverter(converter)
     const q = query(colRef, where('__name__', 'in', mediaIds))
-    return collectionData(this.injector, q, { idField: 'id' })
+    return collectionData(this.injector, q, { idField: 'id' }).pipe(
+      map(medias => mediaIds
+        .map(id => medias.find(m => m?.id === id))
+        .filter((m): m is Media => !!m)
+      )
+    )
   }
 
   private async add(media: Media, options: { goalId: string }): Promise<string> {

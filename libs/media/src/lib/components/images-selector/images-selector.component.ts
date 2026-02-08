@@ -156,16 +156,14 @@ export class ImagesSelectorComponent implements OnInit, OnDestroy {
     popover.onDidDismiss().then(dismiss => {
       const { data } = dismiss
       if (data == 'right') {
-        const next = this.form.at(index + 1)
-        this.form.setControl(index, next)
-        this.form.setControl(index + 1, ctrl)
+        this.form.removeAt(index)
+        this.form.insert(index + 1, ctrl)
         this.form.markAsDirty()
       }
 
       if (data == 'left') {
-        const prev = this.form.at(index - 1)
-        this.form.setControl(index, prev)
-        this.form.setControl(index - 1, ctrl)
+        this.form.removeAt(index)
+        this.form.insert(index - 1, ctrl)
         this.form.markAsDirty()
       }
 
