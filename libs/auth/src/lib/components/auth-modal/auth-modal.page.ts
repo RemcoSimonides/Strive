@@ -281,7 +281,8 @@ export class AuthModalComponent implements OnInit {
         let message: string
         switch (error.code) {
           case 'auth/wrong-password':
-            message = 'Wrong password'
+          case 'auth/invalid-credential':
+            message = 'Invalid email or password'
             break
 
           case 'auth/user-not-found':
