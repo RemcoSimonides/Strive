@@ -15,7 +15,7 @@ import { shareSocialOutline } from 'ionicons/icons'
 export class GoalSharePopoverComponent {
   private popoverCtrl = inject(PopoverController);
 
-  @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate')
   onPopState() { this.popoverCtrl.dismiss() }
 
   @Input() url = ''

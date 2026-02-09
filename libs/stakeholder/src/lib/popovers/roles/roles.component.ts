@@ -21,7 +21,7 @@ export class RolesPopoverComponent {
 	private popoverCtrl = inject(PopoverController);
 	private stakeholderService = inject(GoalStakeholderService);
 
-	@HostListener('window:popstate', ['$event'])
+	@HostListener('window:popstate')
 	onPopState() { this.popoverCtrl.dismiss() }
 
 	@Input() goalId!: string

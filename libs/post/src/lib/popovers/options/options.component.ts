@@ -23,7 +23,7 @@ export class PostOptionsComponent {
 	private popoverCtrl = inject(PopoverController);
 	private postService = inject(PostService);
 
-	@HostListener('window:popstate', ['$event'])
+	@HostListener('window:popstate')
 	onPopState() { this.popoverCtrl.dismiss() }
 
 	@Input() post!: Post

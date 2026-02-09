@@ -14,7 +14,7 @@ import { IonDatetime, IonButton, PopoverController } from '@ionic/angular/standa
 export class DatetimeComponent {
   private popoverCtrl = inject(PopoverController);
 
-  @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate')
   onPopState() { this.popoverCtrl.dismiss() }
 
   @ViewChild('datePicker') datetime?: IonDatetime

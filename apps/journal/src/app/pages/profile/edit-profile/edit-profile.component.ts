@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
@@ -23,18 +23,17 @@ import { HeaderComponent } from '@strive/ui/header/header.component'
     styleUrls: ['./edit-profile.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
-        RouterModule,
-        ReactiveFormsModule,
-        HeaderComponent,
-        ImageSelectorComponent,
-        IonContent,
-        IonCard,
-        IonCardContent,
-        IonItem,
-        IonInput,
-        IonButton
-    ]
+    RouterModule,
+    ReactiveFormsModule,
+    HeaderComponent,
+    ImageSelectorComponent,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonItem,
+    IonInput,
+    IonButton
+]
 })
 export class EditProfilePageComponent {
   private alertCtrl = inject(AlertController);

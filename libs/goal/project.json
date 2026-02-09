@@ -8,11 +8,10 @@
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/libs/goal"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/libs/goal"],
       "options": {
-        "jestConfig": "libs/goal/jest.config.ts"
+        "jestConfig": "libs/goal/jest.config.ts",
+        "tsConfig": "libs/goal/tsconfig.spec.json"
       }
     },
     "lint": {

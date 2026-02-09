@@ -34,7 +34,7 @@ export class GoalOptionsPopoverComponent {
   private modalCtrl = inject(ModalController);
   private popoverCtrl = inject(PopoverController);
 
-  @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate')
   onPopState() { this.popoverCtrl.dismiss() }
 
   public enumGoalOptions = enumGoalOptions

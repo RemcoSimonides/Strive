@@ -23,7 +23,7 @@ export class EditProfileImagePopoverComponent implements OnInit {
   private popoverCtrl = inject(PopoverController);
   private profileService = inject(ProfileService);
 
-  @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate')
   onPopState() { this.popoverCtrl.dismiss() }
 
   @ViewChild(ImageSelectorComponent) imageSelector?: ImageSelectorComponent

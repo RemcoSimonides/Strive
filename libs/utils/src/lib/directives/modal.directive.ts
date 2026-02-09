@@ -17,8 +17,8 @@ export class ModalDirective {
   private isWeb = Capacitor.getPlatform() === 'web'
   private isIOS = Capacitor.getPlatform() === 'ios'
 
-  @HostBinding() modal?: HTMLIonModalElement
-  @HostListener('window:popstate', ['$event'])
+  @HostBinding('class.modal') modal?: HTMLIonModalElement
+  @HostListener('window:popstate')
   onPopState() {
     if (this.isIOS) {
       this.modalCtrl.getTop().then(modal => {

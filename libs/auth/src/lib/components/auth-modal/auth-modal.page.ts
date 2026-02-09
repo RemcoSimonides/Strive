@@ -81,7 +81,7 @@ export class AuthModalComponent implements OnInit {
   private profile = inject(ProfileService);
   private screensize = inject(ScreensizeService);
 
-  @HostBinding() modal?: HTMLIonModalElement
+  @HostBinding('class.modal') modal?: HTMLIonModalElement
 
   private success = false
 
@@ -144,7 +144,7 @@ export class AuthModalComponent implements OnInit {
     map(([isMobile, isIOS]) => isMobile && isIOS)
   )
 
-  @HostListener('window:popstate', ['$event'])
+  @HostListener('window:popstate')
   onPopState() {
     if (this.authSegmentChoice === enumAuthSegment.forgot_password) {
       window.history.pushState(null, '', window.location.href)

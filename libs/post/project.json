@@ -8,11 +8,10 @@
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/libs/post"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/libs/post"],
       "options": {
-        "jestConfig": "libs/post/jest.config.ts"
+        "jestConfig": "libs/post/jest.config.ts",
+        "tsConfig": "libs/post/tsconfig.spec.json"
       }
     },
     "lint": {
