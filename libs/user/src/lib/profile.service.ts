@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore, deleteDoc, setDoc } from '@angular/fire/firestore'
-import { collection, doc, getDoc, getDocs, query, QueryConstraint, where } from 'firebase/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { deleteDoc, setDoc, collection, doc, getDoc, getDocs, query, QueryConstraint, where } from 'firebase/firestore'
 import { createConverter, docData, collectionData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
@@ -10,18 +10,17 @@ const converter = createConverter<User>(createUser, 'uid')
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
 
   docData(uid: string): Observable<User | undefined> {
     const docRef = doc(this.firestore, `Users/${uid}`).withConverter(converter)
-    return docData(this.injector, docRef)
+    return docData(docRef)
   }
 
   collectionData(constraints: QueryConstraint[] = []): Observable<User[]> {
     const colRef = collection(this.firestore, 'Users').withConverter(converter)
     const q = query(colRef, ...constraints)
-    return collectionData(this.injector, q, { idField: 'uid' })
+    return collectionData(q, { idField: 'uid' })
   }
 
   getDoc(uid: string): Promise<User | undefined> {

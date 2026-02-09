@@ -1,7 +1,7 @@
 import { Component, HostListener, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule, isPlatformBrowser, isPlatformServer, Location } from '@angular/common';
-import { Unsubscribe } from '@angular/fire/firestore'
+import { Unsubscribe } from 'firebase/firestore'
 
 // Ionic
 import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'

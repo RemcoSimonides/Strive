@@ -1,12 +1,12 @@
-import { Injectable, Injector, inject } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular/standalone'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
 
-import { Firestore, setDoc } from '@angular/fire/firestore'
-import { doc, arrayUnion, arrayRemove, getDoc, serverTimestamp, QueryConstraint, collection, query } from 'firebase/firestore'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { setDoc, doc, arrayUnion, arrayRemove, getDoc, serverTimestamp, QueryConstraint, collection, query } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
 
 import { createConverter, docData, collectionData } from '@strive/utils/firebase'
@@ -22,8 +22,7 @@ const converter = createConverter<Personal>(createPersonal, 'uid')
 
 @Injectable({ providedIn: 'root' })
 export class PersonalService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
   private auth = inject(AuthService)
   private router = inject(Router)
   private toastController = inject(ToastController)
@@ -37,7 +36,7 @@ export class PersonalService {
   personal$: Observable<Personal | undefined> = this.auth.uid$.pipe(
     switchMap(uid => {
       if (!uid) return of(undefined)
-      return docData(this.injector, this.getDocRef(uid))
+      return docData(this.getDocRef(uid))
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   )
@@ -71,14 +70,14 @@ export class PersonalService {
   docData(uid: string): Observable<Personal | undefined> {
     const docPath = `Users/${uid}/Personal/${uid}`
     const docRef = doc(this.firestore, docPath).withConverter(converter)
-    return docData(this.injector, docRef)
+    return docData(docRef)
   }
 
   collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<Personal[]> {
     const colPath = `Users/${options.uid}/Personal`
     const colRef = collection(this.firestore, colPath).withConverter(converter)
     const q = query(colRef, ...constraints)
-    return collectionData(this.injector, q)
+    return collectionData(q)
   }
 
   getDoc(uid: string): Promise<Personal | undefined> {

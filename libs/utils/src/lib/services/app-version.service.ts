@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 
-import { Firestore } from '@angular/fire/firestore'
+import { FIRESTORE } from '@strive/utils/firebase-init'
 import { doc, DocumentReference } from 'firebase/firestore'
 import { docData } from '@strive/utils/firebase'
 
@@ -17,8 +17,7 @@ interface Version {
 
 @Injectable({ providedIn: 'root' })
 export class AppVersionService {
-  private firestore = inject(Firestore);
-  private injector = inject(Injector);
+  private firestore = inject(FIRESTORE);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
 
@@ -31,7 +30,7 @@ export class AppVersionService {
   checkForUpdate() {
     const docPath = `meta/version`
     const docRef = doc(this.firestore, docPath) as DocumentReference<Version>
-    docData(this.injector, docRef).subscribe(version => {
+    docData(docRef).subscribe(version => {
       if (!version) return
 
       if (version.maintenance) {

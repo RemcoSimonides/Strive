@@ -1,14 +1,26 @@
-import { Injector, runInInjectionContext } from '@angular/core'
-import { docData as afDocData, collectionData as afCollectionData } from '@angular/fire/firestore'
+import { docData as rxDocData, collectionData as rxCollectionData } from 'rxfire/firestore'
 import { DocumentData, DocumentReference, FirestoreDataConverter, Query, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, Timestamp } from 'firebase/firestore'
 import { Observable, OperatorFunction, from, of, tap, startWith, combineLatest, map, switchMap, debounceTime } from 'rxjs'
 
-export function docData<T>(injector: Injector, ref: DocumentReference<T>): Observable<T | undefined> {
-  return runInInjectionContext(injector, () => afDocData(ref))
+/**
+ * Subscribe outside Angular's zone so Firebase's internal async operations
+ * (gRPC connections, timers) don't block SSR stability checks.
+ */
+declare const Zone: { root: { run: <T>(fn: () => T) => T } } | undefined
+function outsideZone<T>(source: Observable<T>): Observable<T> {
+  const rootZone = typeof Zone !== 'undefined' ? Zone : undefined
+  return new Observable<T>(subscriber => {
+    const subscribe = () => source.subscribe(subscriber)
+    return rootZone ? rootZone.root.run(subscribe) : subscribe()
+  })
 }
 
-export function collectionData<T>(injector: Injector, ref: Query<T>, options?: { idField?: string }): Observable<NonNullable<T>[]> {
-  return runInInjectionContext(injector, () => afCollectionData(ref, options as any)) as Observable<NonNullable<T>[]>
+export function docData<T>(ref: DocumentReference<T>): Observable<T | undefined> {
+  return outsideZone(rxDocData(ref) as Observable<T | undefined>)
+}
+
+export function collectionData<T>(ref: Query<T>, options?: { idField?: string }): Observable<NonNullable<T>[]> {
+  return outsideZone(rxCollectionData(ref, options as any) as Observable<NonNullable<T>[]>)
 }
 
 export const createConverter = <T extends Record<string, any>>(

@@ -1,6 +1,6 @@
-import { inject, Injectable, Injector } from '@angular/core'
-import { Firestore, addDoc, setDoc } from '@angular/fire/firestore'
-import { collection, doc, getDocs, QueryConstraint, query } from 'firebase/firestore'
+import { inject, Injectable } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { addDoc, setDoc, collection, doc, getDocs, QueryConstraint, query } from 'firebase/firestore'
 import { createConverter, docData, collectionData } from '@strive/utils/firebase'
 
 import { ChatGPTMessage, Goal, createChatGPTMessage } from '@strive/model'
@@ -14,20 +14,19 @@ const converter = createConverter<ChatGPTMessage>(createChatGPTMessage)
   providedIn: 'root'
 })
 export class ChatGPTService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
 
   docData(id: string, options: { goalId: string }): Observable<ChatGPTMessage | undefined> {
     const docPath = `Goals/${options.goalId}/ChatGPT/${id}`
     const docRef = doc(this.firestore, docPath).withConverter(converter)
-    return docData(this.injector, docRef)
+    return docData(docRef)
   }
 
   collectionData(constraints: QueryConstraint[], options: { goalId: string }): Observable<ChatGPTMessage[]> {
     const colPath = `Goals/${options.goalId}/ChatGPT`
     const colRef = collection(this.firestore, colPath).withConverter(converter)
     const q = query(colRef, ...constraints)
-    return collectionData(this.injector, q, { idField: 'id' })
+    return collectionData(q, { idField: 'id' })
   }
 
   getDocs(constraints: QueryConstraint[], options: { goalId: string }) {

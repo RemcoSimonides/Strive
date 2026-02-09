@@ -7,7 +7,7 @@ import { IonContent, IonSelect, IonSelectOption, IonButton, IonIcon, IonCard, Io
 import { addIcons } from 'ionicons'
 import { add } from 'ionicons/icons'
 
-import { orderBy } from '@angular/fire/firestore'
+import { orderBy } from 'firebase/firestore'
 import { firstValueFrom, map, of, switchMap } from 'rxjs'
 
 import { EntryModalComponent } from '@strive/exercises/wheel-of-life/modals/entry/entry.component'

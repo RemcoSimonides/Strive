@@ -11,9 +11,7 @@ import { environment } from '@env';
 
 import { provideIonicAngular } from '@ionic/angular/standalone'
 
-import { provideFirebaseApp, initializeApp, FirebaseOptions } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore'
-import { provideAuth, getAuth } from '@angular/fire/auth'
+import { provideFirebase } from '@strive/utils/firebase-init'
 
 // import { AUTH_DEPS, FIREBASE_CONFIG } from 'ngfire'
 // import { indexedDBLocalPersistence } from 'firebase/auth'
@@ -38,12 +36,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
     provideIonicAngular({ mode: 'md' }),
-    provideFirebaseApp(() => {
-      const config: FirebaseOptions = environment.firebase.options
-      return initializeApp(config)
-    }),
-    provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
+    ...provideFirebase(environment.firebase.options),
     provideServiceWorker('sw-master.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

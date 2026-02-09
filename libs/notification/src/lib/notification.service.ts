@@ -1,5 +1,5 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore } from '@angular/fire/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
 import { collection, limit, query, QueryConstraint, where } from 'firebase/firestore'
 import { createConverter, collectionData } from '@strive/utils/firebase'
 
@@ -14,8 +14,7 @@ const converter = createConverter<NotificationBase>(createNotificationBase)
   providedIn: 'root'
 })
 export class NotificationService {
-  private firestore = inject(Firestore);
-  private injector = inject(Injector);
+  private firestore = inject(FIRESTORE);
   private personal = inject(PersonalService);
 
   hasUnreadNotification$ = this.personal.personal$.pipe(
@@ -36,6 +35,6 @@ export class NotificationService {
     const colPath = `Users/${options.uid}/Notifications`
     const colRef = collection(this.firestore, colPath).withConverter(converter)
     const q = query(colRef, ...constraints)
-    return collectionData(this.injector, q, { idField: 'id' })
+    return collectionData(q, { idField: 'id' })
   }
 }

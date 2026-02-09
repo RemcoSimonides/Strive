@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Affirmations, DailyGratitude, DearFutureSelf, SelfReflectSettings, WheelOfLifeSettings } from '@strive/model'
-import { Firestore } from '@angular/fire/firestore'
+import { FIRESTORE } from '@strive/utils/firebase-init'
 import { collection, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from 'firebase/firestore'
 import { toDate, collectionData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
@@ -18,11 +18,10 @@ const converter: FirestoreDataConverter<ExerciseSettings> = {
 
 @Injectable({providedIn: 'root'})
 export class ExerciseService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
 
   collectionData(options: { uid: string }): Observable<ExerciseSettings[]> {
     const colRef = collection(this.firestore, `Users/${options.uid}/Exercises`).withConverter(converter)
-    return collectionData(this.injector, colRef, { idField: 'id' })
+    return collectionData(colRef, { idField: 'id' })
   }
 }

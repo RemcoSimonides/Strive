@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore, setDoc, addDoc, deleteDoc } from '@angular/fire/firestore'
-import { collection, query, QueryConstraint, where, collectionGroup, doc } from 'firebase/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { setDoc, addDoc, deleteDoc, collection, query, QueryConstraint, where, collectionGroup, doc } from 'firebase/firestore'
 import { createConverter, docData, collectionData } from '@strive/utils/firebase'
 
 import { of, switchMap, map, shareReplay, Observable } from 'rxjs'
@@ -14,8 +14,7 @@ const converter = createConverter<SupportBase>(createSupportBase)
 @Injectable({ providedIn: 'root' })
 export class SupportService {
   private auth = inject(AuthService);
-  private firestore = inject(Firestore);
-  private injector = inject(Injector);
+  private firestore = inject(FIRESTORE);
 
   hasSupportNeedingDecision$ = this.auth.uid$.pipe(
     switchMap(uid => {
@@ -33,7 +32,7 @@ export class SupportService {
   docData(id: string, options: { goalId: string }): Observable<SupportBase | undefined> {
     const path = `Goals/${options.goalId}/Supports/${id}`
     const docRef = doc(this.firestore, path).withConverter(converter)
-    return docData(this.injector, docRef)
+    return docData(docRef)
   }
 
   collectionData(queryConstraints: QueryConstraint[], options?: { goalId: string }): Observable<SupportBase[]> {
@@ -42,7 +41,7 @@ export class SupportService {
       ? collection(this.firestore, path).withConverter(converter)
       : collectionGroup(this.firestore, 'Supports').withConverter(converter)
     const q = query(ref, ...queryConstraints)
-    return collectionData(this.injector, q, { idField: 'id' })
+    return collectionData(q, { idField: 'id' })
   }
 
   upsert(support: Partial<SupportBase>, options: { goalId: string }) {

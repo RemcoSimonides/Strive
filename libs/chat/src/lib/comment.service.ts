@@ -1,6 +1,6 @@
-import { inject, Injectable, Injector } from '@angular/core'
-import { Firestore, addDoc, setDoc } from '@angular/fire/firestore'
-import { collection, doc, query, QueryConstraint } from 'firebase/firestore'
+import { inject, Injectable } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { addDoc, setDoc, collection, doc, query, QueryConstraint } from 'firebase/firestore'
 import { createConverter, collectionData } from '@strive/utils/firebase'
 
 import { Comment, createComment } from '@strive/model'
@@ -12,14 +12,13 @@ const converter = createConverter<Comment>(createComment)
   providedIn: 'root'
 })
 export class CommentService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
 
   collectionData(queryConstraints: QueryConstraint[], options: { goalId: string }): Observable<Comment[]> {
     const colPath = `Goals/${options.goalId}/ChatGPT`
     const colRef = collection(this.firestore, colPath).withConverter(converter)
     const q = query(colRef, ...queryConstraints)
-    return collectionData(this.injector, q, { idField: 'id' })
+    return collectionData(q, { idField: 'id' })
   }
 
   upsert(payload: Comment, options: { goalId: string }) {

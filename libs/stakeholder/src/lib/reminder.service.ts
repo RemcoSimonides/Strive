@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore, addDoc, setDoc, deleteDoc } from '@angular/fire/firestore'
-import { collection, doc, DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions } from 'firebase/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { addDoc, setDoc, deleteDoc, collection, doc, DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions } from 'firebase/firestore'
 import { collectionData, toDate } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
@@ -12,8 +12,7 @@ import { Reminder, createReminder } from '@strive/model'
   providedIn: 'root'
 })
 export class ReminderService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
   private auth = inject(AuthService)
 
   private converter: FirestoreDataConverter<Reminder | undefined> = {
@@ -47,7 +46,7 @@ export class ReminderService {
 
   collectionData(options: { goalId: string, uid: string }): Observable<Reminder[]> {
     const colRef = collection(this.firestore, this.getPath(options)).withConverter(this.converter)
-    return collectionData(this.injector, colRef, { idField: 'id' }) as Observable<Reminder[]>
+    return collectionData(colRef, { idField: 'id' }) as Observable<Reminder[]>
   }
 
   async add(reminder: Reminder, options: { goalId: string, uid: string }): Promise<string> {

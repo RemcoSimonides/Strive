@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore, setDoc } from '@angular/fire/firestore'
-import { collectionGroup, collection, doc, getDoc, getDocs, query, where, QueryConstraint } from 'firebase/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { setDoc, collectionGroup, collection, doc, getDoc, getDocs, query, where, QueryConstraint } from 'firebase/firestore'
 import { createConverter, docData, collectionData } from '@strive/utils/firebase'
 import { map, Observable } from 'rxjs'
 
@@ -14,25 +14,24 @@ const converter = createConverter<Spectator>(createSpectator, 'uid')
   providedIn: 'root'
 })
 export class SpectatorService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
   private auth = inject(AuthService)
 
   docData(spectatorUid: string, options: { uid: string }): Observable<Spectator | undefined> {
     const docRef = doc(this.firestore, `Users/${options.uid}/Spectators/${spectatorUid}`).withConverter(converter)
-    return docData(this.injector, docRef)
+    return docData(docRef)
   }
 
   private collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<Spectator[]> {
     const colRef = collection(this.firestore, `Users/${options.uid}/Spectators`).withConverter(converter)
     const q = query(colRef, ...constraints)
-    return collectionData(this.injector, q, { idField: 'uid' })
+    return collectionData(q, { idField: 'uid' })
   }
 
   private collectionGroupData(constraints: QueryConstraint[]): Observable<Spectator[]> {
     const ref = collectionGroup(this.firestore, 'Spectators').withConverter(converter)
     const q = query(ref, ...constraints)
-    return collectionData(this.injector, q, { idField: 'uid' })
+    return collectionData(q, { idField: 'uid' })
   }
 
   private getDoc(spectatorUid: string, options: { uid: string }): Promise<Spectator | undefined> {

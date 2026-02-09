@@ -6,7 +6,7 @@ import { IonContent, ModalController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { chevronUpOutline } from 'ionicons/icons'
 
-import { orderBy } from '@angular/fire/firestore'
+import { orderBy } from 'firebase/firestore'
 import { joinWith } from '@strive/utils/firebase'
 
 import { switchMap, tap, map } from 'rxjs/operators'

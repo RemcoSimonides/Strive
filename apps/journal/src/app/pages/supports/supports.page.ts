@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 
 import { IonContent, IonRefresher, IonRefresherContent, ModalController, RefresherCustomEvent } from '@ionic/angular/standalone'
 
-import { where } from '@angular/fire/firestore'
+import { where } from 'firebase/firestore'
 import { joinWith } from '@strive/utils/firebase'
 
 import { combineLatest, Observable, of } from 'rxjs'

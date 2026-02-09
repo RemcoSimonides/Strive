@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore, addDoc } from '@angular/fire/firestore'
-import { collection, doc, query, where } from 'firebase/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { addDoc, collection, query, where } from 'firebase/firestore'
 import { createConverter, collectionData } from '@strive/utils/firebase'
 import { Observable, of, map } from 'rxjs'
 
@@ -15,14 +15,13 @@ const converter = createConverter<Media>(createMedia)
   providedIn: 'root'
 })
 export class MediaService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
 
   collectionData(mediaIds: string[], options: { goalId: string }): Observable<Media[]> {
     if (!mediaIds.length) return of([])
     const colRef = collection(this.firestore, `Goals/${options.goalId}/Media`).withConverter(converter)
     const q = query(colRef, where('__name__', 'in', mediaIds))
-    return collectionData(this.injector, q, { idField: 'id' }).pipe(
+    return collectionData(q, { idField: 'id' }).pipe(
       map(medias => mediaIds
         .map(id => medias.find(m => m?.id === id))
         .filter((m): m is Media => !!m)

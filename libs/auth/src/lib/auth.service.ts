@@ -1,6 +1,7 @@
-import { inject, Injectable, Injector, OnDestroy, signal } from '@angular/core'
-import { Firestore } from '@angular/fire/firestore'
+import { inject, Injectable, OnDestroy, signal } from '@angular/core'
 import { doc, getDoc } from 'firebase/firestore'
+import { User } from 'firebase/auth'
+import { FIRESTORE, AUTH } from '@strive/utils/firebase-init'
 import { createConverter, docData } from '@strive/utils/firebase'
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -8,15 +9,13 @@ import { createUser, User as StriveUser } from '@strive/model'
 
 import { shareReplay, switchMap } from 'rxjs/operators'
 import { of } from 'rxjs'
-import { Auth, User } from '@angular/fire/auth'
 
 const converter = createConverter<StriveUser>(createUser, 'uid')
 
 @Injectable({ providedIn: 'root' })
 export class AuthService implements OnDestroy {
-  private _auth = inject(Auth)
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private _auth = inject(AUTH)
+  private firestore = inject(FIRESTORE)
 
   user = signal<User | null>(this._auth.currentUser)
   user$ = toObservable(this.user)
@@ -29,7 +28,7 @@ export class AuthService implements OnDestroy {
     switchMap(uid => {
       if (uid) {
         const profileRef = doc(this.firestore, `Users/${uid}`).withConverter(converter)
-        return docData(this.injector, profileRef)
+        return docData(profileRef)
       } else {
         return of(undefined)
       }

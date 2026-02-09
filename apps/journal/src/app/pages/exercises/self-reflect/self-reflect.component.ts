@@ -7,7 +7,7 @@ import { IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem, IonLabel,
 import { addIcons } from 'ionicons'
 import { settingsOutline, arrowForwardOutline, filterOutline, addOutline } from 'ionicons/icons'
 
-import { orderBy } from '@angular/fire/firestore'
+import { orderBy } from 'firebase/firestore'
 import { combineLatest, firstValueFrom, map, of, shareReplay, switchMap, startWith } from 'rxjs'
 import { addDays, addMonths, addQuarters, addWeeks, addYears, differenceInDays, getDate, getMonth, getQuarter, getWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek } from 'date-fns'
 

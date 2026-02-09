@@ -1,6 +1,6 @@
-import { Injectable, Injector, inject } from '@angular/core'
-import { Firestore, setDoc } from '@angular/fire/firestore'
-import { collection, doc, getDoc, query, QueryConstraint } from 'firebase/firestore'
+import { Injectable, inject } from '@angular/core'
+import { FIRESTORE } from '@strive/utils/firebase-init'
+import { setDoc, collection, doc, getDoc, query, QueryConstraint } from 'firebase/firestore'
 import { createConverter, collectionData, docData } from '@strive/utils/firebase'
 import { Observable } from 'rxjs'
 
@@ -35,12 +35,12 @@ const entryConverter = createConverter<DailyGratitudeEntry>(entryFactory)
   providedIn: 'root'
 })
 export class DailyGratitudeService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
+
 
   getSettings$(uid: string): Observable<DailyGratitude | undefined> {
     const docRef = doc(this.firestore, `Users/${uid}/Exercises/DailyGratitude`).withConverter(settingsConverter)
-    return docData(this.injector, docRef)
+    return docData(docRef)
   }
 
   getDailyGratitudeSettings(uid: string): Promise<DailyGratitude | undefined> {
@@ -58,15 +58,15 @@ export class DailyGratitudeService {
   providedIn: 'root'
 })
 export class DailyGratitudeEntryService {
-  private firestore = inject(Firestore)
-  private injector = inject(Injector)
+  private firestore = inject(FIRESTORE)
+
   private auth = inject(AuthService)
   private personalService = inject(PersonalService)
 
   collectionData(constraints: QueryConstraint[], options: { uid: string }): Observable<DailyGratitudeEntry[]> {
     const colRef = collection(this.firestore, `Users/${options.uid}/Exercises/DailyGratitude/Entries`).withConverter(entryConverter)
     const q = query(colRef, ...constraints)
-    return collectionData(this.injector, q, { idField: 'id' })
+    return collectionData(q, { idField: 'id' })
   }
 
   async decrypt(cards: DailyGratitudeEntry[]) {
