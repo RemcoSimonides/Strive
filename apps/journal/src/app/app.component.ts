@@ -6,7 +6,15 @@ import { Unsubscribe } from 'firebase/firestore'
 // Ionic
 import { IonApp, IonNav, IonHeader, IonToolbar, IonButton, IonIcon, IonRouterOutlet, Platform, ModalController, PopoverController, IonRouterLink, IonRouterLinkWithHref, IonAvatar } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons';
-import { search, notificationsOutline } from 'ionicons/icons'
+import {
+  search, notificationsOutline, settingsOutline, send, closeOutline, imagesOutline, close, arrowBack,
+  logoGoogle, logoApple, mail, trashOutline, checkmarkOutline, ellipsisVertical, calendarOutline,
+  linkOutline, checkmark, shareSocialOutline, arrowForwardOutline, ellipsisVerticalOutline, play,
+  chevronDownOutline, moonOutline, sunnyOutline, downloadOutline, openOutline, sparklesOutline,
+  addOutline, star, starOutline, add, lockClosedOutline, flagOutline, shield, flag, people, map,
+  list, clipboard, filterOutline, chatboxOutline, listOutline, alarmOutline, reorderFourOutline,
+  personOutline, radioButtonOff, chatbubblesOutline, arrowForward, flagSharp, barbellSharp
+} from 'ionicons/icons'
 
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app'
@@ -151,7 +159,15 @@ export class AppComponent implements OnDestroy {
     })
 
     this.seo.setInitial()
-    addIcons({ search, notificationsOutline });
+    addIcons({
+      search, notificationsOutline, settingsOutline, send, closeOutline, imagesOutline, close, arrowBack,
+      logoGoogle, logoApple, mail, trashOutline, checkmarkOutline, ellipsisVertical, calendarOutline,
+      linkOutline, checkmark, shareSocialOutline, arrowForwardOutline, ellipsisVerticalOutline, play,
+      chevronDownOutline, moonOutline, sunnyOutline, downloadOutline, openOutline, sparklesOutline,
+      addOutline, star, starOutline, add, lockClosedOutline, flagOutline, shield, flag, people, map,
+      list, clipboard, filterOutline, chatboxOutline, listOutline, alarmOutline, reorderFourOutline,
+      personOutline, radioButtonOff, chatbubblesOutline, arrowForward, flagSharp, barbellSharp
+    });
   }
 
   ngOnDestroy() {
