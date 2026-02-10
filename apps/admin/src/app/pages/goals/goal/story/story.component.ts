@@ -12,6 +12,7 @@ import { MilestoneService } from '@strive/roadmap/milestone.service'
 import { PostService } from '@strive/post/post.service'
 import { createGoalStakeholder, StoryItem } from '@strive/model'
 import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
+import { StoryComponent as LibStoryComponent } from '@strive/story/components/story/story.component'
 
 @Component({
     selector: '[id] strive-story',
@@ -22,6 +23,7 @@ import { StoryItemMessagePipe } from '@strive/story/pipes/story-message'
         CommonModule,
         RouterModule,
         StoryItemMessagePipe,
+        LibStoryComponent,
     ]
 })
 export class StoryComponent {

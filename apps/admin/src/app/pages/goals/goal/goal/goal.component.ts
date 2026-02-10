@@ -26,7 +26,7 @@ export class GoalComponent implements OnInit {
 
 
   ngOnInit() {
-    this.goal$ = this.goal.valueChanges(this.id)
+    this.goal$ = this.goal.docData(this.id)
   }
 
   update() {
@@ -35,7 +35,7 @@ export class GoalComponent implements OnInit {
       return
     }
 
-    this.goal.update({ ...this.goalForm.value, id: this.id })
+    this.goal.update(this.id, this.goalForm.value as Partial<Goal>)
   }
 
   updateDescription(description: string) {

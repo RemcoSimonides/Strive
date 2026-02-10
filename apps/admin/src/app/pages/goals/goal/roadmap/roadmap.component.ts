@@ -28,7 +28,7 @@ export class AdminRoadmapComponent implements OnInit {
 
 
 	ngOnInit() {
-    this.goal$ = this.goal.valueChanges(this.id)
+    this.goal$ = this.goal.docData(this.id)
     this.milestones$ = this.milestone.collectionData([orderBy('order', 'asc')], { goalId: this.id }).pipe(
       joinWith({
         achiever: ({ achieverId }) => achieverId ? this.profileService.docData(achieverId) : of(undefined)
@@ -49,7 +49,9 @@ export class AdminRoadmapComponent implements OnInit {
     const max = Math.max(from, to)
     const milestonesToUpdate = milestones.filter(milestone => milestone.order >= min && milestone.order <= max).map(milestone => ({ id: milestone.id, order: milestone.order }))
 
-    this.milestone.update(milestonesToUpdate, { params: { goalId: this.id }})
+    for (const m of milestonesToUpdate) {
+      this.milestone.update(m, { goalId: this.id })
+    }
     ev.detail.complete()
   }
 }

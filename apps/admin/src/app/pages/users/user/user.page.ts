@@ -71,9 +71,9 @@ export class UserPage {
 
       this.stakeholders$ = this.user$.pipe(
         filter(user => !!user),
-        switchMap(user => this.stakeholder.valueChanges([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
+        switchMap(user => this.stakeholder.collectionData([where('uid', '==', user?.uid), orderBy('createdAt', 'desc')])),
         joinWith({
-          goal: (stakeholder: GoalStakeholder) => this.goal.valueChanges(stakeholder.goalId)
+          goal: (stakeholder: GoalStakeholder) => this.goal.docData(stakeholder.goalId)
         }, { shouldAwait: true }),
         map(stakeholders => stakeholders.filter(stakeholder => stakeholder.goal)), // <-- in case a goal is being removed
         map(stakeholders => stakeholders.sort((first, second) => {

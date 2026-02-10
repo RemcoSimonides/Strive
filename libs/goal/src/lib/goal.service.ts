@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { FIRESTORE } from '@strive/utils/firebase-init'
-import { addDoc, setDoc, deleteDoc, collection, doc, DocumentData, FirestoreDataConverter, getDoc, orderBy, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, where } from 'firebase/firestore'
-import { docData, joinWith, toDate } from '@strive/utils/firebase'
+import { addDoc, setDoc, deleteDoc, collection, doc, DocumentData, FirestoreDataConverter, getDoc, orderBy, query, QueryConstraint, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, where } from 'firebase/firestore'
+import { collectionData, docData, joinWith, toDate } from '@strive/utils/firebase'
 
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -90,6 +90,12 @@ export class GoalService {
     const docPath = `Goals/${id}`
     const docRef = doc(this.firestore, docPath).withConverter(this.converter)
     return docData(docRef)
+  }
+
+  collectionData(constraints: QueryConstraint[] = []): Observable<Goal[]> {
+    const colRef = collection(this.firestore, 'Goals').withConverter(this.converter)
+    const q = query(colRef, ...constraints)
+    return collectionData(q, { idField: 'id' }) as Observable<Goal[]>
   }
 
   async getDoc(id: string): Promise<Goal | undefined> {

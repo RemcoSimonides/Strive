@@ -26,7 +26,7 @@ export class TeamComponent implements OnInit {
 
 
 	ngOnInit() {
-		this.stakeholders$ = this.stakeholder.valueChanges({ goalId: this.id }).pipe(
+		this.stakeholders$ = this.stakeholder.collectionData([], { goalId: this.id }).pipe(
       joinWith({
         profile: stakeholder => this.profileService.docData(stakeholder.uid)
       }, { shouldAwait: true })
@@ -39,7 +39,7 @@ export class TeamComponent implements OnInit {
       const uid = res.data as string
       if (uid) {
         const stakeholder = createGoalStakeholder({ uid })
-        this.stakeholder.upsert(stakeholder, { params: { goalId: this.id }})
+        this.stakeholder.upsert(stakeholder, { goalId: this.id })
       }
     })
     modal.present()
@@ -52,7 +52,7 @@ export class TeamComponent implements OnInit {
     return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isAdmin: !stakeholder.isAdmin
-    }, { params: { goalId: this.id }})
+    }, { goalId: this.id })
   }
 
   toggleAchiever(stakeholder: GoalStakeholder, event: Event) {
@@ -61,7 +61,7 @@ export class TeamComponent implements OnInit {
     return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isAchiever: !stakeholder.isAchiever
-    }, { params: { goalId: this.id }})
+    }, { goalId: this.id })
   }
 
   toggleSupporter(stakeholder: GoalStakeholder, event: Event) {
@@ -70,6 +70,6 @@ export class TeamComponent implements OnInit {
     return this.stakeholder.upsert({
       uid: stakeholder.uid,
       isSupporter: !stakeholder.isSupporter
-    }, { params: { goalId: this.id }})
+    }, { goalId: this.id })
   }
 }

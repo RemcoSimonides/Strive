@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular'
 // Environments
 import { environment } from 'environments/environment'
 
-import { FIREBASE_CONFIG } from 'ngfire'
+import { provideFirebase } from '@strive/utils/firebase-init'
 
 import { AppComponent } from './app.component'
 import { AppRoutingModule } from './app-routing.module'
@@ -22,7 +22,7 @@ import { AppRoutingModule } from './app-routing.module'
   ],
   providers: [
     { provide: 'APP_NAME', useValue: 'admin' },
-    { provide: FIREBASE_CONFIG, useValue: environment.firebase }
+    ...provideFirebase(environment.firebase.options)
   ],
   bootstrap: [AppComponent],
 })

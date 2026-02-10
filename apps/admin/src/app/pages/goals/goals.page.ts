@@ -16,7 +16,7 @@ export class GoalsComponent {
   private modalCtrl = inject(ModalController);
 
 
-  goals$ = this.goal.valueChanges([orderBy('createdAt', 'desc')])
+  goals$ = this.goal.collectionData([orderBy('createdAt', 'desc')])
 
 
   async add() {
