@@ -4,20 +4,39 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  padding: 4rem 0 2rem;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+.heroTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #3E2723;
 }
 
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: #5D4037;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+[data-theme='dark'] .heroTitle {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .heroSubtitle {
+  color: #b0b0b0;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
 }

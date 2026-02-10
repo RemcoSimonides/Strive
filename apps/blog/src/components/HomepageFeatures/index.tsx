@@ -1,53 +1,48 @@
 import React from 'react';
-import clsx from 'clsx';
+import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: JSX.Element;
+  icon: string;
+  description: string;
+  link: string;
+  linkLabel: string;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Getting Started',
-    Svg: require('@site/static/img/theo-superman-square.svg').default,
-    description: (
-      <>
-        This is where it all starts
-      </>
-    ),
+    icon: '🚀',
+    description: 'New to Strive? Start here to learn the basics and set up your first goal.',
+    link: '/intro',
+    linkLabel: 'Get started',
   },
   {
     title: 'Guides',
-    Svg: require('@site/static/img/theo-crossroad-square.svg').default,
-    description: (
-      <>
-        Get the most out of Strive Journal and read about how to set goals but also every possible feature available.
-      </>
-    ),
+    icon: '📖',
+    description: 'Learn how to get the most out of every feature in Strive Journal.',
+    link: '/category/goal',
+    linkLabel: 'Browse guides',
   },
   {
     title: 'Blog',
-    Svg: require('@site/static/img/theo-contract-square.svg').default,
-    description: (
-      <>
-        Information about goal setting, new releases, mentions in the media and much more...
-      </>
-    ),
-  }
+    icon: '✍️',
+    description: 'Read about goal setting strategies, new releases, and more.',
+    link: '/blog',
+    linkLabel: 'Read the blog',
+  },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, icon, description, link, linkLabel}: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
+    <div className={styles.featureCol}>
+      <Link to={link} className={styles.featureCard}>
+        <span className={styles.featureIcon}>{icon}</span>
+        <h3 className={styles.featureTitle}>{title}</h3>
+        <p className={styles.featureDescription}>{description}</p>
+        <span className={styles.featureLink}>{linkLabel} →</span>
+      </Link>
     </div>
   );
 }
@@ -56,7 +51,7 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="row">
+        <div className={styles.featureGrid}>
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
