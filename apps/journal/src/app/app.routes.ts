@@ -22,6 +22,7 @@ export const appRoutes: Route[] = [
   { path: 'supports/:id', loadComponent: () => import('./pages/supports/support/support.page').then(m => m.SupportPageComponent) },
   { path: 'settings', loadComponent: () => import('./pages//settings/settings.component').then(m => m.SettingsPageComponent)},
   { path: 'settings/email-notifications', loadComponent: () => import('./pages/settings/email-notification-settings/email-notification-settings.component').then(m => m.EmailNotificationSettingsComponent) },
+  { path: 'settings/api-keys', loadComponent: () => import('./pages/settings/api-keys/api-keys.component').then(m => m.ApiKeysComponent) },
   { path: 'settings/push-notifications', loadComponent: () => import('./pages/settings/push-notification-settings/push-notification-settings.component').then(m => m.PushNotificationsSettingsComponent) },
   { path: 'terms', loadComponent: () => import('@strive/ui/static-information/terms/terms.page').then(m => m.TermsPageComponent) },
   { path: '**', pathMatch: 'full', loadComponent: () => import('./pages/404/404.component').then(m => m.NotfoundPageComponent) }

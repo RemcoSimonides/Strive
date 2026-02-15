@@ -13,10 +13,31 @@
         "platform": "node",
         "outputPath": "dist/apps/functions",
         "format": ["cjs"],
-        "bundle": false,
+        "bundle": true,
+        "thirdParty": true,
         "main": "apps/functions/src/main.ts",
         "tsConfig": "apps/functions/tsconfig.app.json",
-        "generatePackageJson": true,
+        "generatePackageJson": false,
+        "external": [
+          "firebase-admin",
+          "firebase-functions",
+          "express",
+          "@google-cloud/storage",
+          "@sendgrid/mail",
+          "@sentry/node",
+          "openai",
+          "algoliasearch",
+          "node-fetch",
+          "crypto-js",
+          "date-fns"
+        ],
+        "assets": [
+          {
+            "input": "apps/functions",
+            "glob": "package.json",
+            "output": "."
+          }
+        ],
         "esbuildOptions": {
           "sourcemap": true,
           "outExtension": {
@@ -32,13 +53,7 @@
             "outExtension": {
               ".js": ".js"
             }
-          },
-          "fileReplacements": [
-            {
-              "replace": "apps/backend-functions/src/environments/environment.ts",
-              "with": "apps/backend-functions/src/environments/environment.prod.ts"
-            }
-          ]
+          }
         }
       }
     },

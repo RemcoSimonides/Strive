@@ -1,0 +1,63 @@
+main {
+  max-width: var(--page-max-width);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.key-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  small {
+    color: var(--ion-color-medium);
+  }
+}
+
+.scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.scope-badge {
+  background: var(--ion-color-light);
+  color: var(--ion-color-medium);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--ion-color-medium);
+}
+
+.limit-note {
+  text-align: center;
+  padding: 8px 16px;
+  color: var(--ion-color-medium);
+  font-size: small;
+}
+
+@media only screen and (max-width: 768px) {
+  ion-list {
+    border-radius: 0;
+  }
+}

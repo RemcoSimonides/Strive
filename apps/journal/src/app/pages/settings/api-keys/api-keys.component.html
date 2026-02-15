@@ -1,0 +1,52 @@
+<strive-header title="API Keys" defaultHref="/settings"></strive-header>
+
+<ion-content [ngClass]="(isMobile$ | async) ? 'ion-no-padding' : 'ion-padding'">
+  <main>
+
+    @if ((isMobile$ | async) === false) {
+      <header>
+        <h1>API Keys</h1>
+      </header>
+    }
+
+    <ion-list lines="full">
+      <ion-list-header>
+        <ion-label>Your Keys</ion-label>
+        <ion-button fill="clear" (click)="createKey()" [disabled]="keys().length >= 10">
+          <ion-icon slot="icon-only" name="add-outline" />
+        </ion-button>
+      </ion-list-header>
+
+      @for (key of keys(); track key.id) {
+        <ion-item>
+          <ion-label>
+            <div class="key-meta">
+              <span>{{ key.name }}</span>
+              <small>{{ key.prefix }}...</small>
+              <div class="scopes">
+                @for (scope of key.scopes; track scope) {
+                  <span class="scope-badge">{{ scope }}</span>
+                }
+              </div>
+              <small>Created {{ key.createdAt | date:'mediumDate' }}</small>
+            </div>
+          </ion-label>
+          <ion-button fill="clear" color="danger" slot="end" (click)="revokeKey(key)">
+            <ion-icon slot="icon-only" name="trash-outline" />
+          </ion-button>
+        </ion-item>
+      } @empty {
+        <ion-item lines="none">
+          <ion-label>
+            <p class="empty-state">No API keys yet. Create one to get started.</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+
+    @if (keys().length >= 10) {
+      <p class="limit-note">Maximum of 10 active keys reached.</p>
+    }
+
+  </main>
+</ion-content>

@@ -138,6 +138,11 @@ service cloud.firestore {
       allow read;
     }
 
+    // ===== API KEYS ====
+    match /ApiKeys/{keyId} {
+      allow read, write: if false;
+    }
+
     // ===== INTEGRATIONS ====
     match /Strava/{stravaId} {
       allow read;

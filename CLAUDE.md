@@ -122,6 +122,8 @@ Strava/{stravaId}
 
 ### Cloud Functions (`apps/functions/src/`)
 
+**Adding a new npm dependency to functions:** The build uses `bundle: true` with esbuild, so workspace code is inlined. Runtime npm dependencies must be added to **both** `apps/functions/project.json` (`external` array) **and** `apps/functions/package.json` (`dependencies`). Missing from `external` = esbuild bundles it (may break native modules). Missing from `package.json` = Cloud Build won't install it (runtime crash).
+
 Three categories of functions exported from `main.ts`:
 
 - **Firestore triggers** (`firestore/`) — React to document create/update/delete on Goals, Users, and their subcollections

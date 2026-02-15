@@ -19,6 +19,13 @@ export const listenToStrava = onRequest(async (req, res) => {
   const challenge = req.query['hub.challenge']
 
   if (challenge) {
+    const verifyToken = req.query['hub.verify_token']
+    const expectedToken = process.env['STRAVA_WEBHOOK_VERIFY_TOKEN']
+    if (!expectedToken || verifyToken !== expectedToken) {
+      res.status(403).json({ error: 'Invalid verify token' })
+      return
+    }
+
     res.setHeader('Content-Type', 'application/json')
     res.send({ 'hub.challenge': challenge })
     return
