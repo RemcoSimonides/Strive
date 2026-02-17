@@ -59,11 +59,6 @@ export const createApiKeyCallable = onCall(async (request) => {
 
   return {
     id: docRef.id,
-    name: apiKeyData.name,
-    prefix: apiKeyData.prefix,
-    scopes: apiKeyData.scopes,
-    expiresAt: apiKeyData.expiresAt ?? null,
-    createdAt: apiKeyData.createdAt,
     key: rawKey // Only returned once — user must store this
   }
 })

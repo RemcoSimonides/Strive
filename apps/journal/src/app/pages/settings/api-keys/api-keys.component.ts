@@ -1,28 +1,24 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { RouterModule } from '@angular/router'
 
-import { AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader } from '@ionic/angular/standalone'
+import { AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, LoadingController } from '@ionic/angular/standalone'
 import { addIcons } from 'ionicons'
 import { addOutline, trashOutline } from 'ionicons/icons'
 
 import { Clipboard } from '@capacitor/clipboard'
+import { collection, doc, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
-import { ApiKeyScope } from '@strive/model'
+import { ApiKey, createApiKey, ApiKeyScope } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
 import { HeaderComponent } from '@strive/ui/header/header.component'
+import { collectionData, createConverter } from '@strive/utils/firebase'
+import { FIRESTORE } from '@strive/utils/firebase-init'
 import { ScreensizeService } from '@strive/utils/services/screensize.service'
 
-interface ApiKeyListItem {
-  id: string
-  name: string
-  prefix: string
-  scopes: ApiKeyScope[]
-  lastUsedAt: string | null
-  expiresAt: string | null
-  createdAt: string
-}
+const converter = createConverter<ApiKey>(createApiKey)
 
 const AVAILABLE_SCOPES: { value: ApiKeyScope, label: string }[] = [
   { value: 'goals:read', label: 'Read Goals' },
@@ -54,26 +50,24 @@ const AVAILABLE_SCOPES: { value: ApiKeyScope, label: string }[] = [
 })
 export class ApiKeysComponent {
   private alertCtrl = inject(AlertController)
+  private loadingCtrl = inject(LoadingController)
   private auth = inject(AuthService)
+  private firestore = inject(FIRESTORE)
   private screensize = inject(ScreensizeService)
 
   isMobile$ = this.screensize.isMobile$
-  keys = signal<ApiKeyListItem[]>([])
+  keys = signal<ApiKey[]>([])
 
   constructor() {
     addIcons({ addOutline, trashOutline })
-    this.loadKeys()
-  }
 
-  async loadKeys() {
     const uid = this.auth.uid()
-    if (!uid) return
-
-    const fn = httpsCallable(getFunctions(), 'listApiKeysCallable')
-    const result = await fn({})
-    const response = result.data as { data?: ApiKeyListItem[], error?: string }
-    if (response.data) {
-      this.keys.set(response.data)
+    if (uid) {
+      const colRef = collection(this.firestore, 'ApiKeys').withConverter(converter)
+      const q = query(colRef, where('uid', '==', uid), where('revoked', '==', false))
+      collectionData(q, { idField: 'id' }).pipe(
+        takeUntilDestroyed()
+      ).subscribe(keys => this.keys.set(keys as ApiKey[]))
     }
   }
 
@@ -127,10 +121,27 @@ export class ApiKeysComponent {
       return
     }
 
-    // Call the create function
-    const fn = httpsCallable(getFunctions(), 'createApiKeyCallable')
-    const result = await fn({ name, scopes })
-    const response = result.data as { key?: string, error?: string, id?: string }
+    // Call the create function (needs server-side crypto)
+    const loading = await this.loadingCtrl.create({ message: 'Creating API key...' })
+    await loading.present()
+
+    let response: { key?: string, error?: string, id?: string }
+    try {
+      const fn = httpsCallable(getFunctions(), 'createApiKeyCallable')
+      const result = await fn({ name, scopes })
+      response = result.data as { key?: string, error?: string, id?: string }
+    } catch {
+      await loading.dismiss()
+      const errorAlert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'Failed to create API key. Please try again.',
+        buttons: ['OK']
+      })
+      await errorAlert.present()
+      return
+    }
+
+    await loading.dismiss()
 
     if (response.error) {
       const errorAlert = await this.alertCtrl.create({
@@ -142,11 +153,14 @@ export class ApiKeysComponent {
       return
     }
 
-    // Step 3: Show the raw key
+    // Step 3: Show the raw key (Firestore listener will auto-update the list)
     if (response.key) {
       const keyAlert = await this.alertCtrl.create({
         header: 'API Key Created',
-        message: `Copy this key now. You won't be able to see it again.<br><br><strong>${response.key}</strong>`,
+        message: "Copy this key now. You won't be able to see it again.",
+        inputs: [
+          { name: 'key', type: 'text', value: response.key, attributes: { readonly: true } }
+        ],
         buttons: [
           {
             text: 'Copy & Close',
@@ -158,11 +172,9 @@ export class ApiKeysComponent {
       })
       await keyAlert.present()
     }
-
-    await this.loadKeys()
   }
 
-  async revokeKey(key: ApiKeyListItem) {
+  async revokeKey(key: ApiKey) {
     const alert = await this.alertCtrl.create({
       header: 'Revoke API Key',
       message: `Are you sure you want to revoke "${key.name}" (${key.prefix}...)?`,
@@ -172,9 +184,8 @@ export class ApiKeysComponent {
           text: 'Revoke',
           role: 'destructive',
           handler: async () => {
-            const fn = httpsCallable(getFunctions(), 'revokeApiKeyCallable')
-            await fn({ keyId: key.id })
-            await this.loadKeys()
+            const docRef = doc(this.firestore, `ApiKeys/${key.id}`)
+            await updateDoc(docRef, { revoked: true, updatedAt: serverTimestamp() })
           }
         }
       ]

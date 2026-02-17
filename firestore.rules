@@ -140,7 +140,8 @@ service cloud.firestore {
 
     // ===== API KEYS ====
     match /ApiKeys/{keyId} {
-      allow read, write: if false;
+      allow read, update: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create, delete: if false;
     }
 
     // ===== INTEGRATIONS ====
