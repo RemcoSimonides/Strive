@@ -47,7 +47,7 @@ export const createApiKeyCallable = onCall(async (request) => {
     prefix,
     hashedKey,
     scopes: scopes as ApiKeyScope[],
-    expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+    expiresAt: expiresAt ? new Date(expiresAt) : null,
     createdAt: now,
     updatedAt: now,
   })
