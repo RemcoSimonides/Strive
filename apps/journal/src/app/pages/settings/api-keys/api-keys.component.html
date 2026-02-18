@@ -17,8 +17,8 @@
         </ion-button>
       </ion-list-header>
 
-      @for (key of keys(); track key.id) {
-        <ion-item>
+      @for (key of keys(); track key.id; let last = $last) {
+        <ion-item [lines]="last ? 'none' : 'full'">
           <ion-label>
             <div class="key-meta">
               <span>{{ key.name }}</span>
