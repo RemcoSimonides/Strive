@@ -46,6 +46,10 @@ export class AuthService implements OnDestroy {
     this.authStateChangeUnsubscribe()
   }
 
+  authStateReady(): Promise<void> {
+    return this._auth.authStateReady()
+  }
+
   async getUID(): Promise<string> {
     await this._auth.authStateReady()
     return this._auth.currentUser ? this._auth.currentUser.uid : '';

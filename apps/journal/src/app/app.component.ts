@@ -181,6 +181,7 @@ export class AppComponent implements OnDestroy {
     if (isPlatformServer(this.platformId)) return
 
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
+      await this.auth.authStateReady()
       const isLoggedIn = this.auth.isLoggedIn()
       const { url } = event
 

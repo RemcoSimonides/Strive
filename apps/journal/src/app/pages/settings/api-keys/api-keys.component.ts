@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { RouterModule } from '@angular/router'
 
 import { AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, LoadingController } from '@ionic/angular/standalone'
@@ -10,6 +10,7 @@ import { addOutline, trashOutline } from 'ionicons/icons'
 import { Clipboard } from '@capacitor/clipboard'
 import { collection, doc, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { of, switchMap } from 'rxjs'
 
 import { ApiKey, createApiKey, ApiKeyScope } from '@strive/model'
 import { AuthService } from '@strive/auth/auth.service'
@@ -61,14 +62,15 @@ export class ApiKeysComponent {
   constructor() {
     addIcons({ addOutline, trashOutline })
 
-    const uid = this.auth.uid()
-    if (uid) {
-      const colRef = collection(this.firestore, 'ApiKeys').withConverter(converter)
-      const q = query(colRef, where('uid', '==', uid), where('revoked', '==', false))
-      collectionData(q, { idField: 'id' }).pipe(
-        takeUntilDestroyed()
-      ).subscribe(keys => this.keys.set(keys as ApiKey[]))
-    }
+    toObservable(this.auth.uid).pipe(
+      switchMap(uid => {
+        if (!uid) return of([])
+        const colRef = collection(this.firestore, 'ApiKeys').withConverter(converter)
+        const q = query(colRef, where('uid', '==', uid), where('revoked', '==', false))
+        return collectionData(q, { idField: 'id' })
+      }),
+      takeUntilDestroyed()
+    ).subscribe(keys => this.keys.set(keys as ApiKey[]))
   }
 
   async createKey() {
