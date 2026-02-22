@@ -74,6 +74,12 @@ const config = {
             label: 'Guides',
           },
           {
+            type: 'docSidebar',
+            sidebarId: 'apiSidebar',
+            position: 'right',
+            label: 'API Documentation',
+          },
+          {
             to: '/blog',
             label: 'Blog',
             position: 'right'
@@ -105,6 +111,10 @@ const config = {
               {
                 label: 'Create the Perfect Goal',
                 to: '/category/create-the-perfect-goal',
+              },
+              {
+                label: 'API Documentation',
+                to: '/api/overview',
               }
             ],
           },

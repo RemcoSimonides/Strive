@@ -12,9 +12,9 @@
       }
     },
     "serve": {
-      "command": "npx nx docusaurus blog:start",
+      "command": "npx docusaurus start --port 3000",
       "options": {
-        "port": 3000
+        "cwd": "apps/blog"
       }
     }
   }

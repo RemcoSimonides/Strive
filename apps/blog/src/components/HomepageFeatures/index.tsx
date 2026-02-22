@@ -26,6 +26,13 @@ const FeatureList: FeatureItem[] = [
     linkLabel: 'Browse guides',
   },
   {
+    title: 'API Documentation',
+    icon: '🔌',
+    description: 'Integrate Strive into your workflow with our REST API.',
+    link: '/api/overview',
+    linkLabel: 'View API docs',
+  },
+  {
     title: 'Blog',
     icon: '✍️',
     description: 'Read about goal setting strategies, new releases, and more.',
