@@ -17,7 +17,7 @@ You can create API keys in two ways:
 
 When creating a key, you specify:
 - **Name** — A label to identify the key (e.g., "My Integration")
-- **Scopes** — The permissions this key should have
+- **Scopes** — The permissions this key should have (e.g., `goals:read`, `goals:write`, `posts:write`, `milestones:write`)
 - **Expiration** (optional) — When the key should automatically expire
 
 :::caution

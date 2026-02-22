@@ -5,6 +5,7 @@ export type ApiKeyScope =
   | 'milestones:write'
   | 'user:read'
   | 'posts:read'
+  | 'posts:write'
   | 'supports:read'
 
 export interface ApiKey {

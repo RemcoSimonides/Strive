@@ -42,6 +42,7 @@ Each API key has a set of scopes that determine which endpoints it can access:
 | `milestones:write` | Create and update milestones |
 | `user:read` | Read your profile |
 | `posts:read` | Read posts |
+| `posts:write` | Create and delete posts |
 | `supports:read` | Read supports |
 
 If a request requires a scope that the API key doesn't have, the server returns a **403 Forbidden** response.

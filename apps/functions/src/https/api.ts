@@ -2,6 +2,7 @@ import express from 'express'
 import { onRequest } from 'firebase-functions/v2/https'
 import { authenticateApiKey, rateLimit } from '../shared/api-key'
 import { goalsRouter } from './api/v1/goals'
+import { postsRouter } from './api/v1/posts'
 import { usersRouter } from './api/v1/users'
 import { apiKeysRouter } from './api/v1/api-keys'
 
@@ -22,6 +23,7 @@ const v1 = express.Router()
 v1.use(authenticateApiKey)
 v1.use(rateLimit)
 v1.use('/goals', goalsRouter)
+goalsRouter.use('/:goalId/posts', postsRouter)
 v1.use('/users', usersRouter)
 v1.use('/api-keys', apiKeysRouter)
 

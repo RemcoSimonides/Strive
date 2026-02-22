@@ -6,7 +6,7 @@ import { generateApiKey } from '../../../shared/api-key'
 
 const VALID_SCOPES: ApiKeyScope[] = [
   'goals:read', 'goals:write', 'milestones:read', 'milestones:write',
-  'user:read', 'posts:read', 'supports:read'
+  'user:read', 'posts:read', 'posts:write', 'supports:read'
 ]
 
 export const apiKeysRouter = Router()
