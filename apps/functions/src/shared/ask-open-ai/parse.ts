@@ -1,5 +1,6 @@
 export function parseRaw(answer: string): string[] | undefined {
   let value = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
+  value = value.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '')  // strip markdown code fences
   if (value.split('"').length % 2 === 0) value = value + '"'
   if (value.startsWith('[') && !value.endsWith(']')) value = value + ']'
 
