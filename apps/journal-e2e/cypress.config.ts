@@ -7,5 +7,7 @@ export default defineConfig({
       cypressDir: 'src',
     }),
     baseUrl: 'http://localhost:4200',
+    includeShadowDom: true,
+    testIsolation: false,
   },
 });
