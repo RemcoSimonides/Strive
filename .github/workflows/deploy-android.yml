@@ -51,10 +51,13 @@ jobs:
         run: npx nx run journal:sync:android --no-cloud
         working-directory: .
 
+      - name: Fix Capacitor plugin paths
+        run: sed -i "s|'../node_modules|'../../../node_modules|g" capacitor.settings.gradle
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - uses: ruby/setup-ruby@v1
         with:
