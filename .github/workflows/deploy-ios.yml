@@ -1,0 +1,85 @@
+name: Deploy iOS
+
+on:
+  push:
+    tags:
+      - 'ios-v*'
+  workflow_dispatch:
+    inputs:
+      destination:
+        description: 'Deploy destination'
+        required: true
+        default: 'testflight'
+        type: choice
+        options:
+          - testflight
+          - production
+
+concurrency:
+  group: deploy-ios
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: macos-15
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: apps/journal/ios/App
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+        working-directory: .
+
+      - name: Build journal web assets
+        run: npx nx build journal --configuration=production
+        working-directory: .
+
+      - name: Sync Capacitor iOS
+        run: npx nx run journal:sync:ios
+        working-directory: .
+
+      - name: Install CocoaPods
+        run: pod install
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/journal/ios/App
+
+      - name: Set up SSH for Match
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_DEPLOY_KEY }}
+
+      - name: Determine lane
+        id: lane
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            DEST="${{ github.event.inputs.destination }}"
+          else
+            DEST="testflight"
+          fi
+          if [ "$DEST" = "production" ]; then
+            echo "name=deploy_production" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=deploy_testflight" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run Fastlane
+        run: bundle exec fastlane ${{ steps.lane.outputs.name }}
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}

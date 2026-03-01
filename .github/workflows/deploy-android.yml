@@ -1,0 +1,88 @@
+name: Deploy Android
+
+on:
+  push:
+    tags:
+      - 'android-v*'
+  workflow_dispatch:
+    inputs:
+      track:
+        description: 'Play Store track'
+        required: true
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - production
+
+concurrency:
+  group: deploy-android
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/journal/android
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+        working-directory: .
+
+      - name: Build journal web assets
+        run: npx nx build journal --configuration=production
+        working-directory: .
+
+      - name: Sync Capacitor Android
+        run: npx nx run journal:sync:android
+        working-directory: .
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/journal/android
+
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+
+      - name: Decode Play Store key
+        run: echo "${{ secrets.PLAY_STORE_JSON_KEY_BASE64 }}" | base64 --decode > fastlane/play-store-key.json
+
+      - name: Determine lane
+        id: lane
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TRACK="${{ github.event.inputs.track }}"
+          else
+            TRACK="internal"
+          fi
+          if [ "$TRACK" = "production" ]; then
+            echo "name=deploy_production" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=deploy_internal" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run Fastlane
+        run: bundle exec fastlane ${{ steps.lane.outputs.name }}
+        env:
+          KEYSTORE_FILE: ${{ github.workspace }}/apps/journal/android/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          PLAY_STORE_JSON_KEY_FILE: fastlane/play-store-key.json
