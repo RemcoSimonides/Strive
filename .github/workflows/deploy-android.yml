@@ -39,6 +39,10 @@ jobs:
         run: npm ci --legacy-peer-deps
         working-directory: .
 
+      - name: Install Capacitor plugins
+        run: npm install
+        working-directory: apps/journal
+
       - name: Build journal web assets
         run: npx nx build journal --configuration=production --no-cloud
         working-directory: .
