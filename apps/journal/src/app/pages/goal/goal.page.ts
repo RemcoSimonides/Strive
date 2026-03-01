@@ -723,8 +723,8 @@ export class GoalPageComponent implements OnDestroy {
         if (!uid) return
         const personal = await this.personalService.getDoc(uid)
         console.log('personal: ', personal)
-        if (personal?.stravaRefreshToken) {
-          refreshToken = personal.stravaRefreshToken
+        if (personal?.oauthTokens?.['strava']) {
+          refreshToken = personal.oauthTokens['strava']
         } else {
           const client_id = 102223
           const redirect_uri = `https://strivejournal.com/goal/${this.goal.id}`

@@ -9,6 +9,7 @@ export interface StravaIntegration {
   totalDistance: number
   totalMovingTime: number
   totalElevationGain: number
+  apiKeyId: string
   createdAt: Date
   updatedAt: Date
 }
@@ -25,6 +26,7 @@ export function createStravaIntegration(params?: Partial<StravaIntegration>): St
     totalDistance: 0,
     totalMovingTime: 0,
     totalElevationGain: 0,
+    apiKeyId: '',
     createdAt: new Date(),
     updatedAt: new Date(),
     ...params

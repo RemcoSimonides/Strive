@@ -25,10 +25,10 @@
       ></iframe>
     } @else {
       <swiper-container pagination="true">
-        @if (post.stravaActivityId) {
+        @if (post.source === 'strava' && post.externalId) {
           <swiper-slide class="strava-slide">
             <section class="strava-wrapper">
-              <div class="strava-embed-placeholder" data-embed-type="activity" [attr.data-embed-id]="post.stravaActivityId" data-style="standard"></div>
+              <div class="strava-embed-placeholder" data-embed-type="activity" [attr.data-embed-id]="post.externalId" data-style="standard"></div>
               <div class="iframe-overlay"></div>
             </section>
           </swiper-slide>

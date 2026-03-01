@@ -38,7 +38,9 @@ const secrets = [
 	defineSecret('OPENAI_APIKEY'),
 	defineSecret('STRAVA_CLIENT_ID'),
 	defineSecret('STRAVA_CLIENT_SECRET'),
-	defineSecret('STRAVA_WEBHOOK_VERIFY_TOKEN')
+	defineSecret('STRAVA_WEBHOOK_VERIFY_TOKEN'),
+	defineSecret('API_KEY_ENCRYPTION_SECRET'),
+	defineSecret('API_BASE_URL')
 ]
 
 setGlobalOptions({

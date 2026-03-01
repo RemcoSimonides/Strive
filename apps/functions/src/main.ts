@@ -23,6 +23,7 @@ export { chatGPTMessageCreatedHandler } from './firestore/goals/chatgpt/chatgpt'
 export { mediaDeletedHandler } from './firestore/goals/media/media'
 
 export { goalEventCreatedHandler } from './firestore/goal-events/goal-events'
+export { stravaIntegrationChangeHandler } from './firestore/strava/strava'
 
 // http
 export { migrate } from './migration'

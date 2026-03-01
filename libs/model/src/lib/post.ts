@@ -1,5 +1,7 @@
 import { Media } from './media'
 
+export type PostSource = 'strava'
+
 export interface PostBase {
   id?: string
   description: string
@@ -10,7 +12,8 @@ export interface PostBase {
   uid: string
   milestoneId?: string // link to milestone
   date: Date
-  stravaActivityId?: number
+  externalId?: string
+  source?: PostSource
   updatedAt?: Date
   createdAt?: Date
 }
@@ -28,7 +31,6 @@ export function createPost(params: Partial<Post> = {}): Post {
     goalId: '',
     uid: '',
     youtubeId: '',
-    stravaActivityId: 0,
     date: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),

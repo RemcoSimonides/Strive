@@ -7,7 +7,8 @@ export interface Personal {
   key: string
   lastCheckedNotifications: Date
   settings: Settings
-  stravaRefreshToken: string
+  oauthTokens: Record<string, string>
+  encryptedApiKeys: Record<string, string>
   updatedAt?: Date
   createdAt?: Date
 }
@@ -19,7 +20,8 @@ export function createPersonal(params: Partial<Personal> = {}): Personal {
     key: '',
     fcmTokens: [],
     lastCheckedNotifications: new Date(),
-    stravaRefreshToken: '',
+    oauthTokens: {},
+    encryptedApiKeys: {},
     ...params,
     settings: createSettings(params.settings),
   }

@@ -1,8 +1,11 @@
 import { db, logger, onCall, onRequest } from '@strive/api/firebase'
 import { ErrorResultResponse, toDate } from '../shared/utils'
-import { ActivityType, createStravaIntegration } from '@strive/model'
-import { createPersonal, createPost } from '@strive/model'
+import { ActivityType, createApiKey, createStravaIntegration } from '@strive/model'
+import { createPersonal } from '@strive/model'
 import { fetchActivities, fetchActivity, fetchAthlete, fetchRefreshToken, fetchToken } from '../shared/strava/strava.shared'
+import { generateApiKey } from '../shared/api-key'
+import { encrypt, decrypt } from '../shared/encryption'
+import { createStriveApiClient } from '../shared/strive-api/strive-api.client'
 
 // https://developers.strava.com/docs/webhooks/
 interface StravaEvent {
@@ -58,14 +61,15 @@ export const listenToStrava = onRequest(async (req, res) => {
 
     const personalSnap = await db.doc(`Users/${userId}/Personal/${userId}`).get()
     const personal = createPersonal(toDate({ ...personalSnap.data(), id: personalSnap.id }))
-    if (!personal.stravaRefreshToken) {
-      logger.error('No strava refresh token for person', userId)
+    const stravaToken = personal.oauthTokens['strava']
+    if (!stravaToken) {
+      logger.error('No strava OAuth token for person', userId)
       continue
     }
 
-    const { access_token, refresh_token } = await fetchRefreshToken(personal.stravaRefreshToken)
+    const { access_token, refresh_token } = await fetchRefreshToken(stravaToken)
     // save refresh token
-    personalSnap.ref.update({ stravaRefreshToken: refresh_token })
+    personalSnap.ref.update({ 'oauthTokens.strava': refresh_token })
 
     // fetch activity
     const activity = await fetchActivity(access_token, body.object_id)
@@ -75,16 +79,41 @@ export const listenToStrava = onRequest(async (req, res) => {
       continue
     }
 
-    // create post
-    const post = createPost({
-      uid: userId,
-      goalId,
-      description: activity.name,
-      date: new Date(activity.start_date),
-      url: `https://www.strava.com/activities/${activity.id}`,
-      stravaActivityId: activity.id
-    })
-    db.collection(`Goals/${goalId}/Posts`).add(post)
+    // create post via API
+    try {
+      const encryptionSecret = process.env['API_KEY_ENCRYPTION_SECRET']
+      const encryptedKey = personal.encryptedApiKeys[strava.apiKeyId]
+      if (!encryptedKey || !encryptionSecret) {
+        logger.error('Missing API key or encryption secret for Strava integration', doc.id)
+        continue
+      }
+
+      const apiKey = decrypt(encryptedKey, encryptionSecret)
+      const client = createStriveApiClient(apiKey)
+
+      const { status } = await client.createPost(goalId, {
+        description: activity.name,
+        date: new Date(activity.start_date).toISOString(),
+        url: `https://www.strava.com/activities/${activity.id}`,
+        externalId: `${activity.id}`,
+        source: 'strava'
+      })
+
+      // 200 means duplicate (already exists) — skip totals update
+      if (status === 200) {
+        logger.log('Post already exists for activity', activity.id)
+        continue
+      }
+    } catch (err) {
+      const error = err as Error & { status?: number }
+      if (error.status === 401) {
+        logger.error('API key revoked for Strava integration', doc.id, '— disabling integration')
+        await doc.ref.update({ enabled: false, updatedAt: new Date() })
+      } else {
+        logger.error('Failed to create post via API for Strava integration', doc.id, error.message)
+      }
+      continue
+    }
 
     // update totals
     const updatedStravaIntegration = createStravaIntegration({
@@ -143,8 +172,29 @@ async (request): Promise<ErrorResultResponse> => {
       athleteId = `${id}`
     }
 
+    // Auto-create API key for Strava integration
+    const { rawKey, hashedKey, prefix } = generateApiKey()
+    const now = new Date()
+    const apiKeyData = createApiKey({
+      uid: userId,
+      name: 'Strava Integration',
+      prefix,
+      hashedKey,
+      scopes: ['posts:write'],
+      createdAt: now,
+      updatedAt: now,
+    })
+    const { id: _keyId, ...keyDataWithoutId } = apiKeyData
+    const apiKeyRef = await db.collection('ApiKeys').add(keyDataWithoutId)
+    logger.log(`API key created for Strava integration: ${apiKeyRef.id} (${prefix}...)`)
+
+    // Encrypt the raw key and store in Personal doc alongside OAuth token
+    const encryptionSecret = process.env['API_KEY_ENCRYPTION_SECRET']
     const personalRef = db.doc(`Users/${userId}/Personal/${userId}`)
-    await personalRef.update({ stravaRefreshToken: newRefreshToken })
+    await personalRef.update({
+      'oauthTokens.strava': newRefreshToken,
+      ...(encryptionSecret ? { [`encryptedApiKeys.${apiKeyRef.id}`]: encrypt(rawKey, encryptionSecret) } : {})
+    })
 
     if (after) {
       const activities = await fetchActivities(accessToken, after)
@@ -165,31 +215,34 @@ async (request): Promise<ErrorResultResponse> => {
         totalActivities,
         totalDistance,
         totalMovingTime,
-        totalElevationGain
+        totalElevationGain,
+        apiKeyId: apiKeyRef.id
       })
 
       db.collection(`Strava`).add(stravaIntegration)
 
-      const batch = db.batch()
+      // Create posts via API
+      const client = createStriveApiClient(rawKey)
       for (const activity of filtered) {
-        const post = createPost({
-          uid: userId,
-          goalId,
-          description: activity.name,
-          date: new Date(activity.start_date),
-          url: `https://www.strava.com/activities/${activity.id}`,
-          stravaActivityId: activity.id
-        })
-        const postRef = db.collection(`Goals/${goalId}/Posts`).doc()
-        batch.set(postRef, post)
+        try {
+          await client.createPost(goalId, {
+            description: activity.name,
+            date: new Date(activity.start_date).toISOString(),
+            url: `https://www.strava.com/activities/${activity.id}`,
+            externalId: `${activity.id}`,
+            source: 'strava'
+          })
+        } catch (err) {
+          logger.error('Failed to create post via API for activity', activity.id, (err as Error).message)
+        }
       }
-      batch.commit()
     } else {
       const stravaIntegration = createStravaIntegration({
         athleteId,
         userId,
         goalId,
-        activityTypes
+        activityTypes,
+        apiKeyId: apiKeyRef.id
       })
       db.doc(`Strava/${goalId}${userId}`).set(stravaIntegration)
     }
@@ -208,4 +261,3 @@ async (request): Promise<ErrorResultResponse> => {
   }
 
 })
-

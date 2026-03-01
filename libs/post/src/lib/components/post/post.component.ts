@@ -62,7 +62,7 @@ export class PostComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.post?.stravaActivityId) {
+    if (this.post?.source === 'strava') {
       const script = this.renderer.createElement('script')
       script.type = 'text/javascript'
       script.src = 'https://strava-embeds.com/embed.js'

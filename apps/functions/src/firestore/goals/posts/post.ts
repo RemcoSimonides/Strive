@@ -54,21 +54,22 @@ async (snapshot) => {
 })
 
 async function _removeStravaActivityFromTotal(post: Post) {
-  if (!post.stravaActivityId) return
+  if (post.source !== 'strava' || !post.externalId) return
 
   const personalSnap = await db.doc(`Users/${post.uid}/Personal/${post.uid}`).get()
   const personal = createPersonal(toDate({ ...personalSnap.data(), id: personalSnap.id}))
-  if (!personal.stravaRefreshToken) {
-    logger.log('No strava refresh token for person', post.uid)
+  const stravaToken = personal.oauthTokens['strava']
+  if (!stravaToken) {
+    logger.log('No strava OAuth token for person', post.uid)
     return
   }
 
-  const { access_token, refresh_token } = await fetchRefreshToken(personal.stravaRefreshToken)
+  const { access_token, refresh_token } = await fetchRefreshToken(stravaToken)
   // save refresh token
-  personalSnap.ref.update({ stravaRefreshToken: refresh_token })
+  personalSnap.ref.update({ 'oauthTokens.strava': refresh_token })
 
   // fetch activity
-  const activity = await fetchActivity(access_token, post.stravaActivityId);
+  const activity = await fetchActivity(access_token, parseInt(post.externalId));
 
   const stravaSnap = await db.collection('Strava').where('goalId', '==', post.goalId).where('athleteId', '==', activity.athlete.id).get()
   if (!stravaSnap.size) {

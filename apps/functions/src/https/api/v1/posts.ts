@@ -81,11 +81,25 @@ postsRouter.post('/', requireScope('posts:write'), async (req, res) => {
     return
   }
 
-  const { description, date, url, milestoneId } = req.body
+  const { description, date, url, milestoneId, externalId, source } = req.body
 
   if (!description || typeof description !== 'string') {
     res.status(400).json({ error: 'description is required and must be a string' })
     return
+  }
+
+  // Deduplication: if both externalId and source are provided, check for existing post
+  if (externalId && source) {
+    const existing = await db.collection(`Goals/${goalId}/Posts`)
+      .where('externalId', '==', externalId)
+      .where('source', '==', source)
+      .limit(1)
+      .get()
+    if (!existing.empty) {
+      const post = createPost(toDate({ ...existing.docs[0].data(), id: existing.docs[0].id }))
+      res.status(200).json({ data: post })
+      return
+    }
   }
 
   const now = new Date()
@@ -94,6 +108,8 @@ postsRouter.post('/', requireScope('posts:write'), async (req, res) => {
     date: date ? new Date(date) : now,
     url: url || '',
     milestoneId: milestoneId || '',
+    externalId: externalId || undefined,
+    source: source || undefined,
     goalId: goalId as string,
     uid: uid as string,
     createdAt: now,

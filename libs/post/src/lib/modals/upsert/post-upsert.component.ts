@@ -166,7 +166,8 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 				mediaIds,
 				url,
 				youtubeId,
-				stravaActivityId: this.post.stravaActivityId,
+				externalId: this.post.externalId,
+				source: this.post.source,
 				uid,
 			})
 
