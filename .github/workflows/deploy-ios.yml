@@ -40,11 +40,11 @@ jobs:
         working-directory: .
 
       - name: Build journal web assets
-        run: npx nx build journal --configuration=production
+        run: npx nx build journal --configuration=production --no-cloud
         working-directory: .
 
       - name: Sync Capacitor iOS
-        run: npx nx run journal:sync:ios
+        run: npx nx run journal:sync:ios --no-cloud
         working-directory: .
 
       - name: Install CocoaPods

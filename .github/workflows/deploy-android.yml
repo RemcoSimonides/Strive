@@ -40,11 +40,11 @@ jobs:
         working-directory: .
 
       - name: Build journal web assets
-        run: npx nx build journal --configuration=production
+        run: npx nx build journal --configuration=production --no-cloud
         working-directory: .
 
       - name: Sync Capacitor Android
-        run: npx nx run journal:sync:android
+        run: npx nx run journal:sync:android --no-cloud
         working-directory: .
 
       - uses: actions/setup-java@v4
