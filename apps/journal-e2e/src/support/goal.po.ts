@@ -44,6 +44,29 @@ export function verifyMilestoneExists(content: string) {
   cy.get('strive-roadmap ion-item.milestone').contains(content).should('be.visible');
 }
 
+export function verifySuggestionsLoaded() {
+  // Wait for the suggestion component to appear and finish generating
+  cy.get('strive-suggestion', { timeout: 30000 }).should('be.visible');
+  // Wait for suggestions to finish streaming/completing (list of suggestion items appears)
+  cy.get('strive-suggestion ion-list.small ion-item', { timeout: 60000 }).should('have.length.greaterThan', 0);
+}
+
+export function addSuggestionByIndex(index: number) {
+  cy.get('strive-suggestion ion-list.small ion-item').eq(index).click();
+}
+
+export function addAllSuggestions() {
+  cy.get('strive-suggestion ion-button').contains('Add suggestions').click();
+}
+
+export function verifySuggestionAddedToRoadmap(index: number) {
+  // After clicking a suggestion, it should appear as a milestone in the roadmap
+  cy.get('strive-suggestion ion-list.small ion-item').eq(index).then($item => {
+    const text = $item.find('small:not(.number)').text().trim();
+    cy.get('strive-roadmap ion-item.milestone').contains(text).should('exist');
+  });
+}
+
 export function verifyGoalPage(title: string) {
   // After goal creation, the modal closes and we navigate to the goal page
   cy.get('ion-modal', { timeout: 10000 }).should('not.exist');

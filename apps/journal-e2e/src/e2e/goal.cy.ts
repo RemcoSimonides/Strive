@@ -13,6 +13,10 @@ import {
   selectPexelsImage,
   addMilestone,
   verifyMilestoneExists,
+  verifySuggestionsLoaded,
+  addSuggestionByIndex,
+  addAllSuggestions,
+  verifySuggestionAddedToRoadmap,
   verifyGoalPage,
 } from '../support/goal.po';
 
@@ -49,18 +53,36 @@ describe('Goal Creation Flow', () => {
     clickNext();
   });
 
-  it('should add milestones to the roadmap', () => {
+  it('should load milestone suggestions from ChatGPT', () => {
     // Verify we are on the roadmap step
     cy.get('strive-goal-roadmap').should('be.visible');
 
+    // Wait for AI-generated milestone suggestions to load
+    verifySuggestionsLoaded();
+  });
+
+  it('should add a suggestion to the roadmap by clicking it', () => {
+    // Click the first suggestion to add it as a milestone
+    addSuggestionByIndex(0);
+    verifySuggestionAddedToRoadmap(0);
+  });
+
+  it('should add all remaining suggestions to the roadmap', () => {
+    // Use the "Add suggestions" button to add all suggestions at once
+    addAllSuggestions();
+
+    // Verify each suggestion item shows as added (has fake-disable class)
+    cy.get('strive-suggestion ion-list.small ion-item').each($item => {
+      cy.wrap($item).should('have.class', 'fake-disable');
+    });
+  });
+
+  it('should also add manual milestones to the roadmap', () => {
     addMilestone('Register for the marathon');
     verifyMilestoneExists('Register for the marathon');
 
     addMilestone('Complete a 10K run');
     verifyMilestoneExists('Complete a 10K run');
-
-    addMilestone('Complete a half marathon');
-    verifyMilestoneExists('Complete a half marathon');
 
     clickNext();
   });
