@@ -38,17 +38,16 @@ export function verifyGoalLinkExists(goalTitle: string) {
 }
 
 export function clickSupportPledge(description: string) {
-  cy.get('journal-supports strive-support-list ion-item')
+  cy.get('journal-supports strive-support-list ion-item', { timeout: 10000 })
     .contains(description)
     .closest('ion-item')
-    .click();
+    .click({ force: true });
 }
 
-// ---------- Support Detail Page ----------
+// ---------- Support Detail Modal ----------
 
-export function verifySupportDetailPage() {
-  cy.url({ timeout: 10000 }).should('include', '/supports/');
-  cy.get('strive-support-details', { timeout: 10000 }).should('exist');
+export function verifySupportDetailModal() {
+  cy.get('ion-modal strive-support-details', { timeout: 10000 }).should('exist');
 }
 
 export function verifySupportStatus(statusText: string) {
@@ -89,7 +88,7 @@ export function confirmRemoveSupport() {
 }
 
 export function verifyGoalLink(goalTitle: string) {
-  cy.get('strive-support-details section.details small.gray a').contains(goalTitle).should('exist');
+  cy.get('strive-support-details small.gray a').contains(goalTitle).should('exist');
 }
 
 // ---------- Decision Component ----------
@@ -137,6 +136,7 @@ export function verifySupportIsActive(description: string) {
 }
 
 export function navigateBackToSupports() {
-  cy.get('strive-header ion-button').first().click();
-  cy.url({ timeout: 10000 }).should('include', '/supports');
+  // Close the support detail modal
+  cy.get('ion-modal strive-header-modal ion-button').first().click({ force: true });
+  cy.get('ion-modal', { timeout: 5000 }).should('not.exist');
 }

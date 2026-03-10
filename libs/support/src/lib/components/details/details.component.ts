@@ -94,6 +94,7 @@ export class SupportDetailsComponent implements OnInit {
       this.supportService.upsert({ id: this.support.id, status: 'accepted', needsDecision: false }, { goalId: this.support.goalId })
       this.support.status = 'accepted'
       this.support.needsDecision = false
+      this.cdr.markForCheck()
     }
 
     const completed = this.support.milestone
