@@ -25,17 +25,16 @@ export class GoalStakeholderService {
 
   converter: FirestoreDataConverter<GoalStakeholder | undefined> = {
     toFirestore: (payload: GoalStakeholder) => {
-      const isUpdate = !!payload['uid'];
       const timestamp = serverTimestamp();
       const data = { ...payload } as DocumentData;
 
-      if (!isUpdate) {
+      if (!data['createdAt']) {
         data['createdAt'] = timestamp;
       }
       data['updatedAt'] = timestamp;
       data['updatedBy'] = this.auth.uid()
 
-      return payload
+      return data
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) => {
       if (snapshot.exists()) {

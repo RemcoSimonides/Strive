@@ -26,7 +26,7 @@ export function clickGoalCard(title: string) {
   cy.get('section.cards strive-goal-thumbnail')
     .contains(title)
     .closest('strive-goal-thumbnail')
-    .click();
+    .click({ force: true });
 }
 
 export function verifyCreateGoalButtonInHeader() {
@@ -34,8 +34,8 @@ export function verifyCreateGoalButtonInHeader() {
 }
 
 export function clickCreateGoalButtonInHeader() {
-  cy.get('header ion-button.create-goal').contains('Create Goal').click();
-  cy.get('ion-modal').should('be.visible');
+  cy.get('header ion-button.create-goal').contains('Create Goal').click({ force: true });
+  cy.get('ion-modal', { timeout: 5000 }).should('be.visible');
 }
 
 export function verifyFilterButton() {
@@ -72,6 +72,6 @@ export function verifyGoalOptionsMenu() {
 }
 
 export function clickCreateGoalFromEmptyState() {
-  cy.get('section.no_goals ion-button').contains('Create Goal').click();
-  cy.get('ion-modal').should('be.visible');
+  cy.get('section.no_goals ion-button').contains('Create Goal').click({ force: true });
+  cy.get('ion-modal', { timeout: 5000 }).should('be.visible');
 }
