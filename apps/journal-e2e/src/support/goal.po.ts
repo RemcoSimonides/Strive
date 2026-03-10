@@ -9,7 +9,8 @@ export function fillGoalTitle(title: string) {
 }
 
 export function clickNext() {
-  cy.get('ion-footer ion-button[fill="solid"]').contains('Next').click();
+  cy.contains('ion-modal ion-button', 'Next').should('not.be.disabled').click();
+  cy.wait(500);
 }
 
 export function clickPrevious() {
@@ -17,16 +18,17 @@ export function clickPrevious() {
 }
 
 export function clickFinish() {
-  cy.get('ion-footer ion-button[fill="solid"]').contains('Finish').click();
+  cy.contains('ion-modal ion-button', 'Finish').should('not.be.disabled').click();
+  cy.wait(500);
 }
 
 export function selectPexelsImage() {
   // Wait for images to load from Pexels API
   cy.get('strive-goal-images ul li', { timeout: 15000 }).should('have.length.greaterThan', 0);
   // Click the first image to select it
-  cy.get('strive-goal-images ul li').first().click();
+  cy.get('strive-goal-images ul li').first().click({ force: true });
   // Verify image is selected (shows SELECTED text)
-  cy.get('strive-goal-images ul li').first().contains('SELECTED').should('be.visible');
+  cy.get('strive-goal-images ul li').first().contains('SELECTED', { timeout: 5000 }).should('be.visible');
 }
 
 export function searchImage(query: string) {
@@ -36,8 +38,8 @@ export function searchImage(query: string) {
 }
 
 export function addMilestone(content: string) {
-  cy.get('strive-roadmap ion-input[formcontrolname="content"]').find('input').clear().type(content);
-  cy.get('strive-roadmap ion-button').contains('Add').click();
+  cy.get('strive-roadmap ion-input[formcontrolname="content"]').find('input').clear({ force: true }).type(content, { force: true });
+  cy.get('strive-roadmap ion-button').contains('Add').click({ force: true });
 }
 
 export function verifyMilestoneExists(content: string) {

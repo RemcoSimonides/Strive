@@ -8,10 +8,11 @@ import { format, isFuture, isPast } from 'date-fns'
 
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { GoalService } from '@strive/goal/goal.service'
+import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
 import { getCountry } from '@strive/utils/country'
-import { createChatGPTMessage, createGoal } from '@strive/model'
+import { createChatGPTMessage, createGoal, createGoalStakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
 import { GoalDetailsComponent } from '../components/details/details.component'
@@ -47,6 +48,7 @@ type Steps = 'details' | 'images' | 'roadmap' | 'reminders' | 'share'
 export class GoalCreateModalComponent extends ModalDirective implements OnDestroy {
   private auth = inject(AuthService);
   private goalService = inject(GoalService);
+  private stakeholderService = inject(GoalStakeholderService);
   private chatGPTService = inject(ChatGPTService);
 
   @ViewChild(GoalImagesComponent) imagesComponent?: GoalImagesComponent
@@ -86,6 +88,18 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
         if (isPast(deadline)) this.goal.status = 'succeeded'
 
         this.goalService.update(this.goal.id, this.goal)
+
+        // Create stakeholder document so the user has admin/achiever access to the goal
+        const stakeholder = createGoalStakeholder({
+          uid,
+          goalId: this.goal.id,
+          goalPublicity: this.goal.publicity,
+          isAdmin: true,
+          isAchiever: true,
+          isSpectator: true
+        })
+        this.stakeholderService.upsert(stakeholder, { goalId: this.goal.id })
+
         this.created = true
         this.form.markAsPristine()
 

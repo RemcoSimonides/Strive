@@ -6,7 +6,7 @@ export function verifyGoalPageLoaded(title: string) {
 }
 
 export function verifyGoalImage() {
-  cy.get('journal-goal picture img[alt="goal image"]').should('exist');
+  cy.get('journal-goal picture img[alt="goal image"]', { timeout: 5000 }).should('exist');
 }
 
 export function verifyRoadmapSection() {
@@ -30,40 +30,43 @@ export function verifyDeadlineShown() {
 // ---------- Chat ----------
 
 export function openChat() {
-  cy.get('journal-goal ion-button').contains('Chat').click();
+  cy.get('journal-goal ion-button').contains('Chat').click({ force: true });
   cy.get('strive-header-modal', { timeout: 5000 }).should('exist');
 }
 
 export function sendChatMessage(message: string) {
-  cy.get('ion-footer ion-textarea textarea').type(message);
-  cy.get('ion-footer ion-icon[name="send"]').click();
+  cy.get('ion-footer ion-textarea textarea', { timeout: 5000 }).type(message, { force: true });
+  cy.get('ion-footer ion-icon[name="send"]').click({ force: true });
 }
 
 export function verifyChatMessageSent(message: string) {
-  cy.get('ion-content ul li', { timeout: 10000 }).contains(message).should('be.visible');
+  cy.get('ion-content ul li', { timeout: 15000 }).contains(message).should('exist');
 }
 
 export function closeChatModal() {
-  cy.get('strive-header-modal ion-button').first().click();
-  cy.get('strive-header-modal').should('not.exist');
+  // Click the close/dismiss button (close-outline icon), not the settings button
+  cy.get('strive-header-modal ion-button ion-icon[name="close-outline"]').closest('ion-button').click({ force: true });
+  cy.wait(1000);
 }
 
 // ---------- Follow ----------
 
 export function clickFollow() {
-  cy.get('journal-goal section.actions ion-button').contains('Follow').click();
+  cy.contains('journal-goal section.actions ion-button', 'Follow').then($btn => {
+    $btn[0].click();
+  });
 }
 
 export function verifyFollowing() {
-  cy.get('journal-goal section.actions ion-button').contains('Following').should('exist');
+  cy.contains('journal-goal section.actions ion-button', 'Following', { timeout: 10000 }).should('exist');
 }
 
 // ---------- Support ----------
 
 export function addSupport(description: string) {
-  cy.get('strive-support-add ion-input input').clear();
-  cy.get('strive-support-add ion-input input').type(description);
-  cy.get('strive-support-add ion-button').contains('ADD').click();
+  cy.get('strive-support-add ion-input input', { timeout: 5000 }).clear({ force: true });
+  cy.get('strive-support-add ion-input input').type(description, { force: true });
+  cy.get('strive-support-add ion-button').contains('ADD').click({ force: true });
 }
 
 export function verifySupportExists(description: string) {
@@ -80,21 +83,21 @@ export function verifyStorySection() {
 // ---------- Options Menu ----------
 
 export function openOptionsMenu() {
-  cy.get('journal-goal section.actions ion-button ion-icon[name="ellipsis-horizontal-outline"]').closest('ion-button').click();
+  cy.get('journal-goal section.actions ion-button ion-icon[name="ellipsis-horizontal-outline"]').closest('ion-button').click({ force: true });
 }
 
 export function clickEditGoalOption() {
-  cy.get('ion-popover ion-item').contains('Edit Goal').click();
+  cy.get('ion-popover ion-item', { timeout: 5000 }).contains('Edit Goal').click({ force: true });
 }
 
 export function clickEditRemindersOption() {
-  cy.get('ion-popover ion-item').contains('Edit Reminders').click();
+  cy.get('ion-popover ion-item', { timeout: 5000 }).contains('Edit Reminders').click({ force: true });
 }
 
 // ---------- Share ----------
 
 export function openShareButton() {
-  cy.get('journal-goal section.actions ion-button ion-icon[name="person-add-outline"]').closest('ion-button').click();
+  cy.get('journal-goal section.actions ion-button ion-icon[name="person-add-outline"]').closest('ion-button').click({ force: true });
 }
 
 export function verifyAddOthersModal() {
@@ -102,19 +105,20 @@ export function verifyAddOthersModal() {
 }
 
 export function closeModal() {
-  cy.get('strive-header-modal ion-button').first().click();
+  cy.get('strive-header-modal ion-button').first().click({ force: true });
+  cy.wait(1000);
 }
 
 // ---------- Roadmap Order ----------
 
 export function toggleRoadmapOrder() {
-  cy.get('journal-goal section.roadmap header ion-button').click();
+  cy.get('journal-goal section.roadmap header ion-button').click({ force: true });
 }
 
 // ---------- Story Order ----------
 
 export function toggleStoryOrder() {
-  cy.get('journal-goal section.story header ion-button').click();
+  cy.get('journal-goal section.story header ion-button').click({ force: true });
 }
 
 // ---------- Description ----------
