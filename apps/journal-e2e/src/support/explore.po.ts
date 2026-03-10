@@ -15,11 +15,11 @@ export function getSearchbar() {
 }
 
 export function searchFor(query: string) {
-  getSearchbar().find('input').clear().type(query);
+  getSearchbar().find('input').clear({ force: true }).type(query, { force: true });
 }
 
 export function clearSearch() {
-  getSearchbar().find('input').clear();
+  getSearchbar().find('input').clear({ force: true });
 }
 
 export function getTypeSelect() {
@@ -36,7 +36,7 @@ export function getOverviewSections() {
 }
 
 export function getOverviewViewMoreButtons() {
-  return cy.get('section ion-button');
+  return cy.get('main section ion-button');
 }
 
 export function getCategoryThumbnails() {
