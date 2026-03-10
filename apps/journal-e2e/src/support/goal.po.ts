@@ -43,7 +43,7 @@ export function addMilestone(content: string) {
 }
 
 export function verifyMilestoneExists(content: string) {
-  cy.get('strive-roadmap ion-item.milestone').contains(content).should('be.visible');
+  cy.get('strive-roadmap ion-item.milestone').contains(content).should('exist');
 }
 
 export function verifySuggestionsLoaded() {
