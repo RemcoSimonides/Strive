@@ -239,7 +239,7 @@ export class ProfilePageComponent {
       uid: uid,
       profileId,
       isSpectator
-    }, { uid })
+    }, { uid: profileId })
 
     if (!isSpectator) return
     const achievingStakeholders = await firstValueFrom(this.achievingStakeholders$)

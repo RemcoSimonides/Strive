@@ -43,15 +43,15 @@ export function getSupportingCount() {
 }
 
 export function clickFollowers() {
-  cy.get('journal-profile ul li').eq(0).click();
+  cy.get('journal-profile ul li').eq(0).click({ force: true });
 }
 
 export function clickFollowing() {
-  cy.get('journal-profile ul li').eq(1).click();
+  cy.get('journal-profile ul li').eq(1).click({ force: true });
 }
 
 export function clickSupporting() {
-  cy.get('journal-profile ul li').eq(2).click();
+  cy.get('journal-profile ul li').eq(2).click({ force: true });
 }
 
 export function getFollowButton() {

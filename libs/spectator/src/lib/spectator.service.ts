@@ -1,14 +1,34 @@
 import { Injectable, inject } from '@angular/core'
 import { FIRESTORE } from '@strive/utils/firebase-init'
-import { setDoc, collectionGroup, collection, doc, getDoc, getDocs, query, where, QueryConstraint } from 'firebase/firestore'
-import { createConverter, docData, collectionData } from '@strive/utils/firebase'
+import { setDoc, collectionGroup, collection, doc, getDoc, getDocs, query, where, QueryConstraint, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, DocumentData, serverTimestamp } from 'firebase/firestore'
+import { toDate, docData, collectionData } from '@strive/utils/firebase'
 import { map, Observable } from 'rxjs'
 
 import { Spectator, createSpectator } from '@strive/model'
 
 import { AuthService } from '@strive/auth/auth.service'
 
-const converter = createConverter<Spectator>(createSpectator, 'uid')
+// Custom converter that preserves the 'uid' field in Firestore documents.
+// Unlike createConverter (which strips the idField), spectators need 'uid'
+// stored as a field for collectionGroup queries in getSpectating.
+const converter: FirestoreDataConverter<Spectator | undefined> = {
+  toFirestore: (payload: Spectator): DocumentData => {
+    const timestamp = serverTimestamp()
+    const data = { ...payload } as DocumentData
+    if (!data['createdAt']) {
+      data['createdAt'] = timestamp
+    }
+    data['updatedAt'] = timestamp
+    return data
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Spectator | undefined => {
+    if (snapshot.exists()) {
+      const data = snapshot.data(options)
+      return createSpectator(toDate({ ...data, uid: snapshot.id }))
+    }
+    return undefined
+  }
+}
 
 @Injectable({
   providedIn: 'root'

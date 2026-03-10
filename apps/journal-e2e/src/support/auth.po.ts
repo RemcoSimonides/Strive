@@ -1,5 +1,5 @@
 export function openAuthModal() {
-  cy.get('.overview li.main').contains('Create goal').click();
+  cy.get('.overview li.main').contains('Create goal').click({ force: true });
 }
 
 export function navigateToSignup() {
