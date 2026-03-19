@@ -112,7 +112,9 @@
           @if (canEdit) {
             <form [formGroup]="subtaskForm">
               <ion-item lines="none">
-                <ion-icon class="icon" name="radio-button-off" color="primary" />
+                <ion-button fill="clear" disabled class="fake-enable">
+                  <ion-icon slot="icon-only" name="radio-button-off" color="primary" />
+                </ion-button>
                 <ion-input formControlName="content" placeholder="Add subtask" (keydown.enter)="addSubtask()" autocapitalize="sentences" class="primary" />
                 <ion-button color="primary" (click)="addSubtask()">Add</ion-button>
               </ion-item>
