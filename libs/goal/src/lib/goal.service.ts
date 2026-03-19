@@ -23,7 +23,7 @@ export class GoalService {
 
   converter: FirestoreDataConverter<Goal | undefined> = {
     toFirestore: (payload: Goal) => {
-      payload.deadline = endOfDay(payload.deadline)
+      if (payload.deadline) payload.deadline = endOfDay(payload.deadline)
 
       const isUpdate = !!payload['id'];
       const timestamp = serverTimestamp();
