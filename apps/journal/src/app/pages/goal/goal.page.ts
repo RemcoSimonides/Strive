@@ -19,7 +19,7 @@ import { Browser } from '@capacitor/browser'
 // Sentry
 import { captureException } from '@sentry/angular'
 // Date fns
-import { isEqual, isPast } from 'date-fns'
+import { addYears, endOfYear, isEqual, isPast, startOfYear } from 'date-fns'
 // Strive Utils
 import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
 // Strive Directives
@@ -34,6 +34,7 @@ import { ChatModalComponent } from '@strive/chat/modals/chat/chat.component'
 import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@strive/ui/image-zoom/image-zoom.component'
 import { AddOthersModalComponent } from './modals/add-others/add-others.component'
 import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { UpsertPostModalComponent } from '@strive/post/modals/upsert/post-upsert.component'
 import { CollectiveGoalsModalComponent } from '@strive/goal/modals/collective-goals/collective-goals.component'
 import { AchieversModalComponent } from '@strive/stakeholder/modals/achievers/achievers.component'
@@ -551,13 +552,31 @@ export class GoalPageComponent implements OnDestroy {
       component: DeadlinePopoverComponent,
       event
     })
-    popover.onDidDismiss().then(({ data }) => {
-      if (!this.goal) return
-      if (data) {
-        this.goalService.update(this.goal.id, { deadline: data })
-      }
+    await popover.present()
+    const { data, role } = await popover.onDidDismiss()
+
+    if (role === 'custom') {
+      this.openCustomDatePicker()
+    } else if (data && this.goal) {
+      this.goalService.update(this.goal.id, { deadline: data })
+    }
+  }
+
+  private async openCustomDatePicker() {
+    const minDate = startOfYear(addYears(new Date(), -100))
+    const maxDate = endOfYear(addYears(new Date(), 1000))
+
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { minDate, maxDate, showRemove: false, width: '300px' },
+      cssClass: 'datetime-popover'
     })
-    popover.present()
+    await popover.present()
+    const { data, role } = await popover.onDidDismiss()
+
+    if (role === 'dismiss' && data && this.goal) {
+      this.goalService.update(this.goal.id, { deadline: new Date(data) })
+    }
   }
 
   finishGoal(status: Goal['status']) {

@@ -4,8 +4,9 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { IonList, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, PopoverController } from '@ionic/angular/standalone'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadline.component'
+import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { categories } from '@strive/model'
-import { endOfDay } from 'date-fns'
+import { addYears, endOfDay, endOfYear, startOfYear } from 'date-fns'
 
 @Component({
     selector: '[form] strive-goal-details',
@@ -40,13 +41,35 @@ export class GoalDetailsComponent {
       component: DeadlinePopoverComponent,
       componentProps: { caption }
     })
-    popover.onDidDismiss().then(({ data }) => {
-      if (data && this.form) {
-        this.form.deadline.setValue(endOfDay(data))
-        this.form.deadline.markAsDirty()
-      }
+    await popover.present()
+    const { data, role } = await popover.onDidDismiss()
+
+    if (role === 'custom') {
+      this.openCustomDatePicker(caption)
+    } else if (data && this.form) {
+      this.form.deadline.setValue(endOfDay(data))
+      this.form.deadline.markAsDirty()
       this.cdr.markForCheck()
+    }
+  }
+
+  private async openCustomDatePicker(caption: string) {
+    const minDate = startOfYear(addYears(new Date(), -100))
+    const maxDate = endOfYear(addYears(new Date(), 1000))
+
+    const popover = await this.popoverCtrl.create({
+      component: DatetimeComponent,
+      componentProps: { minDate, maxDate, showRemove: false, caption, width: '300px' },
+      cssClass: 'datetime-popover'
     })
-    popover.present()
+    await popover.present()
+    const { data, role } = await popover.onDidDismiss()
+
+    if (role === 'dismiss' && this.form) {
+      const date = data ? new Date(data) : new Date()
+      this.form.deadline.setValue(endOfDay(date))
+      this.form.deadline.markAsDirty()
+      this.cdr.markForCheck()
+    }
   }
 }

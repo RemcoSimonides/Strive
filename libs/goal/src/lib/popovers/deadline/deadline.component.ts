@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core'
 import { IonContent, IonList, IonItem, PopoverController } from '@ionic/angular/standalone'
-import { addYears, endOfYear, startOfYear } from 'date-fns'
-
-import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
+import { addYears, endOfYear } from 'date-fns'
 
 @Component({
     selector: 'strive-goal-deadline-popover',
@@ -21,29 +19,11 @@ export class DeadlinePopoverComponent {
   @HostListener('window:popstate')
   onPopState() { this.popoverCtrl.dismiss() }
 
-  @Input() caption?: string
-
-  async deadlineSelect(value: '1' | 'end0' | 'end1' | '3' | '10' | 'custom') {
+  deadlineSelect(value: '1' | 'end0' | 'end1' | '3' | '10' | 'custom') {
     const now = new Date()
 
     if (value === 'custom') {
-      const minDate = startOfYear(addYears(new Date(), -100))
-      const maxDate = endOfYear(addYears(new Date(), 1000))
-
-      const popover = await this.popoverCtrl.create({
-        component: DatetimeComponent,
-        componentProps: { minDate, maxDate, showRemove: false, caption: this.caption, width: '300px' },
-        cssClass: 'datetime-popover'
-      })
-      popover.onDidDismiss().then(({ data, role }) => {
-        if (role === 'dismiss') {
-          const date = data ? new Date(data) : new Date()
-          this.popoverCtrl.dismiss(date)
-        } else {
-          this.popoverCtrl.dismiss()
-        }
-      })
-      popover.present()
+      this.popoverCtrl.dismiss(undefined, 'custom')
     } else {
       let date = undefined
 

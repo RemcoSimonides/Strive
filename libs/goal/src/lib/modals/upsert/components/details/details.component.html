@@ -17,7 +17,8 @@
       <ion-item>
         <ion-input
           [value]="form.deadline.value | date:'longDate'"
-          (ionFocus)="openDatePicker()"
+          (click)="openDatePicker()"
+          [readonly]="true"
           placeholder="dd/mm/yyyy"
           label="When should the goal be finished?"
           labelPlacement="stacked"
