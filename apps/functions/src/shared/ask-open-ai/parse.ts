@@ -1,6 +1,20 @@
 export function parseRaw(answer: string): string[] | undefined {
   let value = answer.trim().replace(/\r?\n|\r/g, '').trim()  // regex removes new lines
-  value = value.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '')  // strip markdown code fences
+
+  // Extract content between code fences if present anywhere in the string
+  const codeFenceMatch = value.match(/```(?:json)?\s*([\s\S]*?)\s*```/)
+  if (codeFenceMatch) {
+    value = codeFenceMatch[1]
+  }
+
+  // Extract the JSON array from the string if it doesn't start with [
+  if (!value.startsWith('[')) {
+    const arrayStart = value.indexOf('[')
+    if (arrayStart !== -1) {
+      value = value.substring(arrayStart)
+    }
+  }
+
   if (value.split('"').length % 2 === 0) value = value + '"'
   if (value.startsWith('[') && !value.endsWith(']')) value = value + ']'
 
