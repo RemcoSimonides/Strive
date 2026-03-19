@@ -18,10 +18,7 @@ import { ModalDirective } from '@strive/utils/directives/modal.directive'
 import { GoalDetailsComponent } from '../components/details/details.component'
 import { GoalImagesComponent } from '../components/images/images.component'
 import { GoalRoadmapComponent } from '../components/roadmap/roadmap.component'
-import { GoalShareComponent } from '../components/share/share.component'
-import { RemindersComponent } from '@strive/stakeholder/components/reminders/reminders.component'
-
-type Steps = 'details' | 'images' | 'roadmap' | 'reminders' | 'share'
+type Steps = 'details' | 'images' | 'roadmap'
 
 @Component({
     selector: 'strive-goal-create',
@@ -33,8 +30,6 @@ type Steps = 'details' | 'images' | 'roadmap' | 'reminders' | 'share'
         GoalDetailsComponent,
         GoalImagesComponent,
         GoalRoadmapComponent,
-        GoalShareComponent,
-        RemindersComponent,
         IonHeader,
         IonToolbar,
         IonButtons,
@@ -63,8 +58,6 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
       ...this.form.getGoalValue()
     })
   })
-  uid = this.auth.uid
-
   constructor() {
     super()
 
@@ -116,11 +109,7 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
 
       next = direction === 'next' ? 'roadmap' : 'details'
     } else if (step === 'roadmap') {
-      next = direction === 'next' ? 'reminders' : 'images'
-    } else if (step === 'reminders') {
-      next = direction === 'next' ? 'share' : 'roadmap'
-    } else if (step === 'share') {
-      if (direction === 'next') { this.close() } else { next = 'reminders' }
+      if (direction === 'next') { this.close() } else { next = 'images' }
     }
     this.stepper$.next(next)
   }
