@@ -39,8 +39,8 @@ jobs:
         run: npm ci --legacy-peer-deps
         working-directory: .
 
-      - name: Install Capacitor plugins
-        run: npm install
+      - name: Symlink node_modules for Capacitor
+        run: ln -s "${{ github.workspace }}/node_modules" node_modules
         working-directory: apps/journal
 
       - name: Build journal web assets
