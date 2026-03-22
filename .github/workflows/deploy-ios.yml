@@ -39,10 +39,6 @@ jobs:
         run: npm ci --legacy-peer-deps
         working-directory: .
 
-      - name: Symlink node_modules for Capacitor
-        run: ln -s "${{ github.workspace }}/node_modules" node_modules
-        working-directory: apps/journal
-
       - name: Build journal web assets
         run: npx nx build journal --configuration=production --no-cloud
         working-directory: .
@@ -50,6 +46,10 @@ jobs:
       - name: Sync Capacitor iOS
         run: npx nx run journal:sync:ios --no-cloud
         working-directory: .
+
+      - name: Install Capacitor plugins
+        run: npm install
+        working-directory: apps/journal
 
       - name: Install CocoaPods
         run: pod install
