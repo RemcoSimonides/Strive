@@ -21,7 +21,7 @@ export class AppVersionService {
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
 
-  version = "1.16.2"
+  version = "1.16.4"
 
   constructor() {
     setContext('version', { app_version: this.version })
