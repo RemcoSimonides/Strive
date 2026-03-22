@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: macos-15
+    runs-on: macos-16
     timeout-minutes: 45
     defaults:
       run:
