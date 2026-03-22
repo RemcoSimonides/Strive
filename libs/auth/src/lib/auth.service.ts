@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core'
+import { inject, Injectable, OnDestroy, signal } from '@angular/core'
 import { doc, getDoc } from 'firebase/firestore'
 import { User } from 'firebase/auth'
 import { FIRESTORE, AUTH } from '@strive/utils/firebase-init'
@@ -15,7 +15,6 @@ const converter = createConverter<StriveUser>(createUser, 'uid')
 @Injectable({ providedIn: 'root' })
 export class AuthService implements OnDestroy {
   private _auth = inject(AUTH)
-  private _ngZone = inject(NgZone)
   private firestore = inject(FIRESTORE)
 
   user = signal<User | null>(this._auth.currentUser)
@@ -38,11 +37,9 @@ export class AuthService implements OnDestroy {
   )
 
   private authStateChangeUnsubscribe = this._auth.onAuthStateChanged((user) => {
-    this._ngZone.run(() => {
-      this.isLoggedIn.set(!!user)
-      this.user.set(user)
-      this.uid.set(user?.uid)
-    })
+    this.isLoggedIn.set(!!user)
+    this.user.set(user)
+    this.uid.set(user?.uid)
   })
 
   ngOnDestroy() {
