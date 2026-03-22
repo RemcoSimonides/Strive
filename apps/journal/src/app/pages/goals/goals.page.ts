@@ -268,7 +268,9 @@ export class GoalsPageComponent implements OnDestroy {
         this.stakeholders$,
         this.achieving$
       ])
-    ).then(() => SplashScreen.hide())
+    )
+    .catch(() => {})
+    .then(() => SplashScreen.hide())
     addIcons({ checkmarkOutline, add, lockClosedOutline, filterOutline })
   }
 

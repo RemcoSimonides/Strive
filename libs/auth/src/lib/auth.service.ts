@@ -3,12 +3,11 @@ import { doc, getDoc } from 'firebase/firestore'
 import { User } from 'firebase/auth'
 import { FIRESTORE, AUTH } from '@strive/utils/firebase-init'
 import { createConverter, docData } from '@strive/utils/firebase'
-import { toObservable } from '@angular/core/rxjs-interop';
 
 import { createUser, User as StriveUser } from '@strive/model'
 
 import { shareReplay, switchMap } from 'rxjs/operators'
-import { of } from 'rxjs'
+import { of, ReplaySubject } from 'rxjs'
 
 const converter = createConverter<StriveUser>(createUser, 'uid')
 
@@ -18,9 +17,13 @@ export class AuthService implements OnDestroy {
   private firestore = inject(FIRESTORE)
 
   user = signal<User | null>(this._auth.currentUser)
-  user$ = toObservable(this.user)
+  private _user$ = new ReplaySubject<User | null>(1)
+  user$ = this._user$.asObservable()
+
   uid = signal<string | undefined>(this._auth.currentUser?.uid)
-  uid$ = toObservable(this.uid)
+  private _uid$ = new ReplaySubject<string | undefined>(1)
+  uid$ = this._uid$.asObservable()
+
   isLoggedIn = signal<boolean | undefined>(undefined)
 
   profile = signal<StriveUser | undefined>(undefined)
@@ -39,7 +42,9 @@ export class AuthService implements OnDestroy {
   private authStateChangeUnsubscribe = this._auth.onAuthStateChanged((user) => {
     this.isLoggedIn.set(!!user)
     this.user.set(user)
+    this._user$.next(user)
     this.uid.set(user?.uid)
+    this._uid$.next(user?.uid)
   })
 
   ngOnDestroy() {
