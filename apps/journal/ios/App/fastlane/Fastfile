@@ -3,14 +3,28 @@ default_platform(:ios)
 MAIN_APP_ID = "com.strive.journal"
 SHARE_EXT_ID = "com.strive.journal.share"
 TEAM_ID = "2Z8SN3C4MM"
+KEYCHAIN_NAME = "fastlane_keychain"
+KEYCHAIN_PASSWORD = "fastlane_password"
 
 platform :ios do
   desc "Fetch or create signing certificates and provisioning profiles via Match"
   lane :certificates do
+    if is_ci
+      create_keychain(
+        name: KEYCHAIN_NAME,
+        password: KEYCHAIN_PASSWORD,
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+      )
+    end
+
     match(
       type: "appstore",
       app_identifier: [MAIN_APP_ID, SHARE_EXT_ID],
       readonly: is_ci,
+      keychain_name: is_ci ? KEYCHAIN_NAME : nil,
+      keychain_password: is_ci ? KEYCHAIN_PASSWORD : nil,
     )
   end
 
@@ -24,6 +38,7 @@ platform :ios do
       path: "App.xcodeproj",
       team_id: TEAM_ID,
       bundle_identifier: MAIN_APP_ID,
+      code_sign_identity: "Apple Distribution",
       profile_name: ENV["sigh_#{MAIN_APP_ID}_appstore_profile-name"],
       targets: ["App"],
     )
@@ -32,6 +47,7 @@ platform :ios do
       path: "App.xcodeproj",
       team_id: TEAM_ID,
       bundle_identifier: SHARE_EXT_ID,
+      code_sign_identity: "Apple Distribution",
       profile_name: ENV["sigh_#{SHARE_EXT_ID}_appstore_profile-name"],
       targets: ["share"],
     )
