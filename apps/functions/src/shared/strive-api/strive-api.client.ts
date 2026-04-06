@@ -26,7 +26,7 @@ export function createStriveApiClient(apiKey: string): StriveApiClient {
   const baseUrl = process.env['API_BASE_URL'] || 'https://api.strivejournal.com'
 
   async function request<T>(method: string, path: string, body?: unknown): Promise<{ data: T, status: number }> {
-    const url = `${baseUrl}/api/v1${path}`
+    const url = `${baseUrl}/v1${path}`
     logger.log(`Strive API ${method} ${url}`)
 
     const response = await fetch(url, {

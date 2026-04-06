@@ -6,7 +6,7 @@ import { requireScope } from '../../../shared/api-key'
 
 export const goalsRouter = Router()
 
-// GET /api/v1/goals — list goals where key owner is a stakeholder
+// GET /v1/goals — list goals where key owner is a stakeholder
 goalsRouter.get('/', requireScope('goals:read'), async (req, res) => {
   const uid = req.apiKey?.uid
   if (!uid) { res.status(401).json({ error: 'Not authenticated' }); return }
@@ -42,7 +42,7 @@ goalsRouter.get('/', requireScope('goals:read'), async (req, res) => {
   res.json({ data: goals })
 })
 
-// GET /api/v1/goals/:goalId — get single goal
+// GET /v1/goals/:goalId — get single goal
 goalsRouter.get('/:goalId', requireScope('goals:read'), async (req, res) => {
   const { goalId } = req.params
   const uid = req.apiKey?.uid
@@ -65,7 +65,7 @@ goalsRouter.get('/:goalId', requireScope('goals:read'), async (req, res) => {
   res.json({ data: goal })
 })
 
-// POST /api/v1/goals — create a new goal
+// POST /v1/goals — create a new goal
 goalsRouter.post('/', requireScope('goals:write'), async (req, res) => {
   const uid = req.apiKey?.uid
   if (!uid) { res.status(401).json({ error: 'Not authenticated' }); return }
@@ -113,7 +113,7 @@ goalsRouter.post('/', requireScope('goals:write'), async (req, res) => {
   res.status(201).json({ data: goal })
 })
 
-// PATCH /api/v1/goals/:goalId — update a goal
+// PATCH /v1/goals/:goalId — update a goal
 goalsRouter.patch('/:goalId', requireScope('goals:write'), async (req, res) => {
   const { goalId } = req.params
   const uid = req.apiKey?.uid
@@ -173,7 +173,7 @@ goalsRouter.patch('/:goalId', requireScope('goals:write'), async (req, res) => {
   res.json({ data: goal })
 })
 
-// GET /api/v1/goals/:goalId/milestones — list milestones
+// GET /v1/goals/:goalId/milestones — list milestones
 goalsRouter.get('/:goalId/milestones', requireScope('milestones:read'), async (req, res) => {
   const { goalId } = req.params
   const uid = req.apiKey?.uid
@@ -197,7 +197,7 @@ goalsRouter.get('/:goalId/milestones', requireScope('milestones:read'), async (r
   res.json({ data: milestones })
 })
 
-// GET /api/v1/goals/:goalId/milestones/:milestoneId — get single milestone
+// GET /v1/goals/:goalId/milestones/:milestoneId — get single milestone
 goalsRouter.get('/:goalId/milestones/:milestoneId', requireScope('milestones:read'), async (req, res) => {
   const { goalId, milestoneId } = req.params
   const uid = req.apiKey?.uid
@@ -219,7 +219,7 @@ goalsRouter.get('/:goalId/milestones/:milestoneId', requireScope('milestones:rea
   res.json({ data: milestone })
 })
 
-// POST /api/v1/goals/:goalId/milestones — create a milestone
+// POST /v1/goals/:goalId/milestones — create a milestone
 goalsRouter.post('/:goalId/milestones', requireScope('milestones:write'), async (req, res) => {
   const { goalId } = req.params
   const uid = req.apiKey?.uid
@@ -270,7 +270,7 @@ goalsRouter.post('/:goalId/milestones', requireScope('milestones:write'), async 
   res.status(201).json({ data: createMilestone({ ...milestoneData, id: docRef.id }) })
 })
 
-// PATCH /api/v1/goals/:goalId/milestones/:milestoneId — update a milestone
+// PATCH /v1/goals/:goalId/milestones/:milestoneId — update a milestone
 goalsRouter.patch('/:goalId/milestones/:milestoneId', requireScope('milestones:write'), async (req, res) => {
   const { goalId, milestoneId } = req.params
   const uid = req.apiKey?.uid
@@ -327,7 +327,7 @@ goalsRouter.patch('/:goalId/milestones/:milestoneId', requireScope('milestones:w
   res.json({ data: milestone })
 })
 
-// DELETE /api/v1/goals/:goalId/milestones/:milestoneId — soft-delete a milestone
+// DELETE /v1/goals/:goalId/milestones/:milestoneId — soft-delete a milestone
 goalsRouter.delete('/:goalId/milestones/:milestoneId', requireScope('milestones:write'), async (req, res) => {
   const { goalId, milestoneId } = req.params
   const uid = req.apiKey?.uid

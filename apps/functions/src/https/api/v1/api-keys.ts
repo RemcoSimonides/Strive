@@ -11,7 +11,7 @@ const VALID_SCOPES: ApiKeyScope[] = [
 
 export const apiKeysRouter = Router()
 
-// POST /api/v1/api-keys — create new key
+// POST /v1/api-keys — create new key
 apiKeysRouter.post('/', async (req, res) => {
   const requestingKey = req.apiKey
   if (!requestingKey) { res.status(401).json({ error: 'Not authenticated' }); return }
@@ -81,7 +81,7 @@ apiKeysRouter.post('/', async (req, res) => {
   })
 })
 
-// GET /api/v1/api-keys — list own keys (hash stripped)
+// GET /v1/api-keys — list own keys (hash stripped)
 apiKeysRouter.get('/', async (req, res) => {
   const uid = req.apiKey?.uid
   if (!uid) { res.status(401).json({ error: 'Not authenticated' }); return }
@@ -107,7 +107,7 @@ apiKeysRouter.get('/', async (req, res) => {
   res.json({ data: keys })
 })
 
-// DELETE /api/v1/api-keys/:keyId — soft-revoke a key
+// DELETE /v1/api-keys/:keyId — soft-revoke a key
 apiKeysRouter.delete('/:keyId', async (req, res) => {
   const { keyId } = req.params
   const uid = req.apiKey?.uid

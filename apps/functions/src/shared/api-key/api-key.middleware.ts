@@ -3,6 +3,7 @@ import { db } from '@strive/api/firebase'
 import { ApiKey, ApiKeyScope, createApiKey } from '@strive/model'
 import { toDate } from '../utils'
 import { hashApiKey } from './api-key.utils'
+import { createHash } from 'crypto'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -13,44 +14,78 @@ declare global {
   }
 }
 
+/**
+ * Authenticate via API key (sk_live_ prefix) or OAuth access token.
+ * On success, populates req.apiKey with user identity and scopes.
+ */
 export async function authenticateApiKey(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
-    res.status(401).json({ error: 'Missing or invalid Authorization header. Use: Bearer <api-key>' })
+    res.status(401).json({ error: 'Missing or invalid Authorization header. Use: Bearer <token>' })
     return
   }
 
-  const rawKey = authHeader.slice(7)
-  if (!rawKey.startsWith('sk_live_')) {
-    res.status(401).json({ error: 'Invalid API key format' })
+  const token = authHeader.slice(7)
+
+  // --- API key path ---
+  if (token.startsWith('sk_live_')) {
+    const hashedKey = hashApiKey(token)
+
+    const snapshot = await db.collection('ApiKeys')
+      .where('hashedKey', '==', hashedKey)
+      .where('revoked', '==', false)
+      .limit(1)
+      .get()
+
+    if (snapshot.empty) {
+      res.status(401).json({ error: 'Invalid or revoked API key' })
+      return
+    }
+
+    const doc = snapshot.docs[0]
+    const apiKey = createApiKey(toDate({ ...doc.data(), id: doc.id }))
+
+    if (apiKey.expiresAt && apiKey.expiresAt < new Date()) {
+      res.status(401).json({ error: 'API key has expired' })
+      return
+    }
+
+    req.apiKey = apiKey
+
+    // Update lastUsedAt fire-and-forget
+    doc.ref.update({ lastUsedAt: new Date() }).catch(() => undefined)
+
+    next()
     return
   }
 
-  const hashedKey = hashApiKey(rawKey)
+  // --- OAuth token path ---
+  const hashedToken = createHash('sha256').update(token).digest('hex')
 
-  const snapshot = await db.collection('ApiKeys')
-    .where('hashedKey', '==', hashedKey)
-    .where('revoked', '==', false)
+  const snap = await db.collection('OAuthTokens')
+    .where('accessTokenHash', '==', hashedToken)
     .limit(1)
     .get()
 
-  if (snapshot.empty) {
-    res.status(401).json({ error: 'Invalid or revoked API key' })
+  if (snap.empty) {
+    res.status(401).json({ error: 'Invalid token' })
     return
   }
 
-  const doc = snapshot.docs[0]
-  const apiKey = createApiKey(toDate({ ...doc.data(), id: doc.id }))
+  const tokenData = snap.docs[0].data()
+  const now = Math.floor(Date.now() / 1000)
 
-  if (apiKey.expiresAt && apiKey.expiresAt < new Date()) {
-    res.status(401).json({ error: 'API key has expired' })
+  if (now > tokenData.accessTokenExpiresAt) {
+    res.status(401).json({ error: 'Access token has expired' })
     return
   }
 
-  req.apiKey = apiKey
-
-  // Update lastUsedAt fire-and-forget
-  doc.ref.update({ lastUsedAt: new Date() }).catch(() => undefined)
+  // Create a virtual ApiKey so existing route handlers work unchanged
+  req.apiKey = createApiKey({
+    uid: tokenData.uid,
+    scopes: tokenData.scopes,
+    id: `oauth:${snap.docs[0].id}`,
+  })
 
   next()
 }

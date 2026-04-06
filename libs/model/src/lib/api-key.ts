@@ -7,6 +7,8 @@ export type ApiKeyScope =
   | 'posts:read'
   | 'posts:write'
   | 'supports:read'
+  | 'reminders:read'
+  | 'reminders:write'
 
 export interface ApiKey {
   id: string

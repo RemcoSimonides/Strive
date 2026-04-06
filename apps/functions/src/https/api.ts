@@ -3,6 +3,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { authenticateApiKey, rateLimit } from '../shared/api-key'
 import { goalsRouter } from './api/v1/goals'
 import { postsRouter } from './api/v1/posts'
+import { remindersRouter } from './api/v1/reminders'
 import { usersRouter } from './api/v1/users'
 import { apiKeysRouter } from './api/v1/api-keys'
 
@@ -24,10 +25,11 @@ v1.use(authenticateApiKey)
 v1.use(rateLimit)
 v1.use('/goals', goalsRouter)
 goalsRouter.use('/:goalId/posts', postsRouter)
+goalsRouter.use('/:goalId/reminders', remindersRouter)
 v1.use('/users', usersRouter)
 v1.use('/api-keys', apiKeysRouter)
 
-app.use('/api/v1', v1)
+app.use('/v1', v1)
 
 // 404 handler for unmatched routes
 app.use((_req, res) => {

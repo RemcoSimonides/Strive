@@ -6,7 +6,7 @@ import { requireScope } from '../../../shared/api-key'
 
 export const postsRouter = Router({ mergeParams: true })
 
-// GET /api/v1/goals/:goalId/posts — list posts for a goal
+// GET /v1/goals/:goalId/posts — list posts for a goal
 postsRouter.get('/', requireScope('posts:read'), async (req, res) => {
   const { goalId } = req.params
   const uid = req.apiKey?.uid
@@ -33,7 +33,7 @@ postsRouter.get('/', requireScope('posts:read'), async (req, res) => {
   res.json({ data: posts })
 })
 
-// GET /api/v1/goals/:goalId/posts/:postId — get single post
+// GET /v1/goals/:goalId/posts/:postId — get single post
 postsRouter.get('/:postId', requireScope('posts:read'), async (req, res) => {
   const { goalId, postId } = req.params
   const uid = req.apiKey?.uid
@@ -55,7 +55,7 @@ postsRouter.get('/:postId', requireScope('posts:read'), async (req, res) => {
   res.json({ data: post })
 })
 
-// POST /api/v1/goals/:goalId/posts — create a post
+// POST /v1/goals/:goalId/posts — create a post
 postsRouter.post('/', requireScope('posts:write'), async (req, res) => {
   const { goalId } = req.params
   const uid = req.apiKey?.uid
@@ -122,7 +122,62 @@ postsRouter.post('/', requireScope('posts:write'), async (req, res) => {
   res.status(201).json({ data: createPost({ ...postData, id: docRef.id }) })
 })
 
-// DELETE /api/v1/goals/:goalId/posts/:postId — delete a post
+// PATCH /v1/goals/:goalId/posts/:postId — update a post
+postsRouter.patch('/:postId', requireScope('posts:write'), async (req, res) => {
+  const { goalId, postId } = req.params
+  const uid = req.apiKey?.uid
+  if (!uid) { res.status(401).json({ error: 'Not authenticated' }); return }
+
+  const stakeholderDoc = await db.doc(`Goals/${goalId}/GStakeholders/${uid}`).get()
+  if (!stakeholderDoc.exists) {
+    res.status(403).json({ error: 'You are not a stakeholder of this goal' })
+    return
+  }
+
+  const postDoc = await db.doc(`Goals/${goalId}/Posts/${postId}`).get()
+  if (!postDoc.exists) {
+    res.status(404).json({ error: 'Post not found' })
+    return
+  }
+
+  const postData = postDoc.data()
+  const stakeholder = stakeholderDoc.data()
+
+  // Only post owner or goal admin can update
+  if (postData?.uid !== uid && !stakeholder?.isAdmin) {
+    res.status(403).json({ error: 'Only post owner or goal admin can update posts' })
+    return
+  }
+
+  const allowedFields = ['description', 'date', 'url', 'milestoneId']
+  const update: Record<string, any> = {}
+
+  for (const field of allowedFields) {
+    if (req.body[field] !== undefined) {
+      if (field === 'date') {
+        update[field] = new Date(req.body[field])
+      } else {
+        update[field] = req.body[field]
+      }
+    }
+  }
+
+  if (Object.keys(update).length === 0) {
+    res.status(400).json({ error: 'No valid fields to update. Allowed: description, date, url, milestoneId' })
+    return
+  }
+
+  update.updatedAt = new Date()
+
+  await postDoc.ref.update(update)
+
+  const updatedDoc = await db.doc(`Goals/${goalId}/Posts/${postId}`).get()
+  const post = createPost(toDate({ ...updatedDoc.data(), id: postId }))
+
+  res.json({ data: post })
+})
+
+// DELETE /v1/goals/:goalId/posts/:postId — delete a post
 postsRouter.delete('/:postId', requireScope('posts:write'), async (req, res) => {
   const { goalId, postId } = req.params
   const uid = req.apiKey?.uid

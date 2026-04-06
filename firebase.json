@@ -42,6 +42,14 @@
         { "source": "/settings/push-notifications", "destination": "settings/push-notifications/index.html" },
         { "source": "/supports", "destination": "supports/index.html" },
         { "source": "/terms", "destination": "terms/index.html" },
+        { "source": "/mcp", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/.well-known/oauth-authorization-server", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/.well-known/oauth-protected-resource/**", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/authorize", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/token", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/register", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/revoke", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
+        { "source": "/oauth/**", "run": { "serviceId": "mcpserver", "region": "us-central1" } },
         { "source": "**", "destination": "/index.html" }
       ]
     },

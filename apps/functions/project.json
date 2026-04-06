@@ -29,7 +29,9 @@
           "algoliasearch",
           "node-fetch",
           "crypto-js",
-          "date-fns"
+          "date-fns",
+          "@modelcontextprotocol/sdk",
+          "zod"
         ],
         "assets": [
           {
