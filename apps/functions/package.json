@@ -4,17 +4,17 @@
   "main": "./main.js",
   "type": "commonjs",
   "dependencies": {
-    "firebase-admin": "^13.6.1",
-    "firebase-functions": "^7.0.5",
+    "firebase-admin": "^13.10.0",
+    "firebase-functions": "^7.2.5",
     "express": "^5.2.1",
     "@google-cloud/storage": "^7.16.0",
     "@sendgrid/mail": "^8.1.6",
-    "@sentry/node": "^10.38.0",
-    "openai": "^6.18.0",
-    "algoliasearch": "^5.48.0",
+    "@sentry/node": "^10.63.0",
+    "openai": "^6.45.0",
+    "algoliasearch": "^5.55.1",
     "node-fetch": "^2.7.0",
     "crypto-js": "^4.2.0",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "zod": "^3.25.0"
   }

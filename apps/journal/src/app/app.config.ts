@@ -11,6 +11,8 @@ import { environment } from '@env';
 
 import { provideIonicAngular } from '@ionic/angular/standalone'
 
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
+
 import { provideFirebase } from '@strive/utils/firebase-init'
 
 // import { AUTH_DEPS, FIREBASE_CONFIG } from 'ngfire'
@@ -36,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
     provideIonicAngular({ mode: 'md' }),
+    provideCharts(withDefaultRegisterables()),
     ...provideFirebase(environment.firebase.options),
     provideServiceWorker('sw-master.js', {
       enabled: !isDevMode(),
