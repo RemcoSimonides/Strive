@@ -36,7 +36,7 @@ export class GoalService {
       data['updatedBy'] = this.auth.uid()
 
       delete data['id'];
-      return payload
+      return data
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) => {
       if (snapshot.exists()) {

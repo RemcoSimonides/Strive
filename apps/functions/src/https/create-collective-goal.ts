@@ -1,14 +1,18 @@
-import { db, serverTimestamp, gcsBucket, onCall, logger } from '@strive/api/firebase'
+import { db, serverTimestamp, gcsBucket, onCall } from '@strive/api/firebase'
+import { HttpsError } from 'firebase-functions/v2/https'
 import { ErrorResultResponse } from '../shared/utils'
 import { createGoal, createGoalStakeholder, Goal } from '@strive/model'
 
 export const createCollectiveGoal = onCall(
 async (request): Promise<ErrorResultResponse> => {
 
-  logger.log('request: ', request);
+  // The acting user is always the authenticated caller — never trust a client-supplied uid.
+  const uid = request.auth?.uid
+  if (!uid) throw new HttpsError('unauthenticated', 'Authentication required')
 
-  const data: { goal: Goal, uid: string } = request.data
-  const { goal, uid } = data
+  const data: { goal: Goal } = request.data
+  const { goal } = data
+  if (!goal?.id) throw new HttpsError('invalid-argument', 'goal.id is required')
 
   const collectiveGoalId = goal.collectiveGoalId ? goal.collectiveGoalId : goal.id
   const batch = db.batch()

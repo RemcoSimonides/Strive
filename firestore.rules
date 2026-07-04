@@ -79,7 +79,16 @@ service cloud.firestore {
 
       match /GStakeholders/{uid} {
         allow read;
-        allow write: if userIsGoalAdmin(goalId) || isOwner(uid)
+
+        // A goal admin may manage any stakeholder. A user may write their OWN
+        // stakeholder doc, but may not self-grant admin/achiever — except the
+        // goal's creator, who bootstraps their own admin stakeholder on create.
+        allow create: if userIsGoalAdmin(goalId)
+          || (isOwner(uid) && !grantsAdminOrAchiever())
+          || (isOwner(uid) && isGoalCreator(goalId))
+        allow update: if userIsGoalAdmin(goalId)
+          || (isOwner(uid) && !escalatesStakeholderPrivileges())
+        allow delete: if userIsGoalAdmin(goalId) || isOwner(uid)
 
         match /Reminders/{id} {
           allow read: if isOwner(uid);
@@ -182,6 +191,32 @@ service cloud.firestore {
 
     function userIsGoalAchiever(goalId) {
       return getGoalStakeholder(goalId).isAchiever == true;
+    }
+
+    function getGoal(goalId) {
+      return get(/databases/$(database)/documents/Goals/$(goalId)).data;
+    }
+
+    // The user who last wrote the goal doc — set to the creator's uid at creation
+    // time (see goal converter). Used to let a creator bootstrap their own admin
+    // stakeholder without allowing arbitrary users to self-grant admin.
+    function isGoalCreator(goalId) {
+      return getGoal(goalId).get('updatedBy', '') == request.auth.uid;
+    }
+
+    // True when the incoming stakeholder doc grants admin or achiever rights.
+    function grantsAdminOrAchiever() {
+      return incomingData().get('isAdmin', false) == true
+        || incomingData().get('isAchiever', false) == true;
+    }
+
+    // True when an update flips isAdmin to true (never self-allowed), or flips
+    // isAchiever to true without a standing invite (hasInviteToJoin).
+    function escalatesStakeholderPrivileges() {
+      return (incomingData().get('isAdmin', false) == true && existingData().get('isAdmin', false) != true)
+        || (incomingData().get('isAchiever', false) == true
+            && existingData().get('isAchiever', false) != true
+            && existingData().get('hasInviteToJoin', false) != true);
     }
 
     function getStravaIntegration(stravaId) {
