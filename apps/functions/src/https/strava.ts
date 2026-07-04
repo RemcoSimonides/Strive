@@ -136,8 +136,6 @@ async (request): Promise<ErrorResultResponse> => {
 
   const data: { authorizationCode: string, refreshToken: string, goalId: string, activityTypes: ActivityType[], after: number | undefined } = request.data
 
-  logger.log('parameters: ', data)
-
   const userId = request.auth.uid
   if (!userId) {
     return {

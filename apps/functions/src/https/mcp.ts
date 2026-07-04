@@ -368,9 +368,20 @@ app.post('/oauth/callback', express.json(), async (req, res) => {
       return
     }
 
-    const grantedScopes = Array.isArray(scopes) && scopes.length > 0
+    // Validate redirect_uri against the client's registered URIs (RFC 6749 §4.1.3).
+    // Without this, an auth code bound to the user could be delivered to an
+    // attacker-controlled URL.
+    const registeredRedirects = (client.redirect_uris || []).map((u: any) => u.toString())
+    if (!registeredRedirects.includes(redirectUri)) {
+      res.status(400).json({ error: 'Invalid redirect_uri' })
+      return
+    }
+
+    // Grant only explicitly-requested, known scopes. Never fall back to all
+    // scopes on an empty request — that would silently over-grant.
+    const grantedScopes = Array.isArray(scopes)
       ? scopes.filter((s: string) => ALL_SCOPES.includes(s))
-      : ALL_SCOPES
+      : []
 
     const code = await oauthProvider.createAuthorizationCode({
       uid,
@@ -387,7 +398,8 @@ app.post('/oauth/callback', express.json(), async (req, res) => {
 
     res.json({ redirectUrl: redirectUrl.toString() })
   } catch (e: any) {
-    res.status(500).json({ error: e.message || 'Internal server error' })
+    logger.error('oauth/callback error:', e?.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -425,70 +437,6 @@ app.delete('/mcp', (_req, res) => {
 app.get('/status', (_req, res) => {
   res.json({ status: 'ok', service: 'strive-mcp', timestamp: new Date().toISOString() })
 })
-
-// Debug endpoint: simulates the OAuth flow step by step
-app.get('/debug/oauth-flow', async (_req, res) => {
-  const results: Record<string, any> = {}
-  const baseUrl = `https://mcpserver-5dkwldatwa-uc.a.run.app`
-
-  try {
-    // Step 1: PRM
-    const prmRes = await fetch(`${baseUrl}/.well-known/oauth-protected-resource/mcp`)
-    results.prm = { status: prmRes.status, body: await prmRes.json() }
-
-    // Step 2: AS metadata
-    const asRes = await fetch(`${baseUrl}/.well-known/oauth-authorization-server`)
-    results.asMetadata = { status: asRes.status, body: await asRes.json() }
-
-    // Step 3: Register
-    const regRes = await fetch(`${baseUrl}/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        redirect_uris: ['http://127.0.0.1:9999/callback'],
-        client_name: 'debug-flow-test',
-        grant_types: ['authorization_code', 'refresh_token'],
-        response_types: ['code'],
-        token_endpoint_auth_method: 'client_secret_post',
-      }),
-    })
-    const regBody = await regRes.json() as any
-    results.register = { status: regRes.status, body: regBody }
-
-    // Step 4: Token exchange with fake code (should get invalid_grant, NOT server_error)
-    const tokenRes = await fetch(`${baseUrl}/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        code: 'fakecode',
-        code_verifier: 'testverifier',
-        client_id: regBody.client_id,
-        client_secret: regBody.client_secret,
-        redirect_uri: 'http://127.0.0.1:9999/callback',
-      }).toString(),
-    })
-    results.token = { status: tokenRes.status, body: await tokenRes.json() }
-
-    // Step 5: Test refresh token with fake token
-    const refreshRes = await fetch(`${baseUrl}/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: 'faketoken',
-        client_id: regBody.client_id,
-        client_secret: regBody.client_secret,
-      }).toString(),
-    })
-    results.refresh = { status: refreshRes.status, body: await refreshRes.json() }
-
-    res.json(results)
-  } catch (e: any) {
-    res.json({ ...results, error: e.message, stack: e.stack })
-  }
-})
-
 
 // Global error handler — log uncaught Express errors
 app.use((err: any, _req: any, res: any, _next: any) => {

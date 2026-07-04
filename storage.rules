@@ -1,8 +1,40 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+
+    function isSignedIn() {
+      return request.auth != null;
     }
+
+    // On upload request.resource is set; on delete it is null.
+    function isValidImageOrDelete() {
+      return request.resource == null
+        || (request.resource.size < 20 * 1024 * 1024
+            && request.resource.contentType.matches('image/.*'));
+    }
+
+    function goalStakeholder(goalId) {
+      return firestore.get(/databases/(default)/documents/Goals/$(goalId)/GStakeholders/$(request.auth.uid)).data;
+    }
+
+    function isGoalContributor(goalId) {
+      return isSignedIn()
+        && firestore.exists(/databases/(default)/documents/Goals/$(goalId)/GStakeholders/$(request.auth.uid))
+        && (goalStakeholder(goalId).isAdmin == true || goalStakeholder(goalId).isAchiever == true);
+    }
+
+    // Profile media — only the owner may write, and only images.
+    match /profiles/{uid}/{fileName=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == uid && isValidImageOrDelete();
+    }
+
+    // Goal media — only goal admins/achievers may write, and only images.
+    match /goals/{goalId}/{fileName=**} {
+      allow read: if isSignedIn();
+      allow write: if isGoalContributor(goalId) && isValidImageOrDelete();
+    }
+
+    // Everything else denies by default (no catch-all allow).
   }
 }

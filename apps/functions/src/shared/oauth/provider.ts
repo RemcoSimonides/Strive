@@ -137,17 +137,30 @@ export class StriveOAuthProvider implements OAuthServerProvider {
    * Exchanges an authorization code for access + refresh tokens.
    */
   async exchangeAuthorizationCode(
-    _client: OAuthClientInformationFull,
-    authorizationCode: string
+    client: OAuthClientInformationFull,
+    authorizationCode: string,
+    _codeVerifier?: string,
+    redirectUri?: string
   ): Promise<OAuthTokens> {
     try {
     const hashedCode = hashToken(authorizationCode)
-    logger.log('exchangeAuthorizationCode: looking up code hash', hashedCode.slice(0, 8))
     const codeDoc = await db.doc(`${AUTH_CODES_COL}/${hashedCode}`).get()
 
     if (!codeDoc.exists) throw new InvalidGrantError('Invalid authorization code')
 
     const codeData = codeDoc.data()!
+
+    // Bind the code to the client it was issued to and the redirect_uri it was
+    // issued with (RFC 6749 §4.1.3) — prevents cross-client code redemption and
+    // code interception via a mismatched redirect_uri.
+    if (codeData.clientId !== client.client_id) {
+      await codeDoc.ref.delete()
+      throw new InvalidGrantError('Authorization code was issued to a different client')
+    }
+    if (redirectUri !== undefined && codeData.redirectUri !== redirectUri) {
+      await codeDoc.ref.delete()
+      throw new InvalidGrantError('redirect_uri does not match the authorization request')
+    }
 
     // Check expiry (codes are valid for 5 minutes)
     if (Date.now() > codeData.expiresAt) {

@@ -1,4 +1,3 @@
-import { logger } from "@strive/api/firebase"
 import { ActivityResponse, AthleteResponse } from "@strive/model"
 import fetch from 'node-fetch'
 
@@ -60,15 +59,12 @@ export function fetchAthlete(access_token: string): Promise<AthleteResponse> {
 }
 
 async function _fetch<T>(url: fetch.RequestInfo, options: fetch.RequestInit): Promise<T> {
-  logger.log('fetching from url: ', url)
-  logger.log('with options: ', options)
+  // NOTE: do not log url/options/response — they carry the Strava client secret,
+  // OAuth codes, and access/refresh tokens.
   const response = await fetch(url, options)
   if (!response.ok) {
     const error = await response.text()
     throw new Error(error)
   }
-  const result = await response.json()
-  logger.log('response: ', result)
-  return result
-  // return await response.json()
+  return response.json() as Promise<T>
 }

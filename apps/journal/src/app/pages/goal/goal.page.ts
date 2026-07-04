@@ -741,7 +741,6 @@ export class GoalPageComponent implements OnDestroy {
         const uid = this.auth.uid()
         if (!uid) return
         const personal = await this.personalService.getDoc(uid)
-        console.log('personal: ', personal)
         if (personal?.oauthTokens?.['strava']) {
           refreshToken = personal.oauthTokens['strava']
         } else {
