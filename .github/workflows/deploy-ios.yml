@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     defaults:
       run:
@@ -29,6 +29,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # Apple requires the iOS 26 SDK (Xcode 26+) for App Store Connect uploads.
+      - name: Select latest Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - uses: actions/setup-node@v4
         with:
