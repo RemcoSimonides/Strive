@@ -35,18 +35,25 @@ describe('Explore Page', () => {
       cy.get('ion-select[formcontrolname="type"]').should('exist');
     });
 
-    it('should display Categories, Goals, and Exercises sections', () => {
-      getOverviewSections().should('have.length', 3);
-      getOverviewSections().eq(0).should('contain.text', 'Categories');
-      getOverviewSections().eq(1).should('contain.text', 'Goals');
-      getOverviewSections().eq(2).should('contain.text', 'Exercises');
+    it('should display Around the world, Categories, Goals, and Exercises sections', () => {
+      getOverviewSections().should('have.length', 4);
+      getOverviewSections().eq(0).should('contain.text', 'Around the world');
+      getOverviewSections().eq(1).should('contain.text', 'Categories');
+      getOverviewSections().eq(2).should('contain.text', 'Goals');
+      getOverviewSections().eq(3).should('contain.text', 'Exercises');
     });
 
-    it('should display "view more" buttons for each section', () => {
-      getOverviewViewMoreButtons().should('have.length', 3);
-      getOverviewViewMoreButtons().each(($btn) => {
+    it('should display a button for each section', () => {
+      getOverviewViewMoreButtons().should('have.length', 4);
+      getOverviewViewMoreButtons().eq(0).should('contain.text', 'view map');
+      getOverviewViewMoreButtons().each(($btn, index) => {
+        if (index === 0) return;
         expect($btn.text().trim().toLowerCase()).to.include('view more');
       });
+    });
+
+    it('should show the embedded map in overview', () => {
+      cy.get('.map-embed strive-goals-map').should('exist');
     });
 
     it('should display the Algolia attribution', () => {
@@ -94,23 +101,30 @@ describe('Explore Page', () => {
   });
 
   describe('Type Filter', () => {
-    it('should switch to search mode when clicking "view more" on Categories', () => {
+    it('should switch to map view when clicking "view map"', () => {
       visitExplorePage();
       getOverviewViewMoreButtons().eq(0).click({ force: true });
+      cy.get('.map-view', { timeout: 5000 }).should('exist');
+      cy.url().should('include', 't=map');
+    });
+
+    it('should switch to search mode when clicking "view more" on Categories', () => {
+      visitExplorePage();
+      getOverviewViewMoreButtons().eq(1).click({ force: true });
       cy.get('ul.search', { timeout: 5000 }).should('exist');
       cy.url().should('include', 't=categories');
     });
 
     it('should switch to search mode when clicking "view more" on Goals', () => {
       visitExplorePage();
-      getOverviewViewMoreButtons().eq(1).click({ force: true });
+      getOverviewViewMoreButtons().eq(2).click({ force: true });
       cy.get('ul.search', { timeout: 5000 }).should('exist');
       cy.url().should('include', 't=goals');
     });
 
     it('should switch to search mode when clicking "view more" on Exercises', () => {
       visitExplorePage();
-      getOverviewViewMoreButtons().eq(2).click({ force: true });
+      getOverviewViewMoreButtons().eq(3).click({ force: true });
       cy.get('ul.search', { timeout: 5000 }).should('exist');
       cy.url().should('include', 't=exercises');
     });
@@ -135,6 +149,19 @@ describe('Explore Page', () => {
       visitExplorePage();
       searchFor('running');
       cy.url({ timeout: 3000 }).should('include', 'q=running');
+    });
+  });
+
+  describe('Map Mode', () => {
+    it('should show the map when visiting with t=map', () => {
+      visitExplorePageWithType('map');
+      cy.get('.map-view strive-goals-map', { timeout: 5000 }).should('exist');
+    });
+
+    it('should not show search results in map mode', () => {
+      visitExplorePageWithType('map');
+      cy.get('.map-view', { timeout: 5000 }).should('exist');
+      cy.get('ul.search').should('not.exist');
     });
   });
 

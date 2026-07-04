@@ -16,6 +16,12 @@ export interface GoalSource {
   commentId?: string
 }
 
+export interface GoalLocation {
+  lat: number
+  lng: number
+  name: string
+}
+
 export interface Goal {
   id: string
   title: string
@@ -32,6 +38,7 @@ export interface Goal {
   numberOfSpectators: number
   tasksCompleted: number
   tasksTotal: number
+  location?: GoalLocation | null
   updatedBy?: string
   updatedAt?: Date
   createdAt?: Date
@@ -45,6 +52,8 @@ export interface AlgoliaGoal {
   categories: string[]
   numberOfAchievers: number
   numberOfSupporters: number
+  _geoloc?: { lat: number, lng: number } | null
+  locationName?: string | null
 }
 
 export function isFinished(goal: Goal) {
@@ -86,6 +95,17 @@ export function createGoal(params: Partial<Goal> = {}): Goal {
 }
 
 export function createAlgoliaGoal(params: AlgoliaGoal | Goal): AlgoliaGoal {
+  const _geoloc = '_geoloc' in params && params._geoloc
+    ? { lat: params._geoloc.lat, lng: params._geoloc.lng }
+    : 'location' in params && params.location
+      ? { lat: params.location.lat, lng: params.location.lng }
+      : null
+  const locationName = ('locationName' in params
+    ? params.locationName
+    : 'location' in params
+      ? params.location?.name
+      : null) ?? null
+
   return {
     objectID: params.id,
     id: params.id,
@@ -93,7 +113,9 @@ export function createAlgoliaGoal(params: AlgoliaGoal | Goal): AlgoliaGoal {
     image: params.image,
     categories: params.categories,
     numberOfAchievers: params.numberOfAchievers,
-    numberOfSupporters: params.numberOfSupporters
+    numberOfSupporters: params.numberOfSupporters,
+    _geoloc,
+    locationName
   }
 }
 

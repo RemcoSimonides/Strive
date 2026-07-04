@@ -1,0 +1,29 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+
+  .results {
+    position: absolute;
+    top: 60px;
+    left: 8px;
+    right: 8px;
+    z-index: 10;
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .map {
+    flex: 1;
+    min-height: 300px;
+  }
+
+  .picked-name {
+    padding: 8px 16px;
+    color: var(--ion-color-medium);
+    text-align: center;
+  }
+}

@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Goal, createGoal, GoalPublicityType } from '@strive/model'
+import { Goal, GoalLocation, createGoal, GoalPublicityType } from '@strive/model'
 
 function createGoalFormControl(params?: Partial<Goal>) {
   const goal = createGoal(params)
@@ -10,7 +10,8 @@ function createGoalFormControl(params?: Partial<Goal>) {
     deadline: new FormControl(goal.deadline, { nonNullable: true, validators: [Validators.required] }),
     publicity: new FormControl<GoalPublicityType>('private', { nonNullable: true }),
     title: new FormControl(goal.title, { nonNullable: true, validators: [Validators.required]}),
-    categories: new FormControl(goal.categories, { nonNullable: true })
+    categories: new FormControl(goal.categories, { nonNullable: true }),
+    location: new FormControl<GoalLocation | null>(goal.location ?? null)
   }
 }
 
@@ -27,9 +28,10 @@ export class GoalForm extends FormGroup<GoalFormControl> {
   get publicity() { return this.controls.publicity }
   get image() { return this.controls.image }
   get categories() { return this.controls.categories }
+  get location() { return this.controls.location }
 
   getGoalValue(): Partial<Goal> {
-    const { description, image, deadline, publicity, title, categories } = this.value
+    const { description, image, deadline, publicity, title, categories, location } = this.value
 
     return {
       description,
@@ -37,7 +39,8 @@ export class GoalForm extends FormGroup<GoalFormControl> {
       image,
       deadline,
       publicity,
-      categories
+      categories,
+      location
     }
   }
 }

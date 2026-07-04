@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, inject } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { IonList, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, PopoverController } from '@ionic/angular/standalone'
+import { IonList, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, ModalController, PopoverController } from '@ionic/angular/standalone'
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadline.component'
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
+import { LocationPickerModalComponent } from '@strive/ui/map/location-picker/location-picker.component'
 import { categories } from '@strive/model'
 import { addYears, endOfDay, endOfYear, startOfYear } from 'date-fns'
 
@@ -26,6 +27,7 @@ import { addYears, endOfDay, endOfYear, startOfYear } from 'date-fns'
 })
 export class GoalDetailsComponent {
   private cdr = inject(ChangeDetectorRef);
+  private modalCtrl = inject(ModalController);
   private popoverCtrl = inject(PopoverController);
 
 
@@ -33,6 +35,20 @@ export class GoalDetailsComponent {
   @Input() mode?: 'create' | 'update'
 
   categories = categories
+
+  async openLocationPicker() {
+    const modal = await this.modalCtrl.create({
+      component: LocationPickerModalComponent,
+      componentProps: { goalLocation: this.form?.location.value }
+    })
+    await modal.present()
+    const { data } = await modal.onDidDismiss()
+
+    if (data === undefined || !this.form) return // cancelled
+    this.form.location.setValue(data.location)
+    this.form.location.markAsDirty()
+    this.cdr.markForCheck()
+  }
 
   async openDatePicker() {
     const caption = 'Is the goal already finished? Pick the date when it was'

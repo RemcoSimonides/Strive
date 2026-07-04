@@ -25,6 +25,17 @@
           class="primary"
         />
       </ion-item>
+      <ion-item>
+        <ion-input
+          [value]="form.location.value?.name"
+          (click)="openLocationPicker()"
+          [readonly]="true"
+          placeholder="Add a location (optional)"
+          label="Where does this goal take place?"
+          labelPlacement="stacked"
+          class="primary"
+        />
+      </ion-item>
       <ion-item [lines]="mode === 'update' ? 'full' : 'none'">
         <ion-label position="stacked" color="primary">Who can see this goal?</ion-label>
         <ion-select interface="popover" formControlName="publicity">

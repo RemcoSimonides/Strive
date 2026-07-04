@@ -153,6 +153,30 @@ section.statistics {
   }
 }
 
+section.world {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+
+  .map-embed {
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    border-radius: 16px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  // keep the map well below viewport height so there is
+  // plenty of room around it to scroll the page on touch devices
+  section.world .map-embed {
+    height: 35dvh;
+    max-height: 280px;
+    width: calc(100% - 16px);
+  }
+}
+
 section.blogs {
   display: flex;
   flex-direction: column;

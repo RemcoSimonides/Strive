@@ -66,6 +66,76 @@ img.algolia {
   margin: 16px auto;
 }
 
+.map-embed {
+  height: 350px;
+  margin: 8px 48px 0;
+  border-radius: 16px;
+}
+
+// fullscreen map mode: the map fills the content area and the
+// search controls hover on top of it
+ion-content.map-mode {
+  header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    padding: 16px;
+    background: none;
+
+    form {
+      pointer-events: none;
+
+      ion-searchbar,
+      ion-card {
+        pointer-events: auto;
+      }
+
+      ion-searchbar {
+        --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  main {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    max-width: none;
+    min-height: 0;
+  }
+
+  img.algolia,
+  strive-footer {
+    display: none;
+  }
+}
+
+.map-view {
+  height: 100%;
+
+  strive-goals-map {
+    border-radius: 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  // keep the embedded map well below viewport height so there is
+  // plenty of room around it to scroll the page on touch devices
+  .map-embed {
+    height: 35dvh;
+    max-height: 280px;
+    margin: 8px 24px 0;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  .map-embed {
+    margin-inline: 16px;
+  }
+}
+
 @media only screen and (max-width: 1024px) {
   header {
     padding: 48px 96px;

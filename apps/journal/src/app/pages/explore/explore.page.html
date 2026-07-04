@@ -1,6 +1,6 @@
 <strive-header title="Explore" />
 
-<ion-content class="ion-no-padding">
+<ion-content class="ion-no-padding" [class.map-mode]="segmentChoice === 'map'">
   <header>
     <form [formGroup]="searchForm">
       <ion-searchbar
@@ -12,6 +12,7 @@
       <ion-card>
         <ion-select placeholder="Type" interface="popover" formControlName="type" legacy>
           <ion-select-option value="all">All</ion-select-option>
+          <ion-select-option value="map">Map</ion-select-option>
           <ion-select-option value="categories">Categories</ion-select-option>
           <ion-select-option value="goals">Goals</ion-select-option>
           <ion-select-option value="users">Users</ion-select-option>
@@ -23,6 +24,14 @@
 
   <main [ngSwitch]="segmentChoice">
     <ng-container *ngSwitchCase="'overview'">
+      <section>
+        <h5>Around the world</h5>
+        <ion-button fill="clear" size="small" (click)="setType('map')">view map</ion-button>
+      </section>
+      <div class="map-embed">
+        <strive-goals-map />
+      </div>
+
       <section>
         <h5>Categories</h5>
         <ion-button fill="clear" size="small" (click)="setType('categories')">view more</ion-button>
@@ -126,6 +135,10 @@
         <i>Couldn't find anything 😔</i>
       </ng-container>
     </ul>
+
+    <div *ngSwitchCase="'map'" class="map-view">
+      <strive-goals-map />
+    </div>
 
     <a href="https://algolia.com/" target="_blank">
       <img class="algolia" asset="search-by-algolia-light-background.svg" alt="Search by Algolia"/>

@@ -20,6 +20,7 @@ import { RowsPipe } from '@strive/ui/thumbnail/pipes/rows.pipe'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { FooterComponent } from '@strive/ui/footer/footer.component'
+import { GoalsMapComponent } from '@strive/ui/map/goals-map/goals-map.component'
 
 
 @Component({
@@ -37,6 +38,7 @@ import { FooterComponent } from '@strive/ui/footer/footer.component'
         ImageDirective,
         HeaderComponent,
         FooterComponent,
+        GoalsMapComponent,
         IonContent,
         IonSearchbar,
         IonCard,
@@ -54,7 +56,7 @@ export class ExplorePageComponent implements OnDestroy {
 
   @ViewChild(IonContent) content?: IonContent
 
-  segmentChoice: 'overview' | 'search' = 'overview'
+  segmentChoice: 'overview' | 'search' | 'map' = 'overview'
 
   searchForm = new FormGroup({
     query: new FormControl(''),
@@ -79,9 +81,12 @@ export class ExplorePageComponent implements OnDestroy {
   ]).subscribe(([query, type]) => {
 
     if (query === undefined || query === null) return
-    this.segmentChoice = !query && type === 'all' ? 'overview' : 'search'
+    this.segmentChoice = type === 'map' ? 'map' : !query && type === 'all' ? 'overview' : 'search'
 
     switch (type) {
+      case 'map':
+        break
+
       case 'goals': {
         const category = this.searchForm.get('category')?.value || undefined
         this.algolia.searchGoals(query, category, undefined)
@@ -138,7 +143,7 @@ export class ExplorePageComponent implements OnDestroy {
     if (query !== queryControl.value) queryControl.setValue(query)
 
     const typeControl = this.searchForm.get('type') as AbstractControl<string>
-    const types = ['goals', 'users', 'exercises', 'categories']
+    const types = ['goals', 'users', 'exercises', 'categories', 'map']
     const type = types.includes(t) ? t : 'all'
     if (type !== typeControl.value) typeControl.setValue(type)
 

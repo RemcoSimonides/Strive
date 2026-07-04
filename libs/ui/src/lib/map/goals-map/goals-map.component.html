@@ -1,0 +1,16 @@
+<strive-map
+  [styleUrl]="styleUrl"
+  [center]="center"
+  [zoom]="zoom"
+  (ready)="initMap($event)"
+/>
+
+@if (selectedGoals().length) {
+  <div class="goal-card">
+    @for (goal of selectedGoals(); track goal.id) {
+      <strive-small-thumbnail [title]="goal.title" [image]="goal.image" asset="goal.png" [routerLink]="'/goal/' + goal.id">
+        <small>{{ goal.locationName }}</small>
+      </strive-small-thumbnail>
+    }
+  </div>
+}

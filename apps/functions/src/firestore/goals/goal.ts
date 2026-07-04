@@ -165,7 +165,7 @@ async (snapshot) => {
       await deleteFromAlgolia('goal', goalId)
     }
 
-  } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters || !arraysAreEqual(before.categories, after.categories)) {
+  } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters || !arraysAreEqual(before.categories, after.categories) || locationChanged(before, after)) {
     await updateAlgoliaObject('goal', goalId, createAlgoliaGoal(after))
   }
 })
@@ -256,4 +256,10 @@ async function disableStravaIntegration(goalId: string) {
 function arraysAreEqual<T>(a: T[], b: T[]): boolean {
   if (a.length!== b.length) return false;
   return !a.some((element, index) => element!== b[index]);
+}
+
+function locationChanged(before: Goal, after: Goal): boolean {
+  return before.location?.lat !== after.location?.lat
+    || before.location?.lng !== after.location?.lng
+    || before.location?.name !== after.location?.name
 }

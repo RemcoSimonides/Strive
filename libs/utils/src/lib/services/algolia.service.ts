@@ -6,6 +6,8 @@ import { algoliasearch } from 'algoliasearch'
 import { environment } from 'environments/environment'
 import { BehaviorSubject, Observable } from 'rxjs'
 
+import { getMockMapGoals } from './mock-map-goals'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,9 +15,11 @@ export class AlgoliaService {
   private client = algoliasearch(environment.algolia.appId, environment.algolia.apiKey)
 
   private _goals = new BehaviorSubject<AlgoliaGoal[]>([])
+  private _mapGoals = new BehaviorSubject<AlgoliaGoal[]>([])
   private _profiles = new BehaviorSubject<AlgoliaUser[]>([])
 
   goals$: Observable<AlgoliaGoal[]> = this._goals.asObservable()
+  mapGoals$: Observable<AlgoliaGoal[]> = this._mapGoals.asObservable()
   profiles$: Observable<AlgoliaUser[]> = this._profiles.asObservable()
 
   search(query: string, hitsPerPage?: number | { goals?: number, profiles?: number}) {
@@ -38,6 +42,23 @@ export class AlgoliaService {
     }).then(({ results }) => {
       const goals = results[0].hits.map((hit: AlgoliaGoal) => createAlgoliaGoal(hit))
       this._goals.next(goals)
+    })
+  }
+
+  /** Search goals with a location within the given bounding box: [north, east, south, west] */
+  searchGoalsByBounds(bounds: [number, number, number, number]): void {
+    this.client.searchForHits<AlgoliaGoal>({
+      requests: [
+        {
+          indexName: environment.algolia.indexNameGoals,
+          query: '',
+          hitsPerPage: 500,
+          insideBoundingBox: [bounds]
+        }
+      ]
+    }).then(({ results }) => {
+      const goals = results[0].hits.map((hit: AlgoliaGoal) => createAlgoliaGoal(hit))
+      this._mapGoals.next([...goals, ...getMockMapGoals(bounds)])
     })
   }
 

@@ -148,6 +148,17 @@
       }
     </section>
     <hr class="fade" />
+    <section class="world">
+      <h3 class="fade">Goals around the world</h3>
+      <div class="map-embed fade">
+        <strive-goals-map />
+      </div>
+      <ion-button fill="clear" class="more fade" routerLink="/explore" [queryParams]="{ t: 'map' }">
+        <span>Explore the map</span>
+        <ion-icon name="arrow-forward-outline" slot="end" />
+      </ion-button>
+    </section>
+    <hr class="fade" />
     <section class="blogs">
       <h3 class="fade">Guides</h3>
       <article>

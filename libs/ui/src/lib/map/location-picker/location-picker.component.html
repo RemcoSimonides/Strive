@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon slot="icon-only" name="close" />
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Pick a location</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="picker">
+    <ion-searchbar
+      [formControl]="searchControl"
+      placeholder="Search for a place"
+      inputmode="search"
+    />
+
+    @if (results$ | async; as results) {
+      @if (results.length) {
+        <ion-list class="results">
+          @for (result of results; track result.name + result.lat) {
+            <ion-item button (click)="select(result)">
+              <ion-icon name="location-outline" slot="start" />
+              <ion-label>{{ result.name }}</ion-label>
+            </ion-item>
+          }
+        </ion-list>
+      }
+    }
+
+    <div class="map">
+      <strive-map (ready)="mapReady($event)" />
+    </div>
+
+    @if (picked(); as location) {
+      <small class="picked-name">{{ location.name || 'Pinned location' }}</small>
+    } @else {
+      <small class="picked-name">Search for a place or tap the map to drop a pin</small>
+    }
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    @if (goalLocation) {
+      <ion-buttons slot="start">
+        <ion-button (click)="remove()" fill="clear" color="danger">Remove location</ion-button>
+      </ion-buttons>
+    }
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" fill="clear" color="primary" [disabled]="!picked()">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

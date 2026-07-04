@@ -14,6 +14,7 @@ import { ThemeService } from '@strive/utils/services/theme.service'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { CompactPipe } from '@strive/utils/pipes/compact.pipe'
 import { FooterComponent } from '@strive/ui/footer/footer.component'
+import { GoalsMapComponent } from '@strive/ui/map/goals-map/goals-map.component'
 
 @Component({
     selector: 'journal-home',
@@ -26,6 +27,7 @@ import { FooterComponent } from '@strive/ui/footer/footer.component'
         ImageDirective,
         CompactPipe,
         FooterComponent,
+        GoalsMapComponent,
         IonContent,
         IonButton,
         IonIcon,

@@ -36,7 +36,8 @@
           "apps/journal/src/theme/variables.scss",
           "node_modules/swiper/swiper.min.css",
           "node_modules/swiper/modules/effect-cards.min.css",
-          "node_modules/swiper/modules/navigation.min.css"
+          "node_modules/swiper/modules/navigation.min.css",
+          "node_modules/maplibre-gl/dist/maplibre-gl.css"
         ],
         "scripts": [],
         "server": "apps/journal/src/main.server.ts",
