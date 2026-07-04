@@ -34,7 +34,9 @@
     }
 
     <div class="map">
-      <strive-map (ready)="mapReady($event)" />
+      @if (viewEntered()) {
+        <strive-map (ready)="mapReady($event)" />
+      }
     </div>
 
     @if (picked(); as location) {
@@ -53,7 +55,7 @@
       </ion-buttons>
     }
     <ion-buttons slot="end">
-      <ion-button (click)="confirm()" fill="clear" color="primary" [disabled]="!picked()">Confirm</ion-button>
+      <ion-button (click)="confirm()" fill="solid" color="primary" [disabled]="!picked()">Confirm</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

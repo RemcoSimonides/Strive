@@ -8,15 +8,17 @@ export interface GeocodeResult {
 
 interface PhotonFeature {
   geometry: { coordinates: [number, number] }
-  properties: { name?: string, city?: string, state?: string, country?: string }
+  properties: { name?: string, housenumber?: string, street?: string, city?: string, state?: string, country?: string }
 }
 
 function toGeocodeResult(feature: PhotonFeature): GeocodeResult {
-  const { name, city, country } = feature.properties
+  const { name, housenumber, street, city, country } = feature.properties
+  // street and house number results have no name of their own
+  const title = name ?? (street ? [street, housenumber].filter(Boolean).join(' ') : undefined)
   return {
     lng: feature.geometry.coordinates[0],
     lat: feature.geometry.coordinates[1],
-    name: [name, city, country].filter(Boolean).join(', ')
+    name: [title, city, country].filter(Boolean).join(', ')
   }
 }
 
@@ -25,10 +27,13 @@ export class GeocodeService {
 
   async search(query: string, limit = 5): Promise<GeocodeResult[]> {
     try {
-      const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=${limit}`)
+      const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=${limit * 2}`)
       if (!res.ok) return []
       const { features } = await res.json() as { features: PhotonFeature[] }
-      return features.map(toGeocodeResult)
+      const results = features.map(toGeocodeResult)
+      // photon returns a result per street segment - dedupe identical names
+      const unique = results.filter((result, index) => results.findIndex(other => other.name === result.name) === index)
+      return unique.slice(0, limit)
     } catch {
       return []
     }

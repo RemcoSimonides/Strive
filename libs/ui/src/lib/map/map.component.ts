@@ -31,7 +31,7 @@ export class MapComponent implements OnDestroy {
         style: this.styleUrl,
         center: [this.center.lng, this.center.lat],
         zoom: this.zoom,
-        attributionControl: { compact: true }
+        attributionControl: false
       })
       this.map.once('load', () => {
         if (this.map) this.ready.emit(this.map)

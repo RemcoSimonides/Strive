@@ -30,6 +30,17 @@ export class GoalsMapComponent implements OnDestroy {
   @Input() center: { lat: number, lng: number } = { lat: 30, lng: 0 }
   @Input() zoom = 1.5
 
+  /**
+   * Static mode: show only these goals instead of querying Algolia by
+   * map bounds, and fit the initial view to contain all pins
+   */
+  @Input() set goals(goals: AlgoliaGoal[] | undefined) {
+    this.staticGoals = goals
+    if (this.map && goals) this.renderGoals(this.map, goals, true)
+  }
+  private staticGoals?: AlgoliaGoal[]
+  private map?: MaplibreMap
+
   selectedGoals = signal<AlgoliaGoal[]>([])
   private goalsSub?: Subscription
 
@@ -41,6 +52,7 @@ export class GoalsMapComponent implements OnDestroy {
   }
 
   initMap(map: MaplibreMap) {
+    this.map = map
     const clusterMaxZoom = 14
 
     map.addSource('goals', {
@@ -87,43 +99,32 @@ export class GoalsMapComponent implements OnDestroy {
       }
     })
 
-    this.goalsSub = this.algolia.mapGoals$.subscribe(goals => {
-      const features = goals
-        .filter(goal => goal._geoloc)
-        .map(goal => ({
-          type: 'Feature' as const,
-          geometry: { type: 'Point' as const, coordinates: [goal._geoloc!.lng, goal._geoloc!.lat] },
-          properties: {
-            id: goal.id,
-            title: goal.title,
-            image: goal.image,
-            locationName: goal.locationName ?? ''
-          }
-        }))
-      const source = map.getSource<GeoJSONSource>('goals')
-      source?.setData({ type: 'FeatureCollection', features })
-    })
+    if (this.staticGoals) {
+      this.renderGoals(map, this.staticGoals, true)
+    } else {
+      this.goalsSub = this.algolia.mapGoals$.subscribe(goals => this.renderGoals(map, goals, false))
 
-    const queryBounds = () => {
-      const bounds = map.getBounds()
-      const north = Math.min(bounds.getNorth(), 90)
-      const south = Math.max(bounds.getSouth(), -90)
+      const queryBounds = () => {
+        const bounds = map.getBounds()
+        const north = Math.min(bounds.getNorth(), 90)
+        const south = Math.max(bounds.getSouth(), -90)
 
-      // maplibre longitudes are unwrapped and can exceed [-180, 180] which Algolia rejects
-      if (bounds.getEast() - bounds.getWest() >= 360) {
-        this.algolia.searchGoalsByBounds([north, 180, south, -180])
-      } else {
-        const wrap = (lng: number) => ((lng + 180) % 360 + 360) % 360 - 180
-        this.algolia.searchGoalsByBounds([north, wrap(bounds.getEast()), south, wrap(bounds.getWest())])
+        // maplibre longitudes are unwrapped and can exceed [-180, 180] which Algolia rejects
+        if (bounds.getEast() - bounds.getWest() >= 360) {
+          this.algolia.searchGoalsByBounds([north, 180, south, -180])
+        } else {
+          const wrap = (lng: number) => ((lng + 180) % 360 + 360) % 360 - 180
+          this.algolia.searchGoalsByBounds([north, wrap(bounds.getEast()), south, wrap(bounds.getWest())])
+        }
       }
-    }
-    queryBounds()
+      queryBounds()
 
-    let debounce: ReturnType<typeof setTimeout>
-    map.on('moveend', () => {
-      clearTimeout(debounce)
-      debounce = setTimeout(queryBounds, 300)
-    })
+      let debounce: ReturnType<typeof setTimeout>
+      map.on('moveend', () => {
+        clearTimeout(debounce)
+        debounce = setTimeout(queryBounds, 300)
+      })
+    }
 
     map.on('click', 'goals', event => {
       const properties = event.features?.[0]?.properties
@@ -155,6 +156,31 @@ export class GoalsMapComponent implements OnDestroy {
     for (const layer of ['goals', 'clusters']) {
       map.on('mouseenter', layer, () => map.getCanvas().style.cursor = 'pointer')
       map.on('mouseleave', layer, () => map.getCanvas().style.cursor = '')
+    }
+  }
+
+  private renderGoals(map: MaplibreMap, goals: AlgoliaGoal[], fitBounds: boolean) {
+    const located = goals.filter(goal => goal._geoloc)
+    const features = located.map(goal => ({
+      type: 'Feature' as const,
+      geometry: { type: 'Point' as const, coordinates: [goal._geoloc!.lng, goal._geoloc!.lat] },
+      properties: {
+        id: goal.id,
+        title: goal.title,
+        image: goal.image,
+        locationName: goal.locationName ?? ''
+      }
+    }))
+    const source = map.getSource<GeoJSONSource>('goals')
+    source?.setData({ type: 'FeatureCollection', features })
+
+    if (fitBounds && located.length) {
+      const lngs = located.map(goal => goal._geoloc!.lng)
+      const lats = located.map(goal => goal._geoloc!.lat)
+      map.fitBounds(
+        [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
+        { padding: 60, maxZoom: 12, animate: false }
+      )
     }
   }
 

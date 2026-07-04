@@ -29,8 +29,9 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { FollowGoalsModalComponent } from './modals/follow-goals/follow-goals.component'
 import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
-import { Goal, GoalStakeholder, User, createMedia, createSpectator } from '@strive/model'
+import { AlgoliaGoal, Goal, GoalStakeholder, User, createAlgoliaGoal, createMedia, createSpectator } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
+import { getMockMapGoals } from '@strive/utils/services/mock-map-goals'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -42,6 +43,7 @@ import { HeaderRootComponent } from '@strive/ui/header-root/header-root.componen
 import { HeaderComponent } from '@strive/ui/header/header.component'
 import { GoalThumbnailComponent } from '@strive/goal/components/thumbnail/thumbnail.component'
 import { PagenotfoundComponent } from '@strive/ui/404/404.component'
+import { GoalsMapComponent } from '@strive/ui/map/goals-map/goals-map.component'
 
 
 @Component({
@@ -59,6 +61,7 @@ import { PagenotfoundComponent } from '@strive/ui/404/404.component'
         HeaderComponent,
         GoalThumbnailComponent,
         PagenotfoundComponent,
+        GoalsMapComponent,
         IonContent,
         IonCard,
         IonAvatar,
@@ -119,6 +122,17 @@ export class ProfilePageComponent {
     switchMap(([isOwner, profileId]) => {
       if (!profileId) return of([])
       return this.goalService.getStakeholderGoals(profileId, 'isAchiever', !isOwner)
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
+  mapGoals$: Observable<AlgoliaGoal[]> = this.achievingStakeholders$.pipe(
+    map(stakeholders => {
+      const goals = stakeholders
+        .map(({ goal }) => createAlgoliaGoal(goal))
+        .filter(goal => goal._geoloc)
+      // mock goals in the Netherlands to preview the map until real goals have locations
+      return goals.length ? goals : getMockMapGoals([53.7, 7.5, 50.5, 3.0])
     })
   )
 

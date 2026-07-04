@@ -93,6 +93,11 @@ header {
   cursor: pointer;
 }
 
+section.map {
+  height: 300px;
+  margin: 16px 0;
+}
+
 section.goals {
   display: flex;
   flex-direction: column;

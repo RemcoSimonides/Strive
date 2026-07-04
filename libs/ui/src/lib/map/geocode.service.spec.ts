@@ -21,8 +21,28 @@ describe('GeocodeService', () => {
 
   it('maps photon features to geocode results', async () => {
     const results = await service.search('Amsterdam')
-    expect(fetchMock).toHaveBeenCalledWith('https://photon.komoot.io/api/?q=Amsterdam&limit=5')
+    expect(fetchMock).toHaveBeenCalledWith('https://photon.komoot.io/api/?q=Amsterdam&limit=10')
     expect(results).toEqual([{ lat: 52.37, lng: 4.89, name: 'Amsterdam, Netherlands' }])
+  })
+
+  it('names street results from street and housenumber', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        features: [
+          { geometry: { coordinates: [4.89, 52.37] }, properties: { street: 'Kalverstraat', housenumber: '92', city: 'Amsterdam', country: 'Netherlands' } }
+        ]
+      })
+    })
+    const results = await service.search('Kalverstraat 92')
+    expect(results).toEqual([{ lat: 52.37, lng: 4.89, name: 'Kalverstraat 92, Amsterdam, Netherlands' }])
+  })
+
+  it('dedupes results with identical names', async () => {
+    const feature = { geometry: { coordinates: [4.89, 52.37] }, properties: { street: 'Herengracht', city: 'Amsterdam', country: 'Netherlands' } }
+    fetchMock.mockResolvedValue({ ok: true, json: () => Promise.resolve({ features: [feature, feature, feature] }) })
+    const results = await service.search('Herengracht')
+    expect(results).toHaveLength(1)
   })
 
   it('reverse geocodes coordinates', async () => {

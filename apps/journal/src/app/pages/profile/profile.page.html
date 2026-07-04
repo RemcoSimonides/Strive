@@ -62,6 +62,13 @@
           }
         }
       </header>
+      @if (mapGoals$ | async; as mapGoals) {
+        @if (mapGoals.length) {
+          <section class="map">
+            <strive-goals-map [goals]="mapGoals" />
+          </section>
+        }
+      }
       <section class="goals">
         <article>
           <h2>Goals</h2>

@@ -49,6 +49,9 @@ export class LocationPickerModalComponent implements OnInit {
   )
 
   picked = signal<GoalLocation | undefined>(undefined)
+  // only create the map once the modal has fully presented - initializing
+  // during the enter animation corrupts the map's coordinate calculations
+  viewEntered = signal(false)
 
   private map?: MaplibreMap
   private marker?: Marker
@@ -63,6 +66,10 @@ export class LocationPickerModalComponent implements OnInit {
 
   ngOnInit() {
     if (this.goalLocation) this.picked.set(this.goalLocation)
+  }
+
+  ionViewDidEnter() {
+    this.viewEntered.set(true)
   }
 
   async mapReady(map: MaplibreMap) {
@@ -105,7 +112,7 @@ export class LocationPickerModalComponent implements OnInit {
     }
 
     const { Marker } = await import('maplibre-gl')
-    this.marker = new Marker({ draggable: true, color: '#f9c711' })
+    this.marker = new Marker({ draggable: true, color: '#F7941D' })
       .setLngLat([lng, lat])
       .addTo(this.map)
 
