@@ -180,6 +180,14 @@ export class AppComponent implements OnDestroy {
     // TODO put code that should only execute in browser in afterRender and afterNextRender lifecycle hooks (https://angular.io/guide/ssr#authoring-server-compatible-components)
     if (isPlatformServer(this.platformId)) return
 
+    // Safety net: the native splash screen (launchAutoHide: false) is normally
+    // hidden once auth resolves / goals load. If that chain ever stalls (e.g.
+    // authStateReady never resolving on iOS), the app would hang on the splash
+    // forever. Force-hide it after a timeout so the app is never fully blocked.
+    // SplashScreen.hide() is idempotent, so the normal hide paths still win when
+    // they fire first.
+    setTimeout(() => SplashScreen.hide().catch(() => undefined), 8000)
+
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       await this.auth.authStateReady()
       const isLoggedIn = this.auth.isLoggedIn()
