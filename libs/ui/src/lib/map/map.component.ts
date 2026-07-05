@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, afterNextRender } from '@angular/core'
 import type { Map as MaplibreMap } from 'maplibre-gl'
+import { loadMaplibre } from './maplibre'
 
 @Component({
     selector: 'strive-map',
@@ -25,8 +26,8 @@ export class MapComponent implements OnDestroy {
   constructor() {
     afterNextRender(async () => {
       if (!this.container) return
-      const { Map } = await import('maplibre-gl')
-      this.map = new Map({
+      const maplibregl = await loadMaplibre()
+      this.map = new maplibregl.Map({
         container: this.container.nativeElement,
         style: this.styleUrl,
         center: [this.center.lng, this.center.lat],

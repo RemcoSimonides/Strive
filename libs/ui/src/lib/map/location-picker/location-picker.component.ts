@@ -10,6 +10,7 @@ import { of } from 'rxjs'
 
 import { GoalLocation } from '@strive/model'
 import { MapComponent } from '../map.component'
+import { loadMaplibre } from '../maplibre'
 import { GeocodeService, GeocodeResult } from '../geocode.service'
 
 @Component({
@@ -111,8 +112,8 @@ export class LocationPickerModalComponent implements OnInit {
       return
     }
 
-    const { Marker } = await import('maplibre-gl')
-    this.marker = new Marker({ draggable: true, color: '#F7941D' })
+    const maplibregl = await loadMaplibre()
+    this.marker = new maplibregl.Marker({ draggable: true, color: '#F7941D' })
       .setLngLat([lng, lat])
       .addTo(this.map)
 
