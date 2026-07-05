@@ -31,7 +31,6 @@ import { CopiedPopoverComponent } from '@strive/ui/copied/copied.component'
 
 import { AlgoliaGoal, Goal, GoalStakeholder, User, createAlgoliaGoal, createMedia, createSpectator } from '@strive/model'
 import { delay } from '@strive/utils/helpers'
-import { getMockMapGoals } from '@strive/utils/services/mock-map-goals'
 
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
@@ -127,13 +126,10 @@ export class ProfilePageComponent {
   )
 
   mapGoals$: Observable<AlgoliaGoal[]> = this.achievingStakeholders$.pipe(
-    map(stakeholders => {
-      const goals = stakeholders
-        .map(({ goal }) => createAlgoliaGoal(goal))
-        .filter(goal => goal._geoloc)
-      // mock goals in the Netherlands to preview the map until real goals have locations
-      return goals.length ? goals : getMockMapGoals([53.7, 7.5, 50.5, 3.0])
-    })
+    map(stakeholders => stakeholders
+      .map(({ goal }) => createAlgoliaGoal(goal))
+      .filter(goal => goal._geoloc)
+    )
   )
 
   supportingGoals$ = combineLatest([

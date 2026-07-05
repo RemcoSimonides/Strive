@@ -165,7 +165,7 @@ async (snapshot) => {
       await deleteFromAlgolia('goal', goalId)
     }
 
-  } else if (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters || !arraysAreEqual(before.categories, after.categories) || locationChanged(before, after)) {
+  } else if (after.publicity === 'public' && (before.title !== after.title || before.image !== after.image || before.numberOfAchievers !== after.numberOfAchievers || before.numberOfSupporters !== after.numberOfSupporters || !arraysAreEqual(before.categories, after.categories) || locationChanged(before, after))) {
     await updateAlgoliaObject('goal', goalId, createAlgoliaGoal(after))
   }
 })

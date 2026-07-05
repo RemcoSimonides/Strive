@@ -22,7 +22,9 @@ export const updateAlgoliaObject = async (indexName: AlgoliaIndex, objectID: str
   client.partialUpdateObject({
     indexName,
     objectID,
-    attributesToUpdate
+    attributesToUpdate,
+    // never create records via partial update - non-indexed docs (e.g. private goals) must stay out
+    createIfNotExists: false
   }).catch((err) => {
     if (err) logger.error('error updating algolia object', err)
   })

@@ -81,7 +81,8 @@
       "executor": "@nx/eslint:lint"
     },
     "deploy-functions": {
-      "executor": "@nx/workspace:run-commands",
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
       "options": {
         "command": "firebase deploy --only functions"
       }

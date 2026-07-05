@@ -6,8 +6,6 @@ import { algoliasearch } from 'algoliasearch'
 import { environment } from 'environments/environment'
 import { BehaviorSubject, Observable } from 'rxjs'
 
-import { getMockMapGoals } from './mock-map-goals'
-
 @Injectable({
   providedIn: 'root'
 })
@@ -58,7 +56,7 @@ export class AlgoliaService {
       ]
     }).then(({ results }) => {
       const goals = results[0].hits.map((hit: AlgoliaGoal) => createAlgoliaGoal(hit))
-      this._mapGoals.next([...goals, ...getMockMapGoals(bounds)])
+      this._mapGoals.next(goals)
     })
   }
 
