@@ -1,0 +1,16 @@
+# Firebase App Hosting configuration for strivejournal.com (backend: journal).
+# https://firebase.google.com/docs/app-hosting/configure
+#
+# This is an Nx monorepo: the Angular build tooling and all dependencies live at
+# the repo root, so the backend's root directory must be "/". Setting an explicit
+# buildCommand opts out of App Hosting's framework adapter (which cannot detect
+# the app inside the Nx workspace) and builds/serves the Angular SSR output
+# directly. The SSR server (apps/journal/src/server.ts) listens on $PORT.
+
+runConfig:
+  minInstances: 0
+  maxInstances: 2
+
+scripts:
+  buildCommand: npx nx build journal
+  runCommand: node dist/apps/journal/server/server.mjs
