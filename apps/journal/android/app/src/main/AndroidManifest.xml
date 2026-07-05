@@ -63,7 +63,10 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Legacy storage: only for Android <= 12. On 13+ the system Photo Picker
+         (Camera.getPhoto / FilePicker.pickMedia) is used, which needs no media
+         permission. READ_MEDIA_IMAGES/VIDEO are intentionally NOT declared —
+         the app only needs one-time picker access (Google Play policy). -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 </manifest>
