@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { ToastController, ToastOptions } from '@ionic/angular/standalone'
-import { SplashScreen } from '@capacitor/splash-screen'
 import { Capacitor } from '@capacitor/core'
 import { FCM } from '@capacitor-community/fcm'
 
 import { FIRESTORE } from '@strive/utils/firebase-init'
+import { hideSplashScreen } from '@strive/utils/splash-screen'
 import { setDoc, doc, arrayUnion, arrayRemove, getDoc, serverTimestamp, QueryConstraint, collection, query } from 'firebase/firestore'
 import { getToken, getMessaging, onMessage, Unsubscribe, isSupported } from 'firebase/messaging'
 
@@ -271,7 +271,7 @@ export class PersonalService {
       (notification: ActionPerformed) => {
         try {
           const link: string = notification.notification.data.link
-          this.router.navigateByUrl(link).then(() => SplashScreen.hide())
+          this.router.navigateByUrl(link).then(() => hideSplashScreen())
         } catch (err) {
           captureException(err)
         }

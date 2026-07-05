@@ -9,7 +9,7 @@ import { addIcons } from 'ionicons'
 
 import { joinWith } from '@strive/utils/firebase'
 import { orderBy, where } from 'firebase/firestore'
-import { SplashScreen } from '@capacitor/splash-screen'
+import { hideSplashScreen } from '@strive/utils/splash-screen'
 import { isBefore, min } from 'date-fns'
 
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs'
@@ -270,7 +270,7 @@ export class GoalsPageComponent implements OnDestroy {
       ])
     )
     .catch(() => {})
-    .then(() => SplashScreen.hide())
+    .then(() => hideSplashScreen())
     addIcons({ checkmarkOutline, add, lockClosedOutline, filterOutline })
   }
 

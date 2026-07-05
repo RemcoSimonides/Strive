@@ -18,11 +18,11 @@ import {
 
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app'
-import { SplashScreen } from '@capacitor/splash-screen'
 
 import { filter, first, Subscription } from 'rxjs'
 
-import { captureException } from '@sentry/angular'
+import { captureException, captureMessage } from '@sentry/angular'
+import { hideSplashScreen, isSplashScreenHidden } from '@strive/utils/splash-screen'
 import { differenceInMilliseconds } from 'date-fns'
 
 import { Intent, SendIntent } from 'send-intent'
@@ -183,10 +183,15 @@ export class AppComponent implements OnDestroy {
     // Safety net: the native splash screen (launchAutoHide: false) is normally
     // hidden once auth resolves / goals load. If that chain ever stalls (e.g.
     // authStateReady never resolving on iOS), the app would hang on the splash
-    // forever. Force-hide it after a timeout so the app is never fully blocked.
-    // SplashScreen.hide() is idempotent, so the normal hide paths still win when
-    // they fire first.
-    setTimeout(() => SplashScreen.hide().catch(() => undefined), 8000)
+    // forever. Force-hide it after a timeout so the app is never fully blocked,
+    // and report to Sentry so silent stalls are visible.
+    setTimeout(() => {
+      if (isSplashScreenHidden()) return
+      if (Capacitor.isNativePlatform()) {
+        captureMessage('Splash screen fallback fired — startup stalled', { level: 'warning' })
+      }
+      hideSplashScreen().catch(() => undefined)
+    }, 8000)
 
     this.sub = this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), first()).subscribe(async event => {
       await this.auth.authStateReady()
@@ -217,7 +222,7 @@ export class AppComponent implements OnDestroy {
 
       const reroutesToGoals = isLoggedIn && url === '/'
       const goalsRoute = url === '/goals'
-      if (!reroutesToGoals && !goalsRoute) SplashScreen.hide().catch(err => captureException(err))
+      if (!reroutesToGoals && !goalsRoute) hideSplashScreen().catch(err => captureException(err))
     })
   }
 
