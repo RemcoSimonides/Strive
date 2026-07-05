@@ -1,4 +1,4 @@
-import { db, onSchedule } from '@strive/api/firebase'
+import { db, logger, onSchedule } from '@strive/api/firebase'
 
 import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 
@@ -21,48 +21,54 @@ async () => {
   const promises = []
 
   for (const doc of personalSnaps.docs) {
-    const personal = createPersonal(toDate(doc.data()))
+    // uid is not stored as a field — the doc id is the uid (client converter strips it on write)
+    const personal = createPersonal(toDate({ ...doc.data(), uid: doc.id }))
 
     if (personal.settings.emailNotification.main === false || personal.settings.emailNotification.monthlyGoalReminder === false) continue
     if (newerThanWeek(personal)) continue
 
-    const stakeholders = await getStakeholders(personal.uid)
+    try {
+      const stakeholders = await getStakeholders(personal.uid)
 
-    const [goals, events, notifications] = await Promise.all([
-      getGoals(stakeholders),
-      getGoalEvents(stakeholders),
-      getNotifications(personal)
-    ])
+      const [goals, events, notifications] = await Promise.all([
+        getGoals(stakeholders),
+        getGoalEvents(stakeholders),
+        getNotifications(personal)
+      ])
 
-    const inProgressGoals = goals.filter(goal => inProgress(goal))
-    const bucketlistGoals = goals.filter(goal => inBucketlist(goal))
-    if (!inProgressGoals.length && !bucketlistGoals.length) continue
+      const inProgressGoals = goals.filter(goal => inProgress(goal))
+      const bucketlistGoals = goals.filter(goal => inBucketlist(goal))
+      if (!inProgressGoals.length && !bucketlistGoals.length) continue
 
-    const unreadNotifications = notifications.length
-    const newUpdates = events
+      const unreadNotifications = notifications.length
+      const newUpdates = events
 
-    const data: {
-      bucketlistGoals: Goal[]
-      inProgressGoals: Goal[]
-      motivation: Motivation
-      unreadNotifications: number
-      newUpdates: number,
-      newFeatures: any[]
-    } = {
-      inProgressGoals,
-      bucketlistGoals,
-      motivation,
-      unreadNotifications,
-      newUpdates,
-      newFeatures
+      const data: {
+        bucketlistGoals: Goal[]
+        inProgressGoals: Goal[]
+        motivation: Motivation
+        unreadNotifications: number
+        newUpdates: number,
+        newFeatures: any[]
+      } = {
+        inProgressGoals,
+        bucketlistGoals,
+        motivation,
+        unreadNotifications,
+        newUpdates,
+        newFeatures
+      }
+
+      const promise = sendMailFromTemplate({
+        to: personal.email,
+        templateId: templateIds.monthlyGoalReminder,
+        data,
+      }, groupIds.unsubscribeAll)
+      promises.push(promise)
+    } catch (err) {
+      // one user's bad data must not abort the monthly emails for everyone else
+      logger.error(`monthly email failed for user ${personal.uid}`, err)
     }
-
-    const promise = sendMailFromTemplate({
-      to: personal.email,
-      templateId: templateIds.monthlyGoalReminder,
-      data,
-    }, groupIds.unsubscribeAll)
-    promises.push(promise)
   }
 
   return Promise.all(promises)

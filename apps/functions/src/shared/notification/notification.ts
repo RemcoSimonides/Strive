@@ -80,6 +80,12 @@ export async function sendGoalEventNotification(
     const userPromise = userId ? getDocument<User>(`Users/${userId}`).then(user => notification.user = user) : undefined
     const commentPromise = commentId ? getDocument<Comment>(`Goals/${goalId}/Comments/${commentId}`).then(comment => notification.comment = comment.text) : undefined
     await Promise.all([goalPromise, milestonePromise, supportPromise, userPromise, commentPromise])
+
+    if (!notification.goal) {
+      // goal deleted between event creation and this handler running — nothing to notify about
+      logger.warn(`Goal ${goalId} no longer exists, skipping notifications for event ${event.name}`)
+      return
+    }
   }
 
   if (options.toStakeholder?.notification) {

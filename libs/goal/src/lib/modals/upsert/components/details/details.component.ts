@@ -7,7 +7,7 @@ import { DeadlinePopoverComponent } from '@strive/goal/popovers/deadline/deadlin
 import { DatetimeComponent } from '@strive/ui/datetime/datetime.component'
 import { LocationPickerModalComponent } from '@strive/ui/map/location-picker/location-picker.component'
 import { categories } from '@strive/model'
-import { addYears, endOfDay, endOfYear, startOfYear } from 'date-fns'
+import { addYears, endOfDay, endOfYear, isValid, startOfYear } from 'date-fns'
 
 @Component({
     selector: '[form] strive-goal-details',
@@ -63,7 +63,9 @@ export class GoalDetailsComponent {
     if (role === 'custom') {
       this.openCustomDatePicker(caption)
     } else if (data && this.form) {
-      this.form.deadline.setValue(endOfDay(data))
+      const date = new Date(data)
+      if (!isValid(date)) return
+      this.form.deadline.setValue(endOfDay(date))
       this.form.deadline.markAsDirty()
       this.cdr.markForCheck()
     }
@@ -82,7 +84,8 @@ export class GoalDetailsComponent {
     const { data, role } = await popover.onDidDismiss()
 
     if (role === 'dismiss' && this.form) {
-      const date = data ? new Date(data) : new Date()
+      const parsed = data ? new Date(data) : new Date()
+      const date = isValid(parsed) ? parsed : new Date()
       this.form.deadline.setValue(endOfDay(date))
       this.form.deadline.markAsDirty()
       this.cdr.markForCheck()

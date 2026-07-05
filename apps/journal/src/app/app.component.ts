@@ -152,10 +152,10 @@ export class AppComponent implements OnDestroy {
 
       if (isPlatformBrowser(this.platformId)) {
         window.addEventListener('sendIntentReceived', () => {
-          SendIntent.checkSendIntentReceived().then(this.sendIntent)
+          this.checkSendIntent()
         })
       }
-      SendIntent.checkSendIntentReceived().then(this.sendIntent)
+      this.checkSendIntent()
     })
 
     this.seo.setInitial()
@@ -240,6 +240,14 @@ export class AppComponent implements OnDestroy {
       event,
       showBackdrop: false
     }).then(popover => popover.present())
+  }
+
+  checkSendIntent() {
+    // The plugin rejects by design when the app wasn't opened via a share intent
+    // ("No processing needed" / "not implemented") — not an error, just no intent.
+    SendIntent.checkSendIntentReceived()
+      .then(sendIntentData => this.sendIntent(sendIntentData))
+      .catch(() => undefined)
   }
 
   sendIntent(sendIntentData: Intent) {

@@ -21,7 +21,7 @@ import { sendAffirmationPushNotification, scheduleNextAffirmation } from './user
 import { scheduleNextReminder, sendWheelOfLifePushNotification } from './user-exercises/wheel_of_life'
 import { sendDearFutureSelfEmail, sendDearFutureSelfPushNotification } from './user-exercises/dear_future_self'
 
-import { DearFutureSelf, Personal, Affirmations, WheelOfLifeSettings, createGoalSource, SelfReflectSettings, Reminder } from '@strive/model'
+import { DearFutureSelf, Goal, Personal, Affirmations, WheelOfLifeSettings, createGoalSource, SelfReflectSettings, Reminder } from '@strive/model'
 import { AES, enc } from 'crypto-js'
 import { scheduleNextSelfReflectReminder, sendSelfReflectPuthNotification } from './user-exercises/self_reflect'
 import { scheduleNextGoalReminder, sendReminderPushNotification } from './goal/reminder'
@@ -96,7 +96,10 @@ function deleteInviteLinkGoal(options: ScheduledTaskGoalInviteLinkDeadline['opti
   return db.doc(`Goals/${options.goalId}/InviteTokens/${options.inviteTokenId}`).delete()
 }
 
-function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['options']) {
+async function goalDeadlineHandler({ goalId }: ScheduledTaskGoalDeadline['options']) {
+  const goal = await getDocument<Goal>(`Goals/${goalId}`)
+  if (!goal) return // goal was deleted before its deadline task fired
+
   const source = createGoalSource({ goalId })
   return addGoalEvent('goalDeadlinePassed', source)
 }
@@ -110,7 +113,10 @@ async function goalReminderHandler({ goalId, userId, reminderId }: ScheduledTask
   ])
 }
 
-function milestoneDeadlineHandler({ goalId, milestoneId }: ScheduledTaskMilestoneDeadline['options']) {
+async function milestoneDeadlineHandler({ goalId, milestoneId }: ScheduledTaskMilestoneDeadline['options']) {
+  const goal = await getDocument<Goal>(`Goals/${goalId}`)
+  if (!goal) return // goal was deleted before the milestone deadline task fired
+
   const source = createGoalSource({ goalId, milestoneId })
   return addGoalEvent('goalMilestoneDeadlinePassed', source)
 }
