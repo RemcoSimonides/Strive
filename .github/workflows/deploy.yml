@@ -1,0 +1,115 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      native: ${{ steps.filter.outputs.native }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            native:
+              - 'apps/journal/**'
+              - 'libs/**'
+              - 'package-lock.json'
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run affected tests
+        run: npx nx affected -t test --base=$NX_BASE --head=$NX_HEAD --no-cloud
+
+  deploy-firebase:
+    name: Deploy functions, rules and hosting
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build blog
+        run: npm ci && npm run build
+        working-directory: apps/blog
+
+      - name: Prepare api hosting placeholder
+        run: mkdir -p dist/apps/api-placeholder
+
+      - name: Write service account key
+        run: echo '${{ secrets.GCP_SA_KEY }}' > "$RUNNER_TEMP/gcp-sa.json"
+
+      - name: Deploy to Firebase
+        run: npx --yes firebase-tools@latest deploy --only firestore,storage,functions,hosting:blog,hosting:api --project strive-journal --force --non-interactive
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-sa.json
+
+  deploy-apphosting:
+    name: Roll out strivejournal.com (App Hosting)
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Write service account key
+        run: echo '${{ secrets.GCP_SA_KEY }}' > "$RUNNER_TEMP/gcp-sa.json"
+
+      - name: Create App Hosting rollout
+        run: npx --yes firebase-tools@latest apphosting:rollouts:create journal --git-branch main --force --project strive-journal
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-sa.json
+
+  deploy-ios:
+    needs: [changes, test]
+    if: needs.changes.outputs.native == 'true'
+    uses: ./.github/workflows/deploy-ios.yml
+    with:
+      destination: production
+    secrets: inherit
+
+  deploy-android:
+    needs: [changes, test]
+    if: needs.changes.outputs.native == 'true'
+    uses: ./.github/workflows/deploy-android.yml
+    with:
+      track: production
+    secrets: inherit

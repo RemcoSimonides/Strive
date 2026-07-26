@@ -14,6 +14,13 @@ on:
         options:
           - internal
           - production
+  workflow_call:
+    inputs:
+      track:
+        description: 'Play Store track (internal or production)'
+        required: false
+        default: 'internal'
+        type: string
 
 concurrency:
   group: deploy-android
@@ -77,11 +84,7 @@ jobs:
       - name: Determine lane
         id: lane
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TRACK="${{ github.event.inputs.track }}"
-          else
-            TRACK="internal"
-          fi
+          TRACK="${{ inputs.track || 'internal' }}"
           if [ "$TRACK" = "production" ]; then
             echo "name=deploy_production" >> "$GITHUB_OUTPUT"
           else

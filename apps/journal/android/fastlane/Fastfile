@@ -1,6 +1,27 @@
 default_platform(:android)
 
 platform :android do
+  desc "Bump versionCode past the highest one on any Play track"
+  private_lane :bump_version_code do
+    gradle_file = File.expand_path("../app/build.gradle", __dir__)
+    current = File.read(gradle_file)[/versionCode (\d+)/, 1].to_i
+
+    codes = [current]
+    %w[production beta alpha internal].each do |track|
+      begin
+        codes += google_play_track_version_codes(track: track)
+      rescue StandardError
+        # track may not exist or have no releases
+      end
+    end
+
+    new_code = codes.max + 1
+    content = File.read(gradle_file)
+    content.sub!(/versionCode \d+/, "versionCode #{new_code}")
+    File.write(gradle_file, content)
+    UI.message("versionCode set to #{new_code}")
+  end
+
   desc "Build a signed AAB (release)"
   lane :build do
     gradle(
@@ -18,6 +39,7 @@ platform :android do
 
   desc "Deploy to Play Store internal testing track"
   lane :deploy_internal do
+    bump_version_code
     build
     upload_to_play_store(
       track: "internal",
@@ -31,6 +53,7 @@ platform :android do
 
   desc "Deploy to Play Store production"
   lane :deploy_production do
+    bump_version_code
     build
     upload_to_play_store(
       track: "production",

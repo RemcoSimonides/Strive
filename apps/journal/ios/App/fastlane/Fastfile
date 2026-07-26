@@ -67,16 +67,52 @@ platform :ios do
     )
   end
 
-  desc "Deploy to TestFlight"
-  lane :deploy_testflight do
-    build
-
-    api_key = app_store_connect_api_key(
+  desc "Create an App Store Connect API key from env"
+  private_lane :asc_api_key do
+    app_store_connect_api_key(
       key_id: ENV["ASC_KEY_ID"],
       issuer_id: ENV["ASC_ISSUER_ID"],
       key_content: ENV["ASC_KEY_CONTENT"],
       is_key_content_base64: true,
     )
+  end
+
+  desc "Bump build number (and marketing version if already released) based on App Store Connect state"
+  private_lane :bump_versions do |options|
+    api_key = options[:api_key]
+
+    live_build = begin
+      app_store_build_number(api_key: api_key, live: true, app_identifier: MAIN_APP_ID)
+    rescue StandardError
+      0
+    end
+    live_version = lane_context[SharedValues::LATEST_VERSION].to_s
+
+    tf_build = begin
+      latest_testflight_build_number(api_key: api_key, app_identifier: MAIN_APP_ID)
+    rescue StandardError
+      0
+    end
+
+    new_build = [live_build.to_i, tf_build.to_i, get_build_number.to_i].max + 1
+    increment_build_number(build_number: new_build)
+
+    # A marketing version that has already been released can't be submitted
+    # again, so move one patch beyond the live version when needed.
+    current_version = get_version_number(xcodeproj: "App.xcodeproj", target: "App")
+    if !live_version.empty? && Gem::Version.new(current_version) <= Gem::Version.new(live_version)
+      parts = live_version.split(".").map(&:to_i)
+      parts << 0 while parts.length < 3
+      parts[2] += 1
+      increment_version_number(version_number: parts.join("."))
+    end
+  end
+
+  desc "Deploy to TestFlight"
+  lane :deploy_testflight do
+    api_key = asc_api_key
+    bump_versions(api_key: api_key)
+    build
 
     upload_to_testflight(
       api_key: api_key,
@@ -85,23 +121,23 @@ platform :ios do
     )
   end
 
-  desc "Deploy to App Store production"
+  desc "Deploy to App Store production and submit for review"
   lane :deploy_production do
+    api_key = asc_api_key
+    bump_versions(api_key: api_key)
     build
-
-    api_key = app_store_connect_api_key(
-      key_id: ENV["ASC_KEY_ID"],
-      issuer_id: ENV["ASC_ISSUER_ID"],
-      key_content: ENV["ASC_KEY_CONTENT"],
-      is_key_content_base64: true,
-    )
 
     upload_to_app_store(
       api_key: api_key,
       ipa: "./build/StriveJournal.ipa",
-      skip_metadata: true,
       skip_screenshots: true,
       precheck_include_in_app_purchases: false,
+      force: true,
+      submit_for_review: true,
+      automatic_release: true,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+      },
     )
   end
 end
