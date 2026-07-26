@@ -31,14 +31,14 @@
       </header>
     }
 
-    <ion-list lines="full">
-      @if (showInstallPromotion$ | async) {
+    @if (showInstallPromotion$ | async) {
+      <ion-list lines="full">
         <ion-item (click)="installPWA()" lines="none" button>
           <ion-label>Install App</ion-label>
           <ion-icon size="small" name="download-outline" />
         </ion-item>
-      }
-    </ion-list>
+      </ion-list>
+    }
     <ion-list lines="full">
       <ion-list-header>Account</ion-list-header>
       <ion-item button routerLink="/edit-profile">
