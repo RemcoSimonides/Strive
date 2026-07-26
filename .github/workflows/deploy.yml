@@ -13,12 +13,15 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      native: ${{ steps.filter.outputs.native }}
+      # On the very first push to the branch there is no previous commit to
+      # diff against (event.before is all zeros) - deploy natives to be safe.
+      native: ${{ steps.filter.outputs.native || 'true' }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: dorny/paths-filter@v3
         id: filter
+        if: github.event.before != '0000000000000000000000000000000000000000'
         with:
           filters: |
             native:
@@ -73,7 +76,15 @@ jobs:
         run: mkdir -p dist/apps/api-placeholder
 
       - name: Write service account key
-        run: echo '${{ secrets.GCP_SA_KEY }}' > "$RUNNER_TEMP/gcp-sa.json"
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          # Secret may be raw JSON or base64-encoded JSON
+          if [ "${GCP_SA_KEY:0:1}" = "{" ]; then
+            printf '%s' "$GCP_SA_KEY" > "$RUNNER_TEMP/gcp-sa.json"
+          else
+            printf '%s' "$GCP_SA_KEY" | base64 --decode > "$RUNNER_TEMP/gcp-sa.json"
+          fi
 
       - name: Deploy to Firebase
         run: npx --yes firebase-tools@latest deploy --only firestore,storage,functions,hosting:blog,hosting:api --project strive-journal --force --non-interactive
@@ -91,7 +102,15 @@ jobs:
           node-version: 22
 
       - name: Write service account key
-        run: echo '${{ secrets.GCP_SA_KEY }}' > "$RUNNER_TEMP/gcp-sa.json"
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          # Secret may be raw JSON or base64-encoded JSON
+          if [ "${GCP_SA_KEY:0:1}" = "{" ]; then
+            printf '%s' "$GCP_SA_KEY" > "$RUNNER_TEMP/gcp-sa.json"
+          else
+            printf '%s' "$GCP_SA_KEY" | base64 --decode > "$RUNNER_TEMP/gcp-sa.json"
+          fi
 
       - name: Create App Hosting rollout
         run: npx --yes firebase-tools@latest apphosting:rollouts:create journal --git-branch main --force --project strive-journal

@@ -36,8 +36,8 @@ npx nx test journal              # Run all tests for journal
 npx nx test <lib-name>           # e.g., npx nx test goal
 npx nx test journal --testFile=path/to/spec  # Single test file
 
-# Deploy
-npm run deploy:hosting:journal   # Build + deploy journal to Firebase Hosting
+# Deploy — normally automatic, see "Branching & Deployment" below.
+# Manual escape hatches:
 npx nx deploy-functions functions  # Deploy Cloud Functions
 firebase deploy --only firestore   # Deploy Firestore rules
 firebase deploy --only functions   # Deploy functions directly
@@ -45,6 +45,18 @@ firebase deploy --only functions   # Deploy functions directly
 # Firebase emulators
 firebase emulators:start
 ```
+
+## Branching & Deployment
+
+- **`main`** is the default branch (renamed from `master` 2026-07). **Every push to `main` deploys to production** via `.github/workflows/deploy.yml`.
+- **`dev`** is the working branch: develop on `dev` (or feature branches), merge to `main` to release.
+- The deploy workflow is gated on `nx affected -t test`. It then deploys in parallel:
+  - Cloud Functions + Firestore rules/indexes + Storage rules + classic hosting sites `blog` and `api` (service account: `GCP_SA_KEY` repo secret)
+  - strivejournal.com via a Firebase App Hosting rollout (`firebase apphosting:rollouts:create journal --git-branch main`)
+  - iOS (App Store, auto-submitted for review) and Android (Play production) — **only when** `apps/journal/**`, `libs/**`, or `package-lock.json` changed
+- Native version handling is automatic: Fastlane bumps the iOS build number / Android versionCode past the highest one in the stores, and bumps the iOS marketing patch version if the in-repo version was already released. Manual bumps are only needed for minor/major version jumps.
+- Manual native deploys still work via workflow_dispatch on the Deploy iOS / Deploy Android workflows (TestFlight / internal track options) or `ios-v*` / `android-v*` tags.
+- The admin app is NOT deployed automatically (its build is broken).
 
 ## Architecture
 
