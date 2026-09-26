@@ -4,14 +4,8 @@ import { createComment, createGoal, createGoalStakeholder, createMilestone } fro
 import { toDate } from '../../../shared/utils'
 import { addGoalEvent } from '../../../shared/goal-event/goal.events'
 import { ChatCompletionMessageParam } from 'openai/resources'
-import { askOpenAI, AskOpenAIConfig } from '../../../shared/ask-open-ai/ask-open-ai'
+import { askOpenAI } from '../../../shared/ask-open-ai/ask-open-ai'
 import { format } from 'date-fns'
-
-const askOpenAIConfig: AskOpenAIConfig = {
-  model: 'gpt-4o',
-  response_format: { type: 'text' },
-  parse: false
-}
 
 // earlier messages sent along as context; keeps long chats from growing the prompt without bound
 const historyLimit = 30
@@ -79,5 +73,5 @@ async (snapshot) =>{
 
   messages.push({ role: 'user', content: comment.text })
 
-  return askOpenAI(messages, ref, askOpenAIConfig)
+  return askOpenAI(messages, ref)
 })

@@ -1,8 +1,9 @@
-import { db, getRef, onDocumentCreate } from '@strive/api/firebase'
-import { createChatGPTMessage, createMilestone } from '@strive/model'
+import { db, onDocumentCreate } from '@strive/api/firebase'
+import { ChatGPTMessage, createChatGPTMessage, createMilestone } from '@strive/model'
 import { toDate } from '../../../shared/utils'
 import { ChatCompletionMessageParam } from 'openai/resources'
 import { AskOpenAIConfig, askOpenAI } from '../../../shared/ask-open-ai/ask-open-ai'
+import { parsePartialArray } from '../../../shared/ask-open-ai/parse'
 import { GlobalOptions } from 'firebase-functions/v2'
 
 const config: GlobalOptions = {
@@ -10,41 +11,64 @@ const config: GlobalOptions = {
   memory: '1GiB',
 }
 
-const askOpenAIConfig: AskOpenAIConfig = {
-  model: 'gpt-4o',
-  parse: true,
-  response_format: { type: 'json_object' } // https://platform.openai.com/docs/guides/text-generation/json-mode
+// One answer carries both the roadmap and the questions that would sharpen it: a single call instead of two,
+// and the questions are about the roadmap the user is actually looking at.
+const roadmapConfig: AskOpenAIConfig = {
+  response_format: {
+    type: 'json_schema',
+    json_schema: {
+      name: 'roadmap',
+      strict: true,
+      schema: {
+        type: 'object',
+        properties: {
+          milestones: { type: 'array', items: { type: 'string' }, description: 'The milestones of the roadmap, in the order they should be done' },
+          questions: { type: 'array', items: { type: 'string' }, description: '3 questions to ask the user to make the roadmap more specific' }
+        },
+        required: ['milestones', 'questions'],
+        additionalProperties: false
+      }
+    }
+  },
+  parse: raw => parsePartialArray(raw, 'milestones')
 }
 
-const parsablePrompt = `The format of your response has to be a JSON parsable array of strings.`
+const roadmapInstruction = `Give the milestones of the roadmap and 3 questions you would ask the user to create a more specific roadmap.`
+
+/** Streams the roadmap into RoadmapSuggestion and puts the questions of the same answer into RoadmapMoreInfoQuestions. */
+async function askRoadmap(goalId: string, messages: ChatCompletionMessageParam[]) {
+  const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`), roadmapConfig)
+
+  const failed = answer === 'error'
+  const questions: Partial<ChatGPTMessage> = {
+    type: 'RoadmapMoreInfoQuestions',
+    status: failed ? 'error' : 'completed',
+    answerRaw: failed ? '' : answer,
+    answerParsed: failed ? [] : parsePartialArray(answer, 'questions')
+  }
+  await db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`).set(questions, { merge: true })
+}
 
 export const chatGPTMessageCreatedHandler = onDocumentCreate(`Goals/{goalId}/ChatGPT/{messageId}`,
 async (snapshot) => {
 
   const { goalId, messageId } = snapshot.params
   const message = createChatGPTMessage(toDate({ ...snapshot.data.data(), id: messageId }))
-  const ref = getRef(`Goals/${goalId}/ChatGPT/${messageId}`);
 
   // doc is created in function of another trigger already
   if (message.status === 'no-trigger') return
+
+  // The questions come with the roadmap now (askRoadmap). App versions from before that still create this doc
+  // next to RoadmapSuggestion; answering it separately would only cost a second call.
+  if (message.type === 'RoadmapMoreInfoQuestions') return
 
   const messages: ChatCompletionMessageParam[] = [
     { role: 'system', content: `You're a life coach helping the user to break down its goal in smaller steps and help the user to stay focused on this goal` },
   ]
 
   if (message.type === 'RoadmapSuggestion') {
-    messages.push({
-      role: 'user',
-      content: `${message.prompt} ${parsablePrompt}`
-    })
-    await askOpenAI(messages, ref, askOpenAIConfig)
-    return
-  }
-
-  if (message.type === 'RoadmapMoreInfoQuestions') {
-    const content = `${message.prompt} ${parsablePrompt}`
-    messages.push({ role: 'user', content })
-    await askOpenAI(messages, ref, askOpenAIConfig)
+    messages.push({ role: 'user', content: `${message.prompt} ${roadmapInstruction}` })
+    await askRoadmap(goalId, messages)
     return
   }
 
@@ -61,18 +85,10 @@ async (snapshot) => {
     messages.push({ role: 'assistant', content: roadmap.answerRaw })
     messages.push({
       role: 'user',
-      content: `Here is some more information about the goal: ${qa}. Please further specify the roadmap based on this information. ${parsablePrompt}`
+      content: `Here is some more information about the goal: ${qa}. Please further specify the roadmap based on this information. ${roadmapInstruction}`
     })
 
-    const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`), askOpenAIConfig)
-
-    messages.push({ role: 'assistant', content: answer })
-    messages.push({
-      role: 'user',
-      content: `What are 3 questions you would ask the user to create a more specific roadmap? ${parsablePrompt}`
-    })
-
-    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`), askOpenAIConfig)
+    await askRoadmap(goalId, messages)
     return
   }
 
@@ -85,7 +101,6 @@ async (snapshot) => {
 
     const roadmap = existing.find(m => m.type === 'RoadmapSuggestion')
     const qa = existing.filter(m => m.type === 'RoadmapMoreInfoAnswers').map(m => m.prompt).join(', ')
-    const questions = existing.find(m => m.type === 'RoadmapMoreInfoQuestions')
 
     if (roadmap) {
       messages.push({ role: 'user', content: roadmap.prompt })
@@ -96,58 +111,26 @@ async (snapshot) => {
       await db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`).set(createChatGPTMessage({ prompt: message.prompt, type: 'RoadmapSuggestion', status: 'no-trigger' }))
     }
 
-    if (!questions) {
-      await db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`).set(createChatGPTMessage({ type: 'RoadmapMoreInfoQuestions', status: 'no-trigger' }))
-    }
-
     const milestones = milestoneSnaps.docs.map(doc => createMilestone(toDate({ ...doc.data(), id: doc.id })))
     const achieved = milestones.filter(milestone => milestone.status === 'succeeded').map(milestone => milestone.content).join(', ')
     const failed = milestones.filter(milestone => milestone.status === 'failed').map(milestone => milestone.content).join(', ')
     const pending = milestones.filter(milestone => milestone.status === 'pending').map(milestone => milestone.content).join(', ')
 
     if (achieved.length || failed.length || pending.length) {
-      messages.push({
-        role: 'user',
-        content: `Here is some more information about the goal: ${qa}.`
-      })
-
-      if (achieved.length) {
-        messages.push({
-          role: 'user',
-          content: `These milestones I have already achieved: ${achieved}`
-        })
-      }
-
-      if (failed.length) {
-        messages.push({
-          role: 'user',
-          content: `These milestones I have tried but have failed: ${failed}`
-        })
-      }
-
-      if (pending.length) {
-        messages.push({
-          role: 'user',
-          content: `These milestones I still have to do: ${pending}`
-        })
-      }
+      if (qa) messages.push({ role: 'user', content: `Here is some more information about the goal: ${qa}.` })
+      if (achieved.length) messages.push({ role: 'user', content: `These milestones I have already achieved: ${achieved}` })
+      if (failed.length) messages.push({ role: 'user', content: `These milestones I have tried but have failed: ${failed}` })
+      if (pending.length) messages.push({ role: 'user', content: `These milestones I still have to do: ${pending}` })
 
       messages.push({
         role: 'user',
-        content: `Could you please update the roadmap based on this information? Only include milestones that still need to be done. ${parsablePrompt}`
+        content: `Could you please update the roadmap based on this information? Only include milestones that still need to be done. ${roadmapInstruction}`
       })
+    } else {
+      messages.push({ role: 'user', content: roadmapInstruction })
     }
 
-    const answer = await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapSuggestion`), askOpenAIConfig)
-
-    messages.push({ role: 'assistant', content: answer })
-    messages.push({
-      role: 'user',
-      content: `What are 3 questions you would ask the user to create a more specific roadmap? ${parsablePrompt}`
-    })
-
-    await askOpenAI(messages, db.doc(`Goals/${goalId}/ChatGPT/RoadmapMoreInfoQuestions`), askOpenAIConfig)
-
+    await askRoadmap(goalId, messages)
     return
   }
 

@@ -4,14 +4,13 @@ import { addIcons } from 'ionicons'
 import { close } from 'ionicons/icons'
 import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonFooter } from '@ionic/angular/standalone'
 import { BehaviorSubject } from 'rxjs'
-import { format, isFuture, isPast } from 'date-fns'
+import { isFuture, isPast } from 'date-fns'
 
 import { GoalForm } from '@strive/goal/forms/goal.form'
 import { GoalService } from '@strive/goal/goal.service'
 import { GoalStakeholderService } from '@strive/stakeholder/stakeholder.service'
 import { AuthService } from '@strive/auth/auth.service'
 import { ChatGPTService } from '@strive/chat/chatgpt.service'
-import { getCountry } from '@strive/utils/country'
 import { createChatGPTMessage, createGoal, createGoalStakeholder } from '@strive/model'
 import { ModalDirective } from '@strive/utils/directives/modal.directive'
 
@@ -128,18 +127,8 @@ export class GoalCreateModalComponent extends ModalDirective implements OnDestro
         prompt,
         type: 'RoadmapSuggestion'
       })
+      // the answer also fills RoadmapMoreInfoQuestions: the questions come with the roadmap
       this.chatGPTService.upsert(message, { goalId: this.goal.id })
-
-
-      const end = format(deadline, 'dd MMMM yyyy')
-      const today = format(new Date(), 'dd MMMM yyyy')
-      const country = getCountry() ?? 'The Netherlands'
-      const message2 = createChatGPTMessage({
-        id: 'RoadmapMoreInfoQuestions',
-        prompt: `Soon I am going to ask you to break down my goal into milestones. I want to achieve "${title}" by ${end}. Today is ${today} and I live in ${country}. What are 3 questions to ask the user to create a more specific roadmap?`,
-        type: 'RoadmapMoreInfoQuestions'
-      })
-      this.chatGPTService.upsert(message2, { goalId: this.goal.id })
     }
   }
 }

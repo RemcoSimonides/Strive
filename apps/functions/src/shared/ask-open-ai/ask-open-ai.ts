@@ -2,12 +2,14 @@ import { DocumentReference, logger } from '@strive/api/firebase'
 import { ChatGPTMessage } from '@strive/model'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsStreaming, ChatCompletionMessageParam } from 'openai/resources'
-import { parseRaw } from './parse'
+
+export const OPENAI_MODEL: ChatCompletionCreateParamsStreaming['model'] = 'gpt-4o'
 
 export interface AskOpenAIConfig {
-  model: ChatCompletionCreateParamsStreaming['model']
-  parse: boolean,
-  response_format: ChatCompletionCreateParamsStreaming['response_format']
+  model?: ChatCompletionCreateParamsStreaming['model']
+  response_format?: ChatCompletionCreateParamsStreaming['response_format']
+  /** turns the answer so far into the list shown as answerParsed; without it only answerRaw is written */
+  parse?: (raw: string) => string[]
 }
 
 // A document takes about one sustained write per second; streaming faster than this only queues writes up.
@@ -23,7 +25,7 @@ function createChatGPTDoc(params: Partial<ChatGPTDoc> = {}) {
   }
 }
 
-export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: DocumentReference, { model, parse }: AskOpenAIConfig): Promise<string> {
+export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: DocumentReference, { model = OPENAI_MODEL, response_format, parse }: AskOpenAIConfig = {}): Promise<string> {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY })
 
   const doc = createChatGPTDoc({ status: 'streaming' })
@@ -44,6 +46,7 @@ export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: Doc
     const stream = await openai.chat.completions.create({
       model,
       messages,
+      response_format,
       stream: true
     })
 
@@ -53,8 +56,9 @@ export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: Doc
 
       doc.answerRaw += delta
       if (parse) {
-        const parsed = parseRaw(doc.answerRaw)
-        if (parsed) doc.answerParsed = parsed
+        doc.answerParsed = parse(doc.answerRaw)
+        // the app shows answerRaw while nothing parsed yet: don't show it the bare JSON
+        if (!doc.answerParsed.length) continue
       }
 
       if (Date.now() - lastWrite >= WRITE_INTERVAL_MS) write()
