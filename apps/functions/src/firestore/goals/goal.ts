@@ -37,7 +37,9 @@ async snapshot => {
 
   addGoalEvent(event, source)
   addStoryItem(event, source)
-  categorizeGoal(goal).then(categories => ref.update({ categories }))
+  const categorizing = categorizeGoal(goal)
+    .then(categories => ref.update({ categories }))
+    .catch(error => logger.error('Categorizing goal failed', error))
 
   // aggregation
   handleAggregation(undefined, goal)
@@ -63,6 +65,9 @@ async snapshot => {
   if (goal.publicity === 'public') {
     await addToAlgolia('goal', goalId, createAlgoliaGoal(goal))
   }
+
+  // the instance may be throttled once the handler returns, so wait for the OpenAI call
+  await categorizing
 })
 
 export const goalDeletedHandler = onDocumentDelete(`Goals/{goalId}`,

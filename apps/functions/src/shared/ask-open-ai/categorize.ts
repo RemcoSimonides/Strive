@@ -1,6 +1,6 @@
 import OpenAI from 'openai'
 import { parseRaw } from './parse'
-import { Goal, Milestone, categories } from '@strive/model'
+import { CategoryBlock, Goal, Milestone, categories } from '@strive/model'
 import { smartJoin } from '@strive/utils/helpers'
 
 export async function categorizeGoal(goal: Goal, milestones?: Milestone[]): Promise<string[]> {
@@ -25,13 +25,14 @@ export async function categorizeGoal(goal: Goal, milestones?: Milestone[]): Prom
     ]
   })
 
-  const content = response.choices[0].message?.content
-  const parsed = parseRaw(content) ?? ['Other']
+  const content = response.choices[0].message?.content ?? ''
+  const parsed = parseRaw(content) ?? []
 
-  // filter out the ones that are not in categories
-  parsed.filter(category => !categories.map(c => c.title.toLowerCase()).includes(category.toLowerCase()))
+  // keep only answers that match a known category; the model may invent one
+  const ids = parsed
+    .map(title => categories.find(c => c.title.toLowerCase() === title.trim().toLowerCase()))
+    .filter((category): category is CategoryBlock => !!category)
+    .map(category => category.id)
 
-  const result = parsed.map(category => categories.find(c => c.title.toLowerCase() === category.toLowerCase())).map(c => c.id)
-
-  return result
+  return ids.length ? [...new Set(ids)] : ['other']
 }

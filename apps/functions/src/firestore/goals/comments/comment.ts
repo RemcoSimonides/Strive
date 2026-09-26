@@ -13,6 +13,9 @@ const askOpenAIConfig: AskOpenAIConfig = {
   parse: false
 }
 
+// earlier messages sent along as context; keeps long chats from growing the prompt without bound
+const historyLimit = 30
+
 export const commentCreatedHandler = onDocumentCreate(`Goals/{goalId}/Comments/{commentId}`,
 async (snapshot) =>{
 
@@ -49,7 +52,13 @@ async (snapshot) =>{
   ])
 
   const milestones = milestonesSnap.docs.map(doc => createMilestone(toDate({ ...doc.data(), id: doc.id })))
-  const comments = commentsSnap.docs.map(doc => createComment(toDate({ ...doc.data(), id: doc.id })))
+  // history in the order it was written, without the message being answered (pushed last below)
+  // and without the empty placeholder that will hold this answer
+  const comments = commentsSnap.docs
+    .map(doc => createComment(toDate({ ...doc.data(), id: doc.id })))
+    .filter(c => c.id !== commentId && c.id !== ref.id)
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    .slice(-historyLimit)
 
   let content = `For context: I want to achieve "${goal.title}" by ${format(goal.deadline, 'dd MMMM yyyy')}.`
 
@@ -62,8 +71,10 @@ async (snapshot) =>{
   messages.push({ role: 'user', content })
 
   comments.forEach(comment => {
+    // answers of the assistant are streamed into answerRaw, its fixed messages (like 'initial') into text
     const role = comment.userId === 'chatgpt' ? 'assistant' : 'user'
-    messages.push({ role, content: comment.text })
+    const content = comment.text || comment.answerRaw
+    if (content) messages.push({ role, content })
   })
 
   messages.push({ role: 'user', content: comment.text })

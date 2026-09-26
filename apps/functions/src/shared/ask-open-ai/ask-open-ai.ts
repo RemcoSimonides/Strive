@@ -1,6 +1,5 @@
 import { DocumentReference, logger } from '@strive/api/firebase'
 import { ChatGPTMessage } from '@strive/model'
-import { delay } from '@strive/utils/helpers'
 import OpenAI from 'openai'
 import { ChatCompletionCreateParamsStreaming, ChatCompletionMessageParam } from 'openai/resources'
 import { parseRaw } from './parse'
@@ -10,6 +9,9 @@ export interface AskOpenAIConfig {
   parse: boolean,
   response_format: ChatCompletionCreateParamsStreaming['response_format']
 }
+
+// A document takes about one sustained write per second; streaming faster than this only queues writes up.
+const WRITE_INTERVAL_MS = 300
 
 type ChatGPTDoc = Pick<ChatGPTMessage, 'answerParsed'|'answerRaw'|'status'>
 
@@ -24,8 +26,20 @@ function createChatGPTDoc(params: Partial<ChatGPTDoc> = {}) {
 export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: DocumentReference, { model, parse }: AskOpenAIConfig): Promise<string> {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY })
 
-  let counter = 0
   const doc = createChatGPTDoc({ status: 'streaming' })
+
+  // Writes go out one at a time, so a slow partial update can never land after the final one.
+  let writing: Promise<unknown> = Promise.resolve()
+  let lastWrite = 0
+  const write = () => {
+    const snapshot = { ...doc }
+    lastWrite = Date.now()
+    writing = writing
+      .then(() => ref.update(snapshot))
+      .catch(error => logger.error('Writing OpenAI answer failed', error))
+    return writing
+  }
+
   try {
     const stream = await openai.chat.completions.create({
       model,
@@ -34,35 +48,31 @@ export async function askOpenAI(messages: ChatCompletionMessageParam[], ref: Doc
     })
 
     for await (const chunk of stream) {
-      const delta = chunk.choices[0].delta?.content
-      if (delta) {
-        doc.answerRaw += delta
-        if (!doc.answerRaw) continue
+      const delta = chunk.choices[0]?.delta?.content
+      if (!delta) continue
 
-        if (parse) {
-          const parsed = parseRaw(doc.answerRaw)
-          if (parsed) doc.answerParsed = parsed
-        }
-
-        if (counter % 10) ref.update(doc) // only update every 5th iteration
+      doc.answerRaw += delta
+      if (parse) {
+        const parsed = parseRaw(doc.answerRaw)
+        if (parsed) doc.answerParsed = parsed
       }
-      counter++
+
+      if (Date.now() - lastWrite >= WRITE_INTERVAL_MS) write()
     }
 
+    // awaited: once the handler returns the instance may be throttled and the write would never land
     doc.status = 'completed'
-    delay(500).then(() => ref.update(doc))
+    await write()
     return doc.answerRaw
   } catch (error) {
-    if (error.response) {
-      logger.error(error.response.status)
-      logger.error(error.response.data)
+    if (error instanceof OpenAI.APIError) {
+      logger.error(`OpenAI ${error.status}: ${error.message}`)
     } else {
-      logger.error(error.message)
+      logger.error(error)
     }
 
     doc.status = 'error'
-    ref.update(doc)
+    await write()
     return 'error'
   }
 }
-
