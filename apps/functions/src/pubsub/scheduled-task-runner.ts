@@ -146,7 +146,7 @@ async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUs
 
   return Promise.all([
     sendDearFutureSelfPushNotification(personal, message),
-    sendDearFutureSelfEmail(personal, description),
+    sendDearFutureSelfEmail(options.userId, personal, description),
     updateAggregation({ usersFutureLetterReceived: 1 })
   ])
 }

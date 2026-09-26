@@ -2,8 +2,7 @@ import * as admin from 'firebase-admin'
 import type { Message as FCMMessage } from 'firebase-admin/messaging'
 import { Message, Personal } from '@strive/model'
 import { format } from 'date-fns'
-import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
-import { groupIds, templateIds } from '../email/ids'
+import { sendMail } from '../../shared/email/email'
 
 export function sendDearFutureSelfPushNotification(personal: Personal, message: Message) {
   if (!personal?.fcmTokens.length) return
@@ -32,10 +31,13 @@ export function sendDearFutureSelfPushNotification(personal: Personal, message: 
   return admin.messaging().sendEach(messages)
 }
 
-export function sendDearFutureSelfEmail(personal: Personal, description: string) {
-  return sendMailFromTemplate({
+export function sendDearFutureSelfEmail(uid: string, personal: Personal, description: string) {
+  if (!personal?.email) return
+  if (personal.settings?.emailNotification?.main === false) return
+  return sendMail({
     to: personal.email,
-    templateId: templateIds.dearFutureSelfMessage,
+    uid,
+    template: 'dearFutureSelf',
     data: { description }
-  }, groupIds.unsubscribeAll)
+  })
 }

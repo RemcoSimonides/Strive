@@ -5,8 +5,7 @@ import { subWeeks, isAfter, subMonths, isWithinInterval } from 'date-fns'
 import { createGoal, createPersonal, inBucketlist, inProgress, Personal, storyEvents } from '@strive/model'
 import { getDocument } from '../../shared/utils'
 import { createGoalEvent, Goal, createGoalStakeholder, GoalStakeholder, createNotificationBase, Feature, Features, Motivation, Motivations } from '@strive/model'
-import { groupIds, templateIds } from './ids'
-import { sendMailFromTemplate } from '../../shared/sendgrid/sendgrid'
+import { sendMail } from '../../shared/email/email'
 import { toDate } from '../../shared/utils'
 
 export const scheduledEmailRunner = onSchedule('0 0 1 * *',
@@ -59,11 +58,12 @@ async () => {
         newFeatures
       }
 
-      const promise = sendMailFromTemplate({
+      const promise = sendMail({
         to: personal.email,
-        templateId: templateIds.monthlyGoalReminder,
+        uid: personal.uid,
+        template: 'monthlyGoalReminder',
         data,
-      }, groupIds.unsubscribeAll)
+      })
       promises.push(promise)
     } catch (err) {
       // one user's bad data must not abort the monthly emails for everyone else
