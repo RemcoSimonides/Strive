@@ -1,25 +1,41 @@
 default_platform(:android)
 
 platform :android do
-  desc "Bump versionCode past the highest one on any Play track"
-  private_lane :bump_version_code do
+  desc "Bump versionCode past the highest one on any Play track, and versionName past any name already on a track"
+  private_lane :bump_versions do
     gradle_file = File.expand_path("../app/build.gradle", __dir__)
-    current = File.read(gradle_file)[/versionCode (\d+)/, 1].to_i
+    content = File.read(gradle_file)
+    current_code = content[/versionCode (\d+)/, 1].to_i
+    current_name = content[/versionName "([^"]+)"/, 1]
 
-    codes = [current]
+    codes = [current_code]
+    names = []
     %w[production beta alpha internal].each do |track|
       begin
         codes += google_play_track_version_codes(track: track)
       rescue StandardError
         # track may not exist or have no releases
       end
+      begin
+        # release names look like "75 (1.16.7)"; drafts count too
+        names += google_play_track_release_names(track: track).map { |name| name[/\d+\.\d+\.\d+/] }.compact
+      rescue StandardError
+      end
     end
 
     new_code = codes.max + 1
-    content = File.read(gradle_file)
+    new_name = current_name
+    highest = names.max_by { |name| Gem::Version.new(name) }
+    if highest && Gem::Version.new(current_name) <= Gem::Version.new(highest)
+      parts = highest.split(".").map(&:to_i)
+      parts[2] += 1
+      new_name = parts.join(".")
+    end
+
     content.sub!(/versionCode \d+/, "versionCode #{new_code}")
+    content.sub!(/versionName "[^"]+"/, "versionName \"#{new_name}\"")
     File.write(gradle_file, content)
-    UI.message("versionCode set to #{new_code}")
+    UI.message("versionCode set to #{new_code}, versionName set to #{new_name}")
   end
 
   desc "Build a signed AAB (release)"
@@ -39,7 +55,7 @@ platform :android do
 
   desc "Deploy to Play Store internal testing track"
   lane :deploy_internal do
-    bump_version_code
+    bump_versions
     build
     upload_to_play_store(
       track: "internal",
@@ -53,7 +69,7 @@ platform :android do
 
   desc "Deploy to Play Store production"
   lane :deploy_production do
-    bump_version_code
+    bump_versions
     build
     upload_to_play_store(
       track: "production",

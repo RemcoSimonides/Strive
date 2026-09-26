@@ -99,3 +99,20 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           PLAY_STORE_JSON_KEY_FILE: fastlane/play-store-key.json
+
+      # Keep the repo on the versionCode/versionName that was just uploaded.
+      # [skip ci] so this commit does not start another deploy.
+      - name: Commit version bump
+        if: github.ref_type == 'branch'
+        run: |
+          CODE=$(grep -oP 'versionCode \K\d+' app/build.gradle)
+          NAME=$(grep -oP 'versionName "\K[^"]+' app/build.gradle)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/build.gradle
+          git commit -m "Android $NAME ($CODE) [skip ci]"
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && exit 0
+            sleep 5
+          done
+          exit 1
