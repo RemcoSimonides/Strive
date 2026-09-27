@@ -145,6 +145,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
       const existing = this._comments.value.find(c => c.id === comment.id)
       if (existing) {
         existing.text = comment.text // update text if comment already exists
+        existing.answerRaw = comment.answerRaw // the assistant's answer streams into answerRaw
         existing.status = comment.status // update status too
         this._comments.next(this._comments.value)
         if (this.scrolledToBottomGenerous) this.content?.scrollToBottom()
@@ -209,7 +210,7 @@ export class ChatModalComponent extends ModalDirective implements OnInit, AfterV
     })
 
     this.form.reset('')
-    // this.commentService.add(comment, { params: { goalId: this.goal.id } })
+    this.commentService.upsert(comment, { goalId: this.goal.id })
   }
 
   async logScrolling($event: ScrollCustomEvent) {

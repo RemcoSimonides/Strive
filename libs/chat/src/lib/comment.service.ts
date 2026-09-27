@@ -15,21 +15,21 @@ export class CommentService {
   private firestore = inject(FIRESTORE)
 
   collectionData(queryConstraints: QueryConstraint[], options: { goalId: string }): Observable<Comment[]> {
-    const colPath = `Goals/${options.goalId}/ChatGPT`
+    const colPath = `Goals/${options.goalId}/Comments`
     const colRef = collection(this.firestore, colPath).withConverter(converter)
     const q = query(colRef, ...queryConstraints)
     return collectionData(q, { idField: 'id' })
   }
 
   upsert(payload: Comment, options: { goalId: string }) {
-      const colPath = `Goals/${options.goalId}/ChatGPT`
+    const colPath = `Goals/${options.goalId}/Comments`
 
-      if (payload.id) {
-        const docRef = doc(this.firestore, `${colPath}/${payload.id}`).withConverter(converter)
-        return setDoc(docRef, payload, { merge: true })
-      } else {
-        const colRef = collection(this.firestore, colPath).withConverter(converter)
-        return addDoc(colRef, payload)
-      }
+    if (payload.id) {
+      const docRef = doc(this.firestore, `${colPath}/${payload.id}`).withConverter(converter)
+      return setDoc(docRef, payload, { merge: true })
+    } else {
+      const colRef = collection(this.firestore, colPath).withConverter(converter)
+      return addDoc(colRef, payload)
     }
+  }
 }
