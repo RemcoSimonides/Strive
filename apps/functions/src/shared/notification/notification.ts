@@ -42,9 +42,32 @@ export async function sendNotificationToUsers(notificationBase: NotificationBase
     if (support) notification.support = support
     if (user) notification.user = user
 
-    const message = getPushMessage(notification, 'user')
+    const message = getPushMessageIfComplete(notification, 'user')
     if (message) sendPushNotificationToUsers(message, recipients)
   }
+}
+
+/**
+ * The push message for a notification, or nothing when a document it refers to no longer exists.
+ * A goal, milestone, support, user or comment can be deleted between the trigger and this handler;
+ * that is not an error worth Sentry, so it is logged and the push notification is skipped.
+ */
+function getPushMessageIfComplete(notification: Notification, target: PushNotificationTarget, commentId?: string): PushMessage | void {
+  const { event, goalId, milestoneId, supportId, userId, goal, milestone, support, user, comment } = notification
+
+  const missing: string[] = []
+  if (goalId && !goal) missing.push(`Goals/${goalId}`)
+  if (milestoneId && !milestone) missing.push(`Goals/${goalId}/Milestones/${milestoneId}`)
+  if (supportId && !support) missing.push(`Goals/${goalId}/Supports/${supportId}`)
+  if (userId && !user) missing.push(`Users/${userId}`)
+  if (commentId && !comment) missing.push(`Goals/${goalId}/Comments/${commentId}`)
+
+  if (missing.length) {
+    logger.warn(`Skipping ${target} push notification for event ${event}: missing or empty ${missing.join(', ')}`)
+    return
+  }
+
+  return getPushMessage(notification, target)
 }
 
 export async function sendGoalEventNotification(
@@ -95,7 +118,7 @@ export async function sendGoalEventNotification(
   }
 
   if (options.toStakeholder?.pushNotification) {
-    const message = getPushMessage(notification, 'stakeholder')
+    const message = getPushMessageIfComplete(notification, 'stakeholder', commentId)
     const recipients = stakeholders.filter(stakeholder => stakeholder[options.toStakeholder.role] === true)
     const recipientIds = recipients.map(stakeholder => stakeholder.uid)
     if (message) sendPushNotificationToUsers(message, recipientIds)
@@ -115,7 +138,7 @@ export async function sendGoalEventNotification(
     }
 
     if (options.toSpectator.pushNotification) {
-      const message = getPushMessage(notification, 'spectator')
+      const message = getPushMessageIfComplete(notification, 'spectator', commentId)
       if (message) sendPushNotificationToUsers(message, spectators)
     }
   }

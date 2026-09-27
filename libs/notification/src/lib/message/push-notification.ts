@@ -317,6 +317,71 @@ function getUserPushMessage({ event, goal, milestone, user, support }: Notificat
         setting: 'supports'
       }
 
+    case 'goalSupportStatusPendingUnsuccessful': {
+      if (!support) throw new Error(`${event} push message needs support defined`)
+      if (!goal) throw new Error(`${event} push message needs goal defined`)
+
+      const title = milestone?.id
+        ? `Milestone '${milestone.content}' failed`
+        : `Goal '${goal.title}' finished unsuccessfully`
+
+      return {
+        title,
+        body: `Decide to give '${support.description}' or not`,
+        link: `supports/${support.id}?goalId=${support.goalId}`,
+        setting: 'supports'
+      }
+    }
+
+    case 'goalSupportCounterStatusPendingUnsuccessful': {
+      if (!support) throw new Error(`${event} push message needs support defined`)
+      if (!goal) throw new Error(`${event} push message needs goal defined`)
+
+      const title = milestone?.id
+        ? `Milestone '${milestone.content}' failed`
+        : `Goal '${goal.title}' finished unsuccessfully`
+
+      return {
+        title,
+        body: `Decide to give '${support.counterDescription}' or not`,
+        link: `supports/${support.id}?goalId=${support.goalId}`,
+        setting: 'supports'
+      }
+    }
+
+    case 'goalSupportStatusRejected':
+      if (!user) throw new Error(`${event} push message needs user defined`)
+      if (!support) throw new Error(`${event} push message needs support defined`)
+
+      return {
+        title: user.username,
+        body: `Rejected giving '${support.description}'`,
+        link: `supports/${support.id}?goalId=${support.goalId}`,
+        setting: 'supports'
+      }
+
+    case 'goalSupportStatusCounterAccepted':
+      if (!user) throw new Error(`${event} push message needs user defined`)
+      if (!support) throw new Error(`${event} push message needs support defined`)
+
+      return {
+        title: user.username,
+        body: `Now owes you '${support.counterDescription}'`,
+        link: `supports/${support.id}?goalId=${support.goalId}`,
+        setting: 'supports'
+      }
+
+    case 'goalSupportStatusCounterRejected':
+      if (!user) throw new Error(`${event} push message needs user defined`)
+      if (!support) throw new Error(`${event} push message needs support defined`)
+
+      return {
+        title: user.username,
+        body: `Rejected giving '${support.counterDescription}'`,
+        link: `supports/${support.id}?goalId=${support.goalId}`,
+        setting: 'supports'
+      }
+
     case 'userSpectatorCreated':
       if (!user) throw new Error(`${event} spectator push message needs user defined`)
 
