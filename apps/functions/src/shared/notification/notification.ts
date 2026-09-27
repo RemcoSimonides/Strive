@@ -78,7 +78,7 @@ export async function sendGoalEventNotification(
     const milestonePromise = milestoneId ? getDocument<Milestone>(`Goals/${goalId}/Milestones/${milestoneId}`).then(milestone => notification.milestone = milestone) : undefined
     const supportPromise = supportId ? getDocument<Support>(`Goals/${goalId}/Supports/${supportId}`).then(support => notification.support = support) : undefined
     const userPromise = userId ? getDocument<User>(`Users/${userId}`).then(user => notification.user = user) : undefined
-    const commentPromise = commentId ? getDocument<Comment>(`Goals/${goalId}/Comments/${commentId}`).then(comment => notification.comment = comment.text) : undefined
+    const commentPromise = commentId ? getDocument<Comment>(`Goals/${goalId}/Comments/${commentId}`).then(comment => notification.comment = comment?.text || comment?.answerRaw) : undefined // the assistant's answer is in answerRaw
     await Promise.all([goalPromise, milestonePromise, supportPromise, userPromise, commentPromise])
 
     if (!notification.goal) {

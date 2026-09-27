@@ -19,9 +19,11 @@ async (snapshot) =>{
 
   if (comment.id === 'initial') return // no need to send notification of the initial message
 
-  addGoalEvent('goalChatMessageCreated', { goalId, userId, commentId })
-
+  // An assistant comment is created empty and its answer streams in afterwards: its event is added below,
+  // once the answer is complete, so the push notification has something to show.
   if (comment.userId === 'chatgpt') return
+
+  addGoalEvent('goalChatMessageCreated', { goalId, userId, commentId })
 
   const [ goalSnap, stakeholderSnap ] = await Promise.all([
     db.doc(`Goals/${goalId}`).get(),
@@ -73,5 +75,6 @@ async (snapshot) =>{
 
   messages.push({ role: 'user', content: comment.text })
 
-  return askOpenAI(messages, ref)
+  const answer = await askOpenAI(messages, ref)
+  if (answer !== 'error') await addGoalEvent('goalChatMessageCreated', { goalId, userId: 'chatgpt', commentId: ref.id })
 })
