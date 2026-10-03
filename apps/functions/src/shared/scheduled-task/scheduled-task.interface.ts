@@ -70,7 +70,10 @@ export interface ScheduledTaskUserExerciseDailyGratitude extends ScheduledTaskBa
 export interface ScheduledTaskUserExerciseDearFutureSelfMessage extends ScheduledTaskBase {
   options: {
     userId: string
-    index: number
+    /** createdAt of the message in milliseconds */
+    createdAt?: number
+    /** @deprecated tasks scheduled before messages were keyed on createdAt */
+    index?: number
   }
 }
 

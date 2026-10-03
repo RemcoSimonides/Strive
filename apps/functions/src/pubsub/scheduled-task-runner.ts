@@ -1,4 +1,4 @@
-import { db, admin, onSchedule } from '@strive/api/firebase'
+import { db, admin, onSchedule, logger } from '@strive/api/firebase'
 
 import { getDocument } from '../shared/utils'
 import { addGoalEvent } from '../shared/goal-event/goal.events'
@@ -139,9 +139,21 @@ function userExerciseDailyGratitudeReminderHandler(options: ScheduledTaskUserExe
 
 async function userExerciseDearFutureSelfMessageHandler(options: ScheduledTaskUserExerciseDearFutureSelfMessage['options']) {
   const dearFutureSelf = await getDocument<DearFutureSelf>(`Users/${options.userId}/Exercises/DearFutureSelf`)
-  const message = dearFutureSelf.messages[options.index]
+  const message = options.createdAt !== undefined
+    ? dearFutureSelf?.messages.find(m => m.createdAt.getTime() === options.createdAt)
+    : dearFutureSelf?.messages[options.index]
+
+  // The list can have changed since the task was scheduled; that is not an error worth Sentry
+  if (!message) {
+    logger.warn(`Skipping dear future self message for user ${options.userId}: no message with ${options.createdAt !== undefined ? `createdAt ${options.createdAt}` : `index ${options.index}`}`)
+    return
+  }
 
   const personal = await getDocument<Personal>(`Users/${options.userId}/Personal/${options.userId}`)
+  if (!personal) {
+    logger.warn(`Skipping dear future self message for user ${options.userId}: Users/${options.userId}/Personal/${options.userId} is gone`)
+    return
+  }
   const description = AES.decrypt(message.description, personal.key).toString(enc.Utf8)
 
   return Promise.all([

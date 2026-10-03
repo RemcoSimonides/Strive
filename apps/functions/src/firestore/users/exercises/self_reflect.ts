@@ -181,14 +181,15 @@ async function saveImagine(uid: string, entry: SelfReflectEntry) {
 }
 
 async function addDearFutureSelfMessage(uid: string, message: Message) {
-  const snap = await getDocumentSnap(`Users/${uid}/Exercises/DearFutureSelf`)
-  if (snap.exists) {
-    await snap.ref.update({
-      messages: arrayUnion(message)
-    })
-  } else {
-    const dfs = createDearFutureSelf({ id: 'DearFutureSelf', messages: [message], createdAt: message.createdAt, updatedAt: message.createdAt })
-    await snap.ref.set(dfs)
+  // create() fails when the document exists, so a message added in the app between a read and
+  // a write here can no longer be overwritten by a set() of a one-message list
+  const ref = db.doc(`Users/${uid}/Exercises/DearFutureSelf`)
+  const dfs = createDearFutureSelf({ id: 'DearFutureSelf', messages: [message], createdAt: message.createdAt, updatedAt: message.createdAt })
+  try {
+    await ref.create(dfs)
+  } catch (err) {
+    if (err?.code !== 6) throw err // 6 = ALREADY_EXISTS
+    await ref.update({ messages: arrayUnion(message) })
   }
 }
 
