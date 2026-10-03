@@ -19,6 +19,8 @@ if (admin.apps.length === 0) {
 	admin.initializeApp()
 }
 export const db = admin.firestore()
+// Optional fields built as `value || undefined` would otherwise make the whole write throw
+db.settings({ ignoreUndefinedProperties: true })
 export const auth = admin.auth()
 
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp

@@ -1,5 +1,4 @@
 import { User } from '@strive/model'
-import { endOfDay } from 'date-fns'
 
 export type MilestoneStatus = 'pending' | 'succeeded' | 'failed'
 
@@ -38,7 +37,7 @@ export function createMilestone(params: Partial<Milestone> = {}): Milestone {
     deletedAt: params.deletedAt ?? null
   }
 
-  if (params.deadline) milestone.deadline = endOfDay(new Date(params.deadline))
+  if (params.deadline) milestone.deadline = new Date(params.deadline)
   if (params.updatedBy) milestone.updatedBy = params.updatedBy
   if (params.updatedAt) milestone.updatedAt = params.updatedAt
   if (params.createdAt) milestone.createdAt = params.createdAt

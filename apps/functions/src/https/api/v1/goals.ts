@@ -6,6 +6,21 @@ import { requireScope } from '../../../shared/api-key'
 
 export const goalsRouter = Router()
 
+// Users have no stored time zone yet and most are in Europe. Functions run in UTC,
+// so date-fns' endOfDay would end the day an hour or two late for them.
+const DEADLINE_TIME_ZONE = 'Europe/Amsterdam'
+
+/** A deadline is the end of its day, like the app's endOfDay, regardless of the time the caller sent. */
+function parseDeadline(value: string): Date {
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(value)
+    ? value
+    : new Date(value).toLocaleDateString('sv-SE', { timeZone: DEADLINE_TIME_ZONE }) // sv-SE formats as YYYY-MM-DD
+  const offset = new Intl.DateTimeFormat('en-US', { timeZone: DEADLINE_TIME_ZONE, timeZoneName: 'longOffset' })
+    .formatToParts(new Date(`${day}T12:00:00Z`))
+    .find(part => part.type === 'timeZoneName')?.value.replace('GMT', '') || '+00:00'
+  return new Date(`${day}T23:59:59.999${offset}`)
+}
+
 // GET /v1/goals — list goals where key owner is a stakeholder
 goalsRouter.get('/', requireScope('goals:read'), async (req, res) => {
   const uid = req.apiKey?.uid
@@ -84,7 +99,7 @@ goalsRouter.post('/', requireScope('goals:write'), async (req, res) => {
     id: goalId,
     title,
     description: description || '',
-    deadline: deadline ? new Date(deadline) : undefined,
+    deadline: deadline ? parseDeadline(deadline) : undefined,
     publicity: publicity === 'public' ? 'public' : 'private',
     image: image || '',
     createdAt: now,
@@ -104,8 +119,8 @@ goalsRouter.post('/', requireScope('goals:write'), async (req, res) => {
     updatedAt: now,
   })
 
-  const { uid: _sUid, ...stakeholderData } = stakeholder
-  await db.doc(`Goals/${goalId}/GStakeholders/${uid}`).set(stakeholderData)
+  // Keep uid in the document: the app and GET /goals look stakeholders up by it
+  await db.doc(`Goals/${goalId}/GStakeholders/${uid}`).set(stakeholder)
 
   const { id: _, ...goalData } = goal
   await db.doc(`Goals/${goalId}`).set(goalData)
@@ -144,7 +159,7 @@ goalsRouter.patch('/:goalId', requireScope('goals:write'), async (req, res) => {
   for (const field of allowedFields) {
     if (req.body[field] !== undefined) {
       if (field === 'deadline') {
-        update[field] = new Date(req.body[field])
+        update[field] = parseDeadline(req.body[field])
       } else if (field === 'status' && !['pending', 'succeeded', 'failed'].includes(req.body[field])) {
         res.status(400).json({ error: 'status must be one of: pending, succeeded, failed' })
         return
@@ -255,7 +270,7 @@ goalsRouter.post('/:goalId/milestones', requireScope('milestones:write'), async 
   const milestone = createMilestone({
     content,
     description: description || '',
-    deadline: deadline ? new Date(deadline) : undefined,
+    deadline: deadline ? parseDeadline(deadline) : undefined,
     order: typeof order === 'number' ? order : 0,
     subtasks: Array.isArray(subtasks) ? subtasks : [],
     deletedAt: null,
@@ -301,7 +316,7 @@ goalsRouter.patch('/:goalId/milestones/:milestoneId', requireScope('milestones:w
   for (const field of allowedFields) {
     if (req.body[field] !== undefined) {
       if (field === 'deadline') {
-        update[field] = new Date(req.body[field])
+        update[field] = parseDeadline(req.body[field])
       } else if (field === 'status' && !['pending', 'succeeded', 'failed'].includes(req.body[field])) {
         res.status(400).json({ error: 'status must be one of: pending, succeeded, failed' })
         return

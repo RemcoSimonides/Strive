@@ -8,7 +8,7 @@ function createGoalFormControl(params?: Partial<Goal>) {
     description: new FormControl(goal.description, { nonNullable: true }),
     image: new FormControl(goal.image, { nonNullable: true }),
     deadline: new FormControl(goal.deadline, { nonNullable: true, validators: [Validators.required] }),
-    publicity: new FormControl<GoalPublicityType>('private', { nonNullable: true }),
+    publicity: new FormControl<GoalPublicityType>(goal.publicity, { nonNullable: true }),
     title: new FormControl(goal.title, { nonNullable: true, validators: [Validators.required]}),
     categories: new FormControl(goal.categories, { nonNullable: true }),
     location: new FormControl<GoalLocation | null>(goal.location ?? null)

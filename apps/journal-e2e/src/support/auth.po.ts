@@ -4,7 +4,7 @@ export function openAuthModal() {
 
 export function navigateToSignup() {
   // "Create goal" opens the modal in register mode, so we're already on the signup view
-  cy.contains('ion-button', 'Sing up with Email').click();
+  cy.contains('ion-button', 'Sign up with Email').click();
 }
 
 export function navigateToLogin() {
