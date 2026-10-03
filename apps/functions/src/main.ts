@@ -1,6 +1,7 @@
 // pubsub
 export { scheduledTasksRunner } from './pubsub/scheduled-task-runner'
 export { scheduledEmailRunner } from './pubsub/email/email'
+export { bigQueryExport } from './pubsub/bigquery-export'
 
 // firestorage
 export { userSpectatorChangeHandler, userSpectatorCreatedHandler, userSpectatorDeleteHandler } from './firestore/users/user-spectators/user-spectator'

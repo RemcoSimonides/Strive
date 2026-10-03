@@ -8,6 +8,8 @@
     "firebase-functions": "^7.2.5",
     "express": "^5.2.1",
     "@google-cloud/storage": "^7.16.0",
+    "@google-cloud/firestore": "^7.11.6",
+    "@google-cloud/bigquery": "^9.1.0",
     "@aws-sdk/client-sesv2": "^3.1141.0",
     "handlebars": "^4.7.9",
     "@sentry/node": "^10.63.0",

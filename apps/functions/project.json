@@ -23,6 +23,8 @@
           "firebase-functions",
           "express",
           "@google-cloud/storage",
+          "@google-cloud/firestore",
+          "@google-cloud/bigquery",
           "@aws-sdk/client-sesv2",
           "handlebars",
           "@sentry/node",
