@@ -21,7 +21,7 @@ import { captureException } from '@sentry/angular'
 // Date fns
 import { addYears, endOfYear, isEqual, isPast, startOfYear } from 'date-fns'
 // Strive Utils
-import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
+import { getImageUrl } from '@strive/media/directives/image-helpers'
 // Strive Directives
 import { ImageDirective } from '@strive/media/directives/image.directive'
 // Strive Pipes
@@ -335,7 +335,7 @@ export class GoalPageComponent implements OnDestroy {
         this.seo.generateTags({
           title: `${goal.title} - Strive Journal`,
           description: goal.description ? goal.description : `Check the plan, follow the progress, chat with the team, and help out wherever you can`,
-          image: goal.image ? getImgIxResourceUrl(goal.image) : undefined
+          image: goal.image ? getImageUrl(goal.image, { w: 1200 }) : undefined
         })
       } else {
         this.pageIsLoading$.next(false)

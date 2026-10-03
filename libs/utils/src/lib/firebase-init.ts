@@ -1,7 +1,7 @@
 import { InjectionToken, NgZone, Provider } from '@angular/core'
 import { FirebaseApp, FirebaseOptions, initializeApp } from 'firebase/app'
 import { Auth, getAuth, indexedDBLocalPersistence, initializeAuth } from 'firebase/auth'
-import { Firestore, getFirestore, initializeFirestore } from 'firebase/firestore'
+import { Firestore, initializeFirestore } from 'firebase/firestore'
 import { Capacitor } from '@capacitor/core'
 
 export const FIREBASE_APP = new InjectionToken<FirebaseApp>('FIREBASE_APP')
@@ -21,11 +21,13 @@ export function provideFirebase(config: FirebaseOptions): Provider[] {
       // WKWebView (capacitor://) — every read/write stays pending forever, which
       // left the app hanging on the splash and profile/feed data never loading.
       // Force long-polling on native so requests complete. Web keeps WebChannel.
+      // Optional fields built from `undefined` (e.g. a post's externalId) would otherwise make the whole write throw.
       useFactory: (app: FirebaseApp, zone: NgZone) =>
         zone.runOutsideAngular(() =>
-          Capacitor.isNativePlatform()
-            ? initializeFirestore(app, { experimentalForceLongPolling: true })
-            : getFirestore(app)
+          initializeFirestore(app, {
+            ignoreUndefinedProperties: true,
+            ...(Capacitor.isNativePlatform() ? { experimentalForceLongPolling: true } : {})
+          })
         ),
       deps: [FIREBASE_APP, NgZone],
     },

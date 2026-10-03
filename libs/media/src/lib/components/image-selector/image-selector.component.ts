@@ -12,7 +12,7 @@ import { filter } from 'rxjs/operators'
 
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper'
 import { deleteObject, getStorage, ref, StorageError, uploadBytes } from 'firebase/storage'
-import { getImgIxResourceUrl, ImageParameters } from '../../directives/imgix-helpers'
+import { getImageUrl } from '../../directives/image-helpers'
 import { isValidHttpUrl } from '@strive/utils/helpers'
 
 import { Camera, CameraResultType } from '@capacitor/camera'
@@ -100,9 +100,7 @@ export class ImageSelectorComponent implements OnInit, OnDestroy {
         this.previewUrl$.next(this.form.value)
         this.step.next('show')
       } else {
-        const params: ImageParameters = { w: 1024 }
-        const previewUrl = getImgIxResourceUrl(this.form.value, params)
-        this.previewUrl$.next(previewUrl)
+        this.previewUrl$.next(getImageUrl(this.form.value, { w: 1024 }))
         this.step.next('show')
       }
     } else {

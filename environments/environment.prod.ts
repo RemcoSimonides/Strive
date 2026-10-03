@@ -20,6 +20,13 @@ export const environment = {
   },
   pexels: {
     apikey: 'cgINQggV3efRS17LqzHMz7j94VyvvUK8IgQwz31irTAGvnKeJFeFq9NQ'
+  },
+  images: {
+    // the api hosting site rewrites /img/** to the image function and caches it on its CDN
+    baseUrl: 'https://api.strivejournal.com/img'
+  },
+  videos: {
+    baseUrl: 'https://api.strivejournal.com/video'
   }
 }
 

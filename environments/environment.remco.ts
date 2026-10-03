@@ -23,6 +23,13 @@ export const environment = {
   },
   pexels: {
     apikey: 'cgINQggV3efRS17LqzHMz7j94VyvvUK8IgQwz31irTAGvnKeJFeFq9NQ'
+  },
+  images: {
+    // no hosting site in front of it in dev, so straight to the function
+    baseUrl: 'https://us-central1-strive-journal-remco.cloudfunctions.net/image'
+  },
+  videos: {
+    baseUrl: 'https://europe-west1-strive-journal-remco.cloudfunctions.net/video'
   }
 }
 

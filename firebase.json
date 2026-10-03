@@ -81,6 +81,8 @@
       "target": "api",
       "public": "dist/apps/api-placeholder",
       "rewrites": [
+        { "source": "/img/**", "function": "image" },
+        { "source": "/video/**", "function": { "functionId": "video", "region": "europe-west1" } },
         { "source": "**", "function": "api" }
       ]
     }

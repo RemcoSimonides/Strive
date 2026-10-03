@@ -2,7 +2,7 @@ import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, Ho
 import { isValidHttpUrl } from '@strive/utils/helpers'
 import { Theme, ThemeService } from '@strive/utils/services/theme.service'
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs'
-import { getImgIxResourceUrl, ImageParameters } from './imgix-helpers'
+import { getImageSrcset, getImageUrl, ImageParameters } from './image-helpers'
 
 function getAssetPath(asset: string, theme: Theme) {
   return `assets/images/${theme}/${asset}`
@@ -18,10 +18,7 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   private sub?: Subscription
 
-  private parameters = new BehaviorSubject<ImageParameters>({
-    auto: 'compress,format',
-    fit: 'crop',
-  })
+  private parameters = new BehaviorSubject<ImageParameters>({ fit: 'crop' })
 
   private asset$ = new BehaviorSubject('')
   private ref$ = new BehaviorSubject<string | undefined>(undefined)
@@ -47,10 +44,6 @@ export class ImageDirective implements OnInit, OnDestroy {
   // -----------------------------------
   //   STATIC / PLACEHOLDER IMAGE INPUT
   // -----------------------------------
-
-  @Input() set ratio(ar: string) {
-    this.parameters.next({ ...this.parameters.getValue(), ar })
-  }
 
   @Input() set height(h: number) {
     this.parameters.next({ ...this.parameters.getValue(), h })
@@ -88,8 +81,8 @@ export class ImageDirective implements OnInit, OnDestroy {
           this.src = ref
           this.srcset = ref
         } else {
-          this.srcset = getImgIxResourceUrl(ref, params)
-          this.src = this.srcset.split(' ')[0]
+          this.src = getImageUrl(ref, params)
+          this.srcset = getImageSrcset(ref, params)
         }
       } else {
         // asset

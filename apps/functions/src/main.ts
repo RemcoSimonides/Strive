@@ -35,3 +35,8 @@ export { api } from './https/api'
 export { createApiKeyCallable } from './https/create-api-key'
 export { mcpServer } from './https/mcp'
 export { emailUnsubscribe } from './https/email-unsubscribe'
+export { image } from './https/image'
+export { video } from './https/video'
+
+// Storage
+export { videoUploadedHandler } from './storage/video'

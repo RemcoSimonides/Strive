@@ -1,7 +1,8 @@
 <swiper-container space-between="16" slides-per-view="auto" #swiper>
   @for (control of form.controls; track control; let index = $index) {
     <swiper-slide (click)="openPopover($event, index)">
-      @if (control.value.type === 'video') {
+      <!-- a new video plays from the local file; a saved one shows its poster frame -->
+      @if (control.value.type === 'video' && !control.value.id) {
         <video [src]="control.value.preview" (loadedmetadata)="checkDuration($event, index)"></video>
       } @else {
         <img [src]="control.value.preview" />

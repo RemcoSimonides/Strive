@@ -1,7 +1,9 @@
 <video
   #player
   controls
+  playsinline
   crossorigin="anonymous"
   [src]="storagePath | videoUrl"
+  [poster]="storagePath | videoPoster"
   autoplay
 ></video>

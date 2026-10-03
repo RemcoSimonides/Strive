@@ -36,12 +36,18 @@
         @for (media of post.medias; track media; let index = $index) {
           <swiper-slide (click)="openZoom(index)">
             @if (media.fileType === 'video') {
-              <video [src]="media | mediaRef | videoUrl" crossorigin="anonymous" preload="auto"></video>
-              <section class="video-overlay">
-                <ion-icon name="play"></ion-icon>
-              </section>
+              @if (media.status === 'uploaded') {
+                <video [src]="media | mediaRef | videoUrl" [poster]="media | mediaRef | videoPoster" crossorigin="anonymous" preload="metadata"></video>
+                <section class="video-overlay">
+                  <ion-icon name="play"></ion-icon>
+                </section>
+              } @else {
+                <section class="video-overlay">
+                  <small>{{ media.status === 'error' ? 'This video could not be processed' : 'Processing video...' }}</small>
+                </section>
+              }
             } @else {
-              <img [ref]="media | mediaRef" asset="">
+              <img [ref]="media | mediaRef" asset="" [width]="1024">
             }
           </swiper-slide>
         }

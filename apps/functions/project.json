@@ -34,7 +34,9 @@
           "crypto-js",
           "date-fns",
           "@modelcontextprotocol/sdk",
-          "zod"
+          "zod",
+          "sharp",
+          "ffmpeg-static"
         ],
         "assets": [
           {

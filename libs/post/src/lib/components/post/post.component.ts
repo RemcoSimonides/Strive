@@ -14,7 +14,7 @@ import { getEnterAnimation, getLeaveAnimation, ImageZoomModalComponent } from '@
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HTMLPipe } from '@strive/utils/pipes/string-to-html.pipe'
 import { SafePipe } from '@strive/utils/pipes/safe-url.pipe'
-import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
+import { MediaRefPipe, VideoPosterPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
 
 @Component({
     selector: '[storyItem] strive-post',
@@ -30,6 +30,7 @@ import { MediaRefPipe, VideoUrlPipe } from '@strive/media/pipes/media.pipe'
         SafePipe,
         MediaRefPipe,
         VideoUrlPipe,
+        VideoPosterPipe,
         IonCard,
         IonAvatar,
         IonButton,

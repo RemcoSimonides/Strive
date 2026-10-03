@@ -10,9 +10,13 @@
       <section class="container">
         <article class="swiper-zoom-container">
           @if (media.fileType === 'video') {
-            <strive-video-player [storagePath]="media | mediaRef"></strive-video-player>
+            @if (media.status === 'uploaded') {
+              <strive-video-player [storagePath]="media | mediaRef"></strive-video-player>
+            } @else {
+              <p class="description">{{ media.status === 'error' ? 'This video could not be processed' : 'Processing video...' }}</p>
+            }
           } @else {
-            <img [ref]="media | mediaRef" [asset]="asset" />
+            <img [ref]="media | mediaRef" [asset]="asset" [width]="2048" />
           }
         </article>
         @if (media.description) {

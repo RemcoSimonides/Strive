@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms'
 import { Media, MediaType } from '@strive/model'
-import { getImgIxResourceUrl } from '../directives/imgix-helpers'
+import { getImageUrl } from '../directives/image-helpers'
 
 export interface EditMedia {
   id: string
@@ -14,7 +14,8 @@ export function mediaToEditMedia(media: Media): EditMedia {
   const getPreview = () => {
     if (media.storagePath && media.id) {
       const path = `${media.storagePath}/${media.id}`
-      return getImgIxResourceUrl(path, { w: 1024 })
+      // a video has a poster frame next to it, made by the videoUploadedHandler function
+      return getImageUrl(media.fileType === 'video' ? `${path}.jpg` : path, { w: 1024 })
     }
     return ''
   }

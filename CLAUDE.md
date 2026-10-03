@@ -49,7 +49,7 @@ firebase emulators:start
 ## Branching & Deployment
 
 - **`main`** is the default branch (renamed from `master` 2026-07). **Every push to `main` deploys to production** via `.github/workflows/deploy.yml`.
-- **`dev`** is the working branch: develop on `dev` (or feature branches), merge to `main` to release.
+- **`develop`** is the working branch: develop on `develop` (or feature branches), merge to `main` to release. Never push to `main` directly: a push that touches `apps/journal/**`, `libs/**` or `package-lock.json` also releases the iOS and Android apps.
 - The deploy workflow is gated on `nx affected -t test`. It then deploys in parallel:
   - Cloud Functions + Firestore rules/indexes + Storage rules + classic hosting sites `blog` and `api` (service account: `GCP_SA_KEY` repo secret)
   - strivejournal.com via a Firebase App Hosting rollout (`firebase apphosting:rollouts:create journal --git-branch main`)

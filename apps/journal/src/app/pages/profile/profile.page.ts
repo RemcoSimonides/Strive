@@ -35,7 +35,7 @@ import { delay } from '@strive/utils/helpers'
 import { AuthModalComponent, enumAuthSegment } from '@strive/auth/components/auth-modal/auth-modal.page'
 import { GoalCreateModalComponent } from '@strive/goal/modals/upsert/create/create.component'
 import { SupportingComponent } from '@strive/goal/modals/supporting/supporting.component'
-import { getImgIxResourceUrl } from '@strive/media/directives/imgix-helpers'
+import { getImageUrl } from '@strive/media/directives/image-helpers'
 import { PageLoadingComponent } from '@strive/ui/page-loading/page-loading.component'
 import { ImageDirective } from '@strive/media/directives/image.directive'
 import { HeaderRootComponent } from '@strive/ui/header-root/header-root.component'
@@ -153,7 +153,7 @@ export class ProfilePageComponent {
       this.seo.generateTags({
         title: `${title} - Strive Journal`,
         description,
-        image: profile?.photoURL ? getImgIxResourceUrl(profile.photoURL) : undefined
+        image: profile?.photoURL ? getImageUrl(profile.photoURL, { w: 600 }) : undefined
       })
       return title
     })
