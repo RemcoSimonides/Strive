@@ -6,7 +6,7 @@ import { AlertController, IonButton, IonIcon, IonItem, IonList, IonPopover, IonS
 import { addIcons } from 'ionicons'
 import { flagOutline } from 'ionicons/icons'
 
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { callable } from '@strive/utils/functions'
 import { BehaviorSubject } from 'rxjs'
 
 import { AuthService } from '@strive/auth/auth.service'
@@ -154,7 +154,7 @@ export class JoinButtonComponent {
   async createCollectiveGoal() {
     this.status$.next('creating')
 
-    const createCollectiveGoalFn = httpsCallable(getFunctions(), 'createCollectiveGoal')
+    const createCollectiveGoalFn = callable('createCollectiveGoal')
     const collectiveGoal = await createCollectiveGoalFn({
       goal: this.goal,
       uid: this.auth.uid()

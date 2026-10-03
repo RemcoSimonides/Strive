@@ -36,4 +36,4 @@ app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' })
 })
 
-export const api = onRequest({ cors: true, region: 'us-central1' }, app)
+export const api = onRequest({ cors: true }, app)

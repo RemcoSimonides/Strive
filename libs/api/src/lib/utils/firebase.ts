@@ -49,7 +49,7 @@ const secrets = [
 
 setGlobalOptions({
 	secrets,
-	region: 'us-central1',
+	region: 'europe-west1',
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

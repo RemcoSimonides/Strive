@@ -6,7 +6,7 @@ import { IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonCon
 import { addIcons } from 'ionicons'
 import { close, calendarOutline, linkOutline } from 'ionicons/icons'
 
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { callable } from '@strive/utils/functions'
 import { SendIntent } from 'send-intent'
 
 import { captureException } from '@sentry/angular'
@@ -96,7 +96,7 @@ export class UpsertPostModalComponent extends ModalDirective implements AfterVie
 		this.scrapingUrl = true
 		this.cdr.markForCheck()
 
-		const scrape = httpsCallable(getFunctions(), 'scrapeMetatags')
+		const scrape = callable('scrapeMetatags')
 		const scraped = await scrape({ url })
 		const { error, result } = scraped.data as { error: string, result: any }
 		if (error) {

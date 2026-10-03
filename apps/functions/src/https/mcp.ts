@@ -446,4 +446,4 @@ app.use((err: any, _req: any, res: any, _next: any) => {
   }
 })
 
-export const mcpServer = onRequest({ cors: true, region: 'us-central1' }, app)
+export const mcpServer = onRequest({ cors: true }, app)

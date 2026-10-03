@@ -9,7 +9,7 @@ import { addOutline, trashOutline } from 'ionicons/icons'
 
 import { Clipboard } from '@capacitor/clipboard'
 import { collection, doc, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { callable } from '@strive/utils/functions'
 import { of, switchMap } from 'rxjs'
 
 import { ApiKey, createApiKey, ApiKeyScope } from '@strive/model'
@@ -129,7 +129,7 @@ export class ApiKeysComponent {
 
     let response: { key?: string, error?: string, id?: string }
     try {
-      const fn = httpsCallable(getFunctions(), 'createApiKeyCallable')
+      const fn = callable('createApiKeyCallable')
       const result = await fn({ name, scopes })
       response = result.data as { key?: string, error?: string, id?: string }
     } catch {

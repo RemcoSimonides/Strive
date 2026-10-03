@@ -12,7 +12,7 @@ function sign(uid: string) {
 
 export function unsubscribeUrl(uid: string) {
   const project = process.env['GCLOUD_PROJECT']
-  return `https://us-central1-${project}.cloudfunctions.net/emailUnsubscribe?uid=${encodeURIComponent(uid)}&token=${sign(uid)}`
+  return `https://europe-west1-${project}.cloudfunctions.net/emailUnsubscribe?uid=${encodeURIComponent(uid)}&token=${sign(uid)}`
 }
 
 export function isValidUnsubscribeToken(uid: string, token: string) {

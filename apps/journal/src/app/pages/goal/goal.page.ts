@@ -74,7 +74,7 @@ import { StravaService } from '@strive/strava/strava.service'
 // Strive Interfaces
 import { Goal, GoalStakeholder, groupByObjective, SupportsGroupedByGoal, Milestone, StoryItem, sortGroupedSupports, createGoalStakeholder, createPost, Stakeholder, createMedia, User } from '@strive/model'
 import { createStravaAuthParams, StravaAuthParams, StravaIntegration } from 'libs/model/src/lib/strava'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { callable } from '@strive/utils/functions'
 import { toObservable } from '@angular/core/rxjs-interop';
 
 function stakeholderChanged(before: GoalStakeholder | undefined, after: GoalStakeholder | undefined): boolean {
@@ -771,7 +771,7 @@ export class GoalPageComponent implements OnDestroy {
 
         const goalId = this.goal?.id
 
-        const func = httpsCallable(getFunctions(), 'initialiseStrava')
+        const func = callable('initialiseStrava')
         const stravaInitialised = await func({ goalId, authorizationCode, refreshToken, activityTypes: types, after })
         const { error, result } = stravaInitialised.data as { error: string, result: unknown }
         if (error) {

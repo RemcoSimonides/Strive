@@ -6,7 +6,7 @@ import { Observable, of, map } from 'rxjs'
 
 import { createMedia, Media } from '@strive/model'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { callable } from '@strive/utils/functions'
 import { captureException } from '@sentry/angular'
 
 const converter = createConverter<Media>(createMedia)
@@ -64,7 +64,7 @@ export class MediaService {
 
     const path = `${storagePath}/${mediaId}`
 
-    const downloadImageFromURL = httpsCallable(getFunctions(), 'downloadImageFromURL')
+    const downloadImageFromURL = callable('downloadImageFromURL')
     const response = await downloadImageFromURL({ url, storagePath: path })
     const { error, result } = response.data as { error: string, result: any }
 
