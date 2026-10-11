@@ -1,42 +1,59 @@
-// pubsub
-export { scheduledTasksRunner } from './pubsub/scheduled-task-runner'
-export { scheduledEmailRunner } from './pubsub/email/email'
-export { bigQueryExport } from './pubsub/bigquery-export'
+// Every function is deployed with this same bundle. On a cold start only the module of the function
+// that is starting (FUNCTION_TARGET) is loaded, so it does not pay for the code and dependencies of all
+// the others. Without a matching FUNCTION_TARGET (deploy discovery, tests) every module is loaded.
+const functions: [string[], () => Record<string, unknown>][] = [
+  // pubsub
+  [['scheduledTasksRunner'], () => require('./pubsub/scheduled-task-runner')],
+  [['scheduledEmailRunner'], () => require('./pubsub/email/email')],
+  [['bigQueryExport'], () => require('./pubsub/bigquery-export')],
 
-// firestorage
-export { userSpectatorChangeHandler, userSpectatorCreatedHandler, userSpectatorDeleteHandler } from './firestore/users/user-spectators/user-spectator'
-export { affirmationsCreatedHandler, affirmationsChangeHandler, affirmationsDeleteHandler } from './firestore/users/exercises/affirmation'
-export { selfReflectSettingsCreatedHandler, selfReflectSettingsChangeHandler, selfReflectEntryCreatedHandler, selfReflectEntryChangeHandler } from './firestore/users/exercises/self_reflect'
-export { dailyGratitudeCreatedHandler, dailyGratitudeChangedHandler, dailyGratitudeDeleteHandler } from './firestore/users/exercises/daily_gratitude'
-export { dearFutureSelfCreatedHandler, dearFutureSelfChangedHandler, dearFutureSelfDeleteHandler } from './firestore/users/exercises/dear_future_self'
-export { wheelOfLifeCreatedHandler, wheelOfLifeChangedHandler, wheelOfLifeDeleteHandler, wheelOfLifeEntryCreatedHandler } from './firestore/users/exercises/wheel_of_life'
-export { userCreatedHandler, userChangeHandler, userDeletedHandler } from './firestore/users/user'
+  // firestorage
+  [['userSpectatorChangeHandler', 'userSpectatorCreatedHandler', 'userSpectatorDeleteHandler'], () => require('./firestore/users/user-spectators/user-spectator')],
+  [['affirmationsCreatedHandler', 'affirmationsChangeHandler', 'affirmationsDeleteHandler'], () => require('./firestore/users/exercises/affirmation')],
+  [['selfReflectSettingsCreatedHandler', 'selfReflectSettingsChangeHandler', 'selfReflectEntryCreatedHandler', 'selfReflectEntryChangeHandler'], () => require('./firestore/users/exercises/self_reflect')],
+  [['dailyGratitudeCreatedHandler', 'dailyGratitudeChangedHandler', 'dailyGratitudeDeleteHandler'], () => require('./firestore/users/exercises/daily_gratitude')],
+  [['dearFutureSelfCreatedHandler', 'dearFutureSelfChangedHandler', 'dearFutureSelfDeleteHandler'], () => require('./firestore/users/exercises/dear_future_self')],
+  [['wheelOfLifeCreatedHandler', 'wheelOfLifeChangedHandler', 'wheelOfLifeDeleteHandler', 'wheelOfLifeEntryCreatedHandler'], () => require('./firestore/users/exercises/wheel_of_life')],
+  [['userCreatedHandler', 'userChangeHandler', 'userDeletedHandler'], () => require('./firestore/users/user')],
 
-export { goalCreatedHandler, goalChangeHandler, goalDeletedHandler } from './firestore/goals/goal'
-export { goalStakeholderCreatedHandler, goalStakeholderChangeHandler, goalStakeholderDeletedHandler } from './firestore/goals/goal-stakeholder/goal-stakeholder'
-export { goalReminderChangeHandler, goalReminderCreatedHandler, goalReminderDeleteHandler } from './firestore/goals/goal-stakeholder/reminders/reminder'
-export { milestoneCreatedhandler, milestoneChangeHandler, milestoneDeletedHandler } from './firestore/goals/milestones/milestone'
-export { supportCreatedHandler, supportChangeHandler, supportDeletedHandler } from './firestore/goals/supports/support'
-export { goalInviteTokenCreatedHandler } from './firestore/goals/invite-tokens/invite-token'
-export { postCreatedHandler, postDeletedHandler, postChangeHandler } from './firestore/goals/posts/post'
-export { commentCreatedHandler } from './firestore/goals/comments/comment'
-export { chatGPTMessageCreatedHandler } from './firestore/goals/chatgpt/chatgpt'
-export { mediaDeletedHandler } from './firestore/goals/media/media'
+  [['goalCreatedHandler', 'goalChangeHandler', 'goalDeletedHandler'], () => require('./firestore/goals/goal')],
+  [['goalStakeholderCreatedHandler', 'goalStakeholderChangeHandler', 'goalStakeholderDeletedHandler'], () => require('./firestore/goals/goal-stakeholder/goal-stakeholder')],
+  [['goalReminderChangeHandler', 'goalReminderCreatedHandler', 'goalReminderDeleteHandler'], () => require('./firestore/goals/goal-stakeholder/reminders/reminder')],
+  [['milestoneCreatedhandler', 'milestoneChangeHandler', 'milestoneDeletedHandler'], () => require('./firestore/goals/milestones/milestone')],
+  [['supportCreatedHandler', 'supportChangeHandler', 'supportDeletedHandler'], () => require('./firestore/goals/supports/support')],
+  [['goalInviteTokenCreatedHandler'], () => require('./firestore/goals/invite-tokens/invite-token')],
+  [['postCreatedHandler', 'postDeletedHandler', 'postChangeHandler'], () => require('./firestore/goals/posts/post')],
+  [['commentCreatedHandler'], () => require('./firestore/goals/comments/comment')],
+  [['chatGPTMessageCreatedHandler'], () => require('./firestore/goals/chatgpt/chatgpt')],
+  [['mediaDeletedHandler'], () => require('./firestore/goals/media/media')],
 
-export { goalEventCreatedHandler } from './firestore/goal-events/goal-events'
-export { stravaIntegrationChangeHandler } from './firestore/strava/strava'
+  [['goalEventCreatedHandler'], () => require('./firestore/goal-events/goal-events')],
+  [['stravaIntegrationChangeHandler'], () => require('./firestore/strava/strava')],
 
-// http
-export { migrate } from './migration'
-export { scrapeMetatags, downloadImageFromURL } from './https/scrape'
-export { createCollectiveGoal } from './https/create-collective-goal'
-export { initialiseStrava, listenToStrava } from './https/strava'
-export { api } from './https/api'
-export { createApiKeyCallable } from './https/create-api-key'
-export { mcpServer } from './https/mcp'
-export { emailUnsubscribe } from './https/email-unsubscribe'
-export { image } from './https/image'
-export { video } from './https/video'
+  // http
+  [['migrate'], () => require('./migration')],
+  [['scrapeMetatags', 'downloadImageFromURL'], () => require('./https/scrape')],
+  [['createCollectiveGoal'], () => require('./https/create-collective-goal')],
+  [['initialiseStrava', 'listenToStrava'], () => require('./https/strava')],
+  [['api'], () => require('./https/api')],
+  [['createApiKeyCallable'], () => require('./https/create-api-key')],
+  [['mcpServer'], () => require('./https/mcp')],
+  [['emailUnsubscribe'], () => require('./https/email-unsubscribe')],
+  [['image'], () => require('./https/image')],
+  [['video'], () => require('./https/video')],
 
-// Storage
-export { videoUploadedHandler } from './storage/video'
+  // Storage
+  [['videoUploadedHandler'], () => require('./storage/video')]
+]
+
+const target = process.env['FUNCTION_TARGET']
+const loadAll = !functions.some(([names]) => target && names.includes(target))
+
+for (const [names, load] of functions) {
+  if (!loadAll && !names.includes(target)) continue
+  const mod = load()
+  for (const name of names) {
+    if (!mod[name]) throw new Error(`Function ${name} is not exported by its module`)
+    exports[name] = mod[name]
+  }
+}

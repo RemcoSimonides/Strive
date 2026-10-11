@@ -744,7 +744,7 @@ export class GoalPageComponent implements OnDestroy {
         if (personal?.oauthTokens?.['strava']) {
           refreshToken = personal.oauthTokens['strava']
         } else {
-          const client_id = 102223
+          const client_id = 284400
           const redirect_uri = `https://strivejournal.com/goal/${this.goal.id}`
           const response_type = 'code'
           const approval_prompt = 'auto'
